@@ -79,7 +79,7 @@ public class For implements IExpression {
 
     List<IItem> retval = new LinkedList<>();
     for (IItem item : variableResult) {
-      subDynamicContext.bindVariableValue(variable.getName().getValue(), ISequence.of(item));
+      subDynamicContext.bindVariableValue(variable.getName(), ISequence.of(item));
       retval.addAll(getReturnExpression().accept(subDynamicContext, focus));
     }
     return ISequence.of(retval);

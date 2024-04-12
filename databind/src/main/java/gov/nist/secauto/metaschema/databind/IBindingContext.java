@@ -304,7 +304,7 @@ public interface IBindingContext {
     IBoundLoader loader = newBoundLoader();
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
 
-    DynamicContext context = StaticContext.instance().dynamicContext();
+    DynamicContext context = new DynamicContext();
     context.setDocumentLoader(loader);
 
     return new DefaultConstraintValidator(handler);
@@ -323,7 +323,7 @@ public interface IBindingContext {
   default IValidationResult validate(@NonNull INodeItem nodeItem) {
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
     IConstraintValidator validator = newValidator(handler);
-    DynamicContext dynamicContext = StaticContext.instance().dynamicContext();
+    DynamicContext dynamicContext = new DynamicContext();
     dynamicContext.setDocumentLoader(newBoundLoader());
     validator.validate(nodeItem, dynamicContext);
     validator.finalizeValidation(dynamicContext);
@@ -390,7 +390,7 @@ public interface IBindingContext {
     IBoundLoader loader = newBoundLoader();
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
 
-    DynamicContext dynamicContext = StaticContext.instance().dynamicContext();
+    DynamicContext dynamicContext = new DynamicContext();
     dynamicContext.setDocumentLoader(loader);
     IDocumentNodeItem nodeItem = loader.loadAsNodeItem(target);
 

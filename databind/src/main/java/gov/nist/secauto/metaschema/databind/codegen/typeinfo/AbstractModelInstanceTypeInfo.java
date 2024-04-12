@@ -41,6 +41,7 @@ import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -120,14 +121,13 @@ abstract class AbstractModelInstanceTypeInfo<INSTANCE extends IModelInstanceAbso
     groupAsAnnoation.addMember("name", "$S",
         ObjectUtils.requireNonNull(modelInstance.getGroupAsName(), "The grouping name must be non-null"));
 
-    String groupAsNamespace = modelInstance.getGroupAsXmlNamespace();
-    if (groupAsNamespace == null) {
-      groupAsAnnoation.addMember("namespace", "$S", "##default");
-    } else if (groupAsNamespace.isEmpty()) {
-      groupAsAnnoation.addMember("namespace", "$S", "##none");
-    } else if (!modelInstance.getContainingModule().getXmlNamespace().toASCIIString().equals(groupAsNamespace)) {
-      groupAsAnnoation.addMember("namespace", "$S", groupAsNamespace);
-    } // otherwise use the ##default
+    TypeInfoUtils.buildNamespaceBindingAnnotation(
+        groupAsAnnoation,
+        "namespace",
+        modelInstance.getGroupAsXmlNamespace(),
+        () -> modelInstance.getContainingModule().getXmlNamespace().toASCIIString(),
+        ModelUtil.DEFAULT_STRING_VALUE,
+        false);
 
     JsonGroupAsBehavior jsonGroupAsBehavior = modelInstance.getJsonGroupAsBehavior();
     assert jsonGroupAsBehavior != null;

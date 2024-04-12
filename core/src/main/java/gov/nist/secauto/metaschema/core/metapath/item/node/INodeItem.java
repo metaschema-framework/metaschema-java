@@ -36,6 +36,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -228,7 +230,7 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   Collection<? extends IFlagNodeItem> getFlags();
 
   /**
-   * Lookup a flag and value data on this node by it's effective name.
+   * Lookup a flag and value data on this node by it's effective qualified name.
    *
    * @param name
    *          the effective name of the flag
@@ -236,7 +238,7 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    *         was found
    */
   @Nullable
-  IFlagNodeItem getFlagByName(@NonNull String name);
+  IFlagNodeItem getFlagByName(@NonNull QName name);
 
   /**
    * Get the flags and value data associated with this node as a stream.
@@ -277,7 +279,7 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    *         empty list if an instance with that name is not present
    */
   @NonNull
-  List<? extends IModelNodeItem<?, ?>> getModelItemsByName(@NonNull String name);
+  List<? extends IModelNodeItem<?, ?>> getModelItemsByName(@NonNull QName name);
 
   /**
    * Get the model items (i.e., fields, assemblies) and value data associated this

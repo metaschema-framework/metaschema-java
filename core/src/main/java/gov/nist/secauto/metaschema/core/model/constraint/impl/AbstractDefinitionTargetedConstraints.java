@@ -26,7 +26,6 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
@@ -62,7 +61,7 @@ public abstract class AbstractDefinitionTargetedConstraints<
    *          the constraints to apply to matching targets
    */
   protected AbstractDefinitionTargetedConstraints(
-      @NonNull MetapathExpression target,
+      @NonNull String target,
       @NonNull S constraints) {
     super(target, constraints);
   }

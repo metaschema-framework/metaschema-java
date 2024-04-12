@@ -30,6 +30,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -50,7 +52,7 @@ public interface IFeatureContainerFlag<FI extends IFlagInstance> extends IContai
 
   @Override
   @Nullable
-  default FI getFlagInstanceByName(String name) {
+  default FI getFlagInstanceByName(QName name) {
     return getFlagContainer().getFlagInstanceMap().get(name);
   }
 

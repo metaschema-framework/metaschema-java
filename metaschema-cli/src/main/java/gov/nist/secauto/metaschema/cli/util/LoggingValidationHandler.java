@@ -62,7 +62,7 @@ public final class LoggingValidationHandler {
     return logExceptions ? LOG_EXCPTION_INSTANCE : NO_LOG_EXCPTION_INSTANCE;
   }
 
-  protected LoggingValidationHandler(boolean logExceptions) {
+  private LoggingValidationHandler(boolean logExceptions) {
     this.logExceptions = logExceptions;
   }
 

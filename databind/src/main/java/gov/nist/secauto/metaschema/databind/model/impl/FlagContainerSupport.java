@@ -26,13 +26,6 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
-import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.model.IBoundInstanceFlag;
-import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
-import gov.nist.secauto.metaschema.databind.model.annotations.Ignore;
-
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,12 +38,20 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.IBoundInstanceFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.Ignore;
 
 public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanceFlag> {
   @NonNull
-  private final Map<String, IBoundInstanceFlag> flagInstances;
+  private final Map<QName, IBoundInstanceFlag> flagInstances;
   @Nullable
   private IBoundInstanceFlag jsonKeyFlag;
 
@@ -80,7 +81,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
     this.flagInstances = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(instances
         .peek(intermediate)
         .collect(Collectors.toMap(
-            IBoundInstanceFlag::getEffectiveName,
+            IBoundInstanceFlag::getXmlQName,
             Function.identity(),
             (v1, v2) -> v2,
             LinkedHashMap::new))));
@@ -136,7 +137,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
 
   @Override
   @NonNull
-  public Map<String, IBoundInstanceFlag> getFlagInstanceMap() {
+  public Map<QName, IBoundInstanceFlag> getFlagInstanceMap() {
     return flagInstances;
   }
 

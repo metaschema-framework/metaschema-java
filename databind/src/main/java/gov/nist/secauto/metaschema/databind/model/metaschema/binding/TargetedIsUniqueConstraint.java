@@ -88,7 +88,7 @@ public class TargetedIsUniqueConstraint implements ITargetedConstraintBase {
   private String _target;
 
   @BoundField(
-      formalName = "Formal Name",
+      formalName = "Formal NameTest",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;

@@ -59,7 +59,7 @@ class XmlFlagContainerSupport
     extends DefaultContainerFlagSupport<IFlagInstance> {
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  private static final XmlObjectParser<Pair<IModelDefinition, Map<String, IFlagInstance>>> XML_MODEL_PARSER
+  private static final XmlObjectParser<Pair<IModelDefinition, Map<QName, IFlagInstance>>> XML_MODEL_PARSER
       = new XmlObjectParser<>(ObjectUtils.notNull(
           Map.ofEntries(
               Map.entry(new QName(IModule.XML_NAMESPACE, "flag"),
@@ -68,9 +68,9 @@ class XmlFlagContainerSupport
                   XmlFlagContainerSupport::handleDefineFlag)))) {
 
         @Override
-        protected Handler<Pair<IModelDefinition, Map<String, IFlagInstance>>> identifyHandler(XmlCursor cursor,
+        protected Handler<Pair<IModelDefinition, Map<QName, IFlagInstance>>> identifyHandler(XmlCursor cursor,
             XmlObject obj) {
-          Handler<Pair<IModelDefinition, Map<String, IFlagInstance>>> retval;
+          Handler<Pair<IModelDefinition, Map<QName, IFlagInstance>>> retval;
           if (obj instanceof FlagReferenceType) {
             retval = XmlFlagContainerSupport::handleFlag;
           } else if (obj instanceof InlineFlagDefinitionType) {
@@ -84,25 +84,25 @@ class XmlFlagContainerSupport
 
   private static void handleFlag( // NOPMD false positive
       @NonNull XmlObject obj,
-      Pair<IModelDefinition, Map<String, IFlagInstance>> state) {
+      Pair<IModelDefinition, Map<QName, IFlagInstance>> state) {
     XmlFlagInstance flagInstance = new XmlFlagInstance(
         (FlagReferenceType) obj,
         ObjectUtils.notNull(state.getLeft()));
-    state.getRight().put(flagInstance.getEffectiveName(), flagInstance);
+    state.getRight().put(flagInstance.getXmlQName(), flagInstance);
   }
 
   private static void handleDefineFlag( // NOPMD false positive
       @NonNull XmlObject obj,
-      Pair<IModelDefinition, Map<String, IFlagInstance>> state) {
+      Pair<IModelDefinition, Map<QName, IFlagInstance>> state) {
     XmlInlineFlagDefinition flagInstance = new XmlInlineFlagDefinition(
         (InlineFlagDefinitionType) obj,
         ObjectUtils.notNull(state.getLeft()));
-    state.getRight().put(flagInstance.getEffectiveName(), flagInstance);
+    state.getRight().put(flagInstance.getXmlQName(), flagInstance);
   }
 
   protected XmlFlagContainerSupport(
-      @NonNull Map<String, IFlagInstance> flagInstanceMap,
-      @Nullable String jsonKeyFlagName) {
+      @NonNull Map<QName, IFlagInstance> flagInstanceMap,
+      @Nullable QName jsonKeyFlagName) {
     super(flagInstanceMap,
         jsonKeyFlagName == null ? null : ObjectUtils.requireNonNull(flagInstanceMap.get(jsonKeyFlagName)));
   }
@@ -122,7 +122,9 @@ class XmlFlagContainerSupport
         xmlField.getFlagList().size() > 0 || xmlField.getDefineFlagList().size() > 0
             ? parseLocalFlags(xmlField, container)
             : CollectionUtil.emptyMap(),
-        xmlField.isSetJsonKey() ? xmlField.getJsonKey().getFlagRef() : null);
+        xmlField.isSetJsonKey()
+            ? container.getContainingModule().toFlagQName(xmlField.getJsonKey().getFlagRef())
+            : null);
   }
 
   /**
@@ -140,7 +142,9 @@ class XmlFlagContainerSupport
         xmlField.getFlagList().size() > 0 || xmlField.getDefineFlagList().size() > 0
             ? parseLocalFlags(xmlField, container)
             : CollectionUtil.emptyMap(),
-        xmlField.isSetJsonKey() ? xmlField.getJsonKey().getFlagRef() : null);
+        xmlField.isSetJsonKey()
+            ? container.getContainingModule().toFlagQName(xmlField.getJsonKey().getFlagRef())
+            : null);
   }
 
   /**
@@ -176,7 +180,9 @@ class XmlFlagContainerSupport
         xmlAssembly.getFlagList().size() > 0 || xmlAssembly.getDefineFlagList().size() > 0
             ? parseLocalFlags(xmlAssembly, container)
             : CollectionUtil.emptyMap(),
-        xmlAssembly.isSetJsonKey() ? xmlAssembly.getJsonKey().getFlagRef() : null);
+        xmlAssembly.isSetJsonKey()
+            ? container.getContainingModule().toFlagQName(xmlAssembly.getJsonKey().getFlagRef())
+            : null);
   }
 
   /**
@@ -194,7 +200,9 @@ class XmlFlagContainerSupport
         xmlAssembly.getFlagList().size() > 0 || xmlAssembly.getDefineFlagList().size() > 0
             ? parseLocalFlags(xmlAssembly, container)
             : CollectionUtil.emptyMap(),
-        xmlAssembly.isSetJsonKey() ? xmlAssembly.getJsonKey().getFlagRef() : null);
+        xmlAssembly.isSetJsonKey()
+            ? container.getContainingModule().toFlagQName(xmlAssembly.getJsonKey().getFlagRef())
+            : null);
   }
 
   /**
@@ -216,11 +224,11 @@ class XmlFlagContainerSupport
   }
 
   @NonNull
-  private static Map<String, IFlagInstance> parseLocalFlags(
+  private static Map<QName, IFlagInstance> parseLocalFlags(
       @NonNull XmlObject xmlObject,
       @NonNull IModelDefinition parent) {
     // handle flags
-    Map<String, IFlagInstance> flagInstances = new LinkedHashMap<>(); // NOPMD - intentional
+    Map<QName, IFlagInstance> flagInstances = new LinkedHashMap<>(); // NOPMD - intentional
 
     XML_MODEL_PARSER.parse(xmlObject, Pair.of(parent, flagInstances));
 

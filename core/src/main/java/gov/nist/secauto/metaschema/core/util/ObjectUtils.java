@@ -50,7 +50,7 @@ public final class ObjectUtils {
    * @return the object
    */
   @NonNull
-  public static <T> T notNull(T obj) {
+  public static <T> T notNull(@Nullable T obj) {
     assert obj != null;
     return obj;
   }
@@ -67,7 +67,7 @@ public final class ObjectUtils {
    *           if {@code obj} is {@code null}
    */
   @NonNull
-  public static <T> T requireNonNull(T obj) {
+  public static <T> T requireNonNull(@Nullable T obj) {
     if (obj == null) {
       throw new NullPointerException(); // NOPMD
     }
@@ -89,7 +89,7 @@ public final class ObjectUtils {
    *           if {@code obj} is {@code null}
    */
   @NonNull
-  public static <T> T requireNonNull(T obj, String message) {
+  public static <T> T requireNonNull(@Nullable T obj, @NonNull String message) {
     if (obj == null) {
       throw new NullPointerException(message); // NOPMD
     }

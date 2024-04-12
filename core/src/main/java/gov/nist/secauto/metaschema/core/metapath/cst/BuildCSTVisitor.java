@@ -26,6 +26,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevforwardstepContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevreversestepContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AdditiveexprContext;
@@ -48,6 +49,8 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.Intersectexcep
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LetexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LiteralContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MultiplicativeexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NametestContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NodetestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NumericliteralContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.OrexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParenthesizedexprContext;
@@ -81,14 +84,19 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Multiplication;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.INameTestExpression;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.INodeTestExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.NameTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashOnlyPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Step;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -103,8 +111,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -119,11 +130,21 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 })
 public class BuildCSTVisitor
     extends AbstractCSTVisitorBase {
+  @NonNull
+  private final StaticContext context;
+
+  public BuildCSTVisitor(@NonNull StaticContext context) {
+    this.context = context;
+  }
 
   /* ============================================================
    * Expressions - https://www.w3.org/TR/xpath-31/#id-expressions
    * ============================================================
    */
+  @NonNull
+  protected StaticContext getContext() {
+    return context;
+  }
 
   @Override
   protected IExpression handleExpr(ExprContext ctx) {
@@ -170,9 +191,13 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleVarref(VarrefContext ctx) {
-    Name varName = (Name) ctx.varname().accept(this);
-    assert varName != null;
-    return new VariableReference(varName);
+    IEQName name = parseEQName(ctx.varname().eqname());
+    assert name != null;
+    return new VariableReference(name.toQName(getContext(), null));
+  }
+
+  private IEQName parseEQName(EqnameContext ctx) {
+    return IEQName.of(ctx.getChild(0).getText());
   }
 
   /* =================================================================================
@@ -229,13 +254,13 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleFunctioncall(FunctioncallContext ctx) {
-    EqnameContext nameCtx = ctx.eqname();
-    String name = nameCtx.getText();
+    IEQName eqname = parseEQName(ctx.eqname());
 
-    assert name != null;
-
-    return new FunctionCall(
-        name,
+    StaticContext staticContext = getContext();
+    QName qname = eqname.toQName(staticContext, staticContext::getDefaultFunctionNamespace);
+    assert qname != null;
+    return new StaticFunctionCall(
+        qname,
         ObjectUtils.notNull(parseArgumentList(ObjectUtils.notNull(ctx.argumentlist()))
             .collect(Collectors.toUnmodifiableList())));
   }
@@ -301,7 +326,7 @@ public class BuildCSTVisitor
     List<IExpression> predicates = numChildren > 1 ? parsePredicates(ctx, 1) : CollectionUtil.emptyList();
 
     if (!predicates.isEmpty()) {
-      retval = new Predicate(retval, predicates);
+      retval = new PredicateExpression(retval, predicates);
     }
     return retval;
   }
@@ -400,7 +425,7 @@ public class BuildCSTVisitor
     default:
       throw new UnsupportedOperationException(token.getText());
     }
-    return new Step(axis, visit(ctx.nametest()));
+    return new Step(axis, handleNameTest(ctx.nametest()));
   }
 
   @Override
@@ -423,7 +448,62 @@ public class BuildCSTVisitor
     default:
       throw new UnsupportedOperationException(token.getText());
     }
-    return new Step(axis, visit(ctx.nametest()));
+    return new Step(axis, handleNameTest(ctx.nametest()));
+  }
+
+  /* =======================================================
+   * Node Tests - https://www.w3.org/TR/xpath-31/#node-tests
+   * =======================================================
+   */
+
+  /* =======================================================
+   * Node Tests - https://www.w3.org/TR/xpath-31/#node-tests
+   * =======================================================
+   */
+
+  @Override
+  protected INodeTestExpression handleNodeTest(NodetestContext ctx) {
+    // TODO: implement kind test
+    NametestContext nameTestCtx = ctx.nametest();
+    return handleNameTest(nameTestCtx);
+  }
+
+  @Override
+  protected INameTestExpression handleNameTest(NametestContext ctx) {
+    StaticContext staticContext = getContext();
+    ParseTree testType = ObjectUtils.requireNonNull(ctx.getChild(0));
+    INameTestExpression retval;
+    if (testType instanceof EqnameContext) {
+      QName name = parseEQName(ctx.eqname()).toQName(staticContext, staticContext::getDefaultModelNamespace);
+      retval = new NameTest(name);
+    } else { // wildcard
+      retval = handleWildcard((WildcardContext) testType);
+    }
+    return retval;
+  }
+
+  @Override
+  protected Wildcard handleWildcard(WildcardContext ctx) {
+    Predicate<IDefinitionNodeItem<?, ?>> matcher = null;
+    TerminalNode node;
+    if ((node = ctx.STAR()) == null) {
+      if ((node = ctx.CS()) != null) {
+        // specified prefix, any local-name
+        String prefix = ctx.NCName().getText();
+        String namespace = getContext().lookupNamespaceForPrefix(prefix);
+        matcher = new Wildcard.MatchAnyLocalName(namespace);
+      } else if ((node = ctx.SC()) != null) {
+        // any prefix, specified local-name
+        matcher = new Wildcard.MatchAnyNamespace(ctx.NCName().getText());
+      } else {
+        // specified braced namespace, any local-name
+        String bracedUriLiteral = ctx.BracedURILiteral().getText();
+        String namespace = bracedUriLiteral.substring(2, bracedUriLiteral.length() - 1);
+        matcher = new Wildcard.MatchAnyLocalName(namespace);
+      }
+    } // star needs no matcher: any prefix, any local-name
+
+    return new Wildcard(matcher);
   }
 
   /* ======================================================================
@@ -439,27 +519,7 @@ public class BuildCSTVisitor
 
     List<IExpression> predicates = parsePredicates(predicateTree, 0);
 
-    return predicates.isEmpty() ? step : new Predicate(step, predicates);
-  }
-
-  /* =======================================================
-   * Node Tests - https://www.w3.org/TR/xpath-31/#node-tests
-   * =======================================================
-   */
-
-  @Override
-  protected IExpression handleEqname(EqnameContext ctx) {
-    ParseTree tree = ctx.getChild(0);
-    String name = ((TerminalNode) tree).getText();
-
-    assert name != null;
-
-    return new Name(name);
-  }
-
-  @Override
-  protected IExpression handleWildcard(WildcardContext ctx) {
-    return new Wildcard();
+    return predicates.isEmpty() ? step : new PredicateExpression(step, predicates);
   }
 
   /* ===========================================================
@@ -473,10 +533,10 @@ public class BuildCSTVisitor
 
     IExpression retval;
     if (numChildren == 1) {
-      retval = new ModelInstance(visit(ctx.getChild(0)));
+      retval = new ModelInstance(ctx.nametest().accept(this));
     } else {
       // this is an AT test
-      retval = new Flag(visit(ctx.getChild(1)));
+      retval = new Flag(ctx.nametest().accept(this));
     }
     return retval;
   }
@@ -762,7 +822,7 @@ public class BuildCSTVisitor
       VarnameContext varName = simpleForBinding.varname();
       ExprsingleContext exprSingle = simpleForBinding.exprsingle();
 
-      Name name = (Name) varName.accept(this);
+      QName name = parseEQName(varName.eqname()).toQName(getContext(), null);
       IExpression boundExpression = exprSingle.accept(this);
 
       assert name != null;
@@ -791,7 +851,7 @@ public class BuildCSTVisitor
     while (reverseListIterator.hasPrevious()) {
       SimpleletbindingContext simpleCtx = reverseListIterator.previous();
 
-      Name varName = (Name) simpleCtx.varname().accept(this);
+      QName varName = parseEQName(simpleCtx.varname().eqname()).toQName(getContext(), null);
       IExpression boundExpression = simpleCtx.exprsingle().accept(this);
 
       assert varName != null;
@@ -837,11 +897,11 @@ public class BuildCSTVisitor
     }
 
     int numVars = (ctx.getChildCount() - 2) / 5; // children - "satisfies expr" / ", $ varName in expr"
-    Map<String, IExpression> vars = new LinkedHashMap<>(); // NOPMD ordering needed
+    Map<QName, IExpression> vars = new LinkedHashMap<>(); // NOPMD ordering needed
     int offset = 0;
     for (; offset < numVars; offset++) {
       // $
-      String varName = ((Name) visit(ctx.varname(offset))).getValue();
+      QName varName = parseEQName(ctx.varname(offset).eqname()).toQName(getContext(), null);
       // in
       IExpression varExpr = visit(ctx.exprsingle(offset));
 
@@ -885,8 +945,10 @@ public class BuildCSTVisitor
 
       ArrowfunctionspecifierContext fcCtx = ctx.getChild(ArrowfunctionspecifierContext.class, offset);
       ArgumentlistContext argumentCtx = ctx.getChild(ArgumentlistContext.class, offset);
-      // QName name = toQName(
-      String name = fcCtx.eqname().getText();
+
+      IEQName eqname = parseEQName(fcCtx.eqname());
+      StaticContext staticContext = getContext();
+      QName name = eqname.toQName(staticContext, staticContext::getDefaultFunctionNamespace);
       assert name != null;
 
       try (Stream<IExpression> args = Stream.concat(
@@ -894,7 +956,7 @@ public class BuildCSTVisitor
           parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {
         assert args != null;
 
-        return new FunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));
+        return new StaticFunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));
       }
     });
   }

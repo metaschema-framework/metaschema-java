@@ -93,10 +93,10 @@ public abstract class AbstractInstanceModelNamed<
       @Nullable GroupAs groupAs) {
     super(binding, parent);
     this.properties = ModelSupport.parseProperties(properties);
-    this.groupAs = ModelSupport.groupAs(groupAs);
+    this.groupAs = ModelSupport.groupAs(groupAs, parent.getOwningDefinition().getXmlNamespace());
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) getContainingDefinition().getBoundNodeItem()
-            .getModelItemsByName(bindingInstance.getEffectiveName())
+            .getModelItemsByName(bindingInstance.getXmlQName())
             .get(position)));
   }
 

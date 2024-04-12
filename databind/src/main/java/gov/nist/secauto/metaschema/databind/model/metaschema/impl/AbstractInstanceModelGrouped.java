@@ -67,7 +67,7 @@ public abstract class AbstractInstanceModelGrouped<
     this.properties = ModelSupport.parseProperties(properties);
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) getContainingDefinition().getBoundNodeItem()
-            .getModelItemsByName(bindingInstance.getEffectiveName())
+            .getModelItemsByName(bindingInstance.getXmlQName())
             .get(position)));
   }
 

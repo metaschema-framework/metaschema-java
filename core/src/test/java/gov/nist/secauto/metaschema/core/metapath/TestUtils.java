@@ -105,7 +105,7 @@ public final class TestUtils {
       @Nullable ISequence<?> focus,
       List<ISequence<?>> arguments) {
 
-    DynamicContext context = dynamicContext == null ? StaticContext.instance().dynamicContext() : dynamicContext;
+    DynamicContext context = dynamicContext == null ? new DynamicContext() : dynamicContext;
     ISequence<?> focusSeqence = function.isFocusDepenent()
         ? ObjectUtils.requireNonNull(focus, "Function call requires a focus")
         : ISequence.empty();

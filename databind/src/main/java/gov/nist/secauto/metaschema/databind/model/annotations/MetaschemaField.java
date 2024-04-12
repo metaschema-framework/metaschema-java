@@ -71,7 +71,7 @@ public @interface MetaschemaField {
   String description() default ModelUtil.NO_STRING_VALUE;
 
   /**
-   * Name of the field.
+   * NameTest of the field.
    *
    * @return the name
    */

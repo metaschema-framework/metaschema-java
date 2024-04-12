@@ -26,6 +26,17 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
@@ -40,20 +51,10 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagReference;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineFlag;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
-
 public class FlagContainerSupport implements IContainerFlagSupport<IBindingInstanceFlag> {
   private static final Logger LOGGER = LogManager.getLogger(FlagContainerSupport.class);
   @NonNull
-  private final Map<String, IBindingInstanceFlag> flagInstances;
+  private final Map<QName, IBindingInstanceFlag> flagInstances;
 
   @SuppressWarnings("PMD.ShortMethodName")
   public static IContainerFlagSupport<IBindingInstanceFlag> of(
@@ -74,7 +75,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBindingInsta
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
       @NonNull IBindingDefinitionModel parent) {
     // create temporary collections to store the child binding objects
-    final Map<String, IBindingInstanceFlag> flagInstances = new LinkedHashMap<>();
+    final Map<QName, IBindingInstanceFlag> flagInstances = new LinkedHashMap<>();
 
     // create counter to track child positions
     int flagReferencePosition = 0;
@@ -104,7 +105,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBindingInsta
       }
 
       String key = flag.getEffectiveName();
-      flagInstances.merge(flag.getEffectiveName(), flag, (v1, v2) -> {
+      flagInstances.merge(flag.getXmlQName(), flag, (v1, v2) -> {
         if (LOGGER.isErrorEnabled()) {
           IModelDefinition owningDefinition = v1.getContainingDefinition();
           IModule module = owningDefinition.getContainingModule();
@@ -126,7 +127,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBindingInsta
   }
 
   @Override
-  public Map<String, IBindingInstanceFlag> getFlagInstanceMap() {
+  public Map<QName, IBindingInstanceFlag> getFlagInstanceMap() {
     return flagInstances;
   }
 

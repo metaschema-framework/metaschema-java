@@ -66,7 +66,7 @@ public class AssemblyReference {
   private String _ref;
 
   @BoundFlag(
-      formalName = "Assembly Reference Binary Name",
+      formalName = "Assembly Reference Binary NameTest",
       name = "index",
       typeAdapter = PositiveIntegerAdapter.class)
   private BigInteger _index;
@@ -94,7 +94,7 @@ public class AssemblyReference {
   private String _maxOccurs;
 
   @BoundField(
-      formalName = "Formal Name",
+      formalName = "Formal NameTest",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;
@@ -115,7 +115,7 @@ public class AssemblyReference {
   private List<Property> _props;
 
   @BoundField(
-      formalName = "Use Name",
+      formalName = "Use NameTest",
       description = "Allows the name of the definition to be overridden.",
       useName = "use-name")
   private UseName _useName;

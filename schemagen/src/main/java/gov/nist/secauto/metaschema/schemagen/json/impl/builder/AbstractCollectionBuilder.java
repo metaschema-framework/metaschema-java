@@ -145,7 +145,9 @@ public abstract class AbstractCollectionBuilder<T extends AbstractCollectionBuil
       String jsonKeyFlagName = instance.getJsonKeyFlagName();
       IFlagInstance jsonKey = null;
       if (jsonKeyFlagName != null) {
-        jsonKey = instance.getDefinition().getFlagInstanceByName(jsonKeyFlagName);
+        IModelDefinition definition = instance.getDefinition();
+        jsonKey = definition.getFlagInstanceByName(
+            definition.getContainingModule().toFlagQName(jsonKeyFlagName));
 
         if (jsonKey == null) {
           throw new IllegalStateException(String.format("No JSON key flag named '%s.", jsonKeyFlagName));

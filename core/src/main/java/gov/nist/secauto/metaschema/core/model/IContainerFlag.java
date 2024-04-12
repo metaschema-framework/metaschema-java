@@ -28,6 +28,8 @@ package gov.nist.secauto.metaschema.core.model;
 
 import java.util.Collection;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -52,7 +54,7 @@ public interface IContainerFlag extends IContainer {
    *         matching the specified name
    */
   @Nullable
-  IFlagInstance getFlagInstanceByName(@NonNull String name);
+  IFlagInstance getFlagInstanceByName(@NonNull QName name);
 
   /**
    * Retrieves the flag instances for all flags defined on the containing

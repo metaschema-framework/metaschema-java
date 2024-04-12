@@ -26,13 +26,14 @@
 
 package gov.nist.secauto.metaschema.databind.model;
 
-import gov.nist.secauto.metaschema.core.model.IContainerModelAssembly;
-
 import java.util.Collection;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import gov.nist.secauto.metaschema.core.model.IContainerModelAssembly;
 
 public interface IBoundContainerModelAssembly extends IContainerModelAssembly {
   @Override
@@ -49,7 +50,7 @@ public interface IBoundContainerModelAssembly extends IContainerModelAssembly {
 
   @Override
   @Nullable
-  IBoundInstanceModelNamed getNamedModelInstanceByName(String name);
+  IBoundInstanceModelNamed getNamedModelInstanceByName(QName name);
 
   @Override
   @NonNull
@@ -57,7 +58,7 @@ public interface IBoundContainerModelAssembly extends IContainerModelAssembly {
 
   @Override
   @Nullable
-  IBoundInstanceModelField getFieldInstanceByName(String name);
+  IBoundInstanceModelField getFieldInstanceByName(QName name);
 
   @Override
   @NonNull
@@ -65,7 +66,7 @@ public interface IBoundContainerModelAssembly extends IContainerModelAssembly {
 
   @Override
   @Nullable
-  IBoundInstanceModelAssembly getAssemblyInstanceByName(String name);
+  IBoundInstanceModelAssembly getAssemblyInstanceByName(QName name);
 
   @Override
   IBoundInstanceModelChoiceGroup getChoiceGroupInstanceByName(String name);

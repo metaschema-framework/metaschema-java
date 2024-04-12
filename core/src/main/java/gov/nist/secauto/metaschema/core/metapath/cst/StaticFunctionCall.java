@@ -38,11 +38,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class FunctionCall implements IExpression {
+public class StaticFunctionCall implements IExpression {
   @NonNull
-  private final String name;
+  private final QName name;
   @NonNull
   private final List<IExpression> arguments;
   private IFunction function;
@@ -55,7 +57,7 @@ public class FunctionCall implements IExpression {
    * @param arguments
    *          the expressions used to provide arguments to the function call
    */
-  public FunctionCall(@NonNull String name, @NonNull List<IExpression> arguments) {
+  public StaticFunctionCall(@NonNull QName name, @NonNull List<IExpression> arguments) {
     this.name = Objects.requireNonNull(name, "name");
     this.arguments = Objects.requireNonNull(arguments, "arguments");
   }

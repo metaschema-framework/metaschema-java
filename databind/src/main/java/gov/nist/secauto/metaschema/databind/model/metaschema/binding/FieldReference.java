@@ -68,7 +68,7 @@ public class FieldReference {
   private String _ref;
 
   @BoundFlag(
-      formalName = "Field Reference Binary Name",
+      formalName = "Field Reference Binary NameTest",
       name = "index",
       typeAdapter = PositiveIntegerAdapter.class)
   private BigInteger _index;
@@ -115,7 +115,7 @@ public class FieldReference {
   private String _inXml;
 
   @BoundField(
-      formalName = "Formal Name",
+      formalName = "Formal NameTest",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;
@@ -136,7 +136,7 @@ public class FieldReference {
   private List<Property> _props;
 
   @BoundField(
-      formalName = "Use Name",
+      formalName = "Use NameTest",
       description = "Allows the name of the definition to be overridden.",
       useName = "use-name")
   private UseName _useName;

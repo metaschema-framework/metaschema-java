@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -60,6 +62,14 @@ public interface IDocumentNodeItem extends INodeItem, IFeatureNoDataItem {
   }
 
   /**
+   * Get the default model namespace for the document.
+   *
+   * @return the URI
+   */
+  @NonNull
+  URI getDefaultModelNamespace();
+
+  /**
    * Get the URI associated with this document.
    *
    * @return the document's URI or {@code null} if unavailable
@@ -79,7 +89,7 @@ public interface IDocumentNodeItem extends INodeItem, IFeatureNoDataItem {
    *          the root item's name to retrieve
    * @return a list of matching root items
    */
-  default List<? extends IRootAssemblyNodeItem> getRootNodeItemByName(@NonNull String name) {
+  default List<? extends IRootAssemblyNodeItem> getRootNodeItemByName(@NonNull QName name) {
     List<? extends IModelNodeItem<?, ?>> result = getModelItemsByName(name);
     return result.stream().flatMap(item -> {
       IRootAssemblyNodeItem retval = null;

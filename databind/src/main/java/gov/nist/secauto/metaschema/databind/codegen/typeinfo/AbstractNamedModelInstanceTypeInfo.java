@@ -124,7 +124,7 @@ abstract class AbstractNamedModelInstanceTypeInfo<INSTANCE extends INamedModelIn
       // requires a group-as
       annotation.addMember("groupAs", "$L", generateGroupAsAnnotation().build());
     }
-
+    
     return CollectionUtil.emptySet();
   }
 

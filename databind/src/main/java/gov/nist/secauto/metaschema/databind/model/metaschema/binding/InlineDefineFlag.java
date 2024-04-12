@@ -60,14 +60,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     moduleClass = MetaschemaModelModule.class)
 public class InlineDefineFlag {
   @BoundFlag(
-      formalName = "Inline Flag Name",
+      formalName = "Inline Flag NameTest",
       name = "name",
       required = true,
       typeAdapter = TokenAdapter.class)
   private String _name;
 
   @BoundFlag(
-      formalName = "Inline Flag Binary Name",
+      formalName = "Inline Flag Binary NameTest",
       name = "index",
       typeAdapter = PositiveIntegerAdapter.class)
   private BigInteger _index;
@@ -119,7 +119,7 @@ public class InlineDefineFlag {
   private String _required;
 
   @BoundField(
-      formalName = "Formal Name",
+      formalName = "Formal NameTest",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;

@@ -91,7 +91,7 @@ public class METASCHEMA {
   private String _abstract;
 
   @BoundField(
-      formalName = "Module Name",
+      formalName = "Module NameTest",
       description = "The name of the information model represented by this Metaschema definition.",
       useName = "schema-name",
       minOccurs = 1,
@@ -105,7 +105,7 @@ public class METASCHEMA {
   private String _schemaVersion;
 
   @BoundField(
-      formalName = "Module Short Name",
+      formalName = "Module Short NameTest",
       description = "A short (code) name to be used for the Metaschema module. This name may be used as a constituent of names assigned to derived artifacts, such as schemas and conversion utilities.",
       useName = "short-name",
       minOccurs = 1,
@@ -266,14 +266,14 @@ public class METASCHEMA {
       moduleClass = MetaschemaModelModule.class)
   public static class DefineField {
     @BoundFlag(
-        formalName = "Global Field Name",
+        formalName = "Global Field NameTest",
         name = "name",
         required = true,
         typeAdapter = TokenAdapter.class)
     private String _name;
 
     @BoundFlag(
-        formalName = "Global Field Binary Name",
+        formalName = "Global Field Binary NameTest",
         name = "index",
         typeAdapter = PositiveIntegerAdapter.class)
     private BigInteger _index;
@@ -330,7 +330,7 @@ public class METASCHEMA {
     private String _default;
 
     @BoundField(
-        formalName = "Formal Name",
+        formalName = "Formal NameTest",
         description = "A formal name for the data construct, to be presented in documentation.",
         useName = "formal-name")
     private String _formalName;
@@ -350,7 +350,7 @@ public class METASCHEMA {
     private List<Property> _props;
 
     @BoundField(
-        formalName = "Use Name",
+        formalName = "Use NameTest",
         description = "Allows the name of the definition to be overridden.",
         useName = "use-name")
     private UseName _useName;
@@ -362,13 +362,13 @@ public class METASCHEMA {
     private JsonKey _jsonKey;
 
     @BoundField(
-        formalName = "Field Value JSON Property Name",
+        formalName = "Field Value JSON Property NameTest",
         useName = "json-value-key",
         typeAdapter = TokenAdapter.class)
     private String _jsonValueKey;
 
     @BoundAssembly(
-        formalName = "Flag Used as the Field Value's JSON Property Name",
+        formalName = "Flag Used as the Field Value's JSON Property NameTest",
         useName = "json-value-key-flag")
     private JsonValueKeyFlag _jsonValueKeyFlag;
 
@@ -603,14 +603,14 @@ public class METASCHEMA {
       moduleClass = MetaschemaModelModule.class)
   public static class DefineFlag {
     @BoundFlag(
-        formalName = "Global Flag Name",
+        formalName = "Global Flag NameTest",
         name = "name",
         required = true,
         typeAdapter = TokenAdapter.class)
     private String _name;
 
     @BoundFlag(
-        formalName = "Global Flag Binary Name",
+        formalName = "Global Flag Binary NameTest",
         name = "index",
         typeAdapter = PositiveIntegerAdapter.class)
     private BigInteger _index;
@@ -666,7 +666,7 @@ public class METASCHEMA {
     private String _default;
 
     @BoundField(
-        formalName = "Formal Name",
+        formalName = "Formal NameTest",
         description = "A formal name for the data construct, to be presented in documentation.",
         useName = "formal-name")
     private String _formalName;
@@ -686,7 +686,7 @@ public class METASCHEMA {
     private List<Property> _props;
 
     @BoundField(
-        formalName = "Use Name",
+        formalName = "Use NameTest",
         description = "Allows the name of the definition to be overridden.",
         useName = "use-name")
     private UseName _useName;
@@ -923,14 +923,14 @@ public class METASCHEMA {
       moduleClass = MetaschemaModelModule.class)
   public static class DefineAssembly {
     @BoundFlag(
-        formalName = "Global Assembly Name",
+        formalName = "Global Assembly NameTest",
         name = "name",
         required = true,
         typeAdapter = TokenAdapter.class)
     private String _name;
 
     @BoundFlag(
-        formalName = "Global Assembly Binary Name",
+        formalName = "Global Assembly Binary NameTest",
         name = "index",
         typeAdapter = PositiveIntegerAdapter.class)
     private BigInteger _index;
@@ -954,7 +954,7 @@ public class METASCHEMA {
     private String _deprecated;
 
     @BoundField(
-        formalName = "Formal Name",
+        formalName = "Formal NameTest",
         description = "A formal name for the data construct, to be presented in documentation.",
         useName = "formal-name")
     private String _formalName;
@@ -974,13 +974,13 @@ public class METASCHEMA {
     private List<Property> _props;
 
     @BoundField(
-        formalName = "Use Name",
+        formalName = "Use NameTest",
         description = "Allows the name of the definition to be overridden.",
         useName = "use-name")
     private UseName _useName;
 
     @BoundField(
-        formalName = "Root Name",
+        formalName = "Root NameTest",
         description = "Provides a root name, for when the definition is used as the root of a node hierarchy.",
         useName = "root-name",
         minOccurs = 1)
@@ -1209,7 +1209,7 @@ public class METASCHEMA {
      * hierarchy.
      */
     @MetaschemaField(
-        formalName = "Root Name",
+        formalName = "Root NameTest",
         description = "Provides a root name, for when the definition is used as the root of a node hierarchy.",
         name = "root-name",
         moduleClass = MetaschemaModelModule.class)

@@ -26,31 +26,12 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import javax.xml.namespace.QName;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 public interface IFlagInstance extends IFlag, IValuedInstance, IInstanceAbsolute {
 
   boolean DEFAULT_FLAG_REQUIRED = false;
 
   @Override
   IContainerFlag getParentContainer();
-
-  @Override
-  default String getXmlNamespace() {
-    // by default, flags do not have namespaces
-    return null;
-  }
-
-  @NonNull
-  @Override
-  default QName getXmlQName() {
-    // flags always have a qname
-    return ObjectUtils.requireNonNull(IValuedInstance.super.getXmlQName());
-  }
 
   @Override
   IFlagDefinition getDefinition();

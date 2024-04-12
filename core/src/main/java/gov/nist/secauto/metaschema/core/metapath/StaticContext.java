@@ -66,6 +66,10 @@ public final class StaticContext {
   private final URI baseUri;
   @NonNull
   private final Map<String, URI> knownNamespaces;
+  @Nullable
+  private final URI defaultModelNamespace;
+  @Nullable
+  private final URI defaultFunctionNamespace;
 
   /**
    * Get the mapping of prefix to namespace URI for all well-known namespaces
@@ -102,11 +106,11 @@ public final class StaticContext {
     return new Builder();
   }
 
-  private StaticContext(
-      @Nullable URI baseUri,
-      @NonNull Map<String, URI> knownNamespaces) {
-    this.baseUri = baseUri;
-    this.knownNamespaces = knownNamespaces;
+  private StaticContext(Builder builder) {
+    this.baseUri = builder.baseUri;
+    this.knownNamespaces = CollectionUtil.unmodifiableMap(Map.copyOf(builder.namespaces));
+    this.defaultModelNamespace = builder.defaultModelNamespace;
+    this.defaultFunctionNamespace = builder.defaultFunctionNamespace;
   }
 
   /**
@@ -167,22 +171,49 @@ public final class StaticContext {
   }
 
   /**
-   * Generate a new dynamic context.
+   * Get the default namespace for assembly, field, or flag references that have
+   * no namespace prefix.
    *
-   * @return the generated dynamic context
+   * @return the namespace if defined or {@code null} otherwise
    */
+  @Nullable
+  public URI getDefaultModelNamespace() {
+    return defaultModelNamespace;
+  }
+
+  /**
+   * Get the default namespace for function references that have no namespace
+   * prefix.
+   *
+   * @return the namespace if defined or {@code null} otherwise
+   */
+  @Nullable
+  public URI getDefaultFunctionNamespace() {
+    return defaultFunctionNamespace;
+  }
+
   @NonNull
-  public DynamicContext dynamicContext() {
-    return new DynamicContext(this);
+  public Builder buildFrom() {
+    Builder builder = new Builder();
+    builder.baseUri = this.baseUri;
+    builder.namespaces.putAll(this.knownNamespaces);
+    builder.defaultModelNamespace = this.defaultModelNamespace;
+    builder.defaultFunctionNamespace = this.defaultFunctionNamespace;
+    return builder;
   }
 
   /**
    * A builder used to generate the static context.
    */
   public static final class Builder {
+    @Nullable
     private URI baseUri;
     @NonNull
     private final Map<String, URI> namespaces = new ConcurrentHashMap<>();
+    @Nullable
+    private URI defaultModelNamespace;
+    @Nullable
+    private URI defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS;
 
     private Builder() {
       namespaces.put(
@@ -241,15 +272,41 @@ public final class StaticContext {
     }
 
     /**
+     * Defines the default namespace to use for assembly, field, or flag references
+     * that have no namespace prefix.
+     *
+     * @param uri
+     *          the namespace URI
+     * @return {@link StaticContext#getDefaultModelNamespace()}
+     */
+    @NonNull
+    public Builder defaultModelNamespace(@NonNull URI uri) {
+      this.defaultModelNamespace = uri;
+      return this;
+    }
+
+    /**
+     * Defines the default namespace to use for assembly, field, or flag references
+     * that have no namespace prefix.
+     *
+     * @param uri
+     *          the namespace URI
+     * @return {@link StaticContext#getDefaultFunctionNamespace()}
+     */
+    @NonNull
+    public Builder defaultFunctionNamespace(@NonNull URI uri) {
+      this.defaultFunctionNamespace = uri;
+      return this;
+    }
+
+    /**
      * Construct a new static context using the information provided to the builder.
      *
      * @return the new static context
      */
     @NonNull
     public StaticContext build() {
-      return new StaticContext(
-          baseUri,
-          CollectionUtil.unmodifiableMap(namespaces));
+      return new StaticContext(this);
     }
   }
 }

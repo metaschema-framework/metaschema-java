@@ -32,7 +32,7 @@ import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public interface IDefinition extends IModelElement, INamed, IAttributable, IFeatureValueConstrained {
+public interface IDefinition extends INamedModelElement, IAttributable, IFeatureValueConstrained {
 
   @NonNull
   ModuleScopeEnum DEFAULT_DEFINITION_MODEL_SCOPE = ModuleScopeEnum.INHERITED;

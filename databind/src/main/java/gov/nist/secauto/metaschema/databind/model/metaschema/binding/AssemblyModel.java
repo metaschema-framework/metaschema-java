@@ -242,7 +242,7 @@ public class AssemblyModel {
       private String _ref;
 
       @BoundFlag(
-          formalName = "Assembly Reference Binary Name",
+          formalName = "Assembly Reference Binary NameTest",
           name = "index",
           typeAdapter = PositiveIntegerAdapter.class)
       private BigInteger _index;
@@ -254,7 +254,7 @@ public class AssemblyModel {
       private String _deprecated;
 
       @BoundField(
-          formalName = "Formal Name",
+          formalName = "Formal NameTest",
           description = "A formal name for the data construct, to be presented in documentation.",
           useName = "formal-name")
       private String _formalName;
@@ -275,7 +275,7 @@ public class AssemblyModel {
       private List<Property> _props;
 
       @BoundField(
-          formalName = "Use Name",
+          formalName = "Use NameTest",
           description = "Allows the name of the definition to be overridden.",
           useName = "use-name")
       private UseName _useName;
@@ -404,14 +404,14 @@ public class AssemblyModel {
         moduleClass = MetaschemaModelModule.class)
     public static class DefineAssembly {
       @BoundFlag(
-          formalName = "Inline Assembly Name",
+          formalName = "Inline Assembly NameTest",
           name = "name",
           required = true,
           typeAdapter = TokenAdapter.class)
       private String _name;
 
       @BoundFlag(
-          formalName = "Inline Assembly Binary Name",
+          formalName = "Inline Assembly Binary NameTest",
           name = "index",
           typeAdapter = PositiveIntegerAdapter.class)
       private BigInteger _index;
@@ -423,7 +423,7 @@ public class AssemblyModel {
       private String _deprecated;
 
       @BoundField(
-          formalName = "Formal Name",
+          formalName = "Formal NameTest",
           description = "A formal name for the data construct, to be presented in documentation.",
           useName = "formal-name")
       private String _formalName;
@@ -653,7 +653,7 @@ public class AssemblyModel {
       private String _ref;
 
       @BoundFlag(
-          formalName = "Field Reference Binary Name",
+          formalName = "Field Reference Binary NameTest",
           name = "index",
           typeAdapter = PositiveIntegerAdapter.class)
       private BigInteger _index;
@@ -684,7 +684,7 @@ public class AssemblyModel {
       private String _inXml;
 
       @BoundField(
-          formalName = "Formal Name",
+          formalName = "Formal NameTest",
           description = "A formal name for the data construct, to be presented in documentation.",
           useName = "formal-name")
       private String _formalName;
@@ -705,7 +705,7 @@ public class AssemblyModel {
       private List<Property> _props;
 
       @BoundField(
-          formalName = "Use Name",
+          formalName = "Use NameTest",
           description = "Allows the name of the definition to be overridden.",
           useName = "use-name")
       private UseName _useName;
@@ -850,14 +850,14 @@ public class AssemblyModel {
         moduleClass = MetaschemaModelModule.class)
     public static class DefineField {
       @BoundFlag(
-          formalName = "Inline Field Name",
+          formalName = "Inline Field NameTest",
           name = "name",
           required = true,
           typeAdapter = TokenAdapter.class)
       private String _name;
 
       @BoundFlag(
-          formalName = "Inline Field Binary Name",
+          formalName = "Inline Field Binary NameTest",
           name = "index",
           typeAdapter = PositiveIntegerAdapter.class)
       private BigInteger _index;
@@ -903,7 +903,7 @@ public class AssemblyModel {
       private String _default;
 
       @BoundField(
-          formalName = "Formal Name",
+          formalName = "Formal NameTest",
           description = "A formal name for the data construct, to be presented in documentation.",
           useName = "formal-name")
       private String _formalName;
@@ -930,13 +930,13 @@ public class AssemblyModel {
       private String _discriminatorValue;
 
       @BoundField(
-          formalName = "Field Value JSON Property Name",
+          formalName = "Field Value JSON Property NameTest",
           useName = "json-value-key",
           typeAdapter = TokenAdapter.class)
       private String _jsonValueKey;
 
       @BoundAssembly(
-          formalName = "Flag Used as the Field Value's JSON Property Name",
+          formalName = "Flag Used as the Field Value's JSON Property NameTest",
           useName = "json-value-key-flag")
       private JsonValueKeyFlag _jsonValueKeyFlag;
 

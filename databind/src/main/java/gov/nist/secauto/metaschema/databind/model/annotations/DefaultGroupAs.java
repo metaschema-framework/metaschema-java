@@ -30,6 +30,8 @@ import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
 
+import java.util.function.Supplier;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -41,7 +43,9 @@ class DefaultGroupAs implements IGroupAs {
   @NonNull
   private final GroupAs annotation;
 
-  DefaultGroupAs(@NonNull GroupAs annotation) {
+  DefaultGroupAs(
+      @NonNull GroupAs annotation,
+      @NonNull Supplier<String> defaultSupplier) {
     this.annotation = annotation;
     {
       String value = ModelUtil.resolveNoneOrDefault(annotation.name(), null);
@@ -53,7 +57,9 @@ class DefaultGroupAs implements IGroupAs {
       }
       this.name = value;
     }
-    this.namespace = ModelUtil.resolveOptionalNamespace(annotation.namespace());
+    this.namespace = ModelUtil.resolveOptionalNamespace(
+        annotation.namespace(),
+        defaultSupplier);
   }
 
   @Override

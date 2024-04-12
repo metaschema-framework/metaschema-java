@@ -26,45 +26,61 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 
-import java.util.Collections;
-import java.util.List;
+import java.net.URI;
+import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * The CST node for a Metapath
- * <a href="https://www.w3.org/TR/xpath-31/#doc-xpath31-Wildcard">wildcard name
- * test</a>.
+ * Represents an
+ * <a href="https://www.w3.org/TR/xpath-31/#dt-expanded-qname">extended
+ * qualified name</a>.
  */
-public class Wildcard implements IExpression {
-  @SuppressWarnings("null")
-  @Override
-  public List<? extends IExpression> getChildren() {
-    return Collections.emptyList();
+public interface IEQName {
+  Pattern NCNAME = Pattern.compile(String.format("^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$"));
+
+  static boolean isValidNCName(@NonNull String name) {
+    Matcher matcher = NCNAME.matcher(name);
+    return matcher.matches();
   }
 
-  @Override
-  public Class<INodeItem> getBaseResultType() {
-    return INodeItem.class;
+  @NonNull
+  static String checkValidNCName(@NonNull String name) {
+    if (!isValidNCName(name)) {
+      throw new IllegalArgumentException(String.format("The name '%s' is not a valid NCName.", name));
+    }
+    return name;
   }
 
-  @Override
-  public Class<INodeItem> getStaticResultType() {
-    return getBaseResultType();
+  @NonNull
+  static IEQName of(@NonNull String prefix, @NonNull String localName) {
+    return new LexicalQName(prefix, localName);
   }
 
-  @Override
-  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitWildcard(this, context);
+  @NonNull
+  static IEQName of(@NonNull URI namespace, @NonNull String localName) {
+    return new UriQualifiedName(namespace, localName);
   }
 
-  @Override
-  public ISequence<? extends INodeItem> accept(
-      DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(focus.asStream()
-        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item)));
+  @NonNull
+  static IEQName of(@NonNull String name) {
+    return name.startsWith("Q{")
+        ? new UriQualifiedName(name)
+        : new LexicalQName(name);
   }
+
+  @NonNull
+  String getLocalName();
+
+  boolean isLexical();
+
+  @NonNull
+  QName toQName(@NonNull StaticContext staticContext, @Nullable Supplier<URI> defaultNamespaceSupplier);
 }
