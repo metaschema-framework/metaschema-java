@@ -53,6 +53,7 @@ import java.util.function.Predicate;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 //TODO: implement getProperties()
@@ -113,6 +114,7 @@ public class DefinitionField
    * @param bindingContext
    *          the Metaschema binding context managing this class
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields, except JSON key")
   public DefinitionField(
       @NonNull Class<?> clazz,
       @NonNull IBindingContext bindingContext) {

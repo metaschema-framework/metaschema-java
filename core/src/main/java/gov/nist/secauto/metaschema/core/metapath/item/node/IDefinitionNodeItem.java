@@ -28,6 +28,9 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.net.URI;
 
 import javax.xml.namespace.QName;
 
@@ -45,6 +48,11 @@ public interface IDefinitionNodeItem<D extends IDefinition, I extends INamedInst
     return instance == null
         ? getDefinition().getXmlQName()
         : instance.getXmlQName();
+  }
+
+  @Override
+  default URI getNamespace() {
+    return ObjectUtils.notNull(URI.create(getName().getNamespaceURI()));
   }
 
   /**

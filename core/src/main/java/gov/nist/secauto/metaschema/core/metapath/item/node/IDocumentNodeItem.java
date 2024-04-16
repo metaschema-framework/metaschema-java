@@ -62,14 +62,6 @@ public interface IDocumentNodeItem extends INodeItem, IFeatureNoDataItem {
   }
 
   /**
-   * Get the default model namespace for the document.
-   *
-   * @return the URI
-   */
-  @NonNull
-  URI getDefaultModelNamespace();
-
-  /**
    * Get the URI associated with this document.
    *
    * @return the document's URI or {@code null} if unavailable

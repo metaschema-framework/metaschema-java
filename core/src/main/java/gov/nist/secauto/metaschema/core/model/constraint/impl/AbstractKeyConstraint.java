@@ -39,8 +39,9 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public abstract class AbstractKeyConstraint
+abstract class AbstractKeyConstraint
     extends AbstractConstraint
     implements IKeyConstraint {
   @NonNull
@@ -70,6 +71,7 @@ public abstract class AbstractKeyConstraint
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
+  @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
   protected AbstractKeyConstraint(
       @Nullable String id,
       @Nullable String formalName,

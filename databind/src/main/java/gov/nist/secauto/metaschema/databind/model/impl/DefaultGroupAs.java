@@ -24,18 +24,21 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.databind.model.annotations;
+package gov.nist.secauto.metaschema.databind.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 
 import java.util.function.Supplier;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-class DefaultGroupAs implements IGroupAs {
+public class DefaultGroupAs implements IGroupAs {
   @NonNull
   private final String name;
   @Nullable
@@ -43,7 +46,8 @@ class DefaultGroupAs implements IGroupAs {
   @NonNull
   private final GroupAs annotation;
 
-  DefaultGroupAs(
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
+  public DefaultGroupAs(
       @NonNull GroupAs annotation,
       @NonNull Supplier<String> defaultSupplier) {
     this.annotation = annotation;

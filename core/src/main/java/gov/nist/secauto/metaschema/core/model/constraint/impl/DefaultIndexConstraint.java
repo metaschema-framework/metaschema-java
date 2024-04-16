@@ -39,6 +39,7 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public final class DefaultIndexConstraint
     extends AbstractKeyConstraint
@@ -72,6 +73,7 @@ public final class DefaultIndexConstraint
    *          optional remarks describing the intent of the constraint
    */
   @SuppressWarnings("PMD.ExcessiveParameterList")
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public DefaultIndexConstraint(
       @Nullable String id,
       @Nullable String formalName,

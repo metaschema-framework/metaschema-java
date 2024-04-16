@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 public class BindingModule
@@ -95,6 +96,7 @@ public class BindingModule
    *           if a processing error occurs
    */
   @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public BindingModule( // NOPMD - unavoidable
       @NonNull URI resource,
       @NonNull IBoundDefinitionModelAssembly rootDefinition,

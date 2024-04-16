@@ -54,14 +54,14 @@ class DocumentNodeItemImpl
     this.model = ObjectUtils.notNull(Lazy.lazy(generator.newDataModelSupplier(this.root)));
   }
 
-  @Override
-  public URI getDefaultModelNamespace() {
-    return ObjectUtils.notNull(URI.create(getRootAssemblyNodeItem().getName().getNamespaceURI()));
-  }
-
   @NonNull
   public IRootAssemblyNodeItem getRootAssemblyNodeItem() {
     return root;
+  }
+
+  @Override
+  public URI getNamespace() {
+    return ObjectUtils.notNull(URI.create(getRootAssemblyNodeItem().getName().getNamespaceURI()));
   }
 
   @Override

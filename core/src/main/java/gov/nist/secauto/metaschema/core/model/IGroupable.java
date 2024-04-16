@@ -100,7 +100,7 @@ public interface IGroupable extends IInstanceAbsolute, IKeyed {
   // REFACTOR: consider pushing down the call for getGroupAsXmlNamespace
   @NonNull
   default String getEffectiveGroupAsNamespace() {
-    String namespace = getGroupAsXmlNamespace();
+    @Nullable String namespace = getGroupAsXmlNamespace();
     if (namespace == null) {
       namespace = ObjectUtils.notNull(getContainingModule().getXmlNamespace().toASCIIString());
     }

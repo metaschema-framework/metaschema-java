@@ -47,6 +47,7 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public abstract class AbstractCollectionBuilder<T extends AbstractCollectionBuilder<T>>
     extends AbstractBuilder<T>
@@ -139,6 +140,7 @@ public abstract class AbstractCollectionBuilder<T extends AbstractCollectionBuil
     @NonNull
     private final IKey key;
 
+    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
     protected Type(@NonNull T instance) {
       this.namedModelInstance = instance;
 

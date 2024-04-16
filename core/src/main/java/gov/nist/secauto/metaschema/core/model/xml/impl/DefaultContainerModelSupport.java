@@ -43,6 +43,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Provides model container support.
@@ -109,7 +110,8 @@ public class DefaultContainerModelSupport<
    *          the Java type for assembly instances
    */
   @SuppressWarnings({ "PMD.UseConcurrentHashMap" })
-  public DefaultContainerModelSupport(
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
+  protected DefaultContainerModelSupport(
       @NonNull Collection<MI> instances,
       @NonNull Class<NMI> namedModelClass,
       @NonNull Class<FI> fieldClass,

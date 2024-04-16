@@ -38,7 +38,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class UriQualifiedName implements IEQName {
+public final class UriQualifiedName implements IEQName {
   private static final Pattern URI_QUALIFIED_NAME = Pattern.compile("^Q\\{([^{}]*)\\}(.+)$");
 
   @NonNull

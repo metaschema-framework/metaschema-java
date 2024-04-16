@@ -491,6 +491,9 @@ public class BuildCSTVisitor
         // specified prefix, any local-name
         String prefix = ctx.NCName().getText();
         String namespace = getContext().lookupNamespaceForPrefix(prefix);
+        if (namespace == null) {
+          throw new IllegalStateException(String.format("Prefix '%s' did not map to a namespace.", prefix));
+        }
         matcher = new Wildcard.MatchAnyLocalName(namespace);
       } else if ((node = ctx.SC()) != null) {
         // any prefix, specified local-name

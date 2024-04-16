@@ -121,6 +121,14 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   URI getBaseUri();
 
   /**
+   * Get the default namespace for the node.
+   *
+   * @return the URI
+   */
+  @NonNull
+  URI getNamespace();
+
+  /**
    * Get the path for this node item as a Metapath.
    *
    * @return the Metapath

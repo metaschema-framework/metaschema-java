@@ -185,8 +185,9 @@ public class InstanceModelFieldInline
     JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();
     String name = obj == null ? null : obj.getFlagRef();
     String namespace = getContainingModule().getXmlNamespace().toASCIIString();
-    return name == null ? null : ObjectUtils.requireNonNull(getFlagInstanceByName(
-        new QName(namespace, name)));
+    return name == null ? null
+        : ObjectUtils.requireNonNull(getFlagInstanceByName(
+            new QName(namespace, name)));
   }
 
   @Override

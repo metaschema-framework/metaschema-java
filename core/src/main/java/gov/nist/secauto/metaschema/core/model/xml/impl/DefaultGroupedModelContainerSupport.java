@@ -39,6 +39,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Supports grouped model instance operations on assembly model instances.
@@ -92,7 +93,8 @@ public class DefaultGroupedModelContainerSupport<
    *          the Java type for assembly instances
    */
   @SuppressWarnings({ "PMD.UseConcurrentHashMap" })
-  public DefaultGroupedModelContainerSupport(
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
+  private DefaultGroupedModelContainerSupport(
       @NonNull Collection<NMI> instances,
       @NonNull Class<FI> fieldClass,
       @NonNull Class<AI> assemblyClass) {

@@ -68,6 +68,7 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 public class MetaschemaJsonReader
@@ -95,6 +96,7 @@ public class MetaschemaJsonReader
    *           if an error occurred while reading the JSON
    * @see DefaultJsonProblemHandler
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public MetaschemaJsonReader(
       @NonNull JsonParser parser) throws IOException {
     this(parser, new DefaultJsonProblemHandler());
@@ -110,6 +112,7 @@ public class MetaschemaJsonReader
    * @throws IOException
    *           if an error occurred while reading the JSON
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public MetaschemaJsonReader(
       @NonNull JsonParser parser,
       @NonNull IJsonProblemHandler problemHandler) throws IOException {

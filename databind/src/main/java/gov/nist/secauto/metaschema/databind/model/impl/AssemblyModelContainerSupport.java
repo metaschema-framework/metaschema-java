@@ -39,6 +39,8 @@ import java.util.stream.Stream;
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -74,6 +76,7 @@ class AssemblyModelContainerSupport
   private final Map<String, IBoundInstanceModelChoiceGroup> choiceGroupInstances;
 
   @SuppressWarnings("PMD.UseConcurrentHashMap")
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public AssemblyModelContainerSupport(
       @NonNull DefinitionAssembly containingDefinition) {
     this.modelInstances = CollectionUtil.unmodifiableList(ObjectUtils.notNull(

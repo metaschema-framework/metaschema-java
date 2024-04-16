@@ -35,6 +35,8 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -80,6 +82,7 @@ class AssemblyModelContainerSupport
   private final Map<String, IInstanceModelChoiceGroupBinding> choiceGroupInstances;
 
   @SuppressWarnings("PMD.ShortMethodName")
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public static IContainerModelAssemblySupport<
       IBindingInstanceModelAbsolute,
       IBindingInstanceModelNamedAbsolute,
@@ -114,6 +117,7 @@ class AssemblyModelContainerSupport
    *          the node item factory used to generate child nodes
    */
   @SuppressWarnings({ "PMD.AvoidInstantiatingObjectsInLoops", "PMD.UseConcurrentHashMap", "PMD.PrematureDeclaration" })
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   protected AssemblyModelContainerSupport(
       @NonNull AssemblyModel model,
       @NonNull IBoundInstanceModelAssembly modelInstance,

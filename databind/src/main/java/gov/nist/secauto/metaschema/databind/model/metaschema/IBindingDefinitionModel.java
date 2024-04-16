@@ -49,7 +49,8 @@ public interface IBindingDefinitionModel
   @Override
   default IBindingInstanceFlag getJsonKeyFlagInstance() {
     String name = getJsonKeyFlagName();
-    return name == null ? null : ObjectUtils.requireNonNull(getFlagInstanceByName(
-        getContainingModule().toFlagQName(name)));
+    return name == null ? null
+        : ObjectUtils.requireNonNull(getFlagInstanceByName(
+            getContainingModule().toFlagQName(name)));
   }
 }

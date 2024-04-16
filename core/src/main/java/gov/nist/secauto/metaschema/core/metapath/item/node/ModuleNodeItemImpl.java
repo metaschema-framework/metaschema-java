@@ -50,7 +50,7 @@ class ModuleNodeItemImpl
   }
 
   @Override
-  public URI getDefaultModelNamespace() {
+  public URI getNamespace() {
     return getModule().getXmlNamespace();
   }
 

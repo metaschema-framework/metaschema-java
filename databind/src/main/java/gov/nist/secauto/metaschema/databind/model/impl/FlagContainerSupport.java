@@ -42,6 +42,8 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -56,6 +58,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
   private IBoundInstanceFlag jsonKeyFlag;
 
   @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public FlagContainerSupport(
       @NonNull AbstractBoundDefinitionModelComplex<?> definition,
       @Nullable Consumer<IBoundInstanceFlag> peeker) {

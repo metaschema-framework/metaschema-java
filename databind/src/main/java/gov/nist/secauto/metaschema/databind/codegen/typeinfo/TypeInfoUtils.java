@@ -93,7 +93,7 @@ public final class TypeInfoUtils {
       } else {
         throw new IllegalStateException("Expected non-null namespace");
       }
-    } else if (namespaceUri.equals(defaultSupplier.get())){
+    } else if (namespaceUri.equals(defaultSupplier.get())) {
       value = ModelUtil.DEFAULT_STRING_VALUE;
     } else {
       value = namespaceUri;

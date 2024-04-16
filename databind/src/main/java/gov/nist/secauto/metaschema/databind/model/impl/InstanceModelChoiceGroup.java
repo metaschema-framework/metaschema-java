@@ -57,6 +57,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
@@ -85,6 +86,7 @@ public class InstanceModelChoiceGroup
    * @param containingDefinition
    *          the definition containing this instance
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public InstanceModelChoiceGroup(
       @NonNull Field javaField,
       @NonNull IBoundDefinitionModelAssembly containingDefinition) {

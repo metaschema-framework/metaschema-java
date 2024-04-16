@@ -38,6 +38,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import java.lang.reflect.Field;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // TODO: implement getProperties()
 public abstract class AbstractBoundInstanceField
@@ -54,6 +55,7 @@ public abstract class AbstractBoundInstanceField
    * @param containingDefinition
    *          the definition containing this instance
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   protected AbstractBoundInstanceField(
       @NonNull Field javaField,
       @NonNull IBoundDefinitionModelAssembly containingDefinition) {

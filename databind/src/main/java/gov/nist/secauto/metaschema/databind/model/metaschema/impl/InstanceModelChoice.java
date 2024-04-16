@@ -105,7 +105,7 @@ public class InstanceModelChoice
     // no remarks
     return null;
   }
-  
+
   @Override
   public String getGroupAsXmlNamespace() {
     return null;

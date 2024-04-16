@@ -37,6 +37,8 @@ import org.apache.logging.log4j.Logger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
@@ -70,6 +72,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBindingInsta
   }
 
   @SuppressWarnings("PMD.UseConcurrentHashMap")
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public FlagContainerSupport(
       @NonNull List<Object> flags,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,

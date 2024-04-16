@@ -90,10 +90,10 @@ class XmlParserTest
             (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class));
 
     IBoundInstanceModelField field1Instance = ObjectUtils.requireNonNull(assembly.getFieldInstanceByName(
-        new QName(NS,"field1")));
+        new QName(NS, "field1")));
 
     IBoundInstanceModelField field2Instance = ObjectUtils.requireNonNull(assembly.getFieldInstanceByName(
-        new QName(NS,"field2")));
+        new QName(NS, "field2")));
 
     MultiFieldAssembly obj = new MultiFieldAssembly();
 
@@ -164,10 +164,10 @@ class XmlParserTest
             (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class));
 
     IBoundInstanceModelField field1Instance
-        = ObjectUtils.requireNonNull(assembly.getFieldInstanceByName(new QName(NS,"field1")));
+        = ObjectUtils.requireNonNull(assembly.getFieldInstanceByName(new QName(NS, "field1")));
 
     IBoundInstanceModelField field2Instance
-        = ObjectUtils.requireNonNull(assembly.getFieldInstanceByName(new QName(NS,"field2")));
+        = ObjectUtils.requireNonNull(assembly.getFieldInstanceByName(new QName(NS, "field2")));
 
     MultiFieldAssembly obj = new MultiFieldAssembly();
 

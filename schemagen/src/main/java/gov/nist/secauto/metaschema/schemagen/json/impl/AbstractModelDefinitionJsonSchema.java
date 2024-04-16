@@ -42,6 +42,7 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public abstract class AbstractModelDefinitionJsonSchema<D extends IModelDefinition>
     extends AbstractDefinitionJsonSchema<D> {
@@ -56,6 +57,7 @@ public abstract class AbstractModelDefinitionJsonSchema<D extends IModelDefiniti
   @NonNull
   private final IKey key;
 
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   protected AbstractModelDefinitionJsonSchema(
       @NonNull D definition,
       @Nullable String jsonKeyFlagName,

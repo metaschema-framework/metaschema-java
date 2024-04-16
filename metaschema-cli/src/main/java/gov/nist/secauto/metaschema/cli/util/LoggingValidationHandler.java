@@ -45,6 +45,7 @@ import org.xml.sax.SAXParseException;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public final class LoggingValidationHandler {
   private static final Logger LOGGER = LogManager.getLogger(LoggingValidationHandler.class);
@@ -58,6 +59,8 @@ public final class LoggingValidationHandler {
     return instance(false);
   }
 
+  @SuppressFBWarnings(value = "SING_SINGLETON_GETTER_NOT_SYNCHRONIZED",
+      justification = "both values are class initialized")
   public static LoggingValidationHandler instance(boolean logExceptions) {
     return logExceptions ? LOG_EXCPTION_INSTANCE : NO_LOG_EXCPTION_INSTANCE;
   }

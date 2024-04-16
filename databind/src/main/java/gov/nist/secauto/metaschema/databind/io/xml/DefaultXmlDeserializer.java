@@ -49,6 +49,7 @@ import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class DefaultXmlDeserializer<CLASS>
     extends AbstractDeserializer<CLASS> {
@@ -65,13 +66,14 @@ public class DefaultXmlDeserializer<CLASS>
    *          the assembly class binding describing the Java objects this
    *          deserializer parses data into
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public DefaultXmlDeserializer(@NonNull IBoundDefinitionModelAssembly definition) {
     super(definition);
+    this.rootDefinition = definition;
     if (!definition.isRoot()) {
       throw new UnsupportedOperationException(
           String.format("The assembly '%s' is not a root assembly.", definition.getBoundClass().getName()));
     }
-    this.rootDefinition = definition;
   }
 
   /**

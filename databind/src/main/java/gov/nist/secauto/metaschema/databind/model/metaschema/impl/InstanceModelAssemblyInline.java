@@ -111,7 +111,8 @@ public class InstanceModelAssemblyInline
         this)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelContainerSupport.of(
         binding.getModel(),
-        ObjectUtils.requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(IAssemblyDefinition.MODEL_QNAME)),
+        ObjectUtils
+            .requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(IAssemblyDefinition.MODEL_QNAME)),
         this,
         nodeItemFactory)));
     this.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
