@@ -15,7 +15,5 @@ reviews:
     drafts: true
     base_branches:
      - "develop"
-  path_filters:
-   - "**/*.java"
 chat:
   auto_reply: true
