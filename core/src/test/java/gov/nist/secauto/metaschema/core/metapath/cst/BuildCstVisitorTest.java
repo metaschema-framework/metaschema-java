@@ -92,7 +92,7 @@ class BuildCstVisitorTest {
   private static final QName FIELD1 = new QName(NS, "field1");
   private static final QName FIELD2 = new QName(NS, "field2");
   private static final QName UUID = new QName(NS, "uuid");
-  private static final QName FLAG = new QName(NS, "flag");
+  private static final QName FLAG = new QName("flag");
 
   @RegisterExtension
   Mockery context = new JUnit5Mockery();

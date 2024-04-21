@@ -26,6 +26,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import gov.nist.secauto.metaschema.core.metapath.EQNameUtils;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevforwardstepContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevreversestepContext;
@@ -191,13 +192,145 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleVarref(VarrefContext ctx) {
-    IEQName name = parseEQName(ctx.varname().eqname());
-    assert name != null;
-    return new VariableReference(name.toQName(getContext(), null));
+    return new VariableReference(
+        EQNameUtils.parseName(
+            ctx.varname().eqname().getText(),
+            getContext().getVariablePrefixResolver()));
   }
 
-  private IEQName parseEQName(EqnameContext ctx) {
-    return IEQName.of(ctx.getChild(0).getText());
+  /* ====================================================================
+   * For Expressions - https://www.w3.org/TR/xpath-31/#id-for-expressions
+   * ====================================================================
+   */
+
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+  @Override
+  protected IExpression handleForexpr(ForexprContext ctx) {
+    SimpleforclauseContext simpleForClause = ctx.simpleforclause();
+
+    // for SimpleForBinding ("," SimpleForBinding)*
+    int bindingCount = simpleForClause.getChildCount() / 2;
+
+    @NonNull IExpression retval = ObjectUtils.notNull(ctx.exprsingle().accept(this));
+
+    // step through in reverse
+    for (int idx = bindingCount - 1; idx >= 0; idx--) {
+      SimpleforbindingContext simpleForBinding = simpleForClause.simpleforbinding(idx);
+
+      VarnameContext varName = simpleForBinding.varname();
+      ExprsingleContext exprSingle = simpleForBinding.exprsingle();
+
+      IExpression boundExpression = exprSingle.accept(this);
+      assert boundExpression != null;
+
+      QName qname = EQNameUtils.parseName(
+          varName.eqname().getText(),
+          getContext().getVariablePrefixResolver());
+
+      Let.VariableDeclaration variable = new Let.VariableDeclaration(qname, boundExpression);
+
+      retval = new For(variable, retval);
+    }
+    return retval;
+  }
+
+  /* ====================================================================
+   * Let Expressions - https://www.w3.org/TR/xpath-31/#id-let-expressions
+   * ====================================================================
+   */
+
+  @Override
+  protected IExpression handleLet(LetexprContext context) {
+    @NonNull IExpression retval = ObjectUtils.notNull(context.exprsingle().accept(this));
+
+    SimpleletclauseContext letClause = context.simpleletclause();
+    List<SimpleletbindingContext> clauses = letClause.simpleletbinding();
+
+    ListIterator<SimpleletbindingContext> reverseListIterator = clauses.listIterator(clauses.size());
+    while (reverseListIterator.hasPrevious()) {
+      SimpleletbindingContext simpleCtx = reverseListIterator.previous();
+
+      IExpression boundExpression = simpleCtx.exprsingle().accept(this);
+      assert boundExpression != null;
+
+      QName varName = EQNameUtils.parseName(
+          simpleCtx.varname().eqname().getText(),
+          getContext().getVariablePrefixResolver());
+
+      retval = new Let(varName, boundExpression, retval); // NOPMD intended
+    }
+    return retval;
+  }
+
+  /* ==================================================================================
+   * Quantified Expressions - https://www.w3.org/TR/xpath-31/#id-quantified-expressions
+   * ==================================================================================
+   */
+
+  @Override
+  protected IExpression handleQuantifiedexpr(QuantifiedexprContext ctx) {
+    Quantified.Quantifier quantifier;
+    int type = ((TerminalNode) ctx.getChild(0)).getSymbol().getType();
+    switch (type) {
+    case Metapath10Lexer.KW_SOME:
+      quantifier = Quantified.Quantifier.SOME;
+      break;
+    case Metapath10Lexer.KW_EVERY:
+      quantifier = Quantified.Quantifier.EVERY;
+      break;
+    default:
+      throw new UnsupportedOperationException(((TerminalNode) ctx.getChild(0)).getSymbol().getText());
+    }
+
+    int numVars = (ctx.getChildCount() - 2) / 5; // children - "satisfies expr" / ", $ varName in expr"
+    Map<QName, IExpression> vars = new LinkedHashMap<>(); // NOPMD ordering needed
+    int offset = 0;
+    for (; offset < numVars; offset++) {
+      // $
+      QName varName = EQNameUtils.parseName(
+          ctx.varname(offset).eqname().getText(),
+          getContext().getVariablePrefixResolver());
+
+      // in
+      IExpression varExpr = visit(ctx.exprsingle(offset));
+
+      vars.put(varName, varExpr);
+    }
+
+    IExpression satisfies = visit(ctx.exprsingle(offset));
+
+    return new Quantified(quantifier, vars, satisfies);
+  }
+
+  /* =======================================================================
+   * Arrow operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
+   * =======================================================================
+   */
+
+  @Override
+  protected IExpression handleArrowexpr(ArrowexprContext context) {
+    // TODO: handle additional syntax for varef and parenthesized
+    return handleGroupedNAiry(context, 0, 3, (ctx, idx, left) -> {
+      // the next child is "=>"
+      assert "=>".equals(ctx.getChild(idx).getText());
+
+      int offset = (idx - 1) / 3;
+
+      ArrowfunctionspecifierContext fcCtx = ctx.getChild(ArrowfunctionspecifierContext.class, offset);
+      ArgumentlistContext argumentCtx = ctx.getChild(ArgumentlistContext.class, offset);
+
+      QName name = EQNameUtils.parseName(
+          fcCtx.eqname().getText(),
+          getContext().getFunctionPrefixResolver());
+
+      try (Stream<IExpression> args = Stream.concat(
+          Stream.of(left),
+          parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {
+        assert args != null;
+
+        return new StaticFunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));
+      }
+    });
   }
 
   /* =================================================================================
@@ -254,11 +387,9 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleFunctioncall(FunctioncallContext ctx) {
-    IEQName eqname = parseEQName(ctx.eqname());
-
-    StaticContext staticContext = getContext();
-    QName qname = eqname.toQName(staticContext, staticContext::getDefaultFunctionNamespace);
-    assert qname != null;
+    QName qname = EQNameUtils.parseName(
+        ctx.eqname().getText(),
+        getContext().getFunctionPrefixResolver());
     return new StaticFunctionCall(
         qname,
         ObjectUtils.notNull(parseArgumentList(ObjectUtils.notNull(ctx.argumentlist()))
@@ -404,28 +535,40 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleForwardstep(ForwardstepContext ctx) {
-    assert ctx.getChildCount() == 2;
+    AbbrevforwardstepContext abbrev = ctx.abbrevforwardstep();
 
-    Token token = (Token) ctx.forwardaxis().getChild(0).getPayload();
+    Step retval;
+    if (abbrev == null) {
+      assert ctx.getChildCount() == 2;
 
-    Axis axis;
-    switch (token.getType()) {
-    case Metapath10Lexer.KW_SELF:
-      axis = Axis.SELF;
-      break;
-    case Metapath10Lexer.KW_CHILD:
-      axis = Axis.CHILDREN;
-      break;
-    case Metapath10Lexer.KW_DESCENDANT:
-      axis = Axis.DESCENDANT;
-      break;
-    case Metapath10Lexer.KW_DESCENDANT_OR_SELF:
-      axis = Axis.DESCENDANT_OR_SELF;
-      break;
-    default:
-      throw new UnsupportedOperationException(token.getText());
+      Token token = (Token) ctx.forwardaxis().getChild(0).getPayload();
+
+      Axis axis;
+      switch (token.getType()) {
+      case Metapath10Lexer.KW_SELF:
+        axis = Axis.SELF;
+        break;
+      case Metapath10Lexer.KW_CHILD:
+        axis = Axis.CHILDREN;
+        break;
+      case Metapath10Lexer.KW_DESCENDANT:
+        axis = Axis.DESCENDANT;
+        break;
+      case Metapath10Lexer.KW_DESCENDANT_OR_SELF:
+        axis = Axis.DESCENDANT_OR_SELF;
+        break;
+      default:
+        throw new UnsupportedOperationException(token.getText());
+      }
+      retval = new Step(axis, parseNodeTest(ctx.nodetest(), false));
+    } else {
+      retval = new Step(
+          Axis.CHILDREN,
+          parseNodeTest(
+              ctx.nodetest(),
+              abbrev.AT() != null));
     }
-    return new Step(axis, handleNameTest(ctx.nametest()));
+    return retval;
   }
 
   @Override
@@ -448,7 +591,7 @@ public class BuildCSTVisitor
     default:
       throw new UnsupportedOperationException(token.getText());
     }
-    return new Step(axis, handleNameTest(ctx.nametest()));
+    return new Step(axis, parseNodeTest(ctx.nodetest(), false));
   }
 
   /* =======================================================
@@ -461,21 +604,20 @@ public class BuildCSTVisitor
    * =======================================================
    */
 
-  @Override
-  protected INodeTestExpression handleNodeTest(NodetestContext ctx) {
+  protected INodeTestExpression parseNodeTest(NodetestContext ctx, boolean flag) {
     // TODO: implement kind test
     NametestContext nameTestCtx = ctx.nametest();
-    return handleNameTest(nameTestCtx);
+    return parseNameTest(nameTestCtx, flag);
   }
 
-  @Override
-  protected INameTestExpression handleNameTest(NametestContext ctx) {
-    StaticContext staticContext = getContext();
+  protected INameTestExpression parseNameTest(NametestContext ctx, boolean flag) {
     ParseTree testType = ObjectUtils.requireNonNull(ctx.getChild(0));
     INameTestExpression retval;
     if (testType instanceof EqnameContext) {
-      QName name = parseEQName(ctx.eqname()).toQName(staticContext, staticContext::getDefaultModelNamespace);
-      retval = new NameTest(name);
+      QName qname = EQNameUtils.parseName(
+          ctx.eqname().getText(),
+          flag ? getContext().getFlagPrefixResolver() : getContext().getModelPrefixResolver());
+      retval = new NameTest(qname);
     } else { // wildcard
       retval = handleWildcard((WildcardContext) testType);
     }
@@ -536,10 +678,10 @@ public class BuildCSTVisitor
 
     IExpression retval;
     if (numChildren == 1) {
-      retval = new ModelInstance(ctx.nametest().accept(this));
+      retval = new ModelInstance(parseNodeTest(ctx.nodetest(), false));
     } else {
       // this is an AT test
-      retval = new Flag(ctx.nametest().accept(this));
+      retval = new Flag(parseNodeTest(ctx.nodetest(), true));
     }
     return retval;
   }
@@ -803,68 +945,6 @@ public class BuildCSTVisitor
     });
   }
 
-  /* ====================================================================
-   * For Expressions - https://www.w3.org/TR/xpath-31/#id-for-expressions
-   * ====================================================================
-   */
-
-  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-  @Override
-  protected IExpression handleForexpr(ForexprContext ctx) {
-    SimpleforclauseContext simpleForClause = ctx.simpleforclause();
-
-    // for SimpleForBinding ("," SimpleForBinding)*
-    int bindingCount = simpleForClause.getChildCount() / 2;
-
-    @NonNull IExpression retval = ObjectUtils.notNull(ctx.exprsingle().accept(this));
-
-    // step through in reverse
-    for (int idx = bindingCount - 1; idx >= 0; idx--) {
-      SimpleforbindingContext simpleForBinding = simpleForClause.simpleforbinding(idx);
-
-      VarnameContext varName = simpleForBinding.varname();
-      ExprsingleContext exprSingle = simpleForBinding.exprsingle();
-
-      QName name = parseEQName(varName.eqname()).toQName(getContext(), null);
-      IExpression boundExpression = exprSingle.accept(this);
-
-      assert name != null;
-      assert boundExpression != null;
-
-      Let.VariableDeclaration variable = new Let.VariableDeclaration(name, boundExpression);
-
-      retval = new For(variable, retval);
-    }
-    return retval;
-  }
-
-  /* ====================================================================
-   * Let Expressions - https://www.w3.org/TR/xpath-31/#id-let-expressions
-   * ====================================================================
-   */
-
-  @Override
-  protected IExpression handleLet(LetexprContext context) {
-    @NonNull IExpression retval = ObjectUtils.notNull(context.exprsingle().accept(this));
-
-    SimpleletclauseContext letClause = context.simpleletclause();
-    List<SimpleletbindingContext> clauses = letClause.simpleletbinding();
-
-    ListIterator<SimpleletbindingContext> reverseListIterator = clauses.listIterator(clauses.size());
-    while (reverseListIterator.hasPrevious()) {
-      SimpleletbindingContext simpleCtx = reverseListIterator.previous();
-
-      QName varName = parseEQName(simpleCtx.varname().eqname()).toQName(getContext(), null);
-      IExpression boundExpression = simpleCtx.exprsingle().accept(this);
-
-      assert varName != null;
-      assert boundExpression != null;
-
-      retval = new Let(varName, boundExpression, retval); // NOPMD intended
-    }
-    return retval;
-  }
-
   /* =========================================================================
    * Conditional Expressions - https://www.w3.org/TR/xpath-31/#id-conditionals
    * =========================================================================
@@ -877,43 +957,6 @@ public class BuildCSTVisitor
     IExpression elseExpr = visit(ctx.exprsingle(1));
 
     return new If(testExpr, thenExpr, elseExpr);
-  }
-
-  /* ==================================================================================
-   * Quantified Expressions - https://www.w3.org/TR/xpath-31/#id-quantified-expressions
-   * ==================================================================================
-   */
-
-  @Override
-  protected IExpression handleQuantifiedexpr(QuantifiedexprContext ctx) {
-    Quantified.Quantifier quantifier;
-    int type = ((TerminalNode) ctx.getChild(0)).getSymbol().getType();
-    switch (type) {
-    case Metapath10Lexer.KW_SOME:
-      quantifier = Quantified.Quantifier.SOME;
-      break;
-    case Metapath10Lexer.KW_EVERY:
-      quantifier = Quantified.Quantifier.EVERY;
-      break;
-    default:
-      throw new UnsupportedOperationException(((TerminalNode) ctx.getChild(0)).getSymbol().getText());
-    }
-
-    int numVars = (ctx.getChildCount() - 2) / 5; // children - "satisfies expr" / ", $ varName in expr"
-    Map<QName, IExpression> vars = new LinkedHashMap<>(); // NOPMD ordering needed
-    int offset = 0;
-    for (; offset < numVars; offset++) {
-      // $
-      QName varName = parseEQName(ctx.varname(offset).eqname()).toQName(getContext(), null);
-      // in
-      IExpression varExpr = visit(ctx.exprsingle(offset));
-
-      vars.put(varName, varExpr);
-    }
-
-    IExpression satisfies = visit(ctx.exprsingle(offset));
-
-    return new Quantified(quantifier, vars, satisfies);
   }
 
   /* =========================================================================
@@ -929,38 +972,6 @@ public class BuildCSTVisitor
       IExpression right = ctx.getChild(idx + 1).accept(this);
 
       return new SimpleMap(left, right);
-    });
-  }
-
-  /* =======================================================================
-   * Arrow operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
-   * =======================================================================
-   */
-
-  @Override
-  protected IExpression handleArrowexpr(ArrowexprContext context) {
-    // TODO: handle additional syntax for varef and parenthesized
-    return handleGroupedNAiry(context, 0, 3, (ctx, idx, left) -> {
-      // the next child is "=>"
-      assert "=>".equals(ctx.getChild(idx).getText());
-
-      int offset = (idx - 1) / 3;
-
-      ArrowfunctionspecifierContext fcCtx = ctx.getChild(ArrowfunctionspecifierContext.class, offset);
-      ArgumentlistContext argumentCtx = ctx.getChild(ArgumentlistContext.class, offset);
-
-      IEQName eqname = parseEQName(fcCtx.eqname());
-      StaticContext staticContext = getContext();
-      QName name = eqname.toQName(staticContext, staticContext::getDefaultFunctionNamespace);
-      assert name != null;
-
-      try (Stream<IExpression> args = Stream.concat(
-          Stream.of(left),
-          parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {
-        assert args != null;
-
-        return new StaticFunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));
-      }
     });
   }
 }

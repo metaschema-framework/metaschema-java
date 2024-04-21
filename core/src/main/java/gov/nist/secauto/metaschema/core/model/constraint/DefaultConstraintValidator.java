@@ -535,13 +535,14 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
       @NonNull DynamicContext dynamicContext) {
+    MetapathExpression metapath = MetapathExpression.compile(
+        constraint.getTest(),
+        dynamicContext.getStaticContext());
     targets.asStream()
         .map(item -> (INodeItem) item)
         .forEachOrdered(item -> {
           assert item != null;
           if (item.hasValue()) {
-            MetapathExpression metapath
-                = MetapathExpression.compile(constraint.getTest(), dynamicContext.getStaticContext());
             try {
               ISequence<?> result = metapath.evaluate(item, dynamicContext);
               if (!FnBoolean.fnBoolean(result).toBoolean()) {

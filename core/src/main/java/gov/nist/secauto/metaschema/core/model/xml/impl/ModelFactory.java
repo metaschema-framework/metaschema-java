@@ -27,8 +27,6 @@
 package gov.nist.secauto.metaschema.core.model.xml.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.cst.IEQName;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractKeyConstraintBuilder;
@@ -70,6 +68,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -494,7 +494,7 @@ public final class ModelFactory {
       @NonNull ISource source) {
     // TODO: figure out how to resolve the namespace prefix on var
     return ILet.of(
-        IEQName.of(ObjectUtils.notNull(xmlObject.getVar())).toQName(StaticContext.instance(), null),
+        new QName(xmlObject.getVar()),
         ObjectUtils.notNull(xmlObject.getExpression()),
         source);
   }

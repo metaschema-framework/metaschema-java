@@ -26,11 +26,14 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import gov.nist.secauto.metaschema.core.metapath.EQNameUtils.IEQNamePrefixResolver;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.xml.XMLConstants;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -193,6 +196,50 @@ public final class StaticContext {
   }
 
   @NonNull
+  public IEQNamePrefixResolver getFunctionPrefixResolver() {
+    return (prefix) -> {
+      String ns = lookupNamespaceForPrefix(prefix);
+      if (ns == null) {
+        URI uri = getDefaultFunctionNamespace();
+        if (uri != null) {
+          ns = uri.toASCIIString();
+        }
+      }
+      return ns == null ? XMLConstants.NULL_NS_URI : ns;
+    };
+  }
+
+  @NonNull
+  public IEQNamePrefixResolver getFlagPrefixResolver() {
+    return (prefix) -> {
+      String ns = lookupNamespaceForPrefix(prefix);
+      return ns == null ? XMLConstants.NULL_NS_URI : ns;
+    };
+  }
+
+  @NonNull
+  public IEQNamePrefixResolver getModelPrefixResolver() {
+    return (prefix) -> {
+      String ns = lookupNamespaceForPrefix(prefix);
+      if (ns == null) {
+        URI uri = getDefaultModelNamespace();
+        if (uri != null) {
+          ns = uri.toASCIIString();
+        }
+      }
+      return ns == null ? XMLConstants.NULL_NS_URI : ns;
+    };
+  }
+
+  @NonNull
+  public IEQNamePrefixResolver getVariablePrefixResolver() {
+    return (prefix) -> {
+      String ns = lookupNamespaceForPrefix(prefix);
+      return ns == null ? XMLConstants.NULL_NS_URI : ns;
+    };
+  }
+
+  @NonNull
   public Builder buildFrom() {
     Builder builder = new Builder();
     builder.baseUri = this.baseUri;
@@ -272,17 +319,22 @@ public final class StaticContext {
     }
 
     /**
-     * Defines the default namespace to use for assembly, field, or flag references
-     * that have no namespace prefix.
+     * A convenience method for {@link #namespace(String, URI)}.
      *
+     * @param prefix
+     *          the prefix to associate with the namespace, which may be
      * @param uri
      *          the namespace URI
-     * @return {@link StaticContext#getDefaultModelNamespace()}
+     * @return this builder
+     * @throws IllegalArgumentException
+     *           if the provided URI is invalid
+     * @see StaticContext#lookupNamespaceForPrefix(String)
+     * @see StaticContext#lookupNamespaceURIForPrefix(String)
+     * @see StaticContext#getWellKnownNamespaces()
      */
     @NonNull
-    public Builder defaultModelNamespace(@NonNull URI uri) {
-      this.defaultModelNamespace = uri;
-      return this;
+    public Builder namespace(@NonNull String prefix, @NonNull String uri) {
+      return namespace(prefix, URI.create(uri));
     }
 
     /**
@@ -291,12 +343,58 @@ public final class StaticContext {
      *
      * @param uri
      *          the namespace URI
-     * @return {@link StaticContext#getDefaultFunctionNamespace()}
+     * @return this builder
+     * @see StaticContext#getDefaultModelNamespace()
+     */
+    @NonNull
+    public Builder defaultModelNamespace(@NonNull URI uri) {
+      this.defaultModelNamespace = uri;
+      return this;
+    }
+
+    /**
+     * A convenience method for {@link #defaultModelNamespace(URI)}.
+     *
+     * @param uri
+     *          the namespace URI
+     * @return this builder
+     * @throws IllegalArgumentException
+     *           if the provided URI is invalid
+     * @see StaticContext#getDefaultModelNamespace()
+     */
+    @NonNull
+    public Builder defaultModelNamespace(@NonNull String uri) {
+      return defaultModelNamespace(URI.create(uri));
+    }
+
+    /**
+     * Defines the default namespace to use for assembly, field, or flag references
+     * that have no namespace prefix.
+     *
+     * @param uri
+     *          the namespace URI
+     * @return this builder
+     * @see StaticContext#getDefaultFunctionNamespace()
      */
     @NonNull
     public Builder defaultFunctionNamespace(@NonNull URI uri) {
       this.defaultFunctionNamespace = uri;
       return this;
+    }
+
+    /**
+     * A convenience method for {@link #defaultFunctionNamespace(URI)}.
+     *
+     * @param uri
+     *          the namespace URI
+     * @return this builder
+     * @throws IllegalArgumentException
+     *           if the provided URI is invalid
+     * @see StaticContext#getDefaultFunctionNamespace()
+     */
+    @NonNull
+    public Builder defaultFunctionNamespace(@NonNull String uri) {
+      return defaultFunctionNamespace(URI.create(uri));
     }
 
     /**

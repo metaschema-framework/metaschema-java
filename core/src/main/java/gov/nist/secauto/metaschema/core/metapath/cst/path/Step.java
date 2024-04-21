@@ -49,7 +49,7 @@ public class Step implements IExpression { // NOPMD - intentional
   @NonNull
   private final Axis axisExpression;
   @NonNull
-  private final INameTestExpression stepExpression;
+  private final INodeTestExpression stepExpression;
   @NonNull
   private final Class<? extends IItem> staticResultType;
 
@@ -62,7 +62,7 @@ public class Step implements IExpression { // NOPMD - intentional
    *          the sub-expression to evaluate before filtering with the predicates
    */
   @SuppressWarnings("null")
-  public Step(@NonNull Axis axis, @NonNull INameTestExpression step) {
+  public Step(@NonNull Axis axis, @NonNull INodeTestExpression step) {
     this.axisExpression = axis;
     this.stepExpression = step;
     this.staticResultType = ExpressionUtils.analyzeStaticResultType(IItem.class, List.of(step));
@@ -84,7 +84,7 @@ public class Step implements IExpression { // NOPMD - intentional
    * @return the sub-expression
    */
   @NonNull
-  public INameTestExpression getStep() {
+  public INodeTestExpression getStep() {
     return stepExpression;
   }
 

@@ -24,70 +24,78 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-public final class UriQualifiedName implements IEQName {
+public final class EQNameUtils {
   private static final Pattern URI_QUALIFIED_NAME = Pattern.compile("^Q\\{([^{}]*)\\}(.+)$");
+  private static final Pattern LEXICAL_NAME = Pattern.compile("^(?:([^:]+):)?(.+)$");
+  private static final Pattern NCNAME = Pattern.compile(String.format("^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$"));
+
+  private EQNameUtils() {
+    // disable construction
+  }
 
   @NonNull
-  private final URI namespace;
-  @NonNull
-  private final String localName;
+  public static QName parseName(
+      @NonNull String name,
+      @Nullable IEQNamePrefixResolver resolver) {
+    Matcher matcher = URI_QUALIFIED_NAME.matcher(name);
+    return matcher.matches()
+        ? newUriQualifiedName(matcher)
+        : parseLexicalQName(name, resolver);
+  }
 
-  public UriQualifiedName(@NonNull String name) {
+  @NonNull
+  public static QName parseUriQualifiedName(@NonNull String name) {
     Matcher matcher = URI_QUALIFIED_NAME.matcher(name);
     if (!matcher.matches()) {
       throw new IllegalArgumentException(
           String.format("The name '%s' is not a valid BracedURILiteral of the form: Q{URI}local-name", name));
     }
-    this.namespace = ObjectUtils.notNull(URI.create(matcher.group(1)));
-    this.localName = IEQName.checkValidNCName(ObjectUtils.notNull(matcher.group(2)));
+    return newUriQualifiedName(matcher);
   }
 
-  public UriQualifiedName(@NonNull URI namespace, @NonNull String localName) {
-    this.namespace = namespace;
-    this.localName = localName;
+  @NonNull
+  private static QName newUriQualifiedName(@NonNull Matcher matcher) {
+    return new QName(matcher.group(1), matcher.group(2));
   }
 
-  public URI getNamespace() {
-    return namespace;
+  @NonNull
+  public static QName parseLexicalQName(
+      @NonNull String name,
+      @Nullable IEQNamePrefixResolver resolver) {
+    Matcher matcher = LEXICAL_NAME.matcher(name);
+    if (!matcher.matches()) {
+      throw new IllegalArgumentException(
+          String.format("The name '%s' is not a valid lexical QName of the form: prefix:local-name or local-name",
+              name));
+    }
+    String prefix = matcher.group(1);
+
+    if (prefix == null) {
+      prefix = XMLConstants.DEFAULT_NS_PREFIX;
+    }
+
+    String namespace = resolver == null ? XMLConstants.NULL_NS_URI : resolver.resolve(prefix);
+    return new QName(namespace, matcher.group(2), prefix);
   }
 
-  @Override
-  public String getLocalName() {
-    return localName;
+  public static boolean isNcName(@NonNull String name) {
+    return NCNAME.matcher(name).matches();
   }
 
-  @Override
-  public boolean isLexical() {
-    // never lexical
-    return false;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Q{");
-    builder.append(namespace);
-    builder.append("}");
-    builder.append(localName);
-    return builder.toString();
-  }
-
-  @Override
-  public QName toQName(StaticContext staticContext, Supplier<URI> defaultNamespaceSupplier) {
-    return new QName(getNamespace().toASCIIString(), getLocalName());
+  @FunctionalInterface
+  public interface IEQNamePrefixResolver {
+    @NonNull
+    String resolve(@NonNull String prefix);
   }
 }
