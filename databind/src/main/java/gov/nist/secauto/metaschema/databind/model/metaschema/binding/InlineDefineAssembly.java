@@ -62,14 +62,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     moduleClass = MetaschemaModelModule.class)
 public class InlineDefineAssembly {
   @BoundFlag(
-      formalName = "Inline Assembly NameTest",
+      formalName = "Inline Assembly Name",
       name = "name",
       required = true,
       typeAdapter = TokenAdapter.class)
   private String _name;
 
   @BoundFlag(
-      formalName = "Inline Assembly Binary NameTest",
+      formalName = "Inline Assembly Binary Name",
       name = "index",
       typeAdapter = PositiveIntegerAdapter.class)
   private BigInteger _index;
@@ -97,7 +97,7 @@ public class InlineDefineAssembly {
   private String _maxOccurs;
 
   @BoundField(
-      formalName = "Formal NameTest",
+      formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;

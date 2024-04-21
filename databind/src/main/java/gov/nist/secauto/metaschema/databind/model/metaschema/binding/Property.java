@@ -46,7 +46,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     moduleClass = MetaschemaModelModule.class)
 public class Property {
   @BoundFlag(
-      formalName = "Property NameTest",
+      formalName = "Property Name",
       name = "name",
       required = true,
       typeAdapter = TokenAdapter.class)

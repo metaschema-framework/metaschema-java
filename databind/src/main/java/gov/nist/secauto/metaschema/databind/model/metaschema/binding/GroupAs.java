@@ -48,7 +48,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     moduleClass = MetaschemaModelModule.class)
 public class GroupAs {
   @BoundFlag(
-      formalName = "Grouping NameTest",
+      formalName = "Grouping Name",
       name = "name",
       required = true,
       typeAdapter = TokenAdapter.class)

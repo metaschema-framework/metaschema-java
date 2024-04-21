@@ -67,7 +67,7 @@ public class FlagReference {
   private String _ref;
 
   @BoundFlag(
-      formalName = "Flag Reference Binary NameTest",
+      formalName = "Flag Reference Binary Name",
       name = "index",
       typeAdapter = PositiveIntegerAdapter.class)
   private BigInteger _index;
@@ -94,7 +94,7 @@ public class FlagReference {
   private String _required;
 
   @BoundField(
-      formalName = "Formal NameTest",
+      formalName = "Formal NameT",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;
@@ -114,7 +114,7 @@ public class FlagReference {
   private List<Property> _props;
 
   @BoundField(
-      formalName = "Use NameTest",
+      formalName = "Use Name",
       description = "Allows the name of the definition to be overridden.",
       useName = "use-name")
   private UseName _useName;

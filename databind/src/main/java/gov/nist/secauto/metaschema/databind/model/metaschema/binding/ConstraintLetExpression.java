@@ -46,7 +46,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     moduleClass = MetaschemaModelModule.class)
 public class ConstraintLetExpression {
   @BoundFlag(
-      formalName = "Let Variable NameTest",
+      formalName = "Let Variable Name",
       name = "var",
       required = true,
       typeAdapter = TokenAdapter.class)

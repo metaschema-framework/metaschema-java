@@ -45,7 +45,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     "PMD.FieldNamingConventions"
 })
 @MetaschemaField(
-    formalName = "Use NameTest",
+    formalName = "Use Name",
     description = "Allows the name of the definition to be overridden.",
     name = "use-name",
     moduleClass = MetaschemaModelModule.class)

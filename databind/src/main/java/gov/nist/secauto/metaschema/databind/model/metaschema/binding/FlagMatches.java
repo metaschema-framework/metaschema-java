@@ -111,7 +111,7 @@ public class FlagMatches implements IConstraintBase {
   private String _datatype;
 
   @BoundField(
-      formalName = "Formal NameTest",
+      formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;

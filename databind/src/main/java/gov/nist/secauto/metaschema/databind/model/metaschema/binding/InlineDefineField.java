@@ -65,14 +65,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     moduleClass = MetaschemaModelModule.class)
 public class InlineDefineField {
   @BoundFlag(
-      formalName = "Inline Field NameTest",
+      formalName = "Inline Field Name",
       name = "name",
       required = true,
       typeAdapter = TokenAdapter.class)
   private String _name;
 
   @BoundFlag(
-      formalName = "Inline Field Binary NameTest",
+      formalName = "Inline Field Binary Name",
       name = "index",
       typeAdapter = PositiveIntegerAdapter.class)
   private BigInteger _index;
@@ -145,7 +145,7 @@ public class InlineDefineField {
   private String _inXml;
 
   @BoundField(
-      formalName = "Formal NameTest",
+      formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;
@@ -172,13 +172,13 @@ public class InlineDefineField {
   private JsonKey _jsonKey;
 
   @BoundField(
-      formalName = "Field Value JSON Property NameTest",
+      formalName = "Field Value JSON Property Name",
       useName = "json-value-key",
       typeAdapter = TokenAdapter.class)
   private String _jsonValueKey;
 
   @BoundAssembly(
-      formalName = "Flag Used as the Field Value's JSON Property NameTest",
+      formalName = "Flag Used as the Field Value's JSON Property Name",
       useName = "json-value-key-flag")
   private JsonValueKeyFlag _jsonValueKeyFlag;
 

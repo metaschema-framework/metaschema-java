@@ -39,7 +39,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     "PMD.FieldNamingConventions"
 })
 @MetaschemaAssembly(
-    formalName = "Flag Used as the Field Value's JSON Property NameTest",
+    formalName = "Flag Used as the Field Value's JSON Property Name",
     name = "json-value-key-flag",
     moduleClass = MetaschemaModelModule.class)
 public class JsonValueKeyFlag {
