@@ -65,6 +65,8 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class EmptyFlagContainer<FI extends IFlagInstance> implements IContainerFlagSupport<FI> {
@@ -72,7 +74,7 @@ class EmptyFlagContainer<FI extends IFlagInstance> implements IContainerFlagSupp
   public static final EmptyFlagContainer<?> EMPTY = new EmptyFlagContainer<>();
 
   @Override
-  public Map<String, FI> getFlagInstanceMap() {
+  public Map<QName, FI> getFlagInstanceMap() {
     return CollectionUtil.emptyMap();
   }
 }

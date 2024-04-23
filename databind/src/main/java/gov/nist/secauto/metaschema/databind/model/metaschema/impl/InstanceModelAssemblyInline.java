@@ -29,6 +29,7 @@ package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.IFeatureDefinitionInstanceInlined;
@@ -110,7 +111,8 @@ public class InstanceModelAssemblyInline
         this)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelContainerSupport.of(
         binding.getModel(),
-        ObjectUtils.requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName("model")),
+        ObjectUtils
+            .requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(IAssemblyDefinition.MODEL_QNAME)),
         this,
         nodeItemFactory)));
     this.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {

@@ -132,6 +132,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-months-from-duration
+    // https://www.w3.org/TR/xpath-functions-31/#func-node-name
     // https://www.w3.org/TR/xpath-functions-31/#func-normalize-space
     // https://www.w3.org/TR/xpath-functions-31/#func-normalize-unicode
     // https://www.w3.org/TR/xpath-functions-31/#func-not
@@ -164,6 +165,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnStartsWith.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-static-base-uri
     registerFunction(FnStaticBaseUri.SIGNATURE);
+    // P0: https://www.w3.org/TR/xpath-functions-31/#func-string
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-join
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-length
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-subsequence

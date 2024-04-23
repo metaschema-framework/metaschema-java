@@ -84,8 +84,9 @@ public abstract class ModelTestBase {
                     assembly.getRootName(),
                     "rootName"),
                 () -> assertEquals(
-                    Optional.ofNullable(ModelUtil.resolveOptionalNamespace(annotation.rootNamespace()))
-                        .orElse(assembly.getContainingModule().getXmlNamespace().toASCIIString()),
+                    ModelUtil.resolveOptionalNamespace(
+                        annotation.rootNamespace(),
+                        () -> assembly.getContainingModule().getXmlNamespace().toASCIIString()),
                     assembly.getRootXmlQName().getNamespaceURI(),
                     "rootNamespace"),
                 () -> assertTrue(true));
@@ -184,8 +185,9 @@ public abstract class ModelTestBase {
             field.getDefaultValue(),
             "defaultValue"),
         () -> assertEquals(
-            Optional.ofNullable(ModelUtil.resolveOptionalNamespace(annotation.namespace()))
-                .orElse(field.getContainingModule().getXmlNamespace().toASCIIString()),
+            ModelUtil.resolveOptionalNamespace(
+                annotation.namespace(),
+                () -> field.getContainingModule().getXmlNamespace().toASCIIString()),
             field.getXmlNamespace(),
             "namespace"),
         () -> assertEquals(

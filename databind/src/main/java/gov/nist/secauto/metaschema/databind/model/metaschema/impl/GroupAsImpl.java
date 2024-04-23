@@ -45,9 +45,9 @@ class GroupAsImpl implements IGroupAs {
   @NonNull
   private final XmlGroupAsBehavior xmlBehavior;
 
-  public GroupAsImpl(@NonNull GroupAs groupAs) {
+  public GroupAsImpl(@NonNull GroupAs groupAs, @Nullable String namespace) {
     this.name = ObjectUtils.requireNonNull(groupAs.getName());
-    this.namespace = null;
+    this.namespace = namespace;
     this.jsonBehavior = ModelSupport.groupAsJsonBehavior(groupAs.getInJson());
     this.xmlBehavior = ModelSupport.groupAsXmlBehavior(groupAs.getInXml());
   }

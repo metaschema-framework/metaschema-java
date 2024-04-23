@@ -104,7 +104,7 @@ public interface IModule {
    * @return the qualified name
    */
   default QName getQName() {
-    return new QName(getXmlNamespace().toString(), getShortName());
+    return new QName(getXmlNamespace().toASCIIString(), getShortName());
   }
 
   /**
@@ -331,4 +331,16 @@ public interface IModule {
    */
   @Nullable
   IAssemblyDefinition getExportedAssemblyDefinitionByName(String name);
+
+  @NonNull
+  default QName toFlagQName(@NonNull String nameRef) {
+    // TODO: handle namespace prefix
+    return new QName(nameRef);
+  }
+
+  @NonNull
+  default QName toModelQName(@NonNull String nameRef) {
+    // TODO: handle namespace prefix
+    return new QName(getXmlNamespace().toASCIIString(), nameRef);
+  }
 }

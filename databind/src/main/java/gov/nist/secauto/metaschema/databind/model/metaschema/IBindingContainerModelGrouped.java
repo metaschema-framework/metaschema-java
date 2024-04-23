@@ -26,9 +26,11 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
-import gov.nist.secauto.metaschema.core.model.IContainerModelGrouped;
-
 import java.util.Collection;
+
+import javax.xml.namespace.QName;
+
+import gov.nist.secauto.metaschema.core.model.IContainerModelGrouped;
 
 public interface IBindingContainerModelGrouped extends IContainerModelGrouped {
 
@@ -44,17 +46,17 @@ public interface IBindingContainerModelGrouped extends IContainerModelGrouped {
   Collection<? extends IBindingInstanceModelNamedGrouped> getNamedModelInstances();
 
   @Override
-  IBindingInstanceModelNamedGrouped getNamedModelInstanceByName(String name);
+  IBindingInstanceModelNamedGrouped getNamedModelInstanceByName(QName name);
 
   @Override
   Collection<? extends IBindingInstanceModelFieldGrouped> getFieldInstances();
 
   @Override
-  IBindingInstanceModelFieldGrouped getFieldInstanceByName(String name);
+  IBindingInstanceModelFieldGrouped getFieldInstanceByName(QName name);
 
   @Override
   Collection<? extends IBindingInstanceModelAssemblyGrouped> getAssemblyInstances();
 
   @Override
-  IBindingInstanceModelAssemblyGrouped getAssemblyInstanceByName(String name);
+  IBindingInstanceModelAssemblyGrouped getAssemblyInstanceByName(QName name);
 }

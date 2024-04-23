@@ -57,6 +57,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
@@ -85,11 +86,14 @@ public class InstanceModelChoiceGroup
    * @param containingDefinition
    *          the definition containing this instance
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public InstanceModelChoiceGroup(
       @NonNull Field javaField,
       @NonNull IBoundDefinitionModelAssembly containingDefinition) {
     super(javaField, BoundChoiceGroup.class, containingDefinition);
-    this.groupAs = ModelUtil.groupAs(getAnnotation().groupAs());
+    this.groupAs = ModelUtil.groupAs(
+        getAnnotation().groupAs(),
+        () -> containingDefinition.getXmlNamespace());
     if (getMaxOccurs() == -1 || getMaxOccurs() > 1) {
       if (IGroupAs.SINGLETON_GROUP_AS.equals(this.groupAs)) {
         throw new IllegalStateException(String.format("Field '%s' on class '%s' is missing the '%s' annotation.",
@@ -229,7 +233,8 @@ public class InstanceModelChoiceGroup
       Class<?> clazz = item.getClass();
 
       IBoundInstanceModelGroupedNamed itemInstance = getClassToInstanceMap().get(clazz);
-      retval = itemInstance.getDefinition().getFlagInstanceByName(jsonKeyFlagName);
+      retval = itemInstance.getDefinition().getFlagInstanceByName(
+          new QName(itemInstance.getXmlNamespace(), jsonKeyFlagName));
     }
     return retval;
   }
@@ -242,11 +247,11 @@ public class InstanceModelChoiceGroup
           IBoundInstanceModelGroupedAssembly> {
 
     @NonNull
-    private final Map<String, IBoundInstanceModelGroupedNamed> namedModelInstances;
+    private final Map<QName, IBoundInstanceModelGroupedNamed> namedModelInstances;
     @NonNull
-    private final Map<String, IBoundInstanceModelGroupedField> fieldInstances;
+    private final Map<QName, IBoundInstanceModelGroupedField> fieldInstances;
     @NonNull
-    private final Map<String, IBoundInstanceModelGroupedAssembly> assemblyInstances;
+    private final Map<QName, IBoundInstanceModelGroupedAssembly> assemblyInstances;
 
     public ChoiceGroupModelContainerSupport(
         @NonNull BoundGroupedAssembly[] assemblies,
@@ -259,7 +264,7 @@ public class InstanceModelChoiceGroup
                 container);
           })
           .collect(Collectors.toMap(
-              instance -> instance.getEffectiveName(),
+              instance -> instance.getXmlQName(),
               Function.identity(),
               CustomCollectors.useLastMapper(),
               LinkedHashMap::new))));
@@ -269,7 +274,7 @@ public class InstanceModelChoiceGroup
             return IBoundInstanceModelGroupedField.newInstance(instance, container);
           })
           .collect(Collectors.toMap(
-              instance -> instance.getEffectiveName(),
+              instance -> instance.getXmlQName(),
               Function.identity(),
               CustomCollectors.useLastMapper(),
               LinkedHashMap::new))));
@@ -290,17 +295,17 @@ public class InstanceModelChoiceGroup
     }
 
     @Override
-    public Map<String, IBoundInstanceModelGroupedNamed> getNamedModelInstanceMap() {
+    public Map<QName, IBoundInstanceModelGroupedNamed> getNamedModelInstanceMap() {
       return namedModelInstances;
     }
 
     @Override
-    public Map<String, IBoundInstanceModelGroupedField> getFieldInstanceMap() {
+    public Map<QName, IBoundInstanceModelGroupedField> getFieldInstanceMap() {
       return fieldInstances;
     }
 
     @Override
-    public Map<String, IBoundInstanceModelGroupedAssembly> getAssemblyInstanceMap() {
+    public Map<QName, IBoundInstanceModelGroupedAssembly> getAssemblyInstanceMap() {
       return assemblyInstances;
     }
   }

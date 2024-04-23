@@ -26,6 +26,11 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
+import java.util.Collection;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IFeatureContainerModel;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingContainerModelAbsolute;
@@ -33,10 +38,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceMod
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceModelAssemblyAbsolute;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceModelFieldAbsolute;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceModelNamedAbsolute;
-
-import java.util.Collection;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IFeatureBindingContainerModel
     extends IBindingContainerModelAbsolute, IFeatureContainerModel<
@@ -58,7 +59,7 @@ public interface IFeatureBindingContainerModel
   }
 
   @Override
-  default IBindingInstanceModelNamedAbsolute getNamedModelInstanceByName(String name) {
+  default IBindingInstanceModelNamedAbsolute getNamedModelInstanceByName(QName name) {
     return getModelContainer().getNamedModelInstanceMap().get(name);
   }
 
@@ -69,7 +70,7 @@ public interface IFeatureBindingContainerModel
   }
 
   @Override
-  default IBindingInstanceModelFieldAbsolute getFieldInstanceByName(String name) {
+  default IBindingInstanceModelFieldAbsolute getFieldInstanceByName(QName name) {
     return getModelContainer().getFieldInstanceMap().get(name);
   }
 
@@ -80,7 +81,7 @@ public interface IFeatureBindingContainerModel
   }
 
   @Override
-  default IBindingInstanceModelAssemblyAbsolute getAssemblyInstanceByName(String name) {
+  default IBindingInstanceModelAssemblyAbsolute getAssemblyInstanceByName(QName name) {
     return getModelContainer().getAssemblyInstanceMap().get(name);
   }
 

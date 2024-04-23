@@ -151,7 +151,9 @@ public class InstanceFlagInline
 
   @Override
   public String getXmlNamespace() {
-    return ModelUtil.resolveOptionalNamespace(getAnnotation().namespace());
+    return ModelUtil.resolveOptionalNamespace(
+        getAnnotation().namespace(),
+        () -> getContainingDefinition().getXmlNamespace());
   }
 
   @Override

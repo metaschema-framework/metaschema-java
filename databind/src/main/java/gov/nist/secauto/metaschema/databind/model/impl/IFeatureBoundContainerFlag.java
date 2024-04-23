@@ -26,16 +26,17 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
+import java.util.Collection;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFeatureContainerFlag;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundContainerFlag;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceFlag;
-
-import java.util.Collection;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Provides default implementations based on a supporting glag container
@@ -51,7 +52,7 @@ public interface IFeatureBoundContainerFlag
 
   @Override
   @Nullable
-  default IBoundInstanceFlag getFlagInstanceByName(String name) {
+  default IBoundInstanceFlag getFlagInstanceByName(QName name) {
     return getFlagContainer().getFlagInstanceMap().get(name);
   }
 

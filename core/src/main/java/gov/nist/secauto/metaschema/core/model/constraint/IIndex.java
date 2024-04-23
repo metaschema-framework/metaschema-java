@@ -182,11 +182,12 @@ public interface IIndex {
       @NonNull INodeItem item,
       @NonNull IKeyField keyField,
       @NonNull DynamicContext dynamicContext) {
-    MetapathExpression keyPath = keyField.getTarget();
+    String keyPath = keyField.getTarget();
+    MetapathExpression keyMetapath = MetapathExpression.compile(keyPath, dynamicContext.getStaticContext());
 
     INodeItem keyItem;
     try {
-      keyItem = keyPath.evaluateAs(item, ResultType.NODE, dynamicContext);
+      keyItem = keyMetapath.evaluateAs(item, ResultType.NODE, dynamicContext);
     } catch (InvalidTypeMetapathException ex) {
       throw new MetapathException("Key path did not result in a single node", ex);
     }

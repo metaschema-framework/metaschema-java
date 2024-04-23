@@ -97,7 +97,7 @@ public class DefinitionFlagGlobal
     }));
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) getContainingModule().getBoundNodeItem()
-            .getModelItemsByName(bindingInstance.getEffectiveName())
+            .getModelItemsByName(bindingInstance.getXmlQName())
             .get(position)));
     // new NodeItem(bindingInstance, position, generator)
   }

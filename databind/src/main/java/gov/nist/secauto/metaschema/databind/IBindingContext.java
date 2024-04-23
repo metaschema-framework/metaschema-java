@@ -304,7 +304,7 @@ public interface IBindingContext {
     IBoundLoader loader = newBoundLoader();
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
 
-    DynamicContext context = StaticContext.instance().dynamicContext();
+    DynamicContext context = new DynamicContext();
     context.setDocumentLoader(loader);
 
     return new DefaultConstraintValidator(handler);
@@ -320,11 +320,16 @@ public interface IBindingContext {
    * @throws IllegalArgumentException
    *           if the provided class is not bound to a Module assembly or field
    */
-  default IValidationResult validate(@NonNull INodeItem nodeItem) {
+  default IValidationResult validate(@NonNull INodeItem nodeItem, @NonNull IBoundLoader loader) {
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
     IConstraintValidator validator = newValidator(handler);
-    DynamicContext dynamicContext = StaticContext.instance().dynamicContext();
-    dynamicContext.setDocumentLoader(newBoundLoader());
+
+    StaticContext staticContext = StaticContext.builder()
+        .defaultModelNamespace(nodeItem.getNamespace())
+        .build();
+
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
+    dynamicContext.setDocumentLoader(loader);
     validator.validate(nodeItem, dynamicContext);
     validator.finalizeValidation(dynamicContext);
     return handler;
@@ -389,12 +394,9 @@ public interface IBindingContext {
   default IValidationResult validateWithConstraints(@NonNull URI target) throws IOException {
     IBoundLoader loader = newBoundLoader();
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
-
-    DynamicContext dynamicContext = StaticContext.instance().dynamicContext();
-    dynamicContext.setDocumentLoader(loader);
     IDocumentNodeItem nodeItem = loader.loadAsNodeItem(target);
 
-    return validate(nodeItem);
+    return validate(nodeItem, loader);
   }
 
   interface IModuleLoaderStrategy {

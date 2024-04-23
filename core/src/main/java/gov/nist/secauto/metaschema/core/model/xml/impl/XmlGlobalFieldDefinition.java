@@ -47,6 +47,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -206,7 +208,10 @@ class XmlGlobalFieldDefinition
   public IFlagInstance getJsonValueKeyFlagInstance() {
     IFlagInstance retval = null;
     if (getXmlObject().isSetJsonValueKeyFlag() && getXmlObject().getJsonValueKeyFlag().isSetFlagRef()) {
-      retval = getFlagInstanceByName(ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef()));
+      retval = getFlagInstanceByName(
+          new QName(
+              getXmlNamespace(),
+              ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef())));
     }
     return retval;
   }

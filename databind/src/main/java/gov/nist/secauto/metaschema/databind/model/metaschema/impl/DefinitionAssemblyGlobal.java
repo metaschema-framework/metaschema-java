@@ -31,6 +31,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
@@ -64,6 +65,7 @@ public class DefinitionAssemblyGlobal
     implements IBindingDefinitionAssembly,
     IFeatureBindingContainerFlag,
     IFeatureBindingContainerModelAssembly {
+
   @NonNull
   private final Map<IAttributable.Key, Set<String>> properties;
   @NonNull
@@ -111,7 +113,8 @@ public class DefinitionAssemblyGlobal
         this)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelContainerSupport.of(
         binding.getModel(),
-        ObjectUtils.requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName("model")),
+        ObjectUtils
+            .requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(IAssemblyDefinition.MODEL_QNAME)),
         this,
         nodeItemFactory)));
     this.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() ->
@@ -127,7 +130,7 @@ public class DefinitionAssemblyGlobal
     this.boundNodeItem = ObjectUtils.notNull(Lazy.lazy(() -> (IAssemblyNodeItem)
 
     getContainingModule().getBoundNodeItem()
-        .getModelItemsByName(bindingInstance.getEffectiveName())
+        .getModelItemsByName(bindingInstance.getXmlQName())
         .get(position)));
   }
 

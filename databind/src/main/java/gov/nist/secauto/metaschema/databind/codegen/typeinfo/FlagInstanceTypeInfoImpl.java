@@ -97,13 +97,13 @@ public class FlagInstanceTypeInfoImpl
       annotation.addMember("useIndex", "$L", index);
     }
 
-    String namespace = instance.getXmlNamespace();
-    if (namespace != null) {
-      if (namespace.equals(instance.getContainingModule().getXmlNamespace().toASCIIString())) {
-        namespace = ModelUtil.DEFAULT_STRING_VALUE;
-      }
-      annotation.addMember("namespace", "$S", namespace);
-    }
+    TypeInfoUtils.buildNamespaceBindingAnnotation(
+        annotation,
+        "namespace",
+        instance.getXmlNamespace(),
+        () -> instance.getContainingModule().getXmlNamespace().toASCIIString(),
+        ModelUtil.NO_STRING_VALUE,
+        true);
 
     IFlagDefinition definition = instance.getDefinition();
 

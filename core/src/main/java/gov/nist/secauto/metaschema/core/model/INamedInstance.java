@@ -26,8 +26,6 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -36,7 +34,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * identify the data.
  *
  */
-public interface INamedInstance extends INamed, IAttributable, IInstance {
+public interface INamedInstance extends INamedModelElement, IAttributable, IInstance {
   /**
    * Retrieve the definition of this instance.
    *
@@ -45,21 +43,4 @@ public interface INamedInstance extends INamed, IAttributable, IInstance {
   @NonNull
   IDefinition getDefinition();
 
-  /**
-   * Get the XML qualified name to use in XML.
-   *
-   * @return the XML qualified name, or {@code null} if there isn't one
-   */
-  default QName getXmlQName() {
-    return new QName(getXmlNamespace(), getEffectiveName());
-  }
-
-  /**
-   * Retrieve the XML namespace for this instance.
-   *
-   * @return the XML namespace or {@code null} if no namespace is defined
-   */
-  default String getXmlNamespace() {
-    return getContainingModule().getXmlNamespace().toASCIIString();
-  }
 }

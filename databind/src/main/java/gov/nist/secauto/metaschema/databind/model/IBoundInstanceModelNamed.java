@@ -26,16 +26,15 @@
 
 package gov.nist.secauto.metaschema.databind.model;
 
-import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
-import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
 import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 public interface IBoundInstanceModelNamed extends IBoundInstanceModel, INamedModelInstanceAbsolute {
 
@@ -65,7 +64,7 @@ public interface IBoundInstanceModelNamed extends IBoundInstanceModel, INamedMod
     String jsonKeyName = getJsonKeyFlagName();
     return JsonGroupAsBehavior.KEYED.equals(getJsonGroupAsBehavior())
         ? ObjectUtils.requireNonNull(getDefinition().getFlagInstanceByName(
-            ObjectUtils.requireNonNull(jsonKeyName)))
+            getContainingModule().toFlagQName(ObjectUtils.requireNonNull(jsonKeyName))))
         : null;
   }
 

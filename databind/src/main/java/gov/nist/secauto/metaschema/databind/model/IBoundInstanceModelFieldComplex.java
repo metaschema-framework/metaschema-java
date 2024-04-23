@@ -55,12 +55,6 @@ public interface IBoundInstanceModelFieldComplex
   }
 
   @Override
-  @NonNull
-  default QName getXmlQName() {
-    return ObjectUtils.notNull(IBoundInstanceModelField.super.getXmlQName());
-  }
-
-  @Override
   default Object readItem(Object parent, IItemReadHandler handler) throws IOException {
     return handler.readItemField(ObjectUtils.requireNonNull(parent, "parent"), this);
   }

@@ -49,6 +49,8 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonValueKe
 
 import java.math.BigInteger;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -181,8 +183,11 @@ public class InstanceModelFieldInline
   @Override
   public IFlagInstance getJsonValueKeyFlagInstance() {
     JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();
-    String flagName = obj == null ? null : obj.getFlagRef();
-    return flagName == null ? null : getFlagInstanceByName(flagName);
+    String name = obj == null ? null : obj.getFlagRef();
+    String namespace = getContainingModule().getXmlNamespace().toASCIIString();
+    return name == null ? null
+        : ObjectUtils.requireNonNull(getFlagInstanceByName(
+            new QName(namespace, name)));
   }
 
   @Override

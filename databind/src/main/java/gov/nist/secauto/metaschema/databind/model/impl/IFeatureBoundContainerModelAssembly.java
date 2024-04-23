@@ -26,6 +26,13 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.IFeatureContainerModelAssembly;
@@ -36,12 +43,6 @@ import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelField;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelNamed;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IFeatureBoundContainerModelAssembly<
     MI extends IBoundInstanceModel,
@@ -60,7 +61,7 @@ public interface IFeatureBoundContainerModelAssembly<
   }
 
   @Override
-  default NMI getNamedModelInstanceByName(String name) {
+  default NMI getNamedModelInstanceByName(QName name) {
     return getModelContainer().getNamedModelInstanceMap().get(name);
   }
 
@@ -71,7 +72,7 @@ public interface IFeatureBoundContainerModelAssembly<
   }
 
   @Override
-  default FI getFieldInstanceByName(String name) {
+  default FI getFieldInstanceByName(QName name) {
     return getModelContainer().getFieldInstanceMap().get(name);
   }
 
@@ -82,7 +83,7 @@ public interface IFeatureBoundContainerModelAssembly<
   }
 
   @Override
-  default AI getAssemblyInstanceByName(String name) {
+  default AI getAssemblyInstanceByName(QName name) {
     return getModelContainer().getAssemblyInstanceMap().get(name);
   }
 

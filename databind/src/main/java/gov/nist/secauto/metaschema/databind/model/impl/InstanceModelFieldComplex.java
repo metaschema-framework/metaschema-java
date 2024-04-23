@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
@@ -69,6 +70,7 @@ public class InstanceModelFieldComplex
    * @param containingDefinition
    *          the definition containing this instance
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public InstanceModelFieldComplex(
       @NonNull Field javaField,
       @NonNull DefinitionField definition,
