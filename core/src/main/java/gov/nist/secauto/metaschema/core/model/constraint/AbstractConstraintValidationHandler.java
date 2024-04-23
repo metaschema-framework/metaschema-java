@@ -103,7 +103,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
         "The cardinality '%d' is below the required minimum '%d' for items matching '%s'.",
         targets.size(),
         constraint.getMinOccurs(),
-        constraint.getTarget().getPath());
+        constraint.getTarget());
   }
 
   /**
@@ -271,7 +271,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
       message = constraint.generateMessage(target, dynamicContext);
     } else {
       message = String.format("Expect constraint '%s' did not match the data at path '%s'",
-          constraint.getTest().getPath(),
+          constraint.getTest(),
           toPath(target));
     }
     return message;

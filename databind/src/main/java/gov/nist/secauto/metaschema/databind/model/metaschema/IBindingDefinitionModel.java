@@ -31,12 +31,14 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IBindingDefinitionModel
     extends IBindingDefinition, IModelDefinition {
   @Override
-  IBindingInstanceFlag getFlagInstanceByName(String name);
+  IBindingInstanceFlag getFlagInstanceByName(QName name);
 
   @Override
   Collection<IBindingInstanceFlag> getFlagInstances();
@@ -47,6 +49,8 @@ public interface IBindingDefinitionModel
   @Override
   default IBindingInstanceFlag getJsonKeyFlagInstance() {
     String name = getJsonKeyFlagName();
-    return name == null ? null : ObjectUtils.requireNonNull(getFlagInstanceByName(name));
+    return name == null ? null
+        : ObjectUtils.requireNonNull(getFlagInstanceByName(
+            getContainingModule().toFlagQName(name)));
   }
 }

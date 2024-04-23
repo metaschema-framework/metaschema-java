@@ -181,10 +181,12 @@ public final class ModelSupport {
   }
 
   @NonNull
-  public static IGroupAs groupAs(@Nullable GroupAs groupAs) {
+  public static IGroupAs groupAs(
+      @Nullable GroupAs groupAs,
+      @Nullable String groupAsNamespace) {
     return groupAs == null
         ? IGroupAs.SINGLETON_GROUP_AS
-        : new GroupAsImpl(groupAs);
+        : new GroupAsImpl(groupAs, groupAsNamespace);
   }
 
   @NonNull

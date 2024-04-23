@@ -33,6 +33,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -57,7 +59,7 @@ public class Let implements IExpression {
    * @param returnExpression
    *          the inner expression to evaluate with the variable in-scope
    */
-  public Let(@NonNull Name name, @NonNull IExpression boundExpression, @NonNull IExpression returnExpression) {
+  public Let(@NonNull QName name, @NonNull IExpression boundExpression, @NonNull IExpression returnExpression) {
     this.variable = new VariableDeclaration(name, boundExpression);
     this.returnExpression = returnExpression;
   }
@@ -104,11 +106,11 @@ public class Let implements IExpression {
 
   public static class VariableDeclaration {
     @NonNull
-    private final Name name;
+    private final QName name;
     @NonNull
     private final IExpression boundExpression;
 
-    public VariableDeclaration(@NonNull Name name, @NonNull IExpression boundExpression) {
+    public VariableDeclaration(@NonNull QName name, @NonNull IExpression boundExpression) {
       this.name = name;
       this.boundExpression = boundExpression;
     }
@@ -119,7 +121,7 @@ public class Let implements IExpression {
      * @return the variable name
      */
     @NonNull
-    public Name getName() {
+    public QName getName() {
       return name;
     }
 
@@ -139,9 +141,7 @@ public class Let implements IExpression {
         @NonNull DynamicContext boundContext) {
 
       ISequence<?> result = getBoundExpression().accept(evalContext, focus);
-
-      String name = getName().getValue();
-      boundContext.bindVariableValue(name, result);
+      boundContext.bindVariableValue(getName(), result);
     }
   }
 }

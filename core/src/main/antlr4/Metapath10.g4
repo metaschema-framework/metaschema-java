@@ -57,14 +57,11 @@ relativepathexpr : stepexpr (( SLASH | SS) stepexpr)* ;
 stepexpr : postfixexpr | axisstep ;
 axisstep : (reversestep | forwardstep) predicatelist ;
 // [40]
-// forwardstep : forwardaxis nodetest | abbrevforwardstep ;
-forwardstep : forwardaxis nametest | abbrevforwardstep ;
+forwardstep : forwardaxis nodetest | abbrevforwardstep ;
 // forwardaxis : KW_CHILD COLONCOLON | KW_DESCENDANT COLONCOLON | KW_ATTRIBUTE COLONCOLON | KW_SELF COLONCOLON | KW_DESCENDANT_OR_SELF COLONCOLON | KW_FOLLOWING_SIBLING COLONCOLON | KW_FOLLOWING COLONCOLON | KW_NAMESPACE COLONCOLON ;
 forwardaxis : KW_CHILD COLONCOLON | KW_DESCENDANT COLONCOLON | KW_SELF COLONCOLON | KW_DESCENDANT_OR_SELF COLONCOLON ;
-// abbrevforwardstep : AT? nodetest ;
-abbrevforwardstep : AT? nametest ;
-// reversestep : reverseaxis nodetest | abbrevreversestep ;
-reversestep : reverseaxis nametest | abbrevreversestep ;
+abbrevforwardstep : AT? nodetest ;
+reversestep : reverseaxis nodetest | abbrevreversestep ;
 // reverseaxis : KW_PARENT COLONCOLON | KW_ANCESTOR COLONCOLON | KW_PRECEDING_SIBLING COLONCOLON | KW_PRECEDING COLONCOLON | KW_ANCESTOR_OR_SELF COLONCOLON ;
 reverseaxis : KW_PARENT COLONCOLON | KW_ANCESTOR COLONCOLON | KW_ANCESTOR_OR_SELF COLONCOLON ;
 // [45]

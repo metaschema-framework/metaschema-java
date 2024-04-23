@@ -26,6 +26,10 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
@@ -45,9 +49,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.IInstanceModelChoic
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonValueKeyFlag;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 public class InstanceModelGroupedFieldInline
@@ -153,7 +154,7 @@ public class InstanceModelGroupedFieldInline
   public IFlagInstance getJsonValueKeyFlagInstance() {
     JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();
     String flagName = obj == null ? null : obj.getFlagRef();
-    return flagName == null ? null : getFlagInstanceByName(flagName);
+    return flagName == null ? null : getFlagInstanceByName(new QName(getXmlNamespace(), flagName));
   }
 
   @Override

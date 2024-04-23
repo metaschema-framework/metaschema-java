@@ -24,4 +24,28 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.databind.testing.model;
+package gov.nist.secauto.metaschema.core.metapath.cst.path;
+
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+
+import java.util.Collections;
+import java.util.List;
+
+public interface INameTestExpression extends INodeTestExpression {
+  @SuppressWarnings("null")
+  @Override
+  default List<? extends IExpression> getChildren() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  default Class<INodeItem> getBaseResultType() {
+    return INodeItem.class;
+  }
+
+  @Override
+  default Class<INodeItem> getStaticResultType() {
+    return getBaseResultType();
+  }
+}

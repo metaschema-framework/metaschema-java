@@ -38,6 +38,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import java.lang.reflect.Field;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // TODO: implement getProperties()
 public abstract class AbstractBoundInstanceField
@@ -54,11 +55,14 @@ public abstract class AbstractBoundInstanceField
    * @param containingDefinition
    *          the definition containing this instance
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   protected AbstractBoundInstanceField(
       @NonNull Field javaField,
       @NonNull IBoundDefinitionModelAssembly containingDefinition) {
     super(javaField, BoundField.class, containingDefinition);
-    this.groupAs = ModelUtil.groupAs(getAnnotation().groupAs());
+    this.groupAs = ModelUtil.groupAs(
+        getAnnotation().groupAs(),
+        () -> containingDefinition.getXmlNamespace());
     if (getMaxOccurs() == -1 || getMaxOccurs() > 1) {
       if (IGroupAs.SINGLETON_GROUP_AS.equals(this.groupAs)) {
         throw new IllegalStateException(String.format("Field '%s' on class '%s' is missing the '%s' annotation.",
@@ -100,6 +104,13 @@ public abstract class AbstractBoundInstanceField
   public Integer getUseIndex() {
     int value = getAnnotation().useIndex();
     return value == Integer.MIN_VALUE ? null : value;
+  }
+
+  @Override
+  public String getXmlNamespace() {
+    return ModelUtil.resolveOptionalNamespace(
+        getAnnotation().namespace(),
+        () -> getContainingDefinition().getXmlNamespace());
   }
 
   @Override

@@ -24,55 +24,10 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.item.node;
+package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 
-import java.net.URI;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-import nl.talsmasoftware.lazy4j.Lazy;
-
-class DocumentNodeItemImpl
-    implements IDocumentNodeItem, IFeatureModelContainerItem {
-  @NonNull
-  private final IRootAssemblyNodeItem root;
-  @NonNull
-  private final URI documentUri;
-
-  @NonNull
-  private final Lazy<ModelContainer> model;
-
-  public DocumentNodeItemImpl(
-      @NonNull IAssemblyDefinition root,
-      @NonNull Object rootValue,
-      @NonNull URI documentUri,
-      @NonNull INodeItemGenerator generator) {
-    this.root = new RootAssemblyValuedNodeItemImpl(root, this, rootValue, generator);
-    this.documentUri = documentUri;
-    this.model = ObjectUtils.notNull(Lazy.lazy(generator.newDataModelSupplier(this.root)));
-  }
-
-  @NonNull
-  public IRootAssemblyNodeItem getRootAssemblyNodeItem() {
-    return root;
-  }
-
-  @Override
-  public URI getNamespace() {
-    return ObjectUtils.notNull(URI.create(getRootAssemblyNodeItem().getName().getNamespaceURI()));
-  }
-
-  @Override
-  @NonNull
-  public URI getDocumentUri() {
-    return documentUri;
-  }
-
-  @SuppressWarnings("null")
-  @Override
-  public ModelContainer getModel() {
-    return model.get();
-  }
+public interface INodeTestExpression extends IExpression {
+  // no additional methods
 }

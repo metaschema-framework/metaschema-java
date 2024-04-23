@@ -26,6 +26,12 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
@@ -40,11 +46,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference;
 
-import java.util.List;
-import java.util.Map;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 public abstract class AbstractBindingModelContainerSupport
     implements IContainerModelSupport<
         IBindingInstanceModelAbsolute,
@@ -55,9 +56,9 @@ public abstract class AbstractBindingModelContainerSupport
   protected static void addInstance(
       @NonNull IBindingInstanceModelAssemblyAbsolute assembly,
       @NonNull List<IBindingInstanceModelAbsolute> modelInstances,
-      @NonNull Map<String, IBindingInstanceModelNamedAbsolute> namedModelInstances,
-      @NonNull Map<String, IBindingInstanceModelAssemblyAbsolute> assemblyInstances) {
-    String effectiveName = assembly.getEffectiveName();
+      @NonNull Map<QName, IBindingInstanceModelNamedAbsolute> namedModelInstances,
+      @NonNull Map<QName, IBindingInstanceModelAssemblyAbsolute> assemblyInstances) {
+    QName effectiveName = assembly.getXmlQName();
     modelInstances.add(assembly);
     namedModelInstances.put(effectiveName, assembly);
     assemblyInstances.put(effectiveName, assembly);
@@ -66,9 +67,9 @@ public abstract class AbstractBindingModelContainerSupport
   protected static void addInstance(
       @NonNull IBindingInstanceModelFieldAbsolute field,
       @NonNull List<IBindingInstanceModelAbsolute> modelInstances,
-      @NonNull Map<String, IBindingInstanceModelNamedAbsolute> namedModelInstances,
-      @NonNull Map<String, IBindingInstanceModelFieldAbsolute> fieldInstances) {
-    String effectiveName = field.getEffectiveName();
+      @NonNull Map<QName, IBindingInstanceModelNamedAbsolute> namedModelInstances,
+      @NonNull Map<QName, IBindingInstanceModelFieldAbsolute> fieldInstances) {
+    QName effectiveName = field.getXmlQName();
     modelInstances.add(field);
     namedModelInstances.put(effectiveName, field);
     fieldInstances.put(effectiveName, field);

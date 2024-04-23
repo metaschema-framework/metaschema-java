@@ -24,47 +24,65 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.databind.model.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
+import gov.nist.secauto.metaschema.databind.model.IGroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.function.Supplier;
 
-/**
- * The CST node for a Metapath
- * <a href="https://www.w3.org/TR/xpath-31/#doc-xpath31-Wildcard">wildcard name
- * test</a>.
- */
-public class Wildcard implements IExpression {
-  @SuppressWarnings("null")
-  @Override
-  public List<? extends IExpression> getChildren() {
-    return Collections.emptyList();
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+public class DefaultGroupAs implements IGroupAs {
+  @NonNull
+  private final String name;
+  @Nullable
+  private final String namespace;
+  @NonNull
+  private final GroupAs annotation;
+
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
+  public DefaultGroupAs(
+      @NonNull GroupAs annotation,
+      @NonNull Supplier<String> defaultSupplier) {
+    this.annotation = annotation;
+    {
+      String value = ModelUtil.resolveNoneOrDefault(annotation.name(), null);
+      if (value == null) {
+        throw new IllegalStateException(
+            String.format("The %s#groupName value '%s' resulted in an invalid null value",
+                GroupAs.class.getName(),
+                annotation.name()));
+      }
+      this.name = value;
+    }
+    this.namespace = ModelUtil.resolveOptionalNamespace(
+        annotation.namespace(),
+        defaultSupplier);
   }
 
   @Override
-  public Class<INodeItem> getBaseResultType() {
-    return INodeItem.class;
+  public String getGroupAsName() {
+    return name;
   }
 
   @Override
-  public Class<INodeItem> getStaticResultType() {
-    return getBaseResultType();
+  public String getGroupAsXmlNamespace() {
+    return namespace;
   }
 
   @Override
-  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitWildcard(this, context);
+  public JsonGroupAsBehavior getJsonGroupAsBehavior() {
+    return annotation.inJson();
   }
 
   @Override
-  public ISequence<? extends INodeItem> accept(
-      DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(focus.asStream()
-        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item)));
+  public XmlGroupAsBehavior getXmlGroupAsBehavior() {
+    return annotation.inXml();
   }
 }

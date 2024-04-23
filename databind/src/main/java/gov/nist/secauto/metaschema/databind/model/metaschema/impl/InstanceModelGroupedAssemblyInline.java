@@ -31,6 +31,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
@@ -89,7 +90,8 @@ public class InstanceModelGroupedAssemblyInline
         this)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelContainerSupport.of(
         binding.getModel(),
-        ObjectUtils.requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName("model")),
+        ObjectUtils
+            .requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(IAssemblyDefinition.MODEL_QNAME)),
         this,
         nodeItemFactory)));
     this.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
@@ -105,7 +107,7 @@ public class InstanceModelGroupedAssemblyInline
     }));
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) getContainingDefinition().getBoundNodeItem()
-            .getModelItemsByName(bindingInstance.getJsonName())
+            .getModelItemsByName(bindingInstance.getXmlQName())
             .get(position)));
   }
 

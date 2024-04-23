@@ -26,6 +26,13 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.IFeatureContainerModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingContainerModelAssembly;
@@ -35,12 +42,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceMod
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceModelNamedAbsolute;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IInstanceModelChoiceBinding;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IInstanceModelChoiceGroupBinding;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IFeatureBindingContainerModelAssembly
     extends IBindingContainerModelAssembly,
@@ -68,7 +69,7 @@ public interface IFeatureBindingContainerModelAssembly
   }
 
   @Override
-  default IBindingInstanceModelNamedAbsolute getNamedModelInstanceByName(String name) {
+  default IBindingInstanceModelNamedAbsolute getNamedModelInstanceByName(QName name) {
     return getModelContainer().getNamedModelInstanceMap().get(name);
   }
 
@@ -79,7 +80,7 @@ public interface IFeatureBindingContainerModelAssembly
   }
 
   @Override
-  default IBindingInstanceModelFieldAbsolute getFieldInstanceByName(String name) {
+  default IBindingInstanceModelFieldAbsolute getFieldInstanceByName(QName name) {
     return getModelContainer().getFieldInstanceMap().get(name);
   }
 
@@ -90,7 +91,7 @@ public interface IFeatureBindingContainerModelAssembly
   }
 
   @Override
-  default IBindingInstanceModelAssemblyAbsolute getAssemblyInstanceByName(String name) {
+  default IBindingInstanceModelAssemblyAbsolute getAssemblyInstanceByName(QName name) {
     return getModelContainer().getAssemblyInstanceMap().get(name);
   }
 

@@ -27,7 +27,6 @@
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
@@ -214,33 +213,33 @@ public class BindingConstraintLoader
   private static AssemblyTargetedConstraints handleScopedAssembly(
       @NonNull MetaschemaModuleConstraints.Scope.Assembly obj,
       @NonNull ISource source) {
-    MetapathExpression expression = MetapathExpression.compile(ObjectUtils.requireNonNull(obj.getTarget()));
-
     IModelConstrained constraints = new AssemblyConstraintSet();
     ConstraintBindingSupport.parse(constraints, obj, source);
-    return new AssemblyTargetedConstraints(expression, constraints);
+    return new AssemblyTargetedConstraints(
+        ObjectUtils.requireNonNull(obj.getTarget()),
+        constraints);
   }
 
   private static FieldTargetedConstraints handleScopedField(
       @NonNull MetaschemaModuleConstraints.Scope.Field obj,
       @NonNull ISource source) {
-    MetapathExpression expression = MetapathExpression.compile(ObjectUtils.requireNonNull(obj.getTarget()));
-
     IValueConstrained constraints = new ValueConstraintSet();
     ConstraintBindingSupport.parse(constraints, obj, source);
 
-    return new FieldTargetedConstraints(expression, constraints);
+    return new FieldTargetedConstraints(
+        ObjectUtils.requireNonNull(obj.getTarget()),
+        constraints);
   }
 
   private static FlagTargetedConstraints handleScopedFlag(
       @NonNull MetaschemaModuleConstraints.Scope.Flag obj,
       @NonNull ISource source) {
-    MetapathExpression expression = MetapathExpression.compile(ObjectUtils.requireNonNull(obj.getTarget()));
-
     IValueConstrained constraints = new ValueConstraintSet();
     ConstraintBindingSupport.parse(constraints, obj, source);
 
-    return new FlagTargetedConstraints(expression, constraints);
+    return new FlagTargetedConstraints(
+        ObjectUtils.requireNonNull(obj.getTarget()),
+        constraints);
   }
 
   private Context parseContext(
@@ -293,22 +292,21 @@ public class BindingConstraintLoader
         @NonNull IModelConstrained constraints) {
       this.metapaths = metapaths;
       this.constraints = constraints;
-      this.targetedConstraints = Lazy.lazy(() -> {
+      this.targetedConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
 
         Stream<ITargetedConstraints> paths = getMetapaths().stream()
-            .map(metapath -> MetapathExpression.compile(ObjectUtils.notNull(metapath)))
-            .map(compiledMetapath -> new MetaTargetedContraints(ObjectUtils.notNull(compiledMetapath), constraints));
+            .map(metapath -> new MetaTargetedContraints(ObjectUtils.notNull(metapath), constraints));
         Stream<ITargetedConstraints> childPaths = childContexts.stream()
             .flatMap(child -> child.getTargetedConstraints().stream());
 
         return Stream.concat(paths, childPaths)
             .collect(Collectors.toUnmodifiableList());
-      });
+      }));
     }
 
     @NonNull
     public List<ITargetedConstraints> getTargetedConstraints() {
-      return targetedConstraints.get();
+      return ObjectUtils.notNull(targetedConstraints.get());
     }
 
     public void addAll(@NonNull Collection<Context> childContexts) {
@@ -326,7 +324,7 @@ public class BindingConstraintLoader
       implements IFeatureModelConstrained {
 
     protected MetaTargetedContraints(
-        @NonNull MetapathExpression target,
+        @NonNull String target,
         @NonNull IModelConstrained constraints) {
       super(target, constraints);
     }

@@ -66,6 +66,7 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class CLIProcessor {
   private static final Logger LOGGER = LogManager.getLogger(CLIProcessor.class);
@@ -253,6 +254,7 @@ public class CLIProcessor {
     @NonNull
     private final List<String> extraArgs;
 
+    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
     public CallingContext(@NonNull List<String> args) {
       Map<String, ICommand> topLevelCommandMap = getTopLevelCommands().stream()
           .collect(Collectors.toUnmodifiableMap(ICommand::getName, Function.identity()));

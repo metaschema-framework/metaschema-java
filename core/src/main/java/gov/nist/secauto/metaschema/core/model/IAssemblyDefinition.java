@@ -34,6 +34,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IAssemblyDefinition
     extends IModelDefinition, IContainerModelAssembly, IAssembly, IFeatureModelConstrained {
+  QName MODEL_QNAME = new QName(IModule.XML_NAMESPACE, "model");
 
   /**
    * Check if the assembly is a top-level root assembly.
@@ -81,7 +82,7 @@ public interface IAssemblyDefinition
     QName retval = null;
     String rootName = getRootName();
     if (rootName != null) {
-      retval = new QName(getContainingModule().getXmlNamespace().toASCIIString(), rootName);
+      retval = getContainingModule().toModelQName(rootName);
     }
     return retval;
   }

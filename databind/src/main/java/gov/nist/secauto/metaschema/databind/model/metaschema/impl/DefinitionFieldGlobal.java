@@ -51,6 +51,8 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -95,7 +97,7 @@ public class DefinitionFieldGlobal
     }));
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) getContainingModule().getBoundNodeItem()
-            .getModelItemsByName(bindingInstance.getEffectiveName())
+            .getModelItemsByName(bindingInstance.getXmlQName())
             .get(position)));
   }
 
@@ -173,8 +175,10 @@ public class DefinitionFieldGlobal
   @Override
   public IFlagInstance getJsonValueKeyFlagInstance() {
     JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();
-    String flagName = obj == null ? null : obj.getFlagRef();
-    return flagName == null ? null : getFlagInstanceByName(flagName);
+    String name = obj == null ? null : obj.getFlagRef();
+    return name == null ? null
+        : ObjectUtils.requireNonNull(getFlagInstanceByName(
+            getContainingModule().toFlagQName(name)));
   }
 
   @Override

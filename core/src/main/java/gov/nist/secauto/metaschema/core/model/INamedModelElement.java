@@ -28,6 +28,9 @@ package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -36,7 +39,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Metaschema module's model that have a name and other identifying
  * characteristics.
  */
-public interface INamed extends IDescribable {
+public interface INamedModelElement extends IDescribable, IModelElement {
   /**
    * The resolved formal display name, which allows an instance to override a
    * definition's name.
@@ -61,26 +64,11 @@ public interface INamed extends IDescribable {
     return getDescription();
   }
 
-  // @NonNull
-  // default QName getXmlQName() {
-  // String namespace = getXmlNamespace();
-  //
-  // @NonNull
-  // QName retval;
-  // if (namespace != null) {
-  // retval = new QName(namespace, getEffectiveName());
-  // } else {
-  // retval = new QName(getEffectiveName());
-  // }
-  // return retval;
-  // }
-
   /**
    * Retrieve the name of the model element.
    *
    * @return the name
    */
-  // from INamedModelElement
   @NonNull
   String getName();
 
@@ -113,6 +101,45 @@ public interface INamed extends IDescribable {
   default String getEffectiveName() {
     @Nullable String useName = getUseName();
     return useName == null ? getName() : useName;
+  }
+
+  /**
+   * Retrieve the XML namespace for this instance.
+   * <p>
+   * Multiple calls to this method are expected to produce the same, deterministic
+   * return value.
+   *
+   * @return the XML namespace or {@code null} if no namespace is defined
+   */
+  @Nullable
+  default String getXmlNamespace() {
+    return getContainingModule().getXmlNamespace().toASCIIString();
+  }
+
+  /**
+   * Get the unique XML qualified name for this model element.
+   * <p>
+   * The qualified name is considered to be unique relative to all sibling
+   * elements. For a flag, this name will be unique among all flag instances on
+   * the same field or assembly definition. For a field or assembly, this name
+   * will be unique among all sibling field or assembly instances on the same
+   * assembly definition.
+   * <p>
+   * Multiple calls to this method are expected to produce the same, deterministic
+   * return value.
+   * <p>
+   * If {@link #getXmlNamespace()} is {@code null}, the the resulting QName will
+   * have the namespace {@link XMLConstants#NULL_NS_URI}.
+   * <p>
+   * This implementation may be overridden by implementation that cache the QName
+   * or provide for a more efficient method for QName creation.
+   *
+   * @return the XML qualified name, or {@code null} if there isn't one
+   */
+  // REFACTOR: rename to getQName
+  @NonNull
+  default QName getXmlQName() {
+    return new QName(getXmlNamespace(), getEffectiveName());
   }
 
   /**

@@ -250,8 +250,8 @@ public abstract class AbstractValidateContentCommand
         return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
       }
 
-      if (LOGGER.isInfoEnabled()) {
-        LOGGER.info("Validation identified the following in file '{}'.", source);
+      if (LOGGER.isInfoEnabled() && !validationResult.isPassing()) {
+        LOGGER.info("Validation identified the following issues:", source);
       }
 
       LoggingValidationHandler.instance().handleValidationResults(validationResult);

@@ -85,7 +85,7 @@ public class InstanceFlagInline
     }));
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) getContainingModule().getBoundNodeItem()
-            .getModelItemsByName(bindingInstance.getEffectiveName())
+            .getModelItemsByName(bindingInstance.getXmlQName())
             .get(position)));
   }
 

@@ -120,6 +120,13 @@ public class InstanceModelGroupedFieldComplex
   }
 
   @Override
+  public String getXmlNamespace() {
+    return ModelUtil.resolveOptionalNamespace(
+        getAnnotation().namespace(),
+        () -> getContainingDefinition().getXmlNamespace());
+  }
+
+  @Override
   public Class<?> getBoundClass() {
     return getAnnotation().binding();
   }
