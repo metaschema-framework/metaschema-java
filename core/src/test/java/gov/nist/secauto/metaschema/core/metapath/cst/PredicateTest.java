@@ -45,7 +45,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
-class PredicateTest
+class PredicateExpressionTest
     extends ExpressionTestBase {
 
   @Test
@@ -83,7 +83,7 @@ class PredicateTest
       }
     });
 
-    Predicate expr = new Predicate(stepExpr, predicates);
+    PredicateExpression expr = new PredicateExpression(stepExpr, predicates);
 
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(item));
     assertEquals(ISequence.of(item), result, "Sequence does not match");
@@ -122,7 +122,7 @@ class PredicateTest
       }
     });
 
-    Predicate expr = new Predicate(stepExpr, predicates);
+    PredicateExpression expr = new PredicateExpression(stepExpr, predicates);
 
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(item));
     assertEquals(ISequence.of(item), result, "Sequence does not match");

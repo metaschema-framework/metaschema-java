@@ -28,6 +28,8 @@ package gov.nist.secauto.metaschema.core.model;
 
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IContainerFlagSupport<FI extends IFlagInstance> {
@@ -50,7 +52,7 @@ public interface IContainerFlagSupport<FI extends IFlagInstance> {
    * @return the mapping of flag effective name to flag instance
    */
   @NonNull
-  Map<String, FI> getFlagInstanceMap();
+  Map<QName, FI> getFlagInstanceMap();
   // @Nullable
   // FI getJsonKeyFlagInstance();
 }

@@ -24,88 +24,80 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
-import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * The CST node for a Metapath
- * <a href="https://www.w3.org/TR/xpath-31/#dt-expanded-qname">expanded QName
- * name test</a>.
+ * <a href="https://www.w3.org/TR/xpath-31/#doc-xpath31-Wildcard">wildcard name
+ * test</a>.
  */
-public class Name // NOPMD - intentional
-    implements IExpression {
+public class Wildcard implements INameTestExpression {
+  @Nullable
+  private final Predicate<IDefinitionNodeItem<?, ?>> matcher;
 
-  @NonNull
-  private final String value;
-
-  /**
-   * Construct a new expanded QName-based literal expression.
-   *
-   * @param value
-   *          the literal value
-   */
-  public Name(@NonNull String value) {
-    this.value = value;
-  }
-
-  /**
-   * Get the string value of the name.
-   *
-   * @return the string value of the name
-   */
-  @NonNull
-  public String getValue() {
-    return value;
-  }
-
-  @Override
-  public List<IExpression> getChildren() {
-    return CollectionUtil.emptyList();
-  }
-
-  @Override
-  public Class<INodeItem> getBaseResultType() {
-    return INodeItem.class;
-  }
-
-  @Override
-  public Class<INodeItem> getStaticResultType() {
-    return getBaseResultType();
+  public Wildcard(@Nullable Predicate<IDefinitionNodeItem<?, ?>> matcher) {
+    this.matcher = matcher;
   }
 
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitName(this, context);
+    return visitor.visitWildcard(this, context);
   }
 
   @Override
   public ISequence<? extends INodeItem> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
-    return ISequence.of(focus.asStream()
-        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item))
-        .filter(this::match));
+      DynamicContext dynamicContext, ISequence<?> focus) {
+    Stream<? extends INodeItem> nodes = focus.asStream()
+        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item));
+    if (matcher != null) {
+      Predicate<IDefinitionNodeItem<?, ?>> test = matcher;
+      nodes = nodes.filter(item -> {
+        assert matcher != null;
+        return !(item instanceof IDefinitionNodeItem) ||
+            test.test((IDefinitionNodeItem<?, ?>) item);
+      });
+    }
+    return ISequence.of(nodes);
   }
 
-  @SuppressWarnings("PMD.UnusedPrivateMethod")
-  private boolean match(INodeItem item) {
-    return item instanceof IDefinitionNodeItem
-        && getValue().equals(((IDefinitionNodeItem<?, ?>) item).getName());
+  public static class MatchAnyNamespace implements Predicate<IDefinitionNodeItem<?, ?>> {
+    @NonNull
+    private String localName;
+
+    public MatchAnyNamespace(@NonNull String localName) {
+      this.localName = localName;
+    }
+
+    @Override
+    public boolean test(IDefinitionNodeItem<?, ?> item) {
+      return localName.equals(item.getName().getLocalPart());
+    }
   }
 
-  @SuppressWarnings("null")
-  @Override
-  public String toASTString() {
-    return String.format("%s[value=%s]", getClass().getName(), getValue());
+  public static class MatchAnyLocalName implements Predicate<IDefinitionNodeItem<?, ?>> {
+    @NonNull
+    private String namespace;
+
+    public MatchAnyLocalName(@NonNull String namespace) {
+      this.namespace = namespace;
+    }
+
+    @Override
+    public boolean test(IDefinitionNodeItem<?, ?> item) {
+      return namespace.equals(item.getName().getNamespaceURI());
+    }
   }
 }

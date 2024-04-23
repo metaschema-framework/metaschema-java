@@ -33,6 +33,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -54,7 +56,7 @@ public interface IFeatureFlagContainerItem extends INodeItem {
   }
 
   @Override
-  default IFlagNodeItem getFlagByName(@NonNull String name) {
+  default IFlagNodeItem getFlagByName(@NonNull QName name) {
     return getModel().getFlagByName(name);
   }
 
@@ -65,7 +67,7 @@ public interface IFeatureFlagContainerItem extends INodeItem {
   }
 
   @Override
-  default List<? extends IModelNodeItem<?, ?>> getModelItemsByName(String name) {
+  default List<? extends IModelNodeItem<?, ?>> getModelItemsByName(QName name) {
     // no model items
     return CollectionUtil.emptyList();
   }
@@ -75,14 +77,14 @@ public interface IFeatureFlagContainerItem extends INodeItem {
    */
   class FlagContainer {
     @NonNull
-    private final Map<String, IFlagNodeItem> flags;
+    private final Map<QName, IFlagNodeItem> flags;
 
-    protected FlagContainer(@NonNull Map<String, IFlagNodeItem> flags) {
+    protected FlagContainer(@NonNull Map<QName, IFlagNodeItem> flags) {
       this.flags = flags;
     }
 
     @Nullable
-    public IFlagNodeItem getFlagByName(@NonNull String name) {
+    public IFlagNodeItem getFlagByName(@NonNull QName name) {
       return flags.get(name);
     }
 

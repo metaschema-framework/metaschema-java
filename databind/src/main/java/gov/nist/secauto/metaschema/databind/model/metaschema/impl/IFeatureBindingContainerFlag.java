@@ -26,16 +26,17 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
+import java.util.Collection;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFeatureContainerFlag;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModel;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceFlag;
-
-import java.util.Collection;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Represents a definition that may contain flags.
@@ -49,7 +50,7 @@ public interface IFeatureBindingContainerFlag
 
   @Override
   @Nullable
-  default IBindingInstanceFlag getFlagInstanceByName(String name) {
+  default IBindingInstanceFlag getFlagInstanceByName(QName name) {
     return getFlagContainer().getFlagInstanceMap().get(name);
   }
 

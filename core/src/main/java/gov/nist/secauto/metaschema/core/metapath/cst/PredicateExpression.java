@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class Predicate implements IExpression {
+public class PredicateExpression implements IExpression {
   @NonNull
   private final IExpression base;
   @NonNull
@@ -56,7 +56,7 @@ public class Predicate implements IExpression {
    * @param predicates
    *          the expression(s) to apply as a filter
    */
-  public Predicate(@NonNull IExpression base, @NonNull List<IExpression> predicates) {
+  public PredicateExpression(@NonNull IExpression base, @NonNull List<IExpression> predicates) {
     this.base = base;
     this.predicates = predicates;
   }

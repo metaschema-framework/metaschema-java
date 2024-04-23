@@ -26,7 +26,6 @@
 
 package gov.nist.secauto.metaschema.core.model.xml;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
@@ -157,7 +156,6 @@ public class XmlMetaConstraintLoader
     public List<ITargetedConstraints> getTargetedConstraints() {
       return Stream.concat(
           getMetapaths().stream()
-              .map(metapath -> MetapathExpression.compile(ObjectUtils.notNull(metapath)))
               .map(metapath -> new MetaTargetedContraints(ObjectUtils.notNull(metapath), constraints)),
           childContexts.stream()
               .flatMap(child -> child.getTargetedConstraints().stream()))
@@ -178,7 +176,7 @@ public class XmlMetaConstraintLoader
       implements IFeatureModelConstrained {
 
     protected MetaTargetedContraints(
-        @NonNull MetapathExpression target,
+        @NonNull String target,
         @NonNull IModelConstrained constraints) {
       super(target, constraints);
     }

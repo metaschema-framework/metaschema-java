@@ -46,26 +46,6 @@ public interface IBoundDefinitionModelComplex
   @NonNull
   Class<?> getBoundClass();
 
-  /**
-   * Retrieve the XML namespace for this definition.
-   *
-   * @return the XML namespace or {@code null} if no namespace is defined
-   */
-  @NonNull
-  default String getXmlNamespace() {
-    return ObjectUtils.notNull(getContainingModule().getXmlNamespace().toASCIIString());
-  }
-
-  /**
-   * Get the XML qualified name to use in XML.
-   *
-   * @return the XML qualified name, or {@code null} if there isn't one
-   */
-  @NonNull
-  default QName getXmlQName() {
-    return new QName(getXmlNamespace(), getEffectiveName());
-  }
-
   @NonNull
   Map<String, IBoundProperty> getJsonProperties(@Nullable Predicate<IBoundInstanceFlag> flagFilter);
 }

@@ -26,9 +26,11 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
-import gov.nist.secauto.metaschema.core.model.IContainerModelAbsolute;
-
 import java.util.Collection;
+
+import javax.xml.namespace.QName;
+
+import gov.nist.secauto.metaschema.core.model.IContainerModelAbsolute;
 
 public interface IBindingContainerModelAbsolute extends IContainerModelAbsolute {
 
@@ -42,17 +44,17 @@ public interface IBindingContainerModelAbsolute extends IContainerModelAbsolute 
   Collection<? extends IBindingInstanceModelNamedAbsolute> getNamedModelInstances();
 
   @Override
-  IBindingInstanceModelNamedAbsolute getNamedModelInstanceByName(String name);
+  IBindingInstanceModelNamedAbsolute getNamedModelInstanceByName(QName name);
 
   @Override
   Collection<? extends IBindingInstanceModelFieldAbsolute> getFieldInstances();
 
   @Override
-  IBindingInstanceModelFieldAbsolute getFieldInstanceByName(String name);
+  IBindingInstanceModelFieldAbsolute getFieldInstanceByName(QName name);
 
   @Override
   Collection<? extends IBindingInstanceModelAssemblyAbsolute> getAssemblyInstances();
 
   @Override
-  IBindingInstanceModelAssemblyAbsolute getAssemblyInstanceByName(String name);
+  IBindingInstanceModelAssemblyAbsolute getAssemblyInstanceByName(QName name);
 }

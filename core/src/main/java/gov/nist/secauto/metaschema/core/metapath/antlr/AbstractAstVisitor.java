@@ -473,30 +473,20 @@ public abstract class AbstractAstVisitor<R> // NOPMD
 
   @Override
   public R visitNodetest(NodetestContext ctx) {
-    // TODO: revisit once kindtest is implemented
-    assert ctx != null;
-    return delegateToChild(ctx);
+    // should never be called, since this is handled by the calling context
+    throw new IllegalStateException();
   }
 
   @Override
   public R visitNametest(NametestContext ctx) {
-    assert ctx != null;
-    return delegateToChild(ctx);
+    // should never be called, since this is handled by the calling context
+    throw new IllegalStateException();
   }
-
-  /**
-   * Handle the provided expression.
-   *
-   * @param ctx
-   *          the provided expression context
-   * @return the result
-   */
-  protected abstract R handleEqname(@NonNull EqnameContext ctx);
 
   @Override
   public R visitEqname(EqnameContext ctx) {
-    assert ctx != null;
-    return handleEqname(ctx);
+    // should never be called, since this is handled by the calling context
+    throw new IllegalStateException();
   }
 
   /**

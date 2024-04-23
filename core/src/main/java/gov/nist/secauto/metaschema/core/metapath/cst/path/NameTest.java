@@ -24,55 +24,73 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.databind.model.annotations;
+package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
-import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
-import gov.nist.secauto.metaschema.databind.model.IGroupAs;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
+import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+
+import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
-class DefaultGroupAs implements IGroupAs {
-  @NonNull
-  private final String name;
-  @Nullable
-  private final String namespace;
-  @NonNull
-  private final GroupAs annotation;
+/**
+ * The CST node for a Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#dt-expanded-qname">expanded QName
+ * name test</a>.
+ */
+public class NameTest
+    implements INameTestExpression {
 
-  DefaultGroupAs(@NonNull GroupAs annotation) {
-    this.annotation = annotation;
-    {
-      String value = ModelUtil.resolveNoneOrDefault(annotation.name(), null);
-      if (value == null) {
-        throw new IllegalStateException(
-            String.format("The %s#groupName value '%s' resulted in an invalid null value",
-                GroupAs.class.getName(),
-                annotation.name()));
-      }
-      this.name = value;
-    }
-    this.namespace = ModelUtil.resolveOptionalNamespace(annotation.namespace());
+  @NonNull
+  private final QName name;
+
+  /**
+   * Construct a new expanded QName-based literal expression.
+   *
+   * @param name
+   *          the literal value
+   */
+  public NameTest(@NonNull QName name) {
+    this.name = name;
   }
 
-  @Override
-  public String getGroupAsName() {
+  /**
+   * Get the string value of the name.
+   *
+   * @return the string value of the name
+   */
+  @NonNull
+  public QName getName() {
     return name;
   }
 
   @Override
-  public String getGroupAsXmlNamespace() {
-    return namespace;
+  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
+    return visitor.visitName(this, context);
   }
 
   @Override
-  public JsonGroupAsBehavior getJsonGroupAsBehavior() {
-    return annotation.inJson();
+  public ISequence<? extends INodeItem> accept(
+      DynamicContext dynamicContext,
+      ISequence<?> focus) {
+    return ISequence.of(focus.asStream()
+        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item))
+        .filter(this::match));
   }
 
+  @SuppressWarnings("PMD.UnusedPrivateMethod")
+  private boolean match(INodeItem item) {
+    return item instanceof IDefinitionNodeItem
+        && getName().equals(((IDefinitionNodeItem<?, ?>) item).getName());
+  }
+
+  @SuppressWarnings("null")
   @Override
-  public XmlGroupAsBehavior getXmlGroupAsBehavior() {
-    return annotation.inXml();
+  public String toASTString() {
+    return String.format("%s[name=%s]", getClass().getName(), getName());
   }
 }

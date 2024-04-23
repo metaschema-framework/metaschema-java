@@ -26,13 +26,15 @@
 
 package gov.nist.secauto.metaschema.databind.model;
 
-import gov.nist.secauto.metaschema.core.model.IContainerFlag;
-
 import java.util.Collection;
+
+import javax.xml.namespace.QName;
+
+import gov.nist.secauto.metaschema.core.model.IContainerFlag;
 
 public interface IBoundContainerFlag extends IContainerFlag {
   @Override
-  IBoundInstanceFlag getFlagInstanceByName(String name);
+  IBoundInstanceFlag getFlagInstanceByName(QName name);
 
   @Override
   Collection<? extends IBoundInstanceFlag> getFlagInstances();

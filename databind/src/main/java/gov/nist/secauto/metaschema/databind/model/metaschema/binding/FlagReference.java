@@ -94,7 +94,7 @@ public class FlagReference {
   private String _required;
 
   @BoundField(
-      formalName = "Formal Name",
+      formalName = "Formal NameT",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name")
   private String _formalName;

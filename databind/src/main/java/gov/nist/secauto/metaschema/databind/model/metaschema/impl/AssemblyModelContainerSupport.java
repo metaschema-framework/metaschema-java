@@ -26,6 +26,17 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -48,14 +59,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldRefere
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
-
 class AssemblyModelContainerSupport
     extends AbstractBindingModelContainerSupport
     implements IContainerModelAssemblySupport<
@@ -68,17 +71,18 @@ class AssemblyModelContainerSupport
   @NonNull
   private final List<IBindingInstanceModelAbsolute> modelInstances;
   @NonNull
-  private final Map<String, IBindingInstanceModelNamedAbsolute> namedModelInstances;
+  private final Map<QName, IBindingInstanceModelNamedAbsolute> namedModelInstances;
   @NonNull
-  private final Map<String, IBindingInstanceModelFieldAbsolute> fieldInstances;
+  private final Map<QName, IBindingInstanceModelFieldAbsolute> fieldInstances;
   @NonNull
-  private final Map<String, IBindingInstanceModelAssemblyAbsolute> assemblyInstances;
+  private final Map<QName, IBindingInstanceModelAssemblyAbsolute> assemblyInstances;
   @NonNull
   private final List<IInstanceModelChoiceBinding> choiceInstances;
   @NonNull
   private final Map<String, IInstanceModelChoiceGroupBinding> choiceGroupInstances;
 
   @SuppressWarnings("PMD.ShortMethodName")
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public static IContainerModelAssemblySupport<
       IBindingInstanceModelAbsolute,
       IBindingInstanceModelNamedAbsolute,
@@ -113,6 +117,7 @@ class AssemblyModelContainerSupport
    *          the node item factory used to generate child nodes
    */
   @SuppressWarnings({ "PMD.AvoidInstantiatingObjectsInLoops", "PMD.UseConcurrentHashMap", "PMD.PrematureDeclaration" })
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   protected AssemblyModelContainerSupport(
       @NonNull AssemblyModel model,
       @NonNull IBoundInstanceModelAssembly modelInstance,
@@ -121,9 +126,9 @@ class AssemblyModelContainerSupport
 
     // create temporary collections to store the child binding objects
     final List<IBindingInstanceModelAbsolute> modelInstances = new LinkedList<>();
-    final Map<String, IBindingInstanceModelNamedAbsolute> namedModelInstances = new LinkedHashMap<>();
-    final Map<String, IBindingInstanceModelFieldAbsolute> fieldInstances = new LinkedHashMap<>();
-    final Map<String, IBindingInstanceModelAssemblyAbsolute> assemblyInstances = new LinkedHashMap<>();
+    final Map<QName, IBindingInstanceModelNamedAbsolute> namedModelInstances = new LinkedHashMap<>();
+    final Map<QName, IBindingInstanceModelFieldAbsolute> fieldInstances = new LinkedHashMap<>();
+    final Map<QName, IBindingInstanceModelAssemblyAbsolute> assemblyInstances = new LinkedHashMap<>();
     final List<IInstanceModelChoiceBinding> choiceInstances = new LinkedList<>();
     final Map<String, IInstanceModelChoiceGroupBinding> choiceGroupInstances = new LinkedHashMap<>();
 
@@ -220,17 +225,17 @@ class AssemblyModelContainerSupport
   }
 
   @Override
-  public Map<String, IBindingInstanceModelNamedAbsolute> getNamedModelInstanceMap() {
+  public Map<QName, IBindingInstanceModelNamedAbsolute> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<String, IBindingInstanceModelFieldAbsolute> getFieldInstanceMap() {
+  public Map<QName, IBindingInstanceModelFieldAbsolute> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<String, IBindingInstanceModelAssemblyAbsolute> getAssemblyInstanceMap() {
+  public Map<QName, IBindingInstanceModelAssemblyAbsolute> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 

@@ -58,6 +58,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -533,12 +535,14 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
       @NonNull DynamicContext dynamicContext) {
+    MetapathExpression metapath = MetapathExpression.compile(
+        constraint.getTest(),
+        dynamicContext.getStaticContext());
     targets.asStream()
         .map(item -> (INodeItem) item)
         .forEachOrdered(item -> {
           assert item != null;
           if (item.hasValue()) {
-            MetapathExpression metapath = constraint.getTest();
             try {
               ISequence<?> result = metapath.evaluate(item, dynamicContext);
               if (!FnBoolean.fnBoolean(result).toBoolean()) {
@@ -610,7 +614,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
     String id = constraint.getId();
     if (id == null) {
       builder.append(" targeting the metapath '")
-          .append(constraint.getTarget().getPath())
+          .append(constraint.getTarget())
           .append('\'');
     } else {
       builder.append(" with id '")
@@ -770,7 +774,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
     @NonNull
     private DynamicContext handleLetStatements(
         @NonNull INodeItem focus,
-        @NonNull Map<String, ILet> letExpressions,
+        @NonNull Map<QName, ILet> letExpressions,
         @NonNull DynamicContext dynamicContext) {
 
       DynamicContext retval;
@@ -781,7 +785,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
         final DynamicContext subContext = dynamicContext.subContext();
 
         for (ILet let : lets) {
-          String name = let.getName();
+          QName name = let.getName();
           ISequence<?> result = let.getValueExpression().evaluate(focus, subContext);
           subContext.bindVariableValue(name, result);
         }

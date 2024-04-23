@@ -26,15 +26,16 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
+import java.util.Collection;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.databind.model.IBoundContainerModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedField;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedNamed;
-
-import java.util.Collection;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IFeatureBoundContainerModelChoiceGroup
     extends IBoundContainerModelChoiceGroup {
@@ -47,7 +48,7 @@ public interface IFeatureBoundContainerModelChoiceGroup
       IBoundInstanceModelGroupedAssembly> getModelContainer();
 
   @Override
-  default IBoundInstanceModelGroupedNamed getNamedModelInstanceByName(String name) {
+  default IBoundInstanceModelGroupedNamed getNamedModelInstanceByName(QName name) {
     return getModelContainer().getNamedModelInstanceMap().get(name);
   }
 
@@ -58,7 +59,7 @@ public interface IFeatureBoundContainerModelChoiceGroup
   }
 
   @Override
-  default IBoundInstanceModelGroupedField getFieldInstanceByName(String name) {
+  default IBoundInstanceModelGroupedField getFieldInstanceByName(QName name) {
     return getModelContainer().getFieldInstanceMap().get(name);
   }
 
@@ -69,7 +70,7 @@ public interface IFeatureBoundContainerModelChoiceGroup
   }
 
   @Override
-  default IBoundInstanceModelGroupedAssembly getAssemblyInstanceByName(String name) {
+  default IBoundInstanceModelGroupedAssembly getAssemblyInstanceByName(QName name) {
     return getModelContainer().getAssemblyInstanceMap().get(name);
   }
 

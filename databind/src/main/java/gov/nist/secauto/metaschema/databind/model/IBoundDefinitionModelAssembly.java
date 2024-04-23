@@ -69,11 +69,12 @@ public interface IBoundDefinitionModelAssembly
     // never inline
     return null;
   }
-
-  @Override
-  default QName getXmlQName() {
-    return ObjectUtils.requireNonNull(getRootXmlQName());
-  }
+  //
+  // @Override
+  // @NonNull
+  // default QName getXmlQName() {
+  // return ObjectUtils.requireNonNull(getRootXmlQName());
+  // }
 
   @Override
   @NonNull

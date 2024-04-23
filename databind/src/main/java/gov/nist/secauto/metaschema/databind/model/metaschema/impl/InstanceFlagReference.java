@@ -71,7 +71,7 @@ public class InstanceFlagReference
     this.defaultValue = ModelSupport.defaultValue(getBinding().getDefault(), definition.getJavaTypeAdapter());
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) getContainingModule().getBoundNodeItem()
-            .getModelItemsByName(bindingInstance.getEffectiveName())
+            .getModelItemsByName(bindingInstance.getXmlQName())
             .get(position)));
   }
 

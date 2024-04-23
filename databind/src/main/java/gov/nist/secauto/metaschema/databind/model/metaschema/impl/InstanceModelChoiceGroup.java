@@ -75,7 +75,7 @@ public class InstanceModelChoiceGroup
       @NonNull IBindingDefinitionAssembly parent,
       @NonNull INodeItemFactory nodeItemFactory) {
     super(binding, parent);
-    this.groupAs = ModelSupport.groupAs(binding.getGroupAs());
+    this.groupAs = ModelSupport.groupAs(binding.getGroupAs(), parent.getXmlNamespace());
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> ChoiceGroupModelContainerSupport.of(
         binding,
         bindingInstance,
@@ -83,7 +83,7 @@ public class InstanceModelChoiceGroup
         nodeItemFactory)));
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) getContainingDefinition().getBoundNodeItem()
-            .getModelItemsByName(bindingInstance.getJsonName())
+            .getModelItemsByName(bindingInstance.getXmlQName())
             .get(position)));
   }
 
