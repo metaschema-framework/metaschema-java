@@ -36,7 +36,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.node.AbstractNodeItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
@@ -792,11 +791,6 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
         retval = subContext;
       }
       return retval;
-    }
-
-    @Override
-    public Void visitDocument(@NonNull IDocumentNodeItem item, DynamicContext context) {
-      return super.visitDocument(item, context);
     }
 
     @Override

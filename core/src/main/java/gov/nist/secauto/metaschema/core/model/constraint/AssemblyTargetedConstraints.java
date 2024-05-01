@@ -61,11 +61,10 @@ public class AssemblyTargetedConstraints
   }
 
   @Override
-  @SuppressWarnings("null")
   protected void applyTo(@NonNull IAssemblyDefinition definition) {
     super.applyTo(definition);
-    getIndexConstraints().forEach(constraint -> definition.addConstraint(constraint));
-    getUniqueConstraints().forEach(constraint -> definition.addConstraint(constraint));
-    getHasCardinalityConstraints().forEach(constraint -> definition.addConstraint(constraint));
+    getIndexConstraints().forEach(definition::addConstraint);
+    getUniqueConstraints().forEach(definition::addConstraint);
+    getHasCardinalityConstraints().forEach(definition::addConstraint);
   }
 }

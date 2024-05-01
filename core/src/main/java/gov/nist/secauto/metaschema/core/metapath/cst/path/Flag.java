@@ -70,7 +70,7 @@ public class Flag // NOPMD - intentional name
       DynamicContext dynamicContext,
       ISequence<?> focus) {
     return ISequence.of(focus.asStream()
-        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item))
+        .map(ItemUtils::checkItemIsNodeItemForStep)
         .flatMap(item -> {
           assert item != null;
           return match(item);

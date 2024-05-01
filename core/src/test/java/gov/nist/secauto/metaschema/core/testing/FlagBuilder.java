@@ -103,11 +103,4 @@ public final class FlagBuilder
     });
     return retval;
   }
-
-  // @Override
-  // public Object getValue(Object parentInstance) {
-  // // TODO Auto-generated method stub
-  // return null;
-  // }
-  // }
 }

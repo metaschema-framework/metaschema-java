@@ -112,7 +112,7 @@ class BuildCstVisitorTest {
   }
 
   @NonNull
-  private StaticContext newStaticContext() {
+  private static StaticContext newStaticContext() {
     return StaticContext.builder()
         .defaultModelNamespace(NS_URI)
         .build();

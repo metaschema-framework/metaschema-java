@@ -373,7 +373,7 @@ public final class FunctionUtils {
    */
   @NonNull
   public static Stream<Class<?>> getTypes(@NonNull Stream<? extends IItem> items) {
-    return ObjectUtils.notNull(items.map(item -> item.getClass()));
+    return ObjectUtils.notNull(items.map(Object::getClass));
   }
 
   /**

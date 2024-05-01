@@ -26,6 +26,7 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
+import gov.nist.secauto.metaschema.core.model.AbstractChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
@@ -42,6 +43,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.BoundGroupedAssemb
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundGroupedField;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
+import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -49,6 +51,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -63,10 +66,21 @@ import nl.talsmasoftware.lazy4j.Lazy;
 /**
  * Implements a Metaschema module choice group instance bound to a Java field.
  */
-public class InstanceModelChoiceGroup
-    extends AbstractBoundInstanceModelJavaField<BoundChoiceGroup>
+public final class InstanceModelChoiceGroup
+    extends AbstractChoiceGroupInstance<
+        IBoundDefinitionModelAssembly,
+        IBoundInstanceModelGroupedNamed,
+        IBoundInstanceModelGroupedField,
+        IBoundInstanceModelGroupedAssembly>
+    // extends AbstractBoundInstanceModelJavaField<BoundChoiceGroup>
     implements IBoundInstanceModelChoiceGroup,
-    IFeatureBoundContainerModelChoiceGroup {
+    IFeatureBoundContainerModelChoiceGroup, IFeatureInstanceModelGroupAs {
+  @NonNull
+  private final Field javaField;
+  @NonNull
+  private final BoundChoiceGroup annotation;
+  @NonNull
+  private final Lazy<IModelInstanceCollectionInfo> collectionInfo;
   @NonNull
   private final IGroupAs groupAs;
   @NonNull
@@ -83,53 +97,87 @@ public class InstanceModelChoiceGroup
    *
    * @param javaField
    *          the Java field bound to this instance
-   * @param containingDefinition
+   * @param parent
    *          the definition containing this instance
+   * @return the instance
    */
-  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
-  public InstanceModelChoiceGroup(
+  @NonNull
+  public static InstanceModelChoiceGroup newInstance(
       @NonNull Field javaField,
-      @NonNull IBoundDefinitionModelAssembly containingDefinition) {
-    super(javaField, BoundChoiceGroup.class, containingDefinition);
-    this.groupAs = ModelUtil.groupAs(
-        getAnnotation().groupAs(),
-        () -> containingDefinition.getXmlNamespace());
-    if (getMaxOccurs() == -1 || getMaxOccurs() > 1) {
-      if (IGroupAs.SINGLETON_GROUP_AS.equals(this.groupAs)) {
+      @NonNull IBoundDefinitionModelAssembly parent) {
+    BoundChoiceGroup annotation = ModelUtil.getAnnotation(javaField, BoundChoiceGroup.class);
+    IGroupAs groupAs = ModelUtil.groupAs(annotation.groupAs(), parent.getContainingModule());
+    if (annotation.maxOccurs() == -1 || annotation.maxOccurs() > 1) {
+      if (IGroupAs.SINGLETON_GROUP_AS.equals(groupAs)) {
         throw new IllegalStateException(String.format("Field '%s' on class '%s' is missing the '%s' annotation.",
-            getField().getName(),
-            containingDefinition.getBoundClass().getName(),
+            javaField.getName(),
+            parent.getBoundClass().getName(),
             GroupAs.class.getName()));
       }
-    } else if (!IGroupAs.SINGLETON_GROUP_AS.equals(this.groupAs)) {
+    } else if (!IGroupAs.SINGLETON_GROUP_AS.equals(groupAs)) {
       // max is 1 and a groupAs is set
       throw new IllegalStateException(
           String.format(
               "Field '%s' on class '%s' has the '%s' annotation, but maxOccurs=1. A groupAs must not be specfied.",
-              getField().getName(),
-              containingDefinition.getBoundClass().getName(),
+              javaField.getName(),
+              parent.getBoundClass().getName(),
               GroupAs.class.getName()));
     }
+    return new InstanceModelChoiceGroup(javaField, annotation, groupAs, parent);
+  }
+
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
+  private InstanceModelChoiceGroup(
+      @NonNull Field javaField,
+      @NonNull BoundChoiceGroup annotation,
+      @NonNull IGroupAs groupAs,
+      @NonNull IBoundDefinitionModelAssembly parent) {
+    super(parent);
+    this.javaField = javaField;
+    this.annotation = annotation;
+    this.groupAs = groupAs;
+    this.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -> IModelInstanceCollectionInfo.of(this)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> new ChoiceGroupModelContainerSupport(
-        getAnnotation().assemblies(),
-        getAnnotation().fields(),
+        this.annotation.assemblies(),
+        this.annotation.fields(),
         this)));
     this.classToInstanceMap = ObjectUtils.notNull(Lazy.lazy(() -> Collections.unmodifiableMap(
         getNamedModelInstances().stream()
             .map(instance -> instance)
             .collect(Collectors.toMap(
-                item -> (Class<?>) item.getDefinition().getBoundClass(),
+                item -> item.getDefinition().getBoundClass(),
                 CustomCollectors.identity())))));
     this.qnameToInstanceMap = ObjectUtils.notNull(Lazy.lazy(() -> Collections.unmodifiableMap(
         getNamedModelInstances().stream()
             .collect(Collectors.toMap(
-                item -> item.getXmlQName(),
+                IBoundInstanceModelGroupedNamed::getXmlQName,
                 CustomCollectors.identity())))));
     this.discriminatorToInstanceMap = ObjectUtils.notNull(Lazy.lazy(() -> Collections.unmodifiableMap(
         getNamedModelInstances().stream()
             .collect(Collectors.toMap(
-                item -> item.getEffectiveDisciminatorValue(),
+                IBoundInstanceModelGroupedNamed::getEffectiveDisciminatorValue,
                 CustomCollectors.identity())))));
+  }
+
+  @Override
+  public Field getField() {
+    return javaField;
+  }
+
+  /**
+   * Get the binding Java annotation.
+   *
+   * @return the binding Java annotation
+   */
+  @NonNull
+  public BoundChoiceGroup getAnnotation() {
+    return annotation;
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  public IModelInstanceCollectionInfo getCollectionInfo() {
+    return collectionInfo.get();
   }
 
   // ------------------------------------------
@@ -201,16 +249,16 @@ public class InstanceModelChoiceGroup
 
   @Override
   public IBoundDefinitionModelAssembly getOwningDefinition() {
-    return getContainingDefinition();
+    return getParentContainer();
   }
 
   @Override
-  public final int getMinOccurs() {
+  public int getMinOccurs() {
     return getAnnotation().minOccurs();
   }
 
   @Override
-  public final int getMaxOccurs() {
+  public int getMaxOccurs() {
     return getAnnotation().maxOccurs();
   }
 
@@ -220,13 +268,13 @@ public class InstanceModelChoiceGroup
   }
 
   @Override
-  public String getJsonKeyFlagName() {
+  public String getJsonKeyFlagInstanceName() {
     return getAnnotation().jsonKey();
   }
 
   @Override
   public IBoundInstanceFlag getItemJsonKey(Object item) {
-    String jsonKeyFlagName = getJsonKeyFlagName();
+    String jsonKeyFlagName = getJsonKeyFlagInstanceName();
     IBoundInstanceFlag retval = null;
 
     if (jsonKeyFlagName != null) {
@@ -264,7 +312,7 @@ public class InstanceModelChoiceGroup
                 container);
           })
           .collect(Collectors.toMap(
-              instance -> instance.getXmlQName(),
+              IBoundInstanceModelGroupedAssembly::getXmlQName,
               Function.identity(),
               CustomCollectors.useLastMapper(),
               LinkedHashMap::new))));
@@ -274,7 +322,7 @@ public class InstanceModelChoiceGroup
             return IBoundInstanceModelGroupedField.newInstance(instance, container);
           })
           .collect(Collectors.toMap(
-              instance -> instance.getXmlQName(),
+              IBoundInstanceModelGroupedField::getXmlQName,
               Function.identity(),
               CustomCollectors.useLastMapper(),
               LinkedHashMap::new))));
@@ -282,8 +330,8 @@ public class InstanceModelChoiceGroup
           this.assemblyInstances.entrySet().stream(),
           this.fieldInstances.entrySet().stream())
           .collect(Collectors.toMap(
-              entry -> entry.getKey(),
-              entry -> entry.getValue(),
+              Entry::getKey,
+              Entry::getValue,
               CustomCollectors.useLastMapper(),
               LinkedHashMap::new))));
     }

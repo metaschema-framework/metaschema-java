@@ -394,7 +394,7 @@ public class DefaultFunction
     if (arguments.isEmpty()) {
       builder.append("()");
     } else {
-      builder.append(arguments.stream().map(argument -> argument.toSignature()).collect(Collectors.joining(",")));
+      builder.append(arguments.stream().map(IArgument::toSignature).collect(Collectors.joining(",")));
 
       if (isArityUnbounded()) {
         builder.append(", ...");

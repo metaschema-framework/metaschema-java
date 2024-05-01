@@ -117,7 +117,7 @@ public class MetaschemaJsonReader
       @NonNull JsonParser parser,
       @NonNull IJsonProblemHandler problemHandler) throws IOException {
     this.problemHandler = problemHandler;
-    this.objectMapper = ObjectUtils.notNull(Lazy.lazy(() -> new ObjectMapper()));
+    this.objectMapper = ObjectUtils.notNull(Lazy.lazy(ObjectMapper::new));
     push(parser);
   }
 
@@ -278,7 +278,7 @@ public class MetaschemaJsonReader
           parentItem,
           instance.getDefinition(),
           instance.getJsonProperties(),
-          instance.getJsonKey(),
+          instance.getEffectiveJsonKey(),
           getProblemHandler());
     }
 
@@ -295,7 +295,7 @@ public class MetaschemaJsonReader
       return readComplexDefinitionObject(
           parentItem,
           definition,
-          instance.getJsonKey(),
+          instance.getEffectiveJsonKey(),
           new PropertyBodyHandler(instance.getJsonProperties()),
           actualProblemHandler);
     }
@@ -333,7 +333,7 @@ public class MetaschemaJsonReader
       return readComplexDefinitionObject(
           parentItem,
           instance.getDefinition(),
-          instance.getJsonKey(),
+          instance.getEffectiveJsonKey(),
           new PropertyBodyHandler(instance.getJsonProperties()),
           new GroupedInstanceProblemHandler(instance, getProblemHandler()));
     }
@@ -511,11 +511,11 @@ public class MetaschemaJsonReader
             handled = true;
           }
 
-          if (!(handled || problemHandler.handleUnknownProperty(
+          if (!handled && !problemHandler.handleUnknownProperty(
               definition,
               parentItem,
               propertyName,
-              getInstanceReader()))) {
+              getInstanceReader())) {
             if (LOGGER.isWarnEnabled()) {
               LOGGER.warn("Skipping unhandled JSON field '{}' {}.", propertyName, JsonUtil.toString(parser));
             }
@@ -747,7 +747,6 @@ public class MetaschemaJsonReader
       IBoundInstanceModel instance = getCollectionInfo().getInstance();
       return instance.readItem(getParentObject(), getItemReader());
     }
-
   }
 
   @SuppressWarnings("unchecked")
@@ -771,7 +770,7 @@ public class MetaschemaJsonReader
 
     T retval = null;
     JsonToken token;
-    while (!(JsonToken.END_OBJECT.equals(token = parser.currentToken()) || token == null)) {
+    while (!JsonToken.END_OBJECT.equals(token = parser.currentToken()) && token != null) {
       if (!JsonToken.FIELD_NAME.equals(token)) {
         throw new IOException(String.format("Expected FIELD_NAME token, found '%s'", token.toString()));
       }

@@ -43,7 +43,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.ShortClassName") // intentional
 public enum Axis implements IExpression {
-  SELF(focus -> Stream.of(focus)),
+  SELF(Stream::of),
   PARENT(focus -> Stream.ofNullable(focus.getParentNodeItem())),
   ANCESTOR(INodeItem::ancestor),
   ANCESTOR_OR_SELF(INodeItem::ancestorOrSelf),
@@ -99,7 +99,7 @@ public enum Axis implements IExpression {
       retval = ISequence.empty();
     } else {
       retval = ISequence.of(outerFocus.asStream()
-          .map(item -> ItemUtils.checkItemIsNodeItemForStep(item))
+          .map(ItemUtils::checkItemIsNodeItemForStep)
           .flatMap(item -> {
             assert item != null;
             return execute(item);
