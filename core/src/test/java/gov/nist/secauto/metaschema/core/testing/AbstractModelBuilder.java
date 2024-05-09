@@ -30,8 +30,8 @@ import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelElement;
-import gov.nist.secauto.metaschema.core.model.INamedModelElement;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
+import gov.nist.secauto.metaschema.core.model.INamedModelElement;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.apache.commons.lang3.ObjectUtils;

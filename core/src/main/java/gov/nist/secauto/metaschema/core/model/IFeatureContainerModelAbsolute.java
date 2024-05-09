@@ -46,7 +46,8 @@ public interface IFeatureContainerModelAbsolute<
     MI extends IModelInstanceAbsolute,
     NMI extends INamedModelInstanceAbsolute,
     FI extends IFieldInstanceAbsolute,
-    AI extends IAssemblyInstanceAbsolute> extends IContainerModelAbsolute, IFeatureContainerModel<MI, NMI, FI, AI> {
+    AI extends IAssemblyInstanceAbsolute>
+    extends IContainerModelAbsolute, IFeatureContainerModel<MI, NMI, FI, AI> {
   @Override
   default Collection<MI> getModelInstances() {
     return getModelContainer().getModelInstances();

@@ -78,7 +78,7 @@ public class NameTest
       DynamicContext dynamicContext,
       ISequence<?> focus) {
     return ISequence.of(focus.asStream()
-        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item))
+        .map(ItemUtils::checkItemIsNodeItemForStep)
         .filter(this::match));
   }
 

@@ -41,7 +41,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * @param <FI>
  *          the flag instance Java type
  */
-public interface IFeatureContainerFlag<FI extends IFlagInstance> extends IContainerFlag {
+public interface IFeatureContainerFlag<FI extends IFlagInstance> extends IModelDefinition {
   /**
    * Lazy initialize the flag instances associated with this definition.
    *
@@ -60,5 +60,10 @@ public interface IFeatureContainerFlag<FI extends IFlagInstance> extends IContai
   @NonNull
   default Collection<? extends FI> getFlagInstances() {
     return ObjectUtils.notNull(getFlagContainer().getFlagInstanceMap().values());
+  }
+
+  @Override
+  default FI getJsonKey() {
+    return getFlagContainer().getJsonKeyFlagInstance();
   }
 }

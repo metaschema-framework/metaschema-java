@@ -26,6 +26,14 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
+import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
+import gov.nist.secauto.metaschema.databind.model.IBoundInstanceFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.Ignore;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,13 +52,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.model.IBoundInstanceFlag;
-import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
-import gov.nist.secauto.metaschema.databind.model.annotations.Ignore;
-
 public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanceFlag> {
   @NonNull
   private final Map<QName, IBoundInstanceFlag> flagInstances;
@@ -60,7 +61,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
   @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public FlagContainerSupport(
-      @NonNull AbstractBoundDefinitionModelComplex<?> definition,
+      @NonNull IBoundDefinitionModelComplex definition,
       @Nullable Consumer<IBoundInstanceFlag> peeker) {
     Class<?> clazz = definition.getBoundClass();
 
@@ -111,12 +112,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
     }
 
     for (Field field : fields) {
-      if (!field.isAnnotationPresent(BoundFlag.class)) {
-        // skip non-flag fields
-        continue;
-      }
-
-      if (field.isAnnotationPresent(Ignore.class)) {
+      if (!field.isAnnotationPresent(BoundFlag.class) || field.isAnnotationPresent(Ignore.class)) {
         // skip this field, since it is ignored
         continue;
       }
@@ -144,6 +140,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
     return flagInstances;
   }
 
+  @Override
   public IBoundInstanceFlag getJsonKeyFlagInstance() {
     return jsonKeyFlag;
   }

@@ -26,6 +26,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.model.constraint.IFeatureModelConstrained;
 
 import javax.xml.namespace.QName;
@@ -106,6 +107,11 @@ public interface IAssemblyDefinition
   @Override
   default IAssemblyDefinition getOwningDefinition() {
     return this;
+  }
+
+  @Override
+  default IAssemblyNodeItem getNodeItem() {
+    return null;
   }
 
   @Override

@@ -26,6 +26,23 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
+import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
+import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
+import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,43 +54,26 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
-import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
-import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceModelAbsolute;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceModelAssemblyAbsolute;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceModelFieldAbsolute;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstanceModelNamedAbsolute;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IInstanceModelChoiceBinding;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
-
 class ChoiceModelContainerSupport
     extends AbstractBindingModelContainerSupport {
   @NonNull
-  private final List<IBindingInstanceModelAbsolute> modelInstances;
+  private final List<IModelInstanceAbsolute> modelInstances;
   @NonNull
-  private final Map<QName, IBindingInstanceModelNamedAbsolute> namedModelInstances;
+  private final Map<QName, INamedModelInstanceAbsolute> namedModelInstances;
   @NonNull
-  private final Map<QName, IBindingInstanceModelFieldAbsolute> fieldInstances;
+  private final Map<QName, IFieldInstanceAbsolute> fieldInstances;
   @NonNull
-  private final Map<QName, IBindingInstanceModelAssemblyAbsolute> assemblyInstances;
+  private final Map<QName, IAssemblyInstanceAbsolute> assemblyInstances;
 
   @SuppressWarnings("PMD.ShortMethodName")
   public static IContainerModelSupport<
-      IBindingInstanceModelAbsolute,
-      IBindingInstanceModelNamedAbsolute,
-      IBindingInstanceModelFieldAbsolute,
-      IBindingInstanceModelAssemblyAbsolute> of(
+      IModelInstanceAbsolute,
+      INamedModelInstanceAbsolute,
+      IFieldInstanceAbsolute,
+      IAssemblyInstanceAbsolute> of(
           @Nullable Choice binding,
           @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
-          @NonNull IInstanceModelChoiceBinding parent,
+          @NonNull IChoiceInstance parent,
           @NonNull INodeItemFactory nodeItemFactory) {
     List<Object> instances;
     return binding == null || (instances = binding.getChoices()) == null || instances.isEmpty()
@@ -102,14 +102,14 @@ class ChoiceModelContainerSupport
   public ChoiceModelContainerSupport(
       @NonNull Choice binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
-      @NonNull IInstanceModelChoiceBinding parent,
+      @NonNull IChoiceInstance parent,
       @NonNull INodeItemFactory nodeItemFactory) {
 
     // create temporary collections to store the child binding objects
-    final List<IBindingInstanceModelAbsolute> modelInstances = new LinkedList<>();
-    final Map<QName, IBindingInstanceModelNamedAbsolute> namedModelInstances = new LinkedHashMap<>();
-    final Map<QName, IBindingInstanceModelFieldAbsolute> fieldInstances = new LinkedHashMap<>();
-    final Map<QName, IBindingInstanceModelAssemblyAbsolute> assemblyInstances = new LinkedHashMap<>();
+    final List<IModelInstanceAbsolute> modelInstances = new LinkedList<>();
+    final Map<QName, INamedModelInstanceAbsolute> namedModelInstances = new LinkedHashMap<>();
+    final Map<QName, IFieldInstanceAbsolute> fieldInstances = new LinkedHashMap<>();
+    final Map<QName, IAssemblyInstanceAbsolute> assemblyInstances = new LinkedHashMap<>();
 
     // create counters to track child positions
     int assemblyReferencePosition = 0;
@@ -125,14 +125,14 @@ class ChoiceModelContainerSupport
           = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
 
       if (obj instanceof AssemblyReference) {
-        IBindingInstanceModelAssemblyAbsolute assembly = newInstance(
+        IAssemblyInstanceAbsolute assembly = newInstance(
             (AssemblyReference) obj,
             objInstance,
             assemblyReferencePosition++,
             parent);
         addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);
       } else if (obj instanceof InlineDefineAssembly) {
-        IBindingInstanceModelAssemblyAbsolute assembly = new InstanceModelAssemblyInline(
+        IAssemblyInstanceAbsolute assembly = new InstanceModelAssemblyInline(
             (InlineDefineAssembly) obj,
             objInstance,
             assemblyInlineDefinitionPosition++,
@@ -140,14 +140,14 @@ class ChoiceModelContainerSupport
             nodeItemFactory);
         addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);
       } else if (obj instanceof FieldReference) {
-        IBindingInstanceModelFieldAbsolute field = newInstance(
+        IFieldInstanceAbsolute field = newInstance(
             (FieldReference) obj,
             objInstance,
             fieldReferencePosition++,
             parent);
         addInstance(field, modelInstances, namedModelInstances, fieldInstances);
       } else if (obj instanceof InlineDefineField) {
-        IBindingInstanceModelFieldAbsolute field = new InstanceModelFieldInline(
+        IFieldInstanceAbsolute field = new InstanceModelFieldInline(
             (InlineDefineField) obj,
             objInstance,
             fieldInlineDefinitionPosition++,
@@ -173,22 +173,22 @@ class ChoiceModelContainerSupport
   }
 
   @Override
-  public List<IBindingInstanceModelAbsolute> getModelInstances() {
+  public List<IModelInstanceAbsolute> getModelInstances() {
     return modelInstances;
   }
 
   @Override
-  public Map<QName, IBindingInstanceModelNamedAbsolute> getNamedModelInstanceMap() {
+  public Map<QName, INamedModelInstanceAbsolute> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<QName, IBindingInstanceModelFieldAbsolute> getFieldInstanceMap() {
+  public Map<QName, IFieldInstanceAbsolute> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<QName, IBindingInstanceModelAssemblyAbsolute> getAssemblyInstanceMap() {
+  public Map<QName, IAssemblyInstanceAbsolute> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 }

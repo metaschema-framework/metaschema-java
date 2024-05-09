@@ -298,6 +298,6 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   @SuppressWarnings("null")
   @NonNull
   default Stream<? extends IModelNodeItem<?, ?>> modelItems() {
-    return getModelItems().stream().flatMap(list -> list.stream());
+    return getModelItems().stream().flatMap(Collection::stream);
   }
 }

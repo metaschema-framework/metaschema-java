@@ -26,9 +26,13 @@
 
 package gov.nist.secauto.metaschema.databind.io;
 
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -41,20 +45,20 @@ public enum Format {
   /**
    * The <a href="https://www.w3.org/XML/">Extensible Markup Language</a> format.
    */
-  XML(".xml"),
+  XML(Set.of(".xml")),
   /**
    * The <a href="https://www.json.org/">JavaScript Object Notation</a> format.
    */
-  JSON(".json"),
+  JSON(Set.of(".json")),
   /**
    * The <a href="https://yaml.org/">YAML Ain't Markup Language</a> format.
    */
-  YAML(".yml");
+  YAML(Set.of(".yml", ".yaml"));
 
   private static final List<String> NAMES;
 
   @NonNull
-  private final String defaultExtension;
+  private final Set<String> defaultExtensions;
 
   static {
     NAMES = Arrays.stream(values())
@@ -72,8 +76,8 @@ public enum Format {
     return NAMES;
   }
 
-  Format(@NonNull String defaultExtension) {
-    this.defaultExtension = defaultExtension;
+  Format(Set<String> defaultExtensions) {
+    this.defaultExtensions = CollectionUtil.unmodifiableSet(ObjectUtils.requireNonNull(defaultExtensions));
   }
 
   /**
@@ -82,7 +86,7 @@ public enum Format {
    * @return the default extension
    */
   @NonNull
-  public String getDefaultExtension() {
-    return defaultExtension;
+  public Set<String> getDefaultExtension() {
+    return defaultExtensions;
   }
 }
