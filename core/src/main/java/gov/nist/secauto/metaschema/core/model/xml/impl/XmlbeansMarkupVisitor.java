@@ -106,11 +106,11 @@ public class XmlbeansMarkupVisitor // TODO: rename
   @Override
   public void writeEmptyElement(QName qname, Map<String, String> attributes)
       throws IllegalArgumentException {
-    @SuppressWarnings("resource") // not owned
+    @SuppressWarnings({ "resource", "PMD.CloseResource" }) // not owned
     XmlCursor cursor = getStream();
     cursor.beginElement(qname);
 
-    attributes.forEach((name, value) -> cursor.insertAttributeWithValue(name, value));
+    attributes.forEach(cursor::insertAttributeWithValue);
 
     // go to the end of the new element
     cursor.toEndToken();
@@ -122,11 +122,11 @@ public class XmlbeansMarkupVisitor // TODO: rename
   @Override
   public void writeElementStart(QName qname, Map<String, String> attributes)
       throws IllegalArgumentException {
-    @SuppressWarnings("resource") // not owned
+    @SuppressWarnings({ "resource", "PMD.CloseResource" }) // not owned
     XmlCursor cursor = getStream();
     cursor.beginElement(qname);
 
-    attributes.forEach((name, value) -> cursor.insertAttributeWithValue(name, value));
+    attributes.forEach(cursor::insertAttributeWithValue);
 
     // save the current location state
     cursor.push();
@@ -134,7 +134,7 @@ public class XmlbeansMarkupVisitor // TODO: rename
 
   @Override
   public void writeElementEnd(QName qname) throws IllegalArgumentException {
-    @SuppressWarnings("resource") // not owned
+    @SuppressWarnings({ "resource", "PMD.CloseResource" }) // not owned
     XmlCursor cursor = getStream();
 
     // restore location to end of start element
@@ -149,14 +149,14 @@ public class XmlbeansMarkupVisitor // TODO: rename
 
   @Override
   public void writeText(CharSequence text) throws IllegalArgumentException {
-    @SuppressWarnings("resource") // not owned
+    @SuppressWarnings({ "resource", "PMD.CloseResource" }) // not owned
     XmlCursor cursor = getStream();
     cursor.insertChars(text.toString());
   }
 
   @Override
   protected void writeComment(CharSequence text) throws IllegalArgumentException {
-    @SuppressWarnings("resource") // not owned
+    @SuppressWarnings({ "resource", "PMD.CloseResource" }) // not owned
     XmlCursor cursor = getStream();
     cursor.insertComment(text.toString());
   }

@@ -144,18 +144,7 @@ public abstract class AbstractCollectionBuilder<T extends AbstractCollectionBuil
     protected Type(@NonNull T instance) {
       this.namedModelInstance = instance;
 
-      String jsonKeyFlagName = instance.getJsonKeyFlagName();
-      IFlagInstance jsonKey = null;
-      if (jsonKeyFlagName != null) {
-        IModelDefinition definition = instance.getDefinition();
-        jsonKey = definition.getFlagInstanceByName(
-            definition.getContainingModule().toFlagQName(jsonKeyFlagName));
-
-        if (jsonKey == null) {
-          throw new IllegalStateException(String.format("No JSON key flag named '%s.", jsonKeyFlagName));
-        }
-      }
-      this.jsonKeyFlag = jsonKey;
+      this.jsonKeyFlag = instance.getEffectiveJsonKey();
 
       if (instance instanceof INamedModelInstanceGrouped) {
         INamedModelInstanceGrouped grouped = (INamedModelInstanceGrouped) instance;
@@ -166,7 +155,11 @@ public abstract class AbstractCollectionBuilder<T extends AbstractCollectionBuil
         this.discriminatorValue = null;
       }
       this.key
-          = IKey.of(instance.getDefinition(), jsonKeyFlagName, this.discriminatorProperty, this.discriminatorValue);
+          = IKey.of(
+              instance.getDefinition(),
+              jsonKeyFlag == null ? null : jsonKeyFlag.getName(),
+              this.discriminatorProperty,
+              this.discriminatorValue);
     }
 
     @NonNull

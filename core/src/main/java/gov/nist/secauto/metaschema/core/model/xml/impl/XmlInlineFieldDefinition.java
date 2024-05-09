@@ -30,11 +30,11 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.model.AbstractInstance;
+import gov.nist.secauto.metaschema.core.model.AbstractInlineFieldDefinition;
+import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IContainerModel;
-import gov.nist.secauto.metaschema.core.model.IFeatureContainerFlag;
-import gov.nist.secauto.metaschema.core.model.IFeatureDefinitionInstanceInlined;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
@@ -57,16 +57,19 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 class XmlInlineFieldDefinition
-    extends AbstractInstance<IContainerModel>
-    implements IFieldInstanceAbsolute, IFieldDefinition,
-    IFeatureContainerFlag<IFlagInstance>,
-    IFeatureDefinitionInstanceInlined<IFieldDefinition, IFieldInstanceAbsolute> {
+    extends AbstractInlineFieldDefinition<
+        IContainerModel,
+        IFieldDefinition,
+        IFieldInstanceAbsolute,
+        IAssemblyDefinition,
+        IFlagInstance>
+    implements IFieldInstanceAbsolute {
   @NonNull
   private final InlineFieldDefinitionType xmlObject;
   @Nullable
   private final Object defaultValue;
   @NonNull
-  private final Lazy<XmlFlagContainerSupport> flagContainer;
+  private final Lazy<IContainerFlagSupport<IFlagInstance>> flagContainer;
   @NonNull
   private final Lazy<IValueConstrained> constraints;
 
@@ -88,7 +91,7 @@ class XmlInlineFieldDefinition
     this.defaultValue = xmlObject.isSetDefault()
         ? getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))
         : null;
-    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> new XmlFlagContainerSupport(xmlObject, this)));
+    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> XmlFlagContainerSupport.newInstance(xmlObject, this)));
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IValueConstrained retval = new ValueConstraintSet();
       if (getXmlObject().isSetConstraint()) {
@@ -113,26 +116,10 @@ class XmlInlineFieldDefinition
     return xmlObject;
   }
 
-  @Override
-  public IFieldDefinition getDefinition() {
-    return this;
-  }
-
-  @Override
-  @NonNull
-  public IFieldInstanceAbsolute getInlineInstance() {
-    return this;
-  }
-
   @SuppressWarnings("null")
   @Override
-  public XmlFlagContainerSupport getFlagContainer() {
+  public IContainerFlagSupport<IFlagInstance> getFlagContainer() {
     return flagContainer.get();
-  }
-
-  @Override
-  public IFlagInstance getJsonKeyFlagInstance() {
-    return getFlagContainer().getJsonKeyFlagInstance();
   }
 
   /**
@@ -243,6 +230,11 @@ class XmlInlineFieldDefinition
   public String getJsonValueKeyName() {
     return getXmlObject().getJsonValueKey();
   }
+
+  // @Override
+  // public String getJsonKeyFlagInstanceName() {
+  // return IFeatureXmlContainerFlag.super.getJsonKeyFlagInstanceName();
+  // }
 
   // -------------------------------------
   // - End XmlBeans driven code - CPD-ON -

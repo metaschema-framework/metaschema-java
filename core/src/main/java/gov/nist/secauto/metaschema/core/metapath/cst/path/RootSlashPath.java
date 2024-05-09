@@ -60,7 +60,7 @@ public class RootSlashPath
       ISequence<?> focus) {
 
     ISequence<?> roots = ObjectUtils.notNull(focus.asStream()
-        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item))
+        .map(ItemUtils::checkItemIsNodeItemForStep)
         .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).findFirst().get())
         .collect(ISequence.toSequence()));
 

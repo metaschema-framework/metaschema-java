@@ -26,26 +26,37 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
-import java.util.Collection;
-
-import javax.xml.namespace.QName;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
+import gov.nist.secauto.metaschema.core.model.IFeatureContainerModelGrouped;
 import gov.nist.secauto.metaschema.databind.model.IBoundContainerModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedField;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedNamed;
 
-public interface IFeatureBoundContainerModelChoiceGroup
-    extends IBoundContainerModelChoiceGroup {
+import java.util.Collection;
 
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+public interface IFeatureBoundContainerModelChoiceGroup
+    extends IBoundContainerModelChoiceGroup, IFeatureContainerModelGrouped<
+        IBoundInstanceModelGroupedNamed,
+        IBoundInstanceModelGroupedField,
+        IBoundInstanceModelGroupedAssembly> {
+
+  @Override
   @NonNull
   IContainerModelSupport<
       IBoundInstanceModelGroupedNamed,
       IBoundInstanceModelGroupedNamed,
       IBoundInstanceModelGroupedField,
       IBoundInstanceModelGroupedAssembly> getModelContainer();
+
+  @Override
+  default Collection<IBoundInstanceModelGroupedNamed> getModelInstances() {
+    return getModelContainer().getModelInstances();
+  }
 
   @Override
   default IBoundInstanceModelGroupedNamed getNamedModelInstanceByName(QName name) {

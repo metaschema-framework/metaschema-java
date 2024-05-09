@@ -240,7 +240,7 @@ public interface ISequence<ITEM_TYPE extends IItem> extends List<ITEM_TYPE> {
 
       @Override
       public BiConsumer<List<ITEM_TYPE>, ITEM_TYPE> accumulator() {
-        return (list, value) -> list.add(value);
+        return List::add;
       }
 
       @Override
@@ -280,7 +280,7 @@ public interface ISequence<ITEM_TYPE extends IItem> extends List<ITEM_TYPE> {
       @NonNull Function<T, R> mapFunction,
       @NonNull ISequence<T> seq) {
     return seq.safeStream()
-        .map(item -> mapFunction.apply(item))
+        .map(mapFunction::apply)
         .collect(toSequence());
   }
 

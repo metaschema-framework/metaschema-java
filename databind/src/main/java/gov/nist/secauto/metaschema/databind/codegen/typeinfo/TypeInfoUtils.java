@@ -30,14 +30,9 @@ import com.squareup.javapoet.AnnotationSpec;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.model.INamedInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
-import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
-
-import java.util.function.Supplier;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class TypeInfoUtils {
   private TypeInfoUtils() {
@@ -65,42 +60,11 @@ public final class TypeInfoUtils {
       annotation.addMember("useIndex", "$L", index);
     }
 
-    buildNamespaceBindingAnnotation(
-        annotation,
-        "namespace",
-        instance.getXmlNamespace(),
-        () -> instance.getContainingModule().getXmlNamespace().toASCIIString(),
-        ModelUtil.DEFAULT_STRING_VALUE,
-        false);
+    // TODO: handle instance namespace as a prefix
 
     MarkupMultiline remarks = instance.getRemarks();
     if (remarks != null) {
       annotation.addMember("remarks", "$S", remarks.toMarkdown());
-    }
-  }
-
-  public static void buildNamespaceBindingAnnotation(
-      @NonNull AnnotationSpec.Builder annotation,
-      @NonNull String annotationMember,
-      @Nullable String namespaceUri,
-      @NonNull Supplier<String> defaultSupplier,
-      @NonNull String annotationDefault,
-      boolean allowNone) {
-    String value;
-    if (namespaceUri == null) {
-      if (allowNone) {
-        value = ModelUtil.NO_STRING_VALUE;
-      } else {
-        throw new IllegalStateException("Expected non-null namespace");
-      }
-    } else if (namespaceUri.equals(defaultSupplier.get())) {
-      value = ModelUtil.DEFAULT_STRING_VALUE;
-    } else {
-      value = namespaceUri;
-    }
-
-    if (!annotationDefault.equals(value)) {
-      annotation.addMember(annotationMember, "$S", value);
     }
   }
 }

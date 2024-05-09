@@ -75,12 +75,11 @@ public abstract class AbstractDefinitionTargetedConstraints<
    * @param definition
    *          the definition to apply the constraints to.
    */
-  @SuppressWarnings("null")
   protected void applyTo(@NonNull T definition) {
-    getAllowedValuesConstraints().forEach(constraint -> definition.addConstraint(constraint));
-    getMatchesConstraints().forEach(constraint -> definition.addConstraint(constraint));
-    getIndexHasKeyConstraints().forEach(constraint -> definition.addConstraint(constraint));
-    getExpectConstraints().forEach(constraint -> definition.addConstraint(constraint));
+    getAllowedValuesConstraints().forEach(definition::addConstraint);
+    getMatchesConstraints().forEach(definition::addConstraint);
+    getIndexHasKeyConstraints().forEach(definition::addConstraint);
+    getExpectConstraints().forEach(definition::addConstraint);
   }
 
   @Override

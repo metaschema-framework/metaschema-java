@@ -138,8 +138,9 @@ public class BuildCSTVisitor
     this.context = context;
   }
 
-  /* ============================================================
-   * Expressions - https://www.w3.org/TR/xpath-31/#id-expressions
+  /*
+   * ============================================================ Expressions -
+   * https://www.w3.org/TR/xpath-31/#id-expressions
    * ============================================================
    */
   @NonNull
@@ -155,8 +156,9 @@ public class BuildCSTVisitor
     });
   }
 
-  /* =================================================================
-   * Literal Expressions - https://www.w3.org/TR/xpath-31/#id-literals
+  /*
+   * ================================================================= Literal
+   * Expressions - https://www.w3.org/TR/xpath-31/#id-literals
    * =================================================================
    */
 
@@ -185,8 +187,9 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /* ==================================================================
-   * Variable References - https://www.w3.org/TR/xpath-31/#id-variables
+  /*
+   * ================================================================== Variable
+   * References - https://www.w3.org/TR/xpath-31/#id-variables
    * ==================================================================
    */
 
@@ -198,8 +201,9 @@ public class BuildCSTVisitor
             getContext().getVariablePrefixResolver()));
   }
 
-  /* ====================================================================
-   * For Expressions - https://www.w3.org/TR/xpath-31/#id-for-expressions
+  /*
+   * ==================================================================== For
+   * Expressions - https://www.w3.org/TR/xpath-31/#id-for-expressions
    * ====================================================================
    */
 
@@ -234,8 +238,9 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /* ====================================================================
-   * Let Expressions - https://www.w3.org/TR/xpath-31/#id-let-expressions
+  /*
+   * ==================================================================== Let
+   * Expressions - https://www.w3.org/TR/xpath-31/#id-let-expressions
    * ====================================================================
    */
 
@@ -262,9 +267,12 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /* ==================================================================================
-   * Quantified Expressions - https://www.w3.org/TR/xpath-31/#id-quantified-expressions
-   * ==================================================================================
+  /*
+   * =============================================================================
+   * ===== Quantified Expressions -
+   * https://www.w3.org/TR/xpath-31/#id-quantified-expressions
+   * =============================================================================
+   * =====
    */
 
   @Override
@@ -302,8 +310,9 @@ public class BuildCSTVisitor
     return new Quantified(quantifier, vars, satisfies);
   }
 
-  /* =======================================================================
-   * Arrow operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
+  /*
+   * ======================================================================= Arrow
+   * operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
    * =======================================================================
    */
 
@@ -333,9 +342,12 @@ public class BuildCSTVisitor
     });
   }
 
-  /* =================================================================================
-   * Parenthesized Expressions  - https://www.w3.org/TR/xpath-31/#id-paren-expressions
-   * =================================================================================
+  /*
+   * =============================================================================
+   * ==== Parenthesized Expressions -
+   * https://www.w3.org/TR/xpath-31/#id-paren-expressions
+   * =============================================================================
+   * ====
    */
 
   @Override
@@ -343,9 +355,12 @@ public class BuildCSTVisitor
     return EmptySequence.instance();
   }
 
-  /* =====================================================================================
-   * Context Item Expression  - https://www.w3.org/TR/xpath-31/#id-context-item-expression
-   * =====================================================================================
+  /*
+   * =============================================================================
+   * ======== Context Item Expression -
+   * https://www.w3.org/TR/xpath-31/#id-context-item-expression
+   * =============================================================================
+   * ========
    */
 
   @Override
@@ -353,7 +368,8 @@ public class BuildCSTVisitor
     return ContextItem.instance();
   }
 
-  /* =========================================================================
+  /*
+   * =========================================================================
    * Static Function Calls - https://www.w3.org/TR/xpath-31/#id-function-calls
    * =========================================================================
    */
@@ -396,7 +412,8 @@ public class BuildCSTVisitor
             .collect(Collectors.toUnmodifiableList())));
   }
 
-  /* =========================================================================
+  /*
+   * =========================================================================
    * Filter Expressions - https://www.w3.org/TR/xpath-31/#id-filter-expression
    * =========================================================================
    */
@@ -461,8 +478,9 @@ public class BuildCSTVisitor
     }
     return retval;
   }
-  /* ======================================================================
-   * Path Expressions - https://www.w3.org/TR/xpath-31/#id-path-expressions
+  /*
+   * ====================================================================== Path
+   * Expressions - https://www.w3.org/TR/xpath-31/#id-path-expressions
    * ======================================================================
    */
 
@@ -498,9 +516,12 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /* =======================================================================================
-   * RelativePath Expressions - https://www.w3.org/TR/xpath-31/#id-relative-path-expressions
-   * =======================================================================================
+  /*
+   * =============================================================================
+   * ========== RelativePath Expressions -
+   * https://www.w3.org/TR/xpath-31/#id-relative-path-expressions
+   * =============================================================================
+   * ==========
    */
 
   @Override
@@ -528,8 +549,9 @@ public class BuildCSTVisitor
     });
   }
 
-  /* ================================================
-   * Steps - https://www.w3.org/TR/xpath-31/#id-steps
+  /*
+   * ================================================ Steps -
+   * https://www.w3.org/TR/xpath-31/#id-steps
    * ================================================
    */
 
@@ -594,13 +616,15 @@ public class BuildCSTVisitor
     return new Step(axis, parseNodeTest(ctx.nodetest(), false));
   }
 
-  /* =======================================================
-   * Node Tests - https://www.w3.org/TR/xpath-31/#node-tests
+  /*
+   * ======================================================= Node Tests -
+   * https://www.w3.org/TR/xpath-31/#node-tests
    * =======================================================
    */
 
-  /* =======================================================
-   * Node Tests - https://www.w3.org/TR/xpath-31/#node-tests
+  /*
+   * ======================================================= Node Tests -
+   * https://www.w3.org/TR/xpath-31/#node-tests
    * =======================================================
    */
 
@@ -627,9 +651,8 @@ public class BuildCSTVisitor
   @Override
   protected Wildcard handleWildcard(WildcardContext ctx) {
     Predicate<IDefinitionNodeItem<?, ?>> matcher = null;
-    TerminalNode node;
-    if ((node = ctx.STAR()) == null) {
-      if ((node = ctx.CS()) != null) {
+    if (ctx.STAR() == null) {
+      if (ctx.CS() != null) {
         // specified prefix, any local-name
         String prefix = ctx.NCName().getText();
         String namespace = getContext().lookupNamespaceForPrefix(prefix);
@@ -637,7 +660,7 @@ public class BuildCSTVisitor
           throw new IllegalStateException(String.format("Prefix '%s' did not map to a namespace.", prefix));
         }
         matcher = new Wildcard.MatchAnyLocalName(namespace);
-      } else if ((node = ctx.SC()) != null) {
+      } else if (ctx.SC() != null) {
         // any prefix, specified local-name
         matcher = new Wildcard.MatchAnyNamespace(ctx.NCName().getText());
       } else {
@@ -651,7 +674,8 @@ public class BuildCSTVisitor
     return new Wildcard(matcher);
   }
 
-  /* ======================================================================
+  /*
+   * ======================================================================
    * Predicates within Steps - https://www.w3.org/TR/xpath-31/#id-predicate
    * ======================================================================
    */
@@ -667,8 +691,9 @@ public class BuildCSTVisitor
     return predicates.isEmpty() ? step : new PredicateExpression(step, predicates);
   }
 
-  /* ===========================================================
-   * Abbreviated Syntax - https://www.w3.org/TR/xpath-31/#abbrev
+  /*
+   * =========================================================== Abbreviated
+   * Syntax - https://www.w3.org/TR/xpath-31/#abbrev
    * ===========================================================
    */
 
@@ -691,7 +716,8 @@ public class BuildCSTVisitor
     return Axis.PARENT;
   }
 
-  /* ======================================================================
+  /*
+   * ======================================================================
    * Constructing Sequences - https://www.w3.org/TR/xpath-31/#construct_seq
    * ======================================================================
    */
@@ -706,7 +732,8 @@ public class BuildCSTVisitor
     return new Range(left, right);
   }
 
-  /* ========================================================================
+  /*
+   * ========================================================================
    * Combining Node Sequences - https://www.w3.org/TR/xpath-31/#combining_seq
    * ========================================================================
    */
@@ -744,7 +771,8 @@ public class BuildCSTVisitor
     });
   }
 
-  /* ======================================================================
+  /*
+   * ======================================================================
    * Arithmetic Expressions - https://www.w3.org/TR/xpath-31/#id-arithmetic
    * ======================================================================
    */
@@ -835,9 +863,12 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /* ========================================================================================
-   * String Concatenation Expressions - https://www.w3.org/TR/xpath-31/#id-string-concat-expr
-   * ========================================================================================
+  /*
+   * =============================================================================
+   * =========== String Concatenation Expressions -
+   * https://www.w3.org/TR/xpath-31/#id-string-concat-expr
+   * =============================================================================
+   * ===========
    */
 
   @Override
@@ -848,7 +879,8 @@ public class BuildCSTVisitor
     });
   }
 
-  /* =======================================================================
+  /*
+   * =======================================================================
    * Comparison Expressions - https://www.w3.org/TR/xpath-31/#id-comparisons
    * =======================================================================
    */
@@ -924,7 +956,8 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /* ============================================================================
+  /*
+   * ============================================================================
    * Logical Expressions - https://www.w3.org/TR/xpath-31/#id-logical-expressions
    * ============================================================================
    */
@@ -945,7 +978,8 @@ public class BuildCSTVisitor
     });
   }
 
-  /* =========================================================================
+  /*
+   * =========================================================================
    * Conditional Expressions - https://www.w3.org/TR/xpath-31/#id-conditionals
    * =========================================================================
    */
@@ -959,7 +993,8 @@ public class BuildCSTVisitor
     return new If(testExpr, thenExpr, elseExpr);
   }
 
-  /* =========================================================================
+  /*
+   * =========================================================================
    * Simple map operator (!) - https://www.w3.org/TR/xpath-31/#id-map-operator
    * =========================================================================
    */

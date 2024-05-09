@@ -40,14 +40,4 @@ public interface IFlag extends INamedModelElement, IAttributable {
   default ModelType getModelType() {
     return ModelType.FLAG;
   }
-
-  /**
-   * {@inheritDoc}
-   * <p>
-   * Flags by default do not have namespaces.
-   */
-  @Override
-  default String getXmlNamespace() {
-    return null;
-  }
 }

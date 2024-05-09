@@ -295,7 +295,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
 
     String allowedValues = constraints.stream()
         .flatMap(constraint -> constraint.getAllowedValues().values().stream())
-        .map(allowedValue -> allowedValue.getValue())
+        .map(IAllowedValue::getValue)
         .sorted()
         .distinct()
         .collect(CustomCollectors.joiningWithOxfordComma("or"));
