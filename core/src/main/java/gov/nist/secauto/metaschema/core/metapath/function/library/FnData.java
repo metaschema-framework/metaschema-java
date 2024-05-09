@@ -127,7 +127,7 @@ public final class FnData {
   @SuppressWarnings("null")
   @NonNull
   public static ISequence<IAnyAtomicItem> fnData(@NonNull ISequence<?> sequence) {
-    @NonNull Stream<? extends IItem> stream = sequence.asStream();
+    @NonNull Stream<? extends IItem> stream = sequence.stream();
     return ISequence.of(stream.flatMap(x -> {
       return Stream.of(fnDataItem(x));
     }));

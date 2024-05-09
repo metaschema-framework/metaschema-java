@@ -24,76 +24,43 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class SingletonSequenceImpl<ITEM_TYPE extends IItem> implements ISequence<ITEM_TYPE> {
+public class SequenceN<ITEM extends IItem>
+    extends AbstractSequence<ITEM> {
   @NonNull
-  private final ITEM_TYPE item;
+  private final List<ITEM> items;
 
-  public SingletonSequenceImpl(@NonNull ITEM_TYPE item) {
-    this.item = item;
+  public SequenceN(@NonNull Collection<ITEM> items) {
+    this(new ArrayList<>(items), false);
   }
 
-  @NonNull
-  protected ITEM_TYPE getItem() {
-    return item;
+  public SequenceN(@NonNull List<ITEM> items, boolean copy) {
+    this.items = CollectionUtil.unmodifiableList(copy ? new ArrayList<>(items) : items);
   }
 
-  @SuppressWarnings("null")
-  @Override
-  public List<ITEM_TYPE> asList() {
-    return List.of(item);
+  @SafeVarargs
+  public SequenceN(@NonNull ITEM... items) {
+    this(CollectionUtil.unmodifiableList(ObjectUtils.notNull(List.of(items))));
   }
 
-  @SuppressWarnings("null")
-  @Override
-  public Stream<ITEM_TYPE> asStream() {
-    return Stream.of(item);
+  public SequenceN(@NonNull List<ITEM> items) {
+    this.items = items;
   }
 
   @Override
-  public boolean isEmpty() {
-    return false;
+  public List<ITEM> getValue() {
+    return items;
   }
 
-  @Override
-  public String toString() {
-    return asList().toString();
-  }
-
-  @Override
-  public int size() {
-    return 1;
-  }
-
-  @Override
-  public ISequence<ITEM_TYPE> collect() {
-    return this;
-  }
-
-  @Override
-  public void forEach(Consumer<? super ITEM_TYPE> action) {
-    action.accept(item);
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    // must either be the same instance or a sequence that has the same list
-    // contents
-    return other == this
-        || other instanceof ISequence && asList().equals(((ISequence<?>) other).asList());
-  }
-
-  @Override
-  public int hashCode() {
-    return asList().hashCode();
-  }
 }

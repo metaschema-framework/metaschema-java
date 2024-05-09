@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
 
@@ -91,7 +92,9 @@ public interface IFunction {
    * @return the function's name
    */
   @NonNull
-  String getName();
+  default String getName() {
+    return ObjectUtils.notNull(getQName().getLocalPart());
+  }
 
   /**
    * Retrieve the namespace of the function.
@@ -99,7 +102,9 @@ public interface IFunction {
    * @return the function's namespace
    */
   @NonNull
-  String getNamespace();
+  default String getNamespace() {
+    return ObjectUtils.notNull(getQName().getNamespaceURI());
+  }
 
   /**
    * Retrieve the namespace qualified name of the function.
@@ -107,9 +112,7 @@ public interface IFunction {
    * @return the namespace qualified name
    */
   @NonNull
-  default QName getQName() {
-    return new QName(getNamespace(), getName());
-  }
+  QName getQName();
 
   /**
    * Retrieve the set of assigned function properties.
@@ -223,7 +226,31 @@ public interface IFunction {
    *
    * @return the signature
    */
-  String toSignature();
+  @NonNull
+  default String toSignature() {
+    StringBuilder builder = new StringBuilder()
+        .append("Q{")
+        .append(getNamespace())
+        .append('}')
+        .append(getName()) // name
+        .append('('); // arguments
+
+    List<IArgument> arguments = getArguments();
+    if (arguments.isEmpty()) {
+      builder.append("()");
+    } else {
+      builder.append(arguments.stream().map(IArgument::toSignature).collect(Collectors.joining(",")));
+
+      if (isArityUnbounded()) {
+        builder.append(", ...");
+      }
+    }
+
+    builder.append(") as ")
+        .append(getResult().toSignature());// return type
+
+    return ObjectUtils.notNull(builder.toString());
+  }
 
   /**
    * Construct a new function signature builder.

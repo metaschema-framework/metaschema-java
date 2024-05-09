@@ -24,46 +24,68 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst.path;
+package gov.nist.secauto.metaschema.core.metapath.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class RootSlashPath
-    extends AbstractRootPathExpression {
+public class StreamSequence<ITEM extends IItem>
+    extends AbstractSequence<ITEM> {
 
-  /**
-   * Construct a new expression that finds a child of the document root using the
-   * {@code right} expression.
-   *
-   * @param node
-   *          the path to evaluate relative to the document root
-   */
-  public RootSlashPath(@NonNull IExpression node) {
-    super(node);
+  private Stream<ITEM> stream;
+  private List<ITEM> list;
+
+  public StreamSequence(@NonNull Stream<ITEM> stream) {
+    Objects.requireNonNull(stream, "stream");
+    this.stream = stream;
   }
 
   @Override
-  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitRootSlashPath(this, context);
+  public List<ITEM> getValue() {
+    synchronized (this) {
+      if (list == null) {
+        list = stream().collect(Collectors.toUnmodifiableList());
+      }
+      assert list != null;
+      return list;
+    }
   }
 
   @Override
-  public ISequence<?> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
+  public Stream<ITEM> stream() {
+    @NonNull Stream<ITEM> retval;
+    synchronized (this) {
+      if (list == null) {
+        if (stream == null) {
+          throw new IllegalStateException("stream is already consumed");
+        }
+        assert stream != null;
+        retval = stream;
+        stream = null; // NOPMD - readability
+      } else {
+        retval = ObjectUtils.notNull(list.stream());
+      }
+    }
+    return retval;
+  }
 
-    ISequence<?> roots = ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).findFirst().get())
-        .collect(ISequence.toSequence()));
+  @Override
+  public void forEach(Consumer<? super ITEM> action) {
+    stream().forEachOrdered(action);
+  }
 
-    return getExpression().accept(dynamicContext, roots);
+  @Override
+  public ISequence<ITEM> collect() {
+    getValue();
+    return this;
   }
 }

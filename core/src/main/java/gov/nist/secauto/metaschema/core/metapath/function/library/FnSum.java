@@ -105,7 +105,7 @@ public final class FnSum {
     ISequence<? extends IAnyAtomicItem> sequence = FunctionUtils.asType(
         ObjectUtils.requireNonNull(arguments.get(0)));
 
-    return ISequence.of(sum(sequence.asList(), IIntegerItem.ZERO));
+    return ISequence.of(sum(sequence.getValue(), IIntegerItem.ZERO));
   }
 
   @SuppressWarnings("unused")
@@ -123,7 +123,7 @@ public final class FnSum {
             ObjectUtils.requireNonNull(arguments.get(1))),
         true);
 
-    return ISequence.of(sum(sequence.asList(), zero));
+    return ISequence.of(sum(sequence.getValue(), zero));
   }
 
   /**

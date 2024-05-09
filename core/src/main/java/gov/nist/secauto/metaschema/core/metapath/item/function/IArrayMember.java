@@ -24,46 +24,12 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst.path;
+package gov.nist.secauto.metaschema.core.metapath.item.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-
-public class RootSlashPath
-    extends AbstractRootPathExpression {
-
-  /**
-   * Construct a new expression that finds a child of the document root using the
-   * {@code right} expression.
-   *
-   * @param node
-   *          the path to evaluate relative to the document root
-   */
-  public RootSlashPath(@NonNull IExpression node) {
-    super(node);
-  }
-
-  @Override
-  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitRootSlashPath(this, context);
-  }
-
-  @Override
-  public ISequence<?> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
-
-    ISequence<?> roots = ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).findFirst().get())
-        .collect(ISequence.toSequence()));
-
-    return getExpression().accept(dynamicContext, roots);
-  }
+/**
+ * This is a marker interface for Java types that can members of an
+ * {@link IArrayItem}.
+ */
+public interface IArrayMember {
+  // no additional methods
 }

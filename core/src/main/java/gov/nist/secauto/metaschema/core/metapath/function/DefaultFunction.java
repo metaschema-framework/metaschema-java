@@ -43,7 +43,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -246,7 +245,7 @@ public class DefaultFunction
       parameter = convertSequence(argument, parameter);
 
       // check resulting values
-      for (IItem item : parameter.asList()) {
+      for (IItem item : parameter.getValue()) {
         Class<? extends IItem> itemClass = item.getClass();
         if (!argumentClass.isAssignableFrom(itemClass)) {
           throw new InvalidTypeMetapathException(
@@ -284,7 +283,7 @@ public class DefaultFunction
 
       boolean atomize = IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass);
 
-      for (IItem item : sequence.asList()) {
+      for (IItem item : sequence.getValue()) {
         assert item != null;
         if (atomize) {
           item = FnData.fnDataItem(item); // NOPMD - intentional
@@ -379,32 +378,6 @@ public class DefaultFunction
   @Override
   public String toString() {
     return toSignature();
-  }
-
-  @Override
-  public String toSignature() {
-    StringBuilder builder = new StringBuilder()
-        .append("Q{")
-        .append(getNamespace())
-        .append('}')
-        .append(getName()) // name
-        .append('('); // arguments
-
-    List<IArgument> arguments = getArguments();
-    if (arguments.isEmpty()) {
-      builder.append("()");
-    } else {
-      builder.append(arguments.stream().map(IArgument::toSignature).collect(Collectors.joining(",")));
-
-      if (isArityUnbounded()) {
-        builder.append(", ...");
-      }
-    }
-
-    builder.append(") as ")
-        .append(getResult().toSignature());// return type
-
-    return builder.toString();
   }
 
   public final class CallingContext {

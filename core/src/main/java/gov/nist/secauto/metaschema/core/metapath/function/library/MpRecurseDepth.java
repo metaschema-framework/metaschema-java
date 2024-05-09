@@ -162,12 +162,12 @@ public final class MpRecurseDepth {
       @NonNull MetapathExpression recursionMetapath,
       @NonNull DynamicContext dynamicContext) {
 
-    return ISequence.of(ObjectUtils.notNull(initialContext.asStream()
+    return ISequence.of(ObjectUtils.notNull(initialContext.stream()
         .flatMap(item -> {
           @NonNull ISequence<INodeItem> metapathResult
               = recursionMetapath.evaluate(item, dynamicContext);
           ISequence<INodeItem> result = recurseDepth(metapathResult, recursionMetapath, dynamicContext);
-          return ObjectUtils.notNull(Stream.concat(result.asStream(), Stream.of(item)));
+          return ObjectUtils.notNull(Stream.concat(result.stream(), Stream.of(item)));
         })));
   }
 }

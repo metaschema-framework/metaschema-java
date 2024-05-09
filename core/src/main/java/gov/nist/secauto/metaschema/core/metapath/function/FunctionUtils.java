@@ -138,7 +138,7 @@ public final class FunctionUtils {
           null,
           "Expected a non-empty sequence, but sequence was empty.");
     }
-    List<ITEM> items = sequence.asList();
+    List<ITEM> items = sequence.getValue();
     if (requireSingleton && items.size() != 1) {
       throw new InvalidTypeMetapathException(
           null,
@@ -169,7 +169,7 @@ public final class FunctionUtils {
   public static <ITEM extends IItem> ITEM getFirstItem(@NonNull ISequence<ITEM> sequence, boolean requireSingleton) {
     @Nullable ITEM retval = null;
     if (!sequence.isEmpty()) {
-      List<ITEM> items = sequence.asList();
+      List<ITEM> items = sequence.getValue();
       if (requireSingleton && items.size() != 1) {
         throw new InvalidTypeMetapathException(
             null,

@@ -24,65 +24,29 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class ListSequenceImpl<ITEM_TYPE extends IItem> implements ISequence<ITEM_TYPE> {
+public abstract class AbstractSequence<ITEM extends IItem>
+    extends ImmutableCollections.AbstractImmutableDelegatedCollection<ITEM>
+    implements ISequence<ITEM> {
+
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   @NonNull
-  private final List<ITEM_TYPE> items;
+  private static final ISequence<?> EMPTY = new SequenceN<>();
 
-  public ListSequenceImpl(@NonNull Collection<ITEM_TYPE> items) {
-    this(new ArrayList<>(items), false);
-  }
-
-  public ListSequenceImpl(@NonNull List<ITEM_TYPE> items, boolean copy) {
-    this.items = CollectionUtil.unmodifiableList(copy ? new ArrayList<>(items) : items);
+  @SuppressWarnings("unchecked")
+  public static <T extends IItem> ISequence<T> empty() {
+    return (ISequence<T>) EMPTY;
   }
 
   @Override
-  public List<ITEM_TYPE> asList() {
-    return items;
-  }
-
-  @Override
-  public Stream<ITEM_TYPE> asStream() {
-    return ObjectUtils.notNull(items.stream());
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return items.isEmpty();
-  }
-
-  @Override
-  public String toString() {
-    return asList().toString();
-  }
-
-  @Override
-  public int size() {
-    return items.size();
-  }
-
-  @Override
-  public ISequence<ITEM_TYPE> collect() {
+  public ISequence<ITEM> collect() {
     return this;
-  }
-
-  @Override
-  public void forEach(Consumer<? super ITEM_TYPE> action) {
-    items.forEach(action);
   }
 
   @Override
@@ -90,11 +54,11 @@ class ListSequenceImpl<ITEM_TYPE extends IItem> implements ISequence<ITEM_TYPE> 
     // must either be the same instance or a sequence that has the same list
     // contents
     return other == this
-        || other instanceof ISequence && asList().equals(((ISequence<?>) other).asList());
+        || other instanceof ISequence && getValue().equals(((ISequence<?>) other).getValue());
   }
 
   @Override
   public int hashCode() {
-    return asList().hashCode();
+    return getValue().hashCode();
   }
 }

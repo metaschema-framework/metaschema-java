@@ -359,7 +359,7 @@ public final class AnnotationGenerator {
       @NonNull LogBuilder logBuilder) {
 
     LogBuilder warn = LOGGER.atWarn();
-    for (IDefinitionNodeItem<?, ?> item : instanceSet.asList()) {
+    for (IDefinitionNodeItem<?, ?> item : instanceSet.getValue()) {
       INamedInstance instance = item.getInstance();
       if (instance instanceof INamedModelInstanceAbsolute) {
         INamedModelInstanceAbsolute modelInstance = (INamedModelInstanceAbsolute) instance;

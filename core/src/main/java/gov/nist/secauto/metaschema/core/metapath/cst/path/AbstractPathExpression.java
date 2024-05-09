@@ -73,9 +73,9 @@ public abstract class AbstractPathExpression<RESULT_TYPE extends IItem>
 
     // check the current focus
     @SuppressWarnings("unchecked") Stream<? extends INodeItem> nodeMatches
-        = (Stream<? extends INodeItem>) expression.accept(dynamicContext, outerFocus).asStream();
+        = (Stream<? extends INodeItem>) expression.accept(dynamicContext, outerFocus).stream();
 
-    Stream<? extends INodeItem> childMatches = outerFocus.asStream()
+    Stream<? extends INodeItem> childMatches = outerFocus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep)
         .flatMap(focusedNode -> {
 

@@ -53,6 +53,17 @@ public final class TestUtils {
   }
 
   @NonNull
+  public static <T extends IItem> ISequence<T> sequence() {
+    return ISequence.of();
+  }
+
+  @SafeVarargs
+  @NonNull
+  public static <T extends IItem> ISequence<T> sequence(@NonNull T... items) {
+    return ISequence.of(items);
+  }
+
+  @NonNull
   public static IBooleanItem bool(boolean value) {
     return IBooleanItem.valueOf(value);
   }

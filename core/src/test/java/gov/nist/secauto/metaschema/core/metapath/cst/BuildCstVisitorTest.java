@@ -147,7 +147,7 @@ class BuildCstVisitorTest {
 
     // evaluate
     ISequence<?> result = expr.evaluate(field);
-    assertThat(result.asList(), contains(
+    assertThat(result.getValue(), contains(
         allOf(
             instanceOf(IFieldNodeItem.class),
             hasProperty("name", equalTo(FIELD2))))); // NOPMD
@@ -221,7 +221,7 @@ class BuildCstVisitorTest {
 
     // evaluate
     ISequence<?> result = expr.evaluate(document);
-    assertThat(result.asList(), contains(
+    assertThat(result.getValue(), contains(
         allOf(
             instanceOf(IRootAssemblyNodeItem.class),
             hasProperty("name", equalTo(ROOT)))));
@@ -242,7 +242,7 @@ class BuildCstVisitorTest {
 
     // evaluate
     ISequence<?> result = expr.evaluate(field);
-    assertThat(result.asList(), contains(
+    assertThat(result.getValue(), contains(
         allOf(
             instanceOf(IFlagNodeItem.class),
             hasProperty("name", equalTo(FLAG)))));
@@ -263,7 +263,7 @@ class BuildCstVisitorTest {
 
     // evaluate
     ISequence<?> result = expr.evaluate(root);
-    assertThat(result.asList(), contains(
+    assertThat(result.getValue(), contains(
         allOf(
             instanceOf(IFieldNodeItem.class),
             hasProperty("name", equalTo(FIELD1))), // NOPMD

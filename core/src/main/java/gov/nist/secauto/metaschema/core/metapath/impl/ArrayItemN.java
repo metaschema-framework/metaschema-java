@@ -24,58 +24,33 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
-class EmptyListImpl<ITEM_TYPE extends IItem> implements ISequence<ITEM_TYPE> {
+import edu.umd.cs.findbugs.annotations.NonNull;
 
-  @SuppressWarnings("null")
-  @Override
-  public List<ITEM_TYPE> asList() {
-    return Collections.emptyList();
+public class ArrayItemN<ITEM extends IArrayMember>
+    extends AbstractArrayItem<ITEM> {
+  @NonNull
+  private final List<ITEM> items;
+
+  @SafeVarargs
+  public ArrayItemN(@NonNull ITEM... items) {
+    this(CollectionUtil.unmodifiableList(ObjectUtils.notNull(List.of(items))));
   }
 
-  @SuppressWarnings("null")
-  @Override
-  public Stream<ITEM_TYPE> asStream() {
-    return Stream.empty();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return true;
+  public ArrayItemN(@NonNull List<ITEM> items) {
+    this.items = items;
   }
 
   @Override
-  public int size() {
-    return 0;
+  public List<ITEM> getValue() {
+    return items;
   }
 
-  @Override
-  public ISequence<ITEM_TYPE> collect() {
-    return this;
-  }
-
-  @Override
-  public void forEach(Consumer<? super ITEM_TYPE> action) {
-    // do nothing
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    // must either be the same instance or a sequence that is empty
-    return other == this
-        || other instanceof ISequence && ((ISequence<?>) other).isEmpty();
-  }
-
-  @Override
-  public int hashCode() {
-    return 1;
-  }
 }

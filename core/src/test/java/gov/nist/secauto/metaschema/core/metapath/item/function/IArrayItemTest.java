@@ -24,46 +24,47 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst.path;
+package gov.nist.secauto.metaschema.core.metapath.item.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class RootSlashPath
-    extends AbstractRootPathExpression {
-
-  /**
-   * Construct a new expression that finds a child of the document root using the
-   * {@code right} expression.
-   *
-   * @param node
-   *          the path to evaluate relative to the document root
-   */
-  public RootSlashPath(@NonNull IExpression node) {
-    super(node);
+class IArrayItemTest
+    extends ExpressionTestBase {
+  private static Stream<Arguments> provideValues() { // NOPMD - false positive
+    return Stream.of(
+        Arguments.of(
+            IArrayItem.of(integer(1), integer(2), integer(5), integer(7)),
+            "[ 1, 2, 5, 7 ]"),
+        Arguments.of(
+            IArrayItem.of(sequence(), sequence(integer(27), integer(17), integer(0))),
+            "[ (), (27, 17, 0)]"),
+        Arguments.of(
+            IArrayItem.of(integer(1), integer(2), integer(5), integer(7)),
+            "array { 1, 2, 5, 7 }"),
+        Arguments.of(
+            IArrayItem.of(integer(27), integer(17), integer(0)),
+            "array { (), (27, 17, 0) }"));
   }
 
-  @Override
-  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitRootSlashPath(this, context);
-  }
-
-  @Override
-  public ISequence<?> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
-
-    ISequence<?> roots = ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).findFirst().get())
-        .collect(ISequence.toSequence()));
-
-    return getExpression().accept(dynamicContext, roots);
+  @ParameterizedTest
+  @MethodSource("provideValues")
+  void testExpression(@NonNull IArrayItem<?> expected, @NonNull String metapath) {
+    assertEquals(
+        expected,
+        MetapathExpression.compile(metapath)
+            .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE, newDynamicContext()));
   }
 }
