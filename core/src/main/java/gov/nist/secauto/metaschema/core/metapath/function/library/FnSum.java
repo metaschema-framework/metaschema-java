@@ -208,7 +208,7 @@ public final class FnSum {
           InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
           String.format("Values must all be of type '%s'.",
               OperationFunctions.AGGREGATE_MATH_TYPES.stream()
-                  .map(type -> type.getName())
+                  .map(Class::getName)
                   .collect(CustomCollectors.joiningWithOxfordComma(","))));
     }
 

@@ -316,6 +316,8 @@ public interface IBindingContext {
    *
    * @param nodeItem
    *          the node item to validate
+   * @param loader
+   *          a module loader used to load and resolve referenced resources
    * @return the validation result
    * @throws IllegalArgumentException
    *           if the provided class is not bound to a Module assembly or field

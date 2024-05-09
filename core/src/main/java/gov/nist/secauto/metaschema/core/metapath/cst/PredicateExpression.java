@@ -36,6 +36,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -125,7 +126,7 @@ public class PredicateExpression implements IExpression {
                   }
                   return bool;
                 }).anyMatch(x -> !x);
-          }).map(entry -> entry.getValue()));
+          }).map(Entry::getValue));
 
       retval = ISequence.of(stream);
     }

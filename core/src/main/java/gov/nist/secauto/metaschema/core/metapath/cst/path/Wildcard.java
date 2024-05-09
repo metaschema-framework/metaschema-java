@@ -60,8 +60,7 @@ public class Wildcard implements INameTestExpression {
   @Override
   public ISequence<? extends INodeItem> accept(
       DynamicContext dynamicContext, ISequence<?> focus) {
-    Stream<? extends INodeItem> nodes = focus.asStream()
-        .map(item -> ItemUtils.checkItemIsNodeItemForStep(item));
+    Stream<? extends INodeItem> nodes = focus.asStream().map(ItemUtils::checkItemIsNodeItemForStep);
     if (matcher != null) {
       Predicate<IDefinitionNodeItem<?, ?>> test = matcher;
       nodes = nodes.filter(item -> {
@@ -75,7 +74,7 @@ public class Wildcard implements INameTestExpression {
 
   public static class MatchAnyNamespace implements Predicate<IDefinitionNodeItem<?, ?>> {
     @NonNull
-    private String localName;
+    private final String localName;
 
     public MatchAnyNamespace(@NonNull String localName) {
       this.localName = localName;
@@ -89,7 +88,7 @@ public class Wildcard implements INameTestExpression {
 
   public static class MatchAnyLocalName implements Predicate<IDefinitionNodeItem<?, ?>> {
     @NonNull
-    private String namespace;
+    private final String namespace;
 
     public MatchAnyLocalName(@NonNull String namespace) {
       this.namespace = namespace;

@@ -74,9 +74,7 @@ public final class FunctionService {
     FunctionLibrary functionLibrary = new FunctionLibrary();
     loader.stream()
         .map(Provider<IFunctionLibrary>::get)
-        .flatMap(library -> {
-          return library.getFunctionsAsStream();
-        })
+        .flatMap(IFunctionLibrary::getFunctionsAsStream)
         .forEachOrdered(function -> functionLibrary.registerFunction(ObjectUtils.notNull(function)));
 
     synchronized (this) {

@@ -26,13 +26,6 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.IFeatureContainerModelAssembly;
@@ -43,6 +36,14 @@ import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelField;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelNamed;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IFeatureBoundContainerModelAssembly<
     MI extends IBoundInstanceModel,

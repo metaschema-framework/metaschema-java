@@ -26,6 +26,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -43,4 +45,12 @@ public interface INamedInstance extends INamedModelElement, IAttributable, IInst
   @NonNull
   IDefinition getDefinition();
 
+  /**
+   * This represents the qualified name of a referenced definition.
+   *
+   * @return the qualified name
+   * @see IDefinition#getDefinitionQName()
+   */
+  @NonNull
+  QName getReferencedDefinitionQName();
 }

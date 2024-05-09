@@ -49,12 +49,6 @@ class EQNameUtilsTest {
       .defaultModelNamespace("http://example.com/ns/model")
       .build();
 
-  private enum NameType {
-    FUNCTION,
-    FLAG,
-    MODEL;
-  }
-
   static Stream<Arguments> provideValues() {
     return Stream.of(
         Arguments.of(
