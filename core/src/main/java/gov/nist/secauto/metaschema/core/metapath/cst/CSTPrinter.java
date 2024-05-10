@@ -336,6 +336,15 @@ public final class CSTPrinter {
       return appendNode(expr, super.visitSimpleMap(expr, context), context);
     }
 
+    @Override
+    public String visitArray(ArraySequence expr, State context) {
+      return appendNode(expr, super.visitArray(expr, context), context);
+    }
+
+    @Override
+    public String visitArray(ArrayMembers expr, State context) {
+      return appendNode(expr, super.visitArray(expr, context), context);
+    }
   }
 
   static class State {

@@ -47,6 +47,7 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 public abstract class AbstractCSTVisitorBase
     extends AbstractAstVisitor<IExpression> {
@@ -128,6 +129,28 @@ public abstract class AbstractCSTVisitorBase
   public IExpression visit(ParseTree tree) {
     assert tree != null;
     return super.visit(tree);
+  }
+
+  @Nullable
+  protected <CONTEXT extends ParserRuleContext, EXPRESSION extends IExpression> IExpression
+      nAiryToCollection(
+          @NonNull CONTEXT context,
+          int startIndex,
+          int step,
+          @NonNull BiFunction<CONTEXT, Integer, EXPRESSION> parser,
+          @NonNull Function<List<EXPRESSION>, IExpression> supplier) {
+    int numChildren = context.getChildCount();
+
+    IExpression retval = null;
+    if (startIndex < numChildren) {
+      List<EXPRESSION> children = new ArrayList<>((numChildren - startIndex) / step);
+      for (int idx = startIndex; idx < numChildren; idx += step) {
+        EXPRESSION result = parser.apply(context, idx);
+        children.add(result);
+      }
+      retval = supplier.apply(children);
+    }
+    return retval;
   }
 
   /**

@@ -24,47 +24,59 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.item.function;
+package gov.nist.secauto.metaschema.core.metapath.cst;
 
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 
-import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import java.util.List;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-import java.util.stream.Stream;
+public class ArraySequence implements IExpression {
+  @Nullable
+  private final IExpression expr;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-
-class IArrayItemTest
-    extends ExpressionTestBase {
-  private static Stream<Arguments> provideValues() { // NOPMD - false positive
-    return Stream.of(
-        Arguments.of(
-            IArrayItem.of(integer(1), integer(2), integer(5), integer(7)),
-            "[ 1, 2, 5, 7 ]"),
-        Arguments.of(
-            IArrayItem.of(sequence(), sequence(integer(27), integer(17), integer(0))),
-            "[ (), (27, 17, 0)]"),
-        Arguments.of(
-            IArrayItem.of(integer(1), integer(2), integer(5), integer(7)),
-            "array { 1, 2, 5, 7 }"),
-        Arguments.of(
-            IArrayItem.of(integer(27), integer(17), integer(0)),
-            "array { (), (27, 17, 0) }"));
+  public ArraySequence(@Nullable IExpression expr) {
+    this.expr = expr;
   }
 
-  @ParameterizedTest
-  @MethodSource("provideValues")
-  void testExpression(@NonNull IArrayItem<?> expected, @NonNull String metapath) {
-    IItem result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
-    assertEquals(expected, result);
+  @SuppressWarnings("rawtypes")
+  @Override
+  public Class<IArrayItem> getBaseResultType() {
+    return IArrayItem.class;
+  }
+
+  @SuppressWarnings("rawtypes")
+  @Override
+  public Class<IArrayItem> getStaticResultType() {
+    return IArrayItem.class;
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  public List<? extends IExpression> getChildren() {
+    return List.of(expr);
+  }
+
+  @Override
+  public ISequence<IArrayItem<?>> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    ISequence<IArrayItem<?>> retval;
+    if (expr != null) {
+      List<? extends IArrayMember> result = FnData.fnData(expr.accept(dynamicContext, focus));
+      IArrayItem<?> array = IArrayItem.of(result);
+      retval = ISequence.of(array);
+    } else {
+      retval = ISequence.of();
+    }
+    return retval;
+  }
+
+  @Override
+  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
+    return visitor.visitArray(this, context);
   }
 }

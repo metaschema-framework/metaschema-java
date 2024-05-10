@@ -34,12 +34,19 @@ import gov.nist.secauto.metaschema.core.metapath.function.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.ArrayItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 import javax.xml.namespace.QName;
 
@@ -183,6 +190,55 @@ public interface IArrayItem<ITEM extends IArrayMember> extends IFunction, IItem,
   @Override
   default List<ITEM> subList(int fromIndex, int toIndex) {
     return getValue().subList(fromIndex, toIndex);
+  }
+
+  /**
+   * A {@link Collector} implementation to generates a sequence from a stream of
+   * Metapath items.
+   *
+   * @param <T>
+   *          the Java type of the items
+   * @return a collector that will generate a sequence
+   */
+  @NonNull
+  static <T extends IArrayMember> Collector<T, ?, IArrayItem<T>> toArrayItem() {
+    return new Collector<T, List<T>, IArrayItem<T>>() {
+
+      @Override
+      public Supplier<List<T>> supplier() {
+        return ArrayList::new;
+      }
+
+      @Override
+      public BiConsumer<List<T>, T> accumulator() {
+        return List::add;
+      }
+
+      @Override
+      public BinaryOperator<List<T>> combiner() {
+        return (list1, list2) -> {
+          list1.addAll(list2);
+          return list1;
+        };
+      }
+
+      @Override
+      public Function<List<T>, IArrayItem<T>> finisher() {
+        return list -> of(ObjectUtils.notNull(list));
+      }
+
+      @Override
+      public Set<Characteristics> characteristics() {
+        return Collections.emptySet();
+      }
+    };
+  }
+
+  @SuppressWarnings("unchecked")
+  @NonNull
+  static <T extends IArrayMember> IArrayItem<T> of( // NOPMD - intentional
+      @NonNull List<? extends T> items) {
+    return items.isEmpty() ? empty() : (IArrayItem<T>) new ArrayItemN<>(items);
   }
 
   /**

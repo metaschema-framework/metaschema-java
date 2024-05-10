@@ -41,6 +41,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -89,4 +90,14 @@ public abstract class AbstractArrayItem<ITEM extends IArrayMember>
         : ObjectUtils.notNull((ISequence<?>) result);
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(getValue());
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    return other == this
+        || other instanceof IArrayItem && getValue().equals(((IArrayItem<?>) other).getValue());
+  }
 }

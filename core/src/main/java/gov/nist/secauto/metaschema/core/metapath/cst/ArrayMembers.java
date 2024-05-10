@@ -24,47 +24,57 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.item.function;
+package gov.nist.secauto.metaschema.core.metapath.cst;
 
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
+import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class IArrayItemTest
-    extends ExpressionTestBase {
-  private static Stream<Arguments> provideValues() { // NOPMD - false positive
-    return Stream.of(
-        Arguments.of(
-            IArrayItem.of(integer(1), integer(2), integer(5), integer(7)),
-            "[ 1, 2, 5, 7 ]"),
-        Arguments.of(
-            IArrayItem.of(sequence(), sequence(integer(27), integer(17), integer(0))),
-            "[ (), (27, 17, 0)]"),
-        Arguments.of(
-            IArrayItem.of(integer(1), integer(2), integer(5), integer(7)),
-            "array { 1, 2, 5, 7 }"),
-        Arguments.of(
-            IArrayItem.of(integer(27), integer(17), integer(0)),
-            "array { (), (27, 17, 0) }"));
+public class ArrayMembers implements IExpression {
+  @NonNull
+  private final List<IExpression> children;
+
+  public ArrayMembers(@NonNull List<IExpression> children) {
+    this.children = children;
   }
 
-  @ParameterizedTest
-  @MethodSource("provideValues")
-  void testExpression(@NonNull IArrayItem<?> expected, @NonNull String metapath) {
-    IItem result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
-    assertEquals(expected, result);
+  @Override
+  public List<? extends IExpression> getChildren() {
+    return children;
   }
+
+  @Override
+  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    return ISequence.of(getChildren().stream()
+        .map(expr -> {
+          ISequence<? extends IArrayMember> result = FnData.fnData(expr.accept(dynamicContext, focus));
+
+          IArrayMember retval;
+          switch (result.size()) {
+          case 0:
+            retval = ISequence.of();
+            break;
+          case 1:
+            retval = result.iterator().next();
+            break;
+          default:
+            retval = result;
+          }
+          return retval;
+        })
+        .collect(IArrayItem.toArrayItem()));
+  }
+
+  @Override
+  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
+    return visitor.visitArray(this, context);
+  }
+
 }
