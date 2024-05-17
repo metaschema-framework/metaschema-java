@@ -24,8 +24,9 @@ jobs:
       contents: read
       security-events: write
     env:
-      BUILD_SNAPSHOT: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-                          (github.ref_name == 'develop' || startsWith(github.ref_name, 'release-')) }}
+      # BUILD_SNAPSHOT: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      #                    (github.ref_name == 'develop' || startsWith(github.ref_name, 'release-')) }}
+      BUILD_SNAPSHOT: false
     steps:
     - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
       with:
