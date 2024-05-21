@@ -35,6 +35,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -61,6 +63,17 @@ public final class TestUtils {
   @NonNull
   public static <T extends IItem> ISequence<T> sequence(@NonNull T... items) {
     return ISequence.of(items);
+  }
+
+  @NonNull
+  public static <T extends IArrayMember> IArrayItem<T> array() {
+    return IArrayItem.of();
+  }
+
+  @SafeVarargs
+  @NonNull
+  public static <T extends IArrayMember> IArrayItem<T> array(@NonNull T... items) {
+    return IArrayItem.of(items);
   }
 
   @NonNull
