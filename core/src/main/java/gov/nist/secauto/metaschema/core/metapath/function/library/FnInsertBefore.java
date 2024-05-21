@@ -84,9 +84,8 @@ public final class FnInsertBefore {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     ISequence<IItem> target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
-    IIntegerItem position
-        = ObjectUtils.requireNonNull(
-            FunctionUtils.getFirstItem(FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1))), true));
+
+    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
     ISequence<IItem> inserts = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2)));
     return ISequence.of(fnInsertBefore(target, position, inserts));
   }

@@ -26,49 +26,30 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.net.URI;
+import org.junit.jupiter.api.Test;
 
-import javax.xml.XMLConstants;
+class ISequenceTest {
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+  @Test
+  void testGetFirstNonSingleton() {
+    assertAll(
+        () -> assertEquals(integer(1), ISequence.of(integer(1), integer(2)).getFirstItem(false)),
+        () -> assertEquals(integer(3), ISequence.of(integer(3)).getFirstItem(false)),
+        () -> assertNull(ISequence.of().getFirstItem(false)));
+  }
 
-/**
- * Provides constant values used in Metapath.
- */
-@SuppressWarnings("PMD.DataClass")
-public final class MetapathConstants {
-  @NonNull
-  public static final URI NS_METAPATH = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath"));
-  @NonNull
-  public static final URI NS_XML_SCHEMA = ObjectUtils.requireNonNull(
-      URI.create(XMLConstants.W3C_XML_SCHEMA_NS_URI));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_MATH = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions/math"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_ARRAY = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions/array"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH;
-
-  @NonNull
-  public static final String PREFIX_METAPATH = "mp";
-  @NonNull
-  public static final String PREFIX_XML_SCHEMA = "xs";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS = "mp";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_MATH = "math";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_ARRAY = "array";
-
-  private MetapathConstants() {
-    // disable construction
+  @Test
+  void testGetFirstSingleton() {
+    assertAll(
+        () -> assertThrows(InvalidTypeMetapathException.class,
+            () -> ISequence.of(integer(1), integer(2)).getFirstItem(true)),
+        () -> assertEquals(integer(3), ISequence.of(integer(3)).getFirstItem(true)),
+        () -> assertNull(ISequence.of().getFirstItem(true)));
   }
 }

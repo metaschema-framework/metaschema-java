@@ -193,6 +193,9 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one
 
+    // https://www.w3.org/TR/xpath-functions-31/#func-array-size
+    registerFunction(ArraySize.SIGNATURE);
+
     // xpath casting functions
     registerFunction(
         CastFunction.signature(MetapathConstants.NS_XML_SCHEMA, "boolean", IBooleanItem.class, IBooleanItem::cast));

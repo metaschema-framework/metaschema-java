@@ -28,6 +28,7 @@ package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -60,5 +61,10 @@ public abstract class AbstractSequence<ITEM extends IItem>
   @Override
   public int hashCode() {
     return getValue().hashCode();
+  }
+
+  @Override
+  public String asString() {
+    return ObjectUtils.notNull(toString());
   }
 }

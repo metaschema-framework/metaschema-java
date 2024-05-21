@@ -61,7 +61,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  *          the Java type of the items in a sequence
  */
 @SuppressWarnings("PMD.ShortMethodName")
-public interface ISequence<ITEM extends IItem> extends List<ITEM>, IArrayMember {
+public interface ISequence<ITEM extends IItem> extends List<ITEM>, IArrayMember, IStringValued {
   /**
    * Get an empty sequence.
    *
@@ -96,6 +96,63 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IArrayMember 
   @Override
   @NonNull
   Stream<ITEM> stream();
+
+  /**
+   * Retrieves the first item in a sequence. If the sequence is empty, a
+   * {@code null} result is returned. If requireSingleton is {@code true} and the
+   * sequence contains more than one item, a {@link TypeMetapathException} is
+   * thrown.
+   *
+   * @param <T>
+   *          the item type to return derived from the provided sequence
+   * @param items
+   *          the sequence to retrieve the first item from
+   * @param requireSingleton
+   *          if {@code true} then a {@link TypeMetapathException} is thrown if
+   *          the sequence contains more than one item
+   * @return {@code null} if the sequence is empty, or the item otherwise
+   * @throws TypeMetapathException
+   *           if the sequence contains more than one item and requireSingleton is
+   *           {@code true}
+   */
+  static <T extends IItem> T getFirstItem(@NonNull ISequence<T> items, boolean requireSingleton) {
+    return getFirstItem(items.stream(), requireSingleton);
+  }
+
+  /**
+   * Retrieves the first item in a sequence. If the sequence is empty, a
+   * {@code null} result is returned. If requireSingleton is {@code true} and the
+   * sequence contains more than one item, a {@link TypeMetapathException} is
+   * thrown.
+   *
+   * @param <T>
+   *          the item type to return derived from the provided sequence
+   * @param items
+   *          the sequence to retrieve the first item from
+   * @param requireSingleton
+   *          if {@code true} then a {@link TypeMetapathException} is thrown if
+   *          the sequence contains more than one item
+   * @return {@code null} if the sequence is empty, or the item otherwise
+   * @throws TypeMetapathException
+   *           if the sequence contains more than one item and requireSingleton is
+   *           {@code true}
+   */
+  static <T extends IItem> T getFirstItem(@NonNull Stream<T> items, boolean requireSingleton) {
+    return items.limit(2)
+        .reduce((t, u) -> {
+          if (requireSingleton) {
+            throw new InvalidTypeMetapathException(
+                null,
+                String.format("sequence expected to contain only one item, but found multiple"));
+          }
+          return t;
+        }).orElse(null);
+  }
+
+  @Nullable
+  default ITEM getFirstItem(boolean requireSingleton) {
+    return getFirstItem(this, requireSingleton);
+  }
 
   /**
    * Get a stream guaranteed to be backed by a list.

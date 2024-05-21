@@ -35,6 +35,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -205,7 +207,7 @@ public class DefaultFunction
               String.format("a sequence of one expected, but found '%d'", size));
         }
 
-        IItem item = FunctionUtils.getFirstItem(parameter, true);
+        IItem item = parameter.getFirstItem(true);
         parameter = item == null ? ISequence.empty() : ISequence.of(item);
         break;
       }
@@ -216,7 +218,7 @@ public class DefaultFunction
               String.format("a sequence of zero or one expected, but found '%d'", size));
         }
 
-        IItem item = FunctionUtils.getFirstItem(parameter, false);
+        IItem item = parameter.getFirstItem(false);
         parameter = item == null ? ISequence.empty() : ISequence.of(item);
         break;
       }
@@ -279,35 +281,34 @@ public class DefaultFunction
       ISequenceType requiredSequenceType = argument.getSequenceType();
       Class<? extends IItem> requiredSequenceTypeClass = requiredSequenceType.getType();
 
-      List<IItem> result = new ArrayList<>(sequence.size());
+      Stream<? extends IItem> stream = sequence.safeStream();
 
-      boolean atomize = IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass);
+      if (IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass)) {
+        Stream<? extends IAnyAtomicItem> atomicStream = stream.flatMap(item -> FnData.atomize(item));
 
-      for (IItem item : sequence.getValue()) {
-        assert item != null;
-        if (atomize) {
-          item = FnData.fnDataItem(item); // NOPMD - intentional
+        // if (IUntypedAtomicItem.class.isInstance(item)) { // NOPMD
+        // // TODO: apply cast to atomic type
+        // }
 
-          // if (IUntypedAtomicItem.class.isInstance(item)) { // NOPMD
-          // // TODO: apply cast to atomic type
-          // }
-
+        if (IStringItem.class.equals(requiredSequenceTypeClass)) {
           // promote URIs to strings if a string is required
-          if (IStringItem.class.equals(requiredSequenceTypeClass) && IAnyUriItem.class.isInstance(item)) {
-            item = IStringItem.cast((IAnyUriItem) item); // NOPMD - intentional
-          }
+          atomicStream = atomicStream.map(item -> IAnyUriItem.class.isInstance(item) ? IStringItem.cast(item) : item);
         }
 
-        // item = requiredSequenceType.
+        stream = atomicStream;
+      }
+
+      stream = stream.peek(item -> {
         if (!requiredSequenceTypeClass.isInstance(item)) {
           throw new InvalidTypeMetapathException(
               item,
-              String.format("The type '%s' is not a subtype of '%s'", item.getClass().getName(),
+              String.format("The type '%s' is not a subtype of '%s'",
+                  item.getClass().getName(),
                   requiredSequenceTypeClass.getName()));
         }
-        result.add(item);
-      }
-      retval = ISequence.of(result);
+      });
+
+      retval = ISequence.of(stream);
     }
     return retval;
   }
@@ -320,7 +321,7 @@ public class DefaultFunction
     try {
       List<ISequence<?>> convertedArguments = convertArguments(this, arguments);
 
-      IItem contextItem = isFocusDepenent() ? FunctionUtils.requireFirstItem(focus, true) : null;
+      IItem contextItem = isFocusDepenent() ? ObjectUtils.requireNonNull(focus.getFirstItem(true)) : null;
 
       CallingContext callingContext = null;
       ISequence<?> result = null;

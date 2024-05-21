@@ -266,6 +266,11 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleArrayConstructor(SquarearrayconstructorContext context) {
+    if (context.getChildCount() == 2) {
+      // empty
+      return new ArrayMembers(CollectionUtil.emptyList());
+    }
+
     return nAiryToCollection(context, 1, 2,
         (ctx, idx) -> {
           int pos = (idx - 1) / 2;

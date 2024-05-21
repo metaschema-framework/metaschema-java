@@ -78,7 +78,7 @@ public abstract class AbstractArrayItem<ITEM extends IArrayMember>
     ISequence<? extends IIntegerItem> arg = FunctionUtils.asType(
         ObjectUtils.notNull(arguments.get(0)));
 
-    IIntegerItem position = FunctionUtils.getFirstItem(arg, true);
+    IIntegerItem position = arg.getFirstItem(true);
     if (position == null) {
       return ISequence.empty(); // NOPMD - readability
     }
@@ -99,5 +99,10 @@ public abstract class AbstractArrayItem<ITEM extends IArrayMember>
   public boolean equals(Object other) {
     return other == this
         || other instanceof IArrayItem && getValue().equals(((IArrayItem<?>) other).getValue());
+  }
+
+  @Override
+  public String asString() {
+    return ObjectUtils.notNull(toString());
   }
 }

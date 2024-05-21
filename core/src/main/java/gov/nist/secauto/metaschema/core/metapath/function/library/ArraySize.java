@@ -24,51 +24,46 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
+import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.net.URI;
-
-import javax.xml.XMLConstants;
+import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-/**
- * Provides constant values used in Metapath.
- */
-@SuppressWarnings("PMD.DataClass")
-public final class MetapathConstants {
+public class ArraySize {
   @NonNull
-  public static final URI NS_METAPATH = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath"));
-  @NonNull
-  public static final URI NS_XML_SCHEMA = ObjectUtils.requireNonNull(
-      URI.create(XMLConstants.W3C_XML_SCHEMA_NS_URI));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_MATH = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions/math"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_ARRAY = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions/array"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH;
+  static final IFunction SIGNATURE = IFunction.builder()
+      .name("size")
+      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
+      .argument(IArgument.builder()
+          .name("array")
+          .type(IArrayItem.class)
+          .one()
+          .build())
+      .returnType(IIntegerItem.class)
+      .returnOne()
+      .functionHandler(ArraySize::execute)
+      .build();
 
+  @SuppressWarnings("unused")
   @NonNull
-  public static final String PREFIX_METAPATH = "mp";
-  @NonNull
-  public static final String PREFIX_XML_SCHEMA = "xs";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS = "mp";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_MATH = "math";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_ARRAY = "array";
+  private static ISequence<IIntegerItem> execute(@NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+    IArrayItem<?> array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
 
-  private MetapathConstants() {
-    // disable construction
+    return ISequence.of(IIntegerItem.valueOf(array.size()));
   }
 }

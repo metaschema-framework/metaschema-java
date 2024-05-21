@@ -24,51 +24,48 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.net.URI;
+import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
-import javax.xml.XMLConstants;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-/**
- * Provides constant values used in Metapath.
- */
-@SuppressWarnings("PMD.DataClass")
-public final class MetapathConstants {
-  @NonNull
-  public static final URI NS_METAPATH = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath"));
-  @NonNull
-  public static final URI NS_XML_SCHEMA = ObjectUtils.requireNonNull(
-      URI.create(XMLConstants.W3C_XML_SCHEMA_NS_URI));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_MATH = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions/math"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_ARRAY = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions/array"));
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH;
+class ArraySizeTest
+    extends ExpressionTestBase {
+  private static Stream<Arguments> provideValues() { // NOPMD - false positive
+    return Stream.of(
+        Arguments.of(
+            integer(3),
+            "array:size([\"a\", \"b\", \"c\"])"),
+        Arguments.of(
+            integer(2),
+            "array:size([\"a\", [\"b\", \"c\"]])"),
+        Arguments.of(
+            integer(0),
+            "array:size([ ])"),
+        Arguments.of(
+            integer(1),
+            "array:size([[ ]])"));
+  }
 
-  @NonNull
-  public static final String PREFIX_METAPATH = "mp";
-  @NonNull
-  public static final String PREFIX_XML_SCHEMA = "xs";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS = "mp";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_MATH = "math";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_ARRAY = "array";
+  @ParameterizedTest
+  @MethodSource("provideValues")
+  void testExpression(@NonNull IIntegerItem expected, @NonNull String metapath) {
 
-  private MetapathConstants() {
-    // disable construction
+    IItem result = MetapathExpression.compile(metapath)
+        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
+    assertEquals(expected, result);
   }
 }

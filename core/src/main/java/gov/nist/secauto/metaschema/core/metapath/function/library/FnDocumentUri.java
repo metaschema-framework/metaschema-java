@@ -107,7 +107,7 @@ public final class FnDocumentUri {
 
     ISequence<? extends INodeItem> arg = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
 
-    INodeItem item = FunctionUtils.getFirstItem(arg, true);
+    INodeItem item = arg.getFirstItem(true);
 
     ISequence<IAnyUriItem> retval;
     if (item == null) {

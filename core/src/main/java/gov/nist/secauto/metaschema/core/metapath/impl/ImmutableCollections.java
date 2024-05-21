@@ -166,6 +166,5 @@ public class ImmutableCollections {
     public String toString() {
       return getValue().toString();
     }
-
   }
 }

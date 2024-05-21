@@ -53,7 +53,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.comparison.AbstractComparis
 import gov.nist.secauto.metaschema.core.metapath.cst.comparison.GeneralComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.comparison.ValueComparison;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
-import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
@@ -316,7 +315,7 @@ class BuildCstVisitorTest {
 
     IDocumentNodeItem document = newTestDocument();
     ISequence<?> result = ast.accept(new DynamicContext(), ISequence.of(document));
-    IItem resultItem = FunctionUtils.getFirstItem(result, false);
+    IItem resultItem = result.getFirstItem(false);
     assertAll(
         () -> assertEquals(And.class, ast.getClass()),
         () -> assertNotNull(resultItem),
@@ -341,7 +340,7 @@ class BuildCstVisitorTest {
 
     IDocumentNodeItem document = newTestDocument();
     ISequence<?> result = ast.accept(new DynamicContext(), ISequence.of(document));
-    IItem resultItem = FunctionUtils.getFirstItem(result, false);
+    IItem resultItem = result.getFirstItem(false);
     assertAll(
         () -> assertEquals(If.class, ast.getClass()),
         () -> assertNotNull(resultItem),

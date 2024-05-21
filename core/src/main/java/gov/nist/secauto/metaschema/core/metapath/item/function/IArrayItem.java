@@ -28,6 +28,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.function;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.IStringValued;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.ISequenceType;
@@ -53,7 +54,7 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.ShortMethodName")
-public interface IArrayItem<ITEM extends IArrayMember> extends IFunction, IItem, List<ITEM> {
+public interface IArrayItem<ITEM extends IArrayMember> extends IFunction, IItem, List<ITEM>, IStringValued {
   @NonNull
   static <T extends IArrayMember> IArrayItem<T> empty() {
     return AbstractArrayItem.empty();
