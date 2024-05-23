@@ -531,5 +531,5 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    *          the processing context
    * @return the visitation result or {@code null} if no result was produced
    */
-  RESULT visitArray(@NonNull ArrayMembers expr, @NonNull CONTEXT context);
+  RESULT visitArray(@NonNull ArraySquare expr, @NonNull CONTEXT context);
 }

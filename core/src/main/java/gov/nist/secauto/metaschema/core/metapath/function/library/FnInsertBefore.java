@@ -87,7 +87,7 @@ public final class FnInsertBefore {
 
     IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
     ISequence<IItem> inserts = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2)));
-    return ISequence.of(fnInsertBefore(target, position, inserts));
+    return ISequence.ofCollection(fnInsertBefore(target, position, inserts));
   }
 
   /**

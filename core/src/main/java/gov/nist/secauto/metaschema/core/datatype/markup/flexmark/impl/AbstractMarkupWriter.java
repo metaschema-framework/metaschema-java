@@ -24,7 +24,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.datatype.markup.flexmark; // NOPMD AST processor has many members
+package gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl; // NOPMD AST processor has many members
 
 import com.vladsch.flexmark.ast.AutoLink;
 import com.vladsch.flexmark.ast.BlockQuote;
@@ -63,7 +63,9 @@ import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import com.vladsch.flexmark.util.sequence.Escaping;
 
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupWriter;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.HtmlQuoteTagExtension.DoubleQuoteNode;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupWriter.ChildHandler;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -111,9 +113,11 @@ public abstract class AbstractMarkupWriter<T, E extends Throwable> // NOPMD not 
     // normal cases
     // ENTITY_MAP.put("&amp;", "&");
     /*
-     * ENTITY_MAP.put("&lsquo;", "‘"); ENTITY_MAP.put("&rsquo;", "’"); ENTITY_MAP.put("&hellip;", "…");
-     * ENTITY_MAP.put("&mdash;", "—"); ENTITY_MAP.put("&ndash;", "–"); ENTITY_MAP.put("&ldquo;", "“");
-     * ENTITY_MAP.put("&rdquo;", "”"); ENTITY_MAP.put("&laquo;", "«"); ENTITY_MAP.put("&raquo;", "»");
+     * ENTITY_MAP.put("&lsquo;", "‘"); ENTITY_MAP.put("&rsquo;", "’");
+     * ENTITY_MAP.put("&hellip;", "…"); ENTITY_MAP.put("&mdash;", "—");
+     * ENTITY_MAP.put("&ndash;", "–"); ENTITY_MAP.put("&ldquo;", "“");
+     * ENTITY_MAP.put("&rdquo;", "”"); ENTITY_MAP.put("&laquo;", "«");
+     * ENTITY_MAP.put("&raquo;", "»");
      */
   }
 

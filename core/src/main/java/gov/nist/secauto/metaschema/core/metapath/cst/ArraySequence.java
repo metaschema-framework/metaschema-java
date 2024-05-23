@@ -28,9 +28,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 
 import java.util.List;
 
@@ -66,8 +64,7 @@ public class ArraySequence implements IExpression {
   public ISequence<IArrayItem<?>> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<IArrayItem<?>> retval;
     if (expr != null) {
-      List<? extends IArrayMember> result = FnData.fnData(expr.accept(dynamicContext, focus));
-      IArrayItem<?> array = IArrayItem.of(result);
+      IArrayItem<?> array = IArrayItem.ofCollection(expr.accept(dynamicContext, focus));
       retval = ISequence.of(array);
     } else {
       retval = ISequence.of();

@@ -359,7 +359,7 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   }
 
   @Override
-  public RESULT visitArray(ArrayMembers expr, CONTEXT context) {
+  public RESULT visitArray(ArraySquare expr, CONTEXT context) {
     return visitChildren(expr, context);
   }
 }

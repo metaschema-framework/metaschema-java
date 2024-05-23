@@ -27,9 +27,8 @@
 package gov.nist.secauto.metaschema.core.metapath.item;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 
-public interface IItem extends IArrayMember {
+public interface IItem {
   /**
    * Get the item's "wrapped" value. This "wrapped" value may be:
    * <ul>

@@ -342,7 +342,7 @@ public final class CSTPrinter {
     }
 
     @Override
-    public String visitArray(ArrayMembers expr, State context) {
+    public String visitArray(ArraySquare expr, State context) {
       return appendNode(expr, super.visitArray(expr, context), context);
     }
   }

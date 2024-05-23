@@ -268,7 +268,7 @@ public class BuildCSTVisitor
   protected IExpression handleArrayConstructor(SquarearrayconstructorContext context) {
     if (context.getChildCount() == 2) {
       // empty
-      return new ArrayMembers(CollectionUtil.emptyList());
+      return new ArraySquare(CollectionUtil.emptyList());
     }
 
     return nAiryToCollection(context, 1, 2,
@@ -279,7 +279,7 @@ public class BuildCSTVisitor
         },
         children -> {
           assert children != null;
-          return new ArrayMembers(children);
+          return new ArraySquare(children);
         });
   }
 

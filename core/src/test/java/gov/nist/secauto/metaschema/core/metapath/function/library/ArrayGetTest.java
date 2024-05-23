@@ -33,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -57,7 +56,7 @@ class ArrayGetTest
 
   @ParameterizedTest
   @MethodSource("provideValues")
-  void testExpression(@NonNull IIntegerItem expected, @NonNull String metapath) {
+  void testExpression(@NonNull IItem expected, @NonNull String metapath) {
 
     IItem result = MetapathExpression.compile(metapath)
         .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());

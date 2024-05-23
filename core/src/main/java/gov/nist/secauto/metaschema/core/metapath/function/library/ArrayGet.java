@@ -34,11 +34,10 @@ import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -46,7 +45,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class ArrayGet {
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("size")
+      .name("get")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .argument(IArgument.builder()
           .name("array")
@@ -58,27 +57,21 @@ public class ArrayGet {
           .type(IIntegerItem.class)
           .one()
           .build())
-      .returnType(IIntegerItem.class)
-      .returnZeroOrMore()
+      .returnType(IItem.class)
+      .returnZeroOrOne()
       .functionHandler(ArrayGet::execute)
       .build();
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IIntegerItem> execute(@NonNull IFunction function,
+  private static ISequence<?> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IArrayItem<?> array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
     IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
-    if (position < 1) {
-      position = 1;
-    } else if (position > target.size()) {
-      position = target.size() + 1;
-    }
-
-    return ISequence.of(IIntegerItem.valueOf(array.size()));
+    return ISequence.of(get(array, position));
   }
 
   /**
@@ -95,26 +88,18 @@ public class ArrayGet {
    */
   @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
-  public static <T extends IItem> List<T> get(
+  public static <T extends IItem> T get(
       @NonNull List<T> target,
       @NonNull IIntegerItem positionItem) {
     int position = positionItem.asInteger().intValue();
 
-    if (position < 1 || position > target.size()) {
+    try {
+      return ObjectUtils.requireNonNull(target.get(position - 1));
+    } catch (IndexOutOfBoundsException ex) {
+      throw new ArrayException(
+          ArrayException.INDEX_OUT_OF_BOUNDS,
+          String.format("The array index %d is outside the range of values.", position),
+          ex);
     }
-
-    IArrayMember member = target.get(position - 1);
-
-    List<T> newSequence = new ArrayList<>(target.size());
-
-    if (position == 1) {
-      newSequence.addAll(inserts);
-      newSequence.addAll(target);
-    } else {
-      newSequence.addAll(target.subList(0, position - 1));
-      newSequence.addAll(inserts);
-      newSequence.addAll(target.subList(position - 1, target.size()));
-    }
-    return newSequence;
   }
 }

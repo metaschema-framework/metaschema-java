@@ -80,7 +80,7 @@ public final class FnRemove {
       IItem focus) {
     ISequence<?> target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
     IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
-    return ISequence.of(fnRemove(target, position));
+    return ISequence.ofCollection(fnRemove(target, position));
   }
 
   /**

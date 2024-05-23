@@ -26,7 +26,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -34,7 +34,7 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ArrayItemN<ITEM extends IArrayMember>
+public class ArrayItemN<ITEM extends IItem>
     extends AbstractArrayItem<ITEM> {
   @NonNull
   private final List<ITEM> items;

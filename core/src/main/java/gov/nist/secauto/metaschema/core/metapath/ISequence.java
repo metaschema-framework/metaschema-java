@@ -32,7 +32,6 @@ import gov.nist.secauto.metaschema.core.metapath.impl.SingletonSequence;
 import gov.nist.secauto.metaschema.core.metapath.impl.StreamSequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  *          the Java type of the items in a sequence
  */
 @SuppressWarnings("PMD.ShortMethodName")
-public interface ISequence<ITEM extends IItem> extends List<ITEM>, IArrayMember, IStringValued {
+public interface ISequence<ITEM extends IItem> extends List<ITEM>, IStringValued {
   /**
    * Get an empty sequence.
    *
@@ -207,7 +206,7 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IArrayMember,
 
       @Override
       public Function<List<ITEM_TYPE>, ISequence<ITEM_TYPE>> finisher() {
-        return list -> of(ObjectUtils.notNull(list));
+        return list -> ofCollection(ObjectUtils.notNull(list));
       }
 
       @Override
@@ -265,7 +264,7 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IArrayMember,
    * @return the new sequence
    */
   @NonNull
-  static <ITEM_TYPE extends IItem> ISequence<ITEM_TYPE> of( // NOPMD - intentional
+  static <ITEM_TYPE extends IItem> ISequence<ITEM_TYPE> ofCollection( // NOPMD - intentional
       @NonNull List<ITEM_TYPE> items) {
     ISequence<ITEM_TYPE> retval;
     if (items.isEmpty()) {

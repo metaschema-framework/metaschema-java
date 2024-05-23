@@ -36,7 +36,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.EnumSet;
@@ -48,7 +47,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public abstract class AbstractArrayItem<ITEM extends IArrayMember>
+public abstract class AbstractArrayItem<ITEM extends IItem>
     extends ImmutableCollections.AbstractImmutableDelegatedCollection<ITEM>
     implements IArrayItem<ITEM> {
   @NonNull
@@ -68,7 +67,7 @@ public abstract class AbstractArrayItem<ITEM extends IArrayMember>
 
   @SuppressWarnings("unchecked")
   @NonNull
-  public static <T extends IArrayMember> IArrayItem<T> empty() {
+  public static <T extends IItem> IArrayItem<T> empty() {
     return (IArrayItem<T>) EMPTY;
   }
 
@@ -84,10 +83,8 @@ public abstract class AbstractArrayItem<ITEM extends IArrayMember>
     }
 
     int index = position.asInteger().intValueExact() - 1;
-    IArrayMember result = getValue().get(index);
-    return result instanceof IItem
-        ? ISequence.of((IItem) result)
-        : ObjectUtils.notNull((ISequence<?>) result);
+    IItem result = getValue().get(index);
+    return ISequence.of(result);
   }
 
   @Override

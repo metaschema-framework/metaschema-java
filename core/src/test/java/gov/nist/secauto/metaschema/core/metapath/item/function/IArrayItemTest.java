@@ -26,8 +26,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
@@ -50,7 +50,7 @@ class IArrayItemTest
             IArrayItem.of(integer(1), integer(2), integer(5), integer(7)),
             "[ 1, 2, 5, 7 ]"),
         Arguments.of(
-            IArrayItem.of(sequence(), sequence(integer(27), integer(17), integer(0))),
+            IArrayItem.of(array(), array(integer(27), integer(17), integer(0))),
             "[ (), (27, 17, 0)]"),
         Arguments.of(
             IArrayItem.of(integer(1), integer(2), integer(5), integer(7)),

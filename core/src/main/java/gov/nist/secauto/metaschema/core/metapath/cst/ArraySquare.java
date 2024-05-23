@@ -28,20 +28,18 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayMember;
 
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ArrayMembers implements IExpression {
+public class ArraySquare implements IExpression {
   @NonNull
   private final List<IExpression> children;
 
-  public ArrayMembers(@NonNull List<IExpression> children) {
+  public ArraySquare(@NonNull List<IExpression> children) {
     this.children = children;
   }
 
@@ -53,19 +51,19 @@ public class ArrayMembers implements IExpression {
   @Override
   public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(getChildren().stream()
-        .map(expr -> {
-          ISequence<? extends IArrayMember> result = FnData.fnData(expr.accept(dynamicContext, focus));
+        .map(expr -> expr.accept(dynamicContext, focus))
+        .map(sequence -> {
 
-          IArrayMember retval;
-          switch (result.size()) {
+          IItem retval;
+          switch (sequence.size()) {
           case 0:
-            retval = ISequence.of();
+            retval = IArrayItem.empty();
             break;
           case 1:
-            retval = result.iterator().next();
+            retval = sequence.iterator().next();
             break;
           default:
-            retval = result;
+            retval = IArrayItem.ofCollection(sequence);
           }
           return retval;
         })
