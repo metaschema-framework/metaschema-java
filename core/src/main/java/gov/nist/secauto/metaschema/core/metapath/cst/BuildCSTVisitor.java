@@ -48,8 +48,10 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctioncallCo
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.GeneralcompContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IfexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IntersectexceptexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.KeyspecifierContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LetexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LiteralContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LookupContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MultiplicativeexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NametestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NodetestContext;
@@ -71,12 +73,14 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimplemapexprC
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SquarearrayconstructorContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.StringconcatexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnaryexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnarylookupContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnionexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ValuecompContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.VarnameContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.VarrefContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.WildcardContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractLookup.IKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.cst.comparison.GeneralComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.comparison.ValueComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Addition;
@@ -99,6 +103,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Step;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -288,6 +293,34 @@ public class BuildCSTVisitor
     return new ArraySequence(visit(ctx.enclosedexpr()));
   }
 
+  // ===============================================
+  // Unary Lookup -
+  // https://www.w3.org/TR/xpath-31/#id-unary-lookup
+  // ===============================================
+
+  @Override
+  protected IExpression handleUnarylookup(UnarylookupContext ctx) {
+    KeyspecifierContext specifier = ctx.keyspecifier();
+
+    IKeySpecifier keySpecifier;
+    if (specifier.parenthesizedexpr() != null) {
+      keySpecifier
+          = new UnaryLookup.ParenthesizedExprKeySpecifier(
+              ObjectUtils.requireNonNull(specifier.parenthesizedexpr().accept(this)));
+    } else if (specifier.NCName() != null) {
+      keySpecifier
+          = new UnaryLookup.NCNameKeySpecifier(ObjectUtils.requireNonNull(specifier.NCName().getText()));
+    } else if (specifier.IntegerLiteral() != null) {
+      keySpecifier = new UnaryLookup.IntegerLiteralKeySpecifier(
+          IIntegerItem.valueOf(ObjectUtils.requireNonNull(specifier.IntegerLiteral().getText())));
+    } else if (specifier.STAR() != null) {
+      keySpecifier = new UnaryLookup.WildcardKeySpecifier();
+    } else {
+      throw new UnsupportedOperationException("unknown key specifier");
+    }
+    return new UnaryLookup(keySpecifier);
+  }
+
   // =========================================================
   // Quantified Expressions -
   // https://www.w3.org/TR/xpath-31/#id-quantified-expressions
@@ -472,21 +505,65 @@ public class BuildCSTVisitor
   }
 
   @Override
-  protected IExpression handlePostfixexpr(PostfixexprContext ctx) {
-    int numChildren = ctx.getChildCount();
-    ParseTree primaryTree = ctx.getChild(0);
-    IExpression retval = ObjectUtils.notNull(primaryTree.accept(this));
+  protected IExpression handlePostfixexpr(PostfixexprContext context) {
+    return handleGroupedNAiry(
+        context,
+        0,
+        1,
+        (ctx, idx, left) -> {
+          ParseTree tree = ctx.getChild(idx);
+          IExpression result;
+          if (tree instanceof ArgumentlistContext) {
+            // map or array access using function call syntax
+            result = new FunctionCallAccessor(
+                left,
+                parseArgumentList((ArgumentlistContext) tree).findFirst().get());
+          } else if (tree instanceof PredicateContext) {
+            result = new PredicateExpression(
+                left,
+                CollectionUtil.singletonList(parsePredicate((PredicateContext) tree)));
+          } else if (tree instanceof LookupContext) {
+            KeyspecifierContext specifier = ((LookupContext) tree).keyspecifier();
 
-    List<IExpression> predicates = numChildren > 1 ? parsePredicates(ctx, 1) : CollectionUtil.emptyList();
-
-    if (!predicates.isEmpty()) {
-      retval = new PredicateExpression(retval, predicates);
-    }
-    return retval;
+            IKeySpecifier keySpecifier;
+            if (specifier.parenthesizedexpr() != null) {
+              keySpecifier
+                  = new PostfixLookup.ParenthesizedExprKeySpecifier(
+                      ObjectUtils.requireNonNull(specifier.parenthesizedexpr().accept(this)));
+            } else if (specifier.NCName() != null) {
+              keySpecifier
+                  = new PostfixLookup.NCNameKeySpecifier(ObjectUtils.requireNonNull(specifier.NCName().getText()));
+            } else if (specifier.IntegerLiteral() != null) {
+              keySpecifier = new PostfixLookup.IntegerLiteralKeySpecifier(
+                  IIntegerItem.valueOf(ObjectUtils.requireNonNull(specifier.IntegerLiteral().getText())));
+            } else if (specifier.STAR() != null) {
+              keySpecifier = new PostfixLookup.WildcardKeySpecifier();
+            } else {
+              throw new UnsupportedOperationException("unknown key specifier");
+            }
+            result = new PostfixLookup(left, keySpecifier);
+          } else {
+            result = visit(tree);
+          }
+          return result;
+        });
   }
+
   // ======================================================================
   // Path Expressions - https://www.w3.org/TR/xpath-31/#id-path-expressions
   // ======================================================================
+
+  @Override
+  protected IExpression handlePredicate(PredicateContext ctx) {
+    parsePredicate(ctx);
+    return null;
+  }
+
+  @Override
+  protected IExpression handleLookup(LookupContext ctx) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
   @Override
   protected IExpression handlePathexpr(PathexprContext ctx) {

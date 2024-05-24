@@ -532,4 +532,37 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    * @return the visitation result or {@code null} if no result was produced
    */
   RESULT visitArray(@NonNull ArraySquare expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
+  RESULT visitPostfixLookup(@NonNull PostfixLookup expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
+  RESULT visitFunctionCallAccessor(@NonNull FunctionCallAccessor expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
+  RESULT visitUnaryLookup(@NonNull UnaryLookup expr, @NonNull CONTEXT context);
 }

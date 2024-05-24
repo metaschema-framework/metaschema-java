@@ -94,7 +94,7 @@ public class ArrayException
   }
 
   @Override
-  protected String getCodePrefix() {
+  public String getCodePrefix() {
     return "FOAY";
   }
 

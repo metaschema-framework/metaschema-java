@@ -50,8 +50,10 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctioncallCo
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.GeneralcompContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IfexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IntersectexceptexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.KeyspecifierContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LetexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LiteralContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LookupContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MetapathContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MultiplicativeexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NametestContext;
@@ -78,6 +80,7 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.Squarearraycon
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.StepexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.StringconcatexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnaryexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnarylookupContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnionexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ValuecompContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ValueexprContext;
@@ -358,10 +361,34 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handle(ctx, (context) -> handlePostfixexpr(ctx));
   }
 
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  protected abstract R handlePredicate(@NonNull PredicateContext ctx);
+
   @Override
   public R visitPredicate(PredicateContext ctx) {
-    // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    assert ctx != null;
+    return handlePredicate(ctx);
+  }
+
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  protected abstract R handleLookup(@NonNull LookupContext ctx);
+
+  @Override
+  public R visitLookup(LookupContext ctx) {
+    assert ctx != null;
+    return handleLookup(ctx);
   }
 
   /*
@@ -878,6 +905,27 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   public R visitCurlyarrayconstructor(CurlyarrayconstructorContext ctx) {
     assert ctx != null;
     return handleArrayConstructor(ctx);
+  }
+
+  @Override
+  public R visitKeyspecifier(KeyspecifierContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException();
+  }
+
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  protected abstract R handleUnarylookup(@NonNull UnarylookupContext ctx);
+
+  @Override
+  public R visitUnarylookup(UnarylookupContext ctx) {
+    assert ctx != null;
+    return handleUnarylookup(ctx);
   }
 
   // =========================================================================

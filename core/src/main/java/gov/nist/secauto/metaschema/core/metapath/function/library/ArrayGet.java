@@ -44,7 +44,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ArrayGet {
   @NonNull
-  static final IFunction SIGNATURE = IFunction.builder()
+  public static final IFunction SIGNATURE = IFunction.builder()
       .name("get")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .argument(IArgument.builder()
@@ -98,7 +98,9 @@ public class ArrayGet {
     } catch (IndexOutOfBoundsException ex) {
       throw new ArrayException(
           ArrayException.INDEX_OUT_OF_BOUNDS,
-          String.format("The array index %d is outside the range of values.", position),
+          String.format("The index %d is outside the range of values for the array size '%d'.",
+              position,
+              target.size()),
           ex);
     }
   }

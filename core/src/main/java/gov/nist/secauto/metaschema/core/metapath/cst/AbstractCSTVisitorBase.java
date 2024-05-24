@@ -295,12 +295,11 @@ public abstract class AbstractCSTVisitorBase
     IExpression retval = null;
     if (numChildren > 0) {
       ParseTree leftTree = context.getChild(startingIndex);
-      IExpression result = ObjectUtils.notNull(leftTree.accept(this));
+      retval = ObjectUtils.notNull(leftTree.accept(this));
 
       for (int i = startingIndex + 1; i < numChildren; i = i + step) {
-        result = parser.apply(context, i, result);
+        retval = parser.apply(context, i, retval);
       }
-      retval = result;
     }
     return retval;
   }
