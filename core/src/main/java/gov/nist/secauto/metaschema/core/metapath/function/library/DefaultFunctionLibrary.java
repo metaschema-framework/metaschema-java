@@ -199,6 +199,8 @@ public class DefaultFunctionLibrary
     registerFunction(ArraySize.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-array-put
     registerFunction(ArrayPut.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-array-append
+    registerFunction(ArrayAppend.SIGNATURE);
 
     // xpath casting functions
     registerFunction(
