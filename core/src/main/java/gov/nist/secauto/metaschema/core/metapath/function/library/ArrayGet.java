@@ -85,7 +85,7 @@ public class ArrayGet {
    * @param positionItem
    *          the integer position of the item to retrieve
    * @return the retrieved item
-   * @throws IndexOutOfBoundsException
+   * @throws ArrayException
    *           if the position is not in the range of 1 to array:size
    */
   @SuppressWarnings("PMD.OnlyOneReturn")

@@ -95,7 +95,7 @@ public class ArrayPut {
    * @param member
    *          the Metapath item to replace the identified array member with
    * @return a new array containing the modification
-   * @throws IndexOutOfBoundsException
+   * @throws ArrayException
    *           if the position is not in the range of 1 to array:size
    */
   @SuppressWarnings("PMD.OnlyOneReturn")

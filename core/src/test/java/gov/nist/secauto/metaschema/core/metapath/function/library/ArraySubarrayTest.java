@@ -42,16 +42,31 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class ArrayAppendTest
+class ArraySubarrayTest
     extends ExpressionTestBase {
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
-            array(string("a"), string("b"), string("c"), string("d")),
-            "array:append([\"a\", \"b\", \"c\"], \"d\")"),
+            array(string("b"), string("c"), string("d")),
+            "array:subarray([\"a\", \"b\", \"c\", \"d\"], 2)"),
         Arguments.of(
-            array(string("a"), string("b"), string("c"), array(string("d"), string("e"))),
-            "array:append([\"a\", \"b\", \"c\"], (\"d\", \"e\"))"));
+            array(),
+            "array:subarray([\"a\", \"b\", \"c\", \"d\"], 5)"),
+        Arguments.of(
+            array(),
+            "array:subarray([\"a\", \"b\", \"c\", \"d\"], 2, 0)"),
+        Arguments.of(
+            array(string("b")),
+            "array:subarray([\"a\", \"b\", \"c\", \"d\"], 2, 1)"),
+        Arguments.of(
+            array(string("b"), string("c")),
+            "array:subarray([\"a\", \"b\", \"c\", \"d\"], 2, 2)"),
+        Arguments.of(
+            array(),
+            "array:subarray([\"a\", \"b\", \"c\", \"d\"], 5, 0)"),
+        Arguments.of(
+            array(),
+            "array:subarray([ ], 1, 0)"));
   }
 
   @ParameterizedTest
