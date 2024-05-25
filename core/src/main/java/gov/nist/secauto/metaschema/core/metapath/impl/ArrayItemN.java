@@ -41,11 +41,11 @@ public class ArrayItemN<ITEM extends IItem>
 
   @SafeVarargs
   public ArrayItemN(@NonNull ITEM... items) {
-    this(CollectionUtil.unmodifiableList(ObjectUtils.notNull(List.of(items))));
+    this(ObjectUtils.notNull(List.of(items)));
   }
 
   public ArrayItemN(@NonNull List<ITEM> items) {
-    this.items = items;
+    this.items = CollectionUtil.unmodifiableList(items);
   }
 
   @Override

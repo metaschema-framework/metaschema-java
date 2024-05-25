@@ -153,6 +153,22 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IStringValued
     return getFirstItem(this, requireSingleton);
   }
 
+  @NonNull
+  default IItem toArrayMember() {
+    IItem retval;
+    switch (size()) {
+    case 0:
+      retval = IArrayItem.empty();
+      break;
+    case 1:
+      retval = stream().findFirst().get();
+      break;
+    default:
+      retval = IArrayItem.ofCollection(this);
+    }
+    return retval;
+  }
+
   /**
    * Get a stream guaranteed to be backed by a list.
    *

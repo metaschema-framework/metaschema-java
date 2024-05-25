@@ -38,14 +38,15 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ArrayGet {
+public class ArrayPut {
   @NonNull
   public static final IFunction SIGNATURE = IFunction.builder()
-      .name("get")
+      .name("put")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .argument(IArgument.builder()
           .name("array")
@@ -57,53 +58,70 @@ public class ArrayGet {
           .type(IIntegerItem.class)
           .one()
           .build())
-      .returnType(IItem.class)
-      .returnZeroOrOne()
-      .functionHandler(ArrayGet::execute)
+      .argument(IArgument.builder()
+          .name("member")
+          .type(IItem.class)
+          .zeroOrMore()
+          .build())
+      .returnType(IArrayItem.class)
+      .returnOne()
+      .functionHandler(ArrayPut::execute)
       .build();
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<?> execute(@NonNull IFunction function,
+  private static <T extends IItem> ISequence<IArrayItem<T>> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    IArrayItem<?> array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
+    IArrayItem<T> array = FunctionUtils.asType(ObjectUtils.requireNonNull(
+        arguments.get(0).getFirstItem(true)));
     IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
+    T member = FunctionUtils.asType(arguments.get(2).toArrayMember());
 
-    return ISequence.of(get(array, position));
+    return ISequence.of(put(array, position, member));
   }
 
   /**
    * An implementation of XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-array-get">array:get</a>.
+   * "https://www.w3.org/TR/xpath-functions-31/#func-array-put">array:put</a>.
    *
    * @param <T>
    *          the type of items in the given Metapath array
-   * @param target
-   *          the array of Metapath items that is the target of retrieval
+   * @param array
+   *          the target Metapath array
    * @param positionItem
-   *          the integer position of the item to retrieve
-   * @return the retrieved item
+   *          the integer position of the item to replace
+   * @param member
+   *          the Metapath item to replace the identified array member with
+   * @return a new array containing the modification
    * @throws IndexOutOfBoundsException
    *           if the position is not in the range of 1 to array:size
    */
   @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
-  public static <T extends IItem> T get(
-      @NonNull List<T> target,
-      @NonNull IIntegerItem positionItem) {
-    int position = positionItem.asInteger().intValue();
+  public static <T extends IItem> IArrayItem<T> put(
+      @NonNull IArrayItem<T> array,
+      @NonNull IIntegerItem positionItem,
+      @NonNull T member) {
+    return put(array, positionItem.asInteger().intValue(), member);
+  }
 
+  @NonNull
+  public static <T extends IItem> IArrayItem<T> put(@NonNull IArrayItem<T> array, int position, @NonNull T member) {
+
+    List<T> copy = new ArrayList<>(array);
     try {
-      return ObjectUtils.requireNonNull(target.get(position - 1));
+      copy.set(position - 1, member);
     } catch (IndexOutOfBoundsException ex) {
       throw new ArrayException(
           ArrayException.INDEX_OUT_OF_BOUNDS,
-          String.format("The index %d is outside the range of values for the array size '%d'.",
+          String.format("The position %d is outside the range of values for the array of size '%d'.",
               position,
-              target.size()),
+              copy.size()),
           ex);
     }
+
+    return IArrayItem.ofCollection(copy);
   }
 }

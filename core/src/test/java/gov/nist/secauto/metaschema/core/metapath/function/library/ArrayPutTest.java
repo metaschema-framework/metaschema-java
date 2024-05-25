@@ -24,41 +24,45 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 
-import java.util.List;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ArraySquare implements IExpression {
-  @NonNull
-  private final List<IExpression> children;
-
-  public ArraySquare(@NonNull List<IExpression> children) {
-    this.children = children;
+class ArrayPutTest
+    extends ExpressionTestBase {
+  private static Stream<Arguments> provideValues() { // NOPMD - false positive
+    return Stream.of(
+        Arguments.of(
+            array(string("a"), string("d"), string("c")),
+            "array:put([\"a\", \"b\", \"c\"], 2, \"d\")"),
+        Arguments.of(
+            array(string("a"), array(string("d"), string("e")), string("c")),
+            "array:put([\"a\", \"b\", \"c\"], 2, (\"d\", \"e\"))"),
+        Arguments.of(
+            array(array(string("d"), string("e"))),
+            "array:put([\"a\"], 1, [\"d\", \"e\"]) "));
   }
 
-  @Override
-  public List<? extends IExpression> getChildren() {
-    return children;
-  }
+  @ParameterizedTest
+  @MethodSource("provideValues")
+  void testExpression(@NonNull IItem expected, @NonNull String metapath) {
 
-  @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(getChildren().stream()
-        .map(expr -> expr.accept(dynamicContext, focus))
-        .map(ISequence::toArrayMember)
-        .collect(IArrayItem.toArrayItem()));
+    IItem result = MetapathExpression.compile(metapath)
+        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
+    assertEquals(expected, result);
   }
-
-  @Override
-  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitArray(this, context);
-  }
-
 }
