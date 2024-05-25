@@ -98,18 +98,16 @@ public class ArrayPut {
    * @throws ArrayException
    *           if the position is not in the range of 1 to array:size
    */
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   public static <T extends IItem> IArrayItem<T> put(
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem positionItem,
       @NonNull T member) {
-    return put(array, positionItem.asInteger().intValue(), member);
+    return put(array, positionItem.asInteger().intValueExact(), member);
   }
 
   @NonNull
   public static <T extends IItem> IArrayItem<T> put(@NonNull IArrayItem<T> array, int position, @NonNull T member) {
-
     List<T> copy = new ArrayList<>(array);
     try {
       copy.set(position - 1, member);

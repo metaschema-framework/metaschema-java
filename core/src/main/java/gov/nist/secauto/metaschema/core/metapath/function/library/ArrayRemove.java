@@ -38,14 +38,19 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ArrayGet {
+public class ArrayRemove {
   @NonNull
   public static final IFunction SIGNATURE = IFunction.builder()
-      .name("get")
+      .name("remove")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .argument(IArgument.builder()
           .name("array")
@@ -53,56 +58,64 @@ public class ArrayGet {
           .one()
           .build())
       .argument(IArgument.builder()
-          .name("position")
+          .name("positions")
           .type(IIntegerItem.class)
-          .one()
+          .zeroOrMore()
           .build())
-      .returnType(IItem.class)
-      .returnZeroOrOne()
-      .functionHandler(ArrayGet::execute)
+      .returnType(IArrayItem.class)
+      .returnOne()
+      .functionHandler(ArrayRemove::execute)
       .build();
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<?> execute(@NonNull IFunction function,
+  private static <T extends IItem> ISequence<IArrayItem<T>> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    IArrayItem<?> array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
-    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
+    IArrayItem<T> array = FunctionUtils.asType(ObjectUtils.requireNonNull(
+        arguments.get(0).getFirstItem(true)));
+    ISequence<? extends IIntegerItem> positions = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));
 
-    return ISequence.of(get(array, position));
+    return ISequence.of(removeItems(array, positions));
   }
 
   /**
    * An implementation of XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-array-get">array:get</a>.
+   * "https://www.w3.org/TR/xpath-functions-31/#func-array-remove">array:remove</a>.
    *
    * @param <T>
    *          the type of items in the given Metapath array
-   * @param target
-   *          the array of Metapath items that is the target of retrieval
-   * @param positionItem
-   *          the integer position of the item to retrieve
-   * @return the retrieved item
+   * @param array
+   *          the target Metapath array
+   * @param positions
+   *          the integer position of the items to remove
+   * @return a new array containing the modification
    * @throws ArrayException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
-  public static <T extends IItem> T get(
-      @NonNull List<T> target,
-      @NonNull IIntegerItem positionItem) {
-    int position = positionItem.asInteger().intValue();
+  public static <T extends IItem> IArrayItem<T> removeItems(
+      @NonNull IArrayItem<T> array,
+      @NonNull Collection<? extends IIntegerItem> positions) {
+    return remove(
+        array,
+        ObjectUtils.notNull(positions.stream()
+            .map(position -> position.asInteger().intValueExact())
+            .collect(Collectors.toSet())));
+  }
 
-    try {
-      return ObjectUtils.requireNonNull(target.get(position - 1));
-    } catch (IndexOutOfBoundsException ex) {
-      throw new ArrayException(
-          ArrayException.INDEX_OUT_OF_BOUNDS,
-          String.format("The index %d is outside the range of values for the array size '%d'.",
-              position,
-              target.size()),
-          ex);
-    }
+  @NonNull
+  public static <T extends IItem> IArrayItem<T> remove(
+      @NonNull IArrayItem<T> array,
+      @NonNull Collection<Integer> positions) {
+    Set<Integer> positionSet = positions instanceof Set ? (Set<Integer>) positions : new HashSet<Integer>(positions);
+
+    List<T> removed = ObjectUtils.notNull(IntStream.range(1, array.size() + 1)
+        .filter(index -> !positionSet.contains(index))
+        .mapToObj(index -> array.get(index - 1))
+        .collect(Collectors.toList()));
+
+    return IArrayItem.ofCollection(removed);
   }
 }

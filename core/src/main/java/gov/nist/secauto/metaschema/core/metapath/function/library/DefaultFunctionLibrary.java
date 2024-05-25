@@ -204,6 +204,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-array-subarray
     registerFunction(ArraySubarray.SIGNATURE_TWO_ARG);
     registerFunction(ArraySubarray.SIGNATURE_THREE_ARG);
+    // https://www.w3.org/TR/xpath-functions-31/#func-array-remove
+    registerFunction(ArrayRemove.SIGNATURE);
 
     // xpath casting functions
     registerFunction(

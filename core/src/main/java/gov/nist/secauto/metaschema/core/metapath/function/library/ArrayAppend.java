@@ -86,7 +86,6 @@ public class ArrayAppend {
    *          the Metapath item to append to the identified array
    * @return a new array containing the modification
    */
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   public static <T extends IItem> IArrayItem<T> append(
       @NonNull IArrayItem<T> array,
