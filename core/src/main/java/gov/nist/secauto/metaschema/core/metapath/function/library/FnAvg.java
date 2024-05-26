@@ -93,7 +93,7 @@ public final class FnAvg {
     ISequence<? extends IAnyAtomicItem> sequence = FunctionUtils.asType(
         ObjectUtils.requireNonNull(arguments.get(0)));
 
-    List<? extends IAnyAtomicItem> items = sequence.asList();
+    List<? extends IAnyAtomicItem> items = sequence.getValue();
 
     return ISequence.of(average(items));
   }

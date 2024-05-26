@@ -42,7 +42,7 @@ public final class FunctionService {
   @NonNull
   private final ServiceLoader<IFunctionLibrary> loader;
   @NonNull
-  private IFunctionLibrary library;
+  private final IFunctionLibrary library;
 
   /**
    * Get the singleton instance of the function service.
@@ -59,16 +59,6 @@ public final class FunctionService {
   @SuppressWarnings("null")
   public FunctionService() {
     this.loader = ServiceLoader.load(IFunctionLibrary.class);
-    this.library = load();
-  }
-
-  /**
-   * Load all known functions registered with this function service.
-   *
-   * @return the function library
-   */
-  @NonNull
-  public IFunctionLibrary load() {
     ServiceLoader<IFunctionLibrary> loader = getLoader();
 
     FunctionLibrary functionLibrary = new FunctionLibrary();
@@ -76,11 +66,7 @@ public final class FunctionService {
         .map(Provider<IFunctionLibrary>::get)
         .flatMap(IFunctionLibrary::getFunctionsAsStream)
         .forEachOrdered(function -> functionLibrary.registerFunction(ObjectUtils.notNull(function)));
-
-    synchronized (this) {
-      this.library = functionLibrary;
-    }
-    return functionLibrary;
+    this.library = functionLibrary;
   }
 
   /**

@@ -346,7 +346,7 @@ public class MetapathExpression {
       result = FnBoolean.fnBoolean(sequence).toBoolean();
       break;
     case NODE:
-      result = FunctionUtils.getFirstItem(sequence, true);
+      result = sequence.getFirstItem(true);
       break;
     case NUMBER:
       INumericItem numeric = FunctionUtils.toNumeric(sequence, true);
@@ -356,8 +356,8 @@ public class MetapathExpression {
       result = sequence;
       break;
     case STRING:
-      IItem item = FunctionUtils.getFirstItem(sequence, true);
-      result = item == null ? "" : FnData.fnDataItem(item).asString();
+      IAnyAtomicItem item = FnData.fnData(sequence).getFirstItem(true);
+      result = item == null ? "" : item.asString();
       break;
     default:
       throw new InvalidTypeMetapathException(null, String.format("unsupported result type '%s'", resultType.name()));

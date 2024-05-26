@@ -29,88 +29,20 @@ package gov.nist.secauto.metaschema.core.metapath;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class StreamSequenceImpl<ITEM_TYPE extends IItem> implements ISequence<ITEM_TYPE> {
-  private Stream<ITEM_TYPE> stream;
-  private List<ITEM_TYPE> list;
+public interface ICollectionValue {
+  // TODO: rename to toSequence and resolve conflicting methods?
+  @NonNull
+  ISequence<?> asSequence();
 
-  public StreamSequenceImpl(@NonNull Stream<ITEM_TYPE> stream) {
-    Objects.requireNonNull(stream, "stream");
-    this.stream = stream;
+  @NonNull
+  static Stream<? extends IItem> normalizeAsItems(@NonNull ICollectionValue value) {
+    return value instanceof IItem ? ObjectUtils.notNull(Stream.of((IItem) value)) : value.asSequence().stream();
   }
 
-  @Override
-  public boolean isEmpty() {
-    return asList().isEmpty();
-  }
-
-  @Override
-  public List<ITEM_TYPE> asList() {
-    synchronized (this) {
-      if (list == null) {
-        list = asStream().collect(Collectors.toUnmodifiableList());
-      }
-      assert list != null;
-      return list;
-    }
-  }
-
-  @Override
-  public Stream<ITEM_TYPE> asStream() {
-    @NonNull Stream<ITEM_TYPE> retval;
-    synchronized (this) {
-      if (list == null) {
-        if (stream == null) {
-          throw new IllegalStateException("stream is already consumed");
-        }
-        assert stream != null;
-        retval = stream;
-        stream = null; // NOPMD - readability
-      } else {
-        retval = ObjectUtils.notNull(list.stream());
-      }
-    }
-    return retval;
-  }
-
-  @Override
-  public void forEach(Consumer<? super ITEM_TYPE> action) {
-    asStream().forEachOrdered(action);
-  }
-
-  @Override
-  public String toString() {
-    return asList().toString();
-  }
-
-  @Override
-  public int size() {
-    return asList().size();
-  }
-
-  @Override
-  public ISequence<ITEM_TYPE> collect() {
-    asList();
-    return this;
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    // must either be the same instance or a sequence that has the same list
-    // contents
-    return other == this
-        || other instanceof ISequence && asList().equals(((ISequence<?>) other).asList());
-  }
-
-  @Override
-  public int hashCode() {
-    return asList().hashCode();
-  }
+  @NonNull
+  Stream<? extends IItem> flatten();
 }

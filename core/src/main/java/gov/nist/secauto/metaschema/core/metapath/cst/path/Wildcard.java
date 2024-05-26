@@ -60,7 +60,7 @@ public class Wildcard implements INameTestExpression {
   @Override
   public ISequence<? extends INodeItem> accept(
       DynamicContext dynamicContext, ISequence<?> focus) {
-    Stream<? extends INodeItem> nodes = focus.asStream().map(ItemUtils::checkItemIsNodeItemForStep);
+    Stream<? extends INodeItem> nodes = focus.stream().map(ItemUtils::checkItemIsNodeItemForStep);
     if (matcher != null) {
       Predicate<IDefinitionNodeItem<?, ?>> test = matcher;
       nodes = nodes.filter(item -> {

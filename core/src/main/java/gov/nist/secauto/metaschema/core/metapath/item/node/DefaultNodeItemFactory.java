@@ -146,42 +146,45 @@ final class DefaultNodeItemFactory
         INamedModelInstanceAbsolute namedInstance = (INamedModelInstanceAbsolute) instance;
 
         Object instanceValue = namedInstance.getValue(parentValue);
-
-        // the item values will be all non-null items
-        Stream<? extends Object> itemValues = namedInstance.getItemValues(instanceValue).stream();
-        AtomicInteger index = new AtomicInteger(); // NOPMD - intentional
-        List<IModelNodeItem<?, ?>> items = itemValues.map(itemValue -> {
-          assert itemValue != null;
-          return newModelItem(namedInstance, parent, index.incrementAndGet(), itemValue);
-        }).collect(Collectors.toUnmodifiableList());
-        retval.put(namedInstance.getXmlQName(), items);
+        if (instanceValue != null) {
+          // the item values will be all non-null items
+          Stream<? extends Object> itemValues = namedInstance.getItemValues(instanceValue).stream();
+          AtomicInteger index = new AtomicInteger(); // NOPMD - intentional
+          List<IModelNodeItem<?, ?>> items = itemValues.map(itemValue -> {
+            assert itemValue != null;
+            return newModelItem(namedInstance, parent, index.incrementAndGet(), itemValue);
+          }).collect(Collectors.toUnmodifiableList());
+          retval.put(namedInstance.getXmlQName(), items);
+        }
       } else if (instance instanceof IChoiceGroupInstance) {
         IChoiceGroupInstance choiceInstance = (IChoiceGroupInstance) instance;
 
         Object instanceValue = choiceInstance.getValue(parentValue);
+        if (instanceValue != null) {
+          Map<INamedModelInstanceGrouped, List<Object>> instanceMap
+              = choiceInstance.getItemValues(instanceValue).stream()
+                  .map(item -> {
+                    assert item != null;
+                    INamedModelInstanceGrouped itemInstance = choiceInstance.getItemInstance(item);
+                    return Map.entry(itemInstance, item);
+                  })
+                  .collect(Collectors.groupingBy(
+                      entry -> entry.getKey(),
+                      LinkedHashMap::new,
+                      Collectors.mapping(entry -> entry.getValue(), Collectors.toUnmodifiableList())));
 
-        Map<INamedModelInstanceGrouped, List<Object>> instanceMap = choiceInstance.getItemValues(instanceValue).stream()
-            .map(item -> {
-              assert item != null;
-              INamedModelInstanceGrouped itemInstance = choiceInstance.getItemInstance(item);
-              return Map.entry(itemInstance, item);
-            })
-            .collect(Collectors.groupingBy(
-                entry -> entry.getKey(),
-                LinkedHashMap::new,
-                Collectors.mapping(entry -> entry.getValue(), Collectors.toUnmodifiableList())));
+          for (Map.Entry<INamedModelInstanceGrouped, List<Object>> entry : instanceMap.entrySet()) {
+            INamedModelInstanceGrouped namedInstance = entry.getKey();
+            assert namedInstance != null;
 
-        for (Map.Entry<INamedModelInstanceGrouped, List<Object>> entry : instanceMap.entrySet()) {
-          INamedModelInstanceGrouped namedInstance = entry.getKey();
-          assert namedInstance != null;
-
-          AtomicInteger index = new AtomicInteger(); // NOPMD - intentional
-          List<IModelNodeItem<?, ?>> items = entry.getValue().stream()
-              .map(itemValue -> {
-                assert itemValue != null;
-                return newModelItem(namedInstance, parent, index.incrementAndGet(), itemValue);
-              }).collect(Collectors.toUnmodifiableList());
-          retval.put(namedInstance.getXmlQName(), items);
+            AtomicInteger index = new AtomicInteger(); // NOPMD - intentional
+            List<IModelNodeItem<?, ?>> items = entry.getValue().stream()
+                .map(itemValue -> {
+                  assert itemValue != null;
+                  return newModelItem(namedInstance, parent, index.incrementAndGet(), itemValue);
+                }).collect(Collectors.toUnmodifiableList());
+            retval.put(namedInstance.getXmlQName(), items);
+          }
         }
       }
 

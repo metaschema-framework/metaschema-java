@@ -166,7 +166,7 @@ public interface IGroupable extends IInstanceAbsolute {
    * @return the item values or an empty collection if no item values exist
    */
   @NonNull
-  default Collection<?> getItemValues(Object instanceValue) {
+  default Collection<?> getItemValues(@NonNull Object instanceValue) {
     // no item values by default
     return CollectionUtil.emptyList();
   }

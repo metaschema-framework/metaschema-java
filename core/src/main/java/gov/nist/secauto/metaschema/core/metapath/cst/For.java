@@ -82,6 +82,6 @@ public class For implements IExpression {
       subDynamicContext.bindVariableValue(variable.getName(), ISequence.of(item));
       retval.addAll(getReturnExpression().accept(subDynamicContext, focus));
     }
-    return ISequence.of(retval);
+    return ISequence.ofCollection(retval);
   }
 }
