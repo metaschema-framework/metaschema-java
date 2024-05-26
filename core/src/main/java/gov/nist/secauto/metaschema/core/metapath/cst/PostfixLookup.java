@@ -24,77 +24,57 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class ListSequenceImpl<ITEM_TYPE extends IItem> implements ISequence<ITEM_TYPE> {
+public class PostfixLookup
+    extends AbstractLookup {
+
   @NonNull
-  private final List<ITEM_TYPE> items;
+  private final IExpression base;
 
-  public ListSequenceImpl(@NonNull Collection<ITEM_TYPE> items) {
-    this(new ArrayList<>(items), false);
+  public PostfixLookup(@NonNull IExpression base, @NonNull IKeySpecifier keySpecifier) {
+    super(keySpecifier);
+    this.base = base;
   }
 
-  public ListSequenceImpl(@NonNull List<ITEM_TYPE> items, boolean copy) {
-    this.items = CollectionUtil.unmodifiableList(copy ? new ArrayList<>(items) : items);
+  /**
+   * Get the base sub-expression.
+   *
+   * @return the sub-expression
+   */
+  @NonNull
+  public IExpression getBase() {
+    return base;
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  public List<? extends IExpression> getChildren() {
+    return List.of(getBase());
   }
 
   @Override
-  public List<ITEM_TYPE> asList() {
-    return items;
+  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    ISequence<?> base = getBase().accept(dynamicContext, focus);
+
+    IKeySpecifier specifier = getKeySpecifier();
+
+    return ISequence.of(base.stream()
+        .flatMap(item -> specifier.lookup(item, dynamicContext, focus))
+        .flatMap(ICollectionValue::normalizeAsItems));
   }
 
   @Override
-  public Stream<ITEM_TYPE> asStream() {
-    return ObjectUtils.notNull(items.stream());
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return items.isEmpty();
-  }
-
-  @Override
-  public String toString() {
-    return asList().toString();
-  }
-
-  @Override
-  public int size() {
-    return items.size();
-  }
-
-  @Override
-  public ISequence<ITEM_TYPE> collect() {
-    return this;
-  }
-
-  @Override
-  public void forEach(Consumer<? super ITEM_TYPE> action) {
-    items.forEach(action);
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    // must either be the same instance or a sequence that has the same list
-    // contents
-    return other == this
-        || other instanceof ISequence && asList().equals(((ISequence<?>) other).asList());
-  }
-
-  @Override
-  public int hashCode() {
-    return asList().hashCode();
+  public <RESULT, CONTEXT> RESULT accept(@NonNull IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
+    return visitor.visitPostfixLookup(this, context);
   }
 }

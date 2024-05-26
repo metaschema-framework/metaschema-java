@@ -289,7 +289,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
     }
 
     IIndex index = IIndex.newInstance(constraint.getKeyFields());
-    targets.asStream()
+    targets.stream()
         .forEachOrdered(item -> {
           assert item != null;
           if (item.hasValue()) {
@@ -354,7 +354,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
       @NonNull ISequence<? extends INodeItem> targets,
       @NonNull DynamicContext dynamicContext) {
     IIndex index = IIndex.newInstance(constraint.getKeyFields());
-    targets.asStream()
+    targets.stream()
         .forEachOrdered(item -> {
           assert item != null;
           if (item.hasValue()) {
@@ -415,7 +415,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
       @NonNull IMatchesConstraint constraint,
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets) {
-    targets.asStream()
+    targets.stream()
         .forEachOrdered(item -> {
           assert item != null;
           if (item.hasValue()) {
@@ -487,7 +487,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
       indexNameToKeyRefMap.put(indexName, keyRefItems);
     }
 
-    KeyRef keyRef = new KeyRef(constraint, node, new ArrayList<>(targets.asList()));
+    KeyRef keyRef = new KeyRef(constraint, node, new ArrayList<>(targets.getValue()));
     keyRefItems.add(keyRef);
   }
 
@@ -537,7 +537,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
     MetapathExpression metapath = MetapathExpression.compile(
         constraint.getTest(),
         dynamicContext.getStaticContext());
-    targets.asStream()
+    targets.stream()
         .map(item -> (INodeItem) item)
         .forEachOrdered(item -> {
           assert item != null;
@@ -589,7 +589,7 @@ public class DefaultConstraintValidator implements IConstraintValidator { // NOP
   private void validateAllowedValues(
       @NonNull IAllowedValuesConstraint constraint,
       @NonNull ISequence<? extends IDefinitionNodeItem<?, ?>> targets) {
-    targets.asStream().forEachOrdered(item -> {
+    targets.stream().forEachOrdered(item -> {
       assert item != null;
       if (item.hasValue()) {
         try {

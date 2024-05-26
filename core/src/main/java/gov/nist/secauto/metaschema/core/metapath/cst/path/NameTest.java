@@ -77,7 +77,7 @@ public class NameTest
   public ISequence<? extends INodeItem> accept(
       DynamicContext dynamicContext,
       ISequence<?> focus) {
-    return ISequence.of(focus.asStream()
+    return ISequence.of(focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep)
         .filter(this::match));
   }

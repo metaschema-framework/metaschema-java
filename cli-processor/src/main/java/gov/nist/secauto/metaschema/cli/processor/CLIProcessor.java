@@ -196,7 +196,7 @@ public class CLIProcessor {
     return status;
   }
 
-  protected List<ICommand> getTopLevelCommands() {
+  protected final List<ICommand> getTopLevelCommands() {
     List<ICommand> retval = Collections.unmodifiableList(commands);
     assert retval != null;
     return retval;
@@ -221,7 +221,7 @@ public class CLIProcessor {
 
   protected void showVersion() {
     @SuppressWarnings("resource") PrintStream out = AnsiConsole.out(); // NOPMD - not owner
-    getVersionInfos().stream().forEach((info) -> {
+    getVersionInfos().stream().forEach(info -> {
       out.println(ansi()
           .bold().a(info.getName()).boldOff()
           .a(" ")
@@ -265,35 +265,31 @@ public class CLIProcessor {
 
       boolean endArgs = false;
       for (String arg : args) {
-        if (endArgs) {
+        if (endArgs || arg.startsWith("-")) {
           extraArgs.add(arg);
+        } else if ("--".equals(arg)) {
+          endArgs = true;
         } else {
-          if (arg.startsWith("-")) {
+          ICommand command;
+          if (calledCommands.isEmpty()) {
+            command = topLevelCommandMap.get(arg);
+          } else {
+            command = calledCommands.getLast();
+            command = command.getSubCommandByName(arg);
+          }
+
+          if (command == null) {
             extraArgs.add(arg);
-          } else if ("--".equals(arg)) {
             endArgs = true;
           } else {
-            ICommand command;
-            if (calledCommands.isEmpty()) {
-              command = topLevelCommandMap.get(arg);
-            } else {
-              command = calledCommands.getLast();
-              command = command.getSubCommandByName(arg);
-            }
-
-            if (command == null) {
-              extraArgs.add(arg);
-              endArgs = true;
-            } else {
-              calledCommands.add(command);
-            }
+            calledCommands.add(command);
           }
         }
       }
 
       if (LOGGER.isDebugEnabled()) {
         String commandChain = calledCommands.stream()
-            .map(command -> command.getName())
+            .map(ICommand::getName)
             .collect(Collectors.joining(" -> "));
         LOGGER.debug("Processing command chain: {}", commandChain);
       }
@@ -548,7 +544,7 @@ public class CLIProcessor {
 
       // output required options
       getOptionsList().stream()
-          .filter(option -> option.isRequired())
+          .filter(Option::isRequired)
           .forEach(option -> {
             builder
                 .append(' ')

@@ -78,7 +78,7 @@ public class MetaConstraintLoaderTest {
           .count()));
     }
 
-    expression.evaluate(moduleItem).asStream()
+    expression.evaluate(moduleItem).stream()
         .map(item -> (IDefinitionNodeItem<?, ?>) item)
         .forEach(item -> assertEquals(1, item.getDefinition().getMatchesConstraints().stream()
             .filter(matches -> MetaschemaDataTypeProvider.UUID.equals(matches.getDataType()))

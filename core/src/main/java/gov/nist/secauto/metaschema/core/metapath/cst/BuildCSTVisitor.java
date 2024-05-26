@@ -38,6 +38,7 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.Arrowfunctions
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AxisstepContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ComparisonexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ContextitemexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.CurlyarrayconstructorContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.EqnameContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ExprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ExprsingleContext;
@@ -47,8 +48,10 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctioncallCo
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.GeneralcompContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IfexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IntersectexceptexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.KeyspecifierContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LetexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LiteralContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LookupContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MultiplicativeexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NametestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NodetestContext;
@@ -67,14 +70,17 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.Simpleforclaus
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimpleletbindingContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimpleletclauseContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimplemapexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SquarearrayconstructorContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.StringconcatexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnaryexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnarylookupContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnionexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ValuecompContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.VarnameContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.VarrefContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.WildcardContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractLookup.IKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.cst.comparison.GeneralComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.comparison.ValueComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Addition;
@@ -97,6 +103,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Step;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -138,11 +145,10 @@ public class BuildCSTVisitor
     this.context = context;
   }
 
-  /*
-   * ============================================================ Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-expressions
-   * ============================================================
-   */
+  // ============================================================
+  // Expressions - https://www.w3.org/TR/xpath-31/#id-expressions
+  // ============================================================
+
   @NonNull
   protected StaticContext getContext() {
     return context;
@@ -156,11 +162,9 @@ public class BuildCSTVisitor
     });
   }
 
-  /*
-   * ================================================================= Literal
-   * Expressions - https://www.w3.org/TR/xpath-31/#id-literals
-   * =================================================================
-   */
+  // =================================================================
+  // Literal Expressions - https://www.w3.org/TR/xpath-31/#id-literals
+  // =================================================================
 
   @Override
   protected IExpression handleStringLiteral(LiteralContext ctx) {
@@ -187,11 +191,9 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /*
-   * ================================================================== Variable
-   * References - https://www.w3.org/TR/xpath-31/#id-variables
-   * ==================================================================
-   */
+  // ==================================================================
+  // Variable References - https://www.w3.org/TR/xpath-31/#id-variables
+  // ==================================================================
 
   @Override
   protected IExpression handleVarref(VarrefContext ctx) {
@@ -201,11 +203,9 @@ public class BuildCSTVisitor
             getContext().getVariablePrefixResolver()));
   }
 
-  /*
-   * ==================================================================== For
-   * Expressions - https://www.w3.org/TR/xpath-31/#id-for-expressions
-   * ====================================================================
-   */
+  // ====================================================================
+  // For Expressions - https://www.w3.org/TR/xpath-31/#id-for-expressions
+  // ====================================================================
 
   @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   @Override
@@ -238,11 +238,9 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /*
-   * ==================================================================== Let
-   * Expressions - https://www.w3.org/TR/xpath-31/#id-let-expressions
-   * ====================================================================
-   */
+  // ====================================================================
+  // Let Expressions - https://www.w3.org/TR/xpath-31/#id-let-expressions
+  // ====================================================================
 
   @Override
   protected IExpression handleLet(LetexprContext context) {
@@ -267,13 +265,66 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /*
-   * =============================================================================
-   * ===== Quantified Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-quantified-expressions
-   * =============================================================================
-   * =====
-   */
+  // ==============================================================
+  // Array Constructors - https://www.w3.org/TR/xpath-31/#id-arrays
+  // ==============================================================
+
+  @Override
+  protected IExpression handleArrayConstructor(SquarearrayconstructorContext context) {
+    if (context.getChildCount() == 2) {
+      // empty
+      return new ArraySquare(CollectionUtil.emptyList());
+    }
+
+    return nAiryToCollection(context, 1, 2,
+        (ctx, idx) -> {
+          int pos = (idx - 1) / 2;
+          ParseTree tree = ctx.exprsingle(pos);
+          return visit(tree);
+        },
+        children -> {
+          assert children != null;
+          return new ArraySquare(children);
+        });
+  }
+
+  @Override
+  protected IExpression handleArrayConstructor(CurlyarrayconstructorContext ctx) {
+    return new ArraySequence(visit(ctx.enclosedexpr()));
+  }
+
+  // ===============================================
+  // Unary Lookup -
+  // https://www.w3.org/TR/xpath-31/#id-unary-lookup
+  // ===============================================
+
+  @Override
+  protected IExpression handleUnarylookup(UnarylookupContext ctx) {
+    KeyspecifierContext specifier = ctx.keyspecifier();
+
+    IKeySpecifier keySpecifier;
+    if (specifier.parenthesizedexpr() != null) {
+      keySpecifier
+          = new UnaryLookup.ParenthesizedExprKeySpecifier(
+              ObjectUtils.requireNonNull(specifier.parenthesizedexpr().accept(this)));
+    } else if (specifier.NCName() != null) {
+      keySpecifier
+          = new UnaryLookup.NCNameKeySpecifier(ObjectUtils.requireNonNull(specifier.NCName().getText()));
+    } else if (specifier.IntegerLiteral() != null) {
+      keySpecifier = new UnaryLookup.IntegerLiteralKeySpecifier(
+          IIntegerItem.valueOf(ObjectUtils.requireNonNull(specifier.IntegerLiteral().getText())));
+    } else if (specifier.STAR() != null) {
+      keySpecifier = new UnaryLookup.WildcardKeySpecifier();
+    } else {
+      throw new UnsupportedOperationException("unknown key specifier");
+    }
+    return new UnaryLookup(keySpecifier);
+  }
+
+  // =========================================================
+  // Quantified Expressions -
+  // https://www.w3.org/TR/xpath-31/#id-quantified-expressions
+  // =========================================================
 
   @Override
   protected IExpression handleQuantifiedexpr(QuantifiedexprContext ctx) {
@@ -310,11 +361,9 @@ public class BuildCSTVisitor
     return new Quantified(quantifier, vars, satisfies);
   }
 
-  /*
-   * ======================================================================= Arrow
-   * operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
-   * =======================================================================
-   */
+  // =======================================================================
+  // Arrow operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
+  // =======================================================================
 
   @Override
   protected IExpression handleArrowexpr(ArrowexprContext context) {
@@ -342,37 +391,29 @@ public class BuildCSTVisitor
     });
   }
 
-  /*
-   * =============================================================================
-   * ==== Parenthesized Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-paren-expressions
-   * =============================================================================
-   * ====
-   */
+  // ====================================================
+  // Parenthesized Expressions -
+  // https://www.w3.org/TR/xpath-31/#id-paren-expressions
+  // ====================================================
 
   @Override
   protected IExpression handleEmptyParenthesizedexpr(ParenthesizedexprContext ctx) {
     return EmptySequence.instance();
   }
 
-  /*
-   * =============================================================================
-   * ======== Context Item Expression -
-   * https://www.w3.org/TR/xpath-31/#id-context-item-expression
-   * =============================================================================
-   * ========
-   */
+  // ==========================================================
+  // Context Item Expression -
+  // https://www.w3.org/TR/xpath-31/#id-context-item-expression
+  // ==========================================================
 
   @Override
   protected IExpression handleContextitemexpr(ContextitemexprContext ctx) {
     return ContextItem.instance();
   }
 
-  /*
-   * =========================================================================
-   * Static Function Calls - https://www.w3.org/TR/xpath-31/#id-function-calls
-   * =========================================================================
-   */
+  // =========================================================================
+  // Static Function Calls - https://www.w3.org/TR/xpath-31/#id-function-calls
+  // =========================================================================
 
   /**
    * Parse a list of arguments.
@@ -412,11 +453,9 @@ public class BuildCSTVisitor
             .collect(Collectors.toUnmodifiableList())));
   }
 
-  /*
-   * =========================================================================
-   * Filter Expressions - https://www.w3.org/TR/xpath-31/#id-filter-expression
-   * =========================================================================
-   */
+  // =========================================================================
+  // Filter Expressions - https://www.w3.org/TR/xpath-31/#id-filter-expression
+  // =========================================================================
 
   /**
    * Parse a predicate AST.
@@ -466,23 +505,65 @@ public class BuildCSTVisitor
   }
 
   @Override
-  protected IExpression handlePostfixexpr(PostfixexprContext ctx) {
-    int numChildren = ctx.getChildCount();
-    ParseTree primaryTree = ctx.getChild(0);
-    IExpression retval = ObjectUtils.notNull(primaryTree.accept(this));
+  protected IExpression handlePostfixexpr(PostfixexprContext context) {
+    return handleGroupedNAiry(
+        context,
+        0,
+        1,
+        (ctx, idx, left) -> {
+          ParseTree tree = ctx.getChild(idx);
+          IExpression result;
+          if (tree instanceof ArgumentlistContext) {
+            // map or array access using function call syntax
+            result = new FunctionCallAccessor(
+                left,
+                parseArgumentList((ArgumentlistContext) tree).findFirst().get());
+          } else if (tree instanceof PredicateContext) {
+            result = new PredicateExpression(
+                left,
+                CollectionUtil.singletonList(parsePredicate((PredicateContext) tree)));
+          } else if (tree instanceof LookupContext) {
+            KeyspecifierContext specifier = ((LookupContext) tree).keyspecifier();
 
-    List<IExpression> predicates = numChildren > 1 ? parsePredicates(ctx, 1) : CollectionUtil.emptyList();
-
-    if (!predicates.isEmpty()) {
-      retval = new PredicateExpression(retval, predicates);
-    }
-    return retval;
+            IKeySpecifier keySpecifier;
+            if (specifier.parenthesizedexpr() != null) {
+              keySpecifier
+                  = new PostfixLookup.ParenthesizedExprKeySpecifier(
+                      ObjectUtils.requireNonNull(specifier.parenthesizedexpr().accept(this)));
+            } else if (specifier.NCName() != null) {
+              keySpecifier
+                  = new PostfixLookup.NCNameKeySpecifier(ObjectUtils.requireNonNull(specifier.NCName().getText()));
+            } else if (specifier.IntegerLiteral() != null) {
+              keySpecifier = new PostfixLookup.IntegerLiteralKeySpecifier(
+                  IIntegerItem.valueOf(ObjectUtils.requireNonNull(specifier.IntegerLiteral().getText())));
+            } else if (specifier.STAR() != null) {
+              keySpecifier = new PostfixLookup.WildcardKeySpecifier();
+            } else {
+              throw new UnsupportedOperationException("unknown key specifier");
+            }
+            result = new PostfixLookup(left, keySpecifier);
+          } else {
+            result = visit(tree);
+          }
+          return result;
+        });
   }
-  /*
-   * ====================================================================== Path
-   * Expressions - https://www.w3.org/TR/xpath-31/#id-path-expressions
-   * ======================================================================
-   */
+
+  // ======================================================================
+  // Path Expressions - https://www.w3.org/TR/xpath-31/#id-path-expressions
+  // ======================================================================
+
+  @Override
+  protected IExpression handlePredicate(PredicateContext ctx) {
+    parsePredicate(ctx);
+    return null;
+  }
+
+  @Override
+  protected IExpression handleLookup(LookupContext ctx) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
   @Override
   protected IExpression handlePathexpr(PathexprContext ctx) {
@@ -516,13 +597,10 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /*
-   * =============================================================================
-   * ========== RelativePath Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-relative-path-expressions
-   * =============================================================================
-   * ==========
-   */
+  // ============================================================
+  // RelativePath Expressions -
+  // https://www.w3.org/TR/xpath-31/#id-relative-path-expressions
+  // ============================================================
 
   @Override
   protected IExpression handleRelativepathexpr(RelativepathexprContext context) {
@@ -549,11 +627,9 @@ public class BuildCSTVisitor
     });
   }
 
-  /*
-   * ================================================ Steps -
-   * https://www.w3.org/TR/xpath-31/#id-steps
-   * ================================================
-   */
+  // ================================================
+  // Steps - https://www.w3.org/TR/xpath-31/#id-steps
+  // ================================================
 
   @Override
   protected IExpression handleForwardstep(ForwardstepContext ctx) {
@@ -616,17 +692,9 @@ public class BuildCSTVisitor
     return new Step(axis, parseNodeTest(ctx.nodetest(), false));
   }
 
-  /*
-   * ======================================================= Node Tests -
-   * https://www.w3.org/TR/xpath-31/#node-tests
-   * =======================================================
-   */
-
-  /*
-   * ======================================================= Node Tests -
-   * https://www.w3.org/TR/xpath-31/#node-tests
-   * =======================================================
-   */
+  // =======================================================
+  // Node Tests - https://www.w3.org/TR/xpath-31/#node-tests
+  // =======================================================
 
   protected INodeTestExpression parseNodeTest(NodetestContext ctx, boolean flag) {
     // TODO: implement kind test
@@ -674,11 +742,9 @@ public class BuildCSTVisitor
     return new Wildcard(matcher);
   }
 
-  /*
-   * ======================================================================
-   * Predicates within Steps - https://www.w3.org/TR/xpath-31/#id-predicate
-   * ======================================================================
-   */
+  // ======================================================================
+  // Predicates within Steps - https://www.w3.org/TR/xpath-31/#id-predicate
+  // ======================================================================
 
   @Override
   protected IExpression handleAxisstep(AxisstepContext ctx) {
@@ -691,11 +757,9 @@ public class BuildCSTVisitor
     return predicates.isEmpty() ? step : new PredicateExpression(step, predicates);
   }
 
-  /*
-   * =========================================================== Abbreviated
-   * Syntax - https://www.w3.org/TR/xpath-31/#abbrev
-   * ===========================================================
-   */
+  // ===========================================================
+  // Abbreviated Syntax - https://www.w3.org/TR/xpath-31/#abbrev
+  // ===========================================================
 
   @Override
   protected IExpression handleAbbrevforwardstep(AbbrevforwardstepContext ctx) {
@@ -716,11 +780,9 @@ public class BuildCSTVisitor
     return Axis.PARENT;
   }
 
-  /*
-   * ======================================================================
-   * Constructing Sequences - https://www.w3.org/TR/xpath-31/#construct_seq
-   * ======================================================================
-   */
+  // ======================================================================
+  // Constructing Sequences - https://www.w3.org/TR/xpath-31/#construct_seq
+  // ======================================================================
 
   @Override
   protected IExpression handleRangeexpr(RangeexprContext ctx) {
@@ -732,11 +794,9 @@ public class BuildCSTVisitor
     return new Range(left, right);
   }
 
-  /*
-   * ========================================================================
-   * Combining Node Sequences - https://www.w3.org/TR/xpath-31/#combining_seq
-   * ========================================================================
-   */
+  // ========================================================================
+  // Combining Node Sequences - https://www.w3.org/TR/xpath-31/#combining_seq
+  // ========================================================================
 
   @Override
   protected IExpression handleUnionexpr(UnionexprContext ctx) {
@@ -771,11 +831,9 @@ public class BuildCSTVisitor
     });
   }
 
-  /*
-   * ======================================================================
-   * Arithmetic Expressions - https://www.w3.org/TR/xpath-31/#id-arithmetic
-   * ======================================================================
-   */
+  // ======================================================================
+  // Arithmetic Expressions - https://www.w3.org/TR/xpath-31/#id-arithmetic
+  // ======================================================================
 
   @Override
   protected IExpression handleAdditiveexpr(AdditiveexprContext context) {
@@ -863,13 +921,10 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /*
-   * =============================================================================
-   * =========== String Concatenation Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-string-concat-expr
-   * =============================================================================
-   * ===========
-   */
+  // =====================================================
+  // String Concatenation Expressions -
+  // https://www.w3.org/TR/xpath-31/#id-string-concat-expr
+  // =====================================================
 
   @Override
   protected IExpression handleStringconcatexpr(StringconcatexprContext ctx) {
@@ -879,11 +934,9 @@ public class BuildCSTVisitor
     });
   }
 
-  /*
-   * =======================================================================
-   * Comparison Expressions - https://www.w3.org/TR/xpath-31/#id-comparisons
-   * =======================================================================
-   */
+  // =======================================================================
+  // Comparison Expressions - https://www.w3.org/TR/xpath-31/#id-comparisons
+  // =======================================================================
 
   @Override
   protected IExpression handleComparisonexpr(ComparisonexprContext ctx) { // NOPMD - ok
@@ -956,11 +1009,9 @@ public class BuildCSTVisitor
     return retval;
   }
 
-  /*
-   * ============================================================================
-   * Logical Expressions - https://www.w3.org/TR/xpath-31/#id-logical-expressions
-   * ============================================================================
-   */
+  // ============================================================================
+  // Logical Expressions - https://www.w3.org/TR/xpath-31/#id-logical-expressions
+  // ============================================================================
 
   @Override
   protected IExpression handleOrexpr(OrexprContext ctx) {
@@ -978,11 +1029,9 @@ public class BuildCSTVisitor
     });
   }
 
-  /*
-   * =========================================================================
-   * Conditional Expressions - https://www.w3.org/TR/xpath-31/#id-conditionals
-   * =========================================================================
-   */
+  // =========================================================================
+  // Conditional Expressions - https://www.w3.org/TR/xpath-31/#id-conditionals
+  // =========================================================================
 
   @Override
   protected IExpression handleIfexpr(IfexprContext ctx) {
@@ -993,11 +1042,9 @@ public class BuildCSTVisitor
     return new If(testExpr, thenExpr, elseExpr);
   }
 
-  /*
-   * =========================================================================
-   * Simple map operator (!) - https://www.w3.org/TR/xpath-31/#id-map-operator
-   * =========================================================================
-   */
+  // =========================================================================
+  // Simple map operator (!) - https://www.w3.org/TR/xpath-31/#id-map-operator
+  // =========================================================================
 
   @Override
   protected IExpression handleSimplemapexpr(SimplemapexprContext context) {

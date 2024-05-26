@@ -35,6 +35,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -50,6 +51,28 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public final class TestUtils {
   private TestUtils() {
     // disable construction
+  }
+
+  @NonNull
+  public static <T extends IItem> ISequence<T> sequence() {
+    return ISequence.of();
+  }
+
+  @SafeVarargs
+  @NonNull
+  public static <T extends IItem> ISequence<T> sequence(@NonNull T... items) {
+    return ISequence.of(items);
+  }
+
+  @NonNull
+  public static <T extends ICollectionValue> IArrayItem<T> array() {
+    return IArrayItem.of();
+  }
+
+  @SafeVarargs
+  @NonNull
+  public static <T extends ICollectionValue> IArrayItem<T> array(@NonNull T... items) {
+    return IArrayItem.of(items);
   }
 
   @NonNull

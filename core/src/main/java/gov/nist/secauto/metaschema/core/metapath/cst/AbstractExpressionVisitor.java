@@ -352,4 +352,29 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   public RESULT visitSimpleMap(SimpleMap expr, CONTEXT context) {
     return visitChildren(expr, context);
   }
+
+  @Override
+  public RESULT visitArray(ArraySequence expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
+  public RESULT visitArray(ArraySquare expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
+  public RESULT visitPostfixLookup(PostfixLookup expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
+  public RESULT visitFunctionCallAccessor(FunctionCallAccessor expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
+  public RESULT visitUnaryLookup(UnaryLookup expr, CONTEXT context) {
+    return defaultResult();
+  }
 }

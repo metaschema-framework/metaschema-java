@@ -68,9 +68,9 @@ class PredicateExpressionTest
         oneOf(stepExpr).accept(dynamicContext, ISequence.of(item));
         will(returnValue(stepResult));
 
-        atMost(1).of(stepResult).asStream();
+        atMost(1).of(stepResult).stream();
         will(returnValue(Stream.of(item)));
-        atMost(1).of(stepResult).asList();
+        atMost(1).of(stepResult).getValue();
         will(returnValue(CollectionUtil.singletonList(item)));
 
         allowing(item).getNodeItem();
@@ -109,9 +109,9 @@ class PredicateExpressionTest
         oneOf(stepExpr).accept(dynamicContext, ISequence.of(item));
         will(returnValue(stepResult));
 
-        atMost(1).of(stepResult).asStream();
+        atMost(1).of(stepResult).stream();
         will(returnValue(Stream.of(item)));
-        atMost(1).of(stepResult).asList();
+        atMost(1).of(stepResult).getValue();
         will(returnValue(CollectionUtil.singletonList(item)));
 
         allowing(item).getNodeItem();

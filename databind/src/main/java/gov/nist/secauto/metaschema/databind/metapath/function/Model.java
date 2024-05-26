@@ -82,7 +82,7 @@ public final class Model {
     }
 
     // always not null, since the first item is required
-    INodeItem node = FunctionUtils.requireFirstItem(nodeSequence, true);
+    INodeItem node = nodeSequence.getFirstItem(true);
 
     if (!(node instanceof IDefinitionNodeItem)) {
       return ISequence.empty();

@@ -24,76 +24,47 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
-import java.util.function.Consumer;
+import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class SingletonSequenceImpl<ITEM_TYPE extends IItem> implements ISequence<ITEM_TYPE> {
-  @NonNull
-  private final ITEM_TYPE item;
-
-  public SingletonSequenceImpl(@NonNull ITEM_TYPE item) {
-    this.item = item;
+class ArrayTailTest
+    extends ExpressionTestBase {
+  private static Stream<Arguments> provideValues() { // NOPMD - false positive
+    return Stream.of(
+        Arguments.of(
+            array(integer(6), integer(7), integer(8)),
+            "array:tail([5, 6, 7, 8])"),
+        Arguments.of(
+            array(),
+            "array:tail([5])"),
+        Arguments.of(
+            array(sequence(string("b"), string("c")), string("d")),
+            "array:tail([\"a\", (\"b\", \"c\"), \"d\"])"));
   }
 
-  @NonNull
-  protected ITEM_TYPE getItem() {
-    return item;
-  }
+  @ParameterizedTest
+  @MethodSource("provideValues")
+  void testExpression(@NonNull IArrayItem<?> expected, @NonNull String metapath) {
 
-  @SuppressWarnings("null")
-  @Override
-  public List<ITEM_TYPE> asList() {
-    return List.of(item);
-  }
-
-  @SuppressWarnings("null")
-  @Override
-  public Stream<ITEM_TYPE> asStream() {
-    return Stream.of(item);
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return false;
-  }
-
-  @Override
-  public String toString() {
-    return asList().toString();
-  }
-
-  @Override
-  public int size() {
-    return 1;
-  }
-
-  @Override
-  public ISequence<ITEM_TYPE> collect() {
-    return this;
-  }
-
-  @Override
-  public void forEach(Consumer<? super ITEM_TYPE> action) {
-    action.accept(item);
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    // must either be the same instance or a sequence that has the same list
-    // contents
-    return other == this
-        || other instanceof ISequence && asList().equals(((ISequence<?>) other).asList());
-  }
-
-  @Override
-  public int hashCode() {
-    return asList().hashCode();
+    IArrayItem<?> result = MetapathExpression.compile(metapath)
+        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
+    assertEquals(expected, result);
   }
 }

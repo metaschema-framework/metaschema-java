@@ -99,7 +99,7 @@ public class PredicateExpression implements IExpression {
       AtomicInteger index = new AtomicInteger();
 
       Stream<? extends IItem> stream = ObjectUtils.notNull(
-          retval.asStream().map(item -> {
+          retval.stream().map(item -> {
             // build a positional index of the items
             return Map.entry(BigInteger.valueOf(index.incrementAndGet()), item);
           }).filter(entry -> {
