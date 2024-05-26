@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -59,13 +60,13 @@ public class ArrayJoin {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<? extends IArrayItem<?>> execute(@NonNull IFunction function,
+  private static <T extends ICollectionValue> ISequence<? extends IArrayItem<T>> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    ISequence<? extends IArrayItem<?>> arrays = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
+    ISequence<? extends IArrayItem<T>> arrays = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
 
-    return ISequence.of((IArrayItem<?>) join(arrays));
+    return join(arrays).asSequence();
   }
 
   /**
@@ -79,7 +80,7 @@ public class ArrayJoin {
    * @return a new combined array
    */
   @NonNull
-  public static <T extends IItem> IArrayItem<T> join(
+  public static <T extends ICollectionValue> IArrayItem<T> join(
       @NonNull Collection<? extends IArrayItem<T>> arrays) {
     return IArrayItem.ofCollection(ObjectUtils.notNull(arrays.stream()
         .flatMap(array -> array.stream())

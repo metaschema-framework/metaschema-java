@@ -52,18 +52,21 @@ class IArrayItemTest
   private static Stream<Arguments> squareConstructorValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
-            sequence(array(integer(1), integer(2), integer(5), integer(7))),
+            array(integer(1), integer(2), integer(5), integer(7)),
             "[ 1, 2, 5, 7 ]"),
         Arguments.of(
-            sequence(array(array(), array(integer(27), integer(17), integer(0)))),
-            "[ (), (27, 17, 0)]"));
+            array(sequence(), sequence(integer(27), integer(17), integer(0))),
+            "[ (), (27, 17, 0)]"),
+        Arguments.of(
+            array(sequence(string("a"), string("b")), sequence(string("c"), string("d"))),
+            "[(\"a\", \"b\"), (\"c\", \"d\")]"));
   }
 
   @ParameterizedTest
   @MethodSource("squareConstructorValues")
-  void testSquareConstructor(@NonNull ISequence<?> expected, @NonNull String metapath) {
-    ISequence<?> result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE, newDynamicContext());
+  void testSquareConstructor(@NonNull IArrayItem<?> expected, @NonNull String metapath) {
+    IArrayItem<?> result = MetapathExpression.compile(metapath)
+        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
     assertEquals(expected, result);
   }
 
@@ -71,18 +74,18 @@ class IArrayItemTest
     return Stream.of(
         // curly constructor
         Arguments.of(
-            sequence(array(integer(1), integer(2), integer(5), integer(7))),
+            array(integer(1), integer(2), integer(5), integer(7)),
             "array { 1, 2, 5, 7 }"),
         Arguments.of(
-            sequence(array(integer(27), integer(17), integer(0))),
+            array(integer(27), integer(17), integer(0)),
             "array { (), (27, 17, 0) }"));
   }
 
   @ParameterizedTest
   @MethodSource("curlyConstructorValues")
-  void testCurlyConstructor(@NonNull ISequence<?> expected, @NonNull String metapath) {
-    ISequence<?> result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE, newDynamicContext());
+  void testCurlyConstructor(@NonNull IArrayItem<?> expected, @NonNull String metapath) {
+    IArrayItem<?> result = MetapathExpression.compile(metapath)
+        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
     assertEquals(expected, result);
   }
 

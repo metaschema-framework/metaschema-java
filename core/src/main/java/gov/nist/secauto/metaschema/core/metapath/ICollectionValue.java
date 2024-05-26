@@ -24,41 +24,22 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.item;
+package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-public interface IItem extends ICollectionValue {
-  /**
-   * Get the item's "wrapped" value. This "wrapped" value may be:
-   * <ul>
-   * <li>In the case of an Assembly, a Java object representing the fields and
-   * flags of the assembly.</li>
-   * <li>In the case of a Field with flags, a Java object representing the field
-   * value and flags of the field.
-   * <li>In the case of a Field without flags or a flag, a Java type managed by a
-   * {@link IDataTypeAdapter} or a primitive type provided by the Java standard
-   * library.
-   * </ul>
-   *
-   * @return the value or {@code null} if the item has no available value
-   */
-  Object getValue();
+import java.util.stream.Stream;
 
-  /**
-   * Determine if the item has an associated value.
-   *
-   * @return {@code true} if the item has a non-{@code null} value or
-   *         {@code false} otherwise
-   */
-  default boolean hasValue() {
-    return getValue() != null;
-  }
+import edu.umd.cs.findbugs.annotations.NonNull;
 
-  @Override
-  default ISequence<?> asSequence() {
-    return ISequence.of(this);
+public interface ICollectionValue {
+  // TODO: rename to toSequence and resolve conflicting methods?
+  @NonNull
+  ISequence<?> asSequence();
+
+  @NonNull
+  static Stream<? extends IItem> normalizeAsItems(@NonNull ICollectionValue value) {
+    return value instanceof IItem ? ObjectUtils.notNull(Stream.of((IItem) value)) : value.asSequence().stream();
   }
 }

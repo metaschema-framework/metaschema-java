@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -63,13 +64,13 @@ public class ArrayAppend {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static <T extends IItem> ISequence<IArrayItem<T>> execute(@NonNull IFunction function,
+  private static <T extends ICollectionValue> ISequence<IArrayItem<T>> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IArrayItem<T> array = FunctionUtils.asType(ObjectUtils.requireNonNull(
         arguments.get(0).getFirstItem(true)));
-    T appendage = FunctionUtils.asType(arguments.get(1).toArrayMember());
+    @SuppressWarnings("unchecked") T appendage = (T) arguments.get(1).toArrayMember();
 
     return ISequence.of(append(array, appendage));
   }
@@ -87,7 +88,7 @@ public class ArrayAppend {
    * @return a new array containing the modification
    */
   @NonNull
-  public static <T extends IItem> IArrayItem<T> append(
+  public static <T extends ICollectionValue> IArrayItem<T> append(
       @NonNull IArrayItem<T> array,
       @NonNull T appendage) {
 

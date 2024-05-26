@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -71,7 +72,7 @@ public class ArrayGet {
     IArrayItem<?> array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
     IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
-    return ISequence.of(get(array, position));
+    return get(array, position).asSequence();
   }
 
   /**
@@ -89,7 +90,7 @@ public class ArrayGet {
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
-  public static <T extends IItem> T get(
+  public static <T extends ICollectionValue> T get(
       @NonNull List<T> target,
       @NonNull IIntegerItem positionItem) {
     int position = positionItem.asInteger().intValue();

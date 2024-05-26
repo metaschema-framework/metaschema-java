@@ -24,57 +24,61 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
+import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
-public class PostfixLookup
-    extends AbstractLookup {
-
+public class ArrayTail {
   @NonNull
-  private final IExpression base;
+  static final IFunction SIGNATURE = IFunction.builder()
+      .name("tail")
+      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
+      .argument(IArgument.builder()
+          .name("array")
+          .type(IArrayItem.class)
+          .one()
+          .build())
+      .returnType(IItem.class)
+      .returnZeroOrOne()
+      .functionHandler(ArrayTail::execute)
+      .build();
 
-  public PostfixLookup(@NonNull IExpression base, @NonNull IKeySpecifier keySpecifier) {
-    super(keySpecifier);
-    this.base = base;
+  @SuppressWarnings("unused")
+  @NonNull
+  private static <T extends IItem> ISequence<IArrayItem<T>> execute(@NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+    IArrayItem<T> array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
+
+    return ISequence.of(tail(array));
   }
 
   /**
-   * Get the base sub-expression.
+   * An implementation of XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-array-tail">array:tail</a>.
    *
-   * @return the sub-expression
+   * @param <T>
+   *          the type of items in the given Metapath array
+   * @param array
+   *          the array to get the tail items from
+   * @return the tail items
    */
-  @NonNull
-  public IExpression getBase() {
-    return base;
-  }
-
-  @SuppressWarnings("null")
-  @Override
-  public List<? extends IExpression> getChildren() {
-    return List.of(getBase());
-  }
-
-  @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    ISequence<?> base = getBase().accept(dynamicContext, focus);
-
-    IKeySpecifier specifier = getKeySpecifier();
-
-    return ISequence.of(base.stream()
-        .flatMap(item -> specifier.lookup(item, dynamicContext, focus))
-        .flatMap(ICollectionValue::normalizeAsItems));
-  }
-
-  @Override
-  public <RESULT, CONTEXT> RESULT accept(@NonNull IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitPostfixLookup(this, context);
+  @Nullable
+  public static <T extends IItem> IArrayItem<T> tail(@NonNull IArrayItem<T> array) {
+    return ArraySubarray.subarray(array, 2);
   }
 }

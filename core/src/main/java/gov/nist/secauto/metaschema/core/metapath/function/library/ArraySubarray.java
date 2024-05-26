@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -88,7 +89,7 @@ public class ArraySubarray {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static <T extends IItem> ISequence<IArrayItem<T>> executeTwoArg(@NonNull IFunction function,
+  private static <T extends ICollectionValue> ISequence<IArrayItem<T>> executeTwoArg(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
@@ -101,7 +102,7 @@ public class ArraySubarray {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static <T extends IItem> ISequence<IArrayItem<T>> executeThreeArg(@NonNull IFunction function,
+  private static <T extends ICollectionValue> ISequence<IArrayItem<T>> executeThreeArg(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
@@ -129,7 +130,7 @@ public class ArraySubarray {
    */
   @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
-  public static <T extends IItem> IArrayItem<T> subarray(
+  public static <T extends ICollectionValue> IArrayItem<T> subarray(
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem startItem) {
     return subarray(array, startItem.asInteger().intValueExact());
@@ -155,7 +156,7 @@ public class ArraySubarray {
    */
   @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
-  public static <T extends IItem> IArrayItem<T> subarray(
+  public static <T extends ICollectionValue> IArrayItem<T> subarray(
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem startItem,
       @NonNull IIntegerItem lengthItem) {
@@ -163,12 +164,13 @@ public class ArraySubarray {
   }
 
   @NonNull
-  public static <T extends IItem> IArrayItem<T> subarray(@NonNull IArrayItem<T> array, int start) {
+  public static <T extends ICollectionValue> IArrayItem<T> subarray(@NonNull IArrayItem<T> array, int start) {
     return subarray(array, start, array.size() - start + 1);
   }
 
   @NonNull
-  public static <T extends IItem> IArrayItem<T> subarray(@NonNull IArrayItem<T> array, int start, int length) {
+  public static <T extends ICollectionValue> IArrayItem<T> subarray(@NonNull IArrayItem<T> array, int start,
+      int length) {
     if (length < 0) {
       throw new ArrayException(
           ArrayException.NEGATIVE_ARRAY_LENGTH, String.format("The length '%d' is negative.", length));

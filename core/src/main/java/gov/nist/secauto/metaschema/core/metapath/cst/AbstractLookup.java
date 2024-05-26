@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
@@ -55,11 +56,11 @@ public abstract class AbstractLookup implements IExpression {
 
   protected interface IKeySpecifier {
 
-    default Stream<? extends IItem> lookup(
+    default Stream<? extends ICollectionValue> lookup(
         @NonNull IItem item,
         @NonNull DynamicContext dynamicContext,
         @NonNull ISequence<?> focus) {
-      Stream<? extends IItem> result;
+      Stream<? extends ICollectionValue> result;
       if (item instanceof IArrayItem) {
         result = lookupInArray((IArrayItem<?>) item, dynamicContext, focus);
       } else {
@@ -69,7 +70,7 @@ public abstract class AbstractLookup implements IExpression {
       return result;
     }
 
-    Stream<? extends IItem> lookupInArray(
+    Stream<? extends ICollectionValue> lookupInArray(
         @NonNull IArrayItem<?> item,
         @NonNull DynamicContext dynamicContext,
         @NonNull ISequence<?> focus);
@@ -105,7 +106,7 @@ public abstract class AbstractLookup implements IExpression {
     }
 
     @Override
-    public Stream<? extends IItem> lookupInArray(
+    public Stream<? extends ICollectionValue> lookupInArray(
         IArrayItem<?> item,
         DynamicContext dynamicContext,
         ISequence<?> focus) {
@@ -125,7 +126,7 @@ public abstract class AbstractLookup implements IExpression {
   protected static class WildcardKeySpecifier implements IKeySpecifier {
 
     @Override
-    public Stream<? extends IItem> lookupInArray(
+    public Stream<? extends ICollectionValue> lookupInArray(
         IArrayItem<?> item,
         DynamicContext dynamicContext,
         ISequence<?> focus) {
@@ -146,7 +147,7 @@ public abstract class AbstractLookup implements IExpression {
     }
 
     @Override
-    public Stream<? extends IItem> lookupInArray(
+    public Stream<? extends ICollectionValue> lookupInArray(
         IArrayItem<?> item,
         DynamicContext dynamicContext,
         ISequence<?> focus) {

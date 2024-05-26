@@ -27,12 +27,12 @@
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.function.Occurrence;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public abstract class AbstractArrayItem<ITEM extends IItem>
+public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
     extends ImmutableCollections.AbstractImmutableDelegatedCollection<ITEM>
     implements IArrayItem<ITEM> {
   @NonNull
@@ -67,7 +67,7 @@ public abstract class AbstractArrayItem<ITEM extends IItem>
 
   @SuppressWarnings("unchecked")
   @NonNull
-  public static <T extends IItem> IArrayItem<T> empty() {
+  public static <T extends ICollectionValue> IArrayItem<T> empty() {
     return (IArrayItem<T>) EMPTY;
   }
 
@@ -83,8 +83,8 @@ public abstract class AbstractArrayItem<ITEM extends IItem>
     }
 
     int index = position.asInteger().intValueExact() - 1;
-    IItem result = getValue().get(index);
-    return ISequence.of(result);
+    ICollectionValue result = getValue().get(index);
+    return result.asSequence();
   }
 
   @Override

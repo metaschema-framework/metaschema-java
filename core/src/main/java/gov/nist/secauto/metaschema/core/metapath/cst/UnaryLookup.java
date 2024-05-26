@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 
@@ -52,7 +53,8 @@ public class UnaryLookup
     IKeySpecifier specifier = getKeySpecifier();
 
     return ISequence.of(focus.stream()
-        .flatMap(item -> specifier.lookup(item, dynamicContext, focus)));
+        .flatMap(item -> specifier.lookup(item, dynamicContext, focus))
+        .flatMap(ICollectionValue::normalizeAsItems));
   }
 
   @Override

@@ -56,6 +56,14 @@ public class ArraySize {
       .functionHandler(ArraySize::execute)
       .build();
 
+  /**
+   * An implementation of XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-array-size">array:size</a>.
+   *
+   * @param array
+   *          the arrays to join
+   * @return a new combined array
+   */
   @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IIntegerItem> execute(@NonNull IFunction function,

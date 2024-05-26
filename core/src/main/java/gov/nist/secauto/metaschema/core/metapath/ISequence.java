@@ -60,7 +60,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  *          the Java type of the items in a sequence
  */
 @SuppressWarnings("PMD.ShortMethodName")
-public interface ISequence<ITEM extends IItem> extends List<ITEM>, IStringValued {
+public interface ISequence<ITEM extends IItem> extends List<ITEM>, IStringValued, ICollectionValue {
   /**
    * Get an empty sequence.
    *
@@ -154,17 +154,17 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IStringValued
   }
 
   @NonNull
-  default IItem toArrayMember() {
-    IItem retval;
+  default ICollectionValue toArrayMember() {
+    ICollectionValue retval;
     switch (size()) {
     case 0:
-      retval = IArrayItem.empty();
+      retval = ISequence.empty();
       break;
     case 1:
-      retval = stream().findFirst().get();
+      retval = ObjectUtils.notNull(stream().findFirst().get());
       break;
     default:
-      retval = IArrayItem.ofCollection(this);
+      retval = this;
     }
     return retval;
   }
@@ -178,17 +178,6 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IStringValued
   default Stream<ITEM> safeStream() {
     return ObjectUtils.notNull(getValue().stream());
   }
-
-  /**
-   * This optional operation ensures that a list is used to back this sequence.
-   * <p>
-   * If a stream is currently backing this sequence, the stream will be collected
-   * into a list. This ensures the sequence can be visited multiple times.
-   *
-   * @return the resulting sequence
-   */
-  @NonNull
-  ISequence<ITEM> collect();
 
   /**
    * A {@link Collector} implementation to generates a sequence from a stream of
@@ -230,6 +219,11 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IStringValued
         return Collections.emptySet();
       }
     };
+  }
+
+  @Override
+  default ISequence<ITEM> asSequence() {
+    return this;
   }
 
   /**

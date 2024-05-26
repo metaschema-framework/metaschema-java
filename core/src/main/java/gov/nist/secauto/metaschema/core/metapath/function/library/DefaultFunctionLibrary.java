@@ -208,6 +208,10 @@ public class DefaultFunctionLibrary
     registerFunction(ArrayRemove.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-array-insert-before
     registerFunction(ArrayInsertBefore.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-array-head
+    registerFunction(ArrayHead.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-array-tail
+    registerFunction(ArrayTail.SIGNATURE);
 
     // https://www.w3.org/TR/xpath-functions-31/#func-array-join
     registerFunction(ArrayJoin.SIGNATURE);

@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -50,7 +51,7 @@ class ArrayPutTest
             array(string("a"), string("d"), string("c")),
             "array:put([\"a\", \"b\", \"c\"], 2, \"d\")"),
         Arguments.of(
-            array(string("a"), array(string("d"), string("e")), string("c")),
+            array(string("a"), sequence(string("d"), string("e")), string("c")),
             "array:put([\"a\", \"b\", \"c\"], 2, (\"d\", \"e\"))"),
         Arguments.of(
             array(array(string("d"), string("e"))),

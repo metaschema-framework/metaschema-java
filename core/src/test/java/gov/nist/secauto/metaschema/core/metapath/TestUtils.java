@@ -65,13 +65,13 @@ public final class TestUtils {
   }
 
   @NonNull
-  public static <T extends IItem> IArrayItem<T> array() {
+  public static <T extends ICollectionValue> IArrayItem<T> array() {
     return IArrayItem.of();
   }
 
   @SafeVarargs
   @NonNull
-  public static <T extends IItem> IArrayItem<T> array(@NonNull T... items) {
+  public static <T extends ICollectionValue> IArrayItem<T> array(@NonNull T... items) {
     return IArrayItem.of(items);
   }
 

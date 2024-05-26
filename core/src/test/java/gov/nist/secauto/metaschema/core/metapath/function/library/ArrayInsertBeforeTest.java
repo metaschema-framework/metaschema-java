@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -47,13 +48,13 @@ class ArrayInsertBeforeTest
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
-            array(string("a"), string("b"), array(string("x"), string("y")), string("c"), string("d")),
+            array(string("a"), string("b"), sequence(string("x"), string("y")), string("c"), string("d")),
             "array:insert-before([\"a\", \"b\", \"c\", \"d\"], 3, (\"x\", \"y\"))"),
         Arguments.of(
-            array(string("a"), string("b"), string("c"), string("d"), array(string("x"), string("y"))),
+            array(string("a"), string("b"), string("c"), string("d"), sequence(string("x"), string("y"))),
             "array:insert-before([\"a\", \"b\", \"c\", \"d\"], 5, (\"x\", \"y\"))"),
         Arguments.of(
-            array(array(string("x"), string("y")), string("a"), string("b"), string("c"), string("d")),
+            array(sequence(string("x"), string("y")), string("a"), string("b"), string("c"), string("d")),
             "array:insert-before([\"a\", \"b\", \"c\", \"d\"], 1, (\"x\", \"y\"))"));
   }
 

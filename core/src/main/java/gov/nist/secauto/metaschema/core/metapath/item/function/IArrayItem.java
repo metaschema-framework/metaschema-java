@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.IStringValued;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
@@ -54,9 +55,9 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.ShortMethodName")
-public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<ITEM>, IStringValued {
+public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, IItem, List<ITEM>, IStringValued {
   @NonNull
-  static <T extends IItem> IArrayItem<T> empty() {
+  static <T extends ICollectionValue> IArrayItem<T> empty() {
     return AbstractArrayItem.empty();
   }
 
@@ -202,7 +203,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    * @return a collector that will generate a sequence
    */
   @NonNull
-  static <T extends IItem> Collector<T, ?, IArrayItem<T>> toArrayItem() {
+  static <T extends ICollectionValue> Collector<T, ?, IArrayItem<T>> toArrayItem() {
     return new Collector<T, List<T>, IArrayItem<T>>() {
 
       @Override
@@ -235,9 +236,14 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
     };
   }
 
+  @Override
+  default ISequence<? extends IArrayItem<ITEM>> asSequence() {
+    return ISequence.of(this);
+  }
+
   @SuppressWarnings("unchecked")
   @NonNull
-  static <T extends IItem> IArrayItem<T> ofCollection( // NOPMD - intentional
+  static <T extends ICollectionValue> IArrayItem<T> ofCollection( // NOPMD - intentional
       @NonNull List<? extends T> items) {
     return items.isEmpty() ? empty() : (IArrayItem<T>) new ArrayItemN<>(items);
   }
@@ -250,7 +256,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    * @return an empty {@code IArrayItem}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of() {
+  static <T extends ICollectionValue> IArrayItem<T> of() {
     return AbstractArrayItem.empty();
   }
 
@@ -266,7 +272,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if the item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1) {
     return new ArrayItemN<>(e1);
   }
 
@@ -284,7 +290,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2) {
     return new ArrayItemN<>(e1, e2);
   }
 
@@ -304,7 +310,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2, T e3) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2, T e3) {
     return new ArrayItemN<>(e1, e2, e3);
   }
 
@@ -326,7 +332,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2, T e3, T e4) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2, T e3, T e4) {
     return new ArrayItemN<>(e1, e2, e3, e4);
   }
 
@@ -350,7 +356,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5) {
     return new ArrayItemN<>(e1, e2, e3, e4, e5);
   }
 
@@ -376,7 +382,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6) {
     return new ArrayItemN<>(e1, e2, e3, e4, e5, e6);
   }
 
@@ -404,7 +410,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6, T e7) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6, T e7) {
     return new ArrayItemN<>(e1, e2, e3, e4, e5, e6, e7);
   }
 
@@ -434,7 +440,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8) {
     return new ArrayItemN<>(e1, e2, e3, e4, e5, e6, e7, e8);
   }
 
@@ -466,7 +472,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9) {
     return new ArrayItemN<>(e1, e2, e3, e4, e5, e6, e7, e8, e9);
   }
 
@@ -500,7 +506,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    *           if an item is {@code null}
    */
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10) {
+  static <T extends ICollectionValue> IArrayItem<T> of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10) {
     return new ArrayItemN<>(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
   }
 
@@ -517,7 +523,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    */
   @SafeVarargs
   @NonNull
-  static <T extends IItem> IArrayItem<T> of(@NonNull T... items) {
+  static <T extends ICollectionValue> IArrayItem<T> of(@NonNull T... items) {
     return items.length == 0 ? empty() : new ArrayItemN<>(items);
   }
 
@@ -540,7 +546,7 @@ public interface IArrayItem<ITEM extends IItem> extends IFunction, IItem, List<I
    */
   @SuppressWarnings("unchecked")
   @NonNull
-  static <T extends IItem> IArrayItem<T> copyOf(Collection<? extends T> collection) {
+  static <T extends ICollectionValue> IArrayItem<T> copyOf(Collection<? extends T> collection) {
     return collection instanceof IArrayItem
         ? (IArrayItem<T>) collection
         : collection.isEmpty()

@@ -68,8 +68,8 @@ public abstract class AbstractPathExpression<RESULT_TYPE extends IItem>
       @NonNull IExpression expression,
       @NonNull DynamicContext dynamicContext,
       @NonNull ISequence<?> outerFocus) {
-
-    outerFocus.collect();
+    // ensure the sequence is backed by a list
+    outerFocus.getValue();
 
     // check the current focus
     @SuppressWarnings("unchecked") Stream<? extends INodeItem> nodeMatches

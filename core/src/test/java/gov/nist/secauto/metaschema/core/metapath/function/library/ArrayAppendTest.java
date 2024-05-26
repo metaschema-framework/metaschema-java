@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -50,7 +51,7 @@ class ArrayAppendTest
             array(string("a"), string("b"), string("c"), string("d")),
             "array:append([\"a\", \"b\", \"c\"], \"d\")"),
         Arguments.of(
-            array(string("a"), string("b"), string("c"), array(string("d"), string("e"))),
+            array(string("a"), string("b"), string("c"), sequence(string("d"), string("e"))),
             "array:append([\"a\", \"b\", \"c\"], (\"d\", \"e\"))"));
   }
 

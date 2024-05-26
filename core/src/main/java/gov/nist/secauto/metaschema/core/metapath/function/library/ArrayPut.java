@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -70,16 +71,16 @@ public class ArrayPut {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static <T extends IItem> ISequence<IArrayItem<T>> execute(@NonNull IFunction function,
+  private static <T extends ICollectionValue> ISequence<? extends IArrayItem<T>> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IArrayItem<T> array = FunctionUtils.asType(ObjectUtils.requireNonNull(
         arguments.get(0).getFirstItem(true)));
     IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
-    T member = FunctionUtils.asType(arguments.get(2).toArrayMember());
+    @SuppressWarnings("unchecked") T member = (T) arguments.get(2).toArrayMember();
 
-    return ISequence.of(put(array, position, member));
+    return put(array, position, member).asSequence();
   }
 
   /**
@@ -99,7 +100,7 @@ public class ArrayPut {
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
-  public static <T extends IItem> IArrayItem<T> put(
+  public static <T extends ICollectionValue> IArrayItem<T> put(
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem positionItem,
       @NonNull T member) {
@@ -107,7 +108,8 @@ public class ArrayPut {
   }
 
   @NonNull
-  public static <T extends IItem> IArrayItem<T> put(@NonNull IArrayItem<T> array, int position, @NonNull T member) {
+  public static <T extends ICollectionValue> IArrayItem<T> put(@NonNull IArrayItem<T> array, int position,
+      @NonNull T member) {
     List<T> copy = new ArrayList<>(array);
     try {
       copy.set(position - 1, member);

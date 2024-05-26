@@ -27,6 +27,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -69,14 +70,14 @@ public class ArrayInsertBefore {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static <T extends IItem> ISequence<IArrayItem<T>> execute(@NonNull IFunction function,
+  private static <T extends ICollectionValue> ISequence<IArrayItem<T>> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IArrayItem<T> array = FunctionUtils.asType(ObjectUtils.requireNonNull(
         arguments.get(0).getFirstItem(true)));
     IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
-    T member = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2)).toArrayMember());
+    @SuppressWarnings("unchecked") T member = (T) ObjectUtils.requireNonNull(arguments.get(2)).toArrayMember();
 
     return ISequence.of(insertBefore(array, position, member));
   }
@@ -98,7 +99,7 @@ public class ArrayInsertBefore {
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
-  public static <T extends IItem> IArrayItem<T> insertBefore(
+  public static <T extends ICollectionValue> IArrayItem<T> insertBefore(
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem positionItem,
       @NonNull T member) {
@@ -106,7 +107,7 @@ public class ArrayInsertBefore {
   }
 
   @NonNull
-  public static <T extends IItem> IArrayItem<T> insertBefore(@NonNull IArrayItem<T> array, int position,
+  public static <T extends ICollectionValue> IArrayItem<T> insertBefore(@NonNull IArrayItem<T> array, int position,
       @NonNull T member) {
     return ArrayJoin.join(ObjectUtils.notNull(List.of(
         ArraySubarray.subarray(array, 1, position - 1),

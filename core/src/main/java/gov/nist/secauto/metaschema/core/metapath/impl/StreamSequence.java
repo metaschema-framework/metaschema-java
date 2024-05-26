@@ -26,7 +26,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -81,11 +80,5 @@ public class StreamSequence<ITEM extends IItem>
   @Override
   public void forEach(Consumer<? super ITEM> action) {
     stream().forEachOrdered(action);
-  }
-
-  @Override
-  public ISequence<ITEM> collect() {
-    getValue();
-    return this;
   }
 }

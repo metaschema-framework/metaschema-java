@@ -30,6 +30,8 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.stream.Collectors;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractSequence<ITEM extends IItem>
@@ -43,11 +45,6 @@ public abstract class AbstractSequence<ITEM extends IItem>
   @SuppressWarnings("unchecked")
   public static <T extends IItem> ISequence<T> empty() {
     return (ISequence<T>) EMPTY;
-  }
-
-  @Override
-  public ISequence<ITEM> collect() {
-    return this;
   }
 
   @Override
@@ -66,5 +63,12 @@ public abstract class AbstractSequence<ITEM extends IItem>
   @Override
   public String asString() {
     return ObjectUtils.notNull(toString());
+  }
+
+  @Override
+  public String toString() {
+    return safeStream()
+        .map(Object::toString)
+        .collect(Collectors.joining(",", "(", ")"));
   }
 }
