@@ -55,6 +55,15 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A representation of a Metapath array item type.
+ * <p>
+ * Instances of this interface are required to enforce non-mutability for array
+ * contents.
+ *
+ * @param <ITEM>
+ *          the Metapath item type of array members
+ */
 @SuppressWarnings("PMD.ShortMethodName")
 public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, IItem, List<ITEM>, IStringValued {
   @NonNull

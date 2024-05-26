@@ -228,28 +228,13 @@ public interface IFunction {
    */
   @NonNull
   default String toSignature() {
-    StringBuilder builder = new StringBuilder()
-        .append("Q{")
-        .append(getNamespace())
-        .append('}')
-        .append(getName()) // name
-        .append('('); // arguments
-
-    List<IArgument> arguments = getArguments();
-    if (arguments.isEmpty()) {
-      builder.append("()");
-    } else {
-      builder.append(arguments.stream().map(IArgument::toSignature).collect(Collectors.joining(",")));
-
-      if (isArityUnbounded()) {
-        builder.append(", ...");
-      }
-    }
-
-    builder.append(") as ")
-        .append(getResult().toSignature());// return type
-
-    return ObjectUtils.notNull(builder.toString());
+    return ObjectUtils.notNull(String.format("Q{%s}%s(%s) as %s",
+        getNamespace(),
+        getName(),
+        getArguments().isEmpty() ? "()"
+            : getArguments().stream().map(IArgument::toSignature).collect(Collectors.joining(","))
+                + (isArityUnbounded() ? ", ..." : ""),
+        getResult().toSignature()));
   }
 
   /**

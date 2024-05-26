@@ -88,14 +88,9 @@ public final class FnDocumentUri {
 
     INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);
 
-    ISequence<IAnyUriItem> retval;
-    if (item instanceof IDocumentNodeItem) {
-      IAnyUriItem uri = fnDocumentUri((IDocumentNodeItem) item);
-      retval = ISequence.of(uri);
-    } else {
-      retval = ISequence.empty();
-    }
-    return retval;
+    return item instanceof IDocumentNodeItem
+        ? ISequence.of(fnDocumentUri((IDocumentNodeItem) item))
+        : ISequence.empty();
   }
 
   @SuppressWarnings("unused")
@@ -109,16 +104,9 @@ public final class FnDocumentUri {
 
     INodeItem item = arg.getFirstItem(true);
 
-    ISequence<IAnyUriItem> retval;
-    if (item == null) {
-      retval = ISequence.empty();
-    } else if (item instanceof IDocumentNodeItem) {
-      IAnyUriItem uri = fnDocumentUri((IDocumentNodeItem) item);
-      retval = ISequence.of(uri);
-    } else {
-      retval = ISequence.empty();
-    }
-    return retval;
+    return item instanceof IDocumentNodeItem
+        ? ISequence.of(fnDocumentUri((IDocumentNodeItem) item))
+        : ISequence.empty();
   }
 
   /**

@@ -61,7 +61,8 @@ public class RootSlashPath
 
     ISequence<?> roots = ObjectUtils.notNull(focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep)
-        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).findFirst().get())
+        // the previous checks for a null instance
+        .flatMap(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).limit(1))
         .collect(ISequence.toSequence()));
 
     return getExpression().accept(dynamicContext, roots);
