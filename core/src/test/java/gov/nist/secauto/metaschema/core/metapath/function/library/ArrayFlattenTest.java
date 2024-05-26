@@ -24,25 +24,45 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public interface ICollectionValue {
-  // TODO: rename to toSequence and resolve conflicting methods?
-  @NonNull
-  ISequence<?> asSequence();
-
-  @NonNull
-  static Stream<? extends IItem> normalizeAsItems(@NonNull ICollectionValue value) {
-    return value instanceof IItem ? ObjectUtils.notNull(Stream.of((IItem) value)) : value.asSequence().stream();
+class ArrayFlattenTest
+    extends ExpressionTestBase {
+  private static Stream<Arguments> provideValues() { // NOPMD - false positive
+    return Stream.of(
+        Arguments.of(
+            sequence(integer(1), integer(4), integer(6), integer(5), integer(3)),
+            "array:flatten([1, 4, 6, 5, 3])"),
+        Arguments.of(
+            sequence(integer(1), integer(2), integer(5), integer(10), integer(11), integer(12), integer(13)),
+            "array:flatten(([1, 2, 5], [[10, 11], 12], [], 13))"),
+        Arguments.of(
+            sequence(integer(1), integer(0), integer(1), integer(1), integer(0), integer(1), integer(0), integer(0)),
+            "array:flatten([(1,0), (1,1), (0,1), (0,0)])"));
   }
 
-  @NonNull
-  Stream<? extends IItem> flatten();
+  @ParameterizedTest
+  @MethodSource("provideValues")
+  void testExpression(@NonNull ISequence<?> expected, @NonNull String metapath) {
+
+    ISequence<?> result = MetapathExpression.compile(metapath)
+        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE, newDynamicContext());
+    assertEquals(expected, result);
+  }
 }

@@ -212,9 +212,18 @@ public class DefaultFunctionLibrary
     registerFunction(ArrayHead.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-array-tail
     registerFunction(ArrayTail.SIGNATURE);
-
+    // https://www.w3.org/TR/xpath-functions-31/#func-array-reverse
+    registerFunction(ArrayReverse.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-array-join
     registerFunction(ArrayJoin.SIGNATURE);
+    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-for-each
+    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-filter
+    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-fold-left
+    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-fold-right
+    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-for-each-pair
+    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-sort
+    // https://www.w3.org/TR/xpath-functions-31/#func-array-flatten
+    registerFunction(ArrayFlatten.SIGNATURE);
 
     // xpath casting functions
     registerFunction(

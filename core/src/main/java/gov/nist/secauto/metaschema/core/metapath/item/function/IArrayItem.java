@@ -49,6 +49,7 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 import javax.xml.namespace.QName;
 
@@ -239,6 +240,13 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
   @Override
   default ISequence<? extends IArrayItem<ITEM>> asSequence() {
     return ISequence.of(this);
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  default Stream<? extends IItem> flatten() {
+    return stream()
+        .flatMap(ICollectionValue::flatten);
   }
 
   @SuppressWarnings("unchecked")

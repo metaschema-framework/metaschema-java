@@ -30,6 +30,8 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 
+import java.util.stream.Stream;
+
 public interface IItem extends ICollectionValue {
   /**
    * Get the item's "wrapped" value. This "wrapped" value may be:
@@ -60,5 +62,11 @@ public interface IItem extends ICollectionValue {
   @Override
   default ISequence<?> asSequence() {
     return ISequence.of(this);
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  default Stream<? extends IItem> flatten() {
+    return Stream.of(this);
   }
 }

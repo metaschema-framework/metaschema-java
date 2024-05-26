@@ -179,6 +179,13 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IStringValued
     return ObjectUtils.notNull(getValue().stream());
   }
 
+  @SuppressWarnings("null")
+  @Override
+  default Stream<? extends IItem> flatten() {
+    // TODO: Is a safe stream needed here?
+    return safeStream();
+  }
+
   /**
    * A {@link Collector} implementation to generates a sequence from a stream of
    * Metapath items.
