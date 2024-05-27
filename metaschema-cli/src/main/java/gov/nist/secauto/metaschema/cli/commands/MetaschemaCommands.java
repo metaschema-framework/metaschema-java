@@ -31,7 +31,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
 
 import java.util.List;
 
-public class MetaschemaCommands {
+public final class MetaschemaCommands {
   public static final List<ICommand> COMMANDS = List.of(
       new ValidateModuleCommand(),
       new GenerateSchemaCommand(),
