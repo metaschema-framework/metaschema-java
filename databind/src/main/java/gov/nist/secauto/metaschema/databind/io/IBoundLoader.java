@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.io;
@@ -30,15 +9,20 @@ import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.IDocumentLoader;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+
+import org.eclipse.jdt.annotation.Owning;
+import org.xml.sax.InputSource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -77,7 +61,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while reading the resource
    */
   @NonNull
-  default FormatDetector.Result detectFormat(@NonNull File file) throws IOException {
+  default Format detectFormat(@NonNull File file) throws IOException {
     return detectFormat(ObjectUtils.notNull(file.toPath()));
   }
 
@@ -91,7 +75,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while reading the resource
    */
   @NonNull
-  default FormatDetector.Result detectFormat(@NonNull Path path) throws IOException {
+  default Format detectFormat(@NonNull Path path) throws IOException {
     return detectFormat(ObjectUtils.notNull(path.toUri()));
   }
 
@@ -105,7 +89,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while reading the resource
    */
   @NonNull
-  default FormatDetector.Result detectFormat(@NonNull URL url) throws IOException {
+  default Format detectFormat(@NonNull URL url) throws IOException {
     try {
       return detectFormat(ObjectUtils.notNull(url.toURI()));
     } catch (URISyntaxException ex) {
@@ -123,7 +107,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while reading the resource
    */
   @NonNull
-  FormatDetector.Result detectFormat(@NonNull URI uri) throws IOException;
+  Format detectFormat(@NonNull URI uri) throws IOException;
 
   /**
    * Determine the format of the provided resource.
@@ -144,26 +128,28 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
   @NonNull
   FormatDetector.Result detectFormat(@NonNull InputStream is) throws IOException;
 
-  //
-  // /**
-  // * Determine the format of the provided resource.
-  // * <p>
-  // * This method will consume data from any {@link InputStream} provided by the
-  // * {@link InputSource}. If the caller of this method intends to read data from
-  // * the stream after determining the format, the caller should pass in a stream
-  // * that can be reset.
-  // * <p>
-  // * This method will not close any {@link InputStream} provided by the
-  // * {@link InputSource}, since it does not own the stream.
-  // *
-  // * @param source
-  // * information about how to access the resource
-  // * @return the format of the provided resource
-  // * @throws IOException
-  // * if an error occurred while reading the resource
-  // */
-  // @NonNull
-  // Format detectFormat(@NonNull InputSource source) throws IOException;
+  /**
+   * Determine the model of the provided resource.
+   * <p>
+   * This method will consume data from any {@link InputStream} provided by the
+   * {@link InputSource}. If the caller of this method intends to read data from
+   * the stream after determining the format, the caller should pass in a stream
+   * that can be reset.
+   * <p>
+   * This method will not close any {@link InputStream} provided by the
+   * {@link InputSource}, since it does not own the stream.
+   *
+   * @param is
+   *          an input stream for the resource
+   * @param format
+   *          the format of the provided resource
+   * @return the model of the provided resource
+   * @throws IOException
+   *           if an error occurred while reading the resource
+   */
+  @NonNull
+  @Owning
+  ModelDetector.Result detectModel(@NonNull InputStream is, @NonNull Format format) throws IOException;
 
   /**
    * Load data from the provided resource into a bound object.
@@ -180,7 +166,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    * @see #detectFormat(File)
    */
   @NonNull
-  default <CLASS> CLASS load(@NonNull File file) throws IOException {
+  default <CLASS extends IBoundObject> CLASS load(@NonNull File file) throws IOException {
     return load(ObjectUtils.notNull(file.toPath()));
   }
 
@@ -199,7 +185,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    * @see #detectFormat(File)
    */
   @NonNull
-  default <CLASS> CLASS load(@NonNull Path path) throws IOException {
+  default <CLASS extends IBoundObject> CLASS load(@NonNull Path path) throws IOException {
     return load(ObjectUtils.notNull(path.toUri()));
   }
 
@@ -220,7 +206,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    * @see #detectFormat(URL)
    */
   @NonNull
-  default <CLASS> CLASS load(@NonNull URL url) throws IOException, URISyntaxException {
+  default <CLASS extends IBoundObject> CLASS load(@NonNull URL url) throws IOException, URISyntaxException {
     return load(ObjectUtils.notNull(url.toURI()));
   }
 
@@ -240,7 +226,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    * @see #detectFormat(URL)
    */
   @NonNull
-  <CLASS> CLASS load(@NonNull URI uri) throws IOException;
+  <CLASS extends IBoundObject> CLASS load(@NonNull URI uri) throws IOException;
 
   /**
    * Load data from the provided resource into a bound object.
@@ -262,7 +248,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    * @see #detectFormat(InputStream)
    */
   @NonNull
-  <CLASS> CLASS load(@NonNull InputStream is, @NonNull URI documentUri) throws IOException;
+  <CLASS extends IBoundObject> CLASS load(@NonNull InputStream is, @NonNull URI documentUri) throws IOException;
 
   /**
    * Load data from the specified resource into a bound object with the type of
@@ -279,7 +265,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while loading the data in the specified file
    */
   @NonNull
-  default <CLASS> CLASS load(
+  default <CLASS extends IBoundObject> CLASS load(
       @NonNull Class<CLASS> clazz,
       @NonNull File file) throws IOException {
     return load(clazz, ObjectUtils.notNull(file.toPath()));
@@ -300,7 +286,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while loading the data in the specified file
    */
   @NonNull
-  default <CLASS> CLASS load(
+  default <CLASS extends IBoundObject> CLASS load(
       @NonNull Class<CLASS> clazz,
       @NonNull Path path) throws IOException {
     return load(clazz, ObjectUtils.notNull(path.toUri()));
@@ -323,7 +309,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if the provided {@code url} is malformed
    */
   @NonNull
-  default <CLASS> CLASS load(
+  default <CLASS extends IBoundObject> CLASS load(
       @NonNull Class<CLASS> clazz,
       @NonNull URL url) throws IOException, URISyntaxException {
     return load(clazz, ObjectUtils.notNull(url.toURI()));
@@ -344,7 +330,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while loading the data in the specified file
    */
   @NonNull
-  <CLASS> CLASS load(
+  <CLASS extends IBoundObject> CLASS load(
       @NonNull Class<CLASS> clazz,
       @NonNull URI uri) throws IOException;
 
@@ -375,8 +361,37 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           resource
    */
   @NonNull
-  <CLASS> CLASS load(
+  <CLASS extends IBoundObject> CLASS load(
       @NonNull Class<CLASS> clazz,
+      @NonNull InputStream is,
+      @NonNull URI documentUri) throws IOException;
+
+  /**
+   * Load data from the specified resource into a bound object with the type of
+   * the specified Java class.
+   * <p>
+   * This method will not close the provided {@link InputStream}, since it does
+   * not own the stream.
+   *
+   * @param <CLASS>
+   *          the Java type to load data into
+   * @param format
+   *          the format to parse
+   * @param clazz
+   *          the class for the java type
+   * @param is
+   *          the resource stream
+   * @param documentUri
+   *          the URI of the resource
+   * @return the loaded data
+   * @throws IOException
+   *           if an error occurred while loading the data from the specified
+   *           resource
+   */
+  @NonNull
+  <CLASS extends IBoundObject> CLASS load(
+      @NonNull Class<CLASS> clazz,
+      @NonNull Format format,
       @NonNull InputStream is,
       @NonNull URI documentUri) throws IOException;
 
@@ -479,7 +494,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while loading the data from the specified
    *           resource or writing the converted data to the specified destination
    */
-  default <CLASS> void convert(
+  default <CLASS extends IBoundObject> void convert(
       @NonNull Path source,
       @NonNull Path destination,
       @NonNull Format toFormat,
@@ -513,7 +528,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while loading the data from the specified
    *           resource or writing the converted data to the specified destination
    */
-  default <CLASS> void convert(
+  default <CLASS extends IBoundObject> void convert(
       @NonNull Path source,
       @NonNull OutputStream os,
       @NonNull Format toFormat,
@@ -547,7 +562,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while loading the data from the specified
    *           resource or writing the converted data to the specified destination
    */
-  default <CLASS> void convert(
+  default <CLASS extends IBoundObject> void convert(
       @NonNull URI source,
       @NonNull Path destination,
       @NonNull Format toFormat,
@@ -581,7 +596,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *           if an error occurred while loading the data from the specified
    *           resource or writing the converted data to the specified destination
    */
-  default <CLASS> void convert(
+  default <CLASS extends IBoundObject> void convert(
       @NonNull URI source,
       @NonNull OutputStream os,
       @NonNull Format toFormat,
@@ -590,5 +605,39 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
 
     ISerializer<CLASS> serializer = getBindingContext().newSerializer(toFormat, rootClass);
     serializer.serialize(object, os);
+  }
+
+  /**
+   * Auto convert the provided {@code source} to the provided {@code toFormat}.
+   * Write the converted content to the provided {@code destination}.
+   * <p>
+   * The format of the source is expected to be auto detected using
+   * {@link #detectFormat(Path)}.
+   *
+   * @param <CLASS>
+   *          the Java type to load data into
+   * @param source
+   *          the resource to convert
+   * @param writer
+   *          the writer to write converted content to
+   * @param toFormat
+   *          the format to convert to
+   * @param rootClass
+   *          the class for the Java type to load data into
+   * @throws FileNotFoundException
+   *           the the provided source file was not found
+   * @throws IOException
+   *           if an error occurred while loading the data from the specified
+   *           resource or writing the converted data to the specified destination
+   */
+  default <CLASS extends IBoundObject> void convert(
+      @NonNull URI source,
+      @NonNull Writer writer,
+      @NonNull Format toFormat,
+      @NonNull Class<CLASS> rootClass) throws FileNotFoundException, IOException {
+    CLASS object = load(rootClass, source);
+
+    ISerializer<CLASS> serializer = getBindingContext().newSerializer(toFormat, rootClass);
+    serializer.serialize(object, writer);
   }
 }

@@ -1,0 +1,33 @@
+# broken plugin and dependency references
+https://bytebuddy.net/byte-buddy
+https://chronicle.software/java-parent-pom/compiler
+https://code.revelc.net/revelc/formatter-maven-plugin
+https://codehaus-plexus.github.io/plexus-cipher/
+https://codehaus-plexus.github.io/plexus-pom/plexus-build-api/
+https://codehaus-plexus.github.io/plexus-pom/plexus-utils/
+https://codehaus-plexus.github.io/plexus-sec-dispatcher/
+https://errorprone.info/error_prone_annotations
+http://forge.sonatype.com/spice-parent/plexus-build-api/
+https://github.com/google/guava/.*
+https://github.com/google/guice/guice
+https://github.com/hamcrest/JavaHamcrest/hamcrest-core
+https://github.com/javaparser/.*
+https://github.com/vsch/flexmark-java/.*
+https://hc.apache.org/httpcomponents-client-5.0.x/5.1.3/httpclient5/
+https://logging.apache.org/log4j/2.x/log4j/.*
+https://pmd.github.io/latest/pmd_userdocs_cpd.html
+https://www.antlr.org/antlr4-maven-plugin/
+https://www.antlr.org/antlr4-runtime/
+http://www.eclipse.org/eclipselink/moxy/org.eclipse.persistence.moxy
+http://www.eclipse.org/sisu/org.eclipse.sisu.plexus/
+http://www.eclipse.org/sisu/org.eclipse.sisu.inject/
+http://www.mojohaus.org/appassembler-maven-plugin/appassembler/appassembler-maven-plugin
+http://www.thymeleaf.org/thymeleaf-lib/thymeleaf
+# broken license references
+https://opensource.org/licenses/Apache-2.0,https://opensource.org/licenses/EPL-2.0
+# prone to long timeouts
+http://nexus.sonatype.org/oss-repository-hosting.html/jmock-parent/.*
+https://glassfish.dev.java.net/.*
+# fix later
+https://github.com/metaschema-framework/liboscal-java/
+

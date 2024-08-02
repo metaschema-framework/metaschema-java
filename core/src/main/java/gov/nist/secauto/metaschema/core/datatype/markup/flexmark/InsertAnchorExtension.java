@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.core.datatype.markup.flexmark; // NOPMD AST processor
@@ -50,17 +29,22 @@ import com.vladsch.flexmark.parser.InlineParserExtensionFactory;
 import com.vladsch.flexmark.parser.LightInlineParser;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.ast.NodeVisitorBase;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.DataKey;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
-import com.vladsch.flexmark.util.misc.Extension;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import com.vladsch.flexmark.util.sequence.CharSubSequence;
+
+import gov.nist.secauto.metaschema.core.datatype.markup.IMarkupString;
 
 import org.jsoup.nodes.Element;
 
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,7 +57,12 @@ public class InsertAnchorExtension
       = new DataKey<>("ENABLE_INLINE_INSERT_ANCHORS", true);
   public static final DataKey<Boolean> ENABLE_RENDERING = new DataKey<>("ENABLE_RENDERING", true);
 
-  public static Extension create() {
+  /**
+   * Construct a new extension instance.
+   *
+   * @return the instance
+   */
+  public static InsertAnchorExtension newInstance() {
     return new InsertAnchorExtension();
   }
 
@@ -138,26 +127,13 @@ public class InsertAnchorExtension
       }
     }
 
-    // @Override
-    // public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
-    // HashSet<NodeRenderingHandler<?>> set = new
-    // HashSet<NodeRenderingHandler<?>>();
-    // set.add(new NodeRenderingHandler<Macro>(Macro.class, new
-    // CustomNodeRenderer<Macro>() {
-    // @Override
-    // public void render(Macro node, NodeRendererContext context, HtmlWriter html)
-    // {
-    // MacroNodeRenderer.this.render(node, context, html); }
-    // }));
     public static class Factory implements NodeRendererFactory {
 
       @Override
       public NodeRenderer apply(DataHolder options) {
         return new InsertAnchorNodeRenderer(options);
       }
-
     }
-
   }
 
   private static class InsertAnchorInlineParser implements InlineParserExtension {
@@ -304,32 +280,64 @@ public class InsertAnchorExtension
       extends Node {
 
     @NonNull
-    private BasedSequence type;
+    private final BasedSequence type;
     @NonNull
     private BasedSequence idReference;
 
+    /**
+     * Construct a new Metaschema insert node.
+     *
+     * @param type
+     *          the type of insertion
+     * @param idReference
+     *          the identifier of the given type to use to determine what to insert
+     */
     @SuppressWarnings("null")
     public InsertAnchorNode(@NonNull String type, @NonNull String idReference) {
       this(CharSubSequence.of(type), CharSubSequence.of(idReference));
     }
 
-    public InsertAnchorNode(@NonNull BasedSequence type, @NonNull BasedSequence idReference) {
+    /**
+     * Construct a new Metaschema insert node.
+     *
+     * @param type
+     *          the type of insertion
+     * @param idReference
+     *          the identifier of the given type to use to determine what to insert
+     */
+    protected InsertAnchorNode(@NonNull BasedSequence type, @NonNull BasedSequence idReference) {
       this.type = type;
       this.idReference = idReference;
     }
 
+    /**
+     * Get the type of insertion.
+     *
+     * @return the type of insertion
+     */
     @NonNull
     public BasedSequence getType() {
       return type;
     }
 
+    /**
+     * Get the identifier of the given type to use to determine what to insert.
+     *
+     * @return the identifier
+     */
     @NonNull
     public BasedSequence getIdReference() {
       return idReference;
     }
 
-    public void setIdReference(@NonNull BasedSequence value) {
-      this.idReference = value;
+    /**
+     * Set the identifier of the given type to use to determine what to insert.
+     *
+     * @param idReference
+     *          the identifier
+     */
+    public void setIdReference(@NonNull BasedSequence idReference) {
+      this.idReference = idReference;
     }
 
     @Override
@@ -343,6 +351,62 @@ public class InsertAnchorExtension
     public void getAstExtra(StringBuilder out) {
       segmentSpanChars(out, getType(), "type");
       segmentSpanChars(out, getIdReference(), "id-ref");
+    }
+  }
+
+  /**
+   * Used to collect insert nodes.
+   */
+  public static class InsertVisitor
+      extends NodeVisitorBase {
+    @NonNull
+    private final List<InsertAnchorNode> inserts = new LinkedList<>();
+    @NonNull
+    private final Predicate<InsertAnchorNode> filter;
+
+    /**
+     * Construct a new visitor that will use the provided filter to visit matching
+     * insert nodes.
+     *
+     * @param filter
+     *          the match criteria to use to identify matching insert nodes
+     */
+    public InsertVisitor(@NonNull Predicate<InsertAnchorNode> filter) {
+      this.filter = filter;
+    }
+
+    /**
+     * Process markup to identify insert nodes.
+     *
+     * @param markup
+     *          the markup to process
+     * @return this visitor
+     */
+    public InsertVisitor processNode(@NonNull IMarkupString<?> markup) {
+      visit(markup.getDocument());
+      return this;
+    }
+
+    @Override
+    protected void visit(Node node) {
+      if (node instanceof InsertAnchorNode) {
+        InsertAnchorNode insert = (InsertAnchorNode) node;
+        if (filter.test(insert)) {
+          inserts.add((InsertAnchorNode) node);
+        }
+      } else {
+        visitChildren(node);
+      }
+    }
+
+    /**
+     * Get the collected insert nodes.
+     *
+     * @return the nodes
+     */
+    @NonNull
+    public List<InsertAnchorNode> getInserts() {
+      return inserts;
     }
   }
 }

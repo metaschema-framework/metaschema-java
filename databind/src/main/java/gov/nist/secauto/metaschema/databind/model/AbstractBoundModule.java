@@ -1,43 +1,27 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.model;
 
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractModule;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.annotations.Module;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.annotations.NsBinding;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -53,7 +37,7 @@ public abstract class AbstractBoundModule
         IBoundModule,
         IBoundDefinitionModelComplex,
         IBoundDefinitionFlag,
-        IBoundDefinitionModelField,
+        IBoundDefinitionModelField<?>,
         IBoundDefinitionModelAssembly>
     implements IBoundModule {
   @NonNull
@@ -61,11 +45,13 @@ public abstract class AbstractBoundModule
   @NonNull
   private final Lazy<Map<QName, IBoundDefinitionModelAssembly>> assemblyDefinitions;
   @NonNull
-  private final Lazy<Map<QName, IBoundDefinitionModelField>> fieldDefinitions;
+  private final Lazy<Map<QName, IBoundDefinitionModelField<?>>> fieldDefinitions;
+  @NonNull
+  private final Lazy<StaticContext> staticContext;
 
   /**
    * Create a new Module instance for a given class annotated by the
-   * {@link Module} annotation.
+   * {@link MetaschemaModule} annotation.
    * <p>
    * Will also load any imported Metaschemas.
    *
@@ -81,12 +67,12 @@ public abstract class AbstractBoundModule
       @NonNull Class<? extends IBoundModule> clazz,
       @NonNull IBindingContext bindingContext) {
 
-    if (!clazz.isAnnotationPresent(Module.class)) {
+    if (!clazz.isAnnotationPresent(MetaschemaModule.class)) {
       throw new IllegalStateException(String.format("The class '%s' is missing the '%s' annotation",
-          clazz.getCanonicalName(), Module.class.getCanonicalName()));
+          clazz.getCanonicalName(), MetaschemaModule.class.getCanonicalName()));
     }
 
-    Module moduleAnnotation = clazz.getAnnotation(Module.class);
+    MetaschemaModule moduleAnnotation = clazz.getAnnotation(MetaschemaModule.class);
 
     List<IBoundModule> importedModules;
     if (moduleAnnotation.imports().length > 0) {
@@ -147,12 +133,28 @@ public abstract class AbstractBoundModule
     this.fieldDefinitions = ObjectUtils.notNull(Lazy.lazy(() -> Arrays.stream(getFieldClasses())
         .map(clazz -> {
           assert clazz != null;
-          return (IBoundDefinitionModelField) ObjectUtils
+          return (IBoundDefinitionModelField<?>) ObjectUtils
               .requireNonNull(bindingContext.getBoundDefinitionForClass(clazz));
         })
         .collect(Collectors.toUnmodifiableMap(
             IBoundDefinitionModelField::getDefinitionQName,
             Function.identity()))));
+    this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -> {
+      StaticContext.Builder builder = StaticContext.builder()
+          .defaultModelNamespace(getXmlNamespace());
+
+      getNamespaceBindings()
+          .forEach(
+              (prefix, ns) -> builder.namespace(
+                  ObjectUtils.requireNonNull(prefix),
+                  ObjectUtils.requireNonNull(ns)));
+      return builder.build();
+    }));
+  }
+
+  @Override
+  public StaticContext getModuleStaticContext() {
+    return ObjectUtils.notNull(staticContext.get());
   }
 
   @Override
@@ -161,22 +163,36 @@ public abstract class AbstractBoundModule
     return bindingContext;
   }
 
+  @Override
+  public Map<String, String> getNamespaceBindings() {
+    return ObjectUtils.notNull(Arrays.stream(getNsBindings())
+        .collect(Collectors.toMap(
+            NsBinding::prefix,
+            NsBinding::uri,
+            (v1, v2) -> v2,
+            LinkedHashMap::new)));
+  }
+
+  @SuppressWarnings({ "null" })
+  @NonNull
+  protected NsBinding[] getNsBindings() {
+    return getClass().isAnnotationPresent(MetaschemaModule.class)
+        ? getClass().getAnnotation(MetaschemaModule.class).nsBindings()
+        : (NsBinding[]) Array.newInstance(NsBinding.class, 0);
+  }
+
   /**
    * Get the assembly instance annotations associated with this bound choice
    * group.
    *
    * @return the annotations
    */
+  @SuppressWarnings({ "null", "unchecked" })
   @NonNull
-  protected Class<?>[] getAssemblyClasses() {
-    Class<?>[] retval;
-    if (getClass().isAnnotationPresent(Module.class)) {
-      Module moduleAnnotation = getClass().getAnnotation(Module.class);
-      retval = moduleAnnotation.assemblies();
-    } else {
-      retval = new Class<?>[] {};
-    }
-    return retval;
+  protected Class<? extends IBoundObject>[] getAssemblyClasses() {
+    return getClass().isAnnotationPresent(MetaschemaModule.class)
+        ? getClass().getAnnotation(MetaschemaModule.class).assemblies()
+        : (Class<? extends IBoundObject>[]) Array.newInstance(Class.class, 0);
   }
 
   /**
@@ -184,16 +200,12 @@ public abstract class AbstractBoundModule
    *
    * @return the annotations
    */
+  @SuppressWarnings({ "null", "unchecked" })
   @NonNull
-  protected Class<?>[] getFieldClasses() {
-    Class<?>[] retval;
-    if (getClass().isAnnotationPresent(Module.class)) {
-      Module moduleAnnotation = getClass().getAnnotation(Module.class);
-      retval = moduleAnnotation.fields();
-    } else {
-      retval = new Class<?>[] {};
-    }
-    return retval;
+  protected Class<? extends IBoundObject>[] getFieldClasses() {
+    return getClass().isAnnotationPresent(MetaschemaModule.class)
+        ? getClass().getAnnotation(MetaschemaModule.class).fields()
+        : (Class<? extends IBoundObject>[]) Array.newInstance(Class.class, 0);
   }
 
   /**
@@ -221,18 +233,18 @@ public abstract class AbstractBoundModule
    *
    * @return the mapping
    */
-  protected Map<QName, IBoundDefinitionModelField> getFieldDefinitionMap() {
+  protected Map<QName, IBoundDefinitionModelField<?>> getFieldDefinitionMap() {
     return fieldDefinitions.get();
   }
 
   @SuppressWarnings("null")
   @Override
-  public Collection<IBoundDefinitionModelField> getFieldDefinitions() {
+  public Collection<IBoundDefinitionModelField<?>> getFieldDefinitions() {
     return getFieldDefinitionMap().values();
   }
 
   @Override
-  public IBoundDefinitionModelField getFieldDefinitionByName(@NonNull QName name) {
+  public IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull QName name) {
     return getFieldDefinitionMap().get(name);
   }
 

@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.io;
@@ -29,8 +8,10 @@ package gov.nist.secauto.metaschema.databind.io;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintValidator;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintValidationHandler;
 import gov.nist.secauto.metaschema.core.model.constraint.LoggingConstraintValidationHandler;
@@ -49,7 +30,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <CLASS>
  *          the bound class to deserialize to
  */
-public abstract class AbstractDeserializer<CLASS>
+public abstract class AbstractDeserializer<CLASS extends IBoundObject>
     extends AbstractSerializationBase<DeserializationFeature<?>>
     implements IDeserializer<CLASS> {
 
@@ -101,14 +82,7 @@ public abstract class AbstractDeserializer<CLASS>
     }
 
     if (isValidating()) {
-      DynamicContext dynamicContext = new DynamicContext(
-          StaticContext.builder()
-              .defaultModelNamespace(nodeItem.getNamespace())
-              .build());
-      dynamicContext.setDocumentLoader(getBindingContext().newBoundLoader());
-      DefaultConstraintValidator validator = new DefaultConstraintValidator(getConstraintValidationHandler());
-      validator.validate(nodeItem, dynamicContext);
-      validator.finalizeValidation(dynamicContext);
+      validate(nodeItem);
     }
     return nodeItem;
   }
@@ -126,6 +100,43 @@ public abstract class AbstractDeserializer<CLASS>
    */
   @NonNull
   protected abstract INodeItem deserializeToNodeItemInternal(@NonNull Reader reader, @NonNull URI documentUri)
+      throws IOException;
+
+  @Override
+  public final CLASS deserializeToValue(Reader reader, URI documentUri) throws IOException {
+    CLASS retval;
+
+    if (isValidating()) {
+      INodeItem nodeItem = deserializeToNodeItemInternal(reader, documentUri);
+      validate(nodeItem);
+      retval = ObjectUtils.asType(ObjectUtils.requireNonNull(nodeItem.getValue()));
+    } else {
+      retval = deserializeToValueInternal(reader, documentUri);
+    }
+    return retval;
+  }
+
+  private void validate(@NonNull INodeItem nodeItem) {
+    IDefinitionNodeItem<?, ?> definitionNodeItem;
+    if (nodeItem instanceof IDocumentNodeItem) {
+      definitionNodeItem = ((IDocumentNodeItem) nodeItem).getRootAssemblyNodeItem();
+    } else if (nodeItem instanceof IDefinitionNodeItem) {
+      definitionNodeItem = (IDefinitionNodeItem<?, ?>) nodeItem;
+    } else {
+      throw new UnsupportedOperationException(String.format(
+          "The node item type '%s' is not supported for validation.",
+          nodeItem.getClass().getName()));
+    }
+
+    DynamicContext dynamicContext = new DynamicContext(nodeItem.getStaticContext());
+    dynamicContext.setDocumentLoader(getBindingContext().newBoundLoader());
+    DefaultConstraintValidator validator = new DefaultConstraintValidator(getConstraintValidationHandler());
+    validator.validate(definitionNodeItem, dynamicContext);
+    validator.finalizeValidation(dynamicContext);
+  }
+
+  @NonNull
+  protected abstract CLASS deserializeToValueInternal(@NonNull Reader reader, @NonNull URI documentUri)
       throws IOException;
 
   @Override

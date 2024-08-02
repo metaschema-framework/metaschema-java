@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>gov.nist.secauto.metaschema</groupId>
+		<groupId>dev.metaschema.java</groupId>
         <artifactId>metaschema-framework</artifactId>
         <version>1.0.0-M2-SNAPSHOT</version>
     </parent>
@@ -15,11 +15,11 @@
 
     <name>Metaschema Maven Plugin</name>
 
-    <url>${site.url}${project.artifactId}/</url>
+    <url>${site.url}/${project.artifactId}/</url>
     <distributionManagement>
         <site>
-            <id>nist-pages</id>
-            <url>${site.url}${project.artifactId}/</url>
+            <id>pages</id>
+            <url>${site.url}/${project.artifactId}/</url>
         </site>
     </distributionManagement>
 
@@ -28,15 +28,15 @@
     </prerequisites>
     <dependencies>
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
             <artifactId>metaschema-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
             <artifactId>metaschema-databind</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
             <artifactId>metaschema-schema-generator</artifactId>
         </dependency>
         <dependency>

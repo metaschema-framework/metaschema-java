@@ -1,28 +1,3 @@
-/*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
- */
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
@@ -53,6 +28,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 final class DefaultNodeItemFactory
     extends AbstractNodeItemFactory {
   @NonNull
@@ -95,7 +71,7 @@ final class DefaultNodeItemFactory
   public Supplier<ModelContainer> newDataModelSupplier(IRootAssemblyNodeItem item) {
     return () -> {
       Map<QName, List<? extends IModelNodeItem<?, ?>>> modelItems = CollectionUtil.singletonMap(
-          item.getName(),
+          item.getQName(),
           CollectionUtil.singletonList(item));
       return new ModelContainer(CollectionUtil.emptyMap(), modelItems);
     };
@@ -134,9 +110,10 @@ final class DefaultNodeItemFactory
    *          the parent assembly containing model instances
    * @return a mapping of model instance name to model node item(s)
    */
-  @SuppressWarnings("PMD.UseConcurrentHashMap") // need an ordered map
+  @SuppressWarnings({ "PMD.UseConcurrentHashMap", "PMD.CognitiveComplexity" }) // need an ordered map
   @NonNull
-  protected Map<QName, List<? extends IModelNodeItem<?, ?>>> generateModelItems(@NonNull IAssemblyNodeItem parent) {
+  protected Map<QName, List<? extends IModelNodeItem<?, ?>>> generateModelItems(
+      @NonNull IAssemblyNodeItem parent) {
     Map<QName, List<? extends IModelNodeItem<?, ?>>> retval = new LinkedHashMap<>();
 
     Object parentValue = parent.getValue();
@@ -147,13 +124,10 @@ final class DefaultNodeItemFactory
 
         Object instanceValue = namedInstance.getValue(parentValue);
         if (instanceValue != null) {
-          // the item values will be all non-null items
-          Stream<? extends Object> itemValues = namedInstance.getItemValues(instanceValue).stream();
-          AtomicInteger index = new AtomicInteger(); // NOPMD - intentional
-          List<IModelNodeItem<?, ?>> items = itemValues.map(itemValue -> {
-            assert itemValue != null;
-            return newModelItem(namedInstance, parent, index.incrementAndGet(), itemValue);
-          }).collect(Collectors.toUnmodifiableList());
+          List<IModelNodeItem<?, ?>> items = generateModelInstanceItems(
+              parent,
+              namedInstance,
+              ObjectUtils.notNull(namedInstance.getItemValues(instanceValue).stream()));
           retval.put(namedInstance.getXmlQName(), items);
         }
       } else if (instance instanceof IChoiceGroupInstance) {
@@ -177,12 +151,10 @@ final class DefaultNodeItemFactory
             INamedModelInstanceGrouped namedInstance = entry.getKey();
             assert namedInstance != null;
 
-            AtomicInteger index = new AtomicInteger(); // NOPMD - intentional
-            List<IModelNodeItem<?, ?>> items = entry.getValue().stream()
-                .map(itemValue -> {
-                  assert itemValue != null;
-                  return newModelItem(namedInstance, parent, index.incrementAndGet(), itemValue);
-                }).collect(Collectors.toUnmodifiableList());
+            List<IModelNodeItem<?, ?>> items = generateModelInstanceItems(
+                parent,
+                namedInstance,
+                ObjectUtils.notNull(entry.getValue().stream()));
             retval.put(namedInstance.getXmlQName(), items);
           }
         }
@@ -190,6 +162,19 @@ final class DefaultNodeItemFactory
 
     }
     return retval.isEmpty() ? CollectionUtil.emptyMap() : CollectionUtil.unmodifiableMap(retval);
+  }
+
+  private List<IModelNodeItem<?, ?>> generateModelInstanceItems(
+      @NonNull IAssemblyNodeItem parent,
+      @NonNull INamedModelInstance namedInstance,
+      @NonNull Stream<?> itemValues) {
+    AtomicInteger index = new AtomicInteger(); // NOPMD - intentional
+
+    // the item values will be all non-null items
+    return itemValues.map(itemValue -> {
+      assert itemValue != null;
+      return newModelItem(namedInstance, parent, index.incrementAndGet(), itemValue);
+    }).collect(Collectors.toUnmodifiableList());
   }
 
   @Override
@@ -203,7 +188,7 @@ final class DefaultNodeItemFactory
               .map(def -> newFlagNodeItem(ObjectUtils.notNull(def), item))
               .collect(
                   Collectors.toMap(
-                      IFlagNodeItem::getName,
+                      IFlagNodeItem::getQName,
                       Function.identity(),
                       (v1, v2) -> v2,
                       LinkedHashMap::new))));
@@ -218,7 +203,7 @@ final class DefaultNodeItemFactory
           = ObjectUtils.notNull(Stream.concat(fieldStream, assemblyStream)
               .collect(
                   Collectors.collectingAndThen(
-                      Collectors.groupingBy(IModelNodeItem::getName),
+                      Collectors.groupingBy(IModelNodeItem::getQName),
                       Collections::unmodifiableMap)));
       return new ModelContainer(flags, modelItems);
     };

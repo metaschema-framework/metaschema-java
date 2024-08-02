@@ -1,31 +1,11 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.model.info;
 
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
@@ -37,16 +17,17 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-class SingletonCollectionInfo
-    extends AbstractModelInstanceCollectionInfo {
+class SingletonCollectionInfo<ITEM>
+    extends AbstractModelInstanceCollectionInfo<ITEM> {
 
-  public SingletonCollectionInfo(@NonNull IBoundInstanceModel instance) {
+  public SingletonCollectionInfo(@NonNull IBoundInstanceModel<ITEM> instance) {
     super(instance);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public List<?> getItemsFromValue(Object value) {
-    return value == null ? CollectionUtil.emptyList() : CollectionUtil.singletonList(value);
+  public List<ITEM> getItemsFromValue(Object value) {
+    return value == null ? CollectionUtil.emptyList() : CollectionUtil.singletonList((ITEM) value);
   }
 
   @Override
@@ -59,34 +40,38 @@ class SingletonCollectionInfo
     return value == null;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public Class<?> getItemType() {
-    return getInstance().getItemType();
+  public Class<? extends ITEM> getItemType() {
+    return (Class<? extends ITEM>) getInstance().getItemType();
   }
 
   @Override
-  public Object deepCopyItems(@NonNull Object fromObject, @NonNull Object toObject)
+  public Object deepCopyItems(@NonNull IBoundObject fromObject, @NonNull IBoundObject toObject)
       throws BindingException {
-    IBoundInstanceModel instance = getInstance();
+    IBoundInstanceModel<ITEM> instance = getInstance();
 
-    Object value = instance.getValue(fromObject);
+    @SuppressWarnings("unchecked") ITEM value = (ITEM) instance.getValue(fromObject);
 
     return value == null ? null : instance.deepCopyItem(ObjectUtils.requireNonNull(value), toObject);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public Object emptyValue() {
-    return getInstance().getDefaultValue();
+  public ITEM emptyValue() {
+    return (ITEM) getInstance().getDefaultValue();
   }
 
   @Override
-  public Object readItems(IModelInstanceReadHandler handler) throws IOException {
+  public Object readItems(IModelInstanceReadHandler<ITEM> handler) throws IOException {
     Object value = handler.readSingleton();
+    // REFACTOR: this can return a null value
     return value == null ? emptyValue() : value;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public void writeItems(IModelInstanceWriteHandler handler, Object value) throws IOException {
-    handler.writeSingleton(value);
+  public void writeItems(IModelInstanceWriteHandler<ITEM> handler, Object value) throws IOException {
+    handler.writeSingleton((ITEM) value);
   }
 }

@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.codegen.impl;
@@ -50,6 +29,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
+import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -62,6 +42,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.Index;
 import gov.nist.secauto.metaschema.databind.model.annotations.IndexHasKey;
 import gov.nist.secauto.metaschema.databind.model.annotations.IsUnique;
 import gov.nist.secauto.metaschema.databind.model.annotations.KeyField;
+import gov.nist.secauto.metaschema.databind.model.annotations.Let;
 import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 
@@ -71,7 +52,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -142,9 +126,13 @@ public final class AnnotationGenerator {
   public static void buildValueConstraints(
       @NonNull AnnotationSpec.Builder builder,
       @NonNull IFlagDefinition definition) {
-    if (!definition.getConstraints().isEmpty()) {
-      AnnotationSpec.Builder annotation = AnnotationSpec.builder(ValueConstraints.class);
 
+    Map<QName, ? extends ILet> lets = definition.getLetExpressions();
+    if (!lets.isEmpty() || !definition.getConstraints().isEmpty()) {
+      AnnotationSpec.Builder annotation = AnnotationSpec.builder(ValueConstraints.class);
+      assert annotation != null;
+
+      applyLetAssignments(annotation, lets);
       applyAllowedValuesConstraints(annotation, definition.getAllowedValuesConstraints());
       applyIndexHasKeyConstraints(annotation, definition.getIndexHasKeyConstraints());
       applyMatchesConstraints(annotation, definition.getMatchesConstraints());
@@ -158,14 +146,18 @@ public final class AnnotationGenerator {
       @NonNull AnnotationSpec.Builder builder,
       @NonNull IModelDefinition definition) {
 
+    Map<QName, ? extends ILet> lets = definition.getLetExpressions();
     List<? extends IAllowedValuesConstraint> allowedValues = definition.getAllowedValuesConstraints();
     List<? extends IIndexHasKeyConstraint> indexHasKey = definition.getIndexHasKeyConstraints();
     List<? extends IMatchesConstraint> matches = definition.getMatchesConstraints();
     List<? extends IExpectConstraint> expects = definition.getExpectConstraints();
 
-    if (!allowedValues.isEmpty() || !indexHasKey.isEmpty() || !matches.isEmpty() || !expects.isEmpty()) {
+    if (!lets.isEmpty() || !allowedValues.isEmpty() || !indexHasKey.isEmpty() || !matches.isEmpty()
+        || !expects.isEmpty()) {
       AnnotationSpec.Builder annotation = AnnotationSpec.builder(ValueConstraints.class);
+      assert annotation != null;
 
+      applyLetAssignments(annotation, lets);
       applyAllowedValuesConstraints(annotation, allowedValues);
       applyIndexHasKeyConstraints(annotation, indexHasKey);
       applyMatchesConstraints(annotation, matches);
@@ -194,8 +186,27 @@ public final class AnnotationGenerator {
     }
   }
 
-  private static void applyAllowedValuesConstraints(AnnotationSpec.Builder annotation,
-      List<? extends IAllowedValuesConstraint> constraints) {
+  private static void applyLetAssignments(
+      @NonNull AnnotationSpec.Builder annotation,
+      @NonNull Map<QName, ? extends ILet> lets) {
+    for (ILet let : lets.values()) {
+      AnnotationSpec.Builder letAnnotation = AnnotationSpec.builder(Let.class);
+      letAnnotation.addMember("name", "$S", let.getName());
+      letAnnotation.addMember("target", "$S", let.getValueExpression().getPath());
+
+      // TODO: Support remarks
+      // MarkupMultiline remarks = let.getRemarks();
+      // if (remarks != null) {
+      // constraintAnnotation.addMember("remarks", "$S", remarks.toMarkdown());
+      // }
+
+      annotation.addMember("lets", "$L", letAnnotation.build());
+    }
+  }
+
+  private static void applyAllowedValuesConstraints(
+      @NonNull AnnotationSpec.Builder annotation,
+      @NonNull List<? extends IAllowedValuesConstraint> constraints) {
     for (IAllowedValuesConstraint constraint : constraints) {
       AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(AllowedValues.class);
       buildConstraint(AllowedValues.class, constraintAnnotation, constraint);
@@ -222,8 +233,9 @@ public final class AnnotationGenerator {
     }
   }
 
-  private static void applyIndexHasKeyConstraints(AnnotationSpec.Builder annotation,
-      List<? extends IIndexHasKeyConstraint> constraints) {
+  private static void applyIndexHasKeyConstraints(
+      @NonNull AnnotationSpec.Builder annotation,
+      @NonNull List<? extends IIndexHasKeyConstraint> constraints) {
     for (IIndexHasKeyConstraint constraint : constraints) {
       AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(IndexHasKey.class);
       buildConstraint(IndexHasKey.class, constraintAnnotation, constraint);
@@ -241,7 +253,8 @@ public final class AnnotationGenerator {
     }
   }
 
-  private static void buildKeyFields(@NonNull Builder constraintAnnotation,
+  private static void buildKeyFields(
+      @NonNull Builder constraintAnnotation,
       @NonNull List<? extends IKeyField> keyFields) {
     for (IKeyField key : keyFields) {
       AnnotationSpec.Builder keyAnnotation = AnnotationSpec.builder(KeyField.class);
@@ -265,8 +278,9 @@ public final class AnnotationGenerator {
     }
   }
 
-  private static void applyMatchesConstraints(AnnotationSpec.Builder annotation,
-      List<? extends IMatchesConstraint> constraints) {
+  private static void applyMatchesConstraints(
+      @NonNull AnnotationSpec.Builder annotation,
+      @NonNull List<? extends IMatchesConstraint> constraints) {
     for (IMatchesConstraint constraint : constraints) {
       AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Matches.class);
       buildConstraint(Matches.class, constraintAnnotation, constraint);
@@ -289,8 +303,9 @@ public final class AnnotationGenerator {
     }
   }
 
-  private static void applyExpectConstraints(AnnotationSpec.Builder annotation,
-      List<? extends IExpectConstraint> constraints) {
+  private static void applyExpectConstraints(
+      @NonNull AnnotationSpec.Builder annotation,
+      @NonNull List<? extends IExpectConstraint> constraints) {
     for (IExpectConstraint constraint : constraints) {
       AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Expect.class);
 
@@ -311,8 +326,9 @@ public final class AnnotationGenerator {
     }
   }
 
-  private static void applyIndexConstraints(AnnotationSpec.Builder annotation,
-      List<? extends IIndexConstraint> constraints) {
+  private static void applyIndexConstraints(
+      @NonNull AnnotationSpec.Builder annotation,
+      @NonNull List<? extends IIndexConstraint> constraints) {
     for (IIndexConstraint constraint : constraints) {
       AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Index.class);
 
@@ -331,8 +347,9 @@ public final class AnnotationGenerator {
     }
   }
 
-  private static void applyUniqueConstraints(AnnotationSpec.Builder annotation,
-      List<? extends IUniqueConstraint> constraints) {
+  private static void applyUniqueConstraints(
+      @NonNull AnnotationSpec.Builder annotation,
+      @NonNull List<? extends IUniqueConstraint> constraints) {
     for (IUniqueConstraint constraint : constraints) {
       AnnotationSpec.Builder constraintAnnotation = ObjectUtils.notNull(AnnotationSpec.builder(IsUnique.class));
 

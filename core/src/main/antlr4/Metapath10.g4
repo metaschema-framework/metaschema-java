@@ -4,11 +4,8 @@ parser grammar Metapath10;
 
 options { tokenVocab=Metapath10Lexer; superClass=Metapath10ParserBase; }
 
-// Metapath extensions
-metapath : expr EOF ;
-
 // [1]
-// xpath : expr EOF ;
+metapath : expr EOF ;
 // paramlist : param ( COMMA param)* ;
 // param : DOLLAR eqname typedeclaration? ;
 // functionbody : enclosedexpr ;
@@ -81,7 +78,7 @@ keyspecifier : NCName | IntegerLiteral | parenthesizedexpr | STAR ;
 //arrowfunctionspecifier : eqname | varref | parenthesizedexpr ;
 arrowfunctionspecifier : eqname;
 // primaryexpr : literal | varref | parenthesizedexpr | contextitemexpr | functioncall | functionitemexpr | mapconstructor | arrayconstructor | unarylookup ;
-primaryexpr : literal | varref | parenthesizedexpr | contextitemexpr | functioncall | arrayconstructor | unarylookup;
+primaryexpr : literal | varref | parenthesizedexpr | contextitemexpr | functioncall | mapconstructor | arrayconstructor | unarylookup;
 literal : numericliteral | StringLiteral ;
 numericliteral : IntegerLiteral | DecimalLiteral | DoubleLiteral ;
 varref : DOLLAR varname ;
@@ -97,11 +94,11 @@ argument : exprsingle ;
 // functionitemexpr : namedfunctionref | inlinefunctionexpr ;
 // namedfunctionref : eqname POUND IntegerLiteral /* xgc: reserved-function-names */;
 // inlinefunctionexpr : KW_FUNCTION OP paramlist? CP ( KW_AS sequencetype)? functionbody ;
-// mapconstructor : KW_MAP OC (mapconstructorentry ( COMMA mapconstructorentry)*)? CC ;
+mapconstructor : KW_MAP OC (mapconstructorentry ( COMMA mapconstructorentry)*)? CC ;
 // [70]
-// mapconstructorentry : mapkeyexpr COLON mapvalueexpr ;
-// mapkeyexpr : exprsingle ;
-// mapvalueexpr : exprsingle ;
+mapconstructorentry : mapkeyexpr COLON mapvalueexpr ;
+mapkeyexpr : exprsingle ;
+mapvalueexpr : exprsingle ;
 arrayconstructor : squarearrayconstructor | curlyarrayconstructor ;
 squarearrayconstructor : OB (exprsingle ( COMMA exprsingle)*)? CB ;
 // [75]
@@ -152,64 +149,64 @@ unarylookup : QM keyspecifier ;
 
 
 // Error in the spec. EQName also includes acceptable keywords.
-eqname : QName | URIQualifiedName
+eqname : NCName | QName | URIQualifiedName
  | KW_ANCESTOR
  | KW_ANCESTOR_OR_SELF
  | KW_AND
-// | KW_ARRAY
-// | KW_AS
-// | KW_ATTRIBUTE
-// | KW_CAST
-// | KW_CASTABLE
+ | KW_ARRAY
+ | KW_AS
+ | KW_ATTRIBUTE
+ | KW_CAST
+ | KW_CASTABLE
  | KW_CHILD
-// | KW_COMMENT 
+ | KW_COMMENT 
  | KW_DESCENDANT
  | KW_DESCENDANT_OR_SELF
  | KW_DIV
-// | KW_DOCUMENT_NODE
-// | KW_ELEMENT
+ | KW_DOCUMENT_NODE
+ | KW_ELEMENT
  | KW_ELSE
  | KW_EMPTY_SEQUENCE
  | KW_EQ
  | KW_EVERY
  | KW_EXCEPT
-// | KW_FOLLOWING
-// | KW_FOLLOWING_SIBLING
+ | KW_FOLLOWING
+ | KW_FOLLOWING_SIBLING
  | KW_FOR
-// | KW_FUNCTION
+ | KW_FUNCTION
  | KW_GE
  | KW_GT
  | KW_IDIV
  | KW_IF
  | KW_IN
-// | KW_INSTANCE
+ | KW_INSTANCE
  | KW_INTERSECT
-// | KW_IS
-// | KW_ITEM
+ | KW_IS
+ | KW_ITEM
  | KW_LE
  | KW_LET
  | KW_LT
-// | KW_MAP
+ | KW_MAP
  | KW_MOD
-// | KW_NAMESPACE
-// | KW_NAMESPACE_NODE
+ | KW_NAMESPACE
+ | KW_NAMESPACE_NODE
  | KW_NE
-// | KW_NODE
-// | KW_OF
+ | KW_NODE
+ | KW_OF
  | KW_OR
  | KW_PARENT
  | KW_PRECEDING
  | KW_PRECEDING_SIBLING
-// | KW_PROCESSING_INSTRUCTION
+ | KW_PROCESSING_INSTRUCTION
  | KW_RETURN
  | KW_SATISFIES
-// | KW_SCHEMA_ATTRIBUTE
-// | KW_SCHEMA_ELEMENT
+ | KW_SCHEMA_ATTRIBUTE
+ | KW_SCHEMA_ELEMENT
  | KW_SELF
  | KW_SOME
-// | KW_TEXT
+ | KW_TEXT
  | KW_THEN
-// | KW_TREAT
+ | KW_TREAT
  | KW_UNION
  ;
 

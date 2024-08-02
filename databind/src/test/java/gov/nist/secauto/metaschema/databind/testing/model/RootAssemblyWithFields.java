@@ -1,31 +1,12 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.testing.model;
 
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
@@ -47,8 +28,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @MetaschemaAssembly(
     name = "assembly-with-fields",
     rootName = "root-assembly-with-fields",
-    moduleClass = MetaschemaModule.class)
-public class RootAssemblyWithFields {
+    moduleClass = TestModule.class)
+public class RootAssemblyWithFields implements IBoundObject {
+  private final IMetaschemaData metaschemaData;
+
   @BoundField
   private String defaultField;
 
@@ -76,6 +59,16 @@ public class RootAssemblyWithFields {
   private Map<String, JsonKeyField> field6;
 
   public RootAssemblyWithFields() {
+    this(null);
+  }
+
+  public RootAssemblyWithFields(IMetaschemaData metaschemaData) {
+    this.metaschemaData = metaschemaData;
+  }
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+    return metaschemaData;
   }
 
   public String getField1() {
@@ -122,8 +115,10 @@ public class RootAssemblyWithFields {
   @SuppressWarnings("PMD")
   @MetaschemaField(
       name = "field-value-key",
-      moduleClass = MetaschemaModule.class)
-  public static class ValueKeyField {
+      moduleClass = TestModule.class)
+  public static class ValueKeyField implements IBoundObject {
+    private final IMetaschemaData metaschemaData;
+
     @BoundFlag
     private String flag;
 
@@ -131,6 +126,16 @@ public class RootAssemblyWithFields {
     private String _value;
 
     public ValueKeyField() {
+      this(null);
+    }
+
+    public ValueKeyField(IMetaschemaData metaschemaData) {
+      this.metaschemaData = metaschemaData;
+    }
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+      return metaschemaData;
     }
 
     public String getFlag() {
@@ -145,8 +150,10 @@ public class RootAssemblyWithFields {
   @SuppressWarnings("PMD")
   @MetaschemaField(
       name = "field-default-value-key",
-      moduleClass = MetaschemaModule.class)
-  public static class DefaultValueKeyField {
+      moduleClass = TestModule.class)
+  public static class DefaultValueKeyField implements IBoundObject {
+    private final IMetaschemaData metaschemaData;
+
     @BoundFlag
     private String flag;
 
@@ -154,6 +161,16 @@ public class RootAssemblyWithFields {
     private String _value;
 
     public DefaultValueKeyField() {
+      this(null);
+    }
+
+    public DefaultValueKeyField(IMetaschemaData metaschemaData) {
+      this.metaschemaData = metaschemaData;
+    }
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+      return metaschemaData;
     }
 
     public String getFlag() {
@@ -168,8 +185,10 @@ public class RootAssemblyWithFields {
   @SuppressWarnings("PMD")
   @MetaschemaField(
       name = "field-flag-value-key",
-      moduleClass = MetaschemaModule.class)
-  public static class FlagValueKeyField {
+      moduleClass = TestModule.class)
+  public static class FlagValueKeyField implements IBoundObject {
+    private final IMetaschemaData metaschemaData;
+
     @BoundFlag
     @JsonFieldValueKeyFlag
     private String flag;
@@ -178,6 +197,16 @@ public class RootAssemblyWithFields {
     private String _value;
 
     public FlagValueKeyField() {
+      this(null);
+    }
+
+    public FlagValueKeyField(IMetaschemaData metaschemaData) {
+      this.metaschemaData = metaschemaData;
+    }
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+      return metaschemaData;
     }
 
     public String getFlag() {
@@ -192,8 +221,10 @@ public class RootAssemblyWithFields {
   @SuppressWarnings("PMD")
   @MetaschemaField(
       name = "field-json-key",
-      moduleClass = MetaschemaModule.class)
-  public static class JsonKeyField {
+      moduleClass = TestModule.class)
+  public static class JsonKeyField implements IBoundObject {
+    private final IMetaschemaData metaschemaData;
+
     @BoundFlag
     @JsonKey
     private String key;
@@ -206,6 +237,16 @@ public class RootAssemblyWithFields {
     private String _value;
 
     public JsonKeyField() {
+      this(null);
+    }
+
+    public JsonKeyField(IMetaschemaData metaschemaData) {
+      this.metaschemaData = metaschemaData;
+    }
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+      return metaschemaData;
     }
 
     public String getKey() {

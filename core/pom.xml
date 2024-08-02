@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>gov.nist.secauto.metaschema</groupId>
+		<groupId>dev.metaschema.java</groupId>
         <artifactId>metaschema-framework</artifactId>
         <version>1.0.0-M2-SNAPSHOT</version>
     </parent>
@@ -13,11 +13,11 @@
 
     <name>Metaschema Core API</name>
 
-    <url>${site.url}${project.artifactId}/</url>
+    <url>${site.url}/${project.artifactId}/</url>
     <distributionManagement>
         <site>
-            <id>nist-pages</id>
-            <url>${site.url}${project.artifactId}/</url>
+            <id>pages</id>
+            <url>${site.url}/${project.artifactId}/</url>
         </site>
     </distributionManagement>
 
@@ -136,6 +136,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+		    <groupId>com.github.seregamorph</groupId>
+		    <artifactId>hamcrest-more-matchers</artifactId>
+		    <scope>test</scope>
+		</dependency>
+        <dependency>
             <groupId>biz.aQute.bnd</groupId>
             <artifactId>biz.aQute.bnd.util</artifactId>
             <scope>provided</scope>
@@ -242,7 +247,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>gov.nist.secauto</groupId>
+                <groupId>dev.metaschema</groupId>
                 <artifactId>oss-build-support</artifactId>
                 <executions>
                     <execution>
@@ -304,6 +309,7 @@
                                         <include>**/*.xsd</include>
                                         <include>**/*.dtd</include>
                                         <include>**/*.json</include>
+                                        <include>**/*.xml</include>
                                     </includes>
                                     <filtering>false</filtering>
                                 </resource>

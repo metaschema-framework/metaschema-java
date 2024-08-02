@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.core.metapath.antlr; // NOPMD requires a large number of public methods
@@ -54,6 +33,10 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.KeyspecifierCo
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LetexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LiteralContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LookupContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MapconstructorContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MapconstructorentryContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MapkeyexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MapvalueexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MetapathContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MultiplicativeexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NametestContext;
@@ -145,11 +128,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     throw new IllegalStateException("a single child expression was expected");
   }
 
-  /*
-   * ============================================================ Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-expressions
-   * ============================================================
-   */
+  // ============================================================
+  // Expressions - https://www.w3.org/TR/xpath-31/#id-expressions
+  // ============================================================
 
   @Override
   public R visitMetapath(MetapathContext ctx) {
@@ -177,11 +158,10 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     assert ctx != null;
     return delegateToChild(ctx);
   }
-  /*
-   * ============================================================================
-   * Primary Expressions - https://www.w3.org/TR/xpath-31/#id-primary-expressions
-   * ============================================================================
-   */
+
+  // ============================================================================
+  // Primary Expressions - https://www.w3.org/TR/xpath-31/#id-primary-expressions
+  // ============================================================================
 
   @Override
   public R visitPrimaryexpr(PrimaryexprContext ctx) {
@@ -189,11 +169,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return delegateToChild(ctx);
   }
 
-  /*
-   * ================================================================= Literal
-   * Expressions - https://www.w3.org/TR/xpath-31/#id-literals
-   * =================================================================
-   */
+  // =================================================================
+  // Literal Expressions - https://www.w3.org/TR/xpath-31/#id-literals
+  // =================================================================
 
   /**
    * Handle the provided expression.
@@ -225,11 +203,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handle(ctx, (context) -> handleNumericLiteral(ctx));
   }
 
-  /*
-   * ================================================================== Variable
-   * References - https://www.w3.org/TR/xpath-31/#id-variables
-   * ==================================================================
-   */
+  // ==================================================================
+  // Variable References - https://www.w3.org/TR/xpath-31/#id-variables
+  // ==================================================================
 
   /**
    * Handle the provided expression.
@@ -252,13 +228,10 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return delegateToChild(ctx);
   }
 
-  /*
-   * =============================================================================
-   * ==== Parenthesized Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-paren-expressions
-   * =============================================================================
-   * ====
-   */
+  // ====================================================
+  // Parenthesized Expressions -
+  // https://www.w3.org/TR/xpath-31/#id-paren-expressions
+  // ====================================================
 
   /**
    * Handle the provided expression.
@@ -276,13 +249,10 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return expr == null ? handleEmptyParenthesizedexpr(ctx) : visit(expr);
   }
 
-  /*
-   * =============================================================================
-   * ======== Context Item Expression -
-   * https://www.w3.org/TR/xpath-31/#id-context-item-expression
-   * =============================================================================
-   * ========
-   */
+  // ==========================================================
+  // Context Item Expression -
+  // https://www.w3.org/TR/xpath-31/#id-context-item-expression
+  // ==========================================================
 
   /**
    * Handle the provided expression.
@@ -340,11 +310,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return expr == null ? null : expr.accept(this);
   }
 
-  /*
-   * =========================================================================
-   * Filter Expressions - https://www.w3.org/TR/xpath-31/#id-filter-expression
-   * =========================================================================
-   */
+  // =========================================================================
+  // Filter Expressions - https://www.w3.org/TR/xpath-31/#id-filter-expression
+  // =========================================================================
 
   /**
    * Handle the provided expression.
@@ -391,11 +359,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handleLookup(ctx);
   }
 
-  /*
-   * ====================================================================== Path
-   * Expressions - https://www.w3.org/TR/xpath-31/#id-path-expressions
-   * ======================================================================
-   */
+  // ======================================================================
+  // Path Expressions - https://www.w3.org/TR/xpath-31/#id-path-expressions
+  // ======================================================================
 
   /**
    * Handle the provided expression.
@@ -412,13 +378,10 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handle(ctx, (context) -> handlePathexpr(ctx));
   }
 
-  /*
-   * =============================================================================
-   * ========== RelativePath Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-relative-path-expressions
-   * =============================================================================
-   * ==========
-   */
+  // ============================================================
+  // RelativePath Expressions -
+  // https://www.w3.org/TR/xpath-31/#id-relative-path-expressions
+  // ============================================================
 
   /**
    * Handle the provided expression.
@@ -435,11 +398,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handle(ctx, (context) -> handleRelativepathexpr(ctx));
   }
 
-  /*
-   * ================================================ Steps -
-   * https://www.w3.org/TR/xpath-31/#id-steps
-   * ================================================
-   */
+  // ================================================
+  // Steps - https://www.w3.org/TR/xpath-31/#id-steps
+  // ================================================
 
   @Override
   public R visitStepexpr(StepexprContext ctx) {
@@ -479,11 +440,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handle(ctx, (context) -> handleReversestep(ctx));
   }
 
-  /*
-   * ======================================================================
-   * Predicates within Steps - https://www.w3.org/TR/xpath-31/#id-predicate
-   * ======================================================================
-   */
+  // ======================================================================
+  // Predicates within Steps - https://www.w3.org/TR/xpath-31/#id-predicate
+  // ======================================================================
 
   /**
    * Handle the provided expression.
@@ -506,11 +465,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     throw new IllegalStateException();
   }
 
-  /*
-   * =========================================== Axes -
-   * https://www.w3.org/TR/xpath-31/#axes
-   * ===========================================
-   */
+  // ===========================================
+  // Axes - https://www.w3.org/TR/xpath-31/#axes
+  // ===========================================
 
   @Override
   public R visitForwardaxis(ForwardaxisContext ctx) {
@@ -524,11 +481,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     throw new IllegalStateException();
   }
 
-  /*
-   * ======================================================= Node Tests -
-   * https://www.w3.org/TR/xpath-31/#node-tests
-   * =======================================================
-   */
+  // =======================================================
+  // Node Tests - https://www.w3.org/TR/xpath-31/#node-tests
+  // =======================================================
 
   @Override
   public R visitNodetest(NodetestContext ctx) {
@@ -555,6 +510,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
    *          the provided expression context
    * @return the result
    */
+  @NonNull
   protected abstract R handleWildcard(@NonNull WildcardContext ctx);
 
   @Override
@@ -563,11 +519,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handleWildcard(ctx);
   }
 
-  /*
-   * =========================================================== Abbreviated
-   * Syntax - https://www.w3.org/TR/xpath-31/#abbrev
-   * ===========================================================
-   */
+  // ===========================================================
+  // Abbreviated Syntax - https://www.w3.org/TR/xpath-31/#abbrev
+  // ===========================================================
 
   /**
    * Handle the provided expression.
@@ -599,11 +553,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handleAbbrevreversestep(ctx);
   }
 
-  /*
-   * ======================================================================
-   * Constructing Sequences - https://www.w3.org/TR/xpath-31/#construct_seq
-   * ======================================================================
-   */
+  // ======================================================================
+  // Constructing Sequences - https://www.w3.org/TR/xpath-31/#construct_seq
+  // ======================================================================
 
   /**
    * Handle the provided expression.
@@ -620,11 +572,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handle(ctx, (context) -> handleRangeexpr(ctx));
   }
 
-  /*
-   * ========================================================================
-   * Combining Node Sequences - https://www.w3.org/TR/xpath-31/#combining_seq
-   * ========================================================================
-   */
+  // ========================================================================
+  // Combining Node Sequences - https://www.w3.org/TR/xpath-31/#combining_seq
+  // ========================================================================
 
   /**
    * Handle the provided expression.
@@ -656,11 +606,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handle(ctx, (context) -> handleIntersectexceptexpr(ctx));
   }
 
-  /*
-   * ======================================================================
-   * Arithmetic Expressions - https://www.w3.org/TR/xpath-31/#id-arithmetic
-   * ======================================================================
-   */
+  // ======================================================================
+  // Arithmetic Expressions - https://www.w3.org/TR/xpath-31/#id-arithmetic
+  // ======================================================================
 
   /**
    * Handle the provided expression.
@@ -713,13 +661,10 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return delegateToChild(ctx);
   }
 
-  /*
-   * =============================================================================
-   * =========== String Concatenation Expressions -
-   * https://www.w3.org/TR/xpath-31/#id-string-concat-expr
-   * =============================================================================
-   * ===========
-   */
+  // =====================================================
+  // String Concatenation Expressions -
+  // https://www.w3.org/TR/xpath-31/#id-string-concat-expr
+  // =====================================================
 
   /**
    * Handle the provided expression.
@@ -736,11 +681,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     return handle(ctx, (context) -> handleStringconcatexpr(ctx));
   }
 
-  /*
-   * =======================================================================
-   * Comparison Expressions - https://www.w3.org/TR/xpath-31/#id-comparisons
-   * =======================================================================
-   */
+  // =======================================================================
+  // Comparison Expressions - https://www.w3.org/TR/xpath-31/#id-comparisons
+  // =======================================================================
 
   /**
    * Handle the provided expression.
@@ -769,11 +712,9 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     throw new IllegalStateException();
   }
 
-  /*
-   * ============================================================================
-   * Logical Expressions - https://www.w3.org/TR/xpath-31/#id-logical-expressions
-   * ============================================================================
-   */
+  // ============================================================================
+  // Logical Expressions - https://www.w3.org/TR/xpath-31/#id-logical-expressions
+  // ============================================================================
 
   /**
    * Handle the provided expression.
@@ -867,6 +808,43 @@ public abstract class AbstractAstVisitor<R> // NOPMD
     throw new IllegalStateException();
   }
 
+  // ======================================================================
+  // Map Constructors - https://www.w3.org/TR/xpath-31/#id-map-constructors
+  // ======================================================================
+
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  protected abstract R handleMapConstructor(@NonNull MapconstructorContext ctx);
+
+  @Override
+  public R visitMapconstructor(MapconstructorContext ctx) {
+    assert ctx != null;
+    return handleMapConstructor(ctx);
+  }
+
+  @Override
+  public R visitMapconstructorentry(MapconstructorentryContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException();
+  }
+
+  @Override
+  public R visitMapkeyexpr(MapkeyexprContext ctx) {
+    assert ctx != null;
+    return delegateToChild(ctx);
+  }
+
+  @Override
+  public R visitMapvalueexpr(MapvalueexprContext ctx) {
+    assert ctx != null;
+    return delegateToChild(ctx);
+  }
+
   // ==============================================================
   // Array Constructors - https://www.w3.org/TR/xpath-31/#id-arrays
   // ==============================================================
@@ -886,12 +864,6 @@ public abstract class AbstractAstVisitor<R> // NOPMD
    */
   protected abstract R handleArrayConstructor(@NonNull SquarearrayconstructorContext ctx);
 
-  @Override
-  public R visitSquarearrayconstructor(SquarearrayconstructorContext ctx) {
-    assert ctx != null;
-    return handleArrayConstructor(ctx);
-  }
-
   /**
    * Handle the provided expression.
    *
@@ -900,6 +872,12 @@ public abstract class AbstractAstVisitor<R> // NOPMD
    * @return the result
    */
   protected abstract R handleArrayConstructor(@NonNull CurlyarrayconstructorContext ctx);
+
+  @Override
+  public R visitSquarearrayconstructor(SquarearrayconstructorContext ctx) {
+    assert ctx != null;
+    return handleArrayConstructor(ctx);
+  }
 
   @Override
   public R visitCurlyarrayconstructor(CurlyarrayconstructorContext ctx) {

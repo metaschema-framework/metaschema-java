@@ -1,33 +1,11 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
-import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
@@ -41,6 +19,7 @@ import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
+import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
@@ -54,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -91,23 +71,6 @@ public class ValidateContentUsingModuleCommand
     retval.add(MetaschemaCommandSupport.METASCHEMA_OPTION);
 
     return CollectionUtil.unmodifiableCollection(retval);
-  }
-
-  @Override
-  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-    // super.validateOptions(callingContext, cmdLine);
-    //
-    // String metaschemaName =
-    // cmdLine.getOptionValue(MetaschemaCommandSupport.METASCHEMA_OPTION);
-    // Path metaschema = Paths.get(metaschemaName);
-    // if (!Files.exists(metaschema)) {
-    // throw new InvalidArgumentException("The provided module '" + metaschema + "'
-    // does not exist.");
-    // }
-    // if (!Files.isReadable(metaschema)) {
-    // throw new InvalidArgumentException("The provided module '" + metaschema + "'
-    // is not readable.");
-    // }
   }
 
   @Override
@@ -160,6 +123,11 @@ public class ValidateContentUsingModuleCommand
             = new ExternalConstraintsModulePostProcessor(constraintSets);
 
         ModuleLoader loader = new ModuleLoader(CollectionUtil.singletonList(postProcessor));
+
+        // BindingModuleLoader loader
+        // = new BindingModuleLoader(new DefaultBindingContext(),
+        // CollectionUtil.singletonList(postProcessor));
+
         loader.allowEntityResolution();
         module = loader.load(moduleUri);
       }
@@ -177,11 +145,13 @@ public class ValidateContentUsingModuleCommand
     protected IBindingContext getBindingContext(@NonNull Set<IConstraintSet> constraintSets)
         throws MetaschemaException, IOException {
 
-      return IBindingContext.instance().registerModule(getModule(constraintSets), getTempDir());
+      IBindingContext retval = new DefaultBindingContext();
+      retval.registerModule(getModule(constraintSets), getTempDir());
+      return retval;
     }
 
     @Override
-    public List<Source> getXmlSchemas() throws IOException {
+    public List<Source> getXmlSchemas(@NonNull URL targetResource) throws IOException {
       Path schemaFile = Files.createTempFile(getTempDir(), "schema-", ".xml");
       assert schemaFile != null;
       IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();
@@ -191,7 +161,7 @@ public class ValidateContentUsingModuleCommand
     }
 
     @Override
-    public JSONObject getJsonSchema() throws IOException {
+    public JSONObject getJsonSchema(@NonNull JSONObject json) throws IOException {
       Path schemaFile = Files.createTempFile(getTempDir(), "schema-", ".json");
       assert schemaFile != null;
       IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();

@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.io;
@@ -31,9 +10,14 @@ import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.resource.AbstractResourceResolver;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.io.ModelDetector.Result;
+
+import org.eclipse.jdt.annotation.NotOwning;
+import org.eclipse.jdt.annotation.Owning;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,12 +103,12 @@ public class DefaultBoundLoader
   }
 
   @Override
-  public FormatDetector.Result detectFormat(@NonNull URI uri) throws IOException {
+  public Format detectFormat(@NonNull URI uri) throws IOException {
     URI resourceUri = resolve(uri);
     URL resource = resourceUri.toURL();
 
     try (InputStream is = ObjectUtils.notNull(resource.openStream())) {
-      return detectFormat(is);
+      return detectFormat(is).getFormat();
     }
   }
 
@@ -154,7 +138,13 @@ public class DefaultBoundLoader
   }
 
   @Override
-  public <CLASS> CLASS load(@NonNull URI uri) throws IOException {
+  @Owning
+  public Result detectModel(@NotOwning InputStream is, Format format) throws IOException {
+    return getModelDetector().detect(is, format);
+  }
+
+  @Override
+  public <CLASS extends IBoundObject> CLASS load(@NonNull URI uri) throws IOException {
     URI resourceUri = resolve(uri);
     URL resource = resourceUri.toURL();
 
@@ -165,13 +155,13 @@ public class DefaultBoundLoader
 
   @Override
   @NonNull
-  public <CLASS> CLASS load(@NonNull InputStream is, @NonNull URI documentUri) throws IOException {
+  public <CLASS extends IBoundObject> CLASS load(@NonNull InputStream is, @NonNull URI documentUri) throws IOException {
     // TODO: avoid node item
     return INodeItem.toValue(loadAsNodeItem(is, documentUri));
   }
 
   @Override
-  public <CLASS> CLASS load(Class<CLASS> clazz, URI uri) throws IOException {
+  public <CLASS extends IBoundObject> CLASS load(Class<CLASS> clazz, URI uri) throws IOException {
     URI resourceUri = resolve(uri);
     URL resource = resourceUri.toURL();
 
@@ -181,7 +171,8 @@ public class DefaultBoundLoader
   }
 
   @Override
-  public <CLASS> CLASS load(Class<CLASS> clazz, InputStream is, URI documentUri) throws IOException {
+  public <CLASS extends IBoundObject> CLASS load(Class<CLASS> clazz, InputStream is, URI documentUri)
+      throws IOException {
     // we cannot close this stream, since it will cause the underlying stream to be
     // closed
     FormatDetector.Result match = getFormatDetector().detect(is);
@@ -193,8 +184,9 @@ public class DefaultBoundLoader
     }
   }
 
+  @Override
   @NonNull
-  private <CLASS> CLASS load(
+  public <CLASS extends IBoundObject> CLASS load(
       @NonNull Class<CLASS> clazz,
       @NonNull Format format,
       @NonNull InputStream is,
@@ -235,20 +227,22 @@ public class DefaultBoundLoader
   }
 
   @Override
-  public IDocumentNodeItem loadAsNodeItem(Format format, InputStream is, URI documentUri) throws IOException {
-    ModelDetector.Result modelMatch = getModelDetector().detect(is, format);
+  public IDocumentNodeItem loadAsNodeItem(Format format, InputStream is, URI documentUri)
+      throws IOException {
+    try (ModelDetector.Result modelMatch = detectModel(is, format)) {
 
-    IDeserializer<?> deserializer = getDeserializer(
-        modelMatch.getBoundClass(),
-        format,
-        getConfiguration());
-    try (InputStream modelStream = modelMatch.getDataStream()) {
-      return (IDocumentNodeItem) deserializer.deserializeToNodeItem(modelStream, documentUri);
+      IDeserializer<?> deserializer = getDeserializer(
+          modelMatch.getBoundClass(),
+          format,
+          getConfiguration());
+      try (InputStream modelStream = modelMatch.getDataStream()) {
+        return (IDocumentNodeItem) deserializer.deserializeToNodeItem(modelStream, documentUri);
+      }
     }
   }
 
   @NonNull
-  private <CLASS> IDeserializer<CLASS> getDeserializer(
+  private <CLASS extends IBoundObject> IDeserializer<CLASS> getDeserializer(
       @NonNull Class<CLASS> clazz,
       @NonNull Format format,
       @NonNull IConfiguration<DeserializationFeature<?>> config) {

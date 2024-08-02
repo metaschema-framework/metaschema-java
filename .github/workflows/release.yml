@@ -3,45 +3,37 @@ on:
     tags:
     - "v*"
   workflow_dispatch:
-    inputs:
-      release:
-        description: 'Delpoy release?'
-        type: boolean
-        default: false
-      website:
-        description: 'Deploy website?'
-        type: boolean
-        default: false
-      pages-branch:
-        description: 'Pages branch name'
-        default: nist-pages
 name: Deploy Tagged Release
+env:
+  MAVEN_VERSION: 3.9.8
+  JAVA_DISTRO: 'temurin'
+  JAVA_VERSION_FILE: .java-version
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 jobs:
   deploy-to-nexus:
-    name: Build and Publish Java Artifacts
-    runs-on: ubuntu-latest
+    name: Maven Central Deployment
+    runs-on: ubuntu-20.04
     permissions:
       actions: read
-      contents: write
+      contents: read
     steps:
     - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
       with:
         submodules: recursive
-        filter: tree:0
     # -------------------------
     # Java
     # -------------------------
     - name: Set up Maven
-      uses: stCarolas/setup-maven@07fbbe97d97ef44336b7382563d66743297e442f
+      uses: stCarolas/setup-maven@d6af6abeda15e98926a57b5aa970a96bb37f97d1
       with:
-        maven-version: 3.9.3
-    - name: Set up JDK 11
+        maven-version: ${{ env.MAVEN_VERSION }}
+    - name: Set up JDK
       uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
       with:
-        java-version: 11
-        distribution: 'temurin'
+        java-version-file: ${{ env.JAVA_VERSION_FILE }}
+        distribution: ${{ env.JAVA_DISTRO }}
         cache: 'maven'
-        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-id: central # Value of the distributionManagement/repository/id field of the pom.xml
         server-username: MAVEN_USERNAME # env variable for username in deploy
         server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
@@ -50,35 +42,48 @@ jobs:
     # Maven Deploy
     # -------------------------
     - name: Deploy Maven Artifacts
-      if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && contains('true', github.event.inputs.release))
       run: |
-        mvn -B -e -Pgpg -Prelease -Preporting deploy
-        # mvn -Pgpg -Prelease nexus-staging:close -DstagingDescription="closing to release"
+        mvn -B -e -Prelease -Pgpg -Prelease deploy
       env:
-        MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-        MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USER }}
+        MAVEN_CENTRAL_TOKEN: ${{ secrets.OSSRH_TOKEN }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-    - name: Create release
-      if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && contains('true', github.event.inputs.release))
-      uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564
+  deploy-website:
+    name: Website Deployment
+    runs-on: ubuntu-20.04
+    permissions:
+      actions: read
+      contents: write
+    steps:
+    - name: Manage GH_TOKEN
+      if: env.GH_TOKEN == ''
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+      run: echo "GH_TOKEN=${GITHUB_TOKEN}" >> $GITHUB_ENV
+    - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
       with:
-        draft: true
-        generate_release_notes: true
-        fail_on_unmatched_files: true
-        files: |
-          metaschema-cli/target/metaschema-cli-*-metaschema-cli.*
+        token: ${{ env.GH_TOKEN }}
+        submodules: recursive
+    # -------------------------
+    # Java
+    # -------------------------
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@d6af6abeda15e98926a57b5aa970a96bb37f97d1
+      with:
+        maven-version: ${{ env.MAVEN_VERSION }}
+    - name: Set up JDK
+      uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
+      with:
+        java-version-file: ${{ env.JAVA_VERSION_FILE }}
+        distribution: ${{ env.JAVA_DISTRO }}
+        cache: 'maven'
     # -------------------------
     # Maven Site
     # -------------------------
     - name: Build Website
-      if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && contains('true', github.event.inputs.website))
       run: |
-        mvn -B -e -Prelease -Preporting install site site:stage
-    - name: Website Deploy
-      uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847
-      if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && contains('true', github.event.inputs.website))
-      with:
-        personal_token: ${{ secrets.COMMIT_TOKEN }}
-        publish_dir: ./target/staging
-        external_repository: ${{ github.repository }}
-        publish_branch: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.pages-branch) || 'nist-pages' }}
+        mvn -B -e -Prelease package site site:stage
+    - name: Run deploy script
+      run: |
+        touch target/staging/.nojekyll
+        bash .github/workflows/deploy.sh --push-only -v -m "Deploying website [ci skip]"

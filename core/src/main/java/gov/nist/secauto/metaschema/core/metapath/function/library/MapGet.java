@@ -1,0 +1,83 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.metapath.function.library;
+
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
+import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+public final class MapGet {
+  @NonNull
+  public static final IFunction SIGNATURE = IFunction.builder()
+      .name("get")
+      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
+      .deterministic()
+      .contextIndependent()
+      .focusIndependent()
+      .argument(IArgument.builder()
+          .name("map")
+          .type(IMapItem.class)
+          .one()
+          .build())
+      .argument(IArgument.builder()
+          .name("key")
+          .type(IAnyAtomicItem.class)
+          .one()
+          .build())
+      .returnType(IItem.class)
+      .returnZeroOrOne()
+      .functionHandler(MapGet::execute)
+      .build();
+
+  private MapGet() {
+    // disable construction
+  }
+
+  @SuppressWarnings("unused")
+  @NonNull
+  private static ISequence<?> execute(@NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+    IMapItem<?> map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
+    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
+
+    ICollectionValue value = get(map, key);
+    return value == null ? ISequence.empty() : value.asSequence();
+  }
+
+  /**
+   * An implementation of XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-map-get">map:get</a>.
+   *
+   * @param <V>
+   *          the type of items in the given Metapath map
+   * @param map
+   *          the map of Metapath items that is the target of retrieval
+   * @param key
+   *          the key for the item to retrieve
+   * @return the retrieved item
+   */
+  @Nullable
+  public static <V extends ICollectionValue> V get(
+      @NonNull IMapItem<V> map,
+      @NonNull IAnyAtomicItem key) {
+    return map.get(key.asMapKey());
+  }
+}
