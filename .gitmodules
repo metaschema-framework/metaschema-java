@@ -1,6 +1,6 @@
 [submodule "core/core/metaschema"]
 	path = core/metaschema
-	url = https://github.com/usnistgov/metaschema.git
+	url = https://github.com/metaschema-framework/metaschema.git
 	branch = main
 [submodule "core/qt3tests"]
 	path = core/qt3tests

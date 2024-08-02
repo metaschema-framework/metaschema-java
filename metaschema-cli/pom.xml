@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>gov.nist.secauto.metaschema</groupId>
+		<groupId>dev.metaschema.java</groupId>
 		<artifactId>metaschema-framework</artifactId>
 		<version>1.0.0-M2-SNAPSHOT</version>
 	</parent>
@@ -11,11 +11,11 @@
 
 	<name>Metaschema Command Line Tool</name>
 
-	<url>${site.url}${project.artifactId}/</url>
+	<url>${site.url}/${project.artifactId}/</url>
 	<distributionManagement>
 		<site>
-			<id>nist-pages</id>
-			<url>${site.url}${project.artifactId}/</url>
+			<id>pages</id>
+			<url>${site.url}/${project.artifactId}/</url>
 		</site>
 	</distributionManagement>
 
@@ -35,15 +35,28 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>metaschema-databind</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>metaschema-databind-modules</artifactId>
+		</dependency>
+<!--
 		<dependency>
 			<groupId>com.google.auto.service</groupId>
 			<artifactId>auto-service-annotations</artifactId>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
 		</dependency>
 	</dependencies>
 

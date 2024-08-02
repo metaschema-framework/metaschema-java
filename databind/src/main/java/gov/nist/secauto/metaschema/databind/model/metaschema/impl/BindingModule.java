@@ -1,47 +1,30 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.AbstractModule;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
-import gov.nist.secauto.metaschema.core.model.IMetaschemaModule;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetapathNamespace;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import java.net.URI;
 import java.util.Collection;
@@ -59,26 +42,22 @@ import nl.talsmasoftware.lazy4j.Lazy;
 
 public class BindingModule
     extends AbstractModule<
-        IMetaschemaModule,
+        IBindingMetaschemaModule,
         IModelDefinition,
         IFlagDefinition,
         IFieldDefinition,
         IAssemblyDefinition>
-    implements IMetaschemaModule {
+    implements IBindingMetaschemaModule {
   @NonNull
-  private final URI location;
+  private final Lazy<StaticContext> staticContext;
   @NonNull
   private final METASCHEMA binding;
   @NonNull
-  private final Lazy<IDocumentNodeItem> nodeItem;
+  private final Lazy<IDocumentNodeItem> documentNodeItem;
   @NonNull
-  private final Map<QName, IFlagDefinition> flagDefinitions;
+  private final Lazy<IModuleNodeItem> moduleNodeItem;
   @NonNull
-  private final Map<QName, IFieldDefinition> fieldDefinitions;
-  @NonNull
-  private final Map<QName, IAssemblyDefinition> assemblyDefinitions;
-  @NonNull
-  private final Map<QName, IAssemblyDefinition> rootAssemblyDefinitions;
+  private final Lazy<Definitions> definitions;
 
   /**
    * Constructs a new Metaschema instance.
@@ -100,80 +79,54 @@ public class BindingModule
       @NonNull URI resource,
       @NonNull IBoundDefinitionModelAssembly rootDefinition,
       @NonNull METASCHEMA binding,
-      @NonNull List<? extends IMetaschemaModule> importedModules) throws MetaschemaException {
+      @NonNull List<? extends IBindingMetaschemaModule> importedModules) throws MetaschemaException {
     super(importedModules);
-    this.location = ObjectUtils.requireNonNull(resource, "resource");
+
     this.binding = binding;
-    this.flagDefinitions = new LinkedHashMap<>();
-    this.fieldDefinitions = new LinkedHashMap<>();
-    this.assemblyDefinitions = new LinkedHashMap<>();
-    this.rootAssemblyDefinitions = new LinkedHashMap<>();
 
-    // create instance position counters
-    int globalFlagPosition = 0;
-    int globalFieldPosition = 0;
-    int globalAssemblyPosition = 0;
+    this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -> {
+      StaticContext.Builder builder = StaticContext.builder()
+          .baseUri(resource)
+          .defaultModelNamespace(getXmlNamespace());
 
-    IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(
-        rootDefinition.getChoiceGroupInstanceByName("definitions"));
+      getNamespaceBindings()
+          .forEach((prefix, ns) -> builder.namespace(
+              ObjectUtils.notNull(prefix), ObjectUtils.notNull(ns)));
+      return builder.build();
+    }));
+
     INodeItemFactory nodeItemFactory = INodeItemFactory.instance();
-    for (Object obj : binding.getDefinitions()) {
-      IBoundInstanceModelGroupedAssembly objInstance
-          = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
-
-      if (obj instanceof METASCHEMA.DefineAssembly) {
-        IAssemblyDefinition definition = new DefinitionAssemblyGlobal(
-            (METASCHEMA.DefineAssembly) obj,
-            objInstance,
-            globalAssemblyPosition++,
-            this,
-            nodeItemFactory);
-        QName name = definition.getDefinitionQName();
-        assemblyDefinitions.put(name, definition);
-        if (definition.isRoot()) {
-          rootAssemblyDefinitions.put(name, definition);
-        }
-      } else if (obj instanceof METASCHEMA.DefineField) {
-        IFieldDefinition definition = new DefinitionFieldGlobal(
-            (METASCHEMA.DefineField) obj,
-            objInstance,
-            globalFieldPosition++,
-            this);
-        QName name = definition.getDefinitionQName();
-        fieldDefinitions.put(name, definition);
-      } else if (obj instanceof METASCHEMA.DefineFlag) {
-        IFlagDefinition definition = new DefinitionFlagGlobal(
-            (METASCHEMA.DefineFlag) obj,
-            objInstance,
-            globalFlagPosition++,
-            this);
-        QName name = definition.getDefinitionQName();
-        flagDefinitions.put(name, definition);
-      } else {
-        throw new IllegalStateException(
-            String.format("Unrecognized definition class '%s' in module '%s'.",
-                obj.getClass(),
-                resource.toASCIIString()));
-      }
-    }
-    this.nodeItem
+    this.definitions = ObjectUtils.notNull(Lazy.lazy(() -> new Definitions(resource, rootDefinition, nodeItemFactory)));
+    this.documentNodeItem
         = ObjectUtils.notNull(Lazy.lazy(() -> nodeItemFactory.newDocumentNodeItem(rootDefinition, resource, binding)));
+    this.moduleNodeItem
+        = ObjectUtils.notNull(Lazy.lazy(() -> nodeItemFactory.newModuleNodeItem(this)));
   }
 
-  @NonNull
-  public METASCHEMA getBinding() {
+  @Override
+  public final METASCHEMA getBinding() {
     return binding;
   }
 
   @Override
-  public IDocumentNodeItem getNodeItem() {
-    return ObjectUtils.notNull(nodeItem.get());
+  public IDocumentNodeItem getSourceNodeItem() {
+    return ObjectUtils.notNull(documentNodeItem.get());
+  }
+
+  @Override
+  public IModuleNodeItem getModuleNodeItem() {
+    return ObjectUtils.notNull(moduleNodeItem.get());
+  }
+
+  @Override
+  public final StaticContext getModuleStaticContext() {
+    return staticContext.get();
   }
 
   @Override
   @NonNull
-  public URI getLocation() {
-    return location;
+  public final URI getLocation() {
+    return ObjectUtils.notNull(getModuleStaticContext().getBaseUri());
   }
 
   @Override
@@ -209,7 +162,7 @@ public class BindingModule
   }
 
   @Override
-  public URI getXmlNamespace() {
+  public final URI getXmlNamespace() {
     URI retval = getBinding().getNamespace();
     if (retval == null) {
       throw new IllegalStateException(
@@ -227,8 +180,24 @@ public class BindingModule
     return retval;
   }
 
+  @Override
+  public Map<String, String> getNamespaceBindings() {
+    return ObjectUtils.notNull(CollectionUtil.listOrEmpty(binding.getNamespaceBindings()).stream()
+        .collect(Collectors.toMap(
+            MetapathNamespace::getPrefix,
+            binding -> binding.getUri().toASCIIString(),
+            (v1, v2) -> v2,
+            LinkedHashMap::new)));
+  }
+
+  @NonNull
+  private Definitions getDefinitions() {
+    return ObjectUtils.notNull(definitions.get());
+  }
+
+  @NonNull
   private Map<QName, IAssemblyDefinition> getAssemblyDefinitionMap() {
-    return assemblyDefinitions;
+    return getDefinitions().assemblyDefinitions;
   }
 
   @Override
@@ -241,8 +210,9 @@ public class BindingModule
     return getAssemblyDefinitionMap().get(name);
   }
 
+  @NonNull
   private Map<QName, IFieldDefinition> getFieldDefinitionMap() {
-    return fieldDefinitions;
+    return getDefinitions().fieldDefinitions;
   }
 
   @SuppressWarnings("null")
@@ -263,8 +233,9 @@ public class BindingModule
         .collect(Collectors.toList());
   }
 
+  @NonNull
   private Map<QName, IFlagDefinition> getFlagDefinitionMap() {
-    return flagDefinitions;
+    return getDefinitions().flagDefinitions;
   }
 
   @SuppressWarnings("null")
@@ -279,7 +250,7 @@ public class BindingModule
   }
 
   private Map<QName, ? extends IAssemblyDefinition> getRootAssemblyDefinitionMap() {
-    return rootAssemblyDefinitions;
+    return getDefinitions().rootAssemblyDefinitions;
   }
 
   @SuppressWarnings("null")
@@ -287,4 +258,75 @@ public class BindingModule
   public Collection<? extends IAssemblyDefinition> getRootAssemblyDefinitions() {
     return getRootAssemblyDefinitionMap().values();
   }
+
+  private final class Definitions {
+    @NonNull
+    private final Map<QName, IFlagDefinition> flagDefinitions;
+    @NonNull
+    private final Map<QName, IFieldDefinition> fieldDefinitions;
+    @NonNull
+    private final Map<QName, IAssemblyDefinition> assemblyDefinitions;
+    @NonNull
+    private final Map<QName, IAssemblyDefinition> rootAssemblyDefinitions;
+
+    private Definitions(
+        @NonNull URI resource,
+        @NonNull IBoundDefinitionModelAssembly rootDefinition,
+        @NonNull INodeItemFactory nodeItemFactory) {
+
+      this.flagDefinitions = new LinkedHashMap<>();
+      this.fieldDefinitions = new LinkedHashMap<>();
+      this.assemblyDefinitions = new LinkedHashMap<>();
+      this.rootAssemblyDefinitions = new LinkedHashMap<>();
+
+      // create instance position counters
+      int globalFlagPosition = 0;
+      int globalFieldPosition = 0;
+      int globalAssemblyPosition = 0;
+
+      IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(
+          rootDefinition.getChoiceGroupInstanceByName("definitions"));
+
+      for (Object obj : binding.getDefinitions()) {
+        IBoundInstanceModelGroupedAssembly objInstance
+            = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
+
+        if (obj instanceof METASCHEMA.DefineAssembly) {
+          IAssemblyDefinition definition = new DefinitionAssemblyGlobal(
+              (METASCHEMA.DefineAssembly) obj,
+              objInstance,
+              globalAssemblyPosition++,
+              BindingModule.this,
+              nodeItemFactory);
+          QName name = definition.getDefinitionQName();
+          assemblyDefinitions.put(name, definition);
+          if (definition.isRoot()) {
+            rootAssemblyDefinitions.put(name, definition);
+          }
+        } else if (obj instanceof METASCHEMA.DefineField) {
+          IFieldDefinition definition = new DefinitionFieldGlobal(
+              (METASCHEMA.DefineField) obj,
+              objInstance,
+              globalFieldPosition++,
+              BindingModule.this);
+          QName name = definition.getDefinitionQName();
+          fieldDefinitions.put(name, definition);
+        } else if (obj instanceof METASCHEMA.DefineFlag) {
+          IFlagDefinition definition = new DefinitionFlagGlobal(
+              (METASCHEMA.DefineFlag) obj,
+              objInstance,
+              globalFlagPosition++,
+              BindingModule.this);
+          QName name = definition.getDefinitionQName();
+          flagDefinitions.put(name, definition);
+        } else {
+          throw new IllegalStateException(
+              String.format("Unrecognized definition class '%s' in module '%s'.",
+                  obj.getClass(),
+                  resource.toASCIIString()));
+        }
+      }
+    }
+  }
+
 }

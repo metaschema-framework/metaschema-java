@@ -1,32 +1,12 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
@@ -55,10 +35,11 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathContext;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetapath;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetapathContext;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaMetaConstraints;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaMetapath;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModuleConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.impl.ConstraintBindingSupport;
 
 import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
@@ -66,13 +47,11 @@ import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,65 +67,99 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * automatically.
  */
 public class BindingConstraintLoader
-    extends AbstractLoader<IConstraintSet>
+    extends AbstractLoader<List<IConstraintSet>>
     implements IConstraintLoader {
 
   @NonNull
   private final IBoundLoader loader;
 
-  public BindingConstraintLoader() {
+  public BindingConstraintLoader(@NonNull IBindingContext bindingContext) {
     // ensure the bindings are registered
-    IBindingContext.instance().registerBindingMatcher(MetaschemaMetaConstraints.class);
-    IBindingContext.instance().registerBindingMatcher(MetaschemaModuleConstraints.class);
+    bindingContext.registerBindingMatcher(MetaschemaMetaConstraints.class);
+    bindingContext.registerBindingMatcher(MetaschemaModuleConstraints.class);
 
-    this.loader = IBindingContext.instance().newBoundLoader();
+    this.loader = bindingContext.newBoundLoader();
     this.loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
   }
 
   @Override
-  protected IConstraintSet parseResource(@NonNull URI resource, @NonNull Deque<URI> visitedResources)
+  protected List<IConstraintSet> parseResource(@NonNull URI resource, @NonNull Deque<URI> visitedResources)
       throws IOException {
 
     Object constraintsDocument = loader.load(resource);
 
-    ISource source = ISource.externalSource(resource);
+    StaticContext.Builder builder = StaticContext.builder()
+        .baseUri(resource);
 
-    IConstraintSet retval;
+    builder.useWildcardWhenNamespaceNotDefaulted(true);
+
+    List<IConstraintSet> retval;
     if (constraintsDocument instanceof MetaschemaModuleConstraints) {
       MetaschemaModuleConstraints obj = (MetaschemaModuleConstraints) constraintsDocument;
 
       // now check if this constraint set imports other constraint sets
       List<MetaschemaModuleConstraints.Import> imports = CollectionUtil.listOrEmpty(obj.getImports());
 
-      @NonNull Map<URI, IConstraintSet> importedConstraints;
+      @NonNull Set<IConstraintSet> importedConstraints;
       if (imports.isEmpty()) {
-        importedConstraints = ObjectUtils.notNull(Collections.emptyMap());
+        importedConstraints = CollectionUtil.emptySet();
       } else {
         try {
-          importedConstraints = new LinkedHashMap<>();
+          importedConstraints = new LinkedHashSet<>();
           for (MetaschemaModuleConstraints.Import imported : imports) {
             URI importedResource = imported.getHref();
             importedResource = ObjectUtils.notNull(resource.resolve(importedResource));
-            importedConstraints.put(importedResource, loadInternal(importedResource, visitedResources));
+            importedConstraints.addAll(loadInternal(importedResource, visitedResources));
           }
         } catch (MetaschemaException ex) {
           throw new IOException(ex);
         }
       }
 
+      CollectionUtil.listOrEmpty(obj.getNamespaceBindings()).stream()
+          .forEach(binding -> builder.namespace(
+              ObjectUtils.notNull(binding.getPrefix()),
+              ObjectUtils.notNull(binding.getUri())));
+      ISource source = ISource.externalSource(builder.build());
+
       // now create this constraint set
-      retval = new DefaultConstraintSet(
+      retval = CollectionUtil.singletonList(new DefaultConstraintSet(
           resource,
           parseScopedConstraints(obj, source),
-          new LinkedHashSet<>(importedConstraints.values()));
+          new LinkedHashSet<>(importedConstraints)));
     } else if (constraintsDocument instanceof MetaschemaMetaConstraints) {
       MetaschemaMetaConstraints obj = (MetaschemaMetaConstraints) constraintsDocument;
 
-      List<ITargetedConstraints> targetedConstraints = CollectionUtil.listOrEmpty(obj.getMetapathContexts()).stream()
+      // now check if this constraint set imports other constraint sets
+      List<MetaschemaMetaConstraints.Import> imports = CollectionUtil.listOrEmpty(obj.getImports());
+
+      retval = new LinkedList<>();
+      if (!imports.isEmpty()) {
+        try {
+          for (MetaschemaMetaConstraints.Import imported : imports) {
+            URI importedResource = imported.getHref();
+            importedResource = ObjectUtils.notNull(resource.resolve(importedResource));
+            retval.addAll(loadInternal(importedResource, visitedResources));
+          }
+        } catch (MetaschemaException ex) {
+          throw new IOException(ex);
+        }
+      }
+
+      CollectionUtil.listOrEmpty(obj.getNamespaceBindings()).stream()
+          .forEach(binding -> builder.namespace(
+              ObjectUtils.notNull(binding.getPrefix()),
+              ObjectUtils.notNull(binding.getUri())));
+
+      ISource source = ISource.externalSource(builder.build());
+
+      List<ITargetedConstraints> targetedConstraints = CollectionUtil.listOrEmpty(obj.getContexts()).stream()
           .flatMap(context -> parseContext(ObjectUtils.notNull(context), null, source)
               .getTargetedConstraints().stream())
           .collect(Collectors.toList());
-      retval = new MetaConstraintSet(targetedConstraints);
+      retval.add(new MetaConstraintSet(targetedConstraints));
+
+      retval = CollectionUtil.unmodifiableList(retval);
     } else {
       throw new UnsupportedOperationException(String.format("Unsupported constraint content '%s'.", resource));
     }
@@ -174,7 +187,7 @@ public class BindingConstraintLoader
 
       List<ITargetedConstraints> targetedConstraints = new LinkedList<>();
       try {
-        for (Object constraintsObj : CollectionUtil.listOrEmpty(scope.getConstraints())) {
+        for (IValueConstraintsBase constraintsObj : CollectionUtil.listOrEmpty(scope.getConstraints())) {
           if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Assembly) {
             targetedConstraints.add(handleScopedAssembly(
                 (MetaschemaModuleConstraints.Scope.Assembly) constraintsObj,
@@ -263,11 +276,14 @@ public class BindingConstraintLoader
           .collect(Collectors.toList());
     }
 
+    AssemblyConstraints contextConstraints = contextObj.getConstraints();
     IModelConstrained constraints = new AssemblyConstraintSet();
-    ConstraintBindingSupport.parse(constraints, ObjectUtils.notNull(contextObj.getConstraints()), source);
+    if (contextConstraints != null) {
+      ConstraintBindingSupport.parse(constraints, contextConstraints, source);
+    }
     Context context = new Context(metapaths, constraints);
 
-    List<Context> childContexts = CollectionUtil.listOrEmpty(contextObj.getMetapathContexts()).stream()
+    List<Context> childContexts = CollectionUtil.listOrEmpty(contextObj.getContexts()).stream()
         .map(childObj -> parseContext(ObjectUtils.notNull(childObj), context, source))
         .collect(Collectors.toList());
 
@@ -335,6 +351,7 @@ public class BindingConstraintLoader
      *          the definition to apply the constraints to.
      */
     protected void applyTo(@NonNull IDefinition definition) {
+      getLetExpressions().values().forEach(definition::addLetExpression);
       getAllowedValuesConstraints().forEach(definition::addConstraint);
       getMatchesConstraints().forEach(definition::addConstraint);
       getIndexHasKeyConstraints().forEach(definition::addConstraint);

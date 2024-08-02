@@ -1,45 +1,26 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.EQNameUtils;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-public interface IModule extends IMetapathQueryable {
+public interface IModule {
 
   String XML_NAMESPACE = "http://csrc.nist.gov/ns/oscal/metaschema/1.0";
 
@@ -346,41 +327,80 @@ public interface IModule extends IMetapathQueryable {
   @Nullable
   IAssemblyDefinition getExportedRootAssemblyDefinitionByName(QName name);
 
+  /**
+   * Get the mapping of prefix to namespace URI for use in resolving the namespace
+   * of lexical qualified named in Metapath.
+   *
+   * @return the mapping
+   */
+  @NonNull
+  Map<String, String> getNamespaceBindings();
+
+  /**
+   * Used to parse a flag name reference to produce a qualified name.
+   *
+   * @param nameRef
+   *          the name reference
+   * @return the qualified name
+   */
   @NonNull
   default QName toFlagQName(@NonNull String nameRef) {
-    // TODO: handle namespace prefix
-    return new QName(nameRef);
+    return EQNameUtils.parseName(
+        nameRef,
+        getModuleStaticContext().getFlagPrefixResolver());
   }
 
+  /**
+   * Used to parse a flag name reference to produce a qualified name.
+   *
+   * @param modelNamespace
+   *          the namespace to use or {@code null}
+   * @param nameRef
+   *          the name reference
+   * @return the qualified name
+   */
   @NonNull
   default QName toFlagQName(@Nullable String modelNamespace, @NonNull String nameRef) {
-    // TODO: handle namespace prefix
     return modelNamespace == null
         ? new QName(nameRef)
         : new QName(modelNamespace, nameRef);
   }
 
+  /**
+   * Used to parse a model name reference to produce a qualified name.
+   *
+   * @param nameRef
+   *          the name reference
+   * @return the qualified name
+   */
   @NonNull
   default QName toModelQName(@NonNull String nameRef) {
-    return toModelQName(null, nameRef);
+    return EQNameUtils.parseName(
+        nameRef,
+        getModuleStaticContext().getModelPrefixResolver());
   }
 
+  /**
+   * Used to parse a flag name reference to produce a qualified name.
+   *
+   * @param modelNamespace
+   *          the namespace to use or {@code null}
+   * @param nameRef
+   *          the name reference
+   * @return the qualified name
+   */
   @NonNull
   default QName toModelQName(@Nullable String modelNamespace, @NonNull String nameRef) {
-    // TODO: handle namespace prefix
     String namespace = modelNamespace == null ? getXmlNamespace().toASCIIString() : modelNamespace;
     return new QName(namespace, nameRef);
   }
 
   /**
-   * If this module is supported by an underlying Metaschema module
-   * representation, this method retrieves that representation.
+   * Get the Metapath static context for compiling Metapath expressions that query
+   * instances of this model.
    *
-   * @return the underlying document as a Metapath node item or {@code null}
+   * @return the static context
    */
-  @Override
-  @Nullable
-  default IDocumentNodeItem getNodeItem() {
-    return null;
-  }
+  @NonNull
+  StaticContext getModuleStaticContext();
 }

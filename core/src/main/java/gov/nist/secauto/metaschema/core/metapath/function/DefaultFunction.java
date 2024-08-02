@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.core.metapath.function;
@@ -32,6 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.TypeSystem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
@@ -193,70 +173,38 @@ public class DefaultFunction
             String.format("argument signature doesn't match '%s'", function.toSignature()));
       }
 
-      assert argument != null;
-
       ISequence<?> parameter = parametersIterator.next();
+      assert argument != null;
+      assert parameter != null;
 
-      int size = parameter.size();
-      Occurrence occurrence = argument.getSequenceType().getOccurrence();
-      switch (occurrence) {
-      case ONE: {
-        if (size != 1) {
-          throw new InvalidTypeMetapathException(
-              null,
-              String.format("a sequence of one expected, but found '%d'", size));
-        }
+      retval.add(convertArgument(argument, parameter));
+    }
+    return retval;
+  }
 
-        IItem item = parameter.getFirstItem(true);
-        parameter = item == null ? ISequence.empty() : ISequence.of(item);
-        break;
-      }
-      case ZERO_OR_ONE: {
-        if (size > 1) {
-          throw new InvalidTypeMetapathException(
-              null,
-              String.format("a sequence of zero or one expected, but found '%d'", size));
-        }
+  @NonNull
+  private static ISequence<?> convertArgument(
+      @NonNull IArgument argument,
+      @NonNull ISequence<?> parameter) {
+    // apply occurrence
+    ISequence<?> retval = argument.getSequenceType().getOccurrence().getSequenceHandler().handle(parameter);
 
-        IItem item = parameter.getFirstItem(false);
-        parameter = item == null ? ISequence.empty() : ISequence.of(item);
-        break;
-      }
-      case ONE_OR_MORE:
-        if (size < 1) {
-          throw new InvalidTypeMetapathException(
-              null,
-              String.format("a sequence of zero or more expected, but found '%d'", size));
-        }
-        break;
-      case ZERO:
-        if (size != 0) {
-          throw new InvalidTypeMetapathException(
-              null,
-              String.format("an empty sequence expected, but found '%d'", size));
-        }
-        break;
-      case ZERO_OR_MORE:
-      default:
-        // do nothing
-      }
+    // apply function conversion and type promotion to the parameter
+    if (!retval.isEmpty()) {
+      retval = convertSequence(argument, retval);
 
+      // verify resulting values
       Class<? extends IItem> argumentClass = argument.getSequenceType().getType();
-
-      // apply function conversion and type promotion to the parameter
-      parameter = convertSequence(argument, parameter);
-
-      // check resulting values
-      for (IItem item : parameter.getValue()) {
+      for (IItem item : retval.getValue()) {
         Class<? extends IItem> itemClass = item.getClass();
         if (!argumentClass.isAssignableFrom(itemClass)) {
           throw new InvalidTypeMetapathException(
               item,
-              String.format("The type '%s' is not a subtype of '%s'", itemClass.getName(), argumentClass.getName()));
+              String.format("The type '%s' is not a subtype of '%s'",
+                  TypeSystem.getName(itemClass),
+                  TypeSystem.getName(argumentClass)));
         }
       }
-
-      retval.add(parameter);
     }
     return retval;
   }
@@ -274,43 +222,38 @@ public class DefaultFunction
    */
   @NonNull
   protected static ISequence<?> convertSequence(@NonNull IArgument argument, @NonNull ISequence<?> sequence) {
-    @NonNull ISequence<?> retval;
-    if (sequence.isEmpty()) {
-      retval = ISequence.empty();
-    } else {
-      ISequenceType requiredSequenceType = argument.getSequenceType();
-      Class<? extends IItem> requiredSequenceTypeClass = requiredSequenceType.getType();
+    ISequenceType requiredSequenceType = argument.getSequenceType();
+    Class<? extends IItem> requiredSequenceTypeClass = requiredSequenceType.getType();
 
-      Stream<? extends IItem> stream = sequence.safeStream();
+    Stream<? extends IItem> stream = sequence.safeStream();
 
-      if (IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass)) {
-        Stream<? extends IAnyAtomicItem> atomicStream = stream.flatMap(item -> FnData.atomize(item));
+    if (IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass)) {
+      Stream<? extends IAnyAtomicItem> atomicStream = stream.flatMap(FnData::atomize);
 
-        // if (IUntypedAtomicItem.class.isInstance(item)) { // NOPMD
-        // // TODO: apply cast to atomic type
-        // }
+      // if (IUntypedAtomicItem.class.isInstance(item)) { // NOPMD
+      // // TODO: apply cast to atomic type
+      // }
 
-        if (IStringItem.class.equals(requiredSequenceTypeClass)) {
-          // promote URIs to strings if a string is required
-          atomicStream = atomicStream.map(item -> IAnyUriItem.class.isInstance(item) ? IStringItem.cast(item) : item);
-        }
-
-        stream = atomicStream;
+      if (IStringItem.class.equals(requiredSequenceTypeClass)) {
+        // promote URIs to strings if a string is required
+        atomicStream = atomicStream.map(item -> IAnyUriItem.class.isInstance(item) ? IStringItem.cast(item) : item);
       }
 
-      stream = stream.peek(item -> {
-        if (!requiredSequenceTypeClass.isInstance(item)) {
-          throw new InvalidTypeMetapathException(
-              item,
-              String.format("The type '%s' is not a subtype of '%s'",
-                  item.getClass().getName(),
-                  requiredSequenceTypeClass.getName()));
-        }
-      });
-
-      retval = ISequence.of(stream);
+      stream = atomicStream;
     }
-    return retval;
+
+    stream = stream.peek(item -> {
+      if (!requiredSequenceTypeClass.isInstance(item)) {
+        throw new InvalidTypeMetapathException(
+            item,
+            String.format("The type '%s' is not a subtype of '%s'",
+                item.getClass().getName(),
+                requiredSequenceTypeClass.getName()));
+      }
+    });
+    assert stream != null;
+
+    return ISequence.of(stream);
   }
 
   @Override
@@ -353,7 +296,7 @@ public class DefaultFunction
 
   @Override
   public int hashCode() {
-    return Objects.hash(getName(), getNamespace(), getArguments(), handler, properties, result);
+    return Objects.hash(getQName(), getArguments(), handler, properties, result);
   }
 
   @Override
@@ -368,8 +311,7 @@ public class DefaultFunction
       return false; // NOPMD - readability
     }
     DefaultFunction other = (DefaultFunction) obj;
-    return Objects.equals(getName(), other.getName())
-        && Objects.equals(getNamespace(), other.getNamespace())
+    return Objects.equals(getQName(), other.getQName())
         && Objects.equals(getArguments(), other.getArguments())
         && Objects.equals(handler, other.handler)
         && Objects.equals(properties, other.properties)

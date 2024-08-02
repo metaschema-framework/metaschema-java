@@ -1,32 +1,12 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.core.model.xml;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.IModule;
@@ -61,14 +41,12 @@ import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -81,8 +59,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * every use. Any constraint set imported is also loaded and cached
  * automatically.
  */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class XmlConstraintLoader
-    extends AbstractLoader<IConstraintSet>
+    extends AbstractLoader<List<IConstraintSet>>
     implements IConstraintLoader {
 
   @SuppressWarnings("PMD.UseConcurrentHashMap")
@@ -119,7 +98,7 @@ public class XmlConstraintLoader
       };
 
   @Override
-  protected IConstraintSet parseResource(@NonNull URI resource, @NonNull Deque<URI> visitedResources)
+  protected List<IConstraintSet> parseResource(@NonNull URI resource, @NonNull Deque<URI> visitedResources)
       throws IOException {
 
     // parse this metaschema
@@ -127,17 +106,17 @@ public class XmlConstraintLoader
 
     // now check if this constraint set imports other constraint sets
     int size = xmlObject.getMETASCHEMACONSTRAINTS().sizeOfImportArray();
-    @NonNull Map<URI, IConstraintSet> importedConstraints;
+    Set<IConstraintSet> importedConstraints;
     if (size == 0) {
-      importedConstraints = ObjectUtils.notNull(Collections.emptyMap());
+      importedConstraints = CollectionUtil.emptySet();
     } else {
       try {
-        importedConstraints = new LinkedHashMap<>();
+        importedConstraints = new LinkedHashSet<>();
         for (METASCHEMACONSTRAINTSDocument.METASCHEMACONSTRAINTS.Import imported : xmlObject.getMETASCHEMACONSTRAINTS()
             .getImportList()) {
           URI importedResource = URI.create(imported.getHref());
           importedResource = ObjectUtils.notNull(resource.resolve(importedResource));
-          importedConstraints.put(importedResource, loadInternal(importedResource, visitedResources));
+          importedConstraints.addAll(loadInternal(importedResource, visitedResources));
         }
       } catch (MetaschemaException ex) {
         throw new IOException(ex);
@@ -145,8 +124,10 @@ public class XmlConstraintLoader
     }
 
     // now create this constraint set
-    Collection<IConstraintSet> values = importedConstraints.values();
-    return new DefaultConstraintSet(resource, parseScopedConstraints(xmlObject, resource), new LinkedHashSet<>(values));
+    return CollectionUtil.singletonList(new DefaultConstraintSet(
+        resource,
+        parseScopedConstraints(xmlObject, resource),
+        importedConstraints));
   }
 
   /**
@@ -175,29 +156,41 @@ public class XmlConstraintLoader
    *
    * @param xmlObject
    *          the XMLBeans object
-   * @param source
-   *          the source of the constraint content
+   * @param resource
+   *          the resource containing the constraint content
    * @return the scoped constraint definitions
    */
   @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // intentional
   @NonNull
   protected List<IScopedContraints> parseScopedConstraints(
       @NonNull METASCHEMACONSTRAINTSDocument xmlObject,
-      @NonNull URI source) {
+      @NonNull URI resource) {
     List<IScopedContraints> scopedConstraints = new LinkedList<>();
-    ISource constraintSource = ISource.externalSource(source);
 
-    for (Scope scope : xmlObject.getMETASCHEMACONSTRAINTS().getScopeList()) {
+    StaticContext.Builder builder = StaticContext.builder()
+        .baseUri(resource);
+
+    METASCHEMACONSTRAINTSDocument.METASCHEMACONSTRAINTS constraints = xmlObject.getMETASCHEMACONSTRAINTS();
+
+    constraints.getNamespaceBindingList().stream()
+        .forEach(binding -> builder.namespace(
+            ObjectUtils.notNull(binding.getPrefix()), ObjectUtils.notNull(binding.getUri())));
+
+    builder.useWildcardWhenNamespaceNotDefaulted(true);
+
+    ISource source = ISource.externalSource(builder.build());
+
+    for (Scope scope : constraints.getScopeList()) {
       assert scope != null;
 
       List<ITargetedConstraints> targetedConstraints = new LinkedList<>(); // NOPMD - intentional
       try {
-        SCOPE_PARSER.parse(scope, Pair.of(constraintSource, targetedConstraints));
+        SCOPE_PARSER.parse(scope, Pair.of(source, targetedConstraints));
       } catch (MetapathException | XmlValueNotSupportedException ex) {
         if (ex.getCause() instanceof MetapathException) {
           throw new MetapathException(
               String.format("Unable to compile a Metapath in '%s'. %s",
-                  constraintSource.getSource(),
+                  source.getSource(),
                   ex.getLocalizedMessage()),
               ex);
         }

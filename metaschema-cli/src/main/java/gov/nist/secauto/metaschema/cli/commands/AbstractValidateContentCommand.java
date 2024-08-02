@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.cli.commands;
@@ -37,32 +16,38 @@ import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.util.LoggingValidationHandler;
+import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
+import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
+import gov.nist.secauto.metaschema.core.model.constraint.ValidationFeature;
+import gov.nist.secauto.metaschema.core.model.validation.AggregateValidationResult;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
+import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.IBindingContext.IValidationSchemaProvider;
+import gov.nist.secauto.metaschema.databind.IBindingContext.ISchemaValidationProvider;
 import gov.nist.secauto.metaschema.databind.io.Format;
-import gov.nist.secauto.metaschema.databind.io.FormatDetector;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
+import gov.nist.secauto.metaschema.modules.sarif.SarifValidationHandler;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.xml.sax.SAXException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
@@ -89,13 +74,28 @@ public abstract class AbstractValidateContentCommand
           .hasArg()
           .argName("FORMAT")
           .desc("source format: xml, json, or yaml")
+          .numberOfArgs(1)
           .build());
   @NonNull
   private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(
       Option.builder("c")
-          .hasArg()
+          .hasArgs()
           .argName("URI")
           .desc("additional constraint definitions")
+          .build());
+  @NonNull
+  private static final Option SARIF_OUTPUT_FILE_OPTION = ObjectUtils.notNull(
+      Option.builder("o")
+          .hasArg()
+          .argName("FILE")
+          .desc("write SARIF results to the provided FILE")
+          .numberOfArgs(1)
+          .build());
+  @NonNull
+  private static final Option SARIF_INCLUDE_PASS_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("sarif-include-pass")
+          .desc("include pass results in SARIF")
           .build());
 
   @Override
@@ -108,7 +108,9 @@ public abstract class AbstractValidateContentCommand
   public Collection<? extends Option> gatherOptions() {
     return List.of(
         AS_OPTION,
-        CONSTRAINTS_OPTION);
+        CONSTRAINTS_OPTION,
+        SARIF_OUTPUT_FILE_OPTION,
+        SARIF_INCLUDE_PASS_OPTION);
   }
 
   @Override
@@ -143,7 +145,7 @@ public abstract class AbstractValidateContentCommand
 
   protected abstract class AbstractValidationCommandExecutor
       extends AbstractCommandExecutor
-      implements IValidationSchemaProvider {
+      implements ISchemaValidationProvider {
 
     public AbstractValidationCommandExecutor(
         @NonNull CallingContext callingContext,
@@ -158,25 +160,27 @@ public abstract class AbstractValidateContentCommand
     @SuppressWarnings("PMD.OnlyOneReturn") // readability
     @Override
     public ExitStatus execute() {
-      URI cwd = Paths.get("").toAbsolutePath().toUri();
+      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
       CommandLine cmdLine = getCommandLine();
 
       Set<IConstraintSet> constraintSets;
       if (cmdLine.hasOption(CONSTRAINTS_OPTION)) {
-        IConstraintLoader constraintLoader = new BindingConstraintLoader();
+        IConstraintLoader constraintLoader = new BindingConstraintLoader(IBindingContext.instance());
         constraintSets = new LinkedHashSet<>();
         String[] args = cmdLine.getOptionValues(CONSTRAINTS_OPTION);
         for (String arg : args) {
+          assert arg != null;
           try {
             URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, cwd));
-            constraintSets.add(constraintLoader.load(constraintUri));
-          } catch (IOException | MetaschemaException | URISyntaxException ex) {
+            constraintSets.addAll(constraintLoader.load(constraintUri));
+          } catch (IOException | MetaschemaException | MetapathException | URISyntaxException ex) {
             return ExitCode.IO_ERROR.exitMessage("Unable to load constraint set '" + arg + "'.").withThrowable(ex);
           }
         }
       } else {
         constraintSets = CollectionUtil.emptySet();
       }
+
       IBindingContext bindingContext;
       try {
         bindingContext = getBindingContext(constraintSets);
@@ -190,7 +194,7 @@ public abstract class AbstractValidateContentCommand
 
       List<String> extraArgs = cmdLine.getArgList();
 
-      String sourceName = extraArgs.get(0);
+      String sourceName = ObjectUtils.requireNonNull(extraArgs.get(0));
       URI source;
 
       try {
@@ -215,9 +219,8 @@ public abstract class AbstractValidateContentCommand
         }
       } else {
         // attempt to determine the format
-        FormatDetector.Result formatResult;
         try {
-          formatResult = loader.detectFormat(source);
+          asFormat = loader.detectFormat(source);
         } catch (FileNotFoundException ex) {
           // this case was already checked for
           return ExitCode.IO_ERROR.exitMessage("The provided source file '" + source + "' does not exist.");
@@ -230,38 +233,66 @@ public abstract class AbstractValidateContentCommand
                       .map(format -> format.name())
                       .collect(CustomCollectors.joiningWithOxfordComma("or")));
         }
-        asFormat = formatResult.getFormat();
       }
 
       if (LOGGER.isInfoEnabled()) {
         LOGGER.info("Validating '{}' as {}.", source, asFormat.name());
       }
 
+      IMutableConfiguration<ValidationFeature<?>> configuration = new DefaultConfiguration<>();
+      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && cmdLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {
+        configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);
+      }
+
       IValidationResult validationResult;
       try {
-        validationResult = bindingContext.validate(source, asFormat, this);
+        // perform schema validation
+        validationResult = this.validateWithSchema(source, asFormat);
+
+        if (validationResult.isPassing()) {
+          // perform constraint validation
+          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);
+          validationResult = AggregateValidationResult.aggregate(validationResult, constraintValidationResult);
+        }
       } catch (FileNotFoundException ex) {
         return ExitCode.IO_ERROR.exitMessage(String.format("Resource not found at '%s'", source)).withThrowable(ex);
 
       } catch (UnknownHostException ex) {
         return ExitCode.IO_ERROR.exitMessage(String.format("Unknown host for '%s'.", source)).withThrowable(ex);
 
-      } catch (IOException | SAXException ex) {
+      } catch (IOException ex) {
+        return ExitCode.IO_ERROR.exit().withThrowable(ex);
+      } catch (MetapathException ex) {
         return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
       }
 
-      if (LOGGER.isInfoEnabled() && !validationResult.isPassing()) {
+      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && LOGGER.isInfoEnabled()) {
+        Path sarifFile = Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION));
+
+        IVersionInfo version
+            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);
+
+        try {
+          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);
+          sarifHandler.addFindings(validationResult.getFindings());
+          sarifHandler.write(sarifFile);
+        } catch (IOException ex) {
+          return ExitCode.IO_ERROR.exit().withThrowable(ex);
+        }
+      } else if (!validationResult.getFindings().isEmpty()) {
         LOGGER.info("Validation identified the following issues:", source);
+        LoggingValidationHandler.instance().handleValidationResults(validationResult);
       }
 
-      LoggingValidationHandler.instance().handleValidationResults(validationResult);
-
-      if (validationResult.isPassing() && !cmdLine.hasOption(CLIProcessor.QUIET_OPTION) && LOGGER.isInfoEnabled()) {
-        LOGGER.info("The file '{}' is valid.", source);
+      if (validationResult.isPassing()) {
+        if (LOGGER.isInfoEnabled()) {
+          LOGGER.info("The file '{}' is valid.", source);
+        }
+      } else if (LOGGER.isErrorEnabled()) {
+        LOGGER.error("The file '{}' is invalid.", source);
       }
 
       return (validationResult.isPassing() ? ExitCode.OK : ExitCode.FAIL).exit();
     }
-
   }
 }

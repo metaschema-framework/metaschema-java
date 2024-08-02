@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
@@ -44,25 +23,26 @@ import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.ConstraintLetExpression;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.ConstraintValueEnum;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagAllowedValues;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagExpect;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagIndexHasKey;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagMatches;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.KeyConstraintField;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.Property;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.Remarks;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedAllowedValuesConstraint;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedExpectConstraint;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedHasCardinalityConstraint;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedIndexConstraint;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedIndexHasKeyConstraint;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedIsUniqueConstraint;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedMatchesConstraint;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IModelConstraintsBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IValueConstraintsBase;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintLetExpression;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintValueEnum;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagAllowedValues;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagExpect;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagIndexHasKey;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagMatches;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.KeyConstraintField;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.Property;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedAllowedValuesConstraint;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedExpectConstraint;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedHasCardinalityConstraint;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIndexConstraint;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIndexHasKeyConstraint;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIsUniqueConstraint;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedMatchesConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -102,16 +82,27 @@ public final class ConstraintBindingSupport {
     }
   }
 
-  public static void parseLet(
+  public static void parse(
       @NonNull IValueConstrained constraintSet,
-      @NonNull IValueConstraintsBase constraints,
+      @NonNull IValueTargetedConstraintsBase constraints,
       @NonNull ISource source) {
-    // parse let expressions
-    for (ConstraintLetExpression letObj : constraints.getLets()) {
-      ILet let = ILet.of(
-          ObjectUtils.requireNonNull(new QName(letObj.getVar())),
-          ObjectUtils.requireNonNull(letObj.getExpression()), source);
-      constraintSet.addLetExpression(let);
+    parseLet(constraintSet, constraints, source);
+
+    // parse rules
+    for (IConstraintBase ruleObj : constraints.getRules()) {
+      if (ruleObj instanceof TargetedAllowedValuesConstraint) {
+        IAllowedValuesConstraint constraint = newAllowedValues((TargetedAllowedValuesConstraint) ruleObj, source);
+        constraintSet.addConstraint(constraint);
+      } else if (ruleObj instanceof TargetedExpectConstraint) {
+        IExpectConstraint constraint = newExpect((TargetedExpectConstraint) ruleObj, source);
+        constraintSet.addConstraint(constraint);
+      } else if (ruleObj instanceof TargetedIndexHasKeyConstraint) {
+        IIndexHasKeyConstraint constraint = newIndexHasKey((TargetedIndexHasKeyConstraint) ruleObj, source);
+        constraintSet.addConstraint(constraint);
+      } else if (ruleObj instanceof TargetedMatchesConstraint) {
+        IMatchesConstraint constraint = newMatches((TargetedMatchesConstraint) ruleObj, source);
+        constraintSet.addConstraint(constraint);
+      }
     }
   }
 
@@ -148,12 +139,25 @@ public final class ConstraintBindingSupport {
     }
   }
 
+  public static void parseLet(
+      @NonNull IValueConstrained constraintSet,
+      @NonNull IValueConstraintsBase constraints,
+      @NonNull ISource source) {
+    // parse let expressions
+    for (ConstraintLetExpression letObj : constraints.getLets()) {
+      ILet let = ILet.of(
+          ObjectUtils.requireNonNull(new QName(letObj.getVar())),
+          ObjectUtils.requireNonNull(letObj.getExpression()), source);
+      constraintSet.addLetExpression(let);
+    }
+  }
+
   @NonNull
   private static IAllowedValuesConstraint newAllowedValues(
       @NonNull FlagAllowedValues obj,
       @NonNull ISource source) {
     IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder()
-        .allowedOther(ModelSupport.yesOrNo(obj.getAllowOther()))
+        .allowsOther(ModelSupport.yesOrNo(obj.getAllowOther()))
         .extensible(extensible(obj.getExtensible()));
     applyCommonValues(obj, null, source, builder);
 
@@ -168,7 +172,7 @@ public final class ConstraintBindingSupport {
       @NonNull TargetedAllowedValuesConstraint obj,
       @NonNull ISource source) {
     IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder()
-        .allowedOther(ModelSupport.yesOrNo(obj.getAllowOther()))
+        .allowsOther(ModelSupport.yesOrNo(obj.getAllowOther()))
         .extensible(extensible(ObjectUtils.requireNonNull(obj.getExtensible())));
     applyCommonValues(obj, obj.getTarget(), source, builder);
 
@@ -213,14 +217,16 @@ public final class ConstraintBindingSupport {
   @NonNull
   private static <T extends AbstractKeyConstraintBuilder<T, ?>> T handleKeyConstraints(
       @NonNull List<KeyConstraintField> keys,
-      @NonNull T builder) {
+      @NonNull T builder,
+      @NonNull ISource source) {
     for (KeyConstraintField value : keys) {
       assert value != null;
 
       IKeyField keyField = IKeyField.of(
           target(ObjectUtils.requireNonNull(value.getTarget())),
           pattern(value.getPattern()),
-          ModelSupport.remarks(value.getRemarks()));
+          ModelSupport.remarks(value.getRemarks()),
+          source);
       builder.keyField(keyField);
     }
     return builder;
@@ -230,10 +236,9 @@ public final class ConstraintBindingSupport {
   private static IIndexHasKeyConstraint newIndexHasKey(
       @NonNull FlagIndexHasKey obj,
       @NonNull ISource source) {
-    IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder()
-        .name(ObjectUtils.requireNonNull(obj.getName()));
+    IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));
     applyCommonValues(obj, null, source, builder);
-    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder);
+    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);
     return builder.build();
   }
 
@@ -241,10 +246,9 @@ public final class ConstraintBindingSupport {
   private static IIndexHasKeyConstraint newIndexHasKey(
       @NonNull TargetedIndexHasKeyConstraint obj,
       @NonNull ISource source) {
-    IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder()
-        .name(ObjectUtils.requireNonNull(obj.getName()));
+    IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));
     applyCommonValues(obj, obj.getTarget(), source, builder);
-    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder);
+    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);
     return builder.build();
   }
 
@@ -294,10 +298,9 @@ public final class ConstraintBindingSupport {
   private static IIndexConstraint newIndex(
       @NonNull TargetedIndexConstraint obj,
       @NonNull ISource source) {
-    IIndexConstraint.Builder builder = IIndexConstraint.builder()
-        .name(ObjectUtils.requireNonNull(obj.getName()));
+    IIndexConstraint.Builder builder = IIndexConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));
     applyCommonValues(obj, obj.getTarget(), source, builder);
-    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder);
+    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);
 
     return builder.build();
   }
@@ -328,7 +331,7 @@ public final class ConstraintBindingSupport {
       @NonNull ISource source) {
     IUniqueConstraint.Builder builder = IUniqueConstraint.builder();
     applyCommonValues(obj, obj.getTarget(), source, builder);
-    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder);
+    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);
 
     return builder.build();
   }
@@ -393,6 +396,9 @@ public final class ConstraintBindingSupport {
         break;
       case "INFORMATIONAL":
         retval = IConstraint.Level.INFORMATIONAL;
+        break;
+      case "DEBUG":
+        retval = IConstraint.Level.DEBUG;
         break;
       default:
         throw new UnsupportedOperationException(level);

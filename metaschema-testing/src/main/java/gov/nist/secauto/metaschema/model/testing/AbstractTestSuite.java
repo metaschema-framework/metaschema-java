@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.model.testing;
@@ -81,11 +60,13 @@ import nl.talsmasoftware.lazy4j.Lazy;
 
 public abstract class AbstractTestSuite {
   private static final Logger LOGGER = LogManager.getLogger(AbstractTestSuite.class);
-  private static final BindingModuleLoader LOADER = new BindingModuleLoader();
+  private static final BindingModuleLoader LOADER;
 
   private static final boolean DELETE_RESULTS_ON_EXIT = false;
 
   static {
+    IBindingContext bindingContext = new DefaultBindingContext();
+    LOADER = new BindingModuleLoader(bindingContext);
     LOADER.allowEntityResolution();
   }
 
@@ -140,30 +121,27 @@ public abstract class AbstractTestSuite {
   protected void deleteCollectionOnExit(Path path) {
     if (path != null) {
       Runtime.getRuntime().addShutdownHook(new Thread( // NOPMD - this is not a webapp
-          new Runnable() {
-            @Override
-            public void run() {
-              try {
-                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-                  @Override
-                  public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
+          () -> {
+            try {
+              Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                  Files.delete(file);
+                  return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException ex) throws IOException {
+                  if (ex == null) {
+                    Files.delete(dir);
                     return FileVisitResult.CONTINUE;
                   }
-
-                  @Override
-                  public FileVisitResult postVisitDirectory(Path dir, IOException ex) throws IOException {
-                    if (ex == null) {
-                      Files.delete(dir);
-                      return FileVisitResult.CONTINUE;
-                    }
-                    // directory iteration failed for some reason
-                    throw ex;
-                  }
-                });
-              } catch (IOException ex) {
-                throw new JUnitException("Failed to delete collection: " + path, ex);
-              }
+                  // directory iteration failed for some reason
+                  throw ex;
+                }
+              });
+            } catch (IOException ex) {
+              throw new JUnitException("Failed to delete collection: " + path, ex);
             }
           }));
     }
@@ -330,7 +308,7 @@ public abstract class AbstractTestSuite {
               throw new JUnitException( // NOPMD - cause is relevant, exception is not
                   "failed to generate schema", ex.getCause());
             }
-            validate(ObjectUtils.requireNonNull(supplier.get()), schemaPath);
+            validateWithSchema(ObjectUtils.requireNonNull(supplier.get()), schemaPath);
           }
         });
 
@@ -356,7 +334,6 @@ public abstract class AbstractTestSuite {
         Stream.concat(Stream.of(validateSchema), contentTests).sequential());
   }
 
-  @SuppressWarnings("unchecked")
   protected Path convertContent(
       @NonNull URI contentUri,
       @NonNull Path generationPath,
@@ -381,8 +358,8 @@ public abstract class AbstractTestSuite {
     }
 
     @SuppressWarnings("rawtypes") ISerializer serializer
-        = context.newSerializer(getRequiredContentFormat(), object.getClass());
-    serializer.serialize(object, convertedContetPath, getWriteOpenOptions());
+        = context.newSerializer(getRequiredContentFormat(), ObjectUtils.asType(object.getClass()));
+    serializer.serialize(ObjectUtils.asType(object), convertedContetPath, getWriteOpenOptions());
 
     return convertedContetPath;
   }
@@ -414,7 +391,7 @@ public abstract class AbstractTestSuite {
 
             assertEquals(
                 contentCase.getValidationResult(),
-                validate(
+                validateWithSchema(
                     ObjectUtils.notNull(contentValidator), ObjectUtils.notNull(contentUri.toURL())),
                 "validation did not match expectation for: " + contentUri.toASCIIString());
           });
@@ -449,7 +426,7 @@ public abstract class AbstractTestSuite {
                   ex.getCause());
             }
             assertEquals(contentCase.getValidationResult(),
-                validate(
+                validateWithSchema(
                     ObjectUtils.notNull(contentValidator),
                     ObjectUtils.notNull(convertedContetPath.toUri().toURL())),
                 String.format("validation of '%s' did not match expectation", convertedContetPath));
@@ -458,7 +435,8 @@ public abstract class AbstractTestSuite {
     return retval;
   }
 
-  private static boolean validate(@NonNull IContentValidator validator, @NonNull URL target) throws IOException {
+  private static boolean validateWithSchema(@NonNull IContentValidator validator, @NonNull URL target)
+      throws IOException {
     IValidationResult schemaValidationResult;
     try {
       schemaValidationResult = validator.validate(target);
@@ -468,7 +446,8 @@ public abstract class AbstractTestSuite {
     return processValidationResult(schemaValidationResult);
   }
 
-  protected static boolean validate(@NonNull IContentValidator validator, @NonNull Path target) throws IOException {
+  protected static boolean validateWithSchema(@NonNull IContentValidator validator, @NonNull Path target)
+      throws IOException {
     IValidationResult schemaValidationResult = validator.validate(target);
     if (!schemaValidationResult.isPassing()) {
       LOGGER.atError().log("Schema validation failed for: {}", target);
@@ -497,6 +476,9 @@ public abstract class AbstractTestSuite {
       break;
     case INFORMATIONAL:
       logBuilder = LOGGER.atInfo();
+      break;
+    case DEBUG:
+      logBuilder = LOGGER.atDebug();
       break;
     default:
       throw new IllegalArgumentException("Unknown level: " + finding.getSeverity().name());

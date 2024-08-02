@@ -1,27 +1,6 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
@@ -87,6 +66,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-doc
     registerFunction(FnDoc.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-doc-available
+    registerFunction(FnDocumentAvailable.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-document-uri
     registerFunction(FnDocumentUri.SIGNATURE_NO_ARG);
     registerFunction(FnDocumentUri.SIGNATURE_ONE_ARG);
@@ -225,29 +205,59 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-array-flatten
     registerFunction(ArrayFlatten.SIGNATURE);
 
-    // xpath casting functions
-    registerFunction(
-        CastFunction.signature(MetapathConstants.NS_XML_SCHEMA, "boolean", IBooleanItem.class, IBooleanItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "date", IDateItem.class, IDateItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "dateTime", IDateTimeItem.class, IDateTimeItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "decimal", IDecimalItem.class, IDecimalItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "duration", IDurationItem.class, IDurationItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "integer", IIntegerItem.class, IIntegerItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "NCName", INcNameItem.class, INcNameItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "nonNegativeInteger", INonNegativeIntegerItem.class,
-        INonNegativeIntegerItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "positiveInteger", IPositiveIntegerItem.class,
-        IPositiveIntegerItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_XML_SCHEMA, "string", IStringItem.class, IStringItem::cast));
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-merge
+    registerFunction(MapMerge.SIGNATURE_ONE_ARG);
+    registerFunction(MapMerge.SIGNATURE_TWO_ARG);
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-size
+    registerFunction(MapSize.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-keys
+    registerFunction(MapKeys.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-contains
+    registerFunction(MapContains.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-get
+    registerFunction(MapGet.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-find
+    registerFunction(MapFind.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-put
+    registerFunction(MapPut.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-entry
+    registerFunction(MapEntry.SIGNATURE);
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-remove
+    registerFunction(MapRemove.SIGNATURE);
+    // P3: https://www.w3.org/TR/xpath-functions-31/#func-map-for-each
+
+    // // xpath casting functions
+    // registerFunction(
+    // CastFunction.signature(MetapathConstants.NS_XML_SCHEMA, "boolean",
+    // IBooleanItem.class, IBooleanItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "date", IDateItem.class, IDateItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "dateTime", IDateTimeItem.class,
+    // IDateTimeItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "decimal", IDecimalItem.class,
+    // IDecimalItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "duration", IDurationItem.class,
+    // IDurationItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "integer", IIntegerItem.class,
+    // IIntegerItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "NCName", INcNameItem.class,
+    // INcNameItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "nonNegativeInteger",
+    // INonNegativeIntegerItem.class,
+    // INonNegativeIntegerItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "positiveInteger",
+    // IPositiveIntegerItem.class,
+    // IPositiveIntegerItem::cast));
+    // registerFunction(CastFunction.signature(
+    // MetapathConstants.NS_XML_SCHEMA, "string", IStringItem.class,
+    // IStringItem::cast));
 
     // metapath casting functions
     registerFunction(CastFunction.signature(

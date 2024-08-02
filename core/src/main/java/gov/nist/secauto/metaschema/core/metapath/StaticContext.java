@@ -1,37 +1,18 @@
 /*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
  */
 
 package gov.nist.secauto.metaschema.core.metapath;
 
 import gov.nist.secauto.metaschema.core.metapath.EQNameUtils.IEQNamePrefixResolver;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
 
@@ -47,6 +28,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class StaticContext {
   @NonNull
   private static final Map<String, URI> WELL_KNOWN_NAMESPACES;
+  @NonNull
+  private static final Map<String, String> WELL_KNOWN_URI_TO_PREFIX;
 
   static {
     Map<String, URI> knownNamespaces = new ConcurrentHashMap<>();
@@ -65,7 +48,16 @@ public final class StaticContext {
     knownNamespaces.put(
         MetapathConstants.PREFIX_XPATH_FUNCTIONS_ARRAY,
         MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY);
+    knownNamespaces.put(
+        MetapathConstants.PREFIX_XPATH_FUNCTIONS_MAP,
+        MetapathConstants.NS_METAPATH_FUNCTIONS_MAP);
     WELL_KNOWN_NAMESPACES = CollectionUtil.unmodifiableMap(knownNamespaces);
+
+    WELL_KNOWN_URI_TO_PREFIX = ObjectUtils.notNull(WELL_KNOWN_NAMESPACES.entrySet().stream()
+        .collect(Collectors.toUnmodifiableMap(
+            entry -> entry.getValue().toASCIIString(),
+            Map.Entry::getKey,
+            (v1, v2) -> v2)));
   }
 
   @Nullable
@@ -76,6 +68,7 @@ public final class StaticContext {
   private final URI defaultModelNamespace;
   @Nullable
   private final URI defaultFunctionNamespace;
+  private final boolean useWildcardWhenNamespaceNotDefaulted;
 
   /**
    * Get the mapping of prefix to namespace URI for all well-known namespaces
@@ -87,8 +80,32 @@ public final class StaticContext {
    * @return the mapping of prefix to namespace URI for all well-known namespaces
    */
   @SuppressFBWarnings("MS_EXPOSE_REP")
-  public static Map<String, URI> getWellKnownNamespaces() {
+  public static Map<String, URI> getWellKnownNamespacesMap() {
     return WELL_KNOWN_NAMESPACES;
+  }
+
+  /**
+   * Get the mapping of namespace URIs to prefixes for all well-known namespaces
+   * provided by default to the static context.
+   *
+   * @return the mapping of namespace URI to prefix for all well-known namespaces
+   */
+  @SuppressFBWarnings("MS_EXPOSE_REP")
+  public static Map<String, String> getWellKnownURIToPrefixMap() {
+    return WELL_KNOWN_URI_TO_PREFIX;
+  }
+
+  /**
+   * Get the namespace prefix associated with the provided URI, if the URI is
+   * well-known.
+   *
+   * @param uri
+   *          the URI to get the prefix for
+   * @return the prefix or {@code null} if the provided URI is not well-known
+   */
+  @Nullable
+  public static String getWellKnownPrefixForUri(@NonNull String uri) {
+    return WELL_KNOWN_URI_TO_PREFIX.get(uri);
   }
 
   /**
@@ -101,22 +118,12 @@ public final class StaticContext {
     return builder().build();
   }
 
-  /**
-   * Create a new static context builder that allows for fine-grained adjustments
-   * when creating a new static context.
-   *
-   * @return a new builder
-   */
-  @NonNull
-  public static Builder builder() {
-    return new Builder();
-  }
-
   private StaticContext(Builder builder) {
     this.baseUri = builder.baseUri;
-    this.knownNamespaces = CollectionUtil.unmodifiableMap(Map.copyOf(builder.namespaces));
+    this.knownNamespaces = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(Map.copyOf(builder.namespaces)));
     this.defaultModelNamespace = builder.defaultModelNamespace;
     this.defaultFunctionNamespace = builder.defaultFunctionNamespace;
+    this.useWildcardWhenNamespaceNotDefaulted = builder.useWildcardWhenNamespaceNotDefaulted;
   }
 
   /**
@@ -142,14 +149,14 @@ public final class StaticContext {
    * namespace bindings when a prefix match is not found.
    * <p>
    * The well-known namespace bindings can be retrieved using the
-   * {@link StaticContext#getWellKnownNamespaces()} method.
+   * {@link StaticContext#getWellKnownNamespacesMap()} method.
    *
    * @param prefix
    *          the namespace prefix
    * @return the namespace URI bound to the prefix, or {@code null} if no
    *         namespace is bound to the prefix
    * @see Builder#namespace(String, URI)
-   * @see #getWellKnownNamespaces()
+   * @see #getWellKnownNamespacesMap()
    */
   @Nullable
   public URI lookupNamespaceURIForPrefix(@NonNull String prefix) {
@@ -198,53 +205,131 @@ public final class StaticContext {
     return defaultFunctionNamespace;
   }
 
+  /**
+   * Get a prefix resolver for use with Metapath function names that will attempt
+   * to identify the namespace corresponding to a given prefix.
+   * <p>
+   * This will use the following lookup order, advancing to the next when a
+   * {@code null} value is returned:
+   * <ol>
+   * <li>Lookup the prefix using
+   * {@link StaticContext#lookupNamespaceForPrefix(String)}</li>
+   * <li>Return the result of
+   * {@link StaticContext#getDefaultFunctionNamespace()}</li>
+   * <li>Return {@link XMLConstants#NULL_NS_URI}</li>
+   * </ol>
+   *
+   * @return the resolver
+   */
   @NonNull
   public IEQNamePrefixResolver getFunctionPrefixResolver() {
-    return (prefix) -> {
-      String ns = lookupNamespaceForPrefix(prefix);
-      if (ns == null) {
-        URI uri = getDefaultFunctionNamespace();
-        if (uri != null) {
-          ns = uri.toASCIIString();
-        }
-      }
-      return ns == null ? XMLConstants.NULL_NS_URI : ns;
-    };
+    return this::resolveFunctionPrefix;
   }
 
+  @NonNull
+  private String resolveFunctionPrefix(@NonNull String prefix) {
+    String ns = lookupNamespaceForPrefix(prefix);
+    if (ns == null) {
+      URI uri = getDefaultFunctionNamespace();
+      if (uri != null) {
+        ns = uri.toASCIIString();
+      }
+    }
+    return ns == null ? XMLConstants.NULL_NS_URI : ns;
+  }
+
+  /**
+   * Get a prefix resolver for use with Metapath flag node names that will attempt
+   * to identify the namespace corresponding to a given prefix.
+   * <p>
+   * This will use the following lookup order, advancing to the next when a
+   * {@code null} value is returned:
+   * <ol>
+   * <li>Lookup the prefix using
+   * {@link StaticContext#lookupNamespaceForPrefix(String)}</li>
+   * <li>Return {@link XMLConstants#NULL_NS_URI}</li>
+   * </ol>
+   *
+   * @return the resolver
+   */
   @NonNull
   public IEQNamePrefixResolver getFlagPrefixResolver() {
-    return (prefix) -> {
-      String ns = lookupNamespaceForPrefix(prefix);
-      return ns == null ? XMLConstants.NULL_NS_URI : ns;
-    };
+    return this::resolveFlagReferencePrefix;
   }
 
+  @NonNull
+  private String resolveFlagReferencePrefix(@NonNull String prefix) {
+    String ns = lookupNamespaceForPrefix(prefix);
+    return ns == null ? XMLConstants.NULL_NS_URI : ns;
+  }
+
+  /**
+   * Get a prefix resolver for use with Metapath model node names that will
+   * attempt to identify the namespace corresponding to a given prefix.
+   * <p>
+   * This will use the following lookup order, advancing to the next when a
+   * {@code null} value is returned:
+   * <ol>
+   * <li>Lookup the prefix using
+   * {@link StaticContext#lookupNamespaceForPrefix(String)}</li>
+   * <li>Return the result of
+   * {@link StaticContext#getDefaultModelNamespace()}</li>
+   * <li>Return {@link XMLConstants#NULL_NS_URI}</li>
+   * </ol>
+   *
+   * @return the resolver
+   */
   @NonNull
   public IEQNamePrefixResolver getModelPrefixResolver() {
-    return (prefix) -> {
-      String ns = lookupNamespaceForPrefix(prefix);
-      if (ns == null) {
-        URI uri = getDefaultModelNamespace();
-        if (uri != null) {
-          ns = uri.toASCIIString();
-        }
-      }
-      return ns == null ? XMLConstants.NULL_NS_URI : ns;
-    };
+    return this::resolveModelReferencePrefix;
   }
 
+  @NonNull
+  private String resolveModelReferencePrefix(@NonNull String prefix) {
+    String ns = lookupNamespaceForPrefix(prefix);
+    if (ns == null) {
+      URI uri = getDefaultModelNamespace();
+      if (uri != null) {
+        ns = uri.toASCIIString();
+      }
+    }
+    return ns == null ? XMLConstants.NULL_NS_URI : ns;
+  }
+
+  /**
+   * Get a prefix resolver for use with Metapath variable names that will attempt
+   * to identify the namespace corresponding to a given prefix.
+   * <p>
+   * This will use the following lookup order, advancing to the next when a
+   * {@code null} value is returned:
+   * <ol>
+   * <li>Lookup the prefix using
+   * {@link StaticContext#lookupNamespaceForPrefix(String)}</li>
+   * <li>Return {@link XMLConstants#NULL_NS_URI}</li>
+   * </ol>
+   *
+   * @return the resolver
+   */
   @NonNull
   public IEQNamePrefixResolver getVariablePrefixResolver() {
-    return (prefix) -> {
-      String ns = lookupNamespaceForPrefix(prefix);
-      return ns == null ? XMLConstants.NULL_NS_URI : ns;
-    };
+    return this::resolveVariablePrefix;
   }
 
   @NonNull
+  private String resolveVariablePrefix(@NonNull String prefix) {
+    String ns = lookupNamespaceForPrefix(prefix);
+    return ns == null ? XMLConstants.NULL_NS_URI : ns;
+  }
+
+  /**
+   * Get a new static context builder that is pre-populated with the setting of
+   * this static context.
+   *
+   * @return a new builder
+   */
+  @NonNull
   public Builder buildFrom() {
-    Builder builder = new Builder();
+    Builder builder = builder();
     builder.baseUri = this.baseUri;
     builder.namespaces.putAll(this.knownNamespaces);
     builder.defaultModelNamespace = this.defaultModelNamespace;
@@ -253,9 +338,33 @@ public final class StaticContext {
   }
 
   /**
+   * Indicates if a name match should use a wildcard for the namespace is the
+   * namespace does not have a value and the {@link #getDefaultModelNamespace()}
+   * is {@code null}.
+   *
+   * @return {@code true} if a wildcard match on the name space should be used or
+   *         {@code false} otherwise
+   */
+  public boolean isUseWildcardWhenNamespaceNotDefaulted() {
+    return useWildcardWhenNamespaceNotDefaulted && getDefaultModelNamespace() == null;
+  }
+
+  /**
+   * Create a new static context builder that allows for fine-grained adjustments
+   * when creating a new static context.
+   *
+   * @return a new builder
+   */
+  @NonNull
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /**
    * A builder used to generate the static context.
    */
   public static final class Builder {
+    public boolean useWildcardWhenNamespaceNotDefaulted; // false
     @Nullable
     private URI baseUri;
     @NonNull
@@ -304,7 +413,7 @@ public final class StaticContext {
      * {@link StaticContext#lookupNamespaceForPrefix(String)} method.
      * <p>
      * Well-known namespace bindings are used by default, which can be retrieved
-     * using the {@link StaticContext#getWellKnownNamespaces()} method.
+     * using the {@link StaticContext#getWellKnownNamespacesMap()} method.
      *
      * @param prefix
      *          the prefix to associate with the namespace, which may be
@@ -313,7 +422,7 @@ public final class StaticContext {
      * @return this builder
      * @see StaticContext#lookupNamespaceForPrefix(String)
      * @see StaticContext#lookupNamespaceURIForPrefix(String)
-     * @see StaticContext#getWellKnownNamespaces()
+     * @see StaticContext#getWellKnownNamespacesMap()
      */
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull URI uri) {
@@ -333,11 +442,11 @@ public final class StaticContext {
      *           if the provided URI is invalid
      * @see StaticContext#lookupNamespaceForPrefix(String)
      * @see StaticContext#lookupNamespaceURIForPrefix(String)
-     * @see StaticContext#getWellKnownNamespaces()
+     * @see StaticContext#getWellKnownNamespacesMap()
      */
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull String uri) {
-      return namespace(prefix, URI.create(uri));
+      return namespace(prefix, ObjectUtils.notNull(URI.create(uri)));
     }
 
     /**
@@ -367,7 +476,7 @@ public final class StaticContext {
      */
     @NonNull
     public Builder defaultModelNamespace(@NonNull String uri) {
-      return defaultModelNamespace(URI.create(uri));
+      return defaultModelNamespace(ObjectUtils.notNull(URI.create(uri)));
     }
 
     /**
@@ -397,7 +506,19 @@ public final class StaticContext {
      */
     @NonNull
     public Builder defaultFunctionNamespace(@NonNull String uri) {
-      return defaultFunctionNamespace(URI.create(uri));
+      return defaultFunctionNamespace(ObjectUtils.notNull(URI.create(uri)));
+    }
+
+    /**
+     * Set the name matching behavior for when a model node has no namespace.
+     *
+     * @param value
+     *          {@code true} if on or {@code false} otherwise
+     * @return this builder
+     */
+    public Builder useWildcardWhenNamespaceNotDefaulted(boolean value) {
+      this.useWildcardWhenNamespaceNotDefaulted = value;
+      return this;
     }
 
     /**
