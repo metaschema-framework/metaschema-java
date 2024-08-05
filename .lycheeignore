@@ -34,6 +34,5 @@ https://opensource.org/licenses/Apache-2.0,https://opensource.org/licenses/EPL-2
 # prone to long timeouts
 http://nexus.sonatype.org/oss-repository-hosting.html/.*
 https://glassfish.dev.java.net/.*
-# fix later
-https://github.com/metaschema-framework/liboscal-java/
+
 
