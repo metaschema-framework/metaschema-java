@@ -29,4 +29,9 @@ Feedback:
 ---------
 
 Please post issues about tool defects, enhancement requests, and any other related
-comments in the tool's GitHub repository at https://github.com/metaschema-framework/metaschema-java.
+comments in the tool's GitHub repository at https://github.com/metaschema-framework/metaschema-java/issues.
+
+Change Log:
+----------
+
+For change logs, please goto https://github.com/metaschema-framework/metaschema-java/releases.
