@@ -49,7 +49,7 @@
 		<dependency.commons-text.version>1.12.0</dependency.commons-text.version>
 		<dependency.everit-json.version>1.14.4</dependency.everit-json.version>
 		<dependency.flexmark.version>0.64.8</dependency.flexmark.version>
-		<dependency.freemarker.version>2.3.32</dependency.freemarker.version>
+		<dependency.freemarker.version>2.3.33</dependency.freemarker.version>
 		<dependency.inject-resources-junit-jupiter.version>0.3.3</dependency.inject-resources-junit-jupiter.version>
 		<dependency.jackson.version>2.17.2</dependency.jackson.version>
 		<dependency.jansi.version>2.4.1</dependency.jansi.version>
