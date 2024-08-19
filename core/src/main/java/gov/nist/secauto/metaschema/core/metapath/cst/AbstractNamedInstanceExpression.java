@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.cst.path.AbstractPathExpression;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.INodeTestExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.NameTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
@@ -17,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractNamedInstanceExpression<RESULT_TYPE extends INodeItem>
     extends AbstractPathExpression<RESULT_TYPE> {
   @NonNull
-  private final IExpression test;
+  private final INodeTestExpression test;
 
   /**
    * Construct a new expression that finds children that match the provided
@@ -26,7 +27,7 @@ public abstract class AbstractNamedInstanceExpression<RESULT_TYPE extends INodeI
    * @param test
    *          the expression to use to determine a match
    */
-  public AbstractNamedInstanceExpression(@NonNull IExpression test) {
+  public AbstractNamedInstanceExpression(@NonNull INodeTestExpression test) {
     this.test = test;
   }
 
@@ -36,7 +37,7 @@ public abstract class AbstractNamedInstanceExpression<RESULT_TYPE extends INodeI
    * @return the test
    */
   @NonNull
-  public IExpression getTest() {
+  public INodeTestExpression getTest() {
     return test;
   }
 

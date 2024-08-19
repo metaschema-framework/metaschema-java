@@ -8,5 +8,5 @@ package gov.nist.secauto.metaschema.databind.model.metaschema;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 
 public interface IBindingDefinitionModel extends IModelDefinition, IBindingModelElement {
-
+  // no additional methods
 }

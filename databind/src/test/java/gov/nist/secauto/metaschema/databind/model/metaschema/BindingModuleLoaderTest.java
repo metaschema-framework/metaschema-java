@@ -20,7 +20,6 @@ class BindingModuleLoaderTest {
     BindingModuleLoader loader = new BindingModuleLoader(new DefaultBindingContext());
     loader.allowEntityResolution();
 
-    IBindingMetaschemaModule module
-        = loader.load(Paths.get("src/test/resources/test-content/legacy-metaschema-data-types-module.xml"));
+    loader.load(Paths.get("src/test/resources/test-content/legacy-metaschema-data-types-module.xml"));
   }
 }

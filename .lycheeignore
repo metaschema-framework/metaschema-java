@@ -1,6 +1,7 @@
 # broken plugin and dependency references
 https://bytebuddy.net/byte-buddy
 https://chronicle.software/java-parent-pom/compiler
+http://code.google.com/p/.*
 https://code.revelc.net/revelc/formatter-maven-plugin
 https://codehaus-plexus.github.io/plexus-cipher/
 https://codehaus-plexus.github.io/plexus-pom/plexus-build-api/

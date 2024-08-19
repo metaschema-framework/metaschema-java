@@ -235,7 +235,7 @@ public class DefaultConstraintValidator
       try {
         validateHasCardinality(constraint, item, targets);
       } catch (MetapathException ex) {
-        rethrowConstraintError(constraint, item, ex);
+        handleError(constraint, item, ex);
       }
     }
   }
@@ -300,7 +300,7 @@ public class DefaultConstraintValidator
       try {
         validateIndex(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
-        rethrowConstraintError(constraint, item, ex);
+        handleError(constraint, item, ex);
       }
     }
   }
@@ -362,6 +362,41 @@ public class DefaultConstraintValidator
     }
   }
 
+  private void handleError(
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull MetapathException ex) {
+    getConstraintValidationHandler().handleError(constraint, node, toErrorMessage(constraint, node, ex), ex);
+  }
+
+  @NonNull
+  private static String toErrorMessage(
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem item,
+      @NonNull MetapathException ex) {
+    StringBuilder builder = new StringBuilder(128);
+    builder.append("A ")
+        .append(constraint.getClass().getName())
+        .append(" constraint");
+
+    String id = constraint.getId();
+    if (id == null) {
+      builder.append(" targeting the metapath '")
+          .append(constraint.getTarget())
+          .append('\'');
+    } else {
+      builder.append(" with id '")
+          .append(id)
+          .append('\'');
+    }
+
+    builder.append(", matching the item at path '")
+        .append(item.getMetapath())
+        .append("', resulted in an unexpected error. The error was: ")
+        .append(ex.getLocalizedMessage());
+    return ObjectUtils.notNull(builder.toString());
+  }
+
   /**
    * Evaluates the provided collection of {@code constraints} in the context of
    * the {@code item}.
@@ -383,7 +418,7 @@ public class DefaultConstraintValidator
       try {
         validateUnique(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
-        rethrowConstraintError(constraint, item, ex);
+        handleError(constraint, item, ex);
       }
     }
   }
@@ -453,7 +488,7 @@ public class DefaultConstraintValidator
       try {
         validateMatches(constraint, item, targets);
       } catch (MetapathException ex) {
-        rethrowConstraintError(constraint, item, ex);
+        handleError(constraint, item, ex);
       }
     }
   }
@@ -627,7 +662,7 @@ public class DefaultConstraintValidator
                 handler.handleExpectViolation(constraint, node, item, dynamicContext);
               }
             } catch (MetapathException ex) {
-              rethrowConstraintError(constraint, item, ex);
+              handleError(constraint, item, ex);
             }
           }
         });
@@ -678,38 +713,10 @@ public class DefaultConstraintValidator
         try {
           updateValueStatus(item, constraint, node);
         } catch (MetapathException ex) {
-          rethrowConstraintError(constraint, item, ex);
+          handleError(constraint, item, ex);
         }
       }
     });
-  }
-
-  private static void rethrowConstraintError(
-      @NonNull IConstraint constraint,
-      @NonNull INodeItem item,
-      @NonNull MetapathException ex) {
-    StringBuilder builder = new StringBuilder(128);
-    builder.append("A ")
-        .append(constraint.getClass().getName())
-        .append(" constraint");
-
-    String id = constraint.getId();
-    if (id == null) {
-      builder.append(" targeting the metapath '")
-          .append(constraint.getTarget())
-          .append('\'');
-    } else {
-      builder.append(" with id '")
-          .append(id)
-          .append('\'');
-    }
-
-    builder.append(", matching the item at path '")
-        .append(item.getMetapath())
-        .append("', resulted in an unexpected error. The error was: ")
-        .append(ex.getLocalizedMessage());
-
-    throw new MetapathException(builder.toString(), ex);
   }
 
   /**

@@ -652,7 +652,7 @@ public class MetaschemaJsonReader
         retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, parser);
       } else {
         // handle JSON value key
-        String key = ObjectUtils.notNull(parser.getCurrentName());
+        String key = ObjectUtils.notNull(parser.currentName());
         Object keyValue = jsonValueKyeFlag.getJavaTypeAdapter().parse(key);
         jsonValueKyeFlag.setValue(ObjectUtils.notNull(parentItem), keyValue);
 

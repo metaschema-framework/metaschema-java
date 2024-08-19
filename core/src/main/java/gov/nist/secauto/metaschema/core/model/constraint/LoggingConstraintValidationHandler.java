@@ -237,4 +237,16 @@ public class LoggingConstraintValidationHandler
   public void handlePass(IConstraint constraint, INodeItem node, INodeItem target) {
     // do nothing
   }
+
+  @Override
+  public void handleError(
+      IConstraint constraint,
+      INodeItem node,
+      String message,
+      Throwable exception) {
+    Level level = Level.CRITICAL;
+    if (isLogged(level)) {
+      logConstraint(level, node, message, exception);
+    }
+  }
 }

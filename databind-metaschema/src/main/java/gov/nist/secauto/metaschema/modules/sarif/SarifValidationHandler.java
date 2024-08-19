@@ -157,16 +157,12 @@ public final class SarifValidationHandler {
     }
   }
 
-  private void addRuleRecord(@NonNull AbstractRuleRecord rule) {
-    rules.add(rule);
-  }
-
   private ConstraintRuleRecord getRuleRecord(@NonNull IConstraint constraint) {
     ConstraintRuleRecord retval = constraintRules.get(constraint);
     if (retval == null) {
       retval = new ConstraintRuleRecord(constraint);
       constraintRules.put(constraint, retval);
-      addRuleRecord(retval);
+      rules.add(retval);
     }
     return retval;
   }

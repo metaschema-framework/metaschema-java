@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.cst.path;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractNamedInstanceExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
@@ -33,7 +32,7 @@ public class ModelInstance
    * @param test
    *          the test to use to match
    */
-  public ModelInstance(@NonNull IExpression test) {
+  public ModelInstance(@NonNull INodeTestExpression test) {
     super(test);
   }
 
@@ -55,13 +54,15 @@ public class ModelInstance
         .map(ItemUtils::checkItemIsNodeItemForStep)
         .flatMap(item -> {
           assert item != null;
-          return match(item);
+          return match(dynamicContext, item);
         })));
   }
 
   /**
    * Get a stream of matching child node items for the provided {@code context}.
    *
+   * @param dynamicContext
+   *          the evaluation context
    * @param focusedItem
    *          the node item to match child items of
    * @return the stream of matching node items
@@ -69,15 +70,20 @@ public class ModelInstance
   @SuppressWarnings("null")
   @NonNull
   protected Stream<? extends IModelNodeItem<?, ?>> match(
+      @NonNull DynamicContext dynamicContext,
       @NonNull INodeItem focusedItem) {
     Stream<? extends IModelNodeItem<?, ?>> retval;
-    if (getTest() instanceof NameTest) {
+
+    INodeTestExpression test = getTest();
+    if (test instanceof NameTest) {
       QName name = ((NameTest) getTest()).getName();
       List<? extends IModelNodeItem<?, ?>> items = focusedItem.getModelItemsByName(name);
       retval = items.stream();
+    } else if (test instanceof Wildcard) {
+      // match all items
+      retval = ((Wildcard) test).match(focusedItem.modelItems());
     } else {
-      // wildcard
-      retval = focusedItem.modelItems();
+      throw new UnsupportedOperationException(test.getClass().getName());
     }
     return retval;
   }

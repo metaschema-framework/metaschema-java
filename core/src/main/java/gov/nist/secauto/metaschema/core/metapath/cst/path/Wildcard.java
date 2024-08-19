@@ -34,7 +34,7 @@ public class Wildcard implements INameTestExpression {
    * @param matcher
    *          the matcher used to determine matching nodes
    */
-  public Wildcard(@Nullable Predicate<IDefinitionNodeItem<?, ?>> matcher) {
+  public Wildcard(@Nullable IWildcardMatcher matcher) {
     this.matcher = matcher;
   }
 
@@ -46,22 +46,50 @@ public class Wildcard implements INameTestExpression {
   @Override
   public ISequence<? extends INodeItem> accept(
       DynamicContext dynamicContext, ISequence<?> focus) {
-    Stream<? extends INodeItem> nodes = focus.stream().map(ItemUtils::checkItemIsNodeItemForStep);
+    Stream<? extends INodeItem> nodes = ObjectUtils.notNull(focus.stream().map(ItemUtils::checkItemIsNodeItemForStep));
+    return ISequence.of(match(nodes));
+  }
+
+  /**
+   * Check the provided items to determine if each item matches the wildcard. All
+   * items that match are returned.
+   *
+   * @param <T>
+   *          the item Java type
+   * @param items
+   *          the items to check if they match
+   * @return the matching items
+   */
+  @NonNull
+  public <T extends INodeItem> Stream<T> match(@NonNull Stream<T> items) {
+    Stream<T> nodes = items;
     if (matcher != null) {
       Predicate<IDefinitionNodeItem<?, ?>> test = matcher;
-      nodes = nodes.filter(item -> {
+      nodes = ObjectUtils.notNull(nodes.filter(item -> {
         assert matcher != null;
         return !(item instanceof IDefinitionNodeItem) ||
             test.test((IDefinitionNodeItem<?, ?>) item);
-      });
+      }));
     }
-    return ISequence.of(ObjectUtils.notNull(nodes));
+    return nodes;
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  public String toASTString() {
+    return String.format("%s[%s]", getClass().getName(), matcher == null ? "*:*" : matcher.toString());
+  }
+
+  public interface IWildcardMatcher extends Predicate<IDefinitionNodeItem<?, ?>> {
+    @Override
+    @NonNull
+    String toString();
   }
 
   /**
    * A wildcard matcher that matches a specific local name in any namespace.
    */
-  public static class MatchAnyNamespace implements Predicate<IDefinitionNodeItem<?, ?>> {
+  public static class MatchAnyNamespace implements IWildcardMatcher {
     @NonNull
     private final String localName;
 
@@ -79,12 +107,17 @@ public class Wildcard implements INameTestExpression {
     public boolean test(IDefinitionNodeItem<?, ?> item) {
       return localName.equals(item.getQName().getLocalPart());
     }
+
+    @Override
+    public String toString() {
+      return "*:" + localName;
+    }
   }
 
   /**
    * A wildcard matcher that matches any local name in a specific namespace.
    */
-  public static class MatchAnyLocalName implements Predicate<IDefinitionNodeItem<?, ?>> {
+  public static class MatchAnyLocalName implements IWildcardMatcher {
     @NonNull
     private final String namespace;
 
@@ -101,6 +134,11 @@ public class Wildcard implements INameTestExpression {
     @Override
     public boolean test(IDefinitionNodeItem<?, ?> item) {
       return namespace.equals(item.getQName().getNamespaceURI());
+    }
+
+    @Override
+    public String toString() {
+      return namespace + ":*";
     }
   }
 }

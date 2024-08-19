@@ -180,7 +180,7 @@ public class ModelDetector {
     Class<? extends IBoundObject> retval = null;
     JsonUtil.advanceAndAssert(parser, JsonToken.START_OBJECT);
     outer: while (JsonToken.FIELD_NAME.equals(parser.nextToken())) {
-      String name = ObjectUtils.notNull(parser.getCurrentName());
+      String name = ObjectUtils.notNull(parser.currentName());
       if (!"$schema".equals(name)) {
         IBindingContext bindingContext = getBindingContext();
         retval = bindingContext.getBoundClassForRootJsonName(name);

@@ -58,8 +58,7 @@ final class MetaschemaJsonUtil {
     Stream<? extends IBoundProperty<?>> instanceStream;
     if (targetDefinition instanceof IBoundDefinitionModelAssembly) {
       // use all child instances
-      instanceStream = ((IBoundDefinitionModelAssembly) targetDefinition).getModelInstances().stream()
-          .map(instance -> (IBoundProperty<?>) instance);
+      instanceStream = ((IBoundDefinitionModelAssembly) targetDefinition).getModelInstances().stream();
     } else if (targetDefinition instanceof IBoundDefinitionModelFieldComplex) {
       IBoundDefinitionModelFieldComplex targetFieldDefinition = (IBoundDefinitionModelFieldComplex) targetDefinition;
 

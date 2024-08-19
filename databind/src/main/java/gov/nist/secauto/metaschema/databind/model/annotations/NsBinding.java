@@ -22,7 +22,7 @@ public @interface NsBinding {
    * @return the prefix
    */
   @NonNull
-  public String prefix();
+  String prefix();
 
   /**
    * The Metapath namespace URI that is bound to the prefix.
@@ -30,5 +30,5 @@ public @interface NsBinding {
    * @return the prefix
    */
   @NonNull
-  public String uri();
+  String uri();
 }

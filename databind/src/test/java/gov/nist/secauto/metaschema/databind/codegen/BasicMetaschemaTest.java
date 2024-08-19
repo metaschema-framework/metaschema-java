@@ -23,7 +23,6 @@ import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
 import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
@@ -200,7 +199,8 @@ class BasicMetaschemaTest
         new URI("https://raw.githubusercontent.com/usnistgov/OSCAL/main/src/metaschema/oscal_complete_metaschema.xml"));
 
     IDocumentNodeItem moduleItem = ObjectUtils.requireNonNull(module.getSourceNodeItem());
-    METASCHEMA moduleData = (METASCHEMA) moduleItem.getValue();
+    // METASCHEMA moduleData =
+    moduleItem.getValue();
     assert moduleItem != null;
 
     StaticContext staticContext = moduleItem.getStaticContext();
@@ -208,11 +208,12 @@ class BasicMetaschemaTest
     DynamicContext dynamicContext = new DynamicContext(staticContext);
     dynamicContext.setDocumentLoader(IBindingContext.instance().newBoundLoader());
 
-    MetapathExpression importsMetapath = MetapathExpression.compile(
-        "for $import in /METASCHEMA/import return doc(resolve-uri($import/@href))/METASCHEMA",
-        staticContext);
+    // MetapathExpression importsMetapath = MetapathExpression.compile(
+    // "for $import in /METASCHEMA/import return
+    // doc(resolve-uri($import/@href))/METASCHEMA",
+    // staticContext);
 
-    ISequence<?> imports = importsMetapath.evaluate(moduleItem, dynamicContext);
+    // ISequence<?> imports = importsMetapath.evaluate(moduleItem, dynamicContext);
 
     MetapathExpression allImportsExpression = MetapathExpression.compile(
         "recurse-depth(/METASCHEMA,'for $import in ./import return doc(resolve-uri($import/@href))/METASCHEMA')",

@@ -24,7 +24,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param targets
    *          the targets of evaluation
@@ -40,7 +40,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param targets
    *          the targets of evaluation
@@ -56,7 +56,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    */
   void handleIndexDuplicateViolation(
@@ -71,7 +71,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param oldItem
    *          the node that exists in the index for the related key
@@ -92,7 +92,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param oldItem
    *          the other node with the same key
@@ -111,7 +111,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param target
    *          the target of evaluation
@@ -132,7 +132,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param target
    *          the target of evaluation
@@ -154,7 +154,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param target
    *          the target of evaluation
@@ -175,7 +175,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param target
    *          the target of evaluation
@@ -200,7 +200,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param target
    *          the target of evaluation
@@ -227,7 +227,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param target
    *          the target of evaluation
@@ -258,7 +258,7 @@ public interface IConstraintValidationHandler {
    * @param constraint
    *          the constraint that was evaluated
    * @param node
-   *          the node the constraint was evaluated as the focus to determine
+   *          the node used as the evaluation focus to determine constraint
    *          targets
    * @param target
    *          the target of evaluation
@@ -267,4 +267,24 @@ public interface IConstraintValidationHandler {
       @NonNull IConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target);
+
+  /**
+   * Handle a constraint that whose evaluation resulted in an unexpected error
+   * during validation.
+   *
+   * @param constraint
+   *          the constraint that was evaluated
+   * @param node
+   *          the node used as the evaluation focus to determine constraint
+   *          targets
+   * @param message
+   *          the error message
+   * @param exception
+   *          the causing exception
+   */
+  void handleError(
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull String message,
+      @NonNull Throwable exception);
 }

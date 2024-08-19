@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.cst.path;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractNamedInstanceExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
@@ -31,7 +30,7 @@ public class Flag // NOPMD - intentional name
    * @param test
    *          the test to use to match
    */
-  public Flag(@NonNull IExpression test) {
+  public Flag(@NonNull INodeTestExpression test) {
     super(test);
   }
 
@@ -68,14 +67,18 @@ public class Flag // NOPMD - intentional name
   @NonNull
   protected Stream<? extends IFlagNodeItem> match(@NonNull INodeItem focusedItem) {
     Stream<? extends IFlagNodeItem> retval;
-    if (getTest() instanceof NameTest) {
+
+    INodeTestExpression test = getTest();
+    if (test instanceof NameTest) {
       QName name = ((NameTest) getTest()).getName();
 
       IFlagNodeItem item = focusedItem.getFlagByName(name);
       retval = item == null ? Stream.empty() : Stream.of(item);
+    } else if (test instanceof Wildcard) {
+      // match all items
+      retval = ((Wildcard) test).match(focusedItem.flags());
     } else {
-      // wildcard
-      retval = focusedItem.flags();
+      throw new UnsupportedOperationException(test.getClass().getName());
     }
     return retval;
   }

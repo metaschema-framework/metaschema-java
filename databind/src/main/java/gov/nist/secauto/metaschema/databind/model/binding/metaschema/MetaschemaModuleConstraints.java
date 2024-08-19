@@ -518,7 +518,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
     @MetaschemaAssembly(
         name = "flag",
         moduleClass = MetaschemaModelModule.class)
-    public static class Flag implements IBoundObject, IValueConstraintsBase {
+    public static class Flag implements IValueConstraintsBase {
       private final IMetaschemaData __metaschemaData;
 
       @BoundFlag(

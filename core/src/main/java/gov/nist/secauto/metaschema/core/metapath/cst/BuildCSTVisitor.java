@@ -87,7 +87,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -102,7 +101,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -766,7 +764,7 @@ public class BuildCSTVisitor
 
   @Override
   protected Wildcard handleWildcard(WildcardContext ctx) {
-    Predicate<IDefinitionNodeItem<?, ?>> matcher = null;
+    Wildcard.IWildcardMatcher matcher = null;
     if (ctx.STAR() == null) {
       if (ctx.CS() != null) {
         // specified prefix, any local-name
