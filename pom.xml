@@ -48,6 +48,7 @@
 		<dependency.commons-io.version>2.16.1</dependency.commons-io.version>
 		<dependency.commons-lang3.version>3.14.0</dependency.commons-lang3.version>
 		<dependency.commons-text.version>1.12.0</dependency.commons-text.version>
+		<dependency.eclipse-jdt.version>2.3.0</dependency.eclipse-jdt.version>
 		<dependency.everit-json.version>1.14.4</dependency.everit-json.version>
 		<dependency.flexmark.version>0.64.8</dependency.flexmark.version>
 		<dependency.freemarker.version>2.3.32</dependency.freemarker.version>
@@ -434,6 +435,11 @@
 				<version>${dependency.spotbugs-annotations.version}</version>
 			</dependency>
 			<dependency>
+			    <groupId>org.eclipse.jdt</groupId>
+			    <artifactId>org.eclipse.jdt.annotation</artifactId>
+			    <version>${dependency.eclipse-jdt.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.jmock</groupId>
 				<artifactId>jmock-junit5</artifactId>
 				<version>${dependency.jmock-junit5.version}</version>
@@ -490,11 +496,6 @@
 				<version>6.4.1</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.eclipse.jdt</groupId>
-			    <artifactId>org.eclipse.jdt.annotation</artifactId>
-			    <version>2.3.0</version>
-			</dependency>
-			<dependency>
 		        <groupId>org.apache.velocity.tools</groupId>
 		        <artifactId>velocity-tools-generic</artifactId>
 		        <version>3.1</version>
@@ -506,6 +507,10 @@
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
 			<!--            <optional>true</optional>-->
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.jdt</groupId>
+		    <artifactId>org.eclipse.jdt.annotation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

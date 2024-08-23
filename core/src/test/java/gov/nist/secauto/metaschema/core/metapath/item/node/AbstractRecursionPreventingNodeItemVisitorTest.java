@@ -4,6 +4,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,8 +23,8 @@ class AbstractRecursionPreventingNodeItemVisitorTest {
           }
         };
 
-    IModule module = new ModuleLoader()
-        .load(Paths.get("metaschema/schema/metaschema/metaschema-module-metaschema.xml"));
+    IModule module = new ModuleLoader().load(ObjectUtils.notNull(
+        Paths.get("metaschema/schema/metaschema/metaschema-module-metaschema.xml")));
     visitor.visitMetaschema(INodeItemFactory.instance().newModuleNodeItem(module), null);
   }
 

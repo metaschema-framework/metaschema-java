@@ -20,15 +20,13 @@ class MermaidErDiagramGeneratorTest {
 
   @Test
   void testErDiagram() throws IOException, MetaschemaException, URISyntaxException {
-    MermaidErDiagramGenerator visitor = new MermaidErDiagramGenerator();
-
     // IModule module = new ModuleLoader()
     // .load(Paths.get("metaschema/schema/metaschema/metaschema-module-metaschema.xml"));
     IModule module = new ModuleLoader()
         .load(new URI("https://github.com/usnistgov/OSCAL/raw/main/src/metaschema/oscal_complete_metaschema.xml"));
 
     try (PrintWriter writer = new PrintWriter(System.out)) {
-      visitor.generate(module, writer);
+      MermaidErDiagramGenerator.generate(module, writer);
     }
   }
 }

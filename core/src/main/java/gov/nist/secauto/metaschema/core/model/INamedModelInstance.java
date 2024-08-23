@@ -5,12 +5,38 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import java.util.function.Predicate;
+
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface INamedModelInstance extends IModelInstance, INamedInstance {
+
+  /**
+   * Tests if the provided instance represents complex data. The data is complex
+   * if one of the following is true:
+   * <ul>
+   * <li>The instance is a {@link IAssemblyInstance}.</li>
+   * <li>The instance is a {@link IFieldInstance} that has flags.</li>
+   * </ul>
+   *
+   * This method can be used as a {@link Predicate}.
+   *
+   * @param instance
+   *          the instance to test
+   * @return {@code true} if the data is complex, or {@code false} otherwise
+   */
+  static boolean complexObjectFilter(INamedModelInstance instance) {
+    boolean retval = true;
+    if (instance instanceof IFieldInstance) {
+      IFieldInstance field = (IFieldInstance) instance;
+      retval = !field.getDefinition().getFlagInstances().isEmpty();
+    }
+    return retval;
+  }
+
   @Override
   @NonNull
   IModelDefinition getDefinition();

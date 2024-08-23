@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.util;
 
@@ -5,21 +9,23 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
-import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
+import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * A basic implementation of a {@link IDiagramNodeVisitor}.
+ */
 @SuppressWarnings("PMD.DataClass")
 public class DefaultDiagramNode implements IDiagramNode {
   @NonNull
@@ -30,15 +36,6 @@ public class DefaultDiagramNode implements IDiagramNode {
   private final List<IDiagramNode.IAttribute> attributes;
   @NonNull
   private final Lazy<List<IDiagramNode.IEdge>> edges;
-
-  public static final boolean objectFilter(IModelInstance instance) {
-    boolean retval = true;
-    if (instance instanceof IFieldInstance) {
-      IFieldInstance field = (IFieldInstance) instance;
-      retval = !field.getDefinition().getFlagInstances().isEmpty();
-    }
-    return retval;
-  }
 
   @NonNull
   private static String getParentContext(@NonNull IModelDefinition definition) {
@@ -53,9 +50,14 @@ public class DefaultDiagramNode implements IDiagramNode {
     return retval;
   }
 
+  /**
+   * Construct a new diagram node.
+   *
+   * @param definition
+   *          the definition to base the node on
+   */
   public DefaultDiagramNode(
-      @NonNull IModelDefinition definition,
-      @NonNull Function<IModelDefinition, IDiagramNode> resolver) {
+      @NonNull IModelDefinition definition) {
     this.definition = definition;
     this.name = getParentContext(definition);
     this.attributes = ObjectUtils.notNull(Stream.concat(
@@ -65,36 +67,36 @@ public class DefaultDiagramNode implements IDiagramNode {
         definition instanceof IAssemblyDefinition
             ? ((IAssemblyDefinition) definition).getFieldInstances().stream()
                 // singleton fields with no flags
-                .filter(field -> !objectFilter(field))
+                .filter(field -> !INamedModelInstance.complexObjectFilter(field))
                 .map(field -> new Attribute(field.getEffectiveName(), field.getDefinition().getJavaTypeAdapter()))
             : Stream.empty())
         .collect(Collectors.toUnmodifiableList()));
     this.edges = ObjectUtils.notNull(Lazy.lazy(() -> definition instanceof IAssemblyDefinition
-        ? generateEdges((IAssemblyDefinition) definition, resolver)
+        ? generateEdges((IAssemblyDefinition) definition)
         : CollectionUtil.emptyList()));
   }
 
   @NonNull
   private List<IDiagramNode.IEdge> generateEdges(
-      @NonNull IAssemblyDefinition definition,
-      @NonNull Function<IModelDefinition, IDiagramNode> resolver) {
+      @NonNull IAssemblyDefinition definition) {
     return ObjectUtils.notNull(definition.getModelInstances().stream()
-        .filter(DefaultDiagramNode::objectFilter)
         .flatMap(instance -> {
           Stream<AbstractEdge<?>> retval;
           if (instance instanceof IChoiceInstance) {
             IChoiceInstance choice = (IChoiceInstance) instance;
             retval = choice.getNamedModelInstances().stream()
-                .filter(DefaultDiagramNode::objectFilter)
+                .filter(INamedModelInstance::complexObjectFilter)
                 .map(ci -> new ChoiceEdge(choice, ObjectUtils.requireNonNull(ci)));
           } else if (instance instanceof IChoiceGroupInstance) {
             IChoiceGroupInstance choiceGroup = (IChoiceGroupInstance) instance;
             retval = choiceGroup.getNamedModelInstances().stream()
-                .filter(DefaultDiagramNode::objectFilter)
+                .filter(INamedModelInstance::complexObjectFilter)
                 .map(cgi -> new ChoiceGroupEdge(choiceGroup, ObjectUtils.requireNonNull(cgi)));
           } else {
             INamedModelInstanceAbsolute modelInstance = (INamedModelInstanceAbsolute) instance;
-            retval = Stream.of(new ModelEdge(ObjectUtils.requireNonNull(modelInstance)));
+            retval = INamedModelInstance.complexObjectFilter(modelInstance)
+                ? Stream.of(new ModelEdge(ObjectUtils.requireNonNull(modelInstance)))
+                : Stream.empty();
           }
           return retval;
         })
@@ -109,7 +111,7 @@ public class DefaultDiagramNode implements IDiagramNode {
 
   @Override
   @NonNull
-  public String getName() {
+  public String getIdentifier() {
     return name;
   }
 
@@ -135,13 +137,13 @@ public class DefaultDiagramNode implements IDiagramNode {
     }
 
     @Override
-    public IDiagramNode getSubjectNode() {
+    public IDiagramNode getNode() {
       return DefaultDiagramNode.this;
     }
 
     @Override
     @NonNull
-    public String getName() {
+    public String getLabel() {
       return name;
     }
 
@@ -166,7 +168,7 @@ public class DefaultDiagramNode implements IDiagramNode {
     }
 
     @Override
-    public IDiagramNode getSubjectNode() {
+    public IDiagramNode getNode() {
       return DefaultDiagramNode.this;
     }
 
@@ -208,6 +210,11 @@ public class DefaultDiagramNode implements IDiagramNode {
       this.choice = choice;
     }
 
+    /**
+     * Get the associated choice.
+     *
+     * @return the choice instance
+     */
     @NonNull
     public IChoiceInstance getChoice() {
       return choice;
@@ -231,6 +238,11 @@ public class DefaultDiagramNode implements IDiagramNode {
       this.choiceGroup = choiceGroup;
     }
 
+    /**
+     * Get the associated choice group.
+     *
+     * @return the choice group instance
+     */
     @NonNull
     public IChoiceGroupInstance getChoiceGroup() {
       return choiceGroup;

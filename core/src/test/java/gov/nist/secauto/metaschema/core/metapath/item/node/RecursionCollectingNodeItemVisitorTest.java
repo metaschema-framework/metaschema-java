@@ -4,6 +4,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +18,8 @@ class RecursionCollectingNodeItemVisitorTest {
 
   @Test
   void testAssemblyRecursion() throws MetaschemaException, IOException {
-    IModule module = new ModuleLoader()
-        .load(Paths.get("metaschema/schema/metaschema/metaschema-module-metaschema.xml"));
+    IModule module = new ModuleLoader().load(ObjectUtils.notNull(
+        Paths.get("metaschema/schema/metaschema/metaschema-module-metaschema.xml")));
 
     RecursionCollectingNodeItemVisitor walker = new RecursionCollectingNodeItemVisitor();
     walker.visit(module);
@@ -30,6 +31,7 @@ class RecursionCollectingNodeItemVisitorTest {
     recursiveAssemblies.forEach(record -> {
       System.out.println(record.getDefinition().getFormalName());
       record.getLocations().forEach(location -> {
+        assert location != null;
         System.out.println("- " + metapath(location));
       });
     });

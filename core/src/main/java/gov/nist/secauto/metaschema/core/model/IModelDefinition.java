@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import javax.xml.namespace.QName;
 
@@ -13,6 +14,29 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IModelDefinition extends IDefinition, IContainer {
+  /**
+   * Tests if the provided definition represents complex data. The data is complex
+   * if one of the following is true:
+   * <ul>
+   * <li>The instance is a {@link IAssemblyDefinition}.</li>
+   * <li>The instance is a {@link IFieldDefinition} that has flags.</li>
+   * </ul>
+   *
+   * This method can be used as a {@link Predicate}.
+   *
+   * @param definition
+   *          the definition to test
+   * @return {@code true} if the data is complex, or {@code false} otherwise
+   */
+  static boolean complexObjectFilter(IModelDefinition definition) {
+    boolean retval = true;
+    if (definition instanceof IFieldDefinition) {
+      IFieldDefinition field = (IFieldDefinition) definition;
+      retval = !field.getFlagInstances().isEmpty();
+    }
+    return retval;
+  }
+
   @Override
   default boolean hasChildren() {
     return !getFlagInstances().isEmpty();
