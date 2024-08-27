@@ -14,6 +14,7 @@ public class MetapathCommand
   public MetapathCommand() {
     super(true);
     addCommandHandler(new ListFunctionsSubcommand());
+    addCommandHandler(new TestPathSubCommand());
   }
 
   @Override
