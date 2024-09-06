@@ -11,6 +11,8 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 
 import java.util.stream.Stream;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 public interface IItem extends ICollectionValue {
 
   /**
@@ -49,4 +51,12 @@ public interface IItem extends ICollectionValue {
   default Stream<? extends IItem> flatten() {
     return Stream.of(this);
   }
+
+  /**
+   * A visitor callback used to visit a variety of Metapath item types.
+   *
+   * @param visitor
+   *          the visitor to call back
+   */
+  void accept(@NonNull IItemVisitor visitor);
 }

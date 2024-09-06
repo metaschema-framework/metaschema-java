@@ -5,6 +5,7 @@ import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathSegment;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -285,4 +286,9 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    */
   @NonNull
   StaticContext getStaticContext();
+
+  @Override
+  default void accept(IItemVisitor visitor) {
+    visitor.visit(this);
+  }
 }

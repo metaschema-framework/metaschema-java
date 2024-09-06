@@ -14,11 +14,8 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.util.XmlUtil;
-import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;
-import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
@@ -68,7 +65,7 @@ public class ValidateContentUsingModuleCommand
 
     List<Option> retval = new ArrayList<>(orig.size() + 1);
     retval.addAll(orig);
-    retval.add(MetaschemaCommandSupport.METASCHEMA_OPTION);
+    retval.add(MetaschemaCommands.METASCHEMA_OPTION);
 
     return CollectionUtil.unmodifiableCollection(retval);
   }
@@ -104,33 +101,14 @@ public class ValidateContentUsingModuleCommand
       URI cwd = Paths.get("").toAbsolutePath().toUri();
 
       if (module == null) {
-        String moduleName
-            = ObjectUtils.requireNonNull(getCommandLine().getOptionValue(MetaschemaCommandSupport.METASCHEMA_OPTION));
-        URI moduleUri;
-
         try {
-          moduleUri = UriUtils.toUri(moduleName, cwd);
+          module = MetaschemaCommands.handleModule(getCommandLine(), cwd, constraintSets);
         } catch (URISyntaxException ex) {
-          IOException newEx = new IOException( // NOPMD - intentional
-              String.format("Cannot load module as '%s' is not a valid file or URL.", moduleName));
-          newEx.addSuppressed(ex);
-          throw newEx;
+          throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),
+              ex);
         }
-
-        assert moduleUri != null;
-
-        ExternalConstraintsModulePostProcessor postProcessor
-            = new ExternalConstraintsModulePostProcessor(constraintSets);
-
-        ModuleLoader loader = new ModuleLoader(CollectionUtil.singletonList(postProcessor));
-
-        // BindingModuleLoader loader
-        // = new BindingModuleLoader(new DefaultBindingContext(),
-        // CollectionUtil.singletonList(postProcessor));
-
-        loader.allowEntityResolution();
-        module = loader.load(moduleUri);
       }
+
       assert module != null;
       return module;
     }

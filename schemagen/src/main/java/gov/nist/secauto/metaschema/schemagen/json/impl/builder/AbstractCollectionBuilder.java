@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.schemagen.json.impl.builder;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IGroupable;
@@ -194,8 +195,21 @@ public abstract class AbstractCollectionBuilder<T extends AbstractCollectionBuil
     public void build(
         @NonNull ObjectNode object,
         @NonNull IJsonGenerationState state) {
-      IDefinitionJsonSchema<IModelDefinition> schema = getJsonSchema(state);
-      schema.generateSchemaOrRef(object, state);
+
+      IModelDefinition definition = getNamedModelInstance().getDefinition();
+
+      int flagCount = definition.getFlagInstances().size();
+      if (jsonKeyFlag != null) {
+        --flagCount;
+      }
+
+      if (flagCount > 0) {
+        IDefinitionJsonSchema<IModelDefinition> schema = getJsonSchema(state);
+        schema.generateSchemaOrRef(object, state);
+      } else if (definition instanceof IFieldDefinition) {
+        IDataTypeJsonSchema schema = state.getSchema(((IFieldDefinition) definition).getJavaTypeAdapter());
+        schema.generateSchemaOrRef(object, state);
+      }
     }
   }
 

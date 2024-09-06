@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.ArrayItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -569,5 +570,10 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
         : collection.isEmpty()
             ? empty()
             : new ArrayItemN<>(new ArrayList<>(collection));
+  }
+
+  @Override
+  default void accept(IItemVisitor visitor) {
+    visitor.visit(this);
   }
 }

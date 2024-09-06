@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.MapItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import java.util.LinkedHashMap;
@@ -781,5 +782,10 @@ public interface IMapItem<VALUE extends ICollectionValue>
         : map.isEmpty()
             ? empty()
             : new MapItemN<>(new LinkedHashMap<>(map));
+  }
+
+  @Override
+  default void accept(IItemVisitor visitor) {
+    visitor.visit(this);
   }
 }

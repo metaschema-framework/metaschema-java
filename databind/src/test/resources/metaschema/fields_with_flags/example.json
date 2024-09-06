@@ -21,8 +21,8 @@
       }
     ],
     "complex-fields4": {
-      "complex-field4-1": {"STRVALUE": "test-string5"},
-      "complex-field4-2": {"STRVALUE": "test-string6"}
+      "complex-field4-1": "test-string5",
+      "complex-field4-2": "test-string6"
     }
   }
 }

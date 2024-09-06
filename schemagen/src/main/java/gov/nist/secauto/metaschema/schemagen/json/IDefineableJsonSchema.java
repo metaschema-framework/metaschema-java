@@ -154,7 +154,7 @@ public interface IDefineableJsonSchema {
       if (jsonKeyFlagName != null || discriminatorProperty != null || discriminatorValue != null) {
         retval = new ComplexKey(definition, jsonKeyFlagName, discriminatorProperty, discriminatorValue);
       } else {
-        retval = new SimpleKey(definition);
+        retval = of(definition);
       }
       return retval;
     }

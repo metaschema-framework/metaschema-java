@@ -80,7 +80,7 @@ public abstract class AbstractValidateContentCommand
   private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(
       Option.builder("c")
           .hasArgs()
-          .argName("URI")
+          .argName("URL")
           .desc("additional constraint definitions")
           .build());
   @NonNull
