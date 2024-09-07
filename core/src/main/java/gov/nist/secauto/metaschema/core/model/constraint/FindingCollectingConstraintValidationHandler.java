@@ -16,15 +16,20 @@ import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class FindingCollectingConstraintValidationHandler
     extends AbstractConstraintValidationHandler
     implements IValidationResult {
+  private static final Logger LOGGER = LogManager.getLogger(FindingCollectingConstraintValidationHandler.class);
   @NonNull
   private final List<ConstraintValidationFinding> findings = new LinkedList<>();
   @NonNull
@@ -263,6 +268,7 @@ public class FindingCollectingConstraintValidationHandler
       INodeItem node,
       String message,
       Throwable exception) {
+    LOGGER.atError().withThrowable(exception).log(message);
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .kind(Kind.FAIL)
         .severity(Level.CRITICAL)

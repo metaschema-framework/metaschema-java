@@ -26,7 +26,7 @@
 	<scm>
 		<url>${scm.url}/tree/develop/metaschema-maven-plugin</url>
 	  <tag>HEAD</tag>
-  </scm>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -75,7 +75,6 @@
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>${dependency.maven-plugin-tools.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
