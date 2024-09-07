@@ -27,6 +27,7 @@ https://www.antlr.org/antlr4-runtime/
 http://www.eclipse.org/eclipselink/moxy/org.eclipse.persistence.moxy
 http://www.eclipse.org/sisu/org.eclipse.sisu.plexus/
 http://www.eclipse.org/sisu/org.eclipse.sisu.inject/
+http://www.jdom.org/
 http://www.mojohaus.org/appassembler-maven-plugin/appassembler/appassembler-maven-plugin
 http://www.seamframework.org/Weld/cdi-api
 http://www.thymeleaf.org/thymeleaf-lib/thymeleaf
