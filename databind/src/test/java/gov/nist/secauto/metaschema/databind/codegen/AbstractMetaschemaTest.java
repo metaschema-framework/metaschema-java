@@ -66,6 +66,7 @@ abstract class AbstractMetaschemaTest {
         .loadClass(rootClassName)));
   }
 
+  @NonNull
   private static <T extends IBoundObject> T read(
       @NonNull Format format,
       @NonNull Path file,

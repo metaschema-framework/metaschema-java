@@ -240,6 +240,17 @@ public abstract class AbstractMetaschemaMojo
     return Stream.of(ds.getIncludedFiles()).map(filename -> new File(metaschemaDir, filename)).distinct();
   }
 
+  /**
+   * Get the configured collection of constraints.
+   *
+   * @param bindingContext
+   *          the Metaschema binding context to use when loading the constraints
+   * @return the loaded constraints
+   * @throws MetaschemaException
+   *           if a binding exception occurred while loading the constraints
+   * @throws IOException
+   *           if an error occurred while reading the constraints
+   */
   protected List<IConstraintSet> getConstraints(@NonNull IBindingContext bindingContext)
       throws MetaschemaException, IOException {
     IConstraintLoader loader = new BindingConstraintLoader(bindingContext);

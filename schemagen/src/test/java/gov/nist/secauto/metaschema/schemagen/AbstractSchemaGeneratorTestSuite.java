@@ -149,13 +149,13 @@ public abstract class AbstractSchemaGeneratorTestSuite
   }
 
   protected Path produceXmlSchema(@NonNull IModule module, @NonNull Path schemaPath) throws IOException {
-    produceSchema(module, schemaPath, XML_SCHEMA_PROVIDER);
+    generateSchema(module, schemaPath, XML_SCHEMA_PROVIDER);
     return schemaPath;
   }
 
   protected Path produceJsonSchema(@NonNull IModule module, @NonNull Path schemaPath)
       throws IOException {
-    produceSchema(module, schemaPath, JSON_SCHEMA_PROVIDER);
+    generateSchema(module, schemaPath, JSON_SCHEMA_PROVIDER);
     return schemaPath;
   }
 

@@ -11,6 +11,9 @@ public class MetapathCommand
     extends AbstractParentCommand {
   private static final String COMMAND = "metapath";
 
+  /**
+   * Construct a new Metapath command.
+   */
   public MetapathCommand() {
     super(true);
     addCommandHandler(new ListFunctionsSubcommand());

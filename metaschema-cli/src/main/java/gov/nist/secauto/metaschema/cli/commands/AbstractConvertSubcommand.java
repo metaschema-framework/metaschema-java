@@ -113,12 +113,25 @@ public abstract class AbstractConvertSubcommand
   protected abstract static class AbstractConversionCommandExecutor
       extends AbstractCommandExecutor {
 
-    public AbstractConversionCommandExecutor(
+    /**
+     * Construct a new command executor.
+     *
+     * @param callingContext
+     *          the context of the command execution
+     * @param commandLine
+     *          the parsed command line details
+     */
+    protected AbstractConversionCommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
     }
 
+    /**
+     * Get the binding context to use for data processing.
+     *
+     * @return the context
+     */
     @NonNull
     protected abstract IBindingContext getBindingContext();
 
@@ -161,9 +174,10 @@ public abstract class AbstractConvertSubcommand
         }
       }
 
-      String sourceName = extraArgs.get(0);
+      String sourceName = ObjectUtils.notNull(extraArgs.get(0));
+      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
+
       URI source;
-      URI cwd = Paths.get("").toAbsolutePath().toUri();
       try {
         source = UriUtils.toUri(sourceName, cwd);
       } catch (URISyntaxException ex) {
@@ -206,6 +220,22 @@ public abstract class AbstractConvertSubcommand
       return ExitCode.OK.exit();
     }
 
+    /**
+     * Called to perform a content conversion.
+     *
+     * @param source
+     *          the resource to convert
+     * @param toFormat
+     *          the format to convert to
+     * @param writer
+     *          the writer to use to write converted content
+     * @param loader
+     *          the Metaschema loader to use to load the content to convert
+     * @throws FileNotFoundException
+     *           if the requested resource was not found
+     * @throws IOException
+     *           if there was an error reading or writing content
+     */
     protected abstract void handleConversion(
         @NonNull URI source,
         @NonNull Format toFormat,

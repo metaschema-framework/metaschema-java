@@ -25,7 +25,7 @@ class JsonParserTest
   @Test
   void testIssue308Regression() throws IOException, MetaschemaException {
     ModuleLoader moduleLoader = new ModuleLoader();
-    IMetaschemaModule module
+    IMetaschemaModule<?> module
         = moduleLoader.load(Paths.get("src/test/resources/metaschema/308-choice-regression/metaschema.xml"));
 
     IBindingContext context = IBindingContext.instance();

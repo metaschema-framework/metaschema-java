@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UuidAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ class UuidItemImpl
 
   @Override
   public String asString() {
-    return asUuid().toString();
+    return ObjectUtils.notNull(asUuid().toString());
   }
 
   @Override

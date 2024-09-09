@@ -157,8 +157,10 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
     writeGroupedModelObject(
         instance,
         item,
-        ((ObjectWriter<IBoundInstanceModelGroupedField>) this::writeDiscriminatorProperty)
-            .andThen(this::writeObjectProperties));
+        (parent, handler) -> {
+          writeDiscriminatorProperty(handler);
+          writeObjectProperties(parent, handler);
+        });
   }
 
   @Override
@@ -184,8 +186,10 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
     writeGroupedModelObject(
         instance,
         item,
-        ((ObjectWriter<IBoundInstanceModelGroupedAssembly>) this::writeDiscriminatorProperty)
-            .andThen(this::writeObjectProperties));
+        (parent, handler) -> {
+          writeDiscriminatorProperty(handler);
+          writeObjectProperties(parent, handler);
+        });
   }
 
   @Override
@@ -216,7 +220,6 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
   }
 
   private <T extends IBoundInstanceModelGroupedNamed> void writeDiscriminatorProperty(
-      @NonNull Object parentItem,
       @NonNull T instance) throws IOException {
 
     IBoundInstanceModelChoiceGroup choiceGroup = instance.getParentContainer();

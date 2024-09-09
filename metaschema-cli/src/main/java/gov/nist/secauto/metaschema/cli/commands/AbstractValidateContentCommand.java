@@ -147,12 +147,31 @@ public abstract class AbstractValidateContentCommand
       extends AbstractCommandExecutor
       implements ISchemaValidationProvider {
 
+    /**
+     * Construct a new command executor.
+     *
+     * @param callingContext
+     *          the context of the command execution
+     * @param commandLine
+     *          the parsed command line details
+     */
     public AbstractValidationCommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
     }
 
+    /**
+     * Get the binding context to use for data processing.
+     *
+     * @param constraintSets
+     *          the constraints to configure in the resulting binding context
+     * @return the context
+     * @throws MetaschemaException
+     *           if a Metaschema error occurred
+     * @throws IOException
+     *           if an error occurred while reading data
+     */
     @NonNull
     protected abstract IBindingContext getBindingContext(@NonNull Set<IConstraintSet> constraintSets)
         throws MetaschemaException, IOException;
@@ -267,7 +286,7 @@ public abstract class AbstractValidateContentCommand
       }
 
       if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && LOGGER.isInfoEnabled()) {
-        Path sarifFile = Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION));
+        Path sarifFile = ObjectUtils.notNull(Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));
 
         IVersionInfo version
             = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);

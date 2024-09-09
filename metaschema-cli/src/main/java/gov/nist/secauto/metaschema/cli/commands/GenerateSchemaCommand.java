@@ -137,6 +137,15 @@ public class GenerateSchemaCommand
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
+  /**
+   * Called to execute the schema generation.
+   *
+   * @param callingContext
+   *          the context information for the execution
+   * @param cmdLine
+   *          the parsed command line details
+   * @return the execution result
+   */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
       "unused"
@@ -188,12 +197,12 @@ public class GenerateSchemaCommand
       }
     }
 
-    URI input;
-    String inputName = extraArgs.get(0);
-    URI cwd = Paths.get("").toAbsolutePath().toUri();
+    String inputName = ObjectUtils.notNull(extraArgs.get(0));
+    URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
 
+    URI input;
     try {
-      input = UriUtils.toUri(extraArgs.get(0), cwd);
+      input = UriUtils.toUri(inputName, cwd);
     } catch (URISyntaxException ex) {
       return ExitCode.IO_ERROR.exitMessage(
           String.format("Unable to load '%s' as it is not a valid file or URI.", inputName)).withThrowable(ex);

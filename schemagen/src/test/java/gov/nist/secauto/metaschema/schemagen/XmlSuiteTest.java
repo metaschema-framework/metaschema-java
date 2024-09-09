@@ -85,7 +85,7 @@ class XmlSuiteTest
   }
 
   @Override
-  protected BiFunction<IModule, Writer, Void> getGeneratorSupplier() {
+  protected BiFunction<IModule, Writer, Void> getSchemaGeneratorSupplier() {
     return XML_SCHEMA_PROVIDER;
   }
 
