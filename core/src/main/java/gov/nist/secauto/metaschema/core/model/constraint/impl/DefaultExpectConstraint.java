@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
-import nl.talsmasoftware.lazy4j.LazyEvaluationException;
 
 public final class DefaultExpectConstraint
     extends AbstractConstraint
@@ -91,16 +90,7 @@ public final class DefaultExpectConstraint
    */
   @NonNull
   public MetapathExpression getTestMetapath() {
-    try {
-      return ObjectUtils.notNull(testMetapath.get());
-    } catch (LazyEvaluationException ex) {
-      Throwable cause = ex.getCause();
-      if (cause instanceof RuntimeException) {
-        cause.addSuppressed(ex);
-        throw (RuntimeException) cause;
-      }
-      throw ex;
-    }
+    return ObjectUtils.notNull(testMetapath.get());
   }
 
   @Override

@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
-import nl.talsmasoftware.lazy4j.LazyEvaluationException;
 
 public class DefaultKeyField implements IKeyField {
 
@@ -62,16 +61,7 @@ public class DefaultKeyField implements IKeyField {
 
   @Override
   public MetapathExpression getTargetMetapath() {
-    try {
-      return ObjectUtils.notNull(target.get());
-    } catch (LazyEvaluationException ex) {
-      Throwable cause = ex.getCause();
-      cause.addSuppressed(ex);
-      if (cause instanceof RuntimeException) {
-        throw (RuntimeException) cause;
-      }
-      throw ex;
-    }
+    return ObjectUtils.notNull(target.get());
   }
 
   @Override

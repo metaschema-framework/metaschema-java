@@ -24,7 +24,6 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
-import nl.talsmasoftware.lazy4j.LazyEvaluationException;
 
 public abstract class AbstractConstraint implements IConstraint { // NOPMD - intentional data class
   @Nullable
@@ -136,16 +135,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
    */
   @NonNull
   public MetapathExpression getTargetMetapath() {
-    try {
-      return ObjectUtils.notNull(targetMetapath.get());
-    } catch (LazyEvaluationException ex) {
-      Throwable cause = ex.getCause();
-      if (cause instanceof RuntimeException) {
-        cause.addSuppressed(ex);
-        throw (RuntimeException) cause;
-      }
-      throw ex;
-    }
+    return ObjectUtils.notNull(targetMetapath.get());
   }
 
   @Override
