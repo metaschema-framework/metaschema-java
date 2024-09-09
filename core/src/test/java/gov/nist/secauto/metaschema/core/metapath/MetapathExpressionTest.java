@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.adelean.inject.resources.junit.jupiter.GivenTextResource;
-import com.adelean.inject.resources.junit.jupiter.TestWithResources;
-
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
+import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 
 @TestWithResources
 class MetapathExpressionTest {
