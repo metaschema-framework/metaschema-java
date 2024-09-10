@@ -17,7 +17,7 @@ class EvaluateMetapathSubCommandTest {
 
   @Test
   void test() {
-    try (LogCaptor logCaptor = LogCaptor.forClass(EvaluateMetapathSubCommand.class)) {
+    try (LogCaptor logCaptor = LogCaptor.forClass(EvaluateMetapathCommand.class)) {
       String[] args
           = {
               "metapath",

@@ -32,6 +32,7 @@ public final class MetaschemaCommands {
   public static final List<ICommand> COMMANDS = ObjectUtils.notNull(List.of(
       new ValidateModuleCommand(),
       new GenerateSchemaCommand(),
+      new GenerateDiagramCommand(),
       new ValidateContentUsingModuleCommand(),
       new MetapathCommand()));
 
@@ -42,6 +43,12 @@ public final class MetaschemaCommands {
           .argName("FILE_OR_URL")
           .required()
           .desc("metaschema resource")
+          .build());
+  @NonNull
+  public static final Option OVERWRITE_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("overwrite")
+          .desc("overwrite the destination if it exists")
           .build());
 
   @NonNull

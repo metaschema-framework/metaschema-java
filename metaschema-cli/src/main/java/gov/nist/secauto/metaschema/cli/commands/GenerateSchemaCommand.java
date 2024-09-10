@@ -54,12 +54,7 @@ public class GenerateSchemaCommand
   private static final String COMMAND = "generate-schema";
   @NonNull
   private static final List<ExtraArgument> EXTRA_ARGUMENTS;
-  @NonNull
-  private static final Option OVERWRITE_OPTION = ObjectUtils.notNull(
-      Option.builder()
-          .longOpt("overwrite")
-          .desc("overwrite the destination if it exists")
-          .build());
+
   @NonNull
   private static final Option AS_OPTION = ObjectUtils.notNull(
       Option.builder()
@@ -96,7 +91,7 @@ public class GenerateSchemaCommand
   @Override
   public Collection<? extends Option> gatherOptions() {
     return List.of(
-        OVERWRITE_OPTION,
+        MetaschemaCommands.OVERWRITE_OPTION,
         AS_OPTION,
         INLINE_TYPES_OPTION);
   }
@@ -153,11 +148,11 @@ public class GenerateSchemaCommand
 
     if (destination != null) {
       if (Files.exists(destination)) {
-        if (!cmdLine.hasOption(OVERWRITE_OPTION)) {
+        if (!cmdLine.hasOption(MetaschemaCommands.OVERWRITE_OPTION)) {
           return ExitCode.INVALID_ARGUMENTS.exitMessage( // NOPMD readability
               String.format("The provided destination '%s' already exists and the '%s' option was not provided.",
                   destination,
-                  OptionUtils.toArgument(OVERWRITE_OPTION)));
+                  OptionUtils.toArgument(MetaschemaCommands.OVERWRITE_OPTION)));
         }
         if (!Files.isWritable(destination)) {
           return ExitCode.IO_ERROR.exitMessage( // NOPMD readability

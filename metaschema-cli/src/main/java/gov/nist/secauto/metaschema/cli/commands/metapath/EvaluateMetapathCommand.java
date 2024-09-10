@@ -49,9 +49,9 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class EvaluateMetapathSubCommand
+public class EvaluateMetapathCommand
     extends AbstractTerminalCommand {
-  private static final Logger LOGGER = LogManager.getLogger(EvaluateMetapathSubCommand.class);
+  private static final Logger LOGGER = LogManager.getLogger(EvaluateMetapathCommand.class);
 
   @NonNull
   private static final String COMMAND = "eval";
@@ -87,7 +87,7 @@ public class EvaluateMetapathSubCommand
 
   @Override
   public String getDescription() {
-    return "Execute a MetaPath expression against a document";
+    return "Execute a Metapath expression against a document";
   }
 
   @SuppressWarnings("null")

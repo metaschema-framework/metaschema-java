@@ -79,41 +79,46 @@ public class CLITest {
             ExitCode.FAIL, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "validate",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/metaschema.xml",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml",
                 "--show-stack-trace" },
             ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "generate-schema",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/metaschema.xml",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml",
                 "--as", "xml",
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "generate-schema",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/metaschema.xml",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml",
                 "--as", "json",
+            },
+            ExitCode.OK, NO_EXCEPTION_CLASS));
+        add(Arguments.of(
+            new String[] { "generate-diagram",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml"
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "validate-content",
                 "-m",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/metaschema.xml",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/example.json",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml",
+                "../databind/src/test/resources/metaschema/simple/example.json",
                 "--as=json"
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "validate-content",
                 "-m",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/metaschema.xml",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/example.xml",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml",
+                "../databind/src/test/resources/metaschema/simple/example.xml",
                 "--as=xml"
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "validate-content",
                 "-m",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/metaschema.xml",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml",
                 "https://bad.domain.example.net/example.xml",
                 "--as=xml"
             },
@@ -121,8 +126,8 @@ public class CLITest {
         add(Arguments.of(
             new String[] { "validate-content",
                 "-m",
-                "https://raw.githubusercontent.com/usnistgov/metaschema-java/28468999d802e69273df7e725d183c132e2b15d8/databind/src/test/resources/metaschema/simple/metaschema.xml",
-                "https://nist.gov/example.xml",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml",
+                "https://github.com/no-example.xml",
                 "--as=xml"
             },
             ExitCode.IO_ERROR, java.io.FileNotFoundException.class));
