@@ -66,7 +66,8 @@
 
 		<dependency>
 		    <groupId>io.github.hakky54</groupId>
-		    <artifactId>logcaptor</artifactId>
+		    <artifactId>consolecaptor</artifactId>
+		    <version>1.0.3</version>
 		    <scope>test</scope>
 		</dependency>
 		<dependency>
@@ -104,7 +105,7 @@
 					<generateRepository>false</generateRepository>
 					<repositoryLayout>flat</repositoryLayout>
 					<repositoryName>lib</repositoryName>
-					<outputFileNameMapping>@{groupId}@.@{artifactId}@-@{version}@.@{extension}@</outputFileNameMapping>
+					<outputFileNameMapping>@{groupId}@.@{artifactId}@-@{version}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
 					<extraJvmArguments>-Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8</extraJvmArguments>
 					<projectArtifactFirstInClassPath>true</projectArtifactFirstInClassPath>
 					<includeConfigurationDirectoryInClasspath>false</includeConfigurationDirectoryInClasspath>

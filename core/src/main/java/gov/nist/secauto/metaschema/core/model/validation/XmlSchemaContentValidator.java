@@ -88,8 +88,22 @@ public class XmlSchemaContentValidator
     validator.setErrorHandler(errorHandler);
     try {
       validator.validate(xmlSource);
+    } catch (SAXParseException ex) {
+      String location = ex.getLineNumber() > -1 && ex.getColumnNumber() > -1
+          ? String.format("at %d:%d", ex.getLineNumber(), ex.getColumnNumber())
+          : "";
+      throw new IOException(
+          String.format("Unexpected failure during validation of '%s'%s. %s",
+              documentUri,
+              location,
+              ex.getLocalizedMessage()),
+          ex);
     } catch (SAXException ex) {
-      throw new IOException(String.format("Unexpected failure during validation of '%s'", documentUri), ex);
+      throw new IOException(
+          String.format("Unexpected failure during validation of '%s'. %s",
+              documentUri,
+              ex.getLocalizedMessage()),
+          ex);
     }
     return errorHandler;
   }

@@ -122,7 +122,9 @@ public abstract class AbstractValidateContentCommand
         AS_OPTION,
         CONSTRAINTS_OPTION,
         SARIF_OUTPUT_FILE_OPTION,
-        SARIF_INCLUDE_PASS_OPTION);
+        SARIF_INCLUDE_PASS_OPTION,
+        NO_SCHEMA_VALIDATION_OPTION,
+        NO_CONSTRAINT_VALIDATION_OPTION);
   }
 
   @Override

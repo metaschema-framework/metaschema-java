@@ -88,12 +88,14 @@ public interface ISchemaGenerator {
      */
     XML(new XmlSchemaGenerator());
 
+    @NonNull
     private final ISchemaGenerator schemaGenerator;
 
     SchemaFormat(@NonNull ISchemaGenerator schemaGenerator) {
       this.schemaGenerator = schemaGenerator;
     }
 
+    @NonNull
     public ISchemaGenerator getSchemaGenerator() {
       return schemaGenerator;
     }

@@ -20,13 +20,6 @@ import gov.nist.secauto.metaschema.schemagen.xml.datatype.XmlDatatypeManager;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
 import gov.nist.secauto.metaschema.schemagen.xml.schematype.IXmlType;
 
-import net.sf.saxon.s9api.Processor;
-import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.Serializer;
-import net.sf.saxon.s9api.Xslt30Transformer;
-import net.sf.saxon.s9api.XsltCompiler;
-import net.sf.saxon.s9api.XsltExecutable;
-
 import org.codehaus.stax2.XMLOutputFactory2;
 import org.codehaus.stax2.XMLStreamWriter2;
 
@@ -42,6 +35,12 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -122,22 +121,32 @@ public class XmlSchemaGenerator
       @NonNull IModule module,
       @NonNull Writer out,
       @NonNull IConfiguration<SchemaGenerationFeature<?>> configuration) {
+    // super.generateFromModule(module, out, configuration);
+
+    String generatedSchema;
     try (StringWriter stringWriter = new StringWriter()) {
       super.generateFromModule(module, stringWriter, configuration);
-      stringWriter.flush();
+      generatedSchema = stringWriter.toString();
+    } catch (IOException ex) {
+      throw new SchemaGenerationException(ex);
+    }
 
-      try (StringReader stringReader = new StringReader(stringWriter.toString())) {
-        Processor processor = new Processor(false);
-        XsltCompiler compiler = processor.newXsltCompiler();
-        try (InputStream is = getClass().getResourceAsStream("/identity.xsl")) {
-          XsltExecutable stylesheet = compiler.compile(new StreamSource(is));
-          Xslt30Transformer transformer = stylesheet.load30();
-          Serializer serializer = processor.newSerializer(out);
-          StreamSource source = new StreamSource(stringReader);
-          transformer.transform(source, serializer);
-        }
+    try (InputStream is = getClass().getResourceAsStream("/identity.xsl")) {
+      Source xsltSource = new StreamSource(is);
+
+      // TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      TransformerFactory transformerFactory = new net.sf.saxon.TransformerFactoryImpl();
+      Transformer transformer = transformerFactory.newTransformer(xsltSource);
+
+      try (StringReader stringReader = new StringReader(generatedSchema)) {
+        Source xmlSource = new StreamSource(stringReader);
+
+        StreamResult result = new StreamResult(out);
+        transformer.transform(xmlSource, result);
+      } catch (TransformerException ex) {
+        throw new SchemaGenerationException(ex);
       }
-    } catch (IOException | SaxonApiException ex) {
+    } catch (IOException | TransformerConfigurationException ex) {
       throw new SchemaGenerationException(ex);
     }
   }
