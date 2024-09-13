@@ -269,7 +269,9 @@ public abstract class AbstractValidateContentCommand
             && (validationResult == null || validationResult.isPassing())) {
           // perform constraint validation
           IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);
-          validationResult = AggregateValidationResult.aggregate(validationResult, constraintValidationResult);
+          validationResult = validationResult == null
+              ? constraintValidationResult
+              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);
         }
       } catch (FileNotFoundException ex) {
         return ExitCode.IO_ERROR.exitMessage(String.format("Resource not found at '%s'", source)).withThrowable(ex);

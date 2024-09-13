@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../core/metaschema/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Model for Testing usnistgov/metaschema-xslt#105</schema-name>
+    <schema-version>0</schema-version>
+    <short-name>schema-validation</short-name>
+    <namespace>http://metaschema.dev/ns/metaschema/test/schema-validation</namespace>
+    <json-base-uri>http://metaschema.dev/ns/metaschema/test/schema-validation</json-base-uri>
+    <define-assembly name="root">
+        <formal-name>Root Assembly with required and optional fields.</formal-name>
+        <description>This root assembly should only an instance to have a field of a or b, but not both.</description>
+        <root-name>root</root-name>
+        <model>
+             <define-field name="required" min-occurs="1" max-occurs="1"/>
+             <define-field name="optional" min-occurs="0" max-occurs="1" default="yes"/>
+        </model>
+        <constraint>
+        	<allowed-values target="optional">
+        		<enum value="yes">Yes</enum>
+        	</allowed-values>
+        </constraint>
+    </define-assembly>
+</METASCHEMA>
