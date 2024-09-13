@@ -64,23 +64,7 @@ final class ConstraintFactory {
 
   @NonNull
   static String toMetapath(@NonNull String metapath) {
-    String path = metapath;
-    if (path.startsWith("/")) {
-      String newPath = "." + path;
-
-      if (LOGGER.isInfoEnabled()) {
-        StringBuilder builder = new StringBuilder(80)
-            .append("The path '")
-            .append(path)
-            .append("' is not properly contextualized using '.'. Using '")
-            .append(newPath)
-            .append("' instead.");
-        LOGGER.atWarn().log(builder.toString());
-      }
-      path = newPath;
-    }
-
-    return path.isBlank() ? IConstraint.DEFAULT_TARGET_METAPATH : path;
+    return metapath.isBlank() ? IConstraint.DEFAULT_TARGET_METAPATH : metapath;
   }
 
   @NonNull
