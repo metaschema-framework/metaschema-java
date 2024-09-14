@@ -63,6 +63,11 @@ public abstract class AbstractTestSuite {
   private static final BindingModuleLoader LOADER;
 
   private static final boolean DELETE_RESULTS_ON_EXIT = false;
+  private static final OpenOption[] OPEN_OPTIONS_TRUNCATE = {
+      StandardOpenOption.CREATE,
+      StandardOpenOption.WRITE,
+      StandardOpenOption.TRUNCATE_EXISTING
+  };
 
   static {
     IBindingContext bindingContext = new DefaultBindingContext();
@@ -70,81 +75,119 @@ public abstract class AbstractTestSuite {
     LOADER.allowEntityResolution();
   }
 
+  /**
+   * Get the content format used by the test suite.
+   * 
+   * @return the format
+   */
   @NonNull
   protected abstract Format getRequiredContentFormat();
 
+  /**
+   * Get the resource describing the tests to execute.
+   * 
+   * @return the resource
+   */
   @NonNull
   protected abstract URI getTestSuiteURI();
 
+  /**
+   * Get the filesystem location to use for generating content.
+   * 
+   * @return the filesystem path
+   */
   @NonNull
   protected abstract Path getGenerationPath();
 
+  /**
+   * Get the method used to generate a schema using a given Metaschema module and
+   * writer.
+   * 
+   * @return the schema generator supplier
+   */
   @NonNull
-  protected abstract BiFunction<IModule, Writer, Void> getGeneratorSupplier();
+  protected abstract BiFunction<IModule, Writer, Void> getSchemaGeneratorSupplier();
 
+  /**
+   * Get the method used to provide a schema validator.
+   * 
+   * @return the method as a supplier
+   */
   @Nullable
   protected abstract Supplier<? extends IContentValidator> getSchemaValidatorSupplier();
 
+  /**
+   * Get the method used to provide a content validator.
+   * 
+   * @return the method as a supplier
+   */
   @NonNull
   protected abstract Function<Path, ? extends IContentValidator> getContentValidatorSupplier();
 
+  /**
+   * Dynamically generate the unit tests.
+   * 
+   * @return the steam of unit tests
+   */
+  @NonNull
   protected Stream<DynamicNode> testFactory() {
     try {
-      return generateTests();
+      XmlOptions options = new XmlOptions();
+      options.setBaseURI(null);
+      options.setLoadLineNumbers();
+
+      Path generationPath = getGenerationPath();
+      if (Files.exists(generationPath)) {
+        if (!Files.isDirectory(generationPath)) {
+          throw new JUnitException(String.format("Generation path '%s' exists and is not a directory", generationPath));
+        }
+      } else {
+        Files.createDirectories(generationPath);
+      }
+
+      URI testSuiteUri = getTestSuiteURI();
+      URL testSuiteUrl = testSuiteUri.toURL();
+      TestSuiteDocument directive = TestSuiteDocument.Factory.parse(testSuiteUrl, options);
+      return ObjectUtils.notNull(directive.getTestSuite().getTestCollectionList().stream()
+          .flatMap(
+              collection -> Stream
+                  .of(generateCollection(ObjectUtils.notNull(collection), testSuiteUri, generationPath))));
     } catch (XmlException | IOException ex) {
       throw new JUnitException("Unable to generate tests", ex);
     }
   }
 
-  private Stream<DynamicNode> generateTests() throws XmlException, IOException {
-    XmlOptions options = new XmlOptions();
-    options.setBaseURI(null);
-    options.setLoadLineNumbers();
+  /**
+   * Configure removal of the provided directory after test execution.
+   * 
+   * @param path
+   *          the directory to configure for removal
+   */
+  protected void deleteCollectionOnExit(@NonNull Path path) {
+    Runtime.getRuntime().addShutdownHook(new Thread( // NOPMD - this is not a webapp
+        () -> {
+          try {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+              @Override
+              public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+              }
 
-    Path generationPath = getGenerationPath();
-    if (Files.exists(generationPath)) {
-      if (!Files.isDirectory(generationPath)) {
-        throw new JUnitException(String.format("Generation path '%s' exists and is not a directory", generationPath));
-      }
-    } else {
-      Files.createDirectories(generationPath);
-    }
-
-    URI testSuiteUri = getTestSuiteURI();
-    URL testSuiteUrl = testSuiteUri.toURL();
-    TestSuiteDocument directive = TestSuiteDocument.Factory.parse(testSuiteUrl, options);
-    return directive.getTestSuite().getTestCollectionList().stream()
-        .flatMap(
-            collection -> Stream.of(generateCollection(ObjectUtils.notNull(collection), testSuiteUri, generationPath)));
-  }
-
-  protected void deleteCollectionOnExit(Path path) {
-    if (path != null) {
-      Runtime.getRuntime().addShutdownHook(new Thread( // NOPMD - this is not a webapp
-          () -> {
-            try {
-              Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                  Files.delete(file);
+              @Override
+              public FileVisitResult postVisitDirectory(Path dir, IOException ex) throws IOException {
+                if (ex == null) {
+                  Files.delete(dir);
                   return FileVisitResult.CONTINUE;
                 }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException ex) throws IOException {
-                  if (ex == null) {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                  }
-                  // directory iteration failed for some reason
-                  throw ex;
-                }
-              });
-            } catch (IOException ex) {
-              throw new JUnitException("Failed to delete collection: " + path, ex);
-            }
-          }));
-    }
+                // directory iteration failed for some reason
+                throw ex;
+              }
+            });
+          } catch (IOException ex) {
+            throw new JUnitException("Failed to delete collection: " + path, ex);
+          }
+        }));
   }
 
   private DynamicContainer generateCollection(@NonNull TestCollection collection, @NonNull URI testSuiteUri,
@@ -156,10 +199,9 @@ public abstract class AbstractTestSuite {
     Lazy<Path> collectionGenerationPath = ObjectUtils.notNull(Lazy.lazy(() -> {
       Path retval;
       try {
-        retval = ObjectUtils.notNull(Files.createTempDirectory(generationPath, "collection-"));
-        assert retval != null;
+        retval = ObjectUtils.requireNonNull(Files.createTempDirectory(generationPath, "collection-"));
         if (DELETE_RESULTS_ON_EXIT) {
-          deleteCollectionOnExit(retval);
+          deleteCollectionOnExit(ObjectUtils.requireNonNull(retval));
         }
       } catch (IOException ex) {
         throw new JUnitException("Unable to create collection temp directory", ex);
@@ -178,11 +220,22 @@ public abstract class AbstractTestSuite {
             .sequential());
   }
 
-  protected void produceSchema(@NonNull IModule module, @NonNull Path schemaPath) throws IOException {
-    produceSchema(module, schemaPath, getGeneratorSupplier());
-  }
-
-  protected void produceSchema(@NonNull IModule module, @NonNull Path schemaPath,
+  /**
+   * Generate a schema for the provided module using the provided schema
+   * generator.
+   * 
+   * @param module
+   *          the Metaschema module to generate the schema for
+   * @param schemaPath
+   *          the location to generate the schema
+   * @param schemaProducer
+   *          the method callback to use to generate the schema
+   * @throws IOException
+   *           if an error occurred while writing the schema
+   */
+  protected void generateSchema(
+      @NonNull IModule module,
+      @NonNull Path schemaPath,
       @NonNull BiFunction<IModule, Writer, Void> schemaProducer) throws IOException {
     Path parentDir = schemaPath.getParent();
     if (parentDir != null && !Files.exists(parentDir)) {
@@ -198,12 +251,12 @@ public abstract class AbstractTestSuite {
     LOGGER.atInfo().log("Produced schema '{}' for module '{}'", schemaPath, module.getLocation());
   }
 
+  /**
+   * The the options for writing generated content.
+   * @return the options
+   */
   protected OpenOption[] getWriteOpenOptions() {
-    return new OpenOption[] {
-        StandardOpenOption.CREATE,
-        StandardOpenOption.WRITE,
-        StandardOpenOption.TRUNCATE_EXISTING
-    };
+    return OPEN_OPTIONS_TRUNCATE;
   }
 
   private DynamicContainer generateScenario(
@@ -267,7 +320,7 @@ public abstract class AbstractTestSuite {
       }
       IModule module = lazyModule.get();
       try {
-        produceSchema(ObjectUtils.notNull(module), ObjectUtils.notNull(schemaPath));
+        generateSchema(ObjectUtils.notNull(module), ObjectUtils.notNull(schemaPath), getSchemaGeneratorSupplier());
       } catch (IOException ex) {
         throw new IllegalStateException(ex);
       }
@@ -334,14 +387,28 @@ public abstract class AbstractTestSuite {
         Stream.concat(Stream.of(validateSchema), contentTests).sequential());
   }
 
+  /**
+   * Perform content conversion.
+   * 
+   * @param resource
+   *          the resource to convert
+   * @param generationPath
+   *          the path to write the converted resource to
+   * @param context
+   *          the Metaschema binding context
+   * @return the location of the converted content
+   * @throws IOException
+   *           if an error occurred while reading or writing content
+   * @see #getRequiredContentFormat()
+   */
   protected Path convertContent(
-      @NonNull URI contentUri,
+      @NonNull URI resource,
       @NonNull Path generationPath,
       @NonNull IBindingContext context)
       throws IOException {
     Object object;
     try {
-      object = context.newBoundLoader().load(ObjectUtils.notNull(contentUri.toURL()));
+      object = context.newBoundLoader().load(ObjectUtils.notNull(resource.toURL()));
     } catch (URISyntaxException ex) {
       throw new IOException(ex);
     }
@@ -446,6 +513,17 @@ public abstract class AbstractTestSuite {
     return processValidationResult(schemaValidationResult);
   }
 
+  /**
+   * Use the provided validator to validate the provided target.
+   * 
+   * @param validator
+   *          the content validator to use
+   * @param target
+   *          the resource to validate
+   * @return {@code true} if the content is valid or {@code false} otherwise
+   * @throws IOException
+   *           if an error occurred while reading the content
+   */
   protected static boolean validateWithSchema(@NonNull IContentValidator validator, @NonNull Path target)
       throws IOException {
     IValidationResult schemaValidationResult = validator.validate(target);

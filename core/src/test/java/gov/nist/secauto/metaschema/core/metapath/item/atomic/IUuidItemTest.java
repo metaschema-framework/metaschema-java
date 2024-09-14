@@ -7,6 +7,8 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,10 +20,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 class IUuidItemTest {
   private static Stream<Arguments> testCompare() { // NOPMD - false positive
-    UUID uuidRandom = UUID.randomUUID();
-    UUID uuid1 = UUID.fromString("4cfa2c52-9345-4012-8055-0bc9ac9b03fa");
-    UUID uuid2 = UUID.fromString("25a6d916-f179-4550-ad2b-7e7cd9df35d2");
-    String uuid2String = uuid2.toString();
+    UUID uuidRandom = ObjectUtils.notNull(UUID.randomUUID());
+    UUID uuid1 = ObjectUtils.notNull(UUID.fromString("4cfa2c52-9345-4012-8055-0bc9ac9b03fa"));
+    UUID uuid2 = ObjectUtils.notNull(UUID.fromString("25a6d916-f179-4550-ad2b-7e7cd9df35d2"));
+    String uuid2String = ObjectUtils.notNull(uuid2.toString());
 
     return Stream.of(
         Arguments.of(IUuidItem.valueOf(uuidRandom), IUuidItem.valueOf(uuidRandom), IIntegerItem.ZERO),

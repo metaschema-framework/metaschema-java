@@ -21,15 +21,28 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.ShortClassName")
 public final class CLI {
+  /**
+   * The main command line entry point.
+   *
+   * @param args
+   *          the command line arguments
+   */
   public static void main(String[] args) {
     System.exit(runCli(args).getExitCode().getStatusCode());
   }
 
+  /**
+   * Execute a command line.
+   *
+   * @param args
+   *          the command line arguments
+   * @return the execution result
+   */
   @NonNull
   public static ExitStatus runCli(String... args) {
     System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
 
-    Map<String, IVersionInfo> versions = ObjectUtils.notNull(
+    @SuppressWarnings("serial") Map<String, IVersionInfo> versions = ObjectUtils.notNull(
         new LinkedHashMap<>() {
           {
             put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());

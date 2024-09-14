@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.cli.util;
 import static org.fusesource.jansi.Ansi.ansi;
 
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
-import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
@@ -31,17 +30,36 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class LoggingValidationHandler {
   private static final Logger LOGGER = LogManager.getLogger(LoggingValidationHandler.class);
 
+  @NonNull
   private static final LoggingValidationHandler NO_LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(false);
+  @NonNull
   private static final LoggingValidationHandler LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(true);
 
   private final boolean logExceptions;
 
+  /**
+   * Get a singleton instance of the logging validation handler.
+   * <p>
+   * This instance will not log exceptions.
+   *
+   * @return the instance
+   */
+  @NonNull
   public static LoggingValidationHandler instance() {
     return instance(false);
   }
 
+  /**
+   * Get a singleton instance of the logging validation handler.
+   *
+   * @param logExceptions
+   *          {@code true} if this instance will log exceptions or {@code false}
+   *          otherwise
+   * @return the instance
+   */
   @SuppressFBWarnings(value = "SING_SINGLETON_GETTER_NOT_SYNCHRONIZED",
       justification = "both values are class initialized")
+  @NonNull
   public static LoggingValidationHandler instance(boolean logExceptions) {
     return logExceptions ? LOG_EXCPTION_INSTANCE : NO_LOG_EXCPTION_INSTANCE;
   }
@@ -50,15 +68,33 @@ public final class LoggingValidationHandler {
     this.logExceptions = logExceptions;
   }
 
+  /**
+   * Determine if exceptions should be logged.
+   *
+   * @return {@code true} if exceptions are logged or {@code false} otherwise
+   */
   public boolean isLogExceptions() {
     return logExceptions;
   }
 
+  /**
+   * Handle the provided collection of validation results.
+   *
+   * @param result
+   *          the validation results
+   * @return {@code true} if the result is passing or {@code false} otherwise
+   */
   public boolean handleValidationResults(IValidationResult result) {
     handleValidationFindings(result.getFindings());
     return result.isPassing();
   }
 
+  /**
+   * Handle the provided collection of validation findings.
+   *
+   * @param findings
+   *          the findings to process
+   */
   public void handleValidationFindings(@NonNull List<? extends IValidationFinding> findings) {
     for (IValidationFinding finding : findings) {
       if (finding instanceof JsonValidationFinding) {

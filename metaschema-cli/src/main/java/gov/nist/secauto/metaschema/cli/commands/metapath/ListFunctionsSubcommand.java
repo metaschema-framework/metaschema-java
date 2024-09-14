@@ -50,9 +50,17 @@ public class ListFunctionsSubcommand
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
+  /**
+   * Execute the list functions command.
+   *
+   * @param callingContext
+   *          the context of the command execution
+   * @param cmdLine
+   *          the parsed command line details
+   * @return the execution result
+   */
   @SuppressWarnings({
-      "PMD.OnlyOneReturn", // readability
-      "unused"
+      "PMD.OnlyOneReturn" // readability
   })
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,

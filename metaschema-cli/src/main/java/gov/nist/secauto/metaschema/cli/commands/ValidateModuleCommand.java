@@ -27,8 +27,6 @@ import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -47,7 +45,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ValidateModuleCommand
     extends AbstractValidateContentCommand {
-  private static final Logger LOGGER = LogManager.getLogger(ValidateModuleCommand.class);
   @NonNull
   private static final String COMMAND = "validate";
 

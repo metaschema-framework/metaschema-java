@@ -44,7 +44,7 @@ public class CLITest {
   }
 
   private static Stream<Arguments> providesValues() {
-    List<Arguments> values = new LinkedList<>() {
+    @SuppressWarnings("serial") List<Arguments> values = new LinkedList<>() {
       {
         add(Arguments.of(new String[] {}, ExitCode.INVALID_COMMAND,
             NO_EXCEPTION_CLASS));
@@ -95,6 +95,11 @@ public class CLITest {
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(
+            new String[] { "generate-diagram",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml"
+            },
+            ExitCode.OK, NO_EXCEPTION_CLASS));
+        add(Arguments.of(
             new String[] { "validate-content",
                 "-m",
                 "../databind/src/test/resources/metaschema/simple/metaschema.xml",
@@ -122,7 +127,7 @@ public class CLITest {
             new String[] { "validate-content",
                 "-m",
                 "../databind/src/test/resources/metaschema/simple/metaschema.xml",
-                "https://nist.gov/example.xml",
+                "https://github.com/no-example.xml",
                 "--as=xml"
             },
             ExitCode.IO_ERROR, java.io.FileNotFoundException.class));

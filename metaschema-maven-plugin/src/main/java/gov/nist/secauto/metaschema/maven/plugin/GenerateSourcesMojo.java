@@ -151,6 +151,7 @@ public class GenerateSourcesMojo
       // generate Java sources based on provided metaschema sources
       final Set<IModule> modules = new HashSet<>();
       for (File source : getModuleSources().collect(Collectors.toList())) {
+        assert source != null;
         if (getLog().isInfoEnabled()) {
           getLog().info("Using metaschema source: " + source.getPath());
         }

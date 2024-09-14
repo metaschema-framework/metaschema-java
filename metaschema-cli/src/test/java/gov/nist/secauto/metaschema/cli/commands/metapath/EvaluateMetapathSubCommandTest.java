@@ -18,7 +18,6 @@ class EvaluateMetapathSubCommandTest {
   @Test
   void test() {
     try (ConsoleCaptor consoleCaptor = new ConsoleCaptor()) {
-
       String[] args
           = {
               "metapath",
@@ -35,5 +34,4 @@ class EvaluateMetapathSubCommandTest {
       assertThat(consoleCaptor.getStandardOutput()).contains("12");
     }
   }
-
 }

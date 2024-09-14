@@ -14,9 +14,10 @@ module gov.nist.secauto.metaschema.core {
   requires java.base;
   requires java.xml;
 
+  requires static org.eclipse.jdt.annotation;
+  requires static biz.aQute.bnd.util;
   requires static com.google.auto.service;
   requires com.github.spotbugs.annotations;
-  requires static biz.aQute.bnd.util;
   // requires static org.jetbrains.annotations;
 
   requires com.ctc.wstx;

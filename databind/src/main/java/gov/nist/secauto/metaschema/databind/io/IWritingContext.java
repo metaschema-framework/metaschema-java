@@ -44,7 +44,7 @@ public interface IWritingContext<WRITER> {
 
     /**
      * Perform a series of property write operations, starting first with this
-     * operation and followed bu the {@code after} operation.
+     * operation and followed by the {@code after} operation.
      *
      * @param after
      *          the secondary property write operation to perform

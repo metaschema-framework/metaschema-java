@@ -87,18 +87,20 @@ public class ValidateContentUsingModuleCommand
       super(callingContext, commandLine);
     }
 
+    @NonNull
     private Path getTempDir() throws IOException {
       if (tempDir == null) {
         tempDir = Files.createTempDirectory("validation-");
         tempDir.toFile().deleteOnExit();
       }
+      assert tempDir != null;
       return tempDir;
     }
 
     @NonNull
     private IModule getModule(@NonNull Set<IConstraintSet> constraintSets)
         throws MetaschemaException, IOException {
-      URI cwd = Paths.get("").toAbsolutePath().toUri();
+      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
 
       if (module == null) {
         try {
@@ -135,7 +137,7 @@ public class ValidateContentUsingModuleCommand
       IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();
       ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.XML, configuration);
       return ObjectUtils.requireNonNull(List.of(
-          XmlUtil.getStreamSource(schemaFile.toUri().toURL())));
+          XmlUtil.getStreamSource(ObjectUtils.notNull(schemaFile.toUri().toURL()))));
     }
 
     @Override
