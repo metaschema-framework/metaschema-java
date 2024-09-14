@@ -37,7 +37,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @param &lt;AI&gt;
  *          the assembly instance Java type
  */
-<span class="nc" id="L40">public class DefaultGroupedModelContainerSupport&lt;</span>
+<span class="fc" id="L40">public class DefaultGroupedModelContainerSupport&lt;</span>
     NMI extends INamedModelInstanceGrouped,
     FI extends IFieldInstanceGrouped,
     AI extends IAssemblyInstanceGrouped&gt;
@@ -55,11 +55,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
    */
   @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;)
   public DefaultGroupedModelContainerSupport() {
-<span class="nc" id="L58">    this(</span>
+<span class="fc" id="L58">    this(</span>
         new LinkedHashMap&lt;&gt;(),
         new LinkedHashMap&lt;&gt;(),
         new LinkedHashMap&lt;&gt;());
-<span class="nc" id="L62">  }</span>
+<span class="fc" id="L62">  }</span>
 
   /**
    * Construct an immutable container from a collection of named model instances.
@@ -120,11 +120,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
   protected DefaultGroupedModelContainerSupport(
       @NonNull Map&lt;QName, NMI&gt; namedModelInstances,
       @NonNull Map&lt;QName, FI&gt; fieldInstances,
-<span class="nc" id="L123">      @NonNull Map&lt;QName, AI&gt; assemblyInstances) {</span>
-<span class="nc" id="L124">    this.namedModelInstances = namedModelInstances;</span>
-<span class="nc" id="L125">    this.fieldInstances = fieldInstances;</span>
-<span class="nc" id="L126">    this.assemblyInstances = assemblyInstances;</span>
-<span class="nc" id="L127">  }</span>
+<span class="fc" id="L123">      @NonNull Map&lt;QName, AI&gt; assemblyInstances) {</span>
+<span class="fc" id="L124">    this.namedModelInstances = namedModelInstances;</span>
+<span class="fc" id="L125">    this.fieldInstances = fieldInstances;</span>
+<span class="fc" id="L126">    this.assemblyInstances = assemblyInstances;</span>
+<span class="fc" id="L127">  }</span>
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
@@ -134,7 +134,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
   @Override
   public Map&lt;QName, NMI&gt; getNamedModelInstanceMap() {
-<span class="nc" id="L137">    return namedModelInstances;</span>
+<span class="fc" id="L137">    return namedModelInstances;</span>
   }
 
   @Override
@@ -144,7 +144,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
   @Override
   public Map&lt;QName, AI&gt; getAssemblyInstanceMap() {
-<span class="nc" id="L147">    return assemblyInstances;</span>
+<span class="fc" id="L147">    return assemblyInstances;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

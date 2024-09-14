@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GenerateDiagramCommand.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Command Line Tool</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.cli.commands</a> &gt; <span class="el_source">GenerateDiagramCommand.java</span></div><h1>GenerateDiagramCommand.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.cli.commands;
+
+import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.ExitCode;
+import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
+import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
+import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
+import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
+import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
+import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
+import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
+import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.MermaidErDiagramGenerator;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.UriUtils;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Collection;
+import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+<span class="fc" id="L45">public class GenerateDiagramCommand</span>
+    extends AbstractTerminalCommand {
+<span class="fc" id="L47">  private static final Logger LOGGER = LogManager.getLogger(GenerateDiagramCommand.class);</span>
+
+  @NonNull
+  private static final String COMMAND = &quot;generate-diagram&quot;;
+  @NonNull
+  private static final List&lt;ExtraArgument&gt; EXTRA_ARGUMENTS;
+
+  static {
+<span class="fc" id="L55">    EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(</span>
+        new DefaultExtraArgument(&quot;metaschema-module-file-or-URL&quot;, true),
+        new DefaultExtraArgument(&quot;destination-diagram-file&quot;, false)));
+<span class="fc" id="L58">  }</span>
+
+  @Override
+  public String getName() {
+<span class="fc" id="L62">    return COMMAND;</span>
+  }
+
+  @Override
+  public String getDescription() {
+<span class="fc" id="L67">    return &quot;Generate a diagram for the provided Metaschema module&quot;;</span>
+  }
+
+  @SuppressWarnings(&quot;null&quot;)
+  @Override
+  public Collection&lt;? extends Option&gt; gatherOptions() {
+<span class="fc" id="L73">    return List.of(</span>
+        MetaschemaCommands.OVERWRITE_OPTION);
+  }
+
+  @Override
+  public List&lt;ExtraArgument&gt; getExtraArguments() {
+<span class="nc" id="L79">    return EXTRA_ARGUMENTS;</span>
+  }
+
+  @Override
+  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
+<span class="fc" id="L84">    List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
+<span class="pc bpc" id="L85" title="2 of 4 branches missed.">    if (extraArgs.isEmpty() || extraArgs.size() &gt; 2) {</span>
+<span class="nc" id="L86">      throw new InvalidArgumentException(&quot;Illegal number of arguments.&quot;);</span>
+    }
+<span class="fc" id="L88">  }</span>
+
+  @Override
+  public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine cmdLine) {
+<span class="fc" id="L92">    return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);</span>
+  }
+
+  /**
+   * Execute the diagram generation command.
+   *
+   * @param callingContext
+   *          information about the calling context
+   * @param cmdLine
+   *          the parsed command line details
+   * @return the execution result
+   */
+  @SuppressWarnings({
+      &quot;PMD.OnlyOneReturn&quot;, // readability
+  })
+  protected ExitStatus executeCommand(
+      @NonNull CallingContext callingContext,
+      @NonNull CommandLine cmdLine) {
+
+<span class="fc" id="L111">    List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
+
+<span class="fc" id="L113">    Path destination = null;</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">    if (extraArgs.size() &gt; 1) {</span>
+<span class="nc" id="L115">      destination = Paths.get(extraArgs.get(1)).toAbsolutePath();</span>
+    }
+
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">    if (destination != null) {</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">      if (Files.exists(destination)) {</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (!cmdLine.hasOption(MetaschemaCommands.OVERWRITE_OPTION)) {</span>
+<span class="nc" id="L121">          return ExitCode.INVALID_ARGUMENTS.exitMessage( // NOPMD readability</span>
+<span class="nc" id="L122">              String.format(&quot;The provided destination '%s' already exists and the '%s' option was not provided.&quot;,</span>
+                  destination,
+<span class="nc" id="L124">                  OptionUtils.toArgument(MetaschemaCommands.OVERWRITE_OPTION)));</span>
+        }
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (!Files.isWritable(destination)) {</span>
+<span class="nc" id="L127">          return ExitCode.IO_ERROR.exitMessage( // NOPMD readability</span>
+              &quot;The provided destination '&quot; + destination + &quot;' is not writable.&quot;);
+        }
+      } else {
+<span class="nc" id="L131">        Path parent = destination.getParent();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (parent != null) {</span>
+          try {
+<span class="nc" id="L134">            Files.createDirectories(parent);</span>
+<span class="nc" id="L135">          } catch (IOException ex) {</span>
+<span class="nc" id="L136">            return ExitCode.INVALID_TARGET.exit().withThrowable(ex); // NOPMD readability</span>
+<span class="nc" id="L137">          }</span>
+        }
+      }
+    }
+
+<span class="fc" id="L142">    URI cwd = ObjectUtils.notNull(Paths.get(&quot;&quot;).toAbsolutePath().toUri());</span>
+
+    IModule module;
+    try {
+<span class="fc" id="L146">      URI moduleUri = UriUtils.toUri(ObjectUtils.requireNonNull(extraArgs.get(0)), cwd);</span>
+<span class="fc" id="L147">      module = MetaschemaCommands.handleModule(moduleUri, CollectionUtil.emptyList());</span>
+<span class="nc" id="L148">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L149">      return ExitCode.INVALID_ARGUMENTS</span>
+<span class="nc" id="L150">          .exitMessage(</span>
+<span class="nc" id="L151">              String.format(&quot;Cannot load module as '%s' is not a valid file or URL.&quot;, ex.getInput()))</span>
+<span class="nc" id="L152">          .withThrowable(ex);</span>
+<span class="nc" id="L153">    } catch (IOException | MetaschemaException ex) {</span>
+<span class="nc" id="L154">      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
+<span class="fc" id="L155">    }</span>
+
+    try {
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">      if (destination == null) {</span>
+<span class="fc" id="L159">        Writer stringWriter = new StringWriter();</span>
+<span class="fc" id="L160">        try (PrintWriter writer = new PrintWriter(stringWriter)) {</span>
+<span class="fc" id="L161">          MermaidErDiagramGenerator.generate(module, writer);</span>
+        }
+
+        // Print the result
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
+<span class="fc" id="L166">          LOGGER.info(stringWriter.toString());</span>
+        }
+<span class="fc" id="L168">      } else {</span>
+<span class="nc" id="L169">        try (Writer writer = Files.newBufferedWriter(</span>
+            destination,
+            StandardCharsets.UTF_8,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.WRITE,
+            StandardOpenOption.TRUNCATE_EXISTING)) {
+<span class="nc" id="L175">          try (PrintWriter printWriter = new PrintWriter(writer)) {</span>
+<span class="nc" id="L176">            MermaidErDiagramGenerator.generate(module, printWriter);</span>
+          }
+        }
+      }
+
+<span class="fc" id="L181">      return ExitCode.OK.exit();</span>
+<span class="nc" id="L182">    } catch (Exception ex) {</span>
+<span class="nc" id="L183">      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

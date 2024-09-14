@@ -63,65 +63,73 @@
 <span class="source-line-no">050</span><span id="line-50">    return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);</span>
 <span class="source-line-no">051</span><span id="line-51">  }</span>
 <span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">  @SuppressWarnings({</span>
-<span class="source-line-no">054</span><span id="line-54">      "PMD.OnlyOneReturn", // readability</span>
-<span class="source-line-no">055</span><span id="line-55">      "unused"</span>
-<span class="source-line-no">056</span><span id="line-56">  })</span>
-<span class="source-line-no">057</span><span id="line-57">  protected ExitStatus executeCommand(</span>
-<span class="source-line-no">058</span><span id="line-58">      @NonNull CallingContext callingContext,</span>
-<span class="source-line-no">059</span><span id="line-59">      @NonNull CommandLine cmdLine) {</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">    Map&lt;String, Map&lt;String, List&lt;IFunction&gt;&gt;&gt; namespaceToNameToFunctionMap = FunctionService.getInstance().stream()</span>
-<span class="source-line-no">062</span><span id="line-62">        .collect(Collectors.groupingBy(</span>
-<span class="source-line-no">063</span><span id="line-63">            function -&gt; function.getQName().getNamespaceURI(),</span>
-<span class="source-line-no">064</span><span id="line-64">            Collectors.groupingBy(</span>
-<span class="source-line-no">065</span><span id="line-65">                IFunction::getName,</span>
-<span class="source-line-no">066</span><span id="line-66">                Collectors.toList())));</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">    Map&lt;String, String&gt; namespaceToPrefixMap = StaticContext.getWellKnownNamespacesMap().entrySet().stream()</span>
-<span class="source-line-no">069</span><span id="line-69">        .collect(Collectors.toMap(entry -&gt; entry.getValue().toASCIIString(), Map.Entry::getKey));</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">    List&lt;String&gt; namespaces = new ArrayList&lt;&gt;(namespaceToNameToFunctionMap.keySet());</span>
-<span class="source-line-no">072</span><span id="line-72"></span>
-<span class="source-line-no">073</span><span id="line-73">    Collections.sort(namespaces);</span>
-<span class="source-line-no">074</span><span id="line-74"></span>
-<span class="source-line-no">075</span><span id="line-75">    for (String namespace : namespaces) {</span>
-<span class="source-line-no">076</span><span id="line-76">      String prefix = namespaceToPrefixMap.get(namespace);</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">      if (prefix == null) {</span>
-<span class="source-line-no">079</span><span id="line-79">        LOGGER.atInfo().log("In namespace '{}':", namespace);</span>
-<span class="source-line-no">080</span><span id="line-80">      } else {</span>
-<span class="source-line-no">081</span><span id="line-81">        LOGGER.atInfo().log("In namespace '{}' as '{}':", namespace, prefix);</span>
-<span class="source-line-no">082</span><span id="line-82">      }</span>
-<span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">      Map&lt;String, List&lt;IFunction&gt;&gt; namespacedFunctions = namespaceToNameToFunctionMap.get(namespace);</span>
+<span class="source-line-no">053</span><span id="line-53">  /**</span>
+<span class="source-line-no">054</span><span id="line-54">   * Execute the list functions command.</span>
+<span class="source-line-no">055</span><span id="line-55">   *</span>
+<span class="source-line-no">056</span><span id="line-56">   * @param callingContext</span>
+<span class="source-line-no">057</span><span id="line-57">   *          the context of the command execution</span>
+<span class="source-line-no">058</span><span id="line-58">   * @param cmdLine</span>
+<span class="source-line-no">059</span><span id="line-59">   *          the parsed command line details</span>
+<span class="source-line-no">060</span><span id="line-60">   * @return the execution result</span>
+<span class="source-line-no">061</span><span id="line-61">   */</span>
+<span class="source-line-no">062</span><span id="line-62">  @SuppressWarnings({</span>
+<span class="source-line-no">063</span><span id="line-63">      "PMD.OnlyOneReturn" // readability</span>
+<span class="source-line-no">064</span><span id="line-64">  })</span>
+<span class="source-line-no">065</span><span id="line-65">  protected ExitStatus executeCommand(</span>
+<span class="source-line-no">066</span><span id="line-66">      @NonNull CallingContext callingContext,</span>
+<span class="source-line-no">067</span><span id="line-67">      @NonNull CommandLine cmdLine) {</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">    Map&lt;String, Map&lt;String, List&lt;IFunction&gt;&gt;&gt; namespaceToNameToFunctionMap = FunctionService.getInstance().stream()</span>
+<span class="source-line-no">070</span><span id="line-70">        .collect(Collectors.groupingBy(</span>
+<span class="source-line-no">071</span><span id="line-71">            function -&gt; function.getQName().getNamespaceURI(),</span>
+<span class="source-line-no">072</span><span id="line-72">            Collectors.groupingBy(</span>
+<span class="source-line-no">073</span><span id="line-73">                IFunction::getName,</span>
+<span class="source-line-no">074</span><span id="line-74">                Collectors.toList())));</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">    Map&lt;String, String&gt; namespaceToPrefixMap = StaticContext.getWellKnownNamespacesMap().entrySet().stream()</span>
+<span class="source-line-no">077</span><span id="line-77">        .collect(Collectors.toMap(entry -&gt; entry.getValue().toASCIIString(), Map.Entry::getKey));</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">    List&lt;String&gt; namespaces = new ArrayList&lt;&gt;(namespaceToNameToFunctionMap.keySet());</span>
+<span class="source-line-no">080</span><span id="line-80"></span>
+<span class="source-line-no">081</span><span id="line-81">    Collections.sort(namespaces);</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">    for (String namespace : namespaces) {</span>
+<span class="source-line-no">084</span><span id="line-84">      String prefix = namespaceToPrefixMap.get(namespace);</span>
 <span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">      List&lt;String&gt; names = new ArrayList&lt;&gt;(namespacedFunctions.keySet());</span>
-<span class="source-line-no">087</span><span id="line-87">      Collections.sort(names);</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">      for (String name : names) {</span>
-<span class="source-line-no">090</span><span id="line-90">        List&lt;IFunction&gt; functions = namespacedFunctions.get(name);</span>
-<span class="source-line-no">091</span><span id="line-91">        Collections.sort(functions, Comparator.comparing(IFunction::arity));</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">        for (IFunction function : functions) {</span>
-<span class="source-line-no">094</span><span id="line-94">          String functionRef = prefix == null</span>
-<span class="source-line-no">095</span><span id="line-95">              ? String.format("Q{%s}%s", function.getQName().getNamespaceURI(), function.getName())</span>
-<span class="source-line-no">096</span><span id="line-96">              : String.format("%s:%s", prefix, function.getName());</span>
-<span class="source-line-no">097</span><span id="line-97"></span>
-<span class="source-line-no">098</span><span id="line-98">          LOGGER.atInfo().log(String.format("%s(%s) as %s",</span>
-<span class="source-line-no">099</span><span id="line-99">              functionRef,</span>
-<span class="source-line-no">100</span><span id="line-100">              function.getArguments().isEmpty()</span>
-<span class="source-line-no">101</span><span id="line-101">                  ? ""</span>
-<span class="source-line-no">102</span><span id="line-102">                  : function.getArguments().stream().map(IArgument::toSignature)</span>
-<span class="source-line-no">103</span><span id="line-103">                      .collect(Collectors.joining(","))</span>
-<span class="source-line-no">104</span><span id="line-104">                      + (function.isArityUnbounded() ? ", ..." : ""),</span>
-<span class="source-line-no">105</span><span id="line-105">              function.getResult().toSignature()));</span>
-<span class="source-line-no">106</span><span id="line-106">        }</span>
-<span class="source-line-no">107</span><span id="line-107">      }</span>
-<span class="source-line-no">108</span><span id="line-108">    }</span>
-<span class="source-line-no">109</span><span id="line-109">    return ExitCode.OK.exit();</span>
-<span class="source-line-no">110</span><span id="line-110">  }</span>
-<span class="source-line-no">111</span><span id="line-111">}</span>
+<span class="source-line-no">086</span><span id="line-86">      if (prefix == null) {</span>
+<span class="source-line-no">087</span><span id="line-87">        LOGGER.atInfo().log("In namespace '{}':", namespace);</span>
+<span class="source-line-no">088</span><span id="line-88">      } else {</span>
+<span class="source-line-no">089</span><span id="line-89">        LOGGER.atInfo().log("In namespace '{}' as '{}':", namespace, prefix);</span>
+<span class="source-line-no">090</span><span id="line-90">      }</span>
+<span class="source-line-no">091</span><span id="line-91"></span>
+<span class="source-line-no">092</span><span id="line-92">      Map&lt;String, List&lt;IFunction&gt;&gt; namespacedFunctions = namespaceToNameToFunctionMap.get(namespace);</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">      List&lt;String&gt; names = new ArrayList&lt;&gt;(namespacedFunctions.keySet());</span>
+<span class="source-line-no">095</span><span id="line-95">      Collections.sort(names);</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">      for (String name : names) {</span>
+<span class="source-line-no">098</span><span id="line-98">        List&lt;IFunction&gt; functions = namespacedFunctions.get(name);</span>
+<span class="source-line-no">099</span><span id="line-99">        Collections.sort(functions, Comparator.comparing(IFunction::arity));</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">        for (IFunction function : functions) {</span>
+<span class="source-line-no">102</span><span id="line-102">          String functionRef = prefix == null</span>
+<span class="source-line-no">103</span><span id="line-103">              ? String.format("Q{%s}%s", function.getQName().getNamespaceURI(), function.getName())</span>
+<span class="source-line-no">104</span><span id="line-104">              : String.format("%s:%s", prefix, function.getName());</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">          LOGGER.atInfo().log(String.format("%s(%s) as %s",</span>
+<span class="source-line-no">107</span><span id="line-107">              functionRef,</span>
+<span class="source-line-no">108</span><span id="line-108">              function.getArguments().isEmpty()</span>
+<span class="source-line-no">109</span><span id="line-109">                  ? ""</span>
+<span class="source-line-no">110</span><span id="line-110">                  : function.getArguments().stream().map(IArgument::toSignature)</span>
+<span class="source-line-no">111</span><span id="line-111">                      .collect(Collectors.joining(","))</span>
+<span class="source-line-no">112</span><span id="line-112">                      + (function.isArityUnbounded() ? ", ..." : ""),</span>
+<span class="source-line-no">113</span><span id="line-113">              function.getResult().toSignature()));</span>
+<span class="source-line-no">114</span><span id="line-114">        }</span>
+<span class="source-line-no">115</span><span id="line-115">      }</span>
+<span class="source-line-no">116</span><span id="line-116">    }</span>
+<span class="source-line-no">117</span><span id="line-117">    return ExitCode.OK.exit();</span>
+<span class="source-line-no">118</span><span id="line-118">  }</span>
+<span class="source-line-no">119</span><span id="line-119">}</span>
 
 
 

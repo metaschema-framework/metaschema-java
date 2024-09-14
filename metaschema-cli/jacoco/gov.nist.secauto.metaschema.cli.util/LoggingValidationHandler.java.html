@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.cli.util;
 import static org.fusesource.jansi.Ansi.ansi;
 
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
-import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
@@ -29,148 +28,185 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public final class LoggingValidationHandler {
-<span class="fc" id="L32">  private static final Logger LOGGER = LogManager.getLogger(LoggingValidationHandler.class);</span>
+<span class="fc" id="L31">  private static final Logger LOGGER = LogManager.getLogger(LoggingValidationHandler.class);</span>
 
+  @NonNull
 <span class="fc" id="L34">  private static final LoggingValidationHandler NO_LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(false);</span>
-<span class="fc" id="L35">  private static final LoggingValidationHandler LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(true);</span>
+  @NonNull
+<span class="fc" id="L36">  private static final LoggingValidationHandler LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(true);</span>
 
   private final boolean logExceptions;
 
+  /**
+   * Get a singleton instance of the logging validation handler.
+   * &lt;p&gt;
+   * This instance will not log exceptions.
+   *
+   * @return the instance
+   */
+  @NonNull
   public static LoggingValidationHandler instance() {
-<span class="fc" id="L40">    return instance(false);</span>
+<span class="fc" id="L49">    return instance(false);</span>
   }
 
+  /**
+   * Get a singleton instance of the logging validation handler.
+   *
+   * @param logExceptions
+   *          {@code true} if this instance will log exceptions or {@code false}
+   *          otherwise
+   * @return the instance
+   */
   @SuppressFBWarnings(value = &quot;SING_SINGLETON_GETTER_NOT_SYNCHRONIZED&quot;,
       justification = &quot;both values are class initialized&quot;)
+  @NonNull
   public static LoggingValidationHandler instance(boolean logExceptions) {
-<span class="pc bpc" id="L46" title="1 of 2 branches missed.">    return logExceptions ? LOG_EXCPTION_INSTANCE : NO_LOG_EXCPTION_INSTANCE;</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">    return logExceptions ? LOG_EXCPTION_INSTANCE : NO_LOG_EXCPTION_INSTANCE;</span>
   }
 
-<span class="fc" id="L49">  private LoggingValidationHandler(boolean logExceptions) {</span>
-<span class="fc" id="L50">    this.logExceptions = logExceptions;</span>
-<span class="fc" id="L51">  }</span>
+<span class="fc" id="L67">  private LoggingValidationHandler(boolean logExceptions) {</span>
+<span class="fc" id="L68">    this.logExceptions = logExceptions;</span>
+<span class="fc" id="L69">  }</span>
 
+  /**
+   * Determine if exceptions should be logged.
+   *
+   * @return {@code true} if exceptions are logged or {@code false} otherwise
+   */
   public boolean isLogExceptions() {
-<span class="nc" id="L54">    return logExceptions;</span>
+<span class="fc" id="L77">    return logExceptions;</span>
   }
 
+  /**
+   * Handle the provided collection of validation results.
+   *
+   * @param result
+   *          the validation results
+   * @return {@code true} if the result is passing or {@code false} otherwise
+   */
   public boolean handleValidationResults(IValidationResult result) {
-<span class="fc" id="L58">    handleValidationFindings(result.getFindings());</span>
-<span class="fc" id="L59">    return result.isPassing();</span>
+<span class="fc" id="L88">    handleValidationFindings(result.getFindings());</span>
+<span class="fc" id="L89">    return result.isPassing();</span>
   }
 
+  /**
+   * Handle the provided collection of validation findings.
+   *
+   * @param findings
+   *          the findings to process
+   */
   public void handleValidationFindings(@NonNull List&lt;? extends IValidationFinding&gt; findings) {
-<span class="fc bfc" id="L63" title="All 2 branches covered.">    for (IValidationFinding finding : findings) {</span>
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">      if (finding instanceof JsonValidationFinding) {</span>
-<span class="nc" id="L65">        handleJsonValidationFinding((JsonValidationFinding) finding);</span>
-<span class="pc bpc" id="L66" title="1 of 2 branches missed.">      } else if (finding instanceof XmlValidationFinding) {</span>
-<span class="nc" id="L67">        handleXmlValidationFinding((XmlValidationFinding) finding);</span>
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">      } else if (finding instanceof ConstraintValidationFinding) {</span>
-<span class="fc" id="L69">        handleConstraintValidationFinding((ConstraintValidationFinding) finding);</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">    for (IValidationFinding finding : findings) {</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">      if (finding instanceof JsonValidationFinding) {</span>
+<span class="nc" id="L101">        handleJsonValidationFinding((JsonValidationFinding) finding);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">      } else if (finding instanceof XmlValidationFinding) {</span>
+<span class="fc" id="L103">        handleXmlValidationFinding((XmlValidationFinding) finding);</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">      } else if (finding instanceof ConstraintValidationFinding) {</span>
+<span class="fc" id="L105">        handleConstraintValidationFinding((ConstraintValidationFinding) finding);</span>
       } else {
-<span class="nc" id="L71">        throw new IllegalStateException();</span>
+<span class="nc" id="L107">        throw new IllegalStateException();</span>
       }
-<span class="fc" id="L73">    }</span>
-<span class="fc" id="L74">  }</span>
+<span class="fc" id="L109">    }</span>
+<span class="fc" id="L110">  }</span>
 
   private void handleJsonValidationFinding(@NonNull JsonValidationFinding finding) {
-<span class="nc" id="L77">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
+<span class="nc" id="L113">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
 
-<span class="nc" id="L79">    ansi = ansi.a('[')</span>
-<span class="nc" id="L80">        .fgBright(Color.WHITE)</span>
-<span class="nc" id="L81">        .a(finding.getCause().getPointerToViolation())</span>
-<span class="nc" id="L82">        .reset()</span>
-<span class="nc" id="L83">        .a(']');</span>
+<span class="nc" id="L115">    ansi = ansi.a('[')</span>
+<span class="nc" id="L116">        .fgBright(Color.WHITE)</span>
+<span class="nc" id="L117">        .a(finding.getCause().getPointerToViolation())</span>
+<span class="nc" id="L118">        .reset()</span>
+<span class="nc" id="L119">        .a(']');</span>
 
-<span class="nc" id="L85">    URI documentUri = finding.getDocumentUri();</span>
-<span class="nc bnc" id="L86" title="All 2 branches missed.">    ansi = documentUri == null</span>
-<span class="nc" id="L87">        ? ansi.format(&quot; %s&quot;, finding.getMessage())</span>
-<span class="nc" id="L88">        : ansi.format(&quot; %s [%s]&quot;, finding.getMessage(), documentUri.toString());</span>
+<span class="nc" id="L121">    URI documentUri = finding.getDocumentUri();</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">    ansi = documentUri == null</span>
+<span class="nc" id="L123">        ? ansi.format(&quot; %s&quot;, finding.getMessage())</span>
+<span class="nc" id="L124">        : ansi.format(&quot; %s [%s]&quot;, finding.getMessage(), documentUri.toString());</span>
 
-<span class="nc" id="L90">    getLogger(finding).log(ansi);</span>
-<span class="nc" id="L91">  }</span>
+<span class="nc" id="L126">    getLogger(finding).log(ansi);</span>
+<span class="nc" id="L127">  }</span>
 
   private void handleXmlValidationFinding(XmlValidationFinding finding) {
-<span class="nc" id="L94">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
-<span class="nc" id="L95">    SAXParseException ex = finding.getCause();</span>
+<span class="fc" id="L130">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
+<span class="fc" id="L131">    SAXParseException ex = finding.getCause();</span>
 
-<span class="nc" id="L97">    URI documentUri = finding.getDocumentUri();</span>
-<span class="nc bnc" id="L98" title="All 2 branches missed.">    ansi = documentUri == null</span>
-<span class="nc" id="L99">        ? ansi.format(&quot;%s [{%d,%d}]&quot;,</span>
-<span class="nc" id="L100">            finding.getMessage(),</span>
-<span class="nc" id="L101">            ex.getLineNumber(),</span>
-<span class="nc" id="L102">            ex.getColumnNumber())</span>
-<span class="nc" id="L103">        : ansi.format(&quot;%s [%s{%d,%d}]&quot;,</span>
-<span class="nc" id="L104">            finding.getMessage(),</span>
-<span class="nc" id="L105">            documentUri.toString(),</span>
-<span class="nc" id="L106">            ex.getLineNumber(),</span>
-<span class="nc" id="L107">            ex.getColumnNumber());</span>
+<span class="fc" id="L133">    URI documentUri = finding.getDocumentUri();</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">    ansi = documentUri == null</span>
+<span class="nc" id="L135">        ? ansi.format(&quot;%s [{%d,%d}]&quot;,</span>
+<span class="nc" id="L136">            finding.getMessage(),</span>
+<span class="nc" id="L137">            ex.getLineNumber(),</span>
+<span class="nc" id="L138">            ex.getColumnNumber())</span>
+<span class="fc" id="L139">        : ansi.format(&quot;%s [%s{%d,%d}]&quot;,</span>
+<span class="fc" id="L140">            finding.getMessage(),</span>
+<span class="fc" id="L141">            documentUri.toString(),</span>
+<span class="fc" id="L142">            ex.getLineNumber(),</span>
+<span class="fc" id="L143">            ex.getColumnNumber());</span>
 
-<span class="nc" id="L109">    getLogger(finding).log(ansi);</span>
-<span class="nc" id="L110">  }</span>
+<span class="fc" id="L145">    getLogger(finding).log(ansi);</span>
+<span class="fc" id="L146">  }</span>
 
   private void handleConstraintValidationFinding(@NonNull ConstraintValidationFinding finding) {
-<span class="fc" id="L113">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
+<span class="fc" id="L149">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
 
-<span class="fc" id="L115">    getLogger(finding).log(</span>
-<span class="fc" id="L116">        ansi.format(&quot;[%s] %s&quot;, finding.getTarget().getMetapath(), finding.getMessage()));</span>
-<span class="fc" id="L117">  }</span>
+<span class="fc" id="L151">    getLogger(finding).log(</span>
+<span class="fc" id="L152">        ansi.format(&quot;[%s] %s&quot;, finding.getTarget().getMetapath(), finding.getMessage()));</span>
+<span class="fc" id="L153">  }</span>
 
   @NonNull
   private LogBuilder getLogger(@NonNull IValidationFinding finding) {
     LogBuilder retval;
-<span class="pc bpc" id="L122" title="4 of 5 branches missed.">    switch (finding.getSeverity()) {</span>
+<span class="pc bpc" id="L158" title="4 of 5 branches missed.">    switch (finding.getSeverity()) {</span>
     case CRITICAL:
-<span class="nc" id="L124">      retval = LOGGER.atFatal();</span>
-<span class="nc" id="L125">      break;</span>
+<span class="nc" id="L160">      retval = LOGGER.atFatal();</span>
+<span class="nc" id="L161">      break;</span>
     case ERROR:
-<span class="fc" id="L127">      retval = LOGGER.atError();</span>
-<span class="fc" id="L128">      break;</span>
+<span class="fc" id="L163">      retval = LOGGER.atError();</span>
+<span class="fc" id="L164">      break;</span>
     case WARNING:
-<span class="nc" id="L130">      retval = LOGGER.atWarn();</span>
-<span class="nc" id="L131">      break;</span>
+<span class="nc" id="L166">      retval = LOGGER.atWarn();</span>
+<span class="nc" id="L167">      break;</span>
     case INFORMATIONAL:
-<span class="nc" id="L133">      retval = LOGGER.atInfo();</span>
-<span class="nc" id="L134">      break;</span>
+<span class="nc" id="L169">      retval = LOGGER.atInfo();</span>
+<span class="nc" id="L170">      break;</span>
     default:
-<span class="nc" id="L136">      throw new IllegalArgumentException(&quot;Unknown level: &quot; + finding.getSeverity().name());</span>
+<span class="nc" id="L172">      throw new IllegalArgumentException(&quot;Unknown level: &quot; + finding.getSeverity().name());</span>
     }
 
-<span class="pc bpc" id="L139" title="1 of 2 branches missed.">    assert retval != null;</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">    assert retval != null;</span>
 
-<span class="pc bpc" id="L141" title="3 of 4 branches missed.">    if (finding.getCause() != null &amp;&amp; isLogExceptions()) {</span>
-<span class="nc" id="L142">      retval.withThrowable(finding.getCause());</span>
+<span class="pc bpc" id="L177" title="1 of 4 branches missed.">    if (finding.getCause() != null &amp;&amp; isLogExceptions()) {</span>
+<span class="nc" id="L178">      retval.withThrowable(finding.getCause());</span>
     }
 
-<span class="fc" id="L145">    return retval;</span>
+<span class="fc" id="L181">    return retval;</span>
   }
 
   @SuppressWarnings(&quot;static-method&quot;)
   @NonNull
   private Ansi generatePreamble(@NonNull Level level) {
-<span class="fc" id="L151">    Ansi ansi = ansi().fgBright(Color.WHITE).a('[').reset();</span>
+<span class="fc" id="L187">    Ansi ansi = ansi().fgBright(Color.WHITE).a('[').reset();</span>
 
-<span class="pc bpc" id="L153" title="4 of 5 branches missed.">    switch (level) {</span>
+<span class="pc bpc" id="L189" title="4 of 5 branches missed.">    switch (level) {</span>
     case CRITICAL:
-<span class="nc" id="L155">      ansi = ansi.fgRed().a(&quot;CRITICAL&quot;).reset();</span>
-<span class="nc" id="L156">      break;</span>
+<span class="nc" id="L191">      ansi = ansi.fgRed().a(&quot;CRITICAL&quot;).reset();</span>
+<span class="nc" id="L192">      break;</span>
     case ERROR:
-<span class="fc" id="L158">      ansi = ansi.fgBrightRed().a(&quot;ERROR&quot;).reset();</span>
-<span class="fc" id="L159">      break;</span>
+<span class="fc" id="L194">      ansi = ansi.fgBrightRed().a(&quot;ERROR&quot;).reset();</span>
+<span class="fc" id="L195">      break;</span>
     case WARNING:
-<span class="nc" id="L161">      ansi = ansi.fgBrightYellow().a(&quot;WARNING&quot;).reset();</span>
-<span class="nc" id="L162">      break;</span>
+<span class="nc" id="L197">      ansi = ansi.fgBrightYellow().a(&quot;WARNING&quot;).reset();</span>
+<span class="nc" id="L198">      break;</span>
     case INFORMATIONAL:
-<span class="nc" id="L164">      ansi = ansi.fgBrightBlue().a(&quot;INFO&quot;).reset();</span>
-<span class="nc" id="L165">      break;</span>
+<span class="nc" id="L200">      ansi = ansi.fgBrightBlue().a(&quot;INFO&quot;).reset();</span>
+<span class="nc" id="L201">      break;</span>
     default:
-<span class="nc" id="L167">      ansi = ansi().fgBright(Color.MAGENTA).a(level.name()).reset();</span>
+<span class="nc" id="L203">      ansi = ansi().fgBright(Color.MAGENTA).a(level.name()).reset();</span>
       break;
     }
-<span class="fc" id="L170">    ansi = ansi.fgBright(Color.WHITE).a(&quot;] &quot;).reset();</span>
+<span class="fc" id="L206">    ansi = ansi.fgBright(Color.WHITE).a(&quot;] &quot;).reset();</span>
 
-<span class="pc bpc" id="L172" title="1 of 2 branches missed.">    assert ansi != null;</span>
-<span class="fc" id="L173">    return ansi;</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">    assert ansi != null;</span>
+<span class="fc" id="L209">    return ansi;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

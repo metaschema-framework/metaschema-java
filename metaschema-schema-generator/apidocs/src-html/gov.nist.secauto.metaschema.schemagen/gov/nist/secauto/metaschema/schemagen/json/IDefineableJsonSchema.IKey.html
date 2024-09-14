@@ -167,7 +167,7 @@
 <span class="source-line-no">154</span><span id="line-154">      if (jsonKeyFlagName != null || discriminatorProperty != null || discriminatorValue != null) {</span>
 <span class="source-line-no">155</span><span id="line-155">        retval = new ComplexKey(definition, jsonKeyFlagName, discriminatorProperty, discriminatorValue);</span>
 <span class="source-line-no">156</span><span id="line-156">      } else {</span>
-<span class="source-line-no">157</span><span id="line-157">        retval = new SimpleKey(definition);</span>
+<span class="source-line-no">157</span><span id="line-157">        retval = of(definition);</span>
 <span class="source-line-no">158</span><span id="line-158">      }</span>
 <span class="source-line-no">159</span><span id="line-159">      return retval;</span>
 <span class="source-line-no">160</span><span id="line-160">    }</span>

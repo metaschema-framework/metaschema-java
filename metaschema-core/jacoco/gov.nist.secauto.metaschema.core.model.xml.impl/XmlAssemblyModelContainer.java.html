@@ -70,12 +70,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 <span class="fc" id="L70">            retval = XmlAssemblyModelContainer::handleDefineField;</span>
 <span class="fc bfc" id="L71" title="All 2 branches covered.">          } else if (obj instanceof AssemblyReferenceType) {</span>
 <span class="fc" id="L72">            retval = XmlAssemblyModelContainer::handleAssemmbly;</span>
-<span class="pc bpc" id="L73" title="1 of 2 branches missed.">          } else if (obj instanceof InlineAssemblyDefinitionType) {</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">          } else if (obj instanceof InlineAssemblyDefinitionType) {</span>
 <span class="fc" id="L74">            retval = XmlAssemblyModelContainer::handleDefineAssembly;</span>
-<span class="nc bnc" id="L75" title="All 2 branches missed.">          } else if (obj instanceof ChoiceType) {</span>
-<span class="nc" id="L76">            retval = XmlAssemblyModelContainer::handleChoice;</span>
-<span class="nc bnc" id="L77" title="All 2 branches missed.">          } else if (obj instanceof GroupedChoiceType) {</span>
-<span class="nc" id="L78">            retval = XmlAssemblyModelContainer::handleChoiceGroup;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">          } else if (obj instanceof ChoiceType) {</span>
+<span class="fc" id="L76">            retval = XmlAssemblyModelContainer::handleChoice;</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">          } else if (obj instanceof GroupedChoiceType) {</span>
+<span class="fc" id="L78">            retval = XmlAssemblyModelContainer::handleChoiceGroup;</span>
           } else {
 <span class="nc" id="L80">            retval = super.identifyHandler(cursor, obj);</span>
           }
@@ -103,8 +103,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       IChoiceGroupInstance&gt; of(
           @Nullable AssemblyModelType xmlObject,
           @NonNull IAssemblyDefinition parent) {
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">    return xmlObject == null</span>
-<span class="nc" id="L107">        ? IContainerModelAssemblySupport.empty()</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    return xmlObject == null</span>
+<span class="fc" id="L107">        ? IContainerModelAssemblySupport.empty()</span>
         : XML_MODEL_PARSER
 <span class="fc" id="L109">            .parse(ObjectUtils.notNull(xmlObject), Pair.of(parent, new XmlAssemblyModelContainer()))</span>
 <span class="fc" id="L110">            .getRight();</span>
@@ -149,22 +149,22 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   private static void handleChoice( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IAssemblyDefinition, XmlAssemblyModelContainer&gt; state) {
-<span class="nc" id="L152">    XmlChoiceInstance instance = new XmlChoiceInstance(</span>
+<span class="fc" id="L152">    XmlChoiceInstance instance = new XmlChoiceInstance(</span>
         (ChoiceType) obj,
-<span class="nc" id="L154">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L155">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="nc" id="L156">  }</span>
+<span class="fc" id="L154">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L155">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="fc" id="L156">  }</span>
 
   private static void handleChoiceGroup( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IAssemblyDefinition, XmlAssemblyModelContainer&gt; state) {
-<span class="nc" id="L161">    XmlChoiceGroupInstance instance = new XmlChoiceGroupInstance(</span>
+<span class="fc" id="L161">    XmlChoiceGroupInstance instance = new XmlChoiceGroupInstance(</span>
         (GroupedChoiceType) obj,
-<span class="nc" id="L163">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L164">    XmlAssemblyModelContainer container = ObjectUtils.notNull(state.getRight());</span>
+<span class="fc" id="L163">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L164">    XmlAssemblyModelContainer container = ObjectUtils.notNull(state.getRight());</span>
 
-<span class="nc" id="L166">    String groupAsName = instance.getGroupAsName();</span>
-<span class="nc bnc" id="L167" title="All 2 branches missed.">    if (groupAsName == null) {</span>
+<span class="fc" id="L166">    String groupAsName = instance.getGroupAsName();</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">    if (groupAsName == null) {</span>
 <span class="nc" id="L168">      String location = XmlObjectParser.toLocation(obj);</span>
 <span class="nc bnc" id="L169" title="All 2 branches missed.">      String locationCtx = location == null ? &quot;&quot; : &quot; at location &quot; + location;</span>
 <span class="nc" id="L170">      throw new IllegalArgumentException(</span>
@@ -172,9 +172,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 <span class="nc" id="L172">              instance.getContainingDefinition().getName(),</span>
               locationCtx));
     }
-<span class="nc" id="L175">    container.getChoiceGroupInstanceMap().put(groupAsName, instance);</span>
-<span class="nc" id="L176">    container.getModelInstances().add(instance);</span>
-<span class="nc" id="L177">  }</span>
+<span class="fc" id="L175">    container.getChoiceGroupInstanceMap().put(groupAsName, instance);</span>
+<span class="fc" id="L176">    container.getModelInstances().add(instance);</span>
+<span class="fc" id="L177">  }</span>
 
   /**
    * Adds the provided instance to the tail of the model.
@@ -209,8 +209,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    *          the instance to append
    */
   public void append(@NonNull IChoiceInstance instance) {
-<span class="nc" id="L212">    getChoiceInstances().add(instance);</span>
-<span class="nc" id="L213">    getModelInstances().add(instance);</span>
-<span class="nc" id="L214">  }</span>
+<span class="fc" id="L212">    getChoiceInstances().add(instance);</span>
+<span class="fc" id="L213">    getModelInstances().add(instance);</span>
+<span class="fc" id="L214">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

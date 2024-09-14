@@ -33,7 +33,7 @@
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>    @Test
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>    <strong class="jxr_keyword">void</strong> testIssue308Regression() <strong class="jxr_keyword">throws</strong> IOException, MetaschemaException {
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      ModuleLoader moduleLoader = <strong class="jxr_keyword">new</strong> ModuleLoader();
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      IMetaschemaModule module
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      IMetaschemaModule&lt;?&gt; module
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          = moduleLoader.load(Paths.get(<span class="jxr_string">"src/test/resources/metaschema/308-choice-regression/metaschema.xml"</span>));
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>      IBindingContext context = IBindingContext.instance();

@@ -41,12 +41,12 @@ class XmlFlagInstance
    */
   @SuppressWarnings(&quot;PMD.ConstructorCallsOverridableMethod&quot;)
   public XmlFlagInstance(@NonNull FlagReferenceType xmlObject, @NonNull IModelDefinition parent) {
-<span class="nc" id="L44">    super(parent);</span>
-<span class="nc" id="L45">    this.xmlFlag = xmlObject;</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">    this.defaultValue = xmlObject.isSetDefault()</span>
-<span class="nc" id="L47">        ? getDefinition().getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))</span>
-<span class="nc" id="L48">        : null; // NOPMD needed for final variable</span>
-<span class="nc" id="L49">  }</span>
+<span class="fc" id="L44">    super(parent);</span>
+<span class="fc" id="L45">    this.xmlFlag = xmlObject;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">    this.defaultValue = xmlObject.isSetDefault()</span>
+<span class="fc" id="L47">        ? getDefinition().getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))</span>
+<span class="fc" id="L48">        : null; // NOPMD needed for final variable</span>
+<span class="fc" id="L49">  }</span>
 
   // ----------------------------------------
   // - Start XmlBeans driven code - CPD-OFF -
@@ -58,7 +58,7 @@ class XmlFlagInstance
    * @return the underlying XML data
    */
   protected final FlagReferenceType getXmlObject() {
-<span class="nc" id="L61">    return xmlFlag;</span>
+<span class="fc" id="L61">    return xmlFlag;</span>
   }
 
   @Override
@@ -81,12 +81,12 @@ class XmlFlagInstance
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public final String getName() {
-<span class="nc" id="L84">    return getXmlObject().getRef();</span>
+<span class="fc" id="L84">    return getXmlObject().getRef();</span>
   }
 
   @Override
   public String getUseName() {
-<span class="nc bnc" id="L89" title="All 2 branches missed.">    return getXmlObject().isSetUseName() ? getXmlObject().getUseName().getStringValue() : null;</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">    return getXmlObject().isSetUseName() ? getXmlObject().getUseName().getStringValue() : null;</span>
   }
 
   @Override

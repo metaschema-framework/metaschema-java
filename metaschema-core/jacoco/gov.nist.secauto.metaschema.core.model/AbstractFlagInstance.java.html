@@ -33,20 +33,20 @@ public abstract class AbstractFlagInstance&lt;
    *          the parent model containing this instance
    */
   protected AbstractFlagInstance(@NonNull PARENT parent) {
-<span class="nc" id="L36">    super(parent, name -&gt; parent.getContainingModule().toFlagQName(name));</span>
-<span class="nc" id="L37">  }</span>
+<span class="fc" id="L36">    super(parent, name -&gt; parent.getContainingModule().toFlagQName(name));</span>
+<span class="fc" id="L37">  }</span>
 
   @Override
   public DEFINITION getDefinition() {
     // this should always be not null
-<span class="nc" id="L42">    return ObjectUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="nc" id="L43">        getContainingModule()</span>
-<span class="nc" id="L44">            .getScopedFlagDefinitionByName(getReferencedDefinitionQName())));</span>
+<span class="fc" id="L42">    return ObjectUtils.asType(ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L43">        getContainingModule()</span>
+<span class="fc" id="L44">            .getScopedFlagDefinitionByName(getReferencedDefinitionQName())));</span>
   }
 
   @Override
   public final PARENT getContainingDefinition() {
-<span class="nc" id="L49">    return getParentContainer();</span>
+<span class="fc" id="L49">    return getParentContainer();</span>
   }
 
   /**
@@ -68,7 +68,7 @@ public abstract class AbstractFlagInstance&lt;
 
   @Override
   public IModule getContainingModule() {
-<span class="nc" id="L71">    return getContainingDefinition().getContainingModule();</span>
+<span class="fc" id="L71">    return getContainingDefinition().getContainingModule();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

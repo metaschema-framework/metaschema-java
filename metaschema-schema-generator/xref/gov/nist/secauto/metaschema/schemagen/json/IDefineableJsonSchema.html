@@ -162,7 +162,7 @@
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>       <strong class="jxr_keyword">if</strong> (jsonKeyFlagName != <strong class="jxr_keyword">null</strong> || discriminatorProperty != <strong class="jxr_keyword">null</strong> || discriminatorValue != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>         retval = <strong class="jxr_keyword">new</strong> ComplexKey(definition, jsonKeyFlagName, discriminatorProperty, discriminatorValue);
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>         retval = <strong class="jxr_keyword">new</strong> SimpleKey(definition);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>         retval = of(definition);
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>       }
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>       <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>     }

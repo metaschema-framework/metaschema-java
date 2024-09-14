@@ -113,12 +113,25 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="nc" id="L113">  protected abstract static class AbstractConversionCommandExecutor</span>
       extends AbstractCommandExecutor {
 
-    public AbstractConversionCommandExecutor(
+    /**
+     * Construct a new command executor.
+     *
+     * @param callingContext
+     *          the context of the command execution
+     * @param commandLine
+     *          the parsed command line details
+     */
+    protected AbstractConversionCommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
-<span class="nc" id="L119">      super(callingContext, commandLine);</span>
-<span class="nc" id="L120">    }</span>
+<span class="nc" id="L127">      super(callingContext, commandLine);</span>
+<span class="nc" id="L128">    }</span>
 
+    /**
+     * Get the binding context to use for data processing.
+     *
+     * @return the context
+     */
     @NonNull
     protected abstract IBindingContext getBindingContext();
 
@@ -128,84 +141,101 @@ import edu.umd.cs.findbugs.annotations.NonNull;
     })
     @Override
     public ExitStatus execute() {
-<span class="nc" id="L131">      CommandLine cmdLine = getCommandLine();</span>
+<span class="nc" id="L144">      CommandLine cmdLine = getCommandLine();</span>
 
-<span class="nc" id="L133">      List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
+<span class="nc" id="L146">      List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
 
-<span class="nc" id="L135">      Path destination = null;</span>
-<span class="nc bnc" id="L136" title="All 2 branches missed.">      if (extraArgs.size() &gt; 1) {</span>
-<span class="nc" id="L137">        destination = Paths.get(extraArgs.get(1)).toAbsolutePath();</span>
+<span class="nc" id="L148">      Path destination = null;</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">      if (extraArgs.size() &gt; 1) {</span>
+<span class="nc" id="L150">        destination = Paths.get(extraArgs.get(1)).toAbsolutePath();</span>
       }
 
-<span class="nc bnc" id="L140" title="All 2 branches missed.">      if (destination != null) {</span>
-<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (Files.exists(destination)) {</span>
-<span class="nc bnc" id="L142" title="All 2 branches missed.">          if (!cmdLine.hasOption(OVERWRITE_OPTION)) {</span>
-<span class="nc" id="L143">            return ExitCode.INVALID_ARGUMENTS.exitMessage(</span>
-<span class="nc" id="L144">                String.format(&quot;The provided destination '%s' already exists and the '%s' option was not provided.&quot;,</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">      if (destination != null) {</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (Files.exists(destination)) {</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">          if (!cmdLine.hasOption(OVERWRITE_OPTION)) {</span>
+<span class="nc" id="L156">            return ExitCode.INVALID_ARGUMENTS.exitMessage(</span>
+<span class="nc" id="L157">                String.format(&quot;The provided destination '%s' already exists and the '%s' option was not provided.&quot;,</span>
                     destination,
-<span class="nc" id="L146">                    OptionUtils.toArgument(OVERWRITE_OPTION)));</span>
+<span class="nc" id="L159">                    OptionUtils.toArgument(OVERWRITE_OPTION)));</span>
           }
-<span class="nc bnc" id="L148" title="All 2 branches missed.">          if (!Files.isWritable(destination)) {</span>
-<span class="nc" id="L149">            return ExitCode.IO_ERROR.exitMessage(</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">          if (!Files.isWritable(destination)) {</span>
+<span class="nc" id="L162">            return ExitCode.IO_ERROR.exitMessage(</span>
                 &quot;The provided destination '&quot; + destination + &quot;' is not writable.&quot;);
           }
         } else {
-<span class="nc" id="L153">          Path parent = destination.getParent();</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">          if (parent != null) {</span>
+<span class="nc" id="L166">          Path parent = destination.getParent();</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">          if (parent != null) {</span>
             try {
-<span class="nc" id="L156">              Files.createDirectories(parent);</span>
-<span class="nc" id="L157">            } catch (IOException ex) {</span>
-<span class="nc" id="L158">              return ExitCode.INVALID_TARGET.exit().withThrowable(ex); // NOPMD readability</span>
-<span class="nc" id="L159">            }</span>
+<span class="nc" id="L169">              Files.createDirectories(parent);</span>
+<span class="nc" id="L170">            } catch (IOException ex) {</span>
+<span class="nc" id="L171">              return ExitCode.INVALID_TARGET.exit().withThrowable(ex); // NOPMD readability</span>
+<span class="nc" id="L172">            }</span>
           }
         }
       }
 
-<span class="nc" id="L164">      String sourceName = extraArgs.get(0);</span>
+<span class="nc" id="L177">      String sourceName = ObjectUtils.notNull(extraArgs.get(0));</span>
+<span class="nc" id="L178">      URI cwd = ObjectUtils.notNull(Paths.get(&quot;&quot;).toAbsolutePath().toUri());</span>
+
       URI source;
-<span class="nc" id="L166">      URI cwd = Paths.get(&quot;&quot;).toAbsolutePath().toUri();</span>
       try {
-<span class="nc" id="L168">        source = UriUtils.toUri(sourceName, cwd);</span>
-<span class="nc" id="L169">      } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L170">        return ExitCode.IO_ERROR.exitMessage(&quot;Cannot load source '%s' as it is not a valid file or URI.&quot;)</span>
-<span class="nc" id="L171">            .withThrowable(ex);</span>
-<span class="nc" id="L172">      }</span>
-<span class="nc bnc" id="L173" title="All 2 branches missed.">      assert source != null;</span>
+<span class="nc" id="L182">        source = UriUtils.toUri(sourceName, cwd);</span>
+<span class="nc" id="L183">      } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L184">        return ExitCode.IO_ERROR.exitMessage(&quot;Cannot load source '%s' as it is not a valid file or URI.&quot;)</span>
+<span class="nc" id="L185">            .withThrowable(ex);</span>
+<span class="nc" id="L186">      }</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">      assert source != null;</span>
 
-<span class="nc" id="L175">      String toFormatText = cmdLine.getOptionValue(TO_OPTION);</span>
-<span class="nc" id="L176">      Format toFormat = Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
+<span class="nc" id="L189">      String toFormatText = cmdLine.getOptionValue(TO_OPTION);</span>
+<span class="nc" id="L190">      Format toFormat = Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
 
-<span class="nc" id="L178">      IBindingContext bindingContext = getBindingContext();</span>
+<span class="nc" id="L192">      IBindingContext bindingContext = getBindingContext();</span>
       try {
-<span class="nc" id="L180">        IBoundLoader loader = bindingContext.newBoundLoader();</span>
-<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
-<span class="nc" id="L182">          LOGGER.info(&quot;Converting '{}'.&quot;, source);</span>
+<span class="nc" id="L194">        IBoundLoader loader = bindingContext.newBoundLoader();</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
+<span class="nc" id="L196">          LOGGER.info(&quot;Converting '{}'.&quot;, source);</span>
         }
 
-<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (destination == null) {</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        if (destination == null) {</span>
           // write to STDOUT
-<span class="nc" id="L187">          OutputStreamWriter writer = new OutputStreamWriter(System.out, StandardCharsets.UTF_8);</span>
-<span class="nc" id="L188">          handleConversion(source, toFormat, writer, loader);</span>
-<span class="nc" id="L189">        } else {</span>
-<span class="nc" id="L190">          try (Writer writer = Files.newBufferedWriter(</span>
+<span class="nc" id="L201">          OutputStreamWriter writer = new OutputStreamWriter(System.out, StandardCharsets.UTF_8);</span>
+<span class="nc" id="L202">          handleConversion(source, toFormat, writer, loader);</span>
+<span class="nc" id="L203">        } else {</span>
+<span class="nc" id="L204">          try (Writer writer = Files.newBufferedWriter(</span>
               destination,
               StandardCharsets.UTF_8,
               StandardOpenOption.CREATE,
               StandardOpenOption.WRITE,
               StandardOpenOption.TRUNCATE_EXISTING)) {
-<span class="nc bnc" id="L196" title="All 2 branches missed.">            assert writer != null;</span>
-<span class="nc" id="L197">            handleConversion(source, toFormat, writer, loader);</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            assert writer != null;</span>
+<span class="nc" id="L211">            handleConversion(source, toFormat, writer, loader);</span>
           }
         }
-<span class="nc" id="L200">      } catch (IOException | IllegalArgumentException ex) {</span>
-<span class="nc" id="L201">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex); // NOPMD readability</span>
-<span class="nc" id="L202">      }</span>
-<span class="nc bnc" id="L203" title="All 4 branches missed.">      if (destination != null &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="nc" id="L204">        LOGGER.info(&quot;Generated {} file: {}&quot;, toFormat.toString(), destination);</span>
+<span class="nc" id="L214">      } catch (IOException | IllegalArgumentException ex) {</span>
+<span class="nc" id="L215">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex); // NOPMD readability</span>
+<span class="nc" id="L216">      }</span>
+<span class="nc bnc" id="L217" title="All 4 branches missed.">      if (destination != null &amp;&amp; LOGGER.isInfoEnabled()) {</span>
+<span class="nc" id="L218">        LOGGER.info(&quot;Generated {} file: {}&quot;, toFormat.toString(), destination);</span>
       }
-<span class="nc" id="L206">      return ExitCode.OK.exit();</span>
+<span class="nc" id="L220">      return ExitCode.OK.exit();</span>
     }
 
+    /**
+     * Called to perform a content conversion.
+     *
+     * @param source
+     *          the resource to convert
+     * @param toFormat
+     *          the format to convert to
+     * @param writer
+     *          the writer to use to write converted content
+     * @param loader
+     *          the Metaschema loader to use to load the content to convert
+     * @throws FileNotFoundException
+     *           if the requested resource was not found
+     * @throws IOException
+     *           if there was an error reading or writing content
+     */
     protected abstract void handleConversion(
         @NonNull URI source,
         @NonNull Format toFormat,

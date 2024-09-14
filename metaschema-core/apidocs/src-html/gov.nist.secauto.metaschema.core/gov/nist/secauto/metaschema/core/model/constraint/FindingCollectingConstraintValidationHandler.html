@@ -29,262 +29,268 @@
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
 <span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
 <span class="source-line-no">018</span><span id="line-18"></span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.LinkedList;</span>
-<span class="source-line-no">020</span><span id="line-20">import java.util.List;</span>
-<span class="source-line-no">021</span><span id="line-21">import java.util.regex.Pattern;</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">public class FindingCollectingConstraintValidationHandler</span>
-<span class="source-line-no">026</span><span id="line-26">    extends AbstractConstraintValidationHandler</span>
-<span class="source-line-no">027</span><span id="line-27">    implements IValidationResult {</span>
-<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
-<span class="source-line-no">029</span><span id="line-29">  private final List&lt;ConstraintValidationFinding&gt; findings = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
-<span class="source-line-no">031</span><span id="line-31">  private Level highestLevel = IConstraint.Level.INFORMATIONAL;</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">  @Override</span>
-<span class="source-line-no">034</span><span id="line-34">  @NonNull</span>
-<span class="source-line-no">035</span><span id="line-35">  public List&lt;ConstraintValidationFinding&gt; getFindings() {</span>
-<span class="source-line-no">036</span><span id="line-36">    return CollectionUtil.unmodifiableList(findings);</span>
-<span class="source-line-no">037</span><span id="line-37">  }</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  @Override</span>
-<span class="source-line-no">040</span><span id="line-40">  @NonNull</span>
-<span class="source-line-no">041</span><span id="line-41">  public Level getHighestSeverity() {</span>
-<span class="source-line-no">042</span><span id="line-42">    return highestLevel;</span>
-<span class="source-line-no">043</span><span id="line-43">  }</span>
-<span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">  /**</span>
-<span class="source-line-no">046</span><span id="line-46">   * Add a finding to the collection of findings maintained by this instance.</span>
-<span class="source-line-no">047</span><span id="line-47">   *</span>
-<span class="source-line-no">048</span><span id="line-48">   * @param finding</span>
-<span class="source-line-no">049</span><span id="line-49">   *          the finding to add</span>
-<span class="source-line-no">050</span><span id="line-50">   */</span>
-<span class="source-line-no">051</span><span id="line-51">  protected void addFinding(@NonNull ConstraintValidationFinding finding) {</span>
-<span class="source-line-no">052</span><span id="line-52">    findings.add(finding);</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">    Level severity = finding.getSeverity();</span>
-<span class="source-line-no">055</span><span id="line-55">    if (severity.ordinal() &gt; highestLevel.ordinal()) {</span>
-<span class="source-line-no">056</span><span id="line-56">      highestLevel = severity;</span>
-<span class="source-line-no">057</span><span id="line-57">    }</span>
-<span class="source-line-no">058</span><span id="line-58">  }</span>
-<span class="source-line-no">059</span><span id="line-59"></span>
-<span class="source-line-no">060</span><span id="line-60">  @NonNull</span>
-<span class="source-line-no">061</span><span id="line-61">  private static Kind toKind(@NonNull Level level) {</span>
-<span class="source-line-no">062</span><span id="line-62">    Kind retval;</span>
-<span class="source-line-no">063</span><span id="line-63">    switch (level) {</span>
-<span class="source-line-no">064</span><span id="line-64">    case CRITICAL:</span>
-<span class="source-line-no">065</span><span id="line-65">    case ERROR:</span>
-<span class="source-line-no">066</span><span id="line-66">      retval = Kind.FAIL;</span>
-<span class="source-line-no">067</span><span id="line-67">      break;</span>
-<span class="source-line-no">068</span><span id="line-68">    case INFORMATIONAL:</span>
-<span class="source-line-no">069</span><span id="line-69">    case DEBUG:</span>
-<span class="source-line-no">070</span><span id="line-70">    case NONE:</span>
-<span class="source-line-no">071</span><span id="line-71">      retval = Kind.INFORMATIONAL;</span>
+<span class="source-line-no">019</span><span id="line-19">import org.apache.logging.log4j.LogManager;</span>
+<span class="source-line-no">020</span><span id="line-20">import org.apache.logging.log4j.Logger;</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.LinkedList;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.util.List;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.util.regex.Pattern;</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
+<span class="source-line-no">029</span><span id="line-29">public class FindingCollectingConstraintValidationHandler</span>
+<span class="source-line-no">030</span><span id="line-30">    extends AbstractConstraintValidationHandler</span>
+<span class="source-line-no">031</span><span id="line-31">    implements IValidationResult {</span>
+<span class="source-line-no">032</span><span id="line-32">  private static final Logger LOGGER = LogManager.getLogger(FindingCollectingConstraintValidationHandler.class);</span>
+<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
+<span class="source-line-no">034</span><span id="line-34">  private final List&lt;ConstraintValidationFinding&gt; findings = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
+<span class="source-line-no">036</span><span id="line-36">  private Level highestLevel = IConstraint.Level.INFORMATIONAL;</span>
+<span class="source-line-no">037</span><span id="line-37"></span>
+<span class="source-line-no">038</span><span id="line-38">  @Override</span>
+<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
+<span class="source-line-no">040</span><span id="line-40">  public List&lt;ConstraintValidationFinding&gt; getFindings() {</span>
+<span class="source-line-no">041</span><span id="line-41">    return CollectionUtil.unmodifiableList(findings);</span>
+<span class="source-line-no">042</span><span id="line-42">  }</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  @Override</span>
+<span class="source-line-no">045</span><span id="line-45">  @NonNull</span>
+<span class="source-line-no">046</span><span id="line-46">  public Level getHighestSeverity() {</span>
+<span class="source-line-no">047</span><span id="line-47">    return highestLevel;</span>
+<span class="source-line-no">048</span><span id="line-48">  }</span>
+<span class="source-line-no">049</span><span id="line-49"></span>
+<span class="source-line-no">050</span><span id="line-50">  /**</span>
+<span class="source-line-no">051</span><span id="line-51">   * Add a finding to the collection of findings maintained by this instance.</span>
+<span class="source-line-no">052</span><span id="line-52">   *</span>
+<span class="source-line-no">053</span><span id="line-53">   * @param finding</span>
+<span class="source-line-no">054</span><span id="line-54">   *          the finding to add</span>
+<span class="source-line-no">055</span><span id="line-55">   */</span>
+<span class="source-line-no">056</span><span id="line-56">  protected void addFinding(@NonNull ConstraintValidationFinding finding) {</span>
+<span class="source-line-no">057</span><span id="line-57">    findings.add(finding);</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">    Level severity = finding.getSeverity();</span>
+<span class="source-line-no">060</span><span id="line-60">    if (severity.ordinal() &gt; highestLevel.ordinal()) {</span>
+<span class="source-line-no">061</span><span id="line-61">      highestLevel = severity;</span>
+<span class="source-line-no">062</span><span id="line-62">    }</span>
+<span class="source-line-no">063</span><span id="line-63">  }</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">  @NonNull</span>
+<span class="source-line-no">066</span><span id="line-66">  private static Kind toKind(@NonNull Level level) {</span>
+<span class="source-line-no">067</span><span id="line-67">    Kind retval;</span>
+<span class="source-line-no">068</span><span id="line-68">    switch (level) {</span>
+<span class="source-line-no">069</span><span id="line-69">    case CRITICAL:</span>
+<span class="source-line-no">070</span><span id="line-70">    case ERROR:</span>
+<span class="source-line-no">071</span><span id="line-71">      retval = Kind.FAIL;</span>
 <span class="source-line-no">072</span><span id="line-72">      break;</span>
-<span class="source-line-no">073</span><span id="line-73">    case WARNING:</span>
-<span class="source-line-no">074</span><span id="line-74">      retval = Kind.PASS;</span>
-<span class="source-line-no">075</span><span id="line-75">      break;</span>
-<span class="source-line-no">076</span><span id="line-76">    default:</span>
-<span class="source-line-no">077</span><span id="line-77">      throw new IllegalArgumentException(String.format("Unsupported level '%s'.", level));</span>
-<span class="source-line-no">078</span><span id="line-78">    }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">    return retval;</span>
-<span class="source-line-no">081</span><span id="line-81">  }</span>
-<span class="source-line-no">082</span><span id="line-82"></span>
-<span class="source-line-no">083</span><span id="line-83">  @Override</span>
-<span class="source-line-no">084</span><span id="line-84">  public void handleCardinalityMinimumViolation(</span>
-<span class="source-line-no">085</span><span id="line-85">      @NonNull ICardinalityConstraint constraint,</span>
-<span class="source-line-no">086</span><span id="line-86">      @NonNull INodeItem node,</span>
-<span class="source-line-no">087</span><span id="line-87">      @NonNull ISequence&lt;? extends INodeItem&gt; targets) {</span>
-<span class="source-line-no">088</span><span id="line-88">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">089</span><span id="line-89">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">090</span><span id="line-90">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">091</span><span id="line-91">        .target(node)</span>
-<span class="source-line-no">092</span><span id="line-92">        .subjects(targets.getValue())</span>
-<span class="source-line-no">093</span><span id="line-93">        .message(newCardinalityMinimumViolationMessage(constraint, node, targets))</span>
-<span class="source-line-no">094</span><span id="line-94">        .build());</span>
-<span class="source-line-no">095</span><span id="line-95">  }</span>
-<span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">  @Override</span>
-<span class="source-line-no">098</span><span id="line-98">  public void handleCardinalityMaximumViolation(</span>
-<span class="source-line-no">099</span><span id="line-99">      @NonNull ICardinalityConstraint constraint,</span>
-<span class="source-line-no">100</span><span id="line-100">      @NonNull INodeItem node,</span>
-<span class="source-line-no">101</span><span id="line-101">      @NonNull ISequence&lt;? extends INodeItem&gt; targets) {</span>
-<span class="source-line-no">102</span><span id="line-102">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">103</span><span id="line-103">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">104</span><span id="line-104">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">105</span><span id="line-105">        .target(node)</span>
-<span class="source-line-no">106</span><span id="line-106">        .subjects(targets.getValue())</span>
-<span class="source-line-no">107</span><span id="line-107">        .message(newCardinalityMaximumViolationMessage(constraint, node, targets))</span>
-<span class="source-line-no">108</span><span id="line-108">        .build());</span>
-<span class="source-line-no">109</span><span id="line-109">  }</span>
-<span class="source-line-no">110</span><span id="line-110"></span>
-<span class="source-line-no">111</span><span id="line-111">  @Override</span>
-<span class="source-line-no">112</span><span id="line-112">  public void handleIndexDuplicateKeyViolation(</span>
-<span class="source-line-no">113</span><span id="line-113">      @NonNull IIndexConstraint constraint,</span>
-<span class="source-line-no">114</span><span id="line-114">      @NonNull INodeItem node,</span>
-<span class="source-line-no">115</span><span id="line-115">      @NonNull INodeItem oldItem,</span>
-<span class="source-line-no">116</span><span id="line-116">      @NonNull INodeItem target) {</span>
-<span class="source-line-no">117</span><span id="line-117">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">118</span><span id="line-118">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">119</span><span id="line-119">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">120</span><span id="line-120">        .target(target)</span>
-<span class="source-line-no">121</span><span id="line-121">        .message(newIndexDuplicateKeyViolationMessage(constraint, node, oldItem, target))</span>
-<span class="source-line-no">122</span><span id="line-122">        .build());</span>
-<span class="source-line-no">123</span><span id="line-123">  }</span>
-<span class="source-line-no">124</span><span id="line-124"></span>
-<span class="source-line-no">125</span><span id="line-125">  @Override</span>
-<span class="source-line-no">126</span><span id="line-126">  public void handleUniqueKeyViolation(</span>
-<span class="source-line-no">127</span><span id="line-127">      @NonNull IUniqueConstraint constraint,</span>
-<span class="source-line-no">128</span><span id="line-128">      @NonNull INodeItem node,</span>
-<span class="source-line-no">129</span><span id="line-129">      @NonNull INodeItem oldItem,</span>
-<span class="source-line-no">130</span><span id="line-130">      @NonNull INodeItem target) {</span>
-<span class="source-line-no">131</span><span id="line-131">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">132</span><span id="line-132">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">133</span><span id="line-133">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">134</span><span id="line-134">        .target(target)</span>
-<span class="source-line-no">135</span><span id="line-135">        .message(newUniqueKeyViolationMessage(constraint, node, oldItem, target))</span>
-<span class="source-line-no">136</span><span id="line-136">        .build());</span>
-<span class="source-line-no">137</span><span id="line-137">  }</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">  @SuppressWarnings("null")</span>
-<span class="source-line-no">140</span><span id="line-140">  @Override</span>
-<span class="source-line-no">141</span><span id="line-141">  public void handleKeyMatchError(</span>
-<span class="source-line-no">142</span><span id="line-142">      @NonNull IKeyConstraint constraint,</span>
-<span class="source-line-no">143</span><span id="line-143">      @NonNull INodeItem node,</span>
-<span class="source-line-no">144</span><span id="line-144">      @NonNull INodeItem target,</span>
-<span class="source-line-no">145</span><span id="line-145">      @NonNull MetapathException cause) {</span>
-<span class="source-line-no">146</span><span id="line-146">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">147</span><span id="line-147">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">148</span><span id="line-148">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">149</span><span id="line-149">        .target(target)</span>
-<span class="source-line-no">150</span><span id="line-150">        .message(cause.getLocalizedMessage())</span>
-<span class="source-line-no">151</span><span id="line-151">        .cause(cause)</span>
-<span class="source-line-no">152</span><span id="line-152">        .build());</span>
-<span class="source-line-no">153</span><span id="line-153">  }</span>
-<span class="source-line-no">154</span><span id="line-154"></span>
-<span class="source-line-no">155</span><span id="line-155">  @Override</span>
-<span class="source-line-no">156</span><span id="line-156">  public void handleMatchPatternViolation(</span>
-<span class="source-line-no">157</span><span id="line-157">      @NonNull IMatchesConstraint constraint,</span>
-<span class="source-line-no">158</span><span id="line-158">      @NonNull INodeItem node,</span>
-<span class="source-line-no">159</span><span id="line-159">      @NonNull INodeItem target,</span>
-<span class="source-line-no">160</span><span id="line-160">      @NonNull String value,</span>
-<span class="source-line-no">161</span><span id="line-161">      @NonNull Pattern pattern) {</span>
-<span class="source-line-no">162</span><span id="line-162">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">163</span><span id="line-163">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">164</span><span id="line-164">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">165</span><span id="line-165">        .target(target)</span>
-<span class="source-line-no">166</span><span id="line-166">        .message(newMatchPatternViolationMessage(constraint, node, target, value, pattern))</span>
-<span class="source-line-no">167</span><span id="line-167">        .build());</span>
-<span class="source-line-no">168</span><span id="line-168">  }</span>
-<span class="source-line-no">169</span><span id="line-169"></span>
-<span class="source-line-no">170</span><span id="line-170">  @Override</span>
-<span class="source-line-no">171</span><span id="line-171">  public void handleMatchDatatypeViolation(</span>
-<span class="source-line-no">172</span><span id="line-172">      @NonNull IMatchesConstraint constraint,</span>
-<span class="source-line-no">173</span><span id="line-173">      @NonNull INodeItem node,</span>
-<span class="source-line-no">174</span><span id="line-174">      @NonNull INodeItem target,</span>
-<span class="source-line-no">175</span><span id="line-175">      @NonNull String value,</span>
-<span class="source-line-no">176</span><span id="line-176">      @NonNull IDataTypeAdapter&lt;?&gt; adapter,</span>
-<span class="source-line-no">177</span><span id="line-177">      @NonNull IllegalArgumentException cause) {</span>
-<span class="source-line-no">178</span><span id="line-178">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">179</span><span id="line-179">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">180</span><span id="line-180">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">181</span><span id="line-181">        .target(target)</span>
-<span class="source-line-no">182</span><span id="line-182">        .message(newMatchDatatypeViolationMessage(constraint, node, target, value, adapter))</span>
-<span class="source-line-no">183</span><span id="line-183">        .cause(cause)</span>
-<span class="source-line-no">184</span><span id="line-184">        .build());</span>
-<span class="source-line-no">185</span><span id="line-185">  }</span>
-<span class="source-line-no">186</span><span id="line-186"></span>
-<span class="source-line-no">187</span><span id="line-187">  @Override</span>
-<span class="source-line-no">188</span><span id="line-188">  public void handleExpectViolation(</span>
-<span class="source-line-no">189</span><span id="line-189">      @NonNull IExpectConstraint constraint,</span>
-<span class="source-line-no">190</span><span id="line-190">      @NonNull INodeItem node,</span>
-<span class="source-line-no">191</span><span id="line-191">      @NonNull INodeItem target,</span>
-<span class="source-line-no">192</span><span id="line-192">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">193</span><span id="line-193">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">194</span><span id="line-194">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">195</span><span id="line-195">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">196</span><span id="line-196">        .target(target)</span>
-<span class="source-line-no">197</span><span id="line-197">        .message(newExpectViolationMessage(constraint, node, target, dynamicContext))</span>
-<span class="source-line-no">198</span><span id="line-198">        .build());</span>
-<span class="source-line-no">199</span><span id="line-199">  }</span>
-<span class="source-line-no">200</span><span id="line-200"></span>
-<span class="source-line-no">201</span><span id="line-201">  @Override</span>
-<span class="source-line-no">202</span><span id="line-202">  public void handleAllowedValuesViolation(</span>
-<span class="source-line-no">203</span><span id="line-203">      @NonNull List&lt;IAllowedValuesConstraint&gt; failedConstraints,</span>
-<span class="source-line-no">204</span><span id="line-204">      @NonNull INodeItem target) {</span>
-<span class="source-line-no">205</span><span id="line-205">    Level maxLevel = ObjectUtils.notNull(failedConstraints.stream()</span>
-<span class="source-line-no">206</span><span id="line-206">        .map(IAllowedValuesConstraint::getLevel)</span>
-<span class="source-line-no">207</span><span id="line-207">        .reduce(Level.NONE, (l1, l2) -&gt; l1.ordinal() &gt;= l2.ordinal() ? l1 : l2));</span>
-<span class="source-line-no">208</span><span id="line-208"></span>
-<span class="source-line-no">209</span><span id="line-209">    addFinding(ConstraintValidationFinding.builder(failedConstraints, target)</span>
-<span class="source-line-no">210</span><span id="line-210">        .severity(maxLevel)</span>
-<span class="source-line-no">211</span><span id="line-211">        .kind(toKind(maxLevel))</span>
-<span class="source-line-no">212</span><span id="line-212">        .target(target)</span>
-<span class="source-line-no">213</span><span id="line-213">        .message(newAllowedValuesViolationMessage(failedConstraints, target))</span>
-<span class="source-line-no">214</span><span id="line-214">        .build());</span>
-<span class="source-line-no">215</span><span id="line-215">  }</span>
-<span class="source-line-no">216</span><span id="line-216"></span>
-<span class="source-line-no">217</span><span id="line-217">  @Override</span>
-<span class="source-line-no">218</span><span id="line-218">  public void handleIndexDuplicateViolation(IIndexConstraint constraint, INodeItem node) {</span>
-<span class="source-line-no">219</span><span id="line-219">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">220</span><span id="line-220">        .kind(Kind.FAIL)</span>
-<span class="source-line-no">221</span><span id="line-221">        .severity(Level.CRITICAL)</span>
-<span class="source-line-no">222</span><span id="line-222">        .target(node)</span>
-<span class="source-line-no">223</span><span id="line-223">        .message(newIndexDuplicateViolationMessage(constraint, node))</span>
-<span class="source-line-no">224</span><span id="line-224">        .build());</span>
-<span class="source-line-no">225</span><span id="line-225">  }</span>
-<span class="source-line-no">226</span><span id="line-226"></span>
-<span class="source-line-no">227</span><span id="line-227">  @Override</span>
-<span class="source-line-no">228</span><span id="line-228">  public void handleIndexMiss(IIndexHasKeyConstraint constraint, INodeItem node, INodeItem target, List&lt;String&gt; key) {</span>
-<span class="source-line-no">229</span><span id="line-229">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">230</span><span id="line-230">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">231</span><span id="line-231">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">232</span><span id="line-232">        .target(target)</span>
-<span class="source-line-no">233</span><span id="line-233">        .message(newIndexMissMessage(constraint, node, target, key))</span>
-<span class="source-line-no">234</span><span id="line-234">        .build());</span>
-<span class="source-line-no">235</span><span id="line-235">  }</span>
-<span class="source-line-no">236</span><span id="line-236"></span>
-<span class="source-line-no">237</span><span id="line-237">  @Override</span>
-<span class="source-line-no">238</span><span id="line-238">  public void handleMissingIndexViolation(</span>
-<span class="source-line-no">239</span><span id="line-239">      IIndexHasKeyConstraint constraint,</span>
-<span class="source-line-no">240</span><span id="line-240">      INodeItem node,</span>
-<span class="source-line-no">241</span><span id="line-241">      INodeItem target,</span>
-<span class="source-line-no">242</span><span id="line-242">      String message) {</span>
-<span class="source-line-no">243</span><span id="line-243">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">244</span><span id="line-244">        .severity(constraint.getLevel())</span>
-<span class="source-line-no">245</span><span id="line-245">        .kind(toKind(constraint.getLevel()))</span>
-<span class="source-line-no">246</span><span id="line-246">        .target(target)</span>
-<span class="source-line-no">247</span><span id="line-247">        .message(newMissingIndexViolationMessage(constraint, node, target, message))</span>
-<span class="source-line-no">248</span><span id="line-248">        .build());</span>
-<span class="source-line-no">249</span><span id="line-249">  }</span>
-<span class="source-line-no">250</span><span id="line-250"></span>
-<span class="source-line-no">251</span><span id="line-251">  @Override</span>
-<span class="source-line-no">252</span><span id="line-252">  public void handlePass(IConstraint constraint, INodeItem node, INodeItem target) {</span>
-<span class="source-line-no">253</span><span id="line-253">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">254</span><span id="line-254">        .kind(Kind.PASS)</span>
-<span class="source-line-no">255</span><span id="line-255">        .severity(Level.NONE)</span>
-<span class="source-line-no">256</span><span id="line-256">        .target(target)</span>
-<span class="source-line-no">257</span><span id="line-257">        .build());</span>
-<span class="source-line-no">258</span><span id="line-258">  }</span>
-<span class="source-line-no">259</span><span id="line-259"></span>
-<span class="source-line-no">260</span><span id="line-260">  @Override</span>
-<span class="source-line-no">261</span><span id="line-261">  public void handleError(</span>
-<span class="source-line-no">262</span><span id="line-262">      IConstraint constraint,</span>
-<span class="source-line-no">263</span><span id="line-263">      INodeItem node,</span>
-<span class="source-line-no">264</span><span id="line-264">      String message,</span>
-<span class="source-line-no">265</span><span id="line-265">      Throwable exception) {</span>
-<span class="source-line-no">266</span><span id="line-266">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="source-line-no">267</span><span id="line-267">        .kind(Kind.FAIL)</span>
-<span class="source-line-no">268</span><span id="line-268">        .severity(Level.CRITICAL)</span>
-<span class="source-line-no">269</span><span id="line-269">        .target(node)</span>
-<span class="source-line-no">270</span><span id="line-270">        .message(message)</span>
-<span class="source-line-no">271</span><span id="line-271">        .cause(exception)</span>
-<span class="source-line-no">272</span><span id="line-272">        .build());</span>
-<span class="source-line-no">273</span><span id="line-273">  }</span>
-<span class="source-line-no">274</span><span id="line-274">}</span>
+<span class="source-line-no">073</span><span id="line-73">    case INFORMATIONAL:</span>
+<span class="source-line-no">074</span><span id="line-74">    case DEBUG:</span>
+<span class="source-line-no">075</span><span id="line-75">    case NONE:</span>
+<span class="source-line-no">076</span><span id="line-76">      retval = Kind.INFORMATIONAL;</span>
+<span class="source-line-no">077</span><span id="line-77">      break;</span>
+<span class="source-line-no">078</span><span id="line-78">    case WARNING:</span>
+<span class="source-line-no">079</span><span id="line-79">      retval = Kind.PASS;</span>
+<span class="source-line-no">080</span><span id="line-80">      break;</span>
+<span class="source-line-no">081</span><span id="line-81">    default:</span>
+<span class="source-line-no">082</span><span id="line-82">      throw new IllegalArgumentException(String.format("Unsupported level '%s'.", level));</span>
+<span class="source-line-no">083</span><span id="line-83">    }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">    return retval;</span>
+<span class="source-line-no">086</span><span id="line-86">  }</span>
+<span class="source-line-no">087</span><span id="line-87"></span>
+<span class="source-line-no">088</span><span id="line-88">  @Override</span>
+<span class="source-line-no">089</span><span id="line-89">  public void handleCardinalityMinimumViolation(</span>
+<span class="source-line-no">090</span><span id="line-90">      @NonNull ICardinalityConstraint constraint,</span>
+<span class="source-line-no">091</span><span id="line-91">      @NonNull INodeItem node,</span>
+<span class="source-line-no">092</span><span id="line-92">      @NonNull ISequence&lt;? extends INodeItem&gt; targets) {</span>
+<span class="source-line-no">093</span><span id="line-93">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">094</span><span id="line-94">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">095</span><span id="line-95">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">096</span><span id="line-96">        .target(node)</span>
+<span class="source-line-no">097</span><span id="line-97">        .subjects(targets.getValue())</span>
+<span class="source-line-no">098</span><span id="line-98">        .message(newCardinalityMinimumViolationMessage(constraint, node, targets))</span>
+<span class="source-line-no">099</span><span id="line-99">        .build());</span>
+<span class="source-line-no">100</span><span id="line-100">  }</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">  @Override</span>
+<span class="source-line-no">103</span><span id="line-103">  public void handleCardinalityMaximumViolation(</span>
+<span class="source-line-no">104</span><span id="line-104">      @NonNull ICardinalityConstraint constraint,</span>
+<span class="source-line-no">105</span><span id="line-105">      @NonNull INodeItem node,</span>
+<span class="source-line-no">106</span><span id="line-106">      @NonNull ISequence&lt;? extends INodeItem&gt; targets) {</span>
+<span class="source-line-no">107</span><span id="line-107">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">108</span><span id="line-108">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">109</span><span id="line-109">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">110</span><span id="line-110">        .target(node)</span>
+<span class="source-line-no">111</span><span id="line-111">        .subjects(targets.getValue())</span>
+<span class="source-line-no">112</span><span id="line-112">        .message(newCardinalityMaximumViolationMessage(constraint, node, targets))</span>
+<span class="source-line-no">113</span><span id="line-113">        .build());</span>
+<span class="source-line-no">114</span><span id="line-114">  }</span>
+<span class="source-line-no">115</span><span id="line-115"></span>
+<span class="source-line-no">116</span><span id="line-116">  @Override</span>
+<span class="source-line-no">117</span><span id="line-117">  public void handleIndexDuplicateKeyViolation(</span>
+<span class="source-line-no">118</span><span id="line-118">      @NonNull IIndexConstraint constraint,</span>
+<span class="source-line-no">119</span><span id="line-119">      @NonNull INodeItem node,</span>
+<span class="source-line-no">120</span><span id="line-120">      @NonNull INodeItem oldItem,</span>
+<span class="source-line-no">121</span><span id="line-121">      @NonNull INodeItem target) {</span>
+<span class="source-line-no">122</span><span id="line-122">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">123</span><span id="line-123">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">124</span><span id="line-124">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">125</span><span id="line-125">        .target(target)</span>
+<span class="source-line-no">126</span><span id="line-126">        .message(newIndexDuplicateKeyViolationMessage(constraint, node, oldItem, target))</span>
+<span class="source-line-no">127</span><span id="line-127">        .build());</span>
+<span class="source-line-no">128</span><span id="line-128">  }</span>
+<span class="source-line-no">129</span><span id="line-129"></span>
+<span class="source-line-no">130</span><span id="line-130">  @Override</span>
+<span class="source-line-no">131</span><span id="line-131">  public void handleUniqueKeyViolation(</span>
+<span class="source-line-no">132</span><span id="line-132">      @NonNull IUniqueConstraint constraint,</span>
+<span class="source-line-no">133</span><span id="line-133">      @NonNull INodeItem node,</span>
+<span class="source-line-no">134</span><span id="line-134">      @NonNull INodeItem oldItem,</span>
+<span class="source-line-no">135</span><span id="line-135">      @NonNull INodeItem target) {</span>
+<span class="source-line-no">136</span><span id="line-136">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">137</span><span id="line-137">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">138</span><span id="line-138">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">139</span><span id="line-139">        .target(target)</span>
+<span class="source-line-no">140</span><span id="line-140">        .message(newUniqueKeyViolationMessage(constraint, node, oldItem, target))</span>
+<span class="source-line-no">141</span><span id="line-141">        .build());</span>
+<span class="source-line-no">142</span><span id="line-142">  }</span>
+<span class="source-line-no">143</span><span id="line-143"></span>
+<span class="source-line-no">144</span><span id="line-144">  @SuppressWarnings("null")</span>
+<span class="source-line-no">145</span><span id="line-145">  @Override</span>
+<span class="source-line-no">146</span><span id="line-146">  public void handleKeyMatchError(</span>
+<span class="source-line-no">147</span><span id="line-147">      @NonNull IKeyConstraint constraint,</span>
+<span class="source-line-no">148</span><span id="line-148">      @NonNull INodeItem node,</span>
+<span class="source-line-no">149</span><span id="line-149">      @NonNull INodeItem target,</span>
+<span class="source-line-no">150</span><span id="line-150">      @NonNull MetapathException cause) {</span>
+<span class="source-line-no">151</span><span id="line-151">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">152</span><span id="line-152">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">153</span><span id="line-153">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">154</span><span id="line-154">        .target(target)</span>
+<span class="source-line-no">155</span><span id="line-155">        .message(cause.getLocalizedMessage())</span>
+<span class="source-line-no">156</span><span id="line-156">        .cause(cause)</span>
+<span class="source-line-no">157</span><span id="line-157">        .build());</span>
+<span class="source-line-no">158</span><span id="line-158">  }</span>
+<span class="source-line-no">159</span><span id="line-159"></span>
+<span class="source-line-no">160</span><span id="line-160">  @Override</span>
+<span class="source-line-no">161</span><span id="line-161">  public void handleMatchPatternViolation(</span>
+<span class="source-line-no">162</span><span id="line-162">      @NonNull IMatchesConstraint constraint,</span>
+<span class="source-line-no">163</span><span id="line-163">      @NonNull INodeItem node,</span>
+<span class="source-line-no">164</span><span id="line-164">      @NonNull INodeItem target,</span>
+<span class="source-line-no">165</span><span id="line-165">      @NonNull String value,</span>
+<span class="source-line-no">166</span><span id="line-166">      @NonNull Pattern pattern) {</span>
+<span class="source-line-no">167</span><span id="line-167">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">168</span><span id="line-168">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">169</span><span id="line-169">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">170</span><span id="line-170">        .target(target)</span>
+<span class="source-line-no">171</span><span id="line-171">        .message(newMatchPatternViolationMessage(constraint, node, target, value, pattern))</span>
+<span class="source-line-no">172</span><span id="line-172">        .build());</span>
+<span class="source-line-no">173</span><span id="line-173">  }</span>
+<span class="source-line-no">174</span><span id="line-174"></span>
+<span class="source-line-no">175</span><span id="line-175">  @Override</span>
+<span class="source-line-no">176</span><span id="line-176">  public void handleMatchDatatypeViolation(</span>
+<span class="source-line-no">177</span><span id="line-177">      @NonNull IMatchesConstraint constraint,</span>
+<span class="source-line-no">178</span><span id="line-178">      @NonNull INodeItem node,</span>
+<span class="source-line-no">179</span><span id="line-179">      @NonNull INodeItem target,</span>
+<span class="source-line-no">180</span><span id="line-180">      @NonNull String value,</span>
+<span class="source-line-no">181</span><span id="line-181">      @NonNull IDataTypeAdapter&lt;?&gt; adapter,</span>
+<span class="source-line-no">182</span><span id="line-182">      @NonNull IllegalArgumentException cause) {</span>
+<span class="source-line-no">183</span><span id="line-183">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">184</span><span id="line-184">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">185</span><span id="line-185">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">186</span><span id="line-186">        .target(target)</span>
+<span class="source-line-no">187</span><span id="line-187">        .message(newMatchDatatypeViolationMessage(constraint, node, target, value, adapter))</span>
+<span class="source-line-no">188</span><span id="line-188">        .cause(cause)</span>
+<span class="source-line-no">189</span><span id="line-189">        .build());</span>
+<span class="source-line-no">190</span><span id="line-190">  }</span>
+<span class="source-line-no">191</span><span id="line-191"></span>
+<span class="source-line-no">192</span><span id="line-192">  @Override</span>
+<span class="source-line-no">193</span><span id="line-193">  public void handleExpectViolation(</span>
+<span class="source-line-no">194</span><span id="line-194">      @NonNull IExpectConstraint constraint,</span>
+<span class="source-line-no">195</span><span id="line-195">      @NonNull INodeItem node,</span>
+<span class="source-line-no">196</span><span id="line-196">      @NonNull INodeItem target,</span>
+<span class="source-line-no">197</span><span id="line-197">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">198</span><span id="line-198">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">199</span><span id="line-199">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">200</span><span id="line-200">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">201</span><span id="line-201">        .target(target)</span>
+<span class="source-line-no">202</span><span id="line-202">        .message(newExpectViolationMessage(constraint, node, target, dynamicContext))</span>
+<span class="source-line-no">203</span><span id="line-203">        .build());</span>
+<span class="source-line-no">204</span><span id="line-204">  }</span>
+<span class="source-line-no">205</span><span id="line-205"></span>
+<span class="source-line-no">206</span><span id="line-206">  @Override</span>
+<span class="source-line-no">207</span><span id="line-207">  public void handleAllowedValuesViolation(</span>
+<span class="source-line-no">208</span><span id="line-208">      @NonNull List&lt;IAllowedValuesConstraint&gt; failedConstraints,</span>
+<span class="source-line-no">209</span><span id="line-209">      @NonNull INodeItem target) {</span>
+<span class="source-line-no">210</span><span id="line-210">    Level maxLevel = ObjectUtils.notNull(failedConstraints.stream()</span>
+<span class="source-line-no">211</span><span id="line-211">        .map(IAllowedValuesConstraint::getLevel)</span>
+<span class="source-line-no">212</span><span id="line-212">        .reduce(Level.NONE, (l1, l2) -&gt; l1.ordinal() &gt;= l2.ordinal() ? l1 : l2));</span>
+<span class="source-line-no">213</span><span id="line-213"></span>
+<span class="source-line-no">214</span><span id="line-214">    addFinding(ConstraintValidationFinding.builder(failedConstraints, target)</span>
+<span class="source-line-no">215</span><span id="line-215">        .severity(maxLevel)</span>
+<span class="source-line-no">216</span><span id="line-216">        .kind(toKind(maxLevel))</span>
+<span class="source-line-no">217</span><span id="line-217">        .target(target)</span>
+<span class="source-line-no">218</span><span id="line-218">        .message(newAllowedValuesViolationMessage(failedConstraints, target))</span>
+<span class="source-line-no">219</span><span id="line-219">        .build());</span>
+<span class="source-line-no">220</span><span id="line-220">  }</span>
+<span class="source-line-no">221</span><span id="line-221"></span>
+<span class="source-line-no">222</span><span id="line-222">  @Override</span>
+<span class="source-line-no">223</span><span id="line-223">  public void handleIndexDuplicateViolation(IIndexConstraint constraint, INodeItem node) {</span>
+<span class="source-line-no">224</span><span id="line-224">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">225</span><span id="line-225">        .kind(Kind.FAIL)</span>
+<span class="source-line-no">226</span><span id="line-226">        .severity(Level.CRITICAL)</span>
+<span class="source-line-no">227</span><span id="line-227">        .target(node)</span>
+<span class="source-line-no">228</span><span id="line-228">        .message(newIndexDuplicateViolationMessage(constraint, node))</span>
+<span class="source-line-no">229</span><span id="line-229">        .build());</span>
+<span class="source-line-no">230</span><span id="line-230">  }</span>
+<span class="source-line-no">231</span><span id="line-231"></span>
+<span class="source-line-no">232</span><span id="line-232">  @Override</span>
+<span class="source-line-no">233</span><span id="line-233">  public void handleIndexMiss(IIndexHasKeyConstraint constraint, INodeItem node, INodeItem target, List&lt;String&gt; key) {</span>
+<span class="source-line-no">234</span><span id="line-234">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">235</span><span id="line-235">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">236</span><span id="line-236">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">237</span><span id="line-237">        .target(target)</span>
+<span class="source-line-no">238</span><span id="line-238">        .message(newIndexMissMessage(constraint, node, target, key))</span>
+<span class="source-line-no">239</span><span id="line-239">        .build());</span>
+<span class="source-line-no">240</span><span id="line-240">  }</span>
+<span class="source-line-no">241</span><span id="line-241"></span>
+<span class="source-line-no">242</span><span id="line-242">  @Override</span>
+<span class="source-line-no">243</span><span id="line-243">  public void handleMissingIndexViolation(</span>
+<span class="source-line-no">244</span><span id="line-244">      IIndexHasKeyConstraint constraint,</span>
+<span class="source-line-no">245</span><span id="line-245">      INodeItem node,</span>
+<span class="source-line-no">246</span><span id="line-246">      INodeItem target,</span>
+<span class="source-line-no">247</span><span id="line-247">      String message) {</span>
+<span class="source-line-no">248</span><span id="line-248">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">249</span><span id="line-249">        .severity(constraint.getLevel())</span>
+<span class="source-line-no">250</span><span id="line-250">        .kind(toKind(constraint.getLevel()))</span>
+<span class="source-line-no">251</span><span id="line-251">        .target(target)</span>
+<span class="source-line-no">252</span><span id="line-252">        .message(newMissingIndexViolationMessage(constraint, node, target, message))</span>
+<span class="source-line-no">253</span><span id="line-253">        .build());</span>
+<span class="source-line-no">254</span><span id="line-254">  }</span>
+<span class="source-line-no">255</span><span id="line-255"></span>
+<span class="source-line-no">256</span><span id="line-256">  @Override</span>
+<span class="source-line-no">257</span><span id="line-257">  public void handlePass(IConstraint constraint, INodeItem node, INodeItem target) {</span>
+<span class="source-line-no">258</span><span id="line-258">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">259</span><span id="line-259">        .kind(Kind.PASS)</span>
+<span class="source-line-no">260</span><span id="line-260">        .severity(Level.NONE)</span>
+<span class="source-line-no">261</span><span id="line-261">        .target(target)</span>
+<span class="source-line-no">262</span><span id="line-262">        .build());</span>
+<span class="source-line-no">263</span><span id="line-263">  }</span>
+<span class="source-line-no">264</span><span id="line-264"></span>
+<span class="source-line-no">265</span><span id="line-265">  @Override</span>
+<span class="source-line-no">266</span><span id="line-266">  public void handleError(</span>
+<span class="source-line-no">267</span><span id="line-267">      IConstraint constraint,</span>
+<span class="source-line-no">268</span><span id="line-268">      INodeItem node,</span>
+<span class="source-line-no">269</span><span id="line-269">      String message,</span>
+<span class="source-line-no">270</span><span id="line-270">      Throwable exception) {</span>
+<span class="source-line-no">271</span><span id="line-271">    LOGGER.atError().withThrowable(exception).log(message);</span>
+<span class="source-line-no">272</span><span id="line-272">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="source-line-no">273</span><span id="line-273">        .kind(Kind.FAIL)</span>
+<span class="source-line-no">274</span><span id="line-274">        .severity(Level.CRITICAL)</span>
+<span class="source-line-no">275</span><span id="line-275">        .target(node)</span>
+<span class="source-line-no">276</span><span id="line-276">        .message(message)</span>
+<span class="source-line-no">277</span><span id="line-277">        .cause(exception)</span>
+<span class="source-line-no">278</span><span id="line-278">        .build());</span>
+<span class="source-line-no">279</span><span id="line-279">  }</span>
+<span class="source-line-no">280</span><span id="line-280">}</span>
 
 
 

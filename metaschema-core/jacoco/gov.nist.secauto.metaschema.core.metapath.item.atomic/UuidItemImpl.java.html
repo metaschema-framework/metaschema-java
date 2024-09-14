@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UuidAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.UUID;
 
@@ -18,40 +19,57 @@ class UuidItemImpl
     implements IUuidItem {
 
   public UuidItemImpl(@NonNull UUID value) {
-<span class="fc" id="L21">    super(value);</span>
-<span class="fc" id="L22">  }</span>
+<span class="fc" id="L22">    super(value);</span>
+<span class="fc" id="L23">  }</span>
 
   @Override
   public UUID asUuid() {
-<span class="nc" id="L26">    return getValue();</span>
+<span class="fc" id="L27">    return getValue();</span>
   }
 
   @Override
   public UuidAdapter getJavaTypeAdapter() {
-<span class="nc" id="L31">    return MetaschemaDataTypeProvider.UUID;</span>
+<span class="nc" id="L32">    return MetaschemaDataTypeProvider.UUID;</span>
   }
 
   @Override
   public IMapKey asMapKey() {
-<span class="nc" id="L36">    return new MapKey();</span>
+<span class="nc" id="L37">    return new MapKey();</span>
   }
 
-<span class="nc" id="L39">  private final class MapKey implements IMapKey {</span>
+  @Override
+  public String asString() {
+<span class="fc" id="L42">    return ObjectUtils.notNull(asUuid().toString());</span>
+  }
+
+  @Override
+  public int hashCode() {
+<span class="nc" id="L47">    return asString().hashCode();</span>
+  }
+
+  @SuppressWarnings(&quot;PMD.OnlyOneReturn&quot;)
+  @Override
+  public boolean equals(Object obj) {
+<span class="nc bnc" id="L53" title="All 4 branches missed.">    return this == obj</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        || (obj instanceof IStringItem &amp;&amp; compareTo((IStringItem) obj) == 0);</span>
+  }
+
+<span class="nc" id="L57">  private final class MapKey implements IMapKey {</span>
     @Override
     public IUuidItem getKey() {
-<span class="nc" id="L42">      return UuidItemImpl.this;</span>
+<span class="nc" id="L60">      return UuidItemImpl.this;</span>
     }
 
     @Override
     public int hashCode() {
-<span class="nc" id="L47">      return getKey().hashCode();</span>
+<span class="nc" id="L65">      return getKey().hashCode();</span>
     }
 
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L52" title="All 4 branches missed.">      return this == obj ||</span>
+<span class="nc bnc" id="L70" title="All 4 branches missed.">      return this == obj ||</span>
           (obj instanceof MapKey
-<span class="nc bnc" id="L54" title="All 2 branches missed.">              &amp;&amp; getKey().asUuid().equals(((MapKey) obj).getKey().asUuid()));</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">              &amp;&amp; getKey().asUuid().equals(((MapKey) obj).getKey().asUuid()));</span>
     }
   }
 }

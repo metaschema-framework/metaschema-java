@@ -55,14 +55,14 @@ class XmlChoiceInstance
   public XmlChoiceInstance(
       @NonNull ChoiceType xmlObject,
       @NonNull IAssemblyDefinition parent) {
-<span class="nc" id="L58">    super(parent);</span>
-<span class="nc" id="L59">    this.xmlChoice = xmlObject;</span>
-<span class="nc" id="L60">    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; new XmlModelContainer(xmlObject, this)));</span>
-<span class="nc" id="L61">  }</span>
+<span class="fc" id="L58">    super(parent);</span>
+<span class="fc" id="L59">    this.xmlChoice = xmlObject;</span>
+<span class="fc" id="L60">    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; new XmlModelContainer(xmlObject, this)));</span>
+<span class="fc" id="L61">  }</span>
 
   @Override
   public XmlModelContainer getModelContainer() {
-<span class="nc" id="L65">    return ObjectUtils.notNull(modelContainer.get());</span>
+<span class="fc" id="L65">    return ObjectUtils.notNull(modelContainer.get());</span>
   }
 
   // ----------------------------------------
@@ -92,68 +92,68 @@ class XmlChoiceInstance
   @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;)
   @NonNull
   private static final XmlObjectParser&lt;Pair&lt;IChoiceInstance,
-<span class="nc" id="L95">      XmlModelContainer&gt;&gt; XML_MODEL_PARSER</span>
-<span class="nc" id="L96">          = new XmlObjectParser&lt;&gt;(ObjectUtils.notNull(</span>
-<span class="nc" id="L97">              Map.ofEntries(Map.entry(new QName(IModule.XML_NAMESPACE, &quot;assembly&quot;), XmlChoiceInstance::handleAssembly),</span>
-<span class="nc" id="L98">                  Map.entry(new QName(IModule.XML_NAMESPACE, &quot;define-assembly&quot;),</span>
+<span class="fc" id="L95">      XmlModelContainer&gt;&gt; XML_MODEL_PARSER</span>
+<span class="fc" id="L96">          = new XmlObjectParser&lt;&gt;(ObjectUtils.notNull(</span>
+<span class="fc" id="L97">              Map.ofEntries(Map.entry(new QName(IModule.XML_NAMESPACE, &quot;assembly&quot;), XmlChoiceInstance::handleAssembly),</span>
+<span class="fc" id="L98">                  Map.entry(new QName(IModule.XML_NAMESPACE, &quot;define-assembly&quot;),</span>
                       XmlChoiceInstance::handleDefineAssembly),
-<span class="nc" id="L100">                  Map.entry(new QName(IModule.XML_NAMESPACE, &quot;field&quot;), XmlChoiceInstance::handleField),</span>
-<span class="nc" id="L101">                  Map.entry(new QName(IModule.XML_NAMESPACE, &quot;define-field&quot;), XmlChoiceInstance::handleDefineField)))) {</span>
+<span class="fc" id="L100">                  Map.entry(new QName(IModule.XML_NAMESPACE, &quot;field&quot;), XmlChoiceInstance::handleField),</span>
+<span class="fc" id="L101">                  Map.entry(new QName(IModule.XML_NAMESPACE, &quot;define-field&quot;), XmlChoiceInstance::handleDefineField)))) {</span>
 
             @Override
             protected Handler&lt;Pair&lt;IChoiceInstance, XmlModelContainer&gt;&gt; identifyHandler(XmlCursor cursor,
                 XmlObject obj) {
               Handler&lt;Pair&lt;IChoiceInstance, XmlModelContainer&gt;&gt; retval;
-<span class="nc bnc" id="L107" title="All 2 branches missed.">              if (obj instanceof FieldReferenceType) {</span>
-<span class="nc" id="L108">                retval = XmlChoiceInstance::handleField;</span>
-<span class="nc bnc" id="L109" title="All 2 branches missed.">              } else if (obj instanceof InlineFieldDefinitionType) {</span>
-<span class="nc" id="L110">                retval = XmlChoiceInstance::handleDefineField;</span>
-<span class="nc bnc" id="L111" title="All 2 branches missed.">              } else if (obj instanceof AssemblyReferenceType) {</span>
-<span class="nc" id="L112">                retval = XmlChoiceInstance::handleAssembly;</span>
-<span class="nc bnc" id="L113" title="All 2 branches missed.">              } else if (obj instanceof InlineAssemblyDefinitionType) {</span>
-<span class="nc" id="L114">                retval = XmlChoiceInstance::handleDefineAssembly;</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">              if (obj instanceof FieldReferenceType) {</span>
+<span class="fc" id="L108">                retval = XmlChoiceInstance::handleField;</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">              } else if (obj instanceof InlineFieldDefinitionType) {</span>
+<span class="fc" id="L110">                retval = XmlChoiceInstance::handleDefineField;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">              } else if (obj instanceof AssemblyReferenceType) {</span>
+<span class="fc" id="L112">                retval = XmlChoiceInstance::handleAssembly;</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">              } else if (obj instanceof InlineAssemblyDefinitionType) {</span>
+<span class="fc" id="L114">                retval = XmlChoiceInstance::handleDefineAssembly;</span>
               } else {
 <span class="nc" id="L116">                retval = super.identifyHandler(cursor, obj);</span>
               }
-<span class="nc" id="L118">              return retval;</span>
+<span class="fc" id="L118">              return retval;</span>
             }
           };
 
   private static void handleField( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IChoiceInstance, XmlModelContainer&gt; state) {
-<span class="nc" id="L125">    IFieldInstanceAbsolute instance = new XmlFieldInstance(</span>
+<span class="fc" id="L125">    IFieldInstanceAbsolute instance = new XmlFieldInstance(</span>
         (FieldReferenceType) obj,
-<span class="nc" id="L127">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L128">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="nc" id="L129">  }</span>
+<span class="fc" id="L127">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L128">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="fc" id="L129">  }</span>
 
   private static void handleDefineField( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IChoiceInstance, XmlModelContainer&gt; state) {
-<span class="nc" id="L134">    IFieldInstanceAbsolute instance = new XmlInlineFieldDefinition(</span>
+<span class="fc" id="L134">    IFieldInstanceAbsolute instance = new XmlInlineFieldDefinition(</span>
         (InlineFieldDefinitionType) obj,
-<span class="nc" id="L136">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L137">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="nc" id="L138">  }</span>
+<span class="fc" id="L136">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L137">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="fc" id="L138">  }</span>
 
   private static void handleAssembly( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IChoiceInstance, XmlModelContainer&gt; state) {
-<span class="nc" id="L143">    IAssemblyInstanceAbsolute instance = new XmlAssemblyInstance(</span>
+<span class="fc" id="L143">    IAssemblyInstanceAbsolute instance = new XmlAssemblyInstance(</span>
         (AssemblyReferenceType) obj,
-<span class="nc" id="L145">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L146">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="nc" id="L147">  }</span>
+<span class="fc" id="L145">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L146">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="fc" id="L147">  }</span>
 
   private static void handleDefineAssembly( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IChoiceInstance, XmlModelContainer&gt; state) {
-<span class="nc" id="L152">    IAssemblyInstanceAbsolute instance = new XmlInlineAssemblyDefinition(</span>
+<span class="fc" id="L152">    IAssemblyInstanceAbsolute instance = new XmlInlineAssemblyDefinition(</span>
         (InlineAssemblyDefinitionType) obj,
-<span class="nc" id="L154">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L155">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="nc" id="L156">  }</span>
+<span class="fc" id="L154">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L155">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="fc" id="L156">  }</span>
 
   private static class XmlModelContainer
       extends DefaultContainerModelSupport&lt;
@@ -172,23 +172,23 @@ class XmlChoiceInstance
      */
     public XmlModelContainer(
         @NonNull ChoiceType xmlObject,
-<span class="nc" id="L175">        @NonNull IChoiceInstance parent) {</span>
-<span class="nc" id="L176">      XML_MODEL_PARSER.parse(xmlObject, Pair.of(parent, this));</span>
-<span class="nc" id="L177">    }</span>
+<span class="fc" id="L175">        @NonNull IChoiceInstance parent) {</span>
+<span class="fc" id="L176">      XML_MODEL_PARSER.parse(xmlObject, Pair.of(parent, this));</span>
+<span class="fc" id="L177">    }</span>
 
     public void append(@NonNull IFieldInstanceAbsolute instance) {
-<span class="nc" id="L180">      QName key = instance.getXmlQName();</span>
-<span class="nc" id="L181">      getFieldInstanceMap().put(key, instance);</span>
-<span class="nc" id="L182">      getNamedModelInstanceMap().put(key, instance);</span>
-<span class="nc" id="L183">      getModelInstances().add(instance);</span>
-<span class="nc" id="L184">    }</span>
+<span class="fc" id="L180">      QName key = instance.getXmlQName();</span>
+<span class="fc" id="L181">      getFieldInstanceMap().put(key, instance);</span>
+<span class="fc" id="L182">      getNamedModelInstanceMap().put(key, instance);</span>
+<span class="fc" id="L183">      getModelInstances().add(instance);</span>
+<span class="fc" id="L184">    }</span>
 
     public void append(@NonNull IAssemblyInstanceAbsolute instance) {
-<span class="nc" id="L187">      QName key = instance.getXmlQName();</span>
-<span class="nc" id="L188">      getAssemblyInstanceMap().put(key, instance);</span>
-<span class="nc" id="L189">      getNamedModelInstanceMap().put(key, instance);</span>
-<span class="nc" id="L190">      getModelInstances().add(instance);</span>
-<span class="nc" id="L191">    }</span>
+<span class="fc" id="L187">      QName key = instance.getXmlQName();</span>
+<span class="fc" id="L188">      getAssemblyInstanceMap().put(key, instance);</span>
+<span class="fc" id="L189">      getNamedModelInstanceMap().put(key, instance);</span>
+<span class="fc" id="L190">      getModelInstances().add(instance);</span>
+<span class="fc" id="L191">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

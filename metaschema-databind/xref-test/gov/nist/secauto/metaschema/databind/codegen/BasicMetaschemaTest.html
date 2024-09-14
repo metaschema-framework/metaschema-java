@@ -242,45 +242,46 @@
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>   }
 <a class="jxr_linenumber" name="L235" href="#L235">235</a> 
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>   @Test
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>   <strong class="jxr_keyword">void</strong> codegenTest() <strong class="jxr_keyword">throws</strong> MetaschemaException, IOException {
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>     List&lt;IConstraintSet&gt; constraints;
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>     {
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>       BindingConstraintLoader constraintLoader = <strong class="jxr_keyword">new</strong> BindingConstraintLoader(<strong class="jxr_keyword">new</strong> DefaultBindingContext());
-<a class="jxr_linenumber" name="L241" href="#L241">241</a> 
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>       constraints = constraintLoader.load(
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>           Paths.get(<span class="jxr_string">"../core/metaschema/schema/metaschema/metaschema-module-constraints.xml"</span>));
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>     }
-<a class="jxr_linenumber" name="L245" href="#L245">245</a> 
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>     IBindingContext bindingContext = <strong class="jxr_keyword">new</strong> DefaultBindingContext(
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>         CollectionUtil.singletonList(<strong class="jxr_keyword">new</strong> ExternalConstraintsModulePostProcessor(constraints)));
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>     BindingModuleLoader loader = <strong class="jxr_keyword">new</strong> BindingModuleLoader(bindingContext);
-<a class="jxr_linenumber" name="L249" href="#L249">249</a> 
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>     IBindingMetaschemaModule module
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>         = loader.load(Paths.get(<span class="jxr_string">"../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml"</span>));
-<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>     Path compilePath = Paths.get(<span class="jxr_string">"target/compile"</span>);
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>     Files.createDirectories(compilePath);
-<a class="jxr_linenumber" name="L255" href="#L255">255</a> 
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>     ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>         compilePath,
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>         ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));
-<a class="jxr_linenumber" name="L259" href="#L259">259</a> 
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>     IProduction production = ModuleCompilerHelper.compileMetaschema(module, compilePath);
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     production.getModuleProductions().stream()
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>         .map(item -&gt; {
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>           <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>             <strong class="jxr_keyword">return</strong> (Class&lt;? <strong class="jxr_keyword">extends</strong> IBoundModule&gt;) classLoader.loadClass(item.getClassName().reflectionName());
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>           } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException ex) {
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>           }
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>         })
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>         .forEachOrdered(clazz -&gt; {
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>           IBoundModule boundModule = bindingContext.registerModule(ObjectUtils.notNull(clazz));
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>           <em class="jxr_comment">// force the binding matchers to load</em>
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>           boundModule.getRootAssemblyDefinitions();
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>         });
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>   }
-<a class="jxr_linenumber" name="L275" href="#L275">275</a> }
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>   @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>   <strong class="jxr_keyword">void</strong> codegenTest() <strong class="jxr_keyword">throws</strong> MetaschemaException, IOException {
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     List&lt;IConstraintSet&gt; constraints;
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>     {
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>       BindingConstraintLoader constraintLoader = <strong class="jxr_keyword">new</strong> BindingConstraintLoader(<strong class="jxr_keyword">new</strong> DefaultBindingContext());
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> 
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>       constraints = constraintLoader.load(
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>           Paths.get(<span class="jxr_string">"../core/metaschema/schema/metaschema/metaschema-module-constraints.xml"</span>));
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     }
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> 
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     IBindingContext bindingContext = <strong class="jxr_keyword">new</strong> DefaultBindingContext(
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         CollectionUtil.singletonList(<strong class="jxr_keyword">new</strong> ExternalConstraintsModulePostProcessor(constraints)));
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     BindingModuleLoader loader = <strong class="jxr_keyword">new</strong> BindingModuleLoader(bindingContext);
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> 
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>     IBindingMetaschemaModule module
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         = loader.load(Paths.get(<span class="jxr_string">"../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml"</span>));
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     Path compilePath = Paths.get(<span class="jxr_string">"target/compile"</span>);
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     Files.createDirectories(compilePath);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> 
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         compilePath,
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>         ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     IProduction production = ModuleCompilerHelper.compileMetaschema(module, compilePath);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     production.getModuleProductions().stream()
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>         .map(item -&gt; {
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>           <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>             <strong class="jxr_keyword">return</strong> (Class&lt;? <strong class="jxr_keyword">extends</strong> IBoundModule&gt;) classLoader.loadClass(item.getClassName().reflectionName());
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>           } <strong class="jxr_keyword">catch</strong> (ClassNotFoundException ex) {
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(ex);
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>           }
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>         })
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>         .forEachOrdered(clazz -&gt; {
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>           IBoundModule boundModule = bindingContext.registerModule(ObjectUtils.notNull(clazz));
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>           <em class="jxr_comment">// force the binding matchers to load</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>           boundModule.getRootAssemblyDefinitions();
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         });
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>   }
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2024. All rights reserved.</div>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1724090663968">
-    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="1.0.2"/>
+<licensePluginReport goal="FORMAT" timestamp="1726318470625">
+    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="1.1.0"/>
     <files>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/adapter/BooleanAdapterTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/adapter/DateAdapterTest.java" result="NOOP"/>
@@ -75,6 +75,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/atomic/IBooleanItemTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/atomic/INumericItemTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/atomic/IStringItemTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/atomic/IUuidItemTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/function/IArrayItemTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/function/LookupTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidatorTest.java" result="NOOP"/>
@@ -93,6 +94,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/IModelInstanceBuilder.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/MockFactory.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/MockedModelTestSupport.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/util/MermaidErDiagramGeneratorTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/util/ReplacementScannerTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/util/UriUtilsTest.java" result="NOOP"/>
     </files>

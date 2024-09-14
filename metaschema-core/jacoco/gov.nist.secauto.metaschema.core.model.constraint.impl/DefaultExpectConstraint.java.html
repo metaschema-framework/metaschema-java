@@ -24,15 +24,14 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
-import nl.talsmasoftware.lazy4j.LazyEvaluationException;
 
 public final class DefaultExpectConstraint
     extends AbstractConstraint
     implements IExpectConstraint {
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
-<span class="fc" id="L34">  private static final Pattern METAPATH_VALUE_TEMPLATE_PATTERN</span>
-<span class="fc" id="L35">      = Pattern.compile(&quot;(?&lt;!\\\\)(\\{\\s*((?:(?:\\\\})|[^}])*)\\s*\\})&quot;);</span>
+<span class="fc" id="L33">  private static final Pattern METAPATH_VALUE_TEMPLATE_PATTERN</span>
+<span class="fc" id="L34">      = Pattern.compile(&quot;(?&lt;!\\\\)(\\{\\s*((?:(?:\\\\})|[^}])*)\\s*\\})&quot;);</span>
   @NonNull
   private final Lazy&lt;MetapathExpression&gt; testMetapath;
   private final String message;
@@ -76,13 +75,13 @@ public final class DefaultExpectConstraint
       @NonNull String test,
       @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-<span class="fc" id="L79">    super(id, formalName, description, source, level, target, properties, remarks);</span>
-<span class="fc" id="L80">    this.testMetapath = ObjectUtils.notNull(</span>
-<span class="pc" id="L81">        Lazy.lazy(() -&gt; MetapathExpression.compile(</span>
+<span class="fc" id="L78">    super(id, formalName, description, source, level, target, properties, remarks);</span>
+<span class="fc" id="L79">    this.testMetapath = ObjectUtils.notNull(</span>
+<span class="pc" id="L80">        Lazy.lazy(() -&gt; MetapathExpression.compile(</span>
             test,
-<span class="nc" id="L83">            source.getStaticContext())));</span>
-<span class="fc" id="L84">    this.message = message;</span>
-<span class="fc" id="L85">  }</span>
+<span class="nc" id="L82">            source.getStaticContext())));</span>
+<span class="fc" id="L83">    this.message = message;</span>
+<span class="fc" id="L84">  }</span>
 
   /**
    * Get the compiled Metapath expression for the test.
@@ -91,39 +90,30 @@ public final class DefaultExpectConstraint
    */
   @NonNull
   public MetapathExpression getTestMetapath() {
-    try {
-<span class="nc" id="L95">      return ObjectUtils.notNull(testMetapath.get());</span>
-<span class="nc" id="L96">    } catch (LazyEvaluationException ex) {</span>
-<span class="nc" id="L97">      Throwable cause = ex.getCause();</span>
-<span class="nc bnc" id="L98" title="All 2 branches missed.">      if (cause instanceof RuntimeException) {</span>
-<span class="nc" id="L99">        cause.addSuppressed(ex);</span>
-<span class="nc" id="L100">        throw (RuntimeException) cause;</span>
-      }
-<span class="nc" id="L102">      throw ex;</span>
-    }
+<span class="nc" id="L93">    return ObjectUtils.notNull(testMetapath.get());</span>
   }
 
   @Override
   public String getTest() {
-<span class="nc" id="L108">    return getTestMetapath().getPath();</span>
+<span class="nc" id="L98">    return getTestMetapath().getPath();</span>
   }
 
   @Override
   public String getMessage() {
-<span class="nc" id="L113">    return message;</span>
+<span class="nc" id="L103">    return message;</span>
   }
 
   @Override
   public String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context) {
-<span class="nc" id="L118">    String message = getMessage();</span>
+<span class="nc" id="L108">    String message = getMessage();</span>
 
-<span class="nc bnc" id="L120" title="All 2 branches missed.">    return message == null ? null</span>
-<span class="nc" id="L121">        : ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -&gt; {</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">    return message == null ? null</span>
+<span class="nc" id="L111">        : ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -&gt; {</span>
           @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L123">          @NonNull String metapath = match.group(2);</span>
-<span class="nc" id="L124">          MetapathExpression expr = MetapathExpression.compile(metapath, context.getStaticContext());</span>
-<span class="nc" id="L125">          return expr.evaluateAs(item, MetapathExpression.ResultType.STRING, context);</span>
-<span class="nc" id="L126">        }).toString();</span>
+<span class="nc" id="L113">          @NonNull String metapath = match.group(2);</span>
+<span class="nc" id="L114">          MetapathExpression expr = MetapathExpression.compile(metapath, context.getStaticContext());</span>
+<span class="nc" id="L115">          return expr.evaluateAs(item, MetapathExpression.ResultType.STRING, context);</span>
+<span class="nc" id="L116">        }).toString();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

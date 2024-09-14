@@ -147,9 +147,9 @@ public interface IModuleExtended&lt;
   default FI getScopedFieldDefinitionByName(@NonNull QName name) {
     // first try local/global top-level definitions from current metaschema module
 <span class="fc" id="L149">    FI retval = getFieldDefinitionByName(name);</span>
-<span class="pc bpc" id="L150" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">    if (retval == null) {</span>
       // try global definitions from imported metaschema modules
-<span class="nc" id="L152">      retval = getExportedFieldDefinitionByName(name);</span>
+<span class="fc" id="L152">      retval = getExportedFieldDefinitionByName(name);</span>
     }
 <span class="fc" id="L154">    return retval;</span>
   }
@@ -159,9 +159,9 @@ public interface IModuleExtended&lt;
   default FL getScopedFlagDefinitionByName(@NonNull QName name) {
     // first try local/global top-level definitions from current metaschema module
 <span class="fc" id="L161">    FL retval = getFlagDefinitionByName(name);</span>
-<span class="pc bpc" id="L162" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (retval == null) {</span>
       // try global definitions from imported metaschema modules
-<span class="nc" id="L164">      retval = getExportedFlagDefinitionByName(name);</span>
+<span class="fc" id="L164">      retval = getExportedFlagDefinitionByName(name);</span>
     }
 <span class="fc" id="L166">    return retval;</span>
   }

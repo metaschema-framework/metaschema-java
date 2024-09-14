@@ -38,7 +38,7 @@ public interface IFieldNodeItem
 
   @Override
   default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull INodeItemVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {
-<span class="nc" id="L41">    return visitor.visitField(this, context);</span>
+<span class="fc" id="L41">    return visitor.visitField(this, context);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

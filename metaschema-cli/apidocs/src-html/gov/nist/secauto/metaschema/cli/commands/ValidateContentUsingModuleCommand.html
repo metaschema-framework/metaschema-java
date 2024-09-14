@@ -27,165 +27,145 @@
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;</span>
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.model.util.JsonUtil;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.model.util.XmlUtil;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.util.UriUtils;</span>
-<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.databind.DefaultBindingContext;</span>
-<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
-<span class="source-line-no">024</span><span id="line-24">import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;</span>
-<span class="source-line-no">025</span><span id="line-25">import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;</span>
-<span class="source-line-no">026</span><span id="line-26">import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">import org.apache.commons.cli.CommandLine;</span>
-<span class="source-line-no">029</span><span id="line-29">import org.apache.commons.cli.Option;</span>
-<span class="source-line-no">030</span><span id="line-30">import org.json.JSONObject;</span>
-<span class="source-line-no">031</span><span id="line-31"></span>
-<span class="source-line-no">032</span><span id="line-32">import java.io.BufferedReader;</span>
-<span class="source-line-no">033</span><span id="line-33">import java.io.IOException;</span>
-<span class="source-line-no">034</span><span id="line-34">import java.net.URI;</span>
-<span class="source-line-no">035</span><span id="line-35">import java.net.URISyntaxException;</span>
-<span class="source-line-no">036</span><span id="line-36">import java.net.URL;</span>
-<span class="source-line-no">037</span><span id="line-37">import java.nio.charset.StandardCharsets;</span>
-<span class="source-line-no">038</span><span id="line-38">import java.nio.file.Files;</span>
-<span class="source-line-no">039</span><span id="line-39">import java.nio.file.Path;</span>
-<span class="source-line-no">040</span><span id="line-40">import java.nio.file.Paths;</span>
-<span class="source-line-no">041</span><span id="line-41">import java.util.ArrayList;</span>
-<span class="source-line-no">042</span><span id="line-42">import java.util.Collection;</span>
-<span class="source-line-no">043</span><span id="line-43">import java.util.List;</span>
-<span class="source-line-no">044</span><span id="line-44">import java.util.Set;</span>
-<span class="source-line-no">045</span><span id="line-45"></span>
-<span class="source-line-no">046</span><span id="line-46">import javax.xml.transform.Source;</span>
-<span class="source-line-no">047</span><span id="line-47"></span>
-<span class="source-line-no">048</span><span id="line-48">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">049</span><span id="line-49"></span>
-<span class="source-line-no">050</span><span id="line-50">public class ValidateContentUsingModuleCommand</span>
-<span class="source-line-no">051</span><span id="line-51">    extends AbstractValidateContentCommand {</span>
-<span class="source-line-no">052</span><span id="line-52">  @NonNull</span>
-<span class="source-line-no">053</span><span id="line-53">  private static final String COMMAND = "validate-content";</span>
-<span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">  @Override</span>
-<span class="source-line-no">056</span><span id="line-56">  public String getName() {</span>
-<span class="source-line-no">057</span><span id="line-57">    return COMMAND;</span>
-<span class="source-line-no">058</span><span id="line-58">  }</span>
-<span class="source-line-no">059</span><span id="line-59"></span>
-<span class="source-line-no">060</span><span id="line-60">  @Override</span>
-<span class="source-line-no">061</span><span id="line-61">  public String getDescription() {</span>
-<span class="source-line-no">062</span><span id="line-62">    return "Verify that the provided resource is well-formed and valid to the provided Module-based model.";</span>
-<span class="source-line-no">063</span><span id="line-63">  }</span>
-<span class="source-line-no">064</span><span id="line-64"></span>
-<span class="source-line-no">065</span><span id="line-65">  @Override</span>
-<span class="source-line-no">066</span><span id="line-66">  public Collection&lt;? extends Option&gt; gatherOptions() {</span>
-<span class="source-line-no">067</span><span id="line-67">    Collection&lt;? extends Option&gt; orig = super.gatherOptions();</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">    List&lt;Option&gt; retval = new ArrayList&lt;&gt;(orig.size() + 1);</span>
-<span class="source-line-no">070</span><span id="line-70">    retval.addAll(orig);</span>
-<span class="source-line-no">071</span><span id="line-71">    retval.add(MetaschemaCommandSupport.METASCHEMA_OPTION);</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.databind.DefaultBindingContext;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;</span>
+<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;</span>
+<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;</span>
+<span class="source-line-no">024</span><span id="line-24"></span>
+<span class="source-line-no">025</span><span id="line-25">import org.apache.commons.cli.CommandLine;</span>
+<span class="source-line-no">026</span><span id="line-26">import org.apache.commons.cli.Option;</span>
+<span class="source-line-no">027</span><span id="line-27">import org.json.JSONObject;</span>
+<span class="source-line-no">028</span><span id="line-28"></span>
+<span class="source-line-no">029</span><span id="line-29">import java.io.BufferedReader;</span>
+<span class="source-line-no">030</span><span id="line-30">import java.io.IOException;</span>
+<span class="source-line-no">031</span><span id="line-31">import java.net.URI;</span>
+<span class="source-line-no">032</span><span id="line-32">import java.net.URISyntaxException;</span>
+<span class="source-line-no">033</span><span id="line-33">import java.net.URL;</span>
+<span class="source-line-no">034</span><span id="line-34">import java.nio.charset.StandardCharsets;</span>
+<span class="source-line-no">035</span><span id="line-35">import java.nio.file.Files;</span>
+<span class="source-line-no">036</span><span id="line-36">import java.nio.file.Path;</span>
+<span class="source-line-no">037</span><span id="line-37">import java.nio.file.Paths;</span>
+<span class="source-line-no">038</span><span id="line-38">import java.util.ArrayList;</span>
+<span class="source-line-no">039</span><span id="line-39">import java.util.Collection;</span>
+<span class="source-line-no">040</span><span id="line-40">import java.util.List;</span>
+<span class="source-line-no">041</span><span id="line-41">import java.util.Set;</span>
+<span class="source-line-no">042</span><span id="line-42"></span>
+<span class="source-line-no">043</span><span id="line-43">import javax.xml.transform.Source;</span>
+<span class="source-line-no">044</span><span id="line-44"></span>
+<span class="source-line-no">045</span><span id="line-45">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">public class ValidateContentUsingModuleCommand</span>
+<span class="source-line-no">048</span><span id="line-48">    extends AbstractValidateContentCommand {</span>
+<span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
+<span class="source-line-no">050</span><span id="line-50">  private static final String COMMAND = "validate-content";</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  @Override</span>
+<span class="source-line-no">053</span><span id="line-53">  public String getName() {</span>
+<span class="source-line-no">054</span><span id="line-54">    return COMMAND;</span>
+<span class="source-line-no">055</span><span id="line-55">  }</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">  @Override</span>
+<span class="source-line-no">058</span><span id="line-58">  public String getDescription() {</span>
+<span class="source-line-no">059</span><span id="line-59">    return "Verify that the provided resource is well-formed and valid to the provided Module-based model.";</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  @Override</span>
+<span class="source-line-no">063</span><span id="line-63">  public Collection&lt;? extends Option&gt; gatherOptions() {</span>
+<span class="source-line-no">064</span><span id="line-64">    Collection&lt;? extends Option&gt; orig = super.gatherOptions();</span>
+<span class="source-line-no">065</span><span id="line-65"></span>
+<span class="source-line-no">066</span><span id="line-66">    List&lt;Option&gt; retval = new ArrayList&lt;&gt;(orig.size() + 1);</span>
+<span class="source-line-no">067</span><span id="line-67">    retval.addAll(orig);</span>
+<span class="source-line-no">068</span><span id="line-68">    retval.add(MetaschemaCommands.METASCHEMA_OPTION);</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">    return CollectionUtil.unmodifiableCollection(retval);</span>
+<span class="source-line-no">071</span><span id="line-71">  }</span>
 <span class="source-line-no">072</span><span id="line-72"></span>
-<span class="source-line-no">073</span><span id="line-73">    return CollectionUtil.unmodifiableCollection(retval);</span>
-<span class="source-line-no">074</span><span id="line-74">  }</span>
-<span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">  @Override</span>
-<span class="source-line-no">077</span><span id="line-77">  public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {</span>
-<span class="source-line-no">078</span><span id="line-78">    return new OscalCommandExecutor(callingContext, commandLine);</span>
-<span class="source-line-no">079</span><span id="line-79">  }</span>
+<span class="source-line-no">073</span><span id="line-73">  @Override</span>
+<span class="source-line-no">074</span><span id="line-74">  public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {</span>
+<span class="source-line-no">075</span><span id="line-75">    return new OscalCommandExecutor(callingContext, commandLine);</span>
+<span class="source-line-no">076</span><span id="line-76">  }</span>
+<span class="source-line-no">077</span><span id="line-77"></span>
+<span class="source-line-no">078</span><span id="line-78">  private final class OscalCommandExecutor</span>
+<span class="source-line-no">079</span><span id="line-79">      extends AbstractValidationCommandExecutor {</span>
 <span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">  private final class OscalCommandExecutor</span>
-<span class="source-line-no">082</span><span id="line-82">      extends AbstractValidationCommandExecutor {</span>
+<span class="source-line-no">081</span><span id="line-81">    private Path tempDir;</span>
+<span class="source-line-no">082</span><span id="line-82">    private IModule module;</span>
 <span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">    private Path tempDir;</span>
-<span class="source-line-no">085</span><span id="line-85">    private IModule module;</span>
-<span class="source-line-no">086</span><span id="line-86"></span>
-<span class="source-line-no">087</span><span id="line-87">    private OscalCommandExecutor(</span>
-<span class="source-line-no">088</span><span id="line-88">        @NonNull CallingContext callingContext,</span>
-<span class="source-line-no">089</span><span id="line-89">        @NonNull CommandLine commandLine) {</span>
-<span class="source-line-no">090</span><span id="line-90">      super(callingContext, commandLine);</span>
-<span class="source-line-no">091</span><span id="line-91">    }</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">    private Path getTempDir() throws IOException {</span>
-<span class="source-line-no">094</span><span id="line-94">      if (tempDir == null) {</span>
-<span class="source-line-no">095</span><span id="line-95">        tempDir = Files.createTempDirectory("validation-");</span>
-<span class="source-line-no">096</span><span id="line-96">        tempDir.toFile().deleteOnExit();</span>
-<span class="source-line-no">097</span><span id="line-97">      }</span>
-<span class="source-line-no">098</span><span id="line-98">      return tempDir;</span>
-<span class="source-line-no">099</span><span id="line-99">    }</span>
-<span class="source-line-no">100</span><span id="line-100"></span>
-<span class="source-line-no">101</span><span id="line-101">    @NonNull</span>
-<span class="source-line-no">102</span><span id="line-102">    private IModule getModule(@NonNull Set&lt;IConstraintSet&gt; constraintSets)</span>
-<span class="source-line-no">103</span><span id="line-103">        throws MetaschemaException, IOException {</span>
-<span class="source-line-no">104</span><span id="line-104">      URI cwd = Paths.get("").toAbsolutePath().toUri();</span>
-<span class="source-line-no">105</span><span id="line-105"></span>
-<span class="source-line-no">106</span><span id="line-106">      if (module == null) {</span>
-<span class="source-line-no">107</span><span id="line-107">        String moduleName</span>
-<span class="source-line-no">108</span><span id="line-108">            = ObjectUtils.requireNonNull(getCommandLine().getOptionValue(MetaschemaCommandSupport.METASCHEMA_OPTION));</span>
-<span class="source-line-no">109</span><span id="line-109">        URI moduleUri;</span>
-<span class="source-line-no">110</span><span id="line-110"></span>
-<span class="source-line-no">111</span><span id="line-111">        try {</span>
-<span class="source-line-no">112</span><span id="line-112">          moduleUri = UriUtils.toUri(moduleName, cwd);</span>
-<span class="source-line-no">113</span><span id="line-113">        } catch (URISyntaxException ex) {</span>
-<span class="source-line-no">114</span><span id="line-114">          IOException newEx = new IOException( // NOPMD - intentional</span>
-<span class="source-line-no">115</span><span id="line-115">              String.format("Cannot load module as '%s' is not a valid file or URL.", moduleName));</span>
-<span class="source-line-no">116</span><span id="line-116">          newEx.addSuppressed(ex);</span>
-<span class="source-line-no">117</span><span id="line-117">          throw newEx;</span>
-<span class="source-line-no">118</span><span id="line-118">        }</span>
-<span class="source-line-no">119</span><span id="line-119"></span>
-<span class="source-line-no">120</span><span id="line-120">        assert moduleUri != null;</span>
-<span class="source-line-no">121</span><span id="line-121"></span>
-<span class="source-line-no">122</span><span id="line-122">        ExternalConstraintsModulePostProcessor postProcessor</span>
-<span class="source-line-no">123</span><span id="line-123">            = new ExternalConstraintsModulePostProcessor(constraintSets);</span>
-<span class="source-line-no">124</span><span id="line-124"></span>
-<span class="source-line-no">125</span><span id="line-125">        ModuleLoader loader = new ModuleLoader(CollectionUtil.singletonList(postProcessor));</span>
-<span class="source-line-no">126</span><span id="line-126"></span>
-<span class="source-line-no">127</span><span id="line-127">        // BindingModuleLoader loader</span>
-<span class="source-line-no">128</span><span id="line-128">        // = new BindingModuleLoader(new DefaultBindingContext(),</span>
-<span class="source-line-no">129</span><span id="line-129">        // CollectionUtil.singletonList(postProcessor));</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">        loader.allowEntityResolution();</span>
-<span class="source-line-no">132</span><span id="line-132">        module = loader.load(moduleUri);</span>
-<span class="source-line-no">133</span><span id="line-133">      }</span>
-<span class="source-line-no">134</span><span id="line-134">      assert module != null;</span>
-<span class="source-line-no">135</span><span id="line-135">      return module;</span>
-<span class="source-line-no">136</span><span id="line-136">    }</span>
-<span class="source-line-no">137</span><span id="line-137"></span>
-<span class="source-line-no">138</span><span id="line-138">    @NonNull</span>
-<span class="source-line-no">139</span><span id="line-139">    private IModule getModule() {</span>
-<span class="source-line-no">140</span><span id="line-140">      // should be initialized already</span>
-<span class="source-line-no">141</span><span id="line-141">      return ObjectUtils.requireNonNull(module);</span>
-<span class="source-line-no">142</span><span id="line-142">    }</span>
-<span class="source-line-no">143</span><span id="line-143"></span>
-<span class="source-line-no">144</span><span id="line-144">    @Override</span>
-<span class="source-line-no">145</span><span id="line-145">    protected IBindingContext getBindingContext(@NonNull Set&lt;IConstraintSet&gt; constraintSets)</span>
-<span class="source-line-no">146</span><span id="line-146">        throws MetaschemaException, IOException {</span>
-<span class="source-line-no">147</span><span id="line-147"></span>
-<span class="source-line-no">148</span><span id="line-148">      IBindingContext retval = new DefaultBindingContext();</span>
-<span class="source-line-no">149</span><span id="line-149">      retval.registerModule(getModule(constraintSets), getTempDir());</span>
-<span class="source-line-no">150</span><span id="line-150">      return retval;</span>
-<span class="source-line-no">151</span><span id="line-151">    }</span>
-<span class="source-line-no">152</span><span id="line-152"></span>
-<span class="source-line-no">153</span><span id="line-153">    @Override</span>
-<span class="source-line-no">154</span><span id="line-154">    public List&lt;Source&gt; getXmlSchemas(@NonNull URL targetResource) throws IOException {</span>
-<span class="source-line-no">155</span><span id="line-155">      Path schemaFile = Files.createTempFile(getTempDir(), "schema-", ".xml");</span>
-<span class="source-line-no">156</span><span id="line-156">      assert schemaFile != null;</span>
-<span class="source-line-no">157</span><span id="line-157">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="source-line-no">158</span><span id="line-158">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.XML, configuration);</span>
-<span class="source-line-no">159</span><span id="line-159">      return ObjectUtils.requireNonNull(List.of(</span>
-<span class="source-line-no">160</span><span id="line-160">          XmlUtil.getStreamSource(schemaFile.toUri().toURL())));</span>
-<span class="source-line-no">161</span><span id="line-161">    }</span>
-<span class="source-line-no">162</span><span id="line-162"></span>
-<span class="source-line-no">163</span><span id="line-163">    @Override</span>
-<span class="source-line-no">164</span><span id="line-164">    public JSONObject getJsonSchema(@NonNull JSONObject json) throws IOException {</span>
-<span class="source-line-no">165</span><span id="line-165">      Path schemaFile = Files.createTempFile(getTempDir(), "schema-", ".json");</span>
-<span class="source-line-no">166</span><span id="line-166">      assert schemaFile != null;</span>
-<span class="source-line-no">167</span><span id="line-167">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="source-line-no">168</span><span id="line-168">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.JSON, configuration);</span>
-<span class="source-line-no">169</span><span id="line-169">      try (BufferedReader reader = ObjectUtils.notNull(Files.newBufferedReader(schemaFile, StandardCharsets.UTF_8))) {</span>
-<span class="source-line-no">170</span><span id="line-170">        return JsonUtil.toJsonObject(reader);</span>
-<span class="source-line-no">171</span><span id="line-171">      }</span>
-<span class="source-line-no">172</span><span id="line-172">    }</span>
-<span class="source-line-no">173</span><span id="line-173">  }</span>
-<span class="source-line-no">174</span><span id="line-174"></span>
-<span class="source-line-no">175</span><span id="line-175">}</span>
+<span class="source-line-no">084</span><span id="line-84">    private OscalCommandExecutor(</span>
+<span class="source-line-no">085</span><span id="line-85">        @NonNull CallingContext callingContext,</span>
+<span class="source-line-no">086</span><span id="line-86">        @NonNull CommandLine commandLine) {</span>
+<span class="source-line-no">087</span><span id="line-87">      super(callingContext, commandLine);</span>
+<span class="source-line-no">088</span><span id="line-88">    }</span>
+<span class="source-line-no">089</span><span id="line-89"></span>
+<span class="source-line-no">090</span><span id="line-90">    @NonNull</span>
+<span class="source-line-no">091</span><span id="line-91">    private Path getTempDir() throws IOException {</span>
+<span class="source-line-no">092</span><span id="line-92">      if (tempDir == null) {</span>
+<span class="source-line-no">093</span><span id="line-93">        tempDir = Files.createTempDirectory("validation-");</span>
+<span class="source-line-no">094</span><span id="line-94">        tempDir.toFile().deleteOnExit();</span>
+<span class="source-line-no">095</span><span id="line-95">      }</span>
+<span class="source-line-no">096</span><span id="line-96">      assert tempDir != null;</span>
+<span class="source-line-no">097</span><span id="line-97">      return tempDir;</span>
+<span class="source-line-no">098</span><span id="line-98">    }</span>
+<span class="source-line-no">099</span><span id="line-99"></span>
+<span class="source-line-no">100</span><span id="line-100">    @NonNull</span>
+<span class="source-line-no">101</span><span id="line-101">    private IModule getModule(@NonNull Set&lt;IConstraintSet&gt; constraintSets)</span>
+<span class="source-line-no">102</span><span id="line-102">        throws MetaschemaException, IOException {</span>
+<span class="source-line-no">103</span><span id="line-103">      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());</span>
+<span class="source-line-no">104</span><span id="line-104"></span>
+<span class="source-line-no">105</span><span id="line-105">      if (module == null) {</span>
+<span class="source-line-no">106</span><span id="line-106">        try {</span>
+<span class="source-line-no">107</span><span id="line-107">          module = MetaschemaCommands.handleModule(getCommandLine(), cwd, constraintSets);</span>
+<span class="source-line-no">108</span><span id="line-108">        } catch (URISyntaxException ex) {</span>
+<span class="source-line-no">109</span><span id="line-109">          throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),</span>
+<span class="source-line-no">110</span><span id="line-110">              ex);</span>
+<span class="source-line-no">111</span><span id="line-111">        }</span>
+<span class="source-line-no">112</span><span id="line-112">      }</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">      assert module != null;</span>
+<span class="source-line-no">115</span><span id="line-115">      return module;</span>
+<span class="source-line-no">116</span><span id="line-116">    }</span>
+<span class="source-line-no">117</span><span id="line-117"></span>
+<span class="source-line-no">118</span><span id="line-118">    @NonNull</span>
+<span class="source-line-no">119</span><span id="line-119">    private IModule getModule() {</span>
+<span class="source-line-no">120</span><span id="line-120">      // should be initialized already</span>
+<span class="source-line-no">121</span><span id="line-121">      return ObjectUtils.requireNonNull(module);</span>
+<span class="source-line-no">122</span><span id="line-122">    }</span>
+<span class="source-line-no">123</span><span id="line-123"></span>
+<span class="source-line-no">124</span><span id="line-124">    @Override</span>
+<span class="source-line-no">125</span><span id="line-125">    protected IBindingContext getBindingContext(@NonNull Set&lt;IConstraintSet&gt; constraintSets)</span>
+<span class="source-line-no">126</span><span id="line-126">        throws MetaschemaException, IOException {</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">      IBindingContext retval = new DefaultBindingContext();</span>
+<span class="source-line-no">129</span><span id="line-129">      retval.registerModule(getModule(constraintSets), getTempDir());</span>
+<span class="source-line-no">130</span><span id="line-130">      return retval;</span>
+<span class="source-line-no">131</span><span id="line-131">    }</span>
+<span class="source-line-no">132</span><span id="line-132"></span>
+<span class="source-line-no">133</span><span id="line-133">    @Override</span>
+<span class="source-line-no">134</span><span id="line-134">    public List&lt;Source&gt; getXmlSchemas(@NonNull URL targetResource) throws IOException {</span>
+<span class="source-line-no">135</span><span id="line-135">      Path schemaFile = Files.createTempFile(getTempDir(), "schema-", ".xml");</span>
+<span class="source-line-no">136</span><span id="line-136">      assert schemaFile != null;</span>
+<span class="source-line-no">137</span><span id="line-137">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
+<span class="source-line-no">138</span><span id="line-138">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.XML, configuration);</span>
+<span class="source-line-no">139</span><span id="line-139">      return ObjectUtils.requireNonNull(List.of(</span>
+<span class="source-line-no">140</span><span id="line-140">          XmlUtil.getStreamSource(ObjectUtils.notNull(schemaFile.toUri().toURL()))));</span>
+<span class="source-line-no">141</span><span id="line-141">    }</span>
+<span class="source-line-no">142</span><span id="line-142"></span>
+<span class="source-line-no">143</span><span id="line-143">    @Override</span>
+<span class="source-line-no">144</span><span id="line-144">    public JSONObject getJsonSchema(@NonNull JSONObject json) throws IOException {</span>
+<span class="source-line-no">145</span><span id="line-145">      Path schemaFile = Files.createTempFile(getTempDir(), "schema-", ".json");</span>
+<span class="source-line-no">146</span><span id="line-146">      assert schemaFile != null;</span>
+<span class="source-line-no">147</span><span id="line-147">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
+<span class="source-line-no">148</span><span id="line-148">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.JSON, configuration);</span>
+<span class="source-line-no">149</span><span id="line-149">      try (BufferedReader reader = ObjectUtils.notNull(Files.newBufferedReader(schemaFile, StandardCharsets.UTF_8))) {</span>
+<span class="source-line-no">150</span><span id="line-150">        return JsonUtil.toJsonObject(reader);</span>
+<span class="source-line-no">151</span><span id="line-151">      }</span>
+<span class="source-line-no">152</span><span id="line-152">    }</span>
+<span class="source-line-no">153</span><span id="line-153">  }</span>
+<span class="source-line-no">154</span><span id="line-154"></span>
+<span class="source-line-no">155</span><span id="line-155">}</span>
 
 
 

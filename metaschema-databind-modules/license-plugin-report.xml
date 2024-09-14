@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1724090963626">
-    <module artifactId="metaschema-databind-modules" groupId="dev.metaschema.java" version="1.0.2"/>
+<licensePluginReport goal="FORMAT" timestamp="1726318763186">
+    <module artifactId="metaschema-databind-modules" groupId="dev.metaschema.java" version="1.1.0"/>
     <files/>
 </licensePluginReport>

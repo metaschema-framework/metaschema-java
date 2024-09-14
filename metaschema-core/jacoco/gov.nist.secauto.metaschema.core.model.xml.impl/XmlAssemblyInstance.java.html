@@ -93,7 +93,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
   @Override
   public String getUseName() {
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">    return getXmlObject().isSetUseName() ? getXmlObject().getUseName().getStringValue() : null;</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    return getXmlObject().isSetUseName() ? getXmlObject().getUseName().getStringValue() : null;</span>
   }
 
   @Override
@@ -115,12 +115,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
   @Override
   public int getMinOccurs() {
-<span class="nc" id="L118">    return XmlModelParser.getMinOccurs(getXmlObject().getMinOccurs());</span>
+<span class="fc" id="L118">    return XmlModelParser.getMinOccurs(getXmlObject().getMinOccurs());</span>
   }
 
   @Override
   public int getMaxOccurs() {
-<span class="nc" id="L123">    return XmlModelParser.getMaxOccurs(getXmlObject().getMaxOccurs());</span>
+<span class="fc" id="L123">    return XmlModelParser.getMaxOccurs(getXmlObject().getMaxOccurs());</span>
   }
 
   @Override

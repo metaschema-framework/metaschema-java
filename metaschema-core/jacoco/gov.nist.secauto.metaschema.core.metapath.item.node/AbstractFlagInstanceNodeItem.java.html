@@ -11,52 +11,25 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A {@link INodeItem} supported by a {@link IFlagInstance}.
  */
 abstract class AbstractFlagInstanceNodeItem
+    extends AbstractInstanceNodeItem&lt;IFlagDefinition, IFlagInstance, IModelNodeItem&lt;?, ?&gt;&gt;
     implements IFlagNodeItem {
-  @NonNull
-  private final IFlagInstance instance;
-  @NonNull
-  private final IModelNodeItem&lt;?, ?&gt; parent;
 
-<span class="fc" id="L20">  public AbstractFlagInstanceNodeItem(@NonNull IFlagInstance instance, @NonNull IModelNodeItem&lt;?, ?&gt; parent) {</span>
-<span class="fc" id="L21">    this.instance = instance;</span>
-<span class="fc" id="L22">    this.parent = parent;</span>
-<span class="fc" id="L23">  }</span>
-
-  @Override
-  public IFlagDefinition getDefinition() {
-<span class="fc" id="L27">    return getInstance().getDefinition();</span>
-  }
-
-  @Override
-  @NonNull
-  public IFlagInstance getInstance() {
-<span class="fc" id="L33">    return instance;</span>
-  }
-
-  @Override
-  @NonNull
-  public IModelNodeItem&lt;?, ?&gt; getParentContentNodeItem() {
-<span class="nc" id="L39">    return getParentNodeItem();</span>
-  }
-
-  @Override
-  @NonNull
-  public IModelNodeItem&lt;?, ?&gt; getParentNodeItem() {
-<span class="fc" id="L45">    return parent;</span>
-  }
+  public AbstractFlagInstanceNodeItem(@NonNull IFlagInstance instance, @NonNull IModelNodeItem&lt;?, ?&gt; parent) {
+<span class="fc" id="L18">    super(instance, parent);</span>
+<span class="fc" id="L19">  }</span>
 
   @Override
   public String toString() {
-<span class="nc" id="L50">    StringBuilder builder = new StringBuilder()</span>
-<span class="nc" id="L51">        .append(getInstance().getXmlQName().toString());</span>
-<span class="nc" id="L52">    IAnyAtomicItem value = toAtomicItem();</span>
-<span class="nc bnc" id="L53" title="All 2 branches missed.">    if (value != null) {</span>
-<span class="nc" id="L54">      builder</span>
-<span class="nc" id="L55">          .append('(')</span>
-<span class="nc" id="L56">          .append(value.asString())</span>
-<span class="nc" id="L57">          .append(')');</span>
+<span class="nc" id="L23">    StringBuilder builder = new StringBuilder()</span>
+<span class="nc" id="L24">        .append(getInstance().getXmlQName().toString());</span>
+<span class="nc" id="L25">    IAnyAtomicItem value = toAtomicItem();</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">    if (value != null) {</span>
+<span class="nc" id="L27">      builder</span>
+<span class="nc" id="L28">          .append('(')</span>
+<span class="nc" id="L29">          .append(value.asString())</span>
+<span class="nc" id="L30">          .append(')');</span>
     }
-<span class="nc" id="L59">    return builder.toString();</span>
+<span class="nc" id="L32">    return builder.toString();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

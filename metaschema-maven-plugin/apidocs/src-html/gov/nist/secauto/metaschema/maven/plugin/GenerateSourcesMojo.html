@@ -164,47 +164,48 @@
 <span class="source-line-no">151</span><span id="line-151">      // generate Java sources based on provided metaschema sources</span>
 <span class="source-line-no">152</span><span id="line-152">      final Set&lt;IModule&gt; modules = new HashSet&lt;&gt;();</span>
 <span class="source-line-no">153</span><span id="line-153">      for (File source : getModuleSources().collect(Collectors.toList())) {</span>
-<span class="source-line-no">154</span><span id="line-154">        if (getLog().isInfoEnabled()) {</span>
-<span class="source-line-no">155</span><span id="line-155">          getLog().info("Using metaschema source: " + source.getPath());</span>
-<span class="source-line-no">156</span><span id="line-156">        }</span>
-<span class="source-line-no">157</span><span id="line-157">        IBindingMetaschemaModule module;</span>
-<span class="source-line-no">158</span><span id="line-158">        try {</span>
-<span class="source-line-no">159</span><span id="line-159">          module = loader.load(source);</span>
-<span class="source-line-no">160</span><span id="line-160">        } catch (MetaschemaException | IOException ex) {</span>
-<span class="source-line-no">161</span><span id="line-161">          throw new MojoExecutionException("Loading of metaschema failed", ex);</span>
-<span class="source-line-no">162</span><span id="line-162">        }</span>
-<span class="source-line-no">163</span><span id="line-163">        modules.add(module);</span>
-<span class="source-line-no">164</span><span id="line-164">      }</span>
-<span class="source-line-no">165</span><span id="line-165"></span>
-<span class="source-line-no">166</span><span id="line-166">      generate(modules);</span>
-<span class="source-line-no">167</span><span id="line-167"></span>
-<span class="source-line-no">168</span><span id="line-168">      // create the stale file</span>
-<span class="source-line-no">169</span><span id="line-169">      if (!staleFileDirectory.exists() &amp;&amp; !staleFileDirectory.mkdirs()) {</span>
-<span class="source-line-no">170</span><span id="line-170">        throw new MojoExecutionException("Unable to create output directory: " + staleFileDirectory);</span>
-<span class="source-line-no">171</span><span id="line-171">      }</span>
-<span class="source-line-no">172</span><span id="line-172">      try (OutputStream os</span>
-<span class="source-line-no">173</span><span id="line-173">          = Files.newOutputStream(staleFile.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE,</span>
-<span class="source-line-no">174</span><span id="line-174">              StandardOpenOption.TRUNCATE_EXISTING)) {</span>
-<span class="source-line-no">175</span><span id="line-175">        os.close();</span>
-<span class="source-line-no">176</span><span id="line-176">        if (getLog().isInfoEnabled()) {</span>
-<span class="source-line-no">177</span><span id="line-177">          getLog().info("Created stale file: " + staleFile);</span>
-<span class="source-line-no">178</span><span id="line-178">        }</span>
-<span class="source-line-no">179</span><span id="line-179">      } catch (IOException ex) {</span>
-<span class="source-line-no">180</span><span id="line-180">        throw new MojoExecutionException("Failed to write stale file: " + staleFile.getPath(), ex);</span>
-<span class="source-line-no">181</span><span id="line-181">      }</span>
-<span class="source-line-no">182</span><span id="line-182"></span>
-<span class="source-line-no">183</span><span id="line-183">      // for m2e</span>
-<span class="source-line-no">184</span><span id="line-184">      getBuildContext().refresh(getOutputDirectory());</span>
-<span class="source-line-no">185</span><span id="line-185">    }</span>
-<span class="source-line-no">186</span><span id="line-186"></span>
-<span class="source-line-no">187</span><span id="line-187">    // add generated sources to Maven</span>
-<span class="source-line-no">188</span><span id="line-188">    try {</span>
-<span class="source-line-no">189</span><span id="line-189">      getMavenProject().addCompileSourceRoot(getOutputDirectory().getCanonicalFile().getPath());</span>
-<span class="source-line-no">190</span><span id="line-190">    } catch (IOException ex) {</span>
-<span class="source-line-no">191</span><span id="line-191">      throw new MojoExecutionException("Unable to add output directory to maven sources.", ex);</span>
-<span class="source-line-no">192</span><span id="line-192">    }</span>
-<span class="source-line-no">193</span><span id="line-193">  }</span>
-<span class="source-line-no">194</span><span id="line-194">}</span>
+<span class="source-line-no">154</span><span id="line-154">        assert source != null;</span>
+<span class="source-line-no">155</span><span id="line-155">        if (getLog().isInfoEnabled()) {</span>
+<span class="source-line-no">156</span><span id="line-156">          getLog().info("Using metaschema source: " + source.getPath());</span>
+<span class="source-line-no">157</span><span id="line-157">        }</span>
+<span class="source-line-no">158</span><span id="line-158">        IBindingMetaschemaModule module;</span>
+<span class="source-line-no">159</span><span id="line-159">        try {</span>
+<span class="source-line-no">160</span><span id="line-160">          module = loader.load(source);</span>
+<span class="source-line-no">161</span><span id="line-161">        } catch (MetaschemaException | IOException ex) {</span>
+<span class="source-line-no">162</span><span id="line-162">          throw new MojoExecutionException("Loading of metaschema failed", ex);</span>
+<span class="source-line-no">163</span><span id="line-163">        }</span>
+<span class="source-line-no">164</span><span id="line-164">        modules.add(module);</span>
+<span class="source-line-no">165</span><span id="line-165">      }</span>
+<span class="source-line-no">166</span><span id="line-166"></span>
+<span class="source-line-no">167</span><span id="line-167">      generate(modules);</span>
+<span class="source-line-no">168</span><span id="line-168"></span>
+<span class="source-line-no">169</span><span id="line-169">      // create the stale file</span>
+<span class="source-line-no">170</span><span id="line-170">      if (!staleFileDirectory.exists() &amp;&amp; !staleFileDirectory.mkdirs()) {</span>
+<span class="source-line-no">171</span><span id="line-171">        throw new MojoExecutionException("Unable to create output directory: " + staleFileDirectory);</span>
+<span class="source-line-no">172</span><span id="line-172">      }</span>
+<span class="source-line-no">173</span><span id="line-173">      try (OutputStream os</span>
+<span class="source-line-no">174</span><span id="line-174">          = Files.newOutputStream(staleFile.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE,</span>
+<span class="source-line-no">175</span><span id="line-175">              StandardOpenOption.TRUNCATE_EXISTING)) {</span>
+<span class="source-line-no">176</span><span id="line-176">        os.close();</span>
+<span class="source-line-no">177</span><span id="line-177">        if (getLog().isInfoEnabled()) {</span>
+<span class="source-line-no">178</span><span id="line-178">          getLog().info("Created stale file: " + staleFile);</span>
+<span class="source-line-no">179</span><span id="line-179">        }</span>
+<span class="source-line-no">180</span><span id="line-180">      } catch (IOException ex) {</span>
+<span class="source-line-no">181</span><span id="line-181">        throw new MojoExecutionException("Failed to write stale file: " + staleFile.getPath(), ex);</span>
+<span class="source-line-no">182</span><span id="line-182">      }</span>
+<span class="source-line-no">183</span><span id="line-183"></span>
+<span class="source-line-no">184</span><span id="line-184">      // for m2e</span>
+<span class="source-line-no">185</span><span id="line-185">      getBuildContext().refresh(getOutputDirectory());</span>
+<span class="source-line-no">186</span><span id="line-186">    }</span>
+<span class="source-line-no">187</span><span id="line-187"></span>
+<span class="source-line-no">188</span><span id="line-188">    // add generated sources to Maven</span>
+<span class="source-line-no">189</span><span id="line-189">    try {</span>
+<span class="source-line-no">190</span><span id="line-190">      getMavenProject().addCompileSourceRoot(getOutputDirectory().getCanonicalFile().getPath());</span>
+<span class="source-line-no">191</span><span id="line-191">    } catch (IOException ex) {</span>
+<span class="source-line-no">192</span><span id="line-192">      throw new MojoExecutionException("Unable to add output directory to maven sources.", ex);</span>
+<span class="source-line-no">193</span><span id="line-193">    }</span>
+<span class="source-line-no">194</span><span id="line-194">  }</span>
+<span class="source-line-no">195</span><span id="line-195">}</span>
 
 
 

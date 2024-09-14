@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
-import nl.talsmasoftware.lazy4j.LazyEvaluationException;
 
 public class DefaultKeyField implements IKeyField {
 
@@ -44,39 +43,30 @@ public class DefaultKeyField implements IKeyField {
       @NonNull String target,
       @Nullable Pattern pattern,
       @Nullable MarkupMultiline remarks,
-<span class="nc" id="L47">      @NonNull ISource source) {</span>
-<span class="nc" id="L48">    this.pattern = pattern;</span>
-<span class="nc" id="L49">    this.target = ObjectUtils.notNull(Lazy.lazy(() -&gt; MetapathExpression.compile(target, source.getStaticContext())));</span>
-<span class="nc" id="L50">    this.remarks = remarks;</span>
-<span class="nc" id="L51">  }</span>
+<span class="nc" id="L46">      @NonNull ISource source) {</span>
+<span class="nc" id="L47">    this.pattern = pattern;</span>
+<span class="nc" id="L48">    this.target = ObjectUtils.notNull(Lazy.lazy(() -&gt; MetapathExpression.compile(target, source.getStaticContext())));</span>
+<span class="nc" id="L49">    this.remarks = remarks;</span>
+<span class="nc" id="L50">  }</span>
 
   @Override
   public Pattern getPattern() {
-<span class="nc" id="L55">    return pattern;</span>
+<span class="nc" id="L54">    return pattern;</span>
   }
 
   @Override
   public String getTarget() {
-<span class="nc" id="L60">    return getTargetMetapath().getPath();</span>
+<span class="nc" id="L59">    return getTargetMetapath().getPath();</span>
   }
 
   @Override
   public MetapathExpression getTargetMetapath() {
-    try {
-<span class="nc" id="L66">      return ObjectUtils.notNull(target.get());</span>
-<span class="nc" id="L67">    } catch (LazyEvaluationException ex) {</span>
-<span class="nc" id="L68">      Throwable cause = ex.getCause();</span>
-<span class="nc" id="L69">      cause.addSuppressed(ex);</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">      if (cause instanceof RuntimeException) {</span>
-<span class="nc" id="L71">        throw (RuntimeException) cause;</span>
-      }
-<span class="nc" id="L73">      throw ex;</span>
-    }
+<span class="nc" id="L64">    return ObjectUtils.notNull(target.get());</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc" id="L79">    return remarks;</span>
+<span class="nc" id="L69">    return remarks;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

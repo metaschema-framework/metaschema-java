@@ -96,7 +96,7 @@ class XmlInlineFlagDefinition
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public final IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {
-<span class="pc bpc" id="L99" title="1 of 2 branches missed.">    return getXmlObject().isSetAsType() ? getXmlObject().getAsType() : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">    return getXmlObject().isSetAsType() ? getXmlObject().getAsType() : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
   }
 
   @Override

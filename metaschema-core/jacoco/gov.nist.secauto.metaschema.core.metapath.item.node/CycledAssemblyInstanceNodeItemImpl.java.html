@@ -33,9 +33,9 @@ class CycledAssemblyInstanceNodeItemImpl
       @NonNull IAssemblyInstance instance,
       @NonNull IAssemblyNodeItem parent,
       @NonNull IAssemblyNodeItem cycledNodeItem) {
-<span class="nc" id="L36">    super(instance, parent);</span>
-<span class="nc" id="L37">    this.cycledNodeItem = cycledNodeItem;</span>
-<span class="nc" id="L38">  }</span>
+<span class="fc" id="L36">    super(instance, parent);</span>
+<span class="fc" id="L37">    this.cycledNodeItem = cycledNodeItem;</span>
+<span class="fc" id="L38">  }</span>
 
   @Override
   public IAssemblyNodeItem getCycledNodeItem() {
@@ -65,7 +65,7 @@ class CycledAssemblyInstanceNodeItemImpl
   @Override
   public int getPosition() {
     // always a singleton as a non-valued item
-<span class="nc" id="L68">    return 1;</span>
+<span class="fc" id="L68">    return 1;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -16,7 +16,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param &lt;DATA&gt;
  *          state information that is carried through the walk
  */
-<span class="nc" id="L19">public abstract class ModelWalker&lt;DATA&gt; {</span>
+<span class="fc" id="L19">public abstract class ModelWalker&lt;DATA&gt; {</span>
   /**
    * Generate default state information.
    *
@@ -43,8 +43,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   public void walk(@NonNull IFlagDefinition flag, DATA data) {
-<span class="nc" id="L46">    visit(flag, data);</span>
-<span class="nc" id="L47">  }</span>
+<span class="fc" id="L46">    visit(flag, data);</span>
+<span class="fc" id="L47">  }</span>
 
   /**
    * Will visit the provided Metaschema module field definition, and then walk the
@@ -67,10 +67,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   public void walk(@NonNull IFieldDefinition field, DATA data) {
-<span class="nc bnc" id="L70" title="All 2 branches missed.">    if (visit(field, data)) {</span>
-<span class="nc" id="L71">      walkFlagInstances(field.getFlagInstances(), data);</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">    if (visit(field, data)) {</span>
+<span class="fc" id="L71">      walkFlagInstances(field.getFlagInstances(), data);</span>
     }
-<span class="nc" id="L73">  }</span>
+<span class="fc" id="L73">  }</span>
 
   /**
    * Will visit the provided Metaschema module assembly definition, and then walk
@@ -80,8 +80,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          the Metaschema module assembly definition to walk
    */
   public void walk(@NonNull IAssemblyDefinition assembly) {
-<span class="nc" id="L83">    walk(assembly, getDefaultData());</span>
-<span class="nc" id="L84">  }</span>
+<span class="fc" id="L83">    walk(assembly, getDefaultData());</span>
+<span class="fc" id="L84">  }</span>
 
   /**
    * Will visit the provided Metaschema module assembly definition, and then walk
@@ -93,11 +93,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   public void walk(@NonNull IAssemblyDefinition assembly, DATA data) {
-<span class="nc bnc" id="L96" title="All 2 branches missed.">    if (visit(assembly, data)) {</span>
-<span class="nc" id="L97">      walkFlagInstances(assembly.getFlagInstances(), data);</span>
-<span class="nc" id="L98">      walkModelInstances(assembly.getModelInstances(), data);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    if (visit(assembly, data)) {</span>
+<span class="fc" id="L97">      walkFlagInstances(assembly.getFlagInstances(), data);</span>
+<span class="fc" id="L98">      walkModelInstances(assembly.getModelInstances(), data);</span>
     }
-<span class="nc" id="L100">  }</span>
+<span class="fc" id="L100">  }</span>
 
   /**
    * Will visit the provided Metaschema module flag instance, and then walk the
@@ -109,10 +109,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   public void walk(@NonNull IFlagInstance instance, DATA data) {
-<span class="nc bnc" id="L112" title="All 2 branches missed.">    if (visit(instance, data)) {</span>
-<span class="nc" id="L113">      walk(instance.getDefinition(), data);</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">    if (visit(instance, data)) {</span>
+<span class="fc" id="L113">      walk(instance.getDefinition(), data);</span>
     }
-<span class="nc" id="L115">  }</span>
+<span class="fc" id="L115">  }</span>
 
   /**
    * Will visit the provided Metaschema module field instance, and then walk the
@@ -124,10 +124,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   public void walk(@NonNull IFieldInstance instance, DATA data) {
-<span class="nc bnc" id="L127" title="All 2 branches missed.">    if (visit(instance, data)) {</span>
-<span class="nc" id="L128">      walk(instance.getDefinition(), data);</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">    if (visit(instance, data)) {</span>
+<span class="fc" id="L128">      walk(instance.getDefinition(), data);</span>
     }
-<span class="nc" id="L130">  }</span>
+<span class="fc" id="L130">  }</span>
 
   /**
    * Will visit the provided Metaschema module assembly instance, and then walk
@@ -139,10 +139,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   public void walk(@NonNull IAssemblyInstance instance, DATA data) {
-<span class="nc bnc" id="L142" title="All 2 branches missed.">    if (visit(instance, data)) {</span>
-<span class="nc" id="L143">      walk(instance.getDefinition(), data);</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">    if (visit(instance, data)) {</span>
+<span class="fc" id="L143">      walk(instance.getDefinition(), data);</span>
     }
-<span class="nc" id="L145">  }</span>
+<span class="fc" id="L145">  }</span>
 
   /**
    * Will visit the provided Metaschema module choice instance, and then walk the
@@ -154,10 +154,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   public void walk(@NonNull IChoiceInstance instance, DATA data) {
-<span class="nc bnc" id="L157" title="All 2 branches missed.">    if (visit(instance, data)) {</span>
-<span class="nc" id="L158">      walkModelInstances(instance.getModelInstances(), data);</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">    if (visit(instance, data)) {</span>
+<span class="fc" id="L158">      walkModelInstances(instance.getModelInstances(), data);</span>
     }
-<span class="nc" id="L160">  }</span>
+<span class="fc" id="L160">  }</span>
 
   /**
    * Will visit the provided Metaschema module choice group instance, and then
@@ -211,11 +211,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   protected void walkFlagInstances(@NonNull Collection&lt;? extends IFlagInstance&gt; instances, DATA data) {
-<span class="nc bnc" id="L214" title="All 2 branches missed.">    for (IFlagInstance instance : instances) {</span>
-<span class="nc bnc" id="L215" title="All 2 branches missed.">      assert instance != null;</span>
-<span class="nc" id="L216">      walk(instance, data);</span>
-<span class="nc" id="L217">    }</span>
-<span class="nc" id="L218">  }</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">    for (IFlagInstance instance : instances) {</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">      assert instance != null;</span>
+<span class="fc" id="L216">      walk(instance, data);</span>
+<span class="fc" id="L217">    }</span>
+<span class="fc" id="L218">  }</span>
 
   /**
    * Will walk each of the provided model instances.
@@ -226,11 +226,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   protected void walkModelInstances(@NonNull Collection&lt;? extends IModelInstance&gt; instances, DATA data) {
-<span class="nc bnc" id="L229" title="All 2 branches missed.">    for (IModelInstance instance : instances) {</span>
-<span class="nc bnc" id="L230" title="All 2 branches missed.">      assert instance != null;</span>
-<span class="nc" id="L231">      walkModelInstance(instance, data);</span>
-<span class="nc" id="L232">    }</span>
-<span class="nc" id="L233">  }</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">    for (IModelInstance instance : instances) {</span>
+<span class="pc bpc" id="L230" title="1 of 2 branches missed.">      assert instance != null;</span>
+<span class="fc" id="L231">      walkModelInstance(instance, data);</span>
+<span class="fc" id="L232">    }</span>
+<span class="fc" id="L233">  }</span>
 
   /**
    * Will walk the provided model instance.
@@ -241,16 +241,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          additional state information to operate on
    */
   protected void walkModelInstance(@NonNull IModelInstance instance, DATA data) {
-<span class="nc bnc" id="L244" title="All 2 branches missed.">    if (instance instanceof IAssemblyInstance) {</span>
-<span class="nc" id="L245">      walk((IAssemblyInstance) instance, data);</span>
-<span class="nc bnc" id="L246" title="All 2 branches missed.">    } else if (instance instanceof IFieldInstance) {</span>
-<span class="nc" id="L247">      walk((IFieldInstance) instance, data);</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">    } else if (instance instanceof IChoiceGroupInstance) {</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">    if (instance instanceof IAssemblyInstance) {</span>
+<span class="fc" id="L245">      walk((IAssemblyInstance) instance, data);</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">    } else if (instance instanceof IFieldInstance) {</span>
+<span class="fc" id="L247">      walk((IFieldInstance) instance, data);</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">    } else if (instance instanceof IChoiceGroupInstance) {</span>
 <span class="nc" id="L249">      walk((IChoiceGroupInstance) instance, data);</span>
-<span class="nc bnc" id="L250" title="All 2 branches missed.">    } else if (instance instanceof IChoiceInstance) {</span>
-<span class="nc" id="L251">      walk((IChoiceInstance) instance, data);</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">    } else if (instance instanceof IChoiceInstance) {</span>
+<span class="fc" id="L251">      walk((IChoiceInstance) instance, data);</span>
     }
-<span class="nc" id="L253">  }</span>
+<span class="fc" id="L253">  }</span>
 
   /**
    * Will visit the provided model definition.
@@ -323,7 +323,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *         {@code false} otherwise
    */
   protected boolean visit(@NonNull IFlagInstance instance, DATA data) {
-<span class="nc" id="L326">    return true;</span>
+<span class="fc" id="L326">    return true;</span>
   }
 
   /**
@@ -338,7 +338,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *         {@code false} otherwise
    */
   protected boolean visit(@NonNull IFieldInstance instance, DATA data) {
-<span class="nc" id="L341">    return true;</span>
+<span class="fc" id="L341">    return true;</span>
   }
 
   /**
@@ -353,7 +353,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *         {@code false} otherwise
    */
   protected boolean visit(@NonNull IAssemblyInstance instance, DATA data) {
-<span class="nc" id="L356">    return true;</span>
+<span class="fc" id="L356">    return true;</span>
   }
 
   /**
@@ -368,7 +368,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *         {@code false} otherwise
    */
   protected boolean visit(@NonNull IChoiceInstance instance, DATA data) {
-<span class="nc" id="L371">    return true;</span>
+<span class="fc" id="L371">    return true;</span>
   }
 
   /**

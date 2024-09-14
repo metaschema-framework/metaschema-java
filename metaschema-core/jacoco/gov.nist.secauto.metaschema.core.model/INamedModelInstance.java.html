@@ -5,12 +5,38 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import java.util.function.Predicate;
+
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface INamedModelInstance extends IModelInstance, INamedInstance {
+
+  /**
+   * Tests if the provided instance represents complex data. The data is complex
+   * if one of the following is true:
+   * &lt;ul&gt;
+   * &lt;li&gt;The instance is a {@link IAssemblyInstance}.&lt;/li&gt;
+   * &lt;li&gt;The instance is a {@link IFieldInstance} that has flags.&lt;/li&gt;
+   * &lt;/ul&gt;
+   *
+   * This method can be used as a {@link Predicate}.
+   *
+   * @param instance
+   *          the instance to test
+   * @return {@code true} if the data is complex, or {@code false} otherwise
+   */
+  static boolean complexObjectFilter(INamedModelInstance instance) {
+<span class="fc" id="L32">    boolean retval = true;</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">    if (instance instanceof IFieldInstance) {</span>
+<span class="fc" id="L34">      IFieldInstance field = (IFieldInstance) instance;</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">      retval = !field.getDefinition().getFlagInstances().isEmpty();</span>
+    }
+<span class="fc" id="L37">    return retval;</span>
+  }
+
   @Override
   @NonNull
   IModelDefinition getDefinition();
@@ -29,7 +55,7 @@ public interface INamedModelInstance extends IModelInstance, INamedInstance {
    */
   // TODO: remove once moved to the instance side
   default boolean hasJsonKey() {
-<span class="nc bnc" id="L32" title="All 2 branches missed.">    return getEffectiveJsonKey() != null;</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">    return getEffectiveJsonKey() != null;</span>
   }
 
   /**
@@ -51,12 +77,12 @@ public interface INamedModelInstance extends IModelInstance, INamedInstance {
 
   @Override
   default QName getReferencedDefinitionQName() {
-<span class="nc" id="L54">    return getContainingModule().toModelQName(getName());</span>
+<span class="nc" id="L80">    return getContainingModule().toModelQName(getName());</span>
   }
 
   @Override
   default QName getXmlQName() {
-<span class="nc" id="L59">    return getContainingModule().toModelQName(getEffectiveName());</span>
+<span class="nc" id="L85">    return getContainingModule().toModelQName(getEffectiveName());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -8,58 +8,78 @@ package gov.nist.secauto.metaschema.schemagen.json.impl.builder;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import gov.nist.secauto.metaschema.core.model.IFieldInstance;
+import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.json.IJsonGenerationState;
 
 import java.util.List;
 
-<span class="fc" id="L16">public class KeyedObjectBuilder</span>
+<span class="fc" id="L19">public class KeyedObjectBuilder</span>
     extends AbstractCollectionBuilder&lt;KeyedObjectBuilder&gt; {
 
   @Override
   protected KeyedObjectBuilder thisBuilder() {
-<span class="fc" id="L21">    return this;</span>
+<span class="fc" id="L24">    return this;</span>
   }
 
   @Override
   public void build(
       ObjectNode object,
       IJsonGenerationState state) {
-<span class="fc" id="L28">    object.put(&quot;type&quot;, &quot;object&quot;);</span>
+<span class="fc" id="L31">    object.put(&quot;type&quot;, &quot;object&quot;);</span>
 
-<span class="fc bfc" id="L30" title="All 2 branches covered.">    if (getMinOccurrence() &gt; 0) {</span>
-<span class="fc" id="L31">      object.put(&quot;minProperties&quot;, getMinOccurrence());</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">    if (getMinOccurrence() &gt; 0) {</span>
+<span class="fc" id="L34">      object.put(&quot;minProperties&quot;, getMinOccurrence());</span>
     }
 
-<span class="pc bpc" id="L34" title="1 of 2 branches missed.">    if (getMaxOccurrence() != -1) {</span>
-<span class="nc" id="L35">      object.put(&quot;maxProperties&quot;, getMaxOccurrence());</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">    if (getMaxOccurrence() != -1) {</span>
+<span class="nc" id="L38">      object.put(&quot;maxProperties&quot;, getMaxOccurrence());</span>
     }
 
-<span class="fc" id="L38">    List&lt;IType&gt; types = getTypes();</span>
+<span class="fc" id="L41">    List&lt;IType&gt; types = getTypes();</span>
 
-<span class="pc bpc" id="L40" title="1 of 2 branches missed.">    if (!types.isEmpty()) {</span>
-<span class="fc" id="L41">      ObjectNode propertyNames = ObjectUtils.notNull(object.putObject(&quot;propertyNames&quot;));</span>
-<span class="pc bpc" id="L42" title="1 of 2 branches missed.">      if (types.size() == 1) {</span>
-<span class="fc" id="L43">        types.iterator().next().build(propertyNames, state);</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">    if (!types.isEmpty()) {</span>
+<span class="fc" id="L44">      ObjectNode propertyNames = ObjectUtils.notNull(object.putObject(&quot;propertyNames&quot;));</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">      if (types.size() == 1) {</span>
+<span class="fc" id="L46">        types.iterator().next().build(propertyNames, state);</span>
       } else {
-<span class="nc" id="L45">        ArrayNode anyOf = propertyNames.putArray(&quot;anyOf&quot;);</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        for (IType type : types) {</span>
-<span class="nc" id="L47">          type.build(ObjectUtils.notNull(anyOf.objectNode()), state);</span>
-<span class="nc" id="L48">        }</span>
+<span class="nc" id="L48">        ArrayNode anyOf = propertyNames.putArray(&quot;anyOf&quot;);</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        for (IType type : types) {</span>
+<span class="nc" id="L50">          type.build(ObjectUtils.notNull(anyOf.objectNode()), state);</span>
+<span class="nc" id="L51">        }</span>
       }
     }
 
-<span class="fc" id="L52">    ObjectNode patternProperties = ObjectUtils.notNull(object.putObject(&quot;patternProperties&quot;));</span>
-<span class="fc" id="L53">    ObjectNode wildcard = patternProperties.putObject(&quot;^.*$&quot;);</span>
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">    if (types.size() == 1) {</span>
-<span class="fc" id="L55">      types.iterator().next().build(wildcard, state);</span>
-    } else {
-<span class="nc" id="L57">      ArrayNode oneOf = wildcard.putArray(&quot;anyOf&quot;);</span>
-<span class="nc bnc" id="L58" title="All 2 branches missed.">      for (IType type : types) {</span>
-<span class="nc" id="L59">        type.build(oneOf, state);</span>
-<span class="nc" id="L60">      }</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">    if (!types.isEmpty()) {</span>
+<span class="fc" id="L56">      ObjectNode patternProperties = ObjectUtils.notNull(object.putObject(&quot;patternProperties&quot;));</span>
+<span class="fc" id="L57">      ObjectNode wildcard = patternProperties.putObject(&quot;^.*$&quot;);</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">      if (types.size() == 1) {</span>
+<span class="fc" id="L59">        types.iterator().next().build(wildcard, state);</span>
+      } else {
+<span class="nc" id="L61">        ArrayNode oneOf = wildcard.putArray(&quot;anyOf&quot;);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        for (IType type : types) {</span>
+<span class="nc" id="L63">          type.build(oneOf, state);</span>
+<span class="nc" id="L64">        }</span>
+      }
     }
-<span class="fc" id="L62">  }</span>
+<span class="fc" id="L67">  }</span>
 
+  @Override
+  public KeyedObjectBuilder addItemType(INamedModelInstanceAbsolute itemType) {
+
+<span class="fc" id="L72">    IModelDefinition definition = itemType.getDefinition();</span>
+
+<span class="fc" id="L74">    int flagCount = definition.getFlagInstances().size();</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">    if (definition.getJsonKey() != null) {</span>
+<span class="fc" id="L76">      --flagCount;</span>
+    }
+
+<span class="pc bpc" id="L79" title="2 of 4 branches missed.">    if (flagCount &gt; 0 || itemType instanceof IFieldInstance) {</span>
+<span class="fc" id="L80">      super.addItemType(itemType);</span>
+    }
+<span class="fc" id="L82">    return this;</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

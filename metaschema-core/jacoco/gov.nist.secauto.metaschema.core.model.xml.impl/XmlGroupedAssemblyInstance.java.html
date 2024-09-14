@@ -44,9 +44,9 @@ public class XmlGroupedAssemblyInstance
   public XmlGroupedAssemblyInstance(
       @NonNull GroupedAssemblyReferenceType xmlObject,
       @NonNull IChoiceGroupInstance parent) {
-<span class="nc" id="L47">    super(parent);</span>
-<span class="nc" id="L48">    this.xmlObject = xmlObject;</span>
-<span class="nc" id="L49">  }</span>
+<span class="fc" id="L47">    super(parent);</span>
+<span class="fc" id="L48">    this.xmlObject = xmlObject;</span>
+<span class="fc" id="L49">  }</span>
 
   /**
    * Get the underlying XML data.
@@ -55,7 +55,7 @@ public class XmlGroupedAssemblyInstance
    */
   @NonNull
   protected GroupedAssemblyReferenceType getXmlObject() {
-<span class="nc" id="L58">    return xmlObject;</span>
+<span class="fc" id="L58">    return xmlObject;</span>
   }
 
   // ----------------------------------------
@@ -81,12 +81,12 @@ public class XmlGroupedAssemblyInstance
 
   @Override
   public String getName() {
-<span class="nc" id="L84">    return ObjectUtils.requireNonNull(getXmlObject().getRef());</span>
+<span class="fc" id="L84">    return ObjectUtils.requireNonNull(getXmlObject().getRef());</span>
   }
 
   @Override
   public String getUseName() {
-<span class="nc bnc" id="L89" title="All 2 branches missed.">    return getXmlObject().isSetUseName() ? getXmlObject().getUseName().getStringValue() : null;</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">    return getXmlObject().isSetUseName() ? getXmlObject().getUseName().getStringValue() : null;</span>
   }
 
   @Override

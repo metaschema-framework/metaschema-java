@@ -21,29 +21,42 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 <span class="fc" id="L22">@SuppressWarnings(&quot;PMD.ShortClassName&quot;)</span>
 public final class CLI {
+  /**
+   * The main command line entry point.
+   *
+   * @param args
+   *          the command line arguments
+   */
   public static void main(String[] args) {
-<span class="nc" id="L25">    System.exit(runCli(args).getExitCode().getStatusCode());</span>
-<span class="nc" id="L26">  }</span>
+<span class="nc" id="L31">    System.exit(runCli(args).getExitCode().getStatusCode());</span>
+<span class="nc" id="L32">  }</span>
 
+  /**
+   * Execute a command line.
+   *
+   * @param args
+   *          the command line arguments
+   * @return the execution result
+   */
   @NonNull
   public static ExitStatus runCli(String... args) {
-<span class="fc" id="L30">    System.setProperty(&quot;java.util.logging.manager&quot;, &quot;org.apache.logging.log4j.jul.LogManager&quot;);</span>
+<span class="fc" id="L43">    System.setProperty(&quot;java.util.logging.manager&quot;, &quot;org.apache.logging.log4j.jul.LogManager&quot;);</span>
 
-<span class="fc" id="L32">    Map&lt;String, IVersionInfo&gt; versions = ObjectUtils.notNull(</span>
-<span class="fc" id="L33">        new LinkedHashMap&lt;&gt;() {</span>
+<span class="fc" id="L45">    @SuppressWarnings(&quot;serial&quot;) Map&lt;String, IVersionInfo&gt; versions = ObjectUtils.notNull(</span>
+<span class="fc" id="L46">        new LinkedHashMap&lt;&gt;() {</span>
           {
-<span class="fc" id="L35">            put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());</span>
-<span class="fc" id="L36">            put(&quot;http://csrc.nist.gov/ns/oscal/metaschema/1.0&quot;, new MetaschemaVersion());</span>
-<span class="fc" id="L37">          }</span>
+<span class="fc" id="L48">            put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());</span>
+<span class="fc" id="L49">            put(&quot;http://csrc.nist.gov/ns/oscal/metaschema/1.0&quot;, new MetaschemaVersion());</span>
+<span class="fc" id="L50">          }</span>
         });
-<span class="fc" id="L39">    CLIProcessor processor = new CLIProcessor(&quot;metaschema-cli&quot;, versions);</span>
-<span class="fc" id="L40">    MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);</span>
+<span class="fc" id="L52">    CLIProcessor processor = new CLIProcessor(&quot;metaschema-cli&quot;, versions);</span>
+<span class="fc" id="L53">    MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);</span>
 
-<span class="fc" id="L42">    CommandService.getInstance().getCommands().stream().forEach(command -&gt; {</span>
-<span class="nc bnc" id="L43" title="All 2 branches missed.">      assert command != null;</span>
-<span class="nc" id="L44">      processor.addCommandHandler(command);</span>
-<span class="nc" id="L45">    });</span>
-<span class="fc" id="L46">    return processor.process(args);</span>
+<span class="fc" id="L55">    CommandService.getInstance().getCommands().stream().forEach(command -&gt; {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">      assert command != null;</span>
+<span class="nc" id="L57">      processor.addCommandHandler(command);</span>
+<span class="nc" id="L58">    });</span>
+<span class="fc" id="L59">    return processor.process(args);</span>
   }
 
   private CLI() {

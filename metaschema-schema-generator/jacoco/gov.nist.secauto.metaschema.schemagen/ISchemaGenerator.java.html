@@ -88,14 +88,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
      */
 <span class="nc" id="L89">    XML(new XmlSchemaGenerator());</span>
 
+    @NonNull
     private final ISchemaGenerator schemaGenerator;
 
-<span class="nc" id="L93">    SchemaFormat(@NonNull ISchemaGenerator schemaGenerator) {</span>
-<span class="nc" id="L94">      this.schemaGenerator = schemaGenerator;</span>
-<span class="nc" id="L95">    }</span>
+<span class="nc" id="L94">    SchemaFormat(@NonNull ISchemaGenerator schemaGenerator) {</span>
+<span class="nc" id="L95">      this.schemaGenerator = schemaGenerator;</span>
+<span class="nc" id="L96">    }</span>
 
+    @NonNull
     public ISchemaGenerator getSchemaGenerator() {
-<span class="nc" id="L98">      return schemaGenerator;</span>
+<span class="nc" id="L100">      return schemaGenerator;</span>
     }
   }
 }

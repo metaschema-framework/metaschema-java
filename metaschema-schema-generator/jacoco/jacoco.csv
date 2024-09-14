@@ -20,7 +20,7 @@ Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.j
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl,AbstractDefinitionJsonSchema.SimpleKey,5,69,6,6,2,15,6,7,0,7
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl,MetadataUtils,56,94,15,16,12,29,10,11,0,4
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json,JsonSchemaGenerator,25,225,4,12,5,61,4,16,0,12
-Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json,IDefineableJsonSchema.IKey,14,45,1,5,1,11,4,5,3,3
+Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json,IDefineableJsonSchema.IKey,14,43,1,5,1,11,4,5,3,3
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json,IJsonGenerationState,8,0,0,0,1,0,1,0,1,0
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json,JsonSchemaGenerator.RootPropertyEntry,0,64,0,2,0,19,0,5,0,4
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json,IDefineableJsonSchema,13,42,0,2,4,11,1,4,1,3
@@ -37,7 +37,7 @@ Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.x
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.datatype,AbstractDatatypeContent,0,19,0,0,0,6,0,3,0,3
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.datatype,CompositeDatatypeProvider,25,38,0,2,3,9,4,4,4,3
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.datatype,AbstractDatatypeManager,0,167,1,1,0,35,1,5,0,5
-Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.xml,XmlSchemaGenerator,66,337,9,15,14,94,11,15,2,12
+Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.xml,XmlSchemaGenerator,78,335,9,15,18,95,11,15,2,12
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen,IInlineStrategy.new IInlineStrategy() {...},3,3,0,0,1,1,1,1,1,1
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen,IInlineStrategy.new IInlineStrategy() {...},0,5,0,0,0,2,0,2,0,2
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen,AbstractGenerationState.AllowedValueCollection,0,19,0,0,0,6,0,3,0,3
@@ -60,8 +60,8 @@ Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.j
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,ArrayBuilder,0,51,1,5,0,12,1,5,0,3
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,SingletonOrListBuilder,19,84,0,2,5,21,3,7,3,6
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,AbstractCollectionBuilder.AbsoluteType,0,4,0,0,0,2,0,1,0,1
-Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,KeyedObjectBuilder,47,70,8,6,9,16,6,4,0,3
-Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,AbstractCollectionBuilder.Type,46,69,6,4,9,21,10,6,7,4
+Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,KeyedObjectBuilder,47,95,12,10,9,24,10,5,0,4
+Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,AbstractCollectionBuilder.Type,43,100,6,10,8,30,9,10,6,5
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,AbstractBuilder,0,3,0,0,0,1,0,1,0,1
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,AbstractCollectionBuilder,26,109,4,8,4,25,4,11,0,9
 Metaschema XML and JSON Schema Generator,gov.nist.secauto.metaschema.schemagen.json.impl.builder,AbstractCollectionBuilder.GroupedType,0,4,0,0,0,2,0,1,0,1

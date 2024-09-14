@@ -154,7 +154,7 @@ public interface IDefineableJsonSchema {
 <span class="pc bpc" id="L154" title="1 of 6 branches missed.">      if (jsonKeyFlagName != null || discriminatorProperty != null || discriminatorValue != null) {</span>
 <span class="fc" id="L155">        retval = new ComplexKey(definition, jsonKeyFlagName, discriminatorProperty, discriminatorValue);</span>
       } else {
-<span class="fc" id="L157">        retval = new SimpleKey(definition);</span>
+<span class="fc" id="L157">        retval = of(definition);</span>
       }
 <span class="fc" id="L159">      return retval;</span>
     }

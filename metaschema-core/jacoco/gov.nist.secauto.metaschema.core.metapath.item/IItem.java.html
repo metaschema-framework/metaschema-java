@@ -11,6 +11,8 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 
 import java.util.stream.Stream;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 public interface IItem extends ICollectionValue {
 
   /**
@@ -36,18 +38,26 @@ public interface IItem extends ICollectionValue {
    *         {@code false} otherwise
    */
   default boolean hasValue() {
-<span class="nc bnc" id="L39" title="All 2 branches missed.">    return getValue() != null;</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">    return getValue() != null;</span>
   }
 
   @Override
   default ISequence&lt;?&gt; asSequence() {
-<span class="fc" id="L44">    return ISequence.of(this);</span>
+<span class="fc" id="L46">    return ISequence.of(this);</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   default Stream&lt;? extends IItem&gt; flatten() {
-<span class="nc" id="L50">    return Stream.of(this);</span>
+<span class="nc" id="L52">    return Stream.of(this);</span>
   }
+
+  /**
+   * A visitor callback used to visit a variety of Metapath item types.
+   *
+   * @param visitor
+   *          the visitor to call back
+   */
+  void accept(@NonNull IItemVisitor visitor);
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

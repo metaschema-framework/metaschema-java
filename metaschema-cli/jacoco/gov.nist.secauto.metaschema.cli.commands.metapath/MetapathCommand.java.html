@@ -11,19 +11,23 @@ public class MetapathCommand
     extends AbstractParentCommand {
   private static final String COMMAND = &quot;metapath&quot;;
 
+  /**
+   * Constructor for a new Metapath command.
+   */
   public MetapathCommand() {
-<span class="fc" id="L15">    super(true);</span>
-<span class="fc" id="L16">    addCommandHandler(new ListFunctionsSubcommand());</span>
-<span class="fc" id="L17">  }</span>
+<span class="fc" id="L18">    super(true);</span>
+<span class="fc" id="L19">    addCommandHandler(new ListFunctionsSubcommand());</span>
+<span class="fc" id="L20">    addCommandHandler(new EvaluateMetapathCommand());</span>
+<span class="fc" id="L21">  }</span>
 
   @Override
   public String getName() {
-<span class="fc" id="L21">    return COMMAND;</span>
+<span class="fc" id="L25">    return COMMAND;</span>
   }
 
   @Override
   public String getDescription() {
-<span class="fc" id="L26">    return &quot;Perform a Metapath operation.&quot;;</span>
+<span class="fc" id="L30">    return &quot;Perform a Metapath operation.&quot;;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

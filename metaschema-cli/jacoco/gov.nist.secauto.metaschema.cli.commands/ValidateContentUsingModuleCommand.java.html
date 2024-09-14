@@ -14,11 +14,8 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.util.XmlUtil;
-import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;
-import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
@@ -47,38 +44,38 @@ import javax.xml.transform.Source;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="fc" id="L50">public class ValidateContentUsingModuleCommand</span>
+<span class="fc" id="L47">public class ValidateContentUsingModuleCommand</span>
     extends AbstractValidateContentCommand {
   @NonNull
   private static final String COMMAND = &quot;validate-content&quot;;
 
   @Override
   public String getName() {
-<span class="fc" id="L57">    return COMMAND;</span>
+<span class="fc" id="L54">    return COMMAND;</span>
   }
 
   @Override
   public String getDescription() {
-<span class="fc" id="L62">    return &quot;Verify that the provided resource is well-formed and valid to the provided Module-based model.&quot;;</span>
+<span class="fc" id="L59">    return &quot;Verify that the provided resource is well-formed and valid to the provided Module-based model.&quot;;</span>
   }
 
   @Override
   public Collection&lt;? extends Option&gt; gatherOptions() {
-<span class="fc" id="L67">    Collection&lt;? extends Option&gt; orig = super.gatherOptions();</span>
+<span class="fc" id="L64">    Collection&lt;? extends Option&gt; orig = super.gatherOptions();</span>
 
-<span class="fc" id="L69">    List&lt;Option&gt; retval = new ArrayList&lt;&gt;(orig.size() + 1);</span>
-<span class="fc" id="L70">    retval.addAll(orig);</span>
-<span class="fc" id="L71">    retval.add(MetaschemaCommandSupport.METASCHEMA_OPTION);</span>
+<span class="fc" id="L66">    List&lt;Option&gt; retval = new ArrayList&lt;&gt;(orig.size() + 1);</span>
+<span class="fc" id="L67">    retval.addAll(orig);</span>
+<span class="fc" id="L68">    retval.add(MetaschemaCommands.METASCHEMA_OPTION);</span>
 
-<span class="fc" id="L73">    return CollectionUtil.unmodifiableCollection(retval);</span>
+<span class="fc" id="L70">    return CollectionUtil.unmodifiableCollection(retval);</span>
   }
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-<span class="fc" id="L78">    return new OscalCommandExecutor(callingContext, commandLine);</span>
+<span class="fc" id="L75">    return new OscalCommandExecutor(callingContext, commandLine);</span>
   }
 
-<span class="fc" id="L81">  private final class OscalCommandExecutor</span>
+<span class="fc" id="L78">  private final class OscalCommandExecutor</span>
       extends AbstractValidationCommandExecutor {
 
     private Path tempDir;
@@ -86,88 +83,71 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
     private OscalCommandExecutor(
         @NonNull CallingContext callingContext,
-<span class="fc" id="L89">        @NonNull CommandLine commandLine) {</span>
-<span class="fc" id="L90">      super(callingContext, commandLine);</span>
-<span class="fc" id="L91">    }</span>
+<span class="fc" id="L86">        @NonNull CommandLine commandLine) {</span>
+<span class="fc" id="L87">      super(callingContext, commandLine);</span>
+<span class="fc" id="L88">    }</span>
 
+    @NonNull
     private Path getTempDir() throws IOException {
-<span class="fc bfc" id="L94" title="All 2 branches covered.">      if (tempDir == null) {</span>
-<span class="fc" id="L95">        tempDir = Files.createTempDirectory(&quot;validation-&quot;);</span>
-<span class="fc" id="L96">        tempDir.toFile().deleteOnExit();</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">      if (tempDir == null) {</span>
+<span class="fc" id="L93">        tempDir = Files.createTempDirectory(&quot;validation-&quot;);</span>
+<span class="fc" id="L94">        tempDir.toFile().deleteOnExit();</span>
       }
-<span class="fc" id="L98">      return tempDir;</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">      assert tempDir != null;</span>
+<span class="fc" id="L97">      return tempDir;</span>
     }
 
     @NonNull
     private IModule getModule(@NonNull Set&lt;IConstraintSet&gt; constraintSets)
         throws MetaschemaException, IOException {
-<span class="fc" id="L104">      URI cwd = Paths.get(&quot;&quot;).toAbsolutePath().toUri();</span>
+<span class="fc" id="L103">      URI cwd = ObjectUtils.notNull(Paths.get(&quot;&quot;).toAbsolutePath().toUri());</span>
 
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">      if (module == null) {</span>
-<span class="fc" id="L107">        String moduleName</span>
-<span class="fc" id="L108">            = ObjectUtils.requireNonNull(getCommandLine().getOptionValue(MetaschemaCommandSupport.METASCHEMA_OPTION));</span>
-        URI moduleUri;
-
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">      if (module == null) {</span>
         try {
-<span class="fc" id="L112">          moduleUri = UriUtils.toUri(moduleName, cwd);</span>
-<span class="nc" id="L113">        } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L114">          IOException newEx = new IOException( // NOPMD - intentional</span>
-<span class="nc" id="L115">              String.format(&quot;Cannot load module as '%s' is not a valid file or URL.&quot;, moduleName));</span>
-<span class="nc" id="L116">          newEx.addSuppressed(ex);</span>
-<span class="nc" id="L117">          throw newEx;</span>
-<span class="fc" id="L118">        }</span>
-
-<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        assert moduleUri != null;</span>
-
-<span class="fc" id="L122">        ExternalConstraintsModulePostProcessor postProcessor</span>
-            = new ExternalConstraintsModulePostProcessor(constraintSets);
-
-<span class="fc" id="L125">        ModuleLoader loader = new ModuleLoader(CollectionUtil.singletonList(postProcessor));</span>
-
-        // BindingModuleLoader loader
-        // = new BindingModuleLoader(new DefaultBindingContext(),
-        // CollectionUtil.singletonList(postProcessor));
-
-<span class="fc" id="L131">        loader.allowEntityResolution();</span>
-<span class="fc" id="L132">        module = loader.load(moduleUri);</span>
+<span class="fc" id="L107">          module = MetaschemaCommands.handleModule(getCommandLine(), cwd, constraintSets);</span>
+<span class="nc" id="L108">        } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L109">          throw new IOException(String.format(&quot;Cannot load module as '%s' is not a valid file or URL.&quot;, ex.getInput()),</span>
+              ex);
+<span class="fc" id="L111">        }</span>
       }
-<span class="pc bpc" id="L134" title="1 of 2 branches missed.">      assert module != null;</span>
-<span class="fc" id="L135">      return module;</span>
+
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">      assert module != null;</span>
+<span class="fc" id="L115">      return module;</span>
     }
 
     @NonNull
     private IModule getModule() {
       // should be initialized already
-<span class="fc" id="L141">      return ObjectUtils.requireNonNull(module);</span>
+<span class="fc" id="L121">      return ObjectUtils.requireNonNull(module);</span>
     }
 
     @Override
     protected IBindingContext getBindingContext(@NonNull Set&lt;IConstraintSet&gt; constraintSets)
         throws MetaschemaException, IOException {
 
-<span class="fc" id="L148">      IBindingContext retval = new DefaultBindingContext();</span>
-<span class="fc" id="L149">      retval.registerModule(getModule(constraintSets), getTempDir());</span>
-<span class="fc" id="L150">      return retval;</span>
+<span class="fc" id="L128">      IBindingContext retval = new DefaultBindingContext();</span>
+<span class="fc" id="L129">      retval.registerModule(getModule(constraintSets), getTempDir());</span>
+<span class="fc" id="L130">      return retval;</span>
     }
 
     @Override
     public List&lt;Source&gt; getXmlSchemas(@NonNull URL targetResource) throws IOException {
-<span class="fc" id="L155">      Path schemaFile = Files.createTempFile(getTempDir(), &quot;schema-&quot;, &quot;.xml&quot;);</span>
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">      assert schemaFile != null;</span>
-<span class="fc" id="L157">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="fc" id="L158">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.XML, configuration);</span>
-<span class="fc" id="L159">      return ObjectUtils.requireNonNull(List.of(</span>
-<span class="fc" id="L160">          XmlUtil.getStreamSource(schemaFile.toUri().toURL())));</span>
+<span class="fc" id="L135">      Path schemaFile = Files.createTempFile(getTempDir(), &quot;schema-&quot;, &quot;.xml&quot;);</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">      assert schemaFile != null;</span>
+<span class="fc" id="L137">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
+<span class="fc" id="L138">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.XML, configuration);</span>
+<span class="fc" id="L139">      return ObjectUtils.requireNonNull(List.of(</span>
+<span class="fc" id="L140">          XmlUtil.getStreamSource(ObjectUtils.notNull(schemaFile.toUri().toURL()))));</span>
     }
 
     @Override
     public JSONObject getJsonSchema(@NonNull JSONObject json) throws IOException {
-<span class="fc" id="L165">      Path schemaFile = Files.createTempFile(getTempDir(), &quot;schema-&quot;, &quot;.json&quot;);</span>
-<span class="pc bpc" id="L166" title="1 of 2 branches missed.">      assert schemaFile != null;</span>
-<span class="fc" id="L167">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="fc" id="L168">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.JSON, configuration);</span>
-<span class="fc" id="L169">      try (BufferedReader reader = ObjectUtils.notNull(Files.newBufferedReader(schemaFile, StandardCharsets.UTF_8))) {</span>
-<span class="fc" id="L170">        return JsonUtil.toJsonObject(reader);</span>
+<span class="fc" id="L145">      Path schemaFile = Files.createTempFile(getTempDir(), &quot;schema-&quot;, &quot;.json&quot;);</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">      assert schemaFile != null;</span>
+<span class="fc" id="L147">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
+<span class="fc" id="L148">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.JSON, configuration);</span>
+<span class="fc" id="L149">      try (BufferedReader reader = ObjectUtils.notNull(Files.newBufferedReader(schemaFile, StandardCharsets.UTF_8))) {</span>
+<span class="fc" id="L150">        return JsonUtil.toJsonObject(reader);</span>
       }
     }
   }

@@ -62,11 +62,11 @@ public final class XmlModelParser {
    * @return the integer value
    */
   public static int getMinOccurs(@Nullable BigInteger value) {
-<span class="nc" id="L65">    int retval = IGroupable.DEFAULT_GROUP_AS_MIN_OCCURS;</span>
-<span class="nc bnc" id="L66" title="All 2 branches missed.">    if (value != null) {</span>
-<span class="nc" id="L67">      retval = value.intValueExact();</span>
+<span class="fc" id="L65">    int retval = IGroupable.DEFAULT_GROUP_AS_MIN_OCCURS;</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">    if (value != null) {</span>
+<span class="fc" id="L67">      retval = value.intValueExact();</span>
     }
-<span class="nc" id="L69">    return retval;</span>
+<span class="fc" id="L69">    return retval;</span>
   }
 
   /**
@@ -79,18 +79,18 @@ public final class XmlModelParser {
    * @return the integer value
    */
   public static int getMaxOccurs(@Nullable Object value) {
-<span class="nc" id="L82">    int retval = IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS;</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">    if (value != null) {</span>
-<span class="nc bnc" id="L84" title="All 2 branches missed.">      if (value instanceof String) {</span>
+<span class="fc" id="L82">    int retval = IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">    if (value != null) {</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">      if (value instanceof String) {</span>
         // must be &quot;unbounded&quot;
-<span class="nc" id="L86">        retval = -1;</span>
-<span class="nc bnc" id="L87" title="All 2 branches missed.">      } else if (value instanceof BigInteger) {</span>
-<span class="nc" id="L88">        retval = ((BigInteger) value).intValueExact();</span>
+<span class="fc" id="L86">        retval = -1;</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">      } else if (value instanceof BigInteger) {</span>
+<span class="fc" id="L88">        retval = ((BigInteger) value).intValueExact();</span>
       } else {
 <span class="nc" id="L90">        throw new IllegalStateException(&quot;Invalid type: &quot; + value.getClass().getName());</span>
       }
     }
-<span class="nc" id="L93">    return retval;</span>
+<span class="fc" id="L93">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

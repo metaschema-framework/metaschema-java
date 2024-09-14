@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1724090939971">
-    <module artifactId="metaschema-maven-plugin" groupId="dev.metaschema.java" version="1.0.2"/>
+<licensePluginReport goal="FORMAT" timestamp="1726318740338">
+    <module artifactId="metaschema-maven-plugin" groupId="dev.metaschema.java" version="1.1.0"/>
     <files>
         <file path="src/main/java/gov/nist/secauto/metaschema/maven/plugin/AbstractMetaschemaMojo.java" result="NOOP"/>
         <file path="src/main/java/gov/nist/secauto/metaschema/maven/plugin/GenerateSchemaMojo.java" result="NOOP"/>

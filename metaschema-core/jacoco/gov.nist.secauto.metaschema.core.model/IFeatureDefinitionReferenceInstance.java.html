@@ -44,7 +44,7 @@ public interface IFeatureDefinitionReferenceInstance&lt;
   @NonNull
   default String getEffectiveName() {
 <span class="fc" id="L46">    String result = getUseName();</span>
-<span class="pc bpc" id="L47" title="1 of 2 branches missed.">    if (result == null) {</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">    if (result == null) {</span>
       // fall back to the definition
 <span class="fc" id="L49">      IDefinition def = getDefinition();</span>
 <span class="fc" id="L50">      result = def.getEffectiveName();</span>

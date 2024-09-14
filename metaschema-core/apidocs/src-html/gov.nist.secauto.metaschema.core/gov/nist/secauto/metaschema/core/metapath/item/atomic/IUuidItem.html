@@ -25,7 +25,7 @@
 <span class="source-line-no">012</span><span id="line-12"></span>
 <span class="source-line-no">013</span><span id="line-13">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">public interface IUuidItem extends IAnyAtomicItem {</span>
+<span class="source-line-no">015</span><span id="line-15">public interface IUuidItem extends IStringItem {</span>
 <span class="source-line-no">016</span><span id="line-16"></span>
 <span class="source-line-no">017</span><span id="line-17">  /**</span>
 <span class="source-line-no">018</span><span id="line-18">   * Construct a new item using the provided {@code value}.</span>
@@ -91,8 +91,8 @@
 <span class="source-line-no">078</span><span id="line-78">  }</span>
 <span class="source-line-no">079</span><span id="line-79"></span>
 <span class="source-line-no">080</span><span id="line-80">  @Override</span>
-<span class="source-line-no">081</span><span id="line-81">  default int compareTo(IAnyAtomicItem item) {</span>
-<span class="source-line-no">082</span><span id="line-82">    return compareTo(cast(item));</span>
+<span class="source-line-no">081</span><span id="line-81">  default int compareTo(IAnyAtomicItem other) {</span>
+<span class="source-line-no">082</span><span id="line-82">    return compareTo(other.asStringItem());</span>
 <span class="source-line-no">083</span><span id="line-83">  }</span>
 <span class="source-line-no">084</span><span id="line-84">}</span>
 

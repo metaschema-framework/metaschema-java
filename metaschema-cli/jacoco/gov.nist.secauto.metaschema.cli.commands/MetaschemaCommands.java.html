@@ -7,15 +7,91 @@ package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.commands.metapath.MetapathCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
+import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
+import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;
+import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.UriUtils;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 public final class MetaschemaCommands {
-<span class="fc" id="L14">  public static final List&lt;ICommand&gt; COMMANDS = List.of(</span>
+  @NonNull
+<span class="fc" id="L32">  public static final List&lt;ICommand&gt; COMMANDS = ObjectUtils.notNull(List.of(</span>
       new ValidateModuleCommand(),
       new GenerateSchemaCommand(),
+      new GenerateDiagramCommand(),
       new ValidateContentUsingModuleCommand(),
-      new MetapathCommand());
+      new MetapathCommand()));
+
+  @NonNull
+<span class="fc" id="L40">  public static final Option METASCHEMA_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L41">      Option.builder(&quot;m&quot;)</span>
+<span class="fc" id="L42">          .hasArg()</span>
+<span class="fc" id="L43">          .argName(&quot;FILE_OR_URL&quot;)</span>
+<span class="fc" id="L44">          .required()</span>
+<span class="fc" id="L45">          .desc(&quot;metaschema resource&quot;)</span>
+<span class="fc" id="L46">          .build());</span>
+  @NonNull
+<span class="fc" id="L48">  public static final Option OVERWRITE_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L49">      Option.builder()</span>
+<span class="fc" id="L50">          .longOpt(&quot;overwrite&quot;)</span>
+<span class="fc" id="L51">          .desc(&quot;overwrite the destination if it exists&quot;)</span>
+<span class="fc" id="L52">          .build());</span>
+
+  @NonNull
+  public static IModule handleModule(
+      @NonNull CommandLine commandLine,
+      @NonNull URI cwd,
+      @NonNull Collection&lt;IConstraintSet&gt; constraintSets) throws URISyntaxException, IOException, MetaschemaException {
+<span class="fc" id="L59">    String moduleName</span>
+<span class="fc" id="L60">        = ObjectUtils.requireNonNull(commandLine.getOptionValue(MetaschemaCommands.METASCHEMA_OPTION));</span>
+<span class="fc" id="L61">    URI moduleUri = UriUtils.toUri(moduleName, cwd);</span>
+<span class="fc" id="L62">    return handleModule(moduleUri, constraintSets);</span>
+  }
+
+  @NonNull
+  public static IModule handleModule(
+      @NonNull URI moduleResource,
+      @NonNull Collection&lt;IConstraintSet&gt; constraintSets) throws IOException, MetaschemaException {
+<span class="fc" id="L69">    ExternalConstraintsModulePostProcessor postProcessor</span>
+        = new ExternalConstraintsModulePostProcessor(constraintSets);
+
+<span class="fc" id="L72">    ModuleLoader loader = new ModuleLoader(CollectionUtil.singletonList(postProcessor));</span>
+
+    // BindingModuleLoader loader
+    // = new BindingModuleLoader(new DefaultBindingContext(),
+    // CollectionUtil.singletonList(postProcessor));
+
+<span class="fc" id="L78">    loader.allowEntityResolution();</span>
+<span class="fc" id="L79">    return loader.load(moduleResource);</span>
+  }
+
+  @NonNull
+  public static URI handleResource(
+      @NonNull String location,
+      @NonNull URI cwd) throws IOException {
+    try {
+<span class="fc" id="L87">      return UriUtils.toUri(location, cwd);</span>
+<span class="nc" id="L88">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L89">      IOException newEx = new IOException( // NOPMD - intentional</span>
+<span class="nc" id="L90">          String.format(&quot;Cannot load module as '%s' is not a valid file or URL.&quot;, location));</span>
+<span class="nc" id="L91">      newEx.addSuppressed(ex);</span>
+<span class="nc" id="L92">      throw newEx;</span>
+    }
+  }
 
   private MetaschemaCommands() {
     // disable construction

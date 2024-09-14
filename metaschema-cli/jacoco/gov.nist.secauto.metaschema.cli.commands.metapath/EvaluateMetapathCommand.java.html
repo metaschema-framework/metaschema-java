@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EvaluateMetapathCommand.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Command Line Tool</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.cli.commands.metapath</a> &gt; <span class="el_source">EvaluateMetapathCommand.java</span></div><h1>EvaluateMetapathCommand.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.cli.commands.metapath;
+
+import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
+import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.ExitCode;
+import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
+import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
+import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
+import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
+import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.item.DefaultItemWriter;
+import gov.nist.secauto.metaschema.core.metapath.item.IItemWriter;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.UriUtils;
+import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+<span class="fc" id="L52">public class EvaluateMetapathCommand</span>
+    extends AbstractTerminalCommand {
+<span class="fc" id="L54">  private static final Logger LOGGER = LogManager.getLogger(EvaluateMetapathCommand.class);</span>
+
+  @NonNull
+  private static final String COMMAND = &quot;eval&quot;;
+  @NonNull
+<span class="fc" id="L59">  private static final Option EXPRESSION_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L60">      Option.builder(&quot;e&quot;)</span>
+<span class="fc" id="L61">          .longOpt(&quot;expression&quot;)</span>
+<span class="fc" id="L62">          .required()</span>
+<span class="fc" id="L63">          .hasArg()</span>
+<span class="fc" id="L64">          .argName(&quot;EXPRESSION&quot;)</span>
+<span class="fc" id="L65">          .desc(&quot;Metapath expression to execute&quot;)</span>
+<span class="fc" id="L66">          .build());</span>
+  @NonNull
+<span class="fc" id="L68">  public static final Option CONTENT_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L69">      Option.builder(&quot;i&quot;)</span>
+<span class="fc" id="L70">          .hasArg()</span>
+<span class="fc" id="L71">          .argName(&quot;FILE_OR_URL&quot;)</span>
+<span class="fc" id="L72">          .desc(&quot;Metaschema content instance resource&quot;)</span>
+<span class="fc" id="L73">          .build());</span>
+
+  @NonNull
+<span class="fc" id="L76">  public static final Option METASCHEMA_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L77">      Option.builder(&quot;m&quot;)</span>
+<span class="fc" id="L78">          .hasArg()</span>
+<span class="fc" id="L79">          .argName(&quot;FILE_OR_URL&quot;)</span>
+<span class="fc" id="L80">          .desc(&quot;metaschema resource&quot;)</span>
+<span class="fc" id="L81">          .build());</span>
+
+  @Override
+  public String getName() {
+<span class="fc" id="L85">    return COMMAND;</span>
+  }
+
+  @Override
+  public String getDescription() {
+<span class="nc" id="L90">    return &quot;Execute a Metapath expression against a document&quot;;</span>
+  }
+
+  @SuppressWarnings(&quot;null&quot;)
+  @Override
+  public Collection&lt;? extends Option&gt; gatherOptions() {
+<span class="fc" id="L96">    return List.of(</span>
+        METASCHEMA_OPTION,
+        CONTENT_OPTION,
+        EXPRESSION_OPTION);
+  }
+
+  @Override
+  public List&lt;ExtraArgument&gt; getExtraArguments() {
+<span class="nc" id="L104">    return CollectionUtil.emptyList();</span>
+  }
+
+  @Override
+  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
+<span class="fc" id="L109">    List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">    if (!extraArgs.isEmpty()) {</span>
+<span class="nc" id="L111">      throw new InvalidArgumentException(&quot;Illegal number of extra arguments.&quot;);</span>
+    }
+<span class="fc" id="L113">  }</span>
+
+  @Override
+  public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine cmdLine) {
+<span class="fc" id="L117">    return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);</span>
+  }
+
+  @SuppressWarnings({
+      &quot;PMD.OnlyOneReturn&quot;, // readability
+  })
+
+  protected ExitStatus executeCommand(
+      @NonNull CallingContext callingContext,
+      @NonNull CommandLine cmdLine) {
+<span class="fc" id="L127">    URI cwd = ObjectUtils.notNull(Paths.get(&quot;&quot;).toAbsolutePath().toUri());</span>
+
+    IModule module;
+    INodeItem item;
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">    if (cmdLine.hasOption(METASCHEMA_OPTION)) {</span>
+      try {
+<span class="fc" id="L133">        String moduleName</span>
+<span class="fc" id="L134">            = ObjectUtils.requireNonNull(cmdLine.getOptionValue(METASCHEMA_OPTION));</span>
+<span class="fc" id="L135">        URI moduleUri = UriUtils.toUri(moduleName, cwd);</span>
+<span class="fc" id="L136">        module = MetaschemaCommands.handleModule(moduleUri, CollectionUtil.emptyList());</span>
+<span class="nc" id="L137">      } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L138">        return ExitCode.INVALID_ARGUMENTS</span>
+<span class="nc" id="L139">            .exitMessage(</span>
+<span class="nc" id="L140">                String.format(&quot;Cannot load module as '%s' is not a valid file or URL.&quot;, ex.getInput()))</span>
+<span class="nc" id="L141">            .withThrowable(ex);</span>
+<span class="nc" id="L142">      } catch (IOException | MetaschemaException ex) {</span>
+<span class="nc" id="L143">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
+<span class="fc" id="L144">      }</span>
+
+      // determine if the query is evaluated against the module or the instance
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">      if (cmdLine.hasOption(CONTENT_OPTION)) {</span>
+        // load the content
+<span class="fc" id="L149">        IBindingContext bindingContext = new DefaultBindingContext();</span>
+
+        try {
+<span class="fc" id="L152">          Path compilePath = Files.createTempDirectory(&quot;validation-&quot;);</span>
+<span class="fc" id="L153">          compilePath.toFile().deleteOnExit();</span>
+
+<span class="fc" id="L155">          bindingContext.registerModule(module, compilePath);</span>
+<span class="nc" id="L156">        } catch (IOException ex) {</span>
+<span class="nc" id="L157">          return ExitCode.PROCESSING_ERROR</span>
+<span class="nc" id="L158">              .exitMessage(&quot;Unable to get binding context. &quot; + ex.getMessage())</span>
+<span class="nc" id="L159">              .withThrowable(ex);</span>
+<span class="fc" id="L160">        }</span>
+
+<span class="fc" id="L162">        IBoundLoader loader = bindingContext.newBoundLoader();</span>
+
+        URI contentResource;
+        try {
+<span class="fc" id="L166">          contentResource = MetaschemaCommands.handleResource(cmdLine.getOptionValue(CONTENT_OPTION), cwd);</span>
+<span class="nc" id="L167">        } catch (IOException ex) {</span>
+<span class="nc" id="L168">          return ExitCode.INVALID_ARGUMENTS</span>
+<span class="nc" id="L169">              .exitMessage(&quot;Unable to resolve content location. &quot; + ex.getMessage())</span>
+<span class="nc" id="L170">              .withThrowable(ex);</span>
+<span class="fc" id="L171">        }</span>
+
+        try {
+<span class="fc" id="L174">          item = loader.loadAsNodeItem(contentResource);</span>
+<span class="nc" id="L175">        } catch (IOException ex) {</span>
+<span class="nc" id="L176">          return ExitCode.INVALID_ARGUMENTS</span>
+<span class="nc" id="L177">              .exitMessage(&quot;Unable to resolve content location. &quot; + ex.getMessage())</span>
+<span class="nc" id="L178">              .withThrowable(ex);</span>
+<span class="fc" id="L179">        }</span>
+<span class="fc" id="L180">      } else {</span>
+<span class="nc" id="L181">        item = INodeItemFactory.instance().newModuleNodeItem(module);</span>
+      }
+<span class="nc bnc" id="L183" title="All 2 branches missed.">    } else if (cmdLine.hasOption(CONTENT_OPTION)) {</span>
+<span class="nc" id="L184">      return ExitCode.INVALID_ARGUMENTS.exitMessage(</span>
+<span class="nc" id="L185">          String.format(&quot;Must use '%s' to specify the Metaschema module.&quot;, CONTENT_OPTION.getArgName()));</span>
+    } else {
+<span class="nc" id="L187">      module = null;</span>
+<span class="nc" id="L188">      item = null;</span>
+    }
+
+<span class="fc" id="L191">    String expression = cmdLine.getOptionValue(EXPRESSION_OPTION);</span>
+
+<span class="fc" id="L193">    StaticContext.Builder builder = StaticContext.builder();</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">    if (module != null) {</span>
+<span class="fc" id="L195">      builder.defaultModelNamespace(module.getXmlNamespace());</span>
+    }
+<span class="fc" id="L197">    StaticContext staticContext = builder.build();</span>
+
+    try {
+      // Parse and compile the Metapath expression
+<span class="fc" id="L201">      MetapathExpression compiledMetapath = MetapathExpression.compile(expression, staticContext);</span>
+<span class="fc" id="L202">      ISequence&lt;?&gt; sequence = compiledMetapath.evaluate(item, new DynamicContext(staticContext));</span>
+
+<span class="fc" id="L204">      Writer stringWriter = new StringWriter();</span>
+<span class="fc" id="L205">      try (PrintWriter writer = new PrintWriter(stringWriter)) {</span>
+<span class="fc" id="L206">        IItemWriter itemWriter = new DefaultItemWriter(writer);</span>
+<span class="fc" id="L207">        itemWriter.writeSequence(sequence);</span>
+      }
+
+      // Print the result
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">      if (LOGGER.isInfoEnabled()) {</span>
+<span class="fc" id="L212">        LOGGER.info(stringWriter.toString());</span>
+      }
+
+<span class="fc" id="L215">      return ExitCode.OK.exit();</span>
+<span class="nc" id="L216">    } catch (Exception ex) {</span>
+<span class="nc" id="L217">      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

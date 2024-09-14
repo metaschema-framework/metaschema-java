@@ -67,8 +67,8 @@ class XmlInlineFieldDefinition
       @NonNull IContainerModel parent) {
 <span class="fc" id="L68">    super(parent);</span>
 <span class="fc" id="L69">    this.xmlObject = xmlObject;</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">    this.defaultValue = xmlObject.isSetDefault()</span>
-<span class="nc" id="L71">        ? getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">    this.defaultValue = xmlObject.isSetDefault()</span>
+<span class="fc" id="L71">        ? getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))</span>
 <span class="fc" id="L72">        : null;</span>
 <span class="fc" id="L73">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(xmlObject, this)));</span>
 <span class="fc" id="L74">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
@@ -158,12 +158,12 @@ class XmlInlineFieldDefinition
 
   @Override
   public int getMinOccurs() {
-<span class="nc" id="L161">    return XmlModelParser.getMinOccurs(getXmlObject().getMinOccurs());</span>
+<span class="fc" id="L161">    return XmlModelParser.getMinOccurs(getXmlObject().getMinOccurs());</span>
   }
 
   @Override
   public int getMaxOccurs() {
-<span class="nc" id="L166">    return XmlModelParser.getMaxOccurs(getXmlObject().getMaxOccurs());</span>
+<span class="fc" id="L166">    return XmlModelParser.getMaxOccurs(getXmlObject().getMaxOccurs());</span>
   }
 
   @Override
@@ -185,7 +185,7 @@ class XmlInlineFieldDefinition
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public final IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {
-<span class="nc bnc" id="L188" title="All 2 branches missed.">    return getXmlObject().isSetAsType() ? getXmlObject().getAsType() : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">    return getXmlObject().isSetAsType() ? getXmlObject().getAsType() : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
   }
 
   @Override

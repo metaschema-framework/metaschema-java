@@ -80,7 +80,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="fc" id="L80">  private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(</span>
 <span class="fc" id="L81">      Option.builder(&quot;c&quot;)</span>
 <span class="fc" id="L82">          .hasArgs()</span>
-<span class="fc" id="L83">          .argName(&quot;URI&quot;)</span>
+<span class="fc" id="L83">          .argName(&quot;URL&quot;)</span>
 <span class="fc" id="L84">          .desc(&quot;additional constraint definitions&quot;)</span>
 <span class="fc" id="L85">          .build());</span>
   @NonNull
@@ -97,62 +97,95 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="fc" id="L97">          .longOpt(&quot;sarif-include-pass&quot;)</span>
 <span class="fc" id="L98">          .desc(&quot;include pass results in SARIF&quot;)</span>
 <span class="fc" id="L99">          .build());</span>
+  @NonNull
+<span class="fc" id="L101">  private static final Option NO_SCHEMA_VALIDATION_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L102">      Option.builder()</span>
+<span class="fc" id="L103">          .longOpt(&quot;disable-schema-validation&quot;)</span>
+<span class="fc" id="L104">          .desc(&quot;do not perform schema validation&quot;)</span>
+<span class="fc" id="L105">          .build());</span>
+  @NonNull
+<span class="fc" id="L107">  private static final Option NO_CONSTRAINT_VALIDATION_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L108">      Option.builder()</span>
+<span class="fc" id="L109">          .longOpt(&quot;disable-constraint-validation&quot;)</span>
+<span class="fc" id="L110">          .desc(&quot;do not perform constraint validation&quot;)</span>
+<span class="fc" id="L111">          .build());</span>
 
   @Override
   public String getName() {
-<span class="nc" id="L103">    return COMMAND;</span>
+<span class="nc" id="L115">    return COMMAND;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;? extends Option&gt; gatherOptions() {
-<span class="fc" id="L109">    return List.of(</span>
+<span class="fc" id="L121">    return List.of(</span>
         AS_OPTION,
         CONSTRAINTS_OPTION,
         SARIF_OUTPUT_FILE_OPTION,
-        SARIF_INCLUDE_PASS_OPTION);
+        SARIF_INCLUDE_PASS_OPTION,
+        NO_SCHEMA_VALIDATION_OPTION,
+        NO_CONSTRAINT_VALIDATION_OPTION);
   }
 
   @Override
   public List&lt;ExtraArgument&gt; getExtraArguments() {
-<span class="fc" id="L118">    return EXTRA_ARGUMENTS;</span>
+<span class="fc" id="L132">    return EXTRA_ARGUMENTS;</span>
   }
 
   @SuppressWarnings(&quot;PMD.PreserveStackTrace&quot;) // intended
   @Override
   public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-<span class="fc" id="L124">    List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">    if (extraArgs.size() != 1) {</span>
-<span class="nc" id="L126">      throw new InvalidArgumentException(&quot;The source to validate must be provided.&quot;);</span>
+<span class="fc" id="L138">    List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">    if (extraArgs.size() != 1) {</span>
+<span class="nc" id="L140">      throw new InvalidArgumentException(&quot;The source to validate must be provided.&quot;);</span>
     }
 
-<span class="fc bfc" id="L129" title="All 2 branches covered.">    if (cmdLine.hasOption(AS_OPTION)) {</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">    if (cmdLine.hasOption(AS_OPTION)) {</span>
       try {
-<span class="fc" id="L131">        String toFormatText = cmdLine.getOptionValue(AS_OPTION);</span>
-<span class="fc" id="L132">        Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
-<span class="nc" id="L133">      } catch (IllegalArgumentException ex) {</span>
-<span class="nc" id="L134">        InvalidArgumentException newEx = new InvalidArgumentException(</span>
-<span class="nc" id="L135">            String.format(&quot;Invalid '%s' argument. The format must be one of: %s.&quot;,</span>
-<span class="nc" id="L136">                OptionUtils.toArgument(AS_OPTION),</span>
-<span class="nc" id="L137">                Arrays.asList(Format.values()).stream()</span>
-<span class="nc" id="L138">                    .map(format -&gt; format.name())</span>
-<span class="nc" id="L139">                    .collect(CustomCollectors.joiningWithOxfordComma(&quot;and&quot;))));</span>
-<span class="nc" id="L140">        newEx.addSuppressed(ex);</span>
-<span class="nc" id="L141">        throw newEx;</span>
-<span class="fc" id="L142">      }</span>
+<span class="fc" id="L145">        String toFormatText = cmdLine.getOptionValue(AS_OPTION);</span>
+<span class="fc" id="L146">        Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
+<span class="nc" id="L147">      } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L148">        InvalidArgumentException newEx = new InvalidArgumentException(</span>
+<span class="nc" id="L149">            String.format(&quot;Invalid '%s' argument. The format must be one of: %s.&quot;,</span>
+<span class="nc" id="L150">                OptionUtils.toArgument(AS_OPTION),</span>
+<span class="nc" id="L151">                Arrays.asList(Format.values()).stream()</span>
+<span class="nc" id="L152">                    .map(format -&gt; format.name())</span>
+<span class="nc" id="L153">                    .collect(CustomCollectors.joiningWithOxfordComma(&quot;and&quot;))));</span>
+<span class="nc" id="L154">        newEx.addSuppressed(ex);</span>
+<span class="nc" id="L155">        throw newEx;</span>
+<span class="fc" id="L156">      }</span>
     }
-<span class="fc" id="L144">  }</span>
+<span class="fc" id="L158">  }</span>
 
-<span class="fc" id="L146">  protected abstract class AbstractValidationCommandExecutor</span>
+<span class="fc" id="L160">  protected abstract class AbstractValidationCommandExecutor</span>
       extends AbstractCommandExecutor
       implements ISchemaValidationProvider {
 
+    /**
+     * Construct a new command executor.
+     *
+     * @param callingContext
+     *          the context of the command execution
+     * @param commandLine
+     *          the parsed command line details
+     */
     public AbstractValidationCommandExecutor(
         @NonNull CallingContext callingContext,
-<span class="fc" id="L152">        @NonNull CommandLine commandLine) {</span>
-<span class="fc" id="L153">      super(callingContext, commandLine);</span>
-<span class="fc" id="L154">    }</span>
+<span class="fc" id="L174">        @NonNull CommandLine commandLine) {</span>
+<span class="fc" id="L175">      super(callingContext, commandLine);</span>
+<span class="fc" id="L176">    }</span>
 
+    /**
+     * Get the binding context to use for data processing.
+     *
+     * @param constraintSets
+     *          the constraints to configure in the resulting binding context
+     * @return the context
+     * @throws MetaschemaException
+     *           if a Metaschema error occurred
+     * @throws IOException
+     *           if an error occurred while reading data
+     */
     @NonNull
     protected abstract IBindingContext getBindingContext(@NonNull Set&lt;IConstraintSet&gt; constraintSets)
         throws MetaschemaException, IOException;
@@ -160,139 +193,144 @@ import edu.umd.cs.findbugs.annotations.NonNull;
     @SuppressWarnings(&quot;PMD.OnlyOneReturn&quot;) // readability
     @Override
     public ExitStatus execute() {
-<span class="fc" id="L163">      URI cwd = ObjectUtils.notNull(Paths.get(&quot;&quot;).toAbsolutePath().toUri());</span>
-<span class="fc" id="L164">      CommandLine cmdLine = getCommandLine();</span>
+<span class="fc" id="L196">      URI cwd = ObjectUtils.notNull(Paths.get(&quot;&quot;).toAbsolutePath().toUri());</span>
+<span class="fc" id="L197">      CommandLine cmdLine = getCommandLine();</span>
 
       Set&lt;IConstraintSet&gt; constraintSets;
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">      if (cmdLine.hasOption(CONSTRAINTS_OPTION)) {</span>
-<span class="nc" id="L168">        IConstraintLoader constraintLoader = new BindingConstraintLoader(IBindingContext.instance());</span>
-<span class="nc" id="L169">        constraintSets = new LinkedHashSet&lt;&gt;();</span>
-<span class="nc" id="L170">        String[] args = cmdLine.getOptionValues(CONSTRAINTS_OPTION);</span>
-<span class="nc bnc" id="L171" title="All 2 branches missed.">        for (String arg : args) {</span>
-<span class="nc bnc" id="L172" title="All 2 branches missed.">          assert arg != null;</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">      if (cmdLine.hasOption(CONSTRAINTS_OPTION)) {</span>
+<span class="nc" id="L201">        IConstraintLoader constraintLoader = new BindingConstraintLoader(IBindingContext.instance());</span>
+<span class="nc" id="L202">        constraintSets = new LinkedHashSet&lt;&gt;();</span>
+<span class="nc" id="L203">        String[] args = cmdLine.getOptionValues(CONSTRAINTS_OPTION);</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        for (String arg : args) {</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">          assert arg != null;</span>
           try {
-<span class="nc" id="L174">            URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, cwd));</span>
-<span class="nc" id="L175">            constraintSets.addAll(constraintLoader.load(constraintUri));</span>
-<span class="nc" id="L176">          } catch (IOException | MetaschemaException | MetapathException | URISyntaxException ex) {</span>
-<span class="nc" id="L177">            return ExitCode.IO_ERROR.exitMessage(&quot;Unable to load constraint set '&quot; + arg + &quot;'.&quot;).withThrowable(ex);</span>
-<span class="nc" id="L178">          }</span>
+<span class="nc" id="L207">            URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, cwd));</span>
+<span class="nc" id="L208">            constraintSets.addAll(constraintLoader.load(constraintUri));</span>
+<span class="nc" id="L209">          } catch (IOException | MetaschemaException | MetapathException | URISyntaxException ex) {</span>
+<span class="nc" id="L210">            return ExitCode.IO_ERROR.exitMessage(&quot;Unable to load constraint set '&quot; + arg + &quot;'.&quot;).withThrowable(ex);</span>
+<span class="nc" id="L211">          }</span>
         }
-<span class="nc" id="L180">      } else {</span>
-<span class="fc" id="L181">        constraintSets = CollectionUtil.emptySet();</span>
+<span class="nc" id="L213">      } else {</span>
+<span class="fc" id="L214">        constraintSets = CollectionUtil.emptySet();</span>
       }
 
       IBindingContext bindingContext;
       try {
-<span class="fc" id="L186">        bindingContext = getBindingContext(constraintSets);</span>
-<span class="nc" id="L187">      } catch (IOException | MetaschemaException ex) {</span>
-<span class="nc" id="L188">        return ExitCode.PROCESSING_ERROR</span>
-<span class="nc" id="L189">            .exitMessage(&quot;Unable to get binding context. &quot; + ex.getMessage())</span>
-<span class="nc" id="L190">            .withThrowable(ex);</span>
-<span class="fc" id="L191">      }</span>
+<span class="fc" id="L219">        bindingContext = getBindingContext(constraintSets);</span>
+<span class="nc" id="L220">      } catch (IOException | MetaschemaException ex) {</span>
+<span class="nc" id="L221">        return ExitCode.PROCESSING_ERROR</span>
+<span class="nc" id="L222">            .exitMessage(&quot;Unable to get binding context. &quot; + ex.getMessage())</span>
+<span class="nc" id="L223">            .withThrowable(ex);</span>
+<span class="fc" id="L224">      }</span>
 
-<span class="fc" id="L193">      IBoundLoader loader = bindingContext.newBoundLoader();</span>
+<span class="fc" id="L226">      IBoundLoader loader = bindingContext.newBoundLoader();</span>
 
-<span class="fc" id="L195">      List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
+<span class="fc" id="L228">      List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
 
-<span class="fc" id="L197">      String sourceName = ObjectUtils.requireNonNull(extraArgs.get(0));</span>
+<span class="fc" id="L230">      String sourceName = ObjectUtils.requireNonNull(extraArgs.get(0));</span>
       URI source;
 
       try {
-<span class="fc" id="L201">        source = UriUtils.toUri(sourceName, cwd);</span>
-<span class="nc" id="L202">      } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L203">        return ExitCode.IO_ERROR.exitMessage(&quot;Cannot load source '%s' as it is not a valid file or URI.&quot;)</span>
-<span class="nc" id="L204">            .withThrowable(ex);</span>
-<span class="fc" id="L205">      }</span>
+<span class="fc" id="L234">        source = UriUtils.toUri(sourceName, cwd);</span>
+<span class="nc" id="L235">      } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L236">        return ExitCode.IO_ERROR.exitMessage(&quot;Cannot load source '%s' as it is not a valid file or URI.&quot;)</span>
+<span class="nc" id="L237">            .withThrowable(ex);</span>
+<span class="fc" id="L238">      }</span>
 
       Format asFormat;
-<span class="fc bfc" id="L208" title="All 2 branches covered.">      if (cmdLine.hasOption(AS_OPTION)) {</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">      if (cmdLine.hasOption(AS_OPTION)) {</span>
         try {
-<span class="fc" id="L210">          String toFormatText = cmdLine.getOptionValue(AS_OPTION);</span>
-<span class="fc" id="L211">          asFormat = Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
-<span class="nc" id="L212">        } catch (IllegalArgumentException ex) {</span>
-<span class="nc" id="L213">          return ExitCode.IO_ERROR</span>
-<span class="nc" id="L214">              .exitMessage(&quot;Invalid '--as' argument. The format must be one of: &quot;</span>
-<span class="nc" id="L215">                  + Arrays.stream(Format.values())</span>
-<span class="nc" id="L216">                      .map(format -&gt; format.name())</span>
-<span class="nc" id="L217">                      .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;)))</span>
-<span class="nc" id="L218">              .withThrowable(ex);</span>
-<span class="fc" id="L219">        }</span>
+<span class="fc" id="L243">          String toFormatText = cmdLine.getOptionValue(AS_OPTION);</span>
+<span class="fc" id="L244">          asFormat = Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
+<span class="nc" id="L245">        } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L246">          return ExitCode.IO_ERROR</span>
+<span class="nc" id="L247">              .exitMessage(&quot;Invalid '--as' argument. The format must be one of: &quot;</span>
+<span class="nc" id="L248">                  + Arrays.stream(Format.values())</span>
+<span class="nc" id="L249">                      .map(format -&gt; format.name())</span>
+<span class="nc" id="L250">                      .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;)))</span>
+<span class="nc" id="L251">              .withThrowable(ex);</span>
+<span class="fc" id="L252">        }</span>
       } else {
         // attempt to determine the format
         try {
-<span class="fc" id="L223">          asFormat = loader.detectFormat(source);</span>
-<span class="nc" id="L224">        } catch (FileNotFoundException ex) {</span>
+<span class="fc" id="L256">          asFormat = loader.detectFormat(source);</span>
+<span class="nc" id="L257">        } catch (FileNotFoundException ex) {</span>
           // this case was already checked for
-<span class="nc" id="L226">          return ExitCode.IO_ERROR.exitMessage(&quot;The provided source file '&quot; + source + &quot;' does not exist.&quot;);</span>
-<span class="nc" id="L227">        } catch (IOException ex) {</span>
-<span class="nc" id="L228">          return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
-<span class="nc" id="L229">        } catch (IllegalArgumentException ex) {</span>
-<span class="nc" id="L230">          return ExitCode.IO_ERROR.exitMessage(</span>
+<span class="nc" id="L259">          return ExitCode.IO_ERROR.exitMessage(&quot;The provided source file '&quot; + source + &quot;' does not exist.&quot;);</span>
+<span class="nc" id="L260">        } catch (IOException ex) {</span>
+<span class="nc" id="L261">          return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
+<span class="nc" id="L262">        } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L263">          return ExitCode.IO_ERROR.exitMessage(</span>
               &quot;Source file has unrecognizable format. Use '--as' to specify the format. The format must be one of: &quot;
-<span class="nc" id="L232">                  + Arrays.stream(Format.values())</span>
-<span class="nc" id="L233">                      .map(format -&gt; format.name())</span>
-<span class="nc" id="L234">                      .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;)));</span>
-<span class="fc" id="L235">        }</span>
+<span class="nc" id="L265">                  + Arrays.stream(Format.values())</span>
+<span class="nc" id="L266">                      .map(format -&gt; format.name())</span>
+<span class="nc" id="L267">                      .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;)));</span>
+<span class="fc" id="L268">        }</span>
       }
 
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">      if (LOGGER.isInfoEnabled()) {</span>
-<span class="fc" id="L239">        LOGGER.info(&quot;Validating '{}' as {}.&quot;, source, asFormat.name());</span>
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">      if (LOGGER.isInfoEnabled()) {</span>
+<span class="fc" id="L272">        LOGGER.info(&quot;Validating '{}' as {}.&quot;, source, asFormat.name());</span>
       }
 
-<span class="fc" id="L242">      IMutableConfiguration&lt;ValidationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="pc bpc" id="L243" title="3 of 4 branches missed.">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; cmdLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {</span>
-<span class="nc" id="L244">        configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);</span>
+<span class="fc" id="L275">      IMutableConfiguration&lt;ValidationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
+<span class="pc bpc" id="L276" title="3 of 4 branches missed.">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; cmdLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {</span>
+<span class="nc" id="L277">        configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);</span>
       }
 
-      IValidationResult validationResult;
+<span class="fc" id="L280">      IValidationResult validationResult = null;</span>
       try {
-        // perform schema validation
-<span class="fc" id="L250">        validationResult = this.validateWithSchema(source, asFormat);</span>
-
-<span class="pc bpc" id="L252" title="1 of 2 branches missed.">        if (validationResult.isPassing()) {</span>
-          // perform constraint validation
-<span class="fc" id="L254">          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);</span>
-<span class="fc" id="L255">          validationResult = AggregateValidationResult.aggregate(validationResult, constraintValidationResult);</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (!cmdLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {</span>
+          // perform schema validation
+<span class="fc" id="L284">          validationResult = this.validateWithSchema(source, asFormat);</span>
         }
-<span class="fc" id="L257">      } catch (FileNotFoundException ex) {</span>
-<span class="fc" id="L258">        return ExitCode.IO_ERROR.exitMessage(String.format(&quot;Resource not found at '%s'&quot;, source)).withThrowable(ex);</span>
 
-<span class="fc" id="L260">      } catch (UnknownHostException ex) {</span>
-<span class="fc" id="L261">        return ExitCode.IO_ERROR.exitMessage(String.format(&quot;Unknown host for '%s'.&quot;, source)).withThrowable(ex);</span>
+<span class="fc bfc" id="L287" title="All 4 branches covered.">        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">            &amp;&amp; (validationResult == null || validationResult.isPassing())) {</span>
+          // perform constraint validation
+<span class="fc" id="L290">          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">          validationResult = validationResult == null</span>
+<span class="fc" id="L292">              ? constraintValidationResult</span>
+<span class="fc" id="L293">              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);</span>
+        }
+<span class="fc" id="L295">      } catch (FileNotFoundException ex) {</span>
+<span class="fc" id="L296">        return ExitCode.IO_ERROR.exitMessage(String.format(&quot;Resource not found at '%s'&quot;, source)).withThrowable(ex);</span>
+<span class="fc" id="L297">      } catch (UnknownHostException ex) {</span>
+<span class="fc" id="L298">        return ExitCode.IO_ERROR.exitMessage(String.format(&quot;Unknown host for '%s'.&quot;, source)).withThrowable(ex);</span>
+<span class="nc" id="L299">      } catch (IOException ex) {</span>
+<span class="nc" id="L300">        return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
+<span class="nc" id="L301">      } catch (MetapathException ex) {</span>
+<span class="nc" id="L302">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
+<span class="fc" id="L303">      }</span>
 
-<span class="nc" id="L263">      } catch (IOException ex) {</span>
-<span class="nc" id="L264">        return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
-<span class="nc" id="L265">      } catch (MetapathException ex) {</span>
-<span class="nc" id="L266">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
-<span class="fc" id="L267">      }</span>
+<span class="pc bpc" id="L305" title="3 of 4 branches missed.">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
+<span class="nc" id="L306">        Path sarifFile = ObjectUtils.notNull(Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));</span>
 
-<span class="pc bpc" id="L269" title="3 of 4 branches missed.">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="nc" id="L270">        Path sarifFile = Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION));</span>
-
-<span class="nc" id="L272">        IVersionInfo version</span>
-<span class="nc" id="L273">            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);</span>
+<span class="nc" id="L308">        IVersionInfo version</span>
+<span class="nc" id="L309">            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);</span>
 
         try {
-<span class="nc" id="L276">          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);</span>
-<span class="nc" id="L277">          sarifHandler.addFindings(validationResult.getFindings());</span>
-<span class="nc" id="L278">          sarifHandler.write(sarifFile);</span>
-<span class="nc" id="L279">        } catch (IOException ex) {</span>
-<span class="nc" id="L280">          return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
-<span class="nc" id="L281">        }</span>
-<span class="pc bfc" id="L282" title="All 2 branches covered.">      } else if (!validationResult.getFindings().isEmpty()) {</span>
-<span class="fc" id="L283">        LOGGER.info(&quot;Validation identified the following issues:&quot;, source);</span>
-<span class="fc" id="L284">        LoggingValidationHandler.instance().handleValidationResults(validationResult);</span>
+<span class="nc" id="L312">          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">          if (validationResult != null) {</span>
+<span class="nc" id="L314">            sarifHandler.addFindings(validationResult.getFindings());</span>
+          }
+<span class="nc" id="L316">          sarifHandler.write(sarifFile);</span>
+<span class="nc" id="L317">        } catch (IOException ex) {</span>
+<span class="nc" id="L318">          return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
+<span class="nc" id="L319">        }</span>
+<span class="pc bfc" id="L320" title="All 4 branches covered.">      } else if (validationResult != null &amp;&amp; !validationResult.getFindings().isEmpty()) {</span>
+<span class="fc" id="L321">        LOGGER.info(&quot;Validation identified the following issues:&quot;, source);</span>
+<span class="fc" id="L322">        LoggingValidationHandler.instance().handleValidationResults(validationResult);</span>
       }
 
-<span class="fc bfc" id="L287" title="All 2 branches covered.">      if (validationResult.isPassing()) {</span>
-<span class="pc bpc" id="L288" title="1 of 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
-<span class="fc" id="L289">          LOGGER.info(&quot;The file '{}' is valid.&quot;, source);</span>
+<span class="fc bfc" id="L325" title="All 4 branches covered.">      if (validationResult == null || validationResult.isPassing()) {</span>
+<span class="pc bpc" id="L326" title="1 of 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
+<span class="fc" id="L327">          LOGGER.info(&quot;The file '{}' is valid.&quot;, source);</span>
         }
-<span class="pc bpc" id="L291" title="1 of 2 branches missed.">      } else if (LOGGER.isErrorEnabled()) {</span>
-<span class="fc" id="L292">        LOGGER.error(&quot;The file '{}' is invalid.&quot;, source);</span>
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">      } else if (LOGGER.isErrorEnabled()) {</span>
+<span class="fc" id="L330">        LOGGER.error(&quot;The file '{}' is invalid.&quot;, source);</span>
       }
 
-<span class="fc bfc" id="L295" title="All 2 branches covered.">      return (validationResult.isPassing() ? ExitCode.OK : ExitCode.FAIL).exit();</span>
+<span class="fc bfc" id="L333" title="All 4 branches covered.">      return (validationResult == null || validationResult.isPassing() ? ExitCode.OK : ExitCode.FAIL).exit();</span>
     }
   }
 }

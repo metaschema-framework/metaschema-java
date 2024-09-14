@@ -53,8 +53,8 @@ final class XmlFlagContainerSupport {
             XmlCursor cursor,
             XmlObject obj) {
           Handler&lt;Pair&lt;IModelDefinition, IFlagContainerBuilder&lt;IFlagInstance&gt;&gt;&gt; retval;
-<span class="pc bpc" id="L56" title="1 of 2 branches missed.">          if (obj instanceof FlagReferenceType) {</span>
-<span class="nc" id="L57">            retval = XmlFlagContainerSupport::handleFlag;</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">          if (obj instanceof FlagReferenceType) {</span>
+<span class="fc" id="L57">            retval = XmlFlagContainerSupport::handleFlag;</span>
 <span class="pc bpc" id="L58" title="1 of 2 branches missed.">          } else if (obj instanceof InlineFlagDefinitionType) {</span>
 <span class="fc" id="L59">            retval = XmlFlagContainerSupport::handleDefineFlag;</span>
           } else {
@@ -67,11 +67,11 @@ final class XmlFlagContainerSupport {
   private static void handleFlag( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IModelDefinition, IFlagContainerBuilder&lt;IFlagInstance&gt;&gt; state) {
-<span class="nc" id="L70">    XmlFlagInstance flagInstance = new XmlFlagInstance(</span>
+<span class="fc" id="L70">    XmlFlagInstance flagInstance = new XmlFlagInstance(</span>
         (FlagReferenceType) obj,
-<span class="nc" id="L72">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L73">    state.getRight().flag(flagInstance);</span>
-<span class="nc" id="L74">  }</span>
+<span class="fc" id="L72">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L73">    state.getRight().flag(flagInstance);</span>
+<span class="fc" id="L74">  }</span>
 
   private static void handleDefineFlag( // NOPMD false positive
       @NonNull XmlObject obj,
@@ -94,7 +94,7 @@ final class XmlFlagContainerSupport {
   static IContainerFlagSupport&lt;IFlagInstance&gt; newInstance(
       @NonNull GlobalFieldDefinitionType xmlField,
       @NonNull IFieldDefinition container) {
-<span class="pc bpc" id="L97" title="1 of 4 branches missed.">    if (!xmlField.getFlagList().isEmpty() || !xmlField.getDefineFlagList().isEmpty()) {</span>
+<span class="fc bfc" id="L97" title="All 4 branches covered.">    if (!xmlField.getFlagList().isEmpty() || !xmlField.getDefineFlagList().isEmpty()) {</span>
 <span class="pc bpc" id="L98" title="1 of 2 branches missed.">      IFlagContainerBuilder&lt;IFlagInstance&gt; builder = xmlField.isSetJsonKey()</span>
 <span class="nc" id="L99">          ? IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(</span>
 <span class="nc" id="L100">              ObjectUtils.requireNonNull(xmlField.getJsonKey().getFlagRef())))</span>
@@ -117,13 +117,13 @@ final class XmlFlagContainerSupport {
   static IContainerFlagSupport&lt;IFlagInstance&gt; newInstance(
       @NonNull InlineFieldDefinitionType xmlField,
       @NonNull IFieldDefinition container) {
-<span class="pc bpc" id="L120" title="2 of 4 branches missed.">    if (!xmlField.getFlagList().isEmpty() || !xmlField.getDefineFlagList().isEmpty()) {</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">      IFlagContainerBuilder&lt;IFlagInstance&gt; builder = xmlField.isSetJsonKey()</span>
+<span class="fc bfc" id="L120" title="All 4 branches covered.">    if (!xmlField.getFlagList().isEmpty() || !xmlField.getDefineFlagList().isEmpty()) {</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">      IFlagContainerBuilder&lt;IFlagInstance&gt; builder = xmlField.isSetJsonKey()</span>
 <span class="nc" id="L122">          ? IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(</span>
 <span class="nc" id="L123">              ObjectUtils.requireNonNull(xmlField.getJsonKey().getFlagRef())))</span>
-<span class="nc" id="L124">          : IContainerFlagSupport.builder();</span>
-<span class="nc" id="L125">      parseLocalFlags(xmlField, container, builder);</span>
-<span class="nc" id="L126">      return builder.build();</span>
+<span class="fc" id="L124">          : IContainerFlagSupport.builder();</span>
+<span class="fc" id="L125">      parseLocalFlags(xmlField, container, builder);</span>
+<span class="fc" id="L126">      return builder.build();</span>
     }
 <span class="fc" id="L128">    return IContainerFlagSupport.empty();</span>
   }
@@ -163,7 +163,7 @@ final class XmlFlagContainerSupport {
   static IContainerFlagSupport&lt;IFlagInstance&gt; newInstance(
       @NonNull GlobalAssemblyDefinitionType xmlAssembly,
       @NonNull IAssemblyDefinition container) {
-<span class="pc bpc" id="L166" title="2 of 4 branches missed.">    if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {</span>
+<span class="fc bfc" id="L166" title="All 4 branches covered.">    if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {</span>
 <span class="pc bpc" id="L167" title="1 of 2 branches missed.">      IFlagContainerBuilder&lt;IFlagInstance&gt; builder = xmlAssembly.isSetJsonKey()</span>
 <span class="nc" id="L168">          ? IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(</span>
 <span class="nc" id="L169">              ObjectUtils.requireNonNull(xmlAssembly.getJsonKey().getFlagRef())))</span>
@@ -171,7 +171,7 @@ final class XmlFlagContainerSupport {
 <span class="fc" id="L171">      parseLocalFlags(xmlAssembly, container, builder);</span>
 <span class="fc" id="L172">      return builder.build();</span>
     }
-<span class="nc" id="L174">    return IContainerFlagSupport.empty();</span>
+<span class="fc" id="L174">    return IContainerFlagSupport.empty();</span>
   }
 
   /**
@@ -186,11 +186,11 @@ final class XmlFlagContainerSupport {
   static IContainerFlagSupport&lt;IFlagInstance&gt; newInstance(
       @NonNull InlineAssemblyDefinitionType xmlAssembly,
       @NonNull IAssemblyDefinition container) {
-<span class="pc bpc" id="L189" title="1 of 4 branches missed.">    if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {</span>
-<span class="pc bpc" id="L190" title="1 of 2 branches missed.">      IFlagContainerBuilder&lt;IFlagInstance&gt; builder = xmlAssembly.isSetJsonKey()</span>
+<span class="fc bfc" id="L189" title="All 4 branches covered.">    if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">      IFlagContainerBuilder&lt;IFlagInstance&gt; builder = xmlAssembly.isSetJsonKey()</span>
 <span class="fc" id="L191">          ? IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(</span>
 <span class="fc" id="L192">              ObjectUtils.requireNonNull(xmlAssembly.getJsonKey().getFlagRef())))</span>
-<span class="pc" id="L193">          : IContainerFlagSupport.builder();</span>
+<span class="fc" id="L193">          : IContainerFlagSupport.builder();</span>
 <span class="fc" id="L194">      parseLocalFlags(xmlAssembly, container, builder);</span>
 <span class="fc" id="L195">      return builder.build();</span>
     }
@@ -210,14 +210,14 @@ final class XmlFlagContainerSupport {
       @NonNull GroupedInlineAssemblyDefinitionType xmlAssembly,
       @NonNull IAssemblyDefinition container,
       @Nullable String jsonKeyName) {
-<span class="nc bnc" id="L213" title="All 4 branches missed.">    if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {</span>
-<span class="nc bnc" id="L214" title="All 2 branches missed.">      IFlagContainerBuilder&lt;IFlagInstance&gt; builder = jsonKeyName == null</span>
-<span class="nc" id="L215">          ? IContainerFlagSupport.builder()</span>
-<span class="nc" id="L216">          : IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(jsonKeyName));</span>
-<span class="nc" id="L217">      parseLocalFlags(xmlAssembly, container, builder);</span>
-<span class="nc" id="L218">      return builder.build();</span>
+<span class="pc bpc" id="L213" title="1 of 4 branches missed.">    if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">      IFlagContainerBuilder&lt;IFlagInstance&gt; builder = jsonKeyName == null</span>
+<span class="fc" id="L215">          ? IContainerFlagSupport.builder()</span>
+<span class="pc" id="L216">          : IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(jsonKeyName));</span>
+<span class="fc" id="L217">      parseLocalFlags(xmlAssembly, container, builder);</span>
+<span class="fc" id="L218">      return builder.build();</span>
     }
-<span class="nc" id="L220">    return IContainerFlagSupport.empty();</span>
+<span class="fc" id="L220">    return IContainerFlagSupport.empty();</span>
   }
 
   private static void parseLocalFlags(
