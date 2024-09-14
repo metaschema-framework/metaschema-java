@@ -12,7 +12,7 @@ public class MetapathCommand
   private static final String COMMAND = "metapath";
 
   /**
-   * Construct a new Metapath command.
+   * Constructor for a new Metapath command.
    */
   public MetapathCommand() {
     super(true);
