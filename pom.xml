@@ -87,7 +87,7 @@
 		<plugin.appassembler.version>2.1.0</plugin.appassembler.version>
 		<plugin.git-commit-id.version>9.0.1</plugin.git-commit-id.version>
 		<plugin.maven-changes.version>2.12.1</plugin.maven-changes.version>
-		<plugin.maven-invoker.version>3.7.0</plugin.maven-invoker.version>
+		<plugin.maven-invoker.version>3.8.0</plugin.maven-invoker.version>
 		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
 		<plugin.pmd.version>3.24.0</plugin.pmd.version>
 		<plugin.spotbugs.version>4.8.6.2</plugin.spotbugs.version>
