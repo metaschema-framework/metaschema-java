@@ -73,6 +73,12 @@ Note: One or more pull requests must be submitted addressing all user story goal
 
 You can contact the maintainers of this project at [maintainers@metaschema.dev](mailto:maintainers@metaschema.dev) if you are interested in contributing to the development of this project or exchanging ideas. 
 
+## Developer information
+
+### Core metaschema functions functions
+
+The Metaschema [specification](https://pages.nist.gov/metaschema/specification/syntax/metapath/) and [this conformant library](/) library implement the Metapath functions required by the specification. See the library's [registry class with an inventory of these functions](https://github.com/metaschema-framework/metaschema-java/blob/v1.1.0/core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java) for a list of custom, OSCAL-specific functions in the 1.1.0 release.
+
 # Licenses and attribution
 
 ## This project is in the public domain
