@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionService;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -61,11 +62,8 @@ public class StaticFunctionCall implements IExpression {
 
   @Override
   public Class<? extends IItem> getBaseResultType() {
-    Class<? extends IItem> retval = getFunction().getResult().getType();
-    if (retval == null) {
-      retval = IItem.class;
-    }
-    return retval;
+    IItemType type = getFunction().getResult().getType();
+    return type == null ? IItem.class : type.getItemClass();
   }
 
   @SuppressWarnings("null")
@@ -81,11 +79,8 @@ public class StaticFunctionCall implements IExpression {
 
   @Override
   public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    List<ISequence<?>> arguments = ObjectUtils.notNull(getChildren().stream().map(expression -> {
-      @NonNull
-      ISequence<?> result = expression.accept(dynamicContext, focus);
-      return result;
-    }).collect(Collectors.toList()));
+    List<ISequence<?>> arguments = ObjectUtils.notNull(getChildren().stream()
+        .map(expression -> expression.accept(dynamicContext, focus)).collect(Collectors.toList()));
 
     IFunction function = getFunction();
     return function.execute(arguments, dynamicContext, focus);

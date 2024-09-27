@@ -8,7 +8,11 @@ package gov.nist.secauto.metaschema.core.metapath.function;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -27,7 +31,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A common interface for all Metapath functions.
  */
-public interface IFunction {
+public interface IFunction extends IItem {
   /**
    * Details specific characteristics of a function.
    */
@@ -212,7 +216,21 @@ public interface IFunction {
    */
   @NonNull
   static Builder builder() {
-    return new Builder();
+    return builder(StaticContext.instance());
+  }
+
+  /**
+   * Construct a new function signature builder.
+   *
+   * @param staticContext
+   *          the static context used to lookup data types and function
+   *          implementations
+   *
+   * @return the new builder instance
+   */
+  @NonNull
+  static Builder builder(@NonNull StaticContext staticContext) {
+    return new Builder(staticContext);
   }
 
   /**
@@ -220,6 +238,8 @@ public interface IFunction {
    */
   @SuppressWarnings("PMD.LooseCoupling")
   final class Builder {
+    @NonNull
+    private final StaticContext staticContext;
     private String name;
     private String namespace;
     @SuppressWarnings("null")
@@ -228,13 +248,18 @@ public interface IFunction {
     @NonNull
     private final List<IArgument> arguments = new LinkedList<>();
     @NonNull
-    private Class<? extends IItem> returnType = IItem.class;
+    private IItemType returnType;
     @NonNull
     private Occurrence returnOccurrence = Occurrence.ONE;
     private IFunctionExecutor functionHandler;
 
-    private Builder() {
-      // do nothing
+    private Builder(@NonNull StaticContext staticContext) {
+      this.staticContext = staticContext;
+      returnType = staticContext.lookupDataType(IItem.class);
+    }
+
+    protected StaticContext getStaticContext() {
+      return staticContext;
     }
 
     /**
@@ -376,14 +401,26 @@ public interface IFunction {
     /**
      * Define the return sequence Java type of the function.
      *
+     * @param name
+     *          the qualified name of the function's return data type
+     * @return this builder
+     */
+    @NonNull
+    public Builder returnType(@NonNull QName name) {
+      this.returnType = getStaticContext().lookupDataType(name);
+      return this;
+    }
+
+    /**
+     * Define the return sequence Java type of the function.
+     *
      * @param type
      *          the function's return Java type
      * @return this builder
      */
     @NonNull
     public Builder returnType(@NonNull Class<? extends IItem> type) {
-      Objects.requireNonNull(type, "type");
-      this.returnType = type;
+      this.returnType = getStaticContext().lookupDataType(type);
       return this;
     }
 

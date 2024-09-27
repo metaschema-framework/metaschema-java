@@ -188,7 +188,6 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
     // is matched first
     // before other String-based data types.
     registerDatatype(STRING);
-
     registerDatatype(BASE64);
     registerDatatype(BOOLEAN);
     registerDatatype(DATE);
@@ -202,7 +201,6 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
     registerDatatype(INTEGER);
     registerDatatype(IP_V4_ADDRESS);
     registerDatatype(IP_V6_ADDRESS);
-
     registerDatatype(NON_NEGATIVE_INTEGER);
     registerDatatype(POSITIVE_INTEGER);
     registerDatatype(TOKEN);

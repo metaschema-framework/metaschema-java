@@ -26,6 +26,7 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ForwardstepCon
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctioncallContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.GeneralcompContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IfexprContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.InstanceofexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IntersectexceptexprContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.KeyspecifierContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LetexprContext;
@@ -63,6 +64,7 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.WildcardContex
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
 import gov.nist.secauto.metaschema.core.metapath.cst.comparison.GeneralComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.comparison.ValueComparison;
+import gov.nist.secauto.metaschema.core.metapath.cst.impl.TypeTestSupport;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Addition;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Division;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.IntegerDivision;
@@ -87,6 +89,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
+import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -339,76 +342,6 @@ public class BuildCSTVisitor
   @Override
   protected IExpression handleUnarylookup(UnarylookupContext ctx) {
     return new UnaryLookup(toKeySpecifier(ObjectUtils.requireNonNull(ctx.keyspecifier())));
-  }
-
-  // =========================================================
-  // Quantified Expressions -
-  // https://www.w3.org/TR/xpath-31/#id-quantified-expressions
-  // =========================================================
-
-  @Override
-  protected IExpression handleQuantifiedexpr(QuantifiedexprContext ctx) {
-    Quantified.Quantifier quantifier;
-    int type = ((TerminalNode) ctx.getChild(0)).getSymbol().getType();
-    switch (type) {
-    case Metapath10Lexer.KW_SOME:
-      quantifier = Quantified.Quantifier.SOME;
-      break;
-    case Metapath10Lexer.KW_EVERY:
-      quantifier = Quantified.Quantifier.EVERY;
-      break;
-    default:
-      throw new UnsupportedOperationException(((TerminalNode) ctx.getChild(0)).getSymbol().getText());
-    }
-
-    int numVars = (ctx.getChildCount() - 2) / 5; // children - "satisfies expr" / ", $ varName in expr"
-    Map<QName, IExpression> vars = new LinkedHashMap<>(); // NOPMD ordering needed
-    int offset = 0;
-    for (; offset < numVars; offset++) {
-      // $
-      QName varName = EQNameUtils.parseName(
-          ObjectUtils.notNull(ctx.varname(offset).eqname().getText()),
-          getContext().getVariablePrefixResolver());
-
-      // in
-      IExpression varExpr = visit(ctx.exprsingle(offset));
-
-      vars.put(varName, varExpr);
-    }
-
-    IExpression satisfies = visit(ctx.exprsingle(offset));
-
-    return new Quantified(quantifier, vars, satisfies);
-  }
-
-  // =======================================================================
-  // Arrow operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
-  // =======================================================================
-
-  @Override
-  protected IExpression handleArrowexpr(ArrowexprContext context) {
-    // TODO: handle additional syntax for varef and parenthesized
-    return handleGroupedNAiry(context, 0, 3, (ctx, idx, left) -> {
-      // the next child is "=>"
-      assert "=>".equals(ctx.getChild(idx).getText());
-
-      int offset = (idx - 1) / 3;
-
-      ArrowfunctionspecifierContext fcCtx = ctx.getChild(ArrowfunctionspecifierContext.class, offset);
-      ArgumentlistContext argumentCtx = ctx.getChild(ArgumentlistContext.class, offset);
-
-      QName name = EQNameUtils.parseName(
-          ObjectUtils.notNull(fcCtx.eqname().getText()),
-          getContext().getFunctionPrefixResolver());
-
-      try (Stream<IExpression> args = Stream.concat(
-          Stream.of(left),
-          parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {
-        assert args != null;
-
-        return new StaticFunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));
-      }
-    });
   }
 
   // ====================================================
@@ -1089,6 +1022,68 @@ public class BuildCSTVisitor
     return new If(testExpr, thenExpr, elseExpr);
   }
 
+  // =========================================================
+  // Quantified Expressions -
+  // https://www.w3.org/TR/xpath-31/#id-quantified-expressions
+  // =========================================================
+
+  @Override
+  protected IExpression handleQuantifiedexpr(QuantifiedexprContext ctx) {
+    Quantified.Quantifier quantifier;
+    int type = ((TerminalNode) ctx.getChild(0)).getSymbol().getType();
+    switch (type) {
+    case Metapath10Lexer.KW_SOME:
+      quantifier = Quantified.Quantifier.SOME;
+      break;
+    case Metapath10Lexer.KW_EVERY:
+      quantifier = Quantified.Quantifier.EVERY;
+      break;
+    default:
+      throw new UnsupportedOperationException(((TerminalNode) ctx.getChild(0)).getSymbol().getText());
+    }
+
+    int numVars = (ctx.getChildCount() - 2) / 5; // children - "satisfies expr" / ", $ varName in expr"
+    Map<QName, IExpression> vars = new LinkedHashMap<>(); // NOPMD ordering needed
+    int offset = 0;
+    for (; offset < numVars; offset++) {
+      // $
+      QName varName = EQNameUtils.parseName(
+          ObjectUtils.notNull(ctx.varname(offset).eqname().getText()),
+          getContext().getVariablePrefixResolver());
+
+      // in
+      IExpression varExpr = visit(ctx.exprsingle(offset));
+
+      vars.put(varName, varExpr);
+    }
+
+    IExpression satisfies = visit(ctx.exprsingle(offset));
+
+    return new Quantified(quantifier, vars, satisfies);
+  }
+
+  /*
+   * ============================================================
+   * instance of - https://www.w3.org/TR/xpath-31/#id-instance-of
+   * ============================================================
+   */
+
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  @Override
+  protected IExpression handleInstanceofexpr(@NonNull InstanceofexprContext ctx) {
+    IExpression left = visit(ctx.treatexpr());
+    ISequenceType sequenceType = TypeTestSupport.parseSequenceType(
+        ObjectUtils.notNull(ctx.sequencetype()),
+        getContext());
+    return new InstanceOf(left, sequenceType);
+  }
+
   // =========================================================================
   // Simple map operator (!) - https://www.w3.org/TR/xpath-31/#id-map-operator
   // =========================================================================
@@ -1103,6 +1098,36 @@ public class BuildCSTVisitor
       IExpression right = ObjectUtils.notNull(ctx.getChild(idx + 1).accept(this));
 
       return new SimpleMap(left, right);
+    });
+  }
+
+  // =======================================================================
+  // Arrow operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
+  // =======================================================================
+
+  @Override
+  protected IExpression handleArrowexpr(ArrowexprContext context) {
+    // TODO: handle additional syntax for varef and parenthesized
+    return handleGroupedNAiry(context, 0, 3, (ctx, idx, left) -> {
+      // the next child is "=>"
+      assert "=>".equals(ctx.getChild(idx).getText());
+
+      int offset = (idx - 1) / 3;
+
+      ArrowfunctionspecifierContext fcCtx = ctx.getChild(ArrowfunctionspecifierContext.class, offset);
+      ArgumentlistContext argumentCtx = ctx.getChild(ArgumentlistContext.class, offset);
+
+      QName name = EQNameUtils.parseName(
+          ObjectUtils.notNull(fcCtx.eqname().getText()),
+          getContext().getFunctionPrefixResolver());
+
+      try (Stream<IExpression> args = Stream.concat(
+          Stream.of(left),
+          parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {
+        assert args != null;
+
+        return new StaticFunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));
+      }
     });
   }
 }

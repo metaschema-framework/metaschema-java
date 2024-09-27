@@ -8,14 +8,17 @@ package gov.nist.secauto.metaschema.core.metapath.function;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.TypeSystem;
+import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.type.TypeSystem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,18 +129,22 @@ public class DefaultFunction
 
     // apply function conversion and type promotion to the parameter
     if (!retval.isEmpty()) {
-      retval = convertSequence(argument, retval);
+      IItemType type = argument.getSequenceType().getType();
+      if (type != null) {
+        // this is not required to be an empty sequence
+        retval = convertSequence(argument, retval, type);
 
-      // verify resulting values
-      Class<? extends IItem> argumentClass = argument.getSequenceType().getType();
-      for (IItem item : retval.getValue()) {
-        Class<? extends IItem> itemClass = item.getClass();
-        if (!argumentClass.isAssignableFrom(itemClass)) {
-          throw new InvalidTypeMetapathException(
-              item,
-              String.format("The type '%s' is not a subtype of '%s'",
-                  TypeSystem.getName(itemClass),
-                  TypeSystem.getName(argumentClass)));
+        // verify resulting values
+        Class<? extends IItem> argumentClass = type.getItemClass();
+        for (IItem item : retval.getValue()) {
+          Class<? extends IItem> itemClass = item.getClass();
+          if (!argumentClass.isAssignableFrom(itemClass)) {
+            throw new InvalidTypeMetapathException(
+                item,
+                String.format("The type '%s' is not a subtype of '%s'",
+                    TypeSystem.getName(itemClass),
+                    TypeSystem.getName(argumentClass)));
+          }
         }
       }
     }
@@ -153,12 +160,16 @@ public class DefaultFunction
    *          the function argument signature details
    * @param sequence
    *          the sequence to convert
+   * @param requiredSequenceType
+   *          the expected item type for the sequence
    * @return the converted sequence
    */
   @NonNull
-  protected static ISequence<?> convertSequence(@NonNull IArgument argument, @NonNull ISequence<?> sequence) {
-    ISequenceType requiredSequenceType = argument.getSequenceType();
-    Class<? extends IItem> requiredSequenceTypeClass = requiredSequenceType.getType();
+  protected static ISequence<?> convertSequence(
+      @NonNull IArgument argument,
+      @NonNull ISequence<?> sequence,
+      @NonNull IItemType requiredSequenceType) {
+    Class<? extends IItem> requiredSequenceTypeClass = requiredSequenceType.getItemClass();
 
     Stream<? extends IItem> stream = sequence.safeStream();
 
@@ -338,5 +349,16 @@ public class DefaultFunction
       }
       return Objects.equals(arguments, other.arguments) && Objects.equals(contextItem, other.contextItem);
     }
+  }
+
+  @Override
+  public Object getValue() {
+    // never a value
+    return null;
+  }
+
+  @Override
+  public void accept(IItemVisitor visitor) {
+    visitor.visit(this);
   }
 }

@@ -5,7 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.EQNameUtils.IEQNamePrefixResolver;
+import gov.nist.secauto.metaschema.core.metapath.EQNameUtils.PrefixToNamespaceResolver;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -15,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -217,7 +220,7 @@ public final class StaticContext {
    * @return the resolver
    */
   @NonNull
-  public IEQNamePrefixResolver getFunctionPrefixResolver() {
+  public PrefixToNamespaceResolver getFunctionPrefixResolver() {
     return this::resolveFunctionPrefix;
   }
 
@@ -248,7 +251,7 @@ public final class StaticContext {
    * @return the resolver
    */
   @NonNull
-  public IEQNamePrefixResolver getFlagPrefixResolver() {
+  public PrefixToNamespaceResolver getFlagPrefixResolver() {
     return this::resolveFlagReferencePrefix;
   }
 
@@ -275,7 +278,7 @@ public final class StaticContext {
    * @return the resolver
    */
   @NonNull
-  public IEQNamePrefixResolver getModelPrefixResolver() {
+  public PrefixToNamespaceResolver getModelPrefixResolver() {
     return this::resolveModelReferencePrefix;
   }
 
@@ -306,7 +309,7 @@ public final class StaticContext {
    * @return the resolver
    */
   @NonNull
-  public IEQNamePrefixResolver getVariablePrefixResolver() {
+  public PrefixToNamespaceResolver getVariablePrefixResolver() {
     return this::resolveVariablePrefix;
   }
 
@@ -514,5 +517,13 @@ public final class StaticContext {
     public StaticContext build() {
       return new StaticContext(this);
     }
+  }
+
+  @NonNull
+  public IItemType lookupDataType(QName name) {
+  }
+
+  @NonNull
+  public IItemType lookupDataType(Class<? extends IItem> clazz) {
   }
 }

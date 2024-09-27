@@ -3,50 +3,37 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.function;
+package gov.nist.secauto.metaschema.core.metapath.type;
 
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.SequenceTypeImpl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface ISequenceType {
+
   @NonNull
-  ISequenceType EMPTY = new ISequenceType() {
-    @Override
-    public boolean isEmpty() {
-      return true;
-    }
-
-    @Override
-    public Class<? extends IItem> getType() {
-      return null;
-    }
-
-    @Override
-    public Occurrence getOccurrence() {
-      return Occurrence.ZERO;
-    }
-
-    @Override
-    public String toSignature() {
-      return "()";
-    }
-  };
+  static ISequenceType empty() {
+    return SequenceTypeImpl.EMPTY;
+  }
 
   /**
    * Create new sequence type using the provide type and occurrence.
    *
    * @param type
-   *          the sequence item type
+   *          the required sequence item type
    * @param occurrence
    *          the expected occurrence of the sequence
    * @return the new sequence type
    */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
-  static ISequenceType of(@NonNull Class<? extends IItem> type, @NonNull Occurrence occurrence) {
+  static ISequenceType of(
+      @NonNull IItemType type,
+      @NonNull Occurrence occurrence) {
     return Occurrence.ZERO.equals(occurrence)
-        ? EMPTY
+        ? empty()
         : new SequenceTypeImpl(type, occurrence);
   }
 
@@ -62,7 +49,8 @@ public interface ISequenceType {
    *
    * @return the type of the sequence or {@code null} if the sequence is empty
    */
-  Class<? extends IItem> getType();
+  @Nullable
+  IItemType getType();
 
   /**
    * Get the occurrence of the sequence.
@@ -70,6 +58,7 @@ public interface ISequenceType {
    * @return the occurrence of the sequence or {@code Occurrence#ZERO} if the
    *         sequence is empty
    */
+  @NonNull
   Occurrence getOccurrence();
 
   /**
@@ -79,4 +68,6 @@ public interface ISequenceType {
    */
   @NonNull
   String toSignature();
+
+  boolean matches(@NonNull ICollectionValue item);
 }

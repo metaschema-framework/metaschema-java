@@ -3,21 +3,51 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.function;
+package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.TypeSystem;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Objects;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class SequenceTypeImpl implements ISequenceType {
-  private final Class<? extends IItem> type;
+public class SequenceTypeImpl implements ISequenceType {
+  @NonNull
+  public static final ISequenceType EMPTY = new ISequenceType() {
+    @Override
+    public boolean isEmpty() {
+      return true;
+    }
+
+    @Override
+    public IItemType getType() {
+      return null;
+    }
+
+    @Override
+    public Occurrence getOccurrence() {
+      return Occurrence.ZERO;
+    }
+
+    @Override
+    public String toSignature() {
+      return "()";
+    }
+
+    @Override
+    public boolean matches(ICollectionValue item) {
+      return false;
+    }
+  };
+
+  private final IItemType type;
   private final Occurrence occurrence;
 
-  public SequenceTypeImpl(@NonNull Class<? extends IItem> type, @NonNull Occurrence occurrence) {
+  public SequenceTypeImpl(@NonNull IItemType type, @NonNull Occurrence occurrence) {
     Objects.requireNonNull(type, "type");
     Objects.requireNonNull(occurrence, "occurrence");
     this.type = type;
@@ -30,7 +60,7 @@ class SequenceTypeImpl implements ISequenceType {
   }
 
   @Override
-  public Class<? extends IItem> getType() {
+  public IItemType getType() {
     return type;
   }
 
@@ -48,11 +78,11 @@ class SequenceTypeImpl implements ISequenceType {
   public String toSignature() {
     StringBuilder builder = new StringBuilder();
 
-    Class<? extends IItem> type = getType();
+    IItemType type = getType();
     // name
     builder.append(type == null
         ? ""
-        : TypeSystem.getName(type))
+        : type.toSignature())
         // occurrence
         .append(getOccurrence().getIndicator());
 
@@ -69,13 +99,15 @@ class SequenceTypeImpl implements ISequenceType {
     if (this == obj) {
       return true; // NOPMD - readability
     }
-    if (obj == null) {
-      return false; // NOPMD - readability
-    }
-    if (getClass() != obj.getClass()) {
+    if (obj == null || getClass() != obj.getClass()) {
       return false; // NOPMD - readability
     }
     ISequenceType other = (ISequenceType) obj;
     return Objects.equals(occurrence, other.getOccurrence()) && Objects.equals(type, other.getType());
+  }
+
+  @Override
+  public boolean matches(ICollectionValue item) {
+    throw new UnsupportedOperationException("implement");
   }
 }

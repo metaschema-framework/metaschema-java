@@ -5,10 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Objects;
+
+import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -43,28 +49,45 @@ public interface IArgument {
   /**
    * Get a new argument builder.
    *
-   * @return the new argument builder
+   * @return the new builder instance
    */
   @NonNull
   static Builder builder() {
-    return new Builder();
+    return builder(StaticContext.instance());
+  }
+
+  /**
+   * Get a new argument builder.
+   *
+   * @param staticContext
+   *          the static context used to lookup data types and function
+   *          implementations
+   * @return the new argument builder
+   */
+  @NonNull
+  static Builder builder(@NonNull StaticContext staticContext) {
+    return new Builder(staticContext);
   }
 
   /**
    * Used to create an argument's signature using a builder pattern.
    */
   final class Builder {
+    @NonNull
+    private final StaticContext staticContext;
     private String name;
     @NonNull
-    private Class<? extends IItem> type = IItem.class;
+    private IItemType type;
     private Occurrence occurrence;
 
-    private Builder() {
+    private Builder(@NonNull StaticContext staticContext) {
       // construct a new non-initialized builder
+      this.staticContext = staticContext;
+      this.type = staticContext.lookupDataType(IItem.class);
     }
 
-    private Builder(@NonNull String name) {
-      this.name = name;
+    protected StaticContext getStaticContext() {
+      return staticContext;
     }
 
     /**
@@ -93,8 +116,23 @@ public interface IArgument {
      * @return this builder
      */
     @NonNull
+    public Builder type(@NonNull QName name) {
+      this.type = getStaticContext().lookupDataType(name);
+      return this;
+    }
+
+    /**
+     * Define the type of the function argument.
+     * <p>
+     * By default an argument has the type {@link IItem}.
+     *
+     * @param type
+     *          the argument's type
+     * @return this builder
+     */
+    @NonNull
     public Builder type(@NonNull Class<? extends IItem> type) {
-      this.type = Objects.requireNonNull(type, "type");
+      this.type = getStaticContext().lookupDataType(type);
       return this;
     }
 

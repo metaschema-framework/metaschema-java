@@ -6,9 +6,9 @@ options { tokenVocab=Metapath10Lexer; superClass=Metapath10ParserBase; }
 
 // [1]
 metapath : expr EOF ;
-// paramlist : param ( COMMA param)* ;
-// param : DOLLAR eqname typedeclaration? ;
-// functionbody : enclosedexpr ;
+paramlist : param ( COMMA param)* ;
+param : DOLLAR eqname typedeclaration? ;
+functionbody : enclosedexpr ;
 // [5]
 enclosedexpr : OC expr? CC ;
 expr : exprsingle ( COMMA exprsingle)* ;
@@ -33,13 +33,12 @@ rangeexpr : additiveexpr ( KW_TO additiveexpr )? ;
 additiveexpr : multiplicativeexpr ( (PLUS | MINUS) multiplicativeexpr )* ;
 multiplicativeexpr : unionexpr ( (STAR | KW_DIV | KW_IDIV | KW_MOD) unionexpr )* ;
 unionexpr : intersectexceptexpr ( (KW_UNION | P) intersectexceptexpr )* ;
-// intersectexceptexpr : instanceofexpr ( ( KW_INTERSECT | KW_EXCEPT) instanceofexpr )* ;
-intersectexceptexpr : arrowexpr ( ( KW_INTERSECT | KW_EXCEPT) arrowexpr )* ;
+intersectexceptexpr : instanceofexpr ( ( KW_INTERSECT | KW_EXCEPT) instanceofexpr )* ;
 // [25]
-// instanceofexpr : treatexpr ( KW_INSTANCE KW_OF sequencetype )? ;
-// treatexpr : castableexpr ( KW_TREAT KW_AS sequencetype )? ;
-// castableexpr : castexpr ( KW_CASTABLE KW_AS singletype )? ;
-// castexpr : arrowexpr ( KW_CAST KW_AS singletype )? ;
+instanceofexpr : treatexpr ( KW_INSTANCE KW_OF sequencetype )? ;
+treatexpr : castableexpr ( KW_TREAT KW_AS sequencetype )? ;
+castableexpr : castexpr ( KW_CASTABLE KW_AS singletype )? ;
+castexpr : arrowexpr ( KW_CAST KW_AS singletype )? ;
 arrowexpr : unaryexpr ( EG arrowfunctionspecifier argumentlist )* ;
 // [30]
 unaryexpr : ( MINUS | PLUS)* valueexpr ;
@@ -74,10 +73,8 @@ predicate : OB expr CB ;
 lookup : QM keyspecifier ;
 keyspecifier : NCName | IntegerLiteral | parenthesizedexpr | STAR ;
 // [55]
-//arrowfunctionspecifier : eqname | varref | parenthesizedexpr ;
-arrowfunctionspecifier : eqname;
-// primaryexpr : literal | varref | parenthesizedexpr | contextitemexpr | functioncall | functionitemexpr | mapconstructor | arrayconstructor | unarylookup ;
-primaryexpr : literal | varref | parenthesizedexpr | contextitemexpr | functioncall | mapconstructor | arrayconstructor | unarylookup;
+arrowfunctionspecifier : eqname | varref | parenthesizedexpr ;
+primaryexpr : literal | varref | parenthesizedexpr | contextitemexpr | functioncall | functionitemexpr | mapconstructor | arrayconstructor | unarylookup ;
 literal : numericliteral | StringLiteral ;
 numericliteral : IntegerLiteral | DecimalLiteral | DoubleLiteral ;
 varref : DOLLAR varname ;
@@ -90,9 +87,9 @@ functioncall : { this.isFuncCall() }? eqname argumentlist ;
 argument : exprsingle ;
 // [65]
 // argumentplaceholder : QM ;
-// functionitemexpr : namedfunctionref | inlinefunctionexpr ;
-// namedfunctionref : eqname POUND IntegerLiteral /* xgc: reserved-function-names */;
-// inlinefunctionexpr : KW_FUNCTION OP paramlist? CP ( KW_AS sequencetype)? functionbody ;
+functionitemexpr : namedfunctionref | inlinefunctionexpr ;
+namedfunctionref : eqname POUND IntegerLiteral /* xgc: reserved-function-names */;
+inlinefunctionexpr : KW_FUNCTION OP paramlist? CP ( KW_AS sequencetype)? functionbody ;
 mapconstructor : KW_MAP OC (mapconstructorentry ( COMMA mapconstructorentry)*)? CC ;
 // [70]
 mapconstructorentry : mapkeyexpr COLON mapvalueexpr ;
@@ -103,13 +100,14 @@ squarearrayconstructor : OB (exprsingle ( COMMA exprsingle)*)? CB ;
 // [75]
 curlyarrayconstructor : KW_ARRAY enclosedexpr ;
 unarylookup : QM keyspecifier ;
-// singletype : simpletypename QM? ;
-// typedeclaration : KW_AS sequencetype ;
-// sequencetype : KW_EMPTY_SEQUENCE OP CP | itemtype occurrenceindicator? ;
+singletype : simpletypename QM? ;
+typedeclaration : KW_AS sequencetype ;
+sequencetype : KW_EMPTY_SEQUENCE OP CP | itemtype occurrenceindicator? ;
 // [80]
-// occurrenceindicator : QM | STAR | PLUS ;
+occurrenceindicator : QM | STAR | PLUS ;
+itemtype : KW_ITEM OP CP | functiontest | maptest | arraytest | atomicoruniontype | parenthesizeditemtype ;
 // itemtype : kindtest | KW_ITEM OP CP | functiontest | maptest | arraytest | atomicoruniontype | parenthesizeditemtype ;
-// atomicoruniontype : eqname ;
+atomicoruniontype : eqname ;
 // kindtest : documenttest | elementtest | attributetest | schemaelementtest | schemaattributetest | pitest | commenttest | texttest | namespacenodetest | anykindtest ;
 // anykindtest : KW_NODE OP CP ;
 // [85]
@@ -131,20 +129,20 @@ unarylookup : QM keyspecifier ;
 // attributename : eqname ;
 // elementname : eqname ;
 // [100]
-// simpletypename : typename_ ;
-// typename_ : eqname ;
-// functiontest : anyfunctiontest | typedfunctiontest ;
-// anyfunctiontest : KW_FUNCTION OP STAR CP ;
-// typedfunctiontest : KW_FUNCTION OP (sequencetype ( COMMA sequencetype)*)? CP KW_AS sequencetype ;
+simpletypename : typename_ ;
+typename_ : eqname ;
+functiontest : anyfunctiontest | typedfunctiontest ;
+anyfunctiontest : KW_FUNCTION OP STAR CP ;
+typedfunctiontest : KW_FUNCTION OP (sequencetype ( COMMA sequencetype)*)? CP KW_AS sequencetype ;
 // [105]
-// maptest : anymaptest | typedmaptest ;
-// anymaptest : KW_MAP OP STAR CP ;
-// typedmaptest : KW_MAP OP atomicoruniontype COMMA sequencetype CP ;
-// arraytest : anyarraytest | typedarraytest ;
-// anyarraytest : KW_ARRAY OP STAR CP ;
+maptest : anymaptest | typedmaptest ;
+anymaptest : KW_MAP OP STAR CP ;
+typedmaptest : KW_MAP OP atomicoruniontype COMMA sequencetype CP ;
+arraytest : anyarraytest | typedarraytest ;
+anyarraytest : KW_ARRAY OP STAR CP ;
 // [110]
-// typedarraytest : KW_ARRAY OP sequencetype CP ;
-// parenthesizeditemtype : OP itemtype CP ;
+typedarraytest : KW_ARRAY OP sequencetype CP ;
+parenthesizeditemtype : OP itemtype CP ;
 
 
 // Error in the spec. EQName also includes acceptable keywords.

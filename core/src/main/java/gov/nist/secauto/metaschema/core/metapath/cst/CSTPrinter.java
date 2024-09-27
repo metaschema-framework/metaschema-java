@@ -351,6 +351,11 @@ public final class CSTPrinter {
     public String visitMapConstructorEntry(MapConstructor.Entry expr, State context) {
       return appendNode(expr, super.visitMapConstructorEntry(expr, context), context);
     }
+
+    @Override
+    public String visitInstanceOf(InstanceOf expr, State context) {
+      return appendNode(expr, super.visitInstanceOf(expr, context), context);
+    }
   }
 
   static class State {

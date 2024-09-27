@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +14,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Utilities for managing qualified names.
@@ -46,7 +49,7 @@ public final class EQNameUtils {
   @NonNull
   public static QName parseName(
       @NonNull String name,
-      @NonNull IEQNamePrefixResolver resolver) {
+      @NonNull PrefixToNamespaceResolver resolver) {
     Matcher matcher = URI_QUALIFIED_NAME.matcher(name);
     return matcher.matches()
         ? newUriQualifiedName(matcher)
@@ -95,7 +98,7 @@ public final class EQNameUtils {
   @NonNull
   public static QName parseLexicalQName(
       @NonNull String name,
-      @NonNull IEQNamePrefixResolver resolver) {
+      @NonNull PrefixToNamespaceResolver resolver) {
     Matcher matcher = LEXICAL_NAME.matcher(name);
     if (!matcher.matches()) {
       throw new IllegalArgumentException(
@@ -123,11 +126,24 @@ public final class EQNameUtils {
     return NCNAME.matcher(name).matches();
   }
 
+  @NonNull
+  public static String toEQName(
+      @NonNull QName qname,
+      @Nullable NamespaceToPrefixResolver resolver) {
+    String namespace = qname.getNamespaceURI();
+    String prefix = namespace.isEmpty() ? null : StaticContext.getWellKnownPrefixForUri(namespace);
+    if (prefix == null && resolver != null) {
+      prefix = resolver.resolve(namespace);
+    }
+
+    return prefix == null ? ObjectUtils.notNull(qname.toString()) : prefix + ":" + qname.getLocalPart();
+  }
+
   /**
    * Provides a callback for resolving namespace prefixes.
    */
   @FunctionalInterface
-  public interface IEQNamePrefixResolver {
+  public interface PrefixToNamespaceResolver {
     /**
      * Get the URI string for the provided namespace prefix.
      *
@@ -137,5 +153,21 @@ public final class EQNameUtils {
      */
     @NonNull
     String resolve(@NonNull String prefix);
+  }
+
+  /**
+   * Provides a callback for resolving namespace prefixes.
+   */
+  @FunctionalInterface
+  public interface NamespaceToPrefixResolver {
+    /**
+     * Get the URI string for the provided namespace prefix.
+     *
+     * @param namespace
+     *          the namespace URI
+     * @return the associated prefix or {@code null} if no prefix is associated
+     */
+    @Nullable
+    String resolve(@NonNull String namespace);
   }
 }

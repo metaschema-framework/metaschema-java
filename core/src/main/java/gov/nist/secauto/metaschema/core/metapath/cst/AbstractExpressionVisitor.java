@@ -367,4 +367,9 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   public RESULT visitUnaryLookup(UnaryLookup expr, CONTEXT context) {
     return defaultResult();
   }
+
+  @Override
+  public RESULT visitInstanceOf(InstanceOf expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
 }
