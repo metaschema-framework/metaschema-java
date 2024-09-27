@@ -208,10 +208,9 @@ public abstract class AbstractMarkupString<TYPE extends AbstractMarkupString<TYP
     return ObjectUtils.notNull(formatter.render(getDocument()));
   }
 
+  @Override
   public String toText() {
-    TextCollectingVisitor textCollectingVisitor = new TextCollectingVisitor();
-    String text = textCollectingVisitor.collectAndGetText(document);
-    return text;
+    return new TextCollectingVisitor().collectAndGetText(document);
   }
 
   @Override

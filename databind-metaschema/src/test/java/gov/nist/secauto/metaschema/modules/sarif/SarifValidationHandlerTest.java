@@ -77,9 +77,9 @@ class SarifValidationHandlerTest {
         allowing(location).getColumn();
         will(returnValue(0));
         allowing(location).getByteOffset();
-        will(returnValue(1024l));
+        will(returnValue(1024L));
         allowing(location).getCharOffset();
-        will(returnValue(2048l));
+        will(returnValue(2048L));
       }
     });
 
@@ -104,16 +104,18 @@ class SarifValidationHandlerTest {
         Validator.Result result
             = new ValidatorFactory().withDialect(new Dialects.Draft2020Dialect()).validate(schemaNode, instanceNode);
         if (!result.isValid()) {
+          StringBuilder sb = new StringBuilder();
           for (dev.harrel.jsonschema.Error finding : result.getErrors()) {
-            System.out.println(
-                String.format("[%s]%s %s for schema '%s'",
-                    finding.getInstanceLocation(),
-                    finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
-                    finding.getError(),
-                    finding.getSchemaLocation()));
+            sb.append(String.format("[%s]%s %s for schema '%s'%n",
+                finding.getInstanceLocation(),
+                finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
+                finding.getError(),
+                finding.getSchemaLocation()));
           }
+          assertTrue(result.isValid(), () -> "Schema validation failed with errors:\n" + sb.toString());
+        } else {
+          assertTrue(result.isValid());
         }
-        assertTrue(result.isValid());
       }
     }
   }

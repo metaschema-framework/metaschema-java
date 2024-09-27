@@ -114,6 +114,14 @@ public interface IMarkupString<TYPE extends IMarkupString<TYPE>>
   String toMarkdown(@NonNull Formatter formatter);
 
   /**
+   * Converts the markup content to plain text.
+   *
+   * @return the plain text representation of the markup content
+   */
+  @NonNull
+  String toText();
+
+  /**
    * Retrieve all nodes contained within this markup text as a stream.
    *
    * @return a depth first stream
