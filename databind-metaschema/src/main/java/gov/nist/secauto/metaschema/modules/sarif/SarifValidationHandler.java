@@ -335,7 +335,7 @@ public final class SarifValidationHandler {
           region.setEndLine(BigInteger.valueOf(location.getLine()));
         }
         if (location.getColumn() > -1) {
-          region.setStartColumn(BigInteger.valueOf(location.getColumn()));
+          region.setStartColumn(BigInteger.valueOf(location.getColumn() + 1));
           region.setEndColumn(BigInteger.valueOf(location.getColumn() + 1));
         }
         if (location.getByteOffset() > -1) {
@@ -491,11 +491,15 @@ public final class SarifValidationHandler {
       ReportingDescriptor retval = new ReportingDescriptor();
       IConstraint constraint = getConstraint();
 
+      UUID guid = getGuid();
+
       String id = constraint.getId();
-      if (id != null) {
+      if (id == null) {
+        retval.setId(guid.toString());
+      } else {
         retval.setId(id);
       }
-      retval.setGuid(getGuid());
+      retval.setGuid(guid);
       String formalName = constraint.getFormalName();
       if (formalName != null) {
         MultiformatMessageString text = new MultiformatMessageString();
@@ -505,6 +509,7 @@ public final class SarifValidationHandler {
       MarkupLine description = constraint.getDescription();
       if (description != null) {
         MultiformatMessageString text = new MultiformatMessageString();
+        text.setText(description.toText());
         text.setMarkdown(description.toMarkdown());
         retval.setFullDescription(text);
       }

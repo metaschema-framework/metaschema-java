@@ -45,6 +45,17 @@
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
 		</dependency>
+		
+		<dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+		    <groupId>dev.harrel</groupId>
+		    <artifactId>json-schema</artifactId>
+		    <version>1.7.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

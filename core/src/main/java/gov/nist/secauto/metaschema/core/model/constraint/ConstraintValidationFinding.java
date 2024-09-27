@@ -293,7 +293,7 @@ public class ConstraintValidationFinding implements IValidationFinding { // NOPM
       List<? extends INodeItem> subjects = this.subjects == null ? CollectionUtil.emptyList() : this.subjects;
 
       assert subjects != null;
-      assert kind != null;
+      assert kind != null : "Kind must not be null";
 
       return new ConstraintValidationFinding(
           constraints,
