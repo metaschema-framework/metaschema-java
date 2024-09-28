@@ -513,6 +513,7 @@ public final class SarifValidationHandler {
         text.setMarkdown(description.toMarkdown());
         retval.setFullDescription(text);
       }
+
       return retval;
     }
 
