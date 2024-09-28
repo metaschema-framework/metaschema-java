@@ -52,6 +52,7 @@ class SarifValidationHandlerTest {
     Path sourceFile = Paths.get(".", "source.json").toAbsolutePath();
 
     Set<String> helpUrls = Set.of("https://example.com/test");
+    Set<String> helpMarkdown = Set.of("**help text**");
 
     context.checking(new Expectations() {
       { // NOPMD - intentional
@@ -69,9 +70,16 @@ class SarifValidationHandlerTest {
         allowing(constraintA).getDescription();
         will(returnValue(MarkupLine.fromMarkdown("a description")));
         allowing(constraintA).getProperties();
-        will(returnValue(Map.of(SarifValidationHandler.SARIF_HELP_URL_KEY, helpUrls)));
+        will(returnValue(
+            Map.ofEntries(
+                Map.entry(SarifValidationHandler.SARIF_HELP_URL_KEY, helpUrls),
+                Map.entry(SarifValidationHandler.SARIF_HELP_MARKDOWN_KEY, helpMarkdown))));
         allowing(constraintA).getPropertyValues(SarifValidationHandler.SARIF_HELP_URL_KEY);
         will(returnValue(helpUrls));
+        allowing(constraintA).getPropertyValues(SarifValidationHandler.SARIF_HELP_TEXT_KEY);
+        will(returnValue(Set.of()));
+        allowing(constraintA).getPropertyValues(SarifValidationHandler.SARIF_HELP_MARKDOWN_KEY);
+        will(returnValue(helpMarkdown));
 
         allowing(node).getLocation();
         will(returnValue(location));

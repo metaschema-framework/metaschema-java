@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.modules.sarif;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
@@ -100,6 +101,12 @@ public final class SarifValidationHandler {
   @NonNull
   public static final IAttributable.Key SARIF_HELP_URL_KEY
       = IAttributable.key("help-url", SarifValidationHandler.SARIF_NS);
+  @NonNull
+  public static final IAttributable.Key SARIF_HELP_TEXT_KEY
+      = IAttributable.key("help-text", SarifValidationHandler.SARIF_NS);
+  @NonNull
+  public static final IAttributable.Key SARIF_HELP_MARKDOWN_KEY
+      = IAttributable.key("help-markdown", SarifValidationHandler.SARIF_NS);
 
   @NonNull
   private final URI source;
@@ -521,9 +528,29 @@ public final class SarifValidationHandler {
         retval.setFullDescription(text);
       }
 
-      Set<String> helpUrls = constraint.getPropertyValues(IAttributable.key("help-url", SARIF_NS));
+      Set<String> helpUrls = constraint.getPropertyValues(SARIF_HELP_URL_KEY);
       if (!helpUrls.isEmpty()) {
         retval.setHelpUri(URI.create(helpUrls.stream().findFirst().get()));
+      }
+
+      Set<String> helpText = constraint.getPropertyValues(SARIF_HELP_TEXT_KEY);
+      Set<String> helpMarkdown = constraint.getPropertyValues(SARIF_HELP_MARKDOWN_KEY);
+      // if there is help text or markdown, produce a message
+      if (!helpText.isEmpty() || !helpMarkdown.isEmpty()) {
+        MultiformatMessageString help = new MultiformatMessageString();
+
+        MarkupMultiline markdown = helpMarkdown.stream().map(MarkupMultiline::fromMarkdown).findFirst().orElse(null);
+        if (markdown != null) {
+          // markdown is provided
+          help.setMarkdown(markdown.toMarkdown());
+        }
+
+        String text = helpText.isEmpty()
+            ? ObjectUtils.requireNonNull(markdown).toText() // if text is empty, markdown must be provided
+            : helpText.stream().findFirst().get(); // use the provided text
+        help.setText(text);
+
+        retval.setHelp(help);
       }
 
       return retval;
