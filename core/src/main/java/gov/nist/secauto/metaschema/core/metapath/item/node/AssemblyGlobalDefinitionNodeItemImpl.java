@@ -30,4 +30,9 @@ class AssemblyGlobalDefinitionNodeItemImpl
   public ModelContainer getModel() {
     return model.get();
   }
+
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

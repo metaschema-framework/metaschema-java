@@ -29,4 +29,9 @@ class FieldGlobalDefinitionNodeItemImpl
   public FlagContainer getModel() {
     return model.get();
   }
+
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

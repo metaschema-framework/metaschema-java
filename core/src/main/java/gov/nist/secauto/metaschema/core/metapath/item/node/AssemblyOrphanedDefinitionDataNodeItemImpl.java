@@ -6,6 +6,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -41,5 +42,12 @@ class AssemblyOrphanedDefinitionDataNodeItemImpl
   @Override
   public Object getValue() {
     return value;
+  }
+
+  @Override
+  public String stringValue() {
+    return ObjectUtils.notNull(modelItems()
+        .map(INodeItem::stringValue)
+        .collect(Collectors.joining()));
   }
 }

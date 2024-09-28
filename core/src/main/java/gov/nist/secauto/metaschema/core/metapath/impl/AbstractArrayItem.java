@@ -58,7 +58,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
   }
 
   @Override
-  public ISequence<?> execute(List<ISequence<?>> arguments, DynamicContext dynamicContext,
+  public ISequence<?> execute(List<? extends ISequence<?>> arguments, DynamicContext dynamicContext,
       ISequence<?> focus) {
     ISequence<? extends IIntegerItem> arg = FunctionUtils.asType(
         ObjectUtils.notNull(arguments.get(0)));

@@ -5,6 +5,8 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.stream.Collectors;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
@@ -50,5 +52,12 @@ class AssemblyInstanceNodeItemImpl
   @Override
   public Object getValue() {
     return value;
+  }
+
+  @Override
+  public String stringValue() {
+    return ObjectUtils.notNull(modelItems()
+        .map(INodeItem::stringValue)
+        .collect(Collectors.joining()));
   }
 }

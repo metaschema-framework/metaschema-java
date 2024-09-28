@@ -97,11 +97,11 @@ public class FunctionTestBase
   }
 
   @SuppressWarnings("unchecked")
-  private static <R extends IItem> ISequence<R> executeFunction(
+  public static <R extends IItem> ISequence<R> executeFunction(
       @NonNull IFunction function,
       @Nullable DynamicContext dynamicContext,
       @Nullable ISequence<?> focus,
-      List<ISequence<?>> arguments) {
+      List<? extends ISequence<?>> arguments) {
 
     DynamicContext context = dynamicContext == null ? new DynamicContext() : dynamicContext;
     ISequence<?> focusSeqence = function.isFocusDepenent()

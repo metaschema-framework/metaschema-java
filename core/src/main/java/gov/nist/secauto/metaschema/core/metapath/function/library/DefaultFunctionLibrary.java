@@ -47,8 +47,8 @@ public class DefaultFunctionLibrary
     registerFunction(FnCeiling.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-compare
     registerFunction(FnCompare.SIGNATURE);
-    registerFunction(FnConcat.SIGNATURE);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-concat
+    registerFunction(FnConcat.SIGNATURE);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-contains
     // https://www.w3.org/TR/xpath-functions-31/#func-count
     registerFunction(FnCount.SIGNATURE);
@@ -145,7 +145,9 @@ public class DefaultFunctionLibrary
     registerFunction(FnStartsWith.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-static-base-uri
     registerFunction(FnStaticBaseUri.SIGNATURE);
-    // P0: https://www.w3.org/TR/xpath-functions-31/#func-string
+    // https://www.w3.org/TR/xpath-functions-31/#func-string
+    registerFunction(FnString.SIGNATURE_NO_ARG);
+    registerFunction(FnString.SIGNATURE_ONE_ARG);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-join
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-length
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-subsequence

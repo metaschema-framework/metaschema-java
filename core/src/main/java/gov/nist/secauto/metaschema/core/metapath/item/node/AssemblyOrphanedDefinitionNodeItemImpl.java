@@ -33,4 +33,8 @@ class AssemblyOrphanedDefinitionNodeItemImpl
     return model.get();
   }
 
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

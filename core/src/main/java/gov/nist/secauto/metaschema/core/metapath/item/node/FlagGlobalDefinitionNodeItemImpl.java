@@ -33,4 +33,9 @@ class FlagGlobalDefinitionNodeItemImpl
   public IFlagInstance getInstance() {
     return null;
   }
+
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

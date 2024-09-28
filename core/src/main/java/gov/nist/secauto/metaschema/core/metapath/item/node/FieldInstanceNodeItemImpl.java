@@ -72,4 +72,9 @@ class FieldInstanceNodeItemImpl
   public IAnyAtomicItem toAtomicItem() {
     return atomicItem.get();
   }
+
+  @Override
+  public String stringValue() {
+    return toAtomicItem().asString();
+  }
 }

@@ -14,4 +14,9 @@ class FlagInstanceNoValueNodeItemImpl
       @NonNull IModelNodeItem<?, ?> parent) {
     super(instance, parent);
   }
+
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

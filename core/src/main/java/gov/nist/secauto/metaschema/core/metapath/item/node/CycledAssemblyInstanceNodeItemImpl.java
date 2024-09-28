@@ -67,4 +67,9 @@ class CycledAssemblyInstanceNodeItemImpl
     // always a singleton as a non-valued item
     return 1;
   }
+
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

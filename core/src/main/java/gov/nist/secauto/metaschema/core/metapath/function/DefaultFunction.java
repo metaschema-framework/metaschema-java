@@ -157,11 +157,11 @@ public class DefaultFunction
   @NonNull
   public static List<ISequence<?>> convertArguments(
       @NonNull IFunction function,
-      @NonNull List<ISequence<?>> parameters) {
+      @NonNull List<? extends ISequence<?>> parameters) {
     @NonNull List<ISequence<?>> retval = new ArrayList<>(parameters.size());
 
     Iterator<IArgument> argumentIterator = function.getArguments().iterator();
-    Iterator<ISequence<?>> parametersIterator = parameters.iterator();
+    Iterator<? extends ISequence<?>> parametersIterator = parameters.iterator();
 
     IArgument argument = null;
     while (parametersIterator.hasNext()) {
@@ -258,7 +258,7 @@ public class DefaultFunction
 
   @Override
   public ISequence<?> execute(
-      @NonNull List<ISequence<?>> arguments,
+      @NonNull List<? extends ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       @NonNull ISequence<?> focus) {
     try {
@@ -270,7 +270,7 @@ public class DefaultFunction
       ISequence<?> result = null;
       if (isDeterministic()) {
         // check cache
-        callingContext = new CallingContext(arguments, contextItem);
+        callingContext = new CallingContext(convertedArguments, contextItem);
         // TODO: implement something like computeIfAbsent
         // attempt to get the result from the cache
         result = dynamicContext.getCachedResult(callingContext);

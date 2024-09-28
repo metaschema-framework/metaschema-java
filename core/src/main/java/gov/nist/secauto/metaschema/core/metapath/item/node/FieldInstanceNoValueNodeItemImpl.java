@@ -36,4 +36,9 @@ class FieldInstanceNoValueNodeItemImpl
   public int getPosition() {
     return 1;
   }
+
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

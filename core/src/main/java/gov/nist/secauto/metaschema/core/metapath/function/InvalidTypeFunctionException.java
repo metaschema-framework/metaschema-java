@@ -28,6 +28,14 @@ public class InvalidTypeFunctionException
   public static final int NODE_HAS_NO_TYPED_VALUE = 12;
 
   /**
+   * <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#ERRFOTY0014">err:FOTY0014</a>:
+   * Raised by fn:string, or by implicit string conversion, if the input sequence
+   * contains a function item.
+   */
+  public static final int ARGUMENT_TO_STRING_IS_FUNCTION = 14;
+
+  /**
    * the serial version UUID.
    */
   private static final long serialVersionUID = 1L;

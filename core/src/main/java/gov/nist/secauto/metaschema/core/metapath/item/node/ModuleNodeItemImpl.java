@@ -46,4 +46,9 @@ class ModuleNodeItemImpl
     // no location
     return null;
   }
+
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

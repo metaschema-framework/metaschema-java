@@ -75,4 +75,10 @@ class DocumentNodeItemImpl
   public StaticContext getStaticContext() {
     return staticContext;
   }
+
+  @Override
+  public String stringValue() {
+    return getRootAssemblyNodeItem().stringValue();
+  }
+
 }

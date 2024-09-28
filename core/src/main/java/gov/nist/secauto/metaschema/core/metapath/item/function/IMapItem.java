@@ -94,7 +94,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
   }
 
   @Override
-  ISequence<?> execute(List<ISequence<?>> arguments, DynamicContext dynamicContext, ISequence<?> focus);
+  ISequence<?> execute(List<? extends ISequence<?>> arguments, DynamicContext dynamicContext, ISequence<?> focus);
 
   @Override
   default String toSignature() {

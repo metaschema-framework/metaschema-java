@@ -280,6 +280,14 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   IResourceLocation getLocation();
 
   /**
+   * Get the string value of the node.
+   *
+   * @return the string value of the node or an empty string if it has no value.
+   */
+  @NonNull
+  String stringValue();
+
+  /**
    * Get the static context to use to query this node item.
    *
    * @return the static context

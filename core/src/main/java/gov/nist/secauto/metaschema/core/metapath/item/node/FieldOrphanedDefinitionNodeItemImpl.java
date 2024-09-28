@@ -36,4 +36,8 @@ class FieldOrphanedDefinitionNodeItemImpl
     return model.get();
   }
 
+  @Override
+  public String stringValue() {
+    return "";
+  }
 }

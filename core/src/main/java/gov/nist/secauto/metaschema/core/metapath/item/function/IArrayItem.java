@@ -104,7 +104,7 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
   }
 
   @Override
-  ISequence<?> execute(List<ISequence<?>> arguments, DynamicContext dynamicContext, ISequence<?> focus);
+  ISequence<?> execute(List<? extends ISequence<?>> arguments, DynamicContext dynamicContext, ISequence<?> focus);
 
   @Override
   default String toSignature() {

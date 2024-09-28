@@ -186,7 +186,7 @@ public interface IFunction {
    */
   @NonNull
   ISequence<?> execute(
-      @NonNull List<ISequence<?>> arguments,
+      @NonNull List<? extends ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       @NonNull ISequence<?> focus);
 
