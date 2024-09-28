@@ -47,7 +47,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnCeiling.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-compare
     registerFunction(FnCompare.SIGNATURE);
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-concat
+    // https://www.w3.org/TR/xpath-functions-31/#func-concat
     registerFunction(FnConcat.SIGNATURE);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-contains
     // https://www.w3.org/TR/xpath-functions-31/#func-count
@@ -79,7 +79,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnExists.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-false
     registerFunction(FnFalse.SIGNATURE);
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-floor
+    // https://www.w3.org/TR/xpath-functions-31/#func-floor
     registerFunction(NumericFunction.signature(MetapathConstants.NS_METAPATH_FUNCTIONS, "floor", INumericItem::floor));
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-date
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-dateTime
@@ -88,7 +88,7 @@ public class DefaultFunctionLibrary
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-time
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-generate-id
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-has-children
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-head
+    // https://www.w3.org/TR/xpath-functions-31/#func-head
     registerFunction(FnHead.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-duration
@@ -96,7 +96,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-implicit-timezone
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-index-of
     // https://www.w3.org/TR/xpath-functions-31/#func-innermost
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-insert-before
+    // https://www.w3.org/TR/xpath-functions-31/#func-insert-before
     registerFunction(FnInsertBefore.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-iri-to-uri
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-last
@@ -125,7 +125,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnPath.SIGNATURE_NO_ARG);
     registerFunction(FnPath.SIGNATURE_ONE_ARG);
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-position
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-remove
+    // https://www.w3.org/TR/xpath-functions-31/#func-remove
     registerFunction(FnRemove.SIGNATURE);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-replace
     // https://www.w3.org/TR/xpath-functions-31/#func-resolve-uri
@@ -157,7 +157,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-sum
     registerFunction(FnSum.SIGNATURE_ONE_ARG);
     registerFunction(FnSum.SIGNATURE_TWO_ARG);
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-tail
+    // https://www.w3.org/TR/xpath-functions-31/#func-tail
     registerFunction(FnTail.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-dateTime
