@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.modules.sarif;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
@@ -46,6 +47,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -92,6 +94,12 @@ public final class SarifValidationHandler {
       return label;
     }
   }
+
+  @NonNull
+  public static final String SARIF_NS = "https://docs.oasis-open.org/sarif/sarif/v2.1.0";
+  @NonNull
+  public static final IAttributable.Key SARIF_HELP_URL_KEY
+      = IAttributable.key("help-url", SarifValidationHandler.SARIF_NS);
 
   @NonNull
   private final URI source;
@@ -464,7 +472,6 @@ public final class SarifValidationHandler {
       retval.setId(getId());
       retval.setGuid(getGuid());
       return retval;
-
     }
 
     public String getId() {
@@ -512,6 +519,11 @@ public final class SarifValidationHandler {
         text.setText(description.toText());
         text.setMarkdown(description.toMarkdown());
         retval.setFullDescription(text);
+      }
+
+      Set<String> helpUrls = constraint.getPropertyValues(IAttributable.key("help-url", SARIF_NS));
+      if (!helpUrls.isEmpty()) {
+        retval.setHelpUri(URI.create(helpUrls.stream().findFirst().get()));
       }
 
       return retval;
