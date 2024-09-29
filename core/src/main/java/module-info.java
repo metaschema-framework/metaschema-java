@@ -64,6 +64,7 @@ module gov.nist.secauto.metaschema.core {
   exports gov.nist.secauto.metaschema.core.metapath.format;
   exports gov.nist.secauto.metaschema.core.metapath.function;
   exports gov.nist.secauto.metaschema.core.metapath.function.library;
+  exports gov.nist.secauto.metaschema.core.metapath.function.regex;
   exports gov.nist.secauto.metaschema.core.metapath.item;
   exports gov.nist.secauto.metaschema.core.metapath.item.atomic;
   exports gov.nist.secauto.metaschema.core.metapath.item.function;

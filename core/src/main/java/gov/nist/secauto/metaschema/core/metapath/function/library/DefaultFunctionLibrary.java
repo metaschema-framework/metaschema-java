@@ -102,6 +102,8 @@ public class DefaultFunctionLibrary
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-last
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-lower-case
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-matches
+    registerFunction(FnMatches.SIGNATURE_TWO_ARG);
+    registerFunction(FnMatches.SIGNATURE_THREE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-max
     registerFunction(FnMinMax.SIGNATURE_MAX);
     // https://www.w3.org/TR/xpath-functions-31/#func-min
