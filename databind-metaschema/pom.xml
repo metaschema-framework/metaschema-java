@@ -167,7 +167,7 @@
 							<goal>generate-sources</goal>
 						</goals>
 						<configuration>
-							<metaschemaDir>${project.basedir}/../core/metaschema/schema/metaschema</metaschemaDir>
+							<metaschemaDir>${project.basedir}/modules/sarif</metaschemaDir>
 							<outputDirectory>${project.build.directory}/generated-sources/metaschema</outputDirectory>
 							<includes>
 								<include>sarif-module.xml</include>
@@ -181,7 +181,7 @@
 							<goal>generate-schemas</goal>
 						</goals>
 						<configuration>
-							<metaschemaDir>${project.basedir}/../core/metaschema/schema/metaschema</metaschemaDir>
+							<metaschemaDir>${project.basedir}/modules/sarif</metaschemaDir>
 							<outputDirectory>${project.build.directory}/generated-resources/schema/xml</outputDirectory>
 							<includes>
 								<include>sarif-module.xml</include>
@@ -198,7 +198,7 @@
 							<goal>generate-schemas</goal>
 						</goals>
 						<configuration>
-							<metaschemaDir>${project.basedir}/../core/metaschema/schema/metaschema</metaschemaDir>
+							<metaschemaDir>${project.basedir}/modules/sarif</metaschemaDir>
 							<outputDirectory>${project.build.directory}/generated-resources/schema/json</outputDirectory>
 							<includes>
 								<include>sarif-module.xml</include>

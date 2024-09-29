@@ -14,6 +14,6 @@ The following dependency can be added to your POM to use this library.
 
 The following modules are supported:
 
-- [Static Analysis Results Interchange Format](https://github.com/metaschema-framework/metaschema/blob/develop/schema/metaschema/sarif-module.xml) (SARIF)
+- [Static Analysis Results Interchange Format](https://github.com/metaschema-framework/metaschema-modules/tree/main/sarif) (SARIF) [module](https://github.com/metaschema-framework/metaschema-modules/blob/main/sarif/sarif-module.xml)
 
 A [Java API](apidocs/index.html) provides utility methods for using these modules.

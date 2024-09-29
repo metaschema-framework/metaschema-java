@@ -93,7 +93,7 @@ class SarifValidationHandlerTest {
     Path sarifFile = Paths.get("target/test.sarif");
     handler.write(sarifFile);
 
-    Path sarifSchema = Paths.get("src/test/resources/sarif-schema-2.1.0.json");
+    Path sarifSchema = Paths.get("modules/sarif/sarif-schema-2.1.0.json");
 
     try (Reader schemaReader = Files.newBufferedReader(sarifSchema, StandardCharsets.UTF_8)) {
       JsonNode schemaNode = new OrgJsonNode(new JSONObject(new JSONTokener(schemaReader)));

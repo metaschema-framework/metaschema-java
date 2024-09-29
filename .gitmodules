@@ -5,3 +5,7 @@
 [submodule "core/qt3tests"]
 	path = core/qt3tests
 	url = https://github.com/w3c/qt3tests.git
+[submodule "databind-metaschema/modules"]
+	path = databind-metaschema/modules
+	url = https://github.com/metaschema-framework/metaschema-modules.git
+	branch = main
