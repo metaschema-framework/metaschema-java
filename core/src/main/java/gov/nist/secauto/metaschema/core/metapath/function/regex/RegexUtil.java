@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.function.regex;
 
@@ -18,12 +22,12 @@ public final class RegexUtil {
    * @return the bitmask
    */
   public static int parseFlags(@NonNull String flags) {
-    return flags.chars()
+    return flags.codePoints()
         .map(i -> characterToFlag((char) i))
         .reduce(0, (mask, flag) -> mask | flag);
   }
 
-  private static int characterToFlag(Character ch) {
+  private static int characterToFlag(char ch) {
     int retval;
     switch (ch) {
     case 's':

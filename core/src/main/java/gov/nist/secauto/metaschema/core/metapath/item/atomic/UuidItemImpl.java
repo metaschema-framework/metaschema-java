@@ -54,6 +54,12 @@ class UuidItemImpl
         || (obj instanceof IStringItem && compareTo((IStringItem) obj) == 0);
   }
 
+  @Override
+  public IStringItem normalizeSpace() {
+    // noop
+    return this;
+  }
+
   private final class MapKey implements IMapKey {
     @Override
     public IUuidItem getKey() {

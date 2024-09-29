@@ -5,20 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,65 +24,60 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class FnMatchesTest
+class FnTokenizeTest
     extends ExpressionTestBase {
-  private static final String POEM = "Kaum hat dies der Hahn gesehen,\n"
-      + "Fängt er auch schon an zu krähen:\n"
-      + "Kikeriki! Kikikerikih!!\n"
-      + "Tak, tak, tak! - da kommen sie.";
 
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
-            bool(true),
-            "matches(\"abracadabra\", \"bra\")"),
+            sequence(string("red"), string("green"), string("blue")),
+            "tokenize(\" red green blue \")"),
         Arguments.of(
-            bool(true),
-            "matches(\"abracadabra\", \"^a.*a$\")"),
+            sequence(string("The"), string("cat"), string("sat"), string("on"), string("the"), string("mat")),
+            "tokenize(\"The cat sat on the mat\", \"\\s+\")"),
         Arguments.of(
-            bool(false),
-            "matches(\"abracadabra\", \"^bra\")"),
+            sequence(string(""), string("red"), string("green"), string("blue"), string("")),
+            "tokenize(\" red green blue \", \"\\s+\")"),
         Arguments.of(
-            bool(false),
-            "matches($poem, \"Kaum.*krähen\")"),
+            sequence(string("1"), string("15"), string("24"), string("50")),
+            "tokenize(\"1, 15, 24, 50\", \",\\s*\")"),
         Arguments.of(
-            bool(true),
-            "matches($poem, \"Kaum.*krähen\", \"s\")"),
+            sequence(string("1"), string("15"), string(""), string("24"), string("50"), string("")),
+            "tokenize(\"1,15,,24,50,\", \",\")"),
         Arguments.of(
-            bool(true),
-            "matches($poem, \"^Kaum.*gesehen,$\", \"m\")"),
-        Arguments.of(
-            bool(false),
-            "matches($poem, \"^Kaum.*gesehen,$\")"),
-        Arguments.of(
-            bool(true),
-            "matches($poem, \"kiki\", \"i\")"));
+            sequence(string("Some unparsed"), string("HTML"), string("text")),
+            "tokenize(\"Some unparsed <br> HTML <BR> text\", \"\\s*<br>\\s*\", \"i\")"));
   }
 
   @ParameterizedTest
   @MethodSource("provideValues")
-  void test(@NonNull IBooleanItem expected, @NonNull String metapath) {
+  void test(@NonNull ISequence<?> expected, @NonNull String metapath) {
     assertEquals(expected, MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.ITEM,
+        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE,
             newDynamicContext()));
   }
 
-  /**
-   * Construct a new dynamic context for testing.
-   *
-   * @return the dynamic context
-   */
-  @NonNull
-  protected static DynamicContext newDynamicContext() {
-    DynamicContext retval = ExpressionTestBase.newDynamicContext();
-
-    retval.bindVariableValue(new QName("poem"), ISequence.of(IStringItem.valueOf(POEM)));
-
-    return retval;
+  @Test
+  void testMatchZeroLengthString() {
+    RegularExpressionMetapathException throwable = assertThrows(RegularExpressionMetapathException.class,
+        () -> {
+          try {
+            FunctionTestBase.executeFunction(
+                FnTokenize.SIGNATURE_TWO_ARG,
+                newDynamicContext(),
+                ISequence.empty(),
+                List.of(sequence(string("abba")), sequence(string(".?"))));
+          } catch (MetapathException ex) {
+            Throwable cause = ex.getCause();
+            if (cause != null) {
+              throw cause;
+            }
+            throw ex;
+          }
+        });
+    assertEquals(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING, throwable.getCode());
   }
 
   @Test
@@ -95,7 +86,7 @@ class FnMatchesTest
         () -> {
           try {
             FunctionTestBase.executeFunction(
-                FnMatches.SIGNATURE_TWO_ARG,
+                FnTokenize.SIGNATURE_TWO_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
                 List.of(sequence(string("input")), sequence(string("pattern["))));
@@ -116,7 +107,7 @@ class FnMatchesTest
         () -> {
           try {
             FunctionTestBase.executeFunction(
-                FnMatches.SIGNATURE_THREE_ARG,
+                FnTokenize.SIGNATURE_THREE_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
                 List.of(sequence(string("input")), sequence(string("pattern")), sequence(string("dsm"))));

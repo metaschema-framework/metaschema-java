@@ -64,4 +64,7 @@ public interface IStringItem extends IAnyAtomicItem {
   default int compareTo(IAnyAtomicItem other) {
     return compareTo(other.asStringItem());
   }
+
+  @NonNull
+  IStringItem normalizeSpace();
 }

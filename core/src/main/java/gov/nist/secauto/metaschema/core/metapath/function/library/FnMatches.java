@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
@@ -75,28 +79,24 @@ public final class FnMatches {
       .functionHandler(FnMatches::executeThreeArg)
       .build();
 
-  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IBooleanItem> executeTwoArg(
-      @NonNull IFunction function,
+      @SuppressWarnings("unused") @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
-      @NonNull DynamicContext dynamicContext,
-      IItem focus) {
+      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,
+      @SuppressWarnings("unused") IItem focus) {
     IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));
 
     return execute(input, pattern, IStringItem.valueOf(""));
   }
 
-  @SuppressWarnings("unused")
-
   @NonNull
   private static ISequence<IBooleanItem> executeThreeArg(
-      @NonNull IFunction function,
+      @SuppressWarnings("unused") @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
-      @NonNull DynamicContext dynamicContext,
-      IItem focus) {
-
+      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,
+      @SuppressWarnings("unused") IItem focus) {
     IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));
     IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));
@@ -104,37 +104,16 @@ public final class FnMatches {
     return execute(input, pattern, flags);
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   private static ISequence<IBooleanItem> execute(
       @Nullable IStringItem input,
       @NonNull IStringItem pattern,
       @NonNull IStringItem flags) {
-    if (input == null) {
-      return ISequence.empty();
-    }
-
-    return ISequence.of(fnMatches(input, pattern, flags));
-  }
-
-  /**
-   * Implements <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-matches">fn:matches</a>.
-   *
-   * @param input
-   *          the string to match against
-   * @param pattern
-   *          the regular expression to use for matching
-   * @param flags
-   *          matching options
-   * @return {@link IBooleanItem#TRUE} if the pattern matches or
-   *         {@link IBooleanItem#FALSE} otherwise
-   */
-  public static IBooleanItem fnMatches(
-      @NonNull IStringItem input,
-      @NonNull IStringItem pattern,
-      @NonNull IStringItem flags) {
-    return IBooleanItem.valueOf(fnMatches(input.asString(), pattern.asString(), flags.asString()));
+    return input == null
+        ? ISequence.empty()
+        : ISequence.of(
+            IBooleanItem.valueOf(
+                fnMatches(input.asString(), pattern.asString(), flags.asString())));
   }
 
   /**
@@ -154,9 +133,15 @@ public final class FnMatches {
       return Pattern.compile(pattern, RegexUtil.parseFlags(flags))
           .matcher(input).find();
     } catch (PatternSyntaxException ex) {
-      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_EXPRESSION, ex);
+      throw new RegularExpressionMetapathException(
+          RegularExpressionMetapathException.INVALID_EXPRESSION,
+          "Invalid regular expression pattern: '" + pattern + "'",
+          ex);
     } catch (IllegalArgumentException ex) {
-      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_FLAG, ex);
+      throw new RegularExpressionMetapathException(
+          RegularExpressionMetapathException.INVALID_FLAG,
+          "Invalid regular expression flags: '" + flags + "'",
+          ex);
     }
   }
 

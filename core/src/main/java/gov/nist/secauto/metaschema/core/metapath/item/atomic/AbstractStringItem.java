@@ -8,11 +8,17 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractStringMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
+import java.util.regex.Pattern;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractStringItem
     extends AbstractAnyAtomicItem<String>
     implements IStringItem {
+  private static final String WHITESPACE_SEGMENT = "[ \t\r\n]";
+  private static final Pattern TRIM_END = Pattern.compile(WHITESPACE_SEGMENT + "++$");
+  private static final Pattern TRIM_START = Pattern.compile("^" + WHITESPACE_SEGMENT + "++");
+  private static final Pattern TRIM_MIDDLE = Pattern.compile(WHITESPACE_SEGMENT + "{2,}");
 
   /**
    * Construct a new string item with the provided {@code value}.
@@ -54,4 +60,15 @@ public abstract class AbstractStringItem
       return AbstractStringItem.this;
     }
   }
+
+  @Override
+  public IStringItem normalizeSpace() {
+    String value = asString();
+    value = TRIM_START.matcher(value).replaceFirst("");
+    value = TRIM_MIDDLE.matcher(value).replaceAll(" ");
+    value = TRIM_END.matcher(value).replaceFirst("");
+
+    return IStringItem.valueOf(value);
+  }
+
 }

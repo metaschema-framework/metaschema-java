@@ -101,7 +101,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-iri-to-uri
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-last
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-lower-case
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-matches
+    // https://www.w3.org/TR/xpath-functions-31/#func-matches
     registerFunction(FnMatches.SIGNATURE_TWO_ARG);
     registerFunction(FnMatches.SIGNATURE_THREE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-max
@@ -164,7 +164,10 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-time
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-tokenize
+    // https://www.w3.org/TR/xpath-functions-31/#func-tokenize
+    registerFunction(FnTokenize.SIGNATURE_ONE_ARG);
+    registerFunction(FnTokenize.SIGNATURE_TWO_ARG);
+    registerFunction(FnTokenize.SIGNATURE_THREE_ARG);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-translate
     // https://www.w3.org/TR/xpath-functions-31/#func-true
     registerFunction(FnTrue.SIGNATURE);
