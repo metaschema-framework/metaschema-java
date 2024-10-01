@@ -64,7 +64,7 @@
 		<dependency.junit5-platform-launcher.version>1.9.0</dependency.junit5-platform-launcher.version>
 		<dependency.log4j2.version>2.23.1</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.9.2</dependency.logcaptor.version>
-		<dependency.moxy.version>4.0.2</dependency.moxy.version>
+		<dependency.moxy.version>4.0.4</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.1</dependency.plexus-utils.version>
 		<dependency.plexus-build-api.version>1.2.0</dependency.plexus-build-api.version>
