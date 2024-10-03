@@ -24,8 +24,8 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements
- * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-string">fn:string</a>.
+ * Implements <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-string">fn:string</a>.
  */
 public final class FnString {
   @NonNull
