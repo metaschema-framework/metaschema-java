@@ -66,7 +66,7 @@
 		<dependency.logcaptor.version>2.9.2</dependency.logcaptor.version>
 		<dependency.moxy.version>4.0.4</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
-		<dependency.plexus-utils.version>4.0.1</dependency.plexus-utils.version>
+		<dependency.plexus-utils.version>4.0.2</dependency.plexus-utils.version>
 		<dependency.plexus-build-api.version>1.2.0</dependency.plexus-build-api.version>
 		<dependency.pmd.version>7.5.0</dependency.pmd.version>
 		<dependency.reflowSkin.version>2.3.4</dependency.reflowSkin.version>
