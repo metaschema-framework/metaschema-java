@@ -1,39 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd"
+<site xmlns="http://maven.apache.org/SITE/2.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd"
 	name="Metaschema Java Tools">
 
-  <skin>
+	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
 		<version>2.0.0-M9</version>
-  </skin>
+	</skin>
 
 	<publishDate position="bottom" format="yyyy-MM-dd" />
-	<version position="left"/>
+	<version position="left" />
 
-  <edit>${this.scm.url}</edit>
+	<edit>${this.scm.url}</edit>
 
-	<bannerLeft>
-		<name><![CDATA[
-      Metaschema Java APIs and Tools Project
-    ]]>
-		</name>
-		<href>${this.site.url}</href>
-	</bannerLeft>
+	<bannerLeft name="Metaschema Java APIs and Tools Project" href="${this.site.url}" />
 
 	<custom>
 		<fluidoSkin>
-      <googleSearch>
-        <sitesearch/>
-      </googleSearch>
-      <gitHub>
-        <projectId>metaschema-framework/metaschema-java</projectId>
-        <ribbonOrientation>right</ribbonOrientation>
-        <ribbonColor>black</ribbonColor>
-      </gitHub>
-    </fluidoSkin>
+			<googleSearch>
+				<sitesearch />
+			</googleSearch>
+			<gitHub>
+				<projectId>metaschema-framework/metaschema-java</projectId>
+				<ribbonOrientation>right</ribbonOrientation>
+				<ribbonColor>black</ribbonColor>
+			</gitHub>
+		</fluidoSkin>
 		<reflowSkin>
 			<protocolRelativeURLs>false</protocolRelativeURLs>
 			<absoluteResourceURL>${this.site.url}</absoluteResourceURL>
@@ -44,7 +38,7 @@
 			<highlightJs>true</highlightJs>
 			<highlightJsTheme>${this.highlightJsTheme}</highlightJsTheme>
 			<highlightJsVersion>${this.highlightJsVersion}</highlightJsVersion>
-<!--
+			<!--
 			<bootstrapVersion>${this.bootstrapVersion}</bootstrapVersion>
 			<bootswatchVersion>${this.bootswatchVersion}</bootswatchVersion>
 -->
@@ -52,16 +46,16 @@
 				<name>
             <![CDATA[
             <span class="color-highlight">Metaschema Java Tools</span> Project
-            ]]>
+]]>
 				</name>
 				<href>${this.site.url}</href>
 			</brand>
 
 			<slogan>Providing Java-based Metaschema tools</slogan>
-      <bottomDescription quote="false">
+			<bottomDescription quote="false">
         <![CDATA[
           <span class="color-highlight">Metaschema Java tools</span> provide a set of tools and libraries that allow developers to quickly develop applications based on Metaschema models.
-        ]]>
+]]>
 			</bottomDescription>
 			<pages>
 				<index project="metaschema-databind">
@@ -85,13 +79,13 @@
 			</bottomNav>
 
 			<skinAttribution>false</skinAttribution>
-      <breadcrumbs>true</breadcrumbs>
+			<breadcrumbs>true</breadcrumbs>
 
 			<titleTemplate>%2$s | %1$s</titleTemplate>
-			<header enabled="true"/>
- 			<!-- Use Table of Contents at the top of the page (max 6 elements) -->
+			<header enabled="true" />
+			<!-- Use Table of Contents at the top of the page (max 6 elements) -->
 			<toc position="fixed" autoExpandable="true" expanded="false">sidebar</toc>
-      <navside-menu cssClass="navside-light bg-light"/>
+			<navside-menu cssClass="navside-light bg-light" />
 			<footer theme="dark" background="dark" />
 			<markPageHeader>false</markPageHeader>
 		</reflowSkin>
@@ -105,29 +99,29 @@
       <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous" />
       <link rel="stylesheet" href="./css/custom.css" />
-    ]]>
+]]>
 		</head>
 
-    <breadcrumbs>
-      <item name="Metaschema Java" href="./"/>
-    </breadcrumbs>
+		<breadcrumbs>
+			<item name="Metaschema Java" href="./" />
+		</breadcrumbs>
 
 		<menu name="Main" inherit="top">
-      <item name="Home" href="./"/>
-      <item name="GitHub" href="${this.scm.url}"/>
-    </menu>
-    <menu name="Modules" ref="modules"/>
-    <menu name="Contribute" inherit="bottom">
-      <item name="Contribute" href="${this.scm.url}/CONTRIBUTING.md"/>
-      <item name="Issues" href="${this.issueManagement.url}"/>
-    </menu>
-    <menu name="Maven Documentation" ref="reports" inherit="bottom"/>
+			<item name="Home" href="./" />
+			<item name="GitHub" href="${this.scm.url}" />
+		</menu>
+		<menu name="Modules" ref="modules" />
+		<menu name="Contribute" inherit="bottom">
+			<item name="Contribute" href="${this.scm.url}/CONTRIBUTING.md" />
+			<item name="Issues" href="${this.issueManagement.url}" />
+		</menu>
+		<menu name="Maven Documentation" ref="reports" inherit="bottom" />
 
 		<!-- Disable copyright footer -->
-    <footer>
+		<footer>
       <![CDATA[
       Copyright and related rights waived via <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>.
-      ]]>
-    </footer>
+]]>
+    	</footer>
 	</body>
-</project>
+</site>

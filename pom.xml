@@ -53,23 +53,22 @@
 		<dependency.flexmark.version>0.64.8</dependency.flexmark.version>
 		<dependency.freemarker.version>2.3.32</dependency.freemarker.version>
 		<dependency.inject-resources-junit-jupiter.version>1.0.0</dependency.inject-resources-junit-jupiter.version>
-		<dependency.jackson.version>2.18.0</dependency.jackson.version>
+		<!-- Downgrade jackson due to https://github.com/FasterXML/jackson-databind/issues/4727 -->
+		<dependency.jackson.version>2.17.2</dependency.jackson.version>
 		<dependency.jansi.version>2.4.1</dependency.jansi.version>
 		<dependency.jaxb.version>4.0.0</dependency.jaxb.version>
 		<dependency.jaxen.version>2.0.0</dependency.jaxen.version>
 		<dependency.jdom2.version>2.0.6.1</dependency.jdom2.version>
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
 		<dependency.json.version>20240303</dependency.json.version>
-		<dependency.junit5.version>5.9.0</dependency.junit5.version>
-		<dependency.junit5-platform-launcher.version>1.9.0</dependency.junit5-platform-launcher.version>
-		<dependency.log4j2.version>2.23.1</dependency.log4j2.version>
+		<dependency.junit5.version>5.11.1</dependency.junit5.version>
+		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.9.2</dependency.logcaptor.version>
 		<dependency.moxy.version>4.0.4</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.2</dependency.plexus-utils.version>
 		<dependency.plexus-build-api.version>1.2.0</dependency.plexus-build-api.version>
 		<dependency.pmd.version>7.6.0</dependency.pmd.version>
-		<dependency.reflowSkin.version>2.3.4</dependency.reflowSkin.version>
 		<dependency.saxon.version>12.5</dependency.saxon.version>
 		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
 		<dependency.stax2-api.version>4.2.2</dependency.stax2-api.version>
@@ -91,6 +90,7 @@
 		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
 		<plugin.pmd.version>3.25.0</plugin.pmd.version>
 		<plugin.spotbugs.version>4.8.6.4</plugin.spotbugs.version>
+		<plugin.maven-surefire.version>3.5.0</plugin.maven-surefire.version>
 		<plugin.templating.version>3.0.0</plugin.templating.version>
 		<!-- The Surefire and Failsafe configurations override the <argLine>
 		element using the @{argLine} notation which
@@ -305,24 +305,11 @@
 				<version>${dependency.woodstox.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-bom</artifactId>
 				<version>${dependency.jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${dependency.jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.dataformat</groupId>
-				<artifactId>jackson-dataformat-xml</artifactId>
-				<version>${dependency.jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.dataformat</groupId>
-				<artifactId>jackson-dataformat-yaml</artifactId>
-				<version>${dependency.jackson.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.json</groupId>
@@ -366,25 +353,10 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-core</artifactId>
+				<artifactId>log4j-bom</artifactId>
 				<version>${dependency.log4j2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-jul</artifactId>
-				<version>${dependency.log4j2.version}</version>
-			</dependency>
-			<!-- Binding for Log4J -->
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-slf4j-impl</artifactId>
-				<version>${dependency.log4j2.version}</version>
-			</dependency>
-			<!-- Log4j API and Core implementation required for binding -->
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-api</artifactId>
-				<version>${dependency.log4j2.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -432,6 +404,13 @@
 			    <version>${dependency.eclipse-jdt.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${dependency.junit5.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.jmock</groupId>
 				<artifactId>jmock-junit5</artifactId>
 				<version>${dependency.jmock-junit5.version}</version>
@@ -440,10 +419,6 @@
 					<exclusion>
 						<groupId>com.google.code.findbugs</groupId>
 						<artifactId>annotations</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.junit.platform</groupId>
-						<artifactId>junit-platform-launcher</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
@@ -672,6 +647,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${plugin.maven-surefire.version}</version>
 					<configuration>
 						<forkCount>1.5C</forkCount>
 						<reuseForks>true</reuseForks>
@@ -681,6 +657,7 @@
 						</excludedEnvironmentVariables>
 						<!-- Use of TCP to transmit events to the plugin -->
 						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
+						<useModulePath>false</useModulePath>
 					</configuration>
 				</plugin>
 				<plugin>
