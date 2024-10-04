@@ -63,7 +63,7 @@
 		<dependency.json.version>20240303</dependency.json.version>
 		<dependency.junit5.version>5.11.1</dependency.junit5.version>
 		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
-		<dependency.logcaptor.version>2.9.2</dependency.logcaptor.version>
+		<dependency.logcaptor.version>2.9.3</dependency.logcaptor.version>
 		<dependency.moxy.version>4.0.4</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.2</dependency.plexus-utils.version>
