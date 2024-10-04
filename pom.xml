@@ -61,7 +61,7 @@
 		<dependency.jdom2.version>2.0.6.1</dependency.jdom2.version>
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
 		<dependency.json.version>20240303</dependency.json.version>
-		<dependency.junit5.version>5.11.1</dependency.junit5.version>
+		<dependency.junit5.version>5.11.2</dependency.junit5.version>
 		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.9.3</dependency.logcaptor.version>
 		<dependency.moxy.version>4.0.4</dependency.moxy.version>
