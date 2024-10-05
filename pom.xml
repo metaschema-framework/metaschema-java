@@ -92,16 +92,8 @@
 		<plugin.spotbugs.version>4.8.6.4</plugin.spotbugs.version>
 		<plugin.maven-surefire.version>3.5.0</plugin.maven-surefire.version>
 		<plugin.templating.version>3.0.0</plugin.templating.version>
-		<!-- The Surefire and Failsafe configurations override the <argLine>
-		element using the @{argLine} notation which
-         allows to include any argLine defined by plugins executing before them (such as
-		Jacoco). However, if no such
-         plugin executes before, the property is undefined and makes the tests fail.
-		Thus we define an empty property
-         here to make sure it doesn't fail. See also
-		https://issues.apache.org/jira/browse/SUREFIRE-1431
-        -->
-		<argLine />
+
+		<argLine>-Xmx1024m</argLine>
 	</properties>
 
 	<issueManagement>
@@ -651,7 +643,6 @@
 					<configuration>
 						<forkCount>1.5C</forkCount>
 						<reuseForks>true</reuseForks>
-						<argLine>@{argLine} -Xmx1024m</argLine>
 						<excludedEnvironmentVariables>
 							<excludedEnvironmentVariable>JAVA_TOOL_OPTIONS</excludedEnvironmentVariable>
 						</excludedEnvironmentVariables>

@@ -105,7 +105,7 @@ public class FunctionTestBase
 
     DynamicContext context = dynamicContext == null ? new DynamicContext() : dynamicContext;
     ISequence<?> focusSeqence = function.isFocusDepenent()
-        ? ObjectUtils.requireNonNull(focus, "Function call requires a focus")
+        ? focus == null ? ISequence.empty() : focus
         : ISequence.empty();
     return (ISequence<R>) function.execute(
         arguments == null ? CollectionUtil.emptyList() : arguments,

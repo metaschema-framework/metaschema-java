@@ -116,6 +116,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-months-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-node-name
     // https://www.w3.org/TR/xpath-functions-31/#func-normalize-space
+    registerFunction(FnNormalizeSpace.SIGNATURE_NO_ARG);
+    registerFunction(FnNormalizeSpace.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-normalize-unicode
     // https://www.w3.org/TR/xpath-functions-31/#func-not
     registerFunction(FnNot.SIGNATURE);

@@ -65,6 +65,12 @@ public interface IStringItem extends IAnyAtomicItem {
     return compareTo(other.asStringItem());
   }
 
+  /**
+   * An implementation of <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-normalize-space">fn::normalize-space</a>.
+   *
+   * @return the normalized string value for this string
+   */
   @NonNull
   IStringItem normalizeSpace();
 }

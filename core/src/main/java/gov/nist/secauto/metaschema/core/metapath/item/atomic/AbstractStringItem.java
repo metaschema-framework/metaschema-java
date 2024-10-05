@@ -17,7 +17,7 @@ public abstract class AbstractStringItem
     implements IStringItem {
   private static final String WHITESPACE_SEGMENT = "[ \t\r\n]";
   private static final Pattern TRIM_END = Pattern.compile(WHITESPACE_SEGMENT + "++$");
-  private static final Pattern TRIM_START = Pattern.compile("^" + WHITESPACE_SEGMENT + "++");
+  private static final Pattern TRIM_START = Pattern.compile("^" + WHITESPACE_SEGMENT + "+");
   private static final Pattern TRIM_MIDDLE = Pattern.compile(WHITESPACE_SEGMENT + "{2,}");
 
   /**

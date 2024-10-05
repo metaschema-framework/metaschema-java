@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class StringLiteral
     extends AbstractLiteralExpression<IStringItem, String> {
 
-  private static final Pattern QUOTE_PATTERN = Pattern.compile("^'(.*)'$|^\"(.*)\"$");
+  private static final Pattern QUOTE_PATTERN = Pattern.compile("(?:^'(.*)'$)|(?:^\"(.*)\"$)");
 
   /**
    * Construct a new expression that always returns the same string value.
@@ -43,17 +43,7 @@ public class StringLiteral
   @SuppressWarnings("null")
   @NonNull
   private static String removeQuotes(@NonNull String value) {
-    Matcher matcher = QUOTE_PATTERN.matcher(value);
-
-    String retval = value;
-    if (matcher.matches()) {
-      if (matcher.group(1) != null) {
-        retval = matcher.group(1);
-      } else if (matcher.group(2) != null) {
-        retval = matcher.group(2);
-      }
-    }
-    return retval;
+    return value.substring(1, value.length() - 1);
   }
 
   @Override
