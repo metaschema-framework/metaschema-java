@@ -68,6 +68,8 @@ public final class FnNormalizeSpace {
 
     ISequence<IAnyAtomicItem> retval;
     if (focus == null) {
+      // Per the specification:
+      // If no argument is supplied and the context item is absent]then a dynamic error is raised: [[err:XPDY0002].
       throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");
     }
 
