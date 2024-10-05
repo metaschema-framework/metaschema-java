@@ -15,8 +15,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
@@ -27,8 +25,7 @@ public class FunctionTestBase
     extends ExpressionTestBase {
 
   /**
-   * Assert that the execution of the provided function and arguments produce the
-   * desired results.
+   * Assert that the execution of the provided function and arguments produce the desired results.
    *
    * @param function
    *          the function to test
@@ -40,18 +37,17 @@ public class FunctionTestBase
   public static void assertFunctionResult(
       @NonNull IFunction function,
       @NonNull ISequence<?> expectedResult,
-      List<ISequence<?>> arguments) {
+      @NonNull List<ISequence<?>> arguments) {
     assertFunctionResult(function, null, expectedResult, arguments);
   }
 
   /**
-   * Assert that the execution of the provided function and arguments produce the
-   * desired results.
+   * Assert that the execution of the provided function and arguments produce the desired results.
    *
    * @param function
    *          the function to test
    * @param focus
-   *          the item focus to use for evaluation
+   *          the item focus to use for evaluation or {@code null} if there is no focus
    * @param expectedResult
    *          the expected result produced by the function
    * @param arguments
@@ -61,27 +57,7 @@ public class FunctionTestBase
       @NonNull IFunction function,
       @Nullable ISequence<?> focus,
       @NonNull ISequence<?> expectedResult,
-      List<ISequence<?>> arguments) {
-
-    List<ISequence<?>> usedArguments = arguments == null ? CollectionUtil.emptyList() : arguments;
-
-    // QName functionName = function.getQName();
-    //
-    // IFunction resolvedFunction =
-    // FunctionService.getInstance().getFunction(functionName,
-    // usedArguments.size());
-    //
-    // assertNotNull(resolvedFunction, String.format("Function '%s' not found in
-    // function service.", functionName));
-
-    assertFunctionResultInternal(function, focus, expectedResult, usedArguments);
-  }
-
-  private static void assertFunctionResultInternal(
-      @NonNull IFunction function,
-      @Nullable ISequence<?> focus,
-      @NonNull ISequence<?> expectedResult,
-      List<ISequence<?>> arguments) {
+      @NonNull List<ISequence<?>> arguments) {
     ISequence<INumericItem> result = FunctionTestBase.executeFunction(
         function,
         newDynamicContext(),
@@ -96,19 +72,35 @@ public class FunctionTestBase
 
   }
 
+  /**
+   * Execute the provided function using the provided context, focus and arguments.
+   * 
+   * @param <R>
+   *          the sequence result Java type
+   * @param function
+   *          the function to call
+   * @param dynamicContext
+   *          the dynamic evaluation context or {@code null} if the default should be used
+   * @param focus
+   *          the current focus or {@code null} if there is no focus
+   * @param arguments
+   *          the function arguments or an empty list if there are no arguments
+   * @return the result of evaluating the function
+   */
   @SuppressWarnings("unchecked")
+  @NonNull
   public static <R extends IItem> ISequence<R> executeFunction(
       @NonNull IFunction function,
       @Nullable DynamicContext dynamicContext,
       @Nullable ISequence<?> focus,
-      List<? extends ISequence<?>> arguments) {
+      @NonNull List<? extends ISequence<?>> arguments) {
 
     DynamicContext context = dynamicContext == null ? new DynamicContext() : dynamicContext;
     ISequence<?> focusSeqence = function.isFocusDepenent()
         ? focus == null ? ISequence.empty() : focus
         : ISequence.empty();
     return (ISequence<R>) function.execute(
-        arguments == null ? CollectionUtil.emptyList() : arguments,
+        arguments,
         context,
         focusSeqence);
   }

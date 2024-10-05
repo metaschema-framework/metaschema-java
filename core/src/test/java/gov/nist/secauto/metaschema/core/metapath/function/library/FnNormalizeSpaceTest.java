@@ -5,19 +5,15 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
 import org.junit.jupiter.api.Test;
@@ -36,7 +32,8 @@ class FnNormalizeSpaceTest
     return Stream.of(
         Arguments.of(
             string("The wealthy curled darlings of our nation."),
-            "fn:normalize-space(\" The    wealthy curled darlings \n\r       \t                                 of    our    nation. \")"));
+            "fn:normalize-space(\" The    wealthy curled darlings \n\r       \t" +
+            "                                 of    our    nation. \")"));
   }
 
   @ParameterizedTest
@@ -49,10 +46,10 @@ class FnNormalizeSpaceTest
 
   @Test
   void testNoFocus() {
-    InvalidTypeMetapathException throwable = assertThrows(InvalidTypeMetapathException.class,
+    DynamicMetapathException throwable = assertThrows(DynamicMetapathException.class,
         () -> {
           try {
-            ISequence<IStringItem> result = FunctionTestBase.executeFunction(
+            FunctionTestBase.executeFunction(
                 FnNormalizeSpace.SIGNATURE_NO_ARG,
                 newDynamicContext(),
                 null,
@@ -61,5 +58,6 @@ class FnNormalizeSpaceTest
             throw ex.getCause();
           }
         });
+    assertEquals(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, throwable.getCode());
   }
 }

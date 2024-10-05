@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class ExpressionTestBase {
   @NonNull
   @RegisterExtension
-  final Mockery context = new JUnit5Mockery();
+  public final Mockery context = new JUnit5Mockery();
 
   /**
    * Get the mocking context.

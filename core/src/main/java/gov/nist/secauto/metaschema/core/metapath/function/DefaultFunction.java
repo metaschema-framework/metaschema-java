@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
@@ -262,9 +263,17 @@ public class DefaultFunction
       @NonNull DynamicContext dynamicContext,
       @NonNull ISequence<?> focus) {
     try {
-      List<ISequence<?>> convertedArguments = convertArguments(this, arguments);
 
-      IItem contextItem = isFocusDepenent() ? ObjectUtils.requireNonNull(focus.getFirstItem(true)) : null;
+      IItem contextItem = null;
+      
+      if (isFocusDepenent()) {
+        contextItem = focus.getFirstItem(true);
+        if (contextItem == null) {
+          throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");
+        }
+      }
+
+      List<ISequence<?>> convertedArguments = convertArguments(this, arguments);
 
       CallingContext callingContext = null;
       ISequence<?> result = null;

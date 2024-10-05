@@ -65,14 +65,9 @@ public final class FnNormalizeSpace {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-
-    ISequence<IAnyAtomicItem> retval;
-    if (focus == null) {
-      // Per the specification:
-      // If no argument is supplied and the context item is absent]then a dynamic error is raised: [[err:XPDY0002].
-      throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");
-    }
-
+    // the Focus should always be non-null, since the function if focus-dependent
+    assert focus != null;
+    
     return ISequence.of(FnString.fnStringItem(focus).normalizeSpace());
   }
 

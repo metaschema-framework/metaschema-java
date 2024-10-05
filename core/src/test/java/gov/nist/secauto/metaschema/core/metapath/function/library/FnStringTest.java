@@ -12,6 +12,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
@@ -54,11 +55,28 @@ class FnStringTest
   }
 
   @Test
-  void testInvalidArgument() {
-    InvalidTypeMetapathException throwable = assertThrows(InvalidTypeMetapathException.class,
+  void testNoFocus() {
+    DynamicMetapathException throwable = assertThrows(DynamicMetapathException.class,
         () -> {
           try {
-            ISequence<IStringItem> result = FunctionTestBase.executeFunction(
+            FunctionTestBase.executeFunction(
+                FnString.SIGNATURE_NO_ARG,
+                newDynamicContext(),
+                null,
+                List.of(sequence()));
+          } catch (MetapathException ex) {
+            throw ex.getCause();
+          }
+        });
+    assertEquals(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, throwable.getCode());
+  }
+
+  @Test
+  void testInvalidArgument() {
+    assertThrows(InvalidTypeMetapathException.class,
+        () -> {
+          try {
+            FunctionTestBase.executeFunction(
                 FnString.SIGNATURE_ONE_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
@@ -74,7 +92,7 @@ class FnStringTest
     InvalidTypeFunctionException throwable = assertThrows(InvalidTypeFunctionException.class,
         () -> {
           try {
-            ISequence<IStringItem> result = FunctionTestBase.executeFunction(
+            FunctionTestBase.executeFunction(
                 FnString.SIGNATURE_ONE_ARG,
                 newDynamicContext(),
                 ISequence.empty(),

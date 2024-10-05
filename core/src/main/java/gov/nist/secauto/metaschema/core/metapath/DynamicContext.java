@@ -285,7 +285,7 @@ public class DynamicContext { // NOPMD - intentional data class
     letVariableMap.put(name, boundValue);
     return this;
   }
-
+  
   private class CachingLoader implements IDocumentLoader {
     @NonNull
     private final IDocumentLoader proxy;
