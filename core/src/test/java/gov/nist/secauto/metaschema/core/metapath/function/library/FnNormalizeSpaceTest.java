@@ -15,13 +15,13 @@ import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -33,7 +33,7 @@ class FnNormalizeSpaceTest
         Arguments.of(
             string("The wealthy curled darlings of our nation."),
             "fn:normalize-space(\" The    wealthy curled darlings \n\r       \t" +
-            "                                 of    our    nation. \")"));
+                "                                 of    our    nation. \")"));
   }
 
   @ParameterizedTest
@@ -53,7 +53,7 @@ class FnNormalizeSpaceTest
                 FnNormalizeSpace.SIGNATURE_NO_ARG,
                 newDynamicContext(),
                 null,
-                List.of(sequence()));
+                CollectionUtil.singletonList(sequence()));
           } catch (MetapathException ex) {
             throw ex.getCause();
           }

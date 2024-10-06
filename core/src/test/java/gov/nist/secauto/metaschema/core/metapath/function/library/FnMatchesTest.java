@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -98,7 +99,7 @@ class FnMatchesTest
                 FnMatches.SIGNATURE_TWO_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
-                List.of(sequence(string("input")), sequence(string("pattern["))));
+                ObjectUtils.notNull(List.of(sequence(string("input")), sequence(string("pattern[")))));
           } catch (MetapathException ex) {
             Throwable cause = ex.getCause();
             if (cause != null) {
@@ -119,7 +120,10 @@ class FnMatchesTest
                 FnMatches.SIGNATURE_THREE_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
-                List.of(sequence(string("input")), sequence(string("pattern")), sequence(string("dsm"))));
+                ObjectUtils.notNull(List.of(
+                    sequence(string("input")),
+                    sequence(string("pattern")),
+                    sequence(string("dsm")))));
           } catch (MetapathException ex) {
             Throwable cause = ex.getCause();
             if (cause != null) {

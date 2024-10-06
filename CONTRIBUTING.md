@@ -75,7 +75,7 @@ You can contact the maintainers of this project at [maintainers@metaschema.dev](
 
 ## Developer information
 
-### Core metaschema functions functions
+### Core Metaschema functions 
 
 The Metaschema [specification](https://pages.nist.gov/metaschema/specification/syntax/metapath/) and [this conformant library](https://github.com/metaschema-framework/metaschema-java) library implement the Metapath functions required by the specification. See the library's [registry class with an inventory listing of the functions](https://github.com/metaschema-framework/metaschema-java/blob/main/core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java) supported in the most current release.
 

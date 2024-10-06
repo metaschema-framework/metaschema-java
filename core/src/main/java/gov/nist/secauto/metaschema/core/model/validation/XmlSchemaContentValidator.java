@@ -157,7 +157,6 @@ public class XmlSchemaContentValidator
       return severity;
     }
 
-    @SuppressWarnings("null")
     @Override
     public URI getDocumentUri() {
       String systemId = getCause().getSystemId();
@@ -204,7 +203,6 @@ public class XmlSchemaContentValidator
       return null;
     }
 
-    @SuppressWarnings("null")
     @Override
     public String getMessage() {
       return getCause().getLocalizedMessage();

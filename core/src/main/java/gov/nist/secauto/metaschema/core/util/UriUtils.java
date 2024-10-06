@@ -100,8 +100,8 @@ public final class UriUtils {
   }
 
   /**
-   * Based on code from
-   * http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java
+   * Get the path of the provided target relative to the path of the provided
+   * base.
    *
    * @param base
    *          the base path to resolve against
@@ -111,6 +111,8 @@ public final class UriUtils {
    */
   @SuppressWarnings("PMD.CyclomaticComplexity")
   public static String prependRelativePath(String base, String target) {
+    // based on code from
+    // http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java
 
     // Split paths into segments
     String[] baseSegments = URI_SEPERATOR_PATTERN.split(base);

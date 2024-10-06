@@ -6,10 +6,12 @@
 package gov.nist.secauto.metaschema.core.datatype;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -21,13 +23,18 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * use this class to provide new data types.
  */
 public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
+  @NonNull
   private final List<IDataTypeAdapter<?>> library = new LinkedList<>();
+  @NonNull
+  protected final Lock instanceLock = new ReentrantLock();
 
-  @SuppressWarnings("null")
   @Override
   public List<? extends IDataTypeAdapter<?>> getJavaTypeAdapters() {
-    synchronized (this) {
-      return Collections.unmodifiableList(library);
+    try {
+      instanceLock.lock();
+      return CollectionUtil.unmodifiableList(library);
+    } finally {
+      instanceLock.unlock();
     }
   }
 
@@ -43,8 +50,11 @@ public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
     if (adapter.getNames().isEmpty()) {
       throw new IllegalArgumentException("The adapter has no name: " + adapter.getClass().getName());
     }
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       library.add(adapter);
+    } finally {
+      instanceLock.unlock();
     }
   }
 }

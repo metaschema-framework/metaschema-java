@@ -27,46 +27,64 @@ public class AssemblyConstraintSet
 
   @Override
   public List<IIndexConstraint> getIndexConstraints() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return indexConstraints;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public List<IUniqueConstraint> getUniqueConstraints() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return uniqueConstraints;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public List<ICardinalityConstraint> getHasCardinalityConstraints() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return cardinalityConstraints;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IIndexConstraint constraint) {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       getConstraints().add(constraint);
       indexConstraints.add(constraint);
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IUniqueConstraint constraint) {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       getConstraints().add(constraint);
       uniqueConstraints.add(constraint);
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull ICardinalityConstraint constraint) {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       getConstraints().add(constraint);
       cardinalityConstraints.add(constraint);
+    } finally {
+      instanceLock.unlock();
     }
   }
 

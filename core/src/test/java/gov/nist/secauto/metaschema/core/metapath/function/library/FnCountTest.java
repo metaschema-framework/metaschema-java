@@ -12,12 +12,12 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -37,6 +37,6 @@ class FnCountTest
     assertFunctionResult(
         FnCount.SIGNATURE,
         ISequence.of(expected),
-        List.of(ISequence.of(items)));
+        CollectionUtil.singletonList(ISequence.of(items)));
   }
 }

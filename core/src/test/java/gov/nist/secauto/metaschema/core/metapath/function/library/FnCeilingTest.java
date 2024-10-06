@@ -9,13 +9,13 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.decimal;
 
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -35,7 +35,7 @@ class FnCeilingTest
     assertFunctionResult(
         FnCeiling.SIGNATURE,
         ISequence.of(expected),
-        List.of(ISequence.of(actual)));
+        CollectionUtil.singletonList(ISequence.of(actual)));
   }
 
   @Test
@@ -43,6 +43,6 @@ class FnCeilingTest
     assertFunctionResult(
         FnCeiling.SIGNATURE,
         ISequence.empty(),
-        List.of(ISequence.empty()));
+        CollectionUtil.singletonList(ISequence.empty()));
   }
 }

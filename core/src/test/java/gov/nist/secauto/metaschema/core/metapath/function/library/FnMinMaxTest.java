@@ -16,13 +16,13 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -50,7 +50,7 @@ class FnMinMaxTest
       assertFunctionResult(
           FnMinMax.SIGNATURE_MIN,
           ISequence.of(expected),
-          List.of(ISequence.of(values)));
+          CollectionUtil.singletonList(ISequence.of(values)));
     } catch (MetapathException ex) {
       if (expected == null) {
         assertAll(
@@ -66,7 +66,7 @@ class FnMinMaxTest
     assertFunctionResult(
         FnMinMax.SIGNATURE_MIN,
         ISequence.empty(),
-        List.of(ISequence.empty()));
+        CollectionUtil.singletonList(ISequence.empty()));
   }
 
   private static Stream<Arguments> provideValuesMax() {
@@ -88,7 +88,7 @@ class FnMinMaxTest
       assertFunctionResult(
           FnMinMax.SIGNATURE_MAX,
           ISequence.of(expected),
-          List.of(ISequence.of(values)));
+          CollectionUtil.singletonList(ISequence.of(values)));
     } catch (MetapathException ex) {
       if (expected == null) {
         assertAll(
@@ -104,6 +104,6 @@ class FnMinMaxTest
     assertFunctionResult(
         FnMinMax.SIGNATURE_MAX,
         ISequence.empty(),
-        List.of(ISequence.empty()));
+        CollectionUtil.singletonList(ISequence.empty()));
   }
 }

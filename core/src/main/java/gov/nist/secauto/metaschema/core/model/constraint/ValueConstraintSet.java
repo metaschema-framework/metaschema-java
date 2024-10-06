@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.xml.namespace.QName;
 
@@ -28,6 +30,8 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   private final List<IIndexHasKeyConstraint> indexHasKeyConstraints = new LinkedList<>();
   @NonNull
   private final List<IExpectConstraint> expectConstraints = new LinkedList<>();
+  @NonNull
+  protected final Lock instanceLock = new ReentrantLock();
 
   @Override
   public Map<QName, ILet> getLetExpressions() {
@@ -41,68 +45,95 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
 
   @Override
   public List<IConstraint> getConstraints() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return constraints;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public List<IAllowedValuesConstraint> getAllowedValuesConstraints() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return allowedValuesConstraints;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public List<IMatchesConstraint> getMatchesConstraints() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return matchesConstraints;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public List<IIndexHasKeyConstraint> getIndexHasKeyConstraints() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return indexHasKeyConstraints;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public List<IExpectConstraint> getExpectConstraints() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return expectConstraints;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IAllowedValuesConstraint constraint) {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       constraints.add(constraint);
       allowedValuesConstraints.add(constraint);
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IMatchesConstraint constraint) {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       constraints.add(constraint);
       matchesConstraints.add(constraint);
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IIndexHasKeyConstraint constraint) {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       constraints.add(constraint);
       indexHasKeyConstraints.add(constraint);
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IExpectConstraint constraint) {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       constraints.add(constraint);
       expectConstraints.add(constraint);
+    } finally {
+      instanceLock.unlock();
     }
   }
 }

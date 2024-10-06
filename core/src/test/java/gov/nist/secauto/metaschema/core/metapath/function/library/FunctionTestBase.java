@@ -25,7 +25,8 @@ public class FunctionTestBase
     extends ExpressionTestBase {
 
   /**
-   * Assert that the execution of the provided function and arguments produce the desired results.
+   * Assert that the execution of the provided function and arguments produce the
+   * desired results.
    *
    * @param function
    *          the function to test
@@ -37,17 +38,19 @@ public class FunctionTestBase
   public static void assertFunctionResult(
       @NonNull IFunction function,
       @NonNull ISequence<?> expectedResult,
-      @NonNull List<ISequence<?>> arguments) {
+      @NonNull List<? extends ISequence<?>> arguments) {
     assertFunctionResult(function, null, expectedResult, arguments);
   }
 
   /**
-   * Assert that the execution of the provided function and arguments produce the desired results.
+   * Assert that the execution of the provided function and arguments produce the
+   * desired results.
    *
    * @param function
    *          the function to test
    * @param focus
-   *          the item focus to use for evaluation or {@code null} if there is no focus
+   *          the item focus to use for evaluation or {@code null} if there is no
+   *          focus
    * @param expectedResult
    *          the expected result produced by the function
    * @param arguments
@@ -57,7 +60,7 @@ public class FunctionTestBase
       @NonNull IFunction function,
       @Nullable ISequence<?> focus,
       @NonNull ISequence<?> expectedResult,
-      @NonNull List<ISequence<?>> arguments) {
+      @NonNull List<? extends ISequence<?>> arguments) {
     ISequence<INumericItem> result = FunctionTestBase.executeFunction(
         function,
         newDynamicContext(),
@@ -73,14 +76,16 @@ public class FunctionTestBase
   }
 
   /**
-   * Execute the provided function using the provided context, focus and arguments.
-   * 
+   * Execute the provided function using the provided context, focus and
+   * arguments.
+   *
    * @param <R>
    *          the sequence result Java type
    * @param function
    *          the function to call
    * @param dynamicContext
-   *          the dynamic evaluation context or {@code null} if the default should be used
+   *          the dynamic evaluation context or {@code null} if the default should
+   *          be used
    * @param focus
    *          the current focus or {@code null} if there is no focus
    * @param arguments

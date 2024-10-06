@@ -18,6 +18,8 @@ import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctio
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -56,7 +58,7 @@ class FnSumTest
       assertFunctionResult(
           FnSum.SIGNATURE_ONE_ARG,
           ISequence.of(expected),
-          List.of(ISequence.of(values)));
+          CollectionUtil.singletonList(ISequence.of(values)));
     } catch (MetapathException ex) {
       if (expected == null) {
         assertAll(
@@ -88,7 +90,7 @@ class FnSumTest
       assertFunctionResult(
           FnSum.SIGNATURE_TWO_ARG,
           ISequence.of(expected),
-          List.of(ISequence.of(values), ISequence.of(zero)));
+          ObjectUtils.notNull(List.of(ISequence.of(values), ISequence.of(zero))));
     } catch (MetapathException ex) {
       if (expected == null) {
         assertAll(
@@ -104,6 +106,6 @@ class FnSumTest
     assertFunctionResult(
         FnSum.SIGNATURE_TWO_ARG,
         ISequence.empty(),
-        List.of(ISequence.empty(), ISequence.empty()));
+        ObjectUtils.notNull(List.of(ISequence.empty(), ISequence.empty())));
   }
 }

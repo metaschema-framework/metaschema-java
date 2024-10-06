@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ExpressionTestBase {
+  @SuppressWarnings("exports")
   @NonNull
   @RegisterExtension
   public final Mockery context = new JUnit5Mockery();

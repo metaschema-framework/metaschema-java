@@ -9,6 +9,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 import javax.xml.namespace.QName;
@@ -22,6 +24,8 @@ public class FunctionLibrary implements IFunctionLibrary {
   private final Map<QName, NamedFunctionSet> libraryByQName = new HashMap<>(); // NOPMD - intentional
   @NonNull
   private final Map<String, NamedFunctionSet> libraryByName = new HashMap<>(); // NOPMD - intentional
+  @NonNull
+  private final Lock instanceLock = new ReentrantLock();
 
   /**
    * Register the provided function signature.
@@ -40,13 +44,16 @@ public class FunctionLibrary implements IFunctionLibrary {
   private void registerFunctionByQName(@NonNull IFunction function) {
     QName qname = function.getQName();
     IFunction duplicate;
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       NamedFunctionSet functions = libraryByQName.get(qname);
       if (functions == null) {
         functions = new NamedFunctionSet();
         libraryByQName.put(qname, functions);
       }
       duplicate = functions.addFunction(function);
+    } finally {
+      instanceLock.unlock();
     }
     if (duplicate != null) {
       throw new IllegalArgumentException(String.format("Duplicate functions with same arity: %s shadows %s",
@@ -56,7 +63,8 @@ public class FunctionLibrary implements IFunctionLibrary {
 
   private void registerFunctionByName(@NonNull IFunction function) {
     String name = function.getName();
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       NamedFunctionSet functions = libraryByName.get(name);
       if (functions == null) {
         functions = new NamedFunctionSet();
@@ -64,24 +72,32 @@ public class FunctionLibrary implements IFunctionLibrary {
       }
       // replace duplicates
       functions.addFunction(function);
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public Stream<IFunction> stream() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       return ObjectUtils.notNull(libraryByQName.values().stream().flatMap(NamedFunctionSet::getFunctionsAsStream));
+    } finally {
+      instanceLock.unlock();
     }
   }
 
   @Override
   public IFunction getFunction(@NonNull String name, int arity) {
     IFunction retval = null;
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       NamedFunctionSet functions = libraryByName.get(name);
       if (functions != null) {
         retval = functions.getFunctionWithArity(arity);
       }
+    } finally {
+      instanceLock.unlock();
     }
     return retval;
   }
@@ -89,11 +105,14 @@ public class FunctionLibrary implements IFunctionLibrary {
   @Override
   public IFunction getFunction(@NonNull QName name, int arity) {
     IFunction retval = null;
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       NamedFunctionSet functions = libraryByQName.get(name);
       if (functions != null) {
         retval = functions.getFunctionWithArity(arity);
       }
+    } finally {
+      instanceLock.unlock();
     }
     return retval;
   }

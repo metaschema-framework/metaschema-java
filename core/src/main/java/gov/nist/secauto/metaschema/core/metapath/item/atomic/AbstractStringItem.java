@@ -67,6 +67,7 @@ public abstract class AbstractStringItem
     value = TRIM_START.matcher(value).replaceFirst("");
     value = TRIM_MIDDLE.matcher(value).replaceAll(" ");
     value = TRIM_END.matcher(value).replaceFirst("");
+    assert value != null;
 
     return IStringItem.valueOf(value);
   }

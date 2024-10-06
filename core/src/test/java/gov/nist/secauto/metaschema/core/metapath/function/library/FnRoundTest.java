@@ -11,6 +11,8 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,7 +40,7 @@ class FnRoundTest
     assertFunctionResult(
         FnRound.SIGNATURE,
         ISequence.of(expected),
-        List.of(ISequence.of(actual)));
+        CollectionUtil.singletonList(ISequence.of(actual)));
   }
 
   @Test
@@ -46,7 +48,7 @@ class FnRoundTest
     assertFunctionResult(
         FnRound.SIGNATURE,
         ISequence.empty(),
-        List.of(ISequence.empty()));
+        CollectionUtil.singletonList(ISequence.empty()));
   }
 
   private static Stream<Arguments> provideValuesForRoundWithPrecision() {
@@ -65,7 +67,7 @@ class FnRoundTest
     assertFunctionResult(
         FnRound.SIGNATURE_WITH_PRECISION,
         ISequence.of(expected),
-        List.of(ISequence.of(actual), ISequence.of(precision)));
+        ObjectUtils.notNull(List.of(ISequence.of(actual), ISequence.of(precision))));
   }
 
   @Test
@@ -73,6 +75,6 @@ class FnRoundTest
     assertFunctionResult(
         FnRound.SIGNATURE_WITH_PRECISION,
         ISequence.empty(),
-        List.of(ISequence.empty()));
+        CollectionUtil.singletonList(ISequence.empty()));
   }
 }

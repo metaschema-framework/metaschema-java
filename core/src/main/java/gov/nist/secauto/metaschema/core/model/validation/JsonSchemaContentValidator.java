@@ -208,7 +208,6 @@ public class JsonSchemaContentValidator
       return getCause().getPointerToViolation();
     }
 
-    @SuppressWarnings("null")
     @Override
     public String getMessage() {
       return getCause().getLocalizedMessage();

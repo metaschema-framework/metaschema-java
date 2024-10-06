@@ -9,9 +9,6 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -22,9 +19,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class StringLiteral
     extends AbstractLiteralExpression<IStringItem, String> {
-
-  private static final Pattern QUOTE_PATTERN = Pattern.compile("(?:^'(.*)'$)|(?:^\"(.*)\"$)");
-
   /**
    * Construct a new expression that always returns the same string value.
    *

@@ -154,7 +154,6 @@ public interface IModule {
    *
    * @return a listing of assembly and field definitions
    */
-  @SuppressWarnings("unchecked")
   @NonNull
   List<? extends IModelDefinition> getAssemblyAndFieldDefinitions();
 

@@ -38,8 +38,18 @@ jobs:
       actions: read
       contents: read
       security-events: write
-
     steps:
+    - name: Validate inputs
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea
+      with:
+        script: |
+          const inputs = ['linkcheck_fail_on_error', 'linkcheck_create_issue'];
+          inputs.forEach(input => {
+            if (typeof github.event.inputs[input] !== 'boolean') {
+              core.setFailed(`Input ${input} must be a boolean value.`);
+            }
+          });
     - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       with:
         submodules: recursive
@@ -58,7 +68,7 @@ jobs:
         distribution: ${{ env.JAVA_DISTRO }}
         cache: 'maven'
     - name: Initialize CodeQL
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.base_ref == 'develop')
       uses: github/codeql-action/init@6db8d6351fd0be61f9ed8ebd12ccd35dcec51fea
       with:
         languages: java
@@ -69,10 +79,10 @@ jobs:
       run: |
         mvn -B -e -Prelease package
     - name: Perform CodeQL Analysis
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.base_ref == 'develop')
       uses: github/codeql-action/analyze@6db8d6351fd0be61f9ed8ebd12ccd35dcec51fea
       with:
-        upload: ${{ github.ref_name == 'develop' && 'always' || 'never' }}
+        upload: ${{ (github.ref_name == 'develop' || (github.event_name == 'pull_request' && github.base_ref == 'develop')) && 'always' || 'never' }}
   build-website:
     name: Website
     runs-on: ubuntu-20.04
@@ -132,7 +142,7 @@ jobs:
         path: html-link-report.md
         retention-days: 5
     - name: Create issue if bad links detected
-      if: ${{ !cancelled() && env.lychee_exit_code != 0 && env.INPUT_ISSUE_ON_ERROR == 'true' }}
+      if: ${{ failure() && env.lychee_exit_code != 0 && env.INPUT_ISSUE_ON_ERROR == 'true' }}
       uses: peter-evans/create-issue-from-file@e8ef132d6df98ed982188e460ebb3b5d4ef3a9cd
       with:
         title: Scheduled Check of Website Content Found Bad Hyperlinks
@@ -141,7 +151,7 @@ jobs:
           bug
           documentation
     - name: Fail on link check error
-      if: ${{ !cancelled() && env.lychee_exit_code != 0 && env.INPUT_FAIL_ON_ERROR == 'true' }}
+      if: ${{ failure() && env.lychee_exit_code != 0 && env.INPUT_FAIL_ON_ERROR == 'true' }}
       uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea
       with:
         script: |

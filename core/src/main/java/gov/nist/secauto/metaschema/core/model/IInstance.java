@@ -49,7 +49,6 @@ public interface IInstance extends IModelElement {
    *
    * @return the coordinate
    */
-  @SuppressWarnings("null")
   @Override
   String toCoordinates();
 }

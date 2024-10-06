@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -68,7 +69,7 @@ class FnTokenizeTest
                 FnTokenize.SIGNATURE_TWO_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
-                List.of(sequence(string("abba")), sequence(string(".?"))));
+                ObjectUtils.notNull(List.of(sequence(string("abba")), sequence(string(".?")))));
           } catch (MetapathException ex) {
             Throwable cause = ex.getCause();
             if (cause != null) {
@@ -89,7 +90,7 @@ class FnTokenizeTest
                 FnTokenize.SIGNATURE_TWO_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
-                List.of(sequence(string("input")), sequence(string("pattern["))));
+                ObjectUtils.notNull(List.of(sequence(string("input")), sequence(string("pattern[")))));
           } catch (MetapathException ex) {
             Throwable cause = ex.getCause();
             if (cause != null) {
@@ -110,7 +111,10 @@ class FnTokenizeTest
                 FnTokenize.SIGNATURE_THREE_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
-                List.of(sequence(string("input")), sequence(string("pattern")), sequence(string("dsm"))));
+                ObjectUtils.notNull(List.of(
+                    sequence(string("input")),
+                    sequence(string("pattern")),
+                    sequence(string("dsm")))));
           } catch (MetapathException ex) {
             Throwable cause = ex.getCause();
             if (cause != null) {

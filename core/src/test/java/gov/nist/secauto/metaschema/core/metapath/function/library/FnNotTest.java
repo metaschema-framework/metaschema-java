@@ -21,6 +21,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.jmock.Expectations;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -59,7 +59,7 @@ class FnNotTest
       assertFunctionResult(
           FnNot.SIGNATURE,
           ISequence.of(expected),
-          List.of(ISequence.of(values)));
+          CollectionUtil.singletonList(ISequence.of(values)));
     } catch (MetapathException ex) {
       assertAll(
           () -> assertNull(expected),
@@ -73,7 +73,7 @@ class FnNotTest
     assertFunctionResult(
         FnNot.SIGNATURE,
         ISequence.of(IBooleanItem.FALSE),
-        List.of(ISequence.of(item)));
+        CollectionUtil.singletonList(ISequence.of(item)));
   }
 
   @Test
@@ -91,7 +91,7 @@ class FnNotTest
     assertFunctionResult(
         FnNot.SIGNATURE,
         ISequence.of(IBooleanItem.TRUE),
-        List.of(ISequence.of(item)));
+        CollectionUtil.singletonList(ISequence.of(item)));
   }
 
   @Test
@@ -109,6 +109,6 @@ class FnNotTest
     assertFunctionResult(
         FnNot.SIGNATURE,
         ISequence.of(IBooleanItem.FALSE),
-        List.of(ISequence.of(item)));
+        CollectionUtil.singletonList(ISequence.of(item)));
   }
 }

@@ -16,7 +16,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.TypeSystem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -257,21 +256,25 @@ public class DefaultFunction
     return ISequence.of(stream);
   }
 
+  private IItem getContextItem(@NonNull ISequence<?> focus) {
+    IItem contextItem = null;
+    if (isFocusDepenent()) {
+      contextItem = focus.getFirstItem(true);
+      if (contextItem == null) {
+        throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");
+      }
+    }
+    return contextItem;
+  }
+
   @Override
   public ISequence<?> execute(
       @NonNull List<? extends ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       @NonNull ISequence<?> focus) {
-    try {
 
-      IItem contextItem = null;
-      
-      if (isFocusDepenent()) {
-        contextItem = focus.getFirstItem(true);
-        if (contextItem == null) {
-          throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");
-        }
-      }
+    try {
+      IItem contextItem = getContextItem(focus);
 
       List<ISequence<?>> convertedArguments = convertArguments(this, arguments);
 

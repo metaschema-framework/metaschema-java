@@ -11,6 +11,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -43,6 +44,6 @@ class FnStartsWithTest
     assertFunctionResult(
         FnStartsWith.SIGNATURE,
         ISequence.of(expected),
-        List.of(ISequence.of(text), ISequence.of(pattern)));
+        ObjectUtils.notNull(List.of(ISequence.of(text), ISequence.of(pattern))));
   }
 }

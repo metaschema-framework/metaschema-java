@@ -20,6 +20,8 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -63,7 +65,7 @@ class FnStringTest
                 FnString.SIGNATURE_NO_ARG,
                 newDynamicContext(),
                 null,
-                List.of(sequence()));
+                CollectionUtil.singletonList(sequence()));
           } catch (MetapathException ex) {
             throw ex.getCause();
           }
@@ -80,7 +82,7 @@ class FnStringTest
                 FnString.SIGNATURE_ONE_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
-                List.of(sequence(integer(1), integer(2))));
+                ObjectUtils.notNull(List.of(sequence(integer(1), integer(2)))));
           } catch (MetapathException ex) {
             throw ex.getCause();
           }
@@ -96,7 +98,11 @@ class FnStringTest
                 FnString.SIGNATURE_ONE_ARG,
                 newDynamicContext(),
                 ISequence.empty(),
-                List.of(sequence(array(array(integer(1), integer(2)), array(integer(3), integer(4))))));
+                ObjectUtils.notNull(List.of(
+                    sequence(
+                        array(
+                            array(integer(1), integer(2)),
+                            array(integer(3), integer(4)))))));
           } catch (MetapathException ex) {
             throw ex.getCause();
           }

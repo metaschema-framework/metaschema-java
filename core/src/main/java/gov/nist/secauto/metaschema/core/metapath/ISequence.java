@@ -182,7 +182,6 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IPrintable, I
     return ObjectUtils.notNull(getValue().stream());
   }
 
-  @SuppressWarnings("null")
   @Override
   default Stream<? extends IItem> flatten() {
     // TODO: Is a safe stream needed here?

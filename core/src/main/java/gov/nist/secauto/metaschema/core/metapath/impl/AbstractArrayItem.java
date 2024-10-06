@@ -40,7 +40,6 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
   @NonNull
   public static final ISequenceType RESULT = ISequenceType.of(IAnyAtomicItem.class, Occurrence.ZERO_OR_ONE);
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   @NonNull
   private static final IArrayItem<?> EMPTY = new ArrayItemN<>();
 

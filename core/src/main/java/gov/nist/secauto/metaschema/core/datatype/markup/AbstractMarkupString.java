@@ -210,7 +210,7 @@ public abstract class AbstractMarkupString<TYPE extends AbstractMarkupString<TYP
 
   @Override
   public String toText() {
-    return new TextCollectingVisitor().collectAndGetText(document);
+    return ObjectUtils.notNull(new TextCollectingVisitor().collectAndGetText(document));
   }
 
   @Override

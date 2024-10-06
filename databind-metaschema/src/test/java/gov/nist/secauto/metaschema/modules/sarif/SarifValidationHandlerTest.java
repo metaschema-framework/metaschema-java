@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import dev.harrel.jsonschema.Dialects;
 import dev.harrel.jsonschema.JsonNode;
@@ -106,6 +107,7 @@ class SarifValidationHandlerTest {
         .kind(IValidationFinding.Kind.FAIL)
         .build());
 
+    // no need to cleanup this file, since it is created in the target directory
     Path sarifFile = Paths.get("target/test.sarif");
     handler.write(sarifFile);
 
@@ -120,15 +122,15 @@ class SarifValidationHandlerTest {
         Validator.Result result
             = new ValidatorFactory().withDialect(new Dialects.Draft2020Dialect()).validate(schemaNode, instanceNode);
         if (!result.isValid()) {
-          StringBuilder sb = new StringBuilder();
+          StringJoiner sj = new StringJoiner("\n");
           for (dev.harrel.jsonschema.Error finding : result.getErrors()) {
-            sb.append(String.format("[%s]%s %s for schema '%s'%n",
-                finding.getInstanceLocation(),
-                finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
-                finding.getError(),
-                finding.getSchemaLocation()));
+              sj.add(String.format("[%s]%s %s for schema '%s'",
+                  finding.getInstanceLocation(),
+                  finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
+                  finding.getError(),
+                  finding.getSchemaLocation()));
           }
-          assertTrue(result.isValid(), () -> "Schema validation failed with errors:\n" + sb.toString());
+          assertTrue(result.isValid(), () -> "SARIF output failed schema validation. Errors:\n" + sj.toString());
         } else {
           assertTrue(result.isValid());
         }

@@ -19,13 +19,13 @@ import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctio
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -56,7 +56,7 @@ class FnAvgTest
       assertFunctionResult(
           FnAvg.SIGNATURE,
           ISequence.of(expected),
-          List.of(ISequence.of(values)));
+          CollectionUtil.singletonList(ISequence.of(values)));
     } catch (MetapathException ex) {
       if (expected == null) {
         assertAll(
@@ -72,6 +72,6 @@ class FnAvgTest
     assertFunctionResult(
         FnAvg.SIGNATURE,
         ISequence.empty(),
-        List.of(ISequence.empty()));
+        CollectionUtil.singletonList(ISequence.empty()));
   }
 }
