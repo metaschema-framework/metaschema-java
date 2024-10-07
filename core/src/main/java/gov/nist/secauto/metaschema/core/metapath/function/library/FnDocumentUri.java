@@ -24,10 +24,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class FnDocumentUri {
-
+  private static final String NAME = "document-uri";
   @NonNull
   static final IFunction SIGNATURE_NO_ARG = IFunction.builder()
-      .name("document-uri")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()
@@ -39,7 +39,7 @@ public final class FnDocumentUri {
 
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
-      .name("document-uri")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

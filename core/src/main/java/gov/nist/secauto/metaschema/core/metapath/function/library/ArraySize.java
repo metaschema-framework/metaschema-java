@@ -20,7 +20,7 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ArraySize {
+public final class ArraySize {
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name("size")
@@ -55,5 +55,9 @@ public class ArraySize {
     IArrayItem<?> array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
 
     return ISequence.of(IIntegerItem.valueOf(array.size()));
+  }
+
+  private ArraySize() {
+    // disable
   }
 }

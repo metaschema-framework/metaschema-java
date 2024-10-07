@@ -27,7 +27,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class MapFind {
   @NonNull
-  public static final IFunction SIGNATURE = IFunction.builder()
+  static final IFunction SIGNATURE = IFunction.builder()
       .name("find")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()

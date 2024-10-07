@@ -32,9 +32,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * "https://www.w3.org/TR/xpath-functions-31/#func-tokenize">fn:tokenize</a>.
  */
 public final class FnTokenize {
+  private static final String NAME = "tokenize";
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
-      .name("tokenize")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
@@ -50,7 +51,7 @@ public final class FnTokenize {
       .build();
   @NonNull
   static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
-      .name("tokenize")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
@@ -72,7 +73,7 @@ public final class FnTokenize {
 
   @NonNull
   static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()
-      .name("tokenize")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

@@ -24,9 +24,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArraySubarray {
+  private static final String NAME = "subarray";
   @NonNull
-  public static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
-      .name("subarray")
+  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()
@@ -46,8 +47,8 @@ public final class ArraySubarray {
       .functionHandler(ArraySubarray::executeTwoArg)
       .build();
   @NonNull
-  public static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()
-      .name("subarray")
+  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayGet {
   @NonNull
-  public static final IFunction SIGNATURE = IFunction.builder()
+  static final IFunction SIGNATURE = IFunction.builder()
       .name("get")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()

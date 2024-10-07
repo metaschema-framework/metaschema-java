@@ -28,7 +28,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class MapRemove {
   @NonNull
-  public static final IFunction SIGNATURE = IFunction.builder()
+  static final IFunction SIGNATURE = IFunction.builder()
       .name("remove")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()

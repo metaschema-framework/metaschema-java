@@ -158,13 +158,12 @@ public class DefaultFunction
   public static List<ISequence<?>> convertArguments(
       @NonNull IFunction function,
       @NonNull List<? extends ISequence<?>> parameters) {
-    @NonNull List<ISequence<?>> retval = new ArrayList<>(parameters.size());
+    @NonNull
+    List<ISequence<?>> retval = new ArrayList<>(parameters.size());
 
     Iterator<IArgument> argumentIterator = function.getArguments().iterator();
-    Iterator<? extends ISequence<?>> parametersIterator = parameters.iterator();
-
     IArgument argument = null;
-    while (parametersIterator.hasNext()) {
+    for (ISequence<?> parameter : parameters) {
       if (argumentIterator.hasNext()) {
         argument = argumentIterator.next();
       } else if (!function.isArityUnbounded()) {
@@ -173,7 +172,6 @@ public class DefaultFunction
             String.format("argument signature doesn't match '%s'", function.toSignature()));
       }
 
-      ISequence<?> parameter = parametersIterator.next();
       assert argument != null;
       assert parameter != null;
 
@@ -210,8 +208,7 @@ public class DefaultFunction
   }
 
   /**
-   * Based on XPath 3.1
-   * <a href="https://www.w3.org/TR/xpath-31/#dt-function-conversion">function
+   * Based on XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#dt-function-conversion">function
    * conversion</a> rules.
    *
    * @param argument
@@ -316,10 +313,7 @@ public class DefaultFunction
     if (this == obj) {
       return true; // NOPMD - readability
     }
-    if (obj == null) {
-      return false; // NOPMD - readability
-    }
-    if (getClass() != obj.getClass()) {
+    if ((obj == null) || (getClass() != obj.getClass())) {
       return false; // NOPMD - readability
     }
     DefaultFunction other = (DefaultFunction) obj;
@@ -389,8 +383,7 @@ public class DefaultFunction
       final int prime = 31;
       int result = 1;
       result = prime * result + getFunction().hashCode();
-      result = prime * result + Objects.hash(contextItem, arguments);
-      return result;
+      return prime * result + Objects.hash(contextItem, arguments);
     }
 
     @Override
@@ -398,10 +391,7 @@ public class DefaultFunction
       if (this == obj) {
         return true; // NOPMD - readability
       }
-      if (obj == null) {
-        return false; // NOPMD - readability
-      }
-      if (getClass() != obj.getClass()) {
+      if ((obj == null) || (getClass() != obj.getClass())) {
         return false; // NOPMD - readability
       }
       CallingContext other = (CallingContext) obj;

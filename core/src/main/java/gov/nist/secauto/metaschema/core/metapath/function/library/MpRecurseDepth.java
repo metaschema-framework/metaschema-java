@@ -28,11 +28,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Provides functions that evaluate a Metapath recursively over sequences.
  */
 public final class MpRecurseDepth {
-  // private static final Logger logger = LogManager.getLogger(FnDoc.class);
+  private static final String NAME = "recurse-depth";
 
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
-      .name("recurse-depth")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_EXTENDED)
       .deterministic()
       .contextDependent()
@@ -49,7 +49,7 @@ public final class MpRecurseDepth {
 
   @NonNull
   static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
-      .name("recurse-depth")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_EXTENDED)
       .deterministic()
       .contextDependent()

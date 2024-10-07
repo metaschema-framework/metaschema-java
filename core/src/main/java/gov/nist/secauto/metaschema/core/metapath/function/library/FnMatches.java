@@ -30,9 +30,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * "https://www.w3.org/TR/xpath-functions-31/#func-matches">fn:matches</a>.
  */
 public final class FnMatches {
+  private static final String NAME = "matches";
   @NonNull
   static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
-      .name("matches")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
@@ -54,7 +55,7 @@ public final class FnMatches {
 
   @NonNull
   static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()
-      .name("matches")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

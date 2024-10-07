@@ -20,7 +20,7 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class MapSize {
+public final class MapSize {
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name("size")
@@ -55,5 +55,9 @@ public class MapSize {
     IMapItem<?> map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
 
     return ISequence.of(IIntegerItem.valueOf(map.size()));
+  }
+
+  private MapSize() {
+    // disable
   }
 }

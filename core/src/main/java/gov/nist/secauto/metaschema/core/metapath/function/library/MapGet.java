@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class MapGet {
   @NonNull
-  public static final IFunction SIGNATURE = IFunction.builder()
+  static final IFunction SIGNATURE = IFunction.builder()
       .name("get")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()

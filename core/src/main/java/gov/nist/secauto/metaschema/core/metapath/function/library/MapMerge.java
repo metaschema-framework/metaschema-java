@@ -34,12 +34,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class MapMerge {
+  private static final String NAME = "merge";
   private static final Random RANDOM = new Random();
   private static final IMapKey DUPLICATES_OPTION = IStringItem.valueOf("duplicates").asMapKey();
 
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
-      .name("merge")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()
       .contextIndependent()
@@ -56,7 +57,7 @@ public final class MapMerge {
 
   @NonNull
   static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
-      .name("merge")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()
       .contextIndependent()
@@ -87,11 +88,11 @@ public final class MapMerge {
     USE_LAST("use-last", (key, v1, v2) -> v2),
     USE_ANY("use-any", (key, v1, v2) -> RANDOM.nextBoolean() ? v1 : v2),
     @SuppressWarnings("null")
-    COMBINE("combine", (key, v1, v2) -> {
-      return Stream.concat(
-          v1.asSequence().stream(),
-          v2.asSequence().stream()).collect(ISequence.toSequence());
-    });
+    COMBINE(
+        "combine",
+        (key, v1, v2) -> Stream.concat(
+            v1.asSequence().stream(),
+            v2.asSequence().stream()).collect(ISequence.toSequence()));
 
     private static final Map<String, Duplicates> BY_NAME;
 

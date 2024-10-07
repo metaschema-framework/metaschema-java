@@ -25,8 +25,6 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class FnDoc {
-  // private static final Logger logger = LogManager.getLogger(FnDoc.class);
-
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name("doc")

@@ -18,7 +18,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class FnStartsWith {
 
@@ -53,11 +52,10 @@ public final class FnStartsWith {
 
     IStringItem arg2 = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
 
-    return ISequence.of(fnStartsWith(arg1, arg2));
-  }
-
-  private FnStartsWith() {
-    // disable construction
+    return ISequence.of(IBooleanItem.valueOf(
+        fnStartsWith(
+            arg1 == null ? "" : arg1.asString(),
+            arg2 == null ? "" : arg2.asString())));
   }
 
   /**
@@ -72,19 +70,22 @@ public final class FnStartsWith {
    *          the string to examine
    * @param arg2
    *          the string to check as the leading substring
-   * @return {@link IBooleanItem#TRUE} if {@code arg1} starts with {@code arg2},
-   *         or {@link IBooleanItem#FALSE} otherwise
+   * @return {@code true} if {@code arg1} starts with {@code arg2}, or
+   *         {@code false} otherwise
    */
-  public static IBooleanItem fnStartsWith(@Nullable IStringItem arg1, @Nullable IStringItem arg2) {
-    String arg2String = arg2 == null ? "" : arg2.asString();
-
+  public static boolean fnStartsWith(@NonNull String arg1, @NonNull String arg2) {
     boolean retval;
-    if (arg2String.isEmpty()) {
+    if (arg2.isEmpty()) {
       retval = true;
+    } else if (arg1.isEmpty()) {
+      retval = false;
     } else {
-      String arg1String = arg1 == null ? "" : arg1.asString();
-      retval = arg1String.startsWith(arg2String);
+      retval = arg1.startsWith(arg2);
     }
-    return IBooleanItem.valueOf(retval);
+    return retval;
+  }
+
+  private FnStartsWith() {
+    // disable construction
   }
 }

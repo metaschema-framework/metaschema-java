@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayPut {
   @NonNull
-  public static final IFunction SIGNATURE = IFunction.builder()
+  static final IFunction SIGNATURE = IFunction.builder()
       .name("put")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()

@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayJoin {
   @NonNull
-  public static final IFunction SIGNATURE = IFunction.builder()
+  static final IFunction SIGNATURE = IFunction.builder()
       .name("join")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()

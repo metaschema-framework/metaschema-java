@@ -27,10 +27,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * document-uri function.
  */
 public final class FnBaseUri {
-
+  private static final String NAME = "base-uri";
   @NonNull
   static final IFunction SIGNATURE_NO_ARG = IFunction.builder()
-      .name("base-uri")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()
@@ -42,7 +42,7 @@ public final class FnBaseUri {
 
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
-      .name("base-uri")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

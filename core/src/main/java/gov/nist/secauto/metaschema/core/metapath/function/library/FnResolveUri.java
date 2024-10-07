@@ -24,9 +24,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class FnResolveUri {
+  private static final String NAME = "resolve-uri";
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
-      .name("resolve-uri")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()
@@ -43,7 +44,7 @@ public final class FnResolveUri {
 
   @NonNull
   static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
-      .name("resolve-uri")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

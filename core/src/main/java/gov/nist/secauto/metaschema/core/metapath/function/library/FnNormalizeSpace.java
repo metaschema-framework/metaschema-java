@@ -24,9 +24,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://www.w3.org/TR/xpath-functions-31/#func-normalize-space">fn:normalize-space</a>.
  */
 public final class FnNormalizeSpace {
+  private static final String NAME = "normalize-space";
   @NonNull
   static final IFunction SIGNATURE_NO_ARG = IFunction.builder()
-      .name("normalize-space")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()
@@ -38,7 +39,7 @@ public final class FnNormalizeSpace {
 
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
-      .name("normalize-space")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

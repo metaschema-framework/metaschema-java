@@ -27,9 +27,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://www.w3.org/TR/xpath-functions-31/#func-string">fn:string</a>.
  */
 public final class FnString {
+  private static final String NAME = "string";
   @NonNull
   static final IFunction SIGNATURE_NO_ARG = IFunction.builder()
-      .name("string")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()
@@ -41,7 +42,7 @@ public final class FnString {
 
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
-      .name("string")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
