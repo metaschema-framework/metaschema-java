@@ -124,11 +124,11 @@ class SarifValidationHandlerTest {
         if (!result.isValid()) {
           StringJoiner sj = new StringJoiner("\n");
           for (dev.harrel.jsonschema.Error finding : result.getErrors()) {
-              sj.add(String.format("[%s]%s %s for schema '%s'",
-                  finding.getInstanceLocation(),
-                  finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
-                  finding.getError(),
-                  finding.getSchemaLocation()));
+            sj.add(String.format("[%s]%s %s for schema '%s'",
+                finding.getInstanceLocation(),
+                finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
+                finding.getError(),
+                finding.getSchemaLocation()));
           }
           assertTrue(result.isValid(), () -> "SARIF output failed schema validation. Errors:\n" + sj.toString());
         } else {

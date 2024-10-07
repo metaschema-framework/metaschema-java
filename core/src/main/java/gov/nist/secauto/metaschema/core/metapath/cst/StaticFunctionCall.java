@@ -45,7 +45,8 @@ public class StaticFunctionCall implements IExpression {
   /**
    * Retrieve the associated function.
    *
-   * @return the function or {@code null} if no function matched the defined name and arguments
+   * @return the function or {@code null} if no function matched the defined name
+   *         and arguments
    * @throws StaticMetapathException
    *           if the function was not found
    */
@@ -81,8 +82,7 @@ public class StaticFunctionCall implements IExpression {
   @Override
   public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     List<ISequence<?>> arguments = ObjectUtils.notNull(getChildren().stream().map(expression -> {
-      @NonNull
-      ISequence<?> result = expression.accept(dynamicContext, focus);
+      @NonNull ISequence<?> result = expression.accept(dynamicContext, focus);
       return result;
     }).collect(Collectors.toList()));
 
