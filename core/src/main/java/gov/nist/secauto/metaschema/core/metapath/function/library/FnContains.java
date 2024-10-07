@@ -20,10 +20,11 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class FnContains {
+  private static final String NAME = "contains";
 
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("contains")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()
