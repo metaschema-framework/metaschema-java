@@ -49,7 +49,8 @@ public class DefaultFunctionLibrary
     registerFunction(FnCompare.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-concat
     registerFunction(FnConcat.SIGNATURE);
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-contains
+    // https://www.w3.org/TR/xpath-functions-31/#func-contains
+    registerFunction(FnContains.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-count
     registerFunction(FnCount.SIGNATURE);
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-date
@@ -74,7 +75,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-empty
     registerFunction(FnEmpty.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-encode-for-uri
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-ends-with
+    // https://www.w3.org/TR/xpath-functions-31/#func-ends-with
+    registerFunction(FnEndsWith.SIGNATURE);
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-exactly-one
     // https://www.w3.org/TR/xpath-functions-31/#func-exists
     registerFunction(FnExists.SIGNATURE);
