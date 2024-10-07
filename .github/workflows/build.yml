@@ -39,17 +39,6 @@ jobs:
       contents: read
       security-events: write
     steps:
-    - name: Validate inputs
-      if: github.event_name == 'workflow_dispatch'
-      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea
-      with:
-        script: |
-          const inputs = ['linkcheck_fail_on_error', 'linkcheck_create_issue'];
-          inputs.forEach(input => {
-            if (typeof github.event.inputs[input] !== 'boolean') {
-              core.setFailed(`Input ${input} must be a boolean value.`);
-            }
-          });
     - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       with:
         submodules: recursive
