@@ -10,6 +10,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +30,8 @@ public class StreamSequence<ITEM extends IItem>
 
   private Stream<ITEM> stream;
   private List<ITEM> list;
+  @NonNull
+  private final Lock instanceLock = new ReentrantLock();
 
   /**
    * Construct a new sequence using the provided item stream.
@@ -42,12 +46,15 @@ public class StreamSequence<ITEM extends IItem>
 
   @Override
   public List<ITEM> getValue() {
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       if (list == null) {
         list = stream().collect(Collectors.toUnmodifiableList());
       }
       assert list != null;
       return list;
+    } finally {
+      instanceLock.unlock();
     }
   }
 
@@ -55,7 +62,8 @@ public class StreamSequence<ITEM extends IItem>
   public Stream<ITEM> stream() {
     @NonNull Stream<ITEM> retval;
     // Ensure thread safety and prevent multiple consumptions of the stream
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       if (list == null) {
         if (stream == null) {
           throw new IllegalStateException("stream is already consumed");
@@ -66,6 +74,8 @@ public class StreamSequence<ITEM extends IItem>
       } else {
         retval = ObjectUtils.notNull(list.stream());
       }
+    } finally {
+      instanceLock.unlock();
     }
     return retval;
   }

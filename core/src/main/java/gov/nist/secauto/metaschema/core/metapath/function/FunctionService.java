@@ -10,6 +10,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 import javax.xml.namespace.QName;
@@ -23,6 +25,8 @@ public final class FunctionService {
   private final ServiceLoader<IFunctionLibrary> loader;
   @NonNull
   private final Lazy<IFunctionLibrary> library;
+  @NonNull
+  private final Lock instanceLock = new ReentrantLock();
 
   /**
    * Get the singleton instance of the function service.
@@ -90,8 +94,11 @@ public final class FunctionService {
    */
   public IFunction getFunction(@NonNull String name, int arity) {
     IFunction retval;
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       retval = getLibrary().getFunction(name, arity);
+    } finally {
+      instanceLock.unlock();
     }
 
     if (retval == null) {
@@ -116,8 +123,11 @@ public final class FunctionService {
    */
   public IFunction getFunction(@NonNull QName name, int arity) {
     IFunction retval;
-    synchronized (this) {
+    try {
+      instanceLock.lock();
       retval = getLibrary().getFunction(name, arity);
+    } finally {
+      instanceLock.unlock();
     }
 
     if (retval == null) {
@@ -126,5 +136,4 @@ public final class FunctionService {
     }
     return retval;
   }
-
 }

@@ -13,6 +13,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -24,6 +26,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public final class InternalModelSource implements ISource {
   @NonNull
   private static final Map<IModule, InternalModelSource> sources = new HashMap<>(); // NOPMD - intentional
+  @NonNull
+  private static final Lock SOURCE_LOCK = new ReentrantLock();
   @NonNull
   private final IModule module;
 
@@ -37,13 +41,14 @@ public final class InternalModelSource implements ISource {
    */
   @NonNull
   public static ISource instance(@NonNull IModule module) {
-    ISource retval;
-    synchronized (sources) {
-      retval = ObjectUtils.notNull(sources.computeIfAbsent(
+    try {
+      SOURCE_LOCK.lock();
+      return ObjectUtils.notNull(sources.computeIfAbsent(
           module,
           (uri) -> new InternalModelSource(module)));
+    } finally {
+      SOURCE_LOCK.unlock();
     }
-    return retval;
   }
 
   private InternalModelSource(@NonNull IModule module) {
