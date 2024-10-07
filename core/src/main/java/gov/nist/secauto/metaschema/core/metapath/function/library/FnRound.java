@@ -27,7 +27,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public final class FnRound {
   private static final String NAME = "round";
-
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name(NAME)

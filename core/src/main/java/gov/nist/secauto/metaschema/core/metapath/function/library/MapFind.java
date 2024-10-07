@@ -26,9 +26,10 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class MapFind {
+  private static final String NAME = "find";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("find")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()
       .contextIndependent()

@@ -22,9 +22,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class ArrayHead {
+  private static final String NAME = "head";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("head")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

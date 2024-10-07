@@ -25,9 +25,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://www.w3.org/TR/xpath-functions-31/#func-insert-before">fn:insert-before</a>.
  */
 public final class FnInsertBefore {
+  private static final String NAME = "insert-before";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("insert-before")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

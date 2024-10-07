@@ -21,9 +21,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-false">fn:false</a>.
  */
 public final class FnFalse {
+  private static final String NAME = "false";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("false")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

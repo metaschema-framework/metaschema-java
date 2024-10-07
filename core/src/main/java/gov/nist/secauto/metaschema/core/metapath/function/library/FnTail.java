@@ -24,9 +24,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-tail">fn:tail</a>.
  */
 public final class FnTail {
+  private static final String NAME = "tail";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("tail")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

@@ -21,9 +21,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArraySize {
+  private static final String NAME = "size";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("size")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

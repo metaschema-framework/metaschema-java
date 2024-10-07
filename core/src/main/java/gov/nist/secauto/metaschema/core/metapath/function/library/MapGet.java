@@ -23,9 +23,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class MapGet {
+  private static final String NAME = "get";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("get")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()
       .contextIndependent()

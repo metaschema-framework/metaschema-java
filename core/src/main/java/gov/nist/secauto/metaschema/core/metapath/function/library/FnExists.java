@@ -24,9 +24,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://www.w3.org/TR/xpath-functions-31/#func-exists">fn:exists</a>.
  */
 public final class FnExists {
+  private static final String NAME = "exists";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("exists")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

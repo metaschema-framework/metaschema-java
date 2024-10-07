@@ -27,9 +27,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://www.w3.org/TR/xpath-functions-31/#func-concat">fn:concat</a>.
  */
 public final class FnConcat {
+  private static final String NAME = "concat";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("concat")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
@@ -106,9 +107,7 @@ public final class FnConcat {
   @NonNull
   public static IStringItem concat(@NonNull Stream<? extends IAnyAtomicItem> items) {
     return IStringItem.valueOf(ObjectUtils.notNull(items
-        .map(item -> {
-          return item == null ? "" : IStringItem.cast(item).asString();
-        })
+        .map(item -> (item == null ? "" : IStringItem.cast(item).asString()))
         .collect(Collectors.joining())));
   }
 }

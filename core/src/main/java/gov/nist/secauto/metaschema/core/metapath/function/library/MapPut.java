@@ -25,9 +25,10 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class MapPut {
+  private static final String NAME = "put";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("put")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()
       .contextIndependent()

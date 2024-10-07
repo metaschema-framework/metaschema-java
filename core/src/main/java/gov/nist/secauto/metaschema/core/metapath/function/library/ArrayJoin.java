@@ -23,9 +23,10 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayJoin {
+  private static final String NAME = "join";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("join")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

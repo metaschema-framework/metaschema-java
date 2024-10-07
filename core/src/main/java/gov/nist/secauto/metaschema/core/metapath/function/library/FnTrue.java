@@ -21,9 +21,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-true">fn:true</a>.
  */
 public final class FnTrue {
+  private static final String NAME = "true";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("true")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

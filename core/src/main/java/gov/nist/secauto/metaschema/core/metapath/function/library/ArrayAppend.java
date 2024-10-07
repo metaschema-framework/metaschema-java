@@ -22,9 +22,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayAppend {
+  private static final String NAME = "append";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("append")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

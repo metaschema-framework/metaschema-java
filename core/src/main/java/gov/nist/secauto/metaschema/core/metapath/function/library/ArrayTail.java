@@ -21,9 +21,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class ArrayTail {
+  private static final String NAME = "tail";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("tail")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

@@ -24,9 +24,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayPut {
+  private static final String NAME = "put";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("put")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

@@ -23,9 +23,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-head">fn:head</a>.
  */
 public final class FnHead {
+  private static final String NAME = "head";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("head")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

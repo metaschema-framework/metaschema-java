@@ -23,9 +23,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class MapContains {
+  private static final String NAME = "contains";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("contains")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()
       .contextIndependent()

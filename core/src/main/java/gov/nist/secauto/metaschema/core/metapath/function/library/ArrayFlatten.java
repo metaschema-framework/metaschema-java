@@ -20,9 +20,10 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayFlatten {
+  private static final String NAME = "flatten";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("flatten")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

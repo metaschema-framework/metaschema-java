@@ -23,9 +23,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayReverse {
+  private static final String NAME = "reverse";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("reverse")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

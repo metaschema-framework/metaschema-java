@@ -24,9 +24,10 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class MapKeys {
+  private static final String NAME = "keys";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("keys")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()
       .contextIndependent()

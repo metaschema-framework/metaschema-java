@@ -22,9 +22,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class MapEntry {
+  private static final String NAME = "entry";
   @NonNull
   public static final IFunction SIGNATURE = IFunction.builder()
-      .name("entry")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)
       .deterministic()
       .contextIndependent()

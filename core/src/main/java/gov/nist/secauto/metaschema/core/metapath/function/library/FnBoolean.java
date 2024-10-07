@@ -26,9 +26,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class FnBoolean {
+  private static final String NAME = "boolean";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("boolean")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

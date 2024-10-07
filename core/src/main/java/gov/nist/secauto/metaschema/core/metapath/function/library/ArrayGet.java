@@ -23,9 +23,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayGet {
+  private static final String NAME = "get";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("get")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()

@@ -158,8 +158,7 @@ public class DefaultFunction
   public static List<ISequence<?>> convertArguments(
       @NonNull IFunction function,
       @NonNull List<? extends ISequence<?>> parameters) {
-    @NonNull
-    List<ISequence<?>> retval = new ArrayList<>(parameters.size());
+    @NonNull List<ISequence<?>> retval = new ArrayList<>(parameters.size());
 
     Iterator<IArgument> argumentIterator = function.getArguments().iterator();
     IArgument argument = null;
@@ -208,7 +207,8 @@ public class DefaultFunction
   }
 
   /**
-   * Based on XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#dt-function-conversion">function
+   * Based on XPath 3.1
+   * <a href="https://www.w3.org/TR/xpath-31/#dt-function-conversion">function
    * conversion</a> rules.
    *
    * @param argument

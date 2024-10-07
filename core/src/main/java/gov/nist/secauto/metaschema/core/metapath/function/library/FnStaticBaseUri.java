@@ -21,9 +21,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class FnStaticBaseUri {
+  private static final String NAME = "static-base-uri";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("static-base-uri")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()

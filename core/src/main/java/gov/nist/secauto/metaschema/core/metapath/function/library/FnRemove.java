@@ -25,9 +25,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://www.w3.org/TR/xpath-functions-31/#func-remove">fn:remove</a>.
  */
 public final class FnRemove {
+  private static final String NAME = "remove";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("remove")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
@@ -80,11 +81,7 @@ public final class FnRemove {
       @NonNull IIntegerItem positionItem) {
     int position = positionItem.asInteger().intValue();
 
-    if (position == 0) {
-      return target;
-    }
-
-    if (position > target.size()) {
+    if ((position == 0) || (position > target.size())) {
       return target;
     }
 

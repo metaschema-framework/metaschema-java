@@ -20,10 +20,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class FnStartsWith {
-
+  private static final String NAME = "starts-with";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("starts-with")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()

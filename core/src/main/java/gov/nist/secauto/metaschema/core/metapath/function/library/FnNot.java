@@ -19,9 +19,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class FnNot {
+  private static final String NAME = "not";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("not")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()

@@ -27,9 +27,10 @@ import java.util.stream.IntStream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayRemove {
+  private static final String NAME = "remove";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("remove")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)
       .deterministic()
       .contextIndependent()
