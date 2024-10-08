@@ -21,12 +21,14 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements <a href= "https://www.w3.org/TR/xpath-functions-31/#func-substring">fn:substring</a>.
+ * Implements <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-substring">fn:substring</a>.
  */
 public final class FnSubstring {
+  private static final String NAME = "substring";
   @NonNull
   static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
-      .name("substring")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
@@ -46,8 +48,9 @@ public final class FnSubstring {
       .functionHandler(FnSubstring::executeTwoArg)
       .build();
 
+  @NonNull
   static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()
-      .name("substring")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
@@ -76,7 +79,7 @@ public final class FnSubstring {
     // disable construction
   }
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings({ "unused", "PMD.OnlyOneReturn" })
   @NonNull
   private static ISequence<IStringItem> executeTwoArg(
       @NonNull IFunction function,
@@ -94,13 +97,14 @@ public final class FnSubstring {
 
     int startIndex = start.round().asInteger().intValue();
 
-    return ISequence.of(fnSubstring(
-        sourceString.asString(),
-        startIndex,
-        sourceString.toString().length() - Math.max(startIndex, 1) + 1));
+    return ISequence.of(IStringItem.valueOf(
+        fnSubstring(
+            sourceString.asString(),
+            startIndex,
+            sourceString.toString().length() - Math.max(startIndex, 1) + 1)));
   }
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings({ "unused", "PMD.OnlyOneReturn" })
   @NonNull
   private static ISequence<IStringItem> executeThreeArg(
       @NonNull IFunction function,
@@ -117,26 +121,27 @@ public final class FnSubstring {
     IDecimalItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
     IDecimalItem length = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2).getFirstItem(true)));
 
-    return ISequence.of(fnSubstring(
-        sourceString.asString(),
-        start.round().asInteger().intValue(),
-        length.round().asInteger().intValue()));
+    return ISequence.of(IStringItem.valueOf(
+        fnSubstring(
+            sourceString.asString(),
+            start.round().asInteger().intValue(),
+            length.round().asInteger().intValue())));
   }
 
   /**
-   * An implementation of XPath 3.1
-   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-substring">fn:substring</a>.
+   * An implementation of XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-substring">fn:substring</a>.
    *
-   * @param sourceString
-   *
+   * @param source
+   *          the source string to get a substring from
    * @param start
-   *
+   *          the 1-based start location
    * @param length
-   *
-   * @return the atomized result
+   *          the substring length
+   * @return the substring
    */
   @NonNull
-  public static IStringItem fnSubstring(
+  public static String fnSubstring(
       @NonNull String source,
       int start,
       int length) {
@@ -151,6 +156,6 @@ public final class FnSubstring {
     // Ensure startIndex is not greater than endIndex
     startIndex = Math.min(startIndex, endIndex);
 
-    return IStringItem.valueOf(source.substring(startIndex - 1, endIndex - 1));
+    return ObjectUtils.notNull(source.substring(startIndex - 1, endIndex - 1));
   }
 }
