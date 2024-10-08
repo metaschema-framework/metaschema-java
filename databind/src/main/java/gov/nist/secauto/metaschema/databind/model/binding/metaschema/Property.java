@@ -46,7 +46,7 @@ public class Property implements IBoundObject {
       formalName = "Property Value",
       name = "value",
       required = true,
-      typeAdapter = TokenAdapter.class)
+      typeAdapter = StringAdapter.class)
   private String _value;
 
   public Property() {
