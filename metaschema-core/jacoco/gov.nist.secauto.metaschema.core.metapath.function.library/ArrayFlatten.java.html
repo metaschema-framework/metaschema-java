@@ -20,22 +20,23 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayFlatten {
+  private static final String NAME = &quot;flatten&quot;;
   @NonNull
-<span class="fc" id="L24">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L25">      .name(&quot;flatten&quot;)</span>
-<span class="fc" id="L26">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L27">      .deterministic()</span>
-<span class="fc" id="L28">      .contextIndependent()</span>
-<span class="fc" id="L29">      .focusIndependent()</span>
-<span class="fc" id="L30">      .argument(IArgument.builder()</span>
-<span class="fc" id="L31">          .name(&quot;input&quot;)</span>
-<span class="fc" id="L32">          .type(IItem.class)</span>
-<span class="fc" id="L33">          .zeroOrMore()</span>
-<span class="fc" id="L34">          .build())</span>
-<span class="fc" id="L35">      .returnType(IItem.class)</span>
-<span class="fc" id="L36">      .returnZeroOrMore()</span>
-<span class="fc" id="L37">      .functionHandler(ArrayFlatten::execute)</span>
-<span class="fc" id="L38">      .build();</span>
+<span class="fc" id="L25">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L26">      .name(NAME)</span>
+<span class="fc" id="L27">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L28">      .deterministic()</span>
+<span class="fc" id="L29">      .contextIndependent()</span>
+<span class="fc" id="L30">      .focusIndependent()</span>
+<span class="fc" id="L31">      .argument(IArgument.builder()</span>
+<span class="fc" id="L32">          .name(&quot;input&quot;)</span>
+<span class="fc" id="L33">          .type(IItem.class)</span>
+<span class="fc" id="L34">          .zeroOrMore()</span>
+<span class="fc" id="L35">          .build())</span>
+<span class="fc" id="L36">      .returnType(IItem.class)</span>
+<span class="fc" id="L37">      .returnZeroOrMore()</span>
+<span class="fc" id="L38">      .functionHandler(ArrayFlatten::execute)</span>
+<span class="fc" id="L39">      .build();</span>
 
   private ArrayFlatten() {
     // disable construction
@@ -47,9 +48,9 @@ public final class ArrayFlatten {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L50">    ISequence&lt;?&gt; input = ObjectUtils.requireNonNull(arguments.get(0));</span>
+<span class="fc" id="L51">    ISequence&lt;?&gt; input = ObjectUtils.requireNonNull(arguments.get(0));</span>
 
-<span class="fc" id="L52">    return ISequence.of(flatten(input));</span>
+<span class="fc" id="L53">    return ISequence.of(flatten(input));</span>
   }
 
   /**
@@ -63,8 +64,8 @@ public final class ArrayFlatten {
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   public static Stream&lt;IItem&gt; flatten(@NonNull List&lt;? extends IItem&gt; items) {
-<span class="fc" id="L66">    return items.stream()</span>
-<span class="fc" id="L67">        .flatMap(ArrayFlatten::flatten);</span>
+<span class="fc" id="L67">    return items.stream()</span>
+<span class="fc" id="L68">        .flatMap(ArrayFlatten::flatten);</span>
   }
 
   /**
@@ -78,13 +79,13 @@ public final class ArrayFlatten {
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   public static Stream&lt;IItem&gt; flatten(@NonNull IItem item) {
-<span class="fc bfc" id="L81" title="All 2 branches covered.">    return item instanceof IArrayItem</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">    return item instanceof IArrayItem</span>
         // flatten the array members
-<span class="fc" id="L83">        ? ((IArrayItem&lt;?&gt;) item).stream()</span>
-<span class="fc" id="L84">            .flatMap(member -&gt; member.asSequence().stream()</span>
-<span class="fc" id="L85">                .flatMap(ArrayFlatten::flatten))</span>
+<span class="fc" id="L84">        ? ((IArrayItem&lt;?&gt;) item).stream()</span>
+<span class="fc" id="L85">            .flatMap(member -&gt; member.asSequence().stream()</span>
+<span class="fc" id="L86">                .flatMap(ArrayFlatten::flatten))</span>
         // use the item
-<span class="fc" id="L87">        : ObjectUtils.notNull(Stream.of(item));</span>
+<span class="fc" id="L88">        : ObjectUtils.notNull(Stream.of(item));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

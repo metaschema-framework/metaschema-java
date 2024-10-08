@@ -9,101 +9,132 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="fc" id="L17">public class ValueConstraintSet implements IValueConstrained { // NOPMD - intentional</span>
-<span class="fc" id="L18">  @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) // need ordering</span>
+<span class="fc" id="L19">public class ValueConstraintSet implements IValueConstrained { // NOPMD - intentional</span>
+<span class="fc" id="L20">  @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) // need ordering</span>
   @NonNull
   private final Map&lt;QName, ILet&gt; lets = new LinkedHashMap&lt;&gt;();
-<span class="fc" id="L21">  @NonNull</span>
-  private final List&lt;IConstraint&gt; constraints = new LinkedList&lt;&gt;();
 <span class="fc" id="L23">  @NonNull</span>
-  private final List&lt;IAllowedValuesConstraint&gt; allowedValuesConstraints = new LinkedList&lt;&gt;();
+  private final List&lt;IConstraint&gt; constraints = new LinkedList&lt;&gt;();
 <span class="fc" id="L25">  @NonNull</span>
-  private final List&lt;IMatchesConstraint&gt; matchesConstraints = new LinkedList&lt;&gt;();
+  private final List&lt;IAllowedValuesConstraint&gt; allowedValuesConstraints = new LinkedList&lt;&gt;();
 <span class="fc" id="L27">  @NonNull</span>
-  private final List&lt;IIndexHasKeyConstraint&gt; indexHasKeyConstraints = new LinkedList&lt;&gt;();
+  private final List&lt;IMatchesConstraint&gt; matchesConstraints = new LinkedList&lt;&gt;();
 <span class="fc" id="L29">  @NonNull</span>
+  private final List&lt;IIndexHasKeyConstraint&gt; indexHasKeyConstraints = new LinkedList&lt;&gt;();
+<span class="fc" id="L31">  @NonNull</span>
   private final List&lt;IExpectConstraint&gt; expectConstraints = new LinkedList&lt;&gt;();
+<span class="fc" id="L33">  @NonNull</span>
+  protected final Lock instanceLock = new ReentrantLock();
 
   @Override
   public Map&lt;QName, ILet&gt; getLetExpressions() {
-<span class="nc" id="L34">    return lets;</span>
+<span class="nc" id="L38">    return lets;</span>
   }
 
   @Override
   public ILet addLetExpression(ILet let) {
-<span class="nc" id="L39">    return lets.put(let.getName(), let);</span>
+<span class="nc" id="L43">    return lets.put(let.getName(), let);</span>
   }
 
   @Override
   public List&lt;IConstraint&gt; getConstraints() {
-<span class="fc" id="L44">    synchronized (this) {</span>
-<span class="fc" id="L45">      return constraints;</span>
+    try {
+<span class="fc" id="L49">      instanceLock.lock();</span>
+<span class="fc" id="L50">      return constraints;</span>
+    } finally {
+<span class="fc" id="L52">      instanceLock.unlock();</span>
     }
   }
 
   @Override
   public List&lt;IAllowedValuesConstraint&gt; getAllowedValuesConstraints() {
-<span class="fc" id="L51">    synchronized (this) {</span>
-<span class="fc" id="L52">      return allowedValuesConstraints;</span>
+    try {
+<span class="fc" id="L59">      instanceLock.lock();</span>
+<span class="fc" id="L60">      return allowedValuesConstraints;</span>
+    } finally {
+<span class="fc" id="L62">      instanceLock.unlock();</span>
     }
   }
 
   @Override
   public List&lt;IMatchesConstraint&gt; getMatchesConstraints() {
-<span class="fc" id="L58">    synchronized (this) {</span>
-<span class="fc" id="L59">      return matchesConstraints;</span>
+    try {
+<span class="fc" id="L69">      instanceLock.lock();</span>
+<span class="fc" id="L70">      return matchesConstraints;</span>
+    } finally {
+<span class="fc" id="L72">      instanceLock.unlock();</span>
     }
   }
 
   @Override
   public List&lt;IIndexHasKeyConstraint&gt; getIndexHasKeyConstraints() {
-<span class="fc" id="L65">    synchronized (this) {</span>
-<span class="fc" id="L66">      return indexHasKeyConstraints;</span>
+    try {
+<span class="fc" id="L79">      instanceLock.lock();</span>
+<span class="fc" id="L80">      return indexHasKeyConstraints;</span>
+    } finally {
+<span class="fc" id="L82">      instanceLock.unlock();</span>
     }
   }
 
   @Override
   public List&lt;IExpectConstraint&gt; getExpectConstraints() {
-<span class="fc" id="L72">    synchronized (this) {</span>
-<span class="fc" id="L73">      return expectConstraints;</span>
+    try {
+<span class="fc" id="L89">      instanceLock.lock();</span>
+<span class="fc" id="L90">      return expectConstraints;</span>
+    } finally {
+<span class="fc" id="L92">      instanceLock.unlock();</span>
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IAllowedValuesConstraint constraint) {
-<span class="fc" id="L79">    synchronized (this) {</span>
-<span class="fc" id="L80">      constraints.add(constraint);</span>
-<span class="fc" id="L81">      allowedValuesConstraints.add(constraint);</span>
-<span class="fc" id="L82">    }</span>
-<span class="fc" id="L83">  }</span>
+    try {
+<span class="fc" id="L99">      instanceLock.lock();</span>
+<span class="fc" id="L100">      constraints.add(constraint);</span>
+<span class="fc" id="L101">      allowedValuesConstraints.add(constraint);</span>
+    } finally {
+<span class="fc" id="L103">      instanceLock.unlock();</span>
+    }
+<span class="fc" id="L105">  }</span>
 
   @Override
   public final void addConstraint(@NonNull IMatchesConstraint constraint) {
-<span class="fc" id="L87">    synchronized (this) {</span>
-<span class="fc" id="L88">      constraints.add(constraint);</span>
-<span class="fc" id="L89">      matchesConstraints.add(constraint);</span>
-<span class="fc" id="L90">    }</span>
-<span class="fc" id="L91">  }</span>
+    try {
+<span class="fc" id="L110">      instanceLock.lock();</span>
+<span class="fc" id="L111">      constraints.add(constraint);</span>
+<span class="fc" id="L112">      matchesConstraints.add(constraint);</span>
+    } finally {
+<span class="fc" id="L114">      instanceLock.unlock();</span>
+    }
+<span class="fc" id="L116">  }</span>
 
   @Override
   public final void addConstraint(@NonNull IIndexHasKeyConstraint constraint) {
-<span class="nc" id="L95">    synchronized (this) {</span>
-<span class="nc" id="L96">      constraints.add(constraint);</span>
-<span class="nc" id="L97">      indexHasKeyConstraints.add(constraint);</span>
-<span class="nc" id="L98">    }</span>
-<span class="nc" id="L99">  }</span>
+    try {
+<span class="nc" id="L121">      instanceLock.lock();</span>
+<span class="nc" id="L122">      constraints.add(constraint);</span>
+<span class="nc" id="L123">      indexHasKeyConstraints.add(constraint);</span>
+    } finally {
+<span class="nc" id="L125">      instanceLock.unlock();</span>
+    }
+<span class="nc" id="L127">  }</span>
 
   @Override
   public final void addConstraint(@NonNull IExpectConstraint constraint) {
-<span class="fc" id="L103">    synchronized (this) {</span>
-<span class="fc" id="L104">      constraints.add(constraint);</span>
-<span class="fc" id="L105">      expectConstraints.add(constraint);</span>
-<span class="fc" id="L106">    }</span>
-<span class="fc" id="L107">  }</span>
+    try {
+<span class="fc" id="L132">      instanceLock.lock();</span>
+<span class="fc" id="L133">      constraints.add(constraint);</span>
+<span class="fc" id="L134">      expectConstraints.add(constraint);</span>
+    } finally {
+<span class="fc" id="L136">      instanceLock.unlock();</span>
+    }
+<span class="fc" id="L138">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

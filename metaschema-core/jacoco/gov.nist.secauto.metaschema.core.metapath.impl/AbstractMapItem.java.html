@@ -60,7 +60,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   }
 
   @Override
-  public ISequence&lt;?&gt; execute(List&lt;ISequence&lt;?&gt;&gt; arguments, DynamicContext dynamicContext,
+  public ISequence&lt;?&gt; execute(List&lt;? extends ISequence&lt;?&gt;&gt; arguments, DynamicContext dynamicContext,
       ISequence&lt;?&gt; focus) {
 <span class="nc" id="L65">    ISequence&lt;? extends IIntegerItem&gt; arg = FunctionUtils.asType(</span>
 <span class="nc" id="L66">        ObjectUtils.notNull(arguments.get(0)));</span>

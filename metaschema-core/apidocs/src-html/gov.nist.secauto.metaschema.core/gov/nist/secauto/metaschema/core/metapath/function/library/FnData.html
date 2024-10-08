@@ -42,10 +42,10 @@
 <span class="source-line-no">029</span><span id="line-29"> * &lt;a href= "https://www.w3.org/TR/xpath-functions-31/#func-data"&gt;fn:data&lt;/a&gt;.</span>
 <span class="source-line-no">030</span><span id="line-30"> */</span>
 <span class="source-line-no">031</span><span id="line-31">public final class FnData {</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
+<span class="source-line-no">032</span><span id="line-32">  private static final String NAME = "data";</span>
 <span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
 <span class="source-line-no">034</span><span id="line-34">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
-<span class="source-line-no">035</span><span id="line-35">      .name("data")</span>
+<span class="source-line-no">035</span><span id="line-35">      .name(NAME)</span>
 <span class="source-line-no">036</span><span id="line-36">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="source-line-no">037</span><span id="line-37">      .deterministic()</span>
 <span class="source-line-no">038</span><span id="line-38">      .contextDependent()</span>
@@ -57,7 +57,7 @@
 <span class="source-line-no">044</span><span id="line-44"></span>
 <span class="source-line-no">045</span><span id="line-45">  @NonNull</span>
 <span class="source-line-no">046</span><span id="line-46">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="source-line-no">047</span><span id="line-47">      .name("data")</span>
+<span class="source-line-no">047</span><span id="line-47">      .name(NAME)</span>
 <span class="source-line-no">048</span><span id="line-48">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="source-line-no">049</span><span id="line-49">      .deterministic()</span>
 <span class="source-line-no">050</span><span id="line-50">      .contextIndependent()</span>

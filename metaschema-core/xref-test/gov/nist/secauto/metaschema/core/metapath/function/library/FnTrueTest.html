@@ -15,22 +15,23 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ISequence;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">class</strong> <a name="FnTrueTest" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/FnTrueTest.html#FnTrueTest">FnTrueTest</a>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">extends</strong> <a name="FunctionTestBase" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/FunctionTestBase.html#FunctionTestBase">FunctionTestBase</a> {
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>    @Test
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>    <strong class="jxr_keyword">void</strong> test() {
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>      assertFunctionResult(
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>          FnTrue.SIGNATURE,
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>          ISequence.of(IBooleanItem.TRUE),
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>          <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>    }
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  }
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.CollectionUtil;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">class</strong> <a name="FnTrueTest" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/FnTrueTest.html#FnTrueTest">FnTrueTest</a>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">extends</strong> <a name="FunctionTestBase" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/FunctionTestBase.html#FunctionTestBase">FunctionTestBase</a> {
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>    @Test
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>    <strong class="jxr_keyword">void</strong> test() {
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>      assertFunctionResult(
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>          FnTrue.SIGNATURE,
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>          ISequence.of(IBooleanItem.TRUE),
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>          CollectionUtil.emptyList());
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>    }
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+<div id="footer">© 2024</div>
 </body>
 </html>

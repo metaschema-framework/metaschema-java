@@ -23,22 +23,23 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayReverse {
+  private static final String NAME = &quot;reverse&quot;;
   @NonNull
-<span class="fc" id="L27">  public static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L28">      .name(&quot;reverse&quot;)</span>
-<span class="fc" id="L29">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L30">      .deterministic()</span>
-<span class="fc" id="L31">      .contextIndependent()</span>
-<span class="fc" id="L32">      .focusIndependent()</span>
-<span class="fc" id="L33">      .argument(IArgument.builder()</span>
-<span class="fc" id="L34">          .name(&quot;array&quot;)</span>
-<span class="fc" id="L35">          .type(IArrayItem.class)</span>
-<span class="fc" id="L36">          .one()</span>
-<span class="fc" id="L37">          .build())</span>
-<span class="fc" id="L38">      .returnType(IArrayItem.class)</span>
-<span class="fc" id="L39">      .returnOne()</span>
-<span class="fc" id="L40">      .functionHandler(ArrayReverse::execute)</span>
-<span class="fc" id="L41">      .build();</span>
+<span class="fc" id="L28">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L29">      .name(NAME)</span>
+<span class="fc" id="L30">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L31">      .deterministic()</span>
+<span class="fc" id="L32">      .contextIndependent()</span>
+<span class="fc" id="L33">      .focusIndependent()</span>
+<span class="fc" id="L34">      .argument(IArgument.builder()</span>
+<span class="fc" id="L35">          .name(&quot;array&quot;)</span>
+<span class="fc" id="L36">          .type(IArrayItem.class)</span>
+<span class="fc" id="L37">          .one()</span>
+<span class="fc" id="L38">          .build())</span>
+<span class="fc" id="L39">      .returnType(IArrayItem.class)</span>
+<span class="fc" id="L40">      .returnOne()</span>
+<span class="fc" id="L41">      .functionHandler(ArrayReverse::execute)</span>
+<span class="fc" id="L42">      .build();</span>
 
   private ArrayReverse() {
     // disable construction
@@ -50,10 +51,10 @@ public final class ArrayReverse {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L53">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L54">        arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L54">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L55">        arguments.get(0).getFirstItem(true)));</span>
 
-<span class="fc" id="L56">    return ISequence.of(reverse(array));</span>
+<span class="fc" id="L57">    return ISequence.of(reverse(array));</span>
   }
 
   /**
@@ -69,9 +70,9 @@ public final class ArrayReverse {
   @NonNull
   public static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; reverse(
       @NonNull IArrayItem&lt;T&gt; array) {
-<span class="fc" id="L72">    List&lt;T&gt; copy = new ArrayList&lt;&gt;(array);</span>
-<span class="fc" id="L73">    Collections.reverse(copy);</span>
-<span class="fc" id="L74">    return IArrayItem.ofCollection(copy);</span>
+<span class="fc" id="L73">    List&lt;T&gt; copy = new ArrayList&lt;&gt;(array);</span>
+<span class="fc" id="L74">    Collections.reverse(copy);</span>
+<span class="fc" id="L75">    return IArrayItem.ofCollection(copy);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -23,27 +23,28 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayGet {
+  private static final String NAME = &quot;get&quot;;
   @NonNull
-<span class="fc" id="L27">  public static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L28">      .name(&quot;get&quot;)</span>
-<span class="fc" id="L29">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L30">      .deterministic()</span>
-<span class="fc" id="L31">      .contextIndependent()</span>
-<span class="fc" id="L32">      .focusIndependent()</span>
-<span class="fc" id="L33">      .argument(IArgument.builder()</span>
-<span class="fc" id="L34">          .name(&quot;array&quot;)</span>
-<span class="fc" id="L35">          .type(IArrayItem.class)</span>
-<span class="fc" id="L36">          .one()</span>
-<span class="fc" id="L37">          .build())</span>
-<span class="fc" id="L38">      .argument(IArgument.builder()</span>
-<span class="fc" id="L39">          .name(&quot;position&quot;)</span>
-<span class="fc" id="L40">          .type(IIntegerItem.class)</span>
-<span class="fc" id="L41">          .one()</span>
-<span class="fc" id="L42">          .build())</span>
-<span class="fc" id="L43">      .returnType(IItem.class)</span>
-<span class="fc" id="L44">      .returnZeroOrOne()</span>
-<span class="fc" id="L45">      .functionHandler(ArrayGet::execute)</span>
-<span class="fc" id="L46">      .build();</span>
+<span class="fc" id="L28">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L29">      .name(NAME)</span>
+<span class="fc" id="L30">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L31">      .deterministic()</span>
+<span class="fc" id="L32">      .contextIndependent()</span>
+<span class="fc" id="L33">      .focusIndependent()</span>
+<span class="fc" id="L34">      .argument(IArgument.builder()</span>
+<span class="fc" id="L35">          .name(&quot;array&quot;)</span>
+<span class="fc" id="L36">          .type(IArrayItem.class)</span>
+<span class="fc" id="L37">          .one()</span>
+<span class="fc" id="L38">          .build())</span>
+<span class="fc" id="L39">      .argument(IArgument.builder()</span>
+<span class="fc" id="L40">          .name(&quot;position&quot;)</span>
+<span class="fc" id="L41">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L42">          .one()</span>
+<span class="fc" id="L43">          .build())</span>
+<span class="fc" id="L44">      .returnType(IItem.class)</span>
+<span class="fc" id="L45">      .returnZeroOrOne()</span>
+<span class="fc" id="L46">      .functionHandler(ArrayGet::execute)</span>
+<span class="fc" id="L47">      .build();</span>
 
   private ArrayGet() {
     // disable construction
@@ -55,10 +56,10 @@ public final class ArrayGet {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L58">    IArrayItem&lt;?&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L59">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L59">    IArrayItem&lt;?&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L60">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
 
-<span class="fc" id="L61">    return get(array, position).asSequence();</span>
+<span class="fc" id="L62">    return get(array, position).asSequence();</span>
   }
 
   /**
@@ -79,7 +80,7 @@ public final class ArrayGet {
   public static &lt;T extends ICollectionValue&gt; T get(
       @NonNull List&lt;T&gt; target,
       @NonNull IIntegerItem positionItem) {
-<span class="fc" id="L82">    return get(target, positionItem.asInteger().intValue());</span>
+<span class="fc" id="L83">    return get(target, positionItem.asInteger().intValue());</span>
   }
 
   /**
@@ -101,13 +102,13 @@ public final class ArrayGet {
       @NonNull List&lt;T&gt; target,
       int position) {
     try {
-<span class="fc" id="L104">      return ObjectUtils.requireNonNull(target.get(position - 1));</span>
-<span class="fc" id="L105">    } catch (IndexOutOfBoundsException ex) {</span>
-<span class="fc" id="L106">      throw new ArrayException(</span>
+<span class="fc" id="L105">      return ObjectUtils.requireNonNull(target.get(position - 1));</span>
+<span class="fc" id="L106">    } catch (IndexOutOfBoundsException ex) {</span>
+<span class="fc" id="L107">      throw new ArrayException(</span>
           ArrayException.INDEX_OUT_OF_BOUNDS,
-<span class="fc" id="L108">          String.format(&quot;The index %d is outside the range of values for the array size '%d'.&quot;,</span>
-<span class="fc" id="L109">              position,</span>
-<span class="fc" id="L110">              target.size()),</span>
+<span class="fc" id="L109">          String.format(&quot;The index %d is outside the range of values for the array size '%d'.&quot;,</span>
+<span class="fc" id="L110">              position,</span>
+<span class="fc" id="L111">              target.size()),</span>
           ex);
     }
   }

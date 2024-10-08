@@ -27,28 +27,29 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * &quot;https://www.w3.org/TR/xpath-functions-31/#func-concat&quot;&gt;fn:concat&lt;/a&gt;.
  */
 public final class FnConcat {
+  private static final String NAME = &quot;concat&quot;;
   @NonNull
-<span class="fc" id="L31">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L32">      .name(&quot;concat&quot;)</span>
-<span class="fc" id="L33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L34">      .deterministic()</span>
-<span class="fc" id="L35">      .contextIndependent()</span>
-<span class="fc" id="L36">      .focusIndependent()</span>
-<span class="fc" id="L37">      .argument(IArgument.builder()</span>
-<span class="fc" id="L38">          .name(&quot;arg1&quot;)</span>
-<span class="fc" id="L39">          .type(IAnyAtomicItem.class)</span>
-<span class="fc" id="L40">          .zeroOrOne()</span>
-<span class="fc" id="L41">          .build())</span>
-<span class="fc" id="L42">      .argument(IArgument.builder()</span>
-<span class="fc" id="L43">          .name(&quot;arg2&quot;)</span>
-<span class="fc" id="L44">          .type(IAnyAtomicItem.class)</span>
-<span class="fc" id="L45">          .zeroOrOne()</span>
-<span class="fc" id="L46">          .build())</span>
-<span class="fc" id="L47">      .allowUnboundedArity(true)</span>
-<span class="fc" id="L48">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L49">      .returnOne()</span>
-<span class="fc" id="L50">      .functionHandler(FnConcat::execute)</span>
-<span class="fc" id="L51">      .build();</span>
+<span class="fc" id="L32">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L33">      .name(NAME)</span>
+<span class="fc" id="L34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L35">      .deterministic()</span>
+<span class="fc" id="L36">      .contextIndependent()</span>
+<span class="fc" id="L37">      .focusIndependent()</span>
+<span class="fc" id="L38">      .argument(IArgument.builder()</span>
+<span class="fc" id="L39">          .name(&quot;arg1&quot;)</span>
+<span class="fc" id="L40">          .type(IAnyAtomicItem.class)</span>
+<span class="fc" id="L41">          .zeroOrOne()</span>
+<span class="fc" id="L42">          .build())</span>
+<span class="fc" id="L43">      .argument(IArgument.builder()</span>
+<span class="fc" id="L44">          .name(&quot;arg2&quot;)</span>
+<span class="fc" id="L45">          .type(IAnyAtomicItem.class)</span>
+<span class="fc" id="L46">          .zeroOrOne()</span>
+<span class="fc" id="L47">          .build())</span>
+<span class="fc" id="L48">      .allowUnboundedArity(true)</span>
+<span class="fc" id="L49">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L50">      .returnOne()</span>
+<span class="fc" id="L51">      .functionHandler(FnConcat::execute)</span>
+<span class="fc" id="L52">      .build();</span>
 
   private FnConcat() {
     // disable construction
@@ -62,10 +63,10 @@ public final class FnConcat {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-<span class="fc" id="L65">    return ISequence.of(concat(ObjectUtils.notNull(arguments.stream()</span>
-<span class="fc" id="L66">        .map(arg -&gt; {</span>
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">          assert arg != null;</span>
-<span class="fc" id="L68">          return (IAnyAtomicItem) arg.getFirstItem(true);</span>
+<span class="fc" id="L66">    return ISequence.of(concat(ObjectUtils.notNull(arguments.stream()</span>
+<span class="fc" id="L67">        .map(arg -&gt; {</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">          assert arg != null;</span>
+<span class="fc" id="L69">          return (IAnyAtomicItem) arg.getFirstItem(true);</span>
         }))));
   }
 
@@ -79,7 +80,7 @@ public final class FnConcat {
    */
   @NonNull
   public static IStringItem concat(IAnyAtomicItem... items) {
-<span class="nc" id="L82">    return concat(ObjectUtils.notNull(Arrays.asList(items)));</span>
+<span class="nc" id="L83">    return concat(ObjectUtils.notNull(Arrays.asList(items)));</span>
   }
 
   /**
@@ -92,7 +93,7 @@ public final class FnConcat {
    */
   @NonNull
   public static IStringItem concat(@NonNull List&lt;? extends IAnyAtomicItem&gt; items) {
-<span class="nc" id="L95">    return concat(ObjectUtils.notNull(items.stream()));</span>
+<span class="nc" id="L96">    return concat(ObjectUtils.notNull(items.stream()));</span>
   }
 
   /**
@@ -105,11 +106,9 @@ public final class FnConcat {
    */
   @NonNull
   public static IStringItem concat(@NonNull Stream&lt;? extends IAnyAtomicItem&gt; items) {
-<span class="fc" id="L108">    return IStringItem.valueOf(ObjectUtils.notNull(items</span>
-<span class="fc" id="L109">        .map(item -&gt; {</span>
-<span class="fc bfc" id="L110" title="All 2 branches covered.">          return item == null ? &quot;&quot; : IStringItem.cast(item).asString();</span>
-        })
-<span class="fc" id="L112">        .collect(Collectors.joining())));</span>
+<span class="fc" id="L109">    return IStringItem.valueOf(ObjectUtils.notNull(items</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        .map(item -&gt; (item == null ? &quot;&quot; : IStringItem.cast(item).asString()))</span>
+<span class="fc" id="L111">        .collect(Collectors.joining())));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

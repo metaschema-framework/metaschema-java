@@ -60,248 +60,262 @@
 <span class="source-line-no">047</span><span id="line-47">    registerFunction(FnCeiling.SIGNATURE);</span>
 <span class="source-line-no">048</span><span id="line-48">    // https://www.w3.org/TR/xpath-functions-31/#func-compare</span>
 <span class="source-line-no">049</span><span id="line-49">    registerFunction(FnCompare.SIGNATURE);</span>
-<span class="source-line-no">050</span><span id="line-50">    registerFunction(FnConcat.SIGNATURE);</span>
-<span class="source-line-no">051</span><span id="line-51">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-concat</span>
-<span class="source-line-no">052</span><span id="line-52">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-contains</span>
-<span class="source-line-no">053</span><span id="line-53">    // https://www.w3.org/TR/xpath-functions-31/#func-count</span>
-<span class="source-line-no">054</span><span id="line-54">    registerFunction(FnCount.SIGNATURE);</span>
-<span class="source-line-no">055</span><span id="line-55">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-date</span>
-<span class="source-line-no">056</span><span id="line-56">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-dateTime</span>
-<span class="source-line-no">057</span><span id="line-57">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-time</span>
-<span class="source-line-no">058</span><span id="line-58">    // https://www.w3.org/TR/xpath-functions-31/#func-data</span>
-<span class="source-line-no">059</span><span id="line-59">    registerFunction(FnData.SIGNATURE_NO_ARG);</span>
-<span class="source-line-no">060</span><span id="line-60">    registerFunction(FnData.SIGNATURE_ONE_ARG);</span>
-<span class="source-line-no">061</span><span id="line-61">    // https://www.w3.org/TR/xpath-functions-31/#func-day-from-date</span>
-<span class="source-line-no">062</span><span id="line-62">    // https://www.w3.org/TR/xpath-functions-31/#func-day-from-dateTime</span>
-<span class="source-line-no">063</span><span id="line-63">    // https://www.w3.org/TR/xpath-functions-31/#func-days-from-duration</span>
-<span class="source-line-no">064</span><span id="line-64">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-deep-equal</span>
-<span class="source-line-no">065</span><span id="line-65">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-distinct-values</span>
-<span class="source-line-no">066</span><span id="line-66">    // https://www.w3.org/TR/xpath-functions-31/#func-doc</span>
-<span class="source-line-no">067</span><span id="line-67">    registerFunction(FnDoc.SIGNATURE);</span>
-<span class="source-line-no">068</span><span id="line-68">    // https://www.w3.org/TR/xpath-functions-31/#func-doc-available</span>
-<span class="source-line-no">069</span><span id="line-69">    registerFunction(FnDocumentAvailable.SIGNATURE);</span>
-<span class="source-line-no">070</span><span id="line-70">    // https://www.w3.org/TR/xpath-functions-31/#func-document-uri</span>
-<span class="source-line-no">071</span><span id="line-71">    registerFunction(FnDocumentUri.SIGNATURE_NO_ARG);</span>
-<span class="source-line-no">072</span><span id="line-72">    registerFunction(FnDocumentUri.SIGNATURE_ONE_ARG);</span>
-<span class="source-line-no">073</span><span id="line-73">    // https://www.w3.org/TR/xpath-functions-31/#func-empty</span>
-<span class="source-line-no">074</span><span id="line-74">    registerFunction(FnEmpty.SIGNATURE);</span>
-<span class="source-line-no">075</span><span id="line-75">    // https://www.w3.org/TR/xpath-functions-31/#func-encode-for-uri</span>
-<span class="source-line-no">076</span><span id="line-76">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-ends-with</span>
-<span class="source-line-no">077</span><span id="line-77">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-exactly-one</span>
-<span class="source-line-no">078</span><span id="line-78">    // https://www.w3.org/TR/xpath-functions-31/#func-exists</span>
-<span class="source-line-no">079</span><span id="line-79">    registerFunction(FnExists.SIGNATURE);</span>
-<span class="source-line-no">080</span><span id="line-80">    // https://www.w3.org/TR/xpath-functions-31/#func-false</span>
-<span class="source-line-no">081</span><span id="line-81">    registerFunction(FnFalse.SIGNATURE);</span>
-<span class="source-line-no">082</span><span id="line-82">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-floor</span>
-<span class="source-line-no">083</span><span id="line-83">    registerFunction(NumericFunction.signature(MetapathConstants.NS_METAPATH_FUNCTIONS, "floor", INumericItem::floor));</span>
-<span class="source-line-no">084</span><span id="line-84">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-date</span>
-<span class="source-line-no">085</span><span id="line-85">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-dateTime</span>
-<span class="source-line-no">086</span><span id="line-86">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-integer</span>
-<span class="source-line-no">087</span><span id="line-87">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-number</span>
-<span class="source-line-no">088</span><span id="line-88">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-time</span>
-<span class="source-line-no">089</span><span id="line-89">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-generate-id</span>
-<span class="source-line-no">090</span><span id="line-90">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-has-children</span>
-<span class="source-line-no">091</span><span id="line-91">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-head</span>
-<span class="source-line-no">092</span><span id="line-92">    registerFunction(FnHead.SIGNATURE);</span>
-<span class="source-line-no">093</span><span id="line-93">    // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-dateTime</span>
-<span class="source-line-no">094</span><span id="line-94">    // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-duration</span>
-<span class="source-line-no">095</span><span id="line-95">    // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-time</span>
-<span class="source-line-no">096</span><span id="line-96">    // https://www.w3.org/TR/xpath-functions-31/#func-implicit-timezone</span>
-<span class="source-line-no">097</span><span id="line-97">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-index-of</span>
-<span class="source-line-no">098</span><span id="line-98">    // https://www.w3.org/TR/xpath-functions-31/#func-innermost</span>
-<span class="source-line-no">099</span><span id="line-99">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-insert-before</span>
-<span class="source-line-no">100</span><span id="line-100">    registerFunction(FnInsertBefore.SIGNATURE);</span>
-<span class="source-line-no">101</span><span id="line-101">    // https://www.w3.org/TR/xpath-functions-31/#func-iri-to-uri</span>
-<span class="source-line-no">102</span><span id="line-102">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-last</span>
-<span class="source-line-no">103</span><span id="line-103">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-lower-case</span>
-<span class="source-line-no">104</span><span id="line-104">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-matches</span>
-<span class="source-line-no">105</span><span id="line-105">    // https://www.w3.org/TR/xpath-functions-31/#func-max</span>
-<span class="source-line-no">106</span><span id="line-106">    registerFunction(FnMinMax.SIGNATURE_MAX);</span>
-<span class="source-line-no">107</span><span id="line-107">    // https://www.w3.org/TR/xpath-functions-31/#func-min</span>
-<span class="source-line-no">108</span><span id="line-108">    registerFunction(FnMinMax.SIGNATURE_MIN);</span>
-<span class="source-line-no">109</span><span id="line-109">    // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-dateTime</span>
-<span class="source-line-no">110</span><span id="line-110">    // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-duration</span>
-<span class="source-line-no">111</span><span id="line-111">    // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-time</span>
-<span class="source-line-no">112</span><span id="line-112">    // https://www.w3.org/TR/xpath-functions-31/#func-month-from-date</span>
-<span class="source-line-no">113</span><span id="line-113">    // https://www.w3.org/TR/xpath-functions-31/#func-month-from-dateTime</span>
-<span class="source-line-no">114</span><span id="line-114">    // https://www.w3.org/TR/xpath-functions-31/#func-months-from-duration</span>
-<span class="source-line-no">115</span><span id="line-115">    // https://www.w3.org/TR/xpath-functions-31/#func-node-name</span>
-<span class="source-line-no">116</span><span id="line-116">    // https://www.w3.org/TR/xpath-functions-31/#func-normalize-space</span>
-<span class="source-line-no">117</span><span id="line-117">    // https://www.w3.org/TR/xpath-functions-31/#func-normalize-unicode</span>
-<span class="source-line-no">118</span><span id="line-118">    // https://www.w3.org/TR/xpath-functions-31/#func-not</span>
-<span class="source-line-no">119</span><span id="line-119">    registerFunction(FnNot.SIGNATURE);</span>
-<span class="source-line-no">120</span><span id="line-120">    // https://www.w3.org/TR/xpath-functions-31/#func-number</span>
-<span class="source-line-no">121</span><span id="line-121">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-one-or-more</span>
-<span class="source-line-no">122</span><span id="line-122">    // https://www.w3.org/TR/xpath-functions-31/#func-outermost</span>
-<span class="source-line-no">123</span><span id="line-123">    // https://www.w3.org/TR/xpath-functions-31/#func-parse-ietf-date</span>
-<span class="source-line-no">124</span><span id="line-124">    // https://www.w3.org/TR/xpath-functions-31/#func-path</span>
-<span class="source-line-no">125</span><span id="line-125">    registerFunction(FnPath.SIGNATURE_NO_ARG);</span>
-<span class="source-line-no">126</span><span id="line-126">    registerFunction(FnPath.SIGNATURE_ONE_ARG);</span>
-<span class="source-line-no">127</span><span id="line-127">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-position</span>
-<span class="source-line-no">128</span><span id="line-128">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-remove</span>
-<span class="source-line-no">129</span><span id="line-129">    registerFunction(FnRemove.SIGNATURE);</span>
-<span class="source-line-no">130</span><span id="line-130">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-replace</span>
-<span class="source-line-no">131</span><span id="line-131">    // https://www.w3.org/TR/xpath-functions-31/#func-resolve-uri</span>
-<span class="source-line-no">132</span><span id="line-132">    registerFunction(FnResolveUri.SIGNATURE_ONE_ARG);</span>
-<span class="source-line-no">133</span><span id="line-133">    registerFunction(FnResolveUri.SIGNATURE_TWO_ARG);</span>
-<span class="source-line-no">134</span><span id="line-134">    // https://www.w3.org/TR/xpath-functions-31/#func-reverse</span>
-<span class="source-line-no">135</span><span id="line-135">    registerFunction(FnReverse.SIGNATURE_ONE_ARG);</span>
-<span class="source-line-no">136</span><span id="line-136">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-root</span>
-<span class="source-line-no">137</span><span id="line-137">    // https://www.w3.org/TR/xpath-functions-31/#func-round</span>
-<span class="source-line-no">138</span><span id="line-138">    registerFunction(FnRound.SIGNATURE);</span>
-<span class="source-line-no">139</span><span id="line-139">    registerFunction(FnRound.SIGNATURE_WITH_PRECISION);</span>
-<span class="source-line-no">140</span><span id="line-140">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-round-half-to-even</span>
-<span class="source-line-no">141</span><span id="line-141">    // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-dateTime</span>
-<span class="source-line-no">142</span><span id="line-142">    // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-duration</span>
-<span class="source-line-no">143</span><span id="line-143">    // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-time</span>
-<span class="source-line-no">144</span><span id="line-144">    // https://www.w3.org/TR/xpath-functions-31/#func-starts-with</span>
-<span class="source-line-no">145</span><span id="line-145">    registerFunction(FnStartsWith.SIGNATURE);</span>
-<span class="source-line-no">146</span><span id="line-146">    // https://www.w3.org/TR/xpath-functions-31/#func-static-base-uri</span>
-<span class="source-line-no">147</span><span id="line-147">    registerFunction(FnStaticBaseUri.SIGNATURE);</span>
-<span class="source-line-no">148</span><span id="line-148">    // P0: https://www.w3.org/TR/xpath-functions-31/#func-string</span>
-<span class="source-line-no">149</span><span id="line-149">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-join</span>
-<span class="source-line-no">150</span><span id="line-150">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-length</span>
-<span class="source-line-no">151</span><span id="line-151">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-subsequence</span>
-<span class="source-line-no">152</span><span id="line-152">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring</span>
-<span class="source-line-no">153</span><span id="line-153">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-after</span>
-<span class="source-line-no">154</span><span id="line-154">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-before</span>
-<span class="source-line-no">155</span><span id="line-155">    // https://www.w3.org/TR/xpath-functions-31/#func-sum</span>
-<span class="source-line-no">156</span><span id="line-156">    registerFunction(FnSum.SIGNATURE_ONE_ARG);</span>
-<span class="source-line-no">157</span><span id="line-157">    registerFunction(FnSum.SIGNATURE_TWO_ARG);</span>
-<span class="source-line-no">158</span><span id="line-158">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-tail</span>
-<span class="source-line-no">159</span><span id="line-159">    registerFunction(FnTail.SIGNATURE);</span>
-<span class="source-line-no">160</span><span id="line-160">    // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-date</span>
-<span class="source-line-no">161</span><span id="line-161">    // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-dateTime</span>
-<span class="source-line-no">162</span><span id="line-162">    // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-time</span>
-<span class="source-line-no">163</span><span id="line-163">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-tokenize</span>
-<span class="source-line-no">164</span><span id="line-164">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-translate</span>
-<span class="source-line-no">165</span><span id="line-165">    // https://www.w3.org/TR/xpath-functions-31/#func-true</span>
-<span class="source-line-no">166</span><span id="line-166">    registerFunction(FnTrue.SIGNATURE);</span>
-<span class="source-line-no">167</span><span id="line-167">    // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text</span>
-<span class="source-line-no">168</span><span id="line-168">    // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text-available</span>
-<span class="source-line-no">169</span><span id="line-169">    // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text-lines</span>
-<span class="source-line-no">170</span><span id="line-170">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-upper-case</span>
-<span class="source-line-no">171</span><span id="line-171">    // https://www.w3.org/TR/xpath-functions-31/#func-year-from-date</span>
-<span class="source-line-no">172</span><span id="line-172">    // https://www.w3.org/TR/xpath-functions-31/#func-year-from-dateTime</span>
-<span class="source-line-no">173</span><span id="line-173">    // https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration</span>
-<span class="source-line-no">174</span><span id="line-174">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one</span>
-<span class="source-line-no">175</span><span id="line-175"></span>
-<span class="source-line-no">176</span><span id="line-176">    // https://www.w3.org/TR/xpath-functions-31/#func-array-get</span>
-<span class="source-line-no">177</span><span id="line-177">    registerFunction(ArrayGet.SIGNATURE);</span>
-<span class="source-line-no">178</span><span id="line-178">    // https://www.w3.org/TR/xpath-functions-31/#func-array-size</span>
-<span class="source-line-no">179</span><span id="line-179">    registerFunction(ArraySize.SIGNATURE);</span>
-<span class="source-line-no">180</span><span id="line-180">    // https://www.w3.org/TR/xpath-functions-31/#func-array-put</span>
-<span class="source-line-no">181</span><span id="line-181">    registerFunction(ArrayPut.SIGNATURE);</span>
-<span class="source-line-no">182</span><span id="line-182">    // https://www.w3.org/TR/xpath-functions-31/#func-array-append</span>
-<span class="source-line-no">183</span><span id="line-183">    registerFunction(ArrayAppend.SIGNATURE);</span>
-<span class="source-line-no">184</span><span id="line-184">    // https://www.w3.org/TR/xpath-functions-31/#func-array-subarray</span>
-<span class="source-line-no">185</span><span id="line-185">    registerFunction(ArraySubarray.SIGNATURE_TWO_ARG);</span>
-<span class="source-line-no">186</span><span id="line-186">    registerFunction(ArraySubarray.SIGNATURE_THREE_ARG);</span>
-<span class="source-line-no">187</span><span id="line-187">    // https://www.w3.org/TR/xpath-functions-31/#func-array-remove</span>
-<span class="source-line-no">188</span><span id="line-188">    registerFunction(ArrayRemove.SIGNATURE);</span>
-<span class="source-line-no">189</span><span id="line-189">    // https://www.w3.org/TR/xpath-functions-31/#func-array-insert-before</span>
-<span class="source-line-no">190</span><span id="line-190">    registerFunction(ArrayInsertBefore.SIGNATURE);</span>
-<span class="source-line-no">191</span><span id="line-191">    // https://www.w3.org/TR/xpath-functions-31/#func-array-head</span>
-<span class="source-line-no">192</span><span id="line-192">    registerFunction(ArrayHead.SIGNATURE);</span>
-<span class="source-line-no">193</span><span id="line-193">    // https://www.w3.org/TR/xpath-functions-31/#func-array-tail</span>
-<span class="source-line-no">194</span><span id="line-194">    registerFunction(ArrayTail.SIGNATURE);</span>
-<span class="source-line-no">195</span><span id="line-195">    // https://www.w3.org/TR/xpath-functions-31/#func-array-reverse</span>
-<span class="source-line-no">196</span><span id="line-196">    registerFunction(ArrayReverse.SIGNATURE);</span>
-<span class="source-line-no">197</span><span id="line-197">    // https://www.w3.org/TR/xpath-functions-31/#func-array-join</span>
-<span class="source-line-no">198</span><span id="line-198">    registerFunction(ArrayJoin.SIGNATURE);</span>
-<span class="source-line-no">199</span><span id="line-199">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-for-each</span>
-<span class="source-line-no">200</span><span id="line-200">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-filter</span>
-<span class="source-line-no">201</span><span id="line-201">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-fold-left</span>
-<span class="source-line-no">202</span><span id="line-202">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-fold-right</span>
-<span class="source-line-no">203</span><span id="line-203">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-for-each-pair</span>
-<span class="source-line-no">204</span><span id="line-204">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-sort</span>
-<span class="source-line-no">205</span><span id="line-205">    // https://www.w3.org/TR/xpath-functions-31/#func-array-flatten</span>
-<span class="source-line-no">206</span><span id="line-206">    registerFunction(ArrayFlatten.SIGNATURE);</span>
-<span class="source-line-no">207</span><span id="line-207"></span>
-<span class="source-line-no">208</span><span id="line-208">    // https://www.w3.org/TR/xpath-functions-31/#func-map-merge</span>
-<span class="source-line-no">209</span><span id="line-209">    registerFunction(MapMerge.SIGNATURE_ONE_ARG);</span>
-<span class="source-line-no">210</span><span id="line-210">    registerFunction(MapMerge.SIGNATURE_TWO_ARG);</span>
-<span class="source-line-no">211</span><span id="line-211">    // https://www.w3.org/TR/xpath-functions-31/#func-map-size</span>
-<span class="source-line-no">212</span><span id="line-212">    registerFunction(MapSize.SIGNATURE);</span>
-<span class="source-line-no">213</span><span id="line-213">    // https://www.w3.org/TR/xpath-functions-31/#func-map-keys</span>
-<span class="source-line-no">214</span><span id="line-214">    registerFunction(MapKeys.SIGNATURE);</span>
-<span class="source-line-no">215</span><span id="line-215">    // https://www.w3.org/TR/xpath-functions-31/#func-map-contains</span>
-<span class="source-line-no">216</span><span id="line-216">    registerFunction(MapContains.SIGNATURE);</span>
-<span class="source-line-no">217</span><span id="line-217">    // https://www.w3.org/TR/xpath-functions-31/#func-map-get</span>
-<span class="source-line-no">218</span><span id="line-218">    registerFunction(MapGet.SIGNATURE);</span>
-<span class="source-line-no">219</span><span id="line-219">    // https://www.w3.org/TR/xpath-functions-31/#func-map-find</span>
-<span class="source-line-no">220</span><span id="line-220">    registerFunction(MapFind.SIGNATURE);</span>
-<span class="source-line-no">221</span><span id="line-221">    // https://www.w3.org/TR/xpath-functions-31/#func-map-put</span>
-<span class="source-line-no">222</span><span id="line-222">    registerFunction(MapPut.SIGNATURE);</span>
-<span class="source-line-no">223</span><span id="line-223">    // https://www.w3.org/TR/xpath-functions-31/#func-map-entry</span>
-<span class="source-line-no">224</span><span id="line-224">    registerFunction(MapEntry.SIGNATURE);</span>
-<span class="source-line-no">225</span><span id="line-225">    // https://www.w3.org/TR/xpath-functions-31/#func-map-remove</span>
-<span class="source-line-no">226</span><span id="line-226">    registerFunction(MapRemove.SIGNATURE);</span>
-<span class="source-line-no">227</span><span id="line-227">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-map-for-each</span>
-<span class="source-line-no">228</span><span id="line-228"></span>
-<span class="source-line-no">229</span><span id="line-229">    // // xpath casting functions</span>
-<span class="source-line-no">230</span><span id="line-230">    // registerFunction(</span>
-<span class="source-line-no">231</span><span id="line-231">    // CastFunction.signature(MetapathConstants.NS_XML_SCHEMA, "boolean",</span>
-<span class="source-line-no">232</span><span id="line-232">    // IBooleanItem.class, IBooleanItem::cast));</span>
-<span class="source-line-no">233</span><span id="line-233">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">234</span><span id="line-234">    // MetapathConstants.NS_XML_SCHEMA, "date", IDateItem.class, IDateItem::cast));</span>
-<span class="source-line-no">235</span><span id="line-235">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">236</span><span id="line-236">    // MetapathConstants.NS_XML_SCHEMA, "dateTime", IDateTimeItem.class,</span>
-<span class="source-line-no">237</span><span id="line-237">    // IDateTimeItem::cast));</span>
-<span class="source-line-no">238</span><span id="line-238">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">239</span><span id="line-239">    // MetapathConstants.NS_XML_SCHEMA, "decimal", IDecimalItem.class,</span>
-<span class="source-line-no">240</span><span id="line-240">    // IDecimalItem::cast));</span>
-<span class="source-line-no">241</span><span id="line-241">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">242</span><span id="line-242">    // MetapathConstants.NS_XML_SCHEMA, "duration", IDurationItem.class,</span>
-<span class="source-line-no">243</span><span id="line-243">    // IDurationItem::cast));</span>
-<span class="source-line-no">244</span><span id="line-244">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">245</span><span id="line-245">    // MetapathConstants.NS_XML_SCHEMA, "integer", IIntegerItem.class,</span>
-<span class="source-line-no">246</span><span id="line-246">    // IIntegerItem::cast));</span>
+<span class="source-line-no">050</span><span id="line-50">    // https://www.w3.org/TR/xpath-functions-31/#func-concat</span>
+<span class="source-line-no">051</span><span id="line-51">    registerFunction(FnConcat.SIGNATURE);</span>
+<span class="source-line-no">052</span><span id="line-52">    // https://www.w3.org/TR/xpath-functions-31/#func-contains</span>
+<span class="source-line-no">053</span><span id="line-53">    registerFunction(FnContains.SIGNATURE);</span>
+<span class="source-line-no">054</span><span id="line-54">    // https://www.w3.org/TR/xpath-functions-31/#func-count</span>
+<span class="source-line-no">055</span><span id="line-55">    registerFunction(FnCount.SIGNATURE);</span>
+<span class="source-line-no">056</span><span id="line-56">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-date</span>
+<span class="source-line-no">057</span><span id="line-57">    // https://www.w3.org/TR/xpath-functions-31/#func-current-dateTime</span>
+<span class="source-line-no">058</span><span id="line-58">    registerFunction(FnCurrentDateTime.SIGNATURE);</span>
+<span class="source-line-no">059</span><span id="line-59">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-time</span>
+<span class="source-line-no">060</span><span id="line-60">    // https://www.w3.org/TR/xpath-functions-31/#func-data</span>
+<span class="source-line-no">061</span><span id="line-61">    registerFunction(FnData.SIGNATURE_NO_ARG);</span>
+<span class="source-line-no">062</span><span id="line-62">    registerFunction(FnData.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">063</span><span id="line-63">    // https://www.w3.org/TR/xpath-functions-31/#func-day-from-date</span>
+<span class="source-line-no">064</span><span id="line-64">    // https://www.w3.org/TR/xpath-functions-31/#func-day-from-dateTime</span>
+<span class="source-line-no">065</span><span id="line-65">    // https://www.w3.org/TR/xpath-functions-31/#func-days-from-duration</span>
+<span class="source-line-no">066</span><span id="line-66">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-deep-equal</span>
+<span class="source-line-no">067</span><span id="line-67">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-distinct-values</span>
+<span class="source-line-no">068</span><span id="line-68">    // https://www.w3.org/TR/xpath-functions-31/#func-doc</span>
+<span class="source-line-no">069</span><span id="line-69">    registerFunction(FnDoc.SIGNATURE);</span>
+<span class="source-line-no">070</span><span id="line-70">    // https://www.w3.org/TR/xpath-functions-31/#func-doc-available</span>
+<span class="source-line-no">071</span><span id="line-71">    registerFunction(FnDocumentAvailable.SIGNATURE);</span>
+<span class="source-line-no">072</span><span id="line-72">    // https://www.w3.org/TR/xpath-functions-31/#func-document-uri</span>
+<span class="source-line-no">073</span><span id="line-73">    registerFunction(FnDocumentUri.SIGNATURE_NO_ARG);</span>
+<span class="source-line-no">074</span><span id="line-74">    registerFunction(FnDocumentUri.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">075</span><span id="line-75">    // https://www.w3.org/TR/xpath-functions-31/#func-empty</span>
+<span class="source-line-no">076</span><span id="line-76">    registerFunction(FnEmpty.SIGNATURE);</span>
+<span class="source-line-no">077</span><span id="line-77">    // https://www.w3.org/TR/xpath-functions-31/#func-encode-for-uri</span>
+<span class="source-line-no">078</span><span id="line-78">    // https://www.w3.org/TR/xpath-functions-31/#func-ends-with</span>
+<span class="source-line-no">079</span><span id="line-79">    registerFunction(FnEndsWith.SIGNATURE);</span>
+<span class="source-line-no">080</span><span id="line-80">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-exactly-one</span>
+<span class="source-line-no">081</span><span id="line-81">    // https://www.w3.org/TR/xpath-functions-31/#func-exists</span>
+<span class="source-line-no">082</span><span id="line-82">    registerFunction(FnExists.SIGNATURE);</span>
+<span class="source-line-no">083</span><span id="line-83">    // https://www.w3.org/TR/xpath-functions-31/#func-false</span>
+<span class="source-line-no">084</span><span id="line-84">    registerFunction(FnFalse.SIGNATURE);</span>
+<span class="source-line-no">085</span><span id="line-85">    // https://www.w3.org/TR/xpath-functions-31/#func-floor</span>
+<span class="source-line-no">086</span><span id="line-86">    registerFunction(NumericFunction.signature(MetapathConstants.NS_METAPATH_FUNCTIONS, "floor", INumericItem::floor));</span>
+<span class="source-line-no">087</span><span id="line-87">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-date</span>
+<span class="source-line-no">088</span><span id="line-88">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-dateTime</span>
+<span class="source-line-no">089</span><span id="line-89">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-integer</span>
+<span class="source-line-no">090</span><span id="line-90">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-number</span>
+<span class="source-line-no">091</span><span id="line-91">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-time</span>
+<span class="source-line-no">092</span><span id="line-92">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-generate-id</span>
+<span class="source-line-no">093</span><span id="line-93">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-has-children</span>
+<span class="source-line-no">094</span><span id="line-94">    // https://www.w3.org/TR/xpath-functions-31/#func-head</span>
+<span class="source-line-no">095</span><span id="line-95">    registerFunction(FnHead.SIGNATURE);</span>
+<span class="source-line-no">096</span><span id="line-96">    // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-dateTime</span>
+<span class="source-line-no">097</span><span id="line-97">    // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-duration</span>
+<span class="source-line-no">098</span><span id="line-98">    // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-time</span>
+<span class="source-line-no">099</span><span id="line-99">    // https://www.w3.org/TR/xpath-functions-31/#func-implicit-timezone</span>
+<span class="source-line-no">100</span><span id="line-100">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-index-of</span>
+<span class="source-line-no">101</span><span id="line-101">    // https://www.w3.org/TR/xpath-functions-31/#func-innermost</span>
+<span class="source-line-no">102</span><span id="line-102">    // https://www.w3.org/TR/xpath-functions-31/#func-insert-before</span>
+<span class="source-line-no">103</span><span id="line-103">    registerFunction(FnInsertBefore.SIGNATURE);</span>
+<span class="source-line-no">104</span><span id="line-104">    // https://www.w3.org/TR/xpath-functions-31/#func-iri-to-uri</span>
+<span class="source-line-no">105</span><span id="line-105">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-last</span>
+<span class="source-line-no">106</span><span id="line-106">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-lower-case</span>
+<span class="source-line-no">107</span><span id="line-107">    // https://www.w3.org/TR/xpath-functions-31/#func-matches</span>
+<span class="source-line-no">108</span><span id="line-108">    registerFunction(FnMatches.SIGNATURE_TWO_ARG);</span>
+<span class="source-line-no">109</span><span id="line-109">    registerFunction(FnMatches.SIGNATURE_THREE_ARG);</span>
+<span class="source-line-no">110</span><span id="line-110">    // https://www.w3.org/TR/xpath-functions-31/#func-max</span>
+<span class="source-line-no">111</span><span id="line-111">    registerFunction(FnMinMax.SIGNATURE_MAX);</span>
+<span class="source-line-no">112</span><span id="line-112">    // https://www.w3.org/TR/xpath-functions-31/#func-min</span>
+<span class="source-line-no">113</span><span id="line-113">    registerFunction(FnMinMax.SIGNATURE_MIN);</span>
+<span class="source-line-no">114</span><span id="line-114">    // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-dateTime</span>
+<span class="source-line-no">115</span><span id="line-115">    // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-duration</span>
+<span class="source-line-no">116</span><span id="line-116">    // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-time</span>
+<span class="source-line-no">117</span><span id="line-117">    // https://www.w3.org/TR/xpath-functions-31/#func-month-from-date</span>
+<span class="source-line-no">118</span><span id="line-118">    // https://www.w3.org/TR/xpath-functions-31/#func-month-from-dateTime</span>
+<span class="source-line-no">119</span><span id="line-119">    // https://www.w3.org/TR/xpath-functions-31/#func-months-from-duration</span>
+<span class="source-line-no">120</span><span id="line-120">    // https://www.w3.org/TR/xpath-functions-31/#func-node-name</span>
+<span class="source-line-no">121</span><span id="line-121">    // https://www.w3.org/TR/xpath-functions-31/#func-normalize-space</span>
+<span class="source-line-no">122</span><span id="line-122">    registerFunction(FnNormalizeSpace.SIGNATURE_NO_ARG);</span>
+<span class="source-line-no">123</span><span id="line-123">    registerFunction(FnNormalizeSpace.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">124</span><span id="line-124">    // https://www.w3.org/TR/xpath-functions-31/#func-normalize-unicode</span>
+<span class="source-line-no">125</span><span id="line-125">    // https://www.w3.org/TR/xpath-functions-31/#func-not</span>
+<span class="source-line-no">126</span><span id="line-126">    registerFunction(FnNot.SIGNATURE);</span>
+<span class="source-line-no">127</span><span id="line-127">    // https://www.w3.org/TR/xpath-functions-31/#func-number</span>
+<span class="source-line-no">128</span><span id="line-128">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-one-or-more</span>
+<span class="source-line-no">129</span><span id="line-129">    // https://www.w3.org/TR/xpath-functions-31/#func-outermost</span>
+<span class="source-line-no">130</span><span id="line-130">    // https://www.w3.org/TR/xpath-functions-31/#func-parse-ietf-date</span>
+<span class="source-line-no">131</span><span id="line-131">    // https://www.w3.org/TR/xpath-functions-31/#func-path</span>
+<span class="source-line-no">132</span><span id="line-132">    registerFunction(FnPath.SIGNATURE_NO_ARG);</span>
+<span class="source-line-no">133</span><span id="line-133">    registerFunction(FnPath.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">134</span><span id="line-134">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-position</span>
+<span class="source-line-no">135</span><span id="line-135">    // https://www.w3.org/TR/xpath-functions-31/#func-remove</span>
+<span class="source-line-no">136</span><span id="line-136">    registerFunction(FnRemove.SIGNATURE);</span>
+<span class="source-line-no">137</span><span id="line-137">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-replace</span>
+<span class="source-line-no">138</span><span id="line-138">    // https://www.w3.org/TR/xpath-functions-31/#func-resolve-uri</span>
+<span class="source-line-no">139</span><span id="line-139">    registerFunction(FnResolveUri.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">140</span><span id="line-140">    registerFunction(FnResolveUri.SIGNATURE_TWO_ARG);</span>
+<span class="source-line-no">141</span><span id="line-141">    // https://www.w3.org/TR/xpath-functions-31/#func-reverse</span>
+<span class="source-line-no">142</span><span id="line-142">    registerFunction(FnReverse.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">143</span><span id="line-143">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-root</span>
+<span class="source-line-no">144</span><span id="line-144">    // https://www.w3.org/TR/xpath-functions-31/#func-round</span>
+<span class="source-line-no">145</span><span id="line-145">    registerFunction(FnRound.SIGNATURE);</span>
+<span class="source-line-no">146</span><span id="line-146">    registerFunction(FnRound.SIGNATURE_WITH_PRECISION);</span>
+<span class="source-line-no">147</span><span id="line-147">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-round-half-to-even</span>
+<span class="source-line-no">148</span><span id="line-148">    // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-dateTime</span>
+<span class="source-line-no">149</span><span id="line-149">    // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-duration</span>
+<span class="source-line-no">150</span><span id="line-150">    // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-time</span>
+<span class="source-line-no">151</span><span id="line-151">    // https://www.w3.org/TR/xpath-functions-31/#func-starts-with</span>
+<span class="source-line-no">152</span><span id="line-152">    registerFunction(FnStartsWith.SIGNATURE);</span>
+<span class="source-line-no">153</span><span id="line-153">    // https://www.w3.org/TR/xpath-functions-31/#func-static-base-uri</span>
+<span class="source-line-no">154</span><span id="line-154">    registerFunction(FnStaticBaseUri.SIGNATURE);</span>
+<span class="source-line-no">155</span><span id="line-155">    // https://www.w3.org/TR/xpath-functions-31/#func-string</span>
+<span class="source-line-no">156</span><span id="line-156">    registerFunction(FnString.SIGNATURE_NO_ARG);</span>
+<span class="source-line-no">157</span><span id="line-157">    registerFunction(FnString.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">158</span><span id="line-158">    // https://www.w3.org/TR/xpath-functions-30/#func-substring</span>
+<span class="source-line-no">159</span><span id="line-159">    registerFunction(FnSubstring.SIGNATURE_TWO_ARG);</span>
+<span class="source-line-no">160</span><span id="line-160">    registerFunction(FnSubstring.SIGNATURE_THREE_ARG);</span>
+<span class="source-line-no">161</span><span id="line-161">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-join</span>
+<span class="source-line-no">162</span><span id="line-162">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-length</span>
+<span class="source-line-no">163</span><span id="line-163">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-subsequence</span>
+<span class="source-line-no">164</span><span id="line-164">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-after</span>
+<span class="source-line-no">165</span><span id="line-165">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-before</span>
+<span class="source-line-no">166</span><span id="line-166">    // https://www.w3.org/TR/xpath-functions-31/#func-sum</span>
+<span class="source-line-no">167</span><span id="line-167">    registerFunction(FnSum.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">168</span><span id="line-168">    registerFunction(FnSum.SIGNATURE_TWO_ARG);</span>
+<span class="source-line-no">169</span><span id="line-169">    // https://www.w3.org/TR/xpath-functions-31/#func-tail</span>
+<span class="source-line-no">170</span><span id="line-170">    registerFunction(FnTail.SIGNATURE);</span>
+<span class="source-line-no">171</span><span id="line-171">    // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-date</span>
+<span class="source-line-no">172</span><span id="line-172">    // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-dateTime</span>
+<span class="source-line-no">173</span><span id="line-173">    // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-time</span>
+<span class="source-line-no">174</span><span id="line-174">    // https://www.w3.org/TR/xpath-functions-31/#func-tokenize</span>
+<span class="source-line-no">175</span><span id="line-175">    registerFunction(FnTokenize.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">176</span><span id="line-176">    registerFunction(FnTokenize.SIGNATURE_TWO_ARG);</span>
+<span class="source-line-no">177</span><span id="line-177">    registerFunction(FnTokenize.SIGNATURE_THREE_ARG);</span>
+<span class="source-line-no">178</span><span id="line-178">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-translate</span>
+<span class="source-line-no">179</span><span id="line-179">    // https://www.w3.org/TR/xpath-functions-31/#func-true</span>
+<span class="source-line-no">180</span><span id="line-180">    registerFunction(FnTrue.SIGNATURE);</span>
+<span class="source-line-no">181</span><span id="line-181">    // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text</span>
+<span class="source-line-no">182</span><span id="line-182">    // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text-available</span>
+<span class="source-line-no">183</span><span id="line-183">    // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text-lines</span>
+<span class="source-line-no">184</span><span id="line-184">    // P1: https://www.w3.org/TR/xpath-functions-31/#func-upper-case</span>
+<span class="source-line-no">185</span><span id="line-185">    // https://www.w3.org/TR/xpath-functions-31/#func-year-from-date</span>
+<span class="source-line-no">186</span><span id="line-186">    // https://www.w3.org/TR/xpath-functions-31/#func-year-from-dateTime</span>
+<span class="source-line-no">187</span><span id="line-187">    // https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration</span>
+<span class="source-line-no">188</span><span id="line-188">    // P2: https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one</span>
+<span class="source-line-no">189</span><span id="line-189"></span>
+<span class="source-line-no">190</span><span id="line-190">    // https://www.w3.org/TR/xpath-functions-31/#func-array-get</span>
+<span class="source-line-no">191</span><span id="line-191">    registerFunction(ArrayGet.SIGNATURE);</span>
+<span class="source-line-no">192</span><span id="line-192">    // https://www.w3.org/TR/xpath-functions-31/#func-array-size</span>
+<span class="source-line-no">193</span><span id="line-193">    registerFunction(ArraySize.SIGNATURE);</span>
+<span class="source-line-no">194</span><span id="line-194">    // https://www.w3.org/TR/xpath-functions-31/#func-array-put</span>
+<span class="source-line-no">195</span><span id="line-195">    registerFunction(ArrayPut.SIGNATURE);</span>
+<span class="source-line-no">196</span><span id="line-196">    // https://www.w3.org/TR/xpath-functions-31/#func-array-append</span>
+<span class="source-line-no">197</span><span id="line-197">    registerFunction(ArrayAppend.SIGNATURE);</span>
+<span class="source-line-no">198</span><span id="line-198">    // https://www.w3.org/TR/xpath-functions-31/#func-array-subarray</span>
+<span class="source-line-no">199</span><span id="line-199">    registerFunction(ArraySubarray.SIGNATURE_TWO_ARG);</span>
+<span class="source-line-no">200</span><span id="line-200">    registerFunction(ArraySubarray.SIGNATURE_THREE_ARG);</span>
+<span class="source-line-no">201</span><span id="line-201">    // https://www.w3.org/TR/xpath-functions-31/#func-array-remove</span>
+<span class="source-line-no">202</span><span id="line-202">    registerFunction(ArrayRemove.SIGNATURE);</span>
+<span class="source-line-no">203</span><span id="line-203">    // https://www.w3.org/TR/xpath-functions-31/#func-array-insert-before</span>
+<span class="source-line-no">204</span><span id="line-204">    registerFunction(ArrayInsertBefore.SIGNATURE);</span>
+<span class="source-line-no">205</span><span id="line-205">    // https://www.w3.org/TR/xpath-functions-31/#func-array-head</span>
+<span class="source-line-no">206</span><span id="line-206">    registerFunction(ArrayHead.SIGNATURE);</span>
+<span class="source-line-no">207</span><span id="line-207">    // https://www.w3.org/TR/xpath-functions-31/#func-array-tail</span>
+<span class="source-line-no">208</span><span id="line-208">    registerFunction(ArrayTail.SIGNATURE);</span>
+<span class="source-line-no">209</span><span id="line-209">    // https://www.w3.org/TR/xpath-functions-31/#func-array-reverse</span>
+<span class="source-line-no">210</span><span id="line-210">    registerFunction(ArrayReverse.SIGNATURE);</span>
+<span class="source-line-no">211</span><span id="line-211">    // https://www.w3.org/TR/xpath-functions-31/#func-array-join</span>
+<span class="source-line-no">212</span><span id="line-212">    registerFunction(ArrayJoin.SIGNATURE);</span>
+<span class="source-line-no">213</span><span id="line-213">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-for-each</span>
+<span class="source-line-no">214</span><span id="line-214">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-filter</span>
+<span class="source-line-no">215</span><span id="line-215">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-fold-left</span>
+<span class="source-line-no">216</span><span id="line-216">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-fold-right</span>
+<span class="source-line-no">217</span><span id="line-217">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-for-each-pair</span>
+<span class="source-line-no">218</span><span id="line-218">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-sort</span>
+<span class="source-line-no">219</span><span id="line-219">    // https://www.w3.org/TR/xpath-functions-31/#func-array-flatten</span>
+<span class="source-line-no">220</span><span id="line-220">    registerFunction(ArrayFlatten.SIGNATURE);</span>
+<span class="source-line-no">221</span><span id="line-221"></span>
+<span class="source-line-no">222</span><span id="line-222">    // https://www.w3.org/TR/xpath-functions-31/#func-map-merge</span>
+<span class="source-line-no">223</span><span id="line-223">    registerFunction(MapMerge.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">224</span><span id="line-224">    registerFunction(MapMerge.SIGNATURE_TWO_ARG);</span>
+<span class="source-line-no">225</span><span id="line-225">    // https://www.w3.org/TR/xpath-functions-31/#func-map-size</span>
+<span class="source-line-no">226</span><span id="line-226">    registerFunction(MapSize.SIGNATURE);</span>
+<span class="source-line-no">227</span><span id="line-227">    // https://www.w3.org/TR/xpath-functions-31/#func-map-keys</span>
+<span class="source-line-no">228</span><span id="line-228">    registerFunction(MapKeys.SIGNATURE);</span>
+<span class="source-line-no">229</span><span id="line-229">    // https://www.w3.org/TR/xpath-functions-31/#func-map-contains</span>
+<span class="source-line-no">230</span><span id="line-230">    registerFunction(MapContains.SIGNATURE);</span>
+<span class="source-line-no">231</span><span id="line-231">    // https://www.w3.org/TR/xpath-functions-31/#func-map-get</span>
+<span class="source-line-no">232</span><span id="line-232">    registerFunction(MapGet.SIGNATURE);</span>
+<span class="source-line-no">233</span><span id="line-233">    // https://www.w3.org/TR/xpath-functions-31/#func-map-find</span>
+<span class="source-line-no">234</span><span id="line-234">    registerFunction(MapFind.SIGNATURE);</span>
+<span class="source-line-no">235</span><span id="line-235">    // https://www.w3.org/TR/xpath-functions-31/#func-map-put</span>
+<span class="source-line-no">236</span><span id="line-236">    registerFunction(MapPut.SIGNATURE);</span>
+<span class="source-line-no">237</span><span id="line-237">    // https://www.w3.org/TR/xpath-functions-31/#func-map-entry</span>
+<span class="source-line-no">238</span><span id="line-238">    registerFunction(MapEntry.SIGNATURE);</span>
+<span class="source-line-no">239</span><span id="line-239">    // https://www.w3.org/TR/xpath-functions-31/#func-map-remove</span>
+<span class="source-line-no">240</span><span id="line-240">    registerFunction(MapRemove.SIGNATURE);</span>
+<span class="source-line-no">241</span><span id="line-241">    // P3: https://www.w3.org/TR/xpath-functions-31/#func-map-for-each</span>
+<span class="source-line-no">242</span><span id="line-242"></span>
+<span class="source-line-no">243</span><span id="line-243">    // // xpath casting functions</span>
+<span class="source-line-no">244</span><span id="line-244">    // registerFunction(</span>
+<span class="source-line-no">245</span><span id="line-245">    // CastFunction.signature(MetapathConstants.NS_XML_SCHEMA, "boolean",</span>
+<span class="source-line-no">246</span><span id="line-246">    // IBooleanItem.class, IBooleanItem::cast));</span>
 <span class="source-line-no">247</span><span id="line-247">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">248</span><span id="line-248">    // MetapathConstants.NS_XML_SCHEMA, "NCName", INcNameItem.class,</span>
-<span class="source-line-no">249</span><span id="line-249">    // INcNameItem::cast));</span>
-<span class="source-line-no">250</span><span id="line-250">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">251</span><span id="line-251">    // MetapathConstants.NS_XML_SCHEMA, "nonNegativeInteger",</span>
-<span class="source-line-no">252</span><span id="line-252">    // INonNegativeIntegerItem.class,</span>
-<span class="source-line-no">253</span><span id="line-253">    // INonNegativeIntegerItem::cast));</span>
-<span class="source-line-no">254</span><span id="line-254">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">255</span><span id="line-255">    // MetapathConstants.NS_XML_SCHEMA, "positiveInteger",</span>
-<span class="source-line-no">256</span><span id="line-256">    // IPositiveIntegerItem.class,</span>
-<span class="source-line-no">257</span><span id="line-257">    // IPositiveIntegerItem::cast));</span>
+<span class="source-line-no">248</span><span id="line-248">    // MetapathConstants.NS_XML_SCHEMA, "date", IDateItem.class, IDateItem::cast));</span>
+<span class="source-line-no">249</span><span id="line-249">    // registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">250</span><span id="line-250">    // MetapathConstants.NS_XML_SCHEMA, "dateTime", IDateTimeItem.class,</span>
+<span class="source-line-no">251</span><span id="line-251">    // IDateTimeItem::cast));</span>
+<span class="source-line-no">252</span><span id="line-252">    // registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">253</span><span id="line-253">    // MetapathConstants.NS_XML_SCHEMA, "decimal", IDecimalItem.class,</span>
+<span class="source-line-no">254</span><span id="line-254">    // IDecimalItem::cast));</span>
+<span class="source-line-no">255</span><span id="line-255">    // registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">256</span><span id="line-256">    // MetapathConstants.NS_XML_SCHEMA, "duration", IDurationItem.class,</span>
+<span class="source-line-no">257</span><span id="line-257">    // IDurationItem::cast));</span>
 <span class="source-line-no">258</span><span id="line-258">    // registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">259</span><span id="line-259">    // MetapathConstants.NS_XML_SCHEMA, "string", IStringItem.class,</span>
-<span class="source-line-no">260</span><span id="line-260">    // IStringItem::cast));</span>
-<span class="source-line-no">261</span><span id="line-261"></span>
-<span class="source-line-no">262</span><span id="line-262">    // metapath casting functions</span>
-<span class="source-line-no">263</span><span id="line-263">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">264</span><span id="line-264">        MetapathConstants.NS_METAPATH, "boolean", IBooleanItem.class, IBooleanItem::cast));</span>
-<span class="source-line-no">265</span><span id="line-265">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">266</span><span id="line-266">        MetapathConstants.NS_METAPATH, "date", IDateItem.class, IDateItem::cast));</span>
-<span class="source-line-no">267</span><span id="line-267">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">268</span><span id="line-268">        MetapathConstants.NS_METAPATH, "date-time", IDateTimeItem.class, IDateTimeItem::cast));</span>
-<span class="source-line-no">269</span><span id="line-269">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">270</span><span id="line-270">        MetapathConstants.NS_METAPATH, "decimal", IDecimalItem.class, IDecimalItem::cast));</span>
-<span class="source-line-no">271</span><span id="line-271">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">272</span><span id="line-272">        MetapathConstants.NS_METAPATH, "duration", IDurationItem.class, IDurationItem::cast));</span>
-<span class="source-line-no">273</span><span id="line-273">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">274</span><span id="line-274">        MetapathConstants.NS_METAPATH, "integer", IIntegerItem.class, IIntegerItem::cast));</span>
-<span class="source-line-no">275</span><span id="line-275">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">276</span><span id="line-276">        MetapathConstants.NS_METAPATH, "ncname", INcNameItem.class, INcNameItem::cast));</span>
+<span class="source-line-no">259</span><span id="line-259">    // MetapathConstants.NS_XML_SCHEMA, "integer", IIntegerItem.class,</span>
+<span class="source-line-no">260</span><span id="line-260">    // IIntegerItem::cast));</span>
+<span class="source-line-no">261</span><span id="line-261">    // registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">262</span><span id="line-262">    // MetapathConstants.NS_XML_SCHEMA, "NCName", INcNameItem.class,</span>
+<span class="source-line-no">263</span><span id="line-263">    // INcNameItem::cast));</span>
+<span class="source-line-no">264</span><span id="line-264">    // registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">265</span><span id="line-265">    // MetapathConstants.NS_XML_SCHEMA, "nonNegativeInteger",</span>
+<span class="source-line-no">266</span><span id="line-266">    // INonNegativeIntegerItem.class,</span>
+<span class="source-line-no">267</span><span id="line-267">    // INonNegativeIntegerItem::cast));</span>
+<span class="source-line-no">268</span><span id="line-268">    // registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">269</span><span id="line-269">    // MetapathConstants.NS_XML_SCHEMA, "positiveInteger",</span>
+<span class="source-line-no">270</span><span id="line-270">    // IPositiveIntegerItem.class,</span>
+<span class="source-line-no">271</span><span id="line-271">    // IPositiveIntegerItem::cast));</span>
+<span class="source-line-no">272</span><span id="line-272">    // registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">273</span><span id="line-273">    // MetapathConstants.NS_XML_SCHEMA, "string", IStringItem.class,</span>
+<span class="source-line-no">274</span><span id="line-274">    // IStringItem::cast));</span>
+<span class="source-line-no">275</span><span id="line-275"></span>
+<span class="source-line-no">276</span><span id="line-276">    // metapath casting functions</span>
 <span class="source-line-no">277</span><span id="line-277">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">278</span><span id="line-278">        MetapathConstants.NS_METAPATH, "non-negative-integer", INonNegativeIntegerItem.class,</span>
-<span class="source-line-no">279</span><span id="line-279">        INonNegativeIntegerItem::cast));</span>
-<span class="source-line-no">280</span><span id="line-280">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">281</span><span id="line-281">        MetapathConstants.NS_METAPATH, "positive-integer", IPositiveIntegerItem.class,</span>
-<span class="source-line-no">282</span><span id="line-282">        IPositiveIntegerItem::cast));</span>
+<span class="source-line-no">278</span><span id="line-278">        MetapathConstants.NS_METAPATH, "boolean", IBooleanItem.class, IBooleanItem::cast));</span>
+<span class="source-line-no">279</span><span id="line-279">    registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">280</span><span id="line-280">        MetapathConstants.NS_METAPATH, "date", IDateItem.class, IDateItem::cast));</span>
+<span class="source-line-no">281</span><span id="line-281">    registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">282</span><span id="line-282">        MetapathConstants.NS_METAPATH, "date-time", IDateTimeItem.class, IDateTimeItem::cast));</span>
 <span class="source-line-no">283</span><span id="line-283">    registerFunction(CastFunction.signature(</span>
-<span class="source-line-no">284</span><span id="line-284">        MetapathConstants.NS_METAPATH, "string", IStringItem.class, IStringItem::cast));</span>
-<span class="source-line-no">285</span><span id="line-285"></span>
-<span class="source-line-no">286</span><span id="line-286">    // extra functions</span>
-<span class="source-line-no">287</span><span id="line-287">    registerFunction(MpRecurseDepth.SIGNATURE_ONE_ARG);</span>
-<span class="source-line-no">288</span><span id="line-288">    registerFunction(MpRecurseDepth.SIGNATURE_TWO_ARG);</span>
-<span class="source-line-no">289</span><span id="line-289">  }</span>
-<span class="source-line-no">290</span><span id="line-290"></span>
-<span class="source-line-no">291</span><span id="line-291">}</span>
+<span class="source-line-no">284</span><span id="line-284">        MetapathConstants.NS_METAPATH, "decimal", IDecimalItem.class, IDecimalItem::cast));</span>
+<span class="source-line-no">285</span><span id="line-285">    registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">286</span><span id="line-286">        MetapathConstants.NS_METAPATH, "duration", IDurationItem.class, IDurationItem::cast));</span>
+<span class="source-line-no">287</span><span id="line-287">    registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">288</span><span id="line-288">        MetapathConstants.NS_METAPATH, "integer", IIntegerItem.class, IIntegerItem::cast));</span>
+<span class="source-line-no">289</span><span id="line-289">    registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">290</span><span id="line-290">        MetapathConstants.NS_METAPATH, "ncname", INcNameItem.class, INcNameItem::cast));</span>
+<span class="source-line-no">291</span><span id="line-291">    registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">292</span><span id="line-292">        MetapathConstants.NS_METAPATH, "non-negative-integer", INonNegativeIntegerItem.class,</span>
+<span class="source-line-no">293</span><span id="line-293">        INonNegativeIntegerItem::cast));</span>
+<span class="source-line-no">294</span><span id="line-294">    registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">295</span><span id="line-295">        MetapathConstants.NS_METAPATH, "positive-integer", IPositiveIntegerItem.class,</span>
+<span class="source-line-no">296</span><span id="line-296">        IPositiveIntegerItem::cast));</span>
+<span class="source-line-no">297</span><span id="line-297">    registerFunction(CastFunction.signature(</span>
+<span class="source-line-no">298</span><span id="line-298">        MetapathConstants.NS_METAPATH, "string", IStringItem.class, IStringItem::cast));</span>
+<span class="source-line-no">299</span><span id="line-299"></span>
+<span class="source-line-no">300</span><span id="line-300">    // extra functions</span>
+<span class="source-line-no">301</span><span id="line-301">    registerFunction(MpRecurseDepth.SIGNATURE_ONE_ARG);</span>
+<span class="source-line-no">302</span><span id="line-302">    registerFunction(MpRecurseDepth.SIGNATURE_TWO_ARG);</span>
+<span class="source-line-no">303</span><span id="line-303">  }</span>
+<span class="source-line-no">304</span><span id="line-304"></span>
+<span class="source-line-no">305</span><span id="line-305">}</span>
 
 
 

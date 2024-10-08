@@ -186,7 +186,7 @@ public interface IFunction {
    */
   @NonNull
   ISequence&lt;?&gt; execute(
-      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
+      @NonNull List&lt;? extends ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       @NonNull ISequence&lt;?&gt; focus);
 
@@ -199,7 +199,7 @@ public interface IFunction {
   default String toSignature() {
 <span class="fc" id="L200">    return ObjectUtils.notNull(String.format(&quot;%s(%s) as %s&quot;,</span>
 <span class="fc" id="L201">        getQName(),</span>
-<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        getArguments().isEmpty() ? &quot;&quot;</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        getArguments().isEmpty() ? &quot;&quot;</span>
 <span class="fc" id="L203">            : getArguments().stream().map(IArgument::toSignature).collect(Collectors.joining(&quot;,&quot;))</span>
 <span class="pc bpc" id="L204" title="1 of 2 branches missed.">                + (isArityUnbounded() ? &quot;, ...&quot; : &quot;&quot;),</span>
 <span class="fc" id="L205">        getResult().toSignature()));</span>

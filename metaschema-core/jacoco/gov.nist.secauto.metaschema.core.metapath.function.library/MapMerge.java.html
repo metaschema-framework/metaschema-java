@@ -34,64 +34,65 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class MapMerge {
-<span class="fc" id="L37">  private static final Random RANDOM = new Random();</span>
-<span class="fc" id="L38">  private static final IMapKey DUPLICATES_OPTION = IStringItem.valueOf(&quot;duplicates&quot;).asMapKey();</span>
+  private static final String NAME = &quot;merge&quot;;
+<span class="fc" id="L38">  private static final Random RANDOM = new Random();</span>
+<span class="fc" id="L39">  private static final IMapKey DUPLICATES_OPTION = IStringItem.valueOf(&quot;duplicates&quot;).asMapKey();</span>
 
   @NonNull
-<span class="fc" id="L41">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="fc" id="L42">      .name(&quot;merge&quot;)</span>
-<span class="fc" id="L43">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="fc" id="L44">      .deterministic()</span>
-<span class="fc" id="L45">      .contextIndependent()</span>
-<span class="fc" id="L46">      .focusIndependent()</span>
-<span class="fc" id="L47">      .argument(IArgument.builder()</span>
-<span class="fc" id="L48">          .name(&quot;maps&quot;)</span>
-<span class="fc" id="L49">          .type(IMapItem.class)</span>
-<span class="fc" id="L50">          .zeroOrMore()</span>
-<span class="fc" id="L51">          .build())</span>
-<span class="fc" id="L52">      .returnType(IMapItem.class)</span>
-<span class="fc" id="L53">      .returnOne()</span>
-<span class="fc" id="L54">      .functionHandler(MapMerge::executeOneArg)</span>
-<span class="fc" id="L55">      .build();</span>
+<span class="fc" id="L42">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="fc" id="L43">      .name(NAME)</span>
+<span class="fc" id="L44">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="fc" id="L45">      .deterministic()</span>
+<span class="fc" id="L46">      .contextIndependent()</span>
+<span class="fc" id="L47">      .focusIndependent()</span>
+<span class="fc" id="L48">      .argument(IArgument.builder()</span>
+<span class="fc" id="L49">          .name(&quot;maps&quot;)</span>
+<span class="fc" id="L50">          .type(IMapItem.class)</span>
+<span class="fc" id="L51">          .zeroOrMore()</span>
+<span class="fc" id="L52">          .build())</span>
+<span class="fc" id="L53">      .returnType(IMapItem.class)</span>
+<span class="fc" id="L54">      .returnOne()</span>
+<span class="fc" id="L55">      .functionHandler(MapMerge::executeOneArg)</span>
+<span class="fc" id="L56">      .build();</span>
 
   @NonNull
-<span class="fc" id="L58">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
-<span class="fc" id="L59">      .name(&quot;merge&quot;)</span>
-<span class="fc" id="L60">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="fc" id="L61">      .deterministic()</span>
-<span class="fc" id="L62">      .contextIndependent()</span>
-<span class="fc" id="L63">      .focusIndependent()</span>
-<span class="fc" id="L64">      .argument(IArgument.builder()</span>
-<span class="fc" id="L65">          .name(&quot;maps&quot;)</span>
-<span class="fc" id="L66">          .type(IMapItem.class)</span>
-<span class="fc" id="L67">          .zeroOrMore()</span>
-<span class="fc" id="L68">          .build())</span>
-<span class="fc" id="L69">      .argument(IArgument.builder()</span>
-<span class="fc" id="L70">          .name(&quot;options&quot;)</span>
-<span class="fc" id="L71">          .type(IMapItem.class)</span>
-<span class="fc" id="L72">          .one()</span>
-<span class="fc" id="L73">          .build())</span>
-<span class="fc" id="L74">      .returnType(IMapItem.class)</span>
-<span class="fc" id="L75">      .returnOne()</span>
-<span class="fc" id="L76">      .functionHandler(MapMerge::executeTwoArg)</span>
-<span class="fc" id="L77">      .build();</span>
+<span class="fc" id="L59">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
+<span class="fc" id="L60">      .name(NAME)</span>
+<span class="fc" id="L61">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="fc" id="L62">      .deterministic()</span>
+<span class="fc" id="L63">      .contextIndependent()</span>
+<span class="fc" id="L64">      .focusIndependent()</span>
+<span class="fc" id="L65">      .argument(IArgument.builder()</span>
+<span class="fc" id="L66">          .name(&quot;maps&quot;)</span>
+<span class="fc" id="L67">          .type(IMapItem.class)</span>
+<span class="fc" id="L68">          .zeroOrMore()</span>
+<span class="fc" id="L69">          .build())</span>
+<span class="fc" id="L70">      .argument(IArgument.builder()</span>
+<span class="fc" id="L71">          .name(&quot;options&quot;)</span>
+<span class="fc" id="L72">          .type(IMapItem.class)</span>
+<span class="fc" id="L73">          .one()</span>
+<span class="fc" id="L74">          .build())</span>
+<span class="fc" id="L75">      .returnType(IMapItem.class)</span>
+<span class="fc" id="L76">      .returnOne()</span>
+<span class="fc" id="L77">      .functionHandler(MapMerge::executeTwoArg)</span>
+<span class="fc" id="L78">      .build();</span>
 
-<span class="fc" id="L79">  private enum Duplicates {</span>
-<span class="fc" id="L80">    REJECT(&quot;reject&quot;, (key, v1, v2) -&gt; {</span>
-<span class="nc" id="L81">      throw new JsonFunctionException(</span>
+<span class="fc" id="L80">  private enum Duplicates {</span>
+<span class="fc" id="L81">    REJECT(&quot;reject&quot;, (key, v1, v2) -&gt; {</span>
+<span class="nc" id="L82">      throw new JsonFunctionException(</span>
           JsonFunctionException.DUPLICATE_KEYS,
-<span class="nc" id="L83">          String.format(&quot;Duplicate key '%s' not allowed.&quot;, key.getKey().asString()));</span>
+<span class="nc" id="L84">          String.format(&quot;Duplicate key '%s' not allowed.&quot;, key.getKey().asString()));</span>
     }),
 
-<span class="fc" id="L86">    USE_FIRST(&quot;use-first&quot;, (key, v1, v2) -&gt; v1),</span>
-<span class="fc" id="L87">    USE_LAST(&quot;use-last&quot;, (key, v1, v2) -&gt; v2),</span>
-<span class="pc bnc" id="L88" title="All 2 branches missed.">    USE_ANY(&quot;use-any&quot;, (key, v1, v2) -&gt; RANDOM.nextBoolean() ? v1 : v2),</span>
-<span class="fc" id="L89">    @SuppressWarnings(&quot;null&quot;)</span>
-    COMBINE(&quot;combine&quot;, (key, v1, v2) -&gt; {
-<span class="fc" id="L91">      return Stream.concat(</span>
-<span class="fc" id="L92">          v1.asSequence().stream(),</span>
-<span class="fc" id="L93">          v2.asSequence().stream()).collect(ISequence.toSequence());</span>
-    });
+<span class="fc" id="L87">    USE_FIRST(&quot;use-first&quot;, (key, v1, v2) -&gt; v1),</span>
+<span class="fc" id="L88">    USE_LAST(&quot;use-last&quot;, (key, v1, v2) -&gt; v2),</span>
+<span class="pc bnc" id="L89" title="All 2 branches missed.">    USE_ANY(&quot;use-any&quot;, (key, v1, v2) -&gt; RANDOM.nextBoolean() ? v1 : v2),</span>
+<span class="fc" id="L90">    @SuppressWarnings(&quot;null&quot;)</span>
+    COMBINE(
+        &quot;combine&quot;,
+<span class="fc" id="L93">        (key, v1, v2) -&gt; Stream.concat(</span>
+<span class="fc" id="L94">            v1.asSequence().stream(),</span>
+<span class="fc" id="L95">            v2.asSequence().stream()).collect(ISequence.toSequence()));</span>
 
     private static final Map&lt;String, Duplicates&gt; BY_NAME;
 
@@ -101,30 +102,30 @@ public final class MapMerge {
     private final CustomCollectors.DuplicateHandler&lt;IMapKey, ICollectionValue&gt; duplicateHander;
 
     static {
-<span class="fc" id="L104">      @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;String, Duplicates&gt; map = new HashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L105" title="All 2 branches covered.">      for (Duplicates value : values()) {</span>
-<span class="fc" id="L106">        map.put(value.getName(), value);</span>
+<span class="fc" id="L105">      @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;String, Duplicates&gt; map = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">      for (Duplicates value : values()) {</span>
+<span class="fc" id="L107">        map.put(value.getName(), value);</span>
       }
-<span class="fc" id="L108">      BY_NAME = Collections.unmodifiableMap(map);</span>
-<span class="fc" id="L109">    }</span>
+<span class="fc" id="L109">      BY_NAME = Collections.unmodifiableMap(map);</span>
+<span class="fc" id="L110">    }</span>
 
     @Nullable
     public static Duplicates lookup(@NonNull String name) {
-<span class="fc" id="L113">      return BY_NAME.get(name);</span>
+<span class="fc" id="L114">      return BY_NAME.get(name);</span>
     }
 
     Duplicates(@NonNull String name,
-<span class="fc" id="L117">        @NonNull CustomCollectors.DuplicateHandler&lt;IMapKey, ICollectionValue&gt; duplicateHander) {</span>
-<span class="fc" id="L118">      this.name = name;</span>
-<span class="fc" id="L119">      this.duplicateHander = duplicateHander;</span>
-<span class="fc" id="L120">    }</span>
+<span class="fc" id="L118">        @NonNull CustomCollectors.DuplicateHandler&lt;IMapKey, ICollectionValue&gt; duplicateHander) {</span>
+<span class="fc" id="L119">      this.name = name;</span>
+<span class="fc" id="L120">      this.duplicateHander = duplicateHander;</span>
+<span class="fc" id="L121">    }</span>
 
     public String getName() {
-<span class="fc" id="L123">      return name;</span>
+<span class="fc" id="L124">      return name;</span>
     }
 
     public CustomCollectors.DuplicateHandler&lt;IMapKey, ICollectionValue&gt; getDuplicateHander() {
-<span class="fc" id="L127">      return duplicateHander;</span>
+<span class="fc" id="L128">      return duplicateHander;</span>
     }
   }
 
@@ -138,9 +139,9 @@ public final class MapMerge {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L141">    ISequence&lt;IMapItem&lt;?&gt;&gt; maps = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L142">    ISequence&lt;IMapItem&lt;?&gt;&gt; maps = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
 
-<span class="fc" id="L143">    return ISequence.of(merge(maps, CollectionUtil.emptyMap()));</span>
+<span class="fc" id="L144">    return ISequence.of(merge(maps, CollectionUtil.emptyMap()));</span>
   }
 
   @SuppressWarnings(&quot;unused&quot;)
@@ -149,10 +150,10 @@ public final class MapMerge {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L152">    ISequence&lt;IMapItem&lt;?&gt;&gt; maps = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="fc" id="L153">    IMapItem&lt;?&gt; options = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L153">    ISequence&lt;IMapItem&lt;?&gt;&gt; maps = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L154">    IMapItem&lt;?&gt; options = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
 
-<span class="fc" id="L155">    return ISequence.of(merge(maps, options));</span>
+<span class="fc" id="L156">    return ISequence.of(merge(maps, options));</span>
   }
 
   /**
@@ -169,39 +170,39 @@ public final class MapMerge {
   @NonNull
   public static IMapItem&lt;?&gt; merge(@NonNull Collection&lt;? extends Map&lt;IMapKey, ? extends ICollectionValue&gt;&gt; maps,
       @NonNull Map&lt;IMapKey, ? extends ICollectionValue&gt; options) {
-<span class="fc bfc" id="L172" title="All 2 branches covered.">    if (maps.isEmpty()) {</span>
-<span class="fc" id="L173">      return IMapItem.empty();</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">    if (maps.isEmpty()) {</span>
+<span class="fc" id="L174">      return IMapItem.empty();</span>
     }
 
     // handle the &quot;duplicates&quot; option
-<span class="fc" id="L177">    ICollectionValue duplicatesOption = options.get(DUPLICATES_OPTION);</span>
+<span class="fc" id="L178">    ICollectionValue duplicatesOption = options.get(DUPLICATES_OPTION);</span>
 
     Duplicates duplicates;
-<span class="fc bfc" id="L180" title="All 2 branches covered.">    if (duplicatesOption == null) {</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">    if (duplicatesOption == null) {</span>
       // default option
-<span class="fc" id="L182">      duplicates = Duplicates.USE_FIRST;</span>
+<span class="fc" id="L183">      duplicates = Duplicates.USE_FIRST;</span>
     } else {
       // resolve the provided option
-<span class="fc" id="L185">      IAnyAtomicItem atomicValue = FnData.fnData(duplicatesOption.asSequence()).getFirstItem(true);</span>
-<span class="pc bpc" id="L186" title="1 of 2 branches missed.">      if (atomicValue == null) {</span>
-<span class="nc" id="L187">        throw new JsonFunctionException(</span>
+<span class="fc" id="L186">      IAnyAtomicItem atomicValue = FnData.fnData(duplicatesOption.asSequence()).getFirstItem(true);</span>
+<span class="pc bpc" id="L187" title="1 of 2 branches missed.">      if (atomicValue == null) {</span>
+<span class="nc" id="L188">        throw new JsonFunctionException(</span>
             JsonFunctionException.INVALID_OPTION,
-<span class="nc" id="L189">            String.format(&quot;Missing '%s' option value.&quot;, DUPLICATES_OPTION.getKey().asString()));</span>
+<span class="nc" id="L190">            String.format(&quot;Missing '%s' option value.&quot;, DUPLICATES_OPTION.getKey().asString()));</span>
       }
-<span class="fc" id="L191">      String duplicatesValue = IStringItem.cast(atomicValue).asString();</span>
-<span class="fc" id="L192">      duplicates = Duplicates.lookup(duplicatesValue);</span>
-<span class="pc bpc" id="L193" title="1 of 2 branches missed.">      if (duplicates == null) {</span>
-<span class="nc" id="L194">        throw new JsonFunctionException(</span>
+<span class="fc" id="L192">      String duplicatesValue = IStringItem.cast(atomicValue).asString();</span>
+<span class="fc" id="L193">      duplicates = Duplicates.lookup(duplicatesValue);</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">      if (duplicates == null) {</span>
+<span class="nc" id="L195">        throw new JsonFunctionException(</span>
             JsonFunctionException.INVALID_OPTION,
-<span class="nc" id="L196">            String.format(&quot;Invalid '%s' option value '%s'.&quot;, DUPLICATES_OPTION.getKey().asString(), duplicatesValue));</span>
+<span class="nc" id="L197">            String.format(&quot;Invalid '%s' option value '%s'.&quot;, DUPLICATES_OPTION.getKey().asString(), duplicatesValue));</span>
       }
     }
 
     // merge the maps
-<span class="fc" id="L201">    return IMapItem.ofCollection(maps.stream()</span>
-<span class="fc" id="L202">        .flatMap(map -&gt; map.entrySet().stream())</span>
+<span class="fc" id="L202">    return IMapItem.ofCollection(maps.stream()</span>
+<span class="fc" id="L203">        .flatMap(map -&gt; map.entrySet().stream())</span>
         // collect the entries into a new map
-<span class="fc" id="L204">        .collect(CustomCollectors.toMap(Map.Entry::getKey, Map.Entry::getValue, duplicates.getDuplicateHander(),</span>
+<span class="fc" id="L205">        .collect(CustomCollectors.toMap(Map.Entry::getKey, Map.Entry::getValue, duplicates.getDuplicateHander(),</span>
             HashMap::new)));
   }
 }

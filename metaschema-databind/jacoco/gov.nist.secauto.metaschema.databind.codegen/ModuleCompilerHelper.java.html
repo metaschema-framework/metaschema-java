@@ -156,7 +156,7 @@ public final class ModuleCompilerHelper {
 <span class="fc" id="L156">      ModuleDescriptor descriptor = module.getDescriptor();</span>
 <span class="pc bpc" id="L157" title="1 of 2 branches missed.">      if (descriptor != null) {</span>
         // add the databind module to the task
-<span class="fc" id="L159">        moduleName = descriptor.name();</span>
+<span class="nc" id="L159">        moduleName = descriptor.name();</span>
       }
     }
 
@@ -170,29 +170,29 @@ public final class ModuleCompilerHelper {
 <span class="fc" id="L170">    String modulePath = System.getProperty(&quot;jdk.module.path&quot;);</span>
 <span class="pc bpc" id="L171" title="1 of 2 branches missed.">    if (moduleName == null) {</span>
       // use classpath only
-<span class="nc" id="L173">      String path = null;</span>
-<span class="nc bnc" id="L174" title="All 2 branches missed.">      if (classPath != null) {</span>
-<span class="nc" id="L175">        path = classPath;</span>
+<span class="fc" id="L173">      String path = null;</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">      if (classPath != null) {</span>
+<span class="fc" id="L175">        path = classPath;</span>
       }
 
-<span class="nc bnc" id="L178" title="All 2 branches missed.">      if (modulePath != null) {</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">      if (modulePath != null) {</span>
 <span class="nc bnc" id="L179" title="All 2 branches missed.">        path = path == null ? modulePath : path + &quot;:&quot; + modulePath;</span>
       }
 
-<span class="nc bnc" id="L182" title="All 2 branches missed.">      if (path != null) {</span>
-<span class="nc" id="L183">        options.add(&quot;-classpath&quot;);</span>
-<span class="nc" id="L184">        options.add(path);</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">      if (path != null) {</span>
+<span class="fc" id="L183">        options.add(&quot;-classpath&quot;);</span>
+<span class="fc" id="L184">        options.add(path);</span>
       }
-<span class="nc" id="L186">    } else {</span>
+<span class="fc" id="L186">    } else {</span>
       // use classpath and modulepath from the JDK
-<span class="pc bpc" id="L188" title="1 of 2 branches missed.">      if (classPath != null) {</span>
-<span class="fc" id="L189">        options.add(&quot;-classpath&quot;);</span>
-<span class="fc" id="L190">        options.add(classPath);</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">      if (classPath != null) {</span>
+<span class="nc" id="L189">        options.add(&quot;-classpath&quot;);</span>
+<span class="nc" id="L190">        options.add(classPath);</span>
       }
 
-<span class="pc bpc" id="L193" title="1 of 2 branches missed.">      if (modulePath != null) {</span>
-<span class="fc" id="L194">        options.add(&quot;-p&quot;);</span>
-<span class="fc" id="L195">        options.add(modulePath);</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">      if (modulePath != null) {</span>
+<span class="nc" id="L194">        options.add(&quot;-p&quot;);</span>
+<span class="nc" id="L195">        options.add(modulePath);</span>
       }
     }
 
@@ -204,7 +204,7 @@ public final class ModuleCompilerHelper {
 <span class="fc" id="L204">        = compiler.getTask(null, fileManager, diagnostics, options, null, compilationUnits);</span>
 
 <span class="pc bpc" id="L206" title="1 of 2 branches missed.">    if (moduleName != null) {</span>
-<span class="fc" id="L207">      task.addModules(List.of(moduleName));</span>
+<span class="nc" id="L207">      task.addModules(List.of(moduleName));</span>
     }
 <span class="fc" id="L209">    return task.call();</span>
   }

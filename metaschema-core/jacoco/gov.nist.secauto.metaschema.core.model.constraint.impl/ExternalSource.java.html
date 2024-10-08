@@ -12,6 +12,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -22,7 +24,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public final class ExternalSource implements ISource {
   @NonNull
-<span class="fc" id="L25">  private static final Map&lt;URI, ExternalSource&gt; sources = new HashMap&lt;&gt;(); // NOPMD - intentional</span>
+<span class="fc" id="L27">  private static final Map&lt;URI, ExternalSource&gt; sources = new HashMap&lt;&gt;(); // NOPMD - intentional</span>
+  @NonNull
+<span class="fc" id="L29">  private static final Lock SOURCE_LOCK = new ReentrantLock();</span>
 
   @NonNull
   private final StaticContext staticContext;
@@ -38,13 +42,14 @@ public final class ExternalSource implements ISource {
    */
   @NonNull
   public static ISource instance(@NonNull StaticContext staticContext) {
-    ISource retval;
-<span class="fc" id="L42">    synchronized (sources) {</span>
-<span class="fc" id="L43">      retval = ObjectUtils.notNull(sources.computeIfAbsent(</span>
-<span class="fc" id="L44">          staticContext.getBaseUri(),</span>
-<span class="fc" id="L45">          (uri) -&gt; new ExternalSource(staticContext)));</span>
-<span class="fc" id="L46">    }</span>
-<span class="fc" id="L47">    return retval;</span>
+    try {
+<span class="fc" id="L46">      SOURCE_LOCK.lock();</span>
+<span class="fc" id="L47">      return ObjectUtils.notNull(sources.computeIfAbsent(</span>
+<span class="fc" id="L48">          staticContext.getBaseUri(),</span>
+<span class="fc" id="L49">          (uri) -&gt; new ExternalSource(staticContext)));</span>
+    } finally {
+<span class="fc" id="L51">      SOURCE_LOCK.unlock();</span>
+    }
   }
 
   /**
@@ -54,28 +59,28 @@ public final class ExternalSource implements ISource {
    *          the static Metapath context to use for compiling Metapath
    *          expressions in this source
    */
-<span class="fc" id="L57">  private ExternalSource(@NonNull StaticContext staticContext) {</span>
-<span class="fc" id="L58">    this.staticContext = staticContext;</span>
-<span class="fc" id="L59">  }</span>
+<span class="fc" id="L62">  private ExternalSource(@NonNull StaticContext staticContext) {</span>
+<span class="fc" id="L63">    this.staticContext = staticContext;</span>
+<span class="fc" id="L64">  }</span>
 
   @Override
   public SourceType getSourceType() {
-<span class="nc" id="L63">    return SourceType.EXTERNAL;</span>
+<span class="nc" id="L68">    return SourceType.EXTERNAL;</span>
   }
 
   @Override
   public URI getSource() {
-<span class="nc" id="L68">    return staticContext.getBaseUri();</span>
+<span class="nc" id="L73">    return staticContext.getBaseUri();</span>
   }
 
   @Override
   public StaticContext getStaticContext() {
-<span class="nc" id="L73">    return staticContext;</span>
+<span class="nc" id="L78">    return staticContext;</span>
   }
 
   @Override
   public String toString() {
-<span class="nc" id="L78">    return &quot;external:&quot; + getSource();</span>
+<span class="nc" id="L83">    return &quot;external:&quot; + getSource();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

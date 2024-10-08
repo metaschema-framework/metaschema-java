@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArtifactLocation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Modules</a> &gt; <a href="index.source.html" class="el_package">org.schemastore.json.sarif.x210</a> &gt; <span class="el_source">ArtifactLocation.java</span></div><h1>ArtifactLocation.java</h1><pre class="source lang-java linenums">package org.schemastore.json.sarif.x210;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.IntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.Expect;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+import java.lang.Override;
+import java.lang.String;
+import java.math.BigInteger;
+import java.net.URI;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+/**
+ * Specifies the location of an artifact.
+ */
+@MetaschemaAssembly(
+    formalName = &quot;Artifact Location&quot;,
+    description = &quot;Specifies the location of an artifact.&quot;,
+    name = &quot;artifactLocation&quot;,
+    moduleClass = SarifModule.class
+)
+public class ArtifactLocation implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundField(
+      formalName = &quot;URI&quot;,
+      description = &quot;A valid relative or absolute URI.&quot;,
+      useName = &quot;uri&quot;,
+      typeAdapter = UriReferenceAdapter.class
+  )
+  private URI _uri;
+
+  @BoundField(
+      formalName = &quot;Index&quot;,
+      description = &quot;The index within the run artifacts array of the artifact object associated with the artifact location.&quot;,
+      useName = &quot;index&quot;,
+      defaultValue = &quot;-1&quot;,
+      typeAdapter = IntegerAdapter.class,
+      valueConstraints = @ValueConstraints(expect = @Expect(level = IConstraint.Level.ERROR, test = &quot;@id &gt;= -1&quot;, message = &quot;The index '{ . }' is not greater than or equal to '-1'.&quot;))
+  )
+  private BigInteger _index;
+
+  @BoundAssembly(
+      formalName = &quot;Description&quot;,
+      description = &quot;A short description of the artifact location.&quot;,
+      useName = &quot;description&quot;
+  )
+  private Message _description;
+
+  public ArtifactLocation() {
+<span class="fc" id="L58">    this(null);</span>
+<span class="fc" id="L59">  }</span>
+
+<span class="fc" id="L61">  public ArtifactLocation(IMetaschemaData data) {</span>
+<span class="fc" id="L62">    this.__metaschemaData = data;</span>
+<span class="fc" id="L63">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L67">    return __metaschemaData;</span>
+  }
+
+  public URI getUri() {
+<span class="nc" id="L71">    return _uri;</span>
+  }
+
+  public void setUri(URI value) {
+<span class="fc" id="L75">    _uri = value;</span>
+<span class="fc" id="L76">  }</span>
+
+  public BigInteger getIndex() {
+<span class="nc" id="L79">    return _index;</span>
+  }
+
+  public void setIndex(BigInteger value) {
+<span class="fc" id="L83">    _index = value;</span>
+<span class="fc" id="L84">  }</span>
+
+  public Message getDescription() {
+<span class="nc" id="L87">    return _description;</span>
+  }
+
+  public void setDescription(Message value) {
+<span class="nc" id="L91">    _description = value;</span>
+<span class="nc" id="L92">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L96">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

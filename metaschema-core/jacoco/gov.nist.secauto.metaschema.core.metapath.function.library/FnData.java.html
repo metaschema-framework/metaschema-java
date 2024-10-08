@@ -29,10 +29,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * &lt;a href= &quot;https://www.w3.org/TR/xpath-functions-31/#func-data&quot;&gt;fn:data&lt;/a&gt;.
  */
 public final class FnData {
-
+  private static final String NAME = &quot;data&quot;;
   @NonNull
 <span class="fc" id="L34">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
-<span class="fc" id="L35">      .name(&quot;data&quot;)</span>
+<span class="fc" id="L35">      .name(NAME)</span>
 <span class="fc" id="L36">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="fc" id="L37">      .deterministic()</span>
 <span class="fc" id="L38">      .contextDependent()</span>
@@ -44,7 +44,7 @@ public final class FnData {
 
   @NonNull
 <span class="fc" id="L46">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="fc" id="L47">      .name(&quot;data&quot;)</span>
+<span class="fc" id="L47">      .name(NAME)</span>
 <span class="fc" id="L48">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="fc" id="L49">      .deterministic()</span>
 <span class="fc" id="L50">      .contextIndependent()</span>

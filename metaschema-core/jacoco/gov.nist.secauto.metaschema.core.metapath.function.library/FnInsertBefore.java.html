@@ -25,32 +25,33 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * &quot;https://www.w3.org/TR/xpath-functions-31/#func-insert-before&quot;&gt;fn:insert-before&lt;/a&gt;.
  */
 public final class FnInsertBefore {
+  private static final String NAME = &quot;insert-before&quot;;
   @NonNull
-<span class="fc" id="L29">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L30">      .name(&quot;insert-before&quot;)</span>
-<span class="fc" id="L31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L32">      .deterministic()</span>
-<span class="fc" id="L33">      .contextIndependent()</span>
-<span class="fc" id="L34">      .focusIndependent()</span>
-<span class="fc" id="L35">      .argument(IArgument.builder()</span>
-<span class="fc" id="L36">          .name(&quot;target&quot;)</span>
-<span class="fc" id="L37">          .type(IItem.class)</span>
-<span class="fc" id="L38">          .zeroOrMore()</span>
-<span class="fc" id="L39">          .build())</span>
-<span class="fc" id="L40">      .argument(IArgument.builder()</span>
-<span class="fc" id="L41">          .name(&quot;position&quot;)</span>
-<span class="fc" id="L42">          .type(IIntegerItem.class)</span>
-<span class="fc" id="L43">          .one()</span>
-<span class="fc" id="L44">          .build())</span>
-<span class="fc" id="L45">      .argument(IArgument.builder()</span>
-<span class="fc" id="L46">          .name(&quot;inserts&quot;)</span>
-<span class="fc" id="L47">          .type(IItem.class)</span>
-<span class="fc" id="L48">          .zeroOrMore()</span>
-<span class="fc" id="L49">          .build())</span>
-<span class="fc" id="L50">      .returnType(IItem.class)</span>
-<span class="fc" id="L51">      .returnZeroOrMore()</span>
-<span class="fc" id="L52">      .functionHandler(FnInsertBefore::execute)</span>
-<span class="fc" id="L53">      .build();</span>
+<span class="fc" id="L30">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L31">      .name(NAME)</span>
+<span class="fc" id="L32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L33">      .deterministic()</span>
+<span class="fc" id="L34">      .contextIndependent()</span>
+<span class="fc" id="L35">      .focusIndependent()</span>
+<span class="fc" id="L36">      .argument(IArgument.builder()</span>
+<span class="fc" id="L37">          .name(&quot;target&quot;)</span>
+<span class="fc" id="L38">          .type(IItem.class)</span>
+<span class="fc" id="L39">          .zeroOrMore()</span>
+<span class="fc" id="L40">          .build())</span>
+<span class="fc" id="L41">      .argument(IArgument.builder()</span>
+<span class="fc" id="L42">          .name(&quot;position&quot;)</span>
+<span class="fc" id="L43">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L44">          .one()</span>
+<span class="fc" id="L45">          .build())</span>
+<span class="fc" id="L46">      .argument(IArgument.builder()</span>
+<span class="fc" id="L47">          .name(&quot;inserts&quot;)</span>
+<span class="fc" id="L48">          .type(IItem.class)</span>
+<span class="fc" id="L49">          .zeroOrMore()</span>
+<span class="fc" id="L50">          .build())</span>
+<span class="fc" id="L51">      .returnType(IItem.class)</span>
+<span class="fc" id="L52">      .returnZeroOrMore()</span>
+<span class="fc" id="L53">      .functionHandler(FnInsertBefore::execute)</span>
+<span class="fc" id="L54">      .build();</span>
 
   private FnInsertBefore() {
     // disable construction
@@ -62,11 +63,11 @@ public final class FnInsertBefore {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L65">    ISequence&lt;IItem&gt; target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L66">    ISequence&lt;IItem&gt; target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
 
-<span class="fc" id="L67">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L68">    ISequence&lt;IItem&gt; inserts = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2)));</span>
-<span class="fc" id="L69">    return ISequence.ofCollection(fnInsertBefore(target, position, inserts));</span>
+<span class="fc" id="L68">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L69">    ISequence&lt;IItem&gt; inserts = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2)));</span>
+<span class="fc" id="L70">    return ISequence.ofCollection(fnInsertBefore(target, position, inserts));</span>
   }
 
   /**
@@ -89,33 +90,33 @@ public final class FnInsertBefore {
       @NonNull List&lt;T&gt; target,
       @NonNull IIntegerItem positionItem,
       @NonNull List&lt;T&gt; inserts) {
-<span class="pc bpc" id="L92" title="1 of 2 branches missed.">    if (target.isEmpty()) {</span>
-<span class="nc" id="L93">      return inserts;</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">    if (target.isEmpty()) {</span>
+<span class="nc" id="L94">      return inserts;</span>
     }
 
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">    if (inserts.isEmpty()) {</span>
-<span class="nc" id="L97">      return target;</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">    if (inserts.isEmpty()) {</span>
+<span class="nc" id="L98">      return target;</span>
     }
 
-<span class="fc" id="L100">    int position = positionItem.asInteger().intValue();</span>
+<span class="fc" id="L101">    int position = positionItem.asInteger().intValue();</span>
 
-<span class="fc bfc" id="L102" title="All 2 branches covered.">    if (position &lt; 1) {</span>
-<span class="fc" id="L103">      position = 1;</span>
-<span class="fc bfc" id="L104" title="All 2 branches covered.">    } else if (position &gt; target.size()) {</span>
-<span class="fc" id="L105">      position = target.size() + 1;</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    if (position &lt; 1) {</span>
+<span class="fc" id="L104">      position = 1;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">    } else if (position &gt; target.size()) {</span>
+<span class="fc" id="L106">      position = target.size() + 1;</span>
     }
 
-<span class="fc" id="L108">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target.size() + inserts.size());</span>
+<span class="fc" id="L109">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target.size() + inserts.size());</span>
 
-<span class="fc bfc" id="L110" title="All 2 branches covered.">    if (position == 1) {</span>
-<span class="fc" id="L111">      newSequence.addAll(inserts);</span>
-<span class="fc" id="L112">      newSequence.addAll(target);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">    if (position == 1) {</span>
+<span class="fc" id="L112">      newSequence.addAll(inserts);</span>
+<span class="fc" id="L113">      newSequence.addAll(target);</span>
     } else {
-<span class="fc" id="L114">      newSequence.addAll(target.subList(0, position - 1));</span>
-<span class="fc" id="L115">      newSequence.addAll(inserts);</span>
-<span class="fc" id="L116">      newSequence.addAll(target.subList(position - 1, target.size()));</span>
+<span class="fc" id="L115">      newSequence.addAll(target.subList(0, position - 1));</span>
+<span class="fc" id="L116">      newSequence.addAll(inserts);</span>
+<span class="fc" id="L117">      newSequence.addAll(target.subList(position - 1, target.size()));</span>
     }
-<span class="fc" id="L118">    return newSequence;</span>
+<span class="fc" id="L119">    return newSequence;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

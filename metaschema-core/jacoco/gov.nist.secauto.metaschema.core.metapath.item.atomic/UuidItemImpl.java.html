@@ -54,22 +54,28 @@ class UuidItemImpl
 <span class="nc bnc" id="L54" title="All 2 branches missed.">        || (obj instanceof IStringItem &amp;&amp; compareTo((IStringItem) obj) == 0);</span>
   }
 
-<span class="nc" id="L57">  private final class MapKey implements IMapKey {</span>
+  @Override
+  public IStringItem normalizeSpace() {
+    // noop
+<span class="nc" id="L60">    return this;</span>
+  }
+
+<span class="nc" id="L63">  private final class MapKey implements IMapKey {</span>
     @Override
     public IUuidItem getKey() {
-<span class="nc" id="L60">      return UuidItemImpl.this;</span>
+<span class="nc" id="L66">      return UuidItemImpl.this;</span>
     }
 
     @Override
     public int hashCode() {
-<span class="nc" id="L65">      return getKey().hashCode();</span>
+<span class="nc" id="L71">      return getKey().hashCode();</span>
     }
 
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L70" title="All 4 branches missed.">      return this == obj ||</span>
+<span class="nc bnc" id="L76" title="All 4 branches missed.">      return this == obj ||</span>
           (obj instanceof MapKey
-<span class="nc bnc" id="L72" title="All 2 branches missed.">              &amp;&amp; getKey().asUuid().equals(((MapKey) obj).getKey().asUuid()));</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">              &amp;&amp; getKey().asUuid().equals(((MapKey) obj).getKey().asUuid()));</span>
     }
   }
 }

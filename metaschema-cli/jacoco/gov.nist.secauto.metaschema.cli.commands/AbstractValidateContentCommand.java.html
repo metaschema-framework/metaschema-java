@@ -284,53 +284,52 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="fc" id="L284">          validationResult = this.validateWithSchema(source, asFormat);</span>
         }
 
-<span class="fc bfc" id="L287" title="All 4 branches covered.">        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)</span>
-<span class="fc bfc" id="L288" title="All 2 branches covered.">            &amp;&amp; (validationResult == null || validationResult.isPassing())) {</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {</span>
           // perform constraint validation
-<span class="fc" id="L290">          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);</span>
-<span class="fc bfc" id="L291" title="All 2 branches covered.">          validationResult = validationResult == null</span>
-<span class="fc" id="L292">              ? constraintValidationResult</span>
-<span class="fc" id="L293">              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);</span>
+<span class="fc" id="L289">          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">          validationResult = validationResult == null</span>
+<span class="fc" id="L291">              ? constraintValidationResult</span>
+<span class="fc" id="L292">              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);</span>
         }
-<span class="fc" id="L295">      } catch (FileNotFoundException ex) {</span>
-<span class="fc" id="L296">        return ExitCode.IO_ERROR.exitMessage(String.format(&quot;Resource not found at '%s'&quot;, source)).withThrowable(ex);</span>
-<span class="fc" id="L297">      } catch (UnknownHostException ex) {</span>
-<span class="fc" id="L298">        return ExitCode.IO_ERROR.exitMessage(String.format(&quot;Unknown host for '%s'.&quot;, source)).withThrowable(ex);</span>
-<span class="nc" id="L299">      } catch (IOException ex) {</span>
-<span class="nc" id="L300">        return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
-<span class="nc" id="L301">      } catch (MetapathException ex) {</span>
-<span class="nc" id="L302">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
-<span class="fc" id="L303">      }</span>
+<span class="fc" id="L294">      } catch (FileNotFoundException ex) {</span>
+<span class="fc" id="L295">        return ExitCode.IO_ERROR.exitMessage(String.format(&quot;Resource not found at '%s'&quot;, source)).withThrowable(ex);</span>
+<span class="fc" id="L296">      } catch (UnknownHostException ex) {</span>
+<span class="fc" id="L297">        return ExitCode.IO_ERROR.exitMessage(String.format(&quot;Unknown host for '%s'.&quot;, source)).withThrowable(ex);</span>
+<span class="nc" id="L298">      } catch (IOException ex) {</span>
+<span class="nc" id="L299">        return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
+<span class="nc" id="L300">      } catch (MetapathException ex) {</span>
+<span class="nc" id="L301">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
+<span class="fc" id="L302">      }</span>
 
-<span class="pc bpc" id="L305" title="3 of 4 branches missed.">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="nc" id="L306">        Path sarifFile = ObjectUtils.notNull(Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));</span>
+<span class="pc bpc" id="L304" title="3 of 4 branches missed.">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
+<span class="nc" id="L305">        Path sarifFile = ObjectUtils.notNull(Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));</span>
 
-<span class="nc" id="L308">        IVersionInfo version</span>
-<span class="nc" id="L309">            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);</span>
+<span class="nc" id="L307">        IVersionInfo version</span>
+<span class="nc" id="L308">            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);</span>
 
         try {
-<span class="nc" id="L312">          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);</span>
-<span class="nc bnc" id="L313" title="All 2 branches missed.">          if (validationResult != null) {</span>
-<span class="nc" id="L314">            sarifHandler.addFindings(validationResult.getFindings());</span>
+<span class="nc" id="L311">          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">          if (validationResult != null) {</span>
+<span class="nc" id="L313">            sarifHandler.addFindings(validationResult.getFindings());</span>
           }
-<span class="nc" id="L316">          sarifHandler.write(sarifFile);</span>
-<span class="nc" id="L317">        } catch (IOException ex) {</span>
-<span class="nc" id="L318">          return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
-<span class="nc" id="L319">        }</span>
-<span class="pc bfc" id="L320" title="All 4 branches covered.">      } else if (validationResult != null &amp;&amp; !validationResult.getFindings().isEmpty()) {</span>
-<span class="fc" id="L321">        LOGGER.info(&quot;Validation identified the following issues:&quot;, source);</span>
-<span class="fc" id="L322">        LoggingValidationHandler.instance().handleValidationResults(validationResult);</span>
+<span class="nc" id="L315">          sarifHandler.write(sarifFile);</span>
+<span class="nc" id="L316">        } catch (IOException ex) {</span>
+<span class="nc" id="L317">          return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
+<span class="nc" id="L318">        }</span>
+<span class="pc bfc" id="L319" title="All 4 branches covered.">      } else if (validationResult != null &amp;&amp; !validationResult.getFindings().isEmpty()) {</span>
+<span class="fc" id="L320">        LOGGER.info(&quot;Validation identified the following issues:&quot;, source);</span>
+<span class="fc" id="L321">        LoggingValidationHandler.instance().handleValidationResults(validationResult);</span>
       }
 
-<span class="fc bfc" id="L325" title="All 4 branches covered.">      if (validationResult == null || validationResult.isPassing()) {</span>
-<span class="pc bpc" id="L326" title="1 of 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
-<span class="fc" id="L327">          LOGGER.info(&quot;The file '{}' is valid.&quot;, source);</span>
+<span class="fc bfc" id="L324" title="All 4 branches covered.">      if (validationResult == null || validationResult.isPassing()) {</span>
+<span class="pc bpc" id="L325" title="1 of 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
+<span class="fc" id="L326">          LOGGER.info(&quot;The file '{}' is valid.&quot;, source);</span>
         }
-<span class="pc bpc" id="L329" title="1 of 2 branches missed.">      } else if (LOGGER.isErrorEnabled()) {</span>
-<span class="fc" id="L330">        LOGGER.error(&quot;The file '{}' is invalid.&quot;, source);</span>
+<span class="pc bpc" id="L328" title="1 of 2 branches missed.">      } else if (LOGGER.isErrorEnabled()) {</span>
+<span class="fc" id="L329">        LOGGER.error(&quot;The file '{}' is invalid.&quot;, source);</span>
       }
 
-<span class="fc bfc" id="L333" title="All 4 branches covered.">      return (validationResult == null || validationResult.isPassing() ? ExitCode.OK : ExitCode.FAIL).exit();</span>
+<span class="fc bfc" id="L332" title="All 4 branches covered.">      return (validationResult == null || validationResult.isPassing() ? ExitCode.OK : ExitCode.FAIL).exit();</span>
     }
   }
 }

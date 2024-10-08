@@ -197,174 +197,175 @@ public final class AnnotationGenerator {
       // TODO: Support remarks
       // MarkupMultiline remarks = let.getRemarks();
       // if (remarks != null) {
-      // constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());
+      // constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;,
+      // remarks.toMarkdown());
       // }
 
-<span class="nc" id="L203">      annotation.addMember(&quot;lets&quot;, &quot;$L&quot;, letAnnotation.build());</span>
-<span class="nc" id="L204">    }</span>
-<span class="fc" id="L205">  }</span>
+<span class="nc" id="L204">      annotation.addMember(&quot;lets&quot;, &quot;$L&quot;, letAnnotation.build());</span>
+<span class="nc" id="L205">    }</span>
+<span class="fc" id="L206">  }</span>
 
   private static void applyAllowedValuesConstraints(
       @NonNull AnnotationSpec.Builder annotation,
       @NonNull List&lt;? extends IAllowedValuesConstraint&gt; constraints) {
-<span class="fc bfc" id="L210" title="All 2 branches covered.">    for (IAllowedValuesConstraint constraint : constraints) {</span>
-<span class="fc" id="L211">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(AllowedValues.class);</span>
-<span class="fc" id="L212">      buildConstraint(AllowedValues.class, constraintAnnotation, constraint);</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">    for (IAllowedValuesConstraint constraint : constraints) {</span>
+<span class="fc" id="L212">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(AllowedValues.class);</span>
+<span class="fc" id="L213">      buildConstraint(AllowedValues.class, constraintAnnotation, constraint);</span>
 
-<span class="fc" id="L214">      boolean isAllowedOther = constraint.isAllowedOther();</span>
-<span class="fc bfc" id="L215" title="All 2 branches covered.">      if (isAllowedOther != (boolean) getDefaultValue(AllowedValues.class, &quot;allowOthers&quot;)) {</span>
-<span class="fc" id="L216">        constraintAnnotation.addMember(&quot;allowOthers&quot;, &quot;$L&quot;, isAllowedOther);</span>
+<span class="fc" id="L215">      boolean isAllowedOther = constraint.isAllowedOther();</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">      if (isAllowedOther != (boolean) getDefaultValue(AllowedValues.class, &quot;allowOthers&quot;)) {</span>
+<span class="fc" id="L217">        constraintAnnotation.addMember(&quot;allowOthers&quot;, &quot;$L&quot;, isAllowedOther);</span>
       }
 
-<span class="fc bfc" id="L219" title="All 2 branches covered.">      for (IAllowedValue value : constraint.getAllowedValues().values()) {</span>
-<span class="fc" id="L220">        AnnotationSpec.Builder valueAnnotation = AnnotationSpec.builder(AllowedValue.class);</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">      for (IAllowedValue value : constraint.getAllowedValues().values()) {</span>
+<span class="fc" id="L221">        AnnotationSpec.Builder valueAnnotation = AnnotationSpec.builder(AllowedValue.class);</span>
 
-<span class="fc" id="L222">        valueAnnotation.addMember(&quot;value&quot;, &quot;$S&quot;, value.getValue());</span>
-<span class="fc" id="L223">        valueAnnotation.addMember(&quot;description&quot;, &quot;$S&quot;, value.getDescription().toMarkdown());</span>
+<span class="fc" id="L223">        valueAnnotation.addMember(&quot;value&quot;, &quot;$S&quot;, value.getValue());</span>
+<span class="fc" id="L224">        valueAnnotation.addMember(&quot;description&quot;, &quot;$S&quot;, value.getDescription().toMarkdown());</span>
 
-<span class="fc" id="L225">        constraintAnnotation.addMember(&quot;values&quot;, &quot;$L&quot;, valueAnnotation.build());</span>
-<span class="fc" id="L226">      }</span>
+<span class="fc" id="L226">        constraintAnnotation.addMember(&quot;values&quot;, &quot;$L&quot;, valueAnnotation.build());</span>
+<span class="fc" id="L227">      }</span>
 
-<span class="fc" id="L228">      MarkupMultiline remarks = constraint.getRemarks();</span>
-<span class="fc bfc" id="L229" title="All 2 branches covered.">      if (remarks != null) {</span>
-<span class="fc" id="L230">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L229">      MarkupMultiline remarks = constraint.getRemarks();</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">      if (remarks != null) {</span>
+<span class="fc" id="L231">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
       }
-<span class="fc" id="L232">      annotation.addMember(&quot;allowedValues&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
-<span class="fc" id="L233">    }</span>
-<span class="fc" id="L234">  }</span>
+<span class="fc" id="L233">      annotation.addMember(&quot;allowedValues&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
+<span class="fc" id="L234">    }</span>
+<span class="fc" id="L235">  }</span>
 
   private static void applyIndexHasKeyConstraints(
       @NonNull AnnotationSpec.Builder annotation,
       @NonNull List&lt;? extends IIndexHasKeyConstraint&gt; constraints) {
-<span class="fc bfc" id="L239" title="All 2 branches covered.">    for (IIndexHasKeyConstraint constraint : constraints) {</span>
-<span class="fc" id="L240">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(IndexHasKey.class);</span>
-<span class="fc" id="L241">      buildConstraint(IndexHasKey.class, constraintAnnotation, constraint);</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">    for (IIndexHasKeyConstraint constraint : constraints) {</span>
+<span class="fc" id="L241">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(IndexHasKey.class);</span>
+<span class="fc" id="L242">      buildConstraint(IndexHasKey.class, constraintAnnotation, constraint);</span>
 
-<span class="fc" id="L243">      constraintAnnotation.addMember(&quot;indexName&quot;, &quot;$S&quot;, constraint.getIndexName());</span>
+<span class="fc" id="L244">      constraintAnnotation.addMember(&quot;indexName&quot;, &quot;$S&quot;, constraint.getIndexName());</span>
 
-<span class="fc" id="L245">      buildKeyFields(constraintAnnotation, constraint.getKeyFields());</span>
+<span class="fc" id="L246">      buildKeyFields(constraintAnnotation, constraint.getKeyFields());</span>
 
-<span class="fc" id="L247">      MarkupMultiline remarks = constraint.getRemarks();</span>
-<span class="pc bpc" id="L248" title="1 of 2 branches missed.">      if (remarks != null) {</span>
-<span class="nc" id="L249">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L248">      MarkupMultiline remarks = constraint.getRemarks();</span>
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">      if (remarks != null) {</span>
+<span class="nc" id="L250">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
       }
 
-<span class="fc" id="L252">      annotation.addMember(&quot;indexHasKey&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
-<span class="fc" id="L253">    }</span>
-<span class="fc" id="L254">  }</span>
+<span class="fc" id="L253">      annotation.addMember(&quot;indexHasKey&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
+<span class="fc" id="L254">    }</span>
+<span class="fc" id="L255">  }</span>
 
   private static void buildKeyFields(
       @NonNull Builder constraintAnnotation,
       @NonNull List&lt;? extends IKeyField&gt; keyFields) {
-<span class="fc bfc" id="L259" title="All 2 branches covered.">    for (IKeyField key : keyFields) {</span>
-<span class="fc" id="L260">      AnnotationSpec.Builder keyAnnotation = AnnotationSpec.builder(KeyField.class);</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">    for (IKeyField key : keyFields) {</span>
+<span class="fc" id="L261">      AnnotationSpec.Builder keyAnnotation = AnnotationSpec.builder(KeyField.class);</span>
 
-<span class="fc" id="L262">      String target = key.getTarget();</span>
-<span class="fc bfc" id="L263" title="All 2 branches covered.">      if (!target.equals(getDefaultValue(KeyField.class, &quot;target&quot;))) {</span>
-<span class="fc" id="L264">        keyAnnotation.addMember(&quot;target&quot;, &quot;$S&quot;, target);</span>
+<span class="fc" id="L263">      String target = key.getTarget();</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">      if (!target.equals(getDefaultValue(KeyField.class, &quot;target&quot;))) {</span>
+<span class="fc" id="L265">        keyAnnotation.addMember(&quot;target&quot;, &quot;$S&quot;, target);</span>
       }
 
-<span class="fc" id="L267">      Pattern pattern = key.getPattern();</span>
-<span class="fc bfc" id="L268" title="All 2 branches covered.">      if (pattern != null) {</span>
-<span class="fc" id="L269">        keyAnnotation.addMember(&quot;pattern&quot;, &quot;$S&quot;, pattern.pattern());</span>
+<span class="fc" id="L268">      Pattern pattern = key.getPattern();</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">      if (pattern != null) {</span>
+<span class="fc" id="L270">        keyAnnotation.addMember(&quot;pattern&quot;, &quot;$S&quot;, pattern.pattern());</span>
       }
 
-<span class="fc" id="L272">      MarkupMultiline remarks = key.getRemarks();</span>
-<span class="pc bpc" id="L273" title="1 of 2 branches missed.">      if (remarks != null) {</span>
-<span class="nc" id="L274">        keyAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L273">      MarkupMultiline remarks = key.getRemarks();</span>
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">      if (remarks != null) {</span>
+<span class="nc" id="L275">        keyAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
       }
 
-<span class="fc" id="L277">      constraintAnnotation.addMember(&quot;keyFields&quot;, &quot;$L&quot;, keyAnnotation.build());</span>
-<span class="fc" id="L278">    }</span>
-<span class="fc" id="L279">  }</span>
+<span class="fc" id="L278">      constraintAnnotation.addMember(&quot;keyFields&quot;, &quot;$L&quot;, keyAnnotation.build());</span>
+<span class="fc" id="L279">    }</span>
+<span class="fc" id="L280">  }</span>
 
   private static void applyMatchesConstraints(
       @NonNull AnnotationSpec.Builder annotation,
       @NonNull List&lt;? extends IMatchesConstraint&gt; constraints) {
-<span class="fc bfc" id="L284" title="All 2 branches covered.">    for (IMatchesConstraint constraint : constraints) {</span>
-<span class="fc" id="L285">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Matches.class);</span>
-<span class="fc" id="L286">      buildConstraint(Matches.class, constraintAnnotation, constraint);</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">    for (IMatchesConstraint constraint : constraints) {</span>
+<span class="fc" id="L286">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Matches.class);</span>
+<span class="fc" id="L287">      buildConstraint(Matches.class, constraintAnnotation, constraint);</span>
 
-<span class="fc" id="L288">      Pattern pattern = constraint.getPattern();</span>
-<span class="fc bfc" id="L289" title="All 2 branches covered.">      if (pattern != null) {</span>
-<span class="fc" id="L290">        constraintAnnotation.addMember(&quot;pattern&quot;, &quot;$S&quot;, pattern.pattern());</span>
+<span class="fc" id="L289">      Pattern pattern = constraint.getPattern();</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">      if (pattern != null) {</span>
+<span class="fc" id="L291">        constraintAnnotation.addMember(&quot;pattern&quot;, &quot;$S&quot;, pattern.pattern());</span>
       }
 
-<span class="fc" id="L293">      IDataTypeAdapter&lt;?&gt; dataType = constraint.getDataType();</span>
-<span class="fc bfc" id="L294" title="All 2 branches covered.">      if (dataType != null) {</span>
-<span class="fc" id="L295">        constraintAnnotation.addMember(&quot;typeAdapter&quot;, &quot;$T.class&quot;, dataType.getClass());</span>
+<span class="fc" id="L294">      IDataTypeAdapter&lt;?&gt; dataType = constraint.getDataType();</span>
+<span class="fc bfc" id="L295" title="All 2 branches covered.">      if (dataType != null) {</span>
+<span class="fc" id="L296">        constraintAnnotation.addMember(&quot;typeAdapter&quot;, &quot;$T.class&quot;, dataType.getClass());</span>
       }
 
-<span class="fc" id="L298">      MarkupMultiline remarks = constraint.getRemarks();</span>
-<span class="fc bfc" id="L299" title="All 2 branches covered.">      if (remarks != null) {</span>
-<span class="fc" id="L300">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L299">      MarkupMultiline remarks = constraint.getRemarks();</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">      if (remarks != null) {</span>
+<span class="fc" id="L301">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
       }
-<span class="fc" id="L302">      annotation.addMember(&quot;matches&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
-<span class="fc" id="L303">    }</span>
-<span class="fc" id="L304">  }</span>
+<span class="fc" id="L303">      annotation.addMember(&quot;matches&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
+<span class="fc" id="L304">    }</span>
+<span class="fc" id="L305">  }</span>
 
   private static void applyExpectConstraints(
       @NonNull AnnotationSpec.Builder annotation,
       @NonNull List&lt;? extends IExpectConstraint&gt; constraints) {
-<span class="fc bfc" id="L309" title="All 2 branches covered.">    for (IExpectConstraint constraint : constraints) {</span>
-<span class="fc" id="L310">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Expect.class);</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">    for (IExpectConstraint constraint : constraints) {</span>
+<span class="fc" id="L311">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Expect.class);</span>
 
-<span class="fc" id="L312">      buildConstraint(Expect.class, constraintAnnotation, constraint);</span>
+<span class="fc" id="L313">      buildConstraint(Expect.class, constraintAnnotation, constraint);</span>
 
-<span class="fc" id="L314">      constraintAnnotation.addMember(&quot;test&quot;, &quot;$S&quot;, constraint.getTest());</span>
+<span class="fc" id="L315">      constraintAnnotation.addMember(&quot;test&quot;, &quot;$S&quot;, constraint.getTest());</span>
 
-<span class="fc bfc" id="L316" title="All 2 branches covered.">      if (constraint.getMessage() != null) {</span>
-<span class="fc" id="L317">        constraintAnnotation.addMember(&quot;message&quot;, &quot;$S&quot;, constraint.getMessage());</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">      if (constraint.getMessage() != null) {</span>
+<span class="fc" id="L318">        constraintAnnotation.addMember(&quot;message&quot;, &quot;$S&quot;, constraint.getMessage());</span>
       }
 
-<span class="fc" id="L320">      MarkupMultiline remarks = constraint.getRemarks();</span>
-<span class="fc bfc" id="L321" title="All 2 branches covered.">      if (remarks != null) {</span>
-<span class="fc" id="L322">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L321">      MarkupMultiline remarks = constraint.getRemarks();</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">      if (remarks != null) {</span>
+<span class="fc" id="L323">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
       }
 
-<span class="fc" id="L325">      annotation.addMember(&quot;expect&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
-<span class="fc" id="L326">    }</span>
-<span class="fc" id="L327">  }</span>
+<span class="fc" id="L326">      annotation.addMember(&quot;expect&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
+<span class="fc" id="L327">    }</span>
+<span class="fc" id="L328">  }</span>
 
   private static void applyIndexConstraints(
       @NonNull AnnotationSpec.Builder annotation,
       @NonNull List&lt;? extends IIndexConstraint&gt; constraints) {
-<span class="fc bfc" id="L332" title="All 2 branches covered.">    for (IIndexConstraint constraint : constraints) {</span>
-<span class="fc" id="L333">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Index.class);</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">    for (IIndexConstraint constraint : constraints) {</span>
+<span class="fc" id="L334">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Index.class);</span>
 
-<span class="fc" id="L335">      buildConstraint(Index.class, constraintAnnotation, constraint);</span>
+<span class="fc" id="L336">      buildConstraint(Index.class, constraintAnnotation, constraint);</span>
 
-<span class="fc" id="L337">      constraintAnnotation.addMember(&quot;name&quot;, &quot;$S&quot;, constraint.getName());</span>
+<span class="fc" id="L338">      constraintAnnotation.addMember(&quot;name&quot;, &quot;$S&quot;, constraint.getName());</span>
 
-<span class="fc" id="L339">      buildKeyFields(constraintAnnotation, constraint.getKeyFields());</span>
+<span class="fc" id="L340">      buildKeyFields(constraintAnnotation, constraint.getKeyFields());</span>
 
-<span class="fc" id="L341">      MarkupMultiline remarks = constraint.getRemarks();</span>
-<span class="fc bfc" id="L342" title="All 2 branches covered.">      if (remarks != null) {</span>
-<span class="fc" id="L343">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L342">      MarkupMultiline remarks = constraint.getRemarks();</span>
+<span class="fc bfc" id="L343" title="All 2 branches covered.">      if (remarks != null) {</span>
+<span class="fc" id="L344">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
       }
 
-<span class="fc" id="L346">      annotation.addMember(&quot;index&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
-<span class="fc" id="L347">    }</span>
-<span class="fc" id="L348">  }</span>
+<span class="fc" id="L347">      annotation.addMember(&quot;index&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
+<span class="fc" id="L348">    }</span>
+<span class="fc" id="L349">  }</span>
 
   private static void applyUniqueConstraints(
       @NonNull AnnotationSpec.Builder annotation,
       @NonNull List&lt;? extends IUniqueConstraint&gt; constraints) {
-<span class="fc bfc" id="L353" title="All 2 branches covered.">    for (IUniqueConstraint constraint : constraints) {</span>
-<span class="fc" id="L354">      AnnotationSpec.Builder constraintAnnotation = ObjectUtils.notNull(AnnotationSpec.builder(IsUnique.class));</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">    for (IUniqueConstraint constraint : constraints) {</span>
+<span class="fc" id="L355">      AnnotationSpec.Builder constraintAnnotation = ObjectUtils.notNull(AnnotationSpec.builder(IsUnique.class));</span>
 
-<span class="fc" id="L356">      buildConstraint(IsUnique.class, constraintAnnotation, constraint);</span>
+<span class="fc" id="L357">      buildConstraint(IsUnique.class, constraintAnnotation, constraint);</span>
 
-<span class="fc" id="L358">      buildKeyFields(constraintAnnotation, constraint.getKeyFields());</span>
+<span class="fc" id="L359">      buildKeyFields(constraintAnnotation, constraint.getKeyFields());</span>
 
-<span class="fc" id="L360">      MarkupMultiline remarks = constraint.getRemarks();</span>
-<span class="fc bfc" id="L361" title="All 2 branches covered.">      if (remarks != null) {</span>
-<span class="fc" id="L362">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L361">      MarkupMultiline remarks = constraint.getRemarks();</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">      if (remarks != null) {</span>
+<span class="fc" id="L363">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
       }
 
-<span class="fc" id="L365">      annotation.addMember(&quot;unique&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
-<span class="fc" id="L366">    }</span>
-<span class="fc" id="L367">  }</span>
+<span class="fc" id="L366">      annotation.addMember(&quot;unique&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
+<span class="fc" id="L367">    }</span>
+<span class="fc" id="L368">  }</span>
 
   @SuppressWarnings({
       &quot;PMD.GuardLogStatement&quot; // guarded in outer calls
@@ -375,21 +376,21 @@ public final class AnnotationGenerator {
       @NonNull ISequence&lt;? extends IDefinitionNodeItem&lt;?, ?&gt;&gt; instanceSet,
       @NonNull LogBuilder logBuilder) {
 
-<span class="fc" id="L378">    LogBuilder warn = LOGGER.atWarn();</span>
-<span class="pc bpc" id="L379" title="1 of 2 branches missed.">    for (IDefinitionNodeItem&lt;?, ?&gt; item : instanceSet.getValue()) {</span>
-<span class="nc" id="L380">      INamedInstance instance = item.getInstance();</span>
-<span class="nc bnc" id="L381" title="All 2 branches missed.">      if (instance instanceof INamedModelInstanceAbsolute) {</span>
-<span class="nc" id="L382">        INamedModelInstanceAbsolute modelInstance = (INamedModelInstanceAbsolute) instance;</span>
+<span class="fc" id="L379">    LogBuilder warn = LOGGER.atWarn();</span>
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">    for (IDefinitionNodeItem&lt;?, ?&gt; item : instanceSet.getValue()) {</span>
+<span class="nc" id="L381">      INamedInstance instance = item.getInstance();</span>
+<span class="nc bnc" id="L382" title="All 2 branches missed.">      if (instance instanceof INamedModelInstanceAbsolute) {</span>
+<span class="nc" id="L383">        INamedModelInstanceAbsolute modelInstance = (INamedModelInstanceAbsolute) instance;</span>
 
-<span class="nc" id="L384">        checkMinOccurs(definition, constraint, modelInstance, logBuilder);</span>
-<span class="nc" id="L385">        checkMaxOccurs(definition, constraint, modelInstance, logBuilder);</span>
-<span class="nc" id="L386">      } else {</span>
-<span class="nc" id="L387">        warn.log(String.format(</span>
+<span class="nc" id="L385">        checkMinOccurs(definition, constraint, modelInstance, logBuilder);</span>
+<span class="nc" id="L386">        checkMaxOccurs(definition, constraint, modelInstance, logBuilder);</span>
+<span class="nc" id="L387">      } else {</span>
+<span class="nc" id="L388">        warn.log(String.format(</span>
             &quot;Definition '%s' has min-occurs=%d cardinality constraint targeting '%s' that is not a model instance&quot;,
-<span class="nc" id="L389">            definition.getName(), constraint.getMinOccurs(), constraint.getTarget()));</span>
+<span class="nc" id="L390">            definition.getName(), constraint.getMinOccurs(), constraint.getTarget()));</span>
       }
-<span class="nc" id="L391">    }</span>
-<span class="fc" id="L392">  }</span>
+<span class="nc" id="L392">    }</span>
+<span class="fc" id="L393">  }</span>
 
   @SuppressWarnings({
       &quot;PMD.GuardLogStatement&quot; // guarded in outer calls
@@ -399,25 +400,25 @@ public final class AnnotationGenerator {
       @NonNull ICardinalityConstraint constraint,
       @NonNull INamedModelInstanceAbsolute modelInstance,
       @NonNull LogBuilder logBuilder) {
-<span class="nc" id="L402">    Integer minOccurs = constraint.getMinOccurs();</span>
-<span class="nc bnc" id="L403" title="All 2 branches missed.">    if (minOccurs != null) {</span>
-<span class="nc bnc" id="L404" title="All 2 branches missed.">      if (minOccurs == modelInstance.getMinOccurs()) {</span>
-<span class="nc" id="L405">        logBuilder.log(String.format(</span>
+<span class="nc" id="L403">    Integer minOccurs = constraint.getMinOccurs();</span>
+<span class="nc bnc" id="L404" title="All 2 branches missed.">    if (minOccurs != null) {</span>
+<span class="nc bnc" id="L405" title="All 2 branches missed.">      if (minOccurs == modelInstance.getMinOccurs()) {</span>
+<span class="nc" id="L406">        logBuilder.log(String.format(</span>
             &quot;Definition '%s' has min-occurs=%d cardinality constraint targeting '%s' that is redundant with a&quot;
                 + &quot; targeted instance named '%s' that requires min-occurs=%d&quot;,
-<span class="nc" id="L408">            definition.getName(), minOccurs, constraint.getTarget(),</span>
-<span class="nc" id="L409">            modelInstance.getName(),</span>
-<span class="nc" id="L410">            modelInstance.getMinOccurs()));</span>
-<span class="nc bnc" id="L411" title="All 2 branches missed.">      } else if (minOccurs &lt; modelInstance.getMinOccurs()) {</span>
-<span class="nc" id="L412">        logBuilder.log(String.format(</span>
+<span class="nc" id="L409">            definition.getName(), minOccurs, constraint.getTarget(),</span>
+<span class="nc" id="L410">            modelInstance.getName(),</span>
+<span class="nc" id="L411">            modelInstance.getMinOccurs()));</span>
+<span class="nc bnc" id="L412" title="All 2 branches missed.">      } else if (minOccurs &lt; modelInstance.getMinOccurs()) {</span>
+<span class="nc" id="L413">        logBuilder.log(String.format(</span>
             &quot;Definition '%s' has min-occurs=%d cardinality constraint targeting '%s' that conflicts with a&quot;
                 + &quot; targeted instance named '%s' that requires min-occurs=%d&quot;,
-<span class="nc" id="L415">            definition.getName(), minOccurs, constraint.getTarget(),</span>
-<span class="nc" id="L416">            modelInstance.getName(),</span>
-<span class="nc" id="L417">            modelInstance.getMinOccurs()));</span>
+<span class="nc" id="L416">            definition.getName(), minOccurs, constraint.getTarget(),</span>
+<span class="nc" id="L417">            modelInstance.getName(),</span>
+<span class="nc" id="L418">            modelInstance.getMinOccurs()));</span>
       }
     }
-<span class="nc" id="L420">  }</span>
+<span class="nc" id="L421">  }</span>
 
   @SuppressWarnings({
       &quot;PMD.GuardLogStatement&quot; // guarded in outer calls
@@ -427,67 +428,67 @@ public final class AnnotationGenerator {
       @NonNull ICardinalityConstraint constraint,
       @NonNull INamedModelInstanceAbsolute modelInstance,
       @NonNull LogBuilder logBuilder) {
-<span class="nc" id="L430">    Integer maxOccurs = constraint.getMaxOccurs();</span>
-<span class="nc bnc" id="L431" title="All 2 branches missed.">    if (maxOccurs != null) {</span>
-<span class="nc bnc" id="L432" title="All 2 branches missed.">      if (maxOccurs == modelInstance.getMaxOccurs()) {</span>
-<span class="nc" id="L433">        logBuilder.log(String.format(</span>
+<span class="nc" id="L431">    Integer maxOccurs = constraint.getMaxOccurs();</span>
+<span class="nc bnc" id="L432" title="All 2 branches missed.">    if (maxOccurs != null) {</span>
+<span class="nc bnc" id="L433" title="All 2 branches missed.">      if (maxOccurs == modelInstance.getMaxOccurs()) {</span>
+<span class="nc" id="L434">        logBuilder.log(String.format(</span>
             &quot;Definition '%s' has max-occurs=%d cardinality constraint targeting '%s' that is redundant with a&quot;
                 + &quot; targeted instance named '%s' that requires max-occurs=%d&quot;,
-<span class="nc" id="L436">            definition.getName(), maxOccurs, constraint.getTarget(),</span>
-<span class="nc" id="L437">            modelInstance.getName(),</span>
-<span class="nc" id="L438">            modelInstance.getMaxOccurs()));</span>
-<span class="nc bnc" id="L439" title="All 2 branches missed.">      } else if (maxOccurs &lt; modelInstance.getMaxOccurs()) {</span>
-<span class="nc" id="L440">        logBuilder.log(String.format(</span>
+<span class="nc" id="L437">            definition.getName(), maxOccurs, constraint.getTarget(),</span>
+<span class="nc" id="L438">            modelInstance.getName(),</span>
+<span class="nc" id="L439">            modelInstance.getMaxOccurs()));</span>
+<span class="nc bnc" id="L440" title="All 2 branches missed.">      } else if (maxOccurs &lt; modelInstance.getMaxOccurs()) {</span>
+<span class="nc" id="L441">        logBuilder.log(String.format(</span>
             &quot;Definition '%s' has max-occurs=%d cardinality constraint targeting '%s' that conflicts with a&quot;
                 + &quot; targeted instance named '%s' that requires max-occurs=%d&quot;,
-<span class="nc" id="L443">            definition.getName(), maxOccurs, constraint.getTarget(),</span>
-<span class="nc" id="L444">            modelInstance.getName(),</span>
-<span class="nc" id="L445">            modelInstance.getMaxOccurs()));</span>
+<span class="nc" id="L444">            definition.getName(), maxOccurs, constraint.getTarget(),</span>
+<span class="nc" id="L445">            modelInstance.getName(),</span>
+<span class="nc" id="L446">            modelInstance.getMaxOccurs()));</span>
       }
     }
-<span class="nc" id="L448">  }</span>
+<span class="nc" id="L449">  }</span>
 
   private static void applyHasCardinalityConstraints(
       @NonNull IAssemblyDefinition definition,
       @NonNull AnnotationSpec.Builder annotation,
       @NonNull List&lt;? extends ICardinalityConstraint&gt; constraints) {
 
-<span class="fc" id="L455">    DynamicContext dynamicContext = new DynamicContext();</span>
-<span class="fc" id="L456">    dynamicContext.disablePredicateEvaluation();</span>
+<span class="fc" id="L456">    DynamicContext dynamicContext = new DynamicContext();</span>
+<span class="fc" id="L457">    dynamicContext.disablePredicateEvaluation();</span>
 
-<span class="fc bfc" id="L458" title="All 2 branches covered.">    for (ICardinalityConstraint constraint : constraints) {</span>
+<span class="fc bfc" id="L459" title="All 2 branches covered.">    for (ICardinalityConstraint constraint : constraints) {</span>
 
       IAssemblyNodeItem definitionNodeItem
-<span class="fc" id="L461">          = INodeItemFactory.instance().newAssemblyNodeItem(definition);</span>
+<span class="fc" id="L462">          = INodeItemFactory.instance().newAssemblyNodeItem(definition);</span>
 
-<span class="fc" id="L463">      ISequence&lt;? extends IDefinitionNodeItem&lt;?, ?&gt;&gt; instanceSet</span>
-<span class="fc" id="L464">          = constraint.matchTargets(definitionNodeItem, dynamicContext);</span>
+<span class="fc" id="L464">      ISequence&lt;? extends IDefinitionNodeItem&lt;?, ?&gt;&gt; instanceSet</span>
+<span class="fc" id="L465">          = constraint.matchTargets(definitionNodeItem, dynamicContext);</span>
 
-<span class="pc bpc" id="L466" title="1 of 2 branches missed.">      if (LOGGER.isWarnEnabled()) {</span>
-<span class="fc" id="L467">        checkCardinalities(definition, constraint, instanceSet, ObjectUtils.notNull(LOGGER.atWarn()));</span>
+<span class="pc bpc" id="L467" title="1 of 2 branches missed.">      if (LOGGER.isWarnEnabled()) {</span>
+<span class="fc" id="L468">        checkCardinalities(definition, constraint, instanceSet, ObjectUtils.notNull(LOGGER.atWarn()));</span>
       }
 
-<span class="fc" id="L470">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(HasCardinality.class);</span>
+<span class="fc" id="L471">      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(HasCardinality.class);</span>
 
-<span class="fc" id="L472">      buildConstraint(HasCardinality.class, constraintAnnotation, constraint);</span>
+<span class="fc" id="L473">      buildConstraint(HasCardinality.class, constraintAnnotation, constraint);</span>
 
-<span class="fc" id="L474">      Integer minOccurs = constraint.getMinOccurs();</span>
-<span class="pc bpc" id="L475" title="1 of 4 branches missed.">      if (minOccurs != null &amp;&amp; !minOccurs.equals(getDefaultValue(HasCardinality.class, &quot;minOccurs&quot;))) {</span>
-<span class="fc" id="L476">        constraintAnnotation.addMember(&quot;minOccurs&quot;, &quot;$L&quot;, minOccurs);</span>
+<span class="fc" id="L475">      Integer minOccurs = constraint.getMinOccurs();</span>
+<span class="pc bpc" id="L476" title="1 of 4 branches missed.">      if (minOccurs != null &amp;&amp; !minOccurs.equals(getDefaultValue(HasCardinality.class, &quot;minOccurs&quot;))) {</span>
+<span class="fc" id="L477">        constraintAnnotation.addMember(&quot;minOccurs&quot;, &quot;$L&quot;, minOccurs);</span>
       }
 
-<span class="fc" id="L479">      Integer maxOccurs = constraint.getMaxOccurs();</span>
-<span class="pc bpc" id="L480" title="1 of 4 branches missed.">      if (maxOccurs != null &amp;&amp; !maxOccurs.equals(getDefaultValue(HasCardinality.class, &quot;maxOccurs&quot;))) {</span>
-<span class="fc" id="L481">        constraintAnnotation.addMember(&quot;maxOccurs&quot;, &quot;$L&quot;, maxOccurs);</span>
+<span class="fc" id="L480">      Integer maxOccurs = constraint.getMaxOccurs();</span>
+<span class="pc bpc" id="L481" title="1 of 4 branches missed.">      if (maxOccurs != null &amp;&amp; !maxOccurs.equals(getDefaultValue(HasCardinality.class, &quot;maxOccurs&quot;))) {</span>
+<span class="fc" id="L482">        constraintAnnotation.addMember(&quot;maxOccurs&quot;, &quot;$L&quot;, maxOccurs);</span>
       }
 
-<span class="fc" id="L484">      annotation.addMember(&quot;cardinality&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
+<span class="fc" id="L485">      annotation.addMember(&quot;cardinality&quot;, &quot;$L&quot;, constraintAnnotation.build());</span>
 
-<span class="fc" id="L486">      MarkupMultiline remarks = constraint.getRemarks();</span>
-<span class="fc bfc" id="L487" title="All 2 branches covered.">      if (remarks != null) {</span>
-<span class="fc" id="L488">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L487">      MarkupMultiline remarks = constraint.getRemarks();</span>
+<span class="fc bfc" id="L488" title="All 2 branches covered.">      if (remarks != null) {</span>
+<span class="fc" id="L489">        constraintAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
       }
-<span class="fc" id="L490">    }</span>
-<span class="fc" id="L491">  }</span>
+<span class="fc" id="L491">    }</span>
+<span class="fc" id="L492">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

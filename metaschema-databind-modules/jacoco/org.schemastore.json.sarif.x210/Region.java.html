@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Region.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Modules</a> &gt; <a href="index.source.html" class="el_package">org.schemastore.json.sarif.x210</a> &gt; <span class="el_source">Region.java</span></div><h1>Region.java</h1><pre class="source lang-java linenums">package org.schemastore.json.sarif.x210;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.IntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.Expect;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+import java.lang.Override;
+import java.lang.String;
+import java.math.BigInteger;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+/**
+ * A region within an artifact where a result was detected.
+ */
+@MetaschemaAssembly(
+    formalName = &quot;Region&quot;,
+    description = &quot;A region within an artifact where a result was detected.&quot;,
+    name = &quot;region&quot;,
+    moduleClass = SarifModule.class,
+    valueConstraints = @ValueConstraints(expect = @Expect(level = IConstraint.Level.ERROR, test = &quot;exists(startLine|charOffset|byteOffset)&quot;, message = &quot;At least a startLine, charOffset, or byteOffset must be provided.&quot;))
+)
+public class Region implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundField(
+      formalName = &quot;Start Line&quot;,
+      description = &quot;The line number of the first character in the region.&quot;,
+      useName = &quot;startLine&quot;,
+      typeAdapter = PositiveIntegerAdapter.class
+  )
+  private BigInteger _startLine;
+
+  @BoundField(
+      formalName = &quot;Start Column&quot;,
+      description = &quot;The column number of the first character in the region.&quot;,
+      useName = &quot;startColumn&quot;,
+      typeAdapter = PositiveIntegerAdapter.class
+  )
+  private BigInteger _startColumn;
+
+  @BoundField(
+      formalName = &quot;End Line&quot;,
+      description = &quot;The line number of the last character in the region.&quot;,
+      useName = &quot;endLine&quot;,
+      typeAdapter = PositiveIntegerAdapter.class
+  )
+  private BigInteger _endLine;
+
+  @BoundField(
+      formalName = &quot;End Column&quot;,
+      description = &quot;The column number of the character following the end of the region.&quot;,
+      useName = &quot;endColumn&quot;,
+      typeAdapter = PositiveIntegerAdapter.class
+  )
+  private BigInteger _endColumn;
+
+  @BoundField(
+      formalName = &quot;Character Offset&quot;,
+      description = &quot;The zero-based offset from the beginning of the artifact of the first character in the region.&quot;,
+      useName = &quot;charOffset&quot;,
+      defaultValue = &quot;-1&quot;,
+      typeAdapter = IntegerAdapter.class,
+      valueConstraints = @ValueConstraints(expect = @Expect(level = IConstraint.Level.ERROR, test = &quot;@id &gt;= -1&quot;, message = &quot;The offset '{ . }' is not greater than or equal to '-1'.&quot;))
+  )
+  private BigInteger _charOffset;
+
+  @BoundField(
+      formalName = &quot;Character Length&quot;,
+      description = &quot;The length of the region in characters.&quot;,
+      useName = &quot;charLength&quot;,
+      typeAdapter = NonNegativeIntegerAdapter.class
+  )
+  private BigInteger _charLength;
+
+  @BoundField(
+      formalName = &quot;Byte Offset&quot;,
+      description = &quot;The zero-based offset from the beginning of the artifact of the first byte in the region&quot;,
+      useName = &quot;byteOffset&quot;,
+      defaultValue = &quot;-1&quot;,
+      typeAdapter = IntegerAdapter.class,
+      valueConstraints = @ValueConstraints(expect = @Expect(level = IConstraint.Level.ERROR, test = &quot;@id &gt;= -1&quot;, message = &quot;The offset '{ . }' is not greater than or equal to '-1'.&quot;))
+  )
+  private BigInteger _byteOffset;
+
+  @BoundField(
+      formalName = &quot;Byte Length&quot;,
+      description = &quot;The length of the region in bytes.&quot;,
+      useName = &quot;byteLength&quot;,
+      typeAdapter = NonNegativeIntegerAdapter.class
+  )
+  private BigInteger _byteLength;
+
+  @BoundAssembly(
+      formalName = &quot;Region Message&quot;,
+      description = &quot;A message relevant to the region.&quot;,
+      useName = &quot;message&quot;
+  )
+  private Message _message;
+
+  public Region() {
+<span class="fc" id="L109">    this(null);</span>
+<span class="fc" id="L110">  }</span>
+
+<span class="fc" id="L112">  public Region(IMetaschemaData data) {</span>
+<span class="fc" id="L113">    this.__metaschemaData = data;</span>
+<span class="fc" id="L114">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L118">    return __metaschemaData;</span>
+  }
+
+  public BigInteger getStartLine() {
+<span class="nc" id="L122">    return _startLine;</span>
+  }
+
+  public void setStartLine(BigInteger value) {
+<span class="fc" id="L126">    _startLine = value;</span>
+<span class="fc" id="L127">  }</span>
+
+  public BigInteger getStartColumn() {
+<span class="nc" id="L130">    return _startColumn;</span>
+  }
+
+  public void setStartColumn(BigInteger value) {
+<span class="fc" id="L134">    _startColumn = value;</span>
+<span class="fc" id="L135">  }</span>
+
+  public BigInteger getEndLine() {
+<span class="nc" id="L138">    return _endLine;</span>
+  }
+
+  public void setEndLine(BigInteger value) {
+<span class="fc" id="L142">    _endLine = value;</span>
+<span class="fc" id="L143">  }</span>
+
+  public BigInteger getEndColumn() {
+<span class="nc" id="L146">    return _endColumn;</span>
+  }
+
+  public void setEndColumn(BigInteger value) {
+<span class="fc" id="L150">    _endColumn = value;</span>
+<span class="fc" id="L151">  }</span>
+
+  public BigInteger getCharOffset() {
+<span class="nc" id="L154">    return _charOffset;</span>
+  }
+
+  public void setCharOffset(BigInteger value) {
+<span class="fc" id="L158">    _charOffset = value;</span>
+<span class="fc" id="L159">  }</span>
+
+  public BigInteger getCharLength() {
+<span class="nc" id="L162">    return _charLength;</span>
+  }
+
+  public void setCharLength(BigInteger value) {
+<span class="fc" id="L166">    _charLength = value;</span>
+<span class="fc" id="L167">  }</span>
+
+  public BigInteger getByteOffset() {
+<span class="nc" id="L170">    return _byteOffset;</span>
+  }
+
+  public void setByteOffset(BigInteger value) {
+<span class="fc" id="L174">    _byteOffset = value;</span>
+<span class="fc" id="L175">  }</span>
+
+  public BigInteger getByteLength() {
+<span class="nc" id="L178">    return _byteLength;</span>
+  }
+
+  public void setByteLength(BigInteger value) {
+<span class="fc" id="L182">    _byteLength = value;</span>
+<span class="fc" id="L183">  }</span>
+
+  public Message getMessage() {
+<span class="nc" id="L186">    return _message;</span>
+  }
+
+  public void setMessage(Message value) {
+<span class="nc" id="L190">    _message = value;</span>
+<span class="nc" id="L191">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L195">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

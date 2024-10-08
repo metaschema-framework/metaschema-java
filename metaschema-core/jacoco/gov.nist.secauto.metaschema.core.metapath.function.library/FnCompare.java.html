@@ -24,10 +24,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * &quot;https://www.w3.org/TR/xpath-functions-31/#func-compare&quot;&gt;fn:compare&lt;/a&gt;.
  */
 public final class FnCompare {
-
+  private static final String NAME = &quot;compare&quot;;
   @NonNull
 <span class="fc" id="L29">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L30">      .name(&quot;compare&quot;)</span>
+<span class="fc" id="L30">      .name(NAME)</span>
 <span class="fc" id="L31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="fc" id="L32">      .deterministic()</span>
 <span class="fc" id="L33">      .contextDependent()</span>

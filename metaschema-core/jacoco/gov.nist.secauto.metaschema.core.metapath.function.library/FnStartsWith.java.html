@@ -18,30 +18,29 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class FnStartsWith {
-
+  private static final String NAME = &quot;starts-with&quot;;
   @NonNull
-<span class="fc" id="L26">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L27">      .name(&quot;starts-with&quot;)</span>
-<span class="fc" id="L28">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L29">      .deterministic()</span>
-<span class="fc" id="L30">      .contextDependent()</span>
-<span class="fc" id="L31">      .focusIndependent()</span>
-<span class="fc" id="L32">      .argument(IArgument.builder()</span>
-<span class="fc" id="L33">          .name(&quot;arg1&quot;).type(IStringItem.class)</span>
-<span class="fc" id="L34">          .zeroOrOne()</span>
-<span class="fc" id="L35">          .build())</span>
-<span class="fc" id="L36">      .argument(IArgument.builder()</span>
-<span class="fc" id="L37">          .name(&quot;arg2&quot;)</span>
-<span class="fc" id="L38">          .type(IStringItem.class)</span>
-<span class="fc" id="L39">          .zeroOrOne()</span>
-<span class="fc" id="L40">          .build())</span>
-<span class="fc" id="L41">      .returnType(IBooleanItem.class)</span>
-<span class="fc" id="L42">      .returnOne()</span>
-<span class="fc" id="L43">      .functionHandler(FnStartsWith::execute)</span>
-<span class="fc" id="L44">      .build();</span>
+<span class="fc" id="L25">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L26">      .name(NAME)</span>
+<span class="fc" id="L27">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L28">      .deterministic()</span>
+<span class="fc" id="L29">      .contextDependent()</span>
+<span class="fc" id="L30">      .focusIndependent()</span>
+<span class="fc" id="L31">      .argument(IArgument.builder()</span>
+<span class="fc" id="L32">          .name(&quot;arg1&quot;).type(IStringItem.class)</span>
+<span class="fc" id="L33">          .zeroOrOne()</span>
+<span class="fc" id="L34">          .build())</span>
+<span class="fc" id="L35">      .argument(IArgument.builder()</span>
+<span class="fc" id="L36">          .name(&quot;arg2&quot;)</span>
+<span class="fc" id="L37">          .type(IStringItem.class)</span>
+<span class="fc" id="L38">          .zeroOrOne()</span>
+<span class="fc" id="L39">          .build())</span>
+<span class="fc" id="L40">      .returnType(IBooleanItem.class)</span>
+<span class="fc" id="L41">      .returnOne()</span>
+<span class="fc" id="L42">      .functionHandler(FnStartsWith::execute)</span>
+<span class="fc" id="L43">      .build();</span>
 
   @SuppressWarnings(&quot;unused&quot;)
   @NonNull
@@ -49,15 +48,14 @@ public final class FnStartsWith {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L52">    IStringItem arg1 = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="fc" id="L51">    IStringItem arg1 = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
 
-<span class="fc" id="L54">    IStringItem arg2 = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));</span>
+<span class="fc" id="L53">    IStringItem arg2 = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));</span>
 
-<span class="fc" id="L56">    return ISequence.of(fnStartsWith(arg1, arg2));</span>
-  }
-
-  private FnStartsWith() {
-    // disable construction
+<span class="fc" id="L55">    return ISequence.of(IBooleanItem.valueOf(</span>
+<span class="fc" id="L56">        fnStartsWith(</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            arg1 == null ? &quot;&quot; : arg1.asString(),</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            arg2 == null ? &quot;&quot; : arg2.asString())));</span>
   }
 
   /**
@@ -72,20 +70,23 @@ public final class FnStartsWith {
    *          the string to examine
    * @param arg2
    *          the string to check as the leading substring
-   * @return {@link IBooleanItem#TRUE} if {@code arg1} starts with {@code arg2},
-   *         or {@link IBooleanItem#FALSE} otherwise
+   * @return {@code true} if {@code arg1} starts with {@code arg2}, or
+   *         {@code false} otherwise
    */
-  public static IBooleanItem fnStartsWith(@Nullable IStringItem arg1, @Nullable IStringItem arg2) {
-<span class="fc bfc" id="L79" title="All 2 branches covered.">    String arg2String = arg2 == null ? &quot;&quot; : arg2.asString();</span>
-
+  public static boolean fnStartsWith(@NonNull String arg1, @NonNull String arg2) {
     boolean retval;
-<span class="fc bfc" id="L82" title="All 2 branches covered.">    if (arg2String.isEmpty()) {</span>
-<span class="fc" id="L83">      retval = true;</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    if (arg2.isEmpty()) {</span>
+<span class="fc" id="L79">      retval = true;</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">    } else if (arg1.isEmpty()) {</span>
+<span class="fc" id="L81">      retval = false;</span>
     } else {
-<span class="fc bfc" id="L85" title="All 2 branches covered.">      String arg1String = arg1 == null ? &quot;&quot; : arg1.asString();</span>
-<span class="fc" id="L86">      retval = arg1String.startsWith(arg2String);</span>
+<span class="fc" id="L83">      retval = arg1.startsWith(arg2);</span>
     }
-<span class="fc" id="L88">    return IBooleanItem.valueOf(retval);</span>
+<span class="fc" id="L85">    return retval;</span>
+  }
+
+  private FnStartsWith() {
+    // disable construction
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

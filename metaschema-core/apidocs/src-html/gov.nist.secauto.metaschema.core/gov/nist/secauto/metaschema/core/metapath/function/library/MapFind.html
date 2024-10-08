@@ -39,137 +39,138 @@
 <span class="source-line-no">026</span><span id="line-26">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">027</span><span id="line-27"></span>
 <span class="source-line-no">028</span><span id="line-28">public final class MapFind {</span>
-<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
-<span class="source-line-no">030</span><span id="line-30">  public static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">031</span><span id="line-31">      .name("find")</span>
-<span class="source-line-no">032</span><span id="line-32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="source-line-no">033</span><span id="line-33">      .deterministic()</span>
-<span class="source-line-no">034</span><span id="line-34">      .contextIndependent()</span>
-<span class="source-line-no">035</span><span id="line-35">      .focusIndependent()</span>
-<span class="source-line-no">036</span><span id="line-36">      .argument(IArgument.builder()</span>
-<span class="source-line-no">037</span><span id="line-37">          .name("input")</span>
-<span class="source-line-no">038</span><span id="line-38">          .type(IItem.class)</span>
-<span class="source-line-no">039</span><span id="line-39">          .zeroOrMore()</span>
-<span class="source-line-no">040</span><span id="line-40">          .build())</span>
-<span class="source-line-no">041</span><span id="line-41">      .argument(IArgument.builder()</span>
-<span class="source-line-no">042</span><span id="line-42">          .name("key")</span>
-<span class="source-line-no">043</span><span id="line-43">          .type(IAnyAtomicItem.class)</span>
-<span class="source-line-no">044</span><span id="line-44">          .one()</span>
-<span class="source-line-no">045</span><span id="line-45">          .build())</span>
-<span class="source-line-no">046</span><span id="line-46">      .returnType(IArrayItem.class)</span>
-<span class="source-line-no">047</span><span id="line-47">      .returnOne()</span>
-<span class="source-line-no">048</span><span id="line-48">      .functionHandler(MapFind::execute)</span>
-<span class="source-line-no">049</span><span id="line-49">      .build();</span>
-<span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">  private MapFind() {</span>
-<span class="source-line-no">052</span><span id="line-52">    // disable construction</span>
-<span class="source-line-no">053</span><span id="line-53">  }</span>
-<span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">056</span><span id="line-56">  @NonNull</span>
-<span class="source-line-no">057</span><span id="line-57">  private static ISequence&lt;?&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">058</span><span id="line-58">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">059</span><span id="line-59">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">060</span><span id="line-60">      IItem focus) {</span>
-<span class="source-line-no">061</span><span id="line-61">    ISequence&lt;?&gt; input = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">062</span><span id="line-62">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">063</span><span id="line-63"></span>
-<span class="source-line-no">064</span><span id="line-64">    return ISequence.of(IArrayItem.ofCollection(</span>
-<span class="source-line-no">065</span><span id="line-65">        ObjectUtils.notNull(find((Collection&lt;? extends IItem&gt;) input, key)</span>
-<span class="source-line-no">066</span><span id="line-66">            .collect(Collectors.toList()))));</span>
-<span class="source-line-no">067</span><span id="line-67">  }</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  /**</span>
-<span class="source-line-no">070</span><span id="line-70">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">071</span><span id="line-71">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-find"&gt;map:find&lt;/a&gt;.</span>
-<span class="source-line-no">072</span><span id="line-72">   *</span>
-<span class="source-line-no">073</span><span id="line-73">   * @param items</span>
-<span class="source-line-no">074</span><span id="line-74">   *          the item sequence to search for key matches</span>
-<span class="source-line-no">075</span><span id="line-75">   * @param key</span>
-<span class="source-line-no">076</span><span id="line-76">   *          the key for the item to retrieve</span>
-<span class="source-line-no">077</span><span id="line-77">   * @return the retrieved item</span>
-<span class="source-line-no">078</span><span id="line-78">   */</span>
-<span class="source-line-no">079</span><span id="line-79">  @NonNull</span>
-<span class="source-line-no">080</span><span id="line-80">  public static Stream&lt;ICollectionValue&gt; find(</span>
-<span class="source-line-no">081</span><span id="line-81">      @NonNull Collection&lt;? extends IItem&gt; items,</span>
-<span class="source-line-no">082</span><span id="line-82">      @NonNull IAnyAtomicItem key) {</span>
-<span class="source-line-no">083</span><span id="line-83">    return ObjectUtils.notNull(items.stream()</span>
-<span class="source-line-no">084</span><span id="line-84">        // handle item</span>
-<span class="source-line-no">085</span><span id="line-85">        .flatMap(item -&gt; find(ObjectUtils.notNull(item), key)));</span>
-<span class="source-line-no">086</span><span id="line-86">  }</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">  /**</span>
-<span class="source-line-no">089</span><span id="line-89">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">090</span><span id="line-90">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-find"&gt;map:find&lt;/a&gt;.</span>
-<span class="source-line-no">091</span><span id="line-91">   *</span>
-<span class="source-line-no">092</span><span id="line-92">   * @param item</span>
-<span class="source-line-no">093</span><span id="line-93">   *          the item to search for key matches</span>
-<span class="source-line-no">094</span><span id="line-94">   * @param key</span>
-<span class="source-line-no">095</span><span id="line-95">   *          the key for the item to retrieve</span>
-<span class="source-line-no">096</span><span id="line-96">   * @return the retrieved item</span>
-<span class="source-line-no">097</span><span id="line-97">   */</span>
-<span class="source-line-no">098</span><span id="line-98">  @NonNull</span>
-<span class="source-line-no">099</span><span id="line-99">  public static Stream&lt;ICollectionValue&gt; find(</span>
-<span class="source-line-no">100</span><span id="line-100">      @NonNull IItem item,</span>
-<span class="source-line-no">101</span><span id="line-101">      @NonNull IAnyAtomicItem key) {</span>
-<span class="source-line-no">102</span><span id="line-102">    Stream&lt;ICollectionValue&gt; retval;</span>
-<span class="source-line-no">103</span><span id="line-103">    if (item instanceof IArrayItem) {</span>
-<span class="source-line-no">104</span><span id="line-104">      IArrayItem&lt;?&gt; array = (IArrayItem&lt;?&gt;) item;</span>
-<span class="source-line-no">105</span><span id="line-105">      retval = ObjectUtils.notNull(array.stream()</span>
-<span class="source-line-no">106</span><span id="line-106">          // handle array values</span>
-<span class="source-line-no">107</span><span id="line-107">          .flatMap(value -&gt; find(ObjectUtils.notNull(value), key)));</span>
-<span class="source-line-no">108</span><span id="line-108">    } else if (item instanceof IMapItem) {</span>
-<span class="source-line-no">109</span><span id="line-109">      IMapItem&lt;?&gt; map = (IMapItem&lt;?&gt;) item;</span>
-<span class="source-line-no">110</span><span id="line-110">      // handle map</span>
-<span class="source-line-no">111</span><span id="line-111">      retval = find(map, key);</span>
-<span class="source-line-no">112</span><span id="line-112">    } else {</span>
-<span class="source-line-no">113</span><span id="line-113">      // do nothing</span>
-<span class="source-line-no">114</span><span id="line-114">      retval = ObjectUtils.notNull(Stream.empty());</span>
-<span class="source-line-no">115</span><span id="line-115">    }</span>
-<span class="source-line-no">116</span><span id="line-116">    return retval;</span>
-<span class="source-line-no">117</span><span id="line-117">  }</span>
-<span class="source-line-no">118</span><span id="line-118"></span>
-<span class="source-line-no">119</span><span id="line-119">  @NonNull</span>
-<span class="source-line-no">120</span><span id="line-120">  private static Stream&lt;ICollectionValue&gt; find(</span>
-<span class="source-line-no">121</span><span id="line-121">      @NonNull ICollectionValue value,</span>
-<span class="source-line-no">122</span><span id="line-122">      @NonNull IAnyAtomicItem key) {</span>
-<span class="source-line-no">123</span><span id="line-123">    Stream&lt;ICollectionValue&gt; retval;</span>
-<span class="source-line-no">124</span><span id="line-124">    if (value instanceof ISequence) {</span>
-<span class="source-line-no">125</span><span id="line-125">      ISequence&lt;?&gt; sequence = (ISequence&lt;?&gt;) value;</span>
-<span class="source-line-no">126</span><span id="line-126">      // handle sequence items</span>
-<span class="source-line-no">127</span><span id="line-127">      retval = find((Collection&lt;? extends IItem&gt;) sequence, key);</span>
-<span class="source-line-no">128</span><span id="line-128">    } else {</span>
-<span class="source-line-no">129</span><span id="line-129">      // handle item</span>
-<span class="source-line-no">130</span><span id="line-130">      retval = find((IItem) value, key);</span>
-<span class="source-line-no">131</span><span id="line-131">    }</span>
-<span class="source-line-no">132</span><span id="line-132">    return retval;</span>
-<span class="source-line-no">133</span><span id="line-133">  }</span>
-<span class="source-line-no">134</span><span id="line-134"></span>
-<span class="source-line-no">135</span><span id="line-135">  /**</span>
-<span class="source-line-no">136</span><span id="line-136">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">137</span><span id="line-137">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-find"&gt;map:find&lt;/a&gt;.</span>
-<span class="source-line-no">138</span><span id="line-138">   * &lt;p&gt;</span>
-<span class="source-line-no">139</span><span id="line-139">   * This is a specialized method for processing an item that is a map item, which</span>
-<span class="source-line-no">140</span><span id="line-140">   * can be searched for a key in a much more efficient way.</span>
-<span class="source-line-no">141</span><span id="line-141">   *</span>
-<span class="source-line-no">142</span><span id="line-142">   * @param item</span>
-<span class="source-line-no">143</span><span id="line-143">   *          the item to search for key matches</span>
-<span class="source-line-no">144</span><span id="line-144">   * @param key</span>
-<span class="source-line-no">145</span><span id="line-145">   *          the key for the item to retrieve</span>
-<span class="source-line-no">146</span><span id="line-146">   * @return the retrieved item</span>
-<span class="source-line-no">147</span><span id="line-147">   */</span>
-<span class="source-line-no">148</span><span id="line-148">  @NonNull</span>
-<span class="source-line-no">149</span><span id="line-149">  public static Stream&lt;ICollectionValue&gt; find(</span>
-<span class="source-line-no">150</span><span id="line-150">      @NonNull IMapItem&lt;?&gt; item,</span>
-<span class="source-line-no">151</span><span id="line-151">      @NonNull IAnyAtomicItem key) {</span>
-<span class="source-line-no">152</span><span id="line-152">    return ObjectUtils.notNull(Stream.concat(</span>
-<span class="source-line-no">153</span><span id="line-153">        // add matching value, if it exists</span>
-<span class="source-line-no">154</span><span id="line-154">        Stream.ofNullable(MapGet.get(item, key)),</span>
-<span class="source-line-no">155</span><span id="line-155">        item.values().stream()</span>
-<span class="source-line-no">156</span><span id="line-156">            // handle map values</span>
-<span class="source-line-no">157</span><span id="line-157">            .flatMap(value -&gt; find(ObjectUtils.notNull(value), key))));</span>
-<span class="source-line-no">158</span><span id="line-158">  }</span>
-<span class="source-line-no">159</span><span id="line-159">}</span>
+<span class="source-line-no">029</span><span id="line-29">  private static final String NAME = "find";</span>
+<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
+<span class="source-line-no">031</span><span id="line-31">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">032</span><span id="line-32">      .name(NAME)</span>
+<span class="source-line-no">033</span><span id="line-33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="source-line-no">034</span><span id="line-34">      .deterministic()</span>
+<span class="source-line-no">035</span><span id="line-35">      .contextIndependent()</span>
+<span class="source-line-no">036</span><span id="line-36">      .focusIndependent()</span>
+<span class="source-line-no">037</span><span id="line-37">      .argument(IArgument.builder()</span>
+<span class="source-line-no">038</span><span id="line-38">          .name("input")</span>
+<span class="source-line-no">039</span><span id="line-39">          .type(IItem.class)</span>
+<span class="source-line-no">040</span><span id="line-40">          .zeroOrMore()</span>
+<span class="source-line-no">041</span><span id="line-41">          .build())</span>
+<span class="source-line-no">042</span><span id="line-42">      .argument(IArgument.builder()</span>
+<span class="source-line-no">043</span><span id="line-43">          .name("key")</span>
+<span class="source-line-no">044</span><span id="line-44">          .type(IAnyAtomicItem.class)</span>
+<span class="source-line-no">045</span><span id="line-45">          .one()</span>
+<span class="source-line-no">046</span><span id="line-46">          .build())</span>
+<span class="source-line-no">047</span><span id="line-47">      .returnType(IArrayItem.class)</span>
+<span class="source-line-no">048</span><span id="line-48">      .returnOne()</span>
+<span class="source-line-no">049</span><span id="line-49">      .functionHandler(MapFind::execute)</span>
+<span class="source-line-no">050</span><span id="line-50">      .build();</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  private MapFind() {</span>
+<span class="source-line-no">053</span><span id="line-53">    // disable construction</span>
+<span class="source-line-no">054</span><span id="line-54">  }</span>
+<span class="source-line-no">055</span><span id="line-55"></span>
+<span class="source-line-no">056</span><span id="line-56">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
+<span class="source-line-no">058</span><span id="line-58">  private static ISequence&lt;?&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">059</span><span id="line-59">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">060</span><span id="line-60">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">061</span><span id="line-61">      IItem focus) {</span>
+<span class="source-line-no">062</span><span id="line-62">    ISequence&lt;?&gt; input = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">063</span><span id="line-63">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">    return ISequence.of(IArrayItem.ofCollection(</span>
+<span class="source-line-no">066</span><span id="line-66">        ObjectUtils.notNull(find((Collection&lt;? extends IItem&gt;) input, key)</span>
+<span class="source-line-no">067</span><span id="line-67">            .collect(Collectors.toList()))));</span>
+<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  /**</span>
+<span class="source-line-no">071</span><span id="line-71">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">072</span><span id="line-72">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-find"&gt;map:find&lt;/a&gt;.</span>
+<span class="source-line-no">073</span><span id="line-73">   *</span>
+<span class="source-line-no">074</span><span id="line-74">   * @param items</span>
+<span class="source-line-no">075</span><span id="line-75">   *          the item sequence to search for key matches</span>
+<span class="source-line-no">076</span><span id="line-76">   * @param key</span>
+<span class="source-line-no">077</span><span id="line-77">   *          the key for the item to retrieve</span>
+<span class="source-line-no">078</span><span id="line-78">   * @return the retrieved item</span>
+<span class="source-line-no">079</span><span id="line-79">   */</span>
+<span class="source-line-no">080</span><span id="line-80">  @NonNull</span>
+<span class="source-line-no">081</span><span id="line-81">  public static Stream&lt;ICollectionValue&gt; find(</span>
+<span class="source-line-no">082</span><span id="line-82">      @NonNull Collection&lt;? extends IItem&gt; items,</span>
+<span class="source-line-no">083</span><span id="line-83">      @NonNull IAnyAtomicItem key) {</span>
+<span class="source-line-no">084</span><span id="line-84">    return ObjectUtils.notNull(items.stream()</span>
+<span class="source-line-no">085</span><span id="line-85">        // handle item</span>
+<span class="source-line-no">086</span><span id="line-86">        .flatMap(item -&gt; find(ObjectUtils.notNull(item), key)));</span>
+<span class="source-line-no">087</span><span id="line-87">  }</span>
+<span class="source-line-no">088</span><span id="line-88"></span>
+<span class="source-line-no">089</span><span id="line-89">  /**</span>
+<span class="source-line-no">090</span><span id="line-90">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">091</span><span id="line-91">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-find"&gt;map:find&lt;/a&gt;.</span>
+<span class="source-line-no">092</span><span id="line-92">   *</span>
+<span class="source-line-no">093</span><span id="line-93">   * @param item</span>
+<span class="source-line-no">094</span><span id="line-94">   *          the item to search for key matches</span>
+<span class="source-line-no">095</span><span id="line-95">   * @param key</span>
+<span class="source-line-no">096</span><span id="line-96">   *          the key for the item to retrieve</span>
+<span class="source-line-no">097</span><span id="line-97">   * @return the retrieved item</span>
+<span class="source-line-no">098</span><span id="line-98">   */</span>
+<span class="source-line-no">099</span><span id="line-99">  @NonNull</span>
+<span class="source-line-no">100</span><span id="line-100">  public static Stream&lt;ICollectionValue&gt; find(</span>
+<span class="source-line-no">101</span><span id="line-101">      @NonNull IItem item,</span>
+<span class="source-line-no">102</span><span id="line-102">      @NonNull IAnyAtomicItem key) {</span>
+<span class="source-line-no">103</span><span id="line-103">    Stream&lt;ICollectionValue&gt; retval;</span>
+<span class="source-line-no">104</span><span id="line-104">    if (item instanceof IArrayItem) {</span>
+<span class="source-line-no">105</span><span id="line-105">      IArrayItem&lt;?&gt; array = (IArrayItem&lt;?&gt;) item;</span>
+<span class="source-line-no">106</span><span id="line-106">      retval = ObjectUtils.notNull(array.stream()</span>
+<span class="source-line-no">107</span><span id="line-107">          // handle array values</span>
+<span class="source-line-no">108</span><span id="line-108">          .flatMap(value -&gt; find(ObjectUtils.notNull(value), key)));</span>
+<span class="source-line-no">109</span><span id="line-109">    } else if (item instanceof IMapItem) {</span>
+<span class="source-line-no">110</span><span id="line-110">      IMapItem&lt;?&gt; map = (IMapItem&lt;?&gt;) item;</span>
+<span class="source-line-no">111</span><span id="line-111">      // handle map</span>
+<span class="source-line-no">112</span><span id="line-112">      retval = find(map, key);</span>
+<span class="source-line-no">113</span><span id="line-113">    } else {</span>
+<span class="source-line-no">114</span><span id="line-114">      // do nothing</span>
+<span class="source-line-no">115</span><span id="line-115">      retval = ObjectUtils.notNull(Stream.empty());</span>
+<span class="source-line-no">116</span><span id="line-116">    }</span>
+<span class="source-line-no">117</span><span id="line-117">    return retval;</span>
+<span class="source-line-no">118</span><span id="line-118">  }</span>
+<span class="source-line-no">119</span><span id="line-119"></span>
+<span class="source-line-no">120</span><span id="line-120">  @NonNull</span>
+<span class="source-line-no">121</span><span id="line-121">  private static Stream&lt;ICollectionValue&gt; find(</span>
+<span class="source-line-no">122</span><span id="line-122">      @NonNull ICollectionValue value,</span>
+<span class="source-line-no">123</span><span id="line-123">      @NonNull IAnyAtomicItem key) {</span>
+<span class="source-line-no">124</span><span id="line-124">    Stream&lt;ICollectionValue&gt; retval;</span>
+<span class="source-line-no">125</span><span id="line-125">    if (value instanceof ISequence) {</span>
+<span class="source-line-no">126</span><span id="line-126">      ISequence&lt;?&gt; sequence = (ISequence&lt;?&gt;) value;</span>
+<span class="source-line-no">127</span><span id="line-127">      // handle sequence items</span>
+<span class="source-line-no">128</span><span id="line-128">      retval = find((Collection&lt;? extends IItem&gt;) sequence, key);</span>
+<span class="source-line-no">129</span><span id="line-129">    } else {</span>
+<span class="source-line-no">130</span><span id="line-130">      // handle item</span>
+<span class="source-line-no">131</span><span id="line-131">      retval = find((IItem) value, key);</span>
+<span class="source-line-no">132</span><span id="line-132">    }</span>
+<span class="source-line-no">133</span><span id="line-133">    return retval;</span>
+<span class="source-line-no">134</span><span id="line-134">  }</span>
+<span class="source-line-no">135</span><span id="line-135"></span>
+<span class="source-line-no">136</span><span id="line-136">  /**</span>
+<span class="source-line-no">137</span><span id="line-137">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">138</span><span id="line-138">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-find"&gt;map:find&lt;/a&gt;.</span>
+<span class="source-line-no">139</span><span id="line-139">   * &lt;p&gt;</span>
+<span class="source-line-no">140</span><span id="line-140">   * This is a specialized method for processing an item that is a map item, which</span>
+<span class="source-line-no">141</span><span id="line-141">   * can be searched for a key in a much more efficient way.</span>
+<span class="source-line-no">142</span><span id="line-142">   *</span>
+<span class="source-line-no">143</span><span id="line-143">   * @param item</span>
+<span class="source-line-no">144</span><span id="line-144">   *          the item to search for key matches</span>
+<span class="source-line-no">145</span><span id="line-145">   * @param key</span>
+<span class="source-line-no">146</span><span id="line-146">   *          the key for the item to retrieve</span>
+<span class="source-line-no">147</span><span id="line-147">   * @return the retrieved item</span>
+<span class="source-line-no">148</span><span id="line-148">   */</span>
+<span class="source-line-no">149</span><span id="line-149">  @NonNull</span>
+<span class="source-line-no">150</span><span id="line-150">  public static Stream&lt;ICollectionValue&gt; find(</span>
+<span class="source-line-no">151</span><span id="line-151">      @NonNull IMapItem&lt;?&gt; item,</span>
+<span class="source-line-no">152</span><span id="line-152">      @NonNull IAnyAtomicItem key) {</span>
+<span class="source-line-no">153</span><span id="line-153">    return ObjectUtils.notNull(Stream.concat(</span>
+<span class="source-line-no">154</span><span id="line-154">        // add matching value, if it exists</span>
+<span class="source-line-no">155</span><span id="line-155">        Stream.ofNullable(MapGet.get(item, key)),</span>
+<span class="source-line-no">156</span><span id="line-156">        item.values().stream()</span>
+<span class="source-line-no">157</span><span id="line-157">            // handle map values</span>
+<span class="source-line-no">158</span><span id="line-158">            .flatMap(value -&gt; find(ObjectUtils.notNull(value), key))));</span>
+<span class="source-line-no">159</span><span id="line-159">  }</span>
+<span class="source-line-no">160</span><span id="line-160">}</span>
 
 
 

@@ -157,120 +157,118 @@ public class XmlSchemaContentValidator
 <span class="nc" id="L157">      return severity;</span>
     }
 
-    @SuppressWarnings(&quot;null&quot;)
     @Override
     public URI getDocumentUri() {
-<span class="nc" id="L163">      String systemId = getCause().getSystemId();</span>
-<span class="nc bnc" id="L164" title="All 2 branches missed.">      return systemId == null ? documentUri : URI.create(systemId);</span>
+<span class="nc" id="L162">      String systemId = getCause().getSystemId();</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">      return systemId == null ? documentUri : URI.create(systemId);</span>
     }
 
     @Override
     public int getLine() {
-<span class="nc" id="L169">      return getCause().getLineNumber();</span>
+<span class="nc" id="L168">      return getCause().getLineNumber();</span>
     }
 
     @Override
     public int getColumn() {
-<span class="nc" id="L174">      return getCause().getColumnNumber();</span>
+<span class="nc" id="L173">      return getCause().getColumnNumber();</span>
     }
 
     @Override
     public long getCharOffset() {
       // not known
-<span class="nc" id="L180">      return -1;</span>
+<span class="nc" id="L179">      return -1;</span>
     }
 
     @Override
     public long getByteOffset() {
       // not known
-<span class="nc" id="L186">      return -1;</span>
+<span class="nc" id="L185">      return -1;</span>
     }
 
     @Override
     public IResourceLocation getLocation() {
       // TODO Auto-generated method stub
-<span class="nc" id="L192">      return this;</span>
+<span class="nc" id="L191">      return this;</span>
     }
 
     @Override
     public String getPathKind() {
       // not known
-<span class="nc" id="L198">      return null;</span>
+<span class="nc" id="L197">      return null;</span>
     }
 
     @Override
     public String getPath() {
       // not known
-<span class="nc" id="L204">      return null;</span>
+<span class="nc" id="L203">      return null;</span>
     }
 
-    @SuppressWarnings(&quot;null&quot;)
     @Override
     public String getMessage() {
-<span class="nc" id="L210">      return getCause().getLocalizedMessage();</span>
+<span class="nc" id="L208">      return getCause().getLocalizedMessage();</span>
     }
 
     @NonNull
     @Override
     public SAXParseException getCause() {
-<span class="nc" id="L216">      return exception;</span>
+<span class="nc" id="L214">      return exception;</span>
     }
   }
 
   private static class XmlValidationErrorHandler implements ErrorHandler, IValidationResult {
     @NonNull
     private final URI documentUri;
-<span class="nc" id="L223">    @NonNull</span>
+<span class="nc" id="L221">    @NonNull</span>
     private final List&lt;XmlValidationFinding&gt; findings = new LinkedList&lt;&gt;();
-<span class="nc" id="L225">    @NonNull</span>
+<span class="nc" id="L223">    @NonNull</span>
     private Level highestSeverity = Level.INFORMATIONAL;
 
-<span class="nc" id="L228">    public XmlValidationErrorHandler(@NonNull URI documentUri) {</span>
-<span class="nc" id="L229">      this.documentUri = ObjectUtils.requireNonNull(documentUri, &quot;documentUri&quot;);</span>
-<span class="nc" id="L230">    }</span>
+<span class="nc" id="L226">    public XmlValidationErrorHandler(@NonNull URI documentUri) {</span>
+<span class="nc" id="L227">      this.documentUri = ObjectUtils.requireNonNull(documentUri, &quot;documentUri&quot;);</span>
+<span class="nc" id="L228">    }</span>
 
     @NonNull
     public URI getDocumentUri() {
-<span class="nc" id="L234">      return documentUri;</span>
+<span class="nc" id="L232">      return documentUri;</span>
     }
 
     private void adjustHighestSeverity(@NonNull Level severity) {
-<span class="nc bnc" id="L238" title="All 2 branches missed.">      if (highestSeverity.ordinal() &lt; severity.ordinal()) {</span>
-<span class="nc" id="L239">        highestSeverity = severity;</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">      if (highestSeverity.ordinal() &lt; severity.ordinal()) {</span>
+<span class="nc" id="L237">        highestSeverity = severity;</span>
       }
-<span class="nc" id="L241">    }</span>
+<span class="nc" id="L239">    }</span>
 
     @SuppressWarnings(&quot;null&quot;)
     @Override
     public void warning(SAXParseException ex) throws SAXException {
-<span class="nc" id="L246">      findings.add(new XmlValidationFinding(Level.WARNING, ex, getDocumentUri()));</span>
-<span class="nc" id="L247">      adjustHighestSeverity(Level.WARNING);</span>
-<span class="nc" id="L248">    }</span>
+<span class="nc" id="L244">      findings.add(new XmlValidationFinding(Level.WARNING, ex, getDocumentUri()));</span>
+<span class="nc" id="L245">      adjustHighestSeverity(Level.WARNING);</span>
+<span class="nc" id="L246">    }</span>
 
     @SuppressWarnings(&quot;null&quot;)
     @Override
     public void error(SAXParseException ex) throws SAXException {
-<span class="nc" id="L253">      findings.add(new XmlValidationFinding(Level.ERROR, ex, getDocumentUri()));</span>
-<span class="nc" id="L254">      adjustHighestSeverity(Level.ERROR);</span>
-<span class="nc" id="L255">    }</span>
+<span class="nc" id="L251">      findings.add(new XmlValidationFinding(Level.ERROR, ex, getDocumentUri()));</span>
+<span class="nc" id="L252">      adjustHighestSeverity(Level.CRITICAL);</span>
+<span class="nc" id="L253">    }</span>
 
     @SuppressWarnings(&quot;null&quot;)
     @Override
     public void fatalError(SAXParseException ex) throws SAXException {
-<span class="nc" id="L260">      findings.add(new XmlValidationFinding(Level.CRITICAL, ex, getDocumentUri()));</span>
-<span class="nc" id="L261">      adjustHighestSeverity(Level.CRITICAL);</span>
-<span class="nc" id="L262">    }</span>
+<span class="nc" id="L258">      findings.add(new XmlValidationFinding(Level.CRITICAL, ex, getDocumentUri()));</span>
+<span class="nc" id="L259">      adjustHighestSeverity(Level.CRITICAL);</span>
+<span class="nc" id="L260">    }</span>
 
     @SuppressWarnings(&quot;null&quot;)
     @Override
     @NonNull
     public List&lt;XmlValidationFinding&gt; getFindings() {
-<span class="nc" id="L268">      return Collections.unmodifiableList(findings);</span>
+<span class="nc" id="L266">      return Collections.unmodifiableList(findings);</span>
     }
 
     @Override
     public Level getHighestSeverity() {
-<span class="nc" id="L273">      return highestSeverity;</span>
+<span class="nc" id="L271">      return highestSeverity;</span>
     }
   }
 }

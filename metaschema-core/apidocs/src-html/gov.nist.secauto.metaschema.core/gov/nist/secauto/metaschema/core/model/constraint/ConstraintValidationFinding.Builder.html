@@ -305,8 +305,8 @@
 <span class="source-line-no">292</span><span id="line-292"></span>
 <span class="source-line-no">293</span><span id="line-293">      List&lt;? extends INodeItem&gt; subjects = this.subjects == null ? CollectionUtil.emptyList() : this.subjects;</span>
 <span class="source-line-no">294</span><span id="line-294"></span>
-<span class="source-line-no">295</span><span id="line-295">      assert subjects != null;</span>
-<span class="source-line-no">296</span><span id="line-296">      assert kind != null;</span>
+<span class="source-line-no">295</span><span id="line-295">      assert subjects != null : "subjects must not be null";</span>
+<span class="source-line-no">296</span><span id="line-296">      assert kind != null : "kind must not be null";</span>
 <span class="source-line-no">297</span><span id="line-297"></span>
 <span class="source-line-no">298</span><span id="line-298">      return new ConstraintValidationFinding(</span>
 <span class="source-line-no">299</span><span id="line-299">          constraints,</span>

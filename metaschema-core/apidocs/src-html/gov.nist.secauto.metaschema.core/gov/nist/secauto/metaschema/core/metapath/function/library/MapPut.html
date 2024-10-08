@@ -38,75 +38,76 @@
 <span class="source-line-no">025</span><span id="line-25">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">026</span><span id="line-26"></span>
 <span class="source-line-no">027</span><span id="line-27">public final class MapPut {</span>
-<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
-<span class="source-line-no">029</span><span id="line-29">  public static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">030</span><span id="line-30">      .name("put")</span>
-<span class="source-line-no">031</span><span id="line-31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="source-line-no">032</span><span id="line-32">      .deterministic()</span>
-<span class="source-line-no">033</span><span id="line-33">      .contextIndependent()</span>
-<span class="source-line-no">034</span><span id="line-34">      .focusIndependent()</span>
-<span class="source-line-no">035</span><span id="line-35">      .argument(IArgument.builder()</span>
-<span class="source-line-no">036</span><span id="line-36">          .name("map")</span>
-<span class="source-line-no">037</span><span id="line-37">          .type(IMapItem.class)</span>
-<span class="source-line-no">038</span><span id="line-38">          .one()</span>
-<span class="source-line-no">039</span><span id="line-39">          .build())</span>
-<span class="source-line-no">040</span><span id="line-40">      .argument(IArgument.builder()</span>
-<span class="source-line-no">041</span><span id="line-41">          .name("key")</span>
-<span class="source-line-no">042</span><span id="line-42">          .type(IAnyAtomicItem.class)</span>
-<span class="source-line-no">043</span><span id="line-43">          .one()</span>
-<span class="source-line-no">044</span><span id="line-44">          .build())</span>
-<span class="source-line-no">045</span><span id="line-45">      .argument(IArgument.builder()</span>
-<span class="source-line-no">046</span><span id="line-46">          .name("value")</span>
-<span class="source-line-no">047</span><span id="line-47">          .type(IItem.class)</span>
-<span class="source-line-no">048</span><span id="line-48">          .zeroOrMore()</span>
-<span class="source-line-no">049</span><span id="line-49">          .build())</span>
-<span class="source-line-no">050</span><span id="line-50">      .returnType(IMapItem.class)</span>
-<span class="source-line-no">051</span><span id="line-51">      .returnOne()</span>
-<span class="source-line-no">052</span><span id="line-52">      .functionHandler(MapPut::execute)</span>
-<span class="source-line-no">053</span><span id="line-53">      .build();</span>
-<span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">  private MapPut() {</span>
-<span class="source-line-no">056</span><span id="line-56">    // disable construction</span>
-<span class="source-line-no">057</span><span id="line-57">  }</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">060</span><span id="line-60">  @NonNull</span>
-<span class="source-line-no">061</span><span id="line-61">  private static &lt;V extends ICollectionValue&gt; ISequence&lt;?&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">062</span><span id="line-62">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">063</span><span id="line-63">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">064</span><span id="line-64">      IItem focus) {</span>
-<span class="source-line-no">065</span><span id="line-65">    IMapItem&lt;V&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
-<span class="source-line-no">066</span><span id="line-66">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">067</span><span id="line-67">    @SuppressWarnings("unchecked") V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">    return put(map, key, value).asSequence();</span>
-<span class="source-line-no">070</span><span id="line-70">  }</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">  /**</span>
-<span class="source-line-no">073</span><span id="line-73">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">074</span><span id="line-74">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-put"&gt;map:put&lt;/a&gt;.</span>
-<span class="source-line-no">075</span><span id="line-75">   *</span>
-<span class="source-line-no">076</span><span id="line-76">   * @param &lt;V&gt;</span>
-<span class="source-line-no">077</span><span id="line-77">   *          the type of items in the given Metapath map</span>
-<span class="source-line-no">078</span><span id="line-78">   * @param map</span>
-<span class="source-line-no">079</span><span id="line-79">   *          the map of Metapath items that is to be modified</span>
-<span class="source-line-no">080</span><span id="line-80">   * @param key</span>
-<span class="source-line-no">081</span><span id="line-81">   *          the key for the value to add to the map</span>
-<span class="source-line-no">082</span><span id="line-82">   * @param value</span>
-<span class="source-line-no">083</span><span id="line-83">   *          the value to add to the map</span>
-<span class="source-line-no">084</span><span id="line-84">   * @return the modified map</span>
-<span class="source-line-no">085</span><span id="line-85">   */</span>
-<span class="source-line-no">086</span><span id="line-86">  @NonNull</span>
-<span class="source-line-no">087</span><span id="line-87">  public static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; put(</span>
-<span class="source-line-no">088</span><span id="line-88">      @NonNull IMapItem&lt;V&gt; map,</span>
-<span class="source-line-no">089</span><span id="line-89">      @NonNull IAnyAtomicItem key,</span>
-<span class="source-line-no">090</span><span id="line-90">      @NonNull V value) {</span>
-<span class="source-line-no">091</span><span id="line-91">    @SuppressWarnings("PMD.UseConcurrentHashMap") Map&lt;IMapKey, V&gt; copy = new HashMap&lt;&gt;(map);</span>
-<span class="source-line-no">092</span><span id="line-92">    copy.put(key.asMapKey(), value);</span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">    return IMapItem.ofCollection(copy);</span>
-<span class="source-line-no">095</span><span id="line-95">  }</span>
-<span class="source-line-no">096</span><span id="line-96">}</span>
+<span class="source-line-no">028</span><span id="line-28">  private static final String NAME = "put";</span>
+<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
+<span class="source-line-no">030</span><span id="line-30">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">031</span><span id="line-31">      .name(NAME)</span>
+<span class="source-line-no">032</span><span id="line-32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="source-line-no">033</span><span id="line-33">      .deterministic()</span>
+<span class="source-line-no">034</span><span id="line-34">      .contextIndependent()</span>
+<span class="source-line-no">035</span><span id="line-35">      .focusIndependent()</span>
+<span class="source-line-no">036</span><span id="line-36">      .argument(IArgument.builder()</span>
+<span class="source-line-no">037</span><span id="line-37">          .name("map")</span>
+<span class="source-line-no">038</span><span id="line-38">          .type(IMapItem.class)</span>
+<span class="source-line-no">039</span><span id="line-39">          .one()</span>
+<span class="source-line-no">040</span><span id="line-40">          .build())</span>
+<span class="source-line-no">041</span><span id="line-41">      .argument(IArgument.builder()</span>
+<span class="source-line-no">042</span><span id="line-42">          .name("key")</span>
+<span class="source-line-no">043</span><span id="line-43">          .type(IAnyAtomicItem.class)</span>
+<span class="source-line-no">044</span><span id="line-44">          .one()</span>
+<span class="source-line-no">045</span><span id="line-45">          .build())</span>
+<span class="source-line-no">046</span><span id="line-46">      .argument(IArgument.builder()</span>
+<span class="source-line-no">047</span><span id="line-47">          .name("value")</span>
+<span class="source-line-no">048</span><span id="line-48">          .type(IItem.class)</span>
+<span class="source-line-no">049</span><span id="line-49">          .zeroOrMore()</span>
+<span class="source-line-no">050</span><span id="line-50">          .build())</span>
+<span class="source-line-no">051</span><span id="line-51">      .returnType(IMapItem.class)</span>
+<span class="source-line-no">052</span><span id="line-52">      .returnOne()</span>
+<span class="source-line-no">053</span><span id="line-53">      .functionHandler(MapPut::execute)</span>
+<span class="source-line-no">054</span><span id="line-54">      .build();</span>
+<span class="source-line-no">055</span><span id="line-55"></span>
+<span class="source-line-no">056</span><span id="line-56">  private MapPut() {</span>
+<span class="source-line-no">057</span><span id="line-57">    // disable construction</span>
+<span class="source-line-no">058</span><span id="line-58">  }</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">061</span><span id="line-61">  @NonNull</span>
+<span class="source-line-no">062</span><span id="line-62">  private static &lt;V extends ICollectionValue&gt; ISequence&lt;?&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">063</span><span id="line-63">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">064</span><span id="line-64">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">065</span><span id="line-65">      IItem focus) {</span>
+<span class="source-line-no">066</span><span id="line-66">    IMapItem&lt;V&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="source-line-no">067</span><span id="line-67">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="source-line-no">068</span><span id="line-68">    @SuppressWarnings("unchecked") V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">    return put(map, key, value).asSequence();</span>
+<span class="source-line-no">071</span><span id="line-71">  }</span>
+<span class="source-line-no">072</span><span id="line-72"></span>
+<span class="source-line-no">073</span><span id="line-73">  /**</span>
+<span class="source-line-no">074</span><span id="line-74">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">075</span><span id="line-75">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-put"&gt;map:put&lt;/a&gt;.</span>
+<span class="source-line-no">076</span><span id="line-76">   *</span>
+<span class="source-line-no">077</span><span id="line-77">   * @param &lt;V&gt;</span>
+<span class="source-line-no">078</span><span id="line-78">   *          the type of items in the given Metapath map</span>
+<span class="source-line-no">079</span><span id="line-79">   * @param map</span>
+<span class="source-line-no">080</span><span id="line-80">   *          the map of Metapath items that is to be modified</span>
+<span class="source-line-no">081</span><span id="line-81">   * @param key</span>
+<span class="source-line-no">082</span><span id="line-82">   *          the key for the value to add to the map</span>
+<span class="source-line-no">083</span><span id="line-83">   * @param value</span>
+<span class="source-line-no">084</span><span id="line-84">   *          the value to add to the map</span>
+<span class="source-line-no">085</span><span id="line-85">   * @return the modified map</span>
+<span class="source-line-no">086</span><span id="line-86">   */</span>
+<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
+<span class="source-line-no">088</span><span id="line-88">  public static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; put(</span>
+<span class="source-line-no">089</span><span id="line-89">      @NonNull IMapItem&lt;V&gt; map,</span>
+<span class="source-line-no">090</span><span id="line-90">      @NonNull IAnyAtomicItem key,</span>
+<span class="source-line-no">091</span><span id="line-91">      @NonNull V value) {</span>
+<span class="source-line-no">092</span><span id="line-92">    @SuppressWarnings("PMD.UseConcurrentHashMap") Map&lt;IMapKey, V&gt; copy = new HashMap&lt;&gt;(map);</span>
+<span class="source-line-no">093</span><span id="line-93">    copy.put(key.asMapKey(), value);</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">    return IMapItem.ofCollection(copy);</span>
+<span class="source-line-no">096</span><span id="line-96">  }</span>
+<span class="source-line-no">097</span><span id="line-97">}</span>
 
 
 

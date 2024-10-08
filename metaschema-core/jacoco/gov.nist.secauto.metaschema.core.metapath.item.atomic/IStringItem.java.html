@@ -64,5 +64,14 @@ public interface IStringItem extends IAnyAtomicItem {
   default int compareTo(IAnyAtomicItem other) {
 <span class="fc" id="L65">    return compareTo(other.asStringItem());</span>
   }
+
+  /**
+   * An implementation of &lt;a href=
+   * &quot;https://www.w3.org/TR/xpath-functions-31/#func-normalize-space&quot;&gt;fn::normalize-space&lt;/a&gt;.
+   *
+   * @return the normalized string value for this string
+   */
+  @NonNull
+  IStringItem normalizeSpace();
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

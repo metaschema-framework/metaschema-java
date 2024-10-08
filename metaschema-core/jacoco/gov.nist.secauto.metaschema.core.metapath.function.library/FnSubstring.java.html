@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FnSubstring.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Core API</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.core.metapath.function.library</a> &gt; <span class="el_source">FnSubstring.java</span></div><h1>FnSubstring.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.metapath.function.library;
+
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
+import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Implements &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-substring&quot;&gt;fn:substring&lt;/a&gt;.
+ */
+public final class FnSubstring {
+  private static final String NAME = &quot;substring&quot;;
+  @NonNull
+<span class="fc" id="L30">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
+<span class="fc" id="L31">      .name(NAME)</span>
+<span class="fc" id="L32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L33">      .deterministic()</span>
+<span class="fc" id="L34">      .contextIndependent()</span>
+<span class="fc" id="L35">      .focusIndependent()</span>
+<span class="fc" id="L36">      .argument(IArgument.builder()</span>
+<span class="fc" id="L37">          .name(&quot;sourceString&quot;)</span>
+<span class="fc" id="L38">          .type(IStringItem.class)</span>
+<span class="fc" id="L39">          .zeroOrOne()</span>
+<span class="fc" id="L40">          .build())</span>
+<span class="fc" id="L41">      .argument(IArgument.builder()</span>
+<span class="fc" id="L42">          .name(&quot;start&quot;)</span>
+<span class="fc" id="L43">          .type(IDecimalItem.class)</span>
+<span class="fc" id="L44">          .one()</span>
+<span class="fc" id="L45">          .build())</span>
+<span class="fc" id="L46">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L47">      .returnOne()</span>
+<span class="fc" id="L48">      .functionHandler(FnSubstring::executeTwoArg)</span>
+<span class="fc" id="L49">      .build();</span>
+
+  @NonNull
+<span class="fc" id="L52">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
+<span class="fc" id="L53">      .name(NAME)</span>
+<span class="fc" id="L54">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L55">      .deterministic()</span>
+<span class="fc" id="L56">      .contextIndependent()</span>
+<span class="fc" id="L57">      .focusIndependent()</span>
+<span class="fc" id="L58">      .argument(IArgument.builder()</span>
+<span class="fc" id="L59">          .name(&quot;sourceString&quot;)</span>
+<span class="fc" id="L60">          .type(IStringItem.class)</span>
+<span class="fc" id="L61">          .zeroOrOne()</span>
+<span class="fc" id="L62">          .build())</span>
+<span class="fc" id="L63">      .argument(IArgument.builder()</span>
+<span class="fc" id="L64">          .name(&quot;start&quot;)</span>
+<span class="fc" id="L65">          .type(IDecimalItem.class)</span>
+<span class="fc" id="L66">          .one()</span>
+<span class="fc" id="L67">          .build())</span>
+<span class="fc" id="L68">      .argument(IArgument.builder()</span>
+<span class="fc" id="L69">          .name(&quot;length&quot;)</span>
+<span class="fc" id="L70">          .type(IDecimalItem.class)</span>
+<span class="fc" id="L71">          .one()</span>
+<span class="fc" id="L72">          .build())</span>
+<span class="fc" id="L73">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L74">      .returnOne()</span>
+<span class="fc" id="L75">      .functionHandler(FnSubstring::executeThreeArg)</span>
+<span class="fc" id="L76">      .build();</span>
+
+  private FnSubstring() {
+    // disable construction
+  }
+
+  @SuppressWarnings({ &quot;unused&quot;, &quot;PMD.OnlyOneReturn&quot; })
+  @NonNull
+  private static ISequence&lt;IStringItem&gt; executeTwoArg(
+      @NonNull IFunction function,
+      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+
+<span class="fc" id="L90">    IStringItem sourceString = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">    if (sourceString == null) {</span>
+<span class="nc" id="L93">      return ISequence.of(IStringItem.valueOf(&quot;&quot;));</span>
+    }
+
+<span class="fc" id="L96">    IDecimalItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+
+<span class="fc" id="L98">    int startIndex = start.round().asInteger().intValue();</span>
+
+<span class="fc" id="L100">    return ISequence.of(IStringItem.valueOf(</span>
+<span class="fc" id="L101">        fnSubstring(</span>
+<span class="fc" id="L102">            sourceString.asString(),</span>
+            startIndex,
+<span class="fc" id="L104">            sourceString.toString().length() - Math.max(startIndex, 1) + 1)));</span>
+  }
+
+  @SuppressWarnings({ &quot;unused&quot;, &quot;PMD.OnlyOneReturn&quot; })
+  @NonNull
+  private static ISequence&lt;IStringItem&gt; executeThreeArg(
+      @NonNull IFunction function,
+      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+
+<span class="fc" id="L115">    IStringItem sourceString = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    if (sourceString == null) {</span>
+<span class="fc" id="L118">      return ISequence.of(IStringItem.valueOf(&quot;&quot;));</span>
+    }
+
+<span class="fc" id="L121">    IDecimalItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L122">    IDecimalItem length = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2).getFirstItem(true)));</span>
+
+<span class="fc" id="L124">    return ISequence.of(IStringItem.valueOf(</span>
+<span class="fc" id="L125">        fnSubstring(</span>
+<span class="fc" id="L126">            sourceString.asString(),</span>
+<span class="fc" id="L127">            start.round().asInteger().intValue(),</span>
+<span class="fc" id="L128">            length.round().asInteger().intValue())));</span>
+  }
+
+  /**
+   * An implementation of XPath 3.1 &lt;a href=
+   * &quot;https://www.w3.org/TR/xpath-functions-31/#func-substring&quot;&gt;fn:substring&lt;/a&gt;.
+   *
+   * @param source
+   *          the source string to get a substring from
+   * @param start
+   *          the 1-based start location
+   * @param length
+   *          the substring length
+   * @return the substring
+   */
+  @NonNull
+  public static String fnSubstring(
+      @NonNull String source,
+      int start,
+      int length) {
+<span class="fc" id="L148">    int sourceLength = source.length();</span>
+
+    // XPath uses 1-based indexing, so subtract 1 for 0-based Java indexing
+<span class="fc" id="L151">    int startIndex = Math.max(start, 1);</span>
+
+    // Handle negative or zero length
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    int endIndex = length &lt;= 0 ? startIndex : Math.min(start + length, sourceLength + 1);</span>
+
+    // Ensure startIndex is not greater than endIndex
+<span class="fc" id="L157">    startIndex = Math.min(startIndex, endIndex);</span>
+
+<span class="fc" id="L159">    return ObjectUtils.notNull(source.substring(startIndex - 1, endIndex - 1));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

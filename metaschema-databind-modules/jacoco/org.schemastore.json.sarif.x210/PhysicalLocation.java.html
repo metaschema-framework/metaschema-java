@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PhysicalLocation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Modules</a> &gt; <a href="index.source.html" class="el_package">org.schemastore.json.sarif.x210</a> &gt; <span class="el_source">PhysicalLocation.java</span></div><h1>PhysicalLocation.java</h1><pre class="source lang-java linenums">package org.schemastore.json.sarif.x210;
+
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.Expect;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+import java.lang.Override;
+import java.lang.String;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+/**
+ * A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
+ */
+@MetaschemaAssembly(
+    formalName = &quot;Physical Location&quot;,
+    description = &quot;A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.&quot;,
+    name = &quot;physicalLocation&quot;,
+    moduleClass = SarifModule.class,
+    valueConstraints = @ValueConstraints(expect = @Expect(level = IConstraint.Level.ERROR, test = &quot;exists(address|artifactLocation)&quot;, message = &quot;At least one address or artifactLocation must be provided.&quot;))
+)
+public class PhysicalLocation implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundAssembly(
+      formalName = &quot;Address&quot;,
+      description = &quot;A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).&quot;,
+      useName = &quot;address&quot;
+  )
+  private Address _address;
+
+  @BoundAssembly(
+      formalName = &quot;Artifact Location&quot;,
+      description = &quot;The location of the artifact.&quot;,
+      useName = &quot;artifactLocation&quot;
+  )
+  private ArtifactLocation _artifactLocation;
+
+  @BoundAssembly(
+      formalName = &quot;Region&quot;,
+      description = &quot;Specifies a portion of the artifact.&quot;,
+      useName = &quot;region&quot;
+  )
+  private Region _region;
+
+  @BoundAssembly(
+      formalName = &quot;Context Region&quot;,
+      description = &quot;Specifies a portion of the artifact that encloses the region. Allows a viewer to display additional context around the region.&quot;,
+      useName = &quot;contextRegion&quot;
+  )
+  private Region _contextRegion;
+
+  public PhysicalLocation() {
+<span class="fc" id="L57">    this(null);</span>
+<span class="fc" id="L58">  }</span>
+
+<span class="fc" id="L60">  public PhysicalLocation(IMetaschemaData data) {</span>
+<span class="fc" id="L61">    this.__metaschemaData = data;</span>
+<span class="fc" id="L62">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L66">    return __metaschemaData;</span>
+  }
+
+  public Address getAddress() {
+<span class="nc" id="L70">    return _address;</span>
+  }
+
+  public void setAddress(Address value) {
+<span class="nc" id="L74">    _address = value;</span>
+<span class="nc" id="L75">  }</span>
+
+  public ArtifactLocation getArtifactLocation() {
+<span class="nc" id="L78">    return _artifactLocation;</span>
+  }
+
+  public void setArtifactLocation(ArtifactLocation value) {
+<span class="fc" id="L82">    _artifactLocation = value;</span>
+<span class="fc" id="L83">  }</span>
+
+  public Region getRegion() {
+<span class="nc" id="L86">    return _region;</span>
+  }
+
+  public void setRegion(Region value) {
+<span class="fc" id="L90">    _region = value;</span>
+<span class="fc" id="L91">  }</span>
+
+  public Region getContextRegion() {
+<span class="nc" id="L94">    return _contextRegion;</span>
+  }
+
+  public void setContextRegion(Region value) {
+<span class="nc" id="L98">    _contextRegion = value;</span>
+<span class="nc" id="L99">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L103">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+
+  /**
+   * A physical or virtual address, or a range of addresses, in an &amp;lsquo;addressable region&amp;rsquo; (memory or a binary file).
+   */
+  @MetaschemaAssembly(
+      formalName = &quot;Address&quot;,
+      description = &quot;A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).&quot;,
+      name = &quot;address&quot;,
+      moduleClass = SarifModule.class
+  )
+  public static class Address implements IBoundObject {
+    private final IMetaschemaData __metaschemaData;
+
+    public Address() {
+<span class="nc" id="L119">      this(null);</span>
+<span class="nc" id="L120">    }</span>
+
+<span class="nc" id="L122">    public Address(IMetaschemaData data) {</span>
+<span class="nc" id="L123">      this.__metaschemaData = data;</span>
+<span class="nc" id="L124">    }</span>
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L128">      return __metaschemaData;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L133">      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -6,6 +6,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -27,20 +28,27 @@ class AssemblyOrphanedDefinitionDataNodeItemImpl
       @Nullable URI baseUri,
       @NonNull Object value,
       @NonNull INodeItemGenerator generator) {
-<span class="fc" id="L30">    super(definition, baseUri);</span>
-<span class="fc" id="L31">    this.value = value;</span>
-<span class="fc" id="L32">    this.model = ObjectUtils.notNull(Lazy.lazy(generator.newDataModelSupplier(this)));</span>
-<span class="fc" id="L33">  }</span>
+<span class="fc" id="L31">    super(definition, baseUri);</span>
+<span class="fc" id="L32">    this.value = value;</span>
+<span class="fc" id="L33">    this.model = ObjectUtils.notNull(Lazy.lazy(generator.newDataModelSupplier(this)));</span>
+<span class="fc" id="L34">  }</span>
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public ModelContainer getModel() {
-<span class="fc" id="L38">    return model.get();</span>
+<span class="fc" id="L39">    return model.get();</span>
   }
 
   @Override
   public Object getValue() {
-<span class="fc" id="L43">    return value;</span>
+<span class="fc" id="L44">    return value;</span>
+  }
+
+  @Override
+  public String stringValue() {
+<span class="nc" id="L49">    return ObjectUtils.notNull(modelItems()</span>
+<span class="nc" id="L50">        .map(INodeItem::stringValue)</span>
+<span class="nc" id="L51">        .collect(Collectors.joining()));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

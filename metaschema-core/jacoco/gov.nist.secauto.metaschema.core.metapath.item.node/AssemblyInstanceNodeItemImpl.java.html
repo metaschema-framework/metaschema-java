@@ -5,6 +5,8 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.stream.Collectors;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
@@ -30,26 +32,33 @@ class AssemblyInstanceNodeItemImpl
       int position,
       @NonNull Object value,
       @NonNull INodeItemGenerator generator) {
-<span class="nc" id="L33">    super(instance, parent);</span>
-<span class="nc" id="L34">    this.model = ObjectUtils.notNull(Lazy.lazy(generator.newDataModelSupplier(this)));</span>
-<span class="nc" id="L35">    this.position = position;</span>
-<span class="nc" id="L36">    this.value = value;</span>
-<span class="nc" id="L37">  }</span>
+<span class="nc" id="L35">    super(instance, parent);</span>
+<span class="nc" id="L36">    this.model = ObjectUtils.notNull(Lazy.lazy(generator.newDataModelSupplier(this)));</span>
+<span class="nc" id="L37">    this.position = position;</span>
+<span class="nc" id="L38">    this.value = value;</span>
+<span class="nc" id="L39">  }</span>
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public ModelContainer getModel() {
-<span class="nc" id="L42">    return model.get();</span>
+<span class="nc" id="L44">    return model.get();</span>
   }
 
   @Override
   public int getPosition() {
-<span class="nc" id="L47">    return position;</span>
+<span class="nc" id="L49">    return position;</span>
   }
 
   @Override
   public Object getValue() {
-<span class="nc" id="L52">    return value;</span>
+<span class="nc" id="L54">    return value;</span>
+  }
+
+  @Override
+  public String stringValue() {
+<span class="nc" id="L59">    return ObjectUtils.notNull(modelItems()</span>
+<span class="nc" id="L60">        .map(INodeItem::stringValue)</span>
+<span class="nc" id="L61">        .collect(Collectors.joining()));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -21,22 +21,23 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class ArrayTail {
+  private static final String NAME = &quot;tail&quot;;
   @NonNull
-<span class="fc" id="L25">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L26">      .name(&quot;tail&quot;)</span>
-<span class="fc" id="L27">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L28">      .deterministic()</span>
-<span class="fc" id="L29">      .contextIndependent()</span>
-<span class="fc" id="L30">      .focusIndependent()</span>
-<span class="fc" id="L31">      .argument(IArgument.builder()</span>
-<span class="fc" id="L32">          .name(&quot;array&quot;)</span>
-<span class="fc" id="L33">          .type(IArrayItem.class)</span>
-<span class="fc" id="L34">          .one()</span>
-<span class="fc" id="L35">          .build())</span>
-<span class="fc" id="L36">      .returnType(IItem.class)</span>
-<span class="fc" id="L37">      .returnZeroOrOne()</span>
-<span class="fc" id="L38">      .functionHandler(ArrayTail::execute)</span>
-<span class="fc" id="L39">      .build();</span>
+<span class="fc" id="L26">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L27">      .name(NAME)</span>
+<span class="fc" id="L28">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L29">      .deterministic()</span>
+<span class="fc" id="L30">      .contextIndependent()</span>
+<span class="fc" id="L31">      .focusIndependent()</span>
+<span class="fc" id="L32">      .argument(IArgument.builder()</span>
+<span class="fc" id="L33">          .name(&quot;array&quot;)</span>
+<span class="fc" id="L34">          .type(IArrayItem.class)</span>
+<span class="fc" id="L35">          .one()</span>
+<span class="fc" id="L36">          .build())</span>
+<span class="fc" id="L37">      .returnType(IItem.class)</span>
+<span class="fc" id="L38">      .returnZeroOrOne()</span>
+<span class="fc" id="L39">      .functionHandler(ArrayTail::execute)</span>
+<span class="fc" id="L40">      .build();</span>
 
   private ArrayTail() {
     // disable construction
@@ -48,9 +49,9 @@ public final class ArrayTail {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L51">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L52">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
 
-<span class="fc" id="L53">    return ISequence.of(tail(array));</span>
+<span class="fc" id="L54">    return ISequence.of(tail(array));</span>
   }
 
   /**
@@ -65,7 +66,7 @@ public final class ArrayTail {
    */
   @Nullable
   public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; tail(@NonNull IArrayItem&lt;T&gt; array) {
-<span class="fc" id="L68">    return ArraySubarray.subarray(array, 2);</span>
+<span class="fc" id="L69">    return ArraySubarray.subarray(array, 2);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

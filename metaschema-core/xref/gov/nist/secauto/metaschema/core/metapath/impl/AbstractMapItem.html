@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    }
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Override
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">public</strong> ISequence&lt;?&gt; execute(List&lt;ISequence&lt;?&gt;&gt; arguments, <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext,
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">public</strong> ISequence&lt;?&gt; execute(List&lt;? <strong class="jxr_keyword">extends</strong> ISequence&lt;?&gt;&gt; arguments, <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext,
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>        ISequence&lt;?&gt; focus) {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      ISequence&lt;? <strong class="jxr_keyword">extends</strong> IIntegerItem&gt; arg = FunctionUtils.asType(
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>          ObjectUtils.notNull(arguments.get(0)));
@@ -100,6 +100,6 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+<div id="footer">© 2024</div>
 </body>
 </html>

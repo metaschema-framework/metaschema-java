@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Run.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Modules</a> &gt; <a href="index.source.html" class="el_package">org.schemastore.json.sarif.x210</a> &gt; <span class="el_source">Run.java</span></div><h1>Run.java</h1><pre class="source lang-java linenums">package org.schemastore.json.sarif.x210;
+
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import java.lang.Override;
+import java.lang.String;
+import java.util.LinkedList;
+import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+/**
+ * Describes a single run of an analysis tool, and contains the reported output of that run.
+ */
+@MetaschemaAssembly(
+    formalName = &quot;Run&quot;,
+    description = &quot;Describes a single run of an analysis tool, and contains the reported output of that run.&quot;,
+    name = &quot;run&quot;,
+    moduleClass = SarifModule.class
+)
+public class Run implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundAssembly(
+      formalName = &quot;Tool&quot;,
+      description = &quot;Information about the tool or tool pipeline that generated the results in this run. A run can only contain results produced by a single tool or tool pipeline. A run can aggregate results from multiple log files, as long as context around the tool run (tool command-line arguments and the like) is identical for all aggregated files.&quot;,
+      useName = &quot;tool&quot;
+  )
+  private Tool _tool;
+
+  @BoundAssembly(
+      formalName = &quot;Artifact&quot;,
+      description = &quot;A sequence of artifacts relevant to the run.&quot;,
+      useName = &quot;artifact&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;artifacts&quot;, inJson = JsonGroupAsBehavior.LIST)
+  )
+  private List&lt;Artifact&gt; _artifacts;
+
+  @BoundAssembly(
+      formalName = &quot;Result&quot;,
+      description = &quot;The set of results contained in an SARIF log. The results array can be omitted when a run is solely exporting rules metadata. It must be present (but may be empty) if a log file represents an actual scan.&quot;,
+      useName = &quot;result&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;results&quot;, inJson = JsonGroupAsBehavior.LIST)
+  )
+  private List&lt;Result&gt; _results;
+
+  public Run() {
+<span class="fc" id="L55">    this(null);</span>
+<span class="fc" id="L56">  }</span>
+
+<span class="fc" id="L58">  public Run(IMetaschemaData data) {</span>
+<span class="fc" id="L59">    this.__metaschemaData = data;</span>
+<span class="fc" id="L60">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L64">    return __metaschemaData;</span>
+  }
+
+  public Tool getTool() {
+<span class="nc" id="L68">    return _tool;</span>
+  }
+
+  public void setTool(Tool value) {
+<span class="fc" id="L72">    _tool = value;</span>
+<span class="fc" id="L73">  }</span>
+
+  public List&lt;Artifact&gt; getArtifacts() {
+<span class="nc" id="L76">    return _artifacts;</span>
+  }
+
+  public void setArtifacts(List&lt;Artifact&gt; value) {
+<span class="nc" id="L80">    _artifacts = value;</span>
+<span class="nc" id="L81">  }</span>
+
+  /**
+   * Add a new {@link Artifact} item to the underlying collection.
+   * @param item the item to add
+   * @return {@code true}
+   */
+  public boolean addArtifact(Artifact item) {
+<span class="fc" id="L89">    Artifact value = ObjectUtils.requireNonNull(item,&quot;item cannot be null&quot;);</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">    if (_artifacts == null) {</span>
+<span class="fc" id="L91">      _artifacts = new LinkedList&lt;&gt;();</span>
+    }
+<span class="fc" id="L93">    return _artifacts.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link Artifact} item from the underlying collection.
+   * @param item the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeArtifact(Artifact item) {
+<span class="nc" id="L102">    Artifact value = ObjectUtils.requireNonNull(item,&quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L103" title="All 4 branches missed.">    return _artifacts != null &amp;&amp; _artifacts.remove(value);</span>
+  }
+
+  public List&lt;Result&gt; getResults() {
+<span class="nc" id="L107">    return _results;</span>
+  }
+
+  public void setResults(List&lt;Result&gt; value) {
+<span class="nc" id="L111">    _results = value;</span>
+<span class="nc" id="L112">  }</span>
+
+  /**
+   * Add a new {@link Result} item to the underlying collection.
+   * @param item the item to add
+   * @return {@code true}
+   */
+  public boolean addResult(Result item) {
+<span class="fc" id="L120">    Result value = ObjectUtils.requireNonNull(item,&quot;item cannot be null&quot;);</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">    if (_results == null) {</span>
+<span class="fc" id="L122">      _results = new LinkedList&lt;&gt;();</span>
+    }
+<span class="fc" id="L124">    return _results.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link Result} item from the underlying collection.
+   * @param item the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeResult(Result item) {
+<span class="nc" id="L133">    Result value = ObjectUtils.requireNonNull(item,&quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L134" title="All 4 branches missed.">    return _results != null &amp;&amp; _results.remove(value);</span>
+  }
+
+  @Override
+  public String toString() {
+<span class="nc" id="L139">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

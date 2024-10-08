@@ -24,44 +24,45 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class FnResolveUri {
+  private static final String NAME = &quot;resolve-uri&quot;;
   @NonNull
-<span class="fc" id="L28">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="fc" id="L29">      .name(&quot;resolve-uri&quot;)</span>
-<span class="fc" id="L30">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L31">      .deterministic()</span>
-<span class="fc" id="L32">      .contextDependent()</span>
-<span class="fc" id="L33">      .focusIndependent()</span>
-<span class="fc" id="L34">      .argument(IArgument.builder()</span>
-<span class="fc" id="L35">          .name(&quot;relative&quot;)</span>
-<span class="fc" id="L36">          .type(IStringItem.class)</span>
-<span class="fc" id="L37">          .zeroOrOne()</span>
-<span class="fc" id="L38">          .build())</span>
-<span class="fc" id="L39">      .returnType(IAnyUriItem.class)</span>
-<span class="fc" id="L40">      .returnZeroOrOne()</span>
-<span class="fc" id="L41">      .functionHandler(FnResolveUri::executeOneArg)</span>
-<span class="fc" id="L42">      .build();</span>
+<span class="fc" id="L29">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="fc" id="L30">      .name(NAME)</span>
+<span class="fc" id="L31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L32">      .deterministic()</span>
+<span class="fc" id="L33">      .contextDependent()</span>
+<span class="fc" id="L34">      .focusIndependent()</span>
+<span class="fc" id="L35">      .argument(IArgument.builder()</span>
+<span class="fc" id="L36">          .name(&quot;relative&quot;)</span>
+<span class="fc" id="L37">          .type(IStringItem.class)</span>
+<span class="fc" id="L38">          .zeroOrOne()</span>
+<span class="fc" id="L39">          .build())</span>
+<span class="fc" id="L40">      .returnType(IAnyUriItem.class)</span>
+<span class="fc" id="L41">      .returnZeroOrOne()</span>
+<span class="fc" id="L42">      .functionHandler(FnResolveUri::executeOneArg)</span>
+<span class="fc" id="L43">      .build();</span>
 
   @NonNull
-<span class="fc" id="L45">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
-<span class="fc" id="L46">      .name(&quot;resolve-uri&quot;)</span>
-<span class="fc" id="L47">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L48">      .deterministic()</span>
-<span class="fc" id="L49">      .contextIndependent()</span>
-<span class="fc" id="L50">      .focusIndependent()</span>
-<span class="fc" id="L51">      .argument(IArgument.builder()</span>
-<span class="fc" id="L52">          .name(&quot;relative&quot;)</span>
-<span class="fc" id="L53">          .type(IStringItem.class)</span>
-<span class="fc" id="L54">          .zeroOrOne()</span>
-<span class="fc" id="L55">          .build())</span>
-<span class="fc" id="L56">      .argument(IArgument.builder()</span>
-<span class="fc" id="L57">          .name(&quot;base&quot;)</span>
-<span class="fc" id="L58">          .type(IStringItem.class)</span>
-<span class="fc" id="L59">          .one()</span>
-<span class="fc" id="L60">          .build())</span>
-<span class="fc" id="L61">      .returnType(IAnyUriItem.class)</span>
-<span class="fc" id="L62">      .returnZeroOrOne()</span>
-<span class="fc" id="L63">      .functionHandler(FnResolveUri::executeTwoArg)</span>
-<span class="fc" id="L64">      .build();</span>
+<span class="fc" id="L46">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
+<span class="fc" id="L47">      .name(NAME)</span>
+<span class="fc" id="L48">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L49">      .deterministic()</span>
+<span class="fc" id="L50">      .contextIndependent()</span>
+<span class="fc" id="L51">      .focusIndependent()</span>
+<span class="fc" id="L52">      .argument(IArgument.builder()</span>
+<span class="fc" id="L53">          .name(&quot;relative&quot;)</span>
+<span class="fc" id="L54">          .type(IStringItem.class)</span>
+<span class="fc" id="L55">          .zeroOrOne()</span>
+<span class="fc" id="L56">          .build())</span>
+<span class="fc" id="L57">      .argument(IArgument.builder()</span>
+<span class="fc" id="L58">          .name(&quot;base&quot;)</span>
+<span class="fc" id="L59">          .type(IStringItem.class)</span>
+<span class="fc" id="L60">          .one()</span>
+<span class="fc" id="L61">          .build())</span>
+<span class="fc" id="L62">      .returnType(IAnyUriItem.class)</span>
+<span class="fc" id="L63">      .returnZeroOrOne()</span>
+<span class="fc" id="L64">      .functionHandler(FnResolveUri::executeTwoArg)</span>
+<span class="fc" id="L65">      .build();</span>
 
   private FnResolveUri() {
     // disable construction
@@ -75,18 +76,18 @@ public final class FnResolveUri {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-<span class="nc" id="L78">    ISequence&lt;? extends IStringItem&gt; relativeSequence</span>
-<span class="nc" id="L79">        = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="nc bnc" id="L80" title="All 2 branches missed.">    if (relativeSequence.isEmpty()) {</span>
-<span class="nc" id="L81">      return ISequence.empty(); // NOPMD - readability</span>
+<span class="nc" id="L79">    ISequence&lt;? extends IStringItem&gt; relativeSequence</span>
+<span class="nc" id="L80">        = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">    if (relativeSequence.isEmpty()) {</span>
+<span class="nc" id="L82">      return ISequence.empty(); // NOPMD - readability</span>
     }
 
-<span class="nc" id="L84">    IStringItem relativeString = relativeSequence.getFirstItem(true);</span>
-<span class="nc" id="L85">    IAnyUriItem resolvedUri = null;</span>
-<span class="nc bnc" id="L86" title="All 2 branches missed.">    if (relativeString != null) {</span>
-<span class="nc" id="L87">      resolvedUri = fnResolveUri(relativeString, null, dynamicContext);</span>
+<span class="nc" id="L85">    IStringItem relativeString = relativeSequence.getFirstItem(true);</span>
+<span class="nc" id="L86">    IAnyUriItem resolvedUri = null;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">    if (relativeString != null) {</span>
+<span class="nc" id="L88">      resolvedUri = fnResolveUri(relativeString, null, dynamicContext);</span>
     }
-<span class="nc" id="L89">    return ISequence.of(resolvedUri);</span>
+<span class="nc" id="L90">    return ISequence.of(resolvedUri);</span>
   }
 
   /**
@@ -113,31 +114,31 @@ public final class FnResolveUri {
       IItem focus) { // NOPMD - ok
 
     /* there will always be two arguments */
-<span class="nc bnc" id="L116" title="All 2 branches missed.">    assert arguments.size() == 2;</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">    assert arguments.size() == 2;</span>
 
-<span class="nc" id="L118">    ISequence&lt;? extends IStringItem&gt; relativeSequence = FunctionUtils.asType(</span>
-<span class="nc" id="L119">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="nc bnc" id="L120" title="All 2 branches missed.">    if (relativeSequence.isEmpty()) {</span>
-<span class="nc" id="L121">      return ISequence.empty(); // NOPMD - readability</span>
+<span class="nc" id="L119">    ISequence&lt;? extends IStringItem&gt; relativeSequence = FunctionUtils.asType(</span>
+<span class="nc" id="L120">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">    if (relativeSequence.isEmpty()) {</span>
+<span class="nc" id="L122">      return ISequence.empty(); // NOPMD - readability</span>
     }
 
-<span class="nc" id="L124">    ISequence&lt;? extends IStringItem&gt; baseSequence = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
-<span class="nc" id="L125">    IStringItem baseString = baseSequence.getFirstItem(true);</span>
+<span class="nc" id="L125">    ISequence&lt;? extends IStringItem&gt; baseSequence = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
+<span class="nc" id="L126">    IStringItem baseString = baseSequence.getFirstItem(true);</span>
 
-<span class="nc bnc" id="L127" title="All 2 branches missed.">    if (baseString == null) {</span>
-<span class="nc" id="L128">      throw new InvalidArgumentFunctionException(</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">    if (baseString == null) {</span>
+<span class="nc" id="L129">      throw new InvalidArgumentFunctionException(</span>
           InvalidArgumentFunctionException.INVALID_ARGUMENT_TO_RESOLVE_URI,
           &quot;Invalid argument to fn:resolve-uri().&quot;);
     }
-<span class="nc" id="L132">    IAnyUriItem baseUri = IAnyUriItem.cast(baseString);</span>
+<span class="nc" id="L133">    IAnyUriItem baseUri = IAnyUriItem.cast(baseString);</span>
 
-<span class="nc" id="L134">    IStringItem relativeString = relativeSequence.getFirstItem(true);</span>
+<span class="nc" id="L135">    IStringItem relativeString = relativeSequence.getFirstItem(true);</span>
 
-<span class="nc" id="L136">    IAnyUriItem resolvedUri = null;</span>
-<span class="nc bnc" id="L137" title="All 2 branches missed.">    if (relativeString != null) {</span>
-<span class="nc" id="L138">      resolvedUri = fnResolveUri(relativeString, baseUri, dynamicContext);</span>
+<span class="nc" id="L137">    IAnyUriItem resolvedUri = null;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">    if (relativeString != null) {</span>
+<span class="nc" id="L139">      resolvedUri = fnResolveUri(relativeString, baseUri, dynamicContext);</span>
     }
-<span class="nc" id="L140">    return ISequence.of(resolvedUri);</span>
+<span class="nc" id="L141">    return ISequence.of(resolvedUri);</span>
   }
 
   /**
@@ -157,7 +158,7 @@ public final class FnResolveUri {
       @NonNull IStringItem relative,
       @Nullable IAnyUriItem base,
       @NonNull DynamicContext dynamicContext) {
-<span class="nc" id="L160">    return fnResolveUri(IAnyUriItem.cast(relative), base, dynamicContext);</span>
+<span class="nc" id="L161">    return fnResolveUri(IAnyUriItem.cast(relative), base, dynamicContext);</span>
   }
 
   /**
@@ -178,16 +179,16 @@ public final class FnResolveUri {
       @Nullable IAnyUriItem base,
       @NonNull DynamicContext dynamicContext) {
 
-<span class="nc" id="L181">    IAnyUriItem baseUri = base;</span>
-<span class="nc bnc" id="L182" title="All 2 branches missed.">    if (baseUri == null) {</span>
-<span class="nc" id="L183">      baseUri = FnStaticBaseUri.fnStaticBaseUri(dynamicContext);</span>
-<span class="nc bnc" id="L184" title="All 2 branches missed.">      if (baseUri == null) {</span>
-<span class="nc" id="L185">        throw new UriFunctionException(UriFunctionException.BASE_URI_NOT_DEFINED_IN_STATIC_CONTEXT,</span>
+<span class="nc" id="L182">    IAnyUriItem baseUri = base;</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">    if (baseUri == null) {</span>
+<span class="nc" id="L184">      baseUri = FnStaticBaseUri.fnStaticBaseUri(dynamicContext);</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">      if (baseUri == null) {</span>
+<span class="nc" id="L186">        throw new UriFunctionException(UriFunctionException.BASE_URI_NOT_DEFINED_IN_STATIC_CONTEXT,</span>
             &quot;The base-uri is not defined in the static context&quot;);
       }
     }
 
-<span class="nc" id="L190">    return baseUri.resolve(relative);</span>
+<span class="nc" id="L191">    return baseUri.resolve(relative);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

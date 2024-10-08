@@ -138,10 +138,8 @@ public class JsonSchemaContentValidator
       @NonNull URI resourceUri) {
 <span class="nc" id="L139">    JsonValidationFinding finding = new JsonValidationFinding(exception, resourceUri);</span>
 <span class="nc" id="L140">    Stream&lt;JsonValidationFinding&gt; childFindings = exception.getCausingExceptions().stream()</span>
-<span class="nc" id="L141">        .flatMap(ex -&gt; {</span>
-<span class="nc" id="L142">          return handleValidationException(ex, resourceUri);</span>
-        });
-<span class="nc" id="L144">    return Stream.concat(Stream.of(finding), childFindings);</span>
+<span class="nc" id="L141">        .flatMap(ex -&gt; handleValidationException(ex, resourceUri));</span>
+<span class="nc" id="L142">    return Stream.concat(Stream.of(finding), childFindings);</span>
   }
 
   /**
@@ -166,58 +164,57 @@ public class JsonSchemaContentValidator
      */
     public JsonValidationFinding(
         @NonNull ValidationException exception,
-<span class="nc" id="L169">        @NonNull URI resourceUri) {</span>
-<span class="nc" id="L170">      this.exception = ObjectUtils.requireNonNull(exception, &quot;exception&quot;);</span>
-<span class="nc" id="L171">      this.documentUri = ObjectUtils.requireNonNull(resourceUri, &quot;documentUri&quot;);</span>
-<span class="nc" id="L172">    }</span>
+<span class="nc" id="L167">        @NonNull URI resourceUri) {</span>
+<span class="nc" id="L168">      this.exception = ObjectUtils.requireNonNull(exception, &quot;exception&quot;);</span>
+<span class="nc" id="L169">      this.documentUri = ObjectUtils.requireNonNull(resourceUri, &quot;documentUri&quot;);</span>
+<span class="nc" id="L170">    }</span>
 
     @Override
     public String getIdentifier() {
       // always null
-<span class="nc" id="L177">      return null;</span>
+<span class="nc" id="L175">      return null;</span>
     }
 
     @Override
     public Kind getKind() {
-<span class="nc" id="L182">      return IValidationFinding.Kind.FAIL;</span>
+<span class="nc" id="L180">      return IValidationFinding.Kind.FAIL;</span>
     }
 
     @Override
     public IConstraint.Level getSeverity() {
-<span class="nc" id="L187">      return IConstraint.Level.ERROR;</span>
+<span class="nc" id="L185">      return IConstraint.Level.CRITICAL;</span>
     }
 
     @Override
     public URI getDocumentUri() {
-<span class="nc" id="L192">      return documentUri;</span>
+<span class="nc" id="L190">      return documentUri;</span>
     }
 
     @Override
     public IResourceLocation getLocation() {
       // not known
-<span class="nc" id="L198">      return null;</span>
+<span class="nc" id="L196">      return null;</span>
     }
 
     @Override
     public String getPathKind() {
-<span class="nc" id="L203">      return &quot;JSON-pointer&quot;;</span>
+<span class="nc" id="L201">      return &quot;JSON-pointer&quot;;</span>
     }
 
     @Override
     public String getPath() {
-<span class="nc" id="L208">      return getCause().getPointerToViolation();</span>
+<span class="nc" id="L206">      return getCause().getPointerToViolation();</span>
     }
 
-    @SuppressWarnings(&quot;null&quot;)
     @Override
     public String getMessage() {
-<span class="nc" id="L214">      return getCause().getLocalizedMessage();</span>
+<span class="nc" id="L211">      return getCause().getLocalizedMessage();</span>
     }
 
     @NonNull
     @Override
     public ValidationException getCause() {
-<span class="nc" id="L220">      return exception;</span>
+<span class="nc" id="L217">      return exception;</span>
     }
   }
 
@@ -226,18 +223,18 @@ public class JsonSchemaContentValidator
     private final List&lt;JsonValidationFinding&gt; findings;
 
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L229">    public JsonValidationResult(@NonNull List&lt;JsonValidationFinding&gt; findings) {</span>
-<span class="nc" id="L230">      this.findings = Collections.unmodifiableList(Objects.requireNonNull(findings, &quot;findings&quot;));</span>
-<span class="nc" id="L231">    }</span>
+<span class="nc" id="L226">    public JsonValidationResult(@NonNull List&lt;JsonValidationFinding&gt; findings) {</span>
+<span class="nc" id="L227">      this.findings = Collections.unmodifiableList(Objects.requireNonNull(findings, &quot;findings&quot;));</span>
+<span class="nc" id="L228">    }</span>
 
     @Override
     public IConstraint.Level getHighestSeverity() {
-<span class="nc bnc" id="L235" title="All 2 branches missed.">      return findings.isEmpty() ? IConstraint.Level.INFORMATIONAL : IConstraint.Level.ERROR;</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">      return findings.isEmpty() ? IConstraint.Level.INFORMATIONAL : IConstraint.Level.ERROR;</span>
     }
 
     @Override
     public List&lt;? extends IValidationFinding&gt; getFindings() {
-<span class="nc" id="L240">      return findings;</span>
+<span class="nc" id="L237">      return findings;</span>
     }
 
   }

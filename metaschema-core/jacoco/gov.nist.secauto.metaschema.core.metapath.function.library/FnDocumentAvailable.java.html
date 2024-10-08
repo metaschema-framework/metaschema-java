@@ -27,10 +27,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class FnDocumentAvailable {
-
+  private static final String NAME = &quot;doc-available&quot;;
   @NonNull
 <span class="fc" id="L32">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L33">      .name(&quot;doc-available&quot;)</span>
+<span class="fc" id="L33">      .name(NAME)</span>
 <span class="fc" id="L34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="fc" id="L35">      .deterministic()</span>
 <span class="fc" id="L36">      .contextDependent()</span>

@@ -24,32 +24,33 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayPut {
+  private static final String NAME = &quot;put&quot;;
   @NonNull
-<span class="fc" id="L28">  public static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L29">      .name(&quot;put&quot;)</span>
-<span class="fc" id="L30">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L31">      .deterministic()</span>
-<span class="fc" id="L32">      .contextIndependent()</span>
-<span class="fc" id="L33">      .focusIndependent()</span>
-<span class="fc" id="L34">      .argument(IArgument.builder()</span>
-<span class="fc" id="L35">          .name(&quot;array&quot;)</span>
-<span class="fc" id="L36">          .type(IArrayItem.class)</span>
-<span class="fc" id="L37">          .one()</span>
-<span class="fc" id="L38">          .build())</span>
-<span class="fc" id="L39">      .argument(IArgument.builder()</span>
-<span class="fc" id="L40">          .name(&quot;position&quot;)</span>
-<span class="fc" id="L41">          .type(IIntegerItem.class)</span>
-<span class="fc" id="L42">          .one()</span>
-<span class="fc" id="L43">          .build())</span>
-<span class="fc" id="L44">      .argument(IArgument.builder()</span>
-<span class="fc" id="L45">          .name(&quot;member&quot;)</span>
-<span class="fc" id="L46">          .type(IItem.class)</span>
-<span class="fc" id="L47">          .zeroOrMore()</span>
-<span class="fc" id="L48">          .build())</span>
-<span class="fc" id="L49">      .returnType(IArrayItem.class)</span>
-<span class="fc" id="L50">      .returnOne()</span>
-<span class="fc" id="L51">      .functionHandler(ArrayPut::execute)</span>
-<span class="fc" id="L52">      .build();</span>
+<span class="fc" id="L29">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L30">      .name(NAME)</span>
+<span class="fc" id="L31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L32">      .deterministic()</span>
+<span class="fc" id="L33">      .contextIndependent()</span>
+<span class="fc" id="L34">      .focusIndependent()</span>
+<span class="fc" id="L35">      .argument(IArgument.builder()</span>
+<span class="fc" id="L36">          .name(&quot;array&quot;)</span>
+<span class="fc" id="L37">          .type(IArrayItem.class)</span>
+<span class="fc" id="L38">          .one()</span>
+<span class="fc" id="L39">          .build())</span>
+<span class="fc" id="L40">      .argument(IArgument.builder()</span>
+<span class="fc" id="L41">          .name(&quot;position&quot;)</span>
+<span class="fc" id="L42">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L43">          .one()</span>
+<span class="fc" id="L44">          .build())</span>
+<span class="fc" id="L45">      .argument(IArgument.builder()</span>
+<span class="fc" id="L46">          .name(&quot;member&quot;)</span>
+<span class="fc" id="L47">          .type(IItem.class)</span>
+<span class="fc" id="L48">          .zeroOrMore()</span>
+<span class="fc" id="L49">          .build())</span>
+<span class="fc" id="L50">      .returnType(IArrayItem.class)</span>
+<span class="fc" id="L51">      .returnOne()</span>
+<span class="fc" id="L52">      .functionHandler(ArrayPut::execute)</span>
+<span class="fc" id="L53">      .build();</span>
 
   private ArrayPut() {
     // disable construction
@@ -61,12 +62,12 @@ public final class ArrayPut {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L64">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L65">        arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L66">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L67">    @SuppressWarnings(&quot;unchecked&quot;) T member = (T) arguments.get(2).toCollectionValue();</span>
+<span class="fc" id="L65">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L66">        arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L67">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L68">    @SuppressWarnings(&quot;unchecked&quot;) T member = (T) arguments.get(2).toCollectionValue();</span>
 
-<span class="fc" id="L69">    return put(array, position, member).asSequence();</span>
+<span class="fc" id="L70">    return put(array, position, member).asSequence();</span>
   }
 
   /**
@@ -90,7 +91,7 @@ public final class ArrayPut {
       @NonNull IArrayItem&lt;T&gt; array,
       @NonNull IIntegerItem positionItem,
       @NonNull T member) {
-<span class="fc" id="L93">    return put(array, positionItem.asInteger().intValueExact(), member);</span>
+<span class="fc" id="L94">    return put(array, positionItem.asInteger().intValueExact(), member);</span>
   }
 
   /**
@@ -114,19 +115,19 @@ public final class ArrayPut {
       @NonNull IArrayItem&lt;T&gt; array,
       int position,
       @NonNull T member) {
-<span class="fc" id="L117">    List&lt;T&gt; copy = new ArrayList&lt;&gt;(array);</span>
+<span class="fc" id="L118">    List&lt;T&gt; copy = new ArrayList&lt;&gt;(array);</span>
     try {
-<span class="fc" id="L119">      copy.set(position - 1, member);</span>
-<span class="nc" id="L120">    } catch (IndexOutOfBoundsException ex) {</span>
-<span class="nc" id="L121">      throw new ArrayException(</span>
+<span class="fc" id="L120">      copy.set(position - 1, member);</span>
+<span class="nc" id="L121">    } catch (IndexOutOfBoundsException ex) {</span>
+<span class="nc" id="L122">      throw new ArrayException(</span>
           ArrayException.INDEX_OUT_OF_BOUNDS,
-<span class="nc" id="L123">          String.format(&quot;The position %d is outside the range of values for the array of size '%d'.&quot;,</span>
-<span class="nc" id="L124">              position,</span>
-<span class="nc" id="L125">              copy.size()),</span>
+<span class="nc" id="L124">          String.format(&quot;The position %d is outside the range of values for the array of size '%d'.&quot;,</span>
+<span class="nc" id="L125">              position,</span>
+<span class="nc" id="L126">              copy.size()),</span>
           ex);
-<span class="fc" id="L127">    }</span>
+<span class="fc" id="L128">    }</span>
 
-<span class="fc" id="L129">    return IArrayItem.ofCollection(copy);</span>
+<span class="fc" id="L130">    return IArrayItem.ofCollection(copy);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -167,256 +167,255 @@
 <span class="source-line-no">154</span><span id="line-154">   *</span>
 <span class="source-line-no">155</span><span id="line-155">   * @return a listing of assembly and field definitions</span>
 <span class="source-line-no">156</span><span id="line-156">   */</span>
-<span class="source-line-no">157</span><span id="line-157">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">158</span><span id="line-158">  @NonNull</span>
-<span class="source-line-no">159</span><span id="line-159">  List&lt;? extends IModelDefinition&gt; getAssemblyAndFieldDefinitions();</span>
-<span class="source-line-no">160</span><span id="line-160"></span>
-<span class="source-line-no">161</span><span id="line-161">  /**</span>
-<span class="source-line-no">162</span><span id="line-162">   * Retrieves the top-level flag definitions in this Metaschema module.</span>
-<span class="source-line-no">163</span><span id="line-163">   *</span>
-<span class="source-line-no">164</span><span id="line-164">   * @return the collection of flag definitions</span>
-<span class="source-line-no">165</span><span id="line-165">   */</span>
-<span class="source-line-no">166</span><span id="line-166">  @NonNull</span>
-<span class="source-line-no">167</span><span id="line-167">  Collection&lt;? extends IFlagDefinition&gt; getFlagDefinitions();</span>
-<span class="source-line-no">168</span><span id="line-168"></span>
-<span class="source-line-no">169</span><span id="line-169">  /**</span>
-<span class="source-line-no">170</span><span id="line-170">   * Retrieves the top-level flag definition in this Metaschema module with the</span>
-<span class="source-line-no">171</span><span id="line-171">   * matching name, if it exists.</span>
-<span class="source-line-no">172</span><span id="line-172">   *</span>
-<span class="source-line-no">173</span><span id="line-173">   * @param name</span>
-<span class="source-line-no">174</span><span id="line-174">   *          the definition name</span>
-<span class="source-line-no">175</span><span id="line-175">   *</span>
-<span class="source-line-no">176</span><span id="line-176">   * @return the matching flag definition, or {@code null} if none match</span>
-<span class="source-line-no">177</span><span id="line-177">   */</span>
-<span class="source-line-no">178</span><span id="line-178">  @Nullable</span>
-<span class="source-line-no">179</span><span id="line-179">  IFlagDefinition getFlagDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">180</span><span id="line-180"></span>
-<span class="source-line-no">181</span><span id="line-181">  /**</span>
-<span class="source-line-no">182</span><span id="line-182">   * Retrieves the assembly definition with a matching name from either: 1) the</span>
-<span class="source-line-no">183</span><span id="line-183">   * top-level assembly definitions from this Metaschema module, or 2) global</span>
-<span class="source-line-no">184</span><span id="line-184">   * assembly definitions from each imported Metaschema module in reverse order of</span>
-<span class="source-line-no">185</span><span id="line-185">   * import.</span>
-<span class="source-line-no">186</span><span id="line-186">   *</span>
-<span class="source-line-no">187</span><span id="line-187">   * @param name</span>
-<span class="source-line-no">188</span><span id="line-188">   *          the name of the assembly to find</span>
-<span class="source-line-no">189</span><span id="line-189">   * @return the assembly definition</span>
-<span class="source-line-no">190</span><span id="line-190">   */</span>
-<span class="source-line-no">191</span><span id="line-191">  @Nullable</span>
-<span class="source-line-no">192</span><span id="line-192">  IAssemblyDefinition getScopedAssemblyDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">193</span><span id="line-193"></span>
-<span class="source-line-no">194</span><span id="line-194">  /**</span>
-<span class="source-line-no">195</span><span id="line-195">   * Retrieves the field definition with a matching name from either: 1) the</span>
-<span class="source-line-no">196</span><span id="line-196">   * top-level field definitions from this Metaschema module, or 2) global field</span>
-<span class="source-line-no">197</span><span id="line-197">   * definitions from each imported Metaschema module in reverse order of import.</span>
-<span class="source-line-no">198</span><span id="line-198">   *</span>
-<span class="source-line-no">199</span><span id="line-199">   * @param name</span>
-<span class="source-line-no">200</span><span id="line-200">   *          the name of the field definition to find</span>
-<span class="source-line-no">201</span><span id="line-201">   * @return the field definition</span>
-<span class="source-line-no">202</span><span id="line-202">   */</span>
-<span class="source-line-no">203</span><span id="line-203">  @Nullable</span>
-<span class="source-line-no">204</span><span id="line-204">  IFieldDefinition getScopedFieldDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">205</span><span id="line-205"></span>
-<span class="source-line-no">206</span><span id="line-206">  /**</span>
-<span class="source-line-no">207</span><span id="line-207">   * Retrieves the flag definition with a matching name from either: 1) the</span>
-<span class="source-line-no">208</span><span id="line-208">   * top-level flag definitions from this Metaschema module, or 2) global flag</span>
-<span class="source-line-no">209</span><span id="line-209">   * definitions from each imported Metaschema module in reverse order of import.</span>
-<span class="source-line-no">210</span><span id="line-210">   *</span>
-<span class="source-line-no">211</span><span id="line-211">   * @param name</span>
-<span class="source-line-no">212</span><span id="line-212">   *          the name of the flag definition to find</span>
-<span class="source-line-no">213</span><span id="line-213">   * @return the flag definition</span>
-<span class="source-line-no">214</span><span id="line-214">   */</span>
-<span class="source-line-no">215</span><span id="line-215">  @Nullable</span>
-<span class="source-line-no">216</span><span id="line-216">  IFlagDefinition getScopedFlagDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">217</span><span id="line-217"></span>
-<span class="source-line-no">218</span><span id="line-218">  /**</span>
-<span class="source-line-no">219</span><span id="line-219">   * Retrieves the top-level assembly definitions that are marked as roots from</span>
-<span class="source-line-no">220</span><span id="line-220">   * the current Metaschema module.</span>
-<span class="source-line-no">221</span><span id="line-221">   *</span>
-<span class="source-line-no">222</span><span id="line-222">   * @return a listing of assembly definitions marked as root</span>
-<span class="source-line-no">223</span><span id="line-223">   */</span>
-<span class="source-line-no">224</span><span id="line-224">  @NonNull</span>
-<span class="source-line-no">225</span><span id="line-225">  Collection&lt;? extends IAssemblyDefinition&gt; getRootAssemblyDefinitions();</span>
-<span class="source-line-no">226</span><span id="line-226"></span>
-<span class="source-line-no">227</span><span id="line-227">  /**</span>
-<span class="source-line-no">228</span><span id="line-228">   * Retrieve the top-level flag definitions that are marked global in this</span>
-<span class="source-line-no">229</span><span id="line-229">   * Metaschema module or in any imported Metaschema modules. The resulting</span>
-<span class="source-line-no">230</span><span id="line-230">   * collection is built by adding global definitions from each imported</span>
-<span class="source-line-no">231</span><span id="line-231">   * Metaschema module in order of import, then adding global definitions from the</span>
-<span class="source-line-no">232</span><span id="line-232">   * current Metaschema module. Such a map is built in this way for each imported</span>
-<span class="source-line-no">233</span><span id="line-233">   * Metaschema module in the chain. Values for clashing keys will be replaced in</span>
-<span class="source-line-no">234</span><span id="line-234">   * this order, giving preference to the "closest" definition.</span>
-<span class="source-line-no">235</span><span id="line-235">   *</span>
-<span class="source-line-no">236</span><span id="line-236">   * @return the collection of exported flag definitions</span>
-<span class="source-line-no">237</span><span id="line-237">   */</span>
-<span class="source-line-no">238</span><span id="line-238">  @NonNull</span>
-<span class="source-line-no">239</span><span id="line-239">  Collection&lt;? extends IFlagDefinition&gt; getExportedFlagDefinitions();</span>
-<span class="source-line-no">240</span><span id="line-240"></span>
-<span class="source-line-no">241</span><span id="line-241">  /**</span>
-<span class="source-line-no">242</span><span id="line-242">   * Retrieves the exported named flag definition, if it exists.</span>
-<span class="source-line-no">243</span><span id="line-243">   * &lt;p&gt;</span>
-<span class="source-line-no">244</span><span id="line-244">   * For information about how flag definitions are exported see</span>
-<span class="source-line-no">245</span><span id="line-245">   * {@link #getExportedFlagDefinitions()}.</span>
-<span class="source-line-no">246</span><span id="line-246">   *</span>
-<span class="source-line-no">247</span><span id="line-247">   * @param name</span>
-<span class="source-line-no">248</span><span id="line-248">   *          the definition name</span>
-<span class="source-line-no">249</span><span id="line-249">   * @return the flag definition, or {@code null} if it doesn't exist.</span>
-<span class="source-line-no">250</span><span id="line-250">   */</span>
-<span class="source-line-no">251</span><span id="line-251">  @Nullable</span>
-<span class="source-line-no">252</span><span id="line-252">  IFlagDefinition getExportedFlagDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">253</span><span id="line-253"></span>
-<span class="source-line-no">254</span><span id="line-254">  /**</span>
-<span class="source-line-no">255</span><span id="line-255">   * Retrieve the top-level field definitions that are marked global in this</span>
-<span class="source-line-no">256</span><span id="line-256">   * Metaschema module or in any imported Metaschema module. The resulting</span>
-<span class="source-line-no">257</span><span id="line-257">   * collection is built by adding global definitions from each imported</span>
-<span class="source-line-no">258</span><span id="line-258">   * Metaschema module in order of import, then adding global definitions from the</span>
-<span class="source-line-no">259</span><span id="line-259">   * current Metaschema module. Such a map is built in this way for each imported</span>
-<span class="source-line-no">260</span><span id="line-260">   * Metaschema module in the chain. Values for clashing keys will be replaced in</span>
-<span class="source-line-no">261</span><span id="line-261">   * this order, giving preference to the "closest" definition</span>
-<span class="source-line-no">262</span><span id="line-262">   *</span>
-<span class="source-line-no">263</span><span id="line-263">   * @return the collection of exported field definitions</span>
-<span class="source-line-no">264</span><span id="line-264">   */</span>
-<span class="source-line-no">265</span><span id="line-265">  @NonNull</span>
-<span class="source-line-no">266</span><span id="line-266">  Collection&lt;? extends IFieldDefinition&gt; getExportedFieldDefinitions();</span>
-<span class="source-line-no">267</span><span id="line-267"></span>
-<span class="source-line-no">268</span><span id="line-268">  /**</span>
-<span class="source-line-no">269</span><span id="line-269">   * Retrieves the exported named field definition, if it exists.</span>
-<span class="source-line-no">270</span><span id="line-270">   * &lt;p&gt;</span>
-<span class="source-line-no">271</span><span id="line-271">   * For information about how field definitions are exported see</span>
-<span class="source-line-no">272</span><span id="line-272">   * {@link #getExportedFieldDefinitions()}.</span>
-<span class="source-line-no">273</span><span id="line-273">   *</span>
-<span class="source-line-no">274</span><span id="line-274">   * @param name</span>
-<span class="source-line-no">275</span><span id="line-275">   *          the definition name</span>
-<span class="source-line-no">276</span><span id="line-276">   * @return the field definition, or {@code null} if it doesn't exist.</span>
-<span class="source-line-no">277</span><span id="line-277">   */</span>
-<span class="source-line-no">278</span><span id="line-278">  @Nullable</span>
-<span class="source-line-no">279</span><span id="line-279">  IFieldDefinition getExportedFieldDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">280</span><span id="line-280"></span>
-<span class="source-line-no">281</span><span id="line-281">  /**</span>
-<span class="source-line-no">282</span><span id="line-282">   * Retrieve the top-level assembly definitions that are marked global in this</span>
-<span class="source-line-no">283</span><span id="line-283">   * Metaschema module or in any imported Metaschema module. The resulting</span>
-<span class="source-line-no">284</span><span id="line-284">   * collection is built by adding global definitions from each imported</span>
-<span class="source-line-no">285</span><span id="line-285">   * Metaschema module in order of import, then adding global definitions from the</span>
-<span class="source-line-no">286</span><span id="line-286">   * current Metaschema module. This collection is built in this way for each</span>
-<span class="source-line-no">287</span><span id="line-287">   * imported Metaschema module in the chain. Items with duplicate names will be</span>
-<span class="source-line-no">288</span><span id="line-288">   * replaced in this order, giving preference to the "closest" definition</span>
-<span class="source-line-no">289</span><span id="line-289">   *</span>
-<span class="source-line-no">290</span><span id="line-290">   * @return the collection of exported assembly definitions</span>
-<span class="source-line-no">291</span><span id="line-291">   */</span>
-<span class="source-line-no">292</span><span id="line-292">  @NonNull</span>
-<span class="source-line-no">293</span><span id="line-293">  Collection&lt;? extends IAssemblyDefinition&gt; getExportedAssemblyDefinitions();</span>
-<span class="source-line-no">294</span><span id="line-294"></span>
-<span class="source-line-no">295</span><span id="line-295">  /**</span>
-<span class="source-line-no">296</span><span id="line-296">   * Retrieves the exported named assembly definition, if it exists.</span>
-<span class="source-line-no">297</span><span id="line-297">   * &lt;p&gt;</span>
-<span class="source-line-no">298</span><span id="line-298">   * For information about how assembly definitions are exported see</span>
-<span class="source-line-no">299</span><span id="line-299">   * {@link #getExportedAssemblyDefinitions()}.</span>
-<span class="source-line-no">300</span><span id="line-300">   *</span>
-<span class="source-line-no">301</span><span id="line-301">   * @param name</span>
-<span class="source-line-no">302</span><span id="line-302">   *          the definition name</span>
-<span class="source-line-no">303</span><span id="line-303">   * @return the assembly definition, or {@code null} if it doesn't exist.</span>
-<span class="source-line-no">304</span><span id="line-304">   */</span>
-<span class="source-line-no">305</span><span id="line-305">  @Nullable</span>
-<span class="source-line-no">306</span><span id="line-306">  IAssemblyDefinition getExportedAssemblyDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">307</span><span id="line-307"></span>
-<span class="source-line-no">308</span><span id="line-308">  /**</span>
-<span class="source-line-no">309</span><span id="line-309">   * Retrieves the top-level assembly definitions that are marked as roots from</span>
-<span class="source-line-no">310</span><span id="line-310">   * the current Metaschema module and any imported Metaschema modules.</span>
-<span class="source-line-no">311</span><span id="line-311">   *</span>
-<span class="source-line-no">312</span><span id="line-312">   * @return a listing of assembly definitions marked as root</span>
-<span class="source-line-no">313</span><span id="line-313">   */</span>
-<span class="source-line-no">314</span><span id="line-314">  @NonNull</span>
-<span class="source-line-no">315</span><span id="line-315">  Collection&lt;? extends IAssemblyDefinition&gt; getExportedRootAssemblyDefinitions();</span>
-<span class="source-line-no">316</span><span id="line-316"></span>
-<span class="source-line-no">317</span><span id="line-317">  /**</span>
-<span class="source-line-no">318</span><span id="line-318">   * Retrieves the exported named root assembly definition, if it exists.</span>
-<span class="source-line-no">319</span><span id="line-319">   * &lt;p&gt;</span>
-<span class="source-line-no">320</span><span id="line-320">   * For information about how assembly definitions are exported see</span>
-<span class="source-line-no">321</span><span id="line-321">   * {@link #getExportedAssemblyDefinitions()}.</span>
-<span class="source-line-no">322</span><span id="line-322">   *</span>
-<span class="source-line-no">323</span><span id="line-323">   * @param name</span>
-<span class="source-line-no">324</span><span id="line-324">   *          the root name</span>
-<span class="source-line-no">325</span><span id="line-325">   * @return the assembly definition, or {@code null} if it doesn't exist.</span>
-<span class="source-line-no">326</span><span id="line-326">   */</span>
-<span class="source-line-no">327</span><span id="line-327">  @Nullable</span>
-<span class="source-line-no">328</span><span id="line-328">  IAssemblyDefinition getExportedRootAssemblyDefinitionByName(QName name);</span>
-<span class="source-line-no">329</span><span id="line-329"></span>
-<span class="source-line-no">330</span><span id="line-330">  /**</span>
-<span class="source-line-no">331</span><span id="line-331">   * Get the mapping of prefix to namespace URI for use in resolving the namespace</span>
-<span class="source-line-no">332</span><span id="line-332">   * of lexical qualified named in Metapath.</span>
-<span class="source-line-no">333</span><span id="line-333">   *</span>
-<span class="source-line-no">334</span><span id="line-334">   * @return the mapping</span>
-<span class="source-line-no">335</span><span id="line-335">   */</span>
-<span class="source-line-no">336</span><span id="line-336">  @NonNull</span>
-<span class="source-line-no">337</span><span id="line-337">  Map&lt;String, String&gt; getNamespaceBindings();</span>
-<span class="source-line-no">338</span><span id="line-338"></span>
-<span class="source-line-no">339</span><span id="line-339">  /**</span>
-<span class="source-line-no">340</span><span id="line-340">   * Used to parse a flag name reference to produce a qualified name.</span>
-<span class="source-line-no">341</span><span id="line-341">   *</span>
-<span class="source-line-no">342</span><span id="line-342">   * @param nameRef</span>
-<span class="source-line-no">343</span><span id="line-343">   *          the name reference</span>
-<span class="source-line-no">344</span><span id="line-344">   * @return the qualified name</span>
-<span class="source-line-no">345</span><span id="line-345">   */</span>
-<span class="source-line-no">346</span><span id="line-346">  @NonNull</span>
-<span class="source-line-no">347</span><span id="line-347">  default QName toFlagQName(@NonNull String nameRef) {</span>
-<span class="source-line-no">348</span><span id="line-348">    return EQNameUtils.parseName(</span>
-<span class="source-line-no">349</span><span id="line-349">        nameRef,</span>
-<span class="source-line-no">350</span><span id="line-350">        getModuleStaticContext().getFlagPrefixResolver());</span>
-<span class="source-line-no">351</span><span id="line-351">  }</span>
-<span class="source-line-no">352</span><span id="line-352"></span>
-<span class="source-line-no">353</span><span id="line-353">  /**</span>
-<span class="source-line-no">354</span><span id="line-354">   * Used to parse a flag name reference to produce a qualified name.</span>
-<span class="source-line-no">355</span><span id="line-355">   *</span>
-<span class="source-line-no">356</span><span id="line-356">   * @param modelNamespace</span>
-<span class="source-line-no">357</span><span id="line-357">   *          the namespace to use or {@code null}</span>
-<span class="source-line-no">358</span><span id="line-358">   * @param nameRef</span>
-<span class="source-line-no">359</span><span id="line-359">   *          the name reference</span>
-<span class="source-line-no">360</span><span id="line-360">   * @return the qualified name</span>
-<span class="source-line-no">361</span><span id="line-361">   */</span>
-<span class="source-line-no">362</span><span id="line-362">  @NonNull</span>
-<span class="source-line-no">363</span><span id="line-363">  default QName toFlagQName(@Nullable String modelNamespace, @NonNull String nameRef) {</span>
-<span class="source-line-no">364</span><span id="line-364">    return modelNamespace == null</span>
-<span class="source-line-no">365</span><span id="line-365">        ? new QName(nameRef)</span>
-<span class="source-line-no">366</span><span id="line-366">        : new QName(modelNamespace, nameRef);</span>
-<span class="source-line-no">367</span><span id="line-367">  }</span>
-<span class="source-line-no">368</span><span id="line-368"></span>
-<span class="source-line-no">369</span><span id="line-369">  /**</span>
-<span class="source-line-no">370</span><span id="line-370">   * Used to parse a model name reference to produce a qualified name.</span>
-<span class="source-line-no">371</span><span id="line-371">   *</span>
-<span class="source-line-no">372</span><span id="line-372">   * @param nameRef</span>
-<span class="source-line-no">373</span><span id="line-373">   *          the name reference</span>
-<span class="source-line-no">374</span><span id="line-374">   * @return the qualified name</span>
-<span class="source-line-no">375</span><span id="line-375">   */</span>
-<span class="source-line-no">376</span><span id="line-376">  @NonNull</span>
-<span class="source-line-no">377</span><span id="line-377">  default QName toModelQName(@NonNull String nameRef) {</span>
-<span class="source-line-no">378</span><span id="line-378">    return EQNameUtils.parseName(</span>
-<span class="source-line-no">379</span><span id="line-379">        nameRef,</span>
-<span class="source-line-no">380</span><span id="line-380">        getModuleStaticContext().getModelPrefixResolver());</span>
-<span class="source-line-no">381</span><span id="line-381">  }</span>
-<span class="source-line-no">382</span><span id="line-382"></span>
-<span class="source-line-no">383</span><span id="line-383">  /**</span>
-<span class="source-line-no">384</span><span id="line-384">   * Used to parse a flag name reference to produce a qualified name.</span>
-<span class="source-line-no">385</span><span id="line-385">   *</span>
-<span class="source-line-no">386</span><span id="line-386">   * @param modelNamespace</span>
-<span class="source-line-no">387</span><span id="line-387">   *          the namespace to use or {@code null}</span>
-<span class="source-line-no">388</span><span id="line-388">   * @param nameRef</span>
-<span class="source-line-no">389</span><span id="line-389">   *          the name reference</span>
-<span class="source-line-no">390</span><span id="line-390">   * @return the qualified name</span>
-<span class="source-line-no">391</span><span id="line-391">   */</span>
-<span class="source-line-no">392</span><span id="line-392">  @NonNull</span>
-<span class="source-line-no">393</span><span id="line-393">  default QName toModelQName(@Nullable String modelNamespace, @NonNull String nameRef) {</span>
-<span class="source-line-no">394</span><span id="line-394">    String namespace = modelNamespace == null ? getXmlNamespace().toASCIIString() : modelNamespace;</span>
-<span class="source-line-no">395</span><span id="line-395">    return new QName(namespace, nameRef);</span>
-<span class="source-line-no">396</span><span id="line-396">  }</span>
-<span class="source-line-no">397</span><span id="line-397"></span>
-<span class="source-line-no">398</span><span id="line-398">  /**</span>
-<span class="source-line-no">399</span><span id="line-399">   * Get the Metapath static context for compiling Metapath expressions that query</span>
-<span class="source-line-no">400</span><span id="line-400">   * instances of this model.</span>
-<span class="source-line-no">401</span><span id="line-401">   *</span>
-<span class="source-line-no">402</span><span id="line-402">   * @return the static context</span>
-<span class="source-line-no">403</span><span id="line-403">   */</span>
-<span class="source-line-no">404</span><span id="line-404">  @NonNull</span>
-<span class="source-line-no">405</span><span id="line-405">  StaticContext getModuleStaticContext();</span>
-<span class="source-line-no">406</span><span id="line-406">}</span>
+<span class="source-line-no">157</span><span id="line-157">  @NonNull</span>
+<span class="source-line-no">158</span><span id="line-158">  List&lt;? extends IModelDefinition&gt; getAssemblyAndFieldDefinitions();</span>
+<span class="source-line-no">159</span><span id="line-159"></span>
+<span class="source-line-no">160</span><span id="line-160">  /**</span>
+<span class="source-line-no">161</span><span id="line-161">   * Retrieves the top-level flag definitions in this Metaschema module.</span>
+<span class="source-line-no">162</span><span id="line-162">   *</span>
+<span class="source-line-no">163</span><span id="line-163">   * @return the collection of flag definitions</span>
+<span class="source-line-no">164</span><span id="line-164">   */</span>
+<span class="source-line-no">165</span><span id="line-165">  @NonNull</span>
+<span class="source-line-no">166</span><span id="line-166">  Collection&lt;? extends IFlagDefinition&gt; getFlagDefinitions();</span>
+<span class="source-line-no">167</span><span id="line-167"></span>
+<span class="source-line-no">168</span><span id="line-168">  /**</span>
+<span class="source-line-no">169</span><span id="line-169">   * Retrieves the top-level flag definition in this Metaschema module with the</span>
+<span class="source-line-no">170</span><span id="line-170">   * matching name, if it exists.</span>
+<span class="source-line-no">171</span><span id="line-171">   *</span>
+<span class="source-line-no">172</span><span id="line-172">   * @param name</span>
+<span class="source-line-no">173</span><span id="line-173">   *          the definition name</span>
+<span class="source-line-no">174</span><span id="line-174">   *</span>
+<span class="source-line-no">175</span><span id="line-175">   * @return the matching flag definition, or {@code null} if none match</span>
+<span class="source-line-no">176</span><span id="line-176">   */</span>
+<span class="source-line-no">177</span><span id="line-177">  @Nullable</span>
+<span class="source-line-no">178</span><span id="line-178">  IFlagDefinition getFlagDefinitionByName(@NonNull QName name);</span>
+<span class="source-line-no">179</span><span id="line-179"></span>
+<span class="source-line-no">180</span><span id="line-180">  /**</span>
+<span class="source-line-no">181</span><span id="line-181">   * Retrieves the assembly definition with a matching name from either: 1) the</span>
+<span class="source-line-no">182</span><span id="line-182">   * top-level assembly definitions from this Metaschema module, or 2) global</span>
+<span class="source-line-no">183</span><span id="line-183">   * assembly definitions from each imported Metaschema module in reverse order of</span>
+<span class="source-line-no">184</span><span id="line-184">   * import.</span>
+<span class="source-line-no">185</span><span id="line-185">   *</span>
+<span class="source-line-no">186</span><span id="line-186">   * @param name</span>
+<span class="source-line-no">187</span><span id="line-187">   *          the name of the assembly to find</span>
+<span class="source-line-no">188</span><span id="line-188">   * @return the assembly definition</span>
+<span class="source-line-no">189</span><span id="line-189">   */</span>
+<span class="source-line-no">190</span><span id="line-190">  @Nullable</span>
+<span class="source-line-no">191</span><span id="line-191">  IAssemblyDefinition getScopedAssemblyDefinitionByName(@NonNull QName name);</span>
+<span class="source-line-no">192</span><span id="line-192"></span>
+<span class="source-line-no">193</span><span id="line-193">  /**</span>
+<span class="source-line-no">194</span><span id="line-194">   * Retrieves the field definition with a matching name from either: 1) the</span>
+<span class="source-line-no">195</span><span id="line-195">   * top-level field definitions from this Metaschema module, or 2) global field</span>
+<span class="source-line-no">196</span><span id="line-196">   * definitions from each imported Metaschema module in reverse order of import.</span>
+<span class="source-line-no">197</span><span id="line-197">   *</span>
+<span class="source-line-no">198</span><span id="line-198">   * @param name</span>
+<span class="source-line-no">199</span><span id="line-199">   *          the name of the field definition to find</span>
+<span class="source-line-no">200</span><span id="line-200">   * @return the field definition</span>
+<span class="source-line-no">201</span><span id="line-201">   */</span>
+<span class="source-line-no">202</span><span id="line-202">  @Nullable</span>
+<span class="source-line-no">203</span><span id="line-203">  IFieldDefinition getScopedFieldDefinitionByName(@NonNull QName name);</span>
+<span class="source-line-no">204</span><span id="line-204"></span>
+<span class="source-line-no">205</span><span id="line-205">  /**</span>
+<span class="source-line-no">206</span><span id="line-206">   * Retrieves the flag definition with a matching name from either: 1) the</span>
+<span class="source-line-no">207</span><span id="line-207">   * top-level flag definitions from this Metaschema module, or 2) global flag</span>
+<span class="source-line-no">208</span><span id="line-208">   * definitions from each imported Metaschema module in reverse order of import.</span>
+<span class="source-line-no">209</span><span id="line-209">   *</span>
+<span class="source-line-no">210</span><span id="line-210">   * @param name</span>
+<span class="source-line-no">211</span><span id="line-211">   *          the name of the flag definition to find</span>
+<span class="source-line-no">212</span><span id="line-212">   * @return the flag definition</span>
+<span class="source-line-no">213</span><span id="line-213">   */</span>
+<span class="source-line-no">214</span><span id="line-214">  @Nullable</span>
+<span class="source-line-no">215</span><span id="line-215">  IFlagDefinition getScopedFlagDefinitionByName(@NonNull QName name);</span>
+<span class="source-line-no">216</span><span id="line-216"></span>
+<span class="source-line-no">217</span><span id="line-217">  /**</span>
+<span class="source-line-no">218</span><span id="line-218">   * Retrieves the top-level assembly definitions that are marked as roots from</span>
+<span class="source-line-no">219</span><span id="line-219">   * the current Metaschema module.</span>
+<span class="source-line-no">220</span><span id="line-220">   *</span>
+<span class="source-line-no">221</span><span id="line-221">   * @return a listing of assembly definitions marked as root</span>
+<span class="source-line-no">222</span><span id="line-222">   */</span>
+<span class="source-line-no">223</span><span id="line-223">  @NonNull</span>
+<span class="source-line-no">224</span><span id="line-224">  Collection&lt;? extends IAssemblyDefinition&gt; getRootAssemblyDefinitions();</span>
+<span class="source-line-no">225</span><span id="line-225"></span>
+<span class="source-line-no">226</span><span id="line-226">  /**</span>
+<span class="source-line-no">227</span><span id="line-227">   * Retrieve the top-level flag definitions that are marked global in this</span>
+<span class="source-line-no">228</span><span id="line-228">   * Metaschema module or in any imported Metaschema modules. The resulting</span>
+<span class="source-line-no">229</span><span id="line-229">   * collection is built by adding global definitions from each imported</span>
+<span class="source-line-no">230</span><span id="line-230">   * Metaschema module in order of import, then adding global definitions from the</span>
+<span class="source-line-no">231</span><span id="line-231">   * current Metaschema module. Such a map is built in this way for each imported</span>
+<span class="source-line-no">232</span><span id="line-232">   * Metaschema module in the chain. Values for clashing keys will be replaced in</span>
+<span class="source-line-no">233</span><span id="line-233">   * this order, giving preference to the "closest" definition.</span>
+<span class="source-line-no">234</span><span id="line-234">   *</span>
+<span class="source-line-no">235</span><span id="line-235">   * @return the collection of exported flag definitions</span>
+<span class="source-line-no">236</span><span id="line-236">   */</span>
+<span class="source-line-no">237</span><span id="line-237">  @NonNull</span>
+<span class="source-line-no">238</span><span id="line-238">  Collection&lt;? extends IFlagDefinition&gt; getExportedFlagDefinitions();</span>
+<span class="source-line-no">239</span><span id="line-239"></span>
+<span class="source-line-no">240</span><span id="line-240">  /**</span>
+<span class="source-line-no">241</span><span id="line-241">   * Retrieves the exported named flag definition, if it exists.</span>
+<span class="source-line-no">242</span><span id="line-242">   * &lt;p&gt;</span>
+<span class="source-line-no">243</span><span id="line-243">   * For information about how flag definitions are exported see</span>
+<span class="source-line-no">244</span><span id="line-244">   * {@link #getExportedFlagDefinitions()}.</span>
+<span class="source-line-no">245</span><span id="line-245">   *</span>
+<span class="source-line-no">246</span><span id="line-246">   * @param name</span>
+<span class="source-line-no">247</span><span id="line-247">   *          the definition name</span>
+<span class="source-line-no">248</span><span id="line-248">   * @return the flag definition, or {@code null} if it doesn't exist.</span>
+<span class="source-line-no">249</span><span id="line-249">   */</span>
+<span class="source-line-no">250</span><span id="line-250">  @Nullable</span>
+<span class="source-line-no">251</span><span id="line-251">  IFlagDefinition getExportedFlagDefinitionByName(@NonNull QName name);</span>
+<span class="source-line-no">252</span><span id="line-252"></span>
+<span class="source-line-no">253</span><span id="line-253">  /**</span>
+<span class="source-line-no">254</span><span id="line-254">   * Retrieve the top-level field definitions that are marked global in this</span>
+<span class="source-line-no">255</span><span id="line-255">   * Metaschema module or in any imported Metaschema module. The resulting</span>
+<span class="source-line-no">256</span><span id="line-256">   * collection is built by adding global definitions from each imported</span>
+<span class="source-line-no">257</span><span id="line-257">   * Metaschema module in order of import, then adding global definitions from the</span>
+<span class="source-line-no">258</span><span id="line-258">   * current Metaschema module. Such a map is built in this way for each imported</span>
+<span class="source-line-no">259</span><span id="line-259">   * Metaschema module in the chain. Values for clashing keys will be replaced in</span>
+<span class="source-line-no">260</span><span id="line-260">   * this order, giving preference to the "closest" definition</span>
+<span class="source-line-no">261</span><span id="line-261">   *</span>
+<span class="source-line-no">262</span><span id="line-262">   * @return the collection of exported field definitions</span>
+<span class="source-line-no">263</span><span id="line-263">   */</span>
+<span class="source-line-no">264</span><span id="line-264">  @NonNull</span>
+<span class="source-line-no">265</span><span id="line-265">  Collection&lt;? extends IFieldDefinition&gt; getExportedFieldDefinitions();</span>
+<span class="source-line-no">266</span><span id="line-266"></span>
+<span class="source-line-no">267</span><span id="line-267">  /**</span>
+<span class="source-line-no">268</span><span id="line-268">   * Retrieves the exported named field definition, if it exists.</span>
+<span class="source-line-no">269</span><span id="line-269">   * &lt;p&gt;</span>
+<span class="source-line-no">270</span><span id="line-270">   * For information about how field definitions are exported see</span>
+<span class="source-line-no">271</span><span id="line-271">   * {@link #getExportedFieldDefinitions()}.</span>
+<span class="source-line-no">272</span><span id="line-272">   *</span>
+<span class="source-line-no">273</span><span id="line-273">   * @param name</span>
+<span class="source-line-no">274</span><span id="line-274">   *          the definition name</span>
+<span class="source-line-no">275</span><span id="line-275">   * @return the field definition, or {@code null} if it doesn't exist.</span>
+<span class="source-line-no">276</span><span id="line-276">   */</span>
+<span class="source-line-no">277</span><span id="line-277">  @Nullable</span>
+<span class="source-line-no">278</span><span id="line-278">  IFieldDefinition getExportedFieldDefinitionByName(@NonNull QName name);</span>
+<span class="source-line-no">279</span><span id="line-279"></span>
+<span class="source-line-no">280</span><span id="line-280">  /**</span>
+<span class="source-line-no">281</span><span id="line-281">   * Retrieve the top-level assembly definitions that are marked global in this</span>
+<span class="source-line-no">282</span><span id="line-282">   * Metaschema module or in any imported Metaschema module. The resulting</span>
+<span class="source-line-no">283</span><span id="line-283">   * collection is built by adding global definitions from each imported</span>
+<span class="source-line-no">284</span><span id="line-284">   * Metaschema module in order of import, then adding global definitions from the</span>
+<span class="source-line-no">285</span><span id="line-285">   * current Metaschema module. This collection is built in this way for each</span>
+<span class="source-line-no">286</span><span id="line-286">   * imported Metaschema module in the chain. Items with duplicate names will be</span>
+<span class="source-line-no">287</span><span id="line-287">   * replaced in this order, giving preference to the "closest" definition</span>
+<span class="source-line-no">288</span><span id="line-288">   *</span>
+<span class="source-line-no">289</span><span id="line-289">   * @return the collection of exported assembly definitions</span>
+<span class="source-line-no">290</span><span id="line-290">   */</span>
+<span class="source-line-no">291</span><span id="line-291">  @NonNull</span>
+<span class="source-line-no">292</span><span id="line-292">  Collection&lt;? extends IAssemblyDefinition&gt; getExportedAssemblyDefinitions();</span>
+<span class="source-line-no">293</span><span id="line-293"></span>
+<span class="source-line-no">294</span><span id="line-294">  /**</span>
+<span class="source-line-no">295</span><span id="line-295">   * Retrieves the exported named assembly definition, if it exists.</span>
+<span class="source-line-no">296</span><span id="line-296">   * &lt;p&gt;</span>
+<span class="source-line-no">297</span><span id="line-297">   * For information about how assembly definitions are exported see</span>
+<span class="source-line-no">298</span><span id="line-298">   * {@link #getExportedAssemblyDefinitions()}.</span>
+<span class="source-line-no">299</span><span id="line-299">   *</span>
+<span class="source-line-no">300</span><span id="line-300">   * @param name</span>
+<span class="source-line-no">301</span><span id="line-301">   *          the definition name</span>
+<span class="source-line-no">302</span><span id="line-302">   * @return the assembly definition, or {@code null} if it doesn't exist.</span>
+<span class="source-line-no">303</span><span id="line-303">   */</span>
+<span class="source-line-no">304</span><span id="line-304">  @Nullable</span>
+<span class="source-line-no">305</span><span id="line-305">  IAssemblyDefinition getExportedAssemblyDefinitionByName(@NonNull QName name);</span>
+<span class="source-line-no">306</span><span id="line-306"></span>
+<span class="source-line-no">307</span><span id="line-307">  /**</span>
+<span class="source-line-no">308</span><span id="line-308">   * Retrieves the top-level assembly definitions that are marked as roots from</span>
+<span class="source-line-no">309</span><span id="line-309">   * the current Metaschema module and any imported Metaschema modules.</span>
+<span class="source-line-no">310</span><span id="line-310">   *</span>
+<span class="source-line-no">311</span><span id="line-311">   * @return a listing of assembly definitions marked as root</span>
+<span class="source-line-no">312</span><span id="line-312">   */</span>
+<span class="source-line-no">313</span><span id="line-313">  @NonNull</span>
+<span class="source-line-no">314</span><span id="line-314">  Collection&lt;? extends IAssemblyDefinition&gt; getExportedRootAssemblyDefinitions();</span>
+<span class="source-line-no">315</span><span id="line-315"></span>
+<span class="source-line-no">316</span><span id="line-316">  /**</span>
+<span class="source-line-no">317</span><span id="line-317">   * Retrieves the exported named root assembly definition, if it exists.</span>
+<span class="source-line-no">318</span><span id="line-318">   * &lt;p&gt;</span>
+<span class="source-line-no">319</span><span id="line-319">   * For information about how assembly definitions are exported see</span>
+<span class="source-line-no">320</span><span id="line-320">   * {@link #getExportedAssemblyDefinitions()}.</span>
+<span class="source-line-no">321</span><span id="line-321">   *</span>
+<span class="source-line-no">322</span><span id="line-322">   * @param name</span>
+<span class="source-line-no">323</span><span id="line-323">   *          the root name</span>
+<span class="source-line-no">324</span><span id="line-324">   * @return the assembly definition, or {@code null} if it doesn't exist.</span>
+<span class="source-line-no">325</span><span id="line-325">   */</span>
+<span class="source-line-no">326</span><span id="line-326">  @Nullable</span>
+<span class="source-line-no">327</span><span id="line-327">  IAssemblyDefinition getExportedRootAssemblyDefinitionByName(QName name);</span>
+<span class="source-line-no">328</span><span id="line-328"></span>
+<span class="source-line-no">329</span><span id="line-329">  /**</span>
+<span class="source-line-no">330</span><span id="line-330">   * Get the mapping of prefix to namespace URI for use in resolving the namespace</span>
+<span class="source-line-no">331</span><span id="line-331">   * of lexical qualified named in Metapath.</span>
+<span class="source-line-no">332</span><span id="line-332">   *</span>
+<span class="source-line-no">333</span><span id="line-333">   * @return the mapping</span>
+<span class="source-line-no">334</span><span id="line-334">   */</span>
+<span class="source-line-no">335</span><span id="line-335">  @NonNull</span>
+<span class="source-line-no">336</span><span id="line-336">  Map&lt;String, String&gt; getNamespaceBindings();</span>
+<span class="source-line-no">337</span><span id="line-337"></span>
+<span class="source-line-no">338</span><span id="line-338">  /**</span>
+<span class="source-line-no">339</span><span id="line-339">   * Used to parse a flag name reference to produce a qualified name.</span>
+<span class="source-line-no">340</span><span id="line-340">   *</span>
+<span class="source-line-no">341</span><span id="line-341">   * @param nameRef</span>
+<span class="source-line-no">342</span><span id="line-342">   *          the name reference</span>
+<span class="source-line-no">343</span><span id="line-343">   * @return the qualified name</span>
+<span class="source-line-no">344</span><span id="line-344">   */</span>
+<span class="source-line-no">345</span><span id="line-345">  @NonNull</span>
+<span class="source-line-no">346</span><span id="line-346">  default QName toFlagQName(@NonNull String nameRef) {</span>
+<span class="source-line-no">347</span><span id="line-347">    return EQNameUtils.parseName(</span>
+<span class="source-line-no">348</span><span id="line-348">        nameRef,</span>
+<span class="source-line-no">349</span><span id="line-349">        getModuleStaticContext().getFlagPrefixResolver());</span>
+<span class="source-line-no">350</span><span id="line-350">  }</span>
+<span class="source-line-no">351</span><span id="line-351"></span>
+<span class="source-line-no">352</span><span id="line-352">  /**</span>
+<span class="source-line-no">353</span><span id="line-353">   * Used to parse a flag name reference to produce a qualified name.</span>
+<span class="source-line-no">354</span><span id="line-354">   *</span>
+<span class="source-line-no">355</span><span id="line-355">   * @param modelNamespace</span>
+<span class="source-line-no">356</span><span id="line-356">   *          the namespace to use or {@code null}</span>
+<span class="source-line-no">357</span><span id="line-357">   * @param nameRef</span>
+<span class="source-line-no">358</span><span id="line-358">   *          the name reference</span>
+<span class="source-line-no">359</span><span id="line-359">   * @return the qualified name</span>
+<span class="source-line-no">360</span><span id="line-360">   */</span>
+<span class="source-line-no">361</span><span id="line-361">  @NonNull</span>
+<span class="source-line-no">362</span><span id="line-362">  default QName toFlagQName(@Nullable String modelNamespace, @NonNull String nameRef) {</span>
+<span class="source-line-no">363</span><span id="line-363">    return modelNamespace == null</span>
+<span class="source-line-no">364</span><span id="line-364">        ? new QName(nameRef)</span>
+<span class="source-line-no">365</span><span id="line-365">        : new QName(modelNamespace, nameRef);</span>
+<span class="source-line-no">366</span><span id="line-366">  }</span>
+<span class="source-line-no">367</span><span id="line-367"></span>
+<span class="source-line-no">368</span><span id="line-368">  /**</span>
+<span class="source-line-no">369</span><span id="line-369">   * Used to parse a model name reference to produce a qualified name.</span>
+<span class="source-line-no">370</span><span id="line-370">   *</span>
+<span class="source-line-no">371</span><span id="line-371">   * @param nameRef</span>
+<span class="source-line-no">372</span><span id="line-372">   *          the name reference</span>
+<span class="source-line-no">373</span><span id="line-373">   * @return the qualified name</span>
+<span class="source-line-no">374</span><span id="line-374">   */</span>
+<span class="source-line-no">375</span><span id="line-375">  @NonNull</span>
+<span class="source-line-no">376</span><span id="line-376">  default QName toModelQName(@NonNull String nameRef) {</span>
+<span class="source-line-no">377</span><span id="line-377">    return EQNameUtils.parseName(</span>
+<span class="source-line-no">378</span><span id="line-378">        nameRef,</span>
+<span class="source-line-no">379</span><span id="line-379">        getModuleStaticContext().getModelPrefixResolver());</span>
+<span class="source-line-no">380</span><span id="line-380">  }</span>
+<span class="source-line-no">381</span><span id="line-381"></span>
+<span class="source-line-no">382</span><span id="line-382">  /**</span>
+<span class="source-line-no">383</span><span id="line-383">   * Used to parse a flag name reference to produce a qualified name.</span>
+<span class="source-line-no">384</span><span id="line-384">   *</span>
+<span class="source-line-no">385</span><span id="line-385">   * @param modelNamespace</span>
+<span class="source-line-no">386</span><span id="line-386">   *          the namespace to use or {@code null}</span>
+<span class="source-line-no">387</span><span id="line-387">   * @param nameRef</span>
+<span class="source-line-no">388</span><span id="line-388">   *          the name reference</span>
+<span class="source-line-no">389</span><span id="line-389">   * @return the qualified name</span>
+<span class="source-line-no">390</span><span id="line-390">   */</span>
+<span class="source-line-no">391</span><span id="line-391">  @NonNull</span>
+<span class="source-line-no">392</span><span id="line-392">  default QName toModelQName(@Nullable String modelNamespace, @NonNull String nameRef) {</span>
+<span class="source-line-no">393</span><span id="line-393">    String namespace = modelNamespace == null ? getXmlNamespace().toASCIIString() : modelNamespace;</span>
+<span class="source-line-no">394</span><span id="line-394">    return new QName(namespace, nameRef);</span>
+<span class="source-line-no">395</span><span id="line-395">  }</span>
+<span class="source-line-no">396</span><span id="line-396"></span>
+<span class="source-line-no">397</span><span id="line-397">  /**</span>
+<span class="source-line-no">398</span><span id="line-398">   * Get the Metapath static context for compiling Metapath expressions that query</span>
+<span class="source-line-no">399</span><span id="line-399">   * instances of this model.</span>
+<span class="source-line-no">400</span><span id="line-400">   *</span>
+<span class="source-line-no">401</span><span id="line-401">   * @return the static context</span>
+<span class="source-line-no">402</span><span id="line-402">   */</span>
+<span class="source-line-no">403</span><span id="line-403">  @NonNull</span>
+<span class="source-line-no">404</span><span id="line-404">  StaticContext getModuleStaticContext();</span>
+<span class="source-line-no">405</span><span id="line-405">}</span>
 
 
 

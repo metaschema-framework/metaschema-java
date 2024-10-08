@@ -40,10 +40,10 @@
 <span class="source-line-no">027</span><span id="line-27"> * document-uri function.</span>
 <span class="source-line-no">028</span><span id="line-28"> */</span>
 <span class="source-line-no">029</span><span id="line-29">public final class FnBaseUri {</span>
-<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">030</span><span id="line-30">  private static final String NAME = "base-uri";</span>
 <span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
 <span class="source-line-no">032</span><span id="line-32">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
-<span class="source-line-no">033</span><span id="line-33">      .name("base-uri")</span>
+<span class="source-line-no">033</span><span id="line-33">      .name(NAME)</span>
 <span class="source-line-no">034</span><span id="line-34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="source-line-no">035</span><span id="line-35">      .deterministic()</span>
 <span class="source-line-no">036</span><span id="line-36">      .contextDependent()</span>
@@ -55,7 +55,7 @@
 <span class="source-line-no">042</span><span id="line-42"></span>
 <span class="source-line-no">043</span><span id="line-43">  @NonNull</span>
 <span class="source-line-no">044</span><span id="line-44">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="source-line-no">045</span><span id="line-45">      .name("base-uri")</span>
+<span class="source-line-no">045</span><span id="line-45">      .name(NAME)</span>
 <span class="source-line-no">046</span><span id="line-46">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="source-line-no">047</span><span id="line-47">      .deterministic()</span>
 <span class="source-line-no">048</span><span id="line-48">      .contextIndependent()</span>

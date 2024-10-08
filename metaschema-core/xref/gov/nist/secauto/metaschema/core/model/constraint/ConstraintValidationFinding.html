@@ -300,8 +300,8 @@
 <a class="jxr_linenumber" name="L292" href="#L292">292</a> 
 <a class="jxr_linenumber" name="L293" href="#L293">293</a>       List&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt; subjects = <strong class="jxr_keyword">this</strong>.subjects == <strong class="jxr_keyword">null</strong> ? CollectionUtil.emptyList() : <strong class="jxr_keyword">this</strong>.subjects;
 <a class="jxr_linenumber" name="L294" href="#L294">294</a> 
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>       assert subjects != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>       assert kind != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>       assert subjects != <strong class="jxr_keyword">null</strong> : <span class="jxr_string">"subjects must not be null"</span>;
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>       assert kind != <strong class="jxr_keyword">null</strong> : <span class="jxr_string">"kind must not be null"</span>;
 <a class="jxr_linenumber" name="L297" href="#L297">297</a> 
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="ConstraintValidationFinding" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationFinding.html#ConstraintValidationFinding">ConstraintValidationFinding</a>(
 <a class="jxr_linenumber" name="L299" href="#L299">299</a>           constraints,
@@ -317,6 +317,6 @@
 <a class="jxr_linenumber" name="L309" href="#L309">309</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+<div id="footer">© 2024</div>
 </body>
 </html>

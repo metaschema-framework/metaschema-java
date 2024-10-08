@@ -182,11 +182,10 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
 <span class="fc" id="L182">    return ObjectUtils.notNull(getValue().stream());</span>
   }
 
-  @SuppressWarnings(&quot;null&quot;)
   @Override
   default Stream&lt;? extends IItem&gt; flatten() {
     // TODO: Is a safe stream needed here?
-<span class="nc" id="L189">    return safeStream();</span>
+<span class="nc" id="L188">    return safeStream();</span>
   }
 
   /**
@@ -199,41 +198,41 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;ITEM_TYPE extends IItem&gt; Collector&lt;ITEM_TYPE, ?, ISequence&lt;ITEM_TYPE&gt;&gt; toSequence() {
-<span class="fc" id="L202">    return new Collector&lt;ITEM_TYPE, List&lt;ITEM_TYPE&gt;, ISequence&lt;ITEM_TYPE&gt;&gt;() {</span>
+<span class="fc" id="L201">    return new Collector&lt;ITEM_TYPE, List&lt;ITEM_TYPE&gt;, ISequence&lt;ITEM_TYPE&gt;&gt;() {</span>
 
       @Override
       public Supplier&lt;List&lt;ITEM_TYPE&gt;&gt; supplier() {
-<span class="fc" id="L206">        return ArrayList::new;</span>
+<span class="fc" id="L205">        return ArrayList::new;</span>
       }
 
       @Override
       public BiConsumer&lt;List&lt;ITEM_TYPE&gt;, ITEM_TYPE&gt; accumulator() {
-<span class="fc" id="L211">        return List::add;</span>
+<span class="fc" id="L210">        return List::add;</span>
       }
 
       @Override
       public BinaryOperator&lt;List&lt;ITEM_TYPE&gt;&gt; combiner() {
-<span class="fc" id="L216">        return (list1, list2) -&gt; {</span>
-<span class="nc" id="L217">          list1.addAll(list2);</span>
-<span class="nc" id="L218">          return list1;</span>
+<span class="fc" id="L215">        return (list1, list2) -&gt; {</span>
+<span class="nc" id="L216">          list1.addAll(list2);</span>
+<span class="nc" id="L217">          return list1;</span>
         };
       }
 
       @Override
       public Function&lt;List&lt;ITEM_TYPE&gt;, ISequence&lt;ITEM_TYPE&gt;&gt; finisher() {
-<span class="fc" id="L224">        return list -&gt; ofCollection(ObjectUtils.notNull(list));</span>
+<span class="fc" id="L223">        return list -&gt; ofCollection(ObjectUtils.notNull(list));</span>
       }
 
       @Override
       public Set&lt;Characteristics&gt; characteristics() {
-<span class="fc" id="L229">        return Collections.emptySet();</span>
+<span class="fc" id="L228">        return Collections.emptySet();</span>
       }
     };
   }
 
   @Override
   default ISequence&lt;ITEM&gt; asSequence() {
-<span class="fc" id="L236">    return this;</span>
+<span class="fc" id="L235">    return this;</span>
   }
 
   /**
@@ -252,9 +251,9 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
   static &lt;T extends R, R extends IItem&gt; ISequence&lt;R&gt; map(
       @NonNull Function&lt;T, R&gt; mapFunction,
       @NonNull ISequence&lt;T&gt; seq) {
-<span class="nc" id="L255">    return seq.safeStream()</span>
-<span class="nc" id="L256">        .map(mapFunction::apply)</span>
-<span class="nc" id="L257">        .collect(toSequence());</span>
+<span class="nc" id="L254">    return seq.safeStream()</span>
+<span class="nc" id="L255">        .map(mapFunction::apply)</span>
+<span class="nc" id="L256">        .collect(toSequence());</span>
   }
 
   /**
@@ -270,14 +269,14 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
   static &lt;ITEM_TYPE extends IItem&gt; ISequence&lt;ITEM_TYPE&gt; ofCollection( // NOPMD - intentional
       @NonNull List&lt;ITEM_TYPE&gt; items) {
     ISequence&lt;ITEM_TYPE&gt; retval;
-<span class="fc bfc" id="L273" title="All 2 branches covered.">    if (items.isEmpty()) {</span>
-<span class="fc" id="L274">      retval = empty();</span>
-<span class="fc bfc" id="L275" title="All 2 branches covered.">    } else if (items.size() == 1) {</span>
-<span class="fc" id="L276">      retval = new SingletonSequence&lt;&gt;(ObjectUtils.notNull(items.iterator().next()));</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">    if (items.isEmpty()) {</span>
+<span class="fc" id="L273">      retval = empty();</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">    } else if (items.size() == 1) {</span>
+<span class="fc" id="L275">      retval = new SingletonSequence&lt;&gt;(ObjectUtils.notNull(items.iterator().next()));</span>
     } else {
-<span class="fc" id="L278">      retval = new SequenceN&lt;&gt;(items);</span>
+<span class="fc" id="L277">      retval = new SequenceN&lt;&gt;(items);</span>
     }
-<span class="fc" id="L280">    return retval;</span>
+<span class="fc" id="L279">    return retval;</span>
   }
 
   /**
@@ -294,7 +293,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of( // NOPMD - intentional
       @Nullable T item) {
-<span class="fc bfc" id="L297" title="All 2 branches covered.">    return item == null ? empty() : new SingletonSequence&lt;&gt;(item);</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">    return item == null ? empty() : new SingletonSequence&lt;&gt;(item);</span>
   }
 
   /**
@@ -309,7 +308,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
   // TODO: remove null check on callers
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(@NonNull Stream&lt;T&gt; items) {
-<span class="fc" id="L312">    return new StreamSequence&lt;&gt;(items);</span>
+<span class="fc" id="L311">    return new StreamSequence&lt;&gt;(items);</span>
   }
 
   /**
@@ -321,7 +320,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of() {
-<span class="fc" id="L324">    return empty();</span>
+<span class="fc" id="L323">    return empty();</span>
   }
 
   /**
@@ -339,7 +338,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2) {
-<span class="fc" id="L342">    return new SequenceN&lt;&gt;(e1, e2);</span>
+<span class="fc" id="L341">    return new SequenceN&lt;&gt;(e1, e2);</span>
   }
 
   /**
@@ -359,7 +358,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2, T e3) {
-<span class="fc" id="L362">    return new SequenceN&lt;&gt;(e1, e2, e3);</span>
+<span class="fc" id="L361">    return new SequenceN&lt;&gt;(e1, e2, e3);</span>
   }
 
   /**
@@ -381,7 +380,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2, T e3, T e4) {
-<span class="fc" id="L384">    return new SequenceN&lt;&gt;(e1, e2, e3, e4);</span>
+<span class="fc" id="L383">    return new SequenceN&lt;&gt;(e1, e2, e3, e4);</span>
   }
 
   /**
@@ -405,7 +404,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2, T e3, T e4, T e5) {
-<span class="nc" id="L408">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5);</span>
+<span class="nc" id="L407">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5);</span>
   }
 
   /**
@@ -431,7 +430,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2, T e3, T e4, T e5, T e6) {
-<span class="nc" id="L434">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6);</span>
+<span class="nc" id="L433">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6);</span>
   }
 
   /**
@@ -459,7 +458,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2, T e3, T e4, T e5, T e6, T e7) {
-<span class="nc" id="L462">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7);</span>
+<span class="nc" id="L461">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7);</span>
   }
 
   /**
@@ -489,7 +488,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8) {
-<span class="nc" id="L492">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8);</span>
+<span class="nc" id="L491">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8);</span>
   }
 
   /**
@@ -521,7 +520,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9) {
-<span class="nc" id="L524">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8, e9);</span>
+<span class="nc" id="L523">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8, e9);</span>
   }
 
   /**
@@ -555,7 +554,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    */
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10) {
-<span class="nc" id="L558">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);</span>
+<span class="nc" id="L557">    return new SequenceN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);</span>
   }
 
   /**
@@ -572,7 +571,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
   @SafeVarargs
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; of(@NonNull T... items) {
-<span class="fc bfc" id="L575" title="All 2 branches covered.">    return items.length == 0 ? empty() : new SequenceN&lt;&gt;(items);</span>
+<span class="fc bfc" id="L574" title="All 2 branches covered.">    return items.length == 0 ? empty() : new SequenceN&lt;&gt;(items);</span>
   }
 
   /**
@@ -595,11 +594,11 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
   @SuppressWarnings(&quot;unchecked&quot;)
   @NonNull
   static &lt;T extends IItem&gt; ISequence&lt;T&gt; copyOf(Collection&lt;? extends T&gt; collection) {
-<span class="nc bnc" id="L598" title="All 2 branches missed.">    return collection instanceof IArrayItem</span>
-<span class="nc" id="L599">        ? (ISequence&lt;T&gt;) collection</span>
-<span class="nc bnc" id="L600" title="All 2 branches missed.">        : collection.isEmpty()</span>
-<span class="nc" id="L601">            ? empty()</span>
-<span class="nc" id="L602">            : new SequenceN&lt;&gt;(new ArrayList&lt;&gt;(collection));</span>
+<span class="nc bnc" id="L597" title="All 2 branches missed.">    return collection instanceof IArrayItem</span>
+<span class="nc" id="L598">        ? (ISequence&lt;T&gt;) collection</span>
+<span class="nc bnc" id="L599" title="All 2 branches missed.">        : collection.isEmpty()</span>
+<span class="nc" id="L600">            ? empty()</span>
+<span class="nc" id="L601">            : new SequenceN&lt;&gt;(new ArrayList&lt;&gt;(collection));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

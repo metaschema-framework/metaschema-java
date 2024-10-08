@@ -292,8 +292,8 @@ public class ConstraintValidationFinding implements IValidationFinding { // NOPM
 
 <span class="pc bpc" id="L293" title="1 of 2 branches missed.">      List&lt;? extends INodeItem&gt; subjects = this.subjects == null ? CollectionUtil.emptyList() : this.subjects;</span>
 
-<span class="pc bpc" id="L295" title="1 of 2 branches missed.">      assert subjects != null;</span>
-<span class="pc bpc" id="L296" title="1 of 2 branches missed.">      assert kind != null;</span>
+<span class="pc bpc" id="L295" title="1 of 2 branches missed.">      assert subjects != null : &quot;subjects must not be null&quot;;</span>
+<span class="pc bpc" id="L296" title="1 of 2 branches missed.">      assert kind != null : &quot;kind must not be null&quot;;</span>
 
 <span class="fc" id="L298">      return new ConstraintValidationFinding(</span>
           constraints,

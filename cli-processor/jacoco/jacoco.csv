@@ -9,8 +9,8 @@ Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,InvalidArgume
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,ExitCode,13,75,0,0,2,14,2,4,2,4
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,MessageExitStatus,53,0,6,0,13,0,6,0,3,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor.command,CommandService,40,0,2,0,11,0,7,0,6,0
-Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor.command,AbstractCommandExecutor,21,0,0,0,7,0,4,0,4,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor.command,ICommandExecutor.new ICommandExecutor() {...},20,0,0,0,2,0,2,0,2,0
+Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor.command,AbstractCommandExecutor,21,0,0,0,7,0,4,0,4,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor.command,AbstractParentCommand,71,0,2,0,20,0,8,0,7,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor.command,ICommandExecutor,7,0,0,0,1,0,1,0,1,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor.command,ICommand,18,0,0,0,7,0,6,0,6,0

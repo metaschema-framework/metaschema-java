@@ -37,53 +37,54 @@
 <span class="source-line-no">024</span><span id="line-24">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">025</span><span id="line-25"></span>
 <span class="source-line-no">026</span><span id="line-26">public final class MapKeys {</span>
-<span class="source-line-no">027</span><span id="line-27">  @NonNull</span>
-<span class="source-line-no">028</span><span id="line-28">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">029</span><span id="line-29">      .name("keys")</span>
-<span class="source-line-no">030</span><span id="line-30">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="source-line-no">031</span><span id="line-31">      .deterministic()</span>
-<span class="source-line-no">032</span><span id="line-32">      .contextIndependent()</span>
-<span class="source-line-no">033</span><span id="line-33">      .focusIndependent()</span>
-<span class="source-line-no">034</span><span id="line-34">      .argument(IArgument.builder()</span>
-<span class="source-line-no">035</span><span id="line-35">          .name("map")</span>
-<span class="source-line-no">036</span><span id="line-36">          .type(IMapItem.class)</span>
-<span class="source-line-no">037</span><span id="line-37">          .one()</span>
-<span class="source-line-no">038</span><span id="line-38">          .build())</span>
-<span class="source-line-no">039</span><span id="line-39">      .returnType(IAnyAtomicItem.class)</span>
-<span class="source-line-no">040</span><span id="line-40">      .returnZeroOrMore()</span>
-<span class="source-line-no">041</span><span id="line-41">      .functionHandler(MapKeys::execute)</span>
-<span class="source-line-no">042</span><span id="line-42">      .build();</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  private MapKeys() {</span>
-<span class="source-line-no">045</span><span id="line-45">    // disable construction</span>
-<span class="source-line-no">046</span><span id="line-46">  }</span>
-<span class="source-line-no">047</span><span id="line-47"></span>
-<span class="source-line-no">048</span><span id="line-48">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
-<span class="source-line-no">050</span><span id="line-50">  private static ISequence&lt;IAnyAtomicItem&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">051</span><span id="line-51">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">052</span><span id="line-52">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">053</span><span id="line-53">      IItem focus) {</span>
-<span class="source-line-no">054</span><span id="line-54">    IMapItem&lt;?&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">    return ISequence.of(keys(map));</span>
-<span class="source-line-no">057</span><span id="line-57">  }</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">  /**</span>
-<span class="source-line-no">060</span><span id="line-60">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">061</span><span id="line-61">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-keys"&gt;map:keys&lt;/a&gt;.</span>
-<span class="source-line-no">062</span><span id="line-62">   *</span>
-<span class="source-line-no">063</span><span id="line-63">   * @param map</span>
-<span class="source-line-no">064</span><span id="line-64">   *          the map to get the keys for</span>
-<span class="source-line-no">065</span><span id="line-65">   * @return a stream of map keys</span>
-<span class="source-line-no">066</span><span id="line-66">   */</span>
-<span class="source-line-no">067</span><span id="line-67">  @SuppressWarnings("null")</span>
-<span class="source-line-no">068</span><span id="line-68">  @NonNull</span>
-<span class="source-line-no">069</span><span id="line-69">  public static Stream&lt;IAnyAtomicItem&gt; keys(@NonNull Map&lt;IMapKey, ?&gt; map) {</span>
-<span class="source-line-no">070</span><span id="line-70">    return map.keySet().stream()</span>
-<span class="source-line-no">071</span><span id="line-71">        .map(IMapKey::getKey);</span>
-<span class="source-line-no">072</span><span id="line-72">  }</span>
-<span class="source-line-no">073</span><span id="line-73">}</span>
+<span class="source-line-no">027</span><span id="line-27">  private static final String NAME = "keys";</span>
+<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
+<span class="source-line-no">029</span><span id="line-29">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">030</span><span id="line-30">      .name(NAME)</span>
+<span class="source-line-no">031</span><span id="line-31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="source-line-no">032</span><span id="line-32">      .deterministic()</span>
+<span class="source-line-no">033</span><span id="line-33">      .contextIndependent()</span>
+<span class="source-line-no">034</span><span id="line-34">      .focusIndependent()</span>
+<span class="source-line-no">035</span><span id="line-35">      .argument(IArgument.builder()</span>
+<span class="source-line-no">036</span><span id="line-36">          .name("map")</span>
+<span class="source-line-no">037</span><span id="line-37">          .type(IMapItem.class)</span>
+<span class="source-line-no">038</span><span id="line-38">          .one()</span>
+<span class="source-line-no">039</span><span id="line-39">          .build())</span>
+<span class="source-line-no">040</span><span id="line-40">      .returnType(IAnyAtomicItem.class)</span>
+<span class="source-line-no">041</span><span id="line-41">      .returnZeroOrMore()</span>
+<span class="source-line-no">042</span><span id="line-42">      .functionHandler(MapKeys::execute)</span>
+<span class="source-line-no">043</span><span id="line-43">      .build();</span>
+<span class="source-line-no">044</span><span id="line-44"></span>
+<span class="source-line-no">045</span><span id="line-45">  private MapKeys() {</span>
+<span class="source-line-no">046</span><span id="line-46">    // disable construction</span>
+<span class="source-line-no">047</span><span id="line-47">  }</span>
+<span class="source-line-no">048</span><span id="line-48"></span>
+<span class="source-line-no">049</span><span id="line-49">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
+<span class="source-line-no">051</span><span id="line-51">  private static ISequence&lt;IAnyAtomicItem&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">052</span><span id="line-52">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">053</span><span id="line-53">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">054</span><span id="line-54">      IItem focus) {</span>
+<span class="source-line-no">055</span><span id="line-55">    IMapItem&lt;?&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">    return ISequence.of(keys(map));</span>
+<span class="source-line-no">058</span><span id="line-58">  }</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  /**</span>
+<span class="source-line-no">061</span><span id="line-61">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">062</span><span id="line-62">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-keys"&gt;map:keys&lt;/a&gt;.</span>
+<span class="source-line-no">063</span><span id="line-63">   *</span>
+<span class="source-line-no">064</span><span id="line-64">   * @param map</span>
+<span class="source-line-no">065</span><span id="line-65">   *          the map to get the keys for</span>
+<span class="source-line-no">066</span><span id="line-66">   * @return a stream of map keys</span>
+<span class="source-line-no">067</span><span id="line-67">   */</span>
+<span class="source-line-no">068</span><span id="line-68">  @SuppressWarnings("null")</span>
+<span class="source-line-no">069</span><span id="line-69">  @NonNull</span>
+<span class="source-line-no">070</span><span id="line-70">  public static Stream&lt;IAnyAtomicItem&gt; keys(@NonNull Map&lt;IMapKey, ?&gt; map) {</span>
+<span class="source-line-no">071</span><span id="line-71">    return map.keySet().stream()</span>
+<span class="source-line-no">072</span><span id="line-72">        .map(IMapKey::getKey);</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74">}</span>
 
 
 

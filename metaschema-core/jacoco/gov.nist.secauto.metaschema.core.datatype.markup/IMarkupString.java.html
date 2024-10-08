@@ -114,6 +114,14 @@ public interface IMarkupString&lt;TYPE extends IMarkupString&lt;TYPE&gt;&gt;
   String toMarkdown(@NonNull Formatter formatter);
 
   /**
+   * Converts the markup content to plain text.
+   *
+   * @return the plain text representation of the markup content
+   */
+  @NonNull
+  String toText();
+
+  /**
    * Retrieve all nodes contained within this markup text as a stream.
    *
    * @return a depth first stream
@@ -128,7 +136,7 @@ public interface IMarkupString&lt;TYPE extends IMarkupString&lt;TYPE&gt;&gt;
    */
   @NonNull
   default List&lt;InsertAnchorNode&gt; getInserts() {
-<span class="nc" id="L131">    return getInserts(insert -&gt; true);</span>
+<span class="nc" id="L139">    return getInserts(insert -&gt; true);</span>
   }
 
   /**

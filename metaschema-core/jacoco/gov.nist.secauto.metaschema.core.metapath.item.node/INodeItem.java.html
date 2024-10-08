@@ -280,6 +280,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   IResourceLocation getLocation();
 
   /**
+   * Get the string value of the node.
+   *
+   * @return the string value of the node or an empty string if it has no value.
+   */
+  @NonNull
+  String stringValue();
+
+  /**
    * Get the static context to use to query this node item.
    *
    * @return the static context
@@ -289,7 +297,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
   @Override
   default void accept(IItemVisitor visitor) {
-<span class="nc" id="L292">    visitor.visit(this);</span>
-<span class="nc" id="L293">  }</span>
+<span class="nc" id="L300">    visitor.visit(this);</span>
+<span class="nc" id="L301">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

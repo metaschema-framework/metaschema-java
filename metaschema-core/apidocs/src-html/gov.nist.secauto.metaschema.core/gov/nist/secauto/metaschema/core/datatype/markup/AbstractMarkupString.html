@@ -25,271 +25,277 @@
 <span class="source-line-no">012</span><span id="line-12">import com.vladsch.flexmark.parser.Parser;</span>
 <span class="source-line-no">013</span><span id="line-13">import com.vladsch.flexmark.util.ast.Document;</span>
 <span class="source-line-no">014</span><span id="line-14">import com.vladsch.flexmark.util.ast.Node;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.AstCollectingVisitor;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupVisitor;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupWriter;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension;</span>
-<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;</span>
-<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupVisitor;</span>
-<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupXmlEventWriter;</span>
-<span class="source-line-no">024</span><span id="line-24">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupXmlStreamWriter;</span>
-<span class="source-line-no">025</span><span id="line-25">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">import org.apache.logging.log4j.LogManager;</span>
-<span class="source-line-no">028</span><span id="line-28">import org.apache.logging.log4j.Logger;</span>
-<span class="source-line-no">029</span><span id="line-29">import org.codehaus.stax2.XMLOutputFactory2;</span>
-<span class="source-line-no">030</span><span id="line-30">import org.codehaus.stax2.XMLStreamWriter2;</span>
-<span class="source-line-no">031</span><span id="line-31">import org.codehaus.stax2.evt.XMLEventFactory2;</span>
-<span class="source-line-no">032</span><span id="line-32">import org.jsoup.Jsoup;</span>
-<span class="source-line-no">033</span><span id="line-33">import org.jsoup.nodes.TextNode;</span>
-<span class="source-line-no">034</span><span id="line-34">import org.jsoup.select.NodeTraversor;</span>
-<span class="source-line-no">035</span><span id="line-35">import org.jsoup.select.NodeVisitor;</span>
-<span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37">import java.io.ByteArrayOutputStream;</span>
-<span class="source-line-no">038</span><span id="line-38">import java.io.IOException;</span>
-<span class="source-line-no">039</span><span id="line-39">import java.nio.charset.StandardCharsets;</span>
-<span class="source-line-no">040</span><span id="line-40">import java.util.List;</span>
-<span class="source-line-no">041</span><span id="line-41">import java.util.function.Predicate;</span>
-<span class="source-line-no">042</span><span id="line-42">import java.util.regex.Pattern;</span>
-<span class="source-line-no">043</span><span id="line-43">import java.util.stream.Stream;</span>
-<span class="source-line-no">044</span><span id="line-44">import java.util.stream.StreamSupport;</span>
-<span class="source-line-no">045</span><span id="line-45"></span>
-<span class="source-line-no">046</span><span id="line-46">import javax.xml.stream.XMLEventWriter;</span>
-<span class="source-line-no">047</span><span id="line-47">import javax.xml.stream.XMLOutputFactory;</span>
-<span class="source-line-no">048</span><span id="line-48">import javax.xml.stream.XMLStreamException;</span>
-<span class="source-line-no">049</span><span id="line-49">import javax.xml.stream.XMLStreamWriter;</span>
-<span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">052</span><span id="line-52">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
-<span class="source-line-no">055</span><span id="line-55">public abstract class AbstractMarkupString&lt;TYPE extends AbstractMarkupString&lt;TYPE&gt;&gt;</span>
-<span class="source-line-no">056</span><span id="line-56">    implements IMarkupString&lt;TYPE&gt; {</span>
-<span class="source-line-no">057</span><span id="line-57">  private static final Logger LOGGER = LogManager.getLogger(FlexmarkFactory.class);</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">  private static final Pattern QUOTE_TAG_REPLACEMENT_PATTERN</span>
-<span class="source-line-no">060</span><span id="line-60">      = Pattern.compile("&lt;/?q&gt;");</span>
-<span class="source-line-no">061</span><span id="line-61"></span>
-<span class="source-line-no">062</span><span id="line-62">  //</span>
-<span class="source-line-no">063</span><span id="line-63">  // @NonNull</span>
-<span class="source-line-no">064</span><span id="line-64">  // private static final String DEFAULT_HTML_NS = "http://www.w3.org/1999/xhtml";</span>
-<span class="source-line-no">065</span><span id="line-65">  // @NonNull</span>
-<span class="source-line-no">066</span><span id="line-66">  // private static final String DEFAULT_HTML_PREFIX = "";</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">  @NonNull</span>
-<span class="source-line-no">069</span><span id="line-69">  private final Document document;</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  /**</span>
-<span class="source-line-no">072</span><span id="line-72">   * Construct a new markup string based on the provided flexmark AST graph.</span>
-<span class="source-line-no">073</span><span id="line-73">   *</span>
-<span class="source-line-no">074</span><span id="line-74">   * @param document</span>
-<span class="source-line-no">075</span><span id="line-75">   *          the AST graph representing Markdown text</span>
-<span class="source-line-no">076</span><span id="line-76">   */</span>
-<span class="source-line-no">077</span><span id="line-77">  protected AbstractMarkupString(@NonNull Document document) {</span>
-<span class="source-line-no">078</span><span id="line-78">    this.document = document;</span>
-<span class="source-line-no">079</span><span id="line-79">  }</span>
-<span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">  @Override</span>
-<span class="source-line-no">082</span><span id="line-82">  public Document getDocument() {</span>
-<span class="source-line-no">083</span><span id="line-83">    return document;</span>
-<span class="source-line-no">084</span><span id="line-84">  }</span>
-<span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">  @Override</span>
-<span class="source-line-no">087</span><span id="line-87">  public boolean isEmpty() {</span>
-<span class="source-line-no">088</span><span id="line-88">    return getDocument().getFirstChild() == null;</span>
-<span class="source-line-no">089</span><span id="line-89">  }</span>
-<span class="source-line-no">090</span><span id="line-90"></span>
-<span class="source-line-no">091</span><span id="line-91">  /**</span>
-<span class="source-line-no">092</span><span id="line-92">   * Parse HTML-based text into markdown as a flexmark AST graph.</span>
-<span class="source-line-no">093</span><span id="line-93">   * &lt;p&gt;</span>
-<span class="source-line-no">094</span><span id="line-94">   * This method uses a two-step approach that first translates the HTML into</span>
-<span class="source-line-no">095</span><span id="line-95">   * markdown, and then parses the markdown into an AST graph.</span>
-<span class="source-line-no">096</span><span id="line-96">   *</span>
-<span class="source-line-no">097</span><span id="line-97">   * @param html</span>
-<span class="source-line-no">098</span><span id="line-98">   *          the HTML text to parse</span>
-<span class="source-line-no">099</span><span id="line-99">   * @param htmlParser</span>
-<span class="source-line-no">100</span><span id="line-100">   *          the HTML parser used to produce markdown</span>
-<span class="source-line-no">101</span><span id="line-101">   * @param markdownParser</span>
-<span class="source-line-no">102</span><span id="line-102">   *          the markdown parser</span>
-<span class="source-line-no">103</span><span id="line-103">   * @return the markdown AST graph</span>
-<span class="source-line-no">104</span><span id="line-104">   */</span>
-<span class="source-line-no">105</span><span id="line-105">  @NonNull</span>
-<span class="source-line-no">106</span><span id="line-106">  protected static Document parseHtml(@NonNull String html, @NonNull FlexmarkHtmlConverter htmlParser,</span>
-<span class="source-line-no">107</span><span id="line-107">      @NonNull Parser markdownParser) {</span>
-<span class="source-line-no">108</span><span id="line-108">    org.jsoup.nodes.Document document = Jsoup.parse(html);</span>
-<span class="source-line-no">109</span><span id="line-109"></span>
-<span class="source-line-no">110</span><span id="line-110">    // Fix for usnistgov/liboscal-java#5</span>
-<span class="source-line-no">111</span><span id="line-111">    // Caused by not stripping out extra newlines inside HTML tags</span>
-<span class="source-line-no">112</span><span id="line-112">    NodeTraversor.traverse(new NodeVisitor() {</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">      @Override</span>
-<span class="source-line-no">115</span><span id="line-115">      public void head(org.jsoup.nodes.Node node, int depth) {</span>
-<span class="source-line-no">116</span><span id="line-116">        if (node instanceof TextNode) {</span>
-<span class="source-line-no">117</span><span id="line-117">          TextNode textNode = (TextNode) node;</span>
-<span class="source-line-no">118</span><span id="line-118"></span>
-<span class="source-line-no">119</span><span id="line-119">          org.jsoup.nodes.Node parent = textNode.parent();</span>
-<span class="source-line-no">120</span><span id="line-120"></span>
-<span class="source-line-no">121</span><span id="line-121">          if (!isTag(parent, "code") || !isTag(parent.parent(), "pre")) {</span>
-<span class="source-line-no">122</span><span id="line-122">            node.replaceWith(new TextNode(textNode.text()));</span>
-<span class="source-line-no">123</span><span id="line-123">          }</span>
-<span class="source-line-no">124</span><span id="line-124">        }</span>
-<span class="source-line-no">125</span><span id="line-125">      }</span>
-<span class="source-line-no">126</span><span id="line-126"></span>
-<span class="source-line-no">127</span><span id="line-127">      private boolean isTag(@Nullable org.jsoup.nodes.Node node, @NonNull String tagName) {</span>
-<span class="source-line-no">128</span><span id="line-128">        return node != null &amp;&amp; tagName.equals(node.normalName());</span>
-<span class="source-line-no">129</span><span id="line-129">      }</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">    }, document);</span>
-<span class="source-line-no">132</span><span id="line-132"></span>
-<span class="source-line-no">133</span><span id="line-133">    String markdown = htmlParser.convert(document);</span>
-<span class="source-line-no">134</span><span id="line-134">    assert markdown != null;</span>
-<span class="source-line-no">135</span><span id="line-135">    if (LOGGER.isDebugEnabled()) {</span>
-<span class="source-line-no">136</span><span id="line-136">      LOGGER.debug("html-&gt;markdown: {}", markdown);</span>
-<span class="source-line-no">137</span><span id="line-137">    }</span>
-<span class="source-line-no">138</span><span id="line-138">    return parseMarkdown(markdown, markdownParser);</span>
-<span class="source-line-no">139</span><span id="line-139">  }</span>
-<span class="source-line-no">140</span><span id="line-140"></span>
-<span class="source-line-no">141</span><span id="line-141">  /**</span>
-<span class="source-line-no">142</span><span id="line-142">   * Parse markdown-based text into a flexmark AST graph.</span>
-<span class="source-line-no">143</span><span id="line-143">   *</span>
-<span class="source-line-no">144</span><span id="line-144">   * @param markdown</span>
-<span class="source-line-no">145</span><span id="line-145">   *          the markdown text to parse</span>
-<span class="source-line-no">146</span><span id="line-146">   * @param parser</span>
-<span class="source-line-no">147</span><span id="line-147">   *          the markdown parser</span>
-<span class="source-line-no">148</span><span id="line-148">   * @return the markdown AST graph</span>
-<span class="source-line-no">149</span><span id="line-149">   */</span>
-<span class="source-line-no">150</span><span id="line-150">  @SuppressWarnings("null")</span>
-<span class="source-line-no">151</span><span id="line-151">  @NonNull</span>
-<span class="source-line-no">152</span><span id="line-152">  protected static Document parseMarkdown(@NonNull String markdown, @NonNull Parser parser) {</span>
-<span class="source-line-no">153</span><span id="line-153">    return parser.parse(markdown);</span>
-<span class="source-line-no">154</span><span id="line-154">  }</span>
-<span class="source-line-no">155</span><span id="line-155"></span>
-<span class="source-line-no">156</span><span id="line-156">  @Override</span>
-<span class="source-line-no">157</span><span id="line-157">  public String toXHtml(@NonNull String namespace) throws XMLStreamException, IOException {</span>
-<span class="source-line-no">158</span><span id="line-158"></span>
-<span class="source-line-no">159</span><span id="line-159">    String retval;</span>
-<span class="source-line-no">160</span><span id="line-160"></span>
-<span class="source-line-no">161</span><span id="line-161">    Document document = getDocument();</span>
-<span class="source-line-no">162</span><span id="line-162">    if (document.hasChildren()) {</span>
-<span class="source-line-no">163</span><span id="line-163"></span>
-<span class="source-line-no">164</span><span id="line-164">      XMLOutputFactory2 factory = (XMLOutputFactory2) XMLOutputFactory.newInstance();</span>
-<span class="source-line-no">165</span><span id="line-165">      assert factory instanceof WstxOutputFactory;</span>
-<span class="source-line-no">166</span><span id="line-166">      factory.setProperty(WstxOutputProperties.P_OUTPUT_VALIDATE_STRUCTURE, false);</span>
-<span class="source-line-no">167</span><span id="line-167">      try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {</span>
-<span class="source-line-no">168</span><span id="line-168">        XMLStreamWriter2 xmlStreamWriter = (XMLStreamWriter2) factory.createXMLStreamWriter(os);</span>
-<span class="source-line-no">169</span><span id="line-169"></span>
-<span class="source-line-no">170</span><span id="line-170">        writeXHtml(namespace, ObjectUtils.notNull(xmlStreamWriter));</span>
-<span class="source-line-no">171</span><span id="line-171"></span>
-<span class="source-line-no">172</span><span id="line-172">        xmlStreamWriter.flush();</span>
-<span class="source-line-no">173</span><span id="line-173">        xmlStreamWriter.close();</span>
-<span class="source-line-no">174</span><span id="line-174">        os.flush();</span>
-<span class="source-line-no">175</span><span id="line-175">        retval = ObjectUtils.notNull(os.toString(StandardCharsets.UTF_8));</span>
-<span class="source-line-no">176</span><span id="line-176">      }</span>
-<span class="source-line-no">177</span><span id="line-177">    } else {</span>
-<span class="source-line-no">178</span><span id="line-178">      retval = "";</span>
-<span class="source-line-no">179</span><span id="line-179">    }</span>
-<span class="source-line-no">180</span><span id="line-180">    return retval;</span>
-<span class="source-line-no">181</span><span id="line-181">  }</span>
-<span class="source-line-no">182</span><span id="line-182"></span>
-<span class="source-line-no">183</span><span id="line-183">  @Override</span>
-<span class="source-line-no">184</span><span id="line-184">  public String toHtml() {</span>
-<span class="source-line-no">185</span><span id="line-185">    // String html;</span>
-<span class="source-line-no">186</span><span id="line-186">    // try {</span>
-<span class="source-line-no">187</span><span id="line-187">    // html = toXHtml("");</span>
-<span class="source-line-no">188</span><span id="line-188">    // } catch(RuntimeException ex) {</span>
-<span class="source-line-no">189</span><span id="line-189">    // throw ex;</span>
-<span class="source-line-no">190</span><span id="line-190">    // } catch (Throwable ex) {</span>
-<span class="source-line-no">191</span><span id="line-191">    // throw new RuntimeException(ex);</span>
-<span class="source-line-no">192</span><span id="line-192">    // }</span>
-<span class="source-line-no">193</span><span id="line-193">    // return QUOTE_TAG_REPLACEMENT_PATTERN.matcher(html)</span>
-<span class="source-line-no">194</span><span id="line-194">    // .replaceAll("&amp;quot;");</span>
-<span class="source-line-no">195</span><span id="line-195">    String html = getFlexmarkFactory().getHtmlRenderer().render(getDocument());</span>
-<span class="source-line-no">196</span><span id="line-196">    return ObjectUtils.notNull(QUOTE_TAG_REPLACEMENT_PATTERN.matcher(html)</span>
-<span class="source-line-no">197</span><span id="line-197">        .replaceAll("&amp;quot;"));</span>
-<span class="source-line-no">198</span><span id="line-198">  }</span>
-<span class="source-line-no">199</span><span id="line-199"></span>
-<span class="source-line-no">200</span><span id="line-200">  @Override</span>
-<span class="source-line-no">201</span><span id="line-201">  public String toMarkdown() {</span>
-<span class="source-line-no">202</span><span id="line-202">    return toMarkdown(getFlexmarkFactory().getFormatter());</span>
-<span class="source-line-no">203</span><span id="line-203">  }</span>
-<span class="source-line-no">204</span><span id="line-204"></span>
-<span class="source-line-no">205</span><span id="line-205">  @Override</span>
-<span class="source-line-no">206</span><span id="line-206">  public String toMarkdown(Formatter formatter) {</span>
-<span class="source-line-no">207</span><span id="line-207">    return ObjectUtils.notNull(formatter.render(getDocument()));</span>
-<span class="source-line-no">208</span><span id="line-208">  }</span>
-<span class="source-line-no">209</span><span id="line-209"></span>
-<span class="source-line-no">210</span><span id="line-210">  @Override</span>
-<span class="source-line-no">211</span><span id="line-211">  public void writeXHtml(String namespace, XMLStreamWriter2 streamWriter) throws XMLStreamException {</span>
-<span class="source-line-no">212</span><span id="line-212">    Document document = getDocument();</span>
-<span class="source-line-no">213</span><span id="line-213">    if (document.hasChildren()) {</span>
-<span class="source-line-no">214</span><span id="line-214">      IMarkupWriter&lt;XMLStreamWriter, XMLStreamException&gt; writer = new MarkupXmlStreamWriter(</span>
-<span class="source-line-no">215</span><span id="line-215">          namespace,</span>
-<span class="source-line-no">216</span><span id="line-216">          getFlexmarkFactory().getListOptions(),</span>
-<span class="source-line-no">217</span><span id="line-217">          streamWriter);</span>
-<span class="source-line-no">218</span><span id="line-218"></span>
-<span class="source-line-no">219</span><span id="line-219">      IMarkupVisitor&lt;XMLStreamWriter, XMLStreamException&gt; visitor = new MarkupVisitor&lt;&gt;(isBlock());</span>
-<span class="source-line-no">220</span><span id="line-220">      visitor.visitDocument(document, writer);</span>
-<span class="source-line-no">221</span><span id="line-221">    } else {</span>
-<span class="source-line-no">222</span><span id="line-222">      streamWriter.writeCharacters("");</span>
-<span class="source-line-no">223</span><span id="line-223">    }</span>
-<span class="source-line-no">224</span><span id="line-224">  }</span>
-<span class="source-line-no">225</span><span id="line-225"></span>
-<span class="source-line-no">226</span><span id="line-226">  @Override</span>
-<span class="source-line-no">227</span><span id="line-227">  public void writeXHtml(String namespace, XMLEventFactory2 eventFactory, XMLEventWriter eventWriter)</span>
-<span class="source-line-no">228</span><span id="line-228">      throws XMLStreamException {</span>
-<span class="source-line-no">229</span><span id="line-229">    Document document = getDocument();</span>
-<span class="source-line-no">230</span><span id="line-230">    if (document.hasChildren()) {</span>
+<span class="source-line-no">015</span><span id="line-15">import com.vladsch.flexmark.util.ast.TextCollectingVisitor;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.AstCollectingVisitor;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupVisitor;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupWriter;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension;</span>
+<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;</span>
+<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupVisitor;</span>
+<span class="source-line-no">024</span><span id="line-24">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupXmlEventWriter;</span>
+<span class="source-line-no">025</span><span id="line-25">import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupXmlStreamWriter;</span>
+<span class="source-line-no">026</span><span id="line-26">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">import org.apache.logging.log4j.LogManager;</span>
+<span class="source-line-no">029</span><span id="line-29">import org.apache.logging.log4j.Logger;</span>
+<span class="source-line-no">030</span><span id="line-30">import org.codehaus.stax2.XMLOutputFactory2;</span>
+<span class="source-line-no">031</span><span id="line-31">import org.codehaus.stax2.XMLStreamWriter2;</span>
+<span class="source-line-no">032</span><span id="line-32">import org.codehaus.stax2.evt.XMLEventFactory2;</span>
+<span class="source-line-no">033</span><span id="line-33">import org.jsoup.Jsoup;</span>
+<span class="source-line-no">034</span><span id="line-34">import org.jsoup.nodes.TextNode;</span>
+<span class="source-line-no">035</span><span id="line-35">import org.jsoup.select.NodeTraversor;</span>
+<span class="source-line-no">036</span><span id="line-36">import org.jsoup.select.NodeVisitor;</span>
+<span class="source-line-no">037</span><span id="line-37"></span>
+<span class="source-line-no">038</span><span id="line-38">import java.io.ByteArrayOutputStream;</span>
+<span class="source-line-no">039</span><span id="line-39">import java.io.IOException;</span>
+<span class="source-line-no">040</span><span id="line-40">import java.nio.charset.StandardCharsets;</span>
+<span class="source-line-no">041</span><span id="line-41">import java.util.List;</span>
+<span class="source-line-no">042</span><span id="line-42">import java.util.function.Predicate;</span>
+<span class="source-line-no">043</span><span id="line-43">import java.util.regex.Pattern;</span>
+<span class="source-line-no">044</span><span id="line-44">import java.util.stream.Stream;</span>
+<span class="source-line-no">045</span><span id="line-45">import java.util.stream.StreamSupport;</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">import javax.xml.stream.XMLEventWriter;</span>
+<span class="source-line-no">048</span><span id="line-48">import javax.xml.stream.XMLOutputFactory;</span>
+<span class="source-line-no">049</span><span id="line-49">import javax.xml.stream.XMLStreamException;</span>
+<span class="source-line-no">050</span><span id="line-50">import javax.xml.stream.XMLStreamWriter;</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">053</span><span id="line-53">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">054</span><span id="line-54"></span>
+<span class="source-line-no">055</span><span id="line-55">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
+<span class="source-line-no">056</span><span id="line-56">public abstract class AbstractMarkupString&lt;TYPE extends AbstractMarkupString&lt;TYPE&gt;&gt;</span>
+<span class="source-line-no">057</span><span id="line-57">    implements IMarkupString&lt;TYPE&gt; {</span>
+<span class="source-line-no">058</span><span id="line-58">  private static final Logger LOGGER = LogManager.getLogger(FlexmarkFactory.class);</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  private static final Pattern QUOTE_TAG_REPLACEMENT_PATTERN</span>
+<span class="source-line-no">061</span><span id="line-61">      = Pattern.compile("&lt;/?q&gt;");</span>
+<span class="source-line-no">062</span><span id="line-62"></span>
+<span class="source-line-no">063</span><span id="line-63">  //</span>
+<span class="source-line-no">064</span><span id="line-64">  // @NonNull</span>
+<span class="source-line-no">065</span><span id="line-65">  // private static final String DEFAULT_HTML_NS = "http://www.w3.org/1999/xhtml";</span>
+<span class="source-line-no">066</span><span id="line-66">  // @NonNull</span>
+<span class="source-line-no">067</span><span id="line-67">  // private static final String DEFAULT_HTML_PREFIX = "";</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  @NonNull</span>
+<span class="source-line-no">070</span><span id="line-70">  private final Document document;</span>
+<span class="source-line-no">071</span><span id="line-71"></span>
+<span class="source-line-no">072</span><span id="line-72">  /**</span>
+<span class="source-line-no">073</span><span id="line-73">   * Construct a new markup string based on the provided flexmark AST graph.</span>
+<span class="source-line-no">074</span><span id="line-74">   *</span>
+<span class="source-line-no">075</span><span id="line-75">   * @param document</span>
+<span class="source-line-no">076</span><span id="line-76">   *          the AST graph representing Markdown text</span>
+<span class="source-line-no">077</span><span id="line-77">   */</span>
+<span class="source-line-no">078</span><span id="line-78">  protected AbstractMarkupString(@NonNull Document document) {</span>
+<span class="source-line-no">079</span><span id="line-79">    this.document = document;</span>
+<span class="source-line-no">080</span><span id="line-80">  }</span>
+<span class="source-line-no">081</span><span id="line-81"></span>
+<span class="source-line-no">082</span><span id="line-82">  @Override</span>
+<span class="source-line-no">083</span><span id="line-83">  public Document getDocument() {</span>
+<span class="source-line-no">084</span><span id="line-84">    return document;</span>
+<span class="source-line-no">085</span><span id="line-85">  }</span>
+<span class="source-line-no">086</span><span id="line-86"></span>
+<span class="source-line-no">087</span><span id="line-87">  @Override</span>
+<span class="source-line-no">088</span><span id="line-88">  public boolean isEmpty() {</span>
+<span class="source-line-no">089</span><span id="line-89">    return getDocument().getFirstChild() == null;</span>
+<span class="source-line-no">090</span><span id="line-90">  }</span>
+<span class="source-line-no">091</span><span id="line-91"></span>
+<span class="source-line-no">092</span><span id="line-92">  /**</span>
+<span class="source-line-no">093</span><span id="line-93">   * Parse HTML-based text into markdown as a flexmark AST graph.</span>
+<span class="source-line-no">094</span><span id="line-94">   * &lt;p&gt;</span>
+<span class="source-line-no">095</span><span id="line-95">   * This method uses a two-step approach that first translates the HTML into</span>
+<span class="source-line-no">096</span><span id="line-96">   * markdown, and then parses the markdown into an AST graph.</span>
+<span class="source-line-no">097</span><span id="line-97">   *</span>
+<span class="source-line-no">098</span><span id="line-98">   * @param html</span>
+<span class="source-line-no">099</span><span id="line-99">   *          the HTML text to parse</span>
+<span class="source-line-no">100</span><span id="line-100">   * @param htmlParser</span>
+<span class="source-line-no">101</span><span id="line-101">   *          the HTML parser used to produce markdown</span>
+<span class="source-line-no">102</span><span id="line-102">   * @param markdownParser</span>
+<span class="source-line-no">103</span><span id="line-103">   *          the markdown parser</span>
+<span class="source-line-no">104</span><span id="line-104">   * @return the markdown AST graph</span>
+<span class="source-line-no">105</span><span id="line-105">   */</span>
+<span class="source-line-no">106</span><span id="line-106">  @NonNull</span>
+<span class="source-line-no">107</span><span id="line-107">  protected static Document parseHtml(@NonNull String html, @NonNull FlexmarkHtmlConverter htmlParser,</span>
+<span class="source-line-no">108</span><span id="line-108">      @NonNull Parser markdownParser) {</span>
+<span class="source-line-no">109</span><span id="line-109">    org.jsoup.nodes.Document document = Jsoup.parse(html);</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">    // Fix for usnistgov/liboscal-java#5</span>
+<span class="source-line-no">112</span><span id="line-112">    // Caused by not stripping out extra newlines inside HTML tags</span>
+<span class="source-line-no">113</span><span id="line-113">    NodeTraversor.traverse(new NodeVisitor() {</span>
+<span class="source-line-no">114</span><span id="line-114"></span>
+<span class="source-line-no">115</span><span id="line-115">      @Override</span>
+<span class="source-line-no">116</span><span id="line-116">      public void head(org.jsoup.nodes.Node node, int depth) {</span>
+<span class="source-line-no">117</span><span id="line-117">        if (node instanceof TextNode) {</span>
+<span class="source-line-no">118</span><span id="line-118">          TextNode textNode = (TextNode) node;</span>
+<span class="source-line-no">119</span><span id="line-119"></span>
+<span class="source-line-no">120</span><span id="line-120">          org.jsoup.nodes.Node parent = textNode.parent();</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">          if (!isTag(parent, "code") || !isTag(parent.parent(), "pre")) {</span>
+<span class="source-line-no">123</span><span id="line-123">            node.replaceWith(new TextNode(textNode.text()));</span>
+<span class="source-line-no">124</span><span id="line-124">          }</span>
+<span class="source-line-no">125</span><span id="line-125">        }</span>
+<span class="source-line-no">126</span><span id="line-126">      }</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">      private boolean isTag(@Nullable org.jsoup.nodes.Node node, @NonNull String tagName) {</span>
+<span class="source-line-no">129</span><span id="line-129">        return node != null &amp;&amp; tagName.equals(node.normalName());</span>
+<span class="source-line-no">130</span><span id="line-130">      }</span>
+<span class="source-line-no">131</span><span id="line-131"></span>
+<span class="source-line-no">132</span><span id="line-132">    }, document);</span>
+<span class="source-line-no">133</span><span id="line-133"></span>
+<span class="source-line-no">134</span><span id="line-134">    String markdown = htmlParser.convert(document);</span>
+<span class="source-line-no">135</span><span id="line-135">    assert markdown != null;</span>
+<span class="source-line-no">136</span><span id="line-136">    if (LOGGER.isDebugEnabled()) {</span>
+<span class="source-line-no">137</span><span id="line-137">      LOGGER.debug("html-&gt;markdown: {}", markdown);</span>
+<span class="source-line-no">138</span><span id="line-138">    }</span>
+<span class="source-line-no">139</span><span id="line-139">    return parseMarkdown(markdown, markdownParser);</span>
+<span class="source-line-no">140</span><span id="line-140">  }</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">  /**</span>
+<span class="source-line-no">143</span><span id="line-143">   * Parse markdown-based text into a flexmark AST graph.</span>
+<span class="source-line-no">144</span><span id="line-144">   *</span>
+<span class="source-line-no">145</span><span id="line-145">   * @param markdown</span>
+<span class="source-line-no">146</span><span id="line-146">   *          the markdown text to parse</span>
+<span class="source-line-no">147</span><span id="line-147">   * @param parser</span>
+<span class="source-line-no">148</span><span id="line-148">   *          the markdown parser</span>
+<span class="source-line-no">149</span><span id="line-149">   * @return the markdown AST graph</span>
+<span class="source-line-no">150</span><span id="line-150">   */</span>
+<span class="source-line-no">151</span><span id="line-151">  @SuppressWarnings("null")</span>
+<span class="source-line-no">152</span><span id="line-152">  @NonNull</span>
+<span class="source-line-no">153</span><span id="line-153">  protected static Document parseMarkdown(@NonNull String markdown, @NonNull Parser parser) {</span>
+<span class="source-line-no">154</span><span id="line-154">    return parser.parse(markdown);</span>
+<span class="source-line-no">155</span><span id="line-155">  }</span>
+<span class="source-line-no">156</span><span id="line-156"></span>
+<span class="source-line-no">157</span><span id="line-157">  @Override</span>
+<span class="source-line-no">158</span><span id="line-158">  public String toXHtml(@NonNull String namespace) throws XMLStreamException, IOException {</span>
+<span class="source-line-no">159</span><span id="line-159"></span>
+<span class="source-line-no">160</span><span id="line-160">    String retval;</span>
+<span class="source-line-no">161</span><span id="line-161"></span>
+<span class="source-line-no">162</span><span id="line-162">    Document document = getDocument();</span>
+<span class="source-line-no">163</span><span id="line-163">    if (document.hasChildren()) {</span>
+<span class="source-line-no">164</span><span id="line-164"></span>
+<span class="source-line-no">165</span><span id="line-165">      XMLOutputFactory2 factory = (XMLOutputFactory2) XMLOutputFactory.newInstance();</span>
+<span class="source-line-no">166</span><span id="line-166">      assert factory instanceof WstxOutputFactory;</span>
+<span class="source-line-no">167</span><span id="line-167">      factory.setProperty(WstxOutputProperties.P_OUTPUT_VALIDATE_STRUCTURE, false);</span>
+<span class="source-line-no">168</span><span id="line-168">      try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {</span>
+<span class="source-line-no">169</span><span id="line-169">        XMLStreamWriter2 xmlStreamWriter = (XMLStreamWriter2) factory.createXMLStreamWriter(os);</span>
+<span class="source-line-no">170</span><span id="line-170"></span>
+<span class="source-line-no">171</span><span id="line-171">        writeXHtml(namespace, ObjectUtils.notNull(xmlStreamWriter));</span>
+<span class="source-line-no">172</span><span id="line-172"></span>
+<span class="source-line-no">173</span><span id="line-173">        xmlStreamWriter.flush();</span>
+<span class="source-line-no">174</span><span id="line-174">        xmlStreamWriter.close();</span>
+<span class="source-line-no">175</span><span id="line-175">        os.flush();</span>
+<span class="source-line-no">176</span><span id="line-176">        retval = ObjectUtils.notNull(os.toString(StandardCharsets.UTF_8));</span>
+<span class="source-line-no">177</span><span id="line-177">      }</span>
+<span class="source-line-no">178</span><span id="line-178">    } else {</span>
+<span class="source-line-no">179</span><span id="line-179">      retval = "";</span>
+<span class="source-line-no">180</span><span id="line-180">    }</span>
+<span class="source-line-no">181</span><span id="line-181">    return retval;</span>
+<span class="source-line-no">182</span><span id="line-182">  }</span>
+<span class="source-line-no">183</span><span id="line-183"></span>
+<span class="source-line-no">184</span><span id="line-184">  @Override</span>
+<span class="source-line-no">185</span><span id="line-185">  public String toHtml() {</span>
+<span class="source-line-no">186</span><span id="line-186">    // String html;</span>
+<span class="source-line-no">187</span><span id="line-187">    // try {</span>
+<span class="source-line-no">188</span><span id="line-188">    // html = toXHtml("");</span>
+<span class="source-line-no">189</span><span id="line-189">    // } catch(RuntimeException ex) {</span>
+<span class="source-line-no">190</span><span id="line-190">    // throw ex;</span>
+<span class="source-line-no">191</span><span id="line-191">    // } catch (Throwable ex) {</span>
+<span class="source-line-no">192</span><span id="line-192">    // throw new RuntimeException(ex);</span>
+<span class="source-line-no">193</span><span id="line-193">    // }</span>
+<span class="source-line-no">194</span><span id="line-194">    // return QUOTE_TAG_REPLACEMENT_PATTERN.matcher(html)</span>
+<span class="source-line-no">195</span><span id="line-195">    // .replaceAll("&amp;quot;");</span>
+<span class="source-line-no">196</span><span id="line-196">    String html = getFlexmarkFactory().getHtmlRenderer().render(getDocument());</span>
+<span class="source-line-no">197</span><span id="line-197">    return ObjectUtils.notNull(QUOTE_TAG_REPLACEMENT_PATTERN.matcher(html)</span>
+<span class="source-line-no">198</span><span id="line-198">        .replaceAll("&amp;quot;"));</span>
+<span class="source-line-no">199</span><span id="line-199">  }</span>
+<span class="source-line-no">200</span><span id="line-200"></span>
+<span class="source-line-no">201</span><span id="line-201">  @Override</span>
+<span class="source-line-no">202</span><span id="line-202">  public String toMarkdown() {</span>
+<span class="source-line-no">203</span><span id="line-203">    return toMarkdown(getFlexmarkFactory().getFormatter());</span>
+<span class="source-line-no">204</span><span id="line-204">  }</span>
+<span class="source-line-no">205</span><span id="line-205"></span>
+<span class="source-line-no">206</span><span id="line-206">  @Override</span>
+<span class="source-line-no">207</span><span id="line-207">  public String toMarkdown(Formatter formatter) {</span>
+<span class="source-line-no">208</span><span id="line-208">    return ObjectUtils.notNull(formatter.render(getDocument()));</span>
+<span class="source-line-no">209</span><span id="line-209">  }</span>
+<span class="source-line-no">210</span><span id="line-210"></span>
+<span class="source-line-no">211</span><span id="line-211">  @Override</span>
+<span class="source-line-no">212</span><span id="line-212">  public String toText() {</span>
+<span class="source-line-no">213</span><span id="line-213">    return ObjectUtils.notNull(new TextCollectingVisitor().collectAndGetText(document));</span>
+<span class="source-line-no">214</span><span id="line-214">  }</span>
+<span class="source-line-no">215</span><span id="line-215"></span>
+<span class="source-line-no">216</span><span id="line-216">  @Override</span>
+<span class="source-line-no">217</span><span id="line-217">  public void writeXHtml(String namespace, XMLStreamWriter2 streamWriter) throws XMLStreamException {</span>
+<span class="source-line-no">218</span><span id="line-218">    Document document = getDocument();</span>
+<span class="source-line-no">219</span><span id="line-219">    if (document.hasChildren()) {</span>
+<span class="source-line-no">220</span><span id="line-220">      IMarkupWriter&lt;XMLStreamWriter, XMLStreamException&gt; writer = new MarkupXmlStreamWriter(</span>
+<span class="source-line-no">221</span><span id="line-221">          namespace,</span>
+<span class="source-line-no">222</span><span id="line-222">          getFlexmarkFactory().getListOptions(),</span>
+<span class="source-line-no">223</span><span id="line-223">          streamWriter);</span>
+<span class="source-line-no">224</span><span id="line-224"></span>
+<span class="source-line-no">225</span><span id="line-225">      IMarkupVisitor&lt;XMLStreamWriter, XMLStreamException&gt; visitor = new MarkupVisitor&lt;&gt;(isBlock());</span>
+<span class="source-line-no">226</span><span id="line-226">      visitor.visitDocument(document, writer);</span>
+<span class="source-line-no">227</span><span id="line-227">    } else {</span>
+<span class="source-line-no">228</span><span id="line-228">      streamWriter.writeCharacters("");</span>
+<span class="source-line-no">229</span><span id="line-229">    }</span>
+<span class="source-line-no">230</span><span id="line-230">  }</span>
 <span class="source-line-no">231</span><span id="line-231"></span>
-<span class="source-line-no">232</span><span id="line-232">      IMarkupWriter&lt;XMLEventWriter, XMLStreamException&gt; writer = new MarkupXmlEventWriter(</span>
-<span class="source-line-no">233</span><span id="line-233">          namespace,</span>
-<span class="source-line-no">234</span><span id="line-234">          getFlexmarkFactory().getListOptions(),</span>
-<span class="source-line-no">235</span><span id="line-235">          eventWriter,</span>
-<span class="source-line-no">236</span><span id="line-236">          eventFactory);</span>
+<span class="source-line-no">232</span><span id="line-232">  @Override</span>
+<span class="source-line-no">233</span><span id="line-233">  public void writeXHtml(String namespace, XMLEventFactory2 eventFactory, XMLEventWriter eventWriter)</span>
+<span class="source-line-no">234</span><span id="line-234">      throws XMLStreamException {</span>
+<span class="source-line-no">235</span><span id="line-235">    Document document = getDocument();</span>
+<span class="source-line-no">236</span><span id="line-236">    if (document.hasChildren()) {</span>
 <span class="source-line-no">237</span><span id="line-237"></span>
-<span class="source-line-no">238</span><span id="line-238">      IMarkupVisitor&lt;XMLEventWriter, XMLStreamException&gt; visitor = new MarkupVisitor&lt;&gt;(isBlock());</span>
-<span class="source-line-no">239</span><span id="line-239">      visitor.visitDocument(getDocument(), writer);</span>
-<span class="source-line-no">240</span><span id="line-240">    } else {</span>
-<span class="source-line-no">241</span><span id="line-241">      eventWriter.add(eventFactory.createSpace(""));</span>
-<span class="source-line-no">242</span><span id="line-242">    }</span>
+<span class="source-line-no">238</span><span id="line-238">      IMarkupWriter&lt;XMLEventWriter, XMLStreamException&gt; writer = new MarkupXmlEventWriter(</span>
+<span class="source-line-no">239</span><span id="line-239">          namespace,</span>
+<span class="source-line-no">240</span><span id="line-240">          getFlexmarkFactory().getListOptions(),</span>
+<span class="source-line-no">241</span><span id="line-241">          eventWriter,</span>
+<span class="source-line-no">242</span><span id="line-242">          eventFactory);</span>
 <span class="source-line-no">243</span><span id="line-243"></span>
-<span class="source-line-no">244</span><span id="line-244">  }</span>
-<span class="source-line-no">245</span><span id="line-245"></span>
-<span class="source-line-no">246</span><span id="line-246">  @SuppressWarnings("null")</span>
-<span class="source-line-no">247</span><span id="line-247">  @Override</span>
-<span class="source-line-no">248</span><span id="line-248">  public Stream&lt;Node&gt; getNodesAsStream() {</span>
-<span class="source-line-no">249</span><span id="line-249">    return Stream.concat(Stream.of(getDocument()),</span>
-<span class="source-line-no">250</span><span id="line-250">        StreamSupport.stream(getDocument().getDescendants().spliterator(), false));</span>
-<span class="source-line-no">251</span><span id="line-251">  }</span>
-<span class="source-line-no">252</span><span id="line-252"></span>
+<span class="source-line-no">244</span><span id="line-244">      IMarkupVisitor&lt;XMLEventWriter, XMLStreamException&gt; visitor = new MarkupVisitor&lt;&gt;(isBlock());</span>
+<span class="source-line-no">245</span><span id="line-245">      visitor.visitDocument(getDocument(), writer);</span>
+<span class="source-line-no">246</span><span id="line-246">    } else {</span>
+<span class="source-line-no">247</span><span id="line-247">      eventWriter.add(eventFactory.createSpace(""));</span>
+<span class="source-line-no">248</span><span id="line-248">    }</span>
+<span class="source-line-no">249</span><span id="line-249"></span>
+<span class="source-line-no">250</span><span id="line-250">  }</span>
+<span class="source-line-no">251</span><span id="line-251"></span>
+<span class="source-line-no">252</span><span id="line-252">  @SuppressWarnings("null")</span>
 <span class="source-line-no">253</span><span id="line-253">  @Override</span>
-<span class="source-line-no">254</span><span id="line-254">  @NonNull</span>
-<span class="source-line-no">255</span><span id="line-255">  public List&lt;InsertAnchorNode&gt; getInserts() {</span>
-<span class="source-line-no">256</span><span id="line-256">    return getInserts(insert -&gt; true);</span>
+<span class="source-line-no">254</span><span id="line-254">  public Stream&lt;Node&gt; getNodesAsStream() {</span>
+<span class="source-line-no">255</span><span id="line-255">    return Stream.concat(Stream.of(getDocument()),</span>
+<span class="source-line-no">256</span><span id="line-256">        StreamSupport.stream(getDocument().getDescendants().spliterator(), false));</span>
 <span class="source-line-no">257</span><span id="line-257">  }</span>
 <span class="source-line-no">258</span><span id="line-258"></span>
-<span class="source-line-no">259</span><span id="line-259">  /**</span>
-<span class="source-line-no">260</span><span id="line-260">   * Retrieve all insert statements that are contained within this markup text</span>
-<span class="source-line-no">261</span><span id="line-261">   * that match the provided filter.</span>
-<span class="source-line-no">262</span><span id="line-262">   *</span>
-<span class="source-line-no">263</span><span id="line-263">   * @param filter</span>
-<span class="source-line-no">264</span><span id="line-264">   *          a filter used to identify matching insert statements</span>
-<span class="source-line-no">265</span><span id="line-265">   * @return the matching insert statements</span>
-<span class="source-line-no">266</span><span id="line-266">   */</span>
-<span class="source-line-no">267</span><span id="line-267">  @Override</span>
-<span class="source-line-no">268</span><span id="line-268">  @NonNull</span>
-<span class="source-line-no">269</span><span id="line-269">  public List&lt;InsertAnchorNode&gt; getInserts(@NonNull Predicate&lt;InsertAnchorNode&gt; filter) {</span>
-<span class="source-line-no">270</span><span id="line-270">    InsertAnchorExtension.InsertVisitor visitor = new InsertAnchorExtension.InsertVisitor(filter);</span>
-<span class="source-line-no">271</span><span id="line-271">    visitor.visitChildren(getDocument());</span>
-<span class="source-line-no">272</span><span id="line-272">    return visitor.getInserts();</span>
-<span class="source-line-no">273</span><span id="line-273">  }</span>
-<span class="source-line-no">274</span><span id="line-274"></span>
-<span class="source-line-no">275</span><span id="line-275">  @Override</span>
-<span class="source-line-no">276</span><span id="line-276">  public String toString() {</span>
-<span class="source-line-no">277</span><span id="line-277">    return AstCollectingVisitor.asString(getDocument());</span>
-<span class="source-line-no">278</span><span id="line-278">  }</span>
-<span class="source-line-no">279</span><span id="line-279">}</span>
+<span class="source-line-no">259</span><span id="line-259">  @Override</span>
+<span class="source-line-no">260</span><span id="line-260">  @NonNull</span>
+<span class="source-line-no">261</span><span id="line-261">  public List&lt;InsertAnchorNode&gt; getInserts() {</span>
+<span class="source-line-no">262</span><span id="line-262">    return getInserts(insert -&gt; true);</span>
+<span class="source-line-no">263</span><span id="line-263">  }</span>
+<span class="source-line-no">264</span><span id="line-264"></span>
+<span class="source-line-no">265</span><span id="line-265">  /**</span>
+<span class="source-line-no">266</span><span id="line-266">   * Retrieve all insert statements that are contained within this markup text</span>
+<span class="source-line-no">267</span><span id="line-267">   * that match the provided filter.</span>
+<span class="source-line-no">268</span><span id="line-268">   *</span>
+<span class="source-line-no">269</span><span id="line-269">   * @param filter</span>
+<span class="source-line-no">270</span><span id="line-270">   *          a filter used to identify matching insert statements</span>
+<span class="source-line-no">271</span><span id="line-271">   * @return the matching insert statements</span>
+<span class="source-line-no">272</span><span id="line-272">   */</span>
+<span class="source-line-no">273</span><span id="line-273">  @Override</span>
+<span class="source-line-no">274</span><span id="line-274">  @NonNull</span>
+<span class="source-line-no">275</span><span id="line-275">  public List&lt;InsertAnchorNode&gt; getInserts(@NonNull Predicate&lt;InsertAnchorNode&gt; filter) {</span>
+<span class="source-line-no">276</span><span id="line-276">    InsertAnchorExtension.InsertVisitor visitor = new InsertAnchorExtension.InsertVisitor(filter);</span>
+<span class="source-line-no">277</span><span id="line-277">    visitor.visitChildren(getDocument());</span>
+<span class="source-line-no">278</span><span id="line-278">    return visitor.getInserts();</span>
+<span class="source-line-no">279</span><span id="line-279">  }</span>
+<span class="source-line-no">280</span><span id="line-280"></span>
+<span class="source-line-no">281</span><span id="line-281">  @Override</span>
+<span class="source-line-no">282</span><span id="line-282">  public String toString() {</span>
+<span class="source-line-no">283</span><span id="line-283">    return AstCollectingVisitor.asString(getDocument());</span>
+<span class="source-line-no">284</span><span id="line-284">  }</span>
+<span class="source-line-no">285</span><span id="line-285">}</span>
 
 
 

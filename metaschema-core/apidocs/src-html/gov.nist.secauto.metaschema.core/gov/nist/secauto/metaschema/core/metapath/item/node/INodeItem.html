@@ -293,18 +293,26 @@
 <span class="source-line-no">280</span><span id="line-280">  IResourceLocation getLocation();</span>
 <span class="source-line-no">281</span><span id="line-281"></span>
 <span class="source-line-no">282</span><span id="line-282">  /**</span>
-<span class="source-line-no">283</span><span id="line-283">   * Get the static context to use to query this node item.</span>
+<span class="source-line-no">283</span><span id="line-283">   * Get the string value of the node.</span>
 <span class="source-line-no">284</span><span id="line-284">   *</span>
-<span class="source-line-no">285</span><span id="line-285">   * @return the static context</span>
+<span class="source-line-no">285</span><span id="line-285">   * @return the string value of the node or an empty string if it has no value.</span>
 <span class="source-line-no">286</span><span id="line-286">   */</span>
 <span class="source-line-no">287</span><span id="line-287">  @NonNull</span>
-<span class="source-line-no">288</span><span id="line-288">  StaticContext getStaticContext();</span>
+<span class="source-line-no">288</span><span id="line-288">  String stringValue();</span>
 <span class="source-line-no">289</span><span id="line-289"></span>
-<span class="source-line-no">290</span><span id="line-290">  @Override</span>
-<span class="source-line-no">291</span><span id="line-291">  default void accept(IItemVisitor visitor) {</span>
-<span class="source-line-no">292</span><span id="line-292">    visitor.visit(this);</span>
-<span class="source-line-no">293</span><span id="line-293">  }</span>
-<span class="source-line-no">294</span><span id="line-294">}</span>
+<span class="source-line-no">290</span><span id="line-290">  /**</span>
+<span class="source-line-no">291</span><span id="line-291">   * Get the static context to use to query this node item.</span>
+<span class="source-line-no">292</span><span id="line-292">   *</span>
+<span class="source-line-no">293</span><span id="line-293">   * @return the static context</span>
+<span class="source-line-no">294</span><span id="line-294">   */</span>
+<span class="source-line-no">295</span><span id="line-295">  @NonNull</span>
+<span class="source-line-no">296</span><span id="line-296">  StaticContext getStaticContext();</span>
+<span class="source-line-no">297</span><span id="line-297"></span>
+<span class="source-line-no">298</span><span id="line-298">  @Override</span>
+<span class="source-line-no">299</span><span id="line-299">  default void accept(IItemVisitor visitor) {</span>
+<span class="source-line-no">300</span><span id="line-300">    visitor.visit(this);</span>
+<span class="source-line-no">301</span><span id="line-301">  }</span>
+<span class="source-line-no">302</span><span id="line-302">}</span>
 
 
 

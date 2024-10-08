@@ -135,9 +135,7 @@ public final class StaticContext {
    */
   @Nullable
   public URI getBaseUri() {
-<span class="fc" id="L138">    synchronized (this) {</span>
-<span class="fc" id="L139">      return baseUri;</span>
-    }
+<span class="fc" id="L138">    return baseUri;</span>
   }
 
   /**
@@ -160,12 +158,12 @@ public final class StaticContext {
    */
   @Nullable
   public URI lookupNamespaceURIForPrefix(@NonNull String prefix) {
-<span class="fc" id="L163">    URI retval = knownNamespaces.get(prefix);</span>
-<span class="fc bfc" id="L164" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L161">    URI retval = knownNamespaces.get(prefix);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (retval == null) {</span>
       // fall back to well-known namespaces
-<span class="fc" id="L166">      retval = WELL_KNOWN_NAMESPACES.get(prefix);</span>
+<span class="fc" id="L164">      retval = WELL_KNOWN_NAMESPACES.get(prefix);</span>
     }
-<span class="fc" id="L168">    return retval;</span>
+<span class="fc" id="L166">    return retval;</span>
   }
 
   /**
@@ -179,8 +177,8 @@ public final class StaticContext {
    */
   @Nullable
   public String lookupNamespaceForPrefix(@NonNull String prefix) {
-<span class="fc" id="L182">    URI result = lookupNamespaceURIForPrefix(prefix);</span>
-<span class="fc bfc" id="L183" title="All 2 branches covered.">    return result == null ? null : result.toASCIIString();</span>
+<span class="fc" id="L180">    URI result = lookupNamespaceURIForPrefix(prefix);</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">    return result == null ? null : result.toASCIIString();</span>
   }
 
   /**
@@ -191,7 +189,7 @@ public final class StaticContext {
    */
   @Nullable
   public URI getDefaultModelNamespace() {
-<span class="fc" id="L194">    return defaultModelNamespace;</span>
+<span class="fc" id="L192">    return defaultModelNamespace;</span>
   }
 
   /**
@@ -202,7 +200,7 @@ public final class StaticContext {
    */
   @Nullable
   public URI getDefaultFunctionNamespace() {
-<span class="fc" id="L205">    return defaultFunctionNamespace;</span>
+<span class="fc" id="L203">    return defaultFunctionNamespace;</span>
   }
 
   /**
@@ -223,19 +221,19 @@ public final class StaticContext {
    */
   @NonNull
   public IEQNamePrefixResolver getFunctionPrefixResolver() {
-<span class="fc" id="L226">    return this::resolveFunctionPrefix;</span>
+<span class="fc" id="L224">    return this::resolveFunctionPrefix;</span>
   }
 
   @NonNull
   private String resolveFunctionPrefix(@NonNull String prefix) {
-<span class="fc" id="L231">    String ns = lookupNamespaceForPrefix(prefix);</span>
-<span class="fc bfc" id="L232" title="All 2 branches covered.">    if (ns == null) {</span>
-<span class="fc" id="L233">      URI uri = getDefaultFunctionNamespace();</span>
-<span class="pc bpc" id="L234" title="1 of 2 branches missed.">      if (uri != null) {</span>
-<span class="fc" id="L235">        ns = uri.toASCIIString();</span>
+<span class="fc" id="L229">    String ns = lookupNamespaceForPrefix(prefix);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">    if (ns == null) {</span>
+<span class="fc" id="L231">      URI uri = getDefaultFunctionNamespace();</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">      if (uri != null) {</span>
+<span class="fc" id="L233">        ns = uri.toASCIIString();</span>
       }
     }
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">    return ns == null ? XMLConstants.NULL_NS_URI : ns;</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">    return ns == null ? XMLConstants.NULL_NS_URI : ns;</span>
   }
 
   /**
@@ -254,13 +252,13 @@ public final class StaticContext {
    */
   @NonNull
   public IEQNamePrefixResolver getFlagPrefixResolver() {
-<span class="fc" id="L257">    return this::resolveFlagReferencePrefix;</span>
+<span class="fc" id="L255">    return this::resolveFlagReferencePrefix;</span>
   }
 
   @NonNull
   private String resolveFlagReferencePrefix(@NonNull String prefix) {
-<span class="fc" id="L262">    String ns = lookupNamespaceForPrefix(prefix);</span>
-<span class="fc bfc" id="L263" title="All 2 branches covered.">    return ns == null ? XMLConstants.NULL_NS_URI : ns;</span>
+<span class="fc" id="L260">    String ns = lookupNamespaceForPrefix(prefix);</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">    return ns == null ? XMLConstants.NULL_NS_URI : ns;</span>
   }
 
   /**
@@ -281,19 +279,19 @@ public final class StaticContext {
    */
   @NonNull
   public IEQNamePrefixResolver getModelPrefixResolver() {
-<span class="fc" id="L284">    return this::resolveModelReferencePrefix;</span>
+<span class="fc" id="L282">    return this::resolveModelReferencePrefix;</span>
   }
 
   @NonNull
   private String resolveModelReferencePrefix(@NonNull String prefix) {
-<span class="fc" id="L289">    String ns = lookupNamespaceForPrefix(prefix);</span>
-<span class="fc bfc" id="L290" title="All 2 branches covered.">    if (ns == null) {</span>
-<span class="fc" id="L291">      URI uri = getDefaultModelNamespace();</span>
-<span class="fc bfc" id="L292" title="All 2 branches covered.">      if (uri != null) {</span>
-<span class="fc" id="L293">        ns = uri.toASCIIString();</span>
+<span class="fc" id="L287">    String ns = lookupNamespaceForPrefix(prefix);</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">    if (ns == null) {</span>
+<span class="fc" id="L289">      URI uri = getDefaultModelNamespace();</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">      if (uri != null) {</span>
+<span class="fc" id="L291">        ns = uri.toASCIIString();</span>
       }
     }
-<span class="fc bfc" id="L296" title="All 2 branches covered.">    return ns == null ? XMLConstants.NULL_NS_URI : ns;</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">    return ns == null ? XMLConstants.NULL_NS_URI : ns;</span>
   }
 
   /**
@@ -312,13 +310,13 @@ public final class StaticContext {
    */
   @NonNull
   public IEQNamePrefixResolver getVariablePrefixResolver() {
-<span class="fc" id="L315">    return this::resolveVariablePrefix;</span>
+<span class="fc" id="L313">    return this::resolveVariablePrefix;</span>
   }
 
   @NonNull
   private String resolveVariablePrefix(@NonNull String prefix) {
-<span class="fc" id="L320">    String ns = lookupNamespaceForPrefix(prefix);</span>
-<span class="fc bfc" id="L321" title="All 2 branches covered.">    return ns == null ? XMLConstants.NULL_NS_URI : ns;</span>
+<span class="fc" id="L318">    String ns = lookupNamespaceForPrefix(prefix);</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">    return ns == null ? XMLConstants.NULL_NS_URI : ns;</span>
   }
 
   /**
@@ -329,12 +327,12 @@ public final class StaticContext {
    */
   @NonNull
   public Builder buildFrom() {
-<span class="nc" id="L332">    Builder builder = builder();</span>
-<span class="nc" id="L333">    builder.baseUri = this.baseUri;</span>
-<span class="nc" id="L334">    builder.namespaces.putAll(this.knownNamespaces);</span>
-<span class="nc" id="L335">    builder.defaultModelNamespace = this.defaultModelNamespace;</span>
-<span class="nc" id="L336">    builder.defaultFunctionNamespace = this.defaultFunctionNamespace;</span>
-<span class="nc" id="L337">    return builder;</span>
+<span class="nc" id="L330">    Builder builder = builder();</span>
+<span class="nc" id="L331">    builder.baseUri = this.baseUri;</span>
+<span class="nc" id="L332">    builder.namespaces.putAll(this.knownNamespaces);</span>
+<span class="nc" id="L333">    builder.defaultModelNamespace = this.defaultModelNamespace;</span>
+<span class="nc" id="L334">    builder.defaultFunctionNamespace = this.defaultFunctionNamespace;</span>
+<span class="nc" id="L335">    return builder;</span>
   }
 
   /**
@@ -346,7 +344,7 @@ public final class StaticContext {
    *         {@code false} otherwise
    */
   public boolean isUseWildcardWhenNamespaceNotDefaulted() {
-<span class="pc bpc" id="L349" title="3 of 4 branches missed.">    return useWildcardWhenNamespaceNotDefaulted &amp;&amp; getDefaultModelNamespace() == null;</span>
+<span class="pc bpc" id="L347" title="3 of 4 branches missed.">    return useWildcardWhenNamespaceNotDefaulted &amp;&amp; getDefaultModelNamespace() == null;</span>
   }
 
   /**
@@ -357,7 +355,7 @@ public final class StaticContext {
    */
   @NonNull
   public static Builder builder() {
-<span class="fc" id="L360">    return new Builder();</span>
+<span class="fc" id="L358">    return new Builder();</span>
   }
 
   /**
@@ -367,27 +365,27 @@ public final class StaticContext {
     public boolean useWildcardWhenNamespaceNotDefaulted; // false
     @Nullable
     private URI baseUri;
-<span class="fc" id="L370">    @NonNull</span>
+<span class="fc" id="L368">    @NonNull</span>
     private final Map&lt;String, URI&gt; namespaces = new ConcurrentHashMap&lt;&gt;();
     @Nullable
     private URI defaultModelNamespace;
-<span class="fc" id="L374">    @Nullable</span>
+<span class="fc" id="L372">    @Nullable</span>
     private URI defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS;
 
-<span class="fc" id="L377">    private Builder() {</span>
-<span class="fc" id="L378">      namespaces.put(</span>
+<span class="fc" id="L375">    private Builder() {</span>
+<span class="fc" id="L376">      namespaces.put(</span>
           MetapathConstants.PREFIX_METAPATH,
           MetapathConstants.NS_METAPATH);
-<span class="fc" id="L381">      namespaces.put(</span>
+<span class="fc" id="L379">      namespaces.put(</span>
           MetapathConstants.PREFIX_XML_SCHEMA,
           MetapathConstants.NS_XML_SCHEMA);
-<span class="fc" id="L384">      namespaces.put(</span>
+<span class="fc" id="L382">      namespaces.put(</span>
           MetapathConstants.PREFIX_XPATH_FUNCTIONS,
           MetapathConstants.NS_METAPATH_FUNCTIONS);
-<span class="fc" id="L387">      namespaces.put(</span>
+<span class="fc" id="L385">      namespaces.put(</span>
           MetapathConstants.PREFIX_XPATH_FUNCTIONS_MATH,
           MetapathConstants.NS_METAPATH_FUNCTIONS_MATH);
-<span class="fc" id="L390">    }</span>
+<span class="fc" id="L388">    }</span>
 
     /**
      * Sets the static base URI to use in resolving URIs handled by the Metapath
@@ -400,8 +398,8 @@ public final class StaticContext {
      */
     @NonNull
     public Builder baseUri(@NonNull URI uri) {
-<span class="fc" id="L403">      this.baseUri = uri;</span>
-<span class="fc" id="L404">      return this;</span>
+<span class="fc" id="L401">      this.baseUri = uri;</span>
+<span class="fc" id="L402">      return this;</span>
     }
 
     /**
@@ -426,8 +424,8 @@ public final class StaticContext {
      */
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull URI uri) {
-<span class="fc" id="L429">      this.namespaces.put(prefix, uri);</span>
-<span class="fc" id="L430">      return this;</span>
+<span class="fc" id="L427">      this.namespaces.put(prefix, uri);</span>
+<span class="fc" id="L428">      return this;</span>
     }
 
     /**
@@ -446,7 +444,7 @@ public final class StaticContext {
      */
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull String uri) {
-<span class="fc" id="L449">      return namespace(prefix, ObjectUtils.notNull(URI.create(uri)));</span>
+<span class="fc" id="L447">      return namespace(prefix, ObjectUtils.notNull(URI.create(uri)));</span>
     }
 
     /**
@@ -460,8 +458,8 @@ public final class StaticContext {
      */
     @NonNull
     public Builder defaultModelNamespace(@NonNull URI uri) {
-<span class="fc" id="L463">      this.defaultModelNamespace = uri;</span>
-<span class="fc" id="L464">      return this;</span>
+<span class="fc" id="L461">      this.defaultModelNamespace = uri;</span>
+<span class="fc" id="L462">      return this;</span>
     }
 
     /**
@@ -476,7 +474,7 @@ public final class StaticContext {
      */
     @NonNull
     public Builder defaultModelNamespace(@NonNull String uri) {
-<span class="fc" id="L479">      return defaultModelNamespace(ObjectUtils.notNull(URI.create(uri)));</span>
+<span class="fc" id="L477">      return defaultModelNamespace(ObjectUtils.notNull(URI.create(uri)));</span>
     }
 
     /**
@@ -490,8 +488,8 @@ public final class StaticContext {
      */
     @NonNull
     public Builder defaultFunctionNamespace(@NonNull URI uri) {
-<span class="fc" id="L493">      this.defaultFunctionNamespace = uri;</span>
-<span class="fc" id="L494">      return this;</span>
+<span class="fc" id="L491">      this.defaultFunctionNamespace = uri;</span>
+<span class="fc" id="L492">      return this;</span>
     }
 
     /**
@@ -506,7 +504,7 @@ public final class StaticContext {
      */
     @NonNull
     public Builder defaultFunctionNamespace(@NonNull String uri) {
-<span class="fc" id="L509">      return defaultFunctionNamespace(ObjectUtils.notNull(URI.create(uri)));</span>
+<span class="fc" id="L507">      return defaultFunctionNamespace(ObjectUtils.notNull(URI.create(uri)));</span>
     }
 
     /**
@@ -517,8 +515,8 @@ public final class StaticContext {
      * @return this builder
      */
     public Builder useWildcardWhenNamespaceNotDefaulted(boolean value) {
-<span class="fc" id="L520">      this.useWildcardWhenNamespaceNotDefaulted = value;</span>
-<span class="fc" id="L521">      return this;</span>
+<span class="fc" id="L518">      this.useWildcardWhenNamespaceNotDefaulted = value;</span>
+<span class="fc" id="L519">      return this;</span>
     }
 
     /**
@@ -528,7 +526,7 @@ public final class StaticContext {
      */
     @NonNull
     public StaticContext build() {
-<span class="fc" id="L531">      return new StaticContext(this);</span>
+<span class="fc" id="L529">      return new StaticContext(this);</span>
     }
   }
 }

@@ -47,40 +47,43 @@ public class DefaultFunctionLibrary
 <span class="fc" id="L47">    registerFunction(FnCeiling.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-compare
 <span class="fc" id="L49">    registerFunction(FnCompare.SIGNATURE);</span>
-<span class="fc" id="L50">    registerFunction(FnConcat.SIGNATURE);</span>
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-concat
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-contains
+    // https://www.w3.org/TR/xpath-functions-31/#func-concat
+<span class="fc" id="L51">    registerFunction(FnConcat.SIGNATURE);</span>
+    // https://www.w3.org/TR/xpath-functions-31/#func-contains
+<span class="fc" id="L53">    registerFunction(FnContains.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-count
-<span class="fc" id="L54">    registerFunction(FnCount.SIGNATURE);</span>
+<span class="fc" id="L55">    registerFunction(FnCount.SIGNATURE);</span>
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-date
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-dateTime
+    // https://www.w3.org/TR/xpath-functions-31/#func-current-dateTime
+<span class="fc" id="L58">    registerFunction(FnCurrentDateTime.SIGNATURE);</span>
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-time
     // https://www.w3.org/TR/xpath-functions-31/#func-data
-<span class="fc" id="L59">    registerFunction(FnData.SIGNATURE_NO_ARG);</span>
-<span class="fc" id="L60">    registerFunction(FnData.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L61">    registerFunction(FnData.SIGNATURE_NO_ARG);</span>
+<span class="fc" id="L62">    registerFunction(FnData.SIGNATURE_ONE_ARG);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-day-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-day-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-days-from-duration
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-deep-equal
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-distinct-values
     // https://www.w3.org/TR/xpath-functions-31/#func-doc
-<span class="fc" id="L67">    registerFunction(FnDoc.SIGNATURE);</span>
+<span class="fc" id="L69">    registerFunction(FnDoc.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-doc-available
-<span class="fc" id="L69">    registerFunction(FnDocumentAvailable.SIGNATURE);</span>
+<span class="fc" id="L71">    registerFunction(FnDocumentAvailable.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-document-uri
-<span class="fc" id="L71">    registerFunction(FnDocumentUri.SIGNATURE_NO_ARG);</span>
-<span class="fc" id="L72">    registerFunction(FnDocumentUri.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L73">    registerFunction(FnDocumentUri.SIGNATURE_NO_ARG);</span>
+<span class="fc" id="L74">    registerFunction(FnDocumentUri.SIGNATURE_ONE_ARG);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-empty
-<span class="fc" id="L74">    registerFunction(FnEmpty.SIGNATURE);</span>
+<span class="fc" id="L76">    registerFunction(FnEmpty.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-encode-for-uri
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-ends-with
+    // https://www.w3.org/TR/xpath-functions-31/#func-ends-with
+<span class="fc" id="L79">    registerFunction(FnEndsWith.SIGNATURE);</span>
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-exactly-one
     // https://www.w3.org/TR/xpath-functions-31/#func-exists
-<span class="fc" id="L79">    registerFunction(FnExists.SIGNATURE);</span>
+<span class="fc" id="L82">    registerFunction(FnExists.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-false
-<span class="fc" id="L81">    registerFunction(FnFalse.SIGNATURE);</span>
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-floor
-<span class="fc" id="L83">    registerFunction(NumericFunction.signature(MetapathConstants.NS_METAPATH_FUNCTIONS, &quot;floor&quot;, INumericItem::floor));</span>
+<span class="fc" id="L84">    registerFunction(FnFalse.SIGNATURE);</span>
+    // https://www.w3.org/TR/xpath-functions-31/#func-floor
+<span class="fc" id="L86">    registerFunction(NumericFunction.signature(MetapathConstants.NS_METAPATH_FUNCTIONS, &quot;floor&quot;, INumericItem::floor));</span>
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-date
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-dateTime
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-integer
@@ -88,24 +91,26 @@ public class DefaultFunctionLibrary
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-time
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-generate-id
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-has-children
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-head
-<span class="fc" id="L92">    registerFunction(FnHead.SIGNATURE);</span>
+    // https://www.w3.org/TR/xpath-functions-31/#func-head
+<span class="fc" id="L95">    registerFunction(FnHead.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-time
     // https://www.w3.org/TR/xpath-functions-31/#func-implicit-timezone
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-index-of
     // https://www.w3.org/TR/xpath-functions-31/#func-innermost
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-insert-before
-<span class="fc" id="L100">    registerFunction(FnInsertBefore.SIGNATURE);</span>
+    // https://www.w3.org/TR/xpath-functions-31/#func-insert-before
+<span class="fc" id="L103">    registerFunction(FnInsertBefore.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-iri-to-uri
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-last
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-lower-case
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-matches
+    // https://www.w3.org/TR/xpath-functions-31/#func-matches
+<span class="fc" id="L108">    registerFunction(FnMatches.SIGNATURE_TWO_ARG);</span>
+<span class="fc" id="L109">    registerFunction(FnMatches.SIGNATURE_THREE_ARG);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-max
-<span class="fc" id="L106">    registerFunction(FnMinMax.SIGNATURE_MAX);</span>
+<span class="fc" id="L111">    registerFunction(FnMinMax.SIGNATURE_MAX);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-min
-<span class="fc" id="L108">    registerFunction(FnMinMax.SIGNATURE_MIN);</span>
+<span class="fc" id="L113">    registerFunction(FnMinMax.SIGNATURE_MIN);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-time
@@ -114,56 +119,65 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-months-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-node-name
     // https://www.w3.org/TR/xpath-functions-31/#func-normalize-space
+<span class="fc" id="L122">    registerFunction(FnNormalizeSpace.SIGNATURE_NO_ARG);</span>
+<span class="fc" id="L123">    registerFunction(FnNormalizeSpace.SIGNATURE_ONE_ARG);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-normalize-unicode
     // https://www.w3.org/TR/xpath-functions-31/#func-not
-<span class="fc" id="L119">    registerFunction(FnNot.SIGNATURE);</span>
+<span class="fc" id="L126">    registerFunction(FnNot.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-number
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-one-or-more
     // https://www.w3.org/TR/xpath-functions-31/#func-outermost
     // https://www.w3.org/TR/xpath-functions-31/#func-parse-ietf-date
     // https://www.w3.org/TR/xpath-functions-31/#func-path
-<span class="fc" id="L125">    registerFunction(FnPath.SIGNATURE_NO_ARG);</span>
-<span class="fc" id="L126">    registerFunction(FnPath.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L132">    registerFunction(FnPath.SIGNATURE_NO_ARG);</span>
+<span class="fc" id="L133">    registerFunction(FnPath.SIGNATURE_ONE_ARG);</span>
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-position
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-remove
-<span class="fc" id="L129">    registerFunction(FnRemove.SIGNATURE);</span>
+    // https://www.w3.org/TR/xpath-functions-31/#func-remove
+<span class="fc" id="L136">    registerFunction(FnRemove.SIGNATURE);</span>
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-replace
     // https://www.w3.org/TR/xpath-functions-31/#func-resolve-uri
-<span class="fc" id="L132">    registerFunction(FnResolveUri.SIGNATURE_ONE_ARG);</span>
-<span class="fc" id="L133">    registerFunction(FnResolveUri.SIGNATURE_TWO_ARG);</span>
+<span class="fc" id="L139">    registerFunction(FnResolveUri.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L140">    registerFunction(FnResolveUri.SIGNATURE_TWO_ARG);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-reverse
-<span class="fc" id="L135">    registerFunction(FnReverse.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L142">    registerFunction(FnReverse.SIGNATURE_ONE_ARG);</span>
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-root
     // https://www.w3.org/TR/xpath-functions-31/#func-round
-<span class="fc" id="L138">    registerFunction(FnRound.SIGNATURE);</span>
-<span class="fc" id="L139">    registerFunction(FnRound.SIGNATURE_WITH_PRECISION);</span>
+<span class="fc" id="L145">    registerFunction(FnRound.SIGNATURE);</span>
+<span class="fc" id="L146">    registerFunction(FnRound.SIGNATURE_WITH_PRECISION);</span>
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-round-half-to-even
     // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-time
     // https://www.w3.org/TR/xpath-functions-31/#func-starts-with
-<span class="fc" id="L145">    registerFunction(FnStartsWith.SIGNATURE);</span>
+<span class="fc" id="L152">    registerFunction(FnStartsWith.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-static-base-uri
-<span class="fc" id="L147">    registerFunction(FnStaticBaseUri.SIGNATURE);</span>
-    // P0: https://www.w3.org/TR/xpath-functions-31/#func-string
+<span class="fc" id="L154">    registerFunction(FnStaticBaseUri.SIGNATURE);</span>
+    // https://www.w3.org/TR/xpath-functions-31/#func-string
+<span class="fc" id="L156">    registerFunction(FnString.SIGNATURE_NO_ARG);</span>
+<span class="fc" id="L157">    registerFunction(FnString.SIGNATURE_ONE_ARG);</span>
+    // https://www.w3.org/TR/xpath-functions-30/#func-substring
+<span class="fc" id="L159">    registerFunction(FnSubstring.SIGNATURE_TWO_ARG);</span>
+<span class="fc" id="L160">    registerFunction(FnSubstring.SIGNATURE_THREE_ARG);</span>
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-join
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-length
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-subsequence
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-after
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-before
     // https://www.w3.org/TR/xpath-functions-31/#func-sum
-<span class="fc" id="L156">    registerFunction(FnSum.SIGNATURE_ONE_ARG);</span>
-<span class="fc" id="L157">    registerFunction(FnSum.SIGNATURE_TWO_ARG);</span>
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-tail
-<span class="fc" id="L159">    registerFunction(FnTail.SIGNATURE);</span>
+<span class="fc" id="L167">    registerFunction(FnSum.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L168">    registerFunction(FnSum.SIGNATURE_TWO_ARG);</span>
+    // https://www.w3.org/TR/xpath-functions-31/#func-tail
+<span class="fc" id="L170">    registerFunction(FnTail.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-time
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-tokenize
+    // https://www.w3.org/TR/xpath-functions-31/#func-tokenize
+<span class="fc" id="L175">    registerFunction(FnTokenize.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L176">    registerFunction(FnTokenize.SIGNATURE_TWO_ARG);</span>
+<span class="fc" id="L177">    registerFunction(FnTokenize.SIGNATURE_THREE_ARG);</span>
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-translate
     // https://www.w3.org/TR/xpath-functions-31/#func-true
-<span class="fc" id="L166">    registerFunction(FnTrue.SIGNATURE);</span>
+<span class="fc" id="L180">    registerFunction(FnTrue.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text
     // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text-available
     // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text-lines
@@ -174,28 +188,28 @@ public class DefaultFunctionLibrary
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one
 
     // https://www.w3.org/TR/xpath-functions-31/#func-array-get
-<span class="fc" id="L177">    registerFunction(ArrayGet.SIGNATURE);</span>
+<span class="fc" id="L191">    registerFunction(ArrayGet.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-size
-<span class="fc" id="L179">    registerFunction(ArraySize.SIGNATURE);</span>
+<span class="fc" id="L193">    registerFunction(ArraySize.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-put
-<span class="fc" id="L181">    registerFunction(ArrayPut.SIGNATURE);</span>
+<span class="fc" id="L195">    registerFunction(ArrayPut.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-append
-<span class="fc" id="L183">    registerFunction(ArrayAppend.SIGNATURE);</span>
+<span class="fc" id="L197">    registerFunction(ArrayAppend.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-subarray
-<span class="fc" id="L185">    registerFunction(ArraySubarray.SIGNATURE_TWO_ARG);</span>
-<span class="fc" id="L186">    registerFunction(ArraySubarray.SIGNATURE_THREE_ARG);</span>
+<span class="fc" id="L199">    registerFunction(ArraySubarray.SIGNATURE_TWO_ARG);</span>
+<span class="fc" id="L200">    registerFunction(ArraySubarray.SIGNATURE_THREE_ARG);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-remove
-<span class="fc" id="L188">    registerFunction(ArrayRemove.SIGNATURE);</span>
+<span class="fc" id="L202">    registerFunction(ArrayRemove.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-insert-before
-<span class="fc" id="L190">    registerFunction(ArrayInsertBefore.SIGNATURE);</span>
+<span class="fc" id="L204">    registerFunction(ArrayInsertBefore.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-head
-<span class="fc" id="L192">    registerFunction(ArrayHead.SIGNATURE);</span>
+<span class="fc" id="L206">    registerFunction(ArrayHead.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-tail
-<span class="fc" id="L194">    registerFunction(ArrayTail.SIGNATURE);</span>
+<span class="fc" id="L208">    registerFunction(ArrayTail.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-reverse
-<span class="fc" id="L196">    registerFunction(ArrayReverse.SIGNATURE);</span>
+<span class="fc" id="L210">    registerFunction(ArrayReverse.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-array-join
-<span class="fc" id="L198">    registerFunction(ArrayJoin.SIGNATURE);</span>
+<span class="fc" id="L212">    registerFunction(ArrayJoin.SIGNATURE);</span>
     // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-for-each
     // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-filter
     // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-fold-left
@@ -203,27 +217,27 @@ public class DefaultFunctionLibrary
     // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-for-each-pair
     // P3: https://www.w3.org/TR/xpath-functions-31/#func-array-sort
     // https://www.w3.org/TR/xpath-functions-31/#func-array-flatten
-<span class="fc" id="L206">    registerFunction(ArrayFlatten.SIGNATURE);</span>
+<span class="fc" id="L220">    registerFunction(ArrayFlatten.SIGNATURE);</span>
 
     // https://www.w3.org/TR/xpath-functions-31/#func-map-merge
-<span class="fc" id="L209">    registerFunction(MapMerge.SIGNATURE_ONE_ARG);</span>
-<span class="fc" id="L210">    registerFunction(MapMerge.SIGNATURE_TWO_ARG);</span>
+<span class="fc" id="L223">    registerFunction(MapMerge.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L224">    registerFunction(MapMerge.SIGNATURE_TWO_ARG);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-map-size
-<span class="fc" id="L212">    registerFunction(MapSize.SIGNATURE);</span>
+<span class="fc" id="L226">    registerFunction(MapSize.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-map-keys
-<span class="fc" id="L214">    registerFunction(MapKeys.SIGNATURE);</span>
+<span class="fc" id="L228">    registerFunction(MapKeys.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-map-contains
-<span class="fc" id="L216">    registerFunction(MapContains.SIGNATURE);</span>
+<span class="fc" id="L230">    registerFunction(MapContains.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-map-get
-<span class="fc" id="L218">    registerFunction(MapGet.SIGNATURE);</span>
+<span class="fc" id="L232">    registerFunction(MapGet.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-map-find
-<span class="fc" id="L220">    registerFunction(MapFind.SIGNATURE);</span>
+<span class="fc" id="L234">    registerFunction(MapFind.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-map-put
-<span class="fc" id="L222">    registerFunction(MapPut.SIGNATURE);</span>
+<span class="fc" id="L236">    registerFunction(MapPut.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-map-entry
-<span class="fc" id="L224">    registerFunction(MapEntry.SIGNATURE);</span>
+<span class="fc" id="L238">    registerFunction(MapEntry.SIGNATURE);</span>
     // https://www.w3.org/TR/xpath-functions-31/#func-map-remove
-<span class="fc" id="L226">    registerFunction(MapRemove.SIGNATURE);</span>
+<span class="fc" id="L240">    registerFunction(MapRemove.SIGNATURE);</span>
     // P3: https://www.w3.org/TR/xpath-functions-31/#func-map-for-each
 
     // // xpath casting functions
@@ -260,33 +274,33 @@ public class DefaultFunctionLibrary
     // IStringItem::cast));
 
     // metapath casting functions
-<span class="fc" id="L263">    registerFunction(CastFunction.signature(</span>
-        MetapathConstants.NS_METAPATH, &quot;boolean&quot;, IBooleanItem.class, IBooleanItem::cast));
-<span class="fc" id="L265">    registerFunction(CastFunction.signature(</span>
-        MetapathConstants.NS_METAPATH, &quot;date&quot;, IDateItem.class, IDateItem::cast));
-<span class="fc" id="L267">    registerFunction(CastFunction.signature(</span>
-        MetapathConstants.NS_METAPATH, &quot;date-time&quot;, IDateTimeItem.class, IDateTimeItem::cast));
-<span class="fc" id="L269">    registerFunction(CastFunction.signature(</span>
-        MetapathConstants.NS_METAPATH, &quot;decimal&quot;, IDecimalItem.class, IDecimalItem::cast));
-<span class="fc" id="L271">    registerFunction(CastFunction.signature(</span>
-        MetapathConstants.NS_METAPATH, &quot;duration&quot;, IDurationItem.class, IDurationItem::cast));
-<span class="fc" id="L273">    registerFunction(CastFunction.signature(</span>
-        MetapathConstants.NS_METAPATH, &quot;integer&quot;, IIntegerItem.class, IIntegerItem::cast));
-<span class="fc" id="L275">    registerFunction(CastFunction.signature(</span>
-        MetapathConstants.NS_METAPATH, &quot;ncname&quot;, INcNameItem.class, INcNameItem::cast));
 <span class="fc" id="L277">    registerFunction(CastFunction.signature(</span>
+        MetapathConstants.NS_METAPATH, &quot;boolean&quot;, IBooleanItem.class, IBooleanItem::cast));
+<span class="fc" id="L279">    registerFunction(CastFunction.signature(</span>
+        MetapathConstants.NS_METAPATH, &quot;date&quot;, IDateItem.class, IDateItem::cast));
+<span class="fc" id="L281">    registerFunction(CastFunction.signature(</span>
+        MetapathConstants.NS_METAPATH, &quot;date-time&quot;, IDateTimeItem.class, IDateTimeItem::cast));
+<span class="fc" id="L283">    registerFunction(CastFunction.signature(</span>
+        MetapathConstants.NS_METAPATH, &quot;decimal&quot;, IDecimalItem.class, IDecimalItem::cast));
+<span class="fc" id="L285">    registerFunction(CastFunction.signature(</span>
+        MetapathConstants.NS_METAPATH, &quot;duration&quot;, IDurationItem.class, IDurationItem::cast));
+<span class="fc" id="L287">    registerFunction(CastFunction.signature(</span>
+        MetapathConstants.NS_METAPATH, &quot;integer&quot;, IIntegerItem.class, IIntegerItem::cast));
+<span class="fc" id="L289">    registerFunction(CastFunction.signature(</span>
+        MetapathConstants.NS_METAPATH, &quot;ncname&quot;, INcNameItem.class, INcNameItem::cast));
+<span class="fc" id="L291">    registerFunction(CastFunction.signature(</span>
         MetapathConstants.NS_METAPATH, &quot;non-negative-integer&quot;, INonNegativeIntegerItem.class,
         INonNegativeIntegerItem::cast));
-<span class="fc" id="L280">    registerFunction(CastFunction.signature(</span>
+<span class="fc" id="L294">    registerFunction(CastFunction.signature(</span>
         MetapathConstants.NS_METAPATH, &quot;positive-integer&quot;, IPositiveIntegerItem.class,
         IPositiveIntegerItem::cast));
-<span class="fc" id="L283">    registerFunction(CastFunction.signature(</span>
+<span class="fc" id="L297">    registerFunction(CastFunction.signature(</span>
         MetapathConstants.NS_METAPATH, &quot;string&quot;, IStringItem.class, IStringItem::cast));
 
     // extra functions
-<span class="fc" id="L287">    registerFunction(MpRecurseDepth.SIGNATURE_ONE_ARG);</span>
-<span class="fc" id="L288">    registerFunction(MpRecurseDepth.SIGNATURE_TWO_ARG);</span>
-<span class="fc" id="L289">  }</span>
+<span class="fc" id="L301">    registerFunction(MpRecurseDepth.SIGNATURE_ONE_ARG);</span>
+<span class="fc" id="L302">    registerFunction(MpRecurseDepth.SIGNATURE_TWO_ARG);</span>
+<span class="fc" id="L303">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

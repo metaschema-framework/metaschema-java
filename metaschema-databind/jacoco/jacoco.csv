@@ -23,8 +23,8 @@ Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.dat
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen.typeinfo,DefaultTypeResolver,71,411,11,17,11,92,11,31,1,27
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen.typeinfo,ITypeResolver,7,35,1,3,1,7,1,4,0,3
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen.typeinfo,AbstractPropertyTypeInfo,12,130,3,3,0,30,3,5,0,5
-Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.metapath.function,Model,90,0,12,0,34,0,9,0,3,0
-Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.metapath.function,DatabindFunctionLibrary,6,0,0,0,3,0,1,0,1,0
+Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.metapath.function,Model,66,24,12,0,19,15,8,1,2,1
+Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.metapath.function,DatabindFunctionLibrary,0,6,0,0,0,3,0,1,0,1
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind,IBindingContext.ISchemaValidationProvider,89,3,9,1,18,1,7,1,1,1
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind,IBindingContext.IBindingMatcher,14,8,1,1,2,2,1,1,0,1
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind,PostProcessingModuleLoaderStrategy,0,67,1,5,0,18,1,6,0,4
@@ -58,7 +58,7 @@ Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.dat
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen,JavaGenerator,0,34,1,1,0,8,1,3,0,3
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen,ClassUtils,0,31,0,0,0,7,0,5,0,5
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen,PackageProductionImpl,3,21,0,0,1,7,1,2,1,2
-Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen,ModuleCompilerHelper,73,188,19,11,18,43,15,9,1,8
+Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen,ModuleCompilerHelper,81,180,18,12,18,43,15,9,1,8
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen,ProductionImpl,25,104,1,5,4,24,4,11,3,9
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen.typeinfo.def,IAssemblyDefinitionTypeInfo,0,6,0,0,0,1,0,1,0,1
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.codegen.typeinfo.def,AssemblyDefinitionTypeInfoImpl,23,122,4,8,4,27,5,10,2,7
@@ -109,8 +109,8 @@ Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.dat
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,InstanceModelFieldInline,38,192,5,7,5,43,8,21,3,20
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,BindingModule.Definitions,18,134,1,9,4,30,1,5,0,1
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,InstanceModelFieldReference,39,99,2,2,7,23,8,13,6,13
-Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,InstanceModelChoice,30,42,0,0,7,8,6,4,6,4
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,InstanceModelChoiceGroup,26,96,4,4,3,20,6,11,2,11
+Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,InstanceModelChoice,30,42,0,0,7,8,6,4,6,4
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,ChoiceGroupModelContainerSupport,152,168,14,12,32,42,16,7,5,5
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,ModelSupport,42,197,13,32,10,62,13,30,1,18
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model.metaschema.impl,InstanceModelGroupedAssemblyReference,34,55,0,0,7,14,6,8,6,8
@@ -174,8 +174,8 @@ Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.dat
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,IBoundDefinitionModelField,2,0,0,0,1,0,1,0,1,0
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,IBoundInstanceModelNamed,4,32,0,2,1,8,1,7,1,6
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,IBoundDefinitionModelFieldComplex,49,99,6,14,12,30,8,12,4,6
-Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,IBoundInstanceModelFieldComplex,22,15,0,0,6,4,4,3,4,3
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,IFeatureJavaField,46,43,0,0,10,14,1,3,1,3
+Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,IBoundInstanceModelFieldComplex,22,15,0,0,6,4,4,3,4,3
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,IBoundDefinitionModelAssembly,9,39,0,2,3,9,3,6,3,5
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,AbstractBoundModule,83,251,7,11,17,51,13,21,6,19
 Metaschema Java Data Binding and Code Generation,gov.nist.secauto.metaschema.databind.model,IBoundInstanceModelField,27,42,2,4,5,13,2,3,0,2

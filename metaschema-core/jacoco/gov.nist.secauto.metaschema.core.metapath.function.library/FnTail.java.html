@@ -24,22 +24,23 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * &lt;a href= &quot;https://www.w3.org/TR/xpath-functions-31/#func-tail&quot;&gt;fn:tail&lt;/a&gt;.
  */
 public final class FnTail {
+  private static final String NAME = &quot;tail&quot;;
   @NonNull
-<span class="fc" id="L28">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L29">      .name(&quot;tail&quot;)</span>
-<span class="fc" id="L30">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L31">      .deterministic()</span>
-<span class="fc" id="L32">      .contextIndependent()</span>
-<span class="fc" id="L33">      .focusIndependent()</span>
-<span class="fc" id="L34">      .argument(IArgument.builder()</span>
-<span class="fc" id="L35">          .name(&quot;arg&quot;)</span>
-<span class="fc" id="L36">          .type(IItem.class)</span>
-<span class="fc" id="L37">          .zeroOrMore()</span>
-<span class="fc" id="L38">          .build())</span>
-<span class="fc" id="L39">      .returnType(IItem.class)</span>
-<span class="fc" id="L40">      .returnZeroOrMore()</span>
-<span class="fc" id="L41">      .functionHandler(FnTail::execute)</span>
-<span class="fc" id="L42">      .build();</span>
+<span class="fc" id="L29">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L30">      .name(NAME)</span>
+<span class="fc" id="L31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L32">      .deterministic()</span>
+<span class="fc" id="L33">      .contextIndependent()</span>
+<span class="fc" id="L34">      .focusIndependent()</span>
+<span class="fc" id="L35">      .argument(IArgument.builder()</span>
+<span class="fc" id="L36">          .name(&quot;arg&quot;)</span>
+<span class="fc" id="L37">          .type(IItem.class)</span>
+<span class="fc" id="L38">          .zeroOrMore()</span>
+<span class="fc" id="L39">          .build())</span>
+<span class="fc" id="L40">      .returnType(IItem.class)</span>
+<span class="fc" id="L41">      .returnZeroOrMore()</span>
+<span class="fc" id="L42">      .functionHandler(FnTail::execute)</span>
+<span class="fc" id="L43">      .build();</span>
 
   private FnTail() {
     // disable construction
@@ -51,8 +52,8 @@ public final class FnTail {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L54">    ISequence&lt;?&gt; items = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="fc" id="L55">    return ISequence.ofCollection(fnTail(items));</span>
+<span class="fc" id="L55">    ISequence&lt;?&gt; items = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L56">    return ISequence.ofCollection(fnTail(items));</span>
   }
 
   /**
@@ -65,9 +66,9 @@ public final class FnTail {
    */
   @NonNull
   public static List&lt;? extends IItem&gt; fnTail(@NonNull List&lt;? extends IItem&gt; sequence) {
-<span class="fc bfc" id="L68" title="All 2 branches covered.">    return sequence.size() &lt;= 1</span>
-<span class="fc" id="L69">        ? CollectionUtil.emptyList()</span>
-<span class="fc" id="L70">        : ObjectUtils.notNull(sequence.subList(1, sequence.size()));</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">    return sequence.size() &lt;= 1</span>
+<span class="fc" id="L70">        ? CollectionUtil.emptyList()</span>
+<span class="fc" id="L71">        : ObjectUtils.notNull(sequence.subList(1, sequence.size()));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

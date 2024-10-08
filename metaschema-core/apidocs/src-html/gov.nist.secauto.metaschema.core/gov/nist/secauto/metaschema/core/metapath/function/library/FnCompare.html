@@ -37,10 +37,10 @@
 <span class="source-line-no">024</span><span id="line-24"> * "https://www.w3.org/TR/xpath-functions-31/#func-compare"&gt;fn:compare&lt;/a&gt;.</span>
 <span class="source-line-no">025</span><span id="line-25"> */</span>
 <span class="source-line-no">026</span><span id="line-26">public final class FnCompare {</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">027</span><span id="line-27">  private static final String NAME = "compare";</span>
 <span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
 <span class="source-line-no">029</span><span id="line-29">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">030</span><span id="line-30">      .name("compare")</span>
+<span class="source-line-no">030</span><span id="line-30">      .name(NAME)</span>
 <span class="source-line-no">031</span><span id="line-31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
 <span class="source-line-no">032</span><span id="line-32">      .deterministic()</span>
 <span class="source-line-no">033</span><span id="line-33">      .contextDependent()</span>

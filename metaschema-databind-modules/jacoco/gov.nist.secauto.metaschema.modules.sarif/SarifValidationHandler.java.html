@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SarifValidationHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Modules</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.modules.sarif</a> &gt; <span class="el_source">SarifValidationHandler.java</span></div><h1>SarifValidationHandler.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.modules.sarif;
+
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.IResourceLocation;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
+import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
+import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
+import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.IVersionInfo;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.UriUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.io.Format;
+import gov.nist.secauto.metaschema.databind.io.SerializationFeature;
+
+import org.schemastore.json.sarif.x210.Artifact;
+import org.schemastore.json.sarif.x210.ArtifactLocation;
+import org.schemastore.json.sarif.x210.Location;
+import org.schemastore.json.sarif.x210.LogicalLocation;
+import org.schemastore.json.sarif.x210.Message;
+import org.schemastore.json.sarif.x210.MultiformatMessageString;
+import org.schemastore.json.sarif.x210.PhysicalLocation;
+import org.schemastore.json.sarif.x210.Region;
+import org.schemastore.json.sarif.x210.ReportingDescriptor;
+import org.schemastore.json.sarif.x210.Result;
+import org.schemastore.json.sarif.x210.Run;
+import org.schemastore.json.sarif.x210.Sarif;
+import org.schemastore.json.sarif.x210.Tool;
+import org.schemastore.json.sarif.x210.ToolComponent;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+public final class SarifValidationHandler {
+<span class="fc" id="L59">  private enum Kind {</span>
+<span class="fc" id="L60">    NOT_APPLICABLE(&quot;notApplicable&quot;),</span>
+<span class="fc" id="L61">    PASS(&quot;pass&quot;),</span>
+<span class="fc" id="L62">    FAIL(&quot;fail&quot;),</span>
+<span class="fc" id="L63">    REVIEW(&quot;review&quot;),</span>
+<span class="fc" id="L64">    OPEN(&quot;open&quot;),</span>
+<span class="fc" id="L65">    INFORMATIONAL(&quot;informational&quot;);</span>
+
+    @NonNull
+    private final String label;
+
+<span class="fc" id="L70">    Kind(@NonNull String label) {</span>
+<span class="fc" id="L71">      this.label = label;</span>
+<span class="fc" id="L72">    }</span>
+
+    @NonNull
+    public String getLabel() {
+<span class="fc" id="L76">      return label;</span>
+    }
+  }
+
+<span class="fc" id="L80">  private enum SeverityLevel {</span>
+<span class="fc" id="L81">    NONE(&quot;none&quot;),</span>
+<span class="fc" id="L82">    NOTE(&quot;note&quot;),</span>
+<span class="fc" id="L83">    WARNING(&quot;warning&quot;),</span>
+<span class="fc" id="L84">    ERROR(&quot;error&quot;);</span>
+
+    @NonNull
+    private final String label;
+
+<span class="fc" id="L89">    SeverityLevel(@NonNull String label) {</span>
+<span class="fc" id="L90">      this.label = label;</span>
+<span class="fc" id="L91">    }</span>
+
+    @NonNull
+    public String getLabel() {
+<span class="fc" id="L95">      return label;</span>
+    }
+  }
+
+  @NonNull
+  public static final String SARIF_NS = &quot;https://docs.oasis-open.org/sarif/sarif/v2.1.0&quot;;
+  @NonNull
+<span class="fc" id="L102">  public static final IAttributable.Key SARIF_HELP_URL_KEY</span>
+<span class="fc" id="L103">      = IAttributable.key(&quot;help-url&quot;, SarifValidationHandler.SARIF_NS);</span>
+  @NonNull
+<span class="fc" id="L105">  public static final IAttributable.Key SARIF_HELP_TEXT_KEY</span>
+<span class="fc" id="L106">      = IAttributable.key(&quot;help-text&quot;, SarifValidationHandler.SARIF_NS);</span>
+  @NonNull
+<span class="fc" id="L108">  public static final IAttributable.Key SARIF_HELP_MARKDOWN_KEY</span>
+<span class="fc" id="L109">      = IAttributable.key(&quot;help-markdown&quot;, SarifValidationHandler.SARIF_NS);</span>
+
+  @NonNull
+  private final URI source;
+  @Nullable
+  private final IVersionInfo toolVersion;
+<span class="fc" id="L115">  private final AtomicInteger artifactIndex = new AtomicInteger(-1);</span>
+<span class="fc" id="L116">  private final AtomicInteger ruleIndex = new AtomicInteger(-1);</span>
+<span class="fc" id="L117">  @NonNull</span>
+  private final Map&lt;URI, ArtifactRecord&gt; artifacts = new LinkedHashMap&lt;&gt;();
+<span class="fc" id="L119">  @NonNull</span>
+  private final List&lt;AbstractRuleRecord&gt; rules = new LinkedList&lt;&gt;();
+<span class="fc" id="L121">  @NonNull</span>
+  private final Map&lt;IConstraint, ConstraintRuleRecord&gt; constraintRules = new LinkedHashMap&lt;&gt;();
+<span class="fc" id="L123">  @NonNull</span>
+  private final List&lt;IResult&gt; results = new LinkedList&lt;&gt;();
+<span class="fc" id="L125">  @NonNull</span>
+  private final SchemaRuleRecord schemaRule = new SchemaRuleRecord();
+<span class="fc" id="L127">  private boolean schemaValid = true;</span>
+
+  public SarifValidationHandler(
+      @NonNull URI source,
+<span class="fc" id="L131">      @Nullable IVersionInfo toolVersion) {</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">    if (!source.isAbsolute()) {</span>
+<span class="nc" id="L133">      throw new IllegalArgumentException(String.format(&quot;The source URI '%s' is not absolute.&quot;, source.toASCIIString()));</span>
+    }
+
+<span class="fc" id="L136">    this.source = source;</span>
+<span class="fc" id="L137">    this.toolVersion = toolVersion;</span>
+<span class="fc" id="L138">  }</span>
+
+  public URI getSource() {
+<span class="nc" id="L141">    return source;</span>
+  }
+
+  public IVersionInfo getToolVersion() {
+<span class="fc" id="L145">    return toolVersion;</span>
+  }
+
+  public void addFindings(@NonNull List&lt;? extends IValidationFinding&gt; findings) {
+<span class="nc bnc" id="L149" title="All 2 branches missed.">    for (IValidationFinding finding : findings) {</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">      assert finding != null;</span>
+<span class="nc" id="L151">      addFinding(finding);</span>
+<span class="nc" id="L152">    }</span>
+<span class="nc" id="L153">  }</span>
+
+  public void addFinding(@NonNull IValidationFinding finding) {
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">    if (finding instanceof JsonValidationFinding) {</span>
+<span class="nc" id="L157">      addJsonValidationFinding((JsonValidationFinding) finding);</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">    } else if (finding instanceof XmlValidationFinding) {</span>
+<span class="nc" id="L159">      addXmlValidationFinding((XmlValidationFinding) finding);</span>
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">    } else if (finding instanceof ConstraintValidationFinding) {</span>
+<span class="fc" id="L161">      addConstraintValidationFinding((ConstraintValidationFinding) finding);</span>
+    } else {
+<span class="nc" id="L163">      throw new IllegalStateException();</span>
+    }
+<span class="fc" id="L165">  }</span>
+
+  public URI relativize(@NonNull URI output, @NonNull URI artifact) throws IOException {
+    try {
+<span class="fc" id="L169">      return UriUtils.relativize(output, artifact, true);</span>
+<span class="nc" id="L170">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L171">      throw new IOException(ex);</span>
+    }
+  }
+
+  private ConstraintRuleRecord getRuleRecord(@NonNull IConstraint constraint) {
+<span class="fc" id="L176">    ConstraintRuleRecord retval = constraintRules.get(constraint);</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="fc" id="L178">      retval = new ConstraintRuleRecord(constraint);</span>
+<span class="fc" id="L179">      constraintRules.put(constraint, retval);</span>
+<span class="fc" id="L180">      rules.add(retval);</span>
+    }
+<span class="fc" id="L182">    return retval;</span>
+  }
+
+  private ArtifactRecord getArtifactRecord(@NonNull URI artifactUri) {
+<span class="fc" id="L186">    ArtifactRecord retval = artifacts.get(artifactUri);</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L188">      retval = new ArtifactRecord(artifactUri);</span>
+<span class="fc" id="L189">      artifacts.put(artifactUri, retval);</span>
+    }
+<span class="fc" id="L191">    return retval;</span>
+  }
+
+  private void addJsonValidationFinding(@NonNull JsonValidationFinding finding) {
+<span class="nc" id="L195">    results.add(new SchemaResult(finding));</span>
+<span class="nc bnc" id="L196" title="All 4 branches missed.">    if (schemaValid &amp;&amp; IValidationFinding.Kind.FAIL.equals(finding.getKind())) {</span>
+<span class="nc" id="L197">      schemaValid = false;</span>
+    }
+<span class="nc" id="L199">  }</span>
+
+  private void addXmlValidationFinding(@NonNull XmlValidationFinding finding) {
+<span class="nc" id="L202">    results.add(new SchemaResult(finding));</span>
+<span class="nc bnc" id="L203" title="All 4 branches missed.">    if (schemaValid &amp;&amp; IValidationFinding.Kind.FAIL.equals(finding.getKind())) {</span>
+<span class="nc" id="L204">      schemaValid = false;</span>
+    }
+<span class="nc" id="L206">  }</span>
+
+  private void addConstraintValidationFinding(@NonNull ConstraintValidationFinding finding) {
+<span class="fc" id="L209">    results.add(new ConstraintResult(finding));</span>
+<span class="fc" id="L210">  }</span>
+
+  public void write(@NonNull Path outputFile) throws IOException {
+
+<span class="fc" id="L214">    URI output = ObjectUtils.notNull(outputFile.toUri());</span>
+
+<span class="fc" id="L216">    Sarif sarif = new Sarif();</span>
+<span class="fc" id="L217">    sarif.setVersion(&quot;2.1.0&quot;);</span>
+
+<span class="fc" id="L219">    Run run = new Run();</span>
+
+<span class="fc" id="L221">    sarif.addRun(run);</span>
+
+<span class="fc" id="L223">    Artifact artifact = new Artifact();</span>
+
+<span class="fc" id="L225">    artifact.setLocation(getArtifactRecord(source).generateArtifactLocation(output));</span>
+
+<span class="fc" id="L227">    run.addArtifact(artifact);</span>
+
+<span class="fc bfc" id="L229" title="All 2 branches covered.">    for (IResult result : results) {</span>
+<span class="fc" id="L230">      result.generateResults(output).forEach(run::addResult);</span>
+<span class="fc" id="L231">    }</span>
+
+<span class="pc bpc" id="L233" title="3 of 4 branches missed.">    if (!rules.isEmpty() || toolVersion != null) {</span>
+<span class="fc" id="L234">      Tool tool = new Tool();</span>
+<span class="fc" id="L235">      ToolComponent driver = new ToolComponent();</span>
+
+<span class="fc" id="L237">      IVersionInfo toolVersion = getToolVersion();</span>
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">      if (toolVersion != null) {</span>
+<span class="fc" id="L239">        driver.setName(toolVersion.getName());</span>
+<span class="fc" id="L240">        driver.setVersion(toolVersion.getVersion());</span>
+      }
+
+<span class="fc bfc" id="L243" title="All 2 branches covered.">      for (AbstractRuleRecord rule : rules) {</span>
+<span class="fc" id="L244">        driver.addRule(rule.generate());</span>
+<span class="fc" id="L245">      }</span>
+
+<span class="fc" id="L247">      tool.setDriver(driver);</span>
+<span class="fc" id="L248">      run.setTool(tool);</span>
+    }
+
+<span class="fc" id="L251">    IBindingContext.instance().newSerializer(Format.JSON, Sarif.class)</span>
+<span class="fc" id="L252">        .disableFeature(SerializationFeature.SERIALIZE_ROOT)</span>
+<span class="fc" id="L253">        .serialize(</span>
+            sarif,
+            outputFile,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.WRITE,
+            StandardOpenOption.TRUNCATE_EXISTING);
+<span class="fc" id="L259">  }</span>
+
+  private interface IResult {
+    @NonNull
+    IValidationFinding getFinding();
+
+    @NonNull
+    List&lt;Result&gt; generateResults(@NonNull URI output) throws IOException;
+  }
+
+  private abstract class AbstractResult&lt;T extends IValidationFinding&gt; implements IResult {
+    @NonNull
+    private final T finding;
+
+<span class="fc" id="L273">    protected AbstractResult(@NonNull T finding) {</span>
+<span class="fc" id="L274">      this.finding = finding;</span>
+<span class="fc" id="L275">    }</span>
+
+    @Override
+    public T getFinding() {
+<span class="fc" id="L279">      return finding;</span>
+    }
+
+    @NonNull
+    protected Kind kind(@NonNull IValidationFinding finding) {
+<span class="fc" id="L284">      IValidationFinding.Kind kind = finding.getKind();</span>
+
+      Kind retval;
+<span class="pc bpc" id="L287" title="4 of 5 branches missed.">      switch (kind) {</span>
+      case FAIL:
+<span class="fc" id="L289">        retval = Kind.FAIL;</span>
+<span class="fc" id="L290">        break;</span>
+      case INFORMATIONAL:
+<span class="nc" id="L292">        retval = Kind.INFORMATIONAL;</span>
+<span class="nc" id="L293">        break;</span>
+      case NOT_APPLICABLE:
+<span class="nc" id="L295">        retval = Kind.NOT_APPLICABLE;</span>
+<span class="nc" id="L296">        break;</span>
+      case PASS:
+<span class="nc" id="L298">        retval = Kind.PASS;</span>
+<span class="nc" id="L299">        break;</span>
+      default:
+<span class="nc" id="L301">        throw new IllegalArgumentException(String.format(&quot;Invalid finding kind '%s'.&quot;, kind));</span>
+      }
+<span class="fc" id="L303">      return retval;</span>
+    }
+
+    @NonNull
+    protected SeverityLevel level(@NonNull Level severity) {
+      SeverityLevel retval;
+<span class="pc bpc" id="L309" title="4 of 5 branches missed.">      switch (severity) {</span>
+      case CRITICAL:
+      case ERROR:
+<span class="fc" id="L312">        retval = SeverityLevel.ERROR;</span>
+<span class="fc" id="L313">        break;</span>
+      case INFORMATIONAL:
+      case DEBUG:
+<span class="nc" id="L316">        retval = SeverityLevel.NOTE;</span>
+<span class="nc" id="L317">        break;</span>
+      case WARNING:
+<span class="nc" id="L319">        retval = SeverityLevel.WARNING;</span>
+<span class="nc" id="L320">        break;</span>
+      case NONE:
+<span class="nc" id="L322">        retval = SeverityLevel.NONE;</span>
+<span class="nc" id="L323">        break;</span>
+      default:
+<span class="nc" id="L325">        throw new IllegalArgumentException(String.format(&quot;Invalid severity '%s'.&quot;, severity));</span>
+      }
+<span class="fc" id="L327">      return retval;</span>
+    }
+
+    protected void message(@NonNull IValidationFinding finding, @NonNull Result result) {
+<span class="fc" id="L331">      String message = finding.getMessage();</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">      if (message == null) {</span>
+<span class="fc" id="L333">        message = &quot;&quot;;</span>
+      }
+
+<span class="fc" id="L336">      Message msg = new Message();</span>
+<span class="fc" id="L337">      msg.setText(message);</span>
+<span class="fc" id="L338">      result.setMessage(msg);</span>
+<span class="fc" id="L339">    }</span>
+
+    protected void location(@NonNull IValidationFinding finding, @NonNull Result result, @NonNull URI base)
+        throws IOException {
+<span class="fc" id="L343">      IResourceLocation location = finding.getLocation();</span>
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">      if (location != null) {</span>
+        // region
+<span class="fc" id="L346">        Region region = new Region();</span>
+
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">        if (location.getLine() &gt; -1) {</span>
+<span class="fc" id="L349">          region.setStartLine(BigInteger.valueOf(location.getLine()));</span>
+<span class="fc" id="L350">          region.setEndLine(BigInteger.valueOf(location.getLine()));</span>
+        }
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">        if (location.getColumn() &gt; -1) {</span>
+<span class="fc" id="L353">          region.setStartColumn(BigInteger.valueOf(location.getColumn() + 1));</span>
+<span class="fc" id="L354">          region.setEndColumn(BigInteger.valueOf(location.getColumn() + 1));</span>
+        }
+<span class="pc bpc" id="L356" title="1 of 2 branches missed.">        if (location.getByteOffset() &gt; -1) {</span>
+<span class="fc" id="L357">          region.setByteOffset(BigInteger.valueOf(location.getByteOffset()));</span>
+<span class="fc" id="L358">          region.setByteLength(BigInteger.ZERO);</span>
+        }
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">        if (location.getCharOffset() &gt; -1) {</span>
+<span class="fc" id="L361">          region.setCharOffset(BigInteger.valueOf(location.getCharOffset()));</span>
+<span class="fc" id="L362">          region.setCharLength(BigInteger.ZERO);</span>
+        }
+
+<span class="fc" id="L365">        PhysicalLocation physical = new PhysicalLocation();</span>
+
+<span class="fc" id="L367">        URI documentUri = finding.getDocumentUri();</span>
+<span class="pc bpc" id="L368" title="1 of 2 branches missed.">        if (documentUri != null) {</span>
+<span class="fc" id="L369">          physical.setArtifactLocation(getArtifactRecord(documentUri).generateArtifactLocation(base));</span>
+        }
+<span class="fc" id="L371">        physical.setRegion(region);</span>
+
+<span class="fc" id="L373">        LogicalLocation logical = new LogicalLocation();</span>
+
+<span class="fc" id="L375">        logical.setDecoratedName(finding.getPath());</span>
+
+<span class="fc" id="L377">        Location loc = new Location();</span>
+<span class="fc" id="L378">        loc.setPhysicalLocation(physical);</span>
+<span class="fc" id="L379">        loc.setLogicalLocation(logical);</span>
+<span class="fc" id="L380">        result.addLocation(loc);</span>
+      }
+<span class="fc" id="L382">    }</span>
+  }
+
+  private final class SchemaResult
+      extends AbstractResult&lt;IValidationFinding&gt; {
+
+<span class="nc" id="L388">    protected SchemaResult(@NonNull IValidationFinding finding) {</span>
+<span class="nc" id="L389">      super(finding);</span>
+<span class="nc" id="L390">    }</span>
+
+    @Override
+    public List&lt;Result&gt; generateResults(@NonNull URI output) throws IOException {
+<span class="nc" id="L394">      IValidationFinding finding = getFinding();</span>
+
+<span class="nc" id="L396">      Result result = new Result();</span>
+
+<span class="nc" id="L398">      result.setRuleId(schemaRule.getId());</span>
+<span class="nc" id="L399">      result.setRuleIndex(BigInteger.valueOf(schemaRule.getIndex()));</span>
+<span class="nc" id="L400">      result.setGuid(schemaRule.getGuid());</span>
+
+<span class="nc" id="L402">      result.setKind(kind(finding).getLabel());</span>
+<span class="nc" id="L403">      result.setLevel(level(finding.getSeverity()).getLabel());</span>
+<span class="nc" id="L404">      message(finding, result);</span>
+<span class="nc" id="L405">      location(finding, result, output);</span>
+
+<span class="nc" id="L407">      return CollectionUtil.singletonList(result);</span>
+    }
+  }
+
+<span class="fc" id="L411">  private final class ConstraintResult</span>
+      extends AbstractResult&lt;ConstraintValidationFinding&gt; {
+
+<span class="fc" id="L414">    protected ConstraintResult(@NonNull ConstraintValidationFinding finding) {</span>
+<span class="fc" id="L415">      super(finding);</span>
+<span class="fc" id="L416">    }</span>
+
+    @Override
+    public List&lt;Result&gt; generateResults(@NonNull URI output) throws IOException {
+<span class="fc" id="L420">      ConstraintValidationFinding finding = getFinding();</span>
+
+<span class="fc" id="L422">      List&lt;Result&gt; retval = new LinkedList&lt;&gt;();</span>
+
+<span class="fc" id="L424">      Kind kind = kind(finding);</span>
+<span class="fc" id="L425">      SeverityLevel level = level(finding.getSeverity());</span>
+
+<span class="fc bfc" id="L427" title="All 2 branches covered.">      for (IConstraint constraint : finding.getConstraints()) {</span>
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">        assert constraint != null;</span>
+<span class="fc" id="L429">        ConstraintRuleRecord rule = getRuleRecord(constraint);</span>
+
+<span class="fc" id="L431">        Result result = new Result();</span>
+
+<span class="fc" id="L433">        String id = constraint.getId();</span>
+<span class="pc bpc" id="L434" title="1 of 2 branches missed.">        if (id != null) {</span>
+<span class="nc" id="L435">          result.setRuleId(id);</span>
+        }
+<span class="fc" id="L437">        result.setRuleIndex(BigInteger.valueOf(rule.getIndex()));</span>
+<span class="fc" id="L438">        result.setGuid(rule.getGuid());</span>
+<span class="fc" id="L439">        result.setKind(kind.getLabel());</span>
+<span class="fc" id="L440">        result.setLevel(level.getLabel());</span>
+<span class="fc" id="L441">        message(finding, result);</span>
+<span class="fc" id="L442">        location(finding, result, output);</span>
+
+<span class="fc" id="L444">        retval.add(result);</span>
+<span class="fc" id="L445">      }</span>
+<span class="fc" id="L446">      return retval;</span>
+    }
+  }
+
+  private abstract class AbstractRuleRecord {
+    private final int index;
+    @NonNull
+    private final UUID guid;
+
+<span class="fc" id="L455">    private AbstractRuleRecord() {</span>
+<span class="fc" id="L456">      this.index = ruleIndex.addAndGet(1);</span>
+<span class="fc" id="L457">      this.guid = ObjectUtils.notNull(UUID.randomUUID());</span>
+<span class="fc" id="L458">    }</span>
+
+    public int getIndex() {
+<span class="fc" id="L461">      return index;</span>
+    }
+
+    @NonNull
+    public UUID getGuid() {
+<span class="fc" id="L466">      return guid;</span>
+    }
+
+    @NonNull
+    protected abstract ReportingDescriptor generate();
+  }
+
+<span class="fc" id="L473">  private final class SchemaRuleRecord</span>
+      extends AbstractRuleRecord {
+
+    @Override
+    protected ReportingDescriptor generate() {
+<span class="nc" id="L478">      ReportingDescriptor retval = new ReportingDescriptor();</span>
+<span class="nc" id="L479">      retval.setId(getId());</span>
+<span class="nc" id="L480">      retval.setGuid(getGuid());</span>
+<span class="nc" id="L481">      return retval;</span>
+    }
+
+    public String getId() {
+<span class="nc" id="L485">      return &quot;schema-valid&quot;;</span>
+    }
+  }
+
+  private final class ConstraintRuleRecord
+      extends AbstractRuleRecord {
+    @NonNull
+    private final IConstraint constraint;
+
+<span class="fc" id="L494">    public ConstraintRuleRecord(@NonNull IConstraint constraint) {</span>
+<span class="fc" id="L495">      this.constraint = constraint;</span>
+<span class="fc" id="L496">    }</span>
+
+    @NonNull
+    public IConstraint getConstraint() {
+<span class="fc" id="L500">      return constraint;</span>
+    }
+
+    @Override
+    protected ReportingDescriptor generate() {
+<span class="fc" id="L505">      ReportingDescriptor retval = new ReportingDescriptor();</span>
+<span class="fc" id="L506">      IConstraint constraint = getConstraint();</span>
+
+<span class="fc" id="L508">      UUID guid = getGuid();</span>
+
+<span class="fc" id="L510">      String id = constraint.getId();</span>
+<span class="pc bpc" id="L511" title="1 of 2 branches missed.">      if (id == null) {</span>
+<span class="fc" id="L512">        retval.setId(guid.toString());</span>
+      } else {
+<span class="nc" id="L514">        retval.setId(id);</span>
+      }
+<span class="fc" id="L516">      retval.setGuid(guid);</span>
+<span class="fc" id="L517">      String formalName = constraint.getFormalName();</span>
+<span class="pc bpc" id="L518" title="1 of 2 branches missed.">      if (formalName != null) {</span>
+<span class="fc" id="L519">        MultiformatMessageString text = new MultiformatMessageString();</span>
+<span class="fc" id="L520">        text.setText(formalName);</span>
+<span class="fc" id="L521">        retval.setShortDescription(text);</span>
+      }
+<span class="fc" id="L523">      MarkupLine description = constraint.getDescription();</span>
+<span class="pc bpc" id="L524" title="1 of 2 branches missed.">      if (description != null) {</span>
+<span class="fc" id="L525">        MultiformatMessageString text = new MultiformatMessageString();</span>
+<span class="fc" id="L526">        text.setText(description.toText());</span>
+<span class="fc" id="L527">        text.setMarkdown(description.toMarkdown());</span>
+<span class="fc" id="L528">        retval.setFullDescription(text);</span>
+      }
+
+<span class="fc" id="L531">      Set&lt;String&gt; helpUrls = constraint.getPropertyValues(SARIF_HELP_URL_KEY);</span>
+<span class="pc bpc" id="L532" title="1 of 2 branches missed.">      if (!helpUrls.isEmpty()) {</span>
+<span class="fc" id="L533">        retval.setHelpUri(URI.create(helpUrls.stream().findFirst().get()));</span>
+      }
+
+<span class="fc" id="L536">      Set&lt;String&gt; helpText = constraint.getPropertyValues(SARIF_HELP_TEXT_KEY);</span>
+<span class="fc" id="L537">      Set&lt;String&gt; helpMarkdown = constraint.getPropertyValues(SARIF_HELP_MARKDOWN_KEY);</span>
+      // if there is help text or markdown, produce a message
+<span class="pc bpc" id="L539" title="2 of 4 branches missed.">      if (!helpText.isEmpty() || !helpMarkdown.isEmpty()) {</span>
+<span class="fc" id="L540">        MultiformatMessageString help = new MultiformatMessageString();</span>
+
+<span class="fc" id="L542">        MarkupMultiline markdown = helpMarkdown.stream().map(MarkupMultiline::fromMarkdown).findFirst().orElse(null);</span>
+<span class="pc bpc" id="L543" title="1 of 2 branches missed.">        if (markdown != null) {</span>
+          // markdown is provided
+<span class="fc" id="L545">          help.setMarkdown(markdown.toMarkdown());</span>
+        }
+
+<span class="pc bpc" id="L548" title="1 of 2 branches missed.">        String text = helpText.isEmpty()</span>
+<span class="fc" id="L549">            ? ObjectUtils.requireNonNull(markdown).toText() // if text is empty, markdown must be provided</span>
+<span class="pc" id="L550">            : helpText.stream().findFirst().get(); // use the provided text</span>
+<span class="fc" id="L551">        help.setText(text);</span>
+
+<span class="fc" id="L553">        retval.setHelp(help);</span>
+      }
+
+<span class="fc" id="L556">      return retval;</span>
+    }
+
+  }
+
+  private final class ArtifactRecord {
+    @NonNull
+    private final URI uri;
+    private final int index;
+
+<span class="fc" id="L566">    public ArtifactRecord(@NonNull URI uri) {</span>
+<span class="fc" id="L567">      this.uri = uri;</span>
+<span class="fc" id="L568">      this.index = artifactIndex.addAndGet(1);</span>
+<span class="fc" id="L569">    }</span>
+
+    @NonNull
+    public URI getUri() {
+<span class="fc" id="L573">      return uri;</span>
+    }
+
+    public int getIndex() {
+<span class="fc" id="L577">      return index;</span>
+    }
+
+    public ArtifactLocation generateArtifactLocation(@NonNull URI baseUri) throws IOException {
+<span class="fc" id="L581">      ArtifactLocation location = new ArtifactLocation();</span>
+<span class="fc" id="L582">      location.setUri(relativize(baseUri, getUri()));</span>
+<span class="fc" id="L583">      location.setIndex(BigInteger.valueOf(getIndex()));</span>
+<span class="fc" id="L584">      return location;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

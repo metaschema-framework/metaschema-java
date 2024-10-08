@@ -28,6 +28,14 @@ public class InvalidTypeFunctionException
   public static final int NODE_HAS_NO_TYPED_VALUE = 12;
 
   /**
+   * &lt;a href=
+   * &quot;https://www.w3.org/TR/xpath-functions-31/#ERRFOTY0014&quot;&gt;err:FOTY0014&lt;/a&gt;:
+   * Raised by fn:string, or by implicit string conversion, if the input sequence
+   * contains a function item.
+   */
+  public static final int ARGUMENT_TO_STRING_IS_FUNCTION = 14;
+
+  /**
    * the serial version UUID.
    */
   private static final long serialVersionUID = 1L;
@@ -42,8 +50,8 @@ public class InvalidTypeFunctionException
    *          the item the exception applies to
    */
   public InvalidTypeFunctionException(int code, @NonNull IItem item) {
-<span class="nc" id="L45">    super(code, generateMessage(item));</span>
-<span class="nc" id="L46">  }</span>
+<span class="fc" id="L53">    super(code, generateMessage(item));</span>
+<span class="fc" id="L54">  }</span>
 
   /**
    * Constructs a new exception with the provided {@code code}, {@code item}, and
@@ -57,25 +65,25 @@ public class InvalidTypeFunctionException
    *          the original exception cause
    */
   public InvalidTypeFunctionException(int code, @NonNull IItem item, Throwable cause) {
-<span class="nc" id="L60">    super(code, generateMessage(item), cause);</span>
-<span class="nc" id="L61">  }</span>
+<span class="nc" id="L68">    super(code, generateMessage(item), cause);</span>
+<span class="nc" id="L69">  }</span>
 
   private static String generateMessage(@NonNull IItem item) {
     String retval;
-<span class="nc bnc" id="L65" title="All 2 branches missed.">    if (item instanceof INodeItem) {</span>
-<span class="nc" id="L66">      INodeItem nodeItem = (INodeItem) item;</span>
-<span class="nc" id="L67">      retval = String.format(&quot;The %s node item at path '%s' has no typed value&quot;,</span>
-<span class="nc" id="L68">          nodeItem.getNodeItemType().name().toLowerCase(Locale.ROOT),</span>
-<span class="nc" id="L69">          nodeItem.getMetapath());</span>
-<span class="nc" id="L70">    } else {</span>
-<span class="nc" id="L71">      retval = String.format(&quot;Item '%s' has no typed value&quot;, item.getClass().getName());</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">    if (item instanceof INodeItem) {</span>
+<span class="nc" id="L74">      INodeItem nodeItem = (INodeItem) item;</span>
+<span class="nc" id="L75">      retval = String.format(&quot;The %s node item at path '%s' has no typed value&quot;,</span>
+<span class="nc" id="L76">          nodeItem.getNodeItemType().name().toLowerCase(Locale.ROOT),</span>
+<span class="nc" id="L77">          nodeItem.getMetapath());</span>
+<span class="nc" id="L78">    } else {</span>
+<span class="fc" id="L79">      retval = String.format(&quot;Item '%s' has no typed value&quot;, item.getClass().getName());</span>
     }
-<span class="nc" id="L73">    return retval;</span>
+<span class="fc" id="L81">    return retval;</span>
   }
 
   @Override
   public String getCodePrefix() {
-<span class="nc" id="L78">    return &quot;FOTY&quot;;</span>
+<span class="nc" id="L86">    return &quot;FOTY&quot;;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

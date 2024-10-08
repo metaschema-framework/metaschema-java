@@ -75,5 +75,11 @@ class DocumentNodeItemImpl
   public StaticContext getStaticContext() {
 <span class="nc" id="L76">    return staticContext;</span>
   }
+
+  @Override
+  public String stringValue() {
+<span class="nc" id="L81">    return getRootAssemblyNodeItem().stringValue();</span>
+  }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

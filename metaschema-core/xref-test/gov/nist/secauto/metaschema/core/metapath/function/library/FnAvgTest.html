@@ -27,13 +27,13 @@
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.MethodSource;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.CollectionUtil;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.MethodSource;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Stream;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
@@ -64,7 +64,7 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>        assertFunctionResult(
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>            FnAvg.SIGNATURE,
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>            ISequence.of(expected),
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>            List.of(ISequence.of(values)));
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>            CollectionUtil.singletonList(ISequence.of(values)));
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      } <strong class="jxr_keyword">catch</strong> (MetapathException ex) {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        <strong class="jxr_keyword">if</strong> (expected == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>          assertAll(
@@ -80,11 +80,11 @@
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      assertFunctionResult(
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          FnAvg.SIGNATURE,
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>          ISequence.empty(),
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>          List.of(ISequence.empty()));
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          CollectionUtil.singletonList(ISequence.empty()));
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    }
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+<div id="footer">© 2024</div>
 </body>
 </html>

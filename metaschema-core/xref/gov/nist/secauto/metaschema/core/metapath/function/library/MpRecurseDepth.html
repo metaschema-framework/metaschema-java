@@ -36,11 +36,11 @@
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> * Provides functions that evaluate a Metapath recursively over sequences.</em>
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a name="MpRecurseDepth" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/MpRecurseDepth.html#MpRecurseDepth">MpRecurseDepth</a> {
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <em class="jxr_comment">// private static final Logger logger = LogManager.getLogger(FnDoc.class);</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String NAME = <span class="jxr_string">"recurse-depth"</span>;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>    @NonNull
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a name="IFunction" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/IFunction.html#IFunction">IFunction</a> SIGNATURE_ONE_ARG = IFunction.builder()
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>        .name(<span class="jxr_string">"recurse-depth"</span>)
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>        .name(NAME)
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>        .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_EXTENDED)
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>        .deterministic()
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>        .contextDependent()
@@ -57,7 +57,7 @@
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>    @NonNull
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a name="IFunction" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/IFunction.html#IFunction">IFunction</a> SIGNATURE_TWO_ARG = IFunction.builder()
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>        .name(<span class="jxr_string">"recurse-depth"</span>)
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>        .name(NAME)
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>        .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_EXTENDED)
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>        .deterministic()
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>        .contextDependent()
@@ -161,6 +161,6 @@
 <a class="jxr_linenumber" name="L153" href="#L153">153</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+<div id="footer">© 2024</div>
 </body>
 </html>

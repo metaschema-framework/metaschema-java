@@ -27,27 +27,28 @@ import java.util.stream.IntStream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayRemove {
+  private static final String NAME = &quot;remove&quot;;
   @NonNull
-<span class="fc" id="L31">  public static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L32">      .name(&quot;remove&quot;)</span>
-<span class="fc" id="L33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L34">      .deterministic()</span>
-<span class="fc" id="L35">      .contextIndependent()</span>
-<span class="fc" id="L36">      .focusIndependent()</span>
-<span class="fc" id="L37">      .argument(IArgument.builder()</span>
-<span class="fc" id="L38">          .name(&quot;array&quot;)</span>
-<span class="fc" id="L39">          .type(IArrayItem.class)</span>
-<span class="fc" id="L40">          .one()</span>
-<span class="fc" id="L41">          .build())</span>
-<span class="fc" id="L42">      .argument(IArgument.builder()</span>
-<span class="fc" id="L43">          .name(&quot;positions&quot;)</span>
-<span class="fc" id="L44">          .type(IIntegerItem.class)</span>
-<span class="fc" id="L45">          .zeroOrMore()</span>
-<span class="fc" id="L46">          .build())</span>
-<span class="fc" id="L47">      .returnType(IArrayItem.class)</span>
-<span class="fc" id="L48">      .returnOne()</span>
-<span class="fc" id="L49">      .functionHandler(ArrayRemove::execute)</span>
-<span class="fc" id="L50">      .build();</span>
+<span class="fc" id="L32">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L33">      .name(NAME)</span>
+<span class="fc" id="L34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L35">      .deterministic()</span>
+<span class="fc" id="L36">      .contextIndependent()</span>
+<span class="fc" id="L37">      .focusIndependent()</span>
+<span class="fc" id="L38">      .argument(IArgument.builder()</span>
+<span class="fc" id="L39">          .name(&quot;array&quot;)</span>
+<span class="fc" id="L40">          .type(IArrayItem.class)</span>
+<span class="fc" id="L41">          .one()</span>
+<span class="fc" id="L42">          .build())</span>
+<span class="fc" id="L43">      .argument(IArgument.builder()</span>
+<span class="fc" id="L44">          .name(&quot;positions&quot;)</span>
+<span class="fc" id="L45">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L46">          .zeroOrMore()</span>
+<span class="fc" id="L47">          .build())</span>
+<span class="fc" id="L48">      .returnType(IArrayItem.class)</span>
+<span class="fc" id="L49">      .returnOne()</span>
+<span class="fc" id="L50">      .functionHandler(ArrayRemove::execute)</span>
+<span class="fc" id="L51">      .build();</span>
 
   private ArrayRemove() {
     // disable construction
@@ -59,11 +60,11 @@ public final class ArrayRemove {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L62">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L63">        arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L64">    ISequence&lt;? extends IIntegerItem&gt; positions = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
+<span class="fc" id="L63">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L64">        arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L65">    ISequence&lt;? extends IIntegerItem&gt; positions = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
 
-<span class="fc" id="L66">    return ISequence.of(removeItems(array, positions));</span>
+<span class="fc" id="L67">    return ISequence.of(removeItems(array, positions));</span>
   }
 
   /**
@@ -84,11 +85,11 @@ public final class ArrayRemove {
   public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; removeItems(
       @NonNull IArrayItem&lt;T&gt; array,
       @NonNull Collection&lt;? extends IIntegerItem&gt; positions) {
-<span class="fc" id="L87">    return remove(</span>
+<span class="fc" id="L88">    return remove(</span>
         array,
-<span class="fc" id="L89">        ObjectUtils.notNull(positions.stream()</span>
-<span class="fc" id="L90">            .map(position -&gt; position.asInteger().intValueExact())</span>
-<span class="fc" id="L91">            .collect(Collectors.toSet())));</span>
+<span class="fc" id="L90">        ObjectUtils.notNull(positions.stream()</span>
+<span class="fc" id="L91">            .map(position -&gt; position.asInteger().intValueExact())</span>
+<span class="fc" id="L92">            .collect(Collectors.toSet())));</span>
   }
 
   /**
@@ -109,14 +110,14 @@ public final class ArrayRemove {
   public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; remove(
       @NonNull IArrayItem&lt;T&gt; array,
       @NonNull Collection&lt;Integer&gt; positions) {
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">    Set&lt;Integer&gt; positionSet = positions instanceof Set ? (Set&lt;Integer&gt;) positions : new HashSet&lt;&gt;(positions);</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">    Set&lt;Integer&gt; positionSet = positions instanceof Set ? (Set&lt;Integer&gt;) positions : new HashSet&lt;&gt;(positions);</span>
 
-<span class="fc" id="L114">    List&lt;T&gt; remaining = ObjectUtils.notNull(IntStream.range(1, array.size() + 1)</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">        .filter(index -&gt; !positionSet.contains(index))</span>
-<span class="fc" id="L116">        .mapToObj(index -&gt; array.get(index - 1))</span>
-<span class="fc" id="L117">        .collect(Collectors.toList()));</span>
+<span class="fc" id="L115">    List&lt;T&gt; remaining = ObjectUtils.notNull(IntStream.range(1, array.size() + 1)</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        .filter(index -&gt; !positionSet.contains(index))</span>
+<span class="fc" id="L117">        .mapToObj(index -&gt; array.get(index - 1))</span>
+<span class="fc" id="L118">        .collect(Collectors.toList()));</span>
 
-<span class="fc" id="L119">    return IArrayItem.ofCollection(remaining);</span>
+<span class="fc" id="L120">    return IArrayItem.ofCollection(remaining);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

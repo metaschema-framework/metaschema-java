@@ -288,20 +288,28 @@
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>   <a name="IResourceLocation" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/IResourceLocation.html#IResourceLocation">IResourceLocation</a> getLocation();
 <a class="jxr_linenumber" name="L281" href="#L281">281</a> 
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">   * Get the static context to use to query this node item.</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">   * Get the string value of the node.</em>
 <a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">   * @return the static context</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">   * @return the string value of the node or an empty string if it has no value.</em>
 <a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L287" href="#L287">287</a>   @NonNull
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>   <a name="StaticContext" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/StaticContext.html#StaticContext">StaticContext</a> getStaticContext();
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>   String stringValue();
 <a class="jxr_linenumber" name="L289" href="#L289">289</a> 
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>   @Override
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">void</strong> accept(<a name="IItemVisitor" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/IItemVisitor.html#IItemVisitor">IItemVisitor</a> visitor) {
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>     visitor.visit(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>   }
-<a class="jxr_linenumber" name="L294" href="#L294">294</a> }
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> <em class="jxr_javadoccomment">   * Get the static context to use to query this node item.</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> <em class="jxr_javadoccomment">   * @return the static context</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>   @NonNull
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>   <a name="StaticContext" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/StaticContext.html#StaticContext">StaticContext</a> getStaticContext();
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> 
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>   @Override
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">void</strong> accept(<a name="IItemVisitor" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/IItemVisitor.html#IItemVisitor">IItemVisitor</a> visitor) {
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     visitor.visit(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>   }
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+<div id="footer">© 2024</div>
 </body>
 </html>

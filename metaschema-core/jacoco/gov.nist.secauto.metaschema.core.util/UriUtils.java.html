@@ -100,8 +100,8 @@ public final class UriUtils {
   }
 
   /**
-   * Based on code from
-   * http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java
+   * Get the path of the provided target relative to the path of the provided
+   * base.
    *
    * @param base
    *          the base path to resolve against
@@ -111,39 +111,41 @@ public final class UriUtils {
    */
   @SuppressWarnings(&quot;PMD.CyclomaticComplexity&quot;)
   public static String prependRelativePath(String base, String target) {
+    // based on code from
+    // http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java
 
     // Split paths into segments
-<span class="fc" id="L116">    String[] baseSegments = URI_SEPERATOR_PATTERN.split(base);</span>
-<span class="fc" id="L117">    String[] targetSegments = URI_SEPERATOR_PATTERN.split(target, -1);</span>
+<span class="fc" id="L118">    String[] baseSegments = URI_SEPERATOR_PATTERN.split(base);</span>
+<span class="fc" id="L119">    String[] targetSegments = URI_SEPERATOR_PATTERN.split(target, -1);</span>
 
     // Discard trailing segment of base path, since this resource doesn't matter
-<span class="pc bpc" id="L120" title="1 of 4 branches missed.">    if (baseSegments.length &gt; 0 &amp;&amp; !base.endsWith(URI_SEPERATOR)) {</span>
-<span class="fc" id="L121">      baseSegments = Arrays.copyOf(baseSegments, baseSegments.length - 1);</span>
+<span class="pc bpc" id="L122" title="1 of 4 branches missed.">    if (baseSegments.length &gt; 0 &amp;&amp; !base.endsWith(URI_SEPERATOR)) {</span>
+<span class="fc" id="L123">      baseSegments = Arrays.copyOf(baseSegments, baseSegments.length - 1);</span>
     }
 
     // Remove common prefix segments
-<span class="fc" id="L125">    int segmentIndex = 0;</span>
-<span class="pc bpc" id="L126" title="1 of 4 branches missed.">    while (segmentIndex &lt; baseSegments.length &amp;&amp; segmentIndex &lt; targetSegments.length</span>
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        &amp;&amp; baseSegments[segmentIndex].equals(targetSegments[segmentIndex])) {</span>
-<span class="fc" id="L128">      segmentIndex++;</span>
+<span class="fc" id="L127">    int segmentIndex = 0;</span>
+<span class="pc bpc" id="L128" title="1 of 4 branches missed.">    while (segmentIndex &lt; baseSegments.length &amp;&amp; segmentIndex &lt; targetSegments.length</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        &amp;&amp; baseSegments[segmentIndex].equals(targetSegments[segmentIndex])) {</span>
+<span class="fc" id="L130">      segmentIndex++;</span>
     }
 
     // Construct the relative path
-<span class="fc" id="L132">    StringBuilder retval = new StringBuilder();</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">    for (int j = 0; j &lt; (baseSegments.length - segmentIndex); j++) {</span>
-<span class="fc" id="L134">      retval.append(&quot;..&quot;);</span>
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">      if (retval.length() != 0) {</span>
-<span class="fc" id="L136">        retval.append(URI_SEPERATOR);</span>
+<span class="fc" id="L134">    StringBuilder retval = new StringBuilder();</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">    for (int j = 0; j &lt; (baseSegments.length - segmentIndex); j++) {</span>
+<span class="fc" id="L136">      retval.append(&quot;..&quot;);</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">      if (retval.length() != 0) {</span>
+<span class="fc" id="L138">        retval.append(URI_SEPERATOR);</span>
       }
     }
 
-<span class="fc bfc" id="L140" title="All 2 branches covered.">    for (int j = segmentIndex; j &lt; targetSegments.length; j++) {</span>
-<span class="fc" id="L141">      retval.append(targetSegments[j]);</span>
-<span class="pc bpc" id="L142" title="1 of 4 branches missed.">      if (retval.length() != 0 &amp;&amp; j &lt; targetSegments.length - 1) {</span>
-<span class="fc" id="L143">        retval.append(URI_SEPERATOR);</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">    for (int j = segmentIndex; j &lt; targetSegments.length; j++) {</span>
+<span class="fc" id="L143">      retval.append(targetSegments[j]);</span>
+<span class="pc bpc" id="L144" title="1 of 4 branches missed.">      if (retval.length() != 0 &amp;&amp; j &lt; targetSegments.length - 1) {</span>
+<span class="fc" id="L145">        retval.append(URI_SEPERATOR);</span>
       }
     }
-<span class="fc" id="L146">    return retval.toString();</span>
+<span class="fc" id="L148">    return retval.toString();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

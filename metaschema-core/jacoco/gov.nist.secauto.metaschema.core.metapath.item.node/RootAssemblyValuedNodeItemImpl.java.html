@@ -4,6 +4,8 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.stream.Collectors;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
@@ -23,39 +25,46 @@ class RootAssemblyValuedNodeItemImpl
       @NonNull IAssemblyDefinition definition,
       @NonNull IDocumentNodeItem parent,
       @NonNull Object value,
-<span class="nc" id="L26">      @NonNull INodeItemGenerator generator) {</span>
-<span class="nc" id="L27">    this.definition = definition;</span>
-<span class="nc" id="L28">    this.parent = parent;</span>
-<span class="nc" id="L29">    this.model = ObjectUtils.notNull(Lazy.lazy(generator.newDataModelSupplier((IAssemblyNodeItem) this)));</span>
-<span class="nc" id="L30">    this.value = value;</span>
-<span class="nc" id="L31">  }</span>
+<span class="nc" id="L28">      @NonNull INodeItemGenerator generator) {</span>
+<span class="nc" id="L29">    this.definition = definition;</span>
+<span class="nc" id="L30">    this.parent = parent;</span>
+<span class="nc" id="L31">    this.model = ObjectUtils.notNull(Lazy.lazy(generator.newDataModelSupplier((IAssemblyNodeItem) this)));</span>
+<span class="nc" id="L32">    this.value = value;</span>
+<span class="nc" id="L33">  }</span>
 
   @Override
   public IAssemblyDefinition getDefinition() {
-<span class="nc" id="L35">    return definition;</span>
+<span class="nc" id="L37">    return definition;</span>
   }
 
   @Override
   public IDocumentNodeItem getDocumentNodeItem() {
-<span class="nc" id="L40">    return parent;</span>
+<span class="nc" id="L42">    return parent;</span>
   }
 
   @Override
   public IAssemblyNodeItem getParentContentNodeItem() {
     // there is no parent assembly
-<span class="nc" id="L46">    return null;</span>
+<span class="nc" id="L48">    return null;</span>
   }
 
   @Override
   @NonNull
   public Object getValue() {
-<span class="nc" id="L52">    return value;</span>
+<span class="nc" id="L54">    return value;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public ModelContainer getModel() {
-<span class="nc" id="L58">    return model.get();</span>
+<span class="nc" id="L60">    return model.get();</span>
+  }
+
+  @Override
+  public String stringValue() {
+<span class="nc" id="L65">    return ObjectUtils.notNull(modelItems()</span>
+<span class="nc" id="L66">        .map(INodeItem::stringValue)</span>
+<span class="nc" id="L67">        .collect(Collectors.joining()));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

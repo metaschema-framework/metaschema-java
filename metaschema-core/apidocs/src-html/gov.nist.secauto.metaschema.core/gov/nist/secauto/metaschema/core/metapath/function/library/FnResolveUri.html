@@ -37,172 +37,173 @@
 <span class="source-line-no">024</span><span id="line-24">import edu.umd.cs.findbugs.annotations.Nullable;</span>
 <span class="source-line-no">025</span><span id="line-25"></span>
 <span class="source-line-no">026</span><span id="line-26">public final class FnResolveUri {</span>
-<span class="source-line-no">027</span><span id="line-27">  @NonNull</span>
-<span class="source-line-no">028</span><span id="line-28">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="source-line-no">029</span><span id="line-29">      .name("resolve-uri")</span>
-<span class="source-line-no">030</span><span id="line-30">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">031</span><span id="line-31">      .deterministic()</span>
-<span class="source-line-no">032</span><span id="line-32">      .contextDependent()</span>
-<span class="source-line-no">033</span><span id="line-33">      .focusIndependent()</span>
-<span class="source-line-no">034</span><span id="line-34">      .argument(IArgument.builder()</span>
-<span class="source-line-no">035</span><span id="line-35">          .name("relative")</span>
-<span class="source-line-no">036</span><span id="line-36">          .type(IStringItem.class)</span>
-<span class="source-line-no">037</span><span id="line-37">          .zeroOrOne()</span>
-<span class="source-line-no">038</span><span id="line-38">          .build())</span>
-<span class="source-line-no">039</span><span id="line-39">      .returnType(IAnyUriItem.class)</span>
-<span class="source-line-no">040</span><span id="line-40">      .returnZeroOrOne()</span>
-<span class="source-line-no">041</span><span id="line-41">      .functionHandler(FnResolveUri::executeOneArg)</span>
-<span class="source-line-no">042</span><span id="line-42">      .build();</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  @NonNull</span>
-<span class="source-line-no">045</span><span id="line-45">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
-<span class="source-line-no">046</span><span id="line-46">      .name("resolve-uri")</span>
-<span class="source-line-no">047</span><span id="line-47">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">048</span><span id="line-48">      .deterministic()</span>
-<span class="source-line-no">049</span><span id="line-49">      .contextIndependent()</span>
-<span class="source-line-no">050</span><span id="line-50">      .focusIndependent()</span>
-<span class="source-line-no">051</span><span id="line-51">      .argument(IArgument.builder()</span>
-<span class="source-line-no">052</span><span id="line-52">          .name("relative")</span>
-<span class="source-line-no">053</span><span id="line-53">          .type(IStringItem.class)</span>
-<span class="source-line-no">054</span><span id="line-54">          .zeroOrOne()</span>
-<span class="source-line-no">055</span><span id="line-55">          .build())</span>
-<span class="source-line-no">056</span><span id="line-56">      .argument(IArgument.builder()</span>
-<span class="source-line-no">057</span><span id="line-57">          .name("base")</span>
-<span class="source-line-no">058</span><span id="line-58">          .type(IStringItem.class)</span>
-<span class="source-line-no">059</span><span id="line-59">          .one()</span>
-<span class="source-line-no">060</span><span id="line-60">          .build())</span>
-<span class="source-line-no">061</span><span id="line-61">      .returnType(IAnyUriItem.class)</span>
-<span class="source-line-no">062</span><span id="line-62">      .returnZeroOrOne()</span>
-<span class="source-line-no">063</span><span id="line-63">      .functionHandler(FnResolveUri::executeTwoArg)</span>
-<span class="source-line-no">064</span><span id="line-64">      .build();</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">  private FnResolveUri() {</span>
-<span class="source-line-no">067</span><span id="line-67">    // disable construction</span>
-<span class="source-line-no">068</span><span id="line-68">  }</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">071</span><span id="line-71">  @NonNull</span>
-<span class="source-line-no">072</span><span id="line-72">  private static ISequence&lt;IAnyUriItem&gt; executeOneArg(</span>
-<span class="source-line-no">073</span><span id="line-73">      @NonNull IFunction function,</span>
-<span class="source-line-no">074</span><span id="line-74">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">075</span><span id="line-75">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">076</span><span id="line-76">      IItem focus) {</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">    ISequence&lt;? extends IStringItem&gt; relativeSequence</span>
-<span class="source-line-no">079</span><span id="line-79">        = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">080</span><span id="line-80">    if (relativeSequence.isEmpty()) {</span>
-<span class="source-line-no">081</span><span id="line-81">      return ISequence.empty(); // NOPMD - readability</span>
-<span class="source-line-no">082</span><span id="line-82">    }</span>
-<span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">    IStringItem relativeString = relativeSequence.getFirstItem(true);</span>
-<span class="source-line-no">085</span><span id="line-85">    IAnyUriItem resolvedUri = null;</span>
-<span class="source-line-no">086</span><span id="line-86">    if (relativeString != null) {</span>
-<span class="source-line-no">087</span><span id="line-87">      resolvedUri = fnResolveUri(relativeString, null, dynamicContext);</span>
-<span class="source-line-no">088</span><span id="line-88">    }</span>
-<span class="source-line-no">089</span><span id="line-89">    return ISequence.of(resolvedUri);</span>
-<span class="source-line-no">090</span><span id="line-90">  }</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">  /**</span>
-<span class="source-line-no">093</span><span id="line-93">   * Implements the two argument version of the XPath 3.1 function &lt;a href=</span>
-<span class="source-line-no">094</span><span id="line-94">   * "https://www.w3.org/TR/xpath-functions-31/#func-resolve-uri"&gt;resolve-uri&lt;/a&gt;.</span>
-<span class="source-line-no">095</span><span id="line-95">   *</span>
-<span class="source-line-no">096</span><span id="line-96">   * @param function</span>
-<span class="source-line-no">097</span><span id="line-97">   *          the function definition</span>
-<span class="source-line-no">098</span><span id="line-98">   * @param arguments</span>
-<span class="source-line-no">099</span><span id="line-99">   *          a list of sequence arguments with an expected size of 2</span>
-<span class="source-line-no">100</span><span id="line-100">   * @param dynamicContext</span>
-<span class="source-line-no">101</span><span id="line-101">   *          the evaluation context</span>
-<span class="source-line-no">102</span><span id="line-102">   * @param focus</span>
-<span class="source-line-no">103</span><span id="line-103">   *          the current focus item</span>
-<span class="source-line-no">104</span><span id="line-104">   * @return a sequence containing the resolved URI or and empty sequence if</span>
-<span class="source-line-no">105</span><span id="line-105">   *         either the base or relative URI is {@code null}</span>
-<span class="source-line-no">106</span><span id="line-106">   */</span>
-<span class="source-line-no">107</span><span id="line-107">  @SuppressWarnings("PMD.UnusedPrivateMethod") // used in lambda</span>
-<span class="source-line-no">108</span><span id="line-108">  @NonNull</span>
-<span class="source-line-no">109</span><span id="line-109">  private static ISequence&lt;IAnyUriItem&gt; executeTwoArg(</span>
-<span class="source-line-no">110</span><span id="line-110">      @NonNull IFunction function, // NOPMD - ok</span>
-<span class="source-line-no">111</span><span id="line-111">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">112</span><span id="line-112">      @NonNull DynamicContext dynamicContext, // NOPMD - ok</span>
-<span class="source-line-no">113</span><span id="line-113">      IItem focus) { // NOPMD - ok</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">    /* there will always be two arguments */</span>
-<span class="source-line-no">116</span><span id="line-116">    assert arguments.size() == 2;</span>
-<span class="source-line-no">117</span><span id="line-117"></span>
-<span class="source-line-no">118</span><span id="line-118">    ISequence&lt;? extends IStringItem&gt; relativeSequence = FunctionUtils.asType(</span>
-<span class="source-line-no">119</span><span id="line-119">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">120</span><span id="line-120">    if (relativeSequence.isEmpty()) {</span>
-<span class="source-line-no">121</span><span id="line-121">      return ISequence.empty(); // NOPMD - readability</span>
-<span class="source-line-no">122</span><span id="line-122">    }</span>
-<span class="source-line-no">123</span><span id="line-123"></span>
-<span class="source-line-no">124</span><span id="line-124">    ISequence&lt;? extends IStringItem&gt; baseSequence = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
-<span class="source-line-no">125</span><span id="line-125">    IStringItem baseString = baseSequence.getFirstItem(true);</span>
-<span class="source-line-no">126</span><span id="line-126"></span>
-<span class="source-line-no">127</span><span id="line-127">    if (baseString == null) {</span>
-<span class="source-line-no">128</span><span id="line-128">      throw new InvalidArgumentFunctionException(</span>
-<span class="source-line-no">129</span><span id="line-129">          InvalidArgumentFunctionException.INVALID_ARGUMENT_TO_RESOLVE_URI,</span>
-<span class="source-line-no">130</span><span id="line-130">          "Invalid argument to fn:resolve-uri().");</span>
-<span class="source-line-no">131</span><span id="line-131">    }</span>
-<span class="source-line-no">132</span><span id="line-132">    IAnyUriItem baseUri = IAnyUriItem.cast(baseString);</span>
-<span class="source-line-no">133</span><span id="line-133"></span>
-<span class="source-line-no">134</span><span id="line-134">    IStringItem relativeString = relativeSequence.getFirstItem(true);</span>
-<span class="source-line-no">135</span><span id="line-135"></span>
-<span class="source-line-no">136</span><span id="line-136">    IAnyUriItem resolvedUri = null;</span>
-<span class="source-line-no">137</span><span id="line-137">    if (relativeString != null) {</span>
-<span class="source-line-no">138</span><span id="line-138">      resolvedUri = fnResolveUri(relativeString, baseUri, dynamicContext);</span>
-<span class="source-line-no">139</span><span id="line-139">    }</span>
-<span class="source-line-no">140</span><span id="line-140">    return ISequence.of(resolvedUri);</span>
-<span class="source-line-no">141</span><span id="line-141">  }</span>
-<span class="source-line-no">142</span><span id="line-142"></span>
-<span class="source-line-no">143</span><span id="line-143">  /**</span>
-<span class="source-line-no">144</span><span id="line-144">   * Resolve the {@code relative} URI against the provided {@code base} URI.</span>
-<span class="source-line-no">145</span><span id="line-145">   *</span>
-<span class="source-line-no">146</span><span id="line-146">   * @param relative</span>
-<span class="source-line-no">147</span><span id="line-147">   *          the relative URI to resolve</span>
-<span class="source-line-no">148</span><span id="line-148">   * @param base</span>
-<span class="source-line-no">149</span><span id="line-149">   *          the base URI to resolve against</span>
-<span class="source-line-no">150</span><span id="line-150">   * @param dynamicContext</span>
-<span class="source-line-no">151</span><span id="line-151">   *          the evaluation context used to get the static base URI if needed</span>
-<span class="source-line-no">152</span><span id="line-152">   * @return the resolved URI or {@code null} if the {@code relative} URI in</span>
-<span class="source-line-no">153</span><span id="line-153">   *         {@code null}</span>
-<span class="source-line-no">154</span><span id="line-154">   */</span>
-<span class="source-line-no">155</span><span id="line-155">  @Nullable</span>
-<span class="source-line-no">156</span><span id="line-156">  public static IAnyUriItem fnResolveUri(</span>
-<span class="source-line-no">157</span><span id="line-157">      @NonNull IStringItem relative,</span>
-<span class="source-line-no">158</span><span id="line-158">      @Nullable IAnyUriItem base,</span>
-<span class="source-line-no">159</span><span id="line-159">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">160</span><span id="line-160">    return fnResolveUri(IAnyUriItem.cast(relative), base, dynamicContext);</span>
-<span class="source-line-no">161</span><span id="line-161">  }</span>
-<span class="source-line-no">162</span><span id="line-162"></span>
-<span class="source-line-no">163</span><span id="line-163">  /**</span>
-<span class="source-line-no">164</span><span id="line-164">   * Resolve the {@code relative} URI against the provided {@code base} URI.</span>
-<span class="source-line-no">165</span><span id="line-165">   *</span>
-<span class="source-line-no">166</span><span id="line-166">   * @param relative</span>
-<span class="source-line-no">167</span><span id="line-167">   *          the relative URI to resolve</span>
-<span class="source-line-no">168</span><span id="line-168">   * @param base</span>
-<span class="source-line-no">169</span><span id="line-169">   *          the base URI to resolve against</span>
-<span class="source-line-no">170</span><span id="line-170">   * @param dynamicContext</span>
-<span class="source-line-no">171</span><span id="line-171">   *          the evaluation context used to get the static base URI if needed</span>
-<span class="source-line-no">172</span><span id="line-172">   * @return the resolved URI or {@code null} if the {@code relative} URI in</span>
-<span class="source-line-no">173</span><span id="line-173">   *         {@code null}</span>
-<span class="source-line-no">174</span><span id="line-174">   */</span>
-<span class="source-line-no">175</span><span id="line-175">  @NonNull</span>
-<span class="source-line-no">176</span><span id="line-176">  public static IAnyUriItem fnResolveUri(</span>
-<span class="source-line-no">177</span><span id="line-177">      @NonNull IAnyUriItem relative,</span>
-<span class="source-line-no">178</span><span id="line-178">      @Nullable IAnyUriItem base,</span>
-<span class="source-line-no">179</span><span id="line-179">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">180</span><span id="line-180"></span>
-<span class="source-line-no">181</span><span id="line-181">    IAnyUriItem baseUri = base;</span>
-<span class="source-line-no">182</span><span id="line-182">    if (baseUri == null) {</span>
-<span class="source-line-no">183</span><span id="line-183">      baseUri = FnStaticBaseUri.fnStaticBaseUri(dynamicContext);</span>
-<span class="source-line-no">184</span><span id="line-184">      if (baseUri == null) {</span>
-<span class="source-line-no">185</span><span id="line-185">        throw new UriFunctionException(UriFunctionException.BASE_URI_NOT_DEFINED_IN_STATIC_CONTEXT,</span>
-<span class="source-line-no">186</span><span id="line-186">            "The base-uri is not defined in the static context");</span>
-<span class="source-line-no">187</span><span id="line-187">      }</span>
-<span class="source-line-no">188</span><span id="line-188">    }</span>
-<span class="source-line-no">189</span><span id="line-189"></span>
-<span class="source-line-no">190</span><span id="line-190">    return baseUri.resolve(relative);</span>
-<span class="source-line-no">191</span><span id="line-191">  }</span>
-<span class="source-line-no">192</span><span id="line-192">}</span>
+<span class="source-line-no">027</span><span id="line-27">  private static final String NAME = "resolve-uri";</span>
+<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
+<span class="source-line-no">029</span><span id="line-29">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="source-line-no">030</span><span id="line-30">      .name(NAME)</span>
+<span class="source-line-no">031</span><span id="line-31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">032</span><span id="line-32">      .deterministic()</span>
+<span class="source-line-no">033</span><span id="line-33">      .contextDependent()</span>
+<span class="source-line-no">034</span><span id="line-34">      .focusIndependent()</span>
+<span class="source-line-no">035</span><span id="line-35">      .argument(IArgument.builder()</span>
+<span class="source-line-no">036</span><span id="line-36">          .name("relative")</span>
+<span class="source-line-no">037</span><span id="line-37">          .type(IStringItem.class)</span>
+<span class="source-line-no">038</span><span id="line-38">          .zeroOrOne()</span>
+<span class="source-line-no">039</span><span id="line-39">          .build())</span>
+<span class="source-line-no">040</span><span id="line-40">      .returnType(IAnyUriItem.class)</span>
+<span class="source-line-no">041</span><span id="line-41">      .returnZeroOrOne()</span>
+<span class="source-line-no">042</span><span id="line-42">      .functionHandler(FnResolveUri::executeOneArg)</span>
+<span class="source-line-no">043</span><span id="line-43">      .build();</span>
+<span class="source-line-no">044</span><span id="line-44"></span>
+<span class="source-line-no">045</span><span id="line-45">  @NonNull</span>
+<span class="source-line-no">046</span><span id="line-46">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
+<span class="source-line-no">047</span><span id="line-47">      .name(NAME)</span>
+<span class="source-line-no">048</span><span id="line-48">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">049</span><span id="line-49">      .deterministic()</span>
+<span class="source-line-no">050</span><span id="line-50">      .contextIndependent()</span>
+<span class="source-line-no">051</span><span id="line-51">      .focusIndependent()</span>
+<span class="source-line-no">052</span><span id="line-52">      .argument(IArgument.builder()</span>
+<span class="source-line-no">053</span><span id="line-53">          .name("relative")</span>
+<span class="source-line-no">054</span><span id="line-54">          .type(IStringItem.class)</span>
+<span class="source-line-no">055</span><span id="line-55">          .zeroOrOne()</span>
+<span class="source-line-no">056</span><span id="line-56">          .build())</span>
+<span class="source-line-no">057</span><span id="line-57">      .argument(IArgument.builder()</span>
+<span class="source-line-no">058</span><span id="line-58">          .name("base")</span>
+<span class="source-line-no">059</span><span id="line-59">          .type(IStringItem.class)</span>
+<span class="source-line-no">060</span><span id="line-60">          .one()</span>
+<span class="source-line-no">061</span><span id="line-61">          .build())</span>
+<span class="source-line-no">062</span><span id="line-62">      .returnType(IAnyUriItem.class)</span>
+<span class="source-line-no">063</span><span id="line-63">      .returnZeroOrOne()</span>
+<span class="source-line-no">064</span><span id="line-64">      .functionHandler(FnResolveUri::executeTwoArg)</span>
+<span class="source-line-no">065</span><span id="line-65">      .build();</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">  private FnResolveUri() {</span>
+<span class="source-line-no">068</span><span id="line-68">    // disable construction</span>
+<span class="source-line-no">069</span><span id="line-69">  }</span>
+<span class="source-line-no">070</span><span id="line-70"></span>
+<span class="source-line-no">071</span><span id="line-71">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">072</span><span id="line-72">  @NonNull</span>
+<span class="source-line-no">073</span><span id="line-73">  private static ISequence&lt;IAnyUriItem&gt; executeOneArg(</span>
+<span class="source-line-no">074</span><span id="line-74">      @NonNull IFunction function,</span>
+<span class="source-line-no">075</span><span id="line-75">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">076</span><span id="line-76">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">077</span><span id="line-77">      IItem focus) {</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">    ISequence&lt;? extends IStringItem&gt; relativeSequence</span>
+<span class="source-line-no">080</span><span id="line-80">        = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">081</span><span id="line-81">    if (relativeSequence.isEmpty()) {</span>
+<span class="source-line-no">082</span><span id="line-82">      return ISequence.empty(); // NOPMD - readability</span>
+<span class="source-line-no">083</span><span id="line-83">    }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">    IStringItem relativeString = relativeSequence.getFirstItem(true);</span>
+<span class="source-line-no">086</span><span id="line-86">    IAnyUriItem resolvedUri = null;</span>
+<span class="source-line-no">087</span><span id="line-87">    if (relativeString != null) {</span>
+<span class="source-line-no">088</span><span id="line-88">      resolvedUri = fnResolveUri(relativeString, null, dynamicContext);</span>
+<span class="source-line-no">089</span><span id="line-89">    }</span>
+<span class="source-line-no">090</span><span id="line-90">    return ISequence.of(resolvedUri);</span>
+<span class="source-line-no">091</span><span id="line-91">  }</span>
+<span class="source-line-no">092</span><span id="line-92"></span>
+<span class="source-line-no">093</span><span id="line-93">  /**</span>
+<span class="source-line-no">094</span><span id="line-94">   * Implements the two argument version of the XPath 3.1 function &lt;a href=</span>
+<span class="source-line-no">095</span><span id="line-95">   * "https://www.w3.org/TR/xpath-functions-31/#func-resolve-uri"&gt;resolve-uri&lt;/a&gt;.</span>
+<span class="source-line-no">096</span><span id="line-96">   *</span>
+<span class="source-line-no">097</span><span id="line-97">   * @param function</span>
+<span class="source-line-no">098</span><span id="line-98">   *          the function definition</span>
+<span class="source-line-no">099</span><span id="line-99">   * @param arguments</span>
+<span class="source-line-no">100</span><span id="line-100">   *          a list of sequence arguments with an expected size of 2</span>
+<span class="source-line-no">101</span><span id="line-101">   * @param dynamicContext</span>
+<span class="source-line-no">102</span><span id="line-102">   *          the evaluation context</span>
+<span class="source-line-no">103</span><span id="line-103">   * @param focus</span>
+<span class="source-line-no">104</span><span id="line-104">   *          the current focus item</span>
+<span class="source-line-no">105</span><span id="line-105">   * @return a sequence containing the resolved URI or and empty sequence if</span>
+<span class="source-line-no">106</span><span id="line-106">   *         either the base or relative URI is {@code null}</span>
+<span class="source-line-no">107</span><span id="line-107">   */</span>
+<span class="source-line-no">108</span><span id="line-108">  @SuppressWarnings("PMD.UnusedPrivateMethod") // used in lambda</span>
+<span class="source-line-no">109</span><span id="line-109">  @NonNull</span>
+<span class="source-line-no">110</span><span id="line-110">  private static ISequence&lt;IAnyUriItem&gt; executeTwoArg(</span>
+<span class="source-line-no">111</span><span id="line-111">      @NonNull IFunction function, // NOPMD - ok</span>
+<span class="source-line-no">112</span><span id="line-112">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">113</span><span id="line-113">      @NonNull DynamicContext dynamicContext, // NOPMD - ok</span>
+<span class="source-line-no">114</span><span id="line-114">      IItem focus) { // NOPMD - ok</span>
+<span class="source-line-no">115</span><span id="line-115"></span>
+<span class="source-line-no">116</span><span id="line-116">    /* there will always be two arguments */</span>
+<span class="source-line-no">117</span><span id="line-117">    assert arguments.size() == 2;</span>
+<span class="source-line-no">118</span><span id="line-118"></span>
+<span class="source-line-no">119</span><span id="line-119">    ISequence&lt;? extends IStringItem&gt; relativeSequence = FunctionUtils.asType(</span>
+<span class="source-line-no">120</span><span id="line-120">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">121</span><span id="line-121">    if (relativeSequence.isEmpty()) {</span>
+<span class="source-line-no">122</span><span id="line-122">      return ISequence.empty(); // NOPMD - readability</span>
+<span class="source-line-no">123</span><span id="line-123">    }</span>
+<span class="source-line-no">124</span><span id="line-124"></span>
+<span class="source-line-no">125</span><span id="line-125">    ISequence&lt;? extends IStringItem&gt; baseSequence = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
+<span class="source-line-no">126</span><span id="line-126">    IStringItem baseString = baseSequence.getFirstItem(true);</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">    if (baseString == null) {</span>
+<span class="source-line-no">129</span><span id="line-129">      throw new InvalidArgumentFunctionException(</span>
+<span class="source-line-no">130</span><span id="line-130">          InvalidArgumentFunctionException.INVALID_ARGUMENT_TO_RESOLVE_URI,</span>
+<span class="source-line-no">131</span><span id="line-131">          "Invalid argument to fn:resolve-uri().");</span>
+<span class="source-line-no">132</span><span id="line-132">    }</span>
+<span class="source-line-no">133</span><span id="line-133">    IAnyUriItem baseUri = IAnyUriItem.cast(baseString);</span>
+<span class="source-line-no">134</span><span id="line-134"></span>
+<span class="source-line-no">135</span><span id="line-135">    IStringItem relativeString = relativeSequence.getFirstItem(true);</span>
+<span class="source-line-no">136</span><span id="line-136"></span>
+<span class="source-line-no">137</span><span id="line-137">    IAnyUriItem resolvedUri = null;</span>
+<span class="source-line-no">138</span><span id="line-138">    if (relativeString != null) {</span>
+<span class="source-line-no">139</span><span id="line-139">      resolvedUri = fnResolveUri(relativeString, baseUri, dynamicContext);</span>
+<span class="source-line-no">140</span><span id="line-140">    }</span>
+<span class="source-line-no">141</span><span id="line-141">    return ISequence.of(resolvedUri);</span>
+<span class="source-line-no">142</span><span id="line-142">  }</span>
+<span class="source-line-no">143</span><span id="line-143"></span>
+<span class="source-line-no">144</span><span id="line-144">  /**</span>
+<span class="source-line-no">145</span><span id="line-145">   * Resolve the {@code relative} URI against the provided {@code base} URI.</span>
+<span class="source-line-no">146</span><span id="line-146">   *</span>
+<span class="source-line-no">147</span><span id="line-147">   * @param relative</span>
+<span class="source-line-no">148</span><span id="line-148">   *          the relative URI to resolve</span>
+<span class="source-line-no">149</span><span id="line-149">   * @param base</span>
+<span class="source-line-no">150</span><span id="line-150">   *          the base URI to resolve against</span>
+<span class="source-line-no">151</span><span id="line-151">   * @param dynamicContext</span>
+<span class="source-line-no">152</span><span id="line-152">   *          the evaluation context used to get the static base URI if needed</span>
+<span class="source-line-no">153</span><span id="line-153">   * @return the resolved URI or {@code null} if the {@code relative} URI in</span>
+<span class="source-line-no">154</span><span id="line-154">   *         {@code null}</span>
+<span class="source-line-no">155</span><span id="line-155">   */</span>
+<span class="source-line-no">156</span><span id="line-156">  @Nullable</span>
+<span class="source-line-no">157</span><span id="line-157">  public static IAnyUriItem fnResolveUri(</span>
+<span class="source-line-no">158</span><span id="line-158">      @NonNull IStringItem relative,</span>
+<span class="source-line-no">159</span><span id="line-159">      @Nullable IAnyUriItem base,</span>
+<span class="source-line-no">160</span><span id="line-160">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">161</span><span id="line-161">    return fnResolveUri(IAnyUriItem.cast(relative), base, dynamicContext);</span>
+<span class="source-line-no">162</span><span id="line-162">  }</span>
+<span class="source-line-no">163</span><span id="line-163"></span>
+<span class="source-line-no">164</span><span id="line-164">  /**</span>
+<span class="source-line-no">165</span><span id="line-165">   * Resolve the {@code relative} URI against the provided {@code base} URI.</span>
+<span class="source-line-no">166</span><span id="line-166">   *</span>
+<span class="source-line-no">167</span><span id="line-167">   * @param relative</span>
+<span class="source-line-no">168</span><span id="line-168">   *          the relative URI to resolve</span>
+<span class="source-line-no">169</span><span id="line-169">   * @param base</span>
+<span class="source-line-no">170</span><span id="line-170">   *          the base URI to resolve against</span>
+<span class="source-line-no">171</span><span id="line-171">   * @param dynamicContext</span>
+<span class="source-line-no">172</span><span id="line-172">   *          the evaluation context used to get the static base URI if needed</span>
+<span class="source-line-no">173</span><span id="line-173">   * @return the resolved URI or {@code null} if the {@code relative} URI in</span>
+<span class="source-line-no">174</span><span id="line-174">   *         {@code null}</span>
+<span class="source-line-no">175</span><span id="line-175">   */</span>
+<span class="source-line-no">176</span><span id="line-176">  @NonNull</span>
+<span class="source-line-no">177</span><span id="line-177">  public static IAnyUriItem fnResolveUri(</span>
+<span class="source-line-no">178</span><span id="line-178">      @NonNull IAnyUriItem relative,</span>
+<span class="source-line-no">179</span><span id="line-179">      @Nullable IAnyUriItem base,</span>
+<span class="source-line-no">180</span><span id="line-180">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">181</span><span id="line-181"></span>
+<span class="source-line-no">182</span><span id="line-182">    IAnyUriItem baseUri = base;</span>
+<span class="source-line-no">183</span><span id="line-183">    if (baseUri == null) {</span>
+<span class="source-line-no">184</span><span id="line-184">      baseUri = FnStaticBaseUri.fnStaticBaseUri(dynamicContext);</span>
+<span class="source-line-no">185</span><span id="line-185">      if (baseUri == null) {</span>
+<span class="source-line-no">186</span><span id="line-186">        throw new UriFunctionException(UriFunctionException.BASE_URI_NOT_DEFINED_IN_STATIC_CONTEXT,</span>
+<span class="source-line-no">187</span><span id="line-187">            "The base-uri is not defined in the static context");</span>
+<span class="source-line-no">188</span><span id="line-188">      }</span>
+<span class="source-line-no">189</span><span id="line-189">    }</span>
+<span class="source-line-no">190</span><span id="line-190"></span>
+<span class="source-line-no">191</span><span id="line-191">    return baseUri.resolve(relative);</span>
+<span class="source-line-no">192</span><span id="line-192">  }</span>
+<span class="source-line-no">193</span><span id="line-193">}</span>
 
 
 

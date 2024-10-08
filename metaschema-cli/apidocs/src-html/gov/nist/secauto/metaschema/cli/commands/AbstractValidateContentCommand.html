@@ -297,56 +297,55 @@
 <span class="source-line-no">284</span><span id="line-284">          validationResult = this.validateWithSchema(source, asFormat);</span>
 <span class="source-line-no">285</span><span id="line-285">        }</span>
 <span class="source-line-no">286</span><span id="line-286"></span>
-<span class="source-line-no">287</span><span id="line-287">        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)</span>
-<span class="source-line-no">288</span><span id="line-288">            &amp;&amp; (validationResult == null || validationResult.isPassing())) {</span>
-<span class="source-line-no">289</span><span id="line-289">          // perform constraint validation</span>
-<span class="source-line-no">290</span><span id="line-290">          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);</span>
-<span class="source-line-no">291</span><span id="line-291">          validationResult = validationResult == null</span>
-<span class="source-line-no">292</span><span id="line-292">              ? constraintValidationResult</span>
-<span class="source-line-no">293</span><span id="line-293">              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);</span>
-<span class="source-line-no">294</span><span id="line-294">        }</span>
-<span class="source-line-no">295</span><span id="line-295">      } catch (FileNotFoundException ex) {</span>
-<span class="source-line-no">296</span><span id="line-296">        return ExitCode.IO_ERROR.exitMessage(String.format("Resource not found at '%s'", source)).withThrowable(ex);</span>
-<span class="source-line-no">297</span><span id="line-297">      } catch (UnknownHostException ex) {</span>
-<span class="source-line-no">298</span><span id="line-298">        return ExitCode.IO_ERROR.exitMessage(String.format("Unknown host for '%s'.", source)).withThrowable(ex);</span>
-<span class="source-line-no">299</span><span id="line-299">      } catch (IOException ex) {</span>
-<span class="source-line-no">300</span><span id="line-300">        return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
-<span class="source-line-no">301</span><span id="line-301">      } catch (MetapathException ex) {</span>
-<span class="source-line-no">302</span><span id="line-302">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
-<span class="source-line-no">303</span><span id="line-303">      }</span>
-<span class="source-line-no">304</span><span id="line-304"></span>
-<span class="source-line-no">305</span><span id="line-305">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">306</span><span id="line-306">        Path sarifFile = ObjectUtils.notNull(Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));</span>
-<span class="source-line-no">307</span><span id="line-307"></span>
-<span class="source-line-no">308</span><span id="line-308">        IVersionInfo version</span>
-<span class="source-line-no">309</span><span id="line-309">            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);</span>
-<span class="source-line-no">310</span><span id="line-310"></span>
-<span class="source-line-no">311</span><span id="line-311">        try {</span>
-<span class="source-line-no">312</span><span id="line-312">          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);</span>
-<span class="source-line-no">313</span><span id="line-313">          if (validationResult != null) {</span>
-<span class="source-line-no">314</span><span id="line-314">            sarifHandler.addFindings(validationResult.getFindings());</span>
-<span class="source-line-no">315</span><span id="line-315">          }</span>
-<span class="source-line-no">316</span><span id="line-316">          sarifHandler.write(sarifFile);</span>
-<span class="source-line-no">317</span><span id="line-317">        } catch (IOException ex) {</span>
-<span class="source-line-no">318</span><span id="line-318">          return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
-<span class="source-line-no">319</span><span id="line-319">        }</span>
-<span class="source-line-no">320</span><span id="line-320">      } else if (validationResult != null &amp;&amp; !validationResult.getFindings().isEmpty()) {</span>
-<span class="source-line-no">321</span><span id="line-321">        LOGGER.info("Validation identified the following issues:", source);</span>
-<span class="source-line-no">322</span><span id="line-322">        LoggingValidationHandler.instance().handleValidationResults(validationResult);</span>
-<span class="source-line-no">323</span><span id="line-323">      }</span>
-<span class="source-line-no">324</span><span id="line-324"></span>
-<span class="source-line-no">325</span><span id="line-325">      if (validationResult == null || validationResult.isPassing()) {</span>
-<span class="source-line-no">326</span><span id="line-326">        if (LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">327</span><span id="line-327">          LOGGER.info("The file '{}' is valid.", source);</span>
-<span class="source-line-no">328</span><span id="line-328">        }</span>
-<span class="source-line-no">329</span><span id="line-329">      } else if (LOGGER.isErrorEnabled()) {</span>
-<span class="source-line-no">330</span><span id="line-330">        LOGGER.error("The file '{}' is invalid.", source);</span>
-<span class="source-line-no">331</span><span id="line-331">      }</span>
-<span class="source-line-no">332</span><span id="line-332"></span>
-<span class="source-line-no">333</span><span id="line-333">      return (validationResult == null || validationResult.isPassing() ? ExitCode.OK : ExitCode.FAIL).exit();</span>
-<span class="source-line-no">334</span><span id="line-334">    }</span>
-<span class="source-line-no">335</span><span id="line-335">  }</span>
-<span class="source-line-no">336</span><span id="line-336">}</span>
+<span class="source-line-no">287</span><span id="line-287">        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {</span>
+<span class="source-line-no">288</span><span id="line-288">          // perform constraint validation</span>
+<span class="source-line-no">289</span><span id="line-289">          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);</span>
+<span class="source-line-no">290</span><span id="line-290">          validationResult = validationResult == null</span>
+<span class="source-line-no">291</span><span id="line-291">              ? constraintValidationResult</span>
+<span class="source-line-no">292</span><span id="line-292">              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);</span>
+<span class="source-line-no">293</span><span id="line-293">        }</span>
+<span class="source-line-no">294</span><span id="line-294">      } catch (FileNotFoundException ex) {</span>
+<span class="source-line-no">295</span><span id="line-295">        return ExitCode.IO_ERROR.exitMessage(String.format("Resource not found at '%s'", source)).withThrowable(ex);</span>
+<span class="source-line-no">296</span><span id="line-296">      } catch (UnknownHostException ex) {</span>
+<span class="source-line-no">297</span><span id="line-297">        return ExitCode.IO_ERROR.exitMessage(String.format("Unknown host for '%s'.", source)).withThrowable(ex);</span>
+<span class="source-line-no">298</span><span id="line-298">      } catch (IOException ex) {</span>
+<span class="source-line-no">299</span><span id="line-299">        return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
+<span class="source-line-no">300</span><span id="line-300">      } catch (MetapathException ex) {</span>
+<span class="source-line-no">301</span><span id="line-301">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
+<span class="source-line-no">302</span><span id="line-302">      }</span>
+<span class="source-line-no">303</span><span id="line-303"></span>
+<span class="source-line-no">304</span><span id="line-304">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">305</span><span id="line-305">        Path sarifFile = ObjectUtils.notNull(Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));</span>
+<span class="source-line-no">306</span><span id="line-306"></span>
+<span class="source-line-no">307</span><span id="line-307">        IVersionInfo version</span>
+<span class="source-line-no">308</span><span id="line-308">            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);</span>
+<span class="source-line-no">309</span><span id="line-309"></span>
+<span class="source-line-no">310</span><span id="line-310">        try {</span>
+<span class="source-line-no">311</span><span id="line-311">          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);</span>
+<span class="source-line-no">312</span><span id="line-312">          if (validationResult != null) {</span>
+<span class="source-line-no">313</span><span id="line-313">            sarifHandler.addFindings(validationResult.getFindings());</span>
+<span class="source-line-no">314</span><span id="line-314">          }</span>
+<span class="source-line-no">315</span><span id="line-315">          sarifHandler.write(sarifFile);</span>
+<span class="source-line-no">316</span><span id="line-316">        } catch (IOException ex) {</span>
+<span class="source-line-no">317</span><span id="line-317">          return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
+<span class="source-line-no">318</span><span id="line-318">        }</span>
+<span class="source-line-no">319</span><span id="line-319">      } else if (validationResult != null &amp;&amp; !validationResult.getFindings().isEmpty()) {</span>
+<span class="source-line-no">320</span><span id="line-320">        LOGGER.info("Validation identified the following issues:", source);</span>
+<span class="source-line-no">321</span><span id="line-321">        LoggingValidationHandler.instance().handleValidationResults(validationResult);</span>
+<span class="source-line-no">322</span><span id="line-322">      }</span>
+<span class="source-line-no">323</span><span id="line-323"></span>
+<span class="source-line-no">324</span><span id="line-324">      if (validationResult == null || validationResult.isPassing()) {</span>
+<span class="source-line-no">325</span><span id="line-325">        if (LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">326</span><span id="line-326">          LOGGER.info("The file '{}' is valid.", source);</span>
+<span class="source-line-no">327</span><span id="line-327">        }</span>
+<span class="source-line-no">328</span><span id="line-328">      } else if (LOGGER.isErrorEnabled()) {</span>
+<span class="source-line-no">329</span><span id="line-329">        LOGGER.error("The file '{}' is invalid.", source);</span>
+<span class="source-line-no">330</span><span id="line-330">      }</span>
+<span class="source-line-no">331</span><span id="line-331"></span>
+<span class="source-line-no">332</span><span id="line-332">      return (validationResult == null || validationResult.isPassing() ? ExitCode.OK : ExitCode.FAIL).exit();</span>
+<span class="source-line-no">333</span><span id="line-333">    }</span>
+<span class="source-line-no">334</span><span id="line-334">  }</span>
+<span class="source-line-no">335</span><span id="line-335">}</span>
 
 
 

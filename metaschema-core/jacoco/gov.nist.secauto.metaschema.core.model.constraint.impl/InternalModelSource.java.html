@@ -13,6 +13,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -23,7 +25,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public final class InternalModelSource implements ISource {
   @NonNull
-<span class="fc" id="L26">  private static final Map&lt;IModule, InternalModelSource&gt; sources = new HashMap&lt;&gt;(); // NOPMD - intentional</span>
+<span class="fc" id="L28">  private static final Map&lt;IModule, InternalModelSource&gt; sources = new HashMap&lt;&gt;(); // NOPMD - intentional</span>
+  @NonNull
+<span class="fc" id="L30">  private static final Lock SOURCE_LOCK = new ReentrantLock();</span>
   @NonNull
   private final IModule module;
 
@@ -37,37 +41,38 @@ public final class InternalModelSource implements ISource {
    */
   @NonNull
   public static ISource instance(@NonNull IModule module) {
-    ISource retval;
-<span class="fc" id="L41">    synchronized (sources) {</span>
-<span class="fc" id="L42">      retval = ObjectUtils.notNull(sources.computeIfAbsent(</span>
+    try {
+<span class="fc" id="L45">      SOURCE_LOCK.lock();</span>
+<span class="fc" id="L46">      return ObjectUtils.notNull(sources.computeIfAbsent(</span>
           module,
-<span class="fc" id="L44">          (uri) -&gt; new InternalModelSource(module)));</span>
-<span class="fc" id="L45">    }</span>
-<span class="fc" id="L46">    return retval;</span>
+<span class="fc" id="L48">          (uri) -&gt; new InternalModelSource(module)));</span>
+    } finally {
+<span class="fc" id="L50">      SOURCE_LOCK.unlock();</span>
+    }
   }
 
-<span class="fc" id="L49">  private InternalModelSource(@NonNull IModule module) {</span>
-<span class="fc" id="L50">    this.module = module;</span>
-<span class="fc" id="L51">  }</span>
+<span class="fc" id="L54">  private InternalModelSource(@NonNull IModule module) {</span>
+<span class="fc" id="L55">    this.module = module;</span>
+<span class="fc" id="L56">  }</span>
 
   @Override
   public SourceType getSourceType() {
-<span class="nc" id="L55">    return SourceType.MODEL;</span>
+<span class="nc" id="L60">    return SourceType.MODEL;</span>
   }
 
   @Override
   public URI getSource() {
-<span class="nc" id="L60">    return module.getLocation();</span>
+<span class="nc" id="L65">    return module.getLocation();</span>
   }
 
   @Override
   public String toString() {
-<span class="nc" id="L65">    return &quot;internal:&quot; + getSource();</span>
+<span class="nc" id="L70">    return &quot;internal:&quot; + getSource();</span>
   }
 
   @Override
   public StaticContext getStaticContext() {
-<span class="nc" id="L70">    return module.getModuleStaticContext();</span>
+<span class="nc" id="L75">    return module.getModuleStaticContext();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

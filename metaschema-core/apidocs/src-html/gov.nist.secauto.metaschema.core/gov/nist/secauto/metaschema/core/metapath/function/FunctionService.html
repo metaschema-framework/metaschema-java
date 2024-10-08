@@ -23,124 +23,133 @@
 <span class="source-line-no">010</span><span id="line-10"></span>
 <span class="source-line-no">011</span><span id="line-11">import java.util.ServiceLoader;</span>
 <span class="source-line-no">012</span><span id="line-12">import java.util.ServiceLoader.Provider;</span>
-<span class="source-line-no">013</span><span id="line-13">import java.util.stream.Stream;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">013</span><span id="line-13">import java.util.concurrent.locks.Lock;</span>
+<span class="source-line-no">014</span><span id="line-14">import java.util.concurrent.locks.ReentrantLock;</span>
+<span class="source-line-no">015</span><span id="line-15">import java.util.stream.Stream;</span>
 <span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">018</span><span id="line-18">import nl.talsmasoftware.lazy4j.Lazy;</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">public final class FunctionService {</span>
-<span class="source-line-no">021</span><span id="line-21">  private static final Lazy&lt;FunctionService&gt; INSTANCE = Lazy.lazy(() -&gt; new FunctionService());</span>
-<span class="source-line-no">022</span><span id="line-22">  @NonNull</span>
-<span class="source-line-no">023</span><span id="line-23">  private final ServiceLoader&lt;IFunctionLibrary&gt; loader;</span>
+<span class="source-line-no">017</span><span id="line-17">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">020</span><span id="line-20">import nl.talsmasoftware.lazy4j.Lazy;</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">public final class FunctionService {</span>
+<span class="source-line-no">023</span><span id="line-23">  private static final Lazy&lt;FunctionService&gt; INSTANCE = Lazy.lazy(() -&gt; new FunctionService());</span>
 <span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
-<span class="source-line-no">025</span><span id="line-25">  private final Lazy&lt;IFunctionLibrary&gt; library;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">  /**</span>
-<span class="source-line-no">028</span><span id="line-28">   * Get the singleton instance of the function service.</span>
-<span class="source-line-no">029</span><span id="line-29">   *</span>
-<span class="source-line-no">030</span><span id="line-30">   * @return the service instance</span>
-<span class="source-line-no">031</span><span id="line-31">   */</span>
-<span class="source-line-no">032</span><span id="line-32">  public static FunctionService getInstance() {</span>
-<span class="source-line-no">033</span><span id="line-33">    return INSTANCE.get();</span>
-<span class="source-line-no">034</span><span id="line-34">  }</span>
-<span class="source-line-no">035</span><span id="line-35"></span>
-<span class="source-line-no">036</span><span id="line-36">  /**</span>
-<span class="source-line-no">037</span><span id="line-37">   * Construct a new function service.</span>
-<span class="source-line-no">038</span><span id="line-38">   */</span>
-<span class="source-line-no">039</span><span id="line-39">  @SuppressWarnings("null")</span>
-<span class="source-line-no">040</span><span id="line-40">  public FunctionService() {</span>
-<span class="source-line-no">041</span><span id="line-41">    this.loader = ServiceLoader.load(IFunctionLibrary.class);</span>
-<span class="source-line-no">042</span><span id="line-42">    ServiceLoader&lt;IFunctionLibrary&gt; loader = getLoader();</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">    this.library = Lazy.lazy(() -&gt; {</span>
-<span class="source-line-no">045</span><span id="line-45">      FunctionLibrary functionLibrary = new FunctionLibrary();</span>
-<span class="source-line-no">046</span><span id="line-46">      loader.stream()</span>
-<span class="source-line-no">047</span><span id="line-47">          .map(Provider&lt;IFunctionLibrary&gt;::get)</span>
-<span class="source-line-no">048</span><span id="line-48">          .flatMap(IFunctionLibrary::stream)</span>
-<span class="source-line-no">049</span><span id="line-49">          .forEachOrdered(function -&gt; functionLibrary.registerFunction(ObjectUtils.notNull(function)));</span>
-<span class="source-line-no">050</span><span id="line-50">      return functionLibrary;</span>
-<span class="source-line-no">051</span><span id="line-51">    });</span>
-<span class="source-line-no">052</span><span id="line-52">  }</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">  /**</span>
-<span class="source-line-no">055</span><span id="line-55">   * Get the function service loader instance.</span>
-<span class="source-line-no">056</span><span id="line-56">   *</span>
-<span class="source-line-no">057</span><span id="line-57">   * @return the service loader instance.</span>
-<span class="source-line-no">058</span><span id="line-58">   */</span>
-<span class="source-line-no">059</span><span id="line-59">  @NonNull</span>
-<span class="source-line-no">060</span><span id="line-60">  private ServiceLoader&lt;IFunctionLibrary&gt; getLoader() {</span>
-<span class="source-line-no">061</span><span id="line-61">    return loader;</span>
-<span class="source-line-no">062</span><span id="line-62">  }</span>
-<span class="source-line-no">063</span><span id="line-63"></span>
-<span class="source-line-no">064</span><span id="line-64">  @NonNull</span>
-<span class="source-line-no">065</span><span id="line-65">  private IFunctionLibrary getLibrary() {</span>
-<span class="source-line-no">066</span><span id="line-66">    return ObjectUtils.notNull(library.get());</span>
-<span class="source-line-no">067</span><span id="line-67">  }</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  /**</span>
-<span class="source-line-no">070</span><span id="line-70">   * Retrieve the collection of function signatures in this library as a stream.</span>
-<span class="source-line-no">071</span><span id="line-71">   *</span>
-<span class="source-line-no">072</span><span id="line-72">   * @return a stream of function signatures</span>
-<span class="source-line-no">073</span><span id="line-73">   */</span>
-<span class="source-line-no">074</span><span id="line-74">  public Stream&lt;IFunction&gt; stream() {</span>
-<span class="source-line-no">075</span><span id="line-75">    return getLibrary().stream();</span>
-<span class="source-line-no">076</span><span id="line-76">  }</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">  /**</span>
-<span class="source-line-no">079</span><span id="line-79">   * Retrieve the function with the provided name that supports the signature of</span>
-<span class="source-line-no">080</span><span id="line-80">   * the provided methods, if such a function exists.</span>
-<span class="source-line-no">081</span><span id="line-81">   *</span>
-<span class="source-line-no">082</span><span id="line-82">   * @param name</span>
-<span class="source-line-no">083</span><span id="line-83">   *          the name of a group of functions</span>
-<span class="source-line-no">084</span><span id="line-84">   * @param arity</span>
-<span class="source-line-no">085</span><span id="line-85">   *          the count of arguments for use in determining an argument signature</span>
-<span class="source-line-no">086</span><span id="line-86">   *          match</span>
-<span class="source-line-no">087</span><span id="line-87">   * @return the matching function or {@code null} if no match exists</span>
-<span class="source-line-no">088</span><span id="line-88">   * @throws StaticMetapathException</span>
-<span class="source-line-no">089</span><span id="line-89">   *           if a matching function was not found</span>
-<span class="source-line-no">090</span><span id="line-90">   */</span>
-<span class="source-line-no">091</span><span id="line-91">  public IFunction getFunction(@NonNull String name, int arity) {</span>
-<span class="source-line-no">092</span><span id="line-92">    IFunction retval;</span>
-<span class="source-line-no">093</span><span id="line-93">    synchronized (this) {</span>
-<span class="source-line-no">094</span><span id="line-94">      retval = getLibrary().getFunction(name, arity);</span>
-<span class="source-line-no">095</span><span id="line-95">    }</span>
-<span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">    if (retval == null) {</span>
-<span class="source-line-no">098</span><span id="line-98">      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,</span>
-<span class="source-line-no">099</span><span id="line-99">          String.format("unable to find function with name '%s' having arity '%d'", name, arity));</span>
-<span class="source-line-no">100</span><span id="line-100">    }</span>
-<span class="source-line-no">101</span><span id="line-101">    return retval;</span>
-<span class="source-line-no">102</span><span id="line-102">  }</span>
+<span class="source-line-no">025</span><span id="line-25">  private final ServiceLoader&lt;IFunctionLibrary&gt; loader;</span>
+<span class="source-line-no">026</span><span id="line-26">  @NonNull</span>
+<span class="source-line-no">027</span><span id="line-27">  private final Lazy&lt;IFunctionLibrary&gt; library;</span>
+<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
+<span class="source-line-no">029</span><span id="line-29">  private final Lock instanceLock = new ReentrantLock();</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">  /**</span>
+<span class="source-line-no">032</span><span id="line-32">   * Get the singleton instance of the function service.</span>
+<span class="source-line-no">033</span><span id="line-33">   *</span>
+<span class="source-line-no">034</span><span id="line-34">   * @return the service instance</span>
+<span class="source-line-no">035</span><span id="line-35">   */</span>
+<span class="source-line-no">036</span><span id="line-36">  public static FunctionService getInstance() {</span>
+<span class="source-line-no">037</span><span id="line-37">    return INSTANCE.get();</span>
+<span class="source-line-no">038</span><span id="line-38">  }</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  /**</span>
+<span class="source-line-no">041</span><span id="line-41">   * Construct a new function service.</span>
+<span class="source-line-no">042</span><span id="line-42">   */</span>
+<span class="source-line-no">043</span><span id="line-43">  @SuppressWarnings("null")</span>
+<span class="source-line-no">044</span><span id="line-44">  public FunctionService() {</span>
+<span class="source-line-no">045</span><span id="line-45">    this.loader = ServiceLoader.load(IFunctionLibrary.class);</span>
+<span class="source-line-no">046</span><span id="line-46">    ServiceLoader&lt;IFunctionLibrary&gt; loader = getLoader();</span>
+<span class="source-line-no">047</span><span id="line-47"></span>
+<span class="source-line-no">048</span><span id="line-48">    this.library = Lazy.lazy(() -&gt; {</span>
+<span class="source-line-no">049</span><span id="line-49">      FunctionLibrary functionLibrary = new FunctionLibrary();</span>
+<span class="source-line-no">050</span><span id="line-50">      loader.stream()</span>
+<span class="source-line-no">051</span><span id="line-51">          .map(Provider&lt;IFunctionLibrary&gt;::get)</span>
+<span class="source-line-no">052</span><span id="line-52">          .flatMap(IFunctionLibrary::stream)</span>
+<span class="source-line-no">053</span><span id="line-53">          .forEachOrdered(function -&gt; functionLibrary.registerFunction(ObjectUtils.notNull(function)));</span>
+<span class="source-line-no">054</span><span id="line-54">      return functionLibrary;</span>
+<span class="source-line-no">055</span><span id="line-55">    });</span>
+<span class="source-line-no">056</span><span id="line-56">  }</span>
+<span class="source-line-no">057</span><span id="line-57"></span>
+<span class="source-line-no">058</span><span id="line-58">  /**</span>
+<span class="source-line-no">059</span><span id="line-59">   * Get the function service loader instance.</span>
+<span class="source-line-no">060</span><span id="line-60">   *</span>
+<span class="source-line-no">061</span><span id="line-61">   * @return the service loader instance.</span>
+<span class="source-line-no">062</span><span id="line-62">   */</span>
+<span class="source-line-no">063</span><span id="line-63">  @NonNull</span>
+<span class="source-line-no">064</span><span id="line-64">  private ServiceLoader&lt;IFunctionLibrary&gt; getLoader() {</span>
+<span class="source-line-no">065</span><span id="line-65">    return loader;</span>
+<span class="source-line-no">066</span><span id="line-66">  }</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  @NonNull</span>
+<span class="source-line-no">069</span><span id="line-69">  private IFunctionLibrary getLibrary() {</span>
+<span class="source-line-no">070</span><span id="line-70">    return ObjectUtils.notNull(library.get());</span>
+<span class="source-line-no">071</span><span id="line-71">  }</span>
+<span class="source-line-no">072</span><span id="line-72"></span>
+<span class="source-line-no">073</span><span id="line-73">  /**</span>
+<span class="source-line-no">074</span><span id="line-74">   * Retrieve the collection of function signatures in this library as a stream.</span>
+<span class="source-line-no">075</span><span id="line-75">   *</span>
+<span class="source-line-no">076</span><span id="line-76">   * @return a stream of function signatures</span>
+<span class="source-line-no">077</span><span id="line-77">   */</span>
+<span class="source-line-no">078</span><span id="line-78">  public Stream&lt;IFunction&gt; stream() {</span>
+<span class="source-line-no">079</span><span id="line-79">    return getLibrary().stream();</span>
+<span class="source-line-no">080</span><span id="line-80">  }</span>
+<span class="source-line-no">081</span><span id="line-81"></span>
+<span class="source-line-no">082</span><span id="line-82">  /**</span>
+<span class="source-line-no">083</span><span id="line-83">   * Retrieve the function with the provided name that supports the signature of</span>
+<span class="source-line-no">084</span><span id="line-84">   * the provided methods, if such a function exists.</span>
+<span class="source-line-no">085</span><span id="line-85">   *</span>
+<span class="source-line-no">086</span><span id="line-86">   * @param name</span>
+<span class="source-line-no">087</span><span id="line-87">   *          the name of a group of functions</span>
+<span class="source-line-no">088</span><span id="line-88">   * @param arity</span>
+<span class="source-line-no">089</span><span id="line-89">   *          the count of arguments for use in determining an argument signature</span>
+<span class="source-line-no">090</span><span id="line-90">   *          match</span>
+<span class="source-line-no">091</span><span id="line-91">   * @return the matching function or {@code null} if no match exists</span>
+<span class="source-line-no">092</span><span id="line-92">   * @throws StaticMetapathException</span>
+<span class="source-line-no">093</span><span id="line-93">   *           if a matching function was not found</span>
+<span class="source-line-no">094</span><span id="line-94">   */</span>
+<span class="source-line-no">095</span><span id="line-95">  public IFunction getFunction(@NonNull String name, int arity) {</span>
+<span class="source-line-no">096</span><span id="line-96">    IFunction retval;</span>
+<span class="source-line-no">097</span><span id="line-97">    try {</span>
+<span class="source-line-no">098</span><span id="line-98">      instanceLock.lock();</span>
+<span class="source-line-no">099</span><span id="line-99">      retval = getLibrary().getFunction(name, arity);</span>
+<span class="source-line-no">100</span><span id="line-100">    } finally {</span>
+<span class="source-line-no">101</span><span id="line-101">      instanceLock.unlock();</span>
+<span class="source-line-no">102</span><span id="line-102">    }</span>
 <span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  /**</span>
-<span class="source-line-no">105</span><span id="line-105">   * Retrieve the function with the provided name that supports the signature of</span>
-<span class="source-line-no">106</span><span id="line-106">   * the provided methods, if such a function exists.</span>
-<span class="source-line-no">107</span><span id="line-107">   *</span>
-<span class="source-line-no">108</span><span id="line-108">   * @param name</span>
-<span class="source-line-no">109</span><span id="line-109">   *          the name of a group of functions</span>
-<span class="source-line-no">110</span><span id="line-110">   * @param arity</span>
-<span class="source-line-no">111</span><span id="line-111">   *          the count of arguments for use in determining an argument signature</span>
-<span class="source-line-no">112</span><span id="line-112">   *          match</span>
-<span class="source-line-no">113</span><span id="line-113">   * @return the matching function or {@code null} if no match exists</span>
-<span class="source-line-no">114</span><span id="line-114">   * @throws StaticMetapathException</span>
-<span class="source-line-no">115</span><span id="line-115">   *           if a matching function was not found</span>
-<span class="source-line-no">116</span><span id="line-116">   */</span>
-<span class="source-line-no">117</span><span id="line-117">  public IFunction getFunction(@NonNull QName name, int arity) {</span>
-<span class="source-line-no">118</span><span id="line-118">    IFunction retval;</span>
-<span class="source-line-no">119</span><span id="line-119">    synchronized (this) {</span>
-<span class="source-line-no">120</span><span id="line-120">      retval = getLibrary().getFunction(name, arity);</span>
-<span class="source-line-no">121</span><span id="line-121">    }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">    if (retval == null) {</span>
-<span class="source-line-no">124</span><span id="line-124">      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,</span>
-<span class="source-line-no">125</span><span id="line-125">          String.format("unable to find function with name '%s' having arity '%d'", name, arity));</span>
-<span class="source-line-no">126</span><span id="line-126">    }</span>
-<span class="source-line-no">127</span><span id="line-127">    return retval;</span>
-<span class="source-line-no">128</span><span id="line-128">  }</span>
-<span class="source-line-no">129</span><span id="line-129"></span>
-<span class="source-line-no">130</span><span id="line-130">}</span>
+<span class="source-line-no">104</span><span id="line-104">    if (retval == null) {</span>
+<span class="source-line-no">105</span><span id="line-105">      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,</span>
+<span class="source-line-no">106</span><span id="line-106">          String.format("unable to find function with name '%s' having arity '%d'", name, arity));</span>
+<span class="source-line-no">107</span><span id="line-107">    }</span>
+<span class="source-line-no">108</span><span id="line-108">    return retval;</span>
+<span class="source-line-no">109</span><span id="line-109">  }</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">  /**</span>
+<span class="source-line-no">112</span><span id="line-112">   * Retrieve the function with the provided name that supports the signature of</span>
+<span class="source-line-no">113</span><span id="line-113">   * the provided methods, if such a function exists.</span>
+<span class="source-line-no">114</span><span id="line-114">   *</span>
+<span class="source-line-no">115</span><span id="line-115">   * @param name</span>
+<span class="source-line-no">116</span><span id="line-116">   *          the name of a group of functions</span>
+<span class="source-line-no">117</span><span id="line-117">   * @param arity</span>
+<span class="source-line-no">118</span><span id="line-118">   *          the count of arguments for use in determining an argument signature</span>
+<span class="source-line-no">119</span><span id="line-119">   *          match</span>
+<span class="source-line-no">120</span><span id="line-120">   * @return the matching function or {@code null} if no match exists</span>
+<span class="source-line-no">121</span><span id="line-121">   * @throws StaticMetapathException</span>
+<span class="source-line-no">122</span><span id="line-122">   *           if a matching function was not found</span>
+<span class="source-line-no">123</span><span id="line-123">   */</span>
+<span class="source-line-no">124</span><span id="line-124">  public IFunction getFunction(@NonNull QName name, int arity) {</span>
+<span class="source-line-no">125</span><span id="line-125">    IFunction retval;</span>
+<span class="source-line-no">126</span><span id="line-126">    try {</span>
+<span class="source-line-no">127</span><span id="line-127">      instanceLock.lock();</span>
+<span class="source-line-no">128</span><span id="line-128">      retval = getLibrary().getFunction(name, arity);</span>
+<span class="source-line-no">129</span><span id="line-129">    } finally {</span>
+<span class="source-line-no">130</span><span id="line-130">      instanceLock.unlock();</span>
+<span class="source-line-no">131</span><span id="line-131">    }</span>
+<span class="source-line-no">132</span><span id="line-132"></span>
+<span class="source-line-no">133</span><span id="line-133">    if (retval == null) {</span>
+<span class="source-line-no">134</span><span id="line-134">      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,</span>
+<span class="source-line-no">135</span><span id="line-135">          String.format("unable to find function with name '%s' having arity '%d'", name, arity));</span>
+<span class="source-line-no">136</span><span id="line-136">    }</span>
+<span class="source-line-no">137</span><span id="line-137">    return retval;</span>
+<span class="source-line-no">138</span><span id="line-138">  }</span>
+<span class="source-line-no">139</span><span id="line-139">}</span>
 
 
 

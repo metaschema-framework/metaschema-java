@@ -22,27 +22,28 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class MapEntry {
+  private static final String NAME = &quot;entry&quot;;
   @NonNull
-<span class="fc" id="L26">  public static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L27">      .name(&quot;entry&quot;)</span>
-<span class="fc" id="L28">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="fc" id="L29">      .deterministic()</span>
-<span class="fc" id="L30">      .contextIndependent()</span>
-<span class="fc" id="L31">      .focusIndependent()</span>
-<span class="fc" id="L32">      .argument(IArgument.builder()</span>
-<span class="fc" id="L33">          .name(&quot;key&quot;)</span>
-<span class="fc" id="L34">          .type(IAnyAtomicItem.class)</span>
-<span class="fc" id="L35">          .one()</span>
-<span class="fc" id="L36">          .build())</span>
-<span class="fc" id="L37">      .argument(IArgument.builder()</span>
-<span class="fc" id="L38">          .name(&quot;item&quot;)</span>
-<span class="fc" id="L39">          .type(IItem.class)</span>
-<span class="fc" id="L40">          .zeroOrMore()</span>
-<span class="fc" id="L41">          .build())</span>
-<span class="fc" id="L42">      .returnType(IItem.class)</span>
-<span class="fc" id="L43">      .returnOne()</span>
-<span class="fc" id="L44">      .functionHandler(MapEntry::execute)</span>
-<span class="fc" id="L45">      .build();</span>
+<span class="fc" id="L27">  public static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L28">      .name(NAME)</span>
+<span class="fc" id="L29">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="fc" id="L30">      .deterministic()</span>
+<span class="fc" id="L31">      .contextIndependent()</span>
+<span class="fc" id="L32">      .focusIndependent()</span>
+<span class="fc" id="L33">      .argument(IArgument.builder()</span>
+<span class="fc" id="L34">          .name(&quot;key&quot;)</span>
+<span class="fc" id="L35">          .type(IAnyAtomicItem.class)</span>
+<span class="fc" id="L36">          .one()</span>
+<span class="fc" id="L37">          .build())</span>
+<span class="fc" id="L38">      .argument(IArgument.builder()</span>
+<span class="fc" id="L39">          .name(&quot;item&quot;)</span>
+<span class="fc" id="L40">          .type(IItem.class)</span>
+<span class="fc" id="L41">          .zeroOrMore()</span>
+<span class="fc" id="L42">          .build())</span>
+<span class="fc" id="L43">      .returnType(IItem.class)</span>
+<span class="fc" id="L44">      .returnOne()</span>
+<span class="fc" id="L45">      .functionHandler(MapEntry::execute)</span>
+<span class="fc" id="L46">      .build();</span>
 
   private MapEntry() {
     // disable construction
@@ -54,10 +55,10 @@ public final class MapEntry {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L57">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L58">    @SuppressWarnings(&quot;unchecked&quot;) T value = (T) arguments.get(1).toCollectionValue();</span>
+<span class="fc" id="L58">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L59">    @SuppressWarnings(&quot;unchecked&quot;) T value = (T) arguments.get(1).toCollectionValue();</span>
 
-<span class="fc" id="L60">    return entry(key, value).asSequence();</span>
+<span class="fc" id="L61">    return entry(key, value).asSequence();</span>
   }
 
   /**
@@ -76,7 +77,7 @@ public final class MapEntry {
   public static &lt;T extends ICollectionValue&gt; IMapItem&lt;T&gt; entry(
       @NonNull IAnyAtomicItem key,
       @NonNull T value) {
-<span class="fc" id="L79">    return IMapItem.ofEntries(IMapItem.entry(key, value));</span>
+<span class="fc" id="L80">    return IMapItem.ofEntries(IMapItem.entry(key, value));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

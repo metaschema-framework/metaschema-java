@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Result.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Modules</a> &gt; <a href="index.source.html" class="el_package">org.schemastore.json.sarif.x210</a> &gt; <span class="el_source">Result.java</span></div><h1>Result.java</h1><pre class="source lang-java linenums">package org.schemastore.json.sarif.x210;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.IntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.UuidAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.Expect;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+import java.lang.Override;
+import java.lang.String;
+import java.math.BigInteger;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+/**
+ * Results from the run of a tool.
+ */
+@MetaschemaAssembly(
+    formalName = &quot;Results&quot;,
+    description = &quot;Results from the run of a tool.&quot;,
+    name = &quot;result&quot;,
+    moduleClass = SarifModule.class,
+    valueConstraints = @ValueConstraints(expect = @Expect(level = IConstraint.Level.ERROR, test = &quot;@ruleIndex &gt;= -1&quot;, message = &quot;The value '{ . }' is not greater than or equal to '-1'.&quot;))
+)
+public class Result implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  /**
+   * &quot;The stable, unique identifier of the rule, if any, to which this result is relevant.&quot;
+   */
+  @BoundFlag(
+      formalName = &quot;Rule Identifier&quot;,
+      description = &quot;The stable, unique identifier of the rule, if any, to which this result is relevant.&quot;,
+      name = &quot;ruleId&quot;,
+      typeAdapter = StringAdapter.class
+  )
+  private String _ruleId;
+
+  /**
+   * &quot;The stable, unique identifier of the rule, if any, to which this result is relevant.&quot;
+   */
+  @BoundFlag(
+      formalName = &quot;Rule Identifier&quot;,
+      description = &quot;The stable, unique identifier of the rule, if any, to which this result is relevant.&quot;,
+      name = &quot;ruleIndex&quot;,
+      defaultValue = &quot;-1&quot;,
+      typeAdapter = IntegerAdapter.class
+  )
+  private BigInteger _ruleIndex;
+
+  /**
+   * &quot;A stable, unique identifier for the result.&quot;
+   */
+  @BoundFlag(
+      formalName = &quot;Result Unique Identifier&quot;,
+      description = &quot;A stable, unique identifier for the result.&quot;,
+      name = &quot;guid&quot;,
+      typeAdapter = UuidAdapter.class
+  )
+  private UUID _guid;
+
+  @BoundAssembly(
+      formalName = &quot;Reporting Descriptor Reference&quot;,
+      description = &quot;A reference used to locate the rule descriptor relevant to this result.&quot;,
+      useName = &quot;rule&quot;
+  )
+  private ReportingDescriptorReference _rule;
+
+  @BoundField(
+      formalName = &quot;Result Kind&quot;,
+      description = &quot;A value that categorizes results by evaluation state.&quot;,
+      useName = &quot;kind&quot;,
+      defaultValue = &quot;fail&quot;,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = &quot;notApplicable&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;pass&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;fail&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;review&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;open&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;informational&quot;, description = &quot;&quot;)}))
+  )
+  private String _kind;
+
+  @BoundField(
+      formalName = &quot;Severity Level&quot;,
+      description = &quot;A value specifying the severity level of the result.&quot;,
+      useName = &quot;level&quot;,
+      defaultValue = &quot;warning&quot;,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = &quot;none&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;note&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;warning&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;error&quot;, description = &quot;&quot;)}))
+  )
+  private String _level;
+
+  @BoundAssembly(
+      formalName = &quot;Result Message&quot;,
+      description = &quot;A message that describes the result. The first sentence of the message only will be displayed when visible space is limited.&quot;,
+      useName = &quot;message&quot;
+  )
+  private Message _message;
+
+  @BoundAssembly(
+      formalName = &quot;Scanned Artifact&quot;,
+      description = &quot;Identifies the artifact that the analysis tool was instructed to scan. This need not be the same as the artifact where the result actually occurred.&quot;,
+      useName = &quot;analysisTarget&quot;
+  )
+  private ArtifactLocation _analysisTarget;
+
+  @BoundAssembly(
+      formalName = &quot;Result Location&quot;,
+      description = &quot;The set of locations where the result was detected. Specify only one location unless the problem indicated by the result can only be corrected by making a change at every specified location.&quot;,
+      useName = &quot;location&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;locations&quot;, inJson = JsonGroupAsBehavior.LIST)
+  )
+  private List&lt;Location&gt; _locations;
+
+  @BoundField(
+      formalName = &quot;Occurrence Count&quot;,
+      description = &quot;A positive integer specifying the number of times this logically unique result was observed in this run.&quot;,
+      useName = &quot;occurenceCount&quot;,
+      typeAdapter = PositiveIntegerAdapter.class
+  )
+  private BigInteger _occurenceCount;
+
+  @BoundAssembly(
+      formalName = &quot;Result Related Location&quot;,
+      description = &quot;A set of locations relevant to this result.&quot;,
+      useName = &quot;relatedLocation&quot;
+  )
+  private Location _relatedLocation;
+
+  @BoundAssembly(
+      formalName = &quot;Result Provenance&quot;,
+      description = &quot;Information about how and when the result was detected.&quot;,
+      useName = &quot;provenance&quot;
+  )
+  private ResultProvenance _provenance;
+
+  public Result() {
+<span class="fc" id="L148">    this(null);</span>
+<span class="fc" id="L149">  }</span>
+
+<span class="fc" id="L151">  public Result(IMetaschemaData data) {</span>
+<span class="fc" id="L152">    this.__metaschemaData = data;</span>
+<span class="fc" id="L153">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L157">    return __metaschemaData;</span>
+  }
+
+  public String getRuleId() {
+<span class="nc" id="L161">    return _ruleId;</span>
+  }
+
+  public void setRuleId(String value) {
+<span class="nc" id="L165">    _ruleId = value;</span>
+<span class="nc" id="L166">  }</span>
+
+  public BigInteger getRuleIndex() {
+<span class="nc" id="L169">    return _ruleIndex;</span>
+  }
+
+  public void setRuleIndex(BigInteger value) {
+<span class="fc" id="L173">    _ruleIndex = value;</span>
+<span class="fc" id="L174">  }</span>
+
+  public UUID getGuid() {
+<span class="nc" id="L177">    return _guid;</span>
+  }
+
+  public void setGuid(UUID value) {
+<span class="fc" id="L181">    _guid = value;</span>
+<span class="fc" id="L182">  }</span>
+
+  public ReportingDescriptorReference getRule() {
+<span class="nc" id="L185">    return _rule;</span>
+  }
+
+  public void setRule(ReportingDescriptorReference value) {
+<span class="nc" id="L189">    _rule = value;</span>
+<span class="nc" id="L190">  }</span>
+
+  public String getKind() {
+<span class="nc" id="L193">    return _kind;</span>
+  }
+
+  public void setKind(String value) {
+<span class="fc" id="L197">    _kind = value;</span>
+<span class="fc" id="L198">  }</span>
+
+  public String getLevel() {
+<span class="nc" id="L201">    return _level;</span>
+  }
+
+  public void setLevel(String value) {
+<span class="fc" id="L205">    _level = value;</span>
+<span class="fc" id="L206">  }</span>
+
+  public Message getMessage() {
+<span class="nc" id="L209">    return _message;</span>
+  }
+
+  public void setMessage(Message value) {
+<span class="fc" id="L213">    _message = value;</span>
+<span class="fc" id="L214">  }</span>
+
+  public ArtifactLocation getAnalysisTarget() {
+<span class="nc" id="L217">    return _analysisTarget;</span>
+  }
+
+  public void setAnalysisTarget(ArtifactLocation value) {
+<span class="nc" id="L221">    _analysisTarget = value;</span>
+<span class="nc" id="L222">  }</span>
+
+  public List&lt;Location&gt; getLocations() {
+<span class="nc" id="L225">    return _locations;</span>
+  }
+
+  public void setLocations(List&lt;Location&gt; value) {
+<span class="nc" id="L229">    _locations = value;</span>
+<span class="nc" id="L230">  }</span>
+
+  /**
+   * Add a new {@link Location} item to the underlying collection.
+   * @param item the item to add
+   * @return {@code true}
+   */
+  public boolean addLocation(Location item) {
+<span class="fc" id="L238">    Location value = ObjectUtils.requireNonNull(item,&quot;item cannot be null&quot;);</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">    if (_locations == null) {</span>
+<span class="fc" id="L240">      _locations = new LinkedList&lt;&gt;();</span>
+    }
+<span class="fc" id="L242">    return _locations.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link Location} item from the underlying collection.
+   * @param item the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeLocation(Location item) {
+<span class="nc" id="L251">    Location value = ObjectUtils.requireNonNull(item,&quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L252" title="All 4 branches missed.">    return _locations != null &amp;&amp; _locations.remove(value);</span>
+  }
+
+  public BigInteger getOccurenceCount() {
+<span class="nc" id="L256">    return _occurenceCount;</span>
+  }
+
+  public void setOccurenceCount(BigInteger value) {
+<span class="nc" id="L260">    _occurenceCount = value;</span>
+<span class="nc" id="L261">  }</span>
+
+  public Location getRelatedLocation() {
+<span class="nc" id="L264">    return _relatedLocation;</span>
+  }
+
+  public void setRelatedLocation(Location value) {
+<span class="nc" id="L268">    _relatedLocation = value;</span>
+<span class="nc" id="L269">  }</span>
+
+  public ResultProvenance getProvenance() {
+<span class="nc" id="L272">    return _provenance;</span>
+  }
+
+  public void setProvenance(ResultProvenance value) {
+<span class="nc" id="L276">    _provenance = value;</span>
+<span class="nc" id="L277">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L281">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ToolComponent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Modules</a> &gt; <a href="index.source.html" class="el_package">org.schemastore.json.sarif.x210</a> &gt; <span class="el_source">ToolComponent.java</span></div><h1>ToolComponent.java</h1><pre class="source lang-java linenums">package org.schemastore.json.sarif.x210;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.UriAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.UuidAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import java.lang.Override;
+import java.lang.String;
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+@MetaschemaAssembly(
+    name = &quot;toolComponent&quot;,
+    moduleClass = SarifModule.class
+)
+public class ToolComponent implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  /**
+   * &quot;A stable, unique identifier for the tool component.&quot;
+   */
+  @BoundFlag(
+      formalName = &quot;Tool Component Unique Identifier&quot;,
+      description = &quot;A stable, unique identifier for the tool component.&quot;,
+      name = &quot;guid&quot;,
+      typeAdapter = UuidAdapter.class
+  )
+  private UUID _guid;
+
+  @BoundField(
+      formalName = &quot;Tool Component Name&quot;,
+      description = &quot;The name of the tool component.&quot;,
+      useName = &quot;name&quot;
+  )
+  private String _name;
+
+  @BoundField(
+      formalName = &quot;Tool Component Organization&quot;,
+      description = &quot;The organization or company that produced the tool component.&quot;,
+      useName = &quot;organization&quot;
+  )
+  private String _organization;
+
+  @BoundField(
+      formalName = &quot;Tool Component Product&quot;,
+      description = &quot;A product suite to which the tool component belongs.&quot;,
+      useName = &quot;product&quot;
+  )
+  private String _product;
+
+  @BoundField(
+      formalName = &quot;Tool Component Version&quot;,
+      description = &quot;The tool component version, in whatever format the component natively provides.&quot;,
+      useName = &quot;version&quot;
+  )
+  private String _version;
+
+  @BoundField(
+      formalName = &quot;Tool Component Semantic Version&quot;,
+      description = &quot;The tool component version in the format specified by Semantic Versioning 2.0.&quot;,
+      useName = &quot;semanticVersion&quot;
+  )
+  private String _semanticVersion;
+
+  @BoundField(
+      formalName = &quot;Tool Component Information URI&quot;,
+      description = &quot;The absolute URI at which information about this version of the tool component can be found.&quot;,
+      useName = &quot;informationUri&quot;,
+      typeAdapter = UriAdapter.class
+  )
+  private URI _informationUri;
+
+  @BoundAssembly(
+      formalName = &quot;Rule&quot;,
+      description = &quot;An array of reportingDescriptor objects relevant to the analysis performed by the tool component.&quot;,
+      useName = &quot;rule&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;rules&quot;, inJson = JsonGroupAsBehavior.LIST)
+  )
+  private List&lt;ReportingDescriptor&gt; _rules;
+
+  public ToolComponent() {
+<span class="fc" id="L94">    this(null);</span>
+<span class="fc" id="L95">  }</span>
+
+<span class="fc" id="L97">  public ToolComponent(IMetaschemaData data) {</span>
+<span class="fc" id="L98">    this.__metaschemaData = data;</span>
+<span class="fc" id="L99">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L103">    return __metaschemaData;</span>
+  }
+
+  public UUID getGuid() {
+<span class="nc" id="L107">    return _guid;</span>
+  }
+
+  public void setGuid(UUID value) {
+<span class="nc" id="L111">    _guid = value;</span>
+<span class="nc" id="L112">  }</span>
+
+  public String getName() {
+<span class="nc" id="L115">    return _name;</span>
+  }
+
+  public void setName(String value) {
+<span class="fc" id="L119">    _name = value;</span>
+<span class="fc" id="L120">  }</span>
+
+  public String getOrganization() {
+<span class="nc" id="L123">    return _organization;</span>
+  }
+
+  public void setOrganization(String value) {
+<span class="nc" id="L127">    _organization = value;</span>
+<span class="nc" id="L128">  }</span>
+
+  public String getProduct() {
+<span class="nc" id="L131">    return _product;</span>
+  }
+
+  public void setProduct(String value) {
+<span class="nc" id="L135">    _product = value;</span>
+<span class="nc" id="L136">  }</span>
+
+  public String getVersion() {
+<span class="nc" id="L139">    return _version;</span>
+  }
+
+  public void setVersion(String value) {
+<span class="fc" id="L143">    _version = value;</span>
+<span class="fc" id="L144">  }</span>
+
+  public String getSemanticVersion() {
+<span class="nc" id="L147">    return _semanticVersion;</span>
+  }
+
+  public void setSemanticVersion(String value) {
+<span class="nc" id="L151">    _semanticVersion = value;</span>
+<span class="nc" id="L152">  }</span>
+
+  public URI getInformationUri() {
+<span class="nc" id="L155">    return _informationUri;</span>
+  }
+
+  public void setInformationUri(URI value) {
+<span class="nc" id="L159">    _informationUri = value;</span>
+<span class="nc" id="L160">  }</span>
+
+  public List&lt;ReportingDescriptor&gt; getRules() {
+<span class="nc" id="L163">    return _rules;</span>
+  }
+
+  public void setRules(List&lt;ReportingDescriptor&gt; value) {
+<span class="nc" id="L167">    _rules = value;</span>
+<span class="nc" id="L168">  }</span>
+
+  /**
+   * Add a new {@link ReportingDescriptor} item to the underlying collection.
+   * @param item the item to add
+   * @return {@code true}
+   */
+  public boolean addRule(ReportingDescriptor item) {
+<span class="fc" id="L176">    ReportingDescriptor value = ObjectUtils.requireNonNull(item,&quot;item cannot be null&quot;);</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">    if (_rules == null) {</span>
+<span class="fc" id="L178">      _rules = new LinkedList&lt;&gt;();</span>
+    }
+<span class="fc" id="L180">    return _rules.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link ReportingDescriptor} item from the underlying collection.
+   * @param item the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeRule(ReportingDescriptor item) {
+<span class="nc" id="L189">    ReportingDescriptor value = ObjectUtils.requireNonNull(item,&quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L190" title="All 4 branches missed.">    return _rules != null &amp;&amp; _rules.remove(value);</span>
+  }
+
+  @Override
+  public String toString() {
+<span class="nc" id="L195">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

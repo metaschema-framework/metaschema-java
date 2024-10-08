@@ -110,10 +110,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   @NonNull
   private static &lt;T extends IItem&gt; ISequence&lt;T&gt; handleZeroOrOne(@NonNull ISequence&lt;T&gt; sequence) {
 <span class="fc" id="L112">    int size = sequence.size();</span>
-<span class="pc bpc" id="L113" title="1 of 2 branches missed.">    if (size &gt; 1) {</span>
-<span class="nc" id="L114">      throw new InvalidTypeMetapathException(</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    if (size &gt; 1) {</span>
+<span class="fc" id="L114">      throw new InvalidTypeMetapathException(</span>
           null,
-<span class="nc" id="L116">          String.format(&quot;a sequence of zero or one expected, but size is '%d'&quot;, size));</span>
+<span class="fc" id="L116">          String.format(&quot;a sequence of zero or one expected, but size is '%d'&quot;, size));</span>
     }
 
 <span class="fc" id="L119">    T item = sequence.getFirstItem(false);</span>

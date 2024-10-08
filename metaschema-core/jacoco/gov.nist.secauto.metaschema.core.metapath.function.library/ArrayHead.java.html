@@ -22,22 +22,23 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class ArrayHead {
+  private static final String NAME = &quot;head&quot;;
   @NonNull
-<span class="fc" id="L26">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L27">      .name(&quot;head&quot;)</span>
-<span class="fc" id="L28">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L29">      .deterministic()</span>
-<span class="fc" id="L30">      .contextIndependent()</span>
-<span class="fc" id="L31">      .focusIndependent()</span>
-<span class="fc" id="L32">      .argument(IArgument.builder()</span>
-<span class="fc" id="L33">          .name(&quot;array&quot;)</span>
-<span class="fc" id="L34">          .type(IArrayItem.class)</span>
-<span class="fc" id="L35">          .one()</span>
-<span class="fc" id="L36">          .build())</span>
-<span class="fc" id="L37">      .returnType(IItem.class)</span>
-<span class="fc" id="L38">      .returnZeroOrOne()</span>
-<span class="fc" id="L39">      .functionHandler(ArrayHead::execute)</span>
-<span class="fc" id="L40">      .build();</span>
+<span class="fc" id="L27">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L28">      .name(NAME)</span>
+<span class="fc" id="L29">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L30">      .deterministic()</span>
+<span class="fc" id="L31">      .contextIndependent()</span>
+<span class="fc" id="L32">      .focusIndependent()</span>
+<span class="fc" id="L33">      .argument(IArgument.builder()</span>
+<span class="fc" id="L34">          .name(&quot;array&quot;)</span>
+<span class="fc" id="L35">          .type(IArrayItem.class)</span>
+<span class="fc" id="L36">          .one()</span>
+<span class="fc" id="L37">          .build())</span>
+<span class="fc" id="L38">      .returnType(IItem.class)</span>
+<span class="fc" id="L39">      .returnZeroOrOne()</span>
+<span class="fc" id="L40">      .functionHandler(ArrayHead::execute)</span>
+<span class="fc" id="L41">      .build();</span>
 
   private ArrayHead() {
     // disable construction
@@ -49,10 +50,10 @@ public final class ArrayHead {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L52">    IArrayItem&lt;?&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L53">    IArrayItem&lt;?&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
 
-<span class="fc" id="L54">    ICollectionValue result = head(array);</span>
-<span class="pc bpc" id="L55" title="1 of 2 branches missed.">    return result == null ? ISequence.empty() : result.asSequence();</span>
+<span class="fc" id="L55">    ICollectionValue result = head(array);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">    return result == null ? ISequence.empty() : result.asSequence();</span>
   }
 
   /**
@@ -67,7 +68,7 @@ public final class ArrayHead {
    */
   @Nullable
   public static &lt;T extends ICollectionValue&gt; T head(@NonNull IArrayItem&lt;T&gt; array) {
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">    return array.isEmpty() ? null : array.get(0);</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">    return array.isEmpty() ? null : array.get(0);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

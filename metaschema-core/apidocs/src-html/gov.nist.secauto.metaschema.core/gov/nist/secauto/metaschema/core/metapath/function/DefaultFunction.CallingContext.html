@@ -19,16 +19,16 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.function;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.TypeSystem;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.TypeSystem;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
 <span class="source-line-no">019</span><span id="line-19"></span>
 <span class="source-line-no">020</span><span id="line-20">import java.util.ArrayList;</span>
 <span class="source-line-no">021</span><span id="line-21">import java.util.Collections;</span>
@@ -170,249 +170,251 @@
 <span class="source-line-no">157</span><span id="line-157">  @NonNull</span>
 <span class="source-line-no">158</span><span id="line-158">  public static List&lt;ISequence&lt;?&gt;&gt; convertArguments(</span>
 <span class="source-line-no">159</span><span id="line-159">      @NonNull IFunction function,</span>
-<span class="source-line-no">160</span><span id="line-160">      @NonNull List&lt;ISequence&lt;?&gt;&gt; parameters) {</span>
+<span class="source-line-no">160</span><span id="line-160">      @NonNull List&lt;? extends ISequence&lt;?&gt;&gt; parameters) {</span>
 <span class="source-line-no">161</span><span id="line-161">    @NonNull List&lt;ISequence&lt;?&gt;&gt; retval = new ArrayList&lt;&gt;(parameters.size());</span>
 <span class="source-line-no">162</span><span id="line-162"></span>
 <span class="source-line-no">163</span><span id="line-163">    Iterator&lt;IArgument&gt; argumentIterator = function.getArguments().iterator();</span>
-<span class="source-line-no">164</span><span id="line-164">    Iterator&lt;ISequence&lt;?&gt;&gt; parametersIterator = parameters.iterator();</span>
-<span class="source-line-no">165</span><span id="line-165"></span>
-<span class="source-line-no">166</span><span id="line-166">    IArgument argument = null;</span>
-<span class="source-line-no">167</span><span id="line-167">    while (parametersIterator.hasNext()) {</span>
-<span class="source-line-no">168</span><span id="line-168">      if (argumentIterator.hasNext()) {</span>
-<span class="source-line-no">169</span><span id="line-169">        argument = argumentIterator.next();</span>
-<span class="source-line-no">170</span><span id="line-170">      } else if (!function.isArityUnbounded()) {</span>
-<span class="source-line-no">171</span><span id="line-171">        throw new InvalidTypeMetapathException(</span>
-<span class="source-line-no">172</span><span id="line-172">            null,</span>
-<span class="source-line-no">173</span><span id="line-173">            String.format("argument signature doesn't match '%s'", function.toSignature()));</span>
-<span class="source-line-no">174</span><span id="line-174">      }</span>
-<span class="source-line-no">175</span><span id="line-175"></span>
-<span class="source-line-no">176</span><span id="line-176">      ISequence&lt;?&gt; parameter = parametersIterator.next();</span>
-<span class="source-line-no">177</span><span id="line-177">      assert argument != null;</span>
-<span class="source-line-no">178</span><span id="line-178">      assert parameter != null;</span>
-<span class="source-line-no">179</span><span id="line-179"></span>
-<span class="source-line-no">180</span><span id="line-180">      retval.add(convertArgument(argument, parameter));</span>
-<span class="source-line-no">181</span><span id="line-181">    }</span>
-<span class="source-line-no">182</span><span id="line-182">    return retval;</span>
-<span class="source-line-no">183</span><span id="line-183">  }</span>
-<span class="source-line-no">184</span><span id="line-184"></span>
-<span class="source-line-no">185</span><span id="line-185">  @NonNull</span>
-<span class="source-line-no">186</span><span id="line-186">  private static ISequence&lt;?&gt; convertArgument(</span>
-<span class="source-line-no">187</span><span id="line-187">      @NonNull IArgument argument,</span>
-<span class="source-line-no">188</span><span id="line-188">      @NonNull ISequence&lt;?&gt; parameter) {</span>
-<span class="source-line-no">189</span><span id="line-189">    // apply occurrence</span>
-<span class="source-line-no">190</span><span id="line-190">    ISequence&lt;?&gt; retval = argument.getSequenceType().getOccurrence().getSequenceHandler().handle(parameter);</span>
-<span class="source-line-no">191</span><span id="line-191"></span>
-<span class="source-line-no">192</span><span id="line-192">    // apply function conversion and type promotion to the parameter</span>
-<span class="source-line-no">193</span><span id="line-193">    if (!retval.isEmpty()) {</span>
-<span class="source-line-no">194</span><span id="line-194">      retval = convertSequence(argument, retval);</span>
-<span class="source-line-no">195</span><span id="line-195"></span>
-<span class="source-line-no">196</span><span id="line-196">      // verify resulting values</span>
-<span class="source-line-no">197</span><span id="line-197">      Class&lt;? extends IItem&gt; argumentClass = argument.getSequenceType().getType();</span>
-<span class="source-line-no">198</span><span id="line-198">      for (IItem item : retval.getValue()) {</span>
-<span class="source-line-no">199</span><span id="line-199">        Class&lt;? extends IItem&gt; itemClass = item.getClass();</span>
-<span class="source-line-no">200</span><span id="line-200">        if (!argumentClass.isAssignableFrom(itemClass)) {</span>
-<span class="source-line-no">201</span><span id="line-201">          throw new InvalidTypeMetapathException(</span>
-<span class="source-line-no">202</span><span id="line-202">              item,</span>
-<span class="source-line-no">203</span><span id="line-203">              String.format("The type '%s' is not a subtype of '%s'",</span>
-<span class="source-line-no">204</span><span id="line-204">                  TypeSystem.getName(itemClass),</span>
-<span class="source-line-no">205</span><span id="line-205">                  TypeSystem.getName(argumentClass)));</span>
-<span class="source-line-no">206</span><span id="line-206">        }</span>
-<span class="source-line-no">207</span><span id="line-207">      }</span>
-<span class="source-line-no">208</span><span id="line-208">    }</span>
-<span class="source-line-no">209</span><span id="line-209">    return retval;</span>
-<span class="source-line-no">210</span><span id="line-210">  }</span>
-<span class="source-line-no">211</span><span id="line-211"></span>
-<span class="source-line-no">212</span><span id="line-212">  /**</span>
-<span class="source-line-no">213</span><span id="line-213">   * Based on XPath 3.1</span>
-<span class="source-line-no">214</span><span id="line-214">   * &lt;a href="https://www.w3.org/TR/xpath-31/#dt-function-conversion"&gt;function</span>
-<span class="source-line-no">215</span><span id="line-215">   * conversion&lt;/a&gt; rules.</span>
-<span class="source-line-no">216</span><span id="line-216">   *</span>
-<span class="source-line-no">217</span><span id="line-217">   * @param argument</span>
-<span class="source-line-no">218</span><span id="line-218">   *          the function argument signature details</span>
-<span class="source-line-no">219</span><span id="line-219">   * @param sequence</span>
-<span class="source-line-no">220</span><span id="line-220">   *          the sequence to convert</span>
-<span class="source-line-no">221</span><span id="line-221">   * @return the converted sequence</span>
-<span class="source-line-no">222</span><span id="line-222">   */</span>
-<span class="source-line-no">223</span><span id="line-223">  @NonNull</span>
-<span class="source-line-no">224</span><span id="line-224">  protected static ISequence&lt;?&gt; convertSequence(@NonNull IArgument argument, @NonNull ISequence&lt;?&gt; sequence) {</span>
-<span class="source-line-no">225</span><span id="line-225">    ISequenceType requiredSequenceType = argument.getSequenceType();</span>
-<span class="source-line-no">226</span><span id="line-226">    Class&lt;? extends IItem&gt; requiredSequenceTypeClass = requiredSequenceType.getType();</span>
-<span class="source-line-no">227</span><span id="line-227"></span>
-<span class="source-line-no">228</span><span id="line-228">    Stream&lt;? extends IItem&gt; stream = sequence.safeStream();</span>
+<span class="source-line-no">164</span><span id="line-164">    IArgument argument = null;</span>
+<span class="source-line-no">165</span><span id="line-165">    for (ISequence&lt;?&gt; parameter : parameters) {</span>
+<span class="source-line-no">166</span><span id="line-166">      if (argumentIterator.hasNext()) {</span>
+<span class="source-line-no">167</span><span id="line-167">        argument = argumentIterator.next();</span>
+<span class="source-line-no">168</span><span id="line-168">      } else if (!function.isArityUnbounded()) {</span>
+<span class="source-line-no">169</span><span id="line-169">        throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">170</span><span id="line-170">            null,</span>
+<span class="source-line-no">171</span><span id="line-171">            String.format("argument signature doesn't match '%s'", function.toSignature()));</span>
+<span class="source-line-no">172</span><span id="line-172">      }</span>
+<span class="source-line-no">173</span><span id="line-173"></span>
+<span class="source-line-no">174</span><span id="line-174">      assert argument != null;</span>
+<span class="source-line-no">175</span><span id="line-175">      assert parameter != null;</span>
+<span class="source-line-no">176</span><span id="line-176"></span>
+<span class="source-line-no">177</span><span id="line-177">      retval.add(convertArgument(argument, parameter));</span>
+<span class="source-line-no">178</span><span id="line-178">    }</span>
+<span class="source-line-no">179</span><span id="line-179">    return retval;</span>
+<span class="source-line-no">180</span><span id="line-180">  }</span>
+<span class="source-line-no">181</span><span id="line-181"></span>
+<span class="source-line-no">182</span><span id="line-182">  @NonNull</span>
+<span class="source-line-no">183</span><span id="line-183">  private static ISequence&lt;?&gt; convertArgument(</span>
+<span class="source-line-no">184</span><span id="line-184">      @NonNull IArgument argument,</span>
+<span class="source-line-no">185</span><span id="line-185">      @NonNull ISequence&lt;?&gt; parameter) {</span>
+<span class="source-line-no">186</span><span id="line-186">    // apply occurrence</span>
+<span class="source-line-no">187</span><span id="line-187">    ISequence&lt;?&gt; retval = argument.getSequenceType().getOccurrence().getSequenceHandler().handle(parameter);</span>
+<span class="source-line-no">188</span><span id="line-188"></span>
+<span class="source-line-no">189</span><span id="line-189">    // apply function conversion and type promotion to the parameter</span>
+<span class="source-line-no">190</span><span id="line-190">    if (!retval.isEmpty()) {</span>
+<span class="source-line-no">191</span><span id="line-191">      retval = convertSequence(argument, retval);</span>
+<span class="source-line-no">192</span><span id="line-192"></span>
+<span class="source-line-no">193</span><span id="line-193">      // verify resulting values</span>
+<span class="source-line-no">194</span><span id="line-194">      Class&lt;? extends IItem&gt; argumentClass = argument.getSequenceType().getType();</span>
+<span class="source-line-no">195</span><span id="line-195">      for (IItem item : retval.getValue()) {</span>
+<span class="source-line-no">196</span><span id="line-196">        Class&lt;? extends IItem&gt; itemClass = item.getClass();</span>
+<span class="source-line-no">197</span><span id="line-197">        if (!argumentClass.isAssignableFrom(itemClass)) {</span>
+<span class="source-line-no">198</span><span id="line-198">          throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">199</span><span id="line-199">              item,</span>
+<span class="source-line-no">200</span><span id="line-200">              String.format("The type '%s' is not a subtype of '%s'",</span>
+<span class="source-line-no">201</span><span id="line-201">                  TypeSystem.getName(itemClass),</span>
+<span class="source-line-no">202</span><span id="line-202">                  TypeSystem.getName(argumentClass)));</span>
+<span class="source-line-no">203</span><span id="line-203">        }</span>
+<span class="source-line-no">204</span><span id="line-204">      }</span>
+<span class="source-line-no">205</span><span id="line-205">    }</span>
+<span class="source-line-no">206</span><span id="line-206">    return retval;</span>
+<span class="source-line-no">207</span><span id="line-207">  }</span>
+<span class="source-line-no">208</span><span id="line-208"></span>
+<span class="source-line-no">209</span><span id="line-209">  /**</span>
+<span class="source-line-no">210</span><span id="line-210">   * Based on XPath 3.1</span>
+<span class="source-line-no">211</span><span id="line-211">   * &lt;a href="https://www.w3.org/TR/xpath-31/#dt-function-conversion"&gt;function</span>
+<span class="source-line-no">212</span><span id="line-212">   * conversion&lt;/a&gt; rules.</span>
+<span class="source-line-no">213</span><span id="line-213">   *</span>
+<span class="source-line-no">214</span><span id="line-214">   * @param argument</span>
+<span class="source-line-no">215</span><span id="line-215">   *          the function argument signature details</span>
+<span class="source-line-no">216</span><span id="line-216">   * @param sequence</span>
+<span class="source-line-no">217</span><span id="line-217">   *          the sequence to convert</span>
+<span class="source-line-no">218</span><span id="line-218">   * @return the converted sequence</span>
+<span class="source-line-no">219</span><span id="line-219">   */</span>
+<span class="source-line-no">220</span><span id="line-220">  @NonNull</span>
+<span class="source-line-no">221</span><span id="line-221">  protected static ISequence&lt;?&gt; convertSequence(@NonNull IArgument argument, @NonNull ISequence&lt;?&gt; sequence) {</span>
+<span class="source-line-no">222</span><span id="line-222">    ISequenceType requiredSequenceType = argument.getSequenceType();</span>
+<span class="source-line-no">223</span><span id="line-223">    Class&lt;? extends IItem&gt; requiredSequenceTypeClass = requiredSequenceType.getType();</span>
+<span class="source-line-no">224</span><span id="line-224"></span>
+<span class="source-line-no">225</span><span id="line-225">    Stream&lt;? extends IItem&gt; stream = sequence.safeStream();</span>
+<span class="source-line-no">226</span><span id="line-226"></span>
+<span class="source-line-no">227</span><span id="line-227">    if (IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass)) {</span>
+<span class="source-line-no">228</span><span id="line-228">      Stream&lt;? extends IAnyAtomicItem&gt; atomicStream = stream.flatMap(FnData::atomize);</span>
 <span class="source-line-no">229</span><span id="line-229"></span>
-<span class="source-line-no">230</span><span id="line-230">    if (IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass)) {</span>
-<span class="source-line-no">231</span><span id="line-231">      Stream&lt;? extends IAnyAtomicItem&gt; atomicStream = stream.flatMap(FnData::atomize);</span>
-<span class="source-line-no">232</span><span id="line-232"></span>
-<span class="source-line-no">233</span><span id="line-233">      // if (IUntypedAtomicItem.class.isInstance(item)) { // NOPMD</span>
-<span class="source-line-no">234</span><span id="line-234">      // // TODO: apply cast to atomic type</span>
-<span class="source-line-no">235</span><span id="line-235">      // }</span>
-<span class="source-line-no">236</span><span id="line-236"></span>
-<span class="source-line-no">237</span><span id="line-237">      if (IStringItem.class.equals(requiredSequenceTypeClass)) {</span>
-<span class="source-line-no">238</span><span id="line-238">        // promote URIs to strings if a string is required</span>
-<span class="source-line-no">239</span><span id="line-239">        atomicStream = atomicStream.map(item -&gt; IAnyUriItem.class.isInstance(item) ? IStringItem.cast(item) : item);</span>
-<span class="source-line-no">240</span><span id="line-240">      }</span>
+<span class="source-line-no">230</span><span id="line-230">      // if (IUntypedAtomicItem.class.isInstance(item)) { // NOPMD</span>
+<span class="source-line-no">231</span><span id="line-231">      // // TODO: apply cast to atomic type</span>
+<span class="source-line-no">232</span><span id="line-232">      // }</span>
+<span class="source-line-no">233</span><span id="line-233"></span>
+<span class="source-line-no">234</span><span id="line-234">      if (IStringItem.class.equals(requiredSequenceTypeClass)) {</span>
+<span class="source-line-no">235</span><span id="line-235">        // promote URIs to strings if a string is required</span>
+<span class="source-line-no">236</span><span id="line-236">        atomicStream = atomicStream.map(item -&gt; IAnyUriItem.class.isInstance(item) ? IStringItem.cast(item) : item);</span>
+<span class="source-line-no">237</span><span id="line-237">      }</span>
+<span class="source-line-no">238</span><span id="line-238"></span>
+<span class="source-line-no">239</span><span id="line-239">      stream = atomicStream;</span>
+<span class="source-line-no">240</span><span id="line-240">    }</span>
 <span class="source-line-no">241</span><span id="line-241"></span>
-<span class="source-line-no">242</span><span id="line-242">      stream = atomicStream;</span>
-<span class="source-line-no">243</span><span id="line-243">    }</span>
-<span class="source-line-no">244</span><span id="line-244"></span>
-<span class="source-line-no">245</span><span id="line-245">    stream = stream.peek(item -&gt; {</span>
-<span class="source-line-no">246</span><span id="line-246">      if (!requiredSequenceTypeClass.isInstance(item)) {</span>
-<span class="source-line-no">247</span><span id="line-247">        throw new InvalidTypeMetapathException(</span>
-<span class="source-line-no">248</span><span id="line-248">            item,</span>
-<span class="source-line-no">249</span><span id="line-249">            String.format("The type '%s' is not a subtype of '%s'",</span>
-<span class="source-line-no">250</span><span id="line-250">                item.getClass().getName(),</span>
-<span class="source-line-no">251</span><span id="line-251">                requiredSequenceTypeClass.getName()));</span>
-<span class="source-line-no">252</span><span id="line-252">      }</span>
-<span class="source-line-no">253</span><span id="line-253">    });</span>
-<span class="source-line-no">254</span><span id="line-254">    assert stream != null;</span>
+<span class="source-line-no">242</span><span id="line-242">    stream = stream.peek(item -&gt; {</span>
+<span class="source-line-no">243</span><span id="line-243">      if (!requiredSequenceTypeClass.isInstance(item)) {</span>
+<span class="source-line-no">244</span><span id="line-244">        throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">245</span><span id="line-245">            item,</span>
+<span class="source-line-no">246</span><span id="line-246">            String.format("The type '%s' is not a subtype of '%s'",</span>
+<span class="source-line-no">247</span><span id="line-247">                item.getClass().getName(),</span>
+<span class="source-line-no">248</span><span id="line-248">                requiredSequenceTypeClass.getName()));</span>
+<span class="source-line-no">249</span><span id="line-249">      }</span>
+<span class="source-line-no">250</span><span id="line-250">    });</span>
+<span class="source-line-no">251</span><span id="line-251">    assert stream != null;</span>
+<span class="source-line-no">252</span><span id="line-252"></span>
+<span class="source-line-no">253</span><span id="line-253">    return ISequence.of(stream);</span>
+<span class="source-line-no">254</span><span id="line-254">  }</span>
 <span class="source-line-no">255</span><span id="line-255"></span>
-<span class="source-line-no">256</span><span id="line-256">    return ISequence.of(stream);</span>
-<span class="source-line-no">257</span><span id="line-257">  }</span>
-<span class="source-line-no">258</span><span id="line-258"></span>
-<span class="source-line-no">259</span><span id="line-259">  @Override</span>
-<span class="source-line-no">260</span><span id="line-260">  public ISequence&lt;?&gt; execute(</span>
-<span class="source-line-no">261</span><span id="line-261">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">262</span><span id="line-262">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">263</span><span id="line-263">      @NonNull ISequence&lt;?&gt; focus) {</span>
-<span class="source-line-no">264</span><span id="line-264">    try {</span>
-<span class="source-line-no">265</span><span id="line-265">      List&lt;ISequence&lt;?&gt;&gt; convertedArguments = convertArguments(this, arguments);</span>
+<span class="source-line-no">256</span><span id="line-256">  private IItem getContextItem(@NonNull ISequence&lt;?&gt; focus) {</span>
+<span class="source-line-no">257</span><span id="line-257">    IItem contextItem = null;</span>
+<span class="source-line-no">258</span><span id="line-258">    if (isFocusDepenent()) {</span>
+<span class="source-line-no">259</span><span id="line-259">      contextItem = focus.getFirstItem(true);</span>
+<span class="source-line-no">260</span><span id="line-260">      if (contextItem == null) {</span>
+<span class="source-line-no">261</span><span id="line-261">        throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");</span>
+<span class="source-line-no">262</span><span id="line-262">      }</span>
+<span class="source-line-no">263</span><span id="line-263">    }</span>
+<span class="source-line-no">264</span><span id="line-264">    return contextItem;</span>
+<span class="source-line-no">265</span><span id="line-265">  }</span>
 <span class="source-line-no">266</span><span id="line-266"></span>
-<span class="source-line-no">267</span><span id="line-267">      IItem contextItem = isFocusDepenent() ? ObjectUtils.requireNonNull(focus.getFirstItem(true)) : null;</span>
-<span class="source-line-no">268</span><span id="line-268"></span>
-<span class="source-line-no">269</span><span id="line-269">      CallingContext callingContext = null;</span>
-<span class="source-line-no">270</span><span id="line-270">      ISequence&lt;?&gt; result = null;</span>
-<span class="source-line-no">271</span><span id="line-271">      if (isDeterministic()) {</span>
-<span class="source-line-no">272</span><span id="line-272">        // check cache</span>
-<span class="source-line-no">273</span><span id="line-273">        callingContext = new CallingContext(arguments, contextItem);</span>
-<span class="source-line-no">274</span><span id="line-274">        // TODO: implement something like computeIfAbsent</span>
-<span class="source-line-no">275</span><span id="line-275">        // attempt to get the result from the cache</span>
-<span class="source-line-no">276</span><span id="line-276">        result = dynamicContext.getCachedResult(callingContext);</span>
-<span class="source-line-no">277</span><span id="line-277">      }</span>
-<span class="source-line-no">278</span><span id="line-278"></span>
-<span class="source-line-no">279</span><span id="line-279">      if (result == null) {</span>
-<span class="source-line-no">280</span><span id="line-280">        result = handler.execute(this, convertedArguments, dynamicContext, contextItem);</span>
-<span class="source-line-no">281</span><span id="line-281"></span>
-<span class="source-line-no">282</span><span id="line-282">        if (callingContext != null) {</span>
-<span class="source-line-no">283</span><span id="line-283">          // add result to cache</span>
-<span class="source-line-no">284</span><span id="line-284">          dynamicContext.cacheResult(callingContext, result);</span>
-<span class="source-line-no">285</span><span id="line-285">        }</span>
+<span class="source-line-no">267</span><span id="line-267">  @Override</span>
+<span class="source-line-no">268</span><span id="line-268">  public ISequence&lt;?&gt; execute(</span>
+<span class="source-line-no">269</span><span id="line-269">      @NonNull List&lt;? extends ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">270</span><span id="line-270">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">271</span><span id="line-271">      @NonNull ISequence&lt;?&gt; focus) {</span>
+<span class="source-line-no">272</span><span id="line-272"></span>
+<span class="source-line-no">273</span><span id="line-273">    try {</span>
+<span class="source-line-no">274</span><span id="line-274">      IItem contextItem = getContextItem(focus);</span>
+<span class="source-line-no">275</span><span id="line-275"></span>
+<span class="source-line-no">276</span><span id="line-276">      List&lt;ISequence&lt;?&gt;&gt; convertedArguments = convertArguments(this, arguments);</span>
+<span class="source-line-no">277</span><span id="line-277"></span>
+<span class="source-line-no">278</span><span id="line-278">      CallingContext callingContext = null;</span>
+<span class="source-line-no">279</span><span id="line-279">      ISequence&lt;?&gt; result = null;</span>
+<span class="source-line-no">280</span><span id="line-280">      if (isDeterministic()) {</span>
+<span class="source-line-no">281</span><span id="line-281">        // check cache</span>
+<span class="source-line-no">282</span><span id="line-282">        callingContext = new CallingContext(convertedArguments, contextItem);</span>
+<span class="source-line-no">283</span><span id="line-283">        // TODO: implement something like computeIfAbsent</span>
+<span class="source-line-no">284</span><span id="line-284">        // attempt to get the result from the cache</span>
+<span class="source-line-no">285</span><span id="line-285">        result = dynamicContext.getCachedResult(callingContext);</span>
 <span class="source-line-no">286</span><span id="line-286">      }</span>
 <span class="source-line-no">287</span><span id="line-287"></span>
-<span class="source-line-no">288</span><span id="line-288">      // logger.info(String.format("Executed function '%s' with arguments '%s'</span>
-<span class="source-line-no">289</span><span id="line-289">      // producing result '%s'",</span>
-<span class="source-line-no">290</span><span id="line-290">      // toSignature(), convertedArguments.toString(), result.asList().toString()));</span>
-<span class="source-line-no">291</span><span id="line-291">      return result;</span>
-<span class="source-line-no">292</span><span id="line-292">    } catch (MetapathException ex) {</span>
-<span class="source-line-no">293</span><span id="line-293">      throw new MetapathException(String.format("Unable to execute function '%s'", toSignature()), ex);</span>
-<span class="source-line-no">294</span><span id="line-294">    }</span>
-<span class="source-line-no">295</span><span id="line-295">  }</span>
+<span class="source-line-no">288</span><span id="line-288">      if (result == null) {</span>
+<span class="source-line-no">289</span><span id="line-289">        result = handler.execute(this, convertedArguments, dynamicContext, contextItem);</span>
+<span class="source-line-no">290</span><span id="line-290"></span>
+<span class="source-line-no">291</span><span id="line-291">        if (callingContext != null) {</span>
+<span class="source-line-no">292</span><span id="line-292">          // add result to cache</span>
+<span class="source-line-no">293</span><span id="line-293">          dynamicContext.cacheResult(callingContext, result);</span>
+<span class="source-line-no">294</span><span id="line-294">        }</span>
+<span class="source-line-no">295</span><span id="line-295">      }</span>
 <span class="source-line-no">296</span><span id="line-296"></span>
-<span class="source-line-no">297</span><span id="line-297">  @Override</span>
-<span class="source-line-no">298</span><span id="line-298">  public int hashCode() {</span>
-<span class="source-line-no">299</span><span id="line-299">    return Objects.hash(getQName(), getArguments(), handler, properties, result);</span>
-<span class="source-line-no">300</span><span id="line-300">  }</span>
-<span class="source-line-no">301</span><span id="line-301"></span>
-<span class="source-line-no">302</span><span id="line-302">  @Override</span>
-<span class="source-line-no">303</span><span id="line-303">  public boolean equals(Object obj) {</span>
-<span class="source-line-no">304</span><span id="line-304">    if (this == obj) {</span>
-<span class="source-line-no">305</span><span id="line-305">      return true; // NOPMD - readability</span>
-<span class="source-line-no">306</span><span id="line-306">    }</span>
-<span class="source-line-no">307</span><span id="line-307">    if (obj == null) {</span>
-<span class="source-line-no">308</span><span id="line-308">      return false; // NOPMD - readability</span>
-<span class="source-line-no">309</span><span id="line-309">    }</span>
-<span class="source-line-no">310</span><span id="line-310">    if (getClass() != obj.getClass()) {</span>
-<span class="source-line-no">311</span><span id="line-311">      return false; // NOPMD - readability</span>
-<span class="source-line-no">312</span><span id="line-312">    }</span>
-<span class="source-line-no">313</span><span id="line-313">    DefaultFunction other = (DefaultFunction) obj;</span>
-<span class="source-line-no">314</span><span id="line-314">    return Objects.equals(getQName(), other.getQName())</span>
-<span class="source-line-no">315</span><span id="line-315">        &amp;&amp; Objects.equals(getArguments(), other.getArguments())</span>
-<span class="source-line-no">316</span><span id="line-316">        &amp;&amp; Objects.equals(handler, other.handler)</span>
-<span class="source-line-no">317</span><span id="line-317">        &amp;&amp; Objects.equals(properties, other.properties)</span>
-<span class="source-line-no">318</span><span id="line-318">        &amp;&amp; Objects.equals(result, other.result);</span>
-<span class="source-line-no">319</span><span id="line-319">  }</span>
-<span class="source-line-no">320</span><span id="line-320"></span>
-<span class="source-line-no">321</span><span id="line-321">  @Override</span>
-<span class="source-line-no">322</span><span id="line-322">  public String toString() {</span>
-<span class="source-line-no">323</span><span id="line-323">    return toSignature();</span>
-<span class="source-line-no">324</span><span id="line-324">  }</span>
-<span class="source-line-no">325</span><span id="line-325"></span>
-<span class="source-line-no">326</span><span id="line-326">  public final class CallingContext {</span>
-<span class="source-line-no">327</span><span id="line-327">    @Nullable</span>
-<span class="source-line-no">328</span><span id="line-328">    private final IItem contextItem;</span>
-<span class="source-line-no">329</span><span id="line-329">    @NonNull</span>
-<span class="source-line-no">330</span><span id="line-330">    private final List&lt;ISequence&lt;?&gt;&gt; arguments;</span>
+<span class="source-line-no">297</span><span id="line-297">      // logger.info(String.format("Executed function '%s' with arguments '%s'</span>
+<span class="source-line-no">298</span><span id="line-298">      // producing result '%s'",</span>
+<span class="source-line-no">299</span><span id="line-299">      // toSignature(), convertedArguments.toString(), result.asList().toString()));</span>
+<span class="source-line-no">300</span><span id="line-300">      return result;</span>
+<span class="source-line-no">301</span><span id="line-301">    } catch (MetapathException ex) {</span>
+<span class="source-line-no">302</span><span id="line-302">      throw new MetapathException(String.format("Unable to execute function '%s'", toSignature()), ex);</span>
+<span class="source-line-no">303</span><span id="line-303">    }</span>
+<span class="source-line-no">304</span><span id="line-304">  }</span>
+<span class="source-line-no">305</span><span id="line-305"></span>
+<span class="source-line-no">306</span><span id="line-306">  @Override</span>
+<span class="source-line-no">307</span><span id="line-307">  public int hashCode() {</span>
+<span class="source-line-no">308</span><span id="line-308">    return Objects.hash(getQName(), getArguments(), handler, properties, result);</span>
+<span class="source-line-no">309</span><span id="line-309">  }</span>
+<span class="source-line-no">310</span><span id="line-310"></span>
+<span class="source-line-no">311</span><span id="line-311">  @Override</span>
+<span class="source-line-no">312</span><span id="line-312">  public boolean equals(Object obj) {</span>
+<span class="source-line-no">313</span><span id="line-313">    if (this == obj) {</span>
+<span class="source-line-no">314</span><span id="line-314">      return true; // NOPMD - readability</span>
+<span class="source-line-no">315</span><span id="line-315">    }</span>
+<span class="source-line-no">316</span><span id="line-316">    if ((obj == null) || (getClass() != obj.getClass())) {</span>
+<span class="source-line-no">317</span><span id="line-317">      return false; // NOPMD - readability</span>
+<span class="source-line-no">318</span><span id="line-318">    }</span>
+<span class="source-line-no">319</span><span id="line-319">    DefaultFunction other = (DefaultFunction) obj;</span>
+<span class="source-line-no">320</span><span id="line-320">    return Objects.equals(getQName(), other.getQName())</span>
+<span class="source-line-no">321</span><span id="line-321">        &amp;&amp; Objects.equals(getArguments(), other.getArguments())</span>
+<span class="source-line-no">322</span><span id="line-322">        &amp;&amp; Objects.equals(handler, other.handler)</span>
+<span class="source-line-no">323</span><span id="line-323">        &amp;&amp; Objects.equals(properties, other.properties)</span>
+<span class="source-line-no">324</span><span id="line-324">        &amp;&amp; Objects.equals(result, other.result);</span>
+<span class="source-line-no">325</span><span id="line-325">  }</span>
+<span class="source-line-no">326</span><span id="line-326"></span>
+<span class="source-line-no">327</span><span id="line-327">  @Override</span>
+<span class="source-line-no">328</span><span id="line-328">  public String toString() {</span>
+<span class="source-line-no">329</span><span id="line-329">    return toSignature();</span>
+<span class="source-line-no">330</span><span id="line-330">  }</span>
 <span class="source-line-no">331</span><span id="line-331"></span>
-<span class="source-line-no">332</span><span id="line-332">    /**</span>
-<span class="source-line-no">333</span><span id="line-333">     * Set up the execution context for this function.</span>
-<span class="source-line-no">334</span><span id="line-334">     *</span>
-<span class="source-line-no">335</span><span id="line-335">     * @param arguments</span>
-<span class="source-line-no">336</span><span id="line-336">     *          the function arguments</span>
-<span class="source-line-no">337</span><span id="line-337">     * @param contextItem</span>
-<span class="source-line-no">338</span><span id="line-338">     *          the current node context</span>
-<span class="source-line-no">339</span><span id="line-339">     */</span>
-<span class="source-line-no">340</span><span id="line-340">    private CallingContext(@NonNull List&lt;ISequence&lt;?&gt;&gt; arguments, @Nullable IItem contextItem) {</span>
-<span class="source-line-no">341</span><span id="line-341">      this.contextItem = contextItem;</span>
-<span class="source-line-no">342</span><span id="line-342">      this.arguments = arguments;</span>
-<span class="source-line-no">343</span><span id="line-343">    }</span>
-<span class="source-line-no">344</span><span id="line-344"></span>
-<span class="source-line-no">345</span><span id="line-345">    /**</span>
-<span class="source-line-no">346</span><span id="line-346">     * Get the function instance associated with the calling context.</span>
-<span class="source-line-no">347</span><span id="line-347">     *</span>
-<span class="source-line-no">348</span><span id="line-348">     * @return the function instance</span>
-<span class="source-line-no">349</span><span id="line-349">     */</span>
-<span class="source-line-no">350</span><span id="line-350">    @NonNull</span>
-<span class="source-line-no">351</span><span id="line-351">    public DefaultFunction getFunction() {</span>
-<span class="source-line-no">352</span><span id="line-352">      return DefaultFunction.this;</span>
-<span class="source-line-no">353</span><span id="line-353">    }</span>
-<span class="source-line-no">354</span><span id="line-354"></span>
-<span class="source-line-no">355</span><span id="line-355">    /**</span>
-<span class="source-line-no">356</span><span id="line-356">     * Get the node item focus associated with the calling context.</span>
-<span class="source-line-no">357</span><span id="line-357">     *</span>
-<span class="source-line-no">358</span><span id="line-358">     * @return the function instance</span>
-<span class="source-line-no">359</span><span id="line-359">     */</span>
-<span class="source-line-no">360</span><span id="line-360">    @Nullable</span>
-<span class="source-line-no">361</span><span id="line-361">    public IItem getContextItem() {</span>
-<span class="source-line-no">362</span><span id="line-362">      return contextItem;</span>
-<span class="source-line-no">363</span><span id="line-363">    }</span>
-<span class="source-line-no">364</span><span id="line-364"></span>
-<span class="source-line-no">365</span><span id="line-365">    /**</span>
-<span class="source-line-no">366</span><span id="line-366">     * Get the arguments associated with the calling context.</span>
-<span class="source-line-no">367</span><span id="line-367">     *</span>
-<span class="source-line-no">368</span><span id="line-368">     * @return the arguments</span>
-<span class="source-line-no">369</span><span id="line-369">     */</span>
-<span class="source-line-no">370</span><span id="line-370">    @NonNull</span>
-<span class="source-line-no">371</span><span id="line-371">    public List&lt;ISequence&lt;?&gt;&gt; getArguments() {</span>
-<span class="source-line-no">372</span><span id="line-372">      return arguments;</span>
-<span class="source-line-no">373</span><span id="line-373">    }</span>
-<span class="source-line-no">374</span><span id="line-374"></span>
-<span class="source-line-no">375</span><span id="line-375">    @Override</span>
-<span class="source-line-no">376</span><span id="line-376">    public int hashCode() {</span>
-<span class="source-line-no">377</span><span id="line-377">      final int prime = 31;</span>
-<span class="source-line-no">378</span><span id="line-378">      int result = 1;</span>
-<span class="source-line-no">379</span><span id="line-379">      result = prime * result + getFunction().hashCode();</span>
-<span class="source-line-no">380</span><span id="line-380">      result = prime * result + Objects.hash(contextItem, arguments);</span>
-<span class="source-line-no">381</span><span id="line-381">      return result;</span>
-<span class="source-line-no">382</span><span id="line-382">    }</span>
-<span class="source-line-no">383</span><span id="line-383"></span>
-<span class="source-line-no">384</span><span id="line-384">    @Override</span>
-<span class="source-line-no">385</span><span id="line-385">    public boolean equals(Object obj) {</span>
-<span class="source-line-no">386</span><span id="line-386">      if (this == obj) {</span>
-<span class="source-line-no">387</span><span id="line-387">        return true; // NOPMD - readability</span>
-<span class="source-line-no">388</span><span id="line-388">      }</span>
-<span class="source-line-no">389</span><span id="line-389">      if (obj == null) {</span>
-<span class="source-line-no">390</span><span id="line-390">        return false; // NOPMD - readability</span>
-<span class="source-line-no">391</span><span id="line-391">      }</span>
-<span class="source-line-no">392</span><span id="line-392">      if (getClass() != obj.getClass()) {</span>
-<span class="source-line-no">393</span><span id="line-393">        return false; // NOPMD - readability</span>
-<span class="source-line-no">394</span><span id="line-394">      }</span>
-<span class="source-line-no">395</span><span id="line-395">      CallingContext other = (CallingContext) obj;</span>
-<span class="source-line-no">396</span><span id="line-396">      if (!getFunction().equals(other.getFunction())) {</span>
-<span class="source-line-no">397</span><span id="line-397">        return false; // NOPMD - readability</span>
-<span class="source-line-no">398</span><span id="line-398">      }</span>
-<span class="source-line-no">399</span><span id="line-399">      return Objects.equals(arguments, other.arguments) &amp;&amp; Objects.equals(contextItem, other.contextItem);</span>
-<span class="source-line-no">400</span><span id="line-400">    }</span>
-<span class="source-line-no">401</span><span id="line-401">  }</span>
-<span class="source-line-no">402</span><span id="line-402">}</span>
+<span class="source-line-no">332</span><span id="line-332">  public final class CallingContext {</span>
+<span class="source-line-no">333</span><span id="line-333">    @Nullable</span>
+<span class="source-line-no">334</span><span id="line-334">    private final IItem contextItem;</span>
+<span class="source-line-no">335</span><span id="line-335">    @NonNull</span>
+<span class="source-line-no">336</span><span id="line-336">    private final List&lt;ISequence&lt;?&gt;&gt; arguments;</span>
+<span class="source-line-no">337</span><span id="line-337"></span>
+<span class="source-line-no">338</span><span id="line-338">    /**</span>
+<span class="source-line-no">339</span><span id="line-339">     * Set up the execution context for this function.</span>
+<span class="source-line-no">340</span><span id="line-340">     *</span>
+<span class="source-line-no">341</span><span id="line-341">     * @param arguments</span>
+<span class="source-line-no">342</span><span id="line-342">     *          the function arguments</span>
+<span class="source-line-no">343</span><span id="line-343">     * @param contextItem</span>
+<span class="source-line-no">344</span><span id="line-344">     *          the current node context</span>
+<span class="source-line-no">345</span><span id="line-345">     */</span>
+<span class="source-line-no">346</span><span id="line-346">    private CallingContext(@NonNull List&lt;ISequence&lt;?&gt;&gt; arguments, @Nullable IItem contextItem) {</span>
+<span class="source-line-no">347</span><span id="line-347">      this.contextItem = contextItem;</span>
+<span class="source-line-no">348</span><span id="line-348">      this.arguments = arguments;</span>
+<span class="source-line-no">349</span><span id="line-349">    }</span>
+<span class="source-line-no">350</span><span id="line-350"></span>
+<span class="source-line-no">351</span><span id="line-351">    /**</span>
+<span class="source-line-no">352</span><span id="line-352">     * Get the function instance associated with the calling context.</span>
+<span class="source-line-no">353</span><span id="line-353">     *</span>
+<span class="source-line-no">354</span><span id="line-354">     * @return the function instance</span>
+<span class="source-line-no">355</span><span id="line-355">     */</span>
+<span class="source-line-no">356</span><span id="line-356">    @NonNull</span>
+<span class="source-line-no">357</span><span id="line-357">    public DefaultFunction getFunction() {</span>
+<span class="source-line-no">358</span><span id="line-358">      return DefaultFunction.this;</span>
+<span class="source-line-no">359</span><span id="line-359">    }</span>
+<span class="source-line-no">360</span><span id="line-360"></span>
+<span class="source-line-no">361</span><span id="line-361">    /**</span>
+<span class="source-line-no">362</span><span id="line-362">     * Get the node item focus associated with the calling context.</span>
+<span class="source-line-no">363</span><span id="line-363">     *</span>
+<span class="source-line-no">364</span><span id="line-364">     * @return the function instance</span>
+<span class="source-line-no">365</span><span id="line-365">     */</span>
+<span class="source-line-no">366</span><span id="line-366">    @Nullable</span>
+<span class="source-line-no">367</span><span id="line-367">    public IItem getContextItem() {</span>
+<span class="source-line-no">368</span><span id="line-368">      return contextItem;</span>
+<span class="source-line-no">369</span><span id="line-369">    }</span>
+<span class="source-line-no">370</span><span id="line-370"></span>
+<span class="source-line-no">371</span><span id="line-371">    /**</span>
+<span class="source-line-no">372</span><span id="line-372">     * Get the arguments associated with the calling context.</span>
+<span class="source-line-no">373</span><span id="line-373">     *</span>
+<span class="source-line-no">374</span><span id="line-374">     * @return the arguments</span>
+<span class="source-line-no">375</span><span id="line-375">     */</span>
+<span class="source-line-no">376</span><span id="line-376">    @NonNull</span>
+<span class="source-line-no">377</span><span id="line-377">    public List&lt;ISequence&lt;?&gt;&gt; getArguments() {</span>
+<span class="source-line-no">378</span><span id="line-378">      return arguments;</span>
+<span class="source-line-no">379</span><span id="line-379">    }</span>
+<span class="source-line-no">380</span><span id="line-380"></span>
+<span class="source-line-no">381</span><span id="line-381">    @Override</span>
+<span class="source-line-no">382</span><span id="line-382">    public int hashCode() {</span>
+<span class="source-line-no">383</span><span id="line-383">      final int prime = 31;</span>
+<span class="source-line-no">384</span><span id="line-384">      int result = 1;</span>
+<span class="source-line-no">385</span><span id="line-385">      result = prime * result + getFunction().hashCode();</span>
+<span class="source-line-no">386</span><span id="line-386">      return prime * result + Objects.hash(contextItem, arguments);</span>
+<span class="source-line-no">387</span><span id="line-387">    }</span>
+<span class="source-line-no">388</span><span id="line-388"></span>
+<span class="source-line-no">389</span><span id="line-389">    @Override</span>
+<span class="source-line-no">390</span><span id="line-390">    public boolean equals(Object obj) {</span>
+<span class="source-line-no">391</span><span id="line-391">      if (this == obj) {</span>
+<span class="source-line-no">392</span><span id="line-392">        return true; // NOPMD - readability</span>
+<span class="source-line-no">393</span><span id="line-393">      }</span>
+<span class="source-line-no">394</span><span id="line-394">      if ((obj == null) || (getClass() != obj.getClass())) {</span>
+<span class="source-line-no">395</span><span id="line-395">        return false; // NOPMD - readability</span>
+<span class="source-line-no">396</span><span id="line-396">      }</span>
+<span class="source-line-no">397</span><span id="line-397">      CallingContext other = (CallingContext) obj;</span>
+<span class="source-line-no">398</span><span id="line-398">      if (!getFunction().equals(other.getFunction())) {</span>
+<span class="source-line-no">399</span><span id="line-399">        return false; // NOPMD - readability</span>
+<span class="source-line-no">400</span><span id="line-400">      }</span>
+<span class="source-line-no">401</span><span id="line-401">      return Objects.equals(arguments, other.arguments) &amp;&amp; Objects.equals(contextItem, other.contextItem);</span>
+<span class="source-line-no">402</span><span id="line-402">    }</span>
+<span class="source-line-no">403</span><span id="line-403">  }</span>
+<span class="source-line-no">404</span><span id="line-404">}</span>
 
 
 
