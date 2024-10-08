@@ -34,8 +34,7 @@ public class JsonSchemaContentValidator
   private final Schema schema;
 
   /**
-   * Construct a new JSON schema validator using the provided reader to load the
-   * JSON schema.
+   * Construct a new JSON schema validator using the provided reader to load the JSON schema.
    *
    * @param reader
    *          the JSON schema reader
@@ -45,8 +44,7 @@ public class JsonSchemaContentValidator
   }
 
   /**
-   * Construct a new JSON schema validator using the provided input stream to load
-   * the JSON schema.
+   * Construct a new JSON schema validator using the provided input stream to load the JSON schema.
    *
    * @param is
    *          the JSON schema input source
@@ -56,8 +54,7 @@ public class JsonSchemaContentValidator
   }
 
   /**
-   * Construct a new JSON schema validator using the provided JSON object for the
-   * JSON schema.
+   * Construct a new JSON schema validator using the provided JSON object for the JSON schema.
    *
    * @param jsonSchema
    *          the JSON schema
@@ -67,8 +64,7 @@ public class JsonSchemaContentValidator
   }
 
   /**
-   * Construct a new JSON schema validator using the provided JSON tokenizer to
-   * load the schema.
+   * Construct a new JSON schema validator using the provided JSON tokenizer to load the schema.
    *
    * @param tokenizer
    *          the JSON schema token stream
@@ -125,8 +121,8 @@ public class JsonSchemaContentValidator
    * Build validation findings from a validation exception.
    *
    * @param exception
-   *          the JSON schema validation exception generated during schema
-   *          validation representing the issue
+   *          the JSON schema validation exception generated during schema validation representing the
+   *          issue
    * @param resourceUri
    *          the resource the issue was found in
    * @return the stream of findings
@@ -138,15 +134,12 @@ public class JsonSchemaContentValidator
       @NonNull URI resourceUri) {
     JsonValidationFinding finding = new JsonValidationFinding(exception, resourceUri);
     Stream<JsonValidationFinding> childFindings = exception.getCausingExceptions().stream()
-        .flatMap(ex -> {
-          return handleValidationException(ex, resourceUri);
-        });
+        .flatMap(ex -> handleValidationException(ex, resourceUri));
     return Stream.concat(Stream.of(finding), childFindings);
   }
 
   /**
-   * Records an identified individual validation result found during JSON schema
-   * validation.
+   * Records an identified individual validation result found during JSON schema validation.
    */
   public static class JsonValidationFinding implements IValidationFinding {
     @NonNull
@@ -155,12 +148,12 @@ public class JsonSchemaContentValidator
     private final URI documentUri;
 
     /**
-     * Construct a new XML schema validation finding, which represents an issue
-     * identified during XML schema validation.
+     * Construct a new XML schema validation finding, which represents an issue identified during XML
+     * schema validation.
      *
      * @param exception
-     *          the JSON schema validation exception generated during schema
-     *          validation representing the issue
+     *          the JSON schema validation exception generated during schema validation representing the
+     *          issue
      * @param resourceUri
      *          the resource the issue was found in
      */
@@ -184,7 +177,7 @@ public class JsonSchemaContentValidator
 
     @Override
     public IConstraint.Level getSeverity() {
-      return IConstraint.Level.ERROR;
+      return IConstraint.Level.CRITICAL;
     }
 
     @Override

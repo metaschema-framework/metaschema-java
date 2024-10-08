@@ -284,8 +284,7 @@ public abstract class AbstractValidateContentCommand
           validationResult = this.validateWithSchema(source, asFormat);
         }
 
-        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)
-            && (validationResult == null || validationResult.isPassing())) {
+        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {
           // perform constraint validation
           IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);
           validationResult = validationResult == null
