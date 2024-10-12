@@ -53,6 +53,8 @@ public class Wildcard implements INameTestExpression {
   /**
    * Check the provided items to determine if each item matches the wildcard. All
    * items that match are returned.
+   * <p>
+   * This is an intermediate stream operation.
    *
    * @param <T>
    *          the item Java type
@@ -61,7 +63,7 @@ public class Wildcard implements INameTestExpression {
    * @return the matching items
    */
   @NonNull
-  public <T extends INodeItem> Stream<T> match(@NonNull Stream<T> items) {
+  public <T extends INodeItem> Stream<T> match(@SuppressWarnings("resource") @NonNull Stream<T> items) {
     Stream<T> nodes = items;
     if (matcher != null) {
       Predicate<IDefinitionNodeItem<?, ?>> test = matcher;

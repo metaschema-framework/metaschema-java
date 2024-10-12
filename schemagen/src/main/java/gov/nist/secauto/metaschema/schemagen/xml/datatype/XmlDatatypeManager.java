@@ -38,7 +38,7 @@ public class XmlDatatypeManager
     Set<String> used = getUsedTypes();
 
     Set<String> requiredTypes = getDatatypeTranslationMap().values().stream()
-        .filter(type -> used.contains(type))
+        .filter(used::contains)
         .collect(Collectors.toCollection(LinkedHashSet::new));
 
     for (IDatatypeProvider provider : DATATYPE_PROVIDERS.get()) {

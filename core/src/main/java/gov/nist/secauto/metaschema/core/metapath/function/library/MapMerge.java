@@ -87,12 +87,11 @@ public final class MapMerge {
     USE_FIRST("use-first", (key, v1, v2) -> v1),
     USE_LAST("use-last", (key, v1, v2) -> v2),
     USE_ANY("use-any", (key, v1, v2) -> RANDOM.nextBoolean() ? v1 : v2),
-    @SuppressWarnings("null")
+    @SuppressWarnings("checkstyle:Indentation")
     COMBINE(
         "combine",
-        (key, v1, v2) -> Stream.concat(
-            v1.asSequence().stream(),
-            v2.asSequence().stream()).collect(ISequence.toSequence()));
+        (key, v1, v2) -> Stream.concat(v1.asSequence().stream(), v2.asSequence().stream())
+            .collect(ISequence.toSequence()));
 
     private static final Map<String, Duplicates> BY_NAME;
 

@@ -24,7 +24,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayPut {
+  @NonNull
   private static final String NAME = "put";
+  // CPD-OFF
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name(NAME)
@@ -51,6 +53,7 @@ public final class ArrayPut {
       .returnOne()
       .functionHandler(ArrayPut::execute)
       .build();
+  // CPD-ON
 
   private ArrayPut() {
     // disable construction

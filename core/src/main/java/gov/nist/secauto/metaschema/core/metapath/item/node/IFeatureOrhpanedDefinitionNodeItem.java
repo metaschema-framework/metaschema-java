@@ -15,7 +15,7 @@ import gov.nist.secauto.metaschema.core.model.INamedInstance;
  * @param <I>
  *          the type of the instance that could be created from the definition
  */
-interface IFeatureOrhpanedDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
+public interface IFeatureOrhpanedDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
     extends IDefinitionNodeItem<D, I> {
 
   @Override

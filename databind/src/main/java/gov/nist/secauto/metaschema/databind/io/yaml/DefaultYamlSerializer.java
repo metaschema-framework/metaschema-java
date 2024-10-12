@@ -30,7 +30,7 @@ public class DefaultYamlSerializer<CLASS extends IBoundObject>
   }
 
   @Override
-  protected JsonFactory getJsonFactoryInstance() {
+  protected JsonFactory newFactoryInstance() {
     return YamlFactoryFactory.newGeneratorFactoryInstance(getConfiguration());
   }
 }

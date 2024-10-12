@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class MetadataUtils {
   private MetadataUtils() {
@@ -72,7 +73,7 @@ public final class MetadataUtils {
     }
   }
 
-  private static JsonNode toJsonValue(Object defaultValue, IDataTypeAdapter<?> adapter) {
+  private static JsonNode toJsonValue(@Nullable Object defaultValue, @NonNull IDataTypeAdapter<?> adapter) {
     JsonNode retval = null;
     switch (adapter.getJsonRawType()) {
     case BOOLEAN:
@@ -100,14 +101,14 @@ public final class MetadataUtils {
     case ARRAY:
     case OBJECT:
     case NULL:
-      throw new UnsupportedOperationException("Invalid type: " + defaultValue.getClass());
+      throw new UnsupportedOperationException("Invalid type: " + adapter.getClass());
     case STRING:
     default:
       // use default conversion
       break;
     }
 
-    if (retval == null) {
+    if (retval == null && defaultValue != null) {
       retval = TextNode.valueOf(adapter.asString(defaultValue));
     }
     return retval;

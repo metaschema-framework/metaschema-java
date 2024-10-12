@@ -460,7 +460,7 @@ public class CLIProcessor {
       if (subCommands.isEmpty()) {
         retval = "";
       } else {
-        StringBuilder builder = new StringBuilder(64);
+        StringBuilder builder = new StringBuilder(128);
         builder
             .append(System.lineSeparator())
             .append("The following are available commands:")
@@ -553,9 +553,9 @@ public class CLIProcessor {
             builder.append('[');
           }
 
-          builder.append('<');
-          builder.append(argument.getName());
-          builder.append('>');
+          builder.append('<')
+              .append(argument.getName())
+              .append('>');
 
           if (argument.getNumber() > 1) {
             builder.append("...");

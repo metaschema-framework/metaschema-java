@@ -32,6 +32,7 @@ import java.nio.file.StandardOpenOption;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 abstract class AbstractMetaschemaTest {
 
   private static final BindingModuleLoader LOADER = new BindingModuleLoader(new DefaultBindingContext());

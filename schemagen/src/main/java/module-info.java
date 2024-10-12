@@ -19,6 +19,7 @@ module gov.nist.secauto.metaschema.schemagen {
   requires org.jdom2;
 
   requires Saxon.HE;
+  requires org.eclipse.jdt.annotation;
 
   exports gov.nist.secauto.metaschema.schemagen;
   exports gov.nist.secauto.metaschema.schemagen.json;

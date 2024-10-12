@@ -20,7 +20,7 @@ public final class ValidationResultType {
    */
   public static void encodeValidationResultType(Boolean obj, org.apache.xmlbeans.SimpleValue target) {
     if (obj != null) {
-      if (obj.booleanValue()) {
+      if (obj) {
         target.setStringValue("VALID");
       } else {
         target.setStringValue("INVALID");

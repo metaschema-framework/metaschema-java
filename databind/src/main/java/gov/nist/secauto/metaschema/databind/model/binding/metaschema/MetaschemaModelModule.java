@@ -85,7 +85,7 @@ public final class MetaschemaModelModule
   private static final Map<String, String> NAMESPACE_BINDINGS;
 
   static {
-    Map<String, String> bindings = new LinkedHashMap<>();
+    @SuppressWarnings("PMD.UseConcurrentHashMap") Map<String, String> bindings = new LinkedHashMap<>();
 
     NAMESPACE_BINDINGS = bindings;
   }

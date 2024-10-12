@@ -20,10 +20,11 @@ import java.io.IOException;
 import java.io.Writer;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 public class DefaultJsonSerializer<CLASS extends IBoundObject>
     extends AbstractSerializer<CLASS> {
-  private JsonFactory jsonFactory;
+  private Lazy<JsonFactory> factory;
 
   /**
    * Construct a new Module binding-based deserializer that reads JSON-based
@@ -35,6 +36,17 @@ public class DefaultJsonSerializer<CLASS extends IBoundObject>
    */
   public DefaultJsonSerializer(@NonNull IBoundDefinitionModelAssembly definition) {
     super(definition);
+    resetFactory();
+  }
+
+  protected final void resetFactory() {
+    this.factory = Lazy.lazy(this::newFactoryInstance);
+  }
+
+  @Override
+  protected void configurationChanged(IMutableConfiguration<SerializationFeature<?>> config) {
+    super.configurationChanged(config);
+    resetFactory();
   }
 
   /**
@@ -46,27 +58,13 @@ public class DefaultJsonSerializer<CLASS extends IBoundObject>
    * @return the factory
    */
   @NonNull
-  protected JsonFactory getJsonFactoryInstance() {
+  protected JsonFactory newFactoryInstance() {
     return JsonFactoryFactory.instance();
-  }
-
-  @SuppressWarnings("PMD.NullAssignment")
-  @Override
-  protected void configurationChanged(IMutableConfiguration<SerializationFeature<?>> config) {
-    synchronized (this) {
-      jsonFactory = null;
-    }
   }
 
   @NonNull
   private JsonFactory getJsonFactory() {
-    synchronized (this) {
-      if (jsonFactory == null) {
-        jsonFactory = getJsonFactoryInstance();
-      }
-      assert jsonFactory != null;
-      return jsonFactory;
-    }
+    return ObjectUtils.notNull(factory.get());
   }
 
   @SuppressWarnings("resource")

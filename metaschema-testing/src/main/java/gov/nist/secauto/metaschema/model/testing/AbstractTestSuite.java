@@ -167,7 +167,7 @@ public abstract class AbstractTestSuite {
     Runtime.getRuntime().addShutdownHook(new Thread( // NOPMD - this is not a webapp
         () -> {
           try {
-            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(path, new SimpleFileVisitor<>() {
               @Override
               public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Files.delete(file);
@@ -256,6 +256,7 @@ public abstract class AbstractTestSuite {
    *
    * @return the options
    */
+  @SuppressWarnings("PMD.MethodReturnsInternalArray")
   protected OpenOption[] getWriteOpenOptions() {
     return OPEN_OPTIONS_TRUNCATE;
   }
@@ -297,8 +298,6 @@ public abstract class AbstractTestSuite {
     });
 
     Lazy<Path> lazySchema = Lazy.lazy(() -> {
-      Path schemaPath;
-
       String schemaExtension;
       Format requiredContentFormat = getRequiredContentFormat();
       switch (requiredContentFormat) {
@@ -314,6 +313,7 @@ public abstract class AbstractTestSuite {
       }
 
       // determine what file to use for the schema
+      Path schemaPath;
       try {
         schemaPath = Files.createTempFile(scenarioGenerationPath.get(), "", "-schema" + schemaExtension);
       } catch (IOException ex) {
@@ -366,21 +366,18 @@ public abstract class AbstractTestSuite {
           }
         });
 
-    Stream<? extends DynamicNode> contentTests;
-    {
-      contentTests = scenario.getValidationCaseList().stream()
-          .flatMap(contentCase -> {
-            assert contentCase != null;
-            DynamicTest test
-                = generateValidationCase(
-                    contentCase,
-                    lazyDynamicBindingContext,
-                    lazyContentValidator,
-                    collectionUri,
-                    ObjectUtils.notNull(scenarioGenerationPath));
-            return test == null ? Stream.empty() : Stream.of(test);
-          }).sequential();
-    }
+    Stream<? extends DynamicNode> contentTests = scenario.getValidationCaseList().stream()
+        .flatMap(contentCase -> {
+          assert contentCase != null;
+          DynamicTest test
+              = generateValidationCase(
+                  contentCase,
+                  lazyDynamicBindingContext,
+                  lazyContentValidator,
+                  collectionUri,
+                  ObjectUtils.notNull(scenarioGenerationPath));
+          return test == null ? Stream.empty() : Stream.of(test);
+        }).sequential();
 
     return DynamicContainer.dynamicContainer(
         scenario.getName(),

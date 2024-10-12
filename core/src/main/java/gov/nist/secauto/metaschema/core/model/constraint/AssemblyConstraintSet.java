@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.model.constraint;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -27,65 +28,70 @@ public class AssemblyConstraintSet
 
   @Override
   public List<IIndexConstraint> getIndexConstraints() {
+    Lock readLock = instanceLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return indexConstraints;
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
   @Override
   public List<IUniqueConstraint> getUniqueConstraints() {
+    Lock readLock = instanceLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return uniqueConstraints;
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
   @Override
   public List<ICardinalityConstraint> getHasCardinalityConstraints() {
+    Lock readLock = instanceLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return cardinalityConstraints;
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IIndexConstraint constraint) {
+    Lock writeLock = instanceLock.writeLock();
     try {
-      instanceLock.lock();
+      writeLock.lock();
       getConstraints().add(constraint);
       indexConstraints.add(constraint);
     } finally {
-      instanceLock.unlock();
+      writeLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IUniqueConstraint constraint) {
+    Lock writeLock = instanceLock.writeLock();
     try {
-      instanceLock.lock();
+      writeLock.lock();
       getConstraints().add(constraint);
       uniqueConstraints.add(constraint);
     } finally {
-      instanceLock.unlock();
+      writeLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull ICardinalityConstraint constraint) {
+    Lock writeLock = instanceLock.writeLock();
     try {
-      instanceLock.lock();
+      writeLock.lock();
       getConstraints().add(constraint);
       cardinalityConstraints.add(constraint);
     } finally {
-      instanceLock.unlock();
+      writeLock.unlock();
     }
   }
-
 }

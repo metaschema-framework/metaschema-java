@@ -105,6 +105,7 @@ public abstract class AbstractDefinitionJsonSchema<D extends IDefinition>
       return Objects.hash(definition, null, null, null);
     }
 
+    @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
       if (this == obj) {

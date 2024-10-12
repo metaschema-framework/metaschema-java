@@ -107,7 +107,7 @@ public final class FnConcat {
   @NonNull
   public static IStringItem concat(@NonNull Stream<? extends IAnyAtomicItem> items) {
     return IStringItem.valueOf(ObjectUtils.notNull(items
-        .map(item -> (item == null ? "" : IStringItem.cast(item).asString()))
+        .map(item -> item == null ? "" : IStringItem.cast(item).asString())
         .collect(Collectors.joining())));
   }
 }

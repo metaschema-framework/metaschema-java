@@ -10,7 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.xml.namespace.QName;
 
@@ -31,7 +32,7 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @NonNull
   private final List<IExpectConstraint> expectConstraints = new LinkedList<>();
   @NonNull
-  protected final Lock instanceLock = new ReentrantLock();
+  protected final ReadWriteLock instanceLock = new ReentrantReadWriteLock();
 
   @Override
   public Map<QName, ILet> getLetExpressions() {
@@ -45,95 +46,104 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
 
   @Override
   public List<IConstraint> getConstraints() {
+    Lock readLock = instanceLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return constraints;
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
   @Override
   public List<IAllowedValuesConstraint> getAllowedValuesConstraints() {
+    Lock readLock = instanceLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return allowedValuesConstraints;
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
   @Override
   public List<IMatchesConstraint> getMatchesConstraints() {
+    Lock readLock = instanceLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return matchesConstraints;
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
   @Override
   public List<IIndexHasKeyConstraint> getIndexHasKeyConstraints() {
+    Lock readLock = instanceLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return indexHasKeyConstraints;
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
   @Override
   public List<IExpectConstraint> getExpectConstraints() {
+    Lock readLock = instanceLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return expectConstraints;
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IAllowedValuesConstraint constraint) {
+    Lock writeLock = instanceLock.writeLock();
     try {
-      instanceLock.lock();
+      writeLock.lock();
       constraints.add(constraint);
       allowedValuesConstraints.add(constraint);
     } finally {
-      instanceLock.unlock();
+      writeLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IMatchesConstraint constraint) {
+    Lock writeLock = instanceLock.writeLock();
     try {
-      instanceLock.lock();
+      writeLock.lock();
       constraints.add(constraint);
       matchesConstraints.add(constraint);
     } finally {
-      instanceLock.unlock();
+      writeLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IIndexHasKeyConstraint constraint) {
+    Lock writeLock = instanceLock.writeLock();
     try {
-      instanceLock.lock();
+      writeLock.lock();
       constraints.add(constraint);
       indexHasKeyConstraints.add(constraint);
     } finally {
-      instanceLock.unlock();
+      writeLock.unlock();
     }
   }
 
   @Override
   public final void addConstraint(@NonNull IExpectConstraint constraint) {
+    Lock writeLock = instanceLock.writeLock();
     try {
-      instanceLock.lock();
+      writeLock.lock();
       constraints.add(constraint);
       expectConstraints.add(constraint);
     } finally {
-      instanceLock.unlock();
+      writeLock.unlock();
     }
   }
 }

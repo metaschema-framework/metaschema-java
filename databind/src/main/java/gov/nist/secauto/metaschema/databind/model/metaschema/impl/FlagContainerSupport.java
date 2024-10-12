@@ -50,6 +50,7 @@ public final class FlagContainerSupport {
     IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(
         bindingInstance.getDefinition().getChoiceGroupInstanceByName("flags"));
     for (Object obj : flags) {
+      assert obj != null;
       IBoundInstanceModelGroupedAssembly objInstance
           = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
 

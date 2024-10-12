@@ -20,7 +20,7 @@ public final class GenerationResultType {
    */
   public static void encodeGenerationResultType(Boolean obj, org.apache.xmlbeans.SimpleValue target) {
     if (obj != null) {
-      if (obj.booleanValue()) {
+      if (obj) {
         target.setStringValue("SUCCESS");
       } else {
         target.setStringValue("FAILURE");

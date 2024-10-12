@@ -10,8 +10,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 import javax.xml.namespace.QName;
@@ -20,13 +18,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 public final class FunctionService {
-  private static final Lazy<FunctionService> INSTANCE = Lazy.lazy(() -> new FunctionService());
+  private static final Lazy<FunctionService> INSTANCE = Lazy.lazy(FunctionService::new);
   @NonNull
   private final ServiceLoader<IFunctionLibrary> loader;
   @NonNull
   private final Lazy<IFunctionLibrary> library;
-  @NonNull
-  private final Lock instanceLock = new ReentrantLock();
 
   /**
    * Get the singleton instance of the function service.
@@ -93,13 +89,7 @@ public final class FunctionService {
    *           if a matching function was not found
    */
   public IFunction getFunction(@NonNull String name, int arity) {
-    IFunction retval;
-    try {
-      instanceLock.lock();
-      retval = getLibrary().getFunction(name, arity);
-    } finally {
-      instanceLock.unlock();
-    }
+    IFunction retval = getLibrary().getFunction(name, arity);
 
     if (retval == null) {
       throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,
@@ -122,13 +112,7 @@ public final class FunctionService {
    *           if a matching function was not found
    */
   public IFunction getFunction(@NonNull QName name, int arity) {
-    IFunction retval;
-    try {
-      instanceLock.lock();
-      retval = getLibrary().getFunction(name, arity);
-    } finally {
-      instanceLock.unlock();
-    }
+    IFunction retval = getLibrary().getFunction(name, arity);
 
     if (retval == null) {
       throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,

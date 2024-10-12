@@ -265,7 +265,6 @@ public abstract class AbstractMarkupWriter<T, E extends Throwable> // NOPMD not 
 
   @SuppressWarnings({
       "unchecked",
-      "unused",
       "PMD.UnusedPrivateMethod"
   }) // while unused, keeping code for when inline HTML is supported
   private void writeHtml(Node node) throws E {

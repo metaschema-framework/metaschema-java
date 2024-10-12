@@ -54,11 +54,11 @@ public class KeyedObjectBuilder
 
     if (!types.isEmpty()) {
       ObjectNode patternProperties = ObjectUtils.notNull(object.putObject("patternProperties"));
-      ObjectNode wildcard = patternProperties.putObject("^.*$");
+      ObjectNode wildcard = ObjectUtils.notNull(patternProperties.putObject("^.*$"));
       if (types.size() == 1) {
         types.iterator().next().build(wildcard, state);
       } else {
-        ArrayNode oneOf = wildcard.putArray("anyOf");
+        ArrayNode oneOf = ObjectUtils.notNull(wildcard.putArray("anyOf"));
         for (IType type : types) {
           type.build(oneOf, state);
         }

@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 
+import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
@@ -31,10 +32,11 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 public class DefaultXmlDeserializer<CLASS extends IBoundObject>
     extends AbstractDeserializer<CLASS> {
-  private XMLInputFactory2 xmlInputFactory;
+  private Lazy<XMLInputFactory2> factory;
 
   @NonNull
   private final IBoundDefinitionModelAssembly rootDefinition;
@@ -55,6 +57,52 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
       throw new UnsupportedOperationException(
           String.format("The assembly '%s' is not a root assembly.", definition.getBoundClass().getName()));
     }
+    resetFactory();
+  }
+
+  protected final void resetFactory() {
+    this.factory = Lazy.lazy(this::newFactoryInstance);
+  }
+
+  @Override
+  protected void configurationChanged(IMutableConfiguration<DeserializationFeature<?>> config) {
+    super.configurationChanged(config);
+    resetFactory();
+  }
+
+  /**
+   * Get a JSON factory instance.
+   * <p>
+   * This method can be used by sub-classes to create a customized factory
+   * instance.
+   *
+   * @return the factory
+   */
+  @NonNull
+  protected XMLInputFactory2 newFactoryInstance() {
+    XMLInputFactory2 retval = (XMLInputFactory2) XMLInputFactory.newInstance();
+    assert retval instanceof WstxInputFactory;
+    retval.configureForXmlConformance();
+    retval.setProperty(XMLInputFactory.IS_COALESCING, false);
+    retval.setProperty(XMLInputFactory2.P_PRESERVE_LOCATION, true);
+    // xmlInputFactory.configureForSpeed();
+
+    if (isFeatureEnabled(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION)) {
+      retval.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, true);
+      retval.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);
+      retval.setProperty(XMLInputFactory.SUPPORT_DTD, true);
+      retval.setProperty(XMLInputFactory.RESOLVER,
+          (XMLResolver) (publicID, systemID, baseURI, namespace) -> {
+            URI base = URI.create(baseURI);
+            URI resource = base.resolve(systemID);
+            try {
+              return resource.toURL().openStream();
+            } catch (IOException ex) {
+              throw new XMLStreamException(ex);
+            }
+          });
+    }
+    return retval;
   }
 
   /**
@@ -67,47 +115,7 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
    */
   @NonNull
   private XMLInputFactory2 getXMLInputFactory() {
-
-    synchronized (this) {
-      if (xmlInputFactory == null) {
-        xmlInputFactory = (XMLInputFactory2) XMLInputFactory.newInstance();
-        assert xmlInputFactory instanceof WstxInputFactory;
-        xmlInputFactory.configureForXmlConformance();
-        xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, false);
-        xmlInputFactory.setProperty(XMLInputFactory2.P_PRESERVE_LOCATION, true);
-        // xmlInputFactory.configureForSpeed();
-
-        if (isFeatureEnabled(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION)) {
-          xmlInputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, true);
-          xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);
-          xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, true);
-          xmlInputFactory.setProperty(XMLInputFactory.RESOLVER,
-              (XMLResolver) (publicID, systemID, baseURI, namespace) -> {
-                URI base = URI.create(baseURI);
-                URI resource = base.resolve(systemID);
-                try {
-                  return resource.toURL().openStream();
-                } catch (IOException ex) {
-                  throw new XMLStreamException(ex);
-                }
-              });
-        }
-      }
-      return ObjectUtils.notNull(xmlInputFactory);
-    }
-  }
-
-  /**
-   * Provide a XML input factory instance that will be used to create XML parser
-   * instances.
-   *
-   * @param factory
-   *          the factory instance
-   */
-  protected void setXMLInputFactory(@NonNull XMLInputFactory2 factory) {
-    synchronized (this) {
-      this.xmlInputFactory = factory;
-    }
+    return ObjectUtils.notNull(factory.get());
   }
 
   @NonNull
@@ -129,7 +137,7 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
   @Override
   public final CLASS deserializeToValueInternal(Reader reader, URI documentUri) throws IOException {
     // doesn't auto close the underlying reader
-    try (AutoCloser<XMLEventReader2, XMLStreamException> closer = new AutoCloser<>(
+    try (AutoCloser<XMLEventReader2, XMLStreamException> closer = AutoCloser.autoClose(
         newXMLEventReader2(documentUri, reader), XMLEventReader::close)) {
       return parseXmlInternal(closer.getResource());
     } catch (XMLStreamException ex) {

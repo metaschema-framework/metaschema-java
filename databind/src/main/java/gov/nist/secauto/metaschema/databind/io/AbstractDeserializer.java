@@ -21,6 +21,8 @@ import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -35,6 +37,7 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
     implements IDeserializer<CLASS> {
 
   private IConstraintValidationHandler constraintValidationHandler;
+  private final Lock handlerLock = new ReentrantLock();
 
   /**
    * Construct a new deserializer.
@@ -56,18 +59,24 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
   @Override
   @NonNull
   public IConstraintValidationHandler getConstraintValidationHandler() {
-    synchronized (this) {
+    try {
+      handlerLock.lock();
       if (constraintValidationHandler == null) {
         constraintValidationHandler = new LoggingConstraintValidationHandler();
       }
       return ObjectUtils.notNull(constraintValidationHandler);
+    } finally {
+      handlerLock.unlock();
     }
   }
 
   @Override
   public void setConstraintValidationHandler(@NonNull IConstraintValidationHandler constraintValidationHandler) {
-    synchronized (this) {
+    try {
+      handlerLock.lock();
       this.constraintValidationHandler = constraintValidationHandler;
+    } finally {
+      handlerLock.unlock();
     }
   }
 

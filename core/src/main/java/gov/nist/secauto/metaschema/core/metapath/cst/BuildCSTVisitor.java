@@ -314,10 +314,8 @@ public class BuildCSTVisitor
   // https://www.w3.org/TR/xpath-31/#id-unary-lookup
   // ===============================================
 
-  @Override
-  protected IExpression handleUnarylookup(UnarylookupContext ctx) {
-    KeyspecifierContext specifier = ctx.keyspecifier();
-
+  @NonNull
+  private IKeySpecifier toKeySpecifier(@NonNull KeyspecifierContext specifier) {
     IKeySpecifier keySpecifier;
     if (specifier.parenthesizedexpr() != null) {
       keySpecifier = AbstractKeySpecifier.newParenthesizedExprKeySpecifier(
@@ -333,7 +331,12 @@ public class BuildCSTVisitor
     } else {
       throw new UnsupportedOperationException("unknown key specifier");
     }
-    return new UnaryLookup(keySpecifier);
+    return keySpecifier;
+  }
+
+  @Override
+  protected IExpression handleUnarylookup(UnarylookupContext ctx) {
+    return new UnaryLookup(toKeySpecifier(ObjectUtils.requireNonNull(ctx.keyspecifier())));
   }
 
   // =========================================================
@@ -448,9 +451,7 @@ public class BuildCSTVisitor
       retval = Stream.empty();
     } else {
       retval = context.argument().stream()
-          .map(argument -> {
-            return argument.exprsingle().accept(this);
-          });
+          .map(argument -> argument.exprsingle().accept(this));
     }
     assert retval != null;
 
@@ -540,24 +541,9 @@ public class BuildCSTVisitor
                 left,
                 CollectionUtil.singletonList(parsePredicate((PredicateContext) tree)));
           } else if (tree instanceof LookupContext) {
-            KeyspecifierContext specifier = ((LookupContext) tree).keyspecifier();
-
-            IKeySpecifier keySpecifier;
-            if (specifier.parenthesizedexpr() != null) {
-              keySpecifier = AbstractKeySpecifier.newParenthesizedExprKeySpecifier(
-                  ObjectUtils.requireNonNull(specifier.parenthesizedexpr().accept(this)));
-            } else if (specifier.NCName() != null) {
-              keySpecifier = AbstractKeySpecifier.newNameKeySpecifier(
-                  ObjectUtils.requireNonNull(specifier.NCName().getText()));
-            } else if (specifier.IntegerLiteral() != null) {
-              keySpecifier = AbstractKeySpecifier.newIntegerLiteralKeySpecifier(
-                  IIntegerItem.valueOf(ObjectUtils.requireNonNull(specifier.IntegerLiteral().getText())));
-            } else if (specifier.STAR() != null) {
-              keySpecifier = AbstractKeySpecifier.newWildcardKeySpecifier();
-            } else {
-              throw new UnsupportedOperationException("unknown key specifier");
-            }
-            result = new PostfixLookup(left, keySpecifier);
+            result = new PostfixLookup(
+                left,
+                toKeySpecifier(ObjectUtils.notNull(((LookupContext) tree).keyspecifier())));
           } else {
             result = visit(tree);
           }

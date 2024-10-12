@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.json.MetaschemaJsonReader;
 import gov.nist.secauto.metaschema.databind.model.test.MultiFieldAssembly;
@@ -56,7 +57,9 @@ class DefaultFieldPropertyTest {
 
       MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
 
-      SimpleAssembly obj = parser.readObjectRoot(classBinding, classBinding.getRootJsonName());
+      SimpleAssembly obj = parser.readObjectRoot(
+          classBinding,
+          ObjectUtils.requireNonNull(classBinding.getRootJsonName()));
       assert obj != null;
 
       assertAll(

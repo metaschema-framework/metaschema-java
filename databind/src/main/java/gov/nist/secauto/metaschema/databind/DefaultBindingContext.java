@@ -42,6 +42,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * The implementation of a {@link IBindingContext} provided by this library.
@@ -57,8 +58,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * <p>
  * This class is synchronized and is thread-safe.
  */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class DefaultBindingContext implements IBindingContext {
-  private static DefaultBindingContext singleton;
+  private static Lazy<DefaultBindingContext> singleton = Lazy.lazy(DefaultBindingContext::new);
   @NonNull
   private final IModuleLoaderStrategy moduleLoaderStrategy;
   @NonNull
@@ -73,12 +75,7 @@ public class DefaultBindingContext implements IBindingContext {
    */
   @NonNull
   public static DefaultBindingContext instance() {
-    synchronized (DefaultBindingContext.class) {
-      if (singleton == null) {
-        singleton = new DefaultBindingContext();
-      }
-    }
-    return ObjectUtils.notNull(singleton);
+    return ObjectUtils.notNull(singleton.get());
   }
 
   /**

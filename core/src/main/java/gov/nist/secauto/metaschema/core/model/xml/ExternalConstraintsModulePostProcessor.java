@@ -17,6 +17,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class ExternalConstraintsModulePostProcessor
     extends gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor {
 
+  /**
+   * This implementation has been moved to
+   * {@link gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor},
+   * which should be used instead.
+   *
+   * @param additionalConstraintSets
+   *          constraints to configure
+   */
   public ExternalConstraintsModulePostProcessor(@NonNull Collection<IConstraintSet> additionalConstraintSets) {
     super(additionalConstraintSets);
   }

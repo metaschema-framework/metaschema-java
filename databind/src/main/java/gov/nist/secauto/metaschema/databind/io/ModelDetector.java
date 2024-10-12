@@ -229,6 +229,7 @@ public class ModelDetector {
       return ObjectUtils.requireNonNull(dataStream, "data stream already closed");
     }
 
+    @SuppressWarnings("PMD.NullAssignment")
     @Override
     public void close() throws IOException {
       this.dataStream.close();

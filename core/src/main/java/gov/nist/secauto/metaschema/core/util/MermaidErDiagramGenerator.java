@@ -88,12 +88,13 @@ public final class MermaidErDiagramGenerator {
   private static final class MermaidNodeVistor implements IDiagramNodeVisitor {
     @NonNull
     private final DiagramNodeModelVisitor nodeVisitor;
+    @SuppressWarnings("resource")
     @NonNull
     private final PrintWriter writer;
 
     private MermaidNodeVistor(
         @NonNull DiagramNodeModelVisitor nodeVisitor,
-        @NonNull PrintWriter writer) {
+        @NotOwning @NonNull PrintWriter writer) {
       this.nodeVisitor = nodeVisitor;
       this.writer = writer;
     }
@@ -142,7 +143,6 @@ public final class MermaidErDiagramGenerator {
           "ChoiceGroup: " + edge.getInstance().getEffectiveDisciminatorValue() + ": " + instance.getEffectiveName());
     }
 
-    @SuppressWarnings("resource")
     private void writeRelationship(
         @NonNull IDiagramNode left,
         @NonNull IDiagramNode right,

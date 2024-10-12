@@ -30,7 +30,9 @@ public class GenerationTest {
     loader.set(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION, true);
     IBindingMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
         "https://raw.githubusercontent.com/usnistgov/OSCAL/main/src/metaschema/oscal_complete_metaschema.xml")));
-    IBindingContext context = IBindingContext.instance().registerModule(module, Paths.get("target/oscal-classes"));
+    IBindingContext context = IBindingContext.instance().registerModule(
+        module,
+        ObjectUtils.notNull(Paths.get("target/oscal-classes")));
     assertAll(
         () -> assertNotNull(module),
         () -> assertNotNull(context));

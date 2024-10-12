@@ -126,8 +126,8 @@ public class EvaluateMetapathCommand
       @NonNull CommandLine cmdLine) {
     URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
 
-    IModule module;
-    INodeItem item;
+    IModule module = null;
+    INodeItem item = null;
     if (cmdLine.hasOption(METASCHEMA_OPTION)) {
       try {
         String moduleName
@@ -161,9 +161,10 @@ public class EvaluateMetapathCommand
 
         IBoundLoader loader = bindingContext.newBoundLoader();
 
+        String content = ObjectUtils.requireNonNull(cmdLine.getOptionValue(CONTENT_OPTION));
         URI contentResource;
         try {
-          contentResource = MetaschemaCommands.handleResource(cmdLine.getOptionValue(CONTENT_OPTION), cwd);
+          contentResource = MetaschemaCommands.handleResource(content, cwd);
         } catch (IOException ex) {
           return ExitCode.INVALID_ARGUMENTS
               .exitMessage("Unable to resolve content location. " + ex.getMessage())
@@ -181,14 +182,10 @@ public class EvaluateMetapathCommand
         item = INodeItemFactory.instance().newModuleNodeItem(module);
       }
     } else if (cmdLine.hasOption(CONTENT_OPTION)) {
+      // content provided, but no module; require module
       return ExitCode.INVALID_ARGUMENTS.exitMessage(
           String.format("Must use '%s' to specify the Metaschema module.", CONTENT_OPTION.getArgName()));
-    } else {
-      module = null;
-      item = null;
     }
-
-    String expression = cmdLine.getOptionValue(EXPRESSION_OPTION);
 
     StaticContext.Builder builder = StaticContext.builder();
     if (module != null) {
@@ -196,22 +193,29 @@ public class EvaluateMetapathCommand
     }
     StaticContext staticContext = builder.build();
 
+    String expression = cmdLine.getOptionValue(EXPRESSION_OPTION);
+    if (expression == null) {
+      return ExitCode.INVALID_ARGUMENTS.exitMessage(
+          String.format("Must use '%s' to specify the Metapath expression.", EXPRESSION_OPTION.getArgName()));
+    }
+
     try {
       // Parse and compile the Metapath expression
       MetapathExpression compiledMetapath = MetapathExpression.compile(expression, staticContext);
       ISequence<?> sequence = compiledMetapath.evaluate(item, new DynamicContext(staticContext));
 
-      Writer stringWriter = new StringWriter();
-      try (PrintWriter writer = new PrintWriter(stringWriter)) {
-        IItemWriter itemWriter = new DefaultItemWriter(writer);
-        itemWriter.writeSequence(sequence);
-      }
+      try (Writer stringWriter = new StringWriter()) {
+        try (PrintWriter writer = new PrintWriter(stringWriter)) {
+          try (IItemWriter itemWriter = new DefaultItemWriter(writer)) {
+            itemWriter.writeSequence(sequence);
+          }
+        }
 
-      // Print the result
-      if (LOGGER.isInfoEnabled()) {
-        LOGGER.info(stringWriter.toString());
+        // Print the result
+        if (LOGGER.isInfoEnabled()) {
+          LOGGER.info(stringWriter.toString());
+        }
       }
-
       return ExitCode.OK.exit();
     } catch (Exception ex) {
       return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);

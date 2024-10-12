@@ -126,13 +126,13 @@ public class GenerateSourcesMojo
         getLog().debug(String.format("Source file generation is configured to be skipped. Skipping."));
       }
       generate = false;
-    } else if (!staleFile.exists()) {
+    } else if (staleFile.exists()) {
+      generate = isGenerationRequired();
+    } else {
       if (getLog().isInfoEnabled()) {
         getLog().info(String.format("Stale file '%s' doesn't exist! Generating source files.", staleFile.getPath()));
       }
       generate = true;
-    } else {
-      generate = isGenerationRequired();
     }
 
     if (generate) {

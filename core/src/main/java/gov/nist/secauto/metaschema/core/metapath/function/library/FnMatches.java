@@ -30,7 +30,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * "https://www.w3.org/TR/xpath-functions-31/#func-matches">fn:matches</a>.
  */
 public final class FnMatches {
+  @NonNull
   private static final String NAME = "matches";
+  // CPD-OFF
   @NonNull
   static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
       .name(NAME)
@@ -79,6 +81,7 @@ public final class FnMatches {
       .returnOne()
       .functionHandler(FnMatches::executeThreeArg)
       .build();
+  // CPD-ON
 
   @NonNull
   private static ISequence<IBooleanItem> executeTwoArg(

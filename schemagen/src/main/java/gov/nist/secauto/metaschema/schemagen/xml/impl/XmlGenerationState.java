@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -56,7 +57,7 @@ public class XmlGenerationState
   @NonNull
   private final Map<IDefinition, IXmlType> definitionToTypeMap = new ConcurrentHashMap<>();
 
-  private int prefixNum; // 0
+  private final AtomicInteger prefixNum = new AtomicInteger(); // 0
 
   public XmlGenerationState(
       @NonNull IModule module,
@@ -91,13 +92,9 @@ public class XmlGenerationState
   public String getNSPrefix(String namespace) {
     String retval = null;
     if (!getDefaultNS().equals(namespace)) {
-      synchronized (this) {
-        retval = namespaceToPrefixMap.get(namespace);
-        if (retval == null) {
-          retval = String.format("ns%d", ++prefixNum);
-          namespaceToPrefixMap.put(namespace, retval);
-        }
-      }
+      retval = namespaceToPrefixMap.computeIfAbsent(
+          namespace,
+          key -> String.format("ns%d", prefixNum.incrementAndGet()));
     }
     return retval;
   }
@@ -256,6 +253,7 @@ public class XmlGenerationState
     getXMLStreamWriter().writeNamespace(prefix, namespaceUri);
   }
 
+  @SuppressWarnings("resource")
   @Override
   public void flushWriter() throws IOException {
     try {

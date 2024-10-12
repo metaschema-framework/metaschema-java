@@ -8,10 +8,16 @@ package gov.nist.secauto.metaschema.core.metapath.antlr;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.eclipse.jdt.annotation.NotOwning;
 
 import java.io.PrintStream;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 public class ParseTreePrinter {
+  @SuppressWarnings("resource")
+  @NotOwning
+  @NonNull
   private final PrintStream outputStream;
   private boolean ignoringWrappers = true;
 
@@ -21,7 +27,7 @@ public class ParseTreePrinter {
    * @param outputStream
    *          the stream to print to
    */
-  public ParseTreePrinter(PrintStream outputStream) {
+  public ParseTreePrinter(@NotOwning @NonNull PrintStream outputStream) {
     this.outputStream = outputStream;
   }
 

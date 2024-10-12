@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.datatype.IDatatypeContent;
 
+import org.eclipse.jdt.annotation.Owning;
 import org.jdom2.Element;
 
 import java.io.InputStream;
@@ -22,6 +23,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractXmlMarkupDatatypeProvider
     extends AbstractXmlDatatypeProvider {
 
+  @SuppressWarnings("null")
+  @Owning
   @Override
   protected InputStream getSchemaResource() {
     return IModule.class.getResourceAsStream(getSchemaResourcePath());

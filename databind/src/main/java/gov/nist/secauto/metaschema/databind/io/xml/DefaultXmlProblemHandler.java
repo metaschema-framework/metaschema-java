@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 
@@ -51,7 +52,7 @@ public class DefaultXmlProblemHandler
     if (LOGGER.isWarnEnabled() && !IGNORED_QNAMES.contains(qname)) {
       LOGGER.atWarn().log("Skipping unrecognized attribute '{}'{}.",
           qname,
-          XmlEventUtil.generateLocationMessage(attribute.getLocation()));
+          XmlEventUtil.generateLocationMessage(ObjectUtils.notNull(attribute.getLocation())));
     }
     // always ignore
     return true;

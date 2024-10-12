@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -23,6 +25,7 @@ class PostProcessingModuleLoaderStrategy
   @NonNull
   private final List<IModuleLoader.IModulePostProcessor> modulePostProcessors;
   private final Set<IModule> resolvedModules = new HashSet<>();
+  private final Lock resolvedModulesLock = new ReentrantLock();
 
   protected PostProcessingModuleLoaderStrategy(
       @NonNull IBindingContext bindingContext,
@@ -42,12 +45,16 @@ class PostProcessingModuleLoaderStrategy
     if (retval != null) {
       // force loading of metaschema information to apply constraints
       IModule module = retval.getContainingModule();
-      synchronized (resolvedModules) {
+
+      try {
+        resolvedModulesLock.lock();
         if (!resolvedModules.contains(module)) {
           // add first, to avoid loops
           resolvedModules.add(module);
           handleModule(module);
         }
+      } finally {
+        resolvedModulesLock.unlock();
       }
     }
     return retval;

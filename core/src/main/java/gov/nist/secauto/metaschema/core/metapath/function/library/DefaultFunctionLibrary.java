@@ -22,7 +22,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IPositiveIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
-@SuppressWarnings({ "removal", "deprecation" })
+@SuppressWarnings({ "removal" })
 @AutoService(IFunctionLibrary.class)
 public class DefaultFunctionLibrary
     extends FunctionLibrary {

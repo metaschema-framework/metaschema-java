@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.ISequenceType;
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.MapItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -50,12 +49,12 @@ public interface IMapItem<VALUE extends ICollectionValue>
 
   @Override
   default QName getQName() {
-    return AbstractArrayItem.QNAME;
+    return AbstractMapItem.QNAME;
   }
 
   @Override
   default Set<FunctionProperty> getProperties() {
-    return AbstractArrayItem.PROPERTIES;
+    return AbstractMapItem.PROPERTIES;
   }
 
   @Override
@@ -75,7 +74,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
 
   @Override
   default List<IArgument> getArguments() {
-    return AbstractArrayItem.ARGUMENTS;
+    return AbstractMapItem.ARGUMENTS;
   }
 
   @Override
@@ -90,7 +89,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
 
   @Override
   default ISequenceType getResult() {
-    return AbstractArrayItem.RESULT;
+    return AbstractMapItem.RESULT;
   }
 
   @Override
@@ -721,7 +720,8 @@ public interface IMapItem<VALUE extends ICollectionValue>
   }
 
   /**
-   * Returns an unmodifiable {@link Entry} containing the given key and value.
+   * Returns an unmodifiable {@link java.util.Map.Entry} containing the given key
+   * and value.
    *
    * @param <V>
    *          the value's type
@@ -739,7 +739,8 @@ public interface IMapItem<VALUE extends ICollectionValue>
   }
 
   /**
-   * Returns an unmodifiable {@link Entry} containing the given key and value.
+   * Returns an unmodifiable {@link java.util.Map.Entry} containing the given key
+   * and value.
    *
    * @param <V>
    *          the value's type

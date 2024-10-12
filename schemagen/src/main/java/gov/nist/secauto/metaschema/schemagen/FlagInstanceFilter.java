@@ -61,7 +61,7 @@ public final class FlagInstanceFilter {
   @NonNull
   private static Predicate<IFlagInstance>
       filterFlag(@NonNull IFlagInstance flagToFilter) {
-    return flag -> flag != flagToFilter;
+    return flag -> !flagToFilter.equals(flag);
   }
 
   @NonNull

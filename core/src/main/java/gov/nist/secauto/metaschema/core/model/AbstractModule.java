@@ -130,7 +130,7 @@ public abstract class AbstractModule<
 
   @SuppressWarnings({ "unused", "PMD.UnusedPrivateMethod" }) // used by lambda
   private static <DEF extends IDefinition> DEF handleShadowedDefinitions(
-      @SuppressWarnings("unused") @NonNull QName key,
+      @NonNull QName key,
       @NonNull DEF oldDef,
       @NonNull DEF newDef) {
     if (!oldDef.equals(newDef) && LOGGER.isInfoEnabled()) {

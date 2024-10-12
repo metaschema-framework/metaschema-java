@@ -19,10 +19,6 @@ import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.ModelWalker;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.codegen.JavaGenerator;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,8 +30,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ModuleIndex {
-  private static final Logger LOGGER = LogManager.getLogger(JavaGenerator.class);
-
   private final Map<IDefinition, DefinitionEntry> index = new LinkedHashMap<>();// new ConcurrentHashMap<>();
 
   @NonNull

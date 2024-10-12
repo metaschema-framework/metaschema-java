@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
+import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
@@ -22,10 +23,11 @@ import java.io.Reader;
 import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 public class DefaultJsonDeserializer<CLASS extends IBoundObject>
     extends AbstractDeserializer<CLASS> {
-  private JsonFactory jsonFactory;
+  private Lazy<JsonFactory> factory;
 
   /**
    * Construct a new JSON deserializer that will parse the bound class identified
@@ -37,6 +39,17 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
    */
   public DefaultJsonDeserializer(@NonNull IBoundDefinitionModelAssembly definition) {
     super(definition);
+    resetFactory();
+  }
+
+  protected final void resetFactory() {
+    this.factory = Lazy.lazy(this::newFactoryInstance);
+  }
+
+  @Override
+  protected void configurationChanged(IMutableConfiguration<DeserializationFeature<?>> config) {
+    super.configurationChanged(config);
+    resetFactory();
   }
 
   /**
@@ -48,7 +61,7 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
    * @return the factory
    */
   @NonNull
-  protected JsonFactory newJsonFactoryInstance() {
+  protected JsonFactory newFactoryInstance() {
     return JsonFactoryFactory.instance();
   }
 
@@ -59,13 +72,7 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
    */
   @NonNull
   protected JsonFactory getJsonFactory() {
-    synchronized (this) {
-      if (jsonFactory == null) {
-        jsonFactory = newJsonFactoryInstance();
-      }
-      assert jsonFactory != null;
-      return jsonFactory;
-    }
+    return ObjectUtils.notNull(factory.get());
   }
 
   /**
@@ -96,7 +103,9 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
       if (definition.isRoot()
           && configuration.isFeatureEnabled(DeserializationFeature.DESERIALIZE_JSON_ROOT_PROPERTY)) {
         // now parse the root property
-        CLASS value = ObjectUtils.requireNonNull(parser.readObjectRoot(definition, definition.getRootJsonName()));
+        CLASS value = ObjectUtils.requireNonNull(parser.readObjectRoot(
+            definition,
+            ObjectUtils.notNull(definition.getRootJsonName())));
 
         retval = INodeItemFactory.instance().newDocumentNodeItem(definition, documentUri, value);
       } else {
@@ -121,7 +130,9 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
           && configuration.isFeatureEnabled(DeserializationFeature.DESERIALIZE_JSON_ROOT_PROPERTY)) {
 
         // now parse the root property
-        retval = ObjectUtils.requireNonNull(parser.readObjectRoot(definition, definition.getRootJsonName()));
+        retval = ObjectUtils.requireNonNull(parser.readObjectRoot(
+            definition,
+            ObjectUtils.notNull(definition.getRootJsonName())));
       } else {
         // read the top-level definition
         retval = ObjectUtils.asType(ObjectUtils.requireNonNull(

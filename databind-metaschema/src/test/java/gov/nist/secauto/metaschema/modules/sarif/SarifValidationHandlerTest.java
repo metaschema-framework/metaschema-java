@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFin
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
@@ -46,11 +47,11 @@ class SarifValidationHandlerTest {
   void testValid() throws IOException {
 
     IVersionInfo versionInfo = context.mock(IVersionInfo.class);
-    IConstraint constraintA = context.mock(IConstraint.class, "constraintA");
-    INodeItem node = context.mock(INodeItem.class);
+    IConstraint constraintA = ObjectUtils.notNull(context.mock(IConstraint.class, "constraintA"));
+    INodeItem node = ObjectUtils.notNull(context.mock(INodeItem.class));
     IResourceLocation location = context.mock(IResourceLocation.class);
 
-    Path sourceFile = Paths.get(".", "source.json").toAbsolutePath();
+    Path sourceFile = ObjectUtils.requireNonNull(Paths.get(".", "source.json").toAbsolutePath());
 
     Set<String> helpUrls = Set.of("https://example.com/test");
     Set<String> helpMarkdown = Set.of("**help text**");
@@ -101,14 +102,14 @@ class SarifValidationHandlerTest {
     });
 
     SarifValidationHandler handler
-        = new SarifValidationHandler(sourceFile.toUri(), versionInfo);
+        = new SarifValidationHandler(ObjectUtils.notNull(sourceFile.toUri()), versionInfo);
 
     handler.addFinding(ConstraintValidationFinding.builder(constraintA, node)
         .kind(IValidationFinding.Kind.FAIL)
         .build());
 
     // no need to cleanup this file, since it is created in the target directory
-    Path sarifFile = Paths.get("target/test.sarif");
+    Path sarifFile = ObjectUtils.requireNonNull(Paths.get("target/test.sarif"));
     handler.write(sarifFile);
 
     Path sarifSchema = Paths.get("modules/sarif/sarif-schema-2.1.0.json");
@@ -121,19 +122,15 @@ class SarifValidationHandlerTest {
 
         Validator.Result result
             = new ValidatorFactory().withDialect(new Dialects.Draft2020Dialect()).validate(schemaNode, instanceNode);
-        if (!result.isValid()) {
-          StringJoiner sj = new StringJoiner("\n");
-          for (dev.harrel.jsonschema.Error finding : result.getErrors()) {
-            sj.add(String.format("[%s]%s %s for schema '%s'",
-                finding.getInstanceLocation(),
-                finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
-                finding.getError(),
-                finding.getSchemaLocation()));
-          }
-          assertTrue(result.isValid(), () -> "SARIF output failed schema validation. Errors:\n" + sj.toString());
-        } else {
-          assertTrue(result.isValid());
+        StringJoiner sj = new StringJoiner("\n");
+        for (dev.harrel.jsonschema.Error finding : result.getErrors()) {
+          sj.add(String.format("[%s]%s %s for schema '%s'",
+              finding.getInstanceLocation(),
+              finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
+              finding.getError(),
+              finding.getSchemaLocation()));
         }
+        assertTrue(result.isValid(), () -> "SARIF output failed schema validation. Errors:\n" + sj.toString());
       }
     }
   }

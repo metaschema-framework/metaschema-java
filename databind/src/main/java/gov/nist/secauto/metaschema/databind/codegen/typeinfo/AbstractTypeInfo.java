@@ -10,15 +10,24 @@ import gov.nist.secauto.metaschema.databind.codegen.ClassUtils;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 abstract class AbstractTypeInfo<PARENT extends IDefinitionTypeInfo> implements ITypeInfo {
   @NonNull
   private final PARENT parentDefinition;
-  private String propertyName;
-  private String fieldName;
+  private final Lazy<String> propertyName;
+  private final Lazy<String> fieldName;
 
   protected AbstractTypeInfo(@NonNull PARENT parentDefinition) {
     this.parentDefinition = parentDefinition;
+    this.propertyName = Lazy.lazy(() -> {
+      String baseName = ClassUtils.toPropertyName(getBaseName());
+      IDefinitionTypeInfo parent = getParentTypeInfo();
+
+      // first check if a property already exists with the same name
+      return parent.getTypeResolver().getPropertyName(parent, baseName);
+    });
+    this.fieldName = Lazy.lazy(() -> "_" + ClassUtils.toVariableName(getPropertyName()));
   }
 
   @Override
@@ -35,16 +44,7 @@ abstract class AbstractTypeInfo<PARENT extends IDefinitionTypeInfo> implements I
   @Override
   @NonNull
   public String getPropertyName() {
-    synchronized (this) {
-      if (this.propertyName == null) {
-        String name = ClassUtils.toPropertyName(getBaseName());
-        IDefinitionTypeInfo parent = getParentTypeInfo();
-
-        // first check if a property already exists with the same name
-        this.propertyName = parent.getTypeResolver().getPropertyName(parent, name);
-      }
-      return ObjectUtils.notNull(this.propertyName);
-    }
+    return ObjectUtils.notNull(propertyName.get());
   }
 
   /**
@@ -55,11 +55,6 @@ abstract class AbstractTypeInfo<PARENT extends IDefinitionTypeInfo> implements I
   @Override
   @NonNull
   public final String getJavaFieldName() {
-    synchronized (this) {
-      if (this.fieldName == null) {
-        this.fieldName = "_" + ClassUtils.toVariableName(getPropertyName());
-      }
-      return ObjectUtils.notNull(this.fieldName);
-    }
+    return ObjectUtils.notNull(fieldName.get());
   }
 }

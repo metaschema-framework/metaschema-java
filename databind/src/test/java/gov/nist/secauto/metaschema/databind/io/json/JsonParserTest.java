@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
@@ -26,14 +27,18 @@ class JsonParserTest
   void testIssue308Regression() throws IOException, MetaschemaException {
     ModuleLoader moduleLoader = new ModuleLoader();
     IMetaschemaModule<?> module
-        = moduleLoader.load(Paths.get("src/test/resources/metaschema/308-choice-regression/metaschema.xml"));
+        = moduleLoader.load(ObjectUtils.notNull(
+            Paths.get("src/test/resources/metaschema/308-choice-regression/metaschema.xml")));
 
     IBindingContext context = IBindingContext.instance();
-    context.registerModule(module, Paths.get("target/generated-test-sources/308-choice-regression"));
+    context.registerModule(
+        module,
+        ObjectUtils.notNull(Paths.get("target/generated-test-sources/308-choice-regression")));
 
     IBoundLoader loader = context.newBoundLoader();
     loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
-    Object obj = loader.load(Paths.get("src/test/resources/metaschema/308-choice-regression/example.json"));
+    Object obj = loader.load(ObjectUtils.notNull(
+        Paths.get("src/test/resources/metaschema/308-choice-regression/example.json")));
     assertNotNull(obj);
   }
 }

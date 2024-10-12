@@ -27,14 +27,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 public class BindingModuleLoader
     extends AbstractModuleLoader<METASCHEMA, IBindingMetaschemaModule>
     implements IMutableConfiguration<DeserializationFeature<?>> {
 
-  @NonNull
-  private final IBindingContext bindingContext;
-  private IBoundLoader loader;
+  private final Lazy<IBoundLoader> loader;
 
   /**
    * Construct a new Metaschema loader.
@@ -60,7 +59,7 @@ public class BindingModuleLoader
       @NonNull IBindingContext bindingContext,
       @NonNull List<IModuleLoader.IModulePostProcessor> modulePostProcessors) {
     super(modulePostProcessors);
-    this.bindingContext = bindingContext;
+    this.loader = Lazy.lazy(bindingContext::newBoundLoader);
   }
 
   @Override
@@ -91,12 +90,7 @@ public class BindingModuleLoader
   }
 
   protected IBoundLoader getLoader() {
-    synchronized (this) {
-      if (this.loader == null) {
-        this.loader = bindingContext.newBoundLoader();
-      }
-      return this.loader;
-    }
+    return ObjectUtils.notNull(loader.get());
   }
 
   @Override

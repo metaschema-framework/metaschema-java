@@ -20,6 +20,7 @@ import gov.nist.secauto.metaschema.core.model.IValuedDefinition;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState;
+import gov.nist.secauto.metaschema.schemagen.ModuleIndex.DefinitionEntry;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
 import gov.nist.secauto.metaschema.schemagen.json.IDefineableJsonSchema.IKey;
@@ -101,7 +102,7 @@ public class JsonGenerationState
       @NonNull IKey key,
       @NonNull IJsonGenerationState state) {
     synchronized (schemaDefinitions) {
-      return schemaDefinitions.computeIfAbsent(key, (k) -> {
+      return schemaDefinitions.computeIfAbsent(key, k -> {
         IDefinitionJsonSchema<?> retval = newJsonSchema(
             k.getDefinition(),
             k.getJsonKeyFlagName(),
@@ -175,8 +176,8 @@ public class JsonGenerationState
     @NonNull Map<IKey, IDefinitionJsonSchema<?>> gatheredDefinitions = new HashMap<>();
 
     getMetaschemaIndex().getDefinitions().stream()
-        .filter(entry -> entry.isRoot())
-        .map(entry -> entry.getDefinition())
+        .filter(DefinitionEntry::isRoot)
+        .map(DefinitionEntry::getDefinition)
         .forEachOrdered(def -> {
           IDefinitionJsonSchema<?> definitionSchema = getSchema(IKey.of(def));
           assert definitionSchema != null;
@@ -247,6 +248,7 @@ public class JsonGenerationState
     writer.writeTree(obj);
   }
 
+  @SuppressWarnings("resource")
   @Override
   public void flushWriter() throws IOException {
     getWriter().flush();

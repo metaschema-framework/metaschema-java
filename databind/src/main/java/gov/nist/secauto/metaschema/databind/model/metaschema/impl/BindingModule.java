@@ -40,6 +40,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class BindingModule
     extends AbstractModule<
         IBindingMetaschemaModule,
@@ -120,7 +121,7 @@ public class BindingModule
 
   @Override
   public final StaticContext getModuleStaticContext() {
-    return staticContext.get();
+    return ObjectUtils.notNull(staticContext.get());
   }
 
   @Override
@@ -269,6 +270,7 @@ public class BindingModule
     @NonNull
     private final Map<QName, IAssemblyDefinition> rootAssemblyDefinitions;
 
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Definitions(
         @NonNull URI resource,
         @NonNull IBoundDefinitionModelAssembly rootDefinition,
@@ -288,6 +290,8 @@ public class BindingModule
           rootDefinition.getChoiceGroupInstanceByName("definitions"));
 
       for (Object obj : binding.getDefinitions()) {
+        assert obj != null : "Object was null";
+
         IBoundInstanceModelGroupedAssembly objInstance
             = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
 

@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.schemagen.datatype.IDatatypeContent;
 import gov.nist.secauto.metaschema.schemagen.datatype.IDatatypeProvider;
 
 import org.codehaus.stax2.XMLStreamWriter2;
+import org.eclipse.jdt.annotation.Owning;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 
@@ -28,6 +29,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public abstract class AbstractXmlDatatypeProvider implements IDatatypeProvider {
   private Map<String, IDatatypeContent> datatypes;
 
+  @Owning
+  @NonNull
   protected abstract InputStream getSchemaResource();
 
   private void initSchema() {

@@ -69,7 +69,7 @@ public class XmlSimpleTypeUnion
         state.writeAttribute(
             "memberTypes",
             ObjectUtils.notNull(memberTypes.stream()
-                .map(type -> type.getTypeReference())
+                .map(IXmlSimpleType::getTypeReference)
                 .collect(Collectors.joining(" "))));
       }
 

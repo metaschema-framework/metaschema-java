@@ -32,6 +32,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * "https://www.w3.org/TR/xpath-functions-31/#func-tokenize">fn:tokenize</a>.
  */
 public final class FnTokenize {
+  // CPD-OFF
+  @NonNull
   private static final String NAME = "tokenize";
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
@@ -97,13 +99,15 @@ public final class FnTokenize {
       .returnZeroOrMore()
       .functionHandler(FnTokenize::executeThreeArg)
       .build();
+  // CPD-ON
 
+  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })
   @NonNull
   private static ISequence<IStringItem> executeOneArg(
-      @SuppressWarnings("unused") @NonNull IFunction function,
+      @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
-      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,
-      @SuppressWarnings("unused") IItem focus) {
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
     IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
 
     return input == null
@@ -113,24 +117,26 @@ public final class FnTokenize {
                 .map(IStringItem::valueOf)));
   }
 
+  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })
   @NonNull
   private static ISequence<IStringItem> executeTwoArg(
-      @SuppressWarnings("unused") @NonNull IFunction function,
+      @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
-      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,
-      @SuppressWarnings("unused") IItem focus) {
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
     IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));
 
     return execute(input, pattern, IStringItem.valueOf(""));
   }
 
+  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })
   @NonNull
   private static ISequence<IStringItem> executeThreeArg(
-      @SuppressWarnings("unused") @NonNull IFunction function,
+      @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
-      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,
-      @SuppressWarnings("unused") IItem focus) {
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
 
     IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));

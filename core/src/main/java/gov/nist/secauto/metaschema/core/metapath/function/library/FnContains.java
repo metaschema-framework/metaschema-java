@@ -20,8 +20,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class FnContains {
+  // CPD-OFF
+  @NonNull
   private static final String NAME = "contains";
-
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name(NAME)
@@ -42,6 +43,7 @@ public final class FnContains {
       .returnOne()
       .functionHandler(FnContains::execute)
       .build();
+  // CPD-ON
 
   @SuppressWarnings("unused")
   @NonNull

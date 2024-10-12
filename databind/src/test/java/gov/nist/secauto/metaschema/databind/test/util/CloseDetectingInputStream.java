@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.databind.test.util;
 
+import org.eclipse.jdt.annotation.NotOwning;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,6 +16,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class CloseDetectingInputStream
     extends InputStream {
 
+  @SuppressWarnings("resource")
+  @NotOwning
   private final InputStream delegate;
   private boolean closed;
 
@@ -24,7 +28,7 @@ public class CloseDetectingInputStream
    * @param delegate
    *          the underlying input stream
    */
-  public CloseDetectingInputStream(@NonNull InputStream delegate) {
+  public CloseDetectingInputStream(@NotOwning @NonNull InputStream delegate) {
     this.delegate = delegate;
   }
 
@@ -84,20 +88,14 @@ public class CloseDetectingInputStream
     closed = true;
   }
 
-  @SuppressWarnings("sync-override")
   @Override
   public void mark(int readlimit) {
-    synchronized (delegate) {
-      delegate.mark(readlimit);
-    }
+    delegate.mark(readlimit);
   }
 
-  @SuppressWarnings("sync-override")
   @Override
   public void reset() throws IOException {
-    synchronized (delegate) {
-      delegate.reset();
-    }
+    delegate.reset();
   }
 
   @Override
@@ -124,5 +122,4 @@ public class CloseDetectingInputStream
   public String toString() {
     return delegate.toString();
   }
-
 }

@@ -429,9 +429,9 @@ class ModelTest
       IBindingContext context = new DefaultBindingContext();
 
       String json = new StringBuilder()
-          .append("{")
+          .append('{')
           .append("  \"root-assembly-with-fields\": { }")
-          .append("}")
+          .append('}')
           .toString();
 
       try (InputStream is = new ByteArrayInputStream(json.getBytes())) {

@@ -58,7 +58,7 @@ public final class MetaschemaCommands {
       @NonNull URI cwd,
       @NonNull Collection<IConstraintSet> constraintSets) throws URISyntaxException, IOException, MetaschemaException {
     String moduleName
-        = ObjectUtils.requireNonNull(commandLine.getOptionValue(MetaschemaCommands.METASCHEMA_OPTION));
+        = ObjectUtils.requireNonNull(commandLine.getOptionValue(METASCHEMA_OPTION));
     URI moduleUri = UriUtils.toUri(moduleName, cwd);
     return handleModule(moduleUri, constraintSets);
   }

@@ -17,6 +17,8 @@ import gov.nist.secauto.metaschema.databind.model.impl.DefinitionField;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -26,8 +28,10 @@ public class SimpleModuleLoaderStrategy implements IBindingContext.IModuleLoader
   private final IBindingContext bindingContext;
   @NonNull
   private final Map<Class<?>, IBoundModule> modulesByClass = new ConcurrentHashMap<>();
+  private final Lock modulesLock = new ReentrantLock();
   @NonNull
   private final Map<Class<?>, IBoundDefinitionModelComplex> definitionsByClass = new ConcurrentHashMap<>();
+  private final Lock definitionsLock = new ReentrantLock();
 
   protected SimpleModuleLoaderStrategy(@NonNull IBindingContext bindingContext) {
     this.bindingContext = bindingContext;
@@ -41,12 +45,15 @@ public class SimpleModuleLoaderStrategy implements IBindingContext.IModuleLoader
   @Override
   public IBoundModule loadModule(@NonNull Class<? extends IBoundModule> clazz) {
     IBoundModule retval;
-    synchronized (this) {
+    try {
+      modulesLock.lock();
       retval = modulesByClass.get(clazz);
       if (retval == null) {
         retval = AbstractBoundModule.createInstance(clazz, getBindingContext());
         modulesByClass.put(clazz, retval);
       }
+    } finally {
+      modulesLock.unlock();
     }
     return ObjectUtils.notNull(retval);
   }
@@ -54,7 +61,8 @@ public class SimpleModuleLoaderStrategy implements IBindingContext.IModuleLoader
   @Override
   public IBoundDefinitionModelComplex getBoundDefinitionForClass(@NonNull Class<? extends IBoundObject> clazz) {
     IBoundDefinitionModelComplex retval;
-    synchronized (this) {
+    try {
+      definitionsLock.lock();
       retval = definitionsByClass.get(clazz);
       if (retval == null) {
         retval = newBoundDefinition(clazz);
@@ -62,6 +70,8 @@ public class SimpleModuleLoaderStrategy implements IBindingContext.IModuleLoader
           definitionsByClass.put(clazz, retval);
         }
       }
+    } finally {
+      definitionsLock.unlock();
     }
     return retval;
   }

@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
 import gov.nist.secauto.metaschema.databind.model.impl.DefaultGroupAs;
@@ -171,6 +170,8 @@ public final class ModelUtil {
    * @param bindingContext
    *          the Metaschema binding context used to lookup the data type adapter
    * @return the data type adapter
+   * @throws IllegalArgumentException
+   *           if the provided adapter is not registered with the binding context
    */
   @NonNull
   public static IDataTypeAdapter<?> getDataTypeAdapter(
@@ -180,7 +181,10 @@ public final class ModelUtil {
     if (NullJavaTypeAdapter.class.equals(adapterClass)) {
       retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;
     } else {
-      retval = ObjectUtils.requireNonNull(bindingContext.getJavaTypeAdapterInstance(adapterClass));
+      retval = bindingContext.getJavaTypeAdapterInstance(adapterClass);
+      if (retval == null) {
+        throw new IllegalArgumentException("Unable to get type adapter instance for class: " + adapterClass.getName());
+      }
     }
     return retval;
   }

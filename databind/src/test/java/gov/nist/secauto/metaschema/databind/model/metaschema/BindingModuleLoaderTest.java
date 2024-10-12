@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ class BindingModuleLoaderTest {
     BindingModuleLoader loader = new BindingModuleLoader(new DefaultBindingContext());
     loader.allowEntityResolution();
 
-    loader.load(Paths.get("src/test/resources/test-content/legacy-metaschema-data-types-module.xml"));
+    loader.load(ObjectUtils.notNull(
+        Paths.get("src/test/resources/test-content/legacy-metaschema-data-types-module.xml")));
   }
 }

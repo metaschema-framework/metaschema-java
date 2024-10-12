@@ -123,6 +123,8 @@ class AssemblyModelContainerSupport
     IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(
         modelInstance.getDefinition().getChoiceGroupInstanceByName("instances"));
     for (Object obj : ObjectUtils.notNull(model.getInstances())) {
+      assert obj != null;
+
       IBoundInstanceModelGroupedAssembly objInstance
           = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
 

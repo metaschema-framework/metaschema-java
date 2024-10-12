@@ -35,6 +35,7 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHandler {
   @NonNull
   private final JsonGenerator generator;
@@ -96,6 +97,7 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
     }
   }
 
+  @SuppressWarnings("PMD.NullAssignment")
   private void writeFieldValue(@NonNull IBoundFieldValue fieldValue, @NonNull Object parentItem) throws IOException {
     Object item = fieldValue.getValue(parentItem);
 

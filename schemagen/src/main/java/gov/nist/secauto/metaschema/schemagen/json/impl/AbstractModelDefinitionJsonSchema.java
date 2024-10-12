@@ -60,7 +60,7 @@ public abstract class AbstractModelDefinitionJsonSchema<D extends IModelDefiniti
                 jsonKeyFlagName,
                 definition.getName()));
       }
-      flagStream = flagStream.filter(instance -> instance != jsonKeyFlag);
+      flagStream = flagStream.filter(instance -> !jsonKeyFlag.equals(instance));
     }
 
     this.flagProperties = ObjectUtils.notNull(flagStream
@@ -169,6 +169,7 @@ public abstract class AbstractModelDefinitionJsonSchema<D extends IModelDefiniti
       return Objects.hash(definition, jsonKeyFlagName, discriminatorProperty, discriminatorValue);
     }
 
+    @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
       if (this == obj) {

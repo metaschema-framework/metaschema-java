@@ -131,6 +131,7 @@ public interface IDefineableJsonSchema {
     generateInlineSchema(definitionObj, state);
   }
 
+  @SuppressWarnings("PMD.ShortClassName")
   interface IKey extends Comparable<IKey> {
     Comparator<IKey> KEY_COMPARATOR = Comparator
         .<IKey, String>comparing(key -> key.getDefinition().getContainingModule().getShortName())
@@ -139,11 +140,13 @@ public interface IDefineableJsonSchema {
         .thenComparing(IKey::getDiscriminatorProperty, Comparator.nullsFirst(Comparator.naturalOrder()))
         .thenComparing(IKey::getDiscriminatorValue, Comparator.nullsFirst(Comparator.naturalOrder()));
 
+    @SuppressWarnings("PMD.ShortMethodName")
     @NonNull
     static IKey of(@NonNull IDefinition definition) {
       return new SimpleKey(definition);
     }
 
+    @SuppressWarnings("PMD.ShortMethodName")
     @NonNull
     static IKey of(
         @NonNull IDefinition definition,

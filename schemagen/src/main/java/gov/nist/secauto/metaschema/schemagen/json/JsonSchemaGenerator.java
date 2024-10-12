@@ -17,6 +17,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractSchemaGenerator;
+import gov.nist.secauto.metaschema.schemagen.ModuleIndex.DefinitionEntry;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import gov.nist.secauto.metaschema.schemagen.json.IDefineableJsonSchema.IKey;
@@ -92,7 +93,7 @@ public class JsonSchemaGenerator
       }
 
       List<IAssemblyDefinition> rootAssemblyDefinitions = state.getMetaschemaIndex().getDefinitions().stream()
-          .map(entry -> entry.getDefinition())
+          .map(DefinitionEntry::getDefinition)
           .filter(
               definition -> definition instanceof IAssemblyDefinition && ((IAssemblyDefinition) definition).isRoot())
           .map(definition -> (IAssemblyDefinition) definition)

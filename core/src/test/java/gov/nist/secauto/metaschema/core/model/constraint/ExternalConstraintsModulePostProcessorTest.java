@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
-import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.model.xml.XmlMetaConstraintLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -28,10 +27,12 @@ class ExternalConstraintsModulePostProcessorTest {
   @Test
   void test() throws MetaschemaException, IOException {
 
-    IModule module = new ModuleLoader().load(Paths.get("src/test/resources/content/issue184-metaschema.xml"));
+    IModule module = new ModuleLoader().load(ObjectUtils.notNull(
+        Paths.get("src/test/resources/content/issue184-metaschema.xml")));
 
     List<IConstraintSet> constraints
-        = new XmlMetaConstraintLoader().load(Paths.get("src/test/resources/content/issue184-constraints.xml"));
+        = new XmlMetaConstraintLoader().load(ObjectUtils.notNull(
+            Paths.get("src/test/resources/content/issue184-constraints.xml")));
 
     new ExternalConstraintsModulePostProcessor(constraints).processModule(module);
 

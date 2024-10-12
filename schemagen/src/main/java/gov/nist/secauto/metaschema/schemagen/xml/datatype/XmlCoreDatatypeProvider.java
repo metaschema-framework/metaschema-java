@@ -44,22 +44,23 @@ public class XmlCoreDatatypeProvider
   private static List<String> analyzeDependencies(@NonNull Element element) {
     XPathExpression<Attribute> xpath = XPathFactory.instance().compile(".//@base", Filters.attribute());
     return ObjectUtils.notNull(xpath.evaluate(element).stream()
-        .map(attr -> attr.getValue())
+        .map(Attribute::getValue)
         .filter(type -> !type.startsWith("xs:"))
         .distinct()
         .collect(Collectors.toList()));
   }
 
   @Override
-  protected @NonNull Map<String, IDatatypeContent> handleResults(
+  @NonNull
+  protected Map<String, IDatatypeContent> handleResults(
       @NonNull List<Element> items) {
     return ObjectUtils.notNull(items.stream()
-        .map(element -> {
-          return (IDatatypeContent) new JDom2DatatypeContent(
-              ObjectUtils.requireNonNull(element.getAttributeValue("name")),
-              CollectionUtil.singletonList(element),
-              analyzeDependencies(element));
-        }).collect(Collectors.toMap(content -> content.getTypeName(), Function.identity(), (e1, e2) -> e2,
+        .map(element -> new JDom2DatatypeContent(
+            ObjectUtils.requireNonNull(element.getAttributeValue("name")),
+            CollectionUtil.singletonList(element),
+            analyzeDependencies(element)))
+        .collect(Collectors.toMap((Function<? super IDatatypeContent, ? extends String>) IDatatypeContent::getTypeName,
+            Function.identity(), (e1, e2) -> e2,
             LinkedHashMap::new)));
   }
 }

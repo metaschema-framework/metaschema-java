@@ -5,6 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.util;
 
+import org.eclipse.jdt.annotation.Owning;
+
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -17,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *          the exception type that may be thrown if an error occurs when
  *          closing the resource
  */
-public class AutoCloser<T, E extends Exception> implements AutoCloseable {
+public final class AutoCloser<T, E extends Exception> implements AutoCloseable {
   @NonNull
   private final T resource;
   @NonNull
@@ -37,6 +43,7 @@ public class AutoCloser<T, E extends Exception> implements AutoCloseable {
    *          the lambda to use as a callback on close
    * @return the resource wrapped in an {@link AutoCloseable}
    */
+  @Owning
   @NonNull
   public static <T, E extends Exception> AutoCloser<T, E> autoClose(
       @NonNull T resource,
@@ -53,7 +60,7 @@ public class AutoCloser<T, E extends Exception> implements AutoCloseable {
    * @param lambda
    *          the lambda to use as a callback on close
    */
-  public AutoCloser(@NonNull T resource, @NonNull Closer<T, E> lambda) {
+  private AutoCloser(@NonNull T resource, @NonNull Closer<T, E> lambda) {
     this.resource = resource;
     this.closeLambda = lambda;
   }
@@ -86,5 +93,35 @@ public class AutoCloser<T, E extends Exception> implements AutoCloseable {
      */
     @SuppressFBWarnings("THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION")
     void close(@NonNull T object) throws E;
+  }
+
+  /**
+   * Wraps the provided output stream to prevent the wrapped stream from being
+   * closed.
+   * <p>
+   * This is useful for protecting standard streams. i.e. {@link System#out},
+   * {@link System#err}.
+   *
+   * @param out
+   *          the stream to wrap
+   * @return the new wrapped stream
+   */
+  @Owning
+  @NonNull
+  public static OutputStream preventClose(OutputStream out) {
+    return new ClosePreventingOutputStream(out);
+  }
+
+  private static class ClosePreventingOutputStream
+      extends FilterOutputStream {
+
+    public ClosePreventingOutputStream(OutputStream out) {
+      super(out);
+    }
+
+    @Override
+    public void close() throws IOException {
+      // do nothing
+    }
   }
 }

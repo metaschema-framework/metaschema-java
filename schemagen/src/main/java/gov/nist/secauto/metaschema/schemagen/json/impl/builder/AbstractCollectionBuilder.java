@@ -17,6 +17,7 @@ import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
 import gov.nist.secauto.metaschema.schemagen.json.IDefineableJsonSchema.IKey;
 import gov.nist.secauto.metaschema.schemagen.json.IDefinitionJsonSchema;
@@ -108,6 +109,7 @@ public abstract class AbstractCollectionBuilder<T extends AbstractCollectionBuil
     }
   }
 
+  @SuppressWarnings("PMD.ShortClassName")
   private abstract static class Type<T extends INamedModelInstance> implements IModelInstanceBuilder.IType {
     @NonNull
     private final T namedModelInstance;
@@ -188,7 +190,7 @@ public abstract class AbstractCollectionBuilder<T extends AbstractCollectionBuil
     public void build(
         @NonNull ArrayNode anyOf,
         @NonNull IJsonGenerationState state) {
-      build(anyOf.addObject(), state);
+      build(ObjectUtils.notNull(anyOf.addObject()), state);
     }
 
     @Override

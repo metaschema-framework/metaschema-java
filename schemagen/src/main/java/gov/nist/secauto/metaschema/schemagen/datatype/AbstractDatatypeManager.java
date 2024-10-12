@@ -8,11 +8,11 @@ package gov.nist.secauto.metaschema.schemagen.datatype;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -48,7 +48,7 @@ public abstract class AbstractDatatypeManager implements IDatatypeManager {
   }
 
   @NonNull
-  private final Map<IDataTypeAdapter<?>, String> datatypeToTypeMap = new HashMap<>(); // NOPMD - intentional
+  private final Map<IDataTypeAdapter<?>, String> datatypeToTypeMap = new ConcurrentHashMap<>(); // NOPMD - intentional
 
   @SuppressWarnings("null")
   @NonNull
@@ -65,13 +65,8 @@ public abstract class AbstractDatatypeManager implements IDatatypeManager {
   @Override
   @NonNull
   public String getTypeNameForDatatype(@NonNull IDataTypeAdapter<?> datatype) {
-    synchronized (this) {
-      String name = datatypeToTypeMap.get(datatype);
-      if (name == null) {
-        name = getDatatypeTranslationMap().get(datatype.getPreferredName().getLocalPart());
-        datatypeToTypeMap.put(datatype, name);
-      }
-      return name;
-    }
+    return datatypeToTypeMap.computeIfAbsent(
+        datatype,
+        key -> getDatatypeTranslationMap().get(key.getPreferredName().getLocalPart()));
   }
 }

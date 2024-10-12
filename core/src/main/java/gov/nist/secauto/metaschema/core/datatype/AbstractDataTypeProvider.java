@@ -11,7 +11,8 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -26,15 +27,16 @@ public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
   @NonNull
   private final List<IDataTypeAdapter<?>> library = new LinkedList<>();
   @NonNull
-  protected final Lock instanceLock = new ReentrantLock();
+  private final ReadWriteLock libraryLock = new ReentrantReadWriteLock();
 
   @Override
   public List<? extends IDataTypeAdapter<?>> getJavaTypeAdapters() {
+    Lock readLock = libraryLock.readLock();
     try {
-      instanceLock.lock();
+      readLock.lock();
       return CollectionUtil.unmodifiableList(library);
     } finally {
-      instanceLock.unlock();
+      readLock.unlock();
     }
   }
 
@@ -50,11 +52,12 @@ public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
     if (adapter.getNames().isEmpty()) {
       throw new IllegalArgumentException("The adapter has no name: " + adapter.getClass().getName());
     }
+    Lock writeLock = libraryLock.writeLock();
     try {
-      instanceLock.lock();
+      writeLock.lock();
       library.add(adapter);
     } finally {
-      instanceLock.unlock();
+      writeLock.unlock();
     }
   }
 }

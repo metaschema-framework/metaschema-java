@@ -114,7 +114,7 @@ public class GenerateSchemaCommand
           String.format("Invalid '%s' argument. The format must be one of: %s.",
               OptionUtils.toArgument(AS_OPTION),
               Arrays.asList(Format.values()).stream()
-                  .map(format -> format.name())
+                  .map(Enum::name)
                   .collect(CustomCollectors.joiningWithOxfordComma("and"))));
       newEx.setOption(AS_OPTION);
       newEx.addSuppressed(ex);

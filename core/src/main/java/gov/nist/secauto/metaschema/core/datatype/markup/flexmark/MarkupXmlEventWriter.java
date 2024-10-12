@@ -31,7 +31,7 @@ public class MarkupXmlEventWriter
     extends AbstractMarkupWriter<XMLEventWriter, XMLStreamException> {
 
   @NonNull
-  protected final XMLEventFactory2 eventFactory;
+  private final XMLEventFactory2 eventFactory;
 
   /**
    * Construct a new event writer.
@@ -78,7 +78,7 @@ public class MarkupXmlEventWriter
       attrs = CollectionUtil.emptyList();
     } else {
       attrs = ObjectUtils.notNull(attributes.entrySet().stream()
-          .map((entry) -> eventFactory.createAttribute(entry.getKey(), entry.getValue()))
+          .map(entry -> eventFactory.createAttribute(entry.getKey(), entry.getValue()))
           .collect(Collectors.toList()));
     }
     return attrs;

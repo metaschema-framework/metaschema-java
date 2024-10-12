@@ -37,7 +37,7 @@ public class XmlProseCompositDatatypeProvider
     if (!result.isEmpty()) {
       // apply core markup types
       Collection<IDatatypeContent> datatypes = proseBaseProvider.getDatatypes().values();
-      Set<String> proseBaseTypes = datatypes.stream().map(content -> content.getTypeName()).collect(Collectors.toSet());
+      Set<String> proseBaseTypes = datatypes.stream().map(IDatatypeContent::getTypeName).collect(Collectors.toSet());
       proseBaseProvider.generateDatatypes(proseBaseTypes, writer);
     }
     return result;

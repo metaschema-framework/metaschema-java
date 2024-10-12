@@ -149,7 +149,7 @@ public abstract class AbstractValidateContentCommand
             String.format("Invalid '%s' argument. The format must be one of: %s.",
                 OptionUtils.toArgument(AS_OPTION),
                 Arrays.asList(Format.values()).stream()
-                    .map(format -> format.name())
+                    .map(Enum::name)
                     .collect(CustomCollectors.joiningWithOxfordComma("and"))));
         newEx.addSuppressed(ex);
         throw newEx;
@@ -246,7 +246,7 @@ public abstract class AbstractValidateContentCommand
           return ExitCode.IO_ERROR
               .exitMessage("Invalid '--as' argument. The format must be one of: "
                   + Arrays.stream(Format.values())
-                      .map(format -> format.name())
+                      .map(Enum::name)
                       .collect(CustomCollectors.joiningWithOxfordComma("or")))
               .withThrowable(ex);
         }
@@ -263,7 +263,7 @@ public abstract class AbstractValidateContentCommand
           return ExitCode.IO_ERROR.exitMessage(
               "Source file has unrecognizable format. Use '--as' to specify the format. The format must be one of: "
                   + Arrays.stream(Format.values())
-                      .map(format -> format.name())
+                      .map(Enum::name)
                       .collect(CustomCollectors.joiningWithOxfordComma("or")));
         }
       }
@@ -317,7 +317,7 @@ public abstract class AbstractValidateContentCommand
           return ExitCode.IO_ERROR.exit().withThrowable(ex);
         }
       } else if (validationResult != null && !validationResult.getFindings().isEmpty()) {
-        LOGGER.info("Validation identified the following issues:", source);
+        LOGGER.info("Validation identified the following issues:");
         LoggingValidationHandler.instance().handleValidationResults(validationResult);
       }
 

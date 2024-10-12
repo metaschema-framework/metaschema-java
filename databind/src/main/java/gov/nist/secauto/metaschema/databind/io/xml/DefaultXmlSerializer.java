@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 import com.ctc.wstx.api.WstxOutputProperties;
 import com.ctc.wstx.stax.WstxOutputFactory;
 
+import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.AbstractSerializer;
@@ -24,10 +25,11 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 public class DefaultXmlSerializer<CLASS extends IBoundObject>
     extends AbstractSerializer<CLASS> {
-  private XMLOutputFactory2 xmlOutputFactory;
+  private Lazy<XMLOutputFactory2> factory;
 
   /**
    * Construct a new XML serializer based on the top-level assembly indicated by
@@ -39,6 +41,35 @@ public class DefaultXmlSerializer<CLASS extends IBoundObject>
    */
   public DefaultXmlSerializer(@NonNull IBoundDefinitionModelAssembly definition) {
     super(definition);
+    resetFactory();
+  }
+
+  protected final void resetFactory() {
+    this.factory = Lazy.lazy(this::newFactoryInstance);
+  }
+
+  @Override
+  protected void configurationChanged(IMutableConfiguration<SerializationFeature<?>> config) {
+    super.configurationChanged(config);
+    resetFactory();
+  }
+
+  /**
+   * Get a JSON factory instance.
+   * <p>
+   * This method can be used by sub-classes to create a customized factory
+   * instance.
+   *
+   * @return the factory
+   */
+  @NonNull
+  protected XMLOutputFactory2 newFactoryInstance() {
+    XMLOutputFactory2 retval = (XMLOutputFactory2) XMLOutputFactory.newInstance();
+    assert retval instanceof WstxOutputFactory;
+    retval.configureForSpeed();
+    retval.setProperty(WstxOutputProperties.P_USE_DOUBLE_QUOTES_IN_XML_DECL, true);
+    retval.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
+    return retval;
   }
 
   /**
@@ -49,30 +80,7 @@ public class DefaultXmlSerializer<CLASS extends IBoundObject>
    */
   @NonNull
   protected final XMLOutputFactory2 getXMLOutputFactory() {
-    synchronized (this) {
-      if (xmlOutputFactory == null) {
-        xmlOutputFactory = (XMLOutputFactory2) XMLOutputFactory.newInstance();
-        assert xmlOutputFactory instanceof WstxOutputFactory;
-        xmlOutputFactory.configureForSpeed();
-        xmlOutputFactory.setProperty(WstxOutputProperties.P_USE_DOUBLE_QUOTES_IN_XML_DECL, true);
-        xmlOutputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
-      }
-      assert xmlOutputFactory != null;
-      return xmlOutputFactory;
-    }
-  }
-
-  /**
-   * Override the default {@link XMLOutputFactory2} instance with a custom
-   * factory.
-   *
-   * @param xmlOutputFactory
-   *          the new factory
-   */
-  protected void setXMLOutputFactory(@NonNull XMLOutputFactory2 xmlOutputFactory) {
-    synchronized (this) {
-      this.xmlOutputFactory = xmlOutputFactory;
-    }
+    return ObjectUtils.notNull(factory.get());
   }
 
   /**

@@ -31,7 +31,7 @@ public interface ICommand {
 
   default int requiredExtraArgumentsCount() {
     return (int) getExtraArguments().stream()
-        .filter(arg -> arg.isRequired())
+        .filter(ExtraArgument::isRequired)
         .count();
   }
 

@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public interface IItemWriter {
+public interface IItemWriter extends AutoCloseable {
   /**
    * Write the provided sequence instance.
    *

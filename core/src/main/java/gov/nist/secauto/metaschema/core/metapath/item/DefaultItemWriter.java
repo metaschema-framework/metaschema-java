@@ -12,6 +12,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
+import org.eclipse.jdt.annotation.Owning;
+
 import java.io.PrintWriter;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -21,6 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class DefaultItemWriter implements IItemWriter {
 
+  @Owning
   @NonNull
   private final PrintWriter writer;
   @NonNull
@@ -119,6 +122,11 @@ public class DefaultItemWriter implements IItemWriter {
     } else if (value instanceof ISequence) {
       writeSequence((ISequence<?>) value);
     }
+  }
+
+  @Override
+  public void close() throws Exception {
+    writer.close();
   }
 
   private final class Visitor implements IItemVisitor {

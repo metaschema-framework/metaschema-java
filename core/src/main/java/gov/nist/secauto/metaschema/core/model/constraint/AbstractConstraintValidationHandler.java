@@ -248,7 +248,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
   @NonNull
   protected String newExpectViolationMessage(
       @NonNull IExpectConstraint constraint,
-      @SuppressWarnings("unused") @NonNull INodeItem node,
+      @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull DynamicContext dynamicContext) {
     String message;

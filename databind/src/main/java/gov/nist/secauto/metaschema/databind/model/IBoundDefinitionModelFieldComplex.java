@@ -89,6 +89,7 @@ public interface IBoundDefinitionModelFieldComplex
     return getFieldValue().getJavaTypeAdapter();
   }
 
+  @SuppressWarnings("PMD.NullAssignment")
   @Override
   @NonNull
   default Map<String, IBoundProperty<?>> getJsonProperties(@Nullable Predicate<IBoundInstanceFlag> flagFilter) {

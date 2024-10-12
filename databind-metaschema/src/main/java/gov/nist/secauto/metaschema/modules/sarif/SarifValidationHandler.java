@@ -55,6 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class SarifValidationHandler {
   private enum Kind {
     NOT_APPLICABLE("notApplicable"),
@@ -100,13 +101,13 @@ public final class SarifValidationHandler {
   public static final String SARIF_NS = "https://docs.oasis-open.org/sarif/sarif/v2.1.0";
   @NonNull
   public static final IAttributable.Key SARIF_HELP_URL_KEY
-      = IAttributable.key("help-url", SarifValidationHandler.SARIF_NS);
+      = IAttributable.key("help-url", SARIF_NS);
   @NonNull
   public static final IAttributable.Key SARIF_HELP_TEXT_KEY
-      = IAttributable.key("help-text", SarifValidationHandler.SARIF_NS);
+      = IAttributable.key("help-text", SARIF_NS);
   @NonNull
   public static final IAttributable.Key SARIF_HELP_MARKDOWN_KEY
-      = IAttributable.key("help-markdown", SarifValidationHandler.SARIF_NS);
+      = IAttributable.key("help-markdown", SARIF_NS);
 
   @NonNull
   private final URI source;
@@ -114,10 +115,13 @@ public final class SarifValidationHandler {
   private final IVersionInfo toolVersion;
   private final AtomicInteger artifactIndex = new AtomicInteger(-1);
   private final AtomicInteger ruleIndex = new AtomicInteger(-1);
+
+  @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
   private final Map<URI, ArtifactRecord> artifacts = new LinkedHashMap<>();
   @NonNull
   private final List<AbstractRuleRecord> rules = new LinkedList<>();
+  @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
   private final Map<IConstraint, ConstraintRuleRecord> constraintRules = new LinkedHashMap<>();
   @NonNull
@@ -137,7 +141,8 @@ public final class SarifValidationHandler {
     this.toolVersion = toolVersion;
   }
 
-  public URI getSource() {
+  @NonNull
+  private URI getSource() {
     return source;
   }
 
@@ -161,14 +166,6 @@ public final class SarifValidationHandler {
       addConstraintValidationFinding((ConstraintValidationFinding) finding);
     } else {
       throw new IllegalStateException();
-    }
-  }
-
-  public URI relativize(@NonNull URI output, @NonNull URI artifact) throws IOException {
-    try {
-      return UriUtils.relativize(output, artifact, true);
-    } catch (URISyntaxException ex) {
-      throw new IOException(ex);
     }
   }
 
@@ -222,7 +219,7 @@ public final class SarifValidationHandler {
 
     Artifact artifact = new Artifact();
 
-    artifact.setLocation(getArtifactRecord(source).generateArtifactLocation(output));
+    artifact.setLocation(getArtifactRecord(getSource()).generateArtifactLocation(output));
 
     run.addArtifact(artifact);
 
@@ -230,11 +227,11 @@ public final class SarifValidationHandler {
       result.generateResults(output).forEach(run::addResult);
     }
 
+    IVersionInfo toolVersion = getToolVersion();
     if (!rules.isEmpty() || toolVersion != null) {
       Tool tool = new Tool();
       ToolComponent driver = new ToolComponent();
 
-      IVersionInfo toolVersion = getToolVersion();
       if (toolVersion != null) {
         driver.setName(toolVersion.getName());
         driver.setVersion(toolVersion.getVersion());
@@ -428,7 +425,7 @@ public final class SarifValidationHandler {
         assert constraint != null;
         ConstraintRuleRecord rule = getRuleRecord(constraint);
 
-        Result result = new Result();
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") Result result = new Result();
 
         String id = constraint.getId();
         if (id != null) {
@@ -579,7 +576,13 @@ public final class SarifValidationHandler {
 
     public ArtifactLocation generateArtifactLocation(@NonNull URI baseUri) throws IOException {
       ArtifactLocation location = new ArtifactLocation();
-      location.setUri(relativize(baseUri, getUri()));
+
+      try {
+        location.setUri(UriUtils.relativize(baseUri, getUri(), true));
+      } catch (URISyntaxException ex) {
+        throw new IOException(ex);
+      }
+
       location.setIndex(BigInteger.valueOf(getIndex()));
       return location;
     }

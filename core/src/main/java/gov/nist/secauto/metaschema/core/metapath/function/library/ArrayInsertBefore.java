@@ -23,7 +23,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class ArrayInsertBefore {
+  @NonNull
   private static final String NAME = "insert-before";
+  // CPD-OFF
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name(NAME)
@@ -50,6 +52,7 @@ public final class ArrayInsertBefore {
       .returnOne()
       .functionHandler(ArrayInsertBefore::execute)
       .build();
+  // CPD-ON
 
   private ArrayInsertBefore() {
     // disable construction

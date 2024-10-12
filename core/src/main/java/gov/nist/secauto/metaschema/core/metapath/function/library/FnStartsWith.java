@@ -20,6 +20,8 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class FnStartsWith {
+  // CPD-OFF
+  @NonNull
   private static final String NAME = "starts-with";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
@@ -41,6 +43,7 @@ public final class FnStartsWith {
       .returnOne()
       .functionHandler(FnStartsWith::execute)
       .build();
+  // CPD-ON
 
   @SuppressWarnings("unused")
   @NonNull

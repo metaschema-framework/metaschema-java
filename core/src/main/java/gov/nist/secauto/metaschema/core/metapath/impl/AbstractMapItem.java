@@ -48,8 +48,8 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
   /**
    * Get an immutable map item that is empty.
    *
-   * @param <T>
-   *          the item Java type
+   * @param <V>
+   *          the Java type of the collection value
    * @return the empty map item
    */
 

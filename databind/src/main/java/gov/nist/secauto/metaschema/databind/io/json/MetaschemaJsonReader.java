@@ -39,6 +39,7 @@ import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionI
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.annotation.NotOwning;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -103,6 +104,7 @@ public class MetaschemaJsonReader
   }
 
   @SuppressWarnings("resource")
+  @NotOwning
   @Override
   public JsonParser getReader() {
     return ObjectUtils.notNull(parserStack.peek());
@@ -230,7 +232,7 @@ public class MetaschemaJsonReader
     return instance.readItem(parent, this);
   }
 
-  @NonNull
+  @Nullable
   private <T> Object readModelInstance(
       @NonNull IBoundInstanceModel<T> instance,
       @NonNull IBoundObject parent) throws IOException {
@@ -245,6 +247,7 @@ public class MetaschemaJsonReader
     return instance.readItem(parent, this);
   }
 
+  @Nullable
   private Object readObjectProperty(
       @NonNull IBoundObject parent,
       @NonNull IBoundProperty<?> property) throws IOException {
@@ -405,7 +408,7 @@ public class MetaschemaJsonReader
         ? bodyHandler
         : new JsonKeyBodyHandler(jsonKey, bodyHandler);
 
-    JsonLocation location = getReader().currentLocation();
+    @SuppressWarnings("resource") JsonLocation location = getReader().currentLocation();
 
     // construct the item
     IBoundObject item = definition.newInstance(
@@ -546,7 +549,9 @@ public class MetaschemaJsonReader
           parser.nextToken();
 
           Object value = readObjectProperty(parent, property);
-          property.setValue(parent, value);
+          if (value != null) {
+            property.setValue(parent, value);
+          }
 
           // mark handled
           remainingInstances.remove(propertyName);

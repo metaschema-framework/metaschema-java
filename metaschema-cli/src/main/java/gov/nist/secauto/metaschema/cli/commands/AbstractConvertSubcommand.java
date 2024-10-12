@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
@@ -44,6 +45,9 @@ import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Used by implementing classes to declare a content conversion command.
+ */
 public abstract class AbstractConvertSubcommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(AbstractConvertSubcommand.class);
@@ -111,6 +115,10 @@ public abstract class AbstractConvertSubcommand
     }
   }
 
+  /**
+   * Used by implementing classes to provide for execution of a conversion
+   * command.
+   */
   protected abstract static class AbstractConversionCommandExecutor
       extends AbstractCommandExecutor {
 
@@ -211,8 +219,10 @@ public abstract class AbstractConvertSubcommand
 
         if (destination == null) {
           // write to STDOUT
-          OutputStreamWriter writer = new OutputStreamWriter(System.out, StandardCharsets.UTF_8);
-          handleConversion(source, toFormat, writer, loader);
+          try (OutputStreamWriter writer
+              = new OutputStreamWriter(AutoCloser.preventClose(System.out), StandardCharsets.UTF_8)) {
+            handleConversion(source, toFormat, writer, loader);
+          }
         } else {
           try (Writer writer = Files.newBufferedWriter(
               destination,

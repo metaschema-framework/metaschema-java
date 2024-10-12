@@ -5,7 +5,10 @@
 
 package gov.nist.secauto.metaschema.databind.codegen;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -27,7 +30,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLo
 import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -99,53 +101,53 @@ class BasicMetaschemaTest
         ObjectUtils.notNull(generationDir),
         obj -> {
           try {
-            Assertions.assertEquals("test", reflectMethod(obj, "getId"));
+            assertEquals("test", reflectMethod(obj, "getId"));
             Object field1 = ReflectionUtils.invokeMethod(obj.getClass().getMethod("getComplexField1"), obj);
-            Assertions.assertNotNull(field1);
-            Assertions.assertEquals("complex-field1", reflectMethod(field1, "getId"));
-            Assertions.assertEquals("test-string", reflectMethod(field1, "getValue"));
+            assertNotNull(field1);
+            assertEquals("complex-field1", reflectMethod(field1, "getId"));
+            assertEquals("test-string", reflectMethod(field1, "getValue"));
 
             @SuppressWarnings("unchecked") List<Object> field2s
                 = (List<Object>) ReflectionUtils.invokeMethod(obj.getClass().getMethod("getComplexFields2"),
                     obj);
-            Assertions.assertNotNull(field2s);
-            Assertions.assertEquals(1, field2s.size());
+            assertNotNull(field2s);
+            assertEquals(1, field2s.size());
             Object field2 = field2s.get(0);
-            Assertions.assertEquals("complex-field2-1", reflectMethod(field2, "getId"));
-            Assertions.assertEquals("test-string2", reflectMethod(field2, "getValue"));
+            assertEquals("complex-field2-1", reflectMethod(field2, "getId"));
+            assertEquals("test-string2", reflectMethod(field2, "getValue"));
 
             @SuppressWarnings("unchecked") List<Object> field3s
                 = (List<Object>) ReflectionUtils.invokeMethod(obj.getClass().getMethod("getComplexFields3"),
                     obj);
-            Assertions.assertEquals(2, field3s.size());
-            Assertions.assertAll("ComplexFields4 item", () -> {
+            assertEquals(2, field3s.size());
+            assertAll("ComplexFields4 item", () -> {
               Object item = field3s.get(0);
               assertEquals("complex-field3-1", reflectMethod(item, "getId2"));
               assertEquals("test-string3", reflectMethod(item, "getValue"));
             });
-            Assertions.assertAll("ComplexFields4 item", () -> {
+            assertAll("ComplexFields4 item", () -> {
               Object item = field3s.get(1);
               assertEquals("complex-field3-2", reflectMethod(item, "getId2"));
               assertEquals("test-string4", reflectMethod(item, "getValue"));
             });
 
-            Assertions.assertAll("ComplexFields4", () -> {
+            assertAll("ComplexFields4", () -> {
               @SuppressWarnings("unchecked") Map<String, Object> collection
                   = (Map<String, Object>) ReflectionUtils.invokeMethod(obj.getClass().getMethod("getComplexFields4"),
                       obj);
-              Assertions.assertNotNull(collection);
-              Assertions.assertEquals(2, collection.size());
+              assertNotNull(collection, "ComplexFields4 collection is null");
+              assertEquals(2, collection.size(), "ComplexFields4 collection is not size 2");
               Set<Map.Entry<String, Object>> entries = collection.entrySet();
               Iterator<Map.Entry<String, Object>> iter = entries.iterator();
 
-              Assertions.assertAll("ComplexFields4 item", () -> {
+              assertAll("ComplexFields4 item", () -> {
                 Map.Entry<String, Object> entry = iter.next();
                 assertEquals("complex-field4-1", entry.getKey());
                 assertEquals("complex-field4-1", reflectMethod(entry.getValue(), "getId2"));
                 assertEquals("test-string5", reflectMethod(entry.getValue(), "getValue"));
               });
 
-              Assertions.assertAll("ComplexFields4 item", () -> {
+              assertAll("ComplexFields4 item", () -> {
                 Map.Entry<String, Object> entry = iter.next();
                 assertEquals("complex-field4-2", entry.getKey());
                 assertEquals("complex-field4-2", reflectMethod(entry.getValue(), "getId2"));
@@ -153,7 +155,7 @@ class BasicMetaschemaTest
               });
             });
           } catch (NoSuchMethodException | SecurityException e) {
-            Assertions.fail(e);
+            fail(e);
           }
         });
   }
@@ -167,9 +169,9 @@ class BasicMetaschemaTest
         ObjectUtils.notNull(generationDir),
         obj -> {
           try {
-            Assertions.assertEquals("test", reflectMethod(obj, "getId"));
+            assertEquals("test", reflectMethod(obj, "getId"));
           } catch (NoSuchMethodException | SecurityException e) {
-            Assertions.fail(e);
+            fail(e);
           }
         });
   }
@@ -240,8 +242,8 @@ class BasicMetaschemaTest
     {
       BindingConstraintLoader constraintLoader = new BindingConstraintLoader(new DefaultBindingContext());
 
-      constraints = constraintLoader.load(
-          Paths.get("../core/metaschema/schema/metaschema/metaschema-module-constraints.xml"));
+      constraints = constraintLoader.load(ObjectUtils.notNull(
+          Paths.get("../core/metaschema/schema/metaschema/metaschema-module-constraints.xml")));
     }
 
     IBindingContext bindingContext = new DefaultBindingContext(
@@ -249,9 +251,10 @@ class BasicMetaschemaTest
     BindingModuleLoader loader = new BindingModuleLoader(bindingContext);
 
     IBindingMetaschemaModule module
-        = loader.load(Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml"));
+        = loader.load(ObjectUtils.notNull(
+            Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml")));
 
-    Path compilePath = Paths.get("target/compile");
+    Path compilePath = ObjectUtils.notNull(Paths.get("target/compile"));
     Files.createDirectories(compilePath);
 
     ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(
@@ -270,7 +273,8 @@ class BasicMetaschemaTest
         .forEachOrdered(clazz -> {
           IBoundModule boundModule = bindingContext.registerModule(ObjectUtils.notNull(clazz));
           // force the binding matchers to load
-          boundModule.getRootAssemblyDefinitions();
+          assertFalse(boundModule.getRootAssemblyDefinitions().isEmpty());
         });
+
   }
 }

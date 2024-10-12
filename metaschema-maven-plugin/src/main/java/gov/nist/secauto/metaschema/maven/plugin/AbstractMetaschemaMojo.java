@@ -39,7 +39,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public abstract class AbstractMetaschemaMojo
     extends AbstractMojo {
-  private static final String SYSTEM_FILE_ENCODING_PROPERTY = "file.encoding";
   private static final String[] DEFAULT_INCLUDES = { "**/*.xml" };
 
   /**

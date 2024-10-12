@@ -20,8 +20,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Manages the exit code of a command line process.
+ * <p>
  * Logging solution based on
- * https://stackoverflow.com/questions/24205093/how-to-create-a-custom-appender-in-log4j2
+ * https://stackoverflow.com/questions/24205093/how-to-create-a-custom-appender-in-log4j2.
  */
 class ExitCodeTest {
   private static MockedAppender mockedAppender;

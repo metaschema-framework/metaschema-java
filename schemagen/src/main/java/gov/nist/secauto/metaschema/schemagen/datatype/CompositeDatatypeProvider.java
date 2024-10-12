@@ -40,7 +40,10 @@ public class CompositeDatatypeProvider implements IDatatypeProvider {
   public Map<String, IDatatypeContent> getDatatypes() {
     return ObjectUtils.notNull(proxiedProviders.stream()
         .flatMap(provider -> provider.getDatatypes().values().stream())
-        .collect(Collectors.toMap(content -> content.getTypeName(), Function.identity(), (e1, e2) -> e2,
+        .collect(Collectors.toMap(
+            IDatatypeContent::getTypeName,
+            Function.identity(),
+            (e1, e2) -> e2,
             LinkedHashMap::new)));
   }
 

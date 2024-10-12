@@ -35,20 +35,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 class DefaultTypeResolver implements ITypeResolver {
   private static final Logger LOGGER = LogManager.getLogger(DefaultTypeResolver.class);
 
   private final Map<String, Set<String>> packageToClassNamesMap = new ConcurrentHashMap<>();
+  private final Lock classNameLock = new ReentrantLock();
+
   private final Map<IModelDefinition, ClassName> definitionToTypeMap = new ConcurrentHashMap<>();
   private final Map<IModule, ClassName> moduleToTypeMap = new ConcurrentHashMap<>();
   private final Map<IAssemblyDefinition, IAssemblyDefinitionTypeInfo> assemblyDefinitionToTypeInfoMap
       = new ConcurrentHashMap<>();
   private final Map<IFieldDefinition, IFieldDefinitionTypeInfo> fieldDefinitionToTypeInfoMap
       = new ConcurrentHashMap<>();
+
+  private final Lock propertyNameLock = new ReentrantLock();
   private final Map<IDefinitionTypeInfo, Set<String>> typeInfoToPropertyNameMap = new ConcurrentHashMap<>();
 
   @NonNull
@@ -186,27 +193,47 @@ class DefaultTypeResolver implements ITypeResolver {
           String className = getBindingConfiguration().getClassName(mod);
           String classNameBase = className;
           int index = 1;
-          while (isClassNameClash(packageName, className)) {
-            className = classNameBase + Integer.toString(index);
+          try {
+            classNameLock.lock();
+            while (isClassNameClash(packageName, className)) {
+              className = classNameBase + Integer.toString(index);
+            }
+            addClassName(packageName, className);
+          } finally {
+            classNameLock.unlock();
           }
-          addClassName(packageName, className);
           return ClassName.get(packageName, className);
         }));
   }
 
   @NonNull
   protected Set<String> getClassNamesFor(@NonNull String packageOrTypeName) {
-    return ObjectUtils.notNull(packageToClassNamesMap.computeIfAbsent(
-        packageOrTypeName,
-        pkg -> Collections.synchronizedSet(new LinkedHashSet<>())));
+    try {
+      classNameLock.lock();
+      return ObjectUtils.notNull(packageToClassNamesMap.computeIfAbsent(
+          packageOrTypeName,
+          pkg -> Collections.synchronizedSet(new LinkedHashSet<>())));
+    } finally {
+      classNameLock.unlock();
+    }
   }
 
   protected boolean isClassNameClash(@NonNull String packageOrTypeName, @NonNull String className) {
-    return getClassNamesFor(packageOrTypeName).contains(className);
+    try {
+      classNameLock.lock();
+      return getClassNamesFor(packageOrTypeName).contains(className);
+    } finally {
+      classNameLock.unlock();
+    }
   }
 
   protected boolean addClassName(@NonNull String packageOrTypeName, @NonNull String className) {
-    return getClassNamesFor(packageOrTypeName).add(className);
+    try {
+      classNameLock.lock();
+      return getClassNamesFor(packageOrTypeName).add(className);
+    } finally {
+      classNameLock.unlock();
+    }
   }
 
   private String generateClassName(
@@ -214,9 +241,10 @@ class DefaultTypeResolver implements ITypeResolver {
       @NonNull String suggestedClassName,
       @NonNull IModelDefinition definition) {
     @NonNull String retval = suggestedClassName;
-    Set<String> classNames = getClassNamesFor(packageOrTypeName);
-    synchronized (classNames) {
-      boolean clash = false;
+    boolean clash = false;
+    try {
+      classNameLock.lock();
+      Set<String> classNames = getClassNamesFor(packageOrTypeName);
       if (classNames.contains(suggestedClassName)) {
         clash = true;
         // first try to append the metaschema's short name
@@ -230,15 +258,17 @@ class DefaultTypeResolver implements ITypeResolver {
         retval = classNameBase + Integer.toString(index++);
       }
       classNames.add(retval);
+    } finally {
+      classNameLock.unlock();
+    }
 
-      if (clash && LOGGER.isWarnEnabled()) {
-        LOGGER.warn(String.format(
-            "Class name '%s', based on '%s' in '%s', clashes with another bound class. Using '%s' instead.",
-            suggestedClassName,
-            definition.getName(),
-            definition.getContainingModule().getLocation(),
-            retval));
-      }
+    if (clash && LOGGER.isWarnEnabled()) {
+      LOGGER.warn(String.format(
+          "Class name '%s', based on '%s' in '%s', clashes with another bound class. Using '%s' instead.",
+          suggestedClassName,
+          definition.getName(),
+          definition.getContainingModule().getLocation(),
+          retval));
     }
     return retval;
   }
@@ -269,11 +299,10 @@ class DefaultTypeResolver implements ITypeResolver {
   @Override
   @NonNull
   public String getPropertyName(IDefinitionTypeInfo parent, String name) {
-    synchronized (typeInfoToPropertyNameMap) {
-      Set<String> propertyNames = typeInfoToPropertyNameMap.get(parent);
-      if (propertyNames == null) {
-        propertyNames = new HashSet<>();
-      }
+
+    try {
+      propertyNameLock.lock();
+      Set<String> propertyNames = typeInfoToPropertyNameMap.computeIfAbsent(parent, key -> new HashSet<>());
 
       String retval = name;
       int index = 0;
@@ -283,6 +312,8 @@ class DefaultTypeResolver implements ITypeResolver {
       }
       propertyNames.add(retval);
       return retval;
+    } finally {
+      propertyNameLock.unlock();
     }
   }
 

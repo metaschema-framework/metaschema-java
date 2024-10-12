@@ -355,7 +355,7 @@ public class MetapathExpression {
       throw new InvalidTypeMetapathException(null, String.format("unsupported result type '%s'", resultType.name()));
     }
 
-    return (T) result;
+    return ObjectUtils.asNullableType(result);
   }
 
   /**

@@ -37,9 +37,6 @@ import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
 import gov.nist.secauto.metaschema.databind.model.annotations.NullJavaTypeAdapter;
 import gov.nist.secauto.metaschema.databind.model.annotations.Property;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -52,8 +49,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 final class ConstraintFactory {
-  private static final Logger LOGGER = LogManager.getLogger(ConstraintFactory.class);
-
   private ConstraintFactory() {
     // disable
   }

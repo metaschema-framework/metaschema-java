@@ -9,6 +9,13 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunctionLibrary;
 import gov.nist.secauto.metaschema.core.metapath.function.library.DefaultFunctionLibrary;
 
+/**
+ * @provides IDataTypeProvider for core built-in data types
+ * @provides IFunctionLibrary for core built-in Metapath functions
+ * @uses IDataTypeProvider to discover data types implementing {@link IDataTypeAdapter}
+ * @uses IFunctionLibrary to discover collections of Metapath functions implementing
+ *       {@link IFunction}
+ */
 module gov.nist.secauto.metaschema.core {
   // requirements
   requires java.base;
