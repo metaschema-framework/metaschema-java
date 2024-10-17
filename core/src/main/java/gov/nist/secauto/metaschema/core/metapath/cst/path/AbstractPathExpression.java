@@ -77,9 +77,7 @@ public abstract class AbstractPathExpression<RESULT_TYPE extends IItem>
           return matches;
         });
 
-    @SuppressWarnings("null")
-    @NonNull Stream<? extends INodeItem> result = Stream.concat(nodeMatches, childMatches);
-    return result;
+    return ObjectUtils.notNull(Stream.concat(nodeMatches, childMatches).distinct());
   }
 
   /**
