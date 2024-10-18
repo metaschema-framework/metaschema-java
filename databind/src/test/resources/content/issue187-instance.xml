@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a xmlns="http://csrc.nist.gov/ns/test/metaschema/issue187-test">
+	<a value="a1">
+		<b>
+			<b value="value1"/>
+		</b>
+		<b>
+			<b value="value2"/>
+		</b>
+	</a>
+	<a value="a2">
+		<b>
+			<b value="value1"/>
+		</b>
+		<b>
+			<b value="value2"/>
+		</b>
+	</a>
+</a>
