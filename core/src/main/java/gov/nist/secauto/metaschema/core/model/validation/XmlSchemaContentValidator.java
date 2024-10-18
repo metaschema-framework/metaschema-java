@@ -65,7 +65,8 @@ public class XmlSchemaContentValidator
   }
 
   /**
-   * Construct a new XML schema validator using the provided pre-parsed XML schema(s).
+   * Construct a new XML schema validator using the provided pre-parsed XML
+   * schema(s).
    *
    * @param schema
    *          the pre-parsed XML schema(s) to use for validation
@@ -108,7 +109,8 @@ public class XmlSchemaContentValidator
   }
 
   /**
-   * Records an identified individual validation result found during XML schema validation.
+   * Records an identified individual validation result found during XML schema
+   * validation.
    */
   public static class XmlValidationFinding implements IValidationFinding, IResourceLocation {
     @NonNull
@@ -119,14 +121,14 @@ public class XmlSchemaContentValidator
     private final Level severity;
 
     /**
-     * Construct a new XML schema validation finding, which represents an issue identified during XML
-     * schema validation.
+     * Construct a new XML schema validation finding, which represents an issue
+     * identified during XML schema validation.
      *
      * @param severity
      *          the finding significance
      * @param exception
-     *          the XML schema validation exception generated during schema validation representing the
-     *          issue
+     *          the XML schema validation exception generated during schema
+     *          validation representing the issue
      * @param resourceUri
      *          the resource the issue was found in
      */

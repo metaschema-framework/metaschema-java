@@ -7,8 +7,8 @@ package gov.nist.secauto.metaschema.maven.plugin;
 
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -27,6 +27,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -215,7 +216,7 @@ public abstract class AbstractMetaschemaMojo
         getLog().debug(String.format("Using configured encoding [%s].", encoding));
       }
     } else {
-      encoding = System.getProperty(SYSTEM_FILE_ENCODING_PROPERTY);
+      encoding = Charset.defaultCharset().displayName();
       if (getLog().isWarnEnabled()) {
         getLog().warn(String.format("Using system encoding [%s]. This build is platform dependent!", encoding));
       }

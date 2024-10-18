@@ -306,7 +306,9 @@ public class MetaschemaXmlReader
 
         // let the property info decide how to parse the value
         Object value = collectionInfo.readItems(handler);
-        instance.setValue(parentObject, value);
+        if (value != null) {
+          instance.setValue(parentObject, value);
+        }
 
         // consume extra whitespace between elements
         XmlEventUtil.skipWhitespace(reader);

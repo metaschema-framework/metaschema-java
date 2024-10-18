@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../metaschema/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+	<schema-name>Test Metaschema with an external entity</schema-name>
+	<schema-version>1.0.0</schema-version>
+	<short-name>constraint-targeting-test</short-name>
+	<namespace>http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test</namespace>
+	<json-base-uri>http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test</json-base-uri>
+	<define-assembly name="a">
+		<root-name>a</root-name>
+        <define-flag name="value" as-type="string"/>
+		<model>
+            <assembly ref="a" max-occurs="unbounded">
+            	<use-name>b</use-name>
+				<group-as name="bs" in-json="ARRAY" />
+			</assembly>
+            <assembly ref="a" max-occurs="unbounded">
+            	<use-name>c</use-name>
+				<group-as name="cs" in-json="ARRAY" />
+			</assembly>
+		</model>
+	</define-assembly>
+</METASCHEMA>
