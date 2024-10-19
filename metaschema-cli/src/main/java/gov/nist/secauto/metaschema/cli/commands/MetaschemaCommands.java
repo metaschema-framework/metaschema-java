@@ -34,6 +34,7 @@ public final class MetaschemaCommands {
       new GenerateSchemaCommand(),
       new GenerateDiagramCommand(),
       new ValidateContentUsingModuleCommand(),
+      new ConvertContentUsingModuleCommand(),
       new MetapathCommand()));
 
   @NonNull

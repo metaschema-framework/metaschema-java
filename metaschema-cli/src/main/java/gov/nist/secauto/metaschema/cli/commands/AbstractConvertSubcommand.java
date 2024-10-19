@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.AbstractCommandExecutor
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
@@ -131,9 +132,13 @@ public abstract class AbstractConvertSubcommand
      * Get the binding context to use for data processing.
      *
      * @return the context
+     * @throws MetaschemaException
+     *           if a Metaschema error occurred
+     * @throws IOException
+     *           if an error occurred while reading data
      */
     @NonNull
-    protected abstract IBindingContext getBindingContext();
+    protected abstract IBindingContext getBindingContext() throws MetaschemaException, IOException;
 
     @SuppressWarnings({
         "PMD.OnlyOneReturn", // readability
@@ -181,7 +186,8 @@ public abstract class AbstractConvertSubcommand
       try {
         source = UriUtils.toUri(sourceName, cwd);
       } catch (URISyntaxException ex) {
-        return ExitCode.IO_ERROR.exitMessage("Cannot load source '%s' as it is not a valid file or URI.")
+        return ExitCode.IO_ERROR
+            .exitMessage(String.format("Cannot load source '%s' as it is not a valid file or URI.", sourceName))
             .withThrowable(ex);
       }
       assert source != null;
@@ -189,7 +195,14 @@ public abstract class AbstractConvertSubcommand
       String toFormatText = cmdLine.getOptionValue(TO_OPTION);
       Format toFormat = Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));
 
-      IBindingContext bindingContext = getBindingContext();
+      IBindingContext bindingContext;
+      try {
+        bindingContext = getBindingContext();
+      } catch (IOException | MetaschemaException ex) {
+        return ExitCode.PROCESSING_ERROR
+            .exitMessage("Unable to get binding context. " + ex.getMessage())
+            .withThrowable(ex);
+      }
       try {
         IBoundLoader loader = bindingContext.newBoundLoader();
         if (LOGGER.isInfoEnabled()) {
