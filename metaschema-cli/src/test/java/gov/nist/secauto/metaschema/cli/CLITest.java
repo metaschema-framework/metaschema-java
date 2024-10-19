@@ -44,16 +44,25 @@ public class CLITest {
   }
 
   private static Stream<Arguments> providesValues() {
-    @SuppressWarnings("serial") List<Arguments> values = new LinkedList<>() {
+    @SuppressWarnings("serial")
+    List<Arguments> values = new LinkedList<>() {
       {
         add(Arguments.of(new String[] {}, ExitCode.INVALID_COMMAND,
             NO_EXCEPTION_CLASS));
         add(Arguments.of(new String[] { "-h" }, ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(new String[] { "generate-schema", "--help" }, ExitCode.OK,
             NO_EXCEPTION_CLASS));
+        add(Arguments.of(new String[] { "generate-diagram", "--help" }, ExitCode.OK,
+            NO_EXCEPTION_CLASS));
         add(Arguments.of(new String[] { "validate", "--help" }, ExitCode.OK,
             NO_EXCEPTION_CLASS));
         add(Arguments.of(new String[] { "validate-content", "--help" }, ExitCode.OK,
+            NO_EXCEPTION_CLASS));
+        add(Arguments.of(new String[] { "convert", "--help" }, ExitCode.OK,
+            NO_EXCEPTION_CLASS));
+        add(Arguments.of(new String[] { "metapath", "list-functions", "--help" }, ExitCode.OK,
+            NO_EXCEPTION_CLASS));
+        add(Arguments.of(new String[] { "metapath", "eval", "--help" }, ExitCode.OK,
             NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "validate",
@@ -162,6 +171,14 @@ public class CLITest {
             ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "metapath", "list-functions" },
+            ExitCode.OK, NO_EXCEPTION_CLASS));
+        add(Arguments.of(
+            new String[] { "convert",
+                "-m",
+                "../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml",
+                "--to=yaml",
+                "../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml",
+            },
             ExitCode.OK, NO_EXCEPTION_CLASS));
       }
     };
