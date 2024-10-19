@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -18,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -51,6 +53,17 @@ class FnStringLengthTest
     IIntegerItem result = MetapathExpression.compile(metapath)
         .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
     assertEquals(expected, result);
+  }
+
+  @Test
+  void testFocusStringTest() {
+    assertEquals(
+        ISequence.of(integer(6)),
+        FunctionTestBase.executeFunction(
+            FnStringLength.SIGNATURE_NO_ARG,
+            newDynamicContext(),
+            ISequence.of(IStringItem.valueOf("000001")),
+            List.of()));
   }
 
   @Test
