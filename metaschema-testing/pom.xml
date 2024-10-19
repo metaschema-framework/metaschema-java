@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>dev.metaschema.java</groupId>
 		<artifactId>metaschema-framework</artifactId>
-		<version>1.2.1-SNAPSHOT</version>
+		<version>1.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>metaschema-testing</artifactId>
 	<name>Metaschema Unit Testing Support</name>
