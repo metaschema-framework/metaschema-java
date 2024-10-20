@@ -60,7 +60,8 @@ public class ListFunctionsSubcommand
    * @return the execution result
    */
   @SuppressWarnings({
-      "PMD.OnlyOneReturn" // readability
+      "PMD.OnlyOneReturn", // readability
+      "PMD.AvoidInstantiatingObjectsInLoops"
   })
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,

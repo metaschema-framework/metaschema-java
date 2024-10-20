@@ -20,6 +20,17 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * The base class of all constraint builders.
+ * <p>
+ * Provides builder methods for the core data elements of an
+ * {@link IConstraint}.
+ *
+ * @param <T>
+ *          the Java type of the implementing builder
+ * @param <R>
+ *          the Java type of the resulting built object
+ */
 public abstract class AbstractConstraintBuilder<
     T extends AbstractConstraintBuilder<T, R>,
     R extends IConstraint> {

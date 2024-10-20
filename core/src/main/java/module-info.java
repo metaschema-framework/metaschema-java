@@ -12,9 +12,11 @@ import gov.nist.secauto.metaschema.core.metapath.function.library.DefaultFunctio
 /**
  * @provides IDataTypeProvider for core built-in data types
  * @provides IFunctionLibrary for core built-in Metapath functions
- * @uses IDataTypeProvider to discover data types implementing {@link IDataTypeAdapter}
- * @uses IFunctionLibrary to discover collections of Metapath functions implementing
- *       {@link IFunction}
+ * @uses IDataTypeProvider to discover data types implementing
+ *       {@link gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter}
+ * @uses IFunctionLibrary to discover collections of Metapath functions
+ *       implementing
+ *       {@link gov.nist.secauto.metaschema.core.metapath.function.IFunction}
  */
 module gov.nist.secauto.metaschema.core {
   // requirements
@@ -81,7 +83,6 @@ module gov.nist.secauto.metaschema.core {
   exports gov.nist.secauto.metaschema.core.model.util;
   exports gov.nist.secauto.metaschema.core.model.validation;
   exports gov.nist.secauto.metaschema.core.model.xml;
-  exports gov.nist.secauto.metaschema.core.resource;
   exports gov.nist.secauto.metaschema.core.util;
 
   exports gov.nist.secauto.metaschema.core.datatype.markup.flexmark

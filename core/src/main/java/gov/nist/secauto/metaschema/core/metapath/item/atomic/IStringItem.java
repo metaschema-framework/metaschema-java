@@ -73,4 +73,13 @@ public interface IStringItem extends IAnyAtomicItem {
    */
   @NonNull
   IStringItem normalizeSpace();
+
+  /**
+   * Get the length of the string.
+   *
+   * @return the length
+   */
+  default int length() {
+    return asString().length();
+  }
 }

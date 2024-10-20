@@ -16,8 +16,8 @@ import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.util.MermaidErDiagramGenerator;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.MermaidErDiagramGenerator;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
 
@@ -41,6 +41,7 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class GenerateDiagramCommand
     extends AbstractTerminalCommand {
@@ -103,7 +104,10 @@ public class GenerateDiagramCommand
    */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
+      "PMD.AvoidCatchingGenericException"
   })
+  @SuppressFBWarnings(value = "REC_CATCH_EXCEPTION",
+      justification = "Catching generic exception for CLI error handling")
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) {
