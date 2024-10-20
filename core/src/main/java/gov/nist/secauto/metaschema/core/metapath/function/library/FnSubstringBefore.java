@@ -20,6 +20,8 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Implements <a href=
  * "https://www.w3.org/TR/xpath-functions-31/#func-substring-before">fn:substring-before</a>.
@@ -59,7 +61,10 @@ public final class FnSubstringBefore {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-	  
+
+	// From the XPath 3.1 specification:
+	// If the value of $arg1 or $arg2 is the empty sequence, or contains only
+	// ignorable collation units, it is interpreted as the zero-length string.
     IStringItem arg1 = arguments.get(0) == ISequence.empty() ? IStringItem.valueOf("") : FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IStringItem arg2 = arguments.get(1) == ISequence.empty() ? IStringItem.valueOf("") : FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
     
@@ -73,15 +78,13 @@ public final class FnSubstringBefore {
    * @param arg1
    *          the source string to get a substring from
    * @param arg2
-   *          the substring to match and find the substring to return before1
+   *          the substring to match and find the substring to return before the match
    * @return the substring
    */
   @NonNull
   public static String fnSubstringBefore(
       @NonNull String arg1,
       @NonNull String arg2) {
-    String[] parts;
-    parts = arg1.split(arg2);
-    return parts.length > 0 ? parts[0] : "";
+	  return StringUtils.substringBefore(arg1,arg2);
   }
 }
