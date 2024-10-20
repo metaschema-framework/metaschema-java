@@ -85,6 +85,6 @@ public final class FnSubstringAfter {
   public static String fnSubstringAfter(
       @NonNull String arg1,
       @NonNull String arg2) {
-    return StringUtils.substringAfterLast(arg1, arg2);
+    return StringUtils.substringAfter(arg1, arg2);
   }
 }
