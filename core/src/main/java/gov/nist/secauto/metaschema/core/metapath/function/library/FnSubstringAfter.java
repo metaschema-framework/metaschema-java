@@ -62,11 +62,11 @@ public final class FnSubstringAfter {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 	
-	// From the XPath 3.1 specification:
-	// If the value of $arg1 or $arg2 is the empty sequence, or contains only
-	// ignorable collation units, it is interpreted as the zero-length string.
-    IStringItem arg1 = arguments.get(0) == ISequence.empty() ? IStringItem.valueOf("") : FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    IStringItem arg2 = arguments.get(1) == ISequence.empty() ? IStringItem.valueOf("") : FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
+    // From the XPath 3.1 specification:
+    // If the value of $arg1 or $arg2 is the empty sequence, or contains only
+    // ignorable collation units, it is interpreted as the zero-length string.
+    IStringItem arg1 = arguments.get(0).isEmpty() ? IStringItem.valueOf("") : FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    IStringItem arg2 = arguments.get(1).isEmpty() ? IStringItem.valueOf("") : FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
     
     return ISequence.of(IStringItem.valueOf(fnSubstringAfter(arg1.asString(), arg2.asString())));
   }
