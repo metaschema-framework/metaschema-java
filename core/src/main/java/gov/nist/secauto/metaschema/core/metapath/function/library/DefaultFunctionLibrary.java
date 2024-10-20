@@ -165,6 +165,7 @@ public class DefaultFunctionLibrary
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-subsequence
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-after
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-before
+    registerFunction(FnSubstringBefore.SIGNATURE_TWO_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-sum
     registerFunction(FnSum.SIGNATURE_ONE_ARG);
     registerFunction(FnSum.SIGNATURE_TWO_ARG);
