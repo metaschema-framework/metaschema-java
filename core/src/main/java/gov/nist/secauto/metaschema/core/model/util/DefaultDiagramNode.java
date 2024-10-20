@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.util;
+package gov.nist.secauto.metaschema.core.model.util;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
@@ -15,6 +15,8 @@ import gov.nist.secauto.metaschema.core.model.INamedInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,7 +65,7 @@ public class DefaultDiagramNode implements IDiagramNode {
     this.attributes = ObjectUtils.notNull(Stream.concat(
         definition.getFlagInstances().stream()
             // all flags
-            .map((flag) -> new Attribute(flag.getEffectiveName(), flag.getDefinition().getJavaTypeAdapter())),
+            .map(flag -> new Attribute(flag.getEffectiveName(), flag.getDefinition().getJavaTypeAdapter())),
         definition instanceof IAssemblyDefinition
             ? ((IAssemblyDefinition) definition).getFieldInstances().stream()
                 // singleton fields with no flags

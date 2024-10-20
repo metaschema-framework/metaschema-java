@@ -11,19 +11,17 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Based on the XPath 3.1 <a href=
+ * Implements the XPath 3.1 <a href=
  * "https://www.w3.org/TR/xpath-functions-31/#func-string-length">fn:string-length</a>
  * functions.
  */
@@ -64,27 +62,30 @@ public final class FnStringLength {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IIntegerItem> executeNoArg(@NonNull IFunction function,
-      @NonNull List<ISequence<?>> arguments, @NonNull DynamicContext dynamicContext, IItem focus) {
+  private static ISequence<IIntegerItem> executeNoArg(
+      @NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
     // the focus should always be non-null, since the function if focus-dependent
-    assert focus != null;
-    return ISequence.of(fnStringLength(focus));
+    return ISequence.of(fnStringLength(ObjectUtils.notNull(focus)));
   }
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IIntegerItem> executeOneArg(@NonNull IFunction function,
-      @NonNull List<ISequence<?>> arguments, @NonNull DynamicContext dynamicContext, IItem focus) {
+  private static ISequence<IIntegerItem> executeOneArg(
+      @NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
 
     // From the XPath 3.1 specification:
     // If the value of $arg is the empty sequence, the function returns the
     // xs:integer value zero (0).
-    if (arguments.get(0).size() == 0) {
-      return ISequence.of(IIntegerItem.valueOf(0));
-    }
-
     IStringItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return ISequence.of(fnStringLength(arg));
+    return arg == null
+        ? ISequence.of(IIntegerItem.ZERO)
+        : ISequence.of(fnStringLength(arg));
   }
 
   /**
@@ -97,6 +98,6 @@ public final class FnStringLength {
    */
   @NonNull
   public static IIntegerItem fnStringLength(@NonNull IItem item) {
-    return IIntegerItem.valueOf(FnString.fnStringItem(item).asString().length());
+    return IIntegerItem.valueOf(FnString.fnStringItem(item).length());
   }
 }

@@ -20,13 +20,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * flag. Provides a common interface for all constraint definitions.
  */
 public interface IConstraint extends IAttributable, IDescribable {
-  enum Kind {
-    NOT_APPLICABLE,
-    PASS,
-    FAIL,
-    INFORMATIONAL;
-  }
-
   /**
    * The degree to which a constraint violation is significant.
    * <p>

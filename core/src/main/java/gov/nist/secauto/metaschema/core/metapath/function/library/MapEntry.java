@@ -21,6 +21,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-map-entry">map:entry</a>
+ * function.
+ */
 public final class MapEntry {
   private static final String NAME = "entry";
   @NonNull
@@ -56,7 +61,8 @@ public final class MapEntry {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
-    @SuppressWarnings("unchecked") T value = (T) arguments.get(1).toCollectionValue();
+    @SuppressWarnings("unchecked")
+    T value = (T) arguments.get(1).toCollectionValue();
 
     return entry(key, value).asSequence();
   }

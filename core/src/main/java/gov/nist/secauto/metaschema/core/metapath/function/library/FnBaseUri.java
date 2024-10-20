@@ -23,8 +23,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-base-uri">fn:base-uri</a>
+ * functions.
+ * <p>
  * Since a node doesn't have a base URI in Metaschema, this is an alias for the
- * document-uri function.
+ * document-uri function, since the node's base URI is the same as the
+ * document's URI.
  */
 public final class FnBaseUri {
   private static final String NAME = "base-uri";

@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.validation;
 
-import gov.nist.secauto.metaschema.core.resource.AbstractResourceResolver;
+import gov.nist.secauto.metaschema.core.model.AbstractResourceResolver;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.BufferedInputStream;

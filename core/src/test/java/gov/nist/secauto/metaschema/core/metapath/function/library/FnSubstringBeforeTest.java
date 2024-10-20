@@ -28,12 +28,11 @@ class FnSubstringBeforeTest
             string("t"),
             "substring-before('tattoo', 'attoo')"),
         Arguments.of(
-                string(""),
-                "substring-before('tattoo', 'tatto')"),
+            string(""),
+            "substring-before('tattoo', 'tatto')"),
         Arguments.of(
-                string(""),
-                "substring-before((), ())")
-    );
+            string(""),
+            "substring-before((), ())"));
   }
 
   @ParameterizedTest

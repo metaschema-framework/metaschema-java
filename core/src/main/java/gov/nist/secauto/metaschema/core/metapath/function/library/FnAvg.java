@@ -34,8 +34,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * An implementation of XPath 3.1
- * <a href="https://www.w3.org/TR/xpath-functions-31/#func-avg">fn:avg</a>.
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-avg">fn:avg</a>
+ * function.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class FnAvg {

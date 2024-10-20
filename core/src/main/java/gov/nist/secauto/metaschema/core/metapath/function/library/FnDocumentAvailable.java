@@ -26,6 +26,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available">fn:doc-available</a>
+ * function.
+ */
 public final class FnDocumentAvailable {
   private static final String NAME = "doc-available";
   @NonNull
@@ -65,7 +70,7 @@ public final class FnDocumentAvailable {
    * Test if the document associated with the URI is retrievable.
    * <p>
    * Based on the XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available">fn:doc</a>
+   * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available">fn:doc-available</a>
    * function.
    *
    * @param documentUri
@@ -90,7 +95,7 @@ public final class FnDocumentAvailable {
    * Test if the document associated with the URI is retrievable.
    * <p>
    * Based on the XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available">fn:doc</a>
+   * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available">fn:doc-available</a>
    * function.
    *
    * @param documentUri

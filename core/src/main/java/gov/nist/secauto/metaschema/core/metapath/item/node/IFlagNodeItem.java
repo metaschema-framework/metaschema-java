@@ -17,6 +17,10 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A Metapath node valued item representing a Metaschema module flag.
+ */
+
 public interface IFlagNodeItem
     extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedItem {
   @Override

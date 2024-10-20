@@ -14,15 +14,15 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A marker interface for implementations that support a mapping of a namespaced
- * key to a set of values.
+ * A marker interface for implementations that supports the mapping of a
+ * namespace valued key to a set of values.
  */
 public interface IAttributable {
+  /**
+   * The default key namespace for a property.
+   */
   @NonNull
   String DEFAULT_PROPERY_NAMESPACE = IModule.XML_NAMESPACE;
-
-  @NonNull
-  Map<Key, Set<String>> EMPTY = CollectionUtil.emptyMap();
 
   /**
    * Get the mapping of property key to values.
@@ -31,7 +31,7 @@ public interface IAttributable {
    */
   @NonNull
   default Map<Key, Set<String>> getProperties() {
-    return EMPTY;
+    return CollectionUtil.emptyMap();
   }
 
   /**

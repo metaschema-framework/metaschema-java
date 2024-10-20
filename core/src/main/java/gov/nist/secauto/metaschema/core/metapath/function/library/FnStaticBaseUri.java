@@ -20,6 +20,11 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-static-base-uri">fn:static-base-uri</a>
+ * function.
+ */
 public final class FnStaticBaseUri {
   private static final String NAME = "static-base-uri";
   @NonNull

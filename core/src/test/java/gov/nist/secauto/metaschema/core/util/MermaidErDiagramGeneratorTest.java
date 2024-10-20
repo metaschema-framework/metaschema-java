@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.util;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.util.MermaidErDiagramGenerator;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 
 import org.junit.jupiter.api.Test;

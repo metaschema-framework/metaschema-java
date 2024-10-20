@@ -50,7 +50,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-@SuppressWarnings("removal")
+@SuppressWarnings({ "removal", "deprecation" })
 public final class TypeSystem {
   private static final Map<Class<? extends IItem>, QName> ITEM_CLASS_TO_QNAME_MAP;
 

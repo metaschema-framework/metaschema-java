@@ -25,6 +25,11 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-map-find">map:find</a>
+ * function.
+ */
 public final class MapFind {
   private static final String NAME = "find";
   @NonNull

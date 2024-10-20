@@ -33,6 +33,11 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-map-merge">map:merge</a>
+ * functions.
+ */
 public final class MapMerge {
   private static final String NAME = "merge";
   private static final Random RANDOM = new Random();
@@ -101,7 +106,8 @@ public final class MapMerge {
     private final CustomCollectors.DuplicateHandler<IMapKey, ICollectionValue> duplicateHander;
 
     static {
-      @SuppressWarnings("PMD.UseConcurrentHashMap") Map<String, Duplicates> map = new HashMap<>();
+      @SuppressWarnings("PMD.UseConcurrentHashMap")
+      Map<String, Duplicates> map = new HashMap<>();
       for (Duplicates value : values()) {
         map.put(value.getName(), value);
       }

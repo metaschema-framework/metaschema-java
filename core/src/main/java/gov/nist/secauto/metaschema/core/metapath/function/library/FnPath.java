@@ -24,8 +24,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Since a node doesn't have a base URI in Metaschema, this is an alias for the
- * document-uri function.
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-path">fn:path</a>
+ * functions.
+ * <p>
+ * This implementation differs from the XPath specification by returning a
+ * Metapath expression instead of an XPath expression.
  */
 public final class FnPath {
   private static final String NAME = "path";

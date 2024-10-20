@@ -3,10 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.resource;
-
-import gov.nist.secauto.metaschema.core.model.IResourceResolver;
-import gov.nist.secauto.metaschema.core.model.IUriResolver;
+package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 

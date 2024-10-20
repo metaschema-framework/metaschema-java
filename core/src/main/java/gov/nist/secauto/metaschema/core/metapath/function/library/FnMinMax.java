@@ -28,6 +28,12 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Implements the XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-functions-31/#func-min">fn:min</a> and
+ * <a href="https://www.w3.org/TR/xpath-functions-31/#func-max">fn:max</a>
+ * functions.
+ */
 public final class FnMinMax {
   private static final String NAME_MIN = "min";
   private static final String NAME_MAX = "max";

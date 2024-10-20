@@ -12,6 +12,9 @@ import java.nio.ByteBuffer;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a Base64 encoded data value.
+ */
 public interface IBase64BinaryItem extends IAnyAtomicItem {
 
   /**

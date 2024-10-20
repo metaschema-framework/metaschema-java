@@ -11,6 +11,9 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A Metapath node valued item representing a Metaschema module field.
+ */
 public interface IFieldNodeItem
     extends IModelNodeItem<IFieldDefinition, IFieldInstance>,
     IAtomicValuedItem {

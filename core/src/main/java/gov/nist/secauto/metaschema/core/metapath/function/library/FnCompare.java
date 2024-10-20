@@ -20,8 +20,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-compare">fn:compare</a>.
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-compare">fn:compare</a>
+ * function.
  */
 public final class FnCompare {
   private static final String NAME = "compare";

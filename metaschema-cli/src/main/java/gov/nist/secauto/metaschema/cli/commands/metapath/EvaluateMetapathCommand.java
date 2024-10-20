@@ -48,6 +48,7 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class EvaluateMetapathCommand
     extends AbstractTerminalCommand {
@@ -119,8 +120,10 @@ public class EvaluateMetapathCommand
 
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
+      "PMD.AvoidCatchingGenericException"
   })
-
+  @SuppressFBWarnings(value = "REC_CATCH_EXCEPTION",
+      justification = "Catching generic exception for CLI error handling")
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) {
