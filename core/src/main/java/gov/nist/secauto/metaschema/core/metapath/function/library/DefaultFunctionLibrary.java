@@ -164,6 +164,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnStringLength.SIGNATURE_ONE_ARG);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-subsequence
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-after
+    registerFunction(FnSubstringAfter.SIGNATURE_TWO_ARG);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-before
     // https://www.w3.org/TR/xpath-functions-31/#func-sum
     registerFunction(FnSum.SIGNATURE_ONE_ARG);
