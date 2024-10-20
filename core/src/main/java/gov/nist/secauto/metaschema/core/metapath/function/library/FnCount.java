@@ -19,6 +19,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-functions-31/#func-count">fn:count</a>
+ * function.
+ */
 public final class FnCount {
   private static final String NAME = "count";
 

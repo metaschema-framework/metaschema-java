@@ -20,6 +20,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-array-size">array:size</a>
+ * function.
+ */
 public final class ArraySize {
   private static final String NAME = "size";
   @NonNull

@@ -12,10 +12,23 @@ import java.util.Locale;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * An Metaschema model instance representing a grouped set of objects consisting
+ * of heterogeneous object types.
+ */
 public interface IChoiceGroupInstance
     extends IModelInstanceAbsolute, IContainerModelGrouped {
 
+  /**
+   * The default max-occurs value for a choice group. {@code -1} represents an
+   * unbounded occurance.
+   */
   int DEFAULT_CHOICE_GROUP_GROUP_AS_MAX_OCCURS = -1;
+
+  /**
+   * The default JSON property value used to identify the specific type of the
+   * object.
+   */
   @NonNull
   String DEFAULT_JSON_DISCRIMINATOR_PROPERTY_NAME = "object-type";
 

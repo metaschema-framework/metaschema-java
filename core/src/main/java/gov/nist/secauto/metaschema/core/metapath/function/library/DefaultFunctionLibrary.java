@@ -22,6 +22,11 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IPositiveIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
+/**
+ * Provides built-in Metapath functions based on the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/">function
+ * specification</a>.
+ */
 @SuppressWarnings({ "removal" })
 @AutoService(IFunctionLibrary.class)
 public class DefaultFunctionLibrary
@@ -163,9 +168,9 @@ public class DefaultFunctionLibrary
     registerFunction(FnStringLength.SIGNATURE_NO_ARG);
     registerFunction(FnStringLength.SIGNATURE_ONE_ARG);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-subsequence
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-after
+    // https://www.w3.org/TR/xpath-functions-31/#func-substring-after
     registerFunction(FnSubstringAfter.SIGNATURE_TWO_ARG);
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-substring-before
+    // https://www.w3.org/TR/xpath-functions-31/#func-substring-before
     registerFunction(FnSubstringBefore.SIGNATURE_TWO_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-sum
     registerFunction(FnSum.SIGNATURE_ONE_ARG);
@@ -305,5 +310,4 @@ public class DefaultFunctionLibrary
     registerFunction(MpRecurseDepth.SIGNATURE_ONE_ARG);
     registerFunction(MpRecurseDepth.SIGNATURE_TWO_ARG);
   }
-
 }

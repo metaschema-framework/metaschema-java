@@ -94,6 +94,10 @@ public final class NumericFunction implements IFunctionExecutor {
     return ISequence.of(result);
   }
 
+  /**
+   * Implementations of this interface are used to execute a numeric opertaion on
+   * the provided item.
+   */
   @FunctionalInterface
   public interface INumericExecutor {
     /**

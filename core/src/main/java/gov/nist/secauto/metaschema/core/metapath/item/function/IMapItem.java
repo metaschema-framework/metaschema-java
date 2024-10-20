@@ -406,6 +406,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
         entry(k6, v6));
   }
 
+  // CPD-OFF
   /**
    * Returns an unmodifiable map item containing seven mappings.
    *
@@ -691,6 +692,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
         entry(k8, v8),
         entry(k9, v9),
         entry(k10, v10));
+    // CPD-ON
   }
 
   /**

@@ -18,6 +18,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-not">fn:not</a>
+ * function.
+ */
 public final class FnNot {
   private static final String NAME = "not";
   @NonNull

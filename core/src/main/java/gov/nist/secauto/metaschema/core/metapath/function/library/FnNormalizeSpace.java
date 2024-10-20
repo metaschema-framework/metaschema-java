@@ -20,8 +20,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-normalize-space">fn:normalize-space</a>.
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-normalize-space">fn:normalize-space</a>
+ * functions.
  */
 public final class FnNormalizeSpace {
   private static final String NAME = "normalize-space";

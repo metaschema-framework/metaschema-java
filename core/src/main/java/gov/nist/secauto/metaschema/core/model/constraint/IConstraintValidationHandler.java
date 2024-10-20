@@ -16,6 +16,10 @@ import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides a set of callback methods used to process the result of evaluating a
+ * constraint.
+ */
 public interface IConstraintValidationHandler {
 
   /**

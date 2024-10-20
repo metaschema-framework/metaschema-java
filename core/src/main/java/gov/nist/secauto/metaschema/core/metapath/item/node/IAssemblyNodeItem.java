@@ -10,6 +10,9 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A Metapath node valued item representing a Metaschema module assembly.
+ */
 public interface IAssemblyNodeItem extends IModelNodeItem<IAssemblyDefinition, IAssemblyInstance> {
   @Override
   default NodeItemType getNodeItemType() {

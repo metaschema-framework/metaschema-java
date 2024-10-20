@@ -17,8 +17,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements
- * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-false">fn:false</a>.
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-false">fn:false</a>
+ * function.
  */
 public final class FnFalse {
   private static final String NAME = "false";

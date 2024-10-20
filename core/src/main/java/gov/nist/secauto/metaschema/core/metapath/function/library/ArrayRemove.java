@@ -26,6 +26,11 @@ import java.util.stream.IntStream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-array-remove">array:remove</a>
+ * function.
+ */
 public final class ArrayRemove {
   private static final String NAME = "remove";
   @NonNull

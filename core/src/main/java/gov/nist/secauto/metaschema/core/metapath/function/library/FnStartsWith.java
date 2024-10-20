@@ -19,6 +19,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-starts-with">fn:starts-with</a>
+ * function.
+ */
 public final class FnStartsWith {
   // CPD-OFF
   @NonNull

@@ -12,19 +12,20 @@ import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-
-import org.apache.commons.lang3.StringUtils;
+// CPD-OFF
 
 /**
- * Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-substring-before">fn:substring-before</a>.
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-substring-before">fn:substring-before</a>
+ * function.
  */
 public final class FnSubstringBefore {
   private static final String NAME = "substring-before";
@@ -49,6 +50,7 @@ public final class FnSubstringBefore {
       .returnOne()
       .functionHandler(FnSubstringBefore::executeTwoArg)
       .build();
+  // CPD-ON
 
   private FnSubstringBefore() {
     // disable construction
@@ -65,9 +67,13 @@ public final class FnSubstringBefore {
     // From the XPath 3.1 specification:
     // If the value of $arg1 or $arg2 is the empty sequence, or contains only
     // ignorable collation units, it is interpreted as the zero-length string.
-    IStringItem arg1 = arguments.get(0).isEmpty() ? IStringItem.valueOf("") : FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    IStringItem arg2 = arguments.get(1).isEmpty() ? IStringItem.valueOf("") : FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
-    
+    IStringItem arg1 = arguments.get(0).isEmpty()
+        ? IStringItem.valueOf("")
+        : FunctionUtils.asType(ObjectUtils.notNull(arguments.get(0).getFirstItem(true)));
+    IStringItem arg2 = arguments.get(1).isEmpty()
+        ? IStringItem.valueOf("")
+        : FunctionUtils.asType(ObjectUtils.notNull(arguments.get(1).getFirstItem(true)));
+
     return ISequence.of(IStringItem.valueOf(fnSubstringBefore(arg1.asString(), arg2.asString())));
   }
 
@@ -78,13 +84,14 @@ public final class FnSubstringBefore {
    * @param arg1
    *          the source string to get a substring from
    * @param arg2
-   *          the substring to match and find the substring to return before the match
+   *          the substring to match and find the substring to return before the
+   *          match
    * @return the substring
    */
   @NonNull
   public static String fnSubstringBefore(
       @NonNull String arg1,
       @NonNull String arg2) {
-	  return StringUtils.substringBefore(arg1,arg2);
+    return ObjectUtils.notNull(StringUtils.substringBefore(arg1, arg2));
   }
 }

@@ -21,8 +21,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-remove">fn:remove</a>.
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-remove">fn:remove</a>
+ * function.
  */
 public final class FnRemove {
   private static final String NAME = "remove";
@@ -81,7 +82,7 @@ public final class FnRemove {
       @NonNull IIntegerItem positionItem) {
     int position = positionItem.asInteger().intValue();
 
-    if ((position == 0) || (position > target.size())) {
+    if (position == 0 || position > target.size()) {
       return target;
     }
 

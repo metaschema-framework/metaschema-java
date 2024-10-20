@@ -28,12 +28,11 @@ class FnSubstringAfterTest
             string("too"),
             "substring-after('tattoo', 'tat')"),
         Arguments.of(
-                string(""),
-                "substring-after('tattoo', 'tattoo')"),
+            string(""),
+            "substring-after('tattoo', 'tattoo')"),
         Arguments.of(
-                string(""),
-                "substring-after((), ())")
-    );
+            string(""),
+            "substring-after((), ())"));
   }
 
   @ParameterizedTest

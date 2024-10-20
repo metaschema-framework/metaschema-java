@@ -10,9 +10,18 @@ import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFun
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item with a boolean value.
+ */
 public interface IBooleanItem extends IAnyAtomicItem {
+  /**
+   * The boolean item value of {@code true}.
+   */
   @NonNull
   IBooleanItem TRUE = new BooleanItemImpl(true);
+  /**
+   * The boolean item value of {@code false}.
+   */
   @NonNull
   IBooleanItem FALSE = new BooleanItemImpl(false);
 

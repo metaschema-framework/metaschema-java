@@ -19,8 +19,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements
- * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-head">fn:head</a>.
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-head">fn:head</a>
+ * function.
  */
 public final class FnHead {
   private static final String NAME = "head";

@@ -48,6 +48,7 @@ public final class FnAbs {
     // disable construction
   }
 
+  // CPD-OFF
   @SuppressWarnings("unused")
   @NonNull
   private static ISequence<INumericItem> execute(
@@ -63,5 +64,6 @@ public final class FnAbs {
     }
 
     return ISequence.of(item.castAsType(item.abs()));
+    // CPD-ON
   }
 }
