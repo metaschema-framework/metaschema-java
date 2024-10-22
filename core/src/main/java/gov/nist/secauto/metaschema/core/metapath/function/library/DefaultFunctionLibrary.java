@@ -191,7 +191,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text
     // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text-available
     // https://www.w3.org/TR/xpath-functions-31/#func-unparsed-text-lines
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-upper-case
+    // https://www.w3.org/TR/xpath-functions-31/#func-upper-case
+    registerFunction(FnUpperCase.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-year-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-year-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration
