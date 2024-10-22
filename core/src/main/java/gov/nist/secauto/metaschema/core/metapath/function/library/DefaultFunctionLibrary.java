@@ -108,7 +108,8 @@ public class DefaultFunctionLibrary
     registerFunction(FnInsertBefore.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-iri-to-uri
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-last
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-lower-case
+    // https://www.w3.org/TR/xpath-functions-31/#func-lower-case
+    registerFunction(FnLowerCase.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-matches
     registerFunction(FnMatches.SIGNATURE_TWO_ARG);
     registerFunction(FnMatches.SIGNATURE_THREE_ARG);
