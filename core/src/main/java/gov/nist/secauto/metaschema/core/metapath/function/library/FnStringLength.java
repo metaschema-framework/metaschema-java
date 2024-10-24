@@ -83,9 +83,9 @@ public final class FnStringLength {
     // If the value of $arg is the empty sequence, the function returns the
     // xs:integer value zero (0).
     IStringItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return arg == null
-        ? ISequence.of(IIntegerItem.ZERO)
-        : ISequence.of(fnStringLength(arg));
+    return ISequence.of(arg == null
+        ? IIntegerItem.ZERO
+        : fnStringLength(arg));
   }
 
   /**

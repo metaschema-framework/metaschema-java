@@ -140,7 +140,7 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
               if (definition instanceof IAssemblyDefinition) {
                 typeInfo = IAssemblyDefinitionTypeInfo.newTypeInfo((IAssemblyDefinition) definition, typeResolver);
               } else if (definition instanceof IFieldDefinition
-                  && !((IFieldDefinition) definition).getFlagInstances().isEmpty()) {
+                  && !definition.getFlagInstances().isEmpty()) {
                 typeInfo = IFieldDefinitionTypeInfo.newTypeInfo((IFieldDefinition) definition, typeResolver);
               } // otherwise field is just a simple data value, then no class is needed
               return typeInfo == null ? null : Stream.of(typeInfo);
@@ -283,7 +283,8 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
             "$L",
             AnnotationSpec.builder(NsBinding.class)
                 .addMember("prefix", "$S", binding.getKey())
-                .addMember("uri", "$S", binding.getValue()));
+                .addMember("uri", "$S", binding.getValue())
+                .build());
       }
     }
 

@@ -9,10 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.codegen.IProduction;
-import gov.nist.secauto.metaschema.databind.codegen.ModuleCompilerHelper;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.io.DefaultBoundLoader;
 import gov.nist.secauto.metaschema.databind.io.Format;
@@ -27,13 +24,9 @@ import gov.nist.secauto.metaschema.databind.io.yaml.DefaultYamlSerializer;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,17 +58,27 @@ public class DefaultBindingContext implements IBindingContext {
   private final IModuleLoaderStrategy moduleLoaderStrategy;
   @NonNull
   private final Map<Class<?>, IBoundDefinitionModelComplex> boundClassToStrategyMap = new ConcurrentHashMap<>();
-  @NonNull
-  private final Map<IBoundDefinitionModelAssembly, IBindingMatcher> bindingMatchers = new ConcurrentHashMap<>();
 
   /**
    * Get the singleton instance of this binding context.
+   * <p>
+   * Note: It is general a better practice to use a new {@link IBindingContext}
+   * and reuse that instance instead of this global instance.
    *
    * @return the binding context
+   * @see IBindingContext#newInstance()
    */
   @NonNull
   public static DefaultBindingContext instance() {
     return ObjectUtils.notNull(singleton.get());
+  }
+
+  /**
+   * Construct a new binding context.
+   */
+  @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
+  public DefaultBindingContext() {
+    this(new SimpleModuleLoaderStrategy());
   }
 
   /**
@@ -85,20 +88,10 @@ public class DefaultBindingContext implements IBindingContext {
    *          a list of module post processors to call after loading a module
    */
   @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
-  public DefaultBindingContext(@NonNull List<IModuleLoader.IModulePostProcessor> modulePostProcessors) {
+  public DefaultBindingContext(@NonNull IBindingContext.IModuleLoaderStrategy strategy) {
     // only allow extended classes
-    moduleLoaderStrategy = new PostProcessingModuleLoaderStrategy(this, modulePostProcessors);
-    registerBindingMatcher(METASCHEMA.class);
-  }
-
-  /**
-   * Construct a new binding context.
-   */
-  @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
-  public DefaultBindingContext() {
-    // only allow extended classes
-    moduleLoaderStrategy = new SimpleModuleLoaderStrategy(this);
-    registerBindingMatcher(METASCHEMA.class);
+    moduleLoaderStrategy = strategy;
+    moduleLoaderStrategy.loadModule(MetaschemaModelModule.class, this);
   }
 
   @NonNull
@@ -115,13 +108,13 @@ public class DefaultBindingContext implements IBindingContext {
    */
   @NonNull
   protected Collection<IBindingMatcher> getBindingMatchers() {
-    return ObjectUtils.notNull(bindingMatchers.values());
+    return getModuleLoaderStrategy().getBindingMatchers();
   }
 
   @Override
   @NonNull
   public final IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
-    return ObjectUtils.notNull(bindingMatchers.computeIfAbsent(definition, key -> IBindingMatcher.of(definition)));
+    return getModuleLoaderStrategy().registerBindingMatcher(definition);
   }
 
   @Override
@@ -137,7 +130,7 @@ public class DefaultBindingContext implements IBindingContext {
       return registerBindingMatcher(ObjectUtils.notNull(assemblyDefinition));
     } catch (ClassCastException ex) {
       throw new IllegalArgumentException(
-          String.format("The provided class '%s' is not a root assembly.", clazz.getName()), ex);
+          String.format("The provided class '%s' is not an assembly.", clazz.getName()), ex);
     }
   }
 
@@ -149,7 +142,7 @@ public class DefaultBindingContext implements IBindingContext {
 
   @Override
   public final IBoundDefinitionModelComplex getBoundDefinitionForClass(@NonNull Class<? extends IBoundObject> clazz) {
-    return moduleLoaderStrategy.getBoundDefinitionForClass(clazz);
+    return moduleLoaderStrategy.getBoundDefinitionForClass(clazz, this);
   }
 
   @Override
@@ -233,44 +226,14 @@ public class DefaultBindingContext implements IBindingContext {
   }
 
   @Override
-  @SuppressWarnings({ "PMD.UseProperClassLoader", "unchecked" }) // false positive
-  @NonNull
-  public IBindingContext registerModule(
-      @NonNull IModule module,
-      @NonNull Path compilePath) throws IOException {
-    if (!(module instanceof IBoundModule)) {
-      Files.createDirectories(compilePath);
-
-      ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(
-          compilePath,
-          ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));
-
-      IProduction production = ModuleCompilerHelper.compileMetaschema(module, compilePath);
-      production.getModuleProductions().stream()
-          .map(item -> {
-            try {
-              return (Class<? extends IBoundModule>) classLoader.loadClass(item.getClassName().reflectionName());
-            } catch (ClassNotFoundException ex) {
-              throw new IllegalStateException(ex);
-            }
-          })
-          .forEachOrdered(clazz -> {
-            IBoundModule boundModule = registerModule(ObjectUtils.notNull(clazz));
-            // force the binding matchers to load
-            boundModule.getRootAssemblyDefinitions();
-          });
-    }
+  public IBindingContext registerModule(IModule module) {
+    getModuleLoaderStrategy().registerModule(module, this);
     return this;
   }
 
   @Override
   public IBoundModule registerModule(Class<? extends IBoundModule> clazz) {
-    return getModuleLoaderStrategy().loadModule(clazz);
-    // retval.getExportedAssemblyDefinitions().stream()
-    // .map(def -> (IBoundDefinitionModelAssembly) def)
-    // .filter(def -> def.isRoot())
-    // .forEachOrdered(def -> registerBindingMatcher(ObjectUtils.notNull(def)));
-    // return retval;
+    return getModuleLoaderStrategy().loadModule(clazz, this);
   }
 
   @Override

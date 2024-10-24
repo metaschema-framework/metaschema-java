@@ -24,7 +24,11 @@ public class ExternalConstraintsModulePostProcessor
    *
    * @param additionalConstraintSets
    *          constraints to configure
+   * @deprecated This implementation has been moved to
+   *             {@link gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor},
+   *             which should be used instead.
    */
+  @Deprecated
   public ExternalConstraintsModulePostProcessor(@NonNull Collection<IConstraintSet> additionalConstraintSets) {
     super(additionalConstraintSets);
   }

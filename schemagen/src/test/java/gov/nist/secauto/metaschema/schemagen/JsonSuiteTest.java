@@ -11,10 +11,12 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.validation.IContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.Format;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
 
 import org.junit.jupiter.api.Disabled;
@@ -31,6 +33,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -63,8 +66,13 @@ class JsonSuiteTest
   @Execution(ExecutionMode.SAME_THREAD)
   @DisplayName("JSON Schema Generation")
   @TestFactory
-  Stream<DynamicNode> generateTests() {
-    return testFactory();
+  Stream<DynamicNode> generateTests() throws IOException {
+    IBindingContext bindingContext = IBindingContext.newInstance(
+        new SimpleModuleLoaderStrategy(
+            new DefaultModuleBindingGenerator(
+                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"),
+                    "modules-")))));
+    return testFactory(bindingContext);
   }
 
   @Disabled
@@ -112,12 +120,16 @@ class JsonSuiteTest
   @Disabled
   @Test
   void testOscalComplete() throws IOException, MetaschemaException { // NOPMD - delegated to doTest
-    IBindingContext context = new DefaultBindingContext();
-    BindingModuleLoader loader = new BindingModuleLoader(context);
+    IBindingContext bindingContext = IBindingContext.newInstance(
+        new SimpleModuleLoaderStrategy(
+            new DefaultModuleBindingGenerator(
+                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"),
+                    "modules-")))));
+    IBindingModuleLoader loader = bindingContext.newModuleLoader();
     loader.allowEntityResolution();
 
     IModule module = loader.load(new URL(
-        "https://raw.githubusercontent.com/usnistgov/OSCAL/develop/src/metaschema/oscal_complete_metaschema.xml"));
+        "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.2/src/metaschema/oscal_complete_metaschema.xml"));
     ISchemaGenerator schemaGenerator = new JsonSchemaGenerator();
     IMutableConfiguration<SchemaGenerationFeature<?>> features
         = new DefaultConfiguration<>();
@@ -134,8 +146,12 @@ class JsonSuiteTest
   @Disabled
   @Test
   void testTestMetaschema() throws IOException, MetaschemaException { // NOPMD - delegated to doTest
-    IBindingContext context = new DefaultBindingContext();
-    BindingModuleLoader loader = new BindingModuleLoader(context);
+    IBindingContext bindingContext = IBindingContext.newInstance(
+        new SimpleModuleLoaderStrategy(
+            new DefaultModuleBindingGenerator(
+                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"),
+                    "modules-")))));
+    IBindingModuleLoader loader = bindingContext.newModuleLoader();
     loader.allowEntityResolution();
 
     IModule module = loader.load(new URL(
@@ -151,5 +167,4 @@ class JsonSuiteTest
       schemaGenerator.generateFromModule(module, writer, features);
     }
   }
-
 }

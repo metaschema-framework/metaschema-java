@@ -41,11 +41,11 @@ public final class InternalModelSource implements ISource {
    */
   @NonNull
   public static ISource instance(@NonNull IModule module) {
+    SOURCE_LOCK.lock();
     try {
-      SOURCE_LOCK.lock();
       return ObjectUtils.notNull(sources.computeIfAbsent(
           module,
-          (uri) -> new InternalModelSource(module)));
+          uri -> new InternalModelSource(module)));
     } finally {
       SOURCE_LOCK.unlock();
     }

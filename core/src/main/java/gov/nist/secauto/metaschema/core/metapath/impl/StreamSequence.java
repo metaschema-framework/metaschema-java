@@ -46,8 +46,8 @@ public class StreamSequence<ITEM extends IItem>
 
   @Override
   public List<ITEM> getValue() {
+    instanceLock.lock();
     try {
-      instanceLock.lock();
       if (list == null) {
         list = stream().collect(Collectors.toUnmodifiableList());
       }
@@ -62,8 +62,8 @@ public class StreamSequence<ITEM extends IItem>
   public Stream<ITEM> stream() {
     @NonNull Stream<ITEM> retval;
     // Ensure thread safety and prevent multiple consumptions of the stream
+    instanceLock.lock();
     try {
-      instanceLock.lock();
       if (list == null) {
         if (stream == null) {
           throw new IllegalStateException("stream is already consumed");

@@ -18,7 +18,6 @@ import gov.nist.secauto.metaschema.core.model.xml.XmlConstraintLoader;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
 import gov.nist.secauto.metaschema.databind.model.test.TestMetaschema;
 
 import org.junit.jupiter.api.Test;
@@ -37,9 +36,10 @@ class DefaultBindingContextTest {
     List<IConstraintSet> constraintSet = constraintLoader.load(
         ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints.xml")));
 
-    ExternalConstraintsModulePostProcessor postProcessor
-        = new ExternalConstraintsModulePostProcessor(constraintSet);
-    IBindingContext bindingContext = new DefaultBindingContext(CollectionUtil.singletonList(postProcessor));
+    IBindingContext bindingContext = new DefaultBindingContext(
+        new PostProcessingModuleLoaderStrategy(
+            CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraintSet))));
+
     IBoundModule module = bindingContext.registerModule(TestMetaschema.class);
 
     IAssemblyDefinition root
@@ -52,13 +52,13 @@ class DefaultBindingContextTest {
 
   @Test
   void testConstraintsUsingBinding() throws MetaschemaException, IOException { // NOPMD - intentional
-    IConstraintLoader constraintLoader = new BindingConstraintLoader(new DefaultBindingContext());
+    IConstraintLoader constraintLoader = new DefaultBindingContext().newConstraintLoader();
     List<IConstraintSet> constraintSet = constraintLoader.load(
         ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints.xml")));
 
-    ExternalConstraintsModulePostProcessor postProcessor
-        = new ExternalConstraintsModulePostProcessor(constraintSet);
-    IBindingContext bindingContext = new DefaultBindingContext(CollectionUtil.singletonList(postProcessor));
+    IBindingContext bindingContext = new DefaultBindingContext(
+        new PostProcessingModuleLoaderStrategy(
+            CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraintSet))));
     IBoundModule module = bindingContext.registerModule(TestMetaschema.class);
 
     IAssemblyDefinition root

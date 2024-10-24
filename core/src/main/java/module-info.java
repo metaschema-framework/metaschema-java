@@ -33,6 +33,7 @@ module gov.nist.secauto.metaschema.core {
   requires com.fasterxml.jackson.annotation;
   requires com.fasterxml.jackson.core;
   requires transitive com.fasterxml.jackson.databind;
+  requires transitive com.github.benmanes.caffeine;
   requires transitive inet.ipaddr;
   requires nl.talsmasoftware.lazy4j;
   requires org.antlr.antlr4.runtime;

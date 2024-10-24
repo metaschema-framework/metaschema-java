@@ -20,8 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-// CPD-OFF
 
+// CPD-OFF
 /**
  * Implements the XPath 3.1 <a href=
  * "https://www.w3.org/TR/xpath-functions-31/#func-substring-after">fn:substring-after</a>

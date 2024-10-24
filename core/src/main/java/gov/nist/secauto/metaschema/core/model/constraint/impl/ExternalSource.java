@@ -42,11 +42,11 @@ public final class ExternalSource implements ISource {
    */
   @NonNull
   public static ISource instance(@NonNull StaticContext staticContext) {
+    SOURCE_LOCK.lock();
     try {
-      SOURCE_LOCK.lock();
       return ObjectUtils.notNull(sources.computeIfAbsent(
           staticContext.getBaseUri(),
-          (uri) -> new ExternalSource(staticContext)));
+          uri -> new ExternalSource(staticContext)));
     } finally {
       SOURCE_LOCK.unlock();
     }

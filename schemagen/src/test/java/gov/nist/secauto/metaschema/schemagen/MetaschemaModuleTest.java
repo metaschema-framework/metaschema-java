@@ -10,9 +10,10 @@ import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 
@@ -33,10 +34,19 @@ class MetaschemaModuleTest {
   private static final Path METASCHEMA_FILE
       = ObjectUtils.notNull(Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml"));
 
+  @NonNull
+  private static IBindingContext getBindingContext() throws IOException {
+    return IBindingContext.newInstance(
+        new SimpleModuleLoaderStrategy(
+            new DefaultModuleBindingGenerator(
+                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"),
+                    "modules-")))));
+  }
+
   @Test
   void testGenerateMetaschemaModuleJson() throws MetaschemaException, IOException {
-    IBindingContext context = new DefaultBindingContext();
-    BindingModuleLoader loader = new BindingModuleLoader(context);
+    IBindingContext bindingContext = getBindingContext();
+    IBindingModuleLoader loader = bindingContext.newModuleLoader();
 
     IModule module = loader.load(METASCHEMA_FILE);
 
@@ -57,8 +67,8 @@ class MetaschemaModuleTest {
 
   @Test
   void testGenerateMetaschemaModuleXml() throws MetaschemaException, IOException {
-    IBindingContext context = new DefaultBindingContext();
-    BindingModuleLoader loader = new BindingModuleLoader(context);
+    IBindingContext bindingContext = getBindingContext();
+    IBindingModuleLoader loader = bindingContext.newModuleLoader();
 
     IModule module = loader.load(METASCHEMA_FILE);
 

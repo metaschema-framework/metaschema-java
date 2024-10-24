@@ -28,6 +28,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 
 import org.apache.commons.cli.CommandLine;
@@ -149,14 +151,16 @@ public class EvaluateMetapathCommand
       // determine if the query is evaluated against the module or the instance
       if (cmdLine.hasOption(CONTENT_OPTION)) {
         // load the content
-        IBindingContext bindingContext = new DefaultBindingContext();
-
+        IBindingContext bindingContext;
         try {
-          Path compilePath = Files.createTempDirectory("validation-");
-          compilePath.toFile().deleteOnExit();
+          Path tempDir = Files.createTempDirectory("metaschema-codegen-modules-");
+          tempDir.toFile().deleteOnExit();
 
-          bindingContext.registerModule(module, compilePath);
-        } catch (IOException ex) {
+          bindingContext = new DefaultBindingContext(
+              new SimpleModuleLoaderStrategy(
+                  new DefaultModuleBindingGenerator(tempDir)));
+          bindingContext.registerModule(module);
+        } catch (Exception ex) {
           return ExitCode.PROCESSING_ERROR
               .exitMessage("Unable to get binding context. " + ex.getMessage())
               .withThrowable(ex);

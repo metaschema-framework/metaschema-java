@@ -18,9 +18,11 @@ import gov.nist.secauto.metaschema.core.model.util.XmlUtil;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.PostProcessingModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
+import gov.nist.secauto.metaschema.databind.codegen.IModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
@@ -75,7 +77,7 @@ public class ValidateModuleCommand
 
     private Path getTempDir() throws IOException {
       if (tempDir == null) {
-        tempDir = Files.createTempDirectory("validation-");
+        tempDir = Files.createTempDirectory("metaschema-codegen-modules-");
         tempDir.toFile().deleteOnExit();
       }
       return tempDir;
@@ -84,16 +86,13 @@ public class ValidateModuleCommand
     @Override
     protected IBindingContext getBindingContext(Set<IConstraintSet> constraintSets)
         throws MetaschemaException, IOException {
-      IBindingContext retval;
-      if (constraintSets.isEmpty()) {
-        retval = IBindingContext.instance();
-      } else {
-        ExternalConstraintsModulePostProcessor postProcessor
-            = new ExternalConstraintsModulePostProcessor(constraintSets);
-        retval = new DefaultBindingContext(CollectionUtil.singletonList(postProcessor));
-      }
-      retval.getBoundDefinitionForClass(METASCHEMA.class);
-      return retval;
+
+      IModuleBindingGenerator generator = new DefaultModuleBindingGenerator(getTempDir());
+      IBindingContext.IModuleLoaderStrategy strategy = constraintSets.isEmpty()
+          ? new SimpleModuleLoaderStrategy(generator)
+          : new PostProcessingModuleLoaderStrategy(
+              CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraintSets)));
+      return IBindingContext.newInstance(strategy);
     }
 
     @Override

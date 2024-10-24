@@ -184,6 +184,9 @@ public class ModelDetector {
       if (!"$schema".equals(name)) {
         IBindingContext bindingContext = getBindingContext();
         retval = bindingContext.getBoundClassForRootJsonName(name);
+        if (retval == null) {
+          throw new IOException("Unrecognized JSON field name: " + name);
+        }
         break outer;
       }
       // do nothing

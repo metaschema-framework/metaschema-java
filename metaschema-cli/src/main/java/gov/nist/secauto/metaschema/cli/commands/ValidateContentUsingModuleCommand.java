@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.util.XmlUtil;
@@ -18,6 +19,9 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.PostProcessingModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
@@ -90,7 +94,7 @@ public class ValidateContentUsingModuleCommand
     @NonNull
     private Path getTempDir() throws IOException {
       if (tempDir == null) {
-        tempDir = Files.createTempDirectory("validation-");
+        tempDir = Files.createTempDirectory("metaschema-codegen-modules-");
         tempDir.toFile().deleteOnExit();
       }
       assert tempDir != null;
@@ -125,8 +129,11 @@ public class ValidateContentUsingModuleCommand
     protected IBindingContext getBindingContext(@NonNull Set<IConstraintSet> constraintSets)
         throws MetaschemaException, IOException {
 
-      IBindingContext retval = new DefaultBindingContext();
-      retval.registerModule(getModule(constraintSets), getTempDir());
+      IBindingContext retval = new DefaultBindingContext(
+          new PostProcessingModuleLoaderStrategy(
+              CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraintSets)),
+              new SimpleModuleLoaderStrategy(new DefaultModuleBindingGenerator(getTempDir()))));
+      retval.registerModule(getModule(constraintSets));
       return retval;
     }
 

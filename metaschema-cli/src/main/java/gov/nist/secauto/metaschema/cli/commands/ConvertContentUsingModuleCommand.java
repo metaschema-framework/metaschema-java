@@ -14,6 +14,8 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.FormatDetector;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
@@ -86,7 +88,7 @@ public class ConvertContentUsingModuleCommand
     @NonNull
     private Path getTempDir() throws IOException {
       if (tempDir == null) {
-        tempDir = Files.createTempDirectory("validation-");
+        tempDir = Files.createTempDirectory("metaschema-codegen-modules-");
         tempDir.toFile().deleteOnExit();
       }
       assert tempDir != null;
@@ -104,8 +106,10 @@ public class ConvertContentUsingModuleCommand
         throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),
             ex);
       }
-      IBindingContext retval = new DefaultBindingContext();
-      retval.registerModule(module, getTempDir());
+      IBindingContext retval = new DefaultBindingContext(
+          new SimpleModuleLoaderStrategy(
+              new DefaultModuleBindingGenerator(getTempDir())));
+      retval.registerModule(module);
       return retval;
     }
 

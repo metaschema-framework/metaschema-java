@@ -318,7 +318,7 @@ public abstract class AbstractValidateContentCommand
         }
       } else if (validationResult != null && !validationResult.getFindings().isEmpty()) {
         LOGGER.info("Validation identified the following issues:");
-        LoggingValidationHandler.instance().handleValidationResults(validationResult);
+        LoggingValidationHandler.instance().handleResults(validationResult);
       }
 
       if (validationResult == null || validationResult.isPassing()) {

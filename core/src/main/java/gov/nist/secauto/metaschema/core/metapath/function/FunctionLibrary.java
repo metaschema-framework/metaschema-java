@@ -46,8 +46,8 @@ public class FunctionLibrary implements IFunctionLibrary {
     QName qname = function.getQName();
     IFunction duplicate;
     Lock writeLock = instanceLock.writeLock();
+    writeLock.lock();
     try {
-      writeLock.lock();
       NamedFunctionSet functions = libraryByQName.get(qname);
       if (functions == null) {
         functions = new NamedFunctionSet();
@@ -66,8 +66,8 @@ public class FunctionLibrary implements IFunctionLibrary {
   private void registerFunctionByName(@NonNull IFunction function) {
     String name = function.getName();
     Lock writeLock = instanceLock.writeLock();
+    writeLock.lock();
     try {
-      writeLock.lock();
       NamedFunctionSet functions = libraryByName.get(name);
       if (functions == null) {
         functions = new NamedFunctionSet();
@@ -83,8 +83,8 @@ public class FunctionLibrary implements IFunctionLibrary {
   @Override
   public Stream<IFunction> stream() {
     Lock readLock = instanceLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
       return ObjectUtils.notNull(libraryByQName.values().stream().flatMap(NamedFunctionSet::getFunctionsAsStream));
     } finally {
       readLock.unlock();
@@ -95,8 +95,8 @@ public class FunctionLibrary implements IFunctionLibrary {
   public IFunction getFunction(@NonNull String name, int arity) {
     IFunction retval = null;
     Lock readLock = instanceLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
       NamedFunctionSet functions = libraryByName.get(name);
       if (functions != null) {
         retval = functions.getFunctionWithArity(arity);
@@ -111,8 +111,8 @@ public class FunctionLibrary implements IFunctionLibrary {
   public IFunction getFunction(@NonNull QName name, int arity) {
     IFunction retval = null;
     Lock readLock = instanceLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
       NamedFunctionSet functions = libraryByQName.get(name);
       if (functions != null) {
         retval = functions.getFunctionWithArity(arity);

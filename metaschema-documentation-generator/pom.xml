@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>dev.metaschema.java</groupId>
 		<artifactId>metaschema-framework</artifactId>
-		<version>1.0.0-M2-SNAPSHOT</version>
+		<version>1.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>metaschema-documentation-generator</artifactId>
 

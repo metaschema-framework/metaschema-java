@@ -10,7 +10,9 @@ import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
@@ -261,7 +263,14 @@ public class GenerateSchemaMojo
         throw new MojoExecutionException("Unable to create output directory: " + outputDir);
       }
 
-      BindingModuleLoader loader = newModuleLoader();
+      IBindingContext bindingContext;
+      try {
+        bindingContext = newBindingContext();
+      } catch (MetaschemaException | IOException ex) {
+        throw new MojoExecutionException("Failed to create the binding context", ex);
+      }
+
+      BindingModuleLoader loader = newModuleLoader(bindingContext);
 
       // generate Java sources based on provided metaschema sources
       final Set<IModule> modules = new HashSet<>();
@@ -277,12 +286,12 @@ public class GenerateSchemaMojo
           throw new MojoExecutionException("Loading of metaschema failed", ex);
         }
 
-        // IValidationResult result = IBindingContext.instance().validate(
-        // module.getSourceNodeItem(),
-        // IBindingContext.instance().newBoundLoader(),
-        // null);
-        //
-        // LoggingValidationHandler.instance().handleValidationResults(validationResult);
+        IValidationResult result = bindingContext.validate(
+            module.getSourceNodeItem(),
+            loader.getBindingContext().newBoundLoader(),
+            null);
+
+        new LoggingValidationHandler().handleResults(result);
 
         modules.add(module);
       }

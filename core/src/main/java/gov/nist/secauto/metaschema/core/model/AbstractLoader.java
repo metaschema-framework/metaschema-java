@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -19,9 +21,9 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -30,7 +32,10 @@ public abstract class AbstractLoader<T> implements ILoader<T> {
   private static final Logger LOGGER = LogManager.getLogger(AbstractLoader.class);
 
   @NonNull
-  private final Map<URI, T> cache = new LinkedHashMap<>(); // NOPMD - intentional
+  private final Map<URI, T> cache = ObjectUtils.notNull(Caffeine.newBuilder()
+      .maximumSize(100)
+      .expireAfterAccess(10, TimeUnit.MINUTES)
+      .<URI, T>build().asMap());
 
   @Override
   @NonNull
@@ -142,10 +147,8 @@ public abstract class AbstractLoader<T> implements ILoader<T> {
         visitedResources.pop();
       }
       cache.put(resource, retval);
-    } else {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Found resource in cache '{}'", resource);
-      }
+    } else if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Found resource in cache '{}'", resource);
     }
     return ObjectUtils.notNull(retval);
   }

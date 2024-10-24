@@ -430,7 +430,7 @@ class ModelTest
 
       String json = new StringBuilder()
           .append('{')
-          .append("  \"root-assembly-with-fields\": { }")
+          .append("  \"root-assembly-with-fields\": {}")
           .append('}')
           .toString();
 
