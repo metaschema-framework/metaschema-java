@@ -7,7 +7,11 @@
     <context>
         <metapath target="/(computer|vendor)/@id"/>
         <constraints>
-            <matches target="." datatype="uuid"/>
+            <matches target="." datatype="uuid">
+            	<remarks>
+            		<p>This matches the id of child computer and vendor elements.</p>
+            	</remarks>
+            </matches>
         </constraints>
     </context>
 </metaschema-meta-constraints>

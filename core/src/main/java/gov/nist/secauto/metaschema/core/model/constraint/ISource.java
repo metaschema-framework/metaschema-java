@@ -48,6 +48,9 @@ public interface ISource {
    * Get the descriptor for a
    * {@link gov.nist.secauto.metaschema.core.model.constraint.ISource.SourceType#EXTERNAL}
    * source with as associated resource.
+   * <p>
+   * The provided static context idenfies the location of this source based on the
+   * {@link StaticContext#getBaseUri()} method.
    *
    * @param staticContext
    *          the static Metapath context to use for compiling Metapath
@@ -57,6 +60,9 @@ public interface ISource {
    */
   @NonNull
   static ISource externalSource(@NonNull StaticContext staticContext) {
+    if (staticContext.getBaseUri() == null) {
+      throw new IllegalArgumentException("The static content must define a baseUri identifing the source resource.");
+    }
     return ExternalSource.instance(staticContext);
   }
 
