@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.AbstractResourceResolver;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -152,11 +151,28 @@ public class DefaultBoundLoader
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   @NonNull
-  public <CLASS extends IBoundObject> CLASS load(@NonNull InputStream is, @NonNull URI documentUri) throws IOException {
-    // TODO: avoid node item
-    return INodeItem.toValue(loadAsNodeItem(is, documentUri));
+  public <CLASS extends IBoundObject> CLASS load(
+      @NotOwning @NonNull InputStream is,
+      @NonNull URI documentUri)
+      throws IOException {
+    FormatDetector.Result formatMatch = getFormatDetector().detect(is);
+    Format format = formatMatch.getFormat();
+
+    try (InputStream formatStream = formatMatch.getDataStream()) {
+      try (ModelDetector.Result modelMatch = detectModel(formatStream, format)) {
+
+        IDeserializer<?> deserializer = getDeserializer(
+            modelMatch.getBoundClass(),
+            format,
+            getConfiguration());
+        try (InputStream modelStream = modelMatch.getDataStream()) {
+          return (CLASS) deserializer.deserialize(modelStream, documentUri);
+        }
+      }
+    }
   }
 
   @Override
