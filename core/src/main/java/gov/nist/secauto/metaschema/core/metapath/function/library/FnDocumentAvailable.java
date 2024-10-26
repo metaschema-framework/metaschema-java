@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.DocumentFunctionExcept
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.function.UriFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
@@ -105,31 +106,32 @@ public final class FnDocumentAvailable {
    * @return if the document is retrievable
    */
   public static IBooleanItem fnDocAvailable(@NonNull IAnyUriItem documentUri, @NonNull DynamicContext context) {
-    // resolve if possible
-    IAnyUriItem uri = FnResolveUri.fnResolveUri(documentUri, null, context);
-    if (!uri.isAbsolute() && !uri.isOpaque()) {
-      throw new DocumentFunctionException(DocumentFunctionException.ERROR_RETRIEVING_RESOURCE, String
-          .format("No base-uri is available in the static context to resolve the URI '%s'.", documentUri.toString()));
-    }
-
     boolean retval;
+    IAnyUriItem uri;
     try {
-      URLConnection connection = uri.asUri().toURL().openConnection();
+      uri = documentUri.isAbsolute() || documentUri.isOpaque()
+          ? documentUri
+          // if not absolute or opaque, then resolve it to make it absolute
+          : FnResolveUri.fnResolveUri(documentUri, null, context);
+      try {
+        URLConnection connection = uri.asUri().toURL().openConnection();
 
-      if (connection instanceof HttpURLConnection) {
-        HttpURLConnection httpConnection = (HttpURLConnection) connection;
-        httpConnection.setRequestMethod("HEAD");
-        httpConnection.connect();
-        retval = HttpURLConnection.HTTP_OK == httpConnection.getResponseCode();
-        httpConnection.disconnect();
-      } else {
-        connection.connect();
-        retval = true;
+        if (connection instanceof HttpURLConnection) {
+          HttpURLConnection httpConnection = (HttpURLConnection) connection;
+          httpConnection.setRequestMethod("HEAD");
+          httpConnection.connect();
+          retval = HttpURLConnection.HTTP_OK == httpConnection.getResponseCode();
+          httpConnection.disconnect();
+        } else {
+          connection.connect();
+          retval = true;
+        }
+      } catch (IOException ex) {
+        retval = false;
       }
-      return IBooleanItem.valueOf(retval);
-    } catch (IOException ex) {
-      throw new DocumentFunctionException(DocumentFunctionException.ERROR_RETRIEVING_RESOURCE, String
-          .format("Unable to retrieve the resource identified by the URI '%s'.", documentUri.toString()), ex);
+    } catch (UriFunctionException ex) {
+      retval = false;
     }
+    return IBooleanItem.valueOf(retval);
   }
 }

@@ -177,6 +177,8 @@ public final class FnResolveUri {
    *          the evaluation context used to get the static base URI if needed
    * @return the resolved URI or {@code null} if the {@code relative} URI in
    *         {@code null}
+   * @throws UriFunctionException
+   *           if the base URI is not configured in the dynamic context
    */
   @NonNull
   public static IAnyUriItem fnResolveUri(
