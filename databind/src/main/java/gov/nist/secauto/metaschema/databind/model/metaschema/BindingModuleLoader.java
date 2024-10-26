@@ -41,7 +41,6 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * dynamic bound module loading. This can be accomplished using the
  * {@link SimpleModuleLoaderStrategy} initialized using the
  * {@link DefaultModuleBindingGenerator}.
- *
  */
 public class BindingModuleLoader
     extends AbstractModuleLoader<METASCHEMA, IBindingMetaschemaModule>

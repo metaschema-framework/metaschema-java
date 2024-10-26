@@ -52,9 +52,27 @@ public abstract class AbstractValidationResultProcessor {
     }
   }
 
+  /**
+   * Process the JSON validation finding.
+   *
+   * @param finding
+   *          the validation finding to process
+   */
   protected abstract void handleJsonValidationFinding(@NonNull JsonValidationFinding finding);
 
+  /**
+   * Process the XML validation finding.
+   *
+   * @param finding
+   *          the validation finding to process
+   */
   protected abstract void handleXmlValidationFinding(@NonNull XmlValidationFinding finding);
 
+  /**
+   * Process the Metaschema module constraint validation finding.
+   *
+   * @param finding
+   *          the validation finding to process
+   */
   protected abstract void handleConstraintValidationFinding(@NonNull ConstraintValidationFinding finding);
 }

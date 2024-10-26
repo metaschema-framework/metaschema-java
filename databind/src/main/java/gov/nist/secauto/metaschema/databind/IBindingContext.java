@@ -369,7 +369,8 @@ public interface IBindingContext {
    *          the Module module to generate classes for
    * @param compilePath
    *          the path to the directory to generate classes in
-   * @return this instance
+   * @return the registered module, which may be a different instance than what
+   *         was provided if dynamic compilation was performed
    * @throws UnsupportedOperationException
    *           if this binding context is not configured to support dynamic bound
    *           module loading and the module instance is not a subclass of
@@ -377,9 +378,8 @@ public interface IBindingContext {
    * @since 2.0.0
    */
   @NonNull
-  default IBindingContext registerModule(@NonNull IModule module) {
-    getModuleLoaderStrategy().registerModule(module, this);
-    return this;
+  default IBoundModule registerModule(@NonNull IModule module) {
+    return getModuleLoaderStrategy().registerModule(module, this);
   }
 
   /**
@@ -660,13 +660,16 @@ public interface IBindingContext {
      *          the Module module to generate classes for
      * @param bindingContext
      *          the Metaschema binding context used to load bound resources
+     * @return the registered module, which may be a different instance than what
+     *         was provided if dynamic compilation was performed
      * @throws UnsupportedOperationException
      *           if this binding context is not configured to support dynamic bound
      *           module loading and the module instance is not a subclass of
      *           {@link IBoundModule}
      * @since 2.0.0
      */
-    void registerModule(
+    @NonNull
+    IBoundModule registerModule(
         @NonNull IModule module,
         @NonNull IBindingContext bindingContext);
 
@@ -697,7 +700,7 @@ public interface IBindingContext {
    *
    * @since 2.0.0
    */
-  public final class BindingContextBuilder {
+  final class BindingContextBuilder {
     private Path compilePath;
     private final List<IModuleLoader.IModulePostProcessor> postProcessors = new LinkedList<>();
     private final List<IConstraintSet> constraintSets = new LinkedList<>();
@@ -708,6 +711,12 @@ public interface IBindingContext {
       this(DefaultBindingContext::new);
     }
 
+    /**
+     * Construct a new builder.
+     *
+     * @param initializer
+     *          the callback to use to get a new binding context instance
+     */
     public BindingContextBuilder(
         @NonNull Function<IBindingContext.IModuleLoaderStrategy, IBindingContext> initializer) {
       this.initializer = initializer;
@@ -882,6 +891,7 @@ public interface IBindingContext {
      * @throws IOException
      *           if an error occurred while loading the schema
      * @throws SAXException
+     *           if an error occurred while parsing the schema
      * @since 2.0.0
      */
     @NonNull

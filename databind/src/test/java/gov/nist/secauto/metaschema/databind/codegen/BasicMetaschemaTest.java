@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
@@ -226,40 +225,25 @@ class BasicMetaschemaTest
   @Test
   @SuppressWarnings("unchecked")
   void codegenTest() throws MetaschemaException, IOException {
-    IBindingContext bindingContext = getBindingContext();
 
     List<IConstraintSet> constraints;
     {
-      IConstraintLoader constraintLoader = bindingContext.newConstraintLoader();
+      IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();
 
       constraints = constraintLoader.load(ObjectUtils.notNull(
           Paths.get("../core/metaschema/schema/metaschema/metaschema-module-constraints.xml")));
     }
 
-    Path compilePath = ObjectUtils.notNull(Paths.get("target/compile"));
-    Files.createDirectories(compilePath);
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .constraintSet(constraints)
+        .build();
 
     IBindingMetaschemaModule module = bindingContext.loadMetaschema(ObjectUtils.notNull(
         Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml")));
 
-    ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(
-        compilePath,
-        ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));
+    IBoundModule registeredModule = bindingContext.registerModule(module);
 
-    IProduction production = ModuleCompilerHelper.compileMetaschema(module, compilePath);
-    production.getModuleProductions().stream()
-        .map(item -> {
-          try {
-            return (Class<? extends IBoundModule>) classLoader.loadClass(item.getClassName().reflectionName());
-          } catch (ClassNotFoundException ex) {
-            throw new IllegalStateException(ex);
-          }
-        })
-        .forEachOrdered(clazz -> {
-          IBoundModule boundModule = bindingContext.registerModule(ObjectUtils.notNull(clazz));
-          // force the binding matchers to load
-          assertFalse(boundModule.getRootAssemblyDefinitions().isEmpty());
-        });
-
+    assertFalse(registeredModule.getRootAssemblyDefinitions().isEmpty());
   }
 }

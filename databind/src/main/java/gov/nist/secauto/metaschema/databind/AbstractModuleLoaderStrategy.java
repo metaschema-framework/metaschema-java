@@ -62,10 +62,10 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
   }
 
   @Override
-  public void registerModule(
+  public IBoundModule registerModule(
       IModule module,
       IBindingContext bindingContext) {
-    toBoundModule(module, bindingContext);
+    return toBoundModule(module, bindingContext);
   }
 
   @NonNull

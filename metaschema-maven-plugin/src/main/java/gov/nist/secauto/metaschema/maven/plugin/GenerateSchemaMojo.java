@@ -82,6 +82,7 @@ public class GenerateSchemaMojo
    * types. If disabled, definitions will always be generated as global types.
    */
   @Parameter(defaultValue = "true")
+  @SuppressWarnings("PMD.ImmutableField")
   private boolean inlineDefinitions = true;
 
   /**
@@ -183,6 +184,7 @@ public class GenerateSchemaMojo
     }
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private static void generateSchemas(
       @NonNull IModule module,
       @NonNull IConfiguration<SchemaGenerationFeature<?>> schemaGenerationConfig,

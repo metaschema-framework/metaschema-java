@@ -466,7 +466,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
       @NonNull XMLEventReader2 reader,
       @NonNull QName presumedName) throws IOException, XMLStreamException {
     XMLEvent retval = reader.nextEvent();
-    if ((!retval.isStartElement() || !presumedName.equals(retval.asStartElement().getName()))) {
+    if (!retval.isStartElement() || !presumedName.equals(retval.asStartElement().getName())) {
       throw new IOException(generateExpectedMessage(
           retval,
           XMLStreamConstants.START_ELEMENT,
@@ -494,7 +494,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
       @NonNull XMLEventReader2 reader,
       @NonNull QName presumedName) throws IOException, XMLStreamException {
     XMLEvent retval = reader.nextEvent();
-    if ((!retval.isEndElement() || !presumedName.equals(retval.asEndElement().getName()))) {
+    if (!retval.isEndElement() || !presumedName.equals(retval.asEndElement().getName())) {
       throw new IOException(generateExpectedMessage(
           retval,
           XMLStreamConstants.END_ELEMENT,

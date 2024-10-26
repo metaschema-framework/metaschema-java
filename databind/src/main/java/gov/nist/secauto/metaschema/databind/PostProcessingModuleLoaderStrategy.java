@@ -57,20 +57,21 @@ public class PostProcessingModuleLoaderStrategy
   }
 
   @Override
-  public void registerModule(IModule module, IBindingContext bindingContext) {
-    delegate.registerModule(module, bindingContext);
+  public IBoundModule registerModule(IModule module, IBindingContext bindingContext) {
+    IBoundModule retval = delegate.registerModule(module, bindingContext);
 
     postProcessedModulesLock.lock();
     try {
-      if (!postProcessedModules.contains(module)) {
+      if (!postProcessedModules.contains(retval)) {
         for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {
-          postProcessor.processModule(module);
+          postProcessor.processModule(retval);
         }
-        postProcessedModules.add(module);
+        postProcessedModules.add(retval);
       }
     } finally {
       postProcessedModulesLock.unlock();
     }
+    return retval;
   }
 
   @Override

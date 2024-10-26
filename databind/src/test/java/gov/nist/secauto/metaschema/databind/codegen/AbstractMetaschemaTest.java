@@ -143,7 +143,7 @@ public abstract class AbstractMetaschemaTest {
       if (LOGGER.isInfoEnabled()) {
         LOGGER.info("Testing XML file: {}", examplePath.toString());
       }
-      String xml;
+
       {
 
         T root = read(Format.XML, examplePath, rootClass, context);

@@ -143,8 +143,7 @@ public final class MpRecurseDepth {
 
     return ISequence.of(ObjectUtils.notNull(initialContext.stream()
         .flatMap(item -> {
-          @NonNull
-          ISequence<INodeItem> metapathResult = recursionMetapath.evaluate(item, dynamicContext);
+          @NonNull ISequence<INodeItem> metapathResult = recursionMetapath.evaluate(item, dynamicContext);
           // ensure this is list backed
           metapathResult.getValue();
 

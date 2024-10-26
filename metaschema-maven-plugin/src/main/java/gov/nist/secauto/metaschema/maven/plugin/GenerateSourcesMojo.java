@@ -111,6 +111,7 @@ public class GenerateSourcesMojo
     }
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   @Override
   public void execute() throws MojoExecutionException {
     File staleFile = getStaleFile();

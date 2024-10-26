@@ -93,10 +93,6 @@ public final class DefinitionAssembly
       return retval;
     }));
     this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -> getJsonProperties(null)));
-    //
-    // if (rootLocalName != null) {
-    // bindingContext.registerBindingMatcher(this);
-    // }
   }
 
   @Override

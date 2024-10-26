@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 
@@ -34,9 +35,9 @@ public class GenerationTest {
     IBindingMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
         "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.2/src/metaschema/oscal_complete_metaschema.xml")));
 
-    IBindingContext context = bindingContext.registerModule(module);
+    IBoundModule registeredModule = bindingContext.registerModule(module);
     assertAll(
         () -> assertNotNull(module),
-        () -> assertNotNull(context));
+        () -> assertNotNull(registeredModule));
   }
 }

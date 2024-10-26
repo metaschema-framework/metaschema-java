@@ -11,14 +11,12 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -57,13 +55,11 @@ public final class FnLowerCase {
       @NonNull List<ISequence<?>> arguments, @NonNull DynamicContext dynamicContext, IItem focus) {
 
     // From the XPath 3.1 specification:
-    // If the value of $arg is the empty sequence, the zero-length string is returned.
-    if (arguments.get(0).size() == 0) {
-      return ISequence.of(IStringItem.valueOf(""));
-    }
-
-    IStringItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return ISequence.of(fnLowerCase(arg));
+    // If the value of $arg is the empty sequence, the zero-length string is
+    // returned.
+    return ISequence.of(arguments.get(0).isEmpty()
+        ? IStringItem.valueOf("")
+        : fnLowerCase(FunctionUtils.asType(ObjectUtils.notNull(arguments.get(0).getFirstItem(true)))));
   }
 
   /**
@@ -76,6 +72,6 @@ public final class FnLowerCase {
    */
   @NonNull
   public static IStringItem fnLowerCase(@NonNull IStringItem arg) {
-    return IStringItem.valueOf(arg.toString().toLowerCase());
+    return IStringItem.valueOf(ObjectUtils.notNull(arg.toString().toLowerCase(Locale.ROOT)));
   }
 }
