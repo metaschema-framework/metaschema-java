@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 
@@ -26,10 +25,9 @@ public class GenerationTest {
 
   @Test
   void testOscalBindingModuleLoader() throws MetaschemaException, IOException {
-    IBindingContext bindingContext = IBindingContext.newInstance(
-        new SimpleModuleLoaderStrategy(
-            new DefaultModuleBindingGenerator(
-                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
 
     IBindingModuleLoader loader = bindingContext.newModuleLoader();
     loader.allowEntityResolution();

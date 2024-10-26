@@ -13,8 +13,6 @@ import gov.nist.secauto.metaschema.core.model.validation.IContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
-import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
@@ -67,11 +65,9 @@ class JsonSuiteTest
   @DisplayName("JSON Schema Generation")
   @TestFactory
   Stream<DynamicNode> generateTests() throws IOException {
-    IBindingContext bindingContext = IBindingContext.newInstance(
-        new SimpleModuleLoaderStrategy(
-            new DefaultModuleBindingGenerator(
-                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"),
-                    "modules-")))));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
     return testFactory(bindingContext);
   }
 
@@ -120,11 +116,9 @@ class JsonSuiteTest
   @Disabled
   @Test
   void testOscalComplete() throws IOException, MetaschemaException { // NOPMD - delegated to doTest
-    IBindingContext bindingContext = IBindingContext.newInstance(
-        new SimpleModuleLoaderStrategy(
-            new DefaultModuleBindingGenerator(
-                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"),
-                    "modules-")))));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
     IBindingModuleLoader loader = bindingContext.newModuleLoader();
     loader.allowEntityResolution();
 
@@ -146,11 +140,9 @@ class JsonSuiteTest
   @Disabled
   @Test
   void testTestMetaschema() throws IOException, MetaschemaException { // NOPMD - delegated to doTest
-    IBindingContext bindingContext = IBindingContext.newInstance(
-        new SimpleModuleLoaderStrategy(
-            new DefaultModuleBindingGenerator(
-                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"),
-                    "modules-")))));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
     IBindingModuleLoader loader = bindingContext.newModuleLoader();
     loader.allowEntityResolution();
 

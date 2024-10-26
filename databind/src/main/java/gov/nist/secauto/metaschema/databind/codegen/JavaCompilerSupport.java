@@ -44,6 +44,18 @@ public class JavaCompilerSupport {
     this.classDir = classDir;
   }
 
+  public Set<String> getClassPath() {
+    return classPath;
+  }
+
+  public Set<String> getModulePath() {
+    return modulePath;
+  }
+
+  public Set<String> getRootModuleNames() {
+    return rootModuleNames;
+  }
+
   public void addToClassPath(@NonNull String entry) {
     classPath.add(entry);
   }
@@ -93,7 +105,7 @@ public class JavaCompilerSupport {
    * @throws IllegalArgumentException
    *           if any of the options are invalid, or if any of the given
    *           compilation units are of other kind than
-   *           {@linkplain JavaFileObject.Kind#SOURCE source}
+   *           {@link javax.tools.JavaFileObject.Kind#SOURCE}
    */
 
   public CompilationResult compile(@NonNull List<Path> classFiles, @Nullable Writer compileOut) throws IOException {

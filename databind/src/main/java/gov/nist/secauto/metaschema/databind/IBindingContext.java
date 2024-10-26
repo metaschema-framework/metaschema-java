@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind;
 
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
+import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
@@ -14,10 +15,12 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IRootAssemblyNodeItem
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintValidator;
 import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.FindingCollectingConstraintValidationHandler;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintValidationHandler;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintValidator;
 import gov.nist.secauto.metaschema.core.model.constraint.ValidationFeature;
@@ -25,9 +28,11 @@ import gov.nist.secauto.metaschema.core.model.validation.AggregateValidationResu
 import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
+import gov.nist.secauto.metaschema.databind.io.DefaultBoundLoader;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
@@ -59,10 +64,11 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -73,10 +79,21 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 public interface IBindingContext {
   /**
-   * Get the singleton {@link IBindingContext} instance, which can be used to load
+   * Get a new builder that can produce a new, configured binding context.
+   *
+   * @return the builder
+   * @since 2.0.0
+   */
+  static BindingContextBuilder builder() {
+    return new BindingContextBuilder();
+  }
+
+  /**
+   * Get a new {@link IBindingContext} instance, which can be used to load
    * information that binds a model to a set of Java classes.
    *
    * @return a new binding context
+   * @since 2.0.0
    */
   @NonNull
   static IBindingContext newInstance() {
@@ -84,12 +101,13 @@ public interface IBindingContext {
   }
 
   /**
-   * Get the singleton {@link IBindingContext} instance, which can be used to load
+   * Get a new {@link IBindingContext} instance, which can be used to load
    * information that binds a model to a set of Java classes.
    *
    * @param strategy
    *          the loader strategy to use when loading Metaschema modules
    * @return a new binding context
+   * @since 2.0.0
    */
   @NonNull
   static IBindingContext newInstance(@NonNull IBindingContext.IModuleLoaderStrategy strategy) {
@@ -97,17 +115,14 @@ public interface IBindingContext {
   }
 
   /**
-   * Get the singleton {@link IBindingContext} instance, which can be used to load
-   * information that binds a model to a set of Java classes.
+   * Get the Metaschema module loader strategy used by this binding context to
+   * load modules.
    *
-   * @return a new binding context
-   * @deprecated Use {@link #newInstance()} instead
+   * @return the strategy instance
+   * @since 2.0.0
    */
-  @Deprecated(since = "1.3.0", forRemoval = true)
   @NonNull
-  static IBindingContext instance() {
-    return DefaultBindingContext.instance();
-  }
+  IModuleLoaderStrategy getModuleLoaderStrategy();
 
   /**
    * Get a loader that supports loading a Metaschema module from a specified
@@ -123,6 +138,7 @@ public interface IBindingContext {
    * {@link DefaultModuleBindingGenerator}.
    *
    * @return the loader
+   * @since 2.0.0
    */
   @NonNull
   default IBindingModuleLoader newModuleLoader() {
@@ -149,7 +165,7 @@ public interface IBindingContext {
    * @throws UnsupportedOperationException
    *           if this binding context is not configured to support dynamic bound
    *           module loading
-   * @since 1.3.0
+   * @since 2.0.0
    */
   @NonNull
   default IBindingMetaschemaModule loadMetaschema(@NonNull Path path) throws MetaschemaException, IOException {
@@ -176,7 +192,7 @@ public interface IBindingContext {
    * @throws UnsupportedOperationException
    *           if this binding context is not configured to support dynamic bound
    *           module loading
-   * @since 1.3.0
+   * @since 2.0.0
    */
   @NonNull
   default IBindingMetaschemaModule loadMetaschema(@NonNull URL url) throws MetaschemaException, IOException {
@@ -194,6 +210,7 @@ public interface IBindingContext {
    * {@link ExternalConstraintsModulePostProcessor} instance.
    *
    * @return the loader
+   * @since 2.0.0
    */
   @NonNull
   static IConstraintLoader getConstraintLoader() {
@@ -211,6 +228,7 @@ public interface IBindingContext {
    * {@link ExternalConstraintsModulePostProcessor} instance.
    *
    * @return the loader
+   * @since 2.0.0
    */
   @NonNull
   default IConstraintLoader newConstraintLoader() {
@@ -226,7 +244,9 @@ public interface IBindingContext {
    * @return the matcher
    */
   @NonNull
-  IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition);
+  default IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
+    return getModuleLoaderStrategy().registerBindingMatcher(definition);
+  }
 
   /**
    * Register a matcher used to identify a bound class by the definition's root
@@ -238,7 +258,21 @@ public interface IBindingContext {
    * @return the matcher
    */
   @NonNull
-  IBindingMatcher registerBindingMatcher(@NonNull Class<? extends IBoundObject> clazz);
+  default IBindingMatcher registerBindingMatcher(@NonNull Class<? extends IBoundObject> clazz) {
+    IBoundDefinitionModelComplex definition = getBoundDefinitionForClass(clazz);
+    if (definition == null) {
+      throw new IllegalArgumentException(String.format("Unable to find bound definition for class '%s'.",
+          clazz.getName()));
+    }
+
+    try {
+      IBoundDefinitionModelAssembly assemblyDefinition = IBoundDefinitionModelAssembly.class.cast(definition);
+      return registerBindingMatcher(ObjectUtils.notNull(assemblyDefinition));
+    } catch (ClassCastException ex) {
+      throw new IllegalArgumentException(
+          String.format("The provided class '%s' is not an assembly.", clazz.getName()), ex);
+    }
+  }
 
   /**
    * Register a class binding for a given bound class.
@@ -305,7 +339,9 @@ public interface IBindingContext {
    *         bound
    */
   @Nullable
-  <TYPE extends IDataTypeAdapter<?>> TYPE getJavaTypeAdapterInstance(@NonNull Class<TYPE> clazz);
+  default <TYPE extends IDataTypeAdapter<?>> TYPE getJavaTypeAdapterInstance(@NonNull Class<TYPE> clazz) {
+    return DataTypeService.getInstance().getJavaTypeAdapterByClass(clazz);
+  }
 
   /**
    * Load a bound Metaschema module implemented by the provided class.
@@ -338,9 +374,13 @@ public interface IBindingContext {
    *           if this binding context is not configured to support dynamic bound
    *           module loading and the module instance is not a subclass of
    *           {@link IBoundModule}
+   * @since 2.0.0
    */
   @NonNull
-  IBindingContext registerModule(@NonNull IModule module);
+  default IBindingContext registerModule(@NonNull IModule module) {
+    getModuleLoaderStrategy().registerModule(module, this);
+    return this;
+  }
 
   /**
    * Gets a data {@link ISerializer} which can be used to write Java instance data
@@ -401,12 +441,14 @@ public interface IBindingContext {
       @NonNull Class<CLASS> clazz);
 
   /**
-   * Get a new {@link IBoundLoader} instance.
+   * Get a new {@link IBoundLoader} instance to load bound content instances.
    *
    * @return the instance
    */
   @NonNull
-  IBoundLoader newBoundLoader();
+  default IBoundLoader newBoundLoader() {
+    return new DefaultBoundLoader(this);
+  }
 
   /**
    * Create a deep copy of the provided bound object.
@@ -529,7 +571,7 @@ public interface IBindingContext {
       @NonNull ISchemaValidationProvider schemaProvider,
       @Nullable IConfiguration<ValidationFeature<?>> config) throws IOException {
 
-    IValidationResult retval = schemaProvider.validateWithSchema(target, asFormat);
+    IValidationResult retval = schemaProvider.validateWithSchema(target, asFormat, this);
 
     if (retval.isPassing()) {
       IValidationResult constraintValidationResult = validateWithConstraints(target, config);
@@ -561,6 +603,9 @@ public interface IBindingContext {
     return validate(nodeItem, loader, config);
   }
 
+  /**
+   * A behavioral class used by the binding context to load Metaschema modules.
+   */
   interface IModuleLoaderStrategy {
     /**
      * Load the bound Metaschema module represented by the provided class.
@@ -576,6 +621,7 @@ public interface IBindingContext {
      * @throws IllegalStateException
      *           if an error occurred while processing the associated module
      *           information
+     * @since 2.0.0
      */
     @NonNull
     IBoundModule loadModule(
@@ -618,22 +664,164 @@ public interface IBindingContext {
      *           if this binding context is not configured to support dynamic bound
      *           module loading and the module instance is not a subclass of
      *           {@link IBoundModule}
+     * @since 2.0.0
      */
     void registerModule(
         @NonNull IModule module,
         @NonNull IBindingContext bindingContext);
 
+    /**
+     * Register a matcher used to identify a bound class by the definition's root
+     * name.
+     *
+     * @param definition
+     *          the definition to match for
+     * @return the matcher
+     */
     @NonNull
     IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition);
 
+    /**
+     * Get the matchers used to identify the bound class associated with the
+     * definition's root name.
+     *
+     * @return the matchers
+     */
     @NonNull
     Collection<IBindingMatcher> getBindingMatchers();
   }
 
+  /**
+   * Enables building a {@link IBindingContext} using common configuration options
+   * based on the builder pattern.
+   *
+   * @since 2.0.0
+   */
+  public final class BindingContextBuilder {
+    private Path compilePath;
+    private final List<IModuleLoader.IModulePostProcessor> postProcessors = new LinkedList<>();
+    private final List<IConstraintSet> constraintSets = new LinkedList<>();
+    @NonNull
+    private final Function<IBindingContext.IModuleLoaderStrategy, IBindingContext> initializer;
+
+    private BindingContextBuilder() {
+      this(DefaultBindingContext::new);
+    }
+
+    public BindingContextBuilder(
+        @NonNull Function<IBindingContext.IModuleLoaderStrategy, IBindingContext> initializer) {
+      this.initializer = initializer;
+    }
+
+    /**
+     * Enable dynamic code generation and compilation for Metaschema module-based
+     * classes.
+     *
+     * @param path
+     *          the path to use to generate and compile Metaschema module-based
+     *          classes
+     * @return this builder
+     */
+    @NonNull
+    public BindingContextBuilder compilePath(@NonNull Path path) {
+      compilePath = path;
+      return this;
+    }
+
+    /**
+     * Configure a Metaschema module post processor.
+     *
+     * @param processor
+     *          the post processor to configure
+     * @return this builder
+     */
+    @NonNull
+    public BindingContextBuilder postProcessor(@NonNull IModuleLoader.IModulePostProcessor processor) {
+      postProcessors.add(processor);
+      return this;
+    }
+
+    /**
+     * Configure a set of constraints targeting Metaschema modules.
+     *
+     * @param set
+     *          the constraint set to configure
+     * @return this builder
+     */
+    @NonNull
+    public BindingContextBuilder constraintSet(@NonNull IConstraintSet set) {
+      constraintSets.add(set);
+      return this;
+    }
+
+    /**
+     * Configure a collection of constraint sets targeting Metaschema modules.
+     *
+     * @param set
+     *          the constraint sets to configure
+     * @return this builder
+     */
+    @NonNull
+    public BindingContextBuilder constraintSet(@NonNull Collection<IConstraintSet> set) {
+      constraintSets.addAll(set);
+      return this;
+    }
+
+    /**
+     * Build a {@link IBindingContext} using the configuration options provided to
+     * the builder.
+     *
+     * @return a new, configured binding context
+     */
+    @NonNull
+    public IBindingContext build() {
+      // get loader strategy based on if code generation is configured
+      IBindingContext.IModuleLoaderStrategy strategy = compilePath == null
+          ? new SimpleModuleLoaderStrategy()
+          : new SimpleModuleLoaderStrategy(new DefaultModuleBindingGenerator(compilePath));
+
+      // determine if any post processors are configured or need to be
+      List<IModuleLoader.IModulePostProcessor> processors = new LinkedList<>(postProcessors);
+      if (!constraintSets.isEmpty()) {
+        processors.add(new ExternalConstraintsModulePostProcessor(constraintSets));
+      }
+
+      if (!processors.isEmpty()) {
+        // post processors are configured, configure the loader strategy to handle them
+        strategy = new PostProcessingModuleLoaderStrategy(
+            CollectionUtil.unmodifiableList(processors),
+            strategy);
+      }
+
+      return ObjectUtils.notNull(initializer.apply(strategy));
+    }
+  }
+
+  /**
+   * Provides schema validation capabilities.
+   */
   interface ISchemaValidationProvider {
 
+    /**
+     * Validate the target resource.
+     *
+     * @param target
+     *          the resource to validate
+     * @param asFormat
+     *          the format to validate the content as
+     * @param bindingContext
+     *          the Metaschema binding context used to load bound resources
+     * @return the validation result
+     * @throws FileNotFoundException
+     *           if the resource was not found
+     * @throws IOException
+     *           if an error occurred while reading the resource
+     */
     @NonNull
-    default IValidationResult validateWithSchema(@NonNull URI target, @NonNull Format asFormat)
+    default IValidationResult validateWithSchema(
+        @NonNull URI target,
+        @NonNull Format asFormat,
+        @NonNull IBindingContext bindingContext)
         throws FileNotFoundException, IOException {
       URL targetResource = ObjectUtils.notNull(target.toURL());
 
@@ -645,13 +833,12 @@ public interface IBindingContext {
             = new BufferedInputStream(ObjectUtils.notNull(targetResource.openStream()))) {
           json = new JSONObject(new JSONTokener(is));
         }
-        retval = new JsonSchemaContentValidator(getJsonSchema(json)).validate(json, target);
+        retval = getJsonSchema(json, bindingContext).validate(json, target);
         break;
       }
       case XML:
         try {
-          List<Source> schemaSources = getXmlSchemas(targetResource);
-          retval = new XmlSchemaContentValidator(schemaSources).validate(target);
+          retval = getXmlSchemas(targetResource, bindingContext).validate(target);
         } catch (SAXException ex) {
           throw new IOException(ex);
         }
@@ -659,7 +846,7 @@ public interface IBindingContext {
       case YAML: {
         JSONObject json = YamlOperations.yamlToJson(YamlOperations.parseYaml(target));
         assert json != null;
-        retval = new JsonSchemaContentValidator(getJsonSchema(json)).validate(json, ObjectUtils.notNull(target));
+        retval = getJsonSchema(json, bindingContext).validate(json, ObjectUtils.notNull(target));
         break;
       }
       default:
@@ -673,26 +860,33 @@ public interface IBindingContext {
      *
      * @param json
      *          the JSON content to validate
-     *
-     * @return the JSON schema
+     * @param bindingContext
+     *          the Metaschema binding context used to load bound resources
+     * @return the JSON schema validator
      * @throws IOException
      *           if an error occurred while loading the schema
+     * @since 2.0.0
      */
     @NonNull
-    JSONObject getJsonSchema(@NonNull JSONObject json) throws IOException;
+    JsonSchemaContentValidator getJsonSchema(@NonNull JSONObject json, @NonNull IBindingContext bindingContext)
+        throws IOException;
 
     /**
      * Get a XML schema to use for content validation.
      *
      * @param targetResource
      *          the URL for the XML content to validate
-     *
-     * @return the XML schema sources
+     * @param bindingContext
+     *          the Metaschema binding context used to load bound resources
+     * @return the XML schema validator
      * @throws IOException
      *           if an error occurred while loading the schema
+     * @throws SAXException
+     * @since 2.0.0
      */
     @NonNull
-    List<Source> getXmlSchemas(@NonNull URL targetResource) throws IOException;
+    XmlSchemaContentValidator getXmlSchemas(@NonNull URL targetResource, @NonNull IBindingContext bindingContext)
+        throws IOException, SAXException;
   }
 
   /**
@@ -701,6 +895,13 @@ public interface IBindingContext {
    * name.
    */
   interface IBindingMatcher {
+    /**
+     * Construct a new binding matcher for the provided assembly definition.
+     *
+     * @param assembly
+     *          the assembly definition that matcher is for
+     * @return the matcher
+     */
     @SuppressWarnings("PMD.ShortMethodName")
     @NonNull
     static IBindingMatcher of(IBoundDefinitionModelAssembly assembly) {

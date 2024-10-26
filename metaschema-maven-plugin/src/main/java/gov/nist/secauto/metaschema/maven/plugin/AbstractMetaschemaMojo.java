@@ -33,13 +33,11 @@ import gov.nist.secauto.metaschema.databind.codegen.ModuleCompilerHelper;
 import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -282,11 +280,12 @@ public abstract class AbstractMetaschemaMojo
     List<IConstraintSet> constraints = getConstraints();
 
     // generate Java sources based on provided metaschema sources
-
     return new DefaultBindingContext(
         new PostProcessingModuleLoaderStrategy(
             CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)),
             new SimpleModuleLoaderStrategy(
+                // this is used instead of the default generator to ensure that plugin classpath
+                // entries are used for compilation
                 new ModuleBindingGenerator(
                     ObjectUtils.notNull(Files.createDirectories(Paths.get("target/metaschema-codegen-modules"))),
                     new DefaultBindingConfiguration()))));
@@ -405,20 +404,6 @@ public abstract class AbstractMetaschemaMojo
       }
     }
     return pathElements;
-  }
-
-  /**
-   * Construct a new module loader based on the provided mojo configuration.
-   *
-   * @return the module loader
-   * @throws MojoExecutionException
-   *           if an error occurred while loading the configured constraints
-   */
-  @NonNull
-  protected BindingModuleLoader newModuleLoader(@NonNull IBindingContext bindingContext) throws MojoExecutionException {
-    BindingModuleLoader loader = new BindingModuleLoader(bindingContext);
-    loader.allowEntityResolution();
-    return loader;
   }
 
   protected final class LoggingValidationHandler

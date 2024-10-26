@@ -30,6 +30,11 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides basic module loading capabilities.
+ *
+ * @since 2.0.0
+ */
 public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IModuleLoaderStrategy {
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull

@@ -11,7 +11,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFin
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
 import gov.nist.secauto.metaschema.core.model.validation.AbstractValidationResultProcessor;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
-import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
 
@@ -76,18 +75,6 @@ public final class LoggingValidationHandler
    */
   public boolean isLogExceptions() {
     return logExceptions;
-  }
-
-  /**
-   * Handle the provided collection of validation results.
-   *
-   * @param result
-   *          the validation results
-   * @return {@code true} if the result is passing or {@code false} otherwise
-   */
-  @Deprecated(since = "1.3.0", forRemoval = true)
-  public boolean handleValidationResults(IValidationResult result) {
-    return handleResults(result);
   }
 
   @Override

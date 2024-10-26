@@ -13,8 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
-import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,11 +25,9 @@ class DefaultBoundLoaderTest {
   @Test
   void testIssue187() throws IOException, MetaschemaException {
 
-    IBindingContext bindingContext = IBindingContext.newInstance(
-        new SimpleModuleLoaderStrategy(
-            new DefaultModuleBindingGenerator(
-                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"),
-                    "modules-")))));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
 
     bindingContext.loadMetaschema(ObjectUtils.notNull(
         Paths.get("src/test/resources/content/issue187-metaschema.xml")));

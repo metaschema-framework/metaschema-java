@@ -162,10 +162,15 @@ public final class ModuleCompilerHelper {
       if (LOGGER.isErrorEnabled()) {
         LOGGER.error(diagnostics.getDiagnostics().toString());
       }
-      throw new IllegalStateException(String.format("failed to compile classes: %s",
+      throw new IllegalStateException(String.format("failed to compile classes: %s%nClasspath: %s%nModule Path: %s%n%s",
           classesToCompile.stream()
               .map(clazz -> clazz.getClassName().canonicalName())
-              .collect(Collectors.joining(","))));
+              .collect(Collectors.joining(",")),
+          diagnostics.getDiagnostics().toString(),
+          compiler.getClassPath().stream()
+              .collect(Collectors.joining(":")),
+          compiler.getModulePath().stream()
+              .collect(Collectors.joining(":"))));
     }
     return production;
   }

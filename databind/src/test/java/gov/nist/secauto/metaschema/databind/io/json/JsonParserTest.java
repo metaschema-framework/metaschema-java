@@ -10,9 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
 import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
-import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 
@@ -26,10 +24,9 @@ class JsonParserTest
     extends AbstractMetaschemaTest {
   @Test
   void testIssue308Regression() throws IOException, MetaschemaException {
-    IBindingContext bindingContext = IBindingContext.newInstance(
-        new SimpleModuleLoaderStrategy(
-            new DefaultModuleBindingGenerator(
-                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
 
     bindingContext.loadMetaschema(ObjectUtils.notNull(
         Paths.get("src/test/resources/metaschema/308-choice-regression/metaschema.xml")));

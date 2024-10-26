@@ -17,8 +17,6 @@ import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidat
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
-import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.model.testing.AbstractTestSuite;
@@ -170,10 +168,9 @@ public abstract class AbstractSchemaGeneratorTestSuite
     Path testSuite = Paths.get("../core/metaschema/test-suite/schema-generation/");
     Path collectionPath = testSuite.resolve(collectionName);
 
-    IBindingContext bindingContext = IBindingContext.newInstance(
-        new SimpleModuleLoaderStrategy(
-            new DefaultModuleBindingGenerator(
-                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
 
     // load the metaschema module
     IBindingModuleLoader loader = bindingContext.newModuleLoader();

@@ -11,7 +11,6 @@ import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
 import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.io.Format;
@@ -42,10 +41,9 @@ public abstract class AbstractMetaschemaTest {
 
   @NonNull
   protected IBindingContext getBindingContext() throws IOException {
-    return IBindingContext.newInstance(
-        new SimpleModuleLoaderStrategy(
-            new DefaultModuleBindingGenerator(
-                ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))));
+    return IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
   }
 
   @NonNull

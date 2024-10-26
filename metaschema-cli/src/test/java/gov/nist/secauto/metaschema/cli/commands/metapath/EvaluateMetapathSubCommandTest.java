@@ -30,7 +30,6 @@ class EvaluateMetapathSubCommandTest {
               "3 + 4 + 5",
               "--show-stack-trace" };
       CLI.runCli(args);
-
       assertThat(consoleCaptor.getStandardOutput()).contains("12");
     }
   }

@@ -35,6 +35,7 @@ import org.schemastore.json.sarif.x210.ReportingDescriptor;
 import org.schemastore.json.sarif.x210.Result;
 import org.schemastore.json.sarif.x210.Run;
 import org.schemastore.json.sarif.x210.Sarif;
+import org.schemastore.json.sarif.x210.SarifModule;
 import org.schemastore.json.sarif.x210.Tool;
 import org.schemastore.json.sarif.x210.ToolComponent;
 
@@ -245,7 +246,9 @@ public final class SarifValidationHandler {
       run.setTool(tool);
     }
 
-    IBindingContext.instance().newSerializer(Format.JSON, Sarif.class)
+    IBindingContext bindingContext = IBindingContext.newInstance();
+    bindingContext.registerModule(SarifModule.class);
+    bindingContext.newSerializer(Format.JSON, Sarif.class)
         .disableFeature(SerializationFeature.SERIALIZE_ROOT)
         .serialize(
             sarif,

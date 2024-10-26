@@ -5,13 +5,9 @@
 
 package gov.nist.secauto.metaschema.databind;
 
-import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
-import gov.nist.secauto.metaschema.databind.io.DefaultBoundLoader;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IDeserializer;
 import gov.nist.secauto.metaschema.databind.io.ISerializer;
@@ -69,7 +65,7 @@ public class DefaultBindingContext implements IBindingContext {
    * @see IBindingContext#newInstance()
    */
   @NonNull
-  public static DefaultBindingContext instance() {
+  static DefaultBindingContext instance() {
     return ObjectUtils.notNull(singleton.get());
   }
 
@@ -84,19 +80,26 @@ public class DefaultBindingContext implements IBindingContext {
   /**
    * Construct a new binding context.
    *
-   * @param modulePostProcessors
-   *          a list of module post processors to call after loading a module
+   * @param strategy
+   *          the behavior class to use for loading Metaschema modules
+   * @since 2.0.0
    */
-  @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
   public DefaultBindingContext(@NonNull IBindingContext.IModuleLoaderStrategy strategy) {
     // only allow extended classes
     moduleLoaderStrategy = strategy;
     moduleLoaderStrategy.loadModule(MetaschemaModelModule.class, this);
   }
 
+  @Override
   @NonNull
-  protected IModuleLoaderStrategy getModuleLoaderStrategy() {
+  public IModuleLoaderStrategy getModuleLoaderStrategy() {
     return moduleLoaderStrategy;
+  }
+
+  @Override
+  @NonNull
+  public final IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz) {
+    return getModuleLoaderStrategy().loadModule(clazz, this);
   }
 
   /**
@@ -112,29 +115,6 @@ public class DefaultBindingContext implements IBindingContext {
   }
 
   @Override
-  @NonNull
-  public final IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
-    return getModuleLoaderStrategy().registerBindingMatcher(definition);
-  }
-
-  @Override
-  public final IBindingMatcher registerBindingMatcher(@NonNull Class<? extends IBoundObject> clazz) {
-    IBoundDefinitionModelComplex definition = getBoundDefinitionForClass(clazz);
-    if (definition == null) {
-      throw new IllegalArgumentException(String.format("Unable to find bound definition for class '%s'.",
-          clazz.getName()));
-    }
-
-    try {
-      IBoundDefinitionModelAssembly assemblyDefinition = IBoundDefinitionModelAssembly.class.cast(definition);
-      return registerBindingMatcher(ObjectUtils.notNull(assemblyDefinition));
-    } catch (ClassCastException ex) {
-      throw new IllegalArgumentException(
-          String.format("The provided class '%s' is not an assembly.", clazz.getName()), ex);
-    }
-  }
-
-  @Override
   public final IBoundDefinitionModelComplex registerClassBinding(IBoundDefinitionModelComplex definition) {
     Class<?> clazz = definition.getBoundClass();
     return boundClassToStrategyMap.computeIfAbsent(clazz, k -> definition);
@@ -143,11 +123,6 @@ public class DefaultBindingContext implements IBindingContext {
   @Override
   public final IBoundDefinitionModelComplex getBoundDefinitionForClass(@NonNull Class<? extends IBoundObject> clazz) {
     return moduleLoaderStrategy.getBoundDefinitionForClass(clazz, this);
-  }
-
-  @Override
-  public <TYPE extends IDataTypeAdapter<?>> TYPE getJavaTypeAdapterInstance(@NonNull Class<TYPE> clazz) {
-    return DataTypeService.getInstance().getJavaTypeAdapterByClass(clazz);
   }
 
   /**
@@ -226,17 +201,6 @@ public class DefaultBindingContext implements IBindingContext {
   }
 
   @Override
-  public IBindingContext registerModule(IModule module) {
-    getModuleLoaderStrategy().registerModule(module, this);
-    return this;
-  }
-
-  @Override
-  public IBoundModule registerModule(Class<? extends IBoundModule> clazz) {
-    return getModuleLoaderStrategy().loadModule(clazz, this);
-  }
-
-  @Override
   public Class<? extends IBoundObject> getBoundClassForRootXmlQName(@NonNull QName rootQName) {
     Class<? extends IBoundObject> retval = null;
     for (IBindingMatcher matcher : getBindingMatchers()) {
@@ -258,11 +222,6 @@ public class DefaultBindingContext implements IBindingContext {
       }
     }
     return retval;
-  }
-
-  @Override
-  public DefaultBoundLoader newBoundLoader() {
-    return new DefaultBoundLoader(this);
   }
 
   @Override

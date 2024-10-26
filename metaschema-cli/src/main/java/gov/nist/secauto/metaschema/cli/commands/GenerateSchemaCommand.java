@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
+import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
@@ -34,8 +35,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -142,8 +145,7 @@ public class GenerateSchemaCommand
    * @return the execution result
    */
   @SuppressWarnings({
-      "PMD.OnlyOneReturn", // readability
-      "unused"
+      "PMD.OnlyOneReturn" // readability
   })
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,
@@ -214,7 +216,12 @@ public class GenerateSchemaCommand
       if (destination == null) {
         @SuppressWarnings({ "resource", "PMD.CloseResource" }) // not owned
         OutputStream os = ObjectUtils.notNull(System.out);
-        ISchemaGenerator.generateSchema(module, os, asFormat, configuration);
+
+        try (OutputStream out = AutoCloser.preventClose(os)) {
+          try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
+            ISchemaGenerator.generateSchema(module, writer, asFormat, configuration);
+          }
+        }
       } else {
         ISchemaGenerator.generateSchema(module, destination, asFormat, configuration);
       }

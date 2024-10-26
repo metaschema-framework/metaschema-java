@@ -156,8 +156,8 @@ public class CLITest {
                 "--as=xml",
                 "--disable-schema-validation"
             },
-            // fail due to constraint validation issue
-            ExitCode.FAIL, NO_EXCEPTION_CLASS));
+            // fail due to missing element during parsing
+            ExitCode.IO_ERROR, java.io.IOException.class));
         add(Arguments.of(
             new String[] { "validate-content",
                 "-m",

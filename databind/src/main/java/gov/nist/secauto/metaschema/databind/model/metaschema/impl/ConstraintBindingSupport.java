@@ -23,7 +23,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.ConstraintLetExpression;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.ConstraintValueEnum;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagAllowedValues;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagExpect;
@@ -144,12 +143,11 @@ public final class ConstraintBindingSupport {
       @NonNull IValueConstraintsBase constraints,
       @NonNull ISource source) {
     // parse let expressions
-    for (ConstraintLetExpression letObj : constraints.getLets()) {
-      ILet let = ILet.of(
-          ObjectUtils.requireNonNull(new QName(letObj.getVar())),
-          ObjectUtils.requireNonNull(letObj.getExpression()), source);
-      constraintSet.addLetExpression(let);
-    }
+    constraints.getLets().stream()
+        .map(letObj -> ILet.of(
+            ObjectUtils.requireNonNull(new QName(letObj.getVar())),
+            ObjectUtils.requireNonNull(letObj.getExpression()), source))
+        .forEachOrdered(constraintSet::addLetExpression);
   }
 
   @NonNull

@@ -3,6 +3,9 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
+/**
+ * Identifies the modules used by the databind library.
+ */
 module gov.nist.secauto.metaschema.databind {
   // requirements
   requires java.base;
@@ -10,10 +13,13 @@ module gov.nist.secauto.metaschema.databind {
 
   requires transitive gov.nist.secauto.metaschema.core;
 
+  requires static org.eclipse.jdt.annotation;
+  requires static com.github.spotbugs.annotations;
+
   requires com.ctc.wstx;
   requires com.fasterxml.jackson.dataformat.yaml;
   requires com.fasterxml.jackson.dataformat.xml;
-  requires com.github.spotbugs.annotations;
+  requires transitive com.google.auto.service;
   requires transitive com.squareup.javapoet;
   requires nl.talsmasoftware.lazy4j;
   requires transitive org.apache.commons.lang3;
@@ -22,8 +28,6 @@ module gov.nist.secauto.metaschema.databind {
   requires org.yaml.snakeyaml;
 
   requires flexmark.util.sequence;
-  requires transitive com.google.auto.service;
-  requires org.eclipse.jdt.annotation;
 
   exports gov.nist.secauto.metaschema.databind;
   exports gov.nist.secauto.metaschema.databind.codegen;

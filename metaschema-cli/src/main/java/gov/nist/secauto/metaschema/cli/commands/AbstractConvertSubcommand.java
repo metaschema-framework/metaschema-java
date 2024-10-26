@@ -208,7 +208,7 @@ public abstract class AbstractConvertSubcommand
         bindingContext = getBindingContext();
       } catch (IOException | MetaschemaException ex) {
         return ExitCode.PROCESSING_ERROR
-            .exitMessage("Unable to get binding context. " + ex.getMessage())
+            .exitMessage(String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()))
             .withThrowable(ex);
       }
       try {

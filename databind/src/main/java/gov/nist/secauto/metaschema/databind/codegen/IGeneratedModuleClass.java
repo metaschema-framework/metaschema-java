@@ -52,7 +52,7 @@ public interface IGeneratedModuleClass extends IGeneratedClass {
    * @return the module class
    * @throws ClassNotFoundException
    *           if this classwas not found
-   * @since 1.3.0
+   * @since 2.0.0
    */
   @SuppressWarnings("unchecked")
   @NonNull

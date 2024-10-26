@@ -16,7 +16,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Provides processing hooks for a set of validation results.
  *
- * @since 1.3.0
+ * @since 2.0.0
  */
 public abstract class AbstractValidationResultProcessor {
 
