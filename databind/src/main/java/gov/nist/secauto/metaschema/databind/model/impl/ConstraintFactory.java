@@ -48,6 +48,7 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 final class ConstraintFactory {
   private ConstraintFactory() {
     // disable
@@ -324,6 +325,14 @@ final class ConstraintFactory {
 
   @NonNull
   static ILet newLetExpression(@NonNull Let annotation, @NonNull ISource source) {
-    return ILet.of(new QName(annotation.name()), annotation.target(), source);
+    String remarkMarkdown = annotation.remarks();
+    MarkupMultiline remarks = remarkMarkdown.isBlank()
+        ? null
+        : MarkupMultiline.fromMarkdown(remarkMarkdown);
+    return ILet.of(
+        new QName(annotation.name()),
+        annotation.target(),
+        source,
+        remarks);
   }
 }

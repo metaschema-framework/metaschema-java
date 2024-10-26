@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultLet;
@@ -12,7 +13,11 @@ import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultLet;
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a variable assignment for use in Metaschema module constraints.
+ */
 @SuppressWarnings("PMD.ShortClassName")
 public interface ILet {
   /**
@@ -25,6 +30,8 @@ public interface ILet {
    *          a Metapath expression string representing the variable value
    * @param source
    *          the source descriptor for the resource containing the constraint
+   * @param remarks
+   *          remarks about the let statement
    * @return the original let statement with the same name or {@code null}
    */
   @SuppressWarnings("PMD.ShortMethodName")
@@ -32,9 +39,14 @@ public interface ILet {
   static ILet of(
       @NonNull QName name,
       @NonNull String valueExpression,
-      @NonNull ISource source) {
+      @NonNull ISource source,
+      @Nullable MarkupMultiline remarks) {
     try {
-      return of(name, MetapathExpression.compile(valueExpression, source.getStaticContext()), source);
+      return of(
+          name,
+          MetapathExpression.compile(valueExpression, source.getStaticContext()),
+          source,
+          remarks);
     } catch (MetapathException ex) {
       throw new MetapathException(
           String.format("Unable to compile the let expression '%s=%s'%s. %s",
@@ -55,6 +67,8 @@ public interface ILet {
    *          a Metapath expression representing the variable value
    * @param source
    *          the source descriptor for the resource containing the constraint
+   * @param remarks
+   *          remarks about the let statement
    * @return the original let statement with the same name or {@code null}
    */
   @SuppressWarnings("PMD.ShortMethodName")
@@ -62,8 +76,9 @@ public interface ILet {
   static ILet of(
       @NonNull QName name,
       @NonNull MetapathExpression valueExpression,
-      @NonNull ISource source) {
-    return new DefaultLet(name, valueExpression, source);
+      @NonNull ISource source,
+      @Nullable MarkupMultiline remarks) {
+    return new DefaultLet(name, valueExpression, source, remarks);
   }
 
   /**
@@ -89,4 +104,12 @@ public interface ILet {
    */
   @NonNull
   ISource getSource();
+
+  /**
+   * Get the remarks associated with the let statement.
+   *
+   * @return the remark or {@code null} if no remarks are defined
+   */
+  @Nullable
+  MarkupMultiline getRemarks();
 }

@@ -61,8 +61,7 @@ public final class MapEntry {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
-    @SuppressWarnings("unchecked")
-    T value = (T) arguments.get(1).toCollectionValue();
+    @SuppressWarnings("unchecked") T value = (T) arguments.get(1).toCollectionValue();
 
     return entry(key, value).asSequence();
   }

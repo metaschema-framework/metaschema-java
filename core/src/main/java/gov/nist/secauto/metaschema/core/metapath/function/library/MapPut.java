@@ -70,8 +70,7 @@ public final class MapPut {
       IItem focus) {
     IMapItem<V> map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
     IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
-    @SuppressWarnings("unchecked")
-    V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();
+    @SuppressWarnings("unchecked") V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();
 
     return put(map, key, value).asSequence();
   }
@@ -95,8 +94,7 @@ public final class MapPut {
       @NonNull IMapItem<V> map,
       @NonNull IAnyAtomicItem key,
       @NonNull V value) {
-    @SuppressWarnings("PMD.UseConcurrentHashMap")
-    Map<IMapKey, V> copy = new HashMap<>(map);
+    @SuppressWarnings("PMD.UseConcurrentHashMap") Map<IMapKey, V> copy = new HashMap<>(map);
     copy.put(key.asMapKey(), value);
 
     return IMapItem.ofCollection(copy);

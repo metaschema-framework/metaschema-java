@@ -194,12 +194,10 @@ public final class AnnotationGenerator {
       letAnnotation.addMember("name", "$S", let.getName());
       letAnnotation.addMember("target", "$S", let.getValueExpression().getPath());
 
-      // TODO: Support remarks
-      // MarkupMultiline remarks = let.getRemarks();
-      // if (remarks != null) {
-      // constraintAnnotation.addMember("remarks", "$S",
-      // remarks.toMarkdown());
-      // }
+      MarkupMultiline remarks = let.getRemarks();
+      if (remarks != null) {
+        letAnnotation.addMember("remarks", "$S", remarks.toMarkdown());
+      }
 
       annotation.addMember("lets", "$L", letAnnotation.build());
     }

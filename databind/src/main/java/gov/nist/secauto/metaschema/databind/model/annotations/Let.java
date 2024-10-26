@@ -14,6 +14,10 @@ import java.lang.annotation.Target;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a constraint let statement used to assign the result of a Metapath
+ * expression to a variable.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)

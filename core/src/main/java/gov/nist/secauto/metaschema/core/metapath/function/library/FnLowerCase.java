@@ -57,7 +57,8 @@ public final class FnLowerCase {
       @NonNull List<ISequence<?>> arguments, @NonNull DynamicContext dynamicContext, IItem focus) {
 
     // From the XPath 3.1 specification:
-    // If the value of $arg is the empty sequence, the zero-length string is returned.
+    // If the value of $arg is the empty sequence, the zero-length string is
+    // returned.
     if (arguments.get(0).size() == 0) {
       return ISequence.of(IStringItem.valueOf(""));
     }

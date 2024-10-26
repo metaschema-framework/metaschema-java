@@ -471,10 +471,14 @@ public final class ModelFactory {
   public static ILet newLet(
       @NonNull ConstraintLetType xmlObject,
       @NonNull ISource source) {
+
     // TODO: figure out how to resolve the namespace prefix on var
     return ILet.of(
         new QName(xmlObject.getVar()),
         ObjectUtils.notNull(xmlObject.getExpression()),
-        source);
+        source,
+        xmlObject.isSetRemarks()
+            ? remarks(ObjectUtils.notNull(xmlObject.getRemarks()))
+            : null);
   }
 }
