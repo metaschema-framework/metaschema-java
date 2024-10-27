@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA.Import;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.impl.BindingModule;
 
 import java.io.IOException;
@@ -31,7 +32,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
- * Supports loading a Metaschema module from a specified resource.
+ * A module loader implementation that parses Metaschema modules from a
+ * specified resource using the built-in model {@link MetaschemaModelModule}
+ * binding.
  * <p>
  * Metaschema modules loaded this way are automatically registered with the
  * {@link IBindingContext}.
@@ -94,6 +97,11 @@ public class BindingModuleLoader
     return getLoader().load(METASCHEMA.class, resource);
   }
 
+  /**
+   * Get the underlying bound loader.
+   *
+   * @return the loader
+   */
   protected IBoundLoader getLoader() {
     return ObjectUtils.notNull(loader.get());
   }
@@ -117,5 +125,13 @@ public class BindingModuleLoader
   @Override
   public IMutableConfiguration<DeserializationFeature<?>> set(DeserializationFeature<?> feature, Object value) {
     return getLoader().set(feature, value);
+  }
+
+  /**
+   * Allow inline XML entities to be automatically replaced.
+   */
+  @Override
+  public void allowEntityResolution() {
+    enableFeature(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION);
   }
 }

@@ -24,7 +24,7 @@ public final class DeserializationFeature<V>
       = new DeserializationFeature<>("validate", Boolean.class, false);
 
   /**
-   * If enabled, perform constraint validation on the deserialized bound objects.
+   * If enabled, allow inline XML entities to be automatically replaced.
    */
   @NonNull
   public static final DeserializationFeature<Boolean> DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION

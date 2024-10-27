@@ -55,8 +55,7 @@ public interface IIntegerItem extends IDecimalItem {
   @NonNull
   static IIntegerItem valueOf(int value) {
     @SuppressWarnings("null")
-    @NonNull
-    BigInteger bigInteger = BigInteger.valueOf(value);
+    @NonNull BigInteger bigInteger = BigInteger.valueOf(value);
     return valueOf(bigInteger);
   }
 
@@ -70,8 +69,7 @@ public interface IIntegerItem extends IDecimalItem {
   @NonNull
   static IIntegerItem valueOf(long value) {
     @SuppressWarnings("null")
-    @NonNull
-    BigInteger bigInteger = BigInteger.valueOf(value);
+    @NonNull BigInteger bigInteger = BigInteger.valueOf(value);
     return valueOf(bigInteger);
   }
 
