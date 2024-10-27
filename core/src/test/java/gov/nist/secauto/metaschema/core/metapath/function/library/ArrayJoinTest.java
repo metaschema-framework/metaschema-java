@@ -47,7 +47,7 @@ class ArrayJoinTest
   @MethodSource("provideValues")
   void testExpression(@NonNull IItem expected, @NonNull String metapath) {
     IItem result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
+        .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext());
     assertEquals(expected, result);
   }
 }

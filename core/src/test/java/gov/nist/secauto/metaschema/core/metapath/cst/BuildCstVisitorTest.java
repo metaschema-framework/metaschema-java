@@ -128,7 +128,8 @@ class BuildCstVisitorTest {
     // select starting node
     IDocumentNodeItem document = newTestDocument();
     IFieldNodeItem field
-        = MetapathExpression.compile("/root/field1", staticContext).evaluateAs(document, ResultType.NODE);
+        = MetapathExpression.compile("/root/field1", staticContext)
+            .evaluateAs(document, ResultType.ITEM);
     assert field != null;
 
     // evaluate
@@ -145,12 +146,12 @@ class BuildCstVisitorTest {
     // select starting node
     IDocumentNodeItem document = newTestDocument();
     IFieldNodeItem field = MetapathExpression.compile("/root/field1", staticContext)
-        .evaluateAs(document, ResultType.NODE);
+        .evaluateAs(document, ResultType.ITEM);
     assert field != null;
 
     // compile expression
     IItem result = MetapathExpression.compile("parent::root", staticContext)
-        .evaluateAs(field, ResultType.NODE);
+        .evaluateAs(field, ResultType.ITEM);
     assert result != null;
 
     assertAll(
@@ -165,7 +166,7 @@ class BuildCstVisitorTest {
     // select starting node
     IDocumentNodeItem document = newTestDocument();
     IFieldNodeItem field = MetapathExpression.compile("/root/field1", staticContext)
-        .evaluateAs(document, ResultType.NODE);
+        .evaluateAs(document, ResultType.ITEM);
     assert field != null;
 
     // compile expression
@@ -221,7 +222,7 @@ class BuildCstVisitorTest {
     // select starting node
     IDocumentNodeItem document = newTestDocument();
     IFieldNodeItem field = MetapathExpression.compile("/root/field2", staticContext)
-        .evaluateAs(document, ResultType.NODE);
+        .evaluateAs(document, ResultType.ITEM);
     assert field != null;
 
     // evaluate
@@ -242,7 +243,7 @@ class BuildCstVisitorTest {
     // select starting node
     IDocumentNodeItem document = newTestDocument();
     IRootAssemblyNodeItem root = MetapathExpression.compile("/root", staticContext)
-        .evaluateAs(document, ResultType.NODE, new DynamicContext(staticContext));
+        .evaluateAs(document, ResultType.ITEM, new DynamicContext(staticContext));
     assert root != null;
 
     // evaluate

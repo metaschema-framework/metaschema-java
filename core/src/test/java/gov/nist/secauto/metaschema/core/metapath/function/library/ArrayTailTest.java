@@ -43,7 +43,7 @@ class ArrayTailTest
   void testExpression(@NonNull IArrayItem<?> expected, @NonNull String metapath) {
 
     IArrayItem<?> result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
+        .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext());
     assertEquals(expected, result);
   }
 }

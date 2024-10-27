@@ -52,7 +52,7 @@ class FnStringTest
   @MethodSource("provideValues")
   void testExpression(@NonNull IStringItem expected, @NonNull String metapath) {
     IStringItem result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
+        .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext());
     assertEquals(expected, result);
   }
 

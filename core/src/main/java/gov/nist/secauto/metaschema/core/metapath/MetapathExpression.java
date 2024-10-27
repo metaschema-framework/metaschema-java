@@ -20,7 +20,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.antlr.v4.runtime.CharStreams;
@@ -67,11 +66,6 @@ public class MetapathExpression {
      */
     SEQUENCE,
     /**
-     * The result is expected to be an {@link INodeItem} value.
-     */
-    // TODO: audit use of this value, replace with ITEM where appropriate
-    NODE,
-    /**
      * The result is expected to be an {@link IItem} value.
      */
     ITEM;
@@ -117,7 +111,8 @@ public class MetapathExpression {
    */
   @NonNull
   public static MetapathExpression compile(@NonNull String path, @NonNull StaticContext context) {
-    @NonNull MetapathExpression retval;
+    @NonNull
+    MetapathExpression retval;
     if (".".equals(path)) {
       retval = CONTEXT_NODE;
     } else {
@@ -337,7 +332,6 @@ public class MetapathExpression {
       result = FnBoolean.fnBoolean(sequence).toBoolean();
       break;
     case ITEM:
-    case NODE:
       result = sequence.getFirstItem(true);
       break;
     case NUMBER:

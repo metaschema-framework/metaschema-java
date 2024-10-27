@@ -44,7 +44,7 @@ class FnStringLengthTest
   @MethodSource("provideValues")
   void testExpression(@NonNull IIntegerItem expected, @NonNull String metapath) {
     IIntegerItem result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.NODE, newDynamicContext());
+        .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext());
     assertEquals(expected, result);
   }
 
