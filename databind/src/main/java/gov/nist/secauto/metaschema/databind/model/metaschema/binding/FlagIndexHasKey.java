@@ -21,7 +21,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -37,7 +37,7 @@ import java.util.List;
     formalName = "Index Has Key Constraint",
     name = "flag-index-has-key",
     moduleClass = MetaschemaModelModule.class)
-public class FlagIndexHasKey implements IBoundObject, IConstraintBase {
+public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstraintBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(

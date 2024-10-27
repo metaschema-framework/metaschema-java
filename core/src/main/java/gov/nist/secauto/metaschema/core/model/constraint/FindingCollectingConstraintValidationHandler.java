@@ -25,6 +25,12 @@ import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A validation result handler that collects the resulting findings for later
+ * retrieval using the {@link #getFindings()} method.
+ * <p>
+ * This class is not thread safe.
+ */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class FindingCollectingConstraintValidationHandler
     extends AbstractConstraintValidationHandler
@@ -88,28 +94,30 @@ public class FindingCollectingConstraintValidationHandler
   @Override
   public void handleCardinalityMinimumViolation(
       @NonNull ICardinalityConstraint constraint,
-      @NonNull INodeItem node,
-      @NonNull ISequence<? extends INodeItem> targets) {
-    addFinding(ConstraintValidationFinding.builder(constraint, node)
+      @NonNull INodeItem target,
+      @NonNull ISequence<? extends INodeItem> testedItems,
+      @NonNull DynamicContext dynamicContext) {
+    addFinding(ConstraintValidationFinding.builder(constraint, target)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
-        .target(node)
-        .subjects(targets.getValue())
-        .message(newCardinalityMinimumViolationMessage(constraint, node, targets))
+        .target(target)
+        .subjects(testedItems.getValue())
+        .message(newCardinalityMinimumViolationMessage(constraint, target, testedItems, dynamicContext))
         .build());
   }
 
   @Override
   public void handleCardinalityMaximumViolation(
       @NonNull ICardinalityConstraint constraint,
-      @NonNull INodeItem node,
-      @NonNull ISequence<? extends INodeItem> targets) {
-    addFinding(ConstraintValidationFinding.builder(constraint, node)
+      @NonNull INodeItem target,
+      @NonNull ISequence<? extends INodeItem> testedItems,
+      @NonNull DynamicContext dynamicContext) {
+    addFinding(ConstraintValidationFinding.builder(constraint, target)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
-        .target(node)
-        .subjects(targets.getValue())
-        .message(newCardinalityMaximumViolationMessage(constraint, node, targets))
+        .target(target)
+        .subjects(testedItems.getValue())
+        .message(newCardinalityMaximumViolationMessage(constraint, target, testedItems, dynamicContext))
         .build());
   }
 
@@ -118,12 +126,13 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull IIndexConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem target) {
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
         .target(target)
-        .message(newIndexDuplicateKeyViolationMessage(constraint, node, oldItem, target))
+        .message(newIndexDuplicateKeyViolationMessage(constraint, node, oldItem, target, dynamicContext))
         .build());
   }
 
@@ -132,12 +141,13 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull IUniqueConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem target) {
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
         .target(target)
-        .message(newUniqueKeyViolationMessage(constraint, node, oldItem, target))
+        .message(newUniqueKeyViolationMessage(constraint, node, oldItem, target, dynamicContext))
         .build());
   }
 
@@ -147,7 +157,8 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull IKeyConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull MetapathException cause) {
+      @NonNull MetapathException cause,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
@@ -163,12 +174,13 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull String value,
-      @NonNull Pattern pattern) {
+      @NonNull Pattern pattern,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
         .target(target)
-        .message(newMatchPatternViolationMessage(constraint, node, target, value, pattern))
+        .message(newMatchPatternViolationMessage(constraint, node, target, value, pattern, dynamicContext))
         .build());
   }
 
@@ -179,12 +191,13 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull IDataTypeAdapter<?> adapter,
-      @NonNull IllegalArgumentException cause) {
+      @NonNull IllegalArgumentException cause,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
         .target(target)
-        .message(newMatchDatatypeViolationMessage(constraint, node, target, value, adapter))
+        .message(newMatchDatatypeViolationMessage(constraint, node, target, value, adapter, dynamicContext))
         .cause(cause)
         .build());
   }
@@ -206,7 +219,8 @@ public class FindingCollectingConstraintValidationHandler
   @Override
   public void handleAllowedValuesViolation(
       @NonNull List<IAllowedValuesConstraint> failedConstraints,
-      @NonNull INodeItem target) {
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
     Level maxLevel = ObjectUtils.notNull(failedConstraints.stream()
         .map(IAllowedValuesConstraint::getLevel)
         .reduce(Level.NONE, (l1, l2) -> l1.ordinal() >= l2.ordinal() ? l1 : l2));
@@ -220,7 +234,10 @@ public class FindingCollectingConstraintValidationHandler
   }
 
   @Override
-  public void handleIndexDuplicateViolation(IIndexConstraint constraint, INodeItem node) {
+  public void handleIndexDuplicateViolation(
+      IIndexConstraint constraint,
+      INodeItem node,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .kind(Kind.FAIL)
         .severity(Level.CRITICAL)
@@ -230,31 +247,41 @@ public class FindingCollectingConstraintValidationHandler
   }
 
   @Override
-  public void handleIndexMiss(IIndexHasKeyConstraint constraint, INodeItem node, INodeItem target, List<String> key) {
+  public void handleIndexMiss(
+      @NonNull IIndexHasKeyConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull List<String> key,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
         .target(target)
-        .message(newIndexMissMessage(constraint, node, target, key))
+        .message(newIndexMissMessage(constraint, node, target, key, dynamicContext))
         .build());
   }
 
   @Override
   public void handleMissingIndexViolation(
-      IIndexHasKeyConstraint constraint,
-      INodeItem node,
-      INodeItem target,
-      String message) {
+      @NonNull IIndexHasKeyConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull String message,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
         .target(target)
-        .message(newMissingIndexViolationMessage(constraint, node, target, message))
+        .message(newMissingIndexViolationMessage(constraint, node, target, message, dynamicContext))
         .build());
   }
 
   @Override
-  public void handlePass(IConstraint constraint, INodeItem node, INodeItem target) {
+  public void handlePass(
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .kind(Kind.PASS)
         .severity(Level.NONE)
@@ -264,10 +291,11 @@ public class FindingCollectingConstraintValidationHandler
 
   @Override
   public void handleError(
-      IConstraint constraint,
-      INodeItem node,
-      String message,
-      Throwable exception) {
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull String message,
+      @NonNull Throwable exception,
+      @NonNull DynamicContext dynamicContext) {
     LOGGER.atError().withThrowable(exception).log(message);
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .kind(Kind.FAIL)

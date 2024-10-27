@@ -106,14 +106,6 @@ public @interface AllowedValues {
   IAllowedValuesConstraint.Extensible extensible() default IAllowedValuesConstraint.Extensible.EXTERNAL;
 
   /**
-   * The message to emit when the constraint is violated.
-   *
-   * @return the message or an empty string otherwise
-   */
-  @NonNull
-  String message() default "";
-
-  /**
    * Any remarks about the constraint, encoded as an escaped Markdown string.
    *
    * @return an encoded markdown string or an empty string if no remarks are

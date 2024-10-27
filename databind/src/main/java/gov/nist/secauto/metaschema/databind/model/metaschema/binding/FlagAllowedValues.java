@@ -120,11 +120,6 @@ public class FlagAllowedValues implements IBoundObject, IConstraintBase {
   private List<ConstraintValueEnum> _enums;
 
   @BoundField(
-      formalName = "Constraint Condition Violation Message",
-      useName = "message")
-  private String _message;
-
-  @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
       useName = "remarks")
@@ -266,15 +261,6 @@ public class FlagAllowedValues implements IBoundObject, IConstraintBase {
   public boolean removeEnum(ConstraintValueEnum item) {
     ConstraintValueEnum value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _enums != null && _enums.remove(value);
-  }
-
-  @Override
-  public String getMessage() {
-    return _message;
-  }
-
-  public void setMessage(String value) {
-    _message = value;
   }
 
   @Override

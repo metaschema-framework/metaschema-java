@@ -253,11 +253,6 @@ public final class AnnotationGenerator {
         constraintAnnotation.addMember("values", "$L", valueAnnotation.build());
       }
 
-      String message = constraint.getMessage();
-      if (message != null) {
-        constraintAnnotation.addMember("message", "$S", message);
-      }
-
       MarkupMultiline remarks = constraint.getRemarks();
       if (remarks != null) {
         constraintAnnotation.addMember("remarks", "$S", remarks.toMarkdown());

@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.constraint.AbstractConfigurableMessageConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractKeyConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
@@ -24,6 +25,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IModelConstraintsBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IValueConstraintsBase;
@@ -241,7 +243,7 @@ public final class ConstraintBindingSupport {
       @NonNull ISource source) {
     IExpectConstraint.Builder builder = IExpectConstraint.builder()
         .test(target(ObjectUtils.requireNonNull(obj.getTest())));
-    applyCommonValues(obj, null, source, builder);
+    applyConfigurableCommonValues(obj, null, source, builder);
 
     String message = obj.getMessage();
     if (message != null) {
@@ -257,7 +259,7 @@ public final class ConstraintBindingSupport {
       @NonNull ISource source) {
     IExpectConstraint.Builder builder = IExpectConstraint.builder()
         .test(target(ObjectUtils.requireNonNull(obj.getTest())));
-    applyCommonValues(obj, obj.getTarget(), source, builder);
+    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);
 
     return builder.build();
   }
@@ -285,7 +287,7 @@ public final class ConstraintBindingSupport {
       @NonNull FlagIndexHasKey obj,
       @NonNull ISource source) {
     IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));
-    applyCommonValues(obj, null, source, builder);
+    applyConfigurableCommonValues(obj, null, source, builder);
     handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);
     return builder.build();
   }
@@ -295,7 +297,7 @@ public final class ConstraintBindingSupport {
       @NonNull TargetedIndexHasKeyConstraint obj,
       @NonNull ISource source) {
     IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));
-    applyCommonValues(obj, obj.getTarget(), source, builder);
+    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);
     handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);
     return builder.build();
   }
@@ -305,7 +307,7 @@ public final class ConstraintBindingSupport {
       @NonNull FlagMatches obj,
       @NonNull ISource source) {
     IMatchesConstraint.Builder builder = IMatchesConstraint.builder();
-    applyCommonValues(obj, null, source, builder);
+    applyConfigurableCommonValues(obj, null, source, builder);
 
     Pattern regex = pattern(obj.getRegex());
     if (regex != null) {
@@ -326,7 +328,7 @@ public final class ConstraintBindingSupport {
       @NonNull TargetedMatchesConstraint obj,
       @NonNull ISource source) {
     IMatchesConstraint.Builder builder = IMatchesConstraint.builder();
-    applyCommonValues(obj, obj.getTarget(), source, builder);
+    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);
 
     Pattern regex = pattern(obj.getRegex());
     if (regex != null) {
@@ -347,7 +349,7 @@ public final class ConstraintBindingSupport {
       @NonNull TargetedIndexConstraint obj,
       @NonNull ISource source) {
     IIndexConstraint.Builder builder = IIndexConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));
-    applyCommonValues(obj, obj.getTarget(), source, builder);
+    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);
     handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);
 
     return builder.build();
@@ -358,7 +360,7 @@ public final class ConstraintBindingSupport {
       @NonNull TargetedHasCardinalityConstraint obj,
       @NonNull ISource source) {
     ICardinalityConstraint.Builder builder = ICardinalityConstraint.builder();
-    applyCommonValues(obj, obj.getTarget(), source, builder);
+    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);
 
     BigInteger minOccurs = obj.getMinOccurs();
     if (minOccurs != null) {
@@ -378,10 +380,25 @@ public final class ConstraintBindingSupport {
       @NonNull TargetedIsUniqueConstraint obj,
       @NonNull ISource source) {
     IUniqueConstraint.Builder builder = IUniqueConstraint.builder();
-    applyCommonValues(obj, obj.getTarget(), source, builder);
+    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);
     handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);
 
     return builder.build();
+  }
+
+  @NonNull
+  private static <T extends AbstractConfigurableMessageConstraintBuilder<T, ?>> T applyConfigurableCommonValues(
+      @NonNull IConfigurableMessageConstraintBase constraint,
+      @Nullable String target,
+      @NonNull ISource source,
+      @NonNull T builder) {
+    applyCommonValues(constraint, target, source, builder);
+
+    String message = constraint.getMessage();
+    if (message != null) {
+      builder.message(message);
+    }
+    return builder;
   }
 
   @NonNull
@@ -409,11 +426,6 @@ public final class ConstraintBindingSupport {
 
     List<Property> props = ObjectUtils.requireNonNull(constraint.getProps());
     builder.properties(ModelSupport.parseProperties(props));
-
-    String message = constraint.getMessage();
-    if (message != null) {
-      builder.message(message);
-    }
 
     Remarks remarks = constraint.getRemarks();
     if (remarks != null) {

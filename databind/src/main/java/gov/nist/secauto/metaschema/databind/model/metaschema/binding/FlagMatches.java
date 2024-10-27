@@ -22,7 +22,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -38,7 +38,7 @@ import java.util.List;
     formalName = "Value Matches Constraint",
     name = "flag-matches",
     moduleClass = MetaschemaModelModule.class)
-public class FlagMatches implements IBoundObject, IConstraintBase {
+public class FlagMatches implements IBoundObject, IConfigurableMessageConstraintBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(

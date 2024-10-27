@@ -18,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents a rule requiring the value of a field or flag to match a pattern
  * and/or conform to an identified data type.
  */
-public interface IMatchesConstraint extends IConstraint {
+public interface IMatchesConstraint extends IConfigurableMessageConstraint {
   /**
    * Get the expected pattern.
    *
@@ -55,7 +55,7 @@ public interface IMatchesConstraint extends IConstraint {
    * Provides a builder pattern for constructing a new {@link IMatchesConstraint}.
    */
   final class Builder
-      extends AbstractConstraintBuilder<Builder, IMatchesConstraint> {
+      extends AbstractConfigurableMessageConstraintBuilder<Builder, IMatchesConstraint> {
     private Pattern pattern;
     private IDataTypeAdapter<?> datatype;
 

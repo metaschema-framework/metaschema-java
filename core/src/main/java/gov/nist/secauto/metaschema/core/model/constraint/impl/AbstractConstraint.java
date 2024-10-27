@@ -11,18 +11,15 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.ReplacementScanner;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -32,9 +29,6 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * The base class for all constraint implementations.
  */
 public abstract class AbstractConstraint implements IConstraint { // NOPMD - intentional data class
-  @NonNull
-  private static final Pattern METAPATH_VALUE_TEMPLATE_PATTERN
-      = ObjectUtils.notNull(Pattern.compile("(?<!\\\\)(\\{\\s*((?:(?:\\\\})|[^}])*)\\s*\\})"));
   @Nullable
   private final String id;
   @Nullable
@@ -45,8 +39,6 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   private final ISource source;
   @NonNull
   private final Level level;
-  @Nullable
-  private final String message;
   @Nullable
   private final MarkupMultiline remarks;
   @NonNull
@@ -72,8 +64,6 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
    *          the Metapath expression identifying the nodes the constraint targets
    * @param properties
    *          a collection of associated properties
-   * @param message
-   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -85,7 +75,6 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
       @NonNull Level level,
       @NonNull String target,
       @NonNull Map<IAttributable.Key, Set<String>> properties,
-      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
     Objects.requireNonNull(target);
     this.id = id;
@@ -94,7 +83,6 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
     this.source = source;
     this.level = ObjectUtils.requireNonNull(level, "level");
     this.properties = properties;
-    this.message = message;
     this.remarks = remarks;
     this.targetMetapath = ObjectUtils.notNull(
         Lazy.lazy(() -> MetapathExpression.compile(
@@ -151,25 +139,6 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   @NonNull
   public MetapathExpression getTargetMetapath() {
     return ObjectUtils.notNull(targetMetapath.get());
-  }
-
-  @Override
-  public String getMessage() {
-    return message;
-  }
-
-  @Override
-  public String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context) {
-    String message = getMessage();
-    if (message == null) {
-      throw new IllegalStateException("A custom message is not defined.");
-    }
-
-    return ObjectUtils.notNull(ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
-      String metapath = ObjectUtils.notNull(match.group(2));
-      MetapathExpression expr = MetapathExpression.compile(metapath, context.getStaticContext());
-      return expr.evaluateAs(item, MetapathExpression.ResultType.STRING, context);
-    }).toString());
   }
 
   @Override

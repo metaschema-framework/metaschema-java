@@ -5,12 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
-import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IConfigurableMessageConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.ReplacementScanner;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,18 +24,23 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Represents a matches constraint.
- * <p>
- * Enforces a value pattern and/or data type.
+ * The base class for all constraint implementations that allow a configurable
+ * message.
+ *
+ * @since 2.0.0
  */
-public final class DefaultMatchesConstraint
-    extends AbstractConfigurableMessageConstraint
-    implements IMatchesConstraint {
-  private final Pattern pattern;
-  private final IDataTypeAdapter<?> dataType;
+public abstract class AbstractConfigurableMessageConstraint
+    extends AbstractConstraint
+    implements IConfigurableMessageConstraint {
+  @NonNull
+  private static final Pattern METAPATH_VALUE_TEMPLATE_PATTERN
+      = ObjectUtils.notNull(Pattern.compile("(?<!\\\\)(\\{\\s*((?:(?:\\\\})|[^}])*)\\s*\\})"));
+
+  @Nullable
+  private final String message;
 
   /**
-   * Construct a new matches constraint.
+   * Construct a new Metaschema constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -48,19 +57,12 @@ public final class DefaultMatchesConstraint
    *          the Metapath expression identifying the nodes the constraint targets
    * @param properties
    *          a collection of associated properties
-   * @param pattern
-   *          the value pattern to match or {@code null} if there is no match
-   *          pattern
-   * @param dataType
-   *          the value data type to match or {@code null} if there is no match
-   *          data type
    * @param message
    *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
-  @SuppressWarnings("PMD.ExcessiveParameterList")
-  public DefaultMatchesConstraint(
+  protected AbstractConfigurableMessageConstraint(
       @Nullable String id,
       @Nullable String formalName,
       @Nullable MarkupLine description,
@@ -68,26 +70,28 @@ public final class DefaultMatchesConstraint
       @NonNull Level level,
       @NonNull String target,
       @NonNull Map<IAttributable.Key, Set<String>> properties,
-      @Nullable Pattern pattern,
-      @Nullable IDataTypeAdapter<?> dataType,
       @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, message, remarks);
-    if (pattern == null && dataType == null) {
-      throw new IllegalArgumentException("a pattern or data type must be provided");
+    super(id, formalName, description, source, level, target, properties, remarks);
+    this.message = message;
+  }
+
+  @Override
+  public String getMessage() {
+    return message;
+  }
+
+  @Override
+  public String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context) {
+    String message = getMessage();
+    if (message == null) {
+      throw new IllegalStateException("A custom message is not defined.");
     }
-    this.pattern = pattern;
-    this.dataType = dataType;
-  }
 
-  @Override
-  public Pattern getPattern() {
-    return pattern;
+    return ObjectUtils.notNull(ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
+      String metapath = ObjectUtils.notNull(match.group(2));
+      MetapathExpression expr = MetapathExpression.compile(metapath, context.getStaticContext());
+      return expr.evaluateAs(item, MetapathExpression.ResultType.STRING, context);
+    }).toString());
   }
-
-  @Override
-  public IDataTypeAdapter<?> getDataType() {
-    return dataType;
-  }
-
 }

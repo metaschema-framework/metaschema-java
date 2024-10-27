@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,23 +68,28 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *
    * @param constraint
    *          the constraint the requested message pertains to
-   * @param node
+   * @param target
    *          the item the constraint targeted
-   * @param targets
-   *          the targets matching the constraint
+   * @param testedItems
+   *          the items tested by the constraint
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newCardinalityMinimumViolationMessage(
       @NonNull ICardinalityConstraint constraint,
-      @NonNull INodeItem node,
-      @NonNull ISequence<? extends INodeItem> targets) {
-    return String.format(
-        "The cardinality '%d' is below the required minimum '%d' for items matching '%s'.",
-        targets.size(),
-        constraint.getMinOccurs(),
-        constraint.getTarget());
+      @NonNull INodeItem target,
+      @NonNull ISequence<? extends INodeItem> testedItems,
+      @NonNull DynamicContext dynamicContext) {
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format(
+            "The cardinality '%d' is below the required minimum '%d' for items matching '%s'.",
+            testedItems.size(),
+            constraint.getMinOccurs(),
+            constraint.getTarget()))
+        : constraint.generateMessage(target, dynamicContext);
   }
 
   /**
@@ -92,29 +98,34 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *
    * @param constraint
    *          the constraint the requested message pertains to
-   * @param node
+   * @param target
    *          the item the constraint targeted
-   * @param targets
-   *          the targets matching the constraint
+   * @param testedItems
+   *          the items tested by the constraint
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newCardinalityMaximumViolationMessage(
       @NonNull ICardinalityConstraint constraint,
-      @NonNull INodeItem node,
-      @NonNull ISequence<? extends INodeItem> targets) {
-    return String.format(
-        "The cardinality '%d' is greater than the required maximum '%d' at: %s.",
-        targets.size(),
-        constraint.getMinOccurs(),
-        targets.safeStream()
-            .map(item -> new StringBuilder(12)
-                .append('\'')
-                .append(toPath(item))
-                .append('\'')
-                .toString())
-            .collect(CustomCollectors.joiningWithOxfordComma("and")));
+      @NonNull INodeItem target,
+      @NonNull ISequence<? extends INodeItem> testedItems,
+      @NonNull DynamicContext dynamicContext) {
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format(
+            "The cardinality '%d' is greater than the required maximum '%d' at: %s.",
+            testedItems.size(),
+            constraint.getMinOccurs(),
+            testedItems.safeStream()
+                .map(item -> new StringBuilder(12)
+                    .append('\'')
+                    .append(toPath(ObjectUtils.notNull(item)))
+                    .append('\'')
+                    .toString())
+                .collect(CustomCollectors.joiningWithOxfordComma("and"))))
+        : constraint.generateMessage(target, dynamicContext);
   }
 
   /**
@@ -127,22 +138,27 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the item the constraint targeted
    * @param oldItem
    *          the original item matching the constraint
-   * @param newItem
+   * @param target
    *          the new item matching the constraint
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newIndexDuplicateKeyViolationMessage(
       @NonNull IIndexConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem newItem) {
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
     // TODO: render the key paths
-    return String.format("Index '%s' has duplicate key for items at paths '%s' and '%s'",
-        constraint.getName(),
-        toPath(oldItem),
-        toPath(newItem));
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format("Index '%s' has duplicate key for items at paths '%s' and '%s'",
+            constraint.getName(),
+            toPath(oldItem),
+            toPath(target)))
+        : constraint.generateMessage(target, dynamicContext);
   }
 
   /**
@@ -155,20 +171,25 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the item the constraint targeted
    * @param oldItem
    *          the original item matching the constraint
-   * @param newItem
+   * @param target
    *          the new item matching the constraint
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newUniqueKeyViolationMessage(
       @NonNull IUniqueConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem newItem) {
-    return String.format("Unique constraint violation at paths '%s' and '%s'",
-        toPath(oldItem),
-        toPath(newItem));
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format("Unique constraint violation at paths '%s' and '%s'",
+            toPath(oldItem),
+            toPath(target)))
+        : constraint.generateMessage(target, dynamicContext);
   }
 
   /**
@@ -185,20 +206,25 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the target's value
    * @param pattern
    *          the expected pattern
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newMatchPatternViolationMessage(
       @NonNull IMatchesConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull String value,
-      @NonNull Pattern pattern) {
-    return String.format("Value '%s' did not match the pattern '%s' at path '%s'",
-        value,
-        pattern.pattern(),
-        toPath(target));
+      @NonNull Pattern pattern,
+      @NonNull DynamicContext dynamicContext) {
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format("Value '%s' did not match the pattern '%s' at path '%s'",
+            value,
+            pattern.pattern(),
+            toPath(target)))
+        : constraint.generateMessage(target, dynamicContext);
   }
 
   /**
@@ -215,18 +241,25 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the target's value
    * @param adapter
    *          the expected data type adapter
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newMatchDatatypeViolationMessage(
       @NonNull IMatchesConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull String value,
-      @NonNull IDataTypeAdapter<?> adapter) {
-    return String.format("Value '%s' did not conform to the data type '%s' at path '%s'", value,
-        adapter.getPreferredName(), toPath(target));
+      @NonNull IDataTypeAdapter<?> adapter,
+      @NonNull DynamicContext dynamicContext) {
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format("Value '%s' did not conform to the data type '%s' at path '%s'",
+            value,
+            adapter.getPreferredName(),
+            toPath(target)))
+        : constraint.generateMessage(target, dynamicContext);
   }
 
   /**
@@ -244,22 +277,17 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          evaluation
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newExpectViolationMessage(
       @NonNull IExpectConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull DynamicContext dynamicContext) {
-    String message;
-    if (constraint.getMessage() != null) {
-      message = constraint.generateMessage(target, dynamicContext);
-    } else {
-      message = String.format("Expect constraint '%s' did not match the data at path '%s'",
-          constraint.getTest(),
-          toPath(target));
-    }
-    return message;
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format("Expect constraint '%s' did not match the data at path '%s'",
+            constraint.getTest(),
+            toPath(target)))
+        : constraint.generateMessage(target, dynamicContext);
   }
 
   /**
@@ -272,12 +300,10 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the target matching the constraint
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newAllowedValuesViolationMessage(
       @NonNull List<IAllowedValuesConstraint> constraints,
       @NonNull INodeItem target) {
-
     String allowedValues = constraints.stream()
         .flatMap(constraint -> constraint.getAllowedValues().values().stream())
         .map(IAllowedValue::getValue)
@@ -285,10 +311,10 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
         .distinct()
         .collect(CustomCollectors.joiningWithOxfordComma("or"));
 
-    return String.format("Value '%s' doesn't match one of '%s' at path '%s'",
+    return ObjectUtils.notNull(String.format("Value '%s' doesn't match one of '%s' at path '%s'",
         FnData.fnDataItem(target).asString(),
         allowedValues,
-        toPath(target));
+        toPath(target)));
   }
 
   /**
@@ -301,14 +327,13 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the item the constraint targeted
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newIndexDuplicateViolationMessage(
       @NonNull IIndexConstraint constraint,
       @NonNull INodeItem node) {
-    return String.format("Duplicate index named '%s' found at path '%s'",
+    return ObjectUtils.notNull(String.format("Duplicate index named '%s' found at path '%s'",
         constraint.getName(),
-        node.getMetapath());
+        node.getMetapath()));
   }
 
   /**
@@ -323,22 +348,27 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the target matching the constraint
    * @param key
    *          the key derived from the target that failed to be found in the index
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    * @return the new message
    */
-  @SuppressWarnings("null")
   @NonNull
   protected String newIndexMissMessage(
       @NonNull IIndexHasKeyConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull List<String> key) {
+      @NonNull List<String> key,
+      @NonNull DynamicContext dynamicContext) {
     String keyValues = key.stream()
         .collect(Collectors.joining(","));
 
-    return String.format("Key reference [%s] not found in index '%s' for item at path '%s'",
-        keyValues,
-        constraint.getIndexName(),
-        target.getMetapath());
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format("Key reference [%s] not found in index '%s' for item at path '%s'",
+            keyValues,
+            constraint.getIndexName(),
+            target.getMetapath()))
+        : constraint.generateMessage(target, dynamicContext);
   }
 
   /**
@@ -353,6 +383,9 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the target matching the constraint
    * @param message
    *          the message to be added before information about the target path
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    * @return the new message
    */
   @SuppressWarnings("null")
@@ -361,7 +394,8 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
       @NonNull IIndexHasKeyConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull String message) {
+      @NonNull String message,
+      @NonNull DynamicContext dynamicContext) {
     return String.format("%s for constraint '%s' for item at path '%s'",
         message,
         Objects.requireNonNullElse(constraint.getId(), "?"),

@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.constraint.AbstractConfigurableMessageConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractKeyConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
@@ -105,7 +106,8 @@ final class ConstraintFactory {
     return builder;
   }
 
-  static <T extends AbstractConstraintBuilder<T, ?>> T applyMessage(@NonNull T builder, @Nullable String message) {
+  static <T extends AbstractConfigurableMessageConstraintBuilder<T, ?>> T applyMessage(@NonNull T builder,
+      @Nullable String message) {
     if (message != null && !message.isBlank()) {
       builder.message(message);
     }
@@ -168,7 +170,6 @@ final class ConstraintFactory {
         .level(constraint.level());
     applyTarget(builder, constraint.target());
     applyProperties(builder, constraint.properties());
-    applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
 
     applyAllowedValues(builder, constraint);

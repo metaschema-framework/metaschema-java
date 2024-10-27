@@ -25,6 +25,7 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.ModuleLoadingPostProcessor;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 
 import java.io.IOException;

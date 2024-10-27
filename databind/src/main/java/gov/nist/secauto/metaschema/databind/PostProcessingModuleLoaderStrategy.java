@@ -12,7 +12,7 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.databind.IBindingContext.IBindingMatcher;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 
 import java.util.ArrayList;
 import java.util.Collection;

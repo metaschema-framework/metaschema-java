@@ -45,7 +45,6 @@ public abstract class AbstractConstraintBuilder<
   private String target = IConstraint.DEFAULT_TARGET_METAPATH;
   @NonNull
   private Map<IAttributable.Key, Set<String>> properties = new LinkedHashMap<>(); // NOPMD not thread safe
-  private String message;
   private MarkupMultiline remarks;
 
   /**
@@ -182,20 +181,6 @@ public abstract class AbstractConstraintBuilder<
   }
 
   /**
-   * A message to emit when the constraint is violated. Allows embedded Metapath
-   * expressions using the syntax {@code \{ metapath \}}.
-   *
-   * @param message
-   *          the message if defined or {@code null} otherwise
-   * @return this builder
-   */
-  @NonNull
-  public T message(@NonNull String message) {
-    this.message = message;
-    return getThis();
-  }
-
-  /**
    * Set the provided {@code remarks}.
    *
    * @param remarks
@@ -308,16 +293,6 @@ public abstract class AbstractConstraintBuilder<
   @NonNull
   protected Map<IAttributable.Key, Set<String>> getProperties() {
     return properties;
-  }
-
-  /**
-   * Get the constraint message provided to the builder.
-   *
-   * @return the message or {@code null} if no message is set
-   */
-  @Nullable
-  protected String getMessage() {
-    return message;
   }
 
   /**

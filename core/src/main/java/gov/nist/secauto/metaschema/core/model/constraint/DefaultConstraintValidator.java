@@ -233,9 +233,9 @@ public class DefaultConstraintValidator
     for (ICardinalityConstraint constraint : constraints) {
       ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
       try {
-        validateHasCardinality(constraint, item, targets);
+        validateHasCardinality(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
-        handleError(constraint, item, ex);
+        handleError(constraint, item, ex, dynamicContext);
       }
     }
   }
@@ -256,7 +256,8 @@ public class DefaultConstraintValidator
   private void validateHasCardinality(
       @NonNull ICardinalityConstraint constraint,
       @NonNull IAssemblyNodeItem node,
-      @NonNull ISequence<? extends INodeItem> targets) {
+      @NonNull ISequence<? extends INodeItem> targets,
+      @NonNull DynamicContext dynamicContext) {
     int itemCount = targets.size();
 
     IConstraintValidationHandler handler = getConstraintValidationHandler();
@@ -264,18 +265,18 @@ public class DefaultConstraintValidator
     boolean violation = false;
     Integer minOccurs = constraint.getMinOccurs();
     if (minOccurs != null && itemCount < minOccurs) {
-      handler.handleCardinalityMinimumViolation(constraint, node, targets);
+      handler.handleCardinalityMinimumViolation(constraint, node, targets, dynamicContext);
       violation = true;
     }
 
     Integer maxOccurs = constraint.getMaxOccurs();
     if (maxOccurs != null && itemCount > maxOccurs) {
-      handler.handleCardinalityMaximumViolation(constraint, node, targets);
+      handler.handleCardinalityMaximumViolation(constraint, node, targets, dynamicContext);
       violation = true;
     }
 
     if (!violation) {
-      handlePass(constraint, node, node);
+      handlePass(constraint, node, node, dynamicContext);
     }
   }
 
@@ -300,7 +301,7 @@ public class DefaultConstraintValidator
       try {
         validateIndex(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
-        handleError(constraint, item, ex);
+        handleError(constraint, item, ex, dynamicContext);
       }
     }
   }
@@ -330,7 +331,7 @@ public class DefaultConstraintValidator
 
     IConstraintValidationHandler handler = getConstraintValidationHandler();
     if (indexNameToIndexMap.containsKey(indexName)) {
-      handler.handleIndexDuplicateViolation(constraint, node);
+      handler.handleIndexDuplicateViolation(constraint, node, dynamicContext);
     } else {
       IIndex index = IIndex.newInstance(constraint.getKeyFields());
       targets.stream()
@@ -340,12 +341,12 @@ public class DefaultConstraintValidator
               try {
                 INodeItem oldItem = index.put(item, dynamicContext);
                 if (oldItem == null) {
-                  handlePass(constraint, node, item);
+                  handlePass(constraint, node, item, dynamicContext);
                 } else {
-                  handler.handleIndexDuplicateKeyViolation(constraint, node, oldItem, item);
+                  handler.handleIndexDuplicateKeyViolation(constraint, node, oldItem, item, dynamicContext);
                 }
               } catch (MetapathException ex) {
-                handler.handleKeyMatchError(constraint, node, item, ex);
+                handler.handleKeyMatchError(constraint, node, item, ex, dynamicContext);
               }
             }
           });
@@ -356,17 +357,20 @@ public class DefaultConstraintValidator
   private void handlePass(
       @NonNull IConstraint constraint,
       @NonNull INodeItem node,
-      @NonNull INodeItem item) {
+      @NonNull INodeItem item,
+      @NonNull DynamicContext dynamicContext) {
     if (isFeatureEnabled(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS)) {
-      getConstraintValidationHandler().handlePass(constraint, node, item);
+      getConstraintValidationHandler().handlePass(constraint, node, item, dynamicContext);
     }
   }
 
   private void handleError(
       @NonNull IConstraint constraint,
       @NonNull INodeItem node,
-      @NonNull MetapathException ex) {
-    getConstraintValidationHandler().handleError(constraint, node, toErrorMessage(constraint, node, ex), ex);
+      @NonNull MetapathException ex,
+      @NonNull DynamicContext dynamicContext) {
+    getConstraintValidationHandler()
+        .handleError(constraint, node, toErrorMessage(constraint, node, ex), ex, dynamicContext);
   }
 
   @NonNull
@@ -418,7 +422,7 @@ public class DefaultConstraintValidator
       try {
         validateUnique(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
-        handleError(constraint, item, ex);
+        handleError(constraint, item, ex, dynamicContext);
       }
     }
   }
@@ -454,12 +458,12 @@ public class DefaultConstraintValidator
             try {
               INodeItem oldItem = index.put(item, dynamicContext);
               if (oldItem == null) {
-                handlePass(constraint, node, item);
+                handlePass(constraint, node, item, dynamicContext);
               } else {
-                handler.handleUniqueKeyViolation(constraint, node, oldItem, item);
+                handler.handleUniqueKeyViolation(constraint, node, oldItem, item, dynamicContext);
               }
             } catch (MetapathException ex) {
-              handler.handleKeyMatchError(constraint, node, item, ex);
+              handler.handleKeyMatchError(constraint, node, item, ex, dynamicContext);
               throw ex;
             }
           }
@@ -486,9 +490,9 @@ public class DefaultConstraintValidator
     for (IMatchesConstraint constraint : constraints) {
       ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
       try {
-        validateMatches(constraint, item, targets);
+        validateMatches(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
-        handleError(constraint, item, ex);
+        handleError(constraint, item, ex, dynamicContext);
       }
     }
   }
@@ -509,12 +513,13 @@ public class DefaultConstraintValidator
   private void validateMatches(
       @NonNull IMatchesConstraint constraint,
       @NonNull INodeItem node,
-      @NonNull ISequence<? extends INodeItem> targets) {
+      @NonNull ISequence<? extends INodeItem> targets,
+      @NonNull DynamicContext dynamicContext) {
     targets.stream()
         .forEachOrdered(item -> {
           assert item != null;
           if (item.hasValue()) {
-            validateMatchesItem(constraint, node, item);
+            validateMatchesItem(constraint, node, item, dynamicContext);
           }
         });
   }
@@ -522,7 +527,8 @@ public class DefaultConstraintValidator
   private void validateMatchesItem(
       @NonNull IMatchesConstraint constraint,
       @NonNull INodeItem node,
-      @NonNull INodeItem item) {
+      @NonNull INodeItem item,
+      @NonNull DynamicContext dynamicContext) {
     String value = FnData.fnDataItem(item).asString();
 
     IConstraintValidationHandler handler = getConstraintValidationHandler();
@@ -530,7 +536,7 @@ public class DefaultConstraintValidator
     Pattern pattern = constraint.getPattern();
     if (pattern != null && !pattern.asMatchPredicate().test(value)) {
       // failed pattern match
-      handler.handleMatchPatternViolation(constraint, node, item, value, pattern);
+      handler.handleMatchPatternViolation(constraint, node, item, value, pattern, dynamicContext);
       valid = false;
     }
 
@@ -539,13 +545,13 @@ public class DefaultConstraintValidator
       try {
         adapter.parse(value);
       } catch (IllegalArgumentException ex) {
-        handler.handleMatchDatatypeViolation(constraint, node, item, value, adapter, ex);
+        handler.handleMatchDatatypeViolation(constraint, node, item, value, adapter, ex, dynamicContext);
         valid = false;
       }
     }
 
     if (valid) {
-      handlePass(constraint, node, item);
+      handlePass(constraint, node, item, dynamicContext);
     }
   }
 
@@ -657,12 +663,12 @@ public class DefaultConstraintValidator
             try {
               ISequence<?> result = metapath.evaluate(item, dynamicContext);
               if (FnBoolean.fnBoolean(result).toBoolean()) {
-                handlePass(constraint, node, item);
+                handlePass(constraint, node, item, dynamicContext);
               } else {
                 handler.handleExpectViolation(constraint, node, item, dynamicContext);
               }
             } catch (MetapathException ex) {
-              handleError(constraint, item, ex);
+              handleError(constraint, item, ex, dynamicContext);
             }
           }
         });
@@ -686,7 +692,7 @@ public class DefaultConstraintValidator
       @NonNull DynamicContext dynamicContext) {
     for (IAllowedValuesConstraint constraint : constraints) {
       ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
-      validateAllowedValues(constraint, item, targets);
+      validateAllowedValues(constraint, item, targets, dynamicContext);
     }
   }
 
@@ -702,18 +708,22 @@ public class DefaultConstraintValidator
    * @param targets
    *          the focus of Metapath evaluation for evaluating any constraint
    *          Metapath clauses
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    */
   private void validateAllowedValues(
       @NonNull IAllowedValuesConstraint constraint,
       @NonNull IDefinitionNodeItem<?, ?> node,
-      @NonNull ISequence<? extends IDefinitionNodeItem<?, ?>> targets) {
+      @NonNull ISequence<? extends IDefinitionNodeItem<?, ?>> targets,
+      @NonNull DynamicContext dynamicContext) {
     targets.stream().forEachOrdered(item -> {
       assert item != null;
       if (item.hasValue()) {
         try {
           updateValueStatus(item, constraint, node);
         } catch (MetapathException ex) {
-          handleError(constraint, item, ex);
+          handleError(constraint, item, ex, dynamicContext);
         }
       }
     });
@@ -751,11 +761,16 @@ public class DefaultConstraintValidator
    *
    * @param targetItem
    *          the item whose value will be validated
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
    */
-  protected void handleAllowedValues(@NonNull INodeItem targetItem) {
+  protected void handleAllowedValues(
+      @NonNull INodeItem targetItem,
+      @NonNull DynamicContext dynamicContext) {
     ValueStatus valueStatus = valueMap.remove(targetItem);
     if (valueStatus != null) {
-      valueStatus.validate();
+      valueStatus.validate(dynamicContext);
     }
   }
 
@@ -794,19 +809,24 @@ public class DefaultConstraintValidator
       List<String> key = IIndex.toKey(item, constraint.getKeyFields(), dynamicContext);
 
       if (index == null) {
-        handler.handleMissingIndexViolation(constraint, contextNode, item, ObjectUtils.notNull(
-            String.format("Key reference to undefined index with name '%s'", indexName)));
+        handler.handleMissingIndexViolation(
+            constraint,
+            contextNode,
+            item,
+            ObjectUtils.notNull(String.format("Key reference to undefined index with name '%s'",
+                indexName)),
+            dynamicContext);
       } else {
         INodeItem referencedItem = index.get(key);
 
         if (referencedItem == null) {
-          handler.handleIndexMiss(constraint, contextNode, item, key);
+          handler.handleIndexMiss(constraint, contextNode, item, key, dynamicContext);
         } else {
-          handlePass(constraint, contextNode, item);
+          handlePass(constraint, contextNode, item, dynamicContext);
         }
       }
     } catch (MetapathException ex) {
-      handler.handleKeyMatchError(constraint, contextNode, item, ex);
+      handler.handleKeyMatchError(constraint, contextNode, item, ex, dynamicContext);
     }
   }
 
@@ -854,7 +874,7 @@ public class DefaultConstraintValidator
       }
     }
 
-    public void validate() {
+    public void validate(@NonNull DynamicContext dynamicContext) {
       if (!constraints.isEmpty()) {
         boolean match = false;
         List<IAllowedValuesConstraint> failedConstraints = new LinkedList<>();
@@ -865,7 +885,7 @@ public class DefaultConstraintValidator
           IAllowedValue matchingValue = allowedValues.getAllowedValue(value);
           if (matchingValue != null) {
             match = true;
-            handlePass(allowedValues, node, item);
+            handlePass(allowedValues, node, item, dynamicContext);
           } else if (IAllowedValuesConstraint.Extensible.NONE.equals(allowedValues.getExtensible())) {
             // hard failure, since no other values can satisfy this constraint
             failedConstraints = CollectionUtil.singletonList(allowedValues);
@@ -878,7 +898,7 @@ public class DefaultConstraintValidator
 
         // it's not a failure if allow others is true
         if (!match && !allowOthers) {
-          handler.handleAllowedValuesViolation(failedConstraints, item);
+          handler.handleAllowedValuesViolation(failedConstraints, item, dynamicContext);
         }
       }
     }
@@ -923,7 +943,7 @@ public class DefaultConstraintValidator
 
       validateFlag(item, effectiveContext);
       super.visitFlag(item, effectiveContext);
-      handleAllowedValues(item);
+      handleAllowedValues(item, context);
       return null;
     }
 
@@ -936,7 +956,7 @@ public class DefaultConstraintValidator
 
       validateField(item, effectiveContext);
       super.visitField(item, effectiveContext);
-      handleAllowedValues(item);
+      handleAllowedValues(item, context);
       return null;
     }
 

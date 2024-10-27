@@ -12,7 +12,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A common interface used for constraints oriented around key-based indexes.
  */
-public interface IKeyConstraint extends IConstraint {
+public interface IKeyConstraint extends IConfigurableMessageConstraint {
   /**
    * Retrieve the list of keys to use in creating and looking up an entry in a
    * given index.

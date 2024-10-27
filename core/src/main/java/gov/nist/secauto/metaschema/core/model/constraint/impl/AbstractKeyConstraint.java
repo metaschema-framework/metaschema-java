@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 abstract class AbstractKeyConstraint
-    extends AbstractConstraint
+    extends AbstractConfigurableMessageConstraint
     implements IKeyConstraint {
   @NonNull
   private final List<IKeyField> keyFields;

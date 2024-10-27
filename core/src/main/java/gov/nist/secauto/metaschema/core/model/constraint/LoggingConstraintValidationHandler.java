@@ -101,10 +101,19 @@ public class LoggingConstraintValidationHandler
   public void handleCardinalityMinimumViolation(
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem node,
-      @NonNull ISequence<? extends INodeItem> targets) {
+      @NonNull ISequence<? extends INodeItem> targets,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, node, newCardinalityMinimumViolationMessage(constraint, node, targets), null);
+      logConstraint(
+          level,
+          node,
+          newCardinalityMinimumViolationMessage(
+              constraint,
+              node,
+              targets,
+              dynamicContext),
+          null);
     }
   }
 
@@ -112,10 +121,19 @@ public class LoggingConstraintValidationHandler
   public void handleCardinalityMaximumViolation(
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem node,
-      @NonNull ISequence<? extends INodeItem> targets) {
+      @NonNull ISequence<? extends INodeItem> targets,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, node, newCardinalityMaximumViolationMessage(constraint, node, targets), null);
+      logConstraint(
+          level,
+          node,
+          newCardinalityMaximumViolationMessage(
+              constraint,
+              node,
+              targets,
+              dynamicContext),
+          null);
     }
   }
 
@@ -124,10 +142,20 @@ public class LoggingConstraintValidationHandler
       @NonNull IIndexConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem target) {
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, target, newIndexDuplicateKeyViolationMessage(constraint, node, oldItem, target), null);
+      logConstraint(
+          level,
+          target,
+          newIndexDuplicateKeyViolationMessage(
+              constraint,
+              node,
+              oldItem,
+              target,
+              dynamicContext),
+          null);
     }
   }
 
@@ -136,10 +164,20 @@ public class LoggingConstraintValidationHandler
       @NonNull IUniqueConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem target) {
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, target, newUniqueKeyViolationMessage(constraint, node, oldItem, target), null);
+      logConstraint(
+          level,
+          target,
+          newUniqueKeyViolationMessage(
+              constraint,
+              node,
+              oldItem,
+              target,
+              dynamicContext),
+          null);
     }
   }
 
@@ -149,7 +187,8 @@ public class LoggingConstraintValidationHandler
       @NonNull IKeyConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull MetapathException cause) {
+      @NonNull MetapathException cause,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logConstraint(level, target, cause.getLocalizedMessage(), cause);
@@ -162,10 +201,21 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull String value,
-      @NonNull Pattern pattern) {
+      @NonNull Pattern pattern,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, target, newMatchPatternViolationMessage(constraint, node, target, value, pattern), null);
+      logConstraint(
+          level,
+          target,
+          newMatchPatternViolationMessage(
+              constraint,
+              node,
+              target,
+              value,
+              pattern,
+              dynamicContext),
+          null);
     }
   }
 
@@ -176,10 +226,21 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull IDataTypeAdapter<?> adapter,
-      @NonNull IllegalArgumentException cause) {
+      @NonNull IllegalArgumentException cause,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, target, newMatchDatatypeViolationMessage(constraint, node, target, value, adapter), cause);
+      logConstraint(
+          level,
+          target,
+          newMatchDatatypeViolationMessage(
+              constraint,
+              node,
+              target,
+              value,
+              adapter,
+              dynamicContext),
+          cause);
     }
   }
 
@@ -191,59 +252,117 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, target, newExpectViolationMessage(constraint, node, target, dynamicContext), null);
+      logConstraint(
+          level,
+          target,
+          newExpectViolationMessage(
+              constraint,
+              node,
+              target,
+              dynamicContext),
+          null);
     }
   }
 
   @Override
-  public void handleAllowedValuesViolation(@NonNull List<IAllowedValuesConstraint> failedConstraints,
-      @NonNull INodeItem target) {
+  public void handleAllowedValuesViolation(
+      List<IAllowedValuesConstraint> failedConstraints,
+      INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
 
     Level level = ObjectUtils.notNull(failedConstraints.stream()
         .map(IConstraint::getLevel)
         .max(Comparator.comparing(Level::ordinal))
         .get());
     if (isLogged(level)) {
-      logConstraint(level, target, newAllowedValuesViolationMessage(failedConstraints, target), null);
+      logConstraint(
+          level,
+          target,
+          newAllowedValuesViolationMessage(
+              failedConstraints,
+              target),
+          null);
     }
   }
 
   @Override
-  public void handleIndexDuplicateViolation(IIndexConstraint constraint, INodeItem node) {
+  public void handleIndexDuplicateViolation(
+      @NonNull IIndexConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull DynamicContext dynamicContext) {
+    // always log at level critical
     Level level = Level.CRITICAL;
     if (isLogged(level)) {
-      logConstraint(level, node, newIndexDuplicateViolationMessage(constraint, node), null);
+      logConstraint(
+          level,
+          node,
+          newIndexDuplicateViolationMessage(
+              constraint,
+              node),
+          null);
     }
   }
 
   @Override
-  public void handleIndexMiss(IIndexHasKeyConstraint constraint, INodeItem node, INodeItem target, List<String> key) {
+  public void handleIndexMiss(
+      @NonNull IIndexHasKeyConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull List<String> key,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, node, newIndexMissMessage(constraint, node, target, key), null);
+      logConstraint(
+          level,
+          node,
+          newIndexMissMessage(
+              constraint,
+              node,
+              target,
+              key,
+              dynamicContext),
+          null);
     }
   }
 
   @Override
-  public void handleMissingIndexViolation(IIndexHasKeyConstraint constraint, INodeItem node, INodeItem target,
-      String message) {
+  public void handleMissingIndexViolation(
+      @NonNull IIndexHasKeyConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull String message,
+      @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, node, newMissingIndexViolationMessage(constraint, node, target, message), null);
+      logConstraint(
+          level,
+          node,
+          newMissingIndexViolationMessage(
+              constraint,
+              node,
+              target,
+              message,
+              dynamicContext),
+          null);
     }
   }
 
   @Override
-  public void handlePass(IConstraint constraint, INodeItem node, INodeItem target) {
+  public void handlePass(
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
     // do nothing
   }
 
   @Override
   public void handleError(
-      IConstraint constraint,
-      INodeItem node,
-      String message,
-      Throwable exception) {
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull String message,
+      @NonNull Throwable exception,
+      @NonNull DynamicContext dynamicContext) {
     Level level = Level.CRITICAL;
     if (isLogged(level)) {
       logConstraint(level, node, message, exception);

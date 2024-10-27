@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -38,7 +39,8 @@ import java.util.List;
     formalName = "Targeted Index Constraint",
     name = "targeted-index-constraint",
     moduleClass = MetaschemaModelModule.class)
-public class TargetedIndexConstraint implements IBoundObject, ITargetedConstraintBase {
+public class TargetedIndexConstraint
+    implements IBoundObject, ITargetedConstraintBase, IConfigurableMessageConstraintBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(

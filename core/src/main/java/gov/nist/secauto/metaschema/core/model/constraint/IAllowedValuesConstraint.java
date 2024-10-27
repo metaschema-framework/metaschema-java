@@ -204,7 +204,6 @@ public interface IAllowedValuesConstraint extends IConstraint {
           getAllowedValues(),
           isAllowedOther(),
           getExtensible(),
-          getMessage(),
           getRemarks());
     }
   }

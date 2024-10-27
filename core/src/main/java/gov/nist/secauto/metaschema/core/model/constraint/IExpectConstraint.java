@@ -16,7 +16,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <p>
  * A custom message can be used to indicate what a test failure signifies.
  */
-public interface IExpectConstraint extends IConstraint {
+public interface IExpectConstraint extends IConfigurableMessageConstraint {
   /**
    * Get the test to use to validate selected nodes.
    *
@@ -44,7 +44,7 @@ public interface IExpectConstraint extends IConstraint {
    * Provides a builder pattern for constructing a new {@link IExpectConstraint}.
    */
   final class Builder
-      extends AbstractConstraintBuilder<Builder, IExpectConstraint> {
+      extends AbstractConfigurableMessageConstraintBuilder<Builder, IExpectConstraint> {
     private String test;
 
     private Builder() {

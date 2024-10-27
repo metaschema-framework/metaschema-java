@@ -28,7 +28,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * against the target.
  */
 public final class DefaultExpectConstraint
-    extends AbstractConstraint
+    extends AbstractConfigurableMessageConstraint
     implements IExpectConstraint {
   @NonNull
   private final Lazy<MetapathExpression> testMetapath;

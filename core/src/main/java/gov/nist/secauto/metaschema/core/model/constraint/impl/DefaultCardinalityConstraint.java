@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * values.
  */
 public final class DefaultCardinalityConstraint
-    extends AbstractConstraint
+    extends AbstractConfigurableMessageConstraint
     implements ICardinalityConstraint {
   @Nullable
   private final Integer minOccurs;

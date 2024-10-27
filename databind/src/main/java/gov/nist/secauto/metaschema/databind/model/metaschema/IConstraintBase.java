@@ -61,17 +61,6 @@ public interface IConstraintBase {
   List<Property> getProps();
 
   /**
-   * Get a custom message to use when the constraint is not satisfied.
-   * <p>
-   * A custom message allow for more meaningful information, tailored to the test
-   * case, to be provided in the case a constraint is not satisfied.
-   *
-   * @return the message or {@code null} if a default message is to be used
-   */
-  @Nullable
-  String getMessage();
-
-  /**
    * Get the optional remarks that provide additional details explanation the
    * intent or use of the constraint.
    * <p>

@@ -61,8 +61,6 @@ public final class DefaultAllowedValuesConstraint
    *          {@code allowedValues} are allowed, or disallowed if {@code false}
    * @param extensible
    *          indicates the degree to which extended values should be allowed
-   * @param message
-   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -77,9 +75,8 @@ public final class DefaultAllowedValuesConstraint
       @NonNull Map<String, IAllowedValue> allowedValues,
       boolean allowedOther,
       @NonNull Extensible extensible,
-      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, message, remarks);
+    super(id, formalName, description, source, level, target, properties, remarks);
     this.allowedValues = allowedValues;
     this.allowedOther = allowedOther;
     this.extensible = extensible;
