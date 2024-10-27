@@ -7,11 +7,6 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -45,26 +40,6 @@ public interface IModuleNodeItem extends IDocumentBasedNodeItem, IFeatureNoDataV
   @Override
   default IModuleNodeItem getNodeItem() {
     return this;
-  }
-
-  /**
-   * Get the root items having the provided {@code name}.
-   *
-   * @param name
-   *          the root item's name to retrieve
-   * @return a list of matching root items
-   */
-  // TODO: delete
-  default List<? extends IRootAssemblyNodeItem> getRootNodeItemByName(@NonNull QName name) {
-    List<? extends IModelNodeItem<?, ?>> result = getModelItemsByName(name);
-    return result.stream().flatMap(item -> {
-      IRootAssemblyNodeItem retval = null;
-      if (item instanceof IRootAssemblyNodeItem) {
-        retval = (IRootAssemblyNodeItem) item;
-      }
-
-      return retval == null ? null : Stream.of(retval);
-    }).collect(Collectors.toUnmodifiableList());
   }
 
   @Override
