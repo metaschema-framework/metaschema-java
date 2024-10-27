@@ -197,6 +197,7 @@ public class FlagExpect implements IBoundObject, IConstraintBase {
     return _props != null && _props.remove(value);
   }
 
+  @Override
   public String getMessage() {
     return _message;
   }
