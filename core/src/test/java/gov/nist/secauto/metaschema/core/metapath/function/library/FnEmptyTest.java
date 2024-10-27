@@ -43,11 +43,10 @@ class FnEmptyTest
             "empty(('hello','world'))"),
         Arguments.of(
             ISequence.of(bool(false)),
-            "empty((''))"));
-    // TODO: Add when we support map constructor syntax.
-    // Arguments.of(
-    // ISequence.of(bool(true)),
-    // "empty(map{})"));
+            "empty((''))"),
+        Arguments.of(
+            ISequence.of(bool(true)),
+            "empty(map{})"));
   }
 
   @ParameterizedTest

@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,14 +34,13 @@ class FnReverseTest
             "reverse(('hello'))"),
         Arguments.of(
             ISequence.empty(),
-            "reverse(())"));
-    // TODO: Add tests when Metapath array syntax supported.
-    // Arguments.of(
-    // ISequence.of(array([1, 2, 3])),
-    // "reverse(([1,2,3]))"),
-    // Arguments.of(
-    // ISequence.of(array([1, 2, 3]), array([1, 2, 3])),
-    // "reverse(([1,2,3],[4,5,6]))");
+            "reverse(())"),
+        Arguments.of(
+            ISequence.of(array(integer(1), integer(2), integer(3))),
+            "reverse(([1,2,3]))"),
+        Arguments.of(
+            ISequence.of(array(integer(4), integer(5), integer(6)), array(integer(1), integer(2), integer(3))),
+            "reverse(([1,2,3],[4,5,6]))"));
   }
 
   @ParameterizedTest
