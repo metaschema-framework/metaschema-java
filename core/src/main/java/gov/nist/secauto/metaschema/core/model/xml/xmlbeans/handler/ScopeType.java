@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
+import gov.nist.secauto.metaschema.core.model.IDefinition;
 
 public final class ScopeType {
   private ScopeType() {
@@ -15,22 +15,22 @@ public final class ScopeType {
   /**
    * Sets the value of obj onto the given simple value target.
    *
-   * @param obj
+   * @param value
    *          the boolean value to set
    * @param target
    *          the XML value to cast to a scope
    */
-  public static void encodeScopeType(ModuleScopeEnum obj, org.apache.xmlbeans.SimpleValue target) {
-    if (obj != null) {
-      switch (obj) {
-      case INHERITED:
+  public static void encodeScopeType(IDefinition.ModuleScope value, org.apache.xmlbeans.SimpleValue target) {
+    if (value != null) {
+      switch (value) {
+      case PUBLIC:
         target.setStringValue("global");
         break;
-      case LOCAL:
+      case PRIVATE:
         target.setStringValue("local");
         break;
       default:
-        throw new UnsupportedOperationException(obj.toString());
+        throw new UnsupportedOperationException(value.toString());
       }
     }
   }
@@ -42,15 +42,15 @@ public final class ScopeType {
    *          the XML value to cast to a scope
    * @return the associated scope value
    */
-  public static ModuleScopeEnum decodeScopeType(org.apache.xmlbeans.SimpleValue obj) {
+  public static IDefinition.ModuleScope decodeScopeType(org.apache.xmlbeans.SimpleValue obj) {
     String value = obj.getStringValue();
-    ModuleScopeEnum retval;
+    IDefinition.ModuleScope retval;
     switch (value) {
     case "global":
-      retval = ModuleScopeEnum.INHERITED;
+      retval = IDefinition.ModuleScope.PUBLIC;
       break;
     case "local":
-      retval = ModuleScopeEnum.LOCAL;
+      retval = IDefinition.ModuleScope.PRIVATE;
       break;
     default:
       throw new UnsupportedOperationException(value);

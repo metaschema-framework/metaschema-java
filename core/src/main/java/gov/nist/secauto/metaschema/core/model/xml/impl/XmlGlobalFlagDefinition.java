@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractGlobalFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
@@ -97,8 +96,8 @@ class XmlGlobalFlagDefinition
 
   @SuppressWarnings("null")
   @Override
-  public ModuleScopeEnum getModuleScope() {
-    return getXmlFlag().isSetScope() ? getXmlFlag().getScope() : DEFAULT_DEFINITION_MODEL_SCOPE;
+  public ModuleScope getModuleScope() {
+    return getXmlFlag().isSetScope() ? getXmlFlag().getScope() : DEFAULT_MODULE_SCOPE;
   }
 
   @SuppressWarnings("null")

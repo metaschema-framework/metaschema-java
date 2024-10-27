@@ -14,7 +14,6 @@ import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
@@ -139,7 +138,7 @@ public class DefinitionFieldGlobal
   }
 
   @Override
-  public ModuleScopeEnum getModuleScope() {
+  public ModuleScope getModuleScope() {
     return ModelSupport.moduleScope(ObjectUtils.requireNonNull(getBinding().getScope()));
   }
 

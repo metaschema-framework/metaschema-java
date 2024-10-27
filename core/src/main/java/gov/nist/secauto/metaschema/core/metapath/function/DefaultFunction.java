@@ -95,8 +95,7 @@ public class DefaultFunction
   public static List<ISequence<?>> convertArguments(
       @NonNull IFunction function,
       @NonNull List<? extends ISequence<?>> parameters) {
-    @NonNull
-    List<ISequence<?>> retval = new ArrayList<>(parameters.size());
+    @NonNull List<ISequence<?>> retval = new ArrayList<>(parameters.size());
 
     Iterator<IArgument> argumentIterator = function.getArguments().iterator();
     IArgument argument = null;

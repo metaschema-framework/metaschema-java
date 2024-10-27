@@ -15,9 +15,22 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IDefinition extends INamedModelElement, IAttributable, IFeatureValueConstrained {
+  /**
+   * Describes the visibility of a definition to other modules.
+   */
+  enum ModuleScope {
+    /**
+     * The definition is scoped to only the defining module.
+     */
+    PRIVATE,
+    /**
+     * The definition is scoped to its defining module and any importing module.
+     */
+    PUBLIC;
+  }
 
   @NonNull
-  ModuleScopeEnum DEFAULT_DEFINITION_MODEL_SCOPE = ModuleScopeEnum.INHERITED;
+  ModuleScope DEFAULT_MODULE_SCOPE = ModuleScope.PUBLIC;
 
   /**
    * Retrieve the definition's scope within the context of its defining module.
@@ -25,8 +38,8 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
    * @return the module scope
    */
   @NonNull
-  default ModuleScopeEnum getModuleScope() {
-    return ModuleScopeEnum.LOCAL;
+  default ModuleScope getModuleScope() {
+    return ModuleScope.PRIVATE;
   }
 
   /**

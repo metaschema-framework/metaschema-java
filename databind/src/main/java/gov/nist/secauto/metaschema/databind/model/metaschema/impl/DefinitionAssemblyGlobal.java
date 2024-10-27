@@ -21,7 +21,6 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
@@ -178,7 +177,7 @@ public class DefinitionAssemblyGlobal
   }
 
   @Override
-  public ModuleScopeEnum getModuleScope() {
+  public ModuleScope getModuleScope() {
     return ModelSupport.moduleScope(ObjectUtils.requireNonNull(getBinding().getScope()));
   }
 

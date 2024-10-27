@@ -14,7 +14,6 @@ import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
@@ -189,8 +188,8 @@ class XmlGlobalFieldDefinition
 
   @SuppressWarnings("null")
   @Override
-  public ModuleScopeEnum getModuleScope() {
-    return getXmlObject().isSetScope() ? getXmlObject().getScope() : DEFAULT_DEFINITION_MODEL_SCOPE;
+  public ModuleScope getModuleScope() {
+    return getXmlObject().isSetScope() ? getXmlObject().getScope() : DEFAULT_MODULE_SCOPE;
   }
 
   @SuppressWarnings("null")

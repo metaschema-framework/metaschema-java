@@ -20,7 +20,6 @@ import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
@@ -200,8 +199,8 @@ class XmlGlobalAssemblyDefinition
 
   @SuppressWarnings("null")
   @Override
-  public ModuleScopeEnum getModuleScope() {
-    return getXmlObject().isSetScope() ? getXmlObject().getScope() : DEFAULT_DEFINITION_MODEL_SCOPE;
+  public ModuleScope getModuleScope() {
+    return getXmlObject().isSetScope() ? getXmlObject().getScope() : DEFAULT_MODULE_SCOPE;
   }
 
   @SuppressWarnings("null")

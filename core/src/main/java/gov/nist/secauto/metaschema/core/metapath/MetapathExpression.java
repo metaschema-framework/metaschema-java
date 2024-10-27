@@ -111,8 +111,7 @@ public class MetapathExpression {
    */
   @NonNull
   public static MetapathExpression compile(@NonNull String path, @NonNull StaticContext context) {
-    @NonNull
-    MetapathExpression retval;
+    @NonNull MetapathExpression retval;
     if (".".equals(path)) {
       retval = CONTEXT_NODE;
     } else {

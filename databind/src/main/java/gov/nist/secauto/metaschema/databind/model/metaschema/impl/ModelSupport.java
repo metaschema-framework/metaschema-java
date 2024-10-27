@@ -12,11 +12,11 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IGroupable;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -67,17 +67,24 @@ public final class ModelSupport {
     return "yes".equals(allowOther);
   }
 
+  /**
+   * Translate a text scope value to the equivalent enumerated value.
+   *
+   * @param value
+   *          the text scope value
+   * @return the enumerated value
+   */
   @SuppressWarnings("PMD.ImplicitSwitchFallThrough")
   @NonNull
-  public static ModuleScopeEnum moduleScope(@NonNull String value) {
-    ModuleScopeEnum retval;
+  public static IDefinition.ModuleScope moduleScope(@NonNull String value) {
+    IDefinition.ModuleScope retval;
     switch (value) {
     case "local":
-      retval = ModuleScopeEnum.LOCAL;
+      retval = IDefinition.ModuleScope.PRIVATE;
       break;
     case "global":
     default:
-      retval = ModuleScopeEnum.INHERITED;
+      retval = IDefinition.ModuleScope.PUBLIC;
     }
     return retval;
   }

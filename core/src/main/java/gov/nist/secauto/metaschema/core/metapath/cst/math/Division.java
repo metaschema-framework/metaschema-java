@@ -74,7 +74,7 @@ public class Division
         retval = OperationFunctions.opDivideYearMonthDuration(left, (INumericItem) divisor);
       } else if (divisor instanceof IYearMonthDurationItem) {
         // TODO: find a way to support this
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("year month division is not supported");
       }
     } else if (dividend instanceof IDayTimeDurationItem) {
       IDayTimeDurationItem left = (IDayTimeDurationItem) dividend;

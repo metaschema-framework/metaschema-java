@@ -13,7 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.AbstractGlobalFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
@@ -124,7 +123,7 @@ public class DefinitionFlagGlobal
   }
 
   @Override
-  public ModuleScopeEnum getModuleScope() {
+  public ModuleScope getModuleScope() {
     return ModelSupport.moduleScope(ObjectUtils.requireNonNull(getBinding().getScope()));
   }
 

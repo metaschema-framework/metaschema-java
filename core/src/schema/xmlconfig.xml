@@ -27,7 +27,7 @@
 		<xb:staticHandler>gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler.XmlGroupAsBehaviorType</xb:staticHandler>
 	</xb:usertype>
 	<xb:usertype name="meta:ScopeType"
-		javaname="gov.nist.secauto.metaschema.core.model.ModuleScopeEnum">
+		javaname="gov.nist.secauto.metaschema.core.model.IDefinition.ModuleScope">
 		<xb:staticHandler>gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler.ScopeType</xb:staticHandler>
 	</xb:usertype>
 	<xb:usertype name="meta:InXmlWrappedType"
