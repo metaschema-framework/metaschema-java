@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultAllowedValue;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Represents an individual enumerated value associated with an
@@ -23,15 +24,17 @@ public interface IAllowedValue {
    *          the allowed value
    * @param description
    *          a textual description of the value
+   * @param deprecatedVersion
+   *          the version this value was deprecated in
    * @return the new allowed value
    */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IAllowedValue of(
       @NonNull String value,
-      @NonNull MarkupLine description) {
-    // TODO: add support for deprecated version
-    return new DefaultAllowedValue(value, description, null);
+      @NonNull MarkupLine description,
+      @Nullable String deprecatedVersion) {
+    return new DefaultAllowedValue(value, description, deprecatedVersion);
   }
 
   /**

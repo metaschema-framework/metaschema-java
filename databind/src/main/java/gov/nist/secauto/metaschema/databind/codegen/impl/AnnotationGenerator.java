@@ -221,6 +221,11 @@ public final class AnnotationGenerator {
         valueAnnotation.addMember("value", "$S", value.getValue());
         valueAnnotation.addMember("description", "$S", value.getDescription().toMarkdown());
 
+        String deprecatedVersion = value.getDeprecatedVersion();
+        if (deprecatedVersion != null) {
+          valueAnnotation.addMember("deprecatedVersion", "$S", deprecatedVersion);
+        }
+
         constraintAnnotation.addMember("values", "$L", valueAnnotation.build());
       }
 

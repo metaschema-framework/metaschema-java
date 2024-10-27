@@ -126,7 +126,15 @@ final class ConstraintFactory {
       @NonNull IAllowedValuesConstraint.Builder builder,
       @NonNull AllowedValues constraint) {
     for (AllowedValue value : constraint.values()) {
-      IAllowedValue allowedValue = IAllowedValue.of(value.value(), MarkupLine.fromMarkdown(value.description()));
+      String deprecatedVersion = value.deprecatedVersion();
+      if (deprecatedVersion.isBlank()) {
+        deprecatedVersion = null;
+      }
+
+      IAllowedValue allowedValue = IAllowedValue.of(
+          value.value(),
+          MarkupLine.fromMarkdown(value.description()),
+          deprecatedVersion);
       builder.allowedValue(allowedValue);
     }
     return builder;

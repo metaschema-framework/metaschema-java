@@ -37,4 +37,12 @@ public @interface AllowedValue {
    */
   @NonNull
   String description();
+
+  /**
+   * The version this value was deprecated in.
+   *
+   * @return the version or an empty string if the value is not deprecated
+   */
+  @NonNull
+  String deprecatedVersion() default "";
 }

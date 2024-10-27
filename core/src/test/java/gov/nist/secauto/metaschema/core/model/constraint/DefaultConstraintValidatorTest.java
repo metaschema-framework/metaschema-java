@@ -64,7 +64,10 @@ class DefaultConstraintValidatorTest {
 
     IAllowedValuesConstraint allowedValues = IAllowedValuesConstraint.builder()
         .source(source)
-        .allowedValue(IAllowedValue.of("other", MarkupLine.fromMarkdown("some documentation")))
+        .allowedValue(IAllowedValue.of(
+            "other",
+            MarkupLine.fromMarkdown("some documentation"),
+            "1.0.0"))
         .allowsOther(true)
         .build();
 
@@ -115,12 +118,17 @@ class DefaultConstraintValidatorTest {
 
     IAllowedValuesConstraint allowedValues1 = IAllowedValuesConstraint.builder()
         .source(source)
-        .allowedValue(IAllowedValue.of("other", MarkupLine.fromMarkdown("some documentation")))
+        .allowedValue(IAllowedValue.of(
+            "other",
+            MarkupLine.fromMarkdown("some documentation"),
+            "1.0.0"))
         .allowsOther(true)
         .build();
     IAllowedValuesConstraint allowedValues2 = IAllowedValuesConstraint.builder()
         .source(source)
-        .allowedValue(IAllowedValue.of("other2", MarkupLine.fromMarkdown("some documentation")))
+        .allowedValue(IAllowedValue.of(
+            "other2",
+            MarkupLine.fromMarkdown("some documentation"), null))
         .allowsOther(true)
         .build();
 
@@ -175,12 +183,18 @@ class DefaultConstraintValidatorTest {
 
     IAllowedValuesConstraint allowedValues1 = IAllowedValuesConstraint.builder()
         .source(source)
-        .allowedValue(IAllowedValue.of("other", MarkupLine.fromMarkdown("some documentation")))
+        .allowedValue(IAllowedValue.of(
+            "other",
+            MarkupLine.fromMarkdown("some documentation"),
+            null))
         .allowsOther(true)
         .build();
     IAllowedValuesConstraint allowedValues2 = IAllowedValuesConstraint.builder()
         .source(source)
-        .allowedValue(IAllowedValue.of("other2", MarkupLine.fromMarkdown("some documentation")))
+        .allowedValue(IAllowedValue.of(
+            "other2",
+            MarkupLine.fromMarkdown("some documentation"),
+            "1.0.0"))
         .allowsOther(false)
         .build();
 

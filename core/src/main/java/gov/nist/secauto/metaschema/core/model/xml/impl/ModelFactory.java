@@ -119,7 +119,8 @@ public final class ModelFactory {
 
       IAllowedValue allowedValue = IAllowedValue.of(
           value,
-          MarkupStringConverter.toMarkupString(xmlEnum));
+          MarkupStringConverter.toMarkupString(xmlEnum),
+          xmlEnum.getDeprecated());
       allowedValues.put(allowedValue.getValue(), allowedValue);
     }
     return CollectionUtil.unmodifiableMap(allowedValues);
