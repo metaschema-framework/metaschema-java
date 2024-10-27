@@ -40,7 +40,7 @@ module gov.nist.secauto.metaschema.databind {
   exports gov.nist.secauto.metaschema.databind.model.info;
   exports gov.nist.secauto.metaschema.databind.model.annotations;
   exports gov.nist.secauto.metaschema.databind.model.metaschema;
-  exports gov.nist.secauto.metaschema.databind.model.binding.metaschema;
+  exports gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
   // need to allow access to the generated XMLBeans files
   opens org.apache.xmlbeans.metadata.system.metaschema.codegen;

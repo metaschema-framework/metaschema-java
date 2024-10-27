@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.ConstraintLetExpression;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintLetExpression;
 
 import java.util.List;
 

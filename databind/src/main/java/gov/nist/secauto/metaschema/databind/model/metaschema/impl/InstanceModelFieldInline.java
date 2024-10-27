@@ -21,14 +21,14 @@ import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FieldConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.InlineDefineField;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonKey;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonValueKeyFlag;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModel;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonKey;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonValueKeyFlag;
 
 import java.math.BigInteger;
 import java.util.Map;

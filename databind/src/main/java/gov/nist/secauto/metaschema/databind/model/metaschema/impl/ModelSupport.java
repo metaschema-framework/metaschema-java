@@ -22,12 +22,12 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.GroupingAs;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA.DefineAssembly.RootName;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.Property;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.Remarks;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.UseName;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.GroupingAs;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.Property;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.UseName;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA.DefineAssembly.RootName;
 
 import java.math.BigInteger;
 import java.net.URI;

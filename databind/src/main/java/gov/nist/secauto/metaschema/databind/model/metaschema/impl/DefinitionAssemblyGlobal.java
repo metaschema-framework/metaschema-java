@@ -26,11 +26,11 @@ import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonKey;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonKey;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 
 import java.util.Map;
 import java.util.Set;

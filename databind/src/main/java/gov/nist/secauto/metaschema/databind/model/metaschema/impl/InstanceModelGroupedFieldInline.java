@@ -20,13 +20,13 @@ import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyModel;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FieldConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonValueKeyFlag;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModel;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonValueKeyFlag;
 
 import java.util.Map;
 import java.util.Set;

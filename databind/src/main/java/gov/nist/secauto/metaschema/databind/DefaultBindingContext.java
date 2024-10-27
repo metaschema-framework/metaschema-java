@@ -21,12 +21,11 @@ import gov.nist.secauto.metaschema.databind.io.yaml.DefaultYamlSerializer;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.ModuleLoadingPostProcessor;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 
 import java.io.IOException;
 import java.net.URI;

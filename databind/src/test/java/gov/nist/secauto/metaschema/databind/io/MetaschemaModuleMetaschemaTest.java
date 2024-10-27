@@ -13,9 +13,9 @@ import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

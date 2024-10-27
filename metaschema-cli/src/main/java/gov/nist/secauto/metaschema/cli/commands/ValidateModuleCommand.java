@@ -16,7 +16,7 @@ import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidat
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext.ISchemaValidationProvider;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 
 import org.apache.commons.cli.CommandLine;
 import org.json.JSONObject;

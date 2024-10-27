@@ -35,12 +35,12 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetapathContext;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaMetaConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaMetapath;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModuleConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathContext;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetapath;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.impl.ConstraintBindingSupport;
 
 import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
@@ -100,7 +100,8 @@ public class BindingConstraintLoader
       // now check if this constraint set imports other constraint sets
       List<MetaschemaModuleConstraints.Import> imports = CollectionUtil.listOrEmpty(obj.getImports());
 
-      @NonNull Set<IConstraintSet> importedConstraints;
+      @NonNull
+      Set<IConstraintSet> importedConstraints;
       if (imports.isEmpty()) {
         importedConstraints = CollectionUtil.emptySet();
       } else {

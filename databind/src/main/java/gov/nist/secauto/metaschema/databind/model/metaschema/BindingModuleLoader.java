@@ -17,9 +17,9 @@ import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerato
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA.Import;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA.Import;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.impl.BindingModule;
 
 import java.io.IOException;

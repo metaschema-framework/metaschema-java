@@ -23,9 +23,9 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetapathNamespace;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathNamespace;
 
 import java.net.URI;
 import java.util.Collection;
