@@ -259,11 +259,6 @@ public final class ConstraintBindingSupport {
         .test(target(ObjectUtils.requireNonNull(obj.getTest())));
     applyCommonValues(obj, obj.getTarget(), source, builder);
 
-    String message = obj.getMessage();
-    if (message != null) {
-      builder.message(message);
-    }
-
     return builder.build();
   }
 
@@ -414,6 +409,11 @@ public final class ConstraintBindingSupport {
 
     List<Property> props = ObjectUtils.requireNonNull(constraint.getProps());
     builder.properties(ModelSupport.parseProperties(props));
+
+    String message = constraint.getMessage();
+    if (message != null) {
+      builder.message(message);
+    }
 
     Remarks remarks = constraint.getRemarks();
     if (remarks != null) {

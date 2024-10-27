@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
@@ -19,6 +18,15 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents an allowed values constraint.
+ * <p>
+ * Ensures that a target instance's value matches one of the allowed values.
+ * This match is required if {@link #isAllowedOther()} is {@code false},
+ * otherwise the constraint will generate a validation warning message if the
+ * target instance's value does not match any of the associated allowed value
+ * constraints targeting it.
+ */
 public final class DefaultAllowedValuesConstraint
     extends AbstractConstraint
     implements IAllowedValuesConstraint {
@@ -29,14 +37,7 @@ public final class DefaultAllowedValuesConstraint
   private final Map<String, IAllowedValue> allowedValues;
 
   /**
-   * Construct a new allowed values constraint which ensures that a target
-   * instance's value match one of the allowed values. This match is required if
-   * {@link #isAllowedOther()} is {@code false}, otherwise the constraint will
-   * generate a validation warning message if the target instance's value does not
-   * match any of the associated allowed value constraints targeting it.
-   *
-   * the associated test evaluates to {@link IBooleanItem#TRUE} against the
-   * target.
+   * Construct a new allowed values constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -60,6 +61,8 @@ public final class DefaultAllowedValuesConstraint
    *          {@code allowedValues} are allowed, or disallowed if {@code false}
    * @param extensible
    *          indicates the degree to which extended values should be allowed
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -74,8 +77,9 @@ public final class DefaultAllowedValuesConstraint
       @NonNull Map<String, IAllowedValue> allowedValues,
       boolean allowedOther,
       @NonNull Extensible extensible,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, remarks);
+    super(id, formalName, description, source, level, target, properties, message, remarks);
     this.allowedValues = allowedValues;
     this.allowedOther = allowedOther;
     this.extensible = extensible;

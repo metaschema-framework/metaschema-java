@@ -240,6 +240,7 @@ public class FlagIndexHasKey implements IBoundObject, IConstraintBase {
     return _keyFields != null && _keyFields.remove(value);
   }
 
+  @Override
   public String getMessage() {
     return _message;
   }

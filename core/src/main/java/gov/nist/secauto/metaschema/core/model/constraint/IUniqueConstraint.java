@@ -34,6 +34,9 @@ public interface IUniqueConstraint extends IKeyConstraint {
     return new Builder();
   }
 
+  /**
+   * Provides a builder pattern for constructing a new {@link IUniqueConstraint}.
+   */
   final class Builder
       extends AbstractKeyConstraintBuilder<Builder, IUniqueConstraint> {
     private Builder() {
@@ -56,6 +59,7 @@ public interface IUniqueConstraint extends IKeyConstraint {
           getTarget(),
           getProperties(),
           getKeyFields(),
+          getMessage(),
           getRemarks());
     }
   }

@@ -28,6 +28,9 @@ public interface IConstraintBase {
   List<Property> getProps();
 
   @Nullable
+  String getMessage();
+
+  @Nullable
   Remarks getRemarks();
 
   @Nullable

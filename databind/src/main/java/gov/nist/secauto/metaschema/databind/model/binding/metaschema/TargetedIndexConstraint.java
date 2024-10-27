@@ -257,6 +257,7 @@ public class TargetedIndexConstraint implements IBoundObject, ITargetedConstrain
     return _keyFields != null && _keyFields.remove(value);
   }
 
+  @Override
   public String getMessage() {
     return _message;
   }

@@ -19,13 +19,18 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a key-based constraint that requires unique keys.
+ * <p>
+ * Uses a set of key fields to build a key used to identify non-unique items.
+ * Each derived key must be unique.
+ */
 public class DefaultUniqueConstraint
     extends AbstractKeyConstraint
     implements IUniqueConstraint {
 
   /**
-   * Create a new key-based constraint, which uses a set of key fields to build a
-   * key used to identify non-unique items.
+   * Construct a new key-based constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -44,6 +49,8 @@ public class DefaultUniqueConstraint
    *          a collection of associated properties
    * @param keyFields
    *          a list of key fields associated with the constraint
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -56,8 +63,9 @@ public class DefaultUniqueConstraint
       @NonNull String target,
       @NonNull Map<IAttributable.Key, Set<String>> properties,
       @NonNull List<IKeyField> keyFields,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, keyFields, remarks);
+    super(id, formalName, description, source, level, target, properties, keyFields, message, remarks);
   }
 
 }

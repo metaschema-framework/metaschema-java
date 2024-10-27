@@ -45,8 +45,11 @@ public interface IIndexConstraint extends IKeyConstraint {
     return new Builder(name);
   }
 
+  /**
+   * Provides a builder pattern for constructing a new {@link IIndexConstraint}.
+   */
   final class Builder
-      extends AbstractKeyConstraintBuilder<Builder, DefaultIndexConstraint> {
+      extends AbstractKeyConstraintBuilder<Builder, IIndexConstraint> {
     @NonNull
     private final String name;
 
@@ -76,6 +79,7 @@ public interface IIndexConstraint extends IKeyConstraint {
           getProperties(),
           getName(),
           getKeyFields(),
+          getMessage(),
           getRemarks());
     }
   }

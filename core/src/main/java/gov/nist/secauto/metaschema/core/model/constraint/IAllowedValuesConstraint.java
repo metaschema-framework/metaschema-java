@@ -19,7 +19,13 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * one entry in a set of enumerated values.
  */
 public interface IAllowedValuesConstraint extends IConstraint {
+  /**
+   * The default allow other value.
+   */
   boolean ALLOW_OTHER_DEFAULT = false;
+  /**
+   * The default extensible value.
+   */
   @NonNull
   Extensible EXTENSIBLE_DEFAULT = Extensible.EXTERNAL;
 
@@ -96,6 +102,10 @@ public interface IAllowedValuesConstraint extends IConstraint {
     return new Builder();
   }
 
+  /**
+   * Provides a builder pattern for constructing a new
+   * {@link IAllowedValuesConstraint}.
+   */
   final class Builder
       extends AbstractConstraintBuilder<Builder, IAllowedValuesConstraint> {
     @NonNull
@@ -194,6 +204,7 @@ public interface IAllowedValuesConstraint extends IConstraint {
           getAllowedValues(),
           isAllowedOther(),
           getExtensible(),
+          getMessage(),
           getRemarks());
     }
   }

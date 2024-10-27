@@ -19,6 +19,12 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a key reference constraint.
+ * <p>
+ * Uses a set of key fields to build a key to match against an index. A Match is
+ * successful if the resulting key matches an entry in the index.
+ */
 public final class DefaultIndexHasKeyConstraint
     extends AbstractKeyConstraint
     implements IIndexHasKeyConstraint {
@@ -26,8 +32,7 @@ public final class DefaultIndexHasKeyConstraint
   private final String indexName;
 
   /**
-   * Create a key reference constraint, which uses a set of key fields to build a
-   * key to match against an index.
+   * Construct a key reference constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -48,6 +53,8 @@ public final class DefaultIndexHasKeyConstraint
    *          a reference to the indexName of the index
    * @param keyFields
    *          a list of key fields associated with the constraint
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -62,8 +69,9 @@ public final class DefaultIndexHasKeyConstraint
       @NonNull Map<IAttributable.Key, Set<String>> properties,
       @NonNull String indexName,
       @NonNull List<IKeyField> keyFields,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, keyFields, remarks);
+    super(id, formalName, description, source, level, target, properties, keyFields, message, remarks);
     if (indexName.isBlank()) {
       throw new IllegalArgumentException("The index indexName must be a non-blank string");
     }

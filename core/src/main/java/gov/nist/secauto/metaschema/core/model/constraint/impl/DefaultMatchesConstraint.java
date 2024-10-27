@@ -19,6 +19,11 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a matches constraint.
+ * <p>
+ * Enforces a value pattern and/or data type.
+ */
 public final class DefaultMatchesConstraint
     extends AbstractConstraint
     implements IMatchesConstraint {
@@ -26,8 +31,7 @@ public final class DefaultMatchesConstraint
   private final IDataTypeAdapter<?> dataType;
 
   /**
-   * Create a new matches constraint, which enforces a value pattern and/or data
-   * type.
+   * Construct a new matches constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -50,6 +54,8 @@ public final class DefaultMatchesConstraint
    * @param dataType
    *          the value data type to match or {@code null} if there is no match
    *          data type
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -64,8 +70,9 @@ public final class DefaultMatchesConstraint
       @NonNull Map<IAttributable.Key, Set<String>> properties,
       @Nullable Pattern pattern,
       @Nullable IDataTypeAdapter<?> dataType,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, remarks);
+    super(id, formalName, description, source, level, target, properties, message, remarks);
     if (pattern == null && dataType == null) {
       throw new IllegalArgumentException("a pattern or data type must be provided");
     }

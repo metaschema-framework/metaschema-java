@@ -231,6 +231,7 @@ public class TargetedHasCardinalityConstraint implements IBoundObject, ITargeted
     return _props != null && _props.remove(value);
   }
 
+  @Override
   public String getMessage() {
     return _message;
   }

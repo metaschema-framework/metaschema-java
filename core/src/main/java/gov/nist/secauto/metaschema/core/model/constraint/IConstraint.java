@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDescribable;
 import gov.nist.secauto.metaschema.core.model.ISource;
@@ -116,6 +117,31 @@ public interface IConstraint extends IAttributable, IDescribable {
   ISequence<? extends IDefinitionNodeItem<?, ?>> matchTargets(
       @NonNull IDefinitionNodeItem<?, ?> item,
       @NonNull DynamicContext dynamicContext);
+
+  /**
+   * A message to emit when the constraint is violated. Allows embedded Metapath
+   * expressions using the syntax {@code \{ metapath \}}.
+   *
+   * @return the message if defined or {@code null} otherwise
+   */
+  @Nullable
+  String getMessage();
+
+  /**
+   * Generate a violation message using the provide item and dynamic context for
+   * inline Metapath value insertion.
+   *
+   * @param item
+   *          the target Metapath item to use as the focus for Metapath evaluation
+   * @param context
+   *          the dynamic context for Metapath evaluation
+   * @return the message
+   * @throws IllegalStateException
+   *           if a custom message is not defined, which will occur if this method
+   *           is called while {@link #getMessage()} returns {@code null}
+   */
+  @NonNull
+  String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context);
 
   /**
    * Retrieve the remarks associated with the constraint.

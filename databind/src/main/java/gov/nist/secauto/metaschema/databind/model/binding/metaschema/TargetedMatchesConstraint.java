@@ -280,6 +280,7 @@ public class TargetedMatchesConstraint implements IBoundObject, ITargetedConstra
     return _props != null && _props.remove(value);
   }
 
+  @Override
   public String getMessage() {
     return _message;
   }

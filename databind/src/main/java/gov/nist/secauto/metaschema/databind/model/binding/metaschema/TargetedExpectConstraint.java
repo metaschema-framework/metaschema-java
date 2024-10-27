@@ -213,6 +213,7 @@ public class TargetedExpectConstraint implements IBoundObject, ITargetedConstrai
     return _props != null && _props.remove(value);
   }
 
+  @Override
   public String getMessage() {
     return _message;
   }

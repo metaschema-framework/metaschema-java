@@ -41,6 +41,10 @@ public interface IIndexHasKeyConstraint extends IKeyConstraint {
     return new Builder(useIndex);
   }
 
+  /**
+   * Provides a builder pattern for constructing a new
+   * {@link IIndexHasKeyConstraint}.
+   */
   final class Builder
       extends AbstractKeyConstraintBuilder<Builder, IIndexHasKeyConstraint> {
     @NonNull
@@ -72,6 +76,7 @@ public interface IIndexHasKeyConstraint extends IKeyConstraint {
           getProperties(),
           getIndexName(),
           getKeyFields(),
+          getMessage(),
           getRemarks());
     }
   }

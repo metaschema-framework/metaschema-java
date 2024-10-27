@@ -47,6 +47,8 @@ abstract class AbstractKeyConstraint
    *          a collection of associated properties
    * @param keyFields
    *          a list of key fields associated with the constraint
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -60,8 +62,9 @@ abstract class AbstractKeyConstraint
       @NonNull String target,
       @NonNull Map<IAttributable.Key, Set<String>> properties,
       @NonNull List<IKeyField> keyFields,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, remarks);
+    super(id, formalName, description, source, level, target, properties, message, remarks);
     if (keyFields.isEmpty()) {
       throw new IllegalArgumentException("an empty list of key fields is not allowed");
     }

@@ -17,6 +17,13 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a cardinality constraint.
+ * <p>
+ * Enforces that the number of items matching the target fall within the
+ * inclusive range described by the {@code minOccurs} or {@code maxOccurs}
+ * values.
+ */
 public final class DefaultCardinalityConstraint
     extends AbstractConstraint
     implements ICardinalityConstraint {
@@ -26,9 +33,7 @@ public final class DefaultCardinalityConstraint
   private final Integer maxOccurs;
 
   /**
-   * Construct a new cardinality constraint which enforces that the number of
-   * items matching the target fall within the inclusive range described by the
-   * {@code minOccurs} or {@code maxOccurs} values.
+   * Construct a new cardinality constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -51,6 +56,8 @@ public final class DefaultCardinalityConstraint
    * @param maxOccurs
    *          if provided, the constraint ensures that the count of targets is at
    *          most this value
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -65,8 +72,9 @@ public final class DefaultCardinalityConstraint
       @NonNull Map<IAttributable.Key, Set<String>> properties,
       @Nullable Integer minOccurs,
       @Nullable Integer maxOccurs,
-      MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, remarks);
+      @Nullable String message,
+      @Nullable MarkupMultiline remarks) {
+    super(id, formalName, description, source, level, target, properties, message, remarks);
     if (minOccurs == null && maxOccurs == null) {
       throw new IllegalArgumentException("at least one of minOccurs or maxOccurs must be provided");
     }

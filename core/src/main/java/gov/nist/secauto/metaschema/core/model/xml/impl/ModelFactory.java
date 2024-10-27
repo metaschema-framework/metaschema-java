@@ -53,6 +53,10 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Produces Metaschema module data objects from XML-based XMLBeans data
+ * bindings.
+ */
 @SuppressWarnings({ "PMD.CouplingBetweenObjects", "PMD.GodClass" })
 public final class ModelFactory {
   private ModelFactory() {
@@ -240,6 +244,10 @@ public final class ModelFactory {
 
     applyToBuilder(xmlObject, target, source, builder);
 
+    if (xmlObject.isSetMessage()) {
+      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));
+    }
+
     if (xmlObject.isSetRemarks()) {
       builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));
     }
@@ -285,6 +293,10 @@ public final class ModelFactory {
 
     applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);
 
+    if (xmlObject.isSetMessage()) {
+      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));
+    }
+
     if (xmlObject.isSetRemarks()) {
       builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));
     }
@@ -310,6 +322,10 @@ public final class ModelFactory {
     IIndexConstraint.Builder builder = IIndexConstraint.builder(ObjectUtils.requireNonNull(xmlObject.getName()));
 
     applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);
+
+    if (xmlObject.isSetMessage()) {
+      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));
+    }
 
     if (xmlObject.isSetRemarks()) {
       builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));
@@ -362,6 +378,10 @@ public final class ModelFactory {
 
     applyToBuilder(xmlObject, target, source, builder);
 
+    if (xmlObject.isSetMessage()) {
+      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));
+    }
+
     if (xmlObject.isSetRemarks()) {
       builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));
     }
@@ -405,23 +425,23 @@ public final class ModelFactory {
 
   @NonNull
   private static IExpectConstraint newExpectConstraint(
-      @NonNull ExpectConstraintType xmlConstraint,
+      @NonNull ExpectConstraintType xmlObject,
       @NonNull String target,
       @NonNull ISource source) {
 
     IExpectConstraint.Builder builder = IExpectConstraint.builder();
 
-    applyToBuilder(xmlConstraint, target, source, builder);
+    applyToBuilder(xmlObject, target, source, builder);
 
-    if (xmlConstraint.isSetRemarks()) {
-      builder.remarks(remarks(ObjectUtils.notNull(xmlConstraint.getRemarks())));
+    if (xmlObject.isSetMessage()) {
+      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));
     }
 
-    if (xmlConstraint.isSetMessage()) {
-      builder.message(ObjectUtils.notNull(xmlConstraint.getMessage()));
+    if (xmlObject.isSetRemarks()) {
+      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));
     }
 
-    builder.test(ObjectUtils.requireNonNull(xmlConstraint.getTest()));
+    builder.test(ObjectUtils.requireNonNull(xmlObject.getTest()));
 
     return builder.build();
   }
@@ -443,6 +463,10 @@ public final class ModelFactory {
     ICardinalityConstraint.Builder builder = ICardinalityConstraint.builder();
 
     applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);
+
+    if (xmlObject.isSetMessage()) {
+      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));
+    }
 
     if (xmlObject.isSetRemarks()) {
       builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));

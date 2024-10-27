@@ -20,6 +20,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Represents an index constraint.
+ * <p>
+ * Uses a set of key fields to build a key and check that that key is unique
+ * compared to other keys.
+ */
 public final class DefaultIndexConstraint
     extends AbstractKeyConstraint
     implements IIndexConstraint {
@@ -27,7 +33,7 @@ public final class DefaultIndexConstraint
   private final String name;
 
   /**
-   * Create a index constraint, which uses a set of key fields to build a key.
+   * Construct a new index constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -48,6 +54,8 @@ public final class DefaultIndexConstraint
    *          the name of the index
    * @param keyFields
    *          a list of key fields associated with the constraint
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -63,8 +71,9 @@ public final class DefaultIndexConstraint
       @NonNull Map<IAttributable.Key, Set<String>> properties,
       @NonNull String name,
       @NonNull List<IKeyField> keyFields,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, keyFields, remarks);
+    super(id, formalName, description, source, level, target, properties, keyFields, message, remarks);
     if (name.isBlank()) {
       throw new IllegalArgumentException("The index name must be a non-blank string");
     }

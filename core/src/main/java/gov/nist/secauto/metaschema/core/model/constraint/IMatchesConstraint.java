@@ -51,6 +51,9 @@ public interface IMatchesConstraint extends IConstraint {
     return new Builder();
   }
 
+  /**
+   * Provides a builder pattern for constructing a new {@link IMatchesConstraint}.
+   */
   final class Builder
       extends AbstractConstraintBuilder<Builder, IMatchesConstraint> {
     private Pattern pattern;
@@ -129,6 +132,7 @@ public interface IMatchesConstraint extends IConstraint {
           getProperties(),
           getPattern(),
           getDatatype(),
+          getMessage(),
           getRemarks());
     }
   }

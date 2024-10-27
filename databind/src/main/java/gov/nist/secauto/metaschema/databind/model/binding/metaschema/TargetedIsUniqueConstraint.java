@@ -242,6 +242,7 @@ public class TargetedIsUniqueConstraint implements IBoundObject, ITargetedConstr
     return _keyFields != null && _keyFields.remove(value);
   }
 
+  @Override
   public String getMessage() {
     return _message;
   }

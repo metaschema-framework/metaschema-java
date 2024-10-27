@@ -54,6 +54,10 @@ public interface ICardinalityConstraint extends IConstraint {
     return new Builder();
   }
 
+  /**
+   * Provides a builder pattern for constructing a new
+   * {@link ICardinalityConstraint}.
+   */
   final class Builder
       extends AbstractConstraintBuilder<Builder, ICardinalityConstraint> {
     private Integer minOccurs;
@@ -121,6 +125,7 @@ public interface ICardinalityConstraint extends IConstraint {
           getProperties(),
           getMinOccurs(),
           getMaxOccurs(),
+          getMessage(),
           getRemarks());
     }
   }

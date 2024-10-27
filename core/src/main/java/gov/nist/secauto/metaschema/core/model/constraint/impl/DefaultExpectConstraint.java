@@ -7,38 +7,34 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.ReplacementScanner;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Represents an expect constraint.
+ * <p>
+ * Requires that the associated test evaluates to {@link IBooleanItem#TRUE}
+ * against the target.
+ */
 public final class DefaultExpectConstraint
     extends AbstractConstraint
     implements IExpectConstraint {
-  @SuppressWarnings("null")
-  @NonNull
-  private static final Pattern METAPATH_VALUE_TEMPLATE_PATTERN
-      = Pattern.compile("(?<!\\\\)(\\{\\s*((?:(?:\\\\})|[^}])*)\\s*\\})");
   @NonNull
   private final Lazy<MetapathExpression> testMetapath;
-  private final String message;
 
   /**
-   * Construct a new expect constraint which requires that the associated test
-   * evaluates to {@link IBooleanItem#TRUE} against the target.
+   * Construct a new expect constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -75,12 +71,11 @@ public final class DefaultExpectConstraint
       @NonNull String test,
       @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-    super(id, formalName, description, source, level, target, properties, remarks);
+    super(id, formalName, description, source, level, target, properties, message, remarks);
     this.testMetapath = ObjectUtils.notNull(
         Lazy.lazy(() -> MetapathExpression.compile(
             test,
             source.getStaticContext())));
-    this.message = message;
   }
 
   /**
@@ -96,23 +91,5 @@ public final class DefaultExpectConstraint
   @Override
   public String getTest() {
     return getTestMetapath().getPath();
-  }
-
-  @Override
-  public String getMessage() {
-    return message;
-  }
-
-  @Override
-  public String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context) {
-    String message = getMessage();
-
-    return message == null ? null
-        : ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
-          @SuppressWarnings("null")
-          @NonNull String metapath = match.group(2);
-          MetapathExpression expr = MetapathExpression.compile(metapath, context.getStaticContext());
-          return expr.evaluateAs(item, MetapathExpression.ResultType.STRING, context);
-        }).toString();
   }
 }
