@@ -78,6 +78,7 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
    *
    * @return the factory
    */
+  @SuppressWarnings("resource")
   @NonNull
   protected XMLInputFactory2 newFactoryInstance() {
     XMLInputFactory2 retval = (XMLInputFactory2) XMLInputFactory.newInstance();
@@ -96,7 +97,8 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
             URI base = URI.create(baseURI);
             URI resource = base.resolve(systemID);
             try {
-              return resource.toURL().openStream();
+
+              return ObjectUtils.notNull(resource.toURL().openStream());
             } catch (IOException ex) {
               throw new XMLStreamException(ex);
             }

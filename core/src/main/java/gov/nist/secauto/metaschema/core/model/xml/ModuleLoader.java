@@ -15,7 +15,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -41,6 +40,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class ModuleLoader
     extends AbstractModuleLoader<METASCHEMADocument, IXmlMetaschemaModule> {
   private boolean resolveEntities; // = false;
+  @NonNull
+  private final List<IModuleLoader.IModulePostProcessor> modulePostProcessors;
 
   /**
    * Construct a new Metaschema loader.
@@ -58,7 +59,7 @@ public class ModuleLoader
    *          loading
    */
   public ModuleLoader(@NonNull List<IModuleLoader.IModulePostProcessor> modulePostProcessors) {
-    super(modulePostProcessors);
+    this.modulePostProcessors = modulePostProcessors;
   }
 
   /**
@@ -71,10 +72,17 @@ public class ModuleLoader
   }
 
   @Override
-  protected IXmlMetaschemaModule newModule(URI resource, METASCHEMADocument binding,
+  protected IXmlMetaschemaModule newModule(
+      URI resource,
+      METASCHEMADocument binding,
       List<? extends IXmlMetaschemaModule> importedModules)
       throws MetaschemaException {
-    return new XmlModule(resource, binding, importedModules);
+    IXmlMetaschemaModule module = new XmlModule(resource, binding, importedModules);
+
+    for (IModuleLoader.IModulePostProcessor postProcessor : modulePostProcessors) {
+      postProcessor.processModule(module);
+    }
+    return module;
   }
 
   @Override
@@ -109,33 +117,21 @@ public class ModuleLoader
           SAXParser parser = factory.newSAXParser();
           parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "file"); // ,jar:file
           XMLReader reader = parser.getXMLReader();
-          reader.setEntityResolver(new EntityResolver() {
-
-            @Override
-            public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-              return null;
-            }
-
-          });
+          reader.setEntityResolver((publicId, systemId) -> null);
           options.setLoadUseXMLReader(reader);
         } catch (SAXException | ParserConfigurationException ex) {
           throw new IOException(ex);
         }
         // options.setLoadEntityBytesLimit(204800);
         // options.setLoadUseDefaultResolver();
-        options.setEntityResolver(new EntityResolver() {
-
-          @Override
-          public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-            String effectiveSystemId = systemId;
-            // TODO: It's very odd that the system id looks like this. Need to investigate.
-            if (effectiveSystemId.startsWith("file://file://")) {
-              effectiveSystemId = effectiveSystemId.substring(14);
-            }
-            URI resolvedSystemId = resource.resolve(effectiveSystemId);
-            return new InputSource(resolvedSystemId.toString());
+        options.setEntityResolver((publicId, systemId) -> {
+          String effectiveSystemId = systemId;
+          // TODO: It's very odd that the system id looks like this. Need to investigate.
+          if (effectiveSystemId.startsWith("file://file://")) {
+            effectiveSystemId = effectiveSystemId.substring(14);
           }
-
+          URI resolvedSystemId = resource.resolve(effectiveSystemId);
+          return new InputSource(resolvedSystemId.toString());
         });
         options.setLoadDTDGrammar(true);
       }

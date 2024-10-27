@@ -8,16 +8,12 @@ package gov.nist.secauto.metaschema.databind.model;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractModule;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.annotations.NsBinding;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,65 +44,6 @@ public abstract class AbstractBoundModule
   private final Lazy<Map<QName, IBoundDefinitionModelField<?>>> fieldDefinitions;
   @NonNull
   private final Lazy<StaticContext> staticContext;
-
-  /**
-   * Create a new Module instance for a given class annotated by the
-   * {@link MetaschemaModule} annotation.
-   * <p>
-   * Will also load any imported Metaschemas.
-   *
-   *
-   * @param clazz
-   *          the Module class
-   * @param bindingContext
-   *          the Module binding context
-   * @return the new Module instance
-   */
-  @NonNull
-  public static IBoundModule createInstance(
-      @NonNull Class<? extends IBoundModule> clazz,
-      @NonNull IBindingContext bindingContext) {
-
-    if (!clazz.isAnnotationPresent(MetaschemaModule.class)) {
-      throw new IllegalStateException(String.format("The class '%s' is missing the '%s' annotation",
-          clazz.getCanonicalName(), MetaschemaModule.class.getCanonicalName()));
-    }
-
-    MetaschemaModule moduleAnnotation = clazz.getAnnotation(MetaschemaModule.class);
-
-    List<IBoundModule> importedModules;
-    if (moduleAnnotation.imports().length > 0) {
-      importedModules = new ArrayList<>(moduleAnnotation.imports().length);
-      for (Class<? extends IBoundModule> importClass : moduleAnnotation.imports()) {
-        assert importClass != null;
-        IBoundModule moduleImport = bindingContext.registerModule(importClass);
-        importedModules.add(moduleImport);
-      }
-    } else {
-      importedModules = CollectionUtil.emptyList();
-    }
-    return createInstance(clazz, bindingContext, importedModules);
-  }
-
-  @NonNull
-  private static IBoundModule createInstance(
-      @NonNull Class<? extends IBoundModule> clazz,
-      @NonNull IBindingContext bindingContext,
-      @NonNull List<? extends IBoundModule> importedModules) {
-
-    Constructor<? extends IBoundModule> constructor;
-    try {
-      constructor = clazz.getDeclaredConstructor(List.class, IBindingContext.class);
-    } catch (NoSuchMethodException ex) {
-      throw new IllegalArgumentException(ex);
-    }
-
-    try {
-      return ObjectUtils.notNull(constructor.newInstance(importedModules, bindingContext));
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-      throw new IllegalArgumentException(ex);
-    }
-  }
 
   /**
    * Construct a new Module instance.

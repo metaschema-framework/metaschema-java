@@ -58,6 +58,7 @@ public final class DefinitionAssembly
   @NonNull
   private final Lazy<Map<String, IBoundProperty<?>>> jsonProperties;
 
+  @NonNull
   public static DefinitionAssembly newInstance(
       @NonNull Class<? extends IBoundObject> clazz,
       @NonNull IBindingContext bindingContext) {
@@ -80,9 +81,9 @@ public final class DefinitionAssembly
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> new FlagContainerSupport(this, null)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> new AssemblyModelContainerSupport(this)));
 
-    IModule module = getContainingModule();
-
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
+      IModule module = getContainingModule();
+
       IModelConstrained retval = new AssemblyConstraintSet();
       ValueConstraints valueAnnotation = getAnnotation().valueConstraints();
       ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);
@@ -92,10 +93,6 @@ public final class DefinitionAssembly
       return retval;
     }));
     this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -> getJsonProperties(null)));
-
-    if (rootLocalName != null) {
-      bindingContext.registerBindingMatcher(this);
-    }
   }
 
   @Override

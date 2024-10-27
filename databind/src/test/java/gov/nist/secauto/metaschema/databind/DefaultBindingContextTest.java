@@ -11,14 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
-import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.XmlConstraintLoader;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
 import gov.nist.secauto.metaschema.databind.model.test.TestMetaschema;
 
 import org.junit.jupiter.api.Test;
@@ -37,9 +34,10 @@ class DefaultBindingContextTest {
     List<IConstraintSet> constraintSet = constraintLoader.load(
         ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints.xml")));
 
-    ExternalConstraintsModulePostProcessor postProcessor
-        = new ExternalConstraintsModulePostProcessor(constraintSet);
-    IBindingContext bindingContext = new DefaultBindingContext(CollectionUtil.singletonList(postProcessor));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .constraintSet(constraintSet)
+        .build();
+
     IBoundModule module = bindingContext.registerModule(TestMetaschema.class);
 
     IAssemblyDefinition root
@@ -52,13 +50,13 @@ class DefaultBindingContextTest {
 
   @Test
   void testConstraintsUsingBinding() throws MetaschemaException, IOException { // NOPMD - intentional
-    IConstraintLoader constraintLoader = new BindingConstraintLoader(new DefaultBindingContext());
+    IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();
     List<IConstraintSet> constraintSet = constraintLoader.load(
         ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints.xml")));
 
-    ExternalConstraintsModulePostProcessor postProcessor
-        = new ExternalConstraintsModulePostProcessor(constraintSet);
-    IBindingContext bindingContext = new DefaultBindingContext(CollectionUtil.singletonList(postProcessor));
+    IBindingContext bindingContext = IBindingContext.builder()
+        .constraintSet(constraintSet)
+        .build();
     IBoundModule module = bindingContext.registerModule(TestMetaschema.class);
 
     IAssemblyDefinition root

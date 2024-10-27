@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.AbstractBoundModelTestSupport;
+import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceFlag;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelField;
@@ -39,7 +39,7 @@ import javax.xml.stream.events.XMLEvent;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 class XmlParserTest
-    extends AbstractBoundModelTestSupport {
+    extends AbstractMetaschemaTest {
   private static final String NS = "https://csrc.nist.gov/ns/test/xml";
 
   @Test

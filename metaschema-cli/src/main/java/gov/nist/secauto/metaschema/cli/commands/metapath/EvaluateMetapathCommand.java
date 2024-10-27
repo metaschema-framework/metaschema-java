@@ -25,8 +25,6 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.UriUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 
@@ -41,8 +39,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
@@ -73,14 +69,6 @@ public class EvaluateMetapathCommand
           .desc("Metaschema content instance resource")
           .build());
 
-  @NonNull
-  public static final Option METASCHEMA_OPTION = ObjectUtils.notNull(
-      Option.builder("m")
-          .hasArg()
-          .argName("FILE_OR_URL")
-          .desc("metaschema resource")
-          .build());
-
   @Override
   public String getName() {
     return COMMAND;
@@ -95,7 +83,7 @@ public class EvaluateMetapathCommand
   @Override
   public Collection<? extends Option> gatherOptions() {
     return List.of(
-        METASCHEMA_OPTION,
+        MetaschemaCommands.METASCHEMA_OPTION,
         CONTENT_OPTION,
         EXPRESSION_OPTION);
   }
@@ -131,12 +119,21 @@ public class EvaluateMetapathCommand
 
     IModule module = null;
     INodeItem item = null;
-    if (cmdLine.hasOption(METASCHEMA_OPTION)) {
+    if (cmdLine.hasOption(MetaschemaCommands.METASCHEMA_OPTION)) {
+      IBindingContext bindingContext;
       try {
-        String moduleName
-            = ObjectUtils.requireNonNull(cmdLine.getOptionValue(METASCHEMA_OPTION));
-        URI moduleUri = UriUtils.toUri(moduleName, cwd);
-        module = MetaschemaCommands.handleModule(moduleUri, CollectionUtil.emptyList());
+        bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
+      } catch (Exception ex) {
+        return ExitCode.PROCESSING_ERROR
+            .exitMessage("Unable to initialize binding context." + ex.getMessage())
+            .withThrowable(ex);
+      }
+
+      try {
+        module = MetaschemaCommands.handleModule(
+            cmdLine,
+            cwd,
+            bindingContext);
       } catch (URISyntaxException ex) {
         return ExitCode.INVALID_ARGUMENTS
             .exitMessage(
@@ -149,18 +146,6 @@ public class EvaluateMetapathCommand
       // determine if the query is evaluated against the module or the instance
       if (cmdLine.hasOption(CONTENT_OPTION)) {
         // load the content
-        IBindingContext bindingContext = new DefaultBindingContext();
-
-        try {
-          Path compilePath = Files.createTempDirectory("validation-");
-          compilePath.toFile().deleteOnExit();
-
-          bindingContext.registerModule(module, compilePath);
-        } catch (IOException ex) {
-          return ExitCode.PROCESSING_ERROR
-              .exitMessage("Unable to get binding context. " + ex.getMessage())
-              .withThrowable(ex);
-        }
 
         IBoundLoader loader = bindingContext.newBoundLoader();
 

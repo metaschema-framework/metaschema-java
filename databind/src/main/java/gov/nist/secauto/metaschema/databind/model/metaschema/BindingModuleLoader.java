@@ -8,11 +8,12 @@ package gov.nist.secauto.metaschema.databind.model.metaschema;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.AbstractModuleLoader;
-import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.IBindingContext.IModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
@@ -29,9 +30,21 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Supports loading a Metaschema module from a specified resource.
+ * <p>
+ * Metaschema modules loaded this way are automatically registered with the
+ * {@link IBindingContext}.
+ * <p>
+ * Use of this Metaschema module loader requires that the associated binding
+ * context is initialized using a {@link IModuleLoaderStrategy} that supports
+ * dynamic bound module loading. This can be accomplished using the
+ * {@link SimpleModuleLoaderStrategy} initialized using the
+ * {@link DefaultModuleBindingGenerator}.
+ */
 public class BindingModuleLoader
     extends AbstractModuleLoader<METASCHEMA, IBindingMetaschemaModule>
-    implements IMutableConfiguration<DeserializationFeature<?>> {
+    implements IBindingModuleLoader {
 
   private final Lazy<IBoundLoader> loader;
 
@@ -42,24 +55,13 @@ public class BindingModuleLoader
    *          the Metaschema binding context used to load bound resources
    */
   public BindingModuleLoader(@NonNull IBindingContext bindingContext) {
-    this(bindingContext, CollectionUtil.emptyList());
+    this.loader = Lazy.lazy(bindingContext::newBoundLoader);
   }
 
-  /**
-   * Construct a new Metaschema loader, which use the provided module post
-   * processors when loading a module.
-   *
-   * @param bindingContext
-   *          the Metaschema binding context used to load bound resources
-   * @param modulePostProcessors
-   *          post processors to perform additional module customization when
-   *          loading
-   */
-  public BindingModuleLoader(
-      @NonNull IBindingContext bindingContext,
-      @NonNull List<IModuleLoader.IModulePostProcessor> modulePostProcessors) {
-    super(modulePostProcessors);
-    this.loader = Lazy.lazy(bindingContext::newBoundLoader);
+  @Override
+  @NonNull
+  public IBindingContext getBindingContext() {
+    return getLoader().getBindingContext();
   }
 
   @Override
@@ -68,13 +70,16 @@ public class BindingModuleLoader
       METASCHEMA binding,
       List<? extends IBindingMetaschemaModule> importedModules)
       throws MetaschemaException {
-    return new BindingModule(
+    IBindingContext bindingContext = getLoader().getBindingContext();
+
+    IBindingMetaschemaModule module = new BindingModule(
         resource,
         ObjectUtils.notNull(
-            (IBoundDefinitionModelAssembly) getLoader().getBindingContext()
-                .getBoundDefinitionForClass(METASCHEMA.class)),
+            (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(METASCHEMA.class)),
         binding,
         importedModules);
+    bindingContext.registerModule(module);
+    return module;
   }
 
   @Override
@@ -112,9 +117,5 @@ public class BindingModuleLoader
   @Override
   public IMutableConfiguration<DeserializationFeature<?>> set(DeserializationFeature<?> feature, Object value) {
     return getLoader().set(feature, value);
-  }
-
-  public void allowEntityResolution() {
-    enableFeature(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION);
   }
 }

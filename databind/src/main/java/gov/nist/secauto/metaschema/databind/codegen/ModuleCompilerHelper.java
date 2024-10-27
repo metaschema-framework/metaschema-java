@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.codegen;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
@@ -22,17 +23,11 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -47,6 +42,33 @@ public final class ModuleCompilerHelper {
 
   private ModuleCompilerHelper() {
     // disable construction
+  }
+
+  /**
+   * Create a new classloader capable of loading Java classes generated in the
+   * provided {@code classDir}.
+   *
+   * @param classDir
+   *          the directory where generated Java classes have been compiled
+   * @param parent
+   *          the classloader to delegate to when the created class loader cannot
+   *          load a class
+   * @return the new class loader
+   */
+  @SuppressWarnings("resource")
+  @Owning
+  @NonNull
+  public static ClassLoader newClassLoader(
+      @NonNull final Path classDir,
+      @NonNull final ClassLoader parent) {
+    return ObjectUtils.notNull(AccessController.doPrivileged(
+        (PrivilegedAction<ClassLoader>) () -> {
+          try {
+            return new URLClassLoader(new URL[] { classDir.toUri().toURL() }, parent);
+          } catch (MalformedURLException ex) {
+            throw new IllegalStateException("unable to configure class loader", ex);
+          }
+        }));
   }
 
   /**
@@ -94,135 +116,62 @@ public final class ModuleCompilerHelper {
     IProduction production = JavaGenerator.generate(module, classDir, bindingConfiguration);
     List<IGeneratedClass> classesToCompile = production.getGeneratedClasses().collect(Collectors.toList());
 
-    DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-    if (!compileGeneratedClasses(classesToCompile, diagnostics, classDir)) {
-      if (LOGGER.isErrorEnabled()) {
-        LOGGER.error(diagnostics.getDiagnostics().toString());
-      }
-      throw new IllegalStateException(String.format("failed to compile classes: %s",
-          classesToCompile.stream()
-              .map(clazz -> clazz.getClassName().canonicalName())
-              .collect(Collectors.joining(","))));
-    }
-    return production;
-  }
+    List<Path> classes = classesToCompile.stream()
+        .map(IGeneratedClass::getClassFile)
+        .collect(Collectors.toUnmodifiableList());
 
-  /**
-   * Create a new classloader capable of loading Java classes generated in the
-   * provided {@code classDir}.
-   *
-   * @param classDir
-   *          the directory where generated Java classes have been compiled
-   * @param parent
-   *          the classloader to delegate to when the created class loader cannot
-   *          load a class
-   * @return the new class loader
-   */
-  @NonNull
-  public static ClassLoader newClassLoader(
-      @NonNull final Path classDir,
-      @NonNull final ClassLoader parent) {
-    ClassLoader retval = AccessController
-        .doPrivileged((PrivilegedAction<ClassLoader>) () -> newClassLoaderInternal(classDir, parent));
-    assert retval != null;
-    return retval;
-  }
+    JavaCompilerSupport compiler = new JavaCompilerSupport(classDir);
 
-  @Owning
-  @NonNull
-  private static ClassLoader newClassLoaderInternal(
-      @NonNull final Path classDir,
-      @NonNull final ClassLoader parent) {
-    try {
-      return new URLClassLoader(new URL[] { classDir.toUri().toURL() }, parent);
-    } catch (MalformedURLException ex) {
-      throw new IllegalStateException("unable to configure class loader", ex);
-    }
-  }
-
-  @SuppressWarnings({
-      "PMD.CyclomaticComplexity", "PMD.CognitiveComplexity", // acceptable
-  })
-  private static boolean compile(
-      JavaCompiler compiler,
-      JavaFileManager fileManager,
-      DiagnosticCollector<JavaFileObject> diagnostics,
-      List<JavaFileObject> compilationUnits,
-      Path classDir) {
-
-    String moduleName = null;
-    Module module = IBindingContext.class.getModule();
-    if (module != null) {
-      ModuleDescriptor descriptor = module.getDescriptor();
+    boolean usingModule = false;
+    Module databindModule = IBindingContext.class.getModule();
+    if (databindModule != null) {
+      ModuleDescriptor descriptor = databindModule.getDescriptor();
       if (descriptor != null) {
         // add the databind module to the task
-        moduleName = descriptor.name();
+        compiler.addRootModule(descriptor.name());
+        usingModule = true;
       }
     }
-
-    List<String> options = new LinkedList<>();
-    // options.add("-verbose");
-    // options.add("-g");
-    options.add("-d");
-    options.add(classDir.toString());
 
     String classPath = System.getProperty("java.class.path");
     String modulePath = System.getProperty("jdk.module.path");
-    if (moduleName == null) {
-      // use classpath only
-      String path = null;
-      if (classPath != null) {
-        path = classPath;
-      }
-
-      if (modulePath != null) {
-        path = path == null ? modulePath : path + ":" + modulePath;
-      }
-
-      if (path != null) {
-        options.add("-classpath");
-        options.add(path);
-      }
-    } else {
+    if (usingModule) {
       // use classpath and modulepath from the JDK
       if (classPath != null) {
-        options.add("-classpath");
-        options.add(classPath);
+        Arrays.stream(classPath.split(":")).forEachOrdered(compiler::addToClassPath);
       }
 
       if (modulePath != null) {
-        options.add("-p");
-        options.add(modulePath);
+        Arrays.stream(modulePath.split(":")).forEachOrdered(compiler::addToModulePath);
+      }
+    } else {
+      // use classpath only
+      if (classPath != null) {
+        Arrays.stream(classPath.split(":")).forEachOrdered(compiler::addToClassPath);
+      }
+
+      if (modulePath != null) {
+        Arrays.stream(modulePath.split(":")).forEachOrdered(compiler::addToClassPath);
       }
     }
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.atDebug().log("Using options: {}", options);
-    }
+    JavaCompilerSupport.CompilationResult result = compiler.compile(classes, null);
 
-    JavaCompiler.CompilationTask task
-        = compiler.getTask(null, fileManager, diagnostics, options, null, compilationUnits);
-
-    if (moduleName != null) {
-      task.addModules(List.of(moduleName));
-    }
-    return task.call();
-  }
-
-  private static boolean compileGeneratedClasses(
-      List<IGeneratedClass> classesToCompile,
-      DiagnosticCollector<JavaFileObject> diagnostics,
-      Path classDir) throws IOException {
-    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
-    try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
-
-      List<JavaFileObject> compilationUnits = new ArrayList<>(classesToCompile.size());
-      for (IGeneratedClass generatedClass : classesToCompile) {
-        compilationUnits.add(fileManager.getJavaFileObjects(generatedClass.getClassFile()).iterator().next());
+    if (!result.isSuccessful()) {
+      DiagnosticCollector<?> diagnostics = new DiagnosticCollector<>();
+      if (LOGGER.isErrorEnabled()) {
+        LOGGER.error(diagnostics.getDiagnostics().toString());
       }
-
-      return compile(compiler, fileManager, diagnostics, compilationUnits, classDir);
+      throw new IllegalStateException(String.format("failed to compile classes: %s%nClasspath: %s%nModule Path: %s%n%s",
+          classesToCompile.stream()
+              .map(clazz -> clazz.getClassName().canonicalName())
+              .collect(Collectors.joining(",")),
+          diagnostics.getDiagnostics().toString(),
+          compiler.getClassPath().stream()
+              .collect(Collectors.joining(":")),
+          compiler.getModulePath().stream()
+              .collect(Collectors.joining(":"))));
     }
+    return production;
   }
 }

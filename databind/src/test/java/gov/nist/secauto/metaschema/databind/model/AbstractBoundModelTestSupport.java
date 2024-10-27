@@ -9,10 +9,8 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
-import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
-import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
 import gov.nist.secauto.metaschema.databind.model.test.RootBoundAssembly;
 
 import org.jmock.junit5.JUnit5Mockery;
@@ -23,26 +21,10 @@ import java.io.Reader;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class AbstractBoundModelTestSupport {
+public class AbstractBoundModelTestSupport
+    extends AbstractMetaschemaTest {
   @RegisterExtension
-  private final JUnit5Mockery context = new JUnit5Mockery();
-
-  @NonNull
-  private final IBindingContext bindingContext = DefaultBindingContext.instance();
-  //
-  // @BeforeAll
-  // void initContext() {
-  // /**
-  // * Setup bound classes
-  // */
-  // registerMetaschema(TestMetaschema.class);
-  // registerClassBinding(CollapsibleFlaggedBoundField.class);
-  // registerClassBinding(EmptyBoundAssembly.class);
-  // registerClassBinding(FlaggedBoundAssembly.class);
-  // registerClassBinding(FlaggedBoundField.class);
-  // registerClassBinding(OnlyModelBoundAssembly.class);
-  // registerClassBinding(RootBoundAssembly.class);
-  // }
+  JUnit5Mockery context = new JUnit5Mockery();
 
   @NonNull
   protected JUnit5Mockery getJUnit5Mockery() {
@@ -50,27 +32,7 @@ public class AbstractBoundModelTestSupport {
   }
 
   @NonNull
-  protected IBindingContext getBindingContext() {
-    return bindingContext;
-  }
-
-  @NonNull
-  protected IBoundDefinitionModelComplex registerClassBinding(@NonNull Class<? extends IBoundObject> clazz) {
-    IBoundDefinitionModelComplex definition = getBindingContext().getBoundDefinitionForClass(clazz);
-    if (definition == null) {
-      throw new IllegalArgumentException(String.format("Unable to find bound definition for class '%s'.",
-          clazz.getName()));
-    }
-    return definition;
-  }
-
-  @NonNull
-  protected IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz) {
-    return getBindingContext().registerModule(clazz);
-  }
-
-  @NonNull
-  protected IBoundDefinitionModelAssembly getRootAssemblyClassBinding() {
+  protected IBoundDefinitionModelAssembly getRootAssemblyClassBinding() throws IOException {
     return ObjectUtils.requireNonNull((IBoundDefinitionModelAssembly) getBindingContext()
         .getBoundDefinitionForClass(RootBoundAssembly.class));
   }

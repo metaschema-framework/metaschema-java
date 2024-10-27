@@ -41,7 +41,6 @@ public class SimpleAssembly implements IBoundObject {
     return _id;
   }
 
-  @SuppressWarnings("unused")
   public BigInteger getNumber() {
     return _number;
   }

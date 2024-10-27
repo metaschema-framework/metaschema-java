@@ -5,34 +5,64 @@
 
 package gov.nist.secauto.metaschema.maven.plugin;
 
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
+import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
 import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
+import gov.nist.secauto.metaschema.core.model.validation.AbstractValidationResultProcessor;
+import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
+import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
+import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.PostProcessingModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.IGeneratedClass;
+import gov.nist.secauto.metaschema.databind.codegen.IGeneratedModuleClass;
+import gov.nist.secauto.metaschema.databind.codegen.IModuleBindingGenerator;
+import gov.nist.secauto.metaschema.databind.codegen.IProduction;
+import gov.nist.secauto.metaschema.databind.codegen.JavaCompilerSupport;
+import gov.nist.secauto.metaschema.databind.codegen.JavaGenerator;
+import gov.nist.secauto.metaschema.databind.codegen.ModuleCompilerHelper;
+import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
+import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
+import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
-import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
+import org.xml.sax.SAXParseException;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.tools.DiagnosticCollector;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -44,7 +74,6 @@ public abstract class AbstractMetaschemaMojo
   /**
    * The Maven project context.
    *
-   * @parameter default-value="${project}"
    * @required
    * @readonly
    */
@@ -61,6 +90,9 @@ public abstract class AbstractMetaschemaMojo
 
   @Component
   private BuildContext buildContext;
+
+  @Parameter(defaultValue = "${plugin.artifacts}", readonly = true, required = true)
+  private List<Artifact> pluginArtifacts;
 
   /**
    * <p>
@@ -122,7 +154,6 @@ public abstract class AbstractMetaschemaMojo
    * A set of inclusion patterns used to select which Metaschema modules are to be
    * processed. By default, all files are processed.
    */
-
   @Parameter
   protected String[] includes;
 
@@ -157,6 +188,10 @@ public abstract class AbstractMetaschemaMojo
    */
   protected final MavenProject getMavenProject() {
     return mavenProject;
+  }
+
+  protected final List<Artifact> getPluginArtifacts() {
+    return pluginArtifacts;
   }
 
   /**
@@ -240,20 +275,35 @@ public abstract class AbstractMetaschemaMojo
     return Stream.of(ds.getIncludedFiles()).map(filename -> new File(metaschemaDir, filename)).distinct();
   }
 
+  @NonNull
+  protected IBindingContext newBindingContext() throws IOException, MetaschemaException {
+    List<IConstraintSet> constraints = getConstraints();
+
+    // generate Java sources based on provided metaschema sources
+    return new DefaultBindingContext(
+        new PostProcessingModuleLoaderStrategy(
+            CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)),
+            new SimpleModuleLoaderStrategy(
+                // this is used instead of the default generator to ensure that plugin classpath
+                // entries are used for compilation
+                new ModuleBindingGenerator(
+                    ObjectUtils.notNull(Files.createDirectories(Paths.get("target/metaschema-codegen-modules"))),
+                    new DefaultBindingConfiguration()))));
+  }
+
   /**
    * Get the configured collection of constraints.
    *
-   * @param bindingContext
-   *          the Metaschema binding context to use when loading the constraints
    * @return the loaded constraints
    * @throws MetaschemaException
    *           if a binding exception occurred while loading the constraints
    * @throws IOException
    *           if an error occurred while reading the constraints
    */
-  protected List<IConstraintSet> getConstraints(@NonNull IBindingContext bindingContext)
+  @NonNull
+  protected List<IConstraintSet> getConstraints()
       throws MetaschemaException, IOException {
-    IConstraintLoader loader = new BindingConstraintLoader(bindingContext);
+    IConstraintLoader loader = IBindingContext.getConstraintLoader();
     List<IConstraintSet> constraintSets = new ArrayList<>(constraints.length);
     for (File constraint : this.constraints) {
       constraintSets.addAll(loader.load(ObjectUtils.notNull(constraint)));
@@ -337,31 +387,220 @@ public abstract class AbstractMetaschemaMojo
     return generate;
   }
 
-  /**
-   * Construct a new module loader based on the provided mojo configuration.
-   *
-   * @return the module loader
-   * @throws MojoExecutionException
-   *           if an error occurred while loading the configured constraints
-   */
-  @NonNull
-  protected BindingModuleLoader newModuleLoader() throws MojoExecutionException {
-    IBindingContext bindingContext = IBindingContext.instance();
-
-    List<IConstraintSet> constraints;
+  protected Set<String> getClassPath() throws DependencyResolutionRequiredException {
+    Set<String> pathElements = null;
     try {
-      constraints = getConstraints(bindingContext);
-    } catch (MetaschemaException | IOException ex) {
-      throw new MojoExecutionException("Unable to load external constraints.", ex);
+      pathElements = new LinkedHashSet<>(getMavenProject().getCompileClasspathElements());
+    } catch (DependencyResolutionRequiredException ex) {
+      getLog().warn("exception calling getCompileClasspathElements", ex);
+      throw ex;
     }
 
-    // generate Java sources based on provided metaschema sources
-    BindingModuleLoader loader = constraints.isEmpty()
-        ? new BindingModuleLoader(bindingContext)
-        : new BindingModuleLoader(
-            bindingContext,
-            CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));
-    loader.allowEntityResolution();
-    return loader;
+    if (pluginArtifacts != null) {
+      for (Artifact a : getPluginArtifacts()) {
+        if (a.getFile() != null) {
+          pathElements.add(a.getFile().getAbsolutePath());
+        }
+      }
+    }
+    return pathElements;
+  }
+
+  protected final class LoggingValidationHandler
+      extends AbstractValidationResultProcessor {
+
+    private <T extends IValidationFinding> void handleFinding(
+        @NonNull T finding,
+        @NonNull Function<T, CharSequence> formatter) {
+
+      Log log = getLog();
+
+      switch (finding.getSeverity()) {
+      case CRITICAL:
+      case ERROR:
+        if (log.isErrorEnabled()) {
+          log.error(formatter.apply(finding), finding.getCause());
+        }
+        break;
+      case WARNING:
+        if (log.isWarnEnabled()) {
+          getLog().warn(formatter.apply(finding), finding.getCause());
+        }
+        break;
+      case INFORMATIONAL:
+        if (log.isInfoEnabled()) {
+          getLog().info(formatter.apply(finding), finding.getCause());
+        }
+        break;
+      default:
+        if (log.isDebugEnabled()) {
+          getLog().debug(formatter.apply(finding), finding.getCause());
+        }
+        break;
+      }
+    }
+
+    @Override
+    protected void handleJsonValidationFinding(JsonValidationFinding finding) {
+      handleFinding(finding, this::getMessage);
+    }
+
+    @Override
+    protected void handleXmlValidationFinding(XmlValidationFinding finding) {
+      handleFinding(finding, this::getMessage);
+    }
+
+    @Override
+    protected void handleConstraintValidationFinding(ConstraintValidationFinding finding) {
+      handleFinding(finding, this::getMessage);
+    }
+
+    @NonNull
+    private CharSequence getMessage(JsonValidationFinding finding) {
+      StringBuilder builder = new StringBuilder();
+      builder.append('[')
+          .append(finding.getCause().getPointerToViolation())
+          .append("] ")
+          .append(finding.getMessage());
+
+      URI documentUri = finding.getDocumentUri();
+      if (documentUri != null) {
+        builder.append(" [")
+            .append(documentUri.toString())
+            .append(']');
+      }
+      return builder;
+    }
+
+    @NonNull
+    private CharSequence getMessage(XmlValidationFinding finding) {
+      StringBuilder builder = new StringBuilder();
+
+      builder.append(finding.getMessage())
+          .append(" [");
+
+      URI documentUri = finding.getDocumentUri();
+      if (documentUri != null) {
+        builder.append(documentUri.toString());
+      }
+
+      SAXParseException ex = finding.getCause();
+      builder.append(finding.getMessage())
+          .append('{')
+          .append(ex.getLineNumber())
+          .append(',')
+          .append(ex.getColumnNumber())
+          .append("}]");
+      return builder;
+    }
+
+    @NonNull
+    private CharSequence getMessage(@NonNull ConstraintValidationFinding finding) {
+      StringBuilder builder = new StringBuilder();
+      builder.append('[')
+          .append(finding.getTarget().getMetapath())
+          .append(']');
+
+      String id = finding.getIdentifier();
+      if (id != null) {
+        builder.append(' ')
+            .append(id);
+      }
+
+      builder.append(' ')
+          .append(finding.getMessage());
+
+      URI documentUri = finding.getTarget().getBaseUri();
+      if (documentUri != null) {
+        builder.append(documentUri.toString());
+      }
+
+      IResourceLocation location = finding.getLocation();
+      if (location != null) {
+        builder.append('{')
+            .append(location.getLine())
+            .append(',')
+            .append(location.getColumn())
+            .append('}');
+      }
+      builder.append(']');
+      return builder;
+    }
+  }
+
+  public class ModuleBindingGenerator implements IModuleBindingGenerator {
+    @NonNull
+    private final Path compilePath;
+    @NonNull
+    private final ClassLoader classLoader;
+    @NonNull
+    private final IBindingConfiguration bindingConfiguration;
+
+    public ModuleBindingGenerator(
+        @NonNull Path compilePath,
+        @NonNull IBindingConfiguration bindingConfiguration) {
+      this.compilePath = compilePath;
+      this.classLoader = ModuleCompilerHelper.newClassLoader(
+          compilePath,
+          ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));
+      this.bindingConfiguration = bindingConfiguration;
+    }
+
+    @NonNull
+    public IProduction generateClasses(@NonNull IModule module) {
+      IProduction production;
+      try {
+        production = JavaGenerator.generate(module, compilePath, bindingConfiguration);
+      } catch (IOException ex) {
+        throw new MetapathException(
+            String.format("Unable to generate and compile classes for module '%s'.", module.getLocation()),
+            ex);
+      }
+      return production;
+    }
+
+    public void compileClasses(@NonNull IProduction production, @NonNull Path classDir)
+        throws IOException, DependencyResolutionRequiredException {
+      List<IGeneratedClass> classesToCompile = production.getGeneratedClasses().collect(Collectors.toList());
+
+      List<Path> classes = classesToCompile.stream()
+          .map(IGeneratedClass::getClassFile)
+          .collect(Collectors.toUnmodifiableList());
+
+      JavaCompilerSupport compiler = new JavaCompilerSupport(classDir);
+
+      getClassPath().forEach(compiler::addToClassPath);
+
+      JavaCompilerSupport.CompilationResult result = compiler.compile(classes, null);
+
+      if (!result.isSuccessful()) {
+        DiagnosticCollector<?> diagnostics = new DiagnosticCollector<>();
+        if (getLog().isErrorEnabled()) {
+          getLog().error("diagnostics: " + diagnostics.getDiagnostics().toString());
+        }
+        throw new IllegalStateException(String.format("failed to compile classes: %s",
+            classesToCompile.stream()
+                .map(clazz -> clazz.getClassName().canonicalName())
+                .collect(Collectors.joining(","))));
+      }
+    }
+
+    @Override
+    public Class<? extends IBoundModule> generate(IModule module) {
+      IProduction production = generateClasses(module);
+      try {
+        compileClasses(production, compilePath);
+      } catch (IOException | DependencyResolutionRequiredException ex) {
+        throw new IllegalStateException("failed to compile classes", ex);
+      }
+      IGeneratedModuleClass moduleClass = ObjectUtils.requireNonNull(production.getModuleProduction(module));
+
+      try {
+        return moduleClass.load(classLoader);
+      } catch (ClassNotFoundException ex) {
+        throw new IllegalStateException(ex);
+      }
+    }
+
   }
 }

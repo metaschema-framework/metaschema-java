@@ -22,12 +22,15 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IPositiveIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Provides built-in Metapath functions based on the XPath 3.1
  * <a href= "https://www.w3.org/TR/xpath-functions-31/">function
  * specification</a>.
  */
 @SuppressWarnings({ "removal" })
+@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
 @AutoService(IFunctionLibrary.class)
 public class DefaultFunctionLibrary
     extends FunctionLibrary {

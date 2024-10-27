@@ -16,11 +16,9 @@ import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValida
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.Format;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.model.testing.AbstractTestSuite;
 import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
@@ -170,11 +168,12 @@ public abstract class AbstractSchemaGeneratorTestSuite
     Path testSuite = Paths.get("../core/metaschema/test-suite/schema-generation/");
     Path collectionPath = testSuite.resolve(collectionName);
 
-    IBindingContext context = new DefaultBindingContext();
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
 
     // load the metaschema module
-    BindingModuleLoader loader = new BindingModuleLoader(context);
-    loader.enableFeature(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION);
+    IBindingModuleLoader loader = bindingContext.newModuleLoader();
     loader.allowEntityResolution();
     Path modulePath = collectionPath.resolve(metaschemaName);
     IModule module = loader.load(modulePath);
@@ -197,15 +196,12 @@ public abstract class AbstractSchemaGeneratorTestSuite
       throw new IllegalStateException();
     }
 
-    // setup object binding
-    context.registerModule(module, generationDir);
-
     // create content test cases
     for (ContentCase contentCase : contentCases) {
       Path contentPath = collectionPath.resolve(contentCase.getName());
 
       if (!requiredContentFormat.equals(contentCase.getActualFormat())) {
-        contentPath = convertContent(contentPath.toUri(), generationDir, context);
+        contentPath = convertContent(contentPath.toUri(), generationDir, bindingContext);
       }
 
       assertEquals(contentCase.isValid(),

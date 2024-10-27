@@ -166,7 +166,7 @@ public class MetaschemaJsonReader
     return (T) definition.readItem(null, this);
   }
 
-  @SuppressWarnings({ "unchecked", "resource" })
+  @SuppressWarnings({ "unchecked" })
   @NonNull
   public <T> T readObjectRoot(
       @NonNull IBoundDefinitionModelComplex definition,
@@ -354,7 +354,6 @@ public class MetaschemaJsonReader
         getProblemHandler());
   }
 
-  @SuppressWarnings("resource")
   @NonNull
   private Object readScalarItem(@NonNull IFeatureScalarItemValueHandler handler)
       throws IOException {
@@ -408,7 +407,7 @@ public class MetaschemaJsonReader
         ? bodyHandler
         : new JsonKeyBodyHandler(jsonKey, bodyHandler);
 
-    @SuppressWarnings("resource") JsonLocation location = getReader().currentLocation();
+    JsonLocation location = getReader().currentLocation();
 
     // construct the item
     IBoundObject item = definition.newInstance(
@@ -487,7 +486,7 @@ public class MetaschemaJsonReader
         IBoundObject parent,
         IJsonProblemHandler problemHandler)
         throws IOException {
-      @SuppressWarnings("resource") JsonParser parser = getReader();
+      JsonParser parser = getReader();
       JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME);
 
       // the field will be the JSON key
@@ -524,7 +523,7 @@ public class MetaschemaJsonReader
         IBoundObject parent,
         IJsonProblemHandler problemHandler)
         throws IOException {
-      @SuppressWarnings("resource") JsonParser parser = getReader();
+      JsonParser parser = getReader();
 
       // advance past the start object
       JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);
@@ -606,7 +605,6 @@ public class MetaschemaJsonReader
       delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances);
     }
 
-    @SuppressWarnings("resource")
     @Override
     public boolean handleUnknownProperty(
         IBoundDefinitionModelComplex definition,
@@ -686,7 +684,6 @@ public class MetaschemaJsonReader
       super(instance, parentItem);
     }
 
-    @SuppressWarnings("resource") // no need to close parser
     @Override
     public List<ITEM> readList() throws IOException {
       JsonParser parser = getReader();
@@ -716,7 +713,6 @@ public class MetaschemaJsonReader
       return items;
     }
 
-    @SuppressWarnings("resource") // no need to close parser
     @Override
     public Map<String, ITEM> readMap() throws IOException {
       JsonParser parser = getReader();

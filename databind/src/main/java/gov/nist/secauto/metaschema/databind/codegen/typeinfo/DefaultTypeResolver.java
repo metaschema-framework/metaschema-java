@@ -193,8 +193,8 @@ class DefaultTypeResolver implements ITypeResolver {
           String className = getBindingConfiguration().getClassName(mod);
           String classNameBase = className;
           int index = 1;
+          classNameLock.lock();
           try {
-            classNameLock.lock();
             while (isClassNameClash(packageName, className)) {
               className = classNameBase + Integer.toString(index);
             }
@@ -208,8 +208,8 @@ class DefaultTypeResolver implements ITypeResolver {
 
   @NonNull
   protected Set<String> getClassNamesFor(@NonNull String packageOrTypeName) {
+    classNameLock.lock();
     try {
-      classNameLock.lock();
       return ObjectUtils.notNull(packageToClassNamesMap.computeIfAbsent(
           packageOrTypeName,
           pkg -> Collections.synchronizedSet(new LinkedHashSet<>())));
@@ -219,8 +219,8 @@ class DefaultTypeResolver implements ITypeResolver {
   }
 
   protected boolean isClassNameClash(@NonNull String packageOrTypeName, @NonNull String className) {
+    classNameLock.lock();
     try {
-      classNameLock.lock();
       return getClassNamesFor(packageOrTypeName).contains(className);
     } finally {
       classNameLock.unlock();
@@ -228,8 +228,8 @@ class DefaultTypeResolver implements ITypeResolver {
   }
 
   protected boolean addClassName(@NonNull String packageOrTypeName, @NonNull String className) {
+    classNameLock.lock();
     try {
-      classNameLock.lock();
       return getClassNamesFor(packageOrTypeName).add(className);
     } finally {
       classNameLock.unlock();
@@ -242,8 +242,8 @@ class DefaultTypeResolver implements ITypeResolver {
       @NonNull IModelDefinition definition) {
     @NonNull String retval = suggestedClassName;
     boolean clash = false;
+    classNameLock.lock();
     try {
-      classNameLock.lock();
       Set<String> classNames = getClassNamesFor(packageOrTypeName);
       if (classNames.contains(suggestedClassName)) {
         clash = true;
@@ -299,9 +299,8 @@ class DefaultTypeResolver implements ITypeResolver {
   @Override
   @NonNull
   public String getPropertyName(IDefinitionTypeInfo parent, String name) {
-
+    propertyNameLock.lock();
     try {
-      propertyNameLock.lock();
       Set<String> propertyNames = typeInfoToPropertyNameMap.computeIfAbsent(parent, key -> new HashSet<>());
 
       String retval = name;

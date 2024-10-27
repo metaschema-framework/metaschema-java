@@ -42,7 +42,7 @@ class DefaultAssemblyClassBindingTest
   }
 
   @Test
-  void testModule() {
+  void testModule() throws IOException {
     IBoundDefinitionModelAssembly definition = getRootAssemblyClassBinding();
     IModule module = definition.getContainingModule();
     assertNotNull(module, "metaschema was null");

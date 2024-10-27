@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.model.xml.XmlMetaConstraintLoader;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
@@ -27,14 +28,14 @@ class ExternalConstraintsModulePostProcessorTest {
   @Test
   void test() throws MetaschemaException, IOException {
 
-    IModule module = new ModuleLoader().load(ObjectUtils.notNull(
-        Paths.get("src/test/resources/content/issue184-metaschema.xml")));
-
     List<IConstraintSet> constraints
         = new XmlMetaConstraintLoader().load(ObjectUtils.notNull(
             Paths.get("src/test/resources/content/issue184-constraints.xml")));
 
-    new ExternalConstraintsModulePostProcessor(constraints).processModule(module);
+    IModule module
+        = new ModuleLoader(CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)))
+            .load(ObjectUtils.notNull(
+                Paths.get("src/test/resources/content/issue184-metaschema.xml")));
 
     IAssemblyDefinition definition = ObjectUtils.requireNonNull(module.getAssemblyDefinitionByName(
         new QName("http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test", "a")));

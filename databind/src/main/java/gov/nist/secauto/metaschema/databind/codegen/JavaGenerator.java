@@ -43,6 +43,7 @@ public final class JavaGenerator {
    * @throws IOException
    *           if an error occurred while generating the class
    */
+  @NonNull
   public static IProduction generate(
       @NonNull IModule module,
       @NonNull Path targetDir,

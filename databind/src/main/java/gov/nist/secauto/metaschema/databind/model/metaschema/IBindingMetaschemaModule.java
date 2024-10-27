@@ -27,6 +27,7 @@ public interface IBindingMetaschemaModule extends IMetaschemaModule<IBindingMeta
    *
    * @return the document node item
    */
+  @NonNull
   IDocumentNodeItem getSourceNodeItem();
 
   /**
@@ -34,5 +35,6 @@ public interface IBindingMetaschemaModule extends IMetaschemaModule<IBindingMeta
    *
    * @return the module node item
    */
+  @NonNull
   IModuleNodeItem getModuleNodeItem();
 }

@@ -10,13 +10,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IDeserializer;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,9 +31,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
-abstract class AbstractMetaschemaTest {
+public abstract class AbstractMetaschemaTest {
 
-  private static final BindingModuleLoader LOADER = new BindingModuleLoader(new DefaultBindingContext());
   private static final Logger LOGGER = LogManager.getLogger(AbstractMetaschemaTest.class);
   // @TempDir
   // Path generationDir;
@@ -43,15 +40,20 @@ abstract class AbstractMetaschemaTest {
   Path generationDir = ObjectUtils.notNull(Paths.get("target/generated-test-sources/metaschema"));
 
   @NonNull
-  private static IBindingMetaschemaModule loadModule(@NonNull Path moduleFile) throws MetaschemaException, IOException {
-    return LOADER.load(moduleFile);
+  protected IBindingContext getBindingContext() throws IOException {
+    return IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
   }
 
   @NonNull
-  public static Class<? extends IBoundObject> compileModule(@NonNull Path moduleFile, @Nullable Path bindingFile,
-      @NonNull String rootClassName, @NonNull Path classDir)
+  public Class<? extends IBoundObject> compileModule(
+      @NonNull Path moduleFile,
+      @Nullable Path bindingFile,
+      @NonNull String rootClassName,
+      @NonNull Path classDir)
       throws IOException, ClassNotFoundException, MetaschemaException {
-    IBindingMetaschemaModule module = loadModule(moduleFile);
+    IBindingMetaschemaModule module = getBindingContext().loadMetaschema(moduleFile);
 
     DefaultBindingConfiguration bindingConfiguration = new DefaultBindingConfiguration();
     if (bindingFile != null && Files.exists(bindingFile) && Files.isRegularFile(bindingFile)) {
@@ -93,13 +95,12 @@ abstract class AbstractMetaschemaTest {
     }
   }
 
-  public static void runTests(@NonNull String testPath, @NonNull String rootClassName, @NonNull Path classDir)
+  public void runTests(@NonNull String testPath, @NonNull String rootClassName, @NonNull Path classDir)
       throws ClassNotFoundException, IOException, MetaschemaException, BindingException {
     runTests(testPath, rootClassName, classDir, null);
   }
 
-  @SuppressWarnings("unused")
-  public static void runTests(
+  public void runTests(
       @NonNull String testPath,
       @NonNull String rootClassName,
       @NonNull Path classDir,
@@ -114,8 +115,7 @@ abstract class AbstractMetaschemaTest {
         assertions);
   }
 
-  @SuppressWarnings("unused")
-  public static void runTests(
+  public void runTests(
       @NonNull Path metaschemaPath,
       @NonNull Path bindingPath,
       @Nullable Path examplePath,
@@ -132,19 +132,18 @@ abstract class AbstractMetaschemaTest {
     runTests(examplePath, rootClass, assertions);
   }
 
-  @SuppressWarnings("unused")
-  public static <T extends IBoundObject> void runTests(
+  public <T extends IBoundObject> void runTests(
       @Nullable Path examplePath,
       @NonNull Class<? extends T> rootClass,
       java.util.function.Consumer<Object> assertions)
       throws ClassNotFoundException, IOException, MetaschemaException, BindingException {
 
     if (examplePath != null && Files.exists(examplePath)) {
-      IBindingContext context = new DefaultBindingContext();
+      IBindingContext context = getBindingContext();
       if (LOGGER.isInfoEnabled()) {
         LOGGER.info("Testing XML file: {}", examplePath.toString());
       }
-      String xml;
+
       {
 
         T root = read(Format.XML, examplePath, rootClass, context);
@@ -174,4 +173,5 @@ abstract class AbstractMetaschemaTest {
       }
     }
   }
+
 }

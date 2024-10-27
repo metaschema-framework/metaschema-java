@@ -50,7 +50,7 @@ class DefaultFieldPropertyTest {
     try (JsonParser jsonParser = factory.createParser(json)) {
       assert jsonParser != null;
 
-      IBindingContext bindingContext = IBindingContext.instance();
+      IBindingContext bindingContext = IBindingContext.newInstance();
       IBoundDefinitionModelAssembly classBinding
           = (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(SimpleAssembly.class);
       assert classBinding != null;
@@ -78,7 +78,7 @@ class DefaultFieldPropertyTest {
       // get first token
       jsonParser.nextToken();
 
-      IBindingContext bindingContext = IBindingContext.instance();
+      IBindingContext bindingContext = IBindingContext.newInstance();
       IBoundDefinitionModelComplex classBinding = bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class);
       assert classBinding != null;
 
@@ -111,7 +111,7 @@ class DefaultFieldPropertyTest {
       // get first token
       jsonParser.nextToken();
 
-      IBindingContext bindingContext = IBindingContext.instance();
+      IBindingContext bindingContext = IBindingContext.newInstance();
       IBoundDefinitionModelComplex classBinding = bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class);
       assert classBinding != null;
 
@@ -137,7 +137,7 @@ class DefaultFieldPropertyTest {
       // get first token
       jsonParser.nextToken();
 
-      IBindingContext bindingContext = IBindingContext.instance();
+      IBindingContext bindingContext = IBindingContext.newInstance();
       IBoundDefinitionModelComplex classBinding = bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class);
       assert classBinding != null;
 
@@ -161,7 +161,7 @@ class DefaultFieldPropertyTest {
       // get first token
       jsonParser.nextToken();
 
-      IBindingContext bindingContext = IBindingContext.instance();
+      IBindingContext bindingContext = IBindingContext.newInstance();
       IBoundDefinitionModelComplex classBinding = bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class);
       assert classBinding != null;
 

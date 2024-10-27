@@ -6,6 +6,8 @@
 package gov.nist.secauto.metaschema.databind.codegen;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 
 import java.util.Collection;
 
@@ -41,4 +43,20 @@ public interface IGeneratedModuleClass extends IGeneratedClass {
    */
   @NonNull
   Collection<IGeneratedDefinitionClass> getGeneratedDefinitionClasses();
+
+  /**
+   * Dynamicly load this class.
+   *
+   * @param classLoader
+   *          the class loader to use to load this class
+   * @return the module class
+   * @throws ClassNotFoundException
+   *           if this classwas not found
+   * @since 2.0.0
+   */
+  @SuppressWarnings("unchecked")
+  @NonNull
+  default Class<? extends IBoundModule> load(@NonNull ClassLoader classLoader) throws ClassNotFoundException {
+    return ObjectUtils.notNull((Class<? extends IBoundModule>) classLoader.loadClass(getClassName().reflectionName()));
+  }
 }

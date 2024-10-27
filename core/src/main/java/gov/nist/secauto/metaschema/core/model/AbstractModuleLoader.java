@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
@@ -34,29 +33,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractModuleLoader<T, M extends IModuleExtended<M, ?, ?, ?, ?>>
     extends AbstractLoader<M>
     implements IModuleLoader<M> {
-  @NonNull
-  private final List<IModuleLoader.IModulePostProcessor> modulePostProcessors;
-
   /**
    * Construct a new Metaschema module loader, which use the provided module post
    * processors when loading a module.
-   *
-   * @param modulePostProcessors
-   *          post processors to perform additional module customization when
-   *          loading
    */
-  protected AbstractModuleLoader(@NonNull List<IModuleLoader.IModulePostProcessor> modulePostProcessors) {
-    this.modulePostProcessors = CollectionUtil.unmodifiableList(new ArrayList<>(modulePostProcessors));
-  }
-
-  /**
-   * Get the set of module post processors associated with this loader.
-   *
-   * @return the set of constraints
-   */
-  @NonNull
-  protected List<IModuleLoader.IModulePostProcessor> getModulePostProcessors() {
-    return modulePostProcessors;
+  protected AbstractModuleLoader() {
+    // only allow construction by extending classes
   }
 
   /**
@@ -115,12 +97,7 @@ public abstract class AbstractModuleLoader<T, M extends IModuleExtended<M, ?, ?,
     // now create this metaschema
     Collection<M> values = importedModules.values();
     try {
-      M module = newModule(resource, binding, new ArrayList<>(values));
-
-      for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {
-        postProcessor.processModule(module);
-      }
-      return module;
+      return newModule(resource, binding, new ArrayList<>(values));
     } catch (MetaschemaException ex) {
       throw new IOException(ex);
     }

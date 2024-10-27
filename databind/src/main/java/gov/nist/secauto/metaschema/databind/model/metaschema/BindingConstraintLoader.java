@@ -39,6 +39,7 @@ import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyCon
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetapathContext;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaMetaConstraints;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaMetapath;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModuleConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.impl.ConstraintBindingSupport;
 
@@ -75,8 +76,7 @@ public class BindingConstraintLoader
 
   public BindingConstraintLoader(@NonNull IBindingContext bindingContext) {
     // ensure the bindings are registered
-    bindingContext.registerBindingMatcher(MetaschemaMetaConstraints.class);
-    bindingContext.registerBindingMatcher(MetaschemaModuleConstraints.class);
+    bindingContext.registerModule(MetaschemaModelModule.class);
 
     this.loader = bindingContext.newBoundLoader();
     this.loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);

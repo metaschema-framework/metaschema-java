@@ -11,8 +11,6 @@ import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -63,13 +61,12 @@ public interface ISchemaGenerator {
 
   static void generateSchema(
       @NonNull IModule module,
-      @NonNull OutputStream os,
+      @NonNull Writer writer,
       @NonNull SchemaFormat asFormat,
       @NonNull IConfiguration<SchemaGenerationFeature<?>> configuration)
       throws IOException {
     ISchemaGenerator schemaGenerator = asFormat.getSchemaGenerator();
 
-    Writer writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
     schemaGenerator.generateFromModule(module, writer, configuration);
     writer.flush();
     // we don't want to close os, since we do not own it

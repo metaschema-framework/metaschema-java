@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.FormatDetector;
@@ -31,8 +30,6 @@ import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,37 +72,26 @@ public class ConvertContentUsingModuleCommand
   private final class OscalCommandExecutor
       extends AbstractConversionCommandExecutor {
 
-    private Path tempDir;
-
     private OscalCommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
     }
 
-    @NonNull
-    private Path getTempDir() throws IOException {
-      if (tempDir == null) {
-        tempDir = Files.createTempDirectory("validation-");
-        tempDir.toFile().deleteOnExit();
-      }
-      assert tempDir != null;
-      return tempDir;
-    }
-
     @Override
     protected IBindingContext getBindingContext() throws IOException, MetaschemaException {
+      IBindingContext retval = MetaschemaCommands.newBindingContextWithDynamicCompilation();
+
       URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
 
       IModule module;
       try {
-        module = MetaschemaCommands.handleModule(getCommandLine(), cwd, CollectionUtil.emptySet());
+        module = MetaschemaCommands.handleModule(getCommandLine(), cwd, retval);
       } catch (URISyntaxException ex) {
         throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),
             ex);
       }
-      IBindingContext retval = new DefaultBindingContext();
-      retval.registerModule(module, getTempDir());
+      retval.registerModule(module);
       return retval;
     }
 

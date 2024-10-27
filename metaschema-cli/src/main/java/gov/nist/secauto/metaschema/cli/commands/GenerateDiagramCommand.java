@@ -17,9 +17,9 @@ import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.util.MermaidErDiagramGenerator;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -143,12 +143,21 @@ public class GenerateDiagramCommand
       }
     }
 
+    IBindingContext bindingContext;
+    try {
+      bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
+    } catch (IOException ex) {
+      return ExitCode.PROCESSING_ERROR
+          .exitMessage(String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()))
+          .withThrowable(ex);
+    }
+
     URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
 
     IModule module;
     try {
       URI moduleUri = UriUtils.toUri(ObjectUtils.requireNonNull(extraArgs.get(0)), cwd);
-      module = MetaschemaCommands.handleModule(moduleUri, CollectionUtil.emptyList());
+      module = MetaschemaCommands.handleModule(moduleUri, bindingContext);
     } catch (URISyntaxException ex) {
       return ExitCode.INVALID_ARGUMENTS
           .exitMessage(

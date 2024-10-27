@@ -7,18 +7,19 @@ package gov.nist.secauto.metaschema.databind.model.metaschema;
 
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
+import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 
-class BindingModuleLoaderTest {
+class BindingModuleLoaderTest
+    extends AbstractMetaschemaTest {
 
   @Test
   void test() throws MetaschemaException, IOException {
-    BindingModuleLoader loader = new BindingModuleLoader(new DefaultBindingContext());
+    IBindingModuleLoader loader = getBindingContext().newModuleLoader();
     loader.allowEntityResolution();
 
     loader.load(ObjectUtils.notNull(

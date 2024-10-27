@@ -99,7 +99,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
     // instantiating
     IModelInstanceCollectionInfo<T> collectionInfo = instance.getCollectionInfo();
     if (!collectionInfo.isEmpty(value)) {
-      QName currentQName = itemWriter.getParentQName();
+      QName currentQName = itemWriter.getObjectQName();
       QName groupAsQName = instance.getEffectiveXmlGroupAsQName();
       try {
         if (groupAsQName != null) {
@@ -143,8 +143,8 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
   private class ItemWriter
       extends AbstractItemWriter {
 
-    public ItemWriter(@NonNull QName parentQName) {
-      super(parentQName);
+    public ItemWriter(@NonNull QName qname) {
+      super(qname);
     }
 
     private <T extends IBoundInstanceModelNamed<IBoundObject> & IFeatureComplexItemValueHandler> void writeFlags(
@@ -244,21 +244,21 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
     }
 
     private <T extends IFeatureComplexItemValueHandler & IBoundDefinitionModelComplex> void writeDefinitionObject(
-        @NonNull T instance,
+        @NonNull T definition,
         @NonNull IBoundObject parentItem,
         @NonNull ObjectWriter<T> propertyWriter) throws IOException {
 
       try {
-        QName wrapperQName = instance.getXmlQName();
+        QName qname = getObjectQName();
         NamespaceContext nsContext = writer.getNamespaceContext();
-        String prefix = nsContext.getPrefix(wrapperQName.getNamespaceURI());
+        String prefix = nsContext.getPrefix(qname.getNamespaceURI());
         if (prefix == null) {
           prefix = "";
         }
 
-        writer.writeStartElement(prefix, wrapperQName.getLocalPart(), wrapperQName.getNamespaceURI());
+        writer.writeStartElement(prefix, qname.getLocalPart(), qname.getNamespaceURI());
 
-        propertyWriter.accept(parentItem, instance);
+        propertyWriter.accept(parentItem, definition);
 
         writer.writeEndElement();
       } catch (XMLStreamException ex) {
@@ -290,7 +290,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
           instance.getJavaTypeAdapter().writeXmlValue(item, wrapperQName, writer);
           writer.writeEndElement();
         } else {
-          instance.getJavaTypeAdapter().writeXmlValue(item, getParentQName(), writer);
+          instance.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);
         }
       } catch (XMLStreamException ex) {
         throw new IOException(ex);
@@ -332,7 +332,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
       Object item = fieldValue.getValue(parentItem);
       if (item != null) {
         try {
-          fieldValue.getJavaTypeAdapter().writeXmlValue(item, getParentQName(), writer);
+          fieldValue.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);
         } catch (XMLStreamException ex) {
           throw new IOException(ex);
         }
@@ -361,12 +361,13 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemAssembly(IBoundObject item, IBoundDefinitionModelAssembly definition) throws IOException {
-      ItemWriter itemWriter = new ItemWriter(definition.getXmlQName());
+      // this is a special case where we are writing a top-level, potentially root,
+      // element. Need to take the object qname passed in
       writeDefinitionObject(
           definition,
           item,
           ((ObjectWriter<IBoundDefinitionModelAssembly>) this::writeFlags)
-              .andThen(itemWriter::writeAssemblyModel));
+              .andThen(this::writeAssemblyModel));
     }
 
     @Override
@@ -379,10 +380,10 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
   private abstract static class AbstractItemWriter implements IItemWriteHandler {
     @NonNull
-    private final QName parentQName;
+    private final QName objectQName;
 
-    protected AbstractItemWriter(@NonNull QName parentQName) {
-      this.parentQName = parentQName;
+    protected AbstractItemWriter(@NonNull QName qname) {
+      this.objectQName = qname;
     }
 
     /**
@@ -391,8 +392,8 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
      * @return the qualified name
      */
     @NonNull
-    protected QName getParentQName() {
-      return parentQName;
+    protected QName getObjectQName() {
+      return objectQName;
     }
   }
 }

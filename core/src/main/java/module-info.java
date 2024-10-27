@@ -26,13 +26,13 @@ module gov.nist.secauto.metaschema.core {
   requires static org.eclipse.jdt.annotation;
   requires static biz.aQute.bnd.util;
   requires static com.google.auto.service;
-  requires com.github.spotbugs.annotations;
-  // requires static org.jetbrains.annotations;
+  requires static com.github.spotbugs.annotations;
 
   requires com.ctc.wstx;
   requires com.fasterxml.jackson.annotation;
   requires com.fasterxml.jackson.core;
   requires transitive com.fasterxml.jackson.databind;
+  requires transitive com.github.benmanes.caffeine;
   requires transitive inet.ipaddr;
   requires nl.talsmasoftware.lazy4j;
   requires org.antlr.antlr4.runtime;

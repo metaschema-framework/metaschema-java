@@ -10,9 +10,11 @@ import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
@@ -80,6 +82,7 @@ public class GenerateSchemaMojo
    * types. If disabled, definitions will always be generated as global types.
    */
   @Parameter(defaultValue = "true")
+  @SuppressWarnings("PMD.ImmutableField")
   private boolean inlineDefinitions = true;
 
   /**
@@ -181,6 +184,7 @@ public class GenerateSchemaMojo
     }
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private static void generateSchemas(
       @NonNull IModule module,
       @NonNull IConfiguration<SchemaGenerationFeature<?>> schemaGenerationConfig,
@@ -261,7 +265,15 @@ public class GenerateSchemaMojo
         throw new MojoExecutionException("Unable to create output directory: " + outputDir);
       }
 
-      BindingModuleLoader loader = newModuleLoader();
+      IBindingContext bindingContext;
+      try {
+        bindingContext = newBindingContext();
+      } catch (MetaschemaException | IOException ex) {
+        throw new MojoExecutionException("Failed to create the binding context", ex);
+      }
+
+      IBindingModuleLoader loader = bindingContext.newModuleLoader();
+      loader.allowEntityResolution();
 
       // generate Java sources based on provided metaschema sources
       final Set<IModule> modules = new HashSet<>();
@@ -277,12 +289,12 @@ public class GenerateSchemaMojo
           throw new MojoExecutionException("Loading of metaschema failed", ex);
         }
 
-        // IValidationResult result = IBindingContext.instance().validate(
-        // module.getSourceNodeItem(),
-        // IBindingContext.instance().newBoundLoader(),
-        // null);
-        //
-        // LoggingValidationHandler.instance().handleValidationResults(validationResult);
+        IValidationResult result = bindingContext.validate(
+            module.getSourceNodeItem(),
+            loader.getBindingContext().newBoundLoader(),
+            null);
+
+        new LoggingValidationHandler().handleResults(result);
 
         modules.add(module);
       }

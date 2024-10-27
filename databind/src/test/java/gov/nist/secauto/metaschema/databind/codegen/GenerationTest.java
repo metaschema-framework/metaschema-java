@@ -10,31 +10,34 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class GenerationTest {
 
   @Test
   void testOscalBindingModuleLoader() throws MetaschemaException, IOException {
-    BindingModuleLoader loader = new BindingModuleLoader(new DefaultBindingContext());
-    loader.set(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION, true);
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
+
+    IBindingModuleLoader loader = bindingContext.newModuleLoader();
+    loader.allowEntityResolution();
     IBindingMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
-        "https://raw.githubusercontent.com/usnistgov/OSCAL/main/src/metaschema/oscal_complete_metaschema.xml")));
-    IBindingContext context = IBindingContext.instance().registerModule(
-        module,
-        ObjectUtils.notNull(Paths.get("target/oscal-classes")));
+        "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.2/src/metaschema/oscal_complete_metaschema.xml")));
+
+    IBoundModule registeredModule = bindingContext.registerModule(module);
     assertAll(
         () -> assertNotNull(module),
-        () -> assertNotNull(context));
+        () -> assertNotNull(registeredModule));
   }
 }

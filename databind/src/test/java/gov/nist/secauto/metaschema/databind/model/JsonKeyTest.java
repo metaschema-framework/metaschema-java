@@ -9,34 +9,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 class JsonKeyTest
-    extends AbstractBoundModelTestSupport {
-  // @TempDir
-  // Path generationDir;
-  @NonNull
-  Path generationDir = ObjectUtils.notNull(Paths.get("target/generated-test-sources/metaschema"));
-
+    extends AbstractMetaschemaTest {
   @Test
   void testJsonKey() throws IOException, MetaschemaException {
-    IBindingMetaschemaModule module
-        = new BindingModuleLoader(new DefaultBindingContext()).load(ObjectUtils.requireNonNull(
-            Paths.get("src/test/resources/metaschema/json-key/metaschema.xml")));
+    IBindingContext bindingContext = getBindingContext();
 
-    IBindingContext bindingContext = IBindingContext.instance();
-    bindingContext.registerModule(module, ObjectUtils.notNull(generationDir));
+    bindingContext.newModuleLoader().load(ObjectUtils.requireNonNull(
+        Paths.get("src/test/resources/metaschema/json-key/metaschema.xml")));
 
     Object obj = bindingContext.newBoundLoader().load(
         ObjectUtils.requireNonNull(Paths.get("src/test/resources/metaschema/json-key/test.json")));

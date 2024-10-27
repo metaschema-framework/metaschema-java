@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.databind.model.binding.metaschema.InlineDefin
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModel;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
 
@@ -44,35 +45,36 @@ public final class FlagContainerSupport {
         : IContainerFlagSupport.builder(parent.getContainingModule().toFlagQName(jsonKeyName));
 
     // create counter to track child positions
-    int flagReferencePosition = 0;
-    int flagInlineDefinitionPosition = 0;
+    AtomicInteger flagReferencePosition = new AtomicInteger();
+    AtomicInteger flagInlineDefinitionPosition = new AtomicInteger();
 
     IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(
         bindingInstance.getDefinition().getChoiceGroupInstanceByName("flags"));
-    for (Object obj : flags) {
-      assert obj != null;
-      IBoundInstanceModelGroupedAssembly objInstance
-          = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
 
-      IFlagInstance flag;
-      if (obj instanceof InlineDefineFlag) {
-        flag = new InstanceFlagInline(
-            (InlineDefineFlag) obj,
-            objInstance,
-            flagInlineDefinitionPosition++,
-            parent);
-      } else if (obj instanceof FlagReference) {
-        flag = newFlagInstance(
-            (FlagReference) obj,
-            objInstance,
-            flagReferencePosition++,
-            parent);
-      } else {
-        throw new UnsupportedOperationException(String.format("Unknown flag instance class: %s", obj.getClass()));
-      }
+    flags.stream()
+        .map(obj -> {
+          assert obj != null;
+          IBoundInstanceModelGroupedAssembly objInstance
+              = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
 
-      builder.flag(flag);
-    }
+          IFlagInstance flag;
+          if (obj instanceof InlineDefineFlag) {
+            flag = new InstanceFlagInline(
+                (InlineDefineFlag) obj,
+                objInstance,
+                flagInlineDefinitionPosition.incrementAndGet(),
+                parent);
+          } else if (obj instanceof FlagReference) {
+            flag = newFlagInstance(
+                (FlagReference) obj,
+                objInstance,
+                flagReferencePosition.incrementAndGet(),
+                parent);
+          } else {
+            throw new UnsupportedOperationException(String.format("Unknown flag instance class: %s", obj.getClass()));
+          }
+          return flag;
+        }).forEachOrdered(builder::flag);
 
     return builder.build();
   }

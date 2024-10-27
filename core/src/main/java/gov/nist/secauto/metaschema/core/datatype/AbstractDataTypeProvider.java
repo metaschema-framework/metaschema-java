@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.datatype;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -32,9 +33,10 @@ public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
   @Override
   public List<? extends IDataTypeAdapter<?>> getJavaTypeAdapters() {
     Lock readLock = libraryLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
-      return CollectionUtil.unmodifiableList(library);
+      // make a defensive copy to protect callers from potential modifications
+      return CollectionUtil.unmodifiableList(new ArrayList<>(library));
     } finally {
       readLock.unlock();
     }
@@ -53,8 +55,8 @@ public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
       throw new IllegalArgumentException("The adapter has no name: " + adapter.getClass().getName());
     }
     Lock writeLock = libraryLock.writeLock();
+    writeLock.lock();
     try {
-      writeLock.lock();
       library.add(adapter);
     } finally {
       writeLock.unlock();

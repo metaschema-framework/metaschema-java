@@ -345,11 +345,10 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
     while ((nextEvent = reader.peek()).isCharacters()) {
       Characters characters = nextEvent.asCharacters();
       String data = characters.getData();
-      if (WHITESPACE_ONLY.matcher(data).matches()) {
-        nextEvent = reader.nextEvent();
-      } else {
+      if (!WHITESPACE_ONLY.matcher(data).matches()) {
         break;
       }
+      nextEvent = reader.nextEvent();
     }
     return nextEvent;
   }
@@ -467,7 +466,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
       @NonNull XMLEventReader2 reader,
       @NonNull QName presumedName) throws IOException, XMLStreamException {
     XMLEvent retval = reader.nextEvent();
-    if (!(retval.isStartElement() && presumedName.equals(retval.asStartElement().getName()))) {
+    if (!retval.isStartElement() || !presumedName.equals(retval.asStartElement().getName())) {
       throw new IOException(generateExpectedMessage(
           retval,
           XMLStreamConstants.START_ELEMENT,
@@ -495,7 +494,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
       @NonNull XMLEventReader2 reader,
       @NonNull QName presumedName) throws IOException, XMLStreamException {
     XMLEvent retval = reader.nextEvent();
-    if (!(retval.isEndElement() && presumedName.equals(retval.asEndElement().getName()))) {
+    if (!retval.isEndElement() || !presumedName.equals(retval.asEndElement().getName())) {
       throw new IOException(generateExpectedMessage(
           retval,
           XMLStreamConstants.END_ELEMENT,
@@ -614,8 +613,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
       builder.append("', instead found null event");
     } else {
       builder.append("', instead found ")
-          .append(toString(event))
-          .append(generateLocationMessage(event));
+          .append(toString(event));
     }
     return builder;
   }

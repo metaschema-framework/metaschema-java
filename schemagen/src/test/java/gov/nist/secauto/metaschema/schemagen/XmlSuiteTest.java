@@ -13,10 +13,10 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.validation.IContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.Format;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 
 import org.jdom2.Document;
@@ -42,6 +42,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -93,8 +94,11 @@ class XmlSuiteTest
   @Execution(ExecutionMode.SAME_THREAD)
   @DisplayName("XML Schema Generation")
   @TestFactory
-  Stream<? extends DynamicNode> generateTests() {
-    return testFactory();
+  Stream<? extends DynamicNode> generateTests() throws IOException {
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
+    return testFactory(bindingContext);
   }
 
   @Disabled
@@ -152,50 +156,16 @@ class XmlSuiteTest
   }
 
   @Test
-  void testliboscalJavaIssue181() throws IOException, MetaschemaException, XMLStreamException, JDOMException {
-    IBindingContext context = new DefaultBindingContext();
-    BindingModuleLoader loader = new BindingModuleLoader(context);
+  void testLiboscalJavaIssue181() throws IOException, MetaschemaException, XMLStreamException, JDOMException {
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .build();
+
+    IBindingModuleLoader loader = bindingContext.newModuleLoader();
     loader.allowEntityResolution();
 
     IModule module = loader.load(new URL(
         // "https://raw.githubusercontent.com/usnistgov/OSCAL/develop/src/metaschema/oscal_complete_metaschema.xml"));
-        "https://raw.githubusercontent.com/usnistgov/OSCAL/v1.1.1/src/metaschema/oscal_catalog_metaschema.xml"));
-    ISchemaGenerator schemaGenerator = new XmlSchemaGenerator();
-    IMutableConfiguration<SchemaGenerationFeature<?>> features = new DefaultConfiguration<>();
-    features.enableFeature(SchemaGenerationFeature.INLINE_DEFINITIONS);
-    features.disableFeature(SchemaGenerationFeature.INLINE_CHOICE_DEFINITIONS);
-
-    Path schemaPath = Path.of("target/oscal-catalog_schema.xsd");
-    try (Writer writer = Files.newBufferedWriter(schemaPath, StandardCharsets.UTF_8, getWriteOpenOptions())) {
-      assert writer != null;
-      schemaGenerator.generateFromModule(module, writer, features);
-    }
-
-    // check for missing attribute types per liboscal-java#181
-    XMLInputFactory factory = XMLInputFactory.newFactory();
-    try (Reader fileReader = Files.newBufferedReader(schemaPath, StandardCharsets.UTF_8)) {
-      XMLEventReader reader = factory.createXMLEventReader(fileReader);
-      StAXEventBuilder builder = new StAXEventBuilder();
-      Document document = builder.build(reader);
-
-      XPathExpression<Element> xpath = XPathFactory.instance()
-          .compile("//xs:attribute[not(@type or xs:simpleType)]",
-              Filters.element(),
-              null,
-              Namespace.getNamespace("xs", "http://www.w3.org/2001/XMLSchema"));
-      List<Element> result = xpath.evaluate(document);
-
-      assertTrue(result.isEmpty());
-    }
-  }
-
-  @Test
-  void testLiboscalJavaIssue181() throws IOException, MetaschemaException, XMLStreamException, JDOMException {
-    IBindingContext context = new DefaultBindingContext();
-    BindingModuleLoader loader = new BindingModuleLoader(context);
-    loader.allowEntityResolution();
-
-    IModule module = loader.load(new URL(
         "https://raw.githubusercontent.com/usnistgov/OSCAL/v1.1.1/src/metaschema/oscal_catalog_metaschema.xml"));
     ISchemaGenerator schemaGenerator = new XmlSchemaGenerator();
     IMutableConfiguration<SchemaGenerationFeature<?>> features = new DefaultConfiguration<>();

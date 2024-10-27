@@ -9,8 +9,8 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
+import gov.nist.secauto.metaschema.core.model.validation.AbstractValidationResultProcessor;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
-import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
 
@@ -22,12 +22,12 @@ import org.fusesource.jansi.Ansi.Color;
 import org.xml.sax.SAXParseException;
 
 import java.net.URI;
-import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public final class LoggingValidationHandler {
+public final class LoggingValidationHandler
+    extends AbstractValidationResultProcessor {
   private static final Logger LOGGER = LogManager.getLogger(LoggingValidationHandler.class);
 
   @NonNull
@@ -77,39 +77,8 @@ public final class LoggingValidationHandler {
     return logExceptions;
   }
 
-  /**
-   * Handle the provided collection of validation results.
-   *
-   * @param result
-   *          the validation results
-   * @return {@code true} if the result is passing or {@code false} otherwise
-   */
-  public boolean handleValidationResults(IValidationResult result) {
-    handleValidationFindings(result.getFindings());
-    return result.isPassing();
-  }
-
-  /**
-   * Handle the provided collection of validation findings.
-   *
-   * @param findings
-   *          the findings to process
-   */
-  public void handleValidationFindings(@NonNull List<? extends IValidationFinding> findings) {
-    for (IValidationFinding finding : findings) {
-      if (finding instanceof JsonValidationFinding) {
-        handleJsonValidationFinding((JsonValidationFinding) finding);
-      } else if (finding instanceof XmlValidationFinding) {
-        handleXmlValidationFinding((XmlValidationFinding) finding);
-      } else if (finding instanceof ConstraintValidationFinding) {
-        handleConstraintValidationFinding((ConstraintValidationFinding) finding);
-      } else {
-        throw new IllegalStateException();
-      }
-    }
-  }
-
-  private void handleJsonValidationFinding(@NonNull JsonValidationFinding finding) {
+  @Override
+  protected void handleJsonValidationFinding(@NonNull JsonValidationFinding finding) {
     Ansi ansi = generatePreamble(finding.getSeverity());
 
     ansi = ansi.a('[')
@@ -126,7 +95,8 @@ public final class LoggingValidationHandler {
     getLogger(finding).log(ansi);
   }
 
-  private void handleXmlValidationFinding(XmlValidationFinding finding) {
+  @Override
+  protected void handleXmlValidationFinding(XmlValidationFinding finding) {
     Ansi ansi = generatePreamble(finding.getSeverity());
     SAXParseException ex = finding.getCause();
 
@@ -145,7 +115,8 @@ public final class LoggingValidationHandler {
     getLogger(finding).log(ansi);
   }
 
-  private void handleConstraintValidationFinding(@NonNull ConstraintValidationFinding finding) {
+  @Override
+  protected void handleConstraintValidationFinding(@NonNull ConstraintValidationFinding finding) {
     Ansi ansi = generatePreamble(finding.getSeverity());
 
     ansi.format("[%s]", finding.getTarget().getMetapath());
@@ -155,8 +126,7 @@ public final class LoggingValidationHandler {
       ansi.format(" %s: ", id);
     }
 
-    getLogger(finding).log(
-        ansi.format(" %s", finding.getTarget().getMetapath(), finding.getMessage()));
+    getLogger(finding).log(ansi.format(" %s", finding.getMessage()));
   }
 
   @NonNull

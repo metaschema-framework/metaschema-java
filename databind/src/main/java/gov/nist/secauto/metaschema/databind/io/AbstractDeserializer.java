@@ -59,8 +59,8 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
   @Override
   @NonNull
   public IConstraintValidationHandler getConstraintValidationHandler() {
+    handlerLock.lock();
     try {
-      handlerLock.lock();
       if (constraintValidationHandler == null) {
         constraintValidationHandler = new LoggingConstraintValidationHandler();
       }
@@ -72,8 +72,8 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
 
   @Override
   public void setConstraintValidationHandler(@NonNull IConstraintValidationHandler constraintValidationHandler) {
+    handlerLock.lock();
     try {
-      handlerLock.lock();
       this.constraintValidationHandler = constraintValidationHandler;
     } finally {
       handlerLock.unlock();

@@ -9,12 +9,12 @@ import gov.nist.secauto.metaschema.cli.commands.metapath.MetapathCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
-import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -22,8 +22,10 @@ import org.apache.commons.cli.Option;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -56,26 +58,17 @@ public final class MetaschemaCommands {
   public static IModule handleModule(
       @NonNull CommandLine commandLine,
       @NonNull URI cwd,
-      @NonNull Collection<IConstraintSet> constraintSets) throws URISyntaxException, IOException, MetaschemaException {
-    String moduleName
-        = ObjectUtils.requireNonNull(commandLine.getOptionValue(METASCHEMA_OPTION));
+      @NonNull IBindingContext bindingContext) throws URISyntaxException, IOException, MetaschemaException {
+    String moduleName = ObjectUtils.requireNonNull(commandLine.getOptionValue(METASCHEMA_OPTION));
     URI moduleUri = UriUtils.toUri(moduleName, cwd);
-    return handleModule(moduleUri, constraintSets);
+    return handleModule(moduleUri, bindingContext);
   }
 
   @NonNull
   public static IModule handleModule(
       @NonNull URI moduleResource,
-      @NonNull Collection<IConstraintSet> constraintSets) throws IOException, MetaschemaException {
-    ExternalConstraintsModulePostProcessor postProcessor
-        = new ExternalConstraintsModulePostProcessor(constraintSets);
-
-    ModuleLoader loader = new ModuleLoader(CollectionUtil.singletonList(postProcessor));
-
-    // BindingModuleLoader loader
-    // = new BindingModuleLoader(new DefaultBindingContext(),
-    // CollectionUtil.singletonList(postProcessor));
-
+      @NonNull IBindingContext bindingContext) throws IOException, MetaschemaException {
+    IBindingModuleLoader loader = bindingContext.newModuleLoader();
     loader.allowEntityResolution();
     return loader.load(moduleResource);
   }
@@ -92,6 +85,27 @@ public final class MetaschemaCommands {
       newEx.addSuppressed(ex);
       throw newEx;
     }
+  }
+
+  @NonNull
+  public static Path newTempDir() throws IOException {
+    Path retval = Files.createTempDirectory("metaschema-cli-");
+    retval.toFile().deleteOnExit();
+    return retval;
+  }
+
+  @NonNull
+  public static IBindingContext newBindingContextWithDynamicCompilation() throws IOException {
+    return newBindingContextWithDynamicCompilation(CollectionUtil.emptySet());
+  }
+
+  @NonNull
+  public static IBindingContext newBindingContextWithDynamicCompilation(@NonNull Set<IConstraintSet> constraintSets)
+      throws IOException {
+    return IBindingContext.builder()
+        .compilePath(newTempDir())
+        .constraintSet(constraintSets)
+        .build();
   }
 
   private MetaschemaCommands() {

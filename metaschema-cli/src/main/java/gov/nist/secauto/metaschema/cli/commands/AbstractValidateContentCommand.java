@@ -20,6 +20,7 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
+import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.ValidationFeature;
@@ -34,7 +35,6 @@ import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext.ISchemaValidationProvider;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
 import gov.nist.secauto.metaschema.modules.sarif.SarifValidationHandler;
 
 import org.apache.commons.cli.CommandLine;
@@ -158,8 +158,7 @@ public abstract class AbstractValidateContentCommand
   }
 
   protected abstract class AbstractValidationCommandExecutor
-      extends AbstractCommandExecutor
-      implements ISchemaValidationProvider {
+      extends AbstractCommandExecutor {
 
     /**
      * Construct a new command executor.
@@ -190,6 +189,18 @@ public abstract class AbstractValidateContentCommand
     protected abstract IBindingContext getBindingContext(@NonNull Set<IConstraintSet> constraintSets)
         throws MetaschemaException, IOException;
 
+    @NonNull
+    protected abstract IModule getModule(
+        @NonNull CommandLine commandLine,
+        IBindingContext bindingContext)
+        throws IOException, MetaschemaException;
+
+    @NonNull
+    protected abstract ISchemaValidationProvider getSchemaValidationProvider(
+        @NonNull IModule module,
+        @NonNull CommandLine commandLine,
+        @NonNull IBindingContext bindingContext);
+
     @SuppressWarnings("PMD.OnlyOneReturn") // readability
     @Override
     public ExitStatus execute() {
@@ -198,7 +209,7 @@ public abstract class AbstractValidateContentCommand
 
       Set<IConstraintSet> constraintSets;
       if (cmdLine.hasOption(CONSTRAINTS_OPTION)) {
-        IConstraintLoader constraintLoader = new BindingConstraintLoader(IBindingContext.instance());
+        IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();
         constraintSets = new LinkedHashSet<>();
         String[] args = cmdLine.getOptionValues(CONSTRAINTS_OPTION);
         for (String arg : args) {
@@ -219,7 +230,7 @@ public abstract class AbstractValidateContentCommand
         bindingContext = getBindingContext(constraintSets);
       } catch (IOException | MetaschemaException ex) {
         return ExitCode.PROCESSING_ERROR
-            .exitMessage("Unable to get binding context. " + ex.getMessage())
+            .exitMessage(String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()))
             .withThrowable(ex);
       }
 
@@ -280,8 +291,10 @@ public abstract class AbstractValidateContentCommand
       IValidationResult validationResult = null;
       try {
         if (!cmdLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {
+          IModule module = getModule(getCommandLine(), bindingContext);
           // perform schema validation
-          validationResult = this.validateWithSchema(source, asFormat);
+          validationResult = getSchemaValidationProvider(module, getCommandLine(), bindingContext)
+              .validateWithSchema(source, asFormat, bindingContext);
         }
 
         if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {
@@ -297,7 +310,7 @@ public abstract class AbstractValidateContentCommand
         return ExitCode.IO_ERROR.exitMessage(String.format("Unknown host for '%s'.", source)).withThrowable(ex);
       } catch (IOException ex) {
         return ExitCode.IO_ERROR.exit().withThrowable(ex);
-      } catch (MetapathException ex) {
+      } catch (MetapathException | MetaschemaException ex) {
         return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
       }
 
@@ -318,7 +331,7 @@ public abstract class AbstractValidateContentCommand
         }
       } else if (validationResult != null && !validationResult.getFindings().isEmpty()) {
         LOGGER.info("Validation identified the following issues:");
-        LoggingValidationHandler.instance().handleValidationResults(validationResult);
+        LoggingValidationHandler.instance().handleResults(validationResult);
       }
 
       if (validationResult == null || validationResult.isPassing()) {

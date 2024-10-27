@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @NonNull
   private final Map<QName, ILet> lets = new LinkedHashMap<>();
   @NonNull
-  private final List<IConstraint> constraints = new LinkedList<>();
+  protected final List<IConstraint> constraints = new LinkedList<>();
   @NonNull
   private final List<IAllowedValuesConstraint> allowedValuesConstraints = new LinkedList<>();
   @NonNull
@@ -47,9 +49,9 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public List<IConstraint> getConstraints() {
     Lock readLock = instanceLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
-      return constraints;
+      return CollectionUtil.unmodifiableList(constraints);
     } finally {
       readLock.unlock();
     }
@@ -58,9 +60,9 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public List<IAllowedValuesConstraint> getAllowedValuesConstraints() {
     Lock readLock = instanceLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
-      return allowedValuesConstraints;
+      return CollectionUtil.unmodifiableList(allowedValuesConstraints);
     } finally {
       readLock.unlock();
     }
@@ -69,9 +71,9 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public List<IMatchesConstraint> getMatchesConstraints() {
     Lock readLock = instanceLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
-      return matchesConstraints;
+      return CollectionUtil.unmodifiableList(matchesConstraints);
     } finally {
       readLock.unlock();
     }
@@ -80,9 +82,9 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public List<IIndexHasKeyConstraint> getIndexHasKeyConstraints() {
     Lock readLock = instanceLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
-      return indexHasKeyConstraints;
+      return CollectionUtil.unmodifiableList(indexHasKeyConstraints);
     } finally {
       readLock.unlock();
     }
@@ -91,9 +93,9 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public List<IExpectConstraint> getExpectConstraints() {
     Lock readLock = instanceLock.readLock();
+    readLock.lock();
     try {
-      readLock.lock();
-      return expectConstraints;
+      return CollectionUtil.unmodifiableList(expectConstraints);
     } finally {
       readLock.unlock();
     }
@@ -102,8 +104,8 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public final void addConstraint(@NonNull IAllowedValuesConstraint constraint) {
     Lock writeLock = instanceLock.writeLock();
+    writeLock.lock();
     try {
-      writeLock.lock();
       constraints.add(constraint);
       allowedValuesConstraints.add(constraint);
     } finally {
@@ -114,8 +116,8 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public final void addConstraint(@NonNull IMatchesConstraint constraint) {
     Lock writeLock = instanceLock.writeLock();
+    writeLock.lock();
     try {
-      writeLock.lock();
       constraints.add(constraint);
       matchesConstraints.add(constraint);
     } finally {
@@ -126,8 +128,8 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public final void addConstraint(@NonNull IIndexHasKeyConstraint constraint) {
     Lock writeLock = instanceLock.writeLock();
+    writeLock.lock();
     try {
-      writeLock.lock();
       constraints.add(constraint);
       indexHasKeyConstraints.add(constraint);
     } finally {
@@ -138,8 +140,8 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   @Override
   public final void addConstraint(@NonNull IExpectConstraint constraint) {
     Lock writeLock = instanceLock.writeLock();
+    writeLock.lock();
     try {
-      writeLock.lock();
       constraints.add(constraint);
       expectConstraints.add(constraint);
     } finally {

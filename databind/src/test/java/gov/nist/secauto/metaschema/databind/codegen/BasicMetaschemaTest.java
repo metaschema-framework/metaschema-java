@@ -17,27 +17,22 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
-import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
@@ -187,18 +182,10 @@ class BasicMetaschemaTest
 
   @Test
   void testExistsWithVariable() throws IOException, URISyntaxException, MetaschemaException {
+    IBindingContext bindingContext = getBindingContext();
 
-    // IDocumentNodeItem moduleItem =
-    // IBindingContext.instance().newBoundLoader().loadAsNodeItem(
-    // new
-    // URI("https://raw.githubusercontent.com/usnistgov/OSCAL/main/src/metaschema/oscal_complete_metaschema.xml"));
-    //
-    // assert moduleItem != null;
-    //
-    // StaticContext staticContext = moduleItem..getStaticContext();
-
-    IBindingMetaschemaModule module = new BindingModuleLoader(new DefaultBindingContext()).load(
-        new URI("https://raw.githubusercontent.com/usnistgov/OSCAL/main/src/metaschema/oscal_complete_metaschema.xml"));
+    IBindingMetaschemaModule module = bindingContext.loadMetaschema(
+        new URL("https://raw.githubusercontent.com/usnistgov/OSCAL/main/src/metaschema/oscal_complete_metaschema.xml"));
 
     IDocumentNodeItem moduleItem = ObjectUtils.requireNonNull(module.getSourceNodeItem());
     // METASCHEMA moduleData =
@@ -208,7 +195,7 @@ class BasicMetaschemaTest
     StaticContext staticContext = moduleItem.getStaticContext();
 
     DynamicContext dynamicContext = new DynamicContext(staticContext);
-    dynamicContext.setDocumentLoader(IBindingContext.instance().newBoundLoader());
+    dynamicContext.setDocumentLoader(bindingContext.newBoundLoader());
 
     // MetapathExpression importsMetapath = MetapathExpression.compile(
     // "for $import in /METASCHEMA/import return
@@ -237,43 +224,25 @@ class BasicMetaschemaTest
 
   @Test
   void codegenTest() throws MetaschemaException, IOException {
+
     List<IConstraintSet> constraints;
     {
-      BindingConstraintLoader constraintLoader = new BindingConstraintLoader(new DefaultBindingContext());
+      IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();
 
       constraints = constraintLoader.load(ObjectUtils.notNull(
           Paths.get("../core/metaschema/schema/metaschema/metaschema-module-constraints.xml")));
     }
 
-    IBindingContext bindingContext = new DefaultBindingContext(
-        CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));
-    BindingModuleLoader loader = new BindingModuleLoader(bindingContext);
+    IBindingContext bindingContext = IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
+        .constraintSet(constraints)
+        .build();
 
-    IBindingMetaschemaModule module
-        = loader.load(ObjectUtils.notNull(
-            Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml")));
+    IBindingMetaschemaModule module = bindingContext.loadMetaschema(ObjectUtils.notNull(
+        Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml")));
 
-    Path compilePath = ObjectUtils.notNull(Paths.get("target/compile"));
-    Files.createDirectories(compilePath);
+    IBoundModule registeredModule = bindingContext.registerModule(module);
 
-    ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(
-        compilePath,
-        ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));
-
-    IProduction production = ModuleCompilerHelper.compileMetaschema(module, compilePath);
-    production.getModuleProductions().stream()
-        .map(item -> {
-          try {
-            return (Class<? extends IBoundModule>) classLoader.loadClass(item.getClassName().reflectionName());
-          } catch (ClassNotFoundException ex) {
-            throw new IllegalStateException(ex);
-          }
-        })
-        .forEachOrdered(clazz -> {
-          IBoundModule boundModule = bindingContext.registerModule(ObjectUtils.notNull(clazz));
-          // force the binding matchers to load
-          assertFalse(boundModule.getRootAssemblyDefinitions().isEmpty());
-        });
-
+    assertFalse(registeredModule.getRootAssemblyDefinitions().isEmpty());
   }
 }

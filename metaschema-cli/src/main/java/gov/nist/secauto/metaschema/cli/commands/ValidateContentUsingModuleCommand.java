@@ -12,12 +12,12 @@ import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
-import gov.nist.secauto.metaschema.core.model.util.XmlUtil;
+import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
+import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.IBindingContext.ISchemaValidationProvider;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
@@ -25,22 +25,23 @@ import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -78,78 +79,79 @@ public class ValidateContentUsingModuleCommand
   private final class OscalCommandExecutor
       extends AbstractValidationCommandExecutor {
 
-    private Path tempDir;
-    private IModule module;
-
     private OscalCommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
     }
 
-    @NonNull
-    private Path getTempDir() throws IOException {
-      if (tempDir == null) {
-        tempDir = Files.createTempDirectory("validation-");
-        tempDir.toFile().deleteOnExit();
-      }
-      assert tempDir != null;
-      return tempDir;
-    }
-
-    @NonNull
-    private IModule getModule(@NonNull Set<IConstraintSet> constraintSets)
-        throws MetaschemaException, IOException {
-      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
-
-      if (module == null) {
-        try {
-          module = MetaschemaCommands.handleModule(getCommandLine(), cwd, constraintSets);
-        } catch (URISyntaxException ex) {
-          throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),
-              ex);
-        }
-      }
-
-      assert module != null;
-      return module;
-    }
-
-    @NonNull
-    private IModule getModule() {
-      // should be initialized already
-      return ObjectUtils.requireNonNull(module);
-    }
-
     @Override
     protected IBindingContext getBindingContext(@NonNull Set<IConstraintSet> constraintSets)
         throws MetaschemaException, IOException {
-
-      IBindingContext retval = new DefaultBindingContext();
-      retval.registerModule(getModule(constraintSets), getTempDir());
-      return retval;
+      return MetaschemaCommands.newBindingContextWithDynamicCompilation(constraintSets);
     }
 
     @Override
-    public List<Source> getXmlSchemas(@NonNull URL targetResource) throws IOException {
-      Path schemaFile = Files.createTempFile(getTempDir(), "schema-", ".xml");
-      assert schemaFile != null;
-      IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();
-      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.XML, configuration);
-      return ObjectUtils.requireNonNull(List.of(
-          XmlUtil.getStreamSource(ObjectUtils.notNull(schemaFile.toUri().toURL()))));
+    protected IModule getModule(
+        CommandLine commandLine,
+        IBindingContext bindingContext) throws IOException, MetaschemaException {
+
+      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
+
+      IModule module;
+      try {
+        module = MetaschemaCommands.handleModule(commandLine, cwd, bindingContext);
+      } catch (URISyntaxException ex) {
+        throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),
+            ex);
+      }
+      return module;
     }
 
     @Override
-    public JSONObject getJsonSchema(@NonNull JSONObject json) throws IOException {
-      Path schemaFile = Files.createTempFile(getTempDir(), "schema-", ".json");
-      assert schemaFile != null;
+    protected ISchemaValidationProvider getSchemaValidationProvider(
+        IModule module,
+        CommandLine commandLine,
+        IBindingContext bindingContext) {
+      return new ModuleValidationProvider(module);
+    }
+
+  }
+
+  private static final class ModuleValidationProvider implements ISchemaValidationProvider {
+    @NonNull
+    private final IModule module;
+
+    public ModuleValidationProvider(@NonNull IModule module) {
+      this.module = module;
+    }
+
+    @Override
+    public XmlSchemaContentValidator getXmlSchemas(
+        @NonNull URL targetResource,
+        @NonNull IBindingContext bindingContext) throws IOException, SAXException {
       IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();
-      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.JSON, configuration);
-      try (BufferedReader reader = ObjectUtils.notNull(Files.newBufferedReader(schemaFile, StandardCharsets.UTF_8))) {
-        return JsonUtil.toJsonObject(reader);
+
+      try (StringWriter writer = new StringWriter()) {
+        ISchemaGenerator.generateSchema(module, writer, SchemaFormat.XML, configuration);
+        try (Reader reader = new StringReader(writer.toString())) {
+          return new XmlSchemaContentValidator(
+              ObjectUtils.notNull(List.of(new StreamSource(reader))));
+        }
+      }
+    }
+
+    @Override
+    public JsonSchemaContentValidator getJsonSchema(
+        @NonNull JSONObject json,
+        @NonNull IBindingContext bindingContext) throws IOException {
+      IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();
+
+      try (StringWriter writer = new StringWriter()) {
+        ISchemaGenerator.generateSchema(module, writer, SchemaFormat.JSON, configuration);
+        return new JsonSchemaContentValidator(
+            new JSONObject(new JSONTokener(writer.toString())));
       }
     }
   }
-
 }
