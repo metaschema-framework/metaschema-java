@@ -81,69 +81,6 @@ public class DefaultFunction
   public ISequenceType getResult() {
     return result;
   }
-  //
-  // @Override
-  // public boolean isSupported(List<IExpression<?>> expressionArguments) {
-  // boolean retval;
-  // if (expressionArguments.isEmpty() && getArguments().isEmpty()) {
-  // // no arguments
-  // retval = true;
-  // // } else if (arity() == 1 && expressionArguments.isEmpty()) {
-  // // // the context item will be the argument
-  // // // TODO: check the context item for type compatibility
-  // // retval = true;
-  // } else if ((expressionArguments.size() == getArguments().size())
-  // || (isArityUnbounded() && expressionArguments.size() >
-  // getArguments().size())) {
-  // retval = true;
-  // // check that argument requirements are satisfied
-  // Iterator<IArgument> argumentIterator = getArguments().iterator();
-  // Iterator<IExpression<?>> expressionIterator = expressionArguments.iterator();
-  //
-  // IArgument argument = null;
-  // while (argumentIterator.hasNext()) {
-  // argument = argumentIterator.next();
-  // IExpression<?> expression = expressionIterator.hasNext() ?
-  // expressionIterator.next() : null;
-  //
-  // if (expression != null) {
-  // // is the expression supported by the argument?
-  // retval = argument.isSupported(expression);
-  // if (!retval) {
-  // break;
-  // }
-  // } else {
-  // // there are no more expression arguments. Make sure that the remaining
-  // arguments are optional
-  // if (!argument.getSequenceType().getOccurrence().isOptional()) {
-  // retval = false;
-  // break;
-  // }
-  // }
-  // }
-  //
-  // if (retval && expressionIterator.hasNext()) {
-  // if (isArityUnbounded()) {
-  // // check remaining expressions against the last argument
-  // while (expressionIterator.hasNext()) {
-  // IExpression<?> expression = expressionIterator.next();
-  // @SuppressWarnings("null")
-  // boolean result = argument.isSupported(expression);
-  // if (!result) {
-  // retval = result;
-  // break;
-  // }
-  // }
-  // } else {
-  // // there are extra expressions, which do not match the arguments
-  // retval = false;
-  // }
-  // }
-  // } else {
-  // retval = false;
-  // }
-  // return retval;
-  // }
 
   /**
    * Converts arguments in an attempt to align with the function's signature.
@@ -158,7 +95,8 @@ public class DefaultFunction
   public static List<ISequence<?>> convertArguments(
       @NonNull IFunction function,
       @NonNull List<? extends ISequence<?>> parameters) {
-    @NonNull List<ISequence<?>> retval = new ArrayList<>(parameters.size());
+    @NonNull
+    List<ISequence<?>> retval = new ArrayList<>(parameters.size());
 
     Iterator<IArgument> argumentIterator = function.getArguments().iterator();
     IArgument argument = null;
@@ -313,7 +251,7 @@ public class DefaultFunction
     if (this == obj) {
       return true; // NOPMD - readability
     }
-    if ((obj == null) || (getClass() != obj.getClass())) {
+    if (obj == null || getClass() != obj.getClass()) {
       return false; // NOPMD - readability
     }
     DefaultFunction other = (DefaultFunction) obj;
@@ -391,7 +329,7 @@ public class DefaultFunction
       if (this == obj) {
         return true; // NOPMD - readability
       }
-      if ((obj == null) || (getClass() != obj.getClass())) {
+      if (obj == null || getClass() != obj.getClass()) {
         return false; // NOPMD - readability
       }
       CallingContext other = (CallingContext) obj;
