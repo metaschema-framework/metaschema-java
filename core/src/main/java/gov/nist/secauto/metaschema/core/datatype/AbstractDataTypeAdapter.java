@@ -66,11 +66,6 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   }
 
   @Override
-  public boolean isParsingStartElement() {
-    return false;
-  }
-
-  @Override
   public boolean canHandleQName(QName nextQName) {
     return false;
   }
@@ -96,15 +91,14 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
     try {
       XMLEvent nextEvent;
       while (!(nextEvent = eventReader.peek()).isEndElement()) {
-        if (nextEvent.isCharacters()) {
-          Characters characters = nextEvent.asCharacters();
-          builder.append(characters.getData());
-          // advance past current event
-          eventReader.nextEvent();
-        } else {
+        if (!nextEvent.isCharacters()) {
           throw new IOException(String.format("Invalid content '%s' at %s", XmlEventUtil.toString(nextEvent),
               XmlEventUtil.toString(nextEvent.getLocation())));
         }
+        Characters characters = nextEvent.asCharacters();
+        builder.append(characters.getData());
+        // advance past current event
+        eventReader.nextEvent();
       }
 
       // trim leading and trailing whitespace
@@ -175,7 +169,8 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
     ITEM_TYPE retval;
     if (item == null) {
       throw new InvalidValueForCastFunctionException("item is null");
-    } else if (getItemClass().isAssignableFrom(item.getClass())) {
+    }
+    if (getItemClass().isAssignableFrom(item.getClass())) {
       @SuppressWarnings("unchecked") ITEM_TYPE typedItem = (ITEM_TYPE) item;
       retval = typedItem;
     } else {

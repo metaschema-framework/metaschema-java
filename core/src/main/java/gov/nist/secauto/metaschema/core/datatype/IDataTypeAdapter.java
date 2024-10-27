@@ -149,16 +149,6 @@ public interface IDataTypeAdapter<TYPE> {
   IAnyAtomicItem cast(IAnyAtomicItem item);
 
   /**
-   * Indicates if the adapter will parse the {@link XMLEvent#START_ELEMENT} before
-   * parsing the value data.
-   *
-   * @return {@code true} if the adapter requires the start element for parsing,
-   *         or {@code false} otherwise
-   */
-  // TODO; implement or remove this
-  boolean isParsingStartElement();
-
-  /**
    * Determines if adapter can parse the next element. The next element's
    * {@link QName} is provided for this purpose.
    * <p>
