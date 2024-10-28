@@ -30,6 +30,8 @@ import gov.nist.secauto.metaschema.databind.model.info.IFeatureScalarItemValueHa
 import gov.nist.secauto.metaschema.databind.model.info.IItemReadHandler;
 import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.stax2.XMLEventReader2;
 
 import java.io.IOException;
@@ -56,6 +58,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class MetaschemaXmlReader
     implements IXmlParsingContext {
+  private static final Logger LOGGER = LogManager.getLogger(MetaschemaXmlReader.class);
   @NonNull
   private final XMLEventReader2 reader;
   @NonNull
@@ -184,11 +187,20 @@ public class MetaschemaXmlReader
                   XmlEventUtil.generateLocationMessage(attribute)));
         }
       } else {
-        // get the attribute value
-        Object value = instance.getDefinition().getJavaTypeAdapter().parse(ObjectUtils.notNull(attribute.getValue()));
-        // apply the value to the parentObject
-        instance.setValue(targetObject, value);
-        flagInstanceMap.remove(qname);
+        try {
+          // get the attribute value
+          Object value = instance.getDefinition().getJavaTypeAdapter().parse(ObjectUtils.notNull(attribute.getValue()));
+          // apply the value to the parentObject
+          instance.setValue(targetObject, value);
+          flagInstanceMap.remove(qname);
+        } catch (IllegalArgumentException ex) {
+          throw new IOException(
+              String.format("Malformed data '%s'%s. %s",
+                  attribute.getValue(),
+                  XmlEventUtil.generateLocationMessage(start),
+                  ex.getLocalizedMessage()),
+              ex);
+        }
       }
     }
 
@@ -453,6 +465,7 @@ public class MetaschemaXmlReader
     public Object readItemFlag(
         IBoundObject parent,
         IBoundInstanceFlag flag) throws IOException {
+      // should never be called
       throw new UnsupportedOperationException("handled by readFlagInstances()");
     }
 
@@ -481,7 +494,7 @@ public class MetaschemaXmlReader
           XmlEventUtil.requireStartElement(getReader(), wrapper);
         }
 
-        Object retval = readScalarItem(instance);
+        Object retval = checkMissingFieldValue(readScalarItem(instance));
 
         if (wrapper != null) {
           XmlEventUtil.skipWhitespace(getReader());
@@ -534,7 +547,19 @@ public class MetaschemaXmlReader
     public Object readItemFieldValue(
         IBoundObject parent,
         IBoundFieldValue fieldValue) throws IOException {
-      return readScalarItem(fieldValue);
+      return checkMissingFieldValue(readScalarItem(fieldValue));
+    }
+
+    @SuppressWarnings("null")
+    @NonNull
+    private Object checkMissingFieldValue(Object value) throws IOException {
+      if (value == null && LOGGER.isWarnEnabled()) {
+        StartElement start = getStartElement();
+        LOGGER.atWarn().log("Missing property value{}",
+            XmlEventUtil.generateLocationMessage(start));
+      }
+      // TODO: change nullness annotations to be @Nullable
+      return value;
     }
 
     private void handleAssemblyDefinitionBody(
@@ -578,7 +603,7 @@ public class MetaschemaXmlReader
           this::handleAssemblyDefinitionBody);
     }
 
-    @NonNull
+    @Nullable
     private Object readScalarItem(@NonNull IFeatureScalarItemValueHandler handler)
         throws IOException {
       return handler.getJavaTypeAdapter().parse(getReader());

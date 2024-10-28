@@ -22,9 +22,9 @@
     </distributionManagement>
 
 	<scm>
-		<url>${scm.url}/tree/develop/core</url>
-	  <tag>HEAD</tag>
-  </scm>
+	    <url>${scm.url}/tree/develop/core</url>
+	    <tag>HEAD</tag>
+	</scm>
 
     <dependencies>
         <dependency>

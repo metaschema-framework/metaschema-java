@@ -16,6 +16,20 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public interface IFeatureScalarItemValueHandler
     extends IItemValueHandler<Object>, IValuedMutable {
 
+  /**
+   * Apply the string value.
+   * <p>
+   * This first parses the value using the underlying data type implementation and
+   * then applies the parsed value.
+   *
+   * @param parent
+   *          the parent object to apply the value to
+   * @param text
+   *          the value to parse
+   * @throws IllegalArgumentException
+   *           if the text was malformed
+   * @see #getJavaTypeAdapter()
+   */
   default void setValue(@NonNull Object parent, @NonNull String text) {
     Object item = getValueFromString(text);
     setValue(parent, item);
@@ -27,6 +41,16 @@ public interface IFeatureScalarItemValueHandler
     return item == null ? null : getJavaTypeAdapter().asString(item);
   }
 
+  /**
+   * Parse a string value using the underlying data type implementation.
+   *
+   * @param text
+   *          the value to parse
+   * @return the parsed value
+   * @throws IllegalArgumentException
+   *           if the text was malformed
+   * @see #getJavaTypeAdapter()
+   */
   default Object getValueFromString(@NonNull String text) {
     return getJavaTypeAdapter().parse(text);
   }

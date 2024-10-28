@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.databind.io.json;
+package gov.nist.secauto.metaschema.databind.io;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.fasterxml.jackson.core.JsonParser;
 
@@ -15,6 +16,8 @@ import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.io.json.JsonFactoryFactory;
+import gov.nist.secauto.metaschema.databind.io.json.MetaschemaJsonReader;
 import gov.nist.secauto.metaschema.databind.io.xml.MetaschemaXmlReader;
 import gov.nist.secauto.metaschema.databind.model.AbstractBoundModule;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
@@ -39,7 +42,7 @@ import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
-class MetaschemaJsonReaderTest {
+class Issue206MetaschemaReaderTest {
   @RegisterExtension
   JUnit5Mockery context = new JUnit5Mockery();
 
@@ -59,9 +62,11 @@ class MetaschemaJsonReaderTest {
       try (JsonParser parser = JsonFactoryFactory.instance().createParser(is)) {
         MetaschemaJsonReader reader = new MetaschemaJsonReader(parser);
 
-        assertThrows(IOException.class, () -> {
-          reader.readItemField(null, definition);
-        });
+        // assertThrows(IOException.class, () -> {
+        // reader.readItemField(null, definition);
+        // });
+        TestField field = (TestField) reader.readItemField(null, definition);
+        assertNull(field.value);
       }
     }
   }
@@ -81,11 +86,11 @@ class MetaschemaJsonReaderTest {
       XMLEventReader2 eventReader = (XMLEventReader2) factory.createXMLEventReader(is);
       MetaschemaXmlReader reader = new MetaschemaXmlReader(eventReader);
 
-      IOException exception = assertThrows(IOException.class, () -> {
-        reader.read(definition);
-      });
-
-      throw exception;
+      // assertThrows(IOException.class, () -> {
+      // reader.read(definition);
+      // });
+      TestField field = (TestField) reader.read(definition);
+      assertEquals("", field.value);
     }
   }
 
@@ -104,11 +109,8 @@ class MetaschemaJsonReaderTest {
       XMLEventReader2 eventReader = (XMLEventReader2) factory.createXMLEventReader(is);
       MetaschemaXmlReader reader = new MetaschemaXmlReader(eventReader);
 
-      IOException exception = assertThrows(IOException.class, () -> {
-        reader.read(definition);
-      });
-
-      throw exception;
+      TestField field = (TestField) reader.read(definition);
+      assertEquals("", field.value);
     }
   }
 

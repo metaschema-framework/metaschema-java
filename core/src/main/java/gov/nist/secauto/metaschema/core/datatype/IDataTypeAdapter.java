@@ -229,6 +229,8 @@ public interface IDataTypeAdapter<TYPE> {
    * @return a supplier that will provide new instances of the parsed data
    * @throws IOException
    *           if an error occurs while parsing
+   * @throws IllegalArgumentException
+   *           if the provided value is invalid based on the data type
    * @see #parse(String)
    */
   @NonNull

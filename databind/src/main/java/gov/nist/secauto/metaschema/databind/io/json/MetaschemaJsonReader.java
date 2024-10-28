@@ -316,7 +316,17 @@ public class MetaschemaJsonReader
   @Override
   public Object readItemFieldValue(IBoundObject parentItem, IBoundFieldValue fieldValue) throws IOException {
     // read the field value's value
-    return readScalarItem(fieldValue);
+    return checkMissingFieldValue(readScalarItem(fieldValue));
+  }
+
+  @NonNull
+  private Object checkMissingFieldValue(Object value) throws IOException {
+    if (value == null && LOGGER.isWarnEnabled()) {
+      LOGGER.atWarn().log("Missing property value{}",
+          JsonUtil.generateLocationMessage(getReader()));
+    }
+    // TODO: change nullness annotations to be @Nullable
+    return ObjectUtils.notNull(value);
   }
 
   @Override
@@ -491,8 +501,17 @@ public class MetaschemaJsonReader
 
       // the field will be the JSON key
       String key = ObjectUtils.notNull(parser.currentName());
-      Object value = jsonKey.getDefinition().getJavaTypeAdapter().parse(key);
-      jsonKey.setValue(parent, ObjectUtils.notNull(value.toString()));
+      try {
+        Object value = jsonKey.getDefinition().getJavaTypeAdapter().parse(key);
+        jsonKey.setValue(parent, ObjectUtils.notNull(value.toString()));
+      } catch (IllegalArgumentException ex) {
+        throw new IOException(
+            String.format("Malformed data '%s'%s. %s",
+                key,
+                JsonUtil.generateLocationMessage(parser),
+                ex.getLocalizedMessage()),
+            ex);
+      }
 
       // skip to the next token
       parser.nextToken();
@@ -626,14 +645,14 @@ public class MetaschemaJsonReader
     @NonNull
     private final IJsonProblemHandler delegate;
     @NonNull
-    private final IBoundInstanceFlag jsonValueKyeFlag;
+    private final IBoundInstanceFlag jsonValueKeyFlag;
     private boolean foundJsonValueKey; // false
 
     private JsomValueKeyProblemHandler(
         @NonNull IJsonProblemHandler delegate,
-        @NonNull IBoundInstanceFlag jsonValueKyeFlag) {
+        @NonNull IBoundInstanceFlag jsonValueKeyFlag) {
       this.delegate = delegate;
-      this.jsonValueKyeFlag = jsonValueKyeFlag;
+      this.jsonValueKeyFlag = jsonValueKeyFlag;
     }
 
     @Override
@@ -656,9 +675,17 @@ public class MetaschemaJsonReader
       } else {
         // handle JSON value key
         String key = ObjectUtils.notNull(parser.currentName());
-        Object keyValue = jsonValueKyeFlag.getJavaTypeAdapter().parse(key);
-        jsonValueKyeFlag.setValue(ObjectUtils.notNull(parentItem), keyValue);
-
+        try {
+          Object keyValue = jsonValueKeyFlag.getJavaTypeAdapter().parse(key);
+          jsonValueKeyFlag.setValue(ObjectUtils.notNull(parentItem), keyValue);
+        } catch (IllegalArgumentException ex) {
+          throw new IOException(
+              String.format("Malformed data '%s'%s. %s",
+                  key,
+                  JsonUtil.generateLocationMessage(parser),
+                  ex.getLocalizedMessage()),
+              ex);
+        }
         // advance past the field name
         JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);
 
@@ -672,7 +699,6 @@ public class MetaschemaJsonReader
       }
       return retval;
     }
-
   }
 
   private class ModelInstanceReadHandler<ITEM>
@@ -719,7 +745,8 @@ public class MetaschemaJsonReader
 
       IBoundInstanceModel<?> instance = getCollectionInfo().getInstance();
 
-      @SuppressWarnings("PMD.UseConcurrentHashMap") Map<String, ITEM> items = new LinkedHashMap<>();
+      @SuppressWarnings("PMD.UseConcurrentHashMap")
+      Map<String, ITEM> items = new LinkedHashMap<>();
 
       // A map value is always wrapped in a START_OBJECT, since fields are used for
       // the keys

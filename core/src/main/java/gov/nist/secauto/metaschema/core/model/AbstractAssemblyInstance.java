@@ -7,6 +7,8 @@ package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -42,10 +44,17 @@ public abstract class AbstractAssemblyInstance<
 
   @Override
   public DEFINITION getDefinition() {
+    QName qname = getReferencedDefinitionQName();
     // this should always be not null
-    return ObjectUtils.asType(ObjectUtils.requireNonNull(
-        getContainingModule()
-            .getScopedAssemblyDefinitionByName(getReferencedDefinitionQName())));
+    IAssemblyDefinition definition = getContainingModule().getScopedAssemblyDefinitionByName(qname);
+    if (definition == null) {
+      throw new IllegalStateException(
+          String.format("Unable to resolve assembly reference '%s' in definition '%s' in module '%s'",
+              qname,
+              getParentContainer().getOwningDefinition().getName(),
+              getContainingModule().getShortName()));
+    }
+    return ObjectUtils.asType(definition);
   }
 
   /**

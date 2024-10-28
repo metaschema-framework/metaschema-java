@@ -10,7 +10,9 @@ import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.codehaus.stax2.XMLEventReader2;
 import org.codehaus.stax2.XMLStreamWriter2;
@@ -42,7 +44,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   /**
    * The default JSON property name for a Metaschema field value.
    */
-  public static final String DEFAULT_JSON_FIELD_NAME = "STRVALUE";
+  public static final String DEFAULT_JSON_FIELD_VALUE_NAME = "STRVALUE";
 
   @NonNull
   private final Class<TYPE> clazz;
@@ -75,7 +77,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
 
   @Override
   public String getDefaultJsonValueKey() {
-    return DEFAULT_JSON_FIELD_NAME;
+    return DEFAULT_JSON_FIELD_VALUE_NAME;
   }
 
   @Override
@@ -91,8 +93,8 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   @Override
   public TYPE parse(XMLEventReader2 eventReader) throws IOException {
     StringBuilder builder = new StringBuilder();
+    XMLEvent nextEvent;
     try {
-      XMLEvent nextEvent;
       while (!(nextEvent = eventReader.peek()).isEndElement()) {
         if (!nextEvent.isCharacters()) {
           throw new IOException(String.format("Invalid content '%s' at %s", XmlEventUtil.toString(nextEvent),
@@ -105,9 +107,17 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
       }
 
       // trim leading and trailing whitespace
-      @SuppressWarnings("null")
-      @NonNull String value = builder.toString().trim();
-      return parse(value);
+      String value = ObjectUtils.notNull(builder.toString().trim());
+      try {
+        return parse(value);
+      } catch (IllegalArgumentException ex) {
+        throw new IOException(
+            String.format("Malformed data '%s'%s. %s",
+                value,
+                XmlEventUtil.generateLocationMessage(nextEvent),
+                ex.getLocalizedMessage()),
+            ex);
+      }
     } catch (XMLStreamException ex) {
       throw new IOException(ex);
     }
@@ -121,11 +131,20 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   public TYPE parse(JsonParser parser) throws IOException {
     String value = parser.getValueAsString();
     if (value == null) {
-      throw new IOException("Unable to parse field value as text");
+      throw new IOException("Unable to null value as text");
     }
     // skip over value
     parser.nextToken();
-    return parse(value);
+    try {
+      return parse(value);
+    } catch (IllegalArgumentException ex) {
+      throw new IOException(
+          String.format("Malformed data '%s'%s. %s",
+              value,
+              JsonUtil.generateLocationMessage(parser),
+              ex.getLocalizedMessage()),
+          ex);
+    }
   }
 
   @SuppressWarnings("null")
