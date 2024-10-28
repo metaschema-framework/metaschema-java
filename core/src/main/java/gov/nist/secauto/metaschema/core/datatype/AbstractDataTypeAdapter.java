@@ -106,8 +106,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
 
       // trim leading and trailing whitespace
       @SuppressWarnings("null")
-      @NonNull
-      String value = builder.toString().trim();
+      @NonNull String value = builder.toString().trim();
       return parse(value);
     } catch (XMLStreamException ex) {
       throw new IOException(ex);
