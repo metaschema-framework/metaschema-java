@@ -71,7 +71,6 @@ public interface IModelDefinition extends IDefinition, IContainer {
    *         otherwise
    */
   // TODO: remove once moved to the instance side
-  // TODO: Reconsider using toFlagName in favor of getReferencedDefinitionQName
   @Nullable
   IFlagInstance getJsonKey();
 }

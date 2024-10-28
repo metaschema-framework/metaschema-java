@@ -24,7 +24,7 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.AvoidUncheckedExceptionsInSignatures") // intended
-public class XmlbeansMarkupVisitor // TODO: rename
+public class XmlbeansMarkupWriter
     extends AbstractMarkupWriter<XmlCursor, IllegalArgumentException> {
 
   /**
@@ -57,7 +57,7 @@ public class XmlbeansMarkupVisitor // TODO: rename
    */
   public static void visit(@NonNull IMarkupString<?> markup, @NonNull String namespace,
       @NonNull XmlCursor cursor) {
-    IMarkupWriter<XmlCursor, IllegalArgumentException> writer = new XmlbeansMarkupVisitor(
+    IMarkupWriter<XmlCursor, IllegalArgumentException> writer = new XmlbeansMarkupWriter(
         namespace,
         markup.getFlexmarkFactory().getListOptions(),
         cursor);
@@ -75,7 +75,7 @@ public class XmlbeansMarkupVisitor // TODO: rename
    * @param writer
    *          the XML beans cursor to write to
    */
-  protected XmlbeansMarkupVisitor(
+  protected XmlbeansMarkupWriter(
       @NonNull String namespace,
       @NonNull ListOptions options,
       @NonNull XmlCursor writer) {

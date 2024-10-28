@@ -375,26 +375,6 @@ public final class ConstraintXmlSupport {
     // disable construction
   }
 
-  /**
-   * Generate the XMLBeans representation of a set of assembly-related
-   * constraints.
-   *
-   * @param constraints
-   *          the set of constraints
-   * @return the XmlObject representation
-   */
-  public static DefineAssemblyConstraintsType generate(@NonNull IModelConstrained constraints) {
-    // TODO: This code is orphaned. Need to implement a full writer
-    DefineAssemblyConstraintsType retval = DefineAssemblyConstraintsType.Factory.newInstance();
-
-    XmlbeanGeneratingVisitor visitor = new XmlbeanGeneratingVisitor();
-
-    for (IConstraint constraint : constraints.getConstraints()) {
-      constraint.accept(visitor, retval);
-    }
-    return retval;
-  }
-
   private static final class XmlbeanGeneratingVisitor
       implements IConstraintVisitor<DefineAssemblyConstraintsType, Void> {
 
@@ -456,14 +436,14 @@ public final class ConstraintXmlSupport {
         AllowedValueType enumType = bean.addNewEnum();
         enumType.setValue(value);
 
-        XmlbeansMarkupVisitor.visit(description, MetaschemaConstants.METASCHEMA_NAMESPACE, enumType);
+        XmlbeansMarkupWriter.visit(description, MetaschemaConstants.METASCHEMA_NAMESPACE, enumType);
       }
 
       MarkupMultiline remarks = constraint.getRemarks();
       if (remarks != null) {
         RemarksType remarksType = bean.addNewRemarks();
         assert remarksType != null;
-        XmlbeansMarkupVisitor.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
+        XmlbeansMarkupWriter.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
       }
       return null;
     }
@@ -488,7 +468,7 @@ public final class ConstraintXmlSupport {
       if (remarks != null) {
         RemarksType remarksType = bean.addNewRemarks();
         assert remarksType != null;
-        XmlbeansMarkupVisitor.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
+        XmlbeansMarkupWriter.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
       }
       return null;
     }
@@ -510,7 +490,7 @@ public final class ConstraintXmlSupport {
       if (remarks != null) {
         RemarksType remarksType = bean.addNewRemarks();
         assert remarksType != null;
-        XmlbeansMarkupVisitor.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
+        XmlbeansMarkupWriter.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
       }
       return null;
     }
@@ -535,7 +515,7 @@ public final class ConstraintXmlSupport {
       if (remarks != null) {
         RemarksType remarksType = bean.addNewRemarks();
         assert remarksType != null;
-        XmlbeansMarkupVisitor.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
+        XmlbeansMarkupWriter.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
       }
       return null;
     }
@@ -561,7 +541,7 @@ public final class ConstraintXmlSupport {
       if (remarks != null) {
         RemarksType remarksType = bean.addNewRemarks();
         assert remarksType != null;
-        XmlbeansMarkupVisitor.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
+        XmlbeansMarkupWriter.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
       }
     }
 
@@ -578,7 +558,7 @@ public final class ConstraintXmlSupport {
       if (remarks != null) {
         RemarksType remarksType = bean.addNewRemarks();
         assert remarksType != null;
-        XmlbeansMarkupVisitor.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
+        XmlbeansMarkupWriter.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
       }
       return null;
     }
@@ -596,7 +576,7 @@ public final class ConstraintXmlSupport {
       if (remarks != null) {
         RemarksType remarksType = bean.addNewRemarks();
         assert remarksType != null;
-        XmlbeansMarkupVisitor.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
+        XmlbeansMarkupWriter.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
       }
       return null;
     }
@@ -612,7 +592,7 @@ public final class ConstraintXmlSupport {
       if (remarks != null) {
         RemarksType remarksType = bean.addNewRemarks();
         assert remarksType != null;
-        XmlbeansMarkupVisitor.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
+        XmlbeansMarkupWriter.visit(remarks, MetaschemaConstants.METASCHEMA_NAMESPACE, remarksType);
       }
       return null;
     }

@@ -12,7 +12,11 @@ import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public interface IBindingMetaschemaModule extends IMetaschemaModule<IBindingMetaschemaModule> {
+/**
+ * A Metaschema module represented as binding to Java classes and fields.
+ */
+public interface IBindingMetaschemaModule
+    extends IMetaschemaModule<IBindingMetaschemaModule> {
 
   /**
    * Get the underlying module data as a bound object.

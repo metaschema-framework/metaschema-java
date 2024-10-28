@@ -7,6 +7,10 @@ package gov.nist.secauto.metaschema.core.model.xml;
 
 import gov.nist.secauto.metaschema.core.model.IMetaschemaModule;
 
-public interface IXmlMetaschemaModule extends IMetaschemaModule<IXmlMetaschemaModule> {
+/**
+ * A Metaschema module represented in XML.
+ */
+public interface IXmlMetaschemaModule
+    extends IMetaschemaModule<IXmlMetaschemaModule> {
   // no additional methods
 }

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
-import gov.nist.secauto.metaschema.core.model.xml.impl.XmlbeansMarkupVisitor;
+import gov.nist.secauto.metaschema.core.model.xml.impl.XmlbeansMarkupWriter;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.METASCHEMADocument;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.METASCHEMADocument.METASCHEMA;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.MarkupLineDatatype;
@@ -70,7 +70,7 @@ class XmlbeansMarkupVisitorTest {
     try (XmlCursor cursor = xmlData.newCursor()) {
       cursor.toEndToken();
 
-      XmlbeansMarkupVisitor.visit(markup, MetaschemaConstants.METASCHEMA_NAMESPACE, cursor);
+      XmlbeansMarkupWriter.visit(markup, MetaschemaConstants.METASCHEMA_NAMESPACE, cursor);
 
       try (StringWriter writer = new StringWriter()) {
         metaschemaDocument.save(writer, options);

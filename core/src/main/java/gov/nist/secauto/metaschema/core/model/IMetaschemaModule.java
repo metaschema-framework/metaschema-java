@@ -5,7 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-// TODO: remove
+/**
+ * Represents a loaded Metaschema module.
+ *
+ * @param <SELF>
+ *          the Java type of the module
+ */
 public interface IMetaschemaModule<SELF extends IMetaschemaModule<SELF>>
     extends IModuleExtended<
         SELF,

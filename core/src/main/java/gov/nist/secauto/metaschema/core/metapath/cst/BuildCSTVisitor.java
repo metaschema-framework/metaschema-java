@@ -207,7 +207,8 @@ public class BuildCSTVisitor
     // for SimpleForBinding ("," SimpleForBinding)*
     int bindingCount = simpleForClause.getChildCount() / 2;
 
-    @NonNull IExpression retval = ObjectUtils.notNull(ctx.exprsingle().accept(this));
+    @NonNull
+    IExpression retval = ObjectUtils.notNull(ctx.exprsingle().accept(this));
 
     // step through in reverse
     for (int idx = bindingCount - 1; idx >= 0; idx--) {
@@ -236,7 +237,8 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleLet(LetexprContext context) {
-    @NonNull IExpression retval = ObjectUtils.notNull(context.exprsingle().accept(this));
+    @NonNull
+    IExpression retval = ObjectUtils.notNull(context.exprsingle().accept(this));
 
     SimpleletclauseContext letClause = context.simpleletclause();
     List<SimpleletbindingContext> clauses = letClause.simpleletbinding();
@@ -557,14 +559,12 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handlePredicate(PredicateContext ctx) {
-    parsePredicate(ctx);
-    return null;
+    return parsePredicate(ctx);
   }
 
   @Override
   protected IExpression handleLookup(LookupContext ctx) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("needs to be implemented");
   }
 
   @Override

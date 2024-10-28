@@ -187,7 +187,6 @@ public class XmlSchemaContentValidator
 
     @Override
     public IResourceLocation getLocation() {
-      // TODO Auto-generated method stub
       return this;
     }
 

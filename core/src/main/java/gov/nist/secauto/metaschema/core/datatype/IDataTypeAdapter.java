@@ -137,8 +137,8 @@ public interface IDataTypeAdapter<TYPE> {
    *          the item's value
    * @return a new item
    */
-  // TODO: markup types are not atomic values. Figure out a better base type
-  // (i.e., IValuedItem)
+  // TODO: markup types are not atomic values.
+  // Figure out a better base type (i.e., IValuedItem)
   @NonNull
   IAnyAtomicItem newItem(@NonNull Object value);
 
