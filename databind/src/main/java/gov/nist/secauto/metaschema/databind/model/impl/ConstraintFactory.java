@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractKeyConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
@@ -24,6 +23,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
 import gov.nist.secauto.metaschema.databind.model.annotations.Expect;
@@ -34,13 +34,11 @@ import gov.nist.secauto.metaschema.databind.model.annotations.IsUnique;
 import gov.nist.secauto.metaschema.databind.model.annotations.KeyField;
 import gov.nist.secauto.metaschema.databind.model.annotations.Let;
 import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
+import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.annotations.NullJavaTypeAdapter;
 import gov.nist.secauto.metaschema.databind.model.annotations.Property;
 
 import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
@@ -98,18 +96,11 @@ final class ConstraintFactory {
       @NonNull T builder,
       @Nullable Property... properties) {
     if (properties != null) {
-      for (Property property : properties) {
-        String name = property.name();
-        String namespace = property.namespace();
-        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ok
-        IAttributable.Key key = IAttributable.key(namespace, name);
-
-        String[] values = property.values();
-        List<String> valueList = Arrays.asList(values);
-        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ok
-        Set<String> valueSet = new LinkedHashSet<>(valueList);
-        builder.property(key, valueSet);
-      }
+      Arrays.stream(properties)
+          .map(ModelUtil::toPropertyEntry)
+          .forEachOrdered(entry -> builder.property(
+              ObjectUtils.notNull(entry.getKey()),
+              ObjectUtils.notNull(entry.getValue())));
     }
     return builder;
   }
@@ -121,6 +112,7 @@ final class ConstraintFactory {
     return builder;
   }
 
+  @SuppressWarnings("PMD.NullAssignment")
   @NonNull
   static IAllowedValuesConstraint.Builder applyAllowedValues(
       @NonNull IAllowedValuesConstraint.Builder builder,

@@ -11,10 +11,10 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedAssemblyReferenceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedChoiceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedFieldReferenceType;
@@ -136,14 +136,10 @@ class XmlChoiceGroupInstance
   private static final XmlObjectParser<Pair<IChoiceGroupInstance, XmlModelContainer>> XML_MODEL_PARSER
       = new XmlObjectParser<>(ObjectUtils.notNull(
           Map.ofEntries(
-              Map.entry(new QName(IModule.XML_NAMESPACE, "assembly"),
-                  XmlChoiceGroupInstance::handleAssembly),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "define-assembly"),
-                  XmlChoiceGroupInstance::handleDefineAssembly),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "field"),
-                  XmlChoiceGroupInstance::handleField),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "define-field"),
-                  XmlChoiceGroupInstance::handleDefineField)))) {
+              Map.entry(XmlModuleConstants.ASSEMBLY_QNAME, XmlChoiceGroupInstance::handleAssembly),
+              Map.entry(XmlModuleConstants.DEFINE_ASSEMBLY_QNAME, XmlChoiceGroupInstance::handleDefineAssembly),
+              Map.entry(XmlModuleConstants.FIELD_QNAME, XmlChoiceGroupInstance::handleField),
+              Map.entry(XmlModuleConstants.DEFINE_FIELD_QNAME, XmlChoiceGroupInstance::handleDefineField)))) {
 
         @Override
         protected Handler<Pair<IChoiceGroupInstance, XmlModelContainer>>

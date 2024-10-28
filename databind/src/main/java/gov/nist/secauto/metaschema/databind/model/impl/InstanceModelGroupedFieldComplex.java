@@ -8,7 +8,9 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractFieldInstance;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
@@ -19,20 +21,26 @@ import gov.nist.secauto.metaschema.databind.model.IBoundProperty;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundGroupedField;
 import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Represents an field model instance that is a member of a choice group
+ * instance.
+ */
 public class InstanceModelGroupedFieldComplex
     extends AbstractFieldInstance<
         IBoundInstanceModelChoiceGroup,
         IBoundDefinitionModelFieldComplex,
         IBoundInstanceModelGroupedField,
         IBoundDefinitionModelAssembly>
-
-    // extends AbstractBoundInstanceModelGroupedNamed<BoundGroupedField>
     implements IBoundInstanceModelGroupedField {
   @NonNull
   private final BoundGroupedField annotation;
@@ -40,7 +48,20 @@ public class InstanceModelGroupedFieldComplex
   private final DefinitionField definition;
   @NonNull
   private final Lazy<Map<String, IBoundProperty<?>>> jsonProperties;
+  @NonNull
+  private final Lazy<Map<IAttributable.Key, Set<String>>> properties;
 
+  /**
+   * Construct a new field model instance instance that is a member of a choice
+   * group instance.
+   *
+   * @param annotation
+   *          the Java annotation the instance is bound to
+   * @param definition
+   *          the assembly definition this instance is bound to
+   * @param container
+   *          the choice group instance containing the instance
+   */
   public InstanceModelGroupedFieldComplex(
       @NonNull BoundGroupedField annotation,
       @NonNull DefinitionField definition,
@@ -62,6 +83,12 @@ public class InstanceModelGroupedFieldComplex
       }
       return getDefinition().getJsonProperties(flagFilter);
     }));
+    this.properties = ObjectUtils.notNull(
+        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+            Arrays.stream(annotation.properties())
+                .map(ModelUtil::toPropertyEntry)
+                .collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2, LinkedHashMap::new))))));
   }
 
   private BoundGroupedField getAnnotation() {
@@ -95,6 +122,11 @@ public class InstanceModelGroupedFieldComplex
   @Override
   public MarkupLine getDescription() {
     return ModelUtil.resolveToMarkupLine(getAnnotation().description());
+  }
+
+  @Override
+  public Map<Key, Set<String>> getProperties() {
+    return ObjectUtils.notNull(properties.get());
   }
 
   @Override

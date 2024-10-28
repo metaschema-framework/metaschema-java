@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.XmlMarkupParser;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -71,8 +72,6 @@ class CommonmarkConformanceTest {
 
   private static final Pattern QUOTE_TAG_REPLACEMENT_PATTERN
       = Pattern.compile("</?q>");
-
-  private static final String METASCHEMA_NS = "http://csrc.nist.gov/ns/oscal/metaschema/1.0";
 
   @Disabled
   @Test
@@ -147,7 +146,7 @@ class CommonmarkConformanceTest {
                 + "]>\r\n")
         .append('<')
         .append(topLevelElementName)
-        .append(" xmlns=\"" + METASCHEMA_NS + "\"") // NOPMD
+        .append(" xmlns=\"" + MetaschemaConstants.METASCHEMA_NAMESPACE + "\"") // NOPMD
         .append(" xmlns:zoop=\"http://csrc.nist.gov/ns/oscal/metaschema-zoop/1.0\"")
         .append('>')
         .append(html)
@@ -179,12 +178,12 @@ class CommonmarkConformanceTest {
         + "<!ENTITY nbsp \"&#160;\">\r\n"
         + "]>\r\n");
 
-    xmlWriter.setPrefix("", METASCHEMA_NS);
-    xmlWriter.writeStartElement(METASCHEMA_NS, topLevelElementName);
-    xmlWriter.writeNamespace("", METASCHEMA_NS);
+    xmlWriter.setPrefix("", MetaschemaConstants.METASCHEMA_NAMESPACE);
+    xmlWriter.writeStartElement(MetaschemaConstants.METASCHEMA_NAMESPACE, topLevelElementName);
+    xmlWriter.writeNamespace("", MetaschemaConstants.METASCHEMA_NAMESPACE);
     xmlWriter.writeNamespace("zoop", "http://csrc.nist.gov/ns/oscal/metaschema-zoop/1.0");
 
-    content.writeXHtml(METASCHEMA_NS, xmlWriter);
+    content.writeXHtml(MetaschemaConstants.METASCHEMA_NAMESPACE, xmlWriter);
 
     xmlWriter.writeEndElement();
     xmlWriter.writeEndDocument();
@@ -236,8 +235,8 @@ class CommonmarkConformanceTest {
                                         "Validate Markdown To XML/HTML",
                                         () -> {
                                           String markdown = testVector.getMarkdown();
-                                          AbstractMarkupString<?> content;
-                                          content = MarkupDataTypeProvider.MARKUP_MULTILINE.parse(markdown);
+                                          AbstractMarkupString<?> content
+                                              = MarkupDataTypeProvider.MARKUP_MULTILINE.parse(markdown);
 
                                           String convertedHtmlInstance = generateXmlInstance(content);
 
@@ -258,9 +257,8 @@ class CommonmarkConformanceTest {
                                         "Convert Markdown to HTML/XHTML and Match with Test Vector",
                                         () -> {
                                           String markdown = testVector.getMarkdown();
-                                          IMarkupString<?> content;
-
-                                          content = MarkupDataTypeProvider.MARKUP_MULTILINE.parse(markdown);
+                                          IMarkupString<?> content
+                                              = MarkupDataTypeProvider.MARKUP_MULTILINE.parse(markdown);
                                           String convertedHtmlInstance = generateXmlInstance(content);
 
                                           // extract the generated HTML

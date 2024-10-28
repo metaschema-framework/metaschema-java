@@ -79,7 +79,7 @@ class XmlGlobalAssemblyDefinition
     this.xmlAssembly = xmlObject;
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> XmlFlagContainerSupport.newInstance(xmlObject, this)));
     this.modelContainer = ObjectUtils.notNull(
-        Lazy.lazy(() -> XmlAssemblyModelContainer.of(xmlObject.getModel(), this)));
+        Lazy.lazy(() -> XmlAssemblyModelContainerSupport.of(xmlObject.getModel(), this)));
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IModelConstrained retval = new AssemblyConstraintSet();
       if (xmlObject.isSetConstraint()) {

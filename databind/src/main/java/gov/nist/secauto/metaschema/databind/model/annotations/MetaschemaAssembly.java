@@ -91,6 +91,13 @@ public @interface MetaschemaAssembly {
   int rootIndex() default Integer.MIN_VALUE;
 
   /**
+   * An optional set of associated properties.
+   *
+   * @return the properties or an empty array with no properties
+   */
+  Property[] properties() default {};
+
+  /**
    * Get any remarks for this assembly.
    *
    * @return a markdown string or {@code "##none"} if no remarks are provided

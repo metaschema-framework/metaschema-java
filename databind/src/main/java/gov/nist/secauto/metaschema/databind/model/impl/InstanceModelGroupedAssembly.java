@@ -8,7 +8,9 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractAssemblyInstance;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
@@ -17,7 +19,11 @@ import gov.nist.secauto.metaschema.databind.model.IBoundProperty;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -32,7 +38,6 @@ public class InstanceModelGroupedAssembly
         IBoundDefinitionModelAssembly,
         IBoundInstanceModelGroupedAssembly,
         IBoundDefinitionModelAssembly>
-    // extends AbstractBoundInstanceModelGroupedNamed<BoundGroupedAssembly>
     implements IBoundInstanceModelGroupedAssembly {
   @NonNull
   private final BoundGroupedAssembly annotation;
@@ -40,9 +45,11 @@ public class InstanceModelGroupedAssembly
   private final IBoundDefinitionModelAssembly definition;
   @NonNull
   private final Lazy<Map<String, IBoundProperty<?>>> jsonProperties;
+  @NonNull
+  private final Lazy<Map<IAttributable.Key, Set<String>>> properties;
 
   /**
-   * Construct a new field model instance instance that is a member of a choice
+   * Construct a new assembly model instance instance that is a member of a choice
    * group instance.
    *
    * @param annotation
@@ -64,6 +71,12 @@ public class InstanceModelGroupedAssembly
     // !jsonKey.equals(flag);
     // return getDefinition().getJsonProperties(flagFilter);
     this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -> getDefinition().getJsonProperties(null)));
+    this.properties = ObjectUtils.notNull(
+        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+            Arrays.stream(annotation.properties())
+                .map(ModelUtil::toPropertyEntry)
+                .collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2, LinkedHashMap::new))))));
   }
 
   private BoundGroupedAssembly getAnnotation() {
@@ -97,6 +110,11 @@ public class InstanceModelGroupedAssembly
   @Override
   public MarkupLine getDescription() {
     return ModelUtil.resolveToMarkupLine(getAnnotation().description());
+  }
+
+  @Override
+  public Map<Key, Set<String>> getProperties() {
+    return ObjectUtils.notNull(properties.get());
   }
 
   @Override

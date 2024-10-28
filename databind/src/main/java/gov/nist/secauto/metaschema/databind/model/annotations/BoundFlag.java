@@ -97,6 +97,13 @@ public @interface BoundFlag {
   Class<? extends IDataTypeAdapter<?>> typeAdapter() default NullJavaTypeAdapter.class;
 
   /**
+   * An optional set of associated properties.
+   *
+   * @return the properties or an empty array with no properties
+   */
+  Property[] properties() default {};
+
+  /**
    * Get any remarks for this flag.
    *
    * @return a markdown string or {@code "##none"} if no remarks are provided

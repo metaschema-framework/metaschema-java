@@ -8,12 +8,14 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
@@ -29,14 +31,21 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
-//TODO: implement getProperties()
+/**
+ * Implements a Metaschema module global field definition bound to a Java class.
+ */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class DefinitionField
     extends AbstractBoundDefinitionModelComplex<MetaschemaField>
     implements IBoundDefinitionModelFieldComplex {
@@ -50,6 +59,8 @@ public final class DefinitionField
   private final Lazy<IValueConstrained> constraints;
   @NonNull
   private final Lazy<Map<String, IBoundProperty<?>>> jsonProperties;
+  @NonNull
+  private final Lazy<Map<IAttributable.Key, Set<String>>> properties;
 
   /**
    * Collect all fields that are part of the model for this class.
@@ -87,7 +98,8 @@ public final class DefinitionField
    * @param clazz
    *          the Java class the definition is bound to
    * @param bindingContext
-   *          the Metaschema binding context managing this class
+   *          the Metaschema binding context managing this class used to lookup
+   *          binding information
    * @return the instance
    */
   @NonNull
@@ -128,6 +140,12 @@ public final class DefinitionField
       Predicate<IBoundInstanceFlag> flagFilter = jsonValueKey == null ? null : flag -> !flag.equals(jsonValueKey);
       return getJsonProperties(flagFilter);
     }));
+    this.properties = ObjectUtils.notNull(
+        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+            Arrays.stream(annotation.properties())
+                .map(ModelUtil::toPropertyEntry)
+                .collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2, LinkedHashMap::new))))));
   }
 
   /**
@@ -204,6 +222,11 @@ public final class DefinitionField
   }
 
   @Override
+  public Map<Key, Set<String>> getProperties() {
+    return ObjectUtils.notNull(properties.get());
+  }
+
+  @Override
   @Nullable
   public Integer getIndex() {
     return ModelUtil.resolveDefaultInteger(getAnnotation().index());
@@ -215,6 +238,9 @@ public final class DefinitionField
     return ModelUtil.resolveToMarkupMultiline(getAnnotation().description());
   }
 
+  /**
+   * Implements a field definition value bound to a Java field.
+   */
   protected class FieldValue
       implements IBoundFieldValue {
     @NonNull

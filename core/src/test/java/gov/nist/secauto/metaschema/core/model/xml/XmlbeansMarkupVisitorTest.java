@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.model.xml;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlbeansMarkupVisitor;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.METASCHEMADocument;
@@ -69,7 +70,7 @@ class XmlbeansMarkupVisitorTest {
     try (XmlCursor cursor = xmlData.newCursor()) {
       cursor.toEndToken();
 
-      XmlbeansMarkupVisitor.visit(markup, "http://csrc.nist.gov/ns/oscal/metaschema/1.0", cursor);
+      XmlbeansMarkupVisitor.visit(markup, MetaschemaConstants.METASCHEMA_NAMESPACE, cursor);
 
       try (StringWriter writer = new StringWriter()) {
         metaschemaDocument.save(writer, options);

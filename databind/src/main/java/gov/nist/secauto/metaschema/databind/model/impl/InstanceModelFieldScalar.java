@@ -9,10 +9,12 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractInlineFieldDefinition;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
@@ -28,12 +30,21 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implements a Metaschema module field instance bound to a scalar valued Java
+ * field.
+ */
 public final class InstanceModelFieldScalar
     extends AbstractInlineFieldDefinition<
         IBoundDefinitionModelAssembly,
@@ -56,28 +67,26 @@ public final class InstanceModelFieldScalar
   private final Object defaultValue;
   @NonNull
   private final Lazy<IValueConstrained> constraints;
+  @NonNull
+  private final Lazy<Map<IAttributable.Key, Set<String>>> properties;
 
   /**
    * Construct a new field instance bound to a Java field.
    *
    * @param javaField
    *          the Java field bound to this instance
-   * @param annotation
-   *          the field binding annotation
-   * @param groupAs
-   *          the grouping info for the model instance
-   * @param containingDefinition
+   * @param parent
    *          the definition containing this instance
    * @return the instance
    */
   @NonNull
   public static InstanceModelFieldScalar newInstance(
       @NonNull Field javaField,
-      @NonNull IBoundDefinitionModelAssembly containingDefinition) {
+      @NonNull IBoundDefinitionModelAssembly parent) {
     BoundField annotation = ModelUtil.getAnnotation(javaField, BoundField.class);
     IGroupAs groupAs = ModelUtil.resolveDefaultGroupAs(
         annotation.groupAs(),
-        containingDefinition.getContainingModule());
+        parent.getContainingModule());
 
     if (annotation.maxOccurs() == -1 || annotation.maxOccurs() > 1) {
       if (IGroupAs.SINGLETON_GROUP_AS.equals(groupAs)) {
@@ -100,22 +109,22 @@ public final class InstanceModelFieldScalar
         javaField,
         annotation,
         groupAs,
-        containingDefinition);
+        parent);
   }
 
   private InstanceModelFieldScalar(
       @NonNull Field javaField,
       @NonNull BoundField annotation,
       @NonNull IGroupAs groupAs,
-      @NonNull IBoundDefinitionModelAssembly containingDefinition) {
-    super(containingDefinition);
+      @NonNull IBoundDefinitionModelAssembly parent) {
+    super(parent);
     this.javaField = javaField;
     this.annotation = annotation;
     this.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -> IModelInstanceCollectionInfo.of(this)));
     this.groupAs = groupAs;
     this.javaTypeAdapter = ModelUtil.getDataTypeAdapter(
         annotation.typeAdapter(),
-        containingDefinition.getBindingContext());
+        parent.getBindingContext());
     this.defaultValue = ModelUtil.resolveDefaultValue(annotation.defaultValue(), this.javaTypeAdapter);
 
     IModule module = getContainingModule();
@@ -126,6 +135,12 @@ public final class InstanceModelFieldScalar
       ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);
       return retval;
     }));
+    this.properties = ObjectUtils.notNull(
+        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+            Arrays.stream(annotation.properties())
+                .map(ModelUtil::toPropertyEntry)
+                .collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2, LinkedHashMap::new))))));
   }
 
   // ------------------------------------------
@@ -214,6 +229,11 @@ public final class InstanceModelFieldScalar
   @Override
   public int getMaxOccurs() {
     return getAnnotation().maxOccurs();
+  }
+
+  @Override
+  public Map<Key, Set<String>> getProperties() {
+    return ObjectUtils.notNull(properties.get());
   }
 
   @Override

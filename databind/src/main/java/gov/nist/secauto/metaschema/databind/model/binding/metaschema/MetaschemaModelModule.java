@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.databind.model.binding.metaschema;
 
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.AbstractBoundModule;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
@@ -74,12 +74,10 @@ public final class MetaschemaModelModule
   private static final String VERSION = "1.0.0-M2";
 
   @NonNull
-  private static final URI XML_NAMESPACE
-      = ObjectUtils.requireNonNull(URI.create("http://csrc.nist.gov/ns/oscal/metaschema/1.0"));
+  private static final URI XML_NAMESPACE = MetaschemaConstants.METASCHEMA_NAMESPACE_URI;
 
   @NonNull
-  private static final URI JSON_BASE_URI
-      = ObjectUtils.requireNonNull(URI.create("http://csrc.nist.gov/ns/oscal/metaschema/1.0"));
+  private static final URI JSON_BASE_URI = MetaschemaConstants.METASCHEMA_NAMESPACE_URI;
 
   @NonNull
   private static final Map<String, String> NAMESPACE_BINDINGS;

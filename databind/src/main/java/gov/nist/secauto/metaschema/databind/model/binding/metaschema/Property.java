@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.model.binding.metaschema;
 import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriAdapter;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
@@ -39,7 +40,7 @@ public class Property implements IBoundObject {
   @BoundFlag(
       formalName = "Property Namespace",
       name = "namespace",
-      defaultValue = "http://csrc.nist.gov/ns/oscal/metaschema/1.0",
+      defaultValue = IAttributable.DEFAULT_PROPERY_NAMESPACE,
       typeAdapter = UriAdapter.class)
   private URI _namespace;
 

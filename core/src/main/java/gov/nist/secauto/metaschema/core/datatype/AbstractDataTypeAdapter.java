@@ -39,6 +39,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomicItem>
     implements IDataTypeAdapter<TYPE> {
+  /**
+   * The default JSON property name for a Metaschema field value.
+   */
   public static final String DEFAULT_JSON_FIELD_NAME = "STRVALUE";
 
   @NonNull
@@ -103,7 +106,8 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
 
       // trim leading and trailing whitespace
       @SuppressWarnings("null")
-      @NonNull String value = builder.toString().trim();
+      @NonNull
+      String value = builder.toString().trim();
       return parse(value);
     } catch (XMLStreamException ex) {
       throw new IOException(ex);
@@ -164,19 +168,15 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   @Override
   public abstract ITEM_TYPE newItem(Object value);
 
+  @SuppressWarnings("unchecked")
   @Override
   public ITEM_TYPE cast(IAnyAtomicItem item) {
-    ITEM_TYPE retval;
     if (item == null) {
       throw new InvalidValueForCastFunctionException("item is null");
     }
-    if (getItemClass().isAssignableFrom(item.getClass())) {
-      @SuppressWarnings("unchecked") ITEM_TYPE typedItem = (ITEM_TYPE) item;
-      retval = typedItem;
-    } else {
-      retval = castInternal(item);
-    }
-    return retval;
+    return getItemClass().isAssignableFrom(item.getClass())
+        ? (ITEM_TYPE) item
+        : castInternal(item);
   }
 
   /**

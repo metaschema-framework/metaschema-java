@@ -11,7 +11,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagContainerBuilder;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
-import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.FlagReferenceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalAssemblyDefinitionType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalFieldDefinitionType;
@@ -28,8 +28,6 @@ import org.apache.xmlbeans.XmlObject;
 
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -43,10 +41,8 @@ final class XmlFlagContainerSupport {
   private static final XmlObjectParser<Pair<IModelDefinition, IFlagContainerBuilder<IFlagInstance>>> XML_MODEL_PARSER
       = new XmlObjectParser<>(ObjectUtils.notNull(
           Map.ofEntries(
-              Map.entry(new QName(IModule.XML_NAMESPACE, "flag"),
-                  XmlFlagContainerSupport::handleFlag),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "define-flag"),
-                  XmlFlagContainerSupport::handleDefineFlag)))) {
+              Map.entry(XmlModuleConstants.FLAG_QNAME, XmlFlagContainerSupport::handleFlag),
+              Map.entry(XmlModuleConstants.DEFINE_FLAG_QNAME, XmlFlagContainerSupport::handleDefineFlag)))) {
 
         @Override
         protected Handler<Pair<IModelDefinition, IFlagContainerBuilder<IFlagInstance>>> identifyHandler(

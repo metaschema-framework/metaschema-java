@@ -8,7 +8,9 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractAssemblyInstance;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceFlag;
@@ -22,8 +24,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -33,7 +39,6 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Implements a Metaschema module assembly instance bound to a Java field,
  * supported by a bound definition class.
  */
-// TODO: implement getProperties()
 public final class InstanceModelAssemblyComplex
     extends AbstractAssemblyInstance<
         IBoundDefinitionModelAssembly,
@@ -53,6 +58,8 @@ public final class InstanceModelAssemblyComplex
   private final IGroupAs groupAs;
   @NonNull
   private final Lazy<Map<String, IBoundProperty<?>>> jsonProperties;
+  @NonNull
+  private final Lazy<Map<IAttributable.Key, Set<String>>> properties;
 
   /**
    * Construct a new field instance bound to a Java field, supported by a bound
@@ -112,6 +119,12 @@ public final class InstanceModelAssemblyComplex
       Predicate<IBoundInstanceFlag> flagFilter = jsonKey == null ? null : flag -> !jsonKey.equals(flag);
       return getDefinition().getJsonProperties(flagFilter);
     }));
+    this.properties = ObjectUtils.notNull(
+        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+            Arrays.stream(annotation.properties())
+                .map(ModelUtil::toPropertyEntry)
+                .collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2, LinkedHashMap::new))))));
   }
 
   // ------------------------------------------
@@ -188,6 +201,11 @@ public final class InstanceModelAssemblyComplex
   @Override
   public int getMaxOccurs() {
     return getAnnotation().maxOccurs();
+  }
+
+  @Override
+  public Map<Key, Set<String>> getProperties() {
+    return ObjectUtils.notNull(properties.get());
   }
 
   @Override

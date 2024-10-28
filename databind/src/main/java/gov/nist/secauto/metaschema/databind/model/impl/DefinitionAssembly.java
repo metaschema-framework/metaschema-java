@@ -7,11 +7,13 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
@@ -28,7 +30,11 @@ import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly
 import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
 
@@ -36,7 +42,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
-//TODO: implement getProperties()
+/**
+ * Implements a Metaschema module global assembly definition bound to a Java
+ * class.
+ */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class DefinitionAssembly
     extends AbstractBoundDefinitionModelComplex<MetaschemaAssembly>
     implements IBoundDefinitionModelAssembly,
@@ -57,7 +67,19 @@ public final class DefinitionAssembly
   private final Lazy<QName> xmlRootQName;
   @NonNull
   private final Lazy<Map<String, IBoundProperty<?>>> jsonProperties;
+  @NonNull
+  private final Lazy<Map<IAttributable.Key, Set<String>>> properties;
 
+  /**
+   * Construct a new global assembly instance.
+   *
+   * @param clazz
+   *          the class the assembly is bound to
+   * @param bindingContext
+   *          the Metaschema binding context managing this class used to lookup
+   *          binding information
+   * @return the definition
+   */
   @NonNull
   public static DefinitionAssembly newInstance(
       @NonNull Class<? extends IBoundObject> clazz,
@@ -93,6 +115,12 @@ public final class DefinitionAssembly
       return retval;
     }));
     this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -> getJsonProperties(null)));
+    this.properties = ObjectUtils.notNull(
+        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+            Arrays.stream(annotation.properties())
+                .map(ModelUtil::toPropertyEntry)
+                .collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2, LinkedHashMap::new))))));
   }
 
   @Override
@@ -156,6 +184,11 @@ public final class DefinitionAssembly
   @Nullable
   public Integer getIndex() {
     return ModelUtil.resolveDefaultInteger(getAnnotation().index());
+  }
+
+  @Override
+  public Map<Key, Set<String>> getProperties() {
+    return ObjectUtils.notNull(properties.get());
   }
 
   @Override

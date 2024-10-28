@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandService;
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.MetaschemaJavaVersion;
 import gov.nist.secauto.metaschema.core.model.MetaschemaVersion;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
@@ -43,7 +44,7 @@ public final class CLI {
 
     Map<String, IVersionInfo> versions = new LinkedHashMap<>();
     versions.put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());
-    versions.put("http://csrc.nist.gov/ns/oscal/metaschema/1.0", new MetaschemaVersion());
+    versions.put(MetaschemaConstants.METASCHEMA_NAMESPACE, new MetaschemaVersion());
 
     CLIProcessor processor = new CLIProcessor("metaschema-cli", versions);
     MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);

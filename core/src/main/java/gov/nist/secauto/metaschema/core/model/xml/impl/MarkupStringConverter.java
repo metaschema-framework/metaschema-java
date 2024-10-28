@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model.xml.impl;
 
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.MarkupLineDatatype;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.MarkupMultilineDatatype;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -66,7 +66,7 @@ public final class MarkupStringConverter {
   @NonNull
   public static MarkupLineDatatype toMarkupLineDatatype(@NonNull MarkupLine markup) {
     MarkupLineDatatype retval = ObjectUtils.notNull(MarkupLineDatatype.Factory.newInstance());
-    XmlbeansMarkupVisitor.visit(markup, IModule.XML_NAMESPACE, retval);
+    XmlbeansMarkupVisitor.visit(markup, MetaschemaConstants.METASCHEMA_NAMESPACE, retval);
     return retval;
   }
 

@@ -88,7 +88,7 @@ class XmlInlineAssemblyDefinition
     this.xmlObject = xmlObject;
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> XmlFlagContainerSupport.newInstance(xmlObject, this)));
     this.modelContainer
-        = ObjectUtils.notNull(Lazy.lazy(() -> XmlAssemblyModelContainer.of(xmlObject.getModel(), this)));
+        = ObjectUtils.notNull(Lazy.lazy(() -> XmlAssemblyModelContainerSupport.of(xmlObject.getModel(), this)));
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IModelConstrained retval = new AssemblyConstraintSet();
       if (getXmlObject().isSetConstraint()) {

@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyTargetedConstraints;
@@ -69,12 +68,9 @@ public class XmlConstraintLoader
   private static final Map<QName,
       Handler<Pair<ISource, List<ITargetedConstraints>>>> SCOPE_OBJECT_MAPPING = ObjectUtils.notNull(
           Map.ofEntries(
-              Map.entry(new QName(IModule.XML_NAMESPACE, "assembly"),
-                  XmlConstraintLoader::handleScopedAssembly),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "field"),
-                  XmlConstraintLoader::handleScopedField),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "flag"),
-                  XmlConstraintLoader::handleScopedFlag)));
+              Map.entry(XmlModuleConstants.ASSEMBLY_QNAME, XmlConstraintLoader::handleScopedAssembly),
+              Map.entry(XmlModuleConstants.FIELD_QNAME, XmlConstraintLoader::handleScopedField),
+              Map.entry(XmlModuleConstants.FLAG_QNAME, XmlConstraintLoader::handleScopedFlag)));
 
   @NonNull
   private static final XmlObjectParser<Pair<ISource, List<ITargetedConstraints>>> SCOPE_PARSER

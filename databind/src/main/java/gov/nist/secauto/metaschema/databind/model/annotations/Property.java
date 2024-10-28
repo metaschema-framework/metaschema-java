@@ -8,6 +8,8 @@ package gov.nist.secauto.metaschema.databind.model.annotations;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import gov.nist.secauto.metaschema.core.model.IAttributable;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -30,7 +32,7 @@ public @interface Property {
    * @return the namespace
    */
   @NonNull
-  String namespace();
+  String namespace() default IAttributable.DEFAULT_PROPERY_NAMESPACE;
 
   /**
    * The values for the property's name and namespace.

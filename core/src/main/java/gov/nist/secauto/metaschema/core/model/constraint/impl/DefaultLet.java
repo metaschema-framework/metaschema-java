@@ -20,6 +20,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * <p>
  * This class is immutable.
  */
+@SuppressWarnings("PMD.DataClass")
 public class DefaultLet implements ILet {
   @NonNull
   private final QName name;

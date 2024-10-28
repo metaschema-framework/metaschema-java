@@ -129,6 +129,13 @@ public @interface BoundField {
   int maxOccurs() default IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS;
 
   /**
+   * An optional set of associated properties.
+   *
+   * @return the properties or an empty array with no properties
+   */
+  Property[] properties() default {};
+
+  /**
    * Get any remarks for this field.
    *
    * @return a markdown string or {@code "##none"} if no remarks are provided

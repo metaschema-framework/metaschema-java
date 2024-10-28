@@ -64,6 +64,7 @@ module gov.nist.secauto.metaschema.core {
   requires transitive flexmark.util.sequence;
   requires flexmark.util.visitor;
 
+  exports gov.nist.secauto.metaschema.core;
   exports gov.nist.secauto.metaschema.core.configuration;
   exports gov.nist.secauto.metaschema.core.datatype;
   exports gov.nist.secauto.metaschema.core.datatype.adapter;

@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.Map;
@@ -22,7 +23,7 @@ public interface IAttributable {
    * The default key namespace for a property.
    */
   @NonNull
-  String DEFAULT_PROPERY_NAMESPACE = IModule.XML_NAMESPACE;
+  String DEFAULT_PROPERY_NAMESPACE = MetaschemaConstants.METASCHEMA_NAMESPACE;
 
   /**
    * Get the mapping of property key to values.
@@ -30,9 +31,7 @@ public interface IAttributable {
    * @return the mapping
    */
   @NonNull
-  default Map<Key, Set<String>> getProperties() {
-    return CollectionUtil.emptyMap();
-  }
+  Map<Key, Set<String>> getProperties();
 
   /**
    * Determine if a property is defined.

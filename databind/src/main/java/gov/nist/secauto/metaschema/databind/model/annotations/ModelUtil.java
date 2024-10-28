@@ -9,9 +9,11 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
 import gov.nist.secauto.metaschema.databind.model.impl.DefaultGroupAs;
@@ -19,6 +21,11 @@ import gov.nist.secauto.metaschema.databind.model.impl.DefaultGroupAs;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -269,5 +276,19 @@ public final class ModelUtil {
       retval = retval.isEmpty() ? location : retval + "@" + location;
     }
     return retval;
+  }
+
+  public static Map.Entry<IAttributable.Key, Set<String>> toPropertyEntry(@NonNull Property property) {
+    String name = property.name();
+    String namespace = property.namespace();
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ok
+    IAttributable.Key key = IAttributable.key(namespace, name);
+
+    String[] values = property.values();
+    List<String> valueList = Arrays.asList(values);
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ok
+    Set<String> valueSet = new LinkedHashSet<>(valueList);
+
+    return Map.entry(key, CollectionUtil.unmodifiableSet(valueSet));
   }
 }

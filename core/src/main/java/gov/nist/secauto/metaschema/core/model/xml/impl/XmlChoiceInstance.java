@@ -12,8 +12,8 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.AssemblyReferenceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.ChoiceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.FieldReferenceType;
@@ -94,11 +94,11 @@ class XmlChoiceInstance
   private static final XmlObjectParser<Pair<IChoiceInstance,
       XmlModelContainer>> XML_MODEL_PARSER
           = new XmlObjectParser<>(ObjectUtils.notNull(
-              Map.ofEntries(Map.entry(new QName(IModule.XML_NAMESPACE, "assembly"), XmlChoiceInstance::handleAssembly),
-                  Map.entry(new QName(IModule.XML_NAMESPACE, "define-assembly"),
-                      XmlChoiceInstance::handleDefineAssembly),
-                  Map.entry(new QName(IModule.XML_NAMESPACE, "field"), XmlChoiceInstance::handleField),
-                  Map.entry(new QName(IModule.XML_NAMESPACE, "define-field"), XmlChoiceInstance::handleDefineField)))) {
+              Map.ofEntries(
+                  Map.entry(XmlModuleConstants.ASSEMBLY_QNAME, XmlChoiceInstance::handleAssembly),
+                  Map.entry(XmlModuleConstants.DEFINE_ASSEMBLY_QNAME, XmlChoiceInstance::handleDefineAssembly),
+                  Map.entry(XmlModuleConstants.FIELD_QNAME, XmlChoiceInstance::handleField),
+                  Map.entry(XmlModuleConstants.DEFINE_FIELD_QNAME, XmlChoiceInstance::handleDefineField)))) {
 
             @Override
             protected Handler<Pair<IChoiceInstance, XmlModelContainer>> identifyHandler(XmlCursor cursor,

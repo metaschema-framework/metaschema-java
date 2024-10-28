@@ -42,6 +42,9 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Represents a Metaschema module based on XMLBeans-based data.
+ */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class XmlModule
     extends AbstractModule<
@@ -52,6 +55,19 @@ public class XmlModule
         IAssemblyDefinition>
     implements IXmlMetaschemaModule {
   private static final Logger LOGGER = LogManager.getLogger(XmlModule.class);
+
+  @NonNull
+  private static final String METASCHEMA_NS_DECLARATION_XPATH
+      = "declare namespace m='http://csrc.nist.gov/ns/oscal/metaschema/1.0';";
+  @NonNull
+  private static final String FLAG_DEFINITION_XPATH
+      = METASCHEMA_NS_DECLARATION_XPATH + "$this/m:define-flag";
+  @NonNull
+  private static final String FIELD_DEFINITION_XPATH
+      = METASCHEMA_NS_DECLARATION_XPATH + "$this/m:define-field";
+  @NonNull
+  private static final String ASSEMBLY_DEFINITION_XPATH
+      = METASCHEMA_NS_DECLARATION_XPATH + "$this/m:define-assembly";
 
   @NonNull
   private final Lazy<StaticContext> staticContext;
@@ -256,7 +272,7 @@ public class XmlModule
       cursor.push();
 
       // start with flag definitions
-      cursor.selectPath("declare namespace m='http://csrc.nist.gov/ns/oscal/metaschema/1.0';$this/m:define-flag");
+      cursor.selectPath(FLAG_DEFINITION_XPATH);
 
       Map<QName, IFlagDefinition> flags = new LinkedHashMap<>();
       while (cursor.toNextSelection()) {
@@ -283,7 +299,7 @@ public class XmlModule
       cursor.push();
 
       // now field definitions
-      cursor.selectPath("declare namespace m='http://csrc.nist.gov/ns/oscal/metaschema/1.0';$this/m:define-field");
+      cursor.selectPath(FIELD_DEFINITION_XPATH);
 
       Map<QName, IFieldDefinition> fields = new LinkedHashMap<>();
       while (cursor.toNextSelection()) {
@@ -310,8 +326,7 @@ public class XmlModule
       cursor.push();
 
       // finally assembly definitions
-      cursor.selectPath(
-          "declare namespace m='http://csrc.nist.gov/ns/oscal/metaschema/1.0';$this/m:define-assembly");
+      cursor.selectPath(ASSEMBLY_DEFINITION_XPATH);
 
       Map<QName, IAssemblyDefinition> assemblies = new LinkedHashMap<>();
       while (cursor.toNextSelection()) {

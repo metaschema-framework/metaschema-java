@@ -32,6 +32,10 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Represents a Metaschema field definition declared locally as an instance
+ * within a choice group.
+ */
 public class XmlGroupedInlineFieldDefinition
     extends AbstractInlineFieldDefinition<
         IChoiceGroupInstance,

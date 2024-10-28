@@ -33,6 +33,10 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Represents a Metaschema assembly definition declared locally as an instance
+ * within a choice group.
+ */
 public class XmlGroupedInlineAssemblyDefinition
     extends AbstractInlineAssemblyDefinition<
         IChoiceGroupInstance,
@@ -87,7 +91,7 @@ public class XmlGroupedInlineAssemblyDefinition
         this,
         parent.getJsonKeyFlagInstanceName())));
     this.modelContainer = ObjectUtils.notNull(
-        Lazy.lazy(() -> XmlAssemblyModelContainer.of(xmlObject.getModel(), this)));
+        Lazy.lazy(() -> XmlAssemblyModelContainerSupport.of(xmlObject.getModel(), this)));
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IModelConstrained retval = new AssemblyConstraintSet();
       if (getXmlObject().isSetConstraint()) {

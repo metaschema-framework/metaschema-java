@@ -9,11 +9,13 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractInlineFlagDefinition;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionFlag;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModel;
@@ -26,7 +28,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -36,10 +43,8 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Implements a Metaschema module inline flag instance/definition bound to a
  * Java field.
  */
-// TODO: implement getProperties()
 public class InstanceFlagInline
     extends AbstractInlineFlagDefinition<IBoundDefinitionModel<IBoundObject>, IBoundDefinitionFlag, IBoundInstanceFlag>
-    // extends AbstractBoundInstanceJavaField<BoundFlag, IBoundDefinitionModel>
     implements IBoundInstanceFlag {
   @NonNull
   private final Field javaField;
@@ -51,28 +56,30 @@ public class InstanceFlagInline
   private final Object defaultValue;
   @NonNull
   private final Lazy<IValueConstrained> constraints;
+  @NonNull
+  private final Lazy<Map<IAttributable.Key, Set<String>>> properties;
 
   /**
    * Construct a new inline field instance/definition.
    *
    * @param javaField
    *          the Java field bound to this instance
-   * @param containingDefinition
+   * @param parent
    *          the definition containing this instance
    */
   public InstanceFlagInline(
       @NonNull Field javaField,
-      @NonNull IBoundDefinitionModel<IBoundObject> containingDefinition) {
-    super(containingDefinition);
+      @NonNull IBoundDefinitionModel<IBoundObject> parent) {
+    super(parent);
     this.javaField = javaField;
     this.annotation = ModelUtil.getAnnotation(javaField, BoundFlag.class);
     Class<? extends IDataTypeAdapter<?>> adapterClass = ObjectUtils.notNull(getAnnotation().typeAdapter());
     this.javaTypeAdapter = ModelUtil.getDataTypeAdapter(
         adapterClass,
-        containingDefinition.getBindingContext());
+        parent.getBindingContext());
     this.defaultValue = ModelUtil.resolveDefaultValue(getAnnotation().defaultValue(), this.javaTypeAdapter);
 
-    IModule module = containingDefinition.getContainingModule();
+    IModule module = parent.getContainingModule();
 
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IValueConstrained retval = new ValueConstraintSet();
@@ -80,6 +87,12 @@ public class InstanceFlagInline
       ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);
       return retval;
     }));
+    this.properties = ObjectUtils.notNull(
+        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+            Arrays.stream(annotation.properties())
+                .map(ModelUtil::toPropertyEntry)
+                .collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2, LinkedHashMap::new))))));
   }
 
   /**
@@ -165,6 +178,11 @@ public class InstanceFlagInline
   @Override
   public Integer getUseIndex() {
     return getAnnotation().useIndex();
+  }
+
+  @Override
+  public Map<Key, Set<String>> getProperties() {
+    return ObjectUtils.notNull(properties.get());
   }
 
   @Override

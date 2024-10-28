@@ -47,13 +47,13 @@ import nl.talsmasoftware.lazy4j.Lazy;
 /**
  * Implements a Metaschema module choice group instance bound to a Java field.
  */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class InstanceModelChoiceGroup
     extends AbstractChoiceGroupInstance<
         IBoundDefinitionModelAssembly,
         IBoundInstanceModelGroupedNamed,
         IBoundInstanceModelGroupedField,
         IBoundInstanceModelGroupedAssembly>
-    // extends AbstractBoundInstanceModelJavaField<BoundChoiceGroup>
     implements IBoundInstanceModelChoiceGroup,
     IFeatureBoundContainerModelChoiceGroup, IFeatureInstanceModelGroupAs<IBoundObject> {
   @NonNull

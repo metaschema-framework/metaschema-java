@@ -12,8 +12,8 @@ import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.AssemblyModelType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.AssemblyReferenceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.ChoiceType;
@@ -34,7 +34,11 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-public class XmlAssemblyModelContainer
+/**
+ * Used to construct the model of an assmebly defintion based on XMLBeans-based
+ * data.
+ */
+public class XmlAssemblyModelContainerSupport
     extends DefaultContainerModelAssemblySupport<
         IModelInstanceAbsolute,
         INamedModelInstanceAbsolute,
@@ -44,38 +48,33 @@ public class XmlAssemblyModelContainer
         IChoiceGroupInstance> {
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  private static final XmlObjectParser<Pair<IAssemblyDefinition, XmlAssemblyModelContainer>> XML_MODEL_PARSER
+  private static final XmlObjectParser<Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport>> XML_MODEL_PARSER
       = new XmlObjectParser<>(ObjectUtils.notNull(
           Map.ofEntries(
-              Map.entry(new QName(IModule.XML_NAMESPACE, "assembly"),
-                  XmlAssemblyModelContainer::handleAssemmbly),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "define-assembly"),
-                  XmlAssemblyModelContainer::handleDefineAssembly),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "field"),
-                  XmlAssemblyModelContainer::handleField),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "define-field"),
-                  XmlAssemblyModelContainer::handleDefineField),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "choice"),
-                  XmlAssemblyModelContainer::handleChoice),
-              Map.entry(new QName(IModule.XML_NAMESPACE, "choice-group"),
-                  XmlAssemblyModelContainer::handleChoiceGroup)))) {
+              Map.entry(XmlModuleConstants.ASSEMBLY_QNAME, XmlAssemblyModelContainerSupport::handleAssemmbly),
+              Map.entry(XmlModuleConstants.DEFINE_ASSEMBLY_QNAME,
+                  XmlAssemblyModelContainerSupport::handleDefineAssembly),
+              Map.entry(XmlModuleConstants.FIELD_QNAME, XmlAssemblyModelContainerSupport::handleField),
+              Map.entry(XmlModuleConstants.DEFINE_FIELD_QNAME, XmlAssemblyModelContainerSupport::handleDefineField),
+              Map.entry(XmlModuleConstants.CHOICE_QNAME, XmlAssemblyModelContainerSupport::handleChoice),
+              Map.entry(XmlModuleConstants.CHOICE_GROUP_QNAME, XmlAssemblyModelContainerSupport::handleChoiceGroup)))) {
 
         @Override
-        protected Handler<Pair<IAssemblyDefinition, XmlAssemblyModelContainer>>
+        protected Handler<Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport>>
             identifyHandler(XmlCursor cursor, XmlObject obj) {
-          Handler<Pair<IAssemblyDefinition, XmlAssemblyModelContainer>> retval;
+          Handler<Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport>> retval;
           if (obj instanceof FieldReferenceType) {
-            retval = XmlAssemblyModelContainer::handleField;
+            retval = XmlAssemblyModelContainerSupport::handleField;
           } else if (obj instanceof InlineFieldDefinitionType) {
-            retval = XmlAssemblyModelContainer::handleDefineField;
+            retval = XmlAssemblyModelContainerSupport::handleDefineField;
           } else if (obj instanceof AssemblyReferenceType) {
-            retval = XmlAssemblyModelContainer::handleAssemmbly;
+            retval = XmlAssemblyModelContainerSupport::handleAssemmbly;
           } else if (obj instanceof InlineAssemblyDefinitionType) {
-            retval = XmlAssemblyModelContainer::handleDefineAssembly;
+            retval = XmlAssemblyModelContainerSupport::handleDefineAssembly;
           } else if (obj instanceof ChoiceType) {
-            retval = XmlAssemblyModelContainer::handleChoice;
+            retval = XmlAssemblyModelContainerSupport::handleChoice;
           } else if (obj instanceof GroupedChoiceType) {
-            retval = XmlAssemblyModelContainer::handleChoiceGroup;
+            retval = XmlAssemblyModelContainerSupport::handleChoiceGroup;
           } else {
             retval = super.identifyHandler(cursor, obj);
           }
@@ -106,13 +105,13 @@ public class XmlAssemblyModelContainer
     return xmlObject == null
         ? IContainerModelAssemblySupport.empty()
         : XML_MODEL_PARSER
-            .parse(ObjectUtils.notNull(xmlObject), Pair.of(parent, new XmlAssemblyModelContainer()))
+            .parse(ObjectUtils.notNull(xmlObject), Pair.of(parent, new XmlAssemblyModelContainerSupport()))
             .getRight();
   }
 
   private static void handleField( // NOPMD false positive
       @NonNull XmlObject obj,
-      Pair<IAssemblyDefinition, XmlAssemblyModelContainer> state) {
+      Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport> state) {
     IFieldInstanceAbsolute instance = new XmlFieldInstance(
         (FieldReferenceType) obj,
         ObjectUtils.notNull(state.getLeft()));
@@ -121,7 +120,7 @@ public class XmlAssemblyModelContainer
 
   private static void handleDefineField( // NOPMD false positive
       @NonNull XmlObject obj,
-      Pair<IAssemblyDefinition, XmlAssemblyModelContainer> state) {
+      Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport> state) {
     IFieldInstanceAbsolute instance = new XmlInlineFieldDefinition(
         (InlineFieldDefinitionType) obj,
         ObjectUtils.notNull(state.getLeft()));
@@ -130,7 +129,7 @@ public class XmlAssemblyModelContainer
 
   private static void handleAssemmbly( // NOPMD false positive
       @NonNull XmlObject obj,
-      Pair<IAssemblyDefinition, XmlAssemblyModelContainer> state) {
+      Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport> state) {
     IAssemblyInstanceAbsolute instance = new XmlAssemblyInstance(
         (AssemblyReferenceType) obj,
         ObjectUtils.notNull(state.getLeft()));
@@ -139,7 +138,7 @@ public class XmlAssemblyModelContainer
 
   private static void handleDefineAssembly( // NOPMD false positive
       @NonNull XmlObject obj,
-      Pair<IAssemblyDefinition, XmlAssemblyModelContainer> state) {
+      Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport> state) {
     IAssemblyInstanceAbsolute instance = new XmlInlineAssemblyDefinition(
         (InlineAssemblyDefinitionType) obj,
         ObjectUtils.notNull(state.getLeft()));
@@ -148,7 +147,7 @@ public class XmlAssemblyModelContainer
 
   private static void handleChoice( // NOPMD false positive
       @NonNull XmlObject obj,
-      Pair<IAssemblyDefinition, XmlAssemblyModelContainer> state) {
+      Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport> state) {
     XmlChoiceInstance instance = new XmlChoiceInstance(
         (ChoiceType) obj,
         ObjectUtils.notNull(state.getLeft()));
@@ -157,11 +156,11 @@ public class XmlAssemblyModelContainer
 
   private static void handleChoiceGroup( // NOPMD false positive
       @NonNull XmlObject obj,
-      Pair<IAssemblyDefinition, XmlAssemblyModelContainer> state) {
+      Pair<IAssemblyDefinition, XmlAssemblyModelContainerSupport> state) {
     XmlChoiceGroupInstance instance = new XmlChoiceGroupInstance(
         (GroupedChoiceType) obj,
         ObjectUtils.notNull(state.getLeft()));
-    XmlAssemblyModelContainer container = ObjectUtils.notNull(state.getRight());
+    XmlAssemblyModelContainerSupport container = ObjectUtils.notNull(state.getRight());
 
     String groupAsName = instance.getGroupAsName();
     if (groupAsName == null) {

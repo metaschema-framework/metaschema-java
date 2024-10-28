@@ -68,8 +68,9 @@ public interface IModuleExtended<
    * @return a predicate implementing the filter
    */
   static <DEF extends IDefinition> Predicate<DEF> allNonLocalDefinitions() {
-    return definition -> (IDefinition.ModuleScope.PUBLIC.equals(definition.getModuleScope())
-        || ModelType.ASSEMBLY.equals(definition.getModelType()) && ((IAssemblyDefinition) definition).isRoot());
+    return definition -> IDefinition.ModuleScope.PUBLIC.equals(definition.getModuleScope())
+        || ModelType.ASSEMBLY.equals(definition.getModelType())
+            && ((IAssemblyDefinition) definition).isRoot();
   }
 
   /**
@@ -80,8 +81,8 @@ public interface IModuleExtended<
    * @return a predicate implementing the filter
    */
   static <DEF extends IDefinition> Predicate<DEF> allRootAssemblyDefinitions() {
-    return definition -> (ModelType.ASSEMBLY.equals(definition.getModelType())
-        && ((IAssemblyDefinition) definition).isRoot());
+    return definition -> ModelType.ASSEMBLY.equals(definition.getModelType())
+        && ((IAssemblyDefinition) definition).isRoot();
   }
 
   @Override

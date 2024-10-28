@@ -30,6 +30,12 @@ import javax.xml.stream.events.XMLEvent;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a data type implementation.
+ *
+ * @param <TYPE>
+ *          the Java type of the underlying data value
+ */
 public interface IDataTypeAdapter<TYPE> {
 
   /**
@@ -182,11 +188,10 @@ public interface IDataTypeAdapter<TYPE> {
    * {@link XMLEvent#END_ELEMENT} that corresponds to an
    * {@link XMLEvent#START_ELEMENT} parsed by this adapter.
    * <p>
-   * If {@link #isParsingStartElement()} returns {@code true}, then the first
-   * event to parse will be the {@link XMLEvent#START_ELEMENT} for the element
-   * that contains the value data, then the value data. If this is the case, this
-   * method must also parse the corresponding {@link XMLEvent#END_ELEMENT}.
-   * Otherwise, the first event to parse will be the value data.
+   * If this method parses the {@link XMLEvent#START_ELEMENT} for the element that
+   * contains the value data, then this method must also parse the corresponding
+   * {@link XMLEvent#END_ELEMENT}. Otherwise, the first event to parse will be the
+   * value data.
    * <p>
    * The value data is expected to be parsed completely, leaving the event stream
    * on a peeked event corresponding to content that is not handled by this

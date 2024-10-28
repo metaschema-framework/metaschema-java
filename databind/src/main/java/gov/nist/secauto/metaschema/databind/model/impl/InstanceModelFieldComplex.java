@@ -8,7 +8,9 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractFieldInstance;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
@@ -24,8 +26,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -56,7 +62,20 @@ public final class InstanceModelFieldComplex
   private final Lazy<Object> defaultValue;
   @NonNull
   private final Lazy<Map<String, IBoundProperty<?>>> jsonProperties;
+  @NonNull
+  private final Lazy<Map<IAttributable.Key, Set<String>>> properties;
 
+  /**
+   * Construct a new field instance.
+   *
+   * @param javaField
+   *          the Java field bound to this instance
+   * @param definition
+   *          the associated field definition
+   * @param parent
+   *          the definition containing this instance
+   * @return the field instance
+   */
   @NonNull
   public static InstanceModelFieldComplex newInstance(
       @NonNull Field javaField,
@@ -126,7 +145,6 @@ public final class InstanceModelFieldComplex
     this.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -> IModelInstanceCollectionInfo.of(this)));
     this.groupAs = groupAs;
     this.definition = definition;
-
     this.defaultValue = ObjectUtils.notNull(Lazy.lazy(() -> {
       Object retval = null;
       if (getMaxOccurs() == 1) {
@@ -155,6 +173,12 @@ public final class InstanceModelFieldComplex
       }
       return getDefinition().getJsonProperties(flagFilter);
     }));
+    this.properties = ObjectUtils.notNull(
+        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+            Arrays.stream(annotation.properties())
+                .map(ModelUtil::toPropertyEntry)
+                .collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v2, LinkedHashMap::new))))));
   }
 
   // ------------------------------------------
@@ -241,6 +265,11 @@ public final class InstanceModelFieldComplex
   @Override
   public int getMaxOccurs() {
     return getAnnotation().maxOccurs();
+  }
+
+  @Override
+  public Map<Key, Set<String>> getProperties() {
+    return ObjectUtils.notNull(properties.get());
   }
 
   @Override
