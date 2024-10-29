@@ -50,7 +50,7 @@ public interface IItemReadHandler {
    * @throws IOException
    *           if an error occurred while parsing
    */
-  @NonNull
+  @Nullable
   Object readItemField(
       @NonNull IBoundObject parent,
       @NonNull IBoundInstanceModelFieldScalar instance) throws IOException;
@@ -115,7 +115,7 @@ public interface IItemReadHandler {
    * @throws IOException
    *           if an error occurred while parsing
    */
-  @NonNull
+  @Nullable
   Object readItemFieldValue(
       @NonNull IBoundObject parent,
       @NonNull IBoundFieldValue fieldValue) throws IOException;
@@ -180,7 +180,7 @@ public interface IItemReadHandler {
    * @throws IOException
    *           if an error occurred while parsing
    */
-  @NonNull
+  @Nullable
   IBoundObject readChoiceGroupItem(
       @NonNull IBoundObject parent,
       @NonNull IBoundInstanceModelChoiceGroup instance) throws IOException;

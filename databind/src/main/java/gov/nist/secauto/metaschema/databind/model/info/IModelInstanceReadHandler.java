@@ -32,6 +32,7 @@ public interface IModelInstanceReadHandler<ITEM> {
    * @throws IOException
    *           if an error occurred while parsing the input
    */
+  @Nullable
   ITEM readItem() throws IOException;
 
   @Nullable

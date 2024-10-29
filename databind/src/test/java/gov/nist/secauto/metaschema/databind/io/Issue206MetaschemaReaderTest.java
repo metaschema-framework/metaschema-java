@@ -42,6 +42,8 @@ import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 class Issue206MetaschemaReaderTest {
   @RegisterExtension
   JUnit5Mockery context = new JUnit5Mockery();
@@ -60,6 +62,7 @@ class Issue206MetaschemaReaderTest {
 
     try (InputStream is = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8))) {
       try (JsonParser parser = JsonFactoryFactory.instance().createParser(is)) {
+        assert parser != null;
         MetaschemaJsonReader reader = new MetaschemaJsonReader(parser);
 
         // assertThrows(IOException.class, () -> {
@@ -83,7 +86,7 @@ class Issue206MetaschemaReaderTest {
 
     XMLInputFactory factory = XMLInputFactory.newInstance();
     try (InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
-      XMLEventReader2 eventReader = (XMLEventReader2) factory.createXMLEventReader(is);
+      XMLEventReader2 eventReader = ObjectUtils.notNull((XMLEventReader2) factory.createXMLEventReader(is));
       MetaschemaXmlReader reader = new MetaschemaXmlReader(eventReader);
 
       // assertThrows(IOException.class, () -> {
@@ -106,7 +109,7 @@ class Issue206MetaschemaReaderTest {
 
     XMLInputFactory factory = XMLInputFactory.newInstance();
     try (InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
-      XMLEventReader2 eventReader = (XMLEventReader2) factory.createXMLEventReader(is);
+      XMLEventReader2 eventReader = ObjectUtils.requireNonNull((XMLEventReader2) factory.createXMLEventReader(is));
       MetaschemaXmlReader reader = new MetaschemaXmlReader(eventReader);
 
       TestField field = (TestField) reader.read(definition);
@@ -117,8 +120,12 @@ class Issue206MetaschemaReaderTest {
   @MetaschemaModule(fields = { TestField.class })
   public static class TestModule
       extends AbstractBoundModule {
+    @NonNull
+    private static final URI NAMESPACE = ObjectUtils.notNull(URI.create("http://example.com/"));
 
-    public TestModule(List<? extends IBoundModule> importedModules, IBindingContext bindingContext) {
+    public TestModule(
+        @NonNull List<? extends IBoundModule> importedModules,
+        @NonNull IBindingContext bindingContext) {
       super(importedModules, bindingContext);
     }
 
@@ -144,17 +151,18 @@ class Issue206MetaschemaReaderTest {
 
     @Override
     public URI getXmlNamespace() {
-      return URI.create("http://example.com/");
+      return NAMESPACE;
     }
 
     @Override
     public URI getJsonBaseUri() {
-      return URI.create("http://example.com/");
+      return NAMESPACE;
     }
   }
 
   @MetaschemaField(name = "test-field", moduleClass = TestModule.class)
   public static class TestField implements IBoundObject {
+    @SuppressWarnings("unused")
     public TestField(IMetaschemaData data) {
       // do nothing
     }

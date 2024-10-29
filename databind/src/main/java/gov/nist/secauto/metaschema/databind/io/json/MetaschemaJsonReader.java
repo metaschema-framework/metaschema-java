@@ -163,7 +163,13 @@ public class MetaschemaJsonReader
   @SuppressWarnings("unchecked")
   @NonNull
   public <T> T readObject(@NonNull IBoundDefinitionModelComplex definition) throws IOException {
-    return (T) definition.readItem(null, this);
+    T value = (T) definition.readItem(null, this);
+    if (value == null) {
+      throw new IOException(String.format("Failed to read object '%s'%s.",
+          definition.getDefinitionQName(),
+          JsonUtil.generateLocationMessage(getReader())));
+    }
+    return value;
   }
 
   @SuppressWarnings({ "unchecked" })
@@ -225,7 +231,7 @@ public class MetaschemaJsonReader
   // Instance readers
   // ================
 
-  @NonNull
+  @Nullable
   private Object readInstance(
       @NonNull IBoundProperty<?> instance,
       @NonNull IBoundObject parent) throws IOException {
@@ -319,14 +325,14 @@ public class MetaschemaJsonReader
     return checkMissingFieldValue(readScalarItem(fieldValue));
   }
 
-  @NonNull
+  @Nullable
   private Object checkMissingFieldValue(Object value) throws IOException {
     if (value == null && LOGGER.isWarnEnabled()) {
       LOGGER.atWarn().log("Missing property value{}",
           JsonUtil.generateLocationMessage(getReader()));
     }
     // TODO: change nullness annotations to be @Nullable
-    return ObjectUtils.notNull(value);
+    return value;
   }
 
   @Override
@@ -391,7 +397,9 @@ public class MetaschemaJsonReader
           (def, parent, problem) -> {
             IBoundFieldValue fieldValue = definition.getFieldValue();
             Object item = readItemFieldValue(parent, fieldValue);
-            fieldValue.setValue(parent, item);
+            if (item != null) {
+              fieldValue.setValue(parent, item);
+            }
           },
           actualProblemHandler);
 
@@ -690,10 +698,10 @@ public class MetaschemaJsonReader
         JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);
 
         IBoundFieldValue fieldValue = ((IBoundDefinitionModelFieldComplex) definition).getFieldValue();
-        Object value = readItemFieldValue(
-            ObjectUtils.notNull(parentItem),
-            fieldValue);
-        fieldValue.setValue(ObjectUtils.notNull(parentItem), value);
+        Object value = readItemFieldValue(ObjectUtils.notNull(parentItem), fieldValue);
+        if (value != null) {
+          fieldValue.setValue(ObjectUtils.notNull(parentItem), value);
+        }
 
         retval = foundJsonValueKey = true;
       }
@@ -758,7 +766,12 @@ public class MetaschemaJsonReader
         // a map item will always start with a FIELD_NAME, since this represents the key
         JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME);
 
+        // get the object, since it must have a JSON key
         ITEM item = readItem();
+        if (item == null) {
+          throw new IOException(String.format("Null object encountered'%s.",
+              JsonUtil.generateLocationMessage(parser)));
+        }
 
         // lookup the key
         IBoundInstanceFlag jsonKey = instance.getItemJsonKey(item);
@@ -785,7 +798,6 @@ public class MetaschemaJsonReader
     }
 
     @Override
-    @NonNull
     public ITEM readItem() throws IOException {
       IBoundInstanceModel<ITEM> instance = getCollectionInfo().getInstance();
       return instance.readItem(getParentObject(), MetaschemaJsonReader.this);

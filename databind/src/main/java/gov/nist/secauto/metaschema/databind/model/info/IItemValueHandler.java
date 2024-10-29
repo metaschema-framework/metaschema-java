@@ -33,7 +33,7 @@ public interface IItemValueHandler<TYPE> {
    * @throws IOException
    *           if an error occurred while parsing
    */
-  @NonNull
+  @Nullable
   TYPE readItem(
       @Nullable IBoundObject parent,
       @NonNull IItemReadHandler handler) throws IOException;

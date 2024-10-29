@@ -144,7 +144,13 @@ public class MetaschemaXmlReader
       }
 
       ItemReadHandler handler = new ItemReadHandler(ObjectUtils.notNull(event.asStartElement()));
-      return ObjectUtils.asType(definition.readItem(null, handler));
+      Object value = definition.readItem(null, handler);
+      if (value == null) {
+        throw new IOException(String.format("Unable to read data%s",
+            XmlEventUtil.generateLocationMessage(reader.peek())));
+      }
+
+      return ObjectUtils.asType(value);
     } catch (XMLStreamException ex) {
       throw new IOException(ex);
     }
@@ -476,7 +482,9 @@ public class MetaschemaXmlReader
 
       // parse the value
       Object value = fieldValue.readItem(item, this);
-      fieldValue.setValue(item, value);
+      if (value != null) {
+        fieldValue.setValue(item, value);
+      }
     }
 
     @Override
@@ -494,7 +502,7 @@ public class MetaschemaXmlReader
           XmlEventUtil.requireStartElement(getReader(), wrapper);
         }
 
-        Object retval = checkMissingFieldValue(readScalarItem(instance));
+        Object retval = readScalarItem(instance);
 
         if (wrapper != null) {
           XmlEventUtil.skipWhitespace(getReader());
@@ -550,15 +558,13 @@ public class MetaschemaXmlReader
       return checkMissingFieldValue(readScalarItem(fieldValue));
     }
 
-    @SuppressWarnings("null")
-    @NonNull
+    @Nullable
     private Object checkMissingFieldValue(Object value) throws IOException {
       if (value == null && LOGGER.isWarnEnabled()) {
         StartElement start = getStartElement();
         LOGGER.atWarn().log("Missing property value{}",
             XmlEventUtil.generateLocationMessage(start));
       }
-      // TODO: change nullness annotations to be @Nullable
       return value;
     }
 

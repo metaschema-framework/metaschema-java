@@ -85,7 +85,7 @@ class DefaultFieldPropertyTest {
       MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
 
       // read the top-level definition
-      MultiFieldAssembly obj = (MultiFieldAssembly) parser.readObject(classBinding);
+      MultiFieldAssembly obj = ObjectUtils.requireNonNull((MultiFieldAssembly) parser.readObject(classBinding));
 
       assertAll(
           () -> assertEquals("field1value", obj.getField1()),
@@ -118,7 +118,7 @@ class DefaultFieldPropertyTest {
       MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
 
       // read the top-level definition
-      MultiFieldAssembly obj = (MultiFieldAssembly) parser.readObject(classBinding);
+      MultiFieldAssembly obj = ObjectUtils.requireNonNull((MultiFieldAssembly) parser.readObject(classBinding));
 
       assertAll(
           () -> assertNull(obj.getField1()),
@@ -144,7 +144,7 @@ class DefaultFieldPropertyTest {
       MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
 
       // read the top-level definition
-      MultiFieldAssembly obj = (MultiFieldAssembly) parser.readObject(classBinding);
+      MultiFieldAssembly obj = ObjectUtils.requireNonNull((MultiFieldAssembly) parser.readObject(classBinding));
 
       assertAll(
           () -> assertEquals("theValue", obj.getField3().getValue()));
@@ -168,7 +168,7 @@ class DefaultFieldPropertyTest {
       MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
 
       // read the top-level definition
-      MultiFieldAssembly obj = (MultiFieldAssembly) parser.readObject(classBinding);
+      MultiFieldAssembly obj = ObjectUtils.requireNonNull((MultiFieldAssembly) parser.readObject(classBinding));
 
       assertAll(
           () -> assertEquals("theValue", obj.getField4().getValue()));

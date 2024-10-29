@@ -16,7 +16,9 @@ public class SimpleModuleLoaderStrategy
   @NonNull
   private static final IModuleBindingGenerator COMPILATION_DISABLED_GENERATOR = module -> {
     throw new UnsupportedOperationException(
-        "Dynamic compilation of Metaschema modules is not enabled by default. Configure a different IModuleBindingGenerator with the IModuleLoaderStrategy used with the IBindignContext.");
+        "Dynamic compilation of Metaschema modules is not enabled by default." +
+            " Configure a different IModuleBindingGenerator with the IModuleLoaderStrategy" +
+            " used with the IBindignContext.");
   };
 
   @NonNull
