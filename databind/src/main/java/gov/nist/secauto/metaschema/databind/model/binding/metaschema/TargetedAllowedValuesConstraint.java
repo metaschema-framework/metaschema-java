@@ -71,7 +71,8 @@ public class TargetedAllowedValuesConstraint implements IBoundObject, ITargetedC
       defaultValue = "no",
       typeAdapter = TokenAdapter.class,
       valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
-          values = { @AllowedValue(value = "no", description = ""), @AllowedValue(value = "yes", description = "") })))
+          values = { @AllowedValue(value = "no", description = "Other value are not allowed."),
+              @AllowedValue(value = "yes", description = "Other values are allowed.") })))
   private String _allowOther;
 
   /**

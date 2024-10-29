@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>dev.metaschema.java</groupId>
@@ -69,7 +71,8 @@
 				<targetPath>${project.build.directory}/generated-distro</targetPath>
 			</resource>
 			<resource>
-				<directory>${project.build.directory}/generated-resources/license</directory>
+				<directory>
+					${project.build.directory}/generated-resources/license</directory>
 			</resource>
 		</resources>
 		<pluginManagement>
@@ -87,7 +90,8 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<configuration>
-						<excludes>**/gov/nist/secauto/metaschema/metaschema/model/**/*</excludes>
+						<excludes>
+							**/gov/nist/secauto/metaschema/metaschema/model/**/*</excludes>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -101,30 +105,81 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>
+								${project.build.directory}/generated-resources/metaschema-sources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>
+										${project.basedir}/../core/metaschema/schema/metaschema</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.github.floverfelt</groupId>
+				<artifactId>find-and-replace-maven-plugin</artifactId>
+				<version>1.2.0</version>
+				<executions>
+					<execution>
+						<id>replace-metaschema-namespace</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>find-and-replace</goal>
+						</goals>
+						<configuration>
+							<!-- Possible replacementType values: file-contents,
+							filenames, directory-names. To run for multiple
+							types, pass the values as a CSV list. -->
+							<replacementType>file-contents</replacementType>
+							<baseDir>target/generated-resources/metaschema-sources</baseDir>
+							<findRegex>&gt;http://csrc\.nist.gov/ns/oscal/metaschema/1\.0</findRegex>
+							<replaceValue>&gt;http://example.com/ns/oscal/metaschema/1.0</replaceValue>
+							<recursive>true</recursive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>metaschema-maven-plugin</artifactId>
 				<version>${project.version}</version>
 				<executions>
-					<!--<execution>-->
-					<!--	<id>metaschema-codegen</id>-->
-					<!--	<phase>generate-sources</phase>-->
-					<!--	<goals>-->
-					<!--		<goal>generate-sources</goal>-->
-					<!--	</goals>-->
-					<!--	<configuration>-->
-					<!--		<metaschemaDir>${project.basedir}/../core/metaschema/schema/metaschema</metaschemaDir>-->
-					<!--		<outputDirectory>${project.build.directory}/generated-sources/metaschema</outputDirectory>-->
-					<!--		<configs>-->
-					<!--			<config>${project.basedir}/src/main/metaschema-bindings/metaschema-metaschema-bindings.xml</config>-->
-					<!--		</configs>-->
-					<!--		<includes>-->
-					<!--			<include>metaschema-module-metaschema.xml</include>-->
-					<!--		</includes>-->
-					<!--		<constraints>-->
-					<!--			<constraint>${project.basedir}/../core/metaschema/schema/metaschema/metaschema-module-constraints.xml</constraint>-->
-					<!--		</constraints>-->
-					<!--	</configuration>-->
-					<!--</execution>-->
+					<execution>
+						<id>metaschema-codegen</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+						<configuration>
+							<metaschemaDir>
+								${project.build.directory}/generated-resources/metaschema-sources</metaschemaDir>
+							<outputDirectory>
+								${project.build.directory}/generated-sources/metaschema</outputDirectory>
+							<configs>
+								<config>
+									${project.basedir}/src/main/metaschema-bindings/metaschema-metaschema-bindings.xml</config>
+							</configs>
+							<includes>
+								<include>metaschema-module-metaschema.xml</include>
+							</includes>
+							<constraints>
+								<constraint>
+									${project.build.directory}/generated-resources/metaschema-sources/metaschema-module-constraints.xml</constraint>
+							</constraints>
+						</configuration>
+					</execution>
 					<execution>
 						<id>metaschema-xml-schema</id>
 						<phase>generate-sources</phase>
@@ -132,8 +187,10 @@
 							<goal>generate-schemas</goal>
 						</goals>
 						<configuration>
-							<metaschemaDir>${project.basedir}/../core/metaschema/schema/metaschema</metaschemaDir>
-							<outputDirectory>${project.build.directory}/generated-resources/schema/xml</outputDirectory>
+							<metaschemaDir>
+								${project.basedir}/../core/metaschema/schema/metaschema</metaschemaDir>
+							<outputDirectory>
+								${project.build.directory}/generated-resources/schema/xml</outputDirectory>
 							<includes>
 								<include>metaschema-module-metaschema.xml</include>
 							</includes>
@@ -149,8 +206,10 @@
 							<goal>generate-schemas</goal>
 						</goals>
 						<configuration>
-							<metaschemaDir>${project.basedir}/../core/metaschema/schema/metaschema</metaschemaDir>
-							<outputDirectory>${project.build.directory}/generated-resources/schema/json</outputDirectory>
+							<metaschemaDir>
+								${project.basedir}/../core/metaschema/schema/metaschema</metaschemaDir>
+							<outputDirectory>
+								${project.build.directory}/generated-resources/schema/json</outputDirectory>
 							<includes>
 								<include>metaschema-module-metaschema.xml</include>
 							</includes>
@@ -167,7 +226,8 @@
 						</goals>
 						<configuration>
 							<metaschemaDir>${project.basedir}/modules/sarif</metaschemaDir>
-							<outputDirectory>${project.build.directory}/generated-sources/metaschema</outputDirectory>
+							<outputDirectory>
+								${project.build.directory}/generated-sources/metaschema</outputDirectory>
 							<includes>
 								<include>sarif-module.xml</include>
 							</includes>
@@ -181,7 +241,8 @@
 						</goals>
 						<configuration>
 							<metaschemaDir>${project.basedir}/modules/sarif</metaschemaDir>
-							<outputDirectory>${project.build.directory}/generated-resources/schema/xml</outputDirectory>
+							<outputDirectory>
+								${project.build.directory}/generated-resources/schema/xml</outputDirectory>
 							<includes>
 								<include>sarif-module.xml</include>
 							</includes>
@@ -198,7 +259,8 @@
 						</goals>
 						<configuration>
 							<metaschemaDir>${project.basedir}/modules/sarif</metaschemaDir>
-							<outputDirectory>${project.build.directory}/generated-resources/schema/json</outputDirectory>
+							<outputDirectory>
+								${project.build.directory}/generated-resources/schema/json</outputDirectory>
 							<includes>
 								<include>sarif-module.xml</include>
 							</includes>
@@ -221,7 +283,8 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${project.build.directory}/generated-sources/metaschema</source>
+								<source>
+									${project.build.directory}/generated-sources/metaschema</source>
 							</sources>
 						</configuration>
 					</execution>
@@ -234,7 +297,8 @@
 						<configuration>
 							<resources>
 								<resource>
-									<directory>${project.build.directory}/generated-resources/metaschema</directory>
+									<directory>
+										${project.build.directory}/generated-resources/metaschema</directory>
 									<includes>
 										<include>**/*.xsd</include>
 										<include>**/*.json</include>

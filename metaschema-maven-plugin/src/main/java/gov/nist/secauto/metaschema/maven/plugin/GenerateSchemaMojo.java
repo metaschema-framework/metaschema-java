@@ -296,6 +296,7 @@ public class GenerateSchemaMojo
 
         new LoggingValidationHandler().handleResults(result);
 
+        // ensure we get the version of the module with the constraints applied
         modules.add(module);
       }
 

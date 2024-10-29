@@ -23,7 +23,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
-import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.junit.jupiter.api.Test;
@@ -241,8 +240,6 @@ class BasicMetaschemaTest
     IBindingMetaschemaModule module = bindingContext.loadMetaschema(ObjectUtils.notNull(
         Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml")));
 
-    IBoundModule registeredModule = bindingContext.registerModule(module);
-
-    assertFalse(registeredModule.getRootAssemblyDefinitions().isEmpty());
+    assertFalse(module.getRootAssemblyDefinitions().isEmpty());
   }
 }

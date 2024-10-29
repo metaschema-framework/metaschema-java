@@ -10,10 +10,8 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -105,18 +103,18 @@ public final class DefinitionField
   @NonNull
   public static DefinitionField newInstance(
       @NonNull Class<? extends IBoundObject> clazz,
+      @NonNull MetaschemaField annotation,
+      @NonNull IBoundModule module,
       @NonNull IBindingContext bindingContext) {
-    MetaschemaField annotation = ModelUtil.getAnnotation(clazz, MetaschemaField.class);
-    Class<? extends IBoundModule> moduleClass = annotation.moduleClass();
-    return new DefinitionField(clazz, annotation, moduleClass, bindingContext);
+    return new DefinitionField(clazz, annotation, module, bindingContext);
   }
 
   private DefinitionField(
       @NonNull Class<? extends IBoundObject> clazz,
       @NonNull MetaschemaField annotation,
-      @NonNull Class<? extends IBoundModule> moduleClass,
+      @NonNull IBoundModule module,
       @NonNull IBindingContext bindingContext) {
-    super(clazz, annotation, moduleClass, bindingContext);
+    super(clazz, annotation, module, bindingContext);
     Field field = getFieldValueField(getBoundClass());
     if (field == null) {
       throw new IllegalArgumentException(
@@ -126,13 +124,10 @@ public final class DefinitionField
     }
     this.fieldValue = new FieldValue(field, BoundFieldValue.class, bindingContext);
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> new FlagContainerSupport(this, this::handleFlagInstance)));
-
-    IModule module = getContainingModule();
-
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IModelConstrained retval = new AssemblyConstraintSet();
       ValueConstraints valueAnnotation = getAnnotation().valueConstraints();
-      ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);
+      ConstraintSupport.parse(valueAnnotation, module.getSource(), retval);
       return retval;
     }));
     this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -> {

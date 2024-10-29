@@ -314,6 +314,11 @@ public class MetaschemaModuleConstraints implements IBoundObject {
     private List<? extends IValueConstraintsBase> _constraints;
 
     @BoundField(
+        formalName = "Constraint Condition Violation Message",
+        useName = "message")
+    private String _message;
+
+    @BoundField(
         formalName = "Remarks",
         description = "Any explanatory or helpful information to be provided about the remarks parent.",
         useName = "remarks")
@@ -354,6 +359,14 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
     public void setConstraints(List<? extends IValueConstraintsBase> value) {
       _constraints = value;
+    }
+
+    public String getMessage() {
+      return _message;
+    }
+
+    public void setMessage(String value) {
+      _message = value;
     }
 
     public Remarks getRemarks() {

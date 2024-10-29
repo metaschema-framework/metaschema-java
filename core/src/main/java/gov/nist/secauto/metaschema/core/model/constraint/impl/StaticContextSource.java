@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -19,12 +19,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Implements a
- * {@link gov.nist.secauto.metaschema.core.model.constraint.ISource.SourceType#EXTERNAL}
+ * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#EXTERNAL}
  * source with an associated resource.
  */
-public final class ExternalSource implements ISource {
+public final class StaticContextSource implements ISource {
   @NonNull
-  private static final Map<URI, ExternalSource> sources = new HashMap<>(); // NOPMD - intentional
+  private static final Map<URI, StaticContextSource> sources = new HashMap<>(); // NOPMD - intentional
   @NonNull
   private static final Lock SOURCE_LOCK = new ReentrantLock();
 
@@ -46,7 +46,7 @@ public final class ExternalSource implements ISource {
     try {
       return ObjectUtils.notNull(sources.computeIfAbsent(
           staticContext.getBaseUri(),
-          uri -> new ExternalSource(staticContext)));
+          uri -> new StaticContextSource(staticContext)));
     } finally {
       SOURCE_LOCK.unlock();
     }
@@ -59,7 +59,7 @@ public final class ExternalSource implements ISource {
    *          the static Metapath context to use for compiling Metapath
    *          expressions in this source
    */
-  private ExternalSource(@NonNull StaticContext staticContext) {
+  private StaticContextSource(@NonNull StaticContext staticContext) {
     this.staticContext = staticContext;
   }
 

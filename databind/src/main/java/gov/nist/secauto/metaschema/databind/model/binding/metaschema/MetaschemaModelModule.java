@@ -28,6 +28,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
     },
     assemblies = {
         METASCHEMA.class,
+        MetapathNamespace.class,
         InlineDefineAssembly.class,
         InlineDefineField.class,
         InlineDefineFlag.class,

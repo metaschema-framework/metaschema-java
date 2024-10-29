@@ -70,7 +70,8 @@ public class FlagAllowedValues implements IBoundObject, IConstraintBase {
       defaultValue = "no",
       typeAdapter = TokenAdapter.class,
       valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
-          values = { @AllowedValue(value = "no", description = ""), @AllowedValue(value = "yes", description = "") })))
+          values = { @AllowedValue(value = "no", description = "Other values are not allowed."),
+              @AllowedValue(value = "yes", description = "Other values are allowed.") })))
   private String _allowOther;
 
   /**

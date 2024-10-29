@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Implements a
- * {@link gov.nist.secauto.metaschema.core.model.constraint.ISource.SourceType#MODEL}
+ * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#MODEL}
  * source with no associated resource.
  */
 public final class InternalModelSource implements ISource {

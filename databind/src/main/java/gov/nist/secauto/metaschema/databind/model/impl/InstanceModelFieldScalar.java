@@ -11,7 +11,6 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractInlineFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -132,7 +131,7 @@ public final class InstanceModelFieldScalar
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IValueConstrained retval = new ValueConstraintSet();
       ValueConstraints valueAnnotation = annotation.valueConstraints();
-      ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);
+      ConstraintSupport.parse(valueAnnotation, module.getSource(), retval);
       return retval;
     }));
     this.properties = ObjectUtils.notNull(

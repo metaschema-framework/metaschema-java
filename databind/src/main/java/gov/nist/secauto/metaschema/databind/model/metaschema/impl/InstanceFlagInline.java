@@ -15,7 +15,6 @@ import gov.nist.secauto.metaschema.core.model.IFeatureValueless;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -69,7 +68,7 @@ public class InstanceFlagInline
       IValueConstrained retval = new ValueConstraintSet();
       FlagConstraints constraints = binding.getConstraint();
       if (constraints != null) {
-        ConstraintBindingSupport.parse(retval, constraints, ISource.modelSource(module));
+        ConstraintBindingSupport.parse(retval, constraints, module.getSource());
       }
       return retval;
     }));

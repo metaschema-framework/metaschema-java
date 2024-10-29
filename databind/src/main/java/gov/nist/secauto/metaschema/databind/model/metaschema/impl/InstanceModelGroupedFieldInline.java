@@ -16,7 +16,6 @@ import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -83,7 +82,7 @@ public class InstanceModelGroupedFieldInline
         ConstraintBindingSupport.parse(
             retval,
             constraints,
-            ISource.modelSource(parent.getOwningDefinition().getContainingModule()));
+            parent.getOwningDefinition().getContainingModule().getSource());
       }
       return retval;
     }));

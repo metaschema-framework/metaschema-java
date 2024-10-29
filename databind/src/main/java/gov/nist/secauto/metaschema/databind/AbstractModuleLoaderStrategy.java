@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.impl.DefinitionAssembly;
 import gov.nist.secauto.metaschema.databind.model.impl.DefinitionField;
 
@@ -65,25 +66,29 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
   public IBoundModule registerModule(
       IModule module,
       IBindingContext bindingContext) {
-    return toBoundModule(module, bindingContext);
-  }
-
-  @NonNull
-  private IBoundModule toBoundModule(
-      @NonNull IModule module,
-      @NonNull IBindingContext bindingContext) {
     modulesLock.lock();
     try {
       return ObjectUtils.notNull(moduleToBoundModuleMap.computeIfAbsent(module, key -> {
         assert key != null;
 
         IBoundModule boundModule;
+        Class<? extends IBoundModule> moduleClass;
         if (key instanceof IBoundModule) {
           boundModule = (IBoundModule) key;
+          moduleClass = boundModule.getClass();
         } else {
-          Class<? extends IBoundModule> moduleClass = handleUnboundModule(key);
+          moduleClass = handleUnboundModule(key);
           boundModule = lookupInstance(moduleClass, bindingContext);
         }
+
+        boundModule.getExportedAssemblyDefinitions().forEach(assembly -> {
+          assert assembly != null;
+          if (assembly.isRoot()) {
+            // force the binding matchers to load
+            registerBindingMatcher(assembly);
+          }
+        });
+
         return boundModule;
       }));
     } finally {
@@ -121,23 +126,6 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
 
         retval = IBoundModule.newInstance(moduleClass, bindingContext, getImportedModules(moduleClass, bindingContext));
         modulesByClass.put(moduleClass, retval);
-
-        MetaschemaModule annotation = moduleClass.getAnnotation(MetaschemaModule.class);
-
-        Arrays.stream(annotation.assemblies())
-            .forEach(clazz -> {
-              if (clazz == null) {
-                throw new IllegalStateException("clazz is null");
-              }
-
-              IBoundDefinitionModelAssembly assembly
-                  = (IBoundDefinitionModelAssembly) getBoundDefinitionForClass(clazz, bindingContext);
-              assert assembly != null;
-              if (assembly.isRoot()) {
-                // force the binding matchers to load
-                bindingContext.registerBindingMatcher(assembly);
-              }
-            });
       }
     } finally {
       modulesLock.unlock();
@@ -145,9 +133,8 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
     return retval;
   }
 
-  @Override
   @NonNull
-  public IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
+  protected IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
     IBindingMatcher retval;
     modulesLock.lock();
     try {
@@ -169,7 +156,7 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
   }
 
   @Override
-  public List<IBindingMatcher> getBindingMatchers() {
+  public final List<IBindingMatcher> getBindingMatchers() {
     modulesLock.lock();
     try {
       // make a defensive copy
@@ -194,6 +181,7 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
   public IBoundDefinitionModelComplex getBoundDefinitionForClass(
       @NonNull Class<? extends IBoundObject> clazz,
       @NonNull IBindingContext bindingContext) {
+
     IBoundDefinitionModelComplex retval;
     definitionsLock.lock();
     try {
@@ -202,6 +190,10 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
         retval = newBoundDefinition(clazz, bindingContext);
         definitionsByClass.put(clazz, retval);
       }
+
+      // // force loading of metaschema information to apply constraints
+      // IModule module = retval.getContainingModule();
+      // registerModule(module, bindingContext);
       return retval;
     } finally {
       definitionsLock.unlock();
@@ -209,14 +201,20 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
   }
 
   @NonNull
-  private static IBoundDefinitionModelComplex newBoundDefinition(
+  private IBoundDefinitionModelComplex newBoundDefinition(
       @NonNull Class<? extends IBoundObject> clazz,
       @NonNull IBindingContext bindingContext) {
     IBoundDefinitionModelComplex retval;
     if (clazz.isAnnotationPresent(MetaschemaAssembly.class)) {
-      retval = DefinitionAssembly.newInstance(clazz, bindingContext);
+      MetaschemaAssembly annotation = ModelUtil.getAnnotation(clazz, MetaschemaAssembly.class);
+      Class<? extends IBoundModule> moduleClass = annotation.moduleClass();
+      IBoundModule module = loadModule(moduleClass, bindingContext);
+      retval = DefinitionAssembly.newInstance(clazz, annotation, module, bindingContext);
     } else if (clazz.isAnnotationPresent(MetaschemaField.class)) {
-      retval = DefinitionField.newInstance(clazz, bindingContext);
+      MetaschemaField annotation = ModelUtil.getAnnotation(clazz, MetaschemaField.class);
+      Class<? extends IBoundModule> moduleClass = annotation.moduleClass();
+      IBoundModule module = loadModule(moduleClass, bindingContext);
+      retval = DefinitionField.newInstance(clazz, annotation, module, bindingContext);
     } else {
       throw new IllegalArgumentException(String.format("Unable to find bound definition for class '%s'.",
           clazz.getName()));

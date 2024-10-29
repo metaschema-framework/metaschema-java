@@ -57,8 +57,7 @@ class XmlGlobalFlagDefinition
     this.constraints = Lazy.lazy(() -> {
       IValueConstrained retval = new ValueConstraintSet();
       if (getXmlFlag().isSetConstraint()) {
-        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlFlag().getConstraint()),
-            ISource.modelSource(module));
+        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlFlag().getConstraint()), module.getSource());
       }
       return retval;
     });

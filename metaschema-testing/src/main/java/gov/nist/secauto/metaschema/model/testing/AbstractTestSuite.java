@@ -17,7 +17,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.ISerializer;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.ContentCaseType;
 import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.GenerateSchemaDocument.GenerateSchema;
 import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.MetaschemaDocument;
@@ -293,11 +293,9 @@ public abstract class AbstractTestSuite {
 
     IModule module;
     try {
-      BindingModuleLoader loader = new BindingModuleLoader(bindingContext);
+      IBindingModuleLoader loader = bindingContext.newModuleLoader();
 
       module = loader.load(ObjectUtils.notNull(metaschemaUri.toURL()));
-
-      bindingContext.registerModule(ObjectUtils.notNull(module));
     } catch (IOException | MetaschemaException ex) {
       throw new JUnitException("Unable to generate classes for metaschema: " + metaschemaUri, ex);
     }

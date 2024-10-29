@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.IXmlMetaschemaModule;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalAssemblyDefinitionType;
@@ -74,6 +75,8 @@ public class XmlModule
   @NonNull
   private final METASCHEMADocument module;
   private final Lazy<Definitions> definitions;
+  @NonNull
+  private final ISource source;
 
   /**
    * Constructs a new Metaschema instance.
@@ -107,13 +110,18 @@ public class XmlModule
       return builder.build();
     }));
     this.module = xmlObject;
-
     this.definitions = Lazy.lazy(() -> new Definitions(moduleXml));
+    this.source = ISource.moduleSource(this);
   }
 
   @Override
   public StaticContext getModuleStaticContext() {
     return ObjectUtils.notNull(staticContext.get());
+  }
+
+  @Override
+  public ISource getSource() {
+    return source;
   }
 
   @NonNull

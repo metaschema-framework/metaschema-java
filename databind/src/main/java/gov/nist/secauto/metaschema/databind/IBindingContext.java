@@ -46,9 +46,9 @@ import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
 import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.ModuleLoadingPostProcessor;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -128,22 +128,20 @@ public interface IBindingContext {
    * Get a loader that supports loading a Metaschema module from a specified
    * resource.
    * <p>
-   * Metaschema modules loaded this way are automatically registered with the
-   * {@link IBindingContext}.
+   * Modules loaded with this loader are automatically registered with this
+   * binding context.
    * <p>
-   * Use of this Metaschema module loader requires that the associated binding
-   * context is initialized using a {@link IModuleLoaderStrategy} that supports
-   * dynamic bound module loading. This can be accomplished using the
-   * {@link SimpleModuleLoaderStrategy} initialized using the
-   * {@link DefaultModuleBindingGenerator}.
+   * Use of this method requires that the binding context is initialized using a
+   * {@link IModuleLoaderStrategy} that supports dynamic bound module loading.
+   * This can be accomplished using the {@link SimpleModuleLoaderStrategy}
+   * initialized using the {@link DefaultModuleBindingGenerator}. * @return the
+   * loader
    *
    * @return the loader
    * @since 2.0.0
    */
   @NonNull
-  default IBindingModuleLoader newModuleLoader() {
-    return new BindingModuleLoader(this);
-  }
+  IBindingModuleLoader newModuleLoader();
 
   /**
    * Loads a Metaschema module from the specified path.
@@ -236,42 +234,42 @@ public interface IBindingContext {
   }
 
   /**
-   * Register a matcher used to identify a bound class by the definition's root
-   * name.
-   *
-   * @param definition
-   *          the definition to match for
-   * @return the matcher
-   */
-  @NonNull
-  default IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
-    return getModuleLoaderStrategy().registerBindingMatcher(definition);
-  }
-
-  /**
-   * Register a matcher used to identify a bound class by the definition's root
-   * name.
+   * Load a bound Metaschema module implemented by the provided class.
+   * <p>
+   * Also registers any associated bound classes.
+   * <p>
+   * Implementations are expected to return the same IModule instance for multiple
+   * calls to this method with the same class argument.
    *
    * @param clazz
-   *          the definition class to match for, which must represent a root
-   *          assembly definition
-   * @return the matcher
+   *          the class implementing a bound Metaschema module
+   * @return the loaded module
    */
   @NonNull
-  default IBindingMatcher registerBindingMatcher(@NonNull Class<? extends IBoundObject> clazz) {
-    IBoundDefinitionModelComplex definition = getBoundDefinitionForClass(clazz);
-    if (definition == null) {
-      throw new IllegalArgumentException(String.format("Unable to find bound definition for class '%s'.",
-          clazz.getName()));
-    }
+  IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz);
 
-    try {
-      IBoundDefinitionModelAssembly assemblyDefinition = IBoundDefinitionModelAssembly.class.cast(definition);
-      return registerBindingMatcher(ObjectUtils.notNull(assemblyDefinition));
-    } catch (ClassCastException ex) {
-      throw new IllegalArgumentException(
-          String.format("The provided class '%s' is not an assembly.", clazz.getName()), ex);
-    }
+  /**
+   * Registers the provided Metaschema module with this binding context.
+   * <p>
+   * If the provided instance is not an instance of {@link IBoundModule}, then
+   * annotated Java classes for this module will be generated, compiled, and
+   * loaded based on the provided Module.
+   *
+   * @param module
+   *          the Module module to generate classes for
+   * @param compilePath
+   *          the path to the directory to generate classes in
+   * @return the registered module, which may be a different instance than what
+   *         was provided if dynamic compilation was performed
+   * @throws UnsupportedOperationException
+   *           if this binding context is not configured to support dynamic bound
+   *           module loading and the module instance is not a subclass of
+   *           {@link IBoundModule}
+   * @since 2.0.0
+   */
+  @NonNull
+  default IBoundModule registerModule(@NonNull IModule module) {
+    return getModuleLoaderStrategy().registerModule(module, this);
   }
 
   /**
@@ -341,45 +339,6 @@ public interface IBindingContext {
   @Nullable
   default <TYPE extends IDataTypeAdapter<?>> TYPE getJavaTypeAdapterInstance(@NonNull Class<TYPE> clazz) {
     return DataTypeService.getInstance().getJavaTypeAdapterByClass(clazz);
-  }
-
-  /**
-   * Load a bound Metaschema module implemented by the provided class.
-   * <p>
-   * Also registers any associated bound classes.
-   * <p>
-   * Implementations are expected to return the same IModule instance for multiple
-   * calls to this method with the same class argument.
-   *
-   * @param clazz
-   *          the class implementing a bound Metaschema module
-   * @return the loaded module
-   */
-  @NonNull
-  IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz);
-
-  /**
-   * Registers the provided Metaschema module with this binding context.
-   * <p>
-   * If the provided instance is not an instance of {@link IBoundModule}, then
-   * annotated Java classes for this module will be generated, compiled, and
-   * loaded based on the provided Module.
-   *
-   * @param module
-   *          the Module module to generate classes for
-   * @param compilePath
-   *          the path to the directory to generate classes in
-   * @return the registered module, which may be a different instance than what
-   *         was provided if dynamic compilation was performed
-   * @throws UnsupportedOperationException
-   *           if this binding context is not configured to support dynamic bound
-   *           module loading and the module instance is not a subclass of
-   *           {@link IBoundModule}
-   * @since 2.0.0
-   */
-  @NonNull
-  default IBoundModule registerModule(@NonNull IModule module) {
-    return getModuleLoaderStrategy().registerModule(module, this);
   }
 
   /**
@@ -605,13 +564,26 @@ public interface IBindingContext {
 
   /**
    * A behavioral class used by the binding context to load Metaschema modules.
+   * <p>
+   * A module will flow through the following process.
+   * <ol>
+   * <li><b>Loading:</b> The module is read from its source.</li>
+   * <li><b>Post Processing:</b> The module is prepared for use.</li>
+   * <li><b>Registration:</b> The module is registered for use.</li>
+   * </ol>
+   * <p>
+   * A module will be loaded when either the module or one of its global
+   * definitions is accessed the first time.
    */
-  interface IModuleLoaderStrategy {
+  interface IModuleLoaderStrategy extends ModuleLoadingPostProcessor {
     /**
      * Load the bound Metaschema module represented by the provided class.
      * <p>
+     * This is the primary entry point for loading an already bound module. This
+     * method must ensure that the loaded module is post-processed and registered.
+     * <p>
      * Implementations are allowed to return a cached instance if the module has
-     * already been loaded.
+     * already been loaded by this method.
      *
      * @param clazz
      *          the Module class
@@ -629,28 +601,26 @@ public interface IBindingContext {
         @NonNull IBindingContext bindingContext);
 
     /**
-     * Get the {@link IBoundDefinitionModel} instance associated with the provided
-     * Java class.
-     * <p>
-     * Typically the class will have a {@link MetaschemaAssembly} or
-     * {@link MetaschemaField} annotation.
+     * Perform post-processing on the module.
      *
-     * @param clazz
-     *          the class binding to load
+     * @param module
+     *          the Metaschema module to post-process
      * @param bindingContext
      *          the Metaschema binding context used to load bound resources
-     * @return the associated class binding instance
-     * @throws IllegalArgumentException
-     *           if the class is not a bound definition with a
-     *           {@link MetaschemaAssembly} or {@link MetaschemaField} annotation
+     * @since 2.0.0
      */
-    @NonNull
-    IBoundDefinitionModelComplex getBoundDefinitionForClass(
-        @NonNull Class<? extends IBoundObject> clazz,
-        @NonNull IBindingContext bindingContext);
+    @Override
+    default void postProcessModule(
+        @NonNull IModule module,
+        @NonNull IBindingContext bindingContext) {
+      // do nothing by default
+    }
 
     /**
-     * Registers the provided Metaschema module with this binding context.
+     * Registers the provided Metaschema module.
+     * <p>
+     * If this module has not been post-processed, this method is expected to drive
+     * post-processing first.
      * <p>
      * If the provided instance is not an instance of {@link IBoundModule}, then
      * annotated Java classes for this module will be generated, compiled, and
@@ -672,17 +642,18 @@ public interface IBindingContext {
     IBoundModule registerModule(
         @NonNull IModule module,
         @NonNull IBindingContext bindingContext);
-
-    /**
-     * Register a matcher used to identify a bound class by the definition's root
-     * name.
-     *
-     * @param definition
-     *          the definition to match for
-     * @return the matcher
-     */
-    @NonNull
-    IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition);
+    //
+    // /**
+    // * Register a matcher used to identify a bound class by the definition's root
+    // * name.
+    // *
+    // * @param definition
+    // * the definition to match for
+    // * @return the matcher
+    // */
+    // @NonNull
+    // IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly
+    // definition);
 
     /**
      * Get the matchers used to identify the bound class associated with the
@@ -692,6 +663,27 @@ public interface IBindingContext {
      */
     @NonNull
     Collection<IBindingMatcher> getBindingMatchers();
+
+    /**
+     * Get the {@link IBoundDefinitionModel} instance associated with the provided
+     * Java class.
+     * <p>
+     * Typically the class will have a {@link MetaschemaAssembly} or
+     * {@link MetaschemaField} annotation.
+     *
+     * @param clazz
+     *          the class binding to load
+     * @param bindingContext
+     *          the Metaschema binding context used to load bound resources
+     * @return the associated class binding instance
+     * @throws IllegalArgumentException
+     *           if the class is not a bound definition with a
+     *           {@link MetaschemaAssembly} or {@link MetaschemaField} annotation
+     */
+    @NonNull
+    IBoundDefinitionModelComplex getBoundDefinitionForClass(
+        @NonNull Class<? extends IBoundObject> clazz,
+        @NonNull IBindingContext bindingContext);
   }
 
   /**

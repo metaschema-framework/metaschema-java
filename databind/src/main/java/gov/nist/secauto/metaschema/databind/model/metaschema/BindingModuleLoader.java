@@ -48,8 +48,8 @@ import nl.talsmasoftware.lazy4j.Lazy;
 public class BindingModuleLoader
     extends AbstractModuleLoader<METASCHEMA, IBindingMetaschemaModule>
     implements IBindingModuleLoader {
-
   private final Lazy<IBoundLoader> loader;
+  private final ModuleLoadingPostProcessor postProcessor;
 
   /**
    * Construct a new Metaschema loader.
@@ -57,8 +57,11 @@ public class BindingModuleLoader
    * @param bindingContext
    *          the Metaschema binding context used to load bound resources
    */
-  public BindingModuleLoader(@NonNull IBindingContext bindingContext) {
+  public BindingModuleLoader(
+      @NonNull IBindingContext bindingContext,
+      @NonNull ModuleLoadingPostProcessor postProcessor) {
     this.loader = Lazy.lazy(bindingContext::newBoundLoader);
+    this.postProcessor = postProcessor;
   }
 
   @Override
@@ -81,7 +84,9 @@ public class BindingModuleLoader
             (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(METASCHEMA.class)),
         binding,
         importedModules);
-    bindingContext.registerModule(module);
+
+    // post-process the module
+    postProcessor.postProcessModule(module, bindingContext);
     return module;
   }
 

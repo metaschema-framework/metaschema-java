@@ -100,6 +100,11 @@ public class FlagIndexHasKey implements IBoundObject, IConstraintBase {
   private List<KeyConstraintField> _keyFields;
 
   @BoundField(
+      formalName = "Constraint Condition Violation Message",
+      useName = "message")
+  private String _message;
+
+  @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
       useName = "remarks")
@@ -233,6 +238,14 @@ public class FlagIndexHasKey implements IBoundObject, IConstraintBase {
   public boolean removeKeyField(KeyConstraintField item) {
     KeyConstraintField value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _keyFields != null && _keyFields.remove(value);
+  }
+
+  public String getMessage() {
+    return _message;
+  }
+
+  public void setMessage(String value) {
+    _message = value;
   }
 
   @Override

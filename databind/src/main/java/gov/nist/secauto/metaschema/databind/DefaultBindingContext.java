@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.io.Format;
@@ -20,9 +21,19 @@ import gov.nist.secauto.metaschema.databind.io.yaml.DefaultYamlSerializer;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
 import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.ModuleLoadingPostProcessor;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -87,19 +98,27 @@ public class DefaultBindingContext implements IBindingContext {
   public DefaultBindingContext(@NonNull IBindingContext.IModuleLoaderStrategy strategy) {
     // only allow extended classes
     moduleLoaderStrategy = strategy;
-    moduleLoaderStrategy.loadModule(MetaschemaModelModule.class, this);
+    registerModule(MetaschemaModelModule.class);
   }
 
   @Override
   @NonNull
-  public IModuleLoaderStrategy getModuleLoaderStrategy() {
+  public final IModuleLoaderStrategy getModuleLoaderStrategy() {
     return moduleLoaderStrategy;
+  }
+
+  @Override
+  public IBindingModuleLoader newModuleLoader() {
+    return new ModuleLoader(this, getModuleLoaderStrategy());
   }
 
   @Override
   @NonNull
   public final IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz) {
-    return getModuleLoaderStrategy().loadModule(clazz, this);
+    IModuleLoaderStrategy strategy = getModuleLoaderStrategy();
+    IBoundModule module = strategy.loadModule(clazz, this);
+    strategy.registerModule(module, this);
+    return module;
   }
 
   /**
@@ -232,5 +251,45 @@ public class DefaultBindingContext implements IBindingContext {
       throw new IllegalStateException(String.format("Class '%s' is not bound", other.getClass().getName()));
     }
     return ObjectUtils.asType(definition.deepCopyItem(other, parentInstance));
+  }
+
+  private static class ModuleLoader
+      extends BindingModuleLoader {
+
+    public ModuleLoader(
+        @NonNull IBindingContext bindingContext,
+        @NonNull ModuleLoadingPostProcessor postProcessor) {
+      super(bindingContext, postProcessor);
+    }
+
+    @Override
+    public IBindingMetaschemaModule load(URI resource) throws MetaschemaException, IOException {
+      IBindingMetaschemaModule module = super.load(resource);
+      getBindingContext().registerModule(module);
+      return module;
+    }
+
+    @Override
+    public IBindingMetaschemaModule load(Path path) throws MetaschemaException, IOException {
+      IBindingMetaschemaModule module = super.load(path);
+      getBindingContext().registerModule(module);
+      return module;
+    }
+
+    @Override
+    public IBindingMetaschemaModule load(URL url) throws MetaschemaException, IOException {
+      IBindingMetaschemaModule module = super.load(url);
+      getBindingContext().registerModule(module);
+      return module;
+    }
+
+    @Override
+    protected IBindingMetaschemaModule newModule(
+        URI resource,
+        METASCHEMA binding,
+        List<? extends IBindingMetaschemaModule> importedModules) throws MetaschemaException {
+      return super.newModule(resource, binding, importedModules);
+    }
+
   }
 }

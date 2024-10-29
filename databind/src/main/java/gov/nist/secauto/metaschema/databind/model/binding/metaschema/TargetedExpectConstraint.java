@@ -100,7 +100,7 @@ public class TargetedExpectConstraint implements IBoundObject, ITargetedConstrai
   private List<Property> _props;
 
   @BoundField(
-      formalName = "Expect Condition Violation Message",
+      formalName = "Constraint Condition Violation Message",
       useName = "message")
   private String _message;
 

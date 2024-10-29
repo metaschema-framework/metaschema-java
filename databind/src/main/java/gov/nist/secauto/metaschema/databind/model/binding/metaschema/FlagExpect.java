@@ -93,7 +93,7 @@ public class FlagExpect implements IBoundObject, IConstraintBase {
   private List<Property> _props;
 
   @BoundField(
-      formalName = "Expect Condition Violation Message",
+      formalName = "Constraint Condition Violation Message",
       useName = "message")
   private String _message;
 

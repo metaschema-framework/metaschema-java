@@ -511,11 +511,15 @@ public abstract class AbstractMetaschemaMojo
           .append(finding.getMessage());
 
       URI documentUri = finding.getTarget().getBaseUri();
+      IResourceLocation location = finding.getLocation();
+      if (documentUri != null || location != null) {
+        builder.append(" [");
+      }
+
       if (documentUri != null) {
         builder.append(documentUri.toString());
       }
 
-      IResourceLocation location = finding.getLocation();
       if (location != null) {
         builder.append('{')
             .append(location.getLine())
@@ -523,7 +527,9 @@ public abstract class AbstractMetaschemaMojo
             .append(location.getColumn())
             .append('}');
       }
-      builder.append(']');
+      if (documentUri != null || location != null) {
+        builder.append("]");
+      }
       return builder;
     }
   }

@@ -753,8 +753,7 @@ public class MetaschemaJsonReader
 
       IBoundInstanceModel<?> instance = getCollectionInfo().getInstance();
 
-      @SuppressWarnings("PMD.UseConcurrentHashMap")
-      Map<String, ITEM> items = new LinkedHashMap<>();
+      @SuppressWarnings("PMD.UseConcurrentHashMap") Map<String, ITEM> items = new LinkedHashMap<>();
 
       // A map value is always wrapped in a START_OBJECT, since fields are used for
       // the keys

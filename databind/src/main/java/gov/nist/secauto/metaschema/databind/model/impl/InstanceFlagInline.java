@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.model.AbstractInlineFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -84,7 +83,7 @@ public class InstanceFlagInline
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IValueConstrained retval = new ValueConstraintSet();
       ValueConstraints valueAnnotation = getAnnotation().valueConstraints();
-      ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);
+      ConstraintSupport.parse(valueAnnotation, module.getSource(), retval);
       return retval;
     }));
     this.properties = ObjectUtils.notNull(

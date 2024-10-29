@@ -22,7 +22,6 @@ import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalAssemblyDefinitionType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.UseNameType;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -83,8 +82,7 @@ class XmlGlobalAssemblyDefinition
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
       IModelConstrained retval = new AssemblyConstraintSet();
       if (xmlObject.isSetConstraint()) {
-        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(xmlObject.getConstraint()),
-            ISource.modelSource(module));
+        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(xmlObject.getConstraint()), module.getSource());
       }
       return retval;
     }));

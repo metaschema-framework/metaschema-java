@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.codegen;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -15,7 +16,6 @@ import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfigu
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IDeserializer;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +37,7 @@ public abstract class AbstractMetaschemaTest {
   // @TempDir
   // Path generationDir;
   @NonNull
-  Path generationDir = ObjectUtils.notNull(Paths.get("target/generated-test-sources/metaschema"));
+  protected Path generationDir = ObjectUtils.notNull(Paths.get("target/generated-test-sources/metaschema"));
 
   @NonNull
   protected IBindingContext getBindingContext() throws IOException {
@@ -53,7 +53,7 @@ public abstract class AbstractMetaschemaTest {
       @NonNull String rootClassName,
       @NonNull Path classDir)
       throws IOException, ClassNotFoundException, MetaschemaException {
-    IBindingMetaschemaModule module = getBindingContext().loadMetaschema(moduleFile);
+    IModule module = getBindingContext().loadMetaschema(moduleFile);
 
     DefaultBindingConfiguration bindingConfiguration = new DefaultBindingConfiguration();
     if (bindingFile != null && Files.exists(bindingFile) && Files.isRegularFile(bindingFile)) {

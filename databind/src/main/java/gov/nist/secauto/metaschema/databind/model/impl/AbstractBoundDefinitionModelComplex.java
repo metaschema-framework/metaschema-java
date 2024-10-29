@@ -31,7 +31,7 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
   @NonNull
   private final IBindingContext bindingContext;
   @NonNull
-  private final Lazy<IBoundModule> module;
+  private final IBoundModule module;
   @NonNull
   private final Lazy<QName> qname;
   @NonNull
@@ -44,12 +44,12 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
   protected AbstractBoundDefinitionModelComplex(
       @NonNull Class<? extends IBoundObject> clazz,
       @NonNull A annotation,
-      @NonNull Class<? extends IBoundModule> moduleClass,
+      @NonNull IBoundModule module,
       @NonNull IBindingContext bindingContext) {
     this.clazz = clazz;
     this.annotation = annotation;
     this.bindingContext = bindingContext;
-    this.module = ObjectUtils.notNull(Lazy.lazy(() -> bindingContext.registerModule(moduleClass)));
+    this.module = module;
     this.qname = ObjectUtils.notNull(Lazy.lazy(() -> getContainingModule().toModelQName(getEffectiveName())));
     this.definitionQName = ObjectUtils.notNull(Lazy.lazy(() -> getContainingModule().toModelQName(getName())));
     this.beforeDeserializeMethod = ClassIntrospector.getMatchingMethod(
@@ -67,6 +67,7 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
     return clazz;
   }
 
+  @NonNull
   public A getAnnotation() {
     return annotation;
   }
@@ -74,7 +75,7 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
   @Override
   @NonNull
   public IBoundModule getContainingModule() {
-    return ObjectUtils.notNull(module.get());
+    return module;
   }
 
   @Override

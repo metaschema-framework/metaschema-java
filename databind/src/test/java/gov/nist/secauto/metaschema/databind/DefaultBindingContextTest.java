@@ -29,7 +29,7 @@ import javax.xml.namespace.QName;
 class DefaultBindingContextTest {
 
   @Test
-  void testConstraints() throws MetaschemaException, IOException { // NOPMD - intentional
+  void testConstraints() throws MetaschemaException, IOException {
     IConstraintLoader constraintLoader = new XmlConstraintLoader();
     List<IConstraintSet> constraintSet = constraintLoader.load(
         ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints.xml")));
@@ -47,24 +47,4 @@ class DefaultBindingContextTest {
     List<? extends IConstraint> constraints = root.getConstraints();
     assertFalse(constraints.isEmpty(), "a constraint was expected");
   }
-
-  @Test
-  void testConstraintsUsingBinding() throws MetaschemaException, IOException { // NOPMD - intentional
-    IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();
-    List<IConstraintSet> constraintSet = constraintLoader.load(
-        ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints.xml")));
-
-    IBindingContext bindingContext = IBindingContext.builder()
-        .constraintSet(constraintSet)
-        .build();
-    IBoundModule module = bindingContext.registerModule(TestMetaschema.class);
-
-    IAssemblyDefinition root
-        = module.getExportedAssemblyDefinitionByName(new QName("https://csrc.nist.gov/ns/test/xml", "root"));
-
-    assertNotNull(root, "root not found");
-    List<? extends IConstraint> constraints = root.getConstraints();
-    assertFalse(constraints.isEmpty(), "a constraint was expected");
-  }
-
 }

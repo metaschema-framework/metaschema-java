@@ -9,10 +9,9 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -83,18 +82,18 @@ public final class DefinitionAssembly
   @NonNull
   public static DefinitionAssembly newInstance(
       @NonNull Class<? extends IBoundObject> clazz,
+      @NonNull MetaschemaAssembly annotation,
+      @NonNull IBoundModule module,
       @NonNull IBindingContext bindingContext) {
-    MetaschemaAssembly annotation = ModelUtil.getAnnotation(clazz, MetaschemaAssembly.class);
-    Class<? extends IBoundModule> moduleClass = annotation.moduleClass();
-    return new DefinitionAssembly(clazz, annotation, moduleClass, bindingContext);
+    return new DefinitionAssembly(clazz, annotation, module, bindingContext);
   }
 
   private DefinitionAssembly(
       @NonNull Class<? extends IBoundObject> clazz,
       @NonNull MetaschemaAssembly annotation,
-      @NonNull Class<? extends IBoundModule> moduleClass,
+      @NonNull IBoundModule module,
       @NonNull IBindingContext bindingContext) {
-    super(clazz, annotation, moduleClass, bindingContext);
+    super(clazz, annotation, module, bindingContext);
 
     String rootLocalName = ModelUtil.resolveNoneOrDefault(getAnnotation().rootName(), null);
     this.xmlRootQName = ObjectUtils.notNull(Lazy.lazy(() -> rootLocalName == null
@@ -103,15 +102,14 @@ public final class DefinitionAssembly
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> new FlagContainerSupport(this, null)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> new AssemblyModelContainerSupport(this)));
 
+    ISource moduleSource = module.getSource();
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-      IModule module = getContainingModule();
-
       IModelConstrained retval = new AssemblyConstraintSet();
       ValueConstraints valueAnnotation = getAnnotation().valueConstraints();
-      ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);
+      ConstraintSupport.parse(valueAnnotation, moduleSource, retval);
 
       AssemblyConstraints assemblyAnnotation = getAnnotation().modelConstraints();
-      ConstraintSupport.parse(assemblyAnnotation, ISource.modelSource(module), retval);
+      ConstraintSupport.parse(assemblyAnnotation, moduleSource, retval);
       return retval;
     }));
     this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -> getJsonProperties(null)));

@@ -110,6 +110,11 @@ public class TargetedHasCardinalityConstraint implements IBoundObject, ITargeted
   private List<Property> _props;
 
   @BoundField(
+      formalName = "Constraint Condition Violation Message",
+      useName = "message")
+  private String _message;
+
+  @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
       useName = "remarks")
@@ -224,6 +229,14 @@ public class TargetedHasCardinalityConstraint implements IBoundObject, ITargeted
   public boolean removeProp(Property item) {
     Property value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _props != null && _props.remove(value);
+  }
+
+  public String getMessage() {
+    return _message;
+  }
+
+  public void setMessage(String value) {
+    _message = value;
   }
 
   @Override

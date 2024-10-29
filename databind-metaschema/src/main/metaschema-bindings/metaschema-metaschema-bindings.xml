@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metaschema-bindings
 	xmlns="https://csrc.nist.gov/ns/metaschema-binding/1.0">
-	<model-binding namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+	<model-binding namespace="http://example.com/ns/oscal/metaschema/1.0">
 		<java>
-			<use-package-name>gov.nist.secauto.metaschema.databind.binding.metaschema</use-package-name>
+			<use-package-name>com.example.metaschema</use-package-name>
 		</java>
 	</model-binding>
 	<metaschema-binding
-		href="../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml">
+		href="target/generated-resources/metaschema-sources/metaschema-module-metaschema.xml">
 		<define-assembly-binding name="group-as">
 			<java>
 				<use-class-name>GroupingAs</use-class-name>

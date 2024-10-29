@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -59,6 +60,8 @@ public class BindingModule
   private final Lazy<IModuleNodeItem> moduleNodeItem;
   @NonNull
   private final Lazy<Definitions> definitions;
+  @NonNull
+  private final ISource source;
 
   /**
    * Constructs a new Metaschema instance.
@@ -102,6 +105,12 @@ public class BindingModule
         = ObjectUtils.notNull(Lazy.lazy(() -> nodeItemFactory.newDocumentNodeItem(rootDefinition, resource, binding)));
     this.moduleNodeItem
         = ObjectUtils.notNull(Lazy.lazy(() -> nodeItemFactory.newModuleNodeItem(this)));
+    this.source = ISource.moduleSource(this);
+  }
+
+  @Override
+  public ISource getSource() {
+    return source;
   }
 
   @Override

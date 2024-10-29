@@ -3,12 +3,11 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.constraint;
+package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.constraint.impl.ExternalSource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.InternalModelSource;
+import gov.nist.secauto.metaschema.core.model.constraint.impl.StaticContextSource;
 
 import java.net.URI;
 
@@ -32,21 +31,22 @@ public interface ISource {
 
   /**
    * Get the descriptor for a
-   * {@link gov.nist.secauto.metaschema.core.model.constraint.ISource.SourceType#MODEL}
+   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#MODEL}
    * source with as associated resource.
    *
    * @param module
    *          the Metaschema module the constraint was defined in
    * @return the source descriptor
+   * @since 2.0.0
    */
   @NonNull
-  static ISource modelSource(@NonNull IModule module) {
+  static ISource moduleSource(@NonNull IModule module) {
     return InternalModelSource.instance(module);
   }
 
   /**
    * Get the descriptor for a
-   * {@link gov.nist.secauto.metaschema.core.model.constraint.ISource.SourceType#EXTERNAL}
+   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#EXTERNAL}
    * source with as associated resource.
    * <p>
    * The provided static context idenfies the location of this source based on the
@@ -63,7 +63,7 @@ public interface ISource {
     if (staticContext.getBaseUri() == null) {
       throw new IllegalArgumentException("The static content must define a baseUri identifing the source resource.");
     }
-    return ExternalSource.instance(staticContext);
+    return StaticContextSource.instance(staticContext);
   }
 
   /**

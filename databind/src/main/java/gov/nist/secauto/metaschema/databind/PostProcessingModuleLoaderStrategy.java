@@ -10,9 +10,9 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.databind.IBindingContext.IBindingMatcher;
-import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
+import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModelModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,8 +28,8 @@ public class PostProcessingModuleLoaderStrategy
     implements IBindingContext.IModuleLoaderStrategy {
   @NonNull
   private final List<IModuleLoader.IModulePostProcessor> modulePostProcessors;
-  private final Set<IModule> resolvedModules = new HashSet<>();
-  private final Lock resolvedModulesLock = new ReentrantLock();
+  // private final Set<IModule> resolvedModules = new HashSet<>();
+  // private final Lock resolvedModulesLock = new ReentrantLock();
   private final IBindingContext.IModuleLoaderStrategy delegate;
   private final Set<IModule> postProcessedModules = new HashSet<>();
   private final Lock postProcessedModulesLock = new ReentrantLock();
@@ -57,26 +57,45 @@ public class PostProcessingModuleLoaderStrategy
   }
 
   @Override
-  public IBoundModule registerModule(IModule module, IBindingContext bindingContext) {
-    IBoundModule retval = delegate.registerModule(module, bindingContext);
+  public void postProcessModule(IModule module, IBindingContext bindingContext) {
+    processModule(module, bindingContext);
+    delegate.postProcessModule(module, bindingContext);
+  }
 
+  @Override
+  public IBoundModule registerModule(IModule module, IBindingContext bindingContext) {
+    IBoundModule boundModule;
     postProcessedModulesLock.lock();
     try {
-      if (!postProcessedModules.contains(retval)) {
-        for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {
-          postProcessor.processModule(retval);
+      // process before registering
+      processModule(module, bindingContext);
+
+      boundModule = delegate.registerModule(module, bindingContext);
+
+      // ensure the resulting bound module is not processed again
+      postProcessedModules.add(boundModule);
+    } finally {
+      postProcessedModulesLock.unlock();
+    }
+    return boundModule;
+  }
+
+  protected void processModule(IModule module, IBindingContext bindingContext) {
+    postProcessedModulesLock.lock();
+    try {
+      if (!postProcessedModules.contains(module)) {
+        // do not post-process the built-in Metaschema module, since it has already been
+        // pre-processed
+        if (!(module instanceof MetaschemaModelModule)) {
+          for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {
+            postProcessor.processModule(module);
+          }
         }
-        postProcessedModules.add(retval);
+        postProcessedModules.add(module);
       }
     } finally {
       postProcessedModulesLock.unlock();
     }
-    return retval;
-  }
-
-  @Override
-  public IBindingMatcher registerBindingMatcher(IBoundDefinitionModelAssembly definition) {
-    return delegate.registerBindingMatcher(definition);
   }
 
   @Override
@@ -88,22 +107,21 @@ public class PostProcessingModuleLoaderStrategy
   public IBoundDefinitionModelComplex getBoundDefinitionForClass(
       Class<? extends IBoundObject> clazz,
       IBindingContext bindingContext) {
-    IBoundDefinitionModelComplex retval = delegate.getBoundDefinitionForClass(clazz, bindingContext);
-    // force loading of metaschema information to apply constraints
-    IModule module = retval.getContainingModule();
 
-    resolvedModulesLock.lock();
-    try {
-      if (!resolvedModules.contains(module)) {
-        // add first, to avoid loops
-        resolvedModules.add(module);
-        for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {
-          postProcessor.processModule(module);
-        }
-      }
-    } finally {
-      resolvedModulesLock.unlock();
-    }
-    return retval;
+    //
+    // resolvedModulesLock.lock();
+    // try {
+    // if (!resolvedModules.contains(module)) {
+    // // add first, to avoid loops
+    // resolvedModules.add(module);
+    // for (IModuleLoader.IModulePostProcessor postProcessor :
+    // getModulePostProcessors()) {
+    // postProcessor.processModule(module);
+    // }
+    // }
+    // } finally {
+    // resolvedModulesLock.unlock();
+    // }
+    return delegate.getBoundDefinitionForClass(clazz, bindingContext);
   }
 }

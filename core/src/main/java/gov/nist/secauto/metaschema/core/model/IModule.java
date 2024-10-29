@@ -32,6 +32,14 @@ public interface IModule {
   URI getLocation();
 
   /**
+   * Get the source information for the module.
+   *
+   * @return the source information
+   */
+  @NonNull
+  ISource getSource();
+
+  /**
    * Get the long name for the Metaschema module.
    *
    * @return the name

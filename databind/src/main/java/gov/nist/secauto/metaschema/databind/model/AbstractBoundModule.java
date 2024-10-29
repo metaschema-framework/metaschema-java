@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.model;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractModule;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
@@ -44,6 +45,8 @@ public abstract class AbstractBoundModule
   private final Lazy<Map<QName, IBoundDefinitionModelField<?>>> fieldDefinitions;
   @NonNull
   private final Lazy<StaticContext> staticContext;
+  @NonNull
+  private final ISource source;
 
   /**
    * Construct a new Module instance.
@@ -87,6 +90,12 @@ public abstract class AbstractBoundModule
                   ObjectUtils.requireNonNull(ns)));
       return builder.build();
     }));
+    this.source = ISource.moduleSource(this);
+  }
+
+  @Override
+  public ISource getSource() {
+    return source;
   }
 
   @Override
