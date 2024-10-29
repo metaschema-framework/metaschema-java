@@ -8,9 +8,11 @@ package gov.nist.secauto.metaschema.cli;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
+import nl.altindag.log.LogCaptor;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -182,7 +184,6 @@ public class CLITest {
             ExitCode.OK, NO_EXCEPTION_CLASS));
       }
     };
-
     return values.stream();
   }
 
@@ -202,13 +203,28 @@ public class CLITest {
 
   @Test
   void test() {
-    String[] cliArgs = { "validate-content",
-        "-m",
-        "src/test/resources/content/schema-validation-module.xml",
-        "src/test/resources/content/schema-validation-module-missing-required.xml",
-        "--as=xml",
-        "--disable-schema-validation"
-    };
-    CLI.runCli(cliArgs);
+    try (LogCaptor captor = LogCaptor.forRoot()) {
+        String[] cliArgs = { "validate-content",
+            "-m",
+            "src/test/resources/content/215-module.xml",
+            "src/test/resources/content/215.xml",
+            "--disable-schema-validation"
+        };
+        CLI.runCli(cliArgs);
+        assertThat(captor.getErrorLogs().toString())
+        	.contains(new String[] {
+        		"expect-default-non-zero:  Expect constraint '. > 0' did not match the data",
+        		"expect-custom-non-zero:  No default message, custom error message for expect-custom-non-zero constraint.",
+        		"matches-default-regex-letters-only:  Value '1' did not match the pattern",
+        		"matches-custom-regex-letters-only:  No default message, custom error message for matches-custom-regex-letters-only constraint.",
+        		"cardinality-default-two-minimum:  The cardinality '1' is below the required minimum '2' for items matching",
+        		"index-items-default:  Index 'index-items-default' has duplicate key for items",
+        		"index-items-custom:  No default message, custom error message for index-item-custom.",
+        		"is-unique-default:  Unique constraint violation at paths",
+        		"is-unique-custom:  No default message, custom error message for is-unique-custom.",
+        		"index-has-key-default:  Key reference [2] not found in index 'index-items-default' for item",
+        		"index-has-key-custom:  No default message, custom error message for index-has-key-custom."
+        	});
+    }
   }
 }

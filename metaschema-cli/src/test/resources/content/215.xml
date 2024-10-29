@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message-root xmlns="https://github.com/metaschema-framework/metaschema-java/issues/215">
+	<expect-default-non-zero>0</expect-default-non-zero>
+	<expect-custom-non-zero>0</expect-custom-non-zero>
+	<matches-default-regex-letters-only>1</matches-default-regex-letters-only>
+	<matches-custom-regex-letters-only>1</matches-custom-regex-letters-only>
+	<item-default id="1">red</item-default>
+	<item-default id="1">blue</item-default>
+	<item-custom  id="1">green</item-custom>
+	<item-custom  id="1">yellow</item-custom>
+	<item-cardinality value="2"/>
+	<item-unique id="1" x="2" y="3"/>
+	<item-unique id="1" x="2" y="3"/>
+	<!-- allowed-values and has-cardinality do not support custom message fields at this time.  -->
+</message-root>

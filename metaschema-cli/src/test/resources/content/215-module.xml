@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 https://raw.githubusercontent.com/metaschema-framework/metaschema/0441e6d4c9bce5b6c40b4647148019e4f47bed08/schema/xml/metaschema.xsd">
+ <schema-name>Module for metaschema-framework/metaschema-java#215</schema-name>
+ <schema-version>0.1.0</schema-version>
+ <short-name>model215</short-name>
+ <namespace>https://github.com/metaschema-framework/metaschema-java/issues/215</namespace>
+ <json-base-uri>https://github.com/metaschema-framework/metaschema-java/issues/215</json-base-uri>
+ <define-assembly name="root">
+ 	<root-name>message-root</root-name>
+ 	<model>
+ 		<define-field name="expect-default-non-zero" as-type="integer" min-occurs="1"/>
+ 		<define-field name="expect-custom-non-zero" as-type="integer" min-occurs="1"/>
+ 		<define-field name="matches-default-regex-letters-only" as-type="string" min-occurs="1"/>
+ 		<define-field name="matches-custom-regex-letters-only" as-type="string" min-occurs="1"/>
+ 		<define-field name="item-default" as-type="string" min-occurs="1" max-occurs="unbounded">
+ 			<group-as name="items-default" in-json="ARRAY"/>
+ 			<define-flag name="id" as-type="integer"/>
+ 		</define-field>
+ 		<define-field name="item-custom" as-type="string" min-occurs="1" max-occurs="unbounded">
+ 			<group-as name="items-custom" in-json="ARRAY"/>
+ 			<define-flag name="id" as-type="integer"/>
+ 		</define-field> 
+ 		<define-field name="item-cardinality" max-occurs="unbounded">
+ 			<group-as name="items-cardinality" in-json="ARRAY"/>
+ 			<define-flag name="value" as-type="integer"/>
+ 		</define-field>
+ 		<define-field name="item-unique" max-occurs="unbounded">
+ 			<group-as name="items-unique" in-json="ARRAY"/>
+ 			<define-flag name="id" as-type="integer" required="yes"/>
+ 			<define-flag name="x" as-type="integer" required="yes"/>
+ 			<define-flag name="y" as-type="integer" required="yes"/>
+ 		</define-field>
+ 	</model>
+ 	<constraint>
+	 	<expect id="expect-default-non-zero" level="ERROR" target="expect-default-non-zero" test=". > 0"/>
+	 	<expect id="expect-custom-non-zero" level="ERROR" target="expect-custom-non-zero" test=". > 0">
+	 		<message>No default message, custom error message for expect-custom-non-zero constraint.</message>
+	 	</expect>
+		<has-cardinality id="cardinality-default-two-minimum" level="ERROR" target="item-cardinality" min-occurs="2" max-occurs="10"/>	 	
+	 	<index id="index-items-default" name="index-items-default" level="ERROR" target="item-default">
+	 		<key-field target="@id"/>
+	 	</index>
+	 	<index id="index-items-custom" name="index-items-custom" level="ERROR" target="item-custom">
+	 		<key-field target="@id"/>
+	 		<message>No default message, custom error message for index-item-custom.</message>
+	 	</index>
+	 	<index-has-key id="index-has-key-default" level="ERROR" name="index-items-default" target="item-cardinality">
+	 		<key-field target="@value"/>
+	 	</index-has-key>
+	 	<index-has-key id="index-has-key-custom" level="ERROR" name="index-items-default" target="item-cardinality">
+	 		<key-field target="@value"/>
+	 		<message>No default message, custom error message for index-has-key-custom.</message>
+	 	</index-has-key>
+	 	<is-unique id="is-unique-default" level="ERROR" target="item-unique">
+	 		<key-field target="@id"/>
+	 		<key-field target="@x"/>
+	 		<key-field target="@y"/>
+	 	</is-unique>
+	 	<is-unique id="is-unique-custom" level="ERROR" target="item-unique">
+	 		<key-field target="@id"/>
+	 		<key-field target="@x"/>
+	 		<key-field target="@y"/>
+	 		<message>No default message, custom error message for is-unique-custom.</message>
+	 	</is-unique>	 	
+	 	<matches id="matches-default-regex-letters-only" level="ERROR" target="matches-default-regex-letters-only" regex="^[a-zA-Z]$"/> 	
+	 	<matches id="matches-custom-regex-letters-only" level="ERROR" target="matches-custom-regex-letters-only" regex="^[a-zA-Z]$">
+	 		<message>No default message, custom error message for matches-custom-regex-letters-only constraint.</message>
+	 	</matches>	 	
+ 	</constraint>
+ </define-assembly>
+</METASCHEMA>
