@@ -1,0 +1,2 @@
+gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider
+gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider

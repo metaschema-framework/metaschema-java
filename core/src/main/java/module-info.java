@@ -25,7 +25,6 @@ module gov.nist.secauto.metaschema.core {
 
   requires static org.eclipse.jdt.annotation;
   requires static biz.aQute.bnd.util;
-  requires static com.google.auto.service;
   requires static com.github.spotbugs.annotations;
 
   requires com.ctc.wstx;

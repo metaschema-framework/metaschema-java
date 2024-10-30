@@ -72,12 +72,10 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
         assert key != null;
 
         IBoundModule boundModule;
-        Class<? extends IBoundModule> moduleClass;
         if (key instanceof IBoundModule) {
           boundModule = (IBoundModule) key;
-          moduleClass = boundModule.getClass();
         } else {
-          moduleClass = handleUnboundModule(key);
+          Class<? extends IBoundModule> moduleClass = handleUnboundModule(key);
           boundModule = lookupInstance(moduleClass, bindingContext);
         }
 

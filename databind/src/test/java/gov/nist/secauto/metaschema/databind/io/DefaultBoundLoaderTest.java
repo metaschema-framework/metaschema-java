@@ -13,7 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +29,7 @@ class DefaultBoundLoaderTest {
         .compilePath(ObjectUtils.notNull(Files.createTempDirectory(Paths.get("target"), "modules-")))
         .build();
 
-    IBindingMetaschemaModule module = bindingContext.loadMetaschema(ObjectUtils.notNull(
+    bindingContext.loadMetaschema(ObjectUtils.notNull(
         Paths.get("src/test/resources/content/issue187-metaschema.xml")));
 
     IBoundLoader loader = new DefaultBoundLoader(bindingContext);

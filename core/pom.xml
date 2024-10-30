@@ -28,12 +28,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.auto.service</groupId>
-            <artifactId>auto-service-annotations</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
         </dependency>
@@ -151,6 +145,9 @@
 
     <build>
         <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
             <resource>
                 <directory>${project.build.directory}/generated-resources/xmlbeans</directory>
             </resource>

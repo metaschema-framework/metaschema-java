@@ -19,7 +19,6 @@ module gov.nist.secauto.metaschema.databind {
   requires com.ctc.wstx;
   requires com.fasterxml.jackson.dataformat.yaml;
   requires com.fasterxml.jackson.dataformat.xml;
-  requires transitive com.google.auto.service;
   requires transitive com.squareup.javapoet;
   requires nl.talsmasoftware.lazy4j;
   requires transitive org.apache.commons.lang3;

@@ -5,10 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.datatype.adapter;
 
-import com.google.auto.service.AutoService;
-
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeProvider;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -17,7 +14,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data types.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
-@AutoService(IDataTypeProvider.class)
 public final class MetaschemaDataTypeProvider // NOPMD - Used for service initialization
     extends AbstractDataTypeProvider {
   @NonNull

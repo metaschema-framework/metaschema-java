@@ -5,11 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import com.google.auto.service.AutoService;
-
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionLibrary;
-import gov.nist.secauto.metaschema.core.metapath.function.IFunctionLibrary;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
@@ -31,7 +28,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressWarnings({ "removal" })
 @SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
-@AutoService(IFunctionLibrary.class)
 public class DefaultFunctionLibrary
     extends FunctionLibrary {
 

@@ -5,10 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.datatype.markup;
 
-import com.google.auto.service.AutoService;
-
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeProvider;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -16,7 +13,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Provides for runtime discovery of built-in implementations of the markup
  * Metaschema data types.
  */
-@AutoService(IDataTypeProvider.class)
 public final class MarkupDataTypeProvider
     extends AbstractDataTypeProvider {
   @NonNull
