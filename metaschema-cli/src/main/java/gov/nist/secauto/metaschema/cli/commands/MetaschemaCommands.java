@@ -40,7 +40,15 @@ public final class MetaschemaCommands {
       new MetapathCommand()));
 
   @NonNull
-  public static final Option METASCHEMA_OPTION = ObjectUtils.notNull(
+  public static final Option METASCHEMA_REQUIRED_OPTION = ObjectUtils.notNull(
+      Option.builder("m")
+          .hasArg()
+          .argName("FILE_OR_URL")
+          .required()
+          .desc("metaschema resource")
+          .build());
+  @NonNull
+  public static final Option METASCHEMA_OPTIONAL_OPTION = ObjectUtils.notNull(
       Option.builder("m")
           .hasArg()
           .argName("FILE_OR_URL")
@@ -57,9 +65,10 @@ public final class MetaschemaCommands {
   @NonNull
   public static IModule handleModule(
       @NonNull CommandLine commandLine,
+      @NonNull Option option,
       @NonNull URI cwd,
       @NonNull IBindingContext bindingContext) throws URISyntaxException, IOException, MetaschemaException {
-    String moduleName = ObjectUtils.requireNonNull(commandLine.getOptionValue(METASCHEMA_OPTION));
+    String moduleName = ObjectUtils.requireNonNull(commandLine.getOptionValue(option));
     URI moduleUri = UriUtils.toUri(moduleName, cwd);
     return handleModule(moduleUri, bindingContext);
   }

@@ -66,7 +66,7 @@ public class ValidateContentUsingModuleCommand
 
     List<Option> retval = new ArrayList<>(orig.size() + 1);
     retval.addAll(orig);
-    retval.add(MetaschemaCommands.METASCHEMA_OPTION);
+    retval.add(MetaschemaCommands.METASCHEMA_REQUIRED_OPTION);
 
     return CollectionUtil.unmodifiableCollection(retval);
   }
@@ -100,7 +100,11 @@ public class ValidateContentUsingModuleCommand
 
       IModule module;
       try {
-        module = MetaschemaCommands.handleModule(commandLine, cwd, bindingContext);
+        module = MetaschemaCommands.handleModule(
+            commandLine,
+            MetaschemaCommands.METASCHEMA_REQUIRED_OPTION,
+            cwd,
+            bindingContext);
       } catch (URISyntaxException ex) {
         throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),
             ex);

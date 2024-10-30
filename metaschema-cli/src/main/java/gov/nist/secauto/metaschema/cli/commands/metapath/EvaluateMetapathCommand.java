@@ -83,7 +83,7 @@ public class EvaluateMetapathCommand
   @Override
   public Collection<? extends Option> gatherOptions() {
     return List.of(
-        MetaschemaCommands.METASCHEMA_OPTION,
+        MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION,
         CONTENT_OPTION,
         EXPRESSION_OPTION);
   }
@@ -119,7 +119,7 @@ public class EvaluateMetapathCommand
 
     IModule module = null;
     INodeItem item = null;
-    if (cmdLine.hasOption(MetaschemaCommands.METASCHEMA_OPTION)) {
+    if (cmdLine.hasOption(MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION)) {
       IBindingContext bindingContext;
       try {
         bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
@@ -132,6 +132,7 @@ public class EvaluateMetapathCommand
       try {
         module = MetaschemaCommands.handleModule(
             cmdLine,
+            MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION,
             cwd,
             bindingContext);
       } catch (URISyntaxException ex) {
