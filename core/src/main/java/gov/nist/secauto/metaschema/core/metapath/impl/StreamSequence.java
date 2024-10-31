@@ -45,11 +45,22 @@ public class StreamSequence<ITEM extends IItem>
   }
 
   @Override
+  public Object[] toArray() {
+    return getValue().toArray();
+  }
+
+  @Override
+  public <T> T[] toArray(T[] a) {
+    return getValue().toArray(a);
+  }
+
+  @Override
   public List<ITEM> getValue() {
     instanceLock.lock();
     try {
       if (list == null) {
-        list = stream().collect(Collectors.toUnmodifiableList());
+        list = stream.collect(Collectors.toUnmodifiableList());
+        stream = null;
       }
       assert list != null;
       return list;

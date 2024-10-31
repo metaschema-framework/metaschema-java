@@ -24,11 +24,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public enum Axis implements IExpression {
   SELF(Stream::of),
   PARENT(focus -> Stream.ofNullable(focus.getParentNodeItem())),
+  FLAG(INodeItem::flags),
   ANCESTOR(INodeItem::ancestor),
   ANCESTOR_OR_SELF(INodeItem::ancestorOrSelf),
   CHILDREN(INodeItem::modelItems),
   DESCENDANT(INodeItem::descendant),
-  DESCENDANT_OR_SELF(INodeItem::descendantOrSelf);
+  DESCENDANT_OR_SELF(INodeItem::descendantOrSelf),
+  FOLLOWING_SIBLING(INodeItem::followingSibling),
+  PRECEDING_SIBLING(INodeItem::precedingSibling),
+  FOLLOWING(INodeItem::following),
+  PRECEDING(INodeItem::preceding);
 
   @NonNull
   private final Function<INodeItem, Stream<? extends INodeItem>> action;

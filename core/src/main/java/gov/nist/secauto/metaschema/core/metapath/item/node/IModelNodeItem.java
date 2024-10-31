@@ -3,21 +3,16 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.util.stream.Stream;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IModelNodeItem<D extends IModelDefinition, I extends INamedModelInstance>
     extends IDefinitionNodeItem<D, I> {
 
-  /**
-   * Retrieve the relative position of this node relative to sibling nodes.
-   * <p>
-   * A singleton item in a sequence will have a position value of {@code 1}.
-   * <p>
-   * The value {@code 1} is used as the starting value to align with the XPath
-   * specification.
-   *
-   * @return a positive integer value designating this instance's position within
-   *         a collection
-   */
+  @Override
   int getPosition();
 
   /**
@@ -30,4 +25,46 @@ public interface IModelNodeItem<D extends IModelDefinition, I extends INamedMode
 
   @Override
   IAssemblyNodeItem getParentContentNodeItem();
+
+  @Override
+  @NonNull
+  default Stream<? extends IModelNodeItem<?, ?>> descendantOrSelf() {
+    return ObjectUtils.notNull(Stream.concat(Stream.of(this), descendant()));
+  }
+
+  @SuppressWarnings("PMD.CompareObjectsWithEquals")
+  @Override
+  @NonNull
+  default Stream<? extends IModelNodeItem<?, ?>> followingSibling() {
+    IModelNodeItem<?, ?> parent = getParentContentNodeItem();
+    return ObjectUtils.notNull(parent == null
+        ? Stream.empty()
+        : parent.modelItems()
+            // need to use != vs !Object.equals to ensure we are matching the same object
+            .dropWhile(item -> this != item)
+            .skip(1));
+  }
+
+  @SuppressWarnings("PMD.CompareObjectsWithEquals")
+  @Override
+  @NonNull
+  default Stream<? extends IModelNodeItem<?, ?>> precedingSibling() {
+    IModelNodeItem<?, ?> parent = getParentContentNodeItem();
+    return ObjectUtils.notNull(parent == null
+        ? Stream.empty()
+        // need to use != vs !Object.equals to ensure we are matching the same object
+        : parent.modelItems().takeWhile(item -> this != item));
+  }
+
+  @Override
+  default Stream<? extends IModelNodeItem<?, ?>> following() {
+    return followingSibling()
+        .flatMap(IModelNodeItem::descendantOrSelf);
+  }
+
+  @Override
+  default Stream<? extends IModelNodeItem<?, ?>> preceding() {
+    return precedingSibling()
+        .flatMap(IModelNodeItem::descendantOrSelf);
+  }
 }

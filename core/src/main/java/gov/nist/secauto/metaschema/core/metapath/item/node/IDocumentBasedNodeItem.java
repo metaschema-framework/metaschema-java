@@ -31,5 +31,4 @@ public interface IDocumentBasedNodeItem extends INodeItem {
     // there is no parent
     return null;
   }
-
 }

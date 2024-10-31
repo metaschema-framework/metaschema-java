@@ -86,7 +86,7 @@ class BuildCstVisitorTest {
   @SuppressWarnings("null")
   @NonNull
   private IDocumentNodeItem newTestDocument() {
-    MockNodeItemFactory factory = new MockNodeItemFactory(context);
+    MockNodeItemFactory factory = new MockNodeItemFactory();
 
     return factory.document(URI.create("http://example.com/content"), ROOT,
         List.of(

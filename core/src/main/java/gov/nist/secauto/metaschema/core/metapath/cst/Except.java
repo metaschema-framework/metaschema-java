@@ -22,15 +22,16 @@ public class Except
     extends AbstractFilterExpression {
 
   /**
-   * Construct a new Metapath except expression CST node.
+   * Construct a except filter expression, which removes the items resulting from
+   * the filter expression from the items expression.
    *
-   * @param left
+   * @param itemsExpression
    *          an expression indicating the items to filter
-   * @param right
+   * @param filterExpression
    *          an expression indicating the items to omit
    */
-  public Except(@NonNull IExpression left, @NonNull IExpression right) {
-    super(left, right);
+  public Except(@NonNull IExpression itemsExpression, @NonNull IExpression filterExpression) {
+    super(itemsExpression, filterExpression);
   }
 
   @Override

@@ -65,6 +65,7 @@
 		<dependency.junit5.version>5.11.3</dependency.junit5.version>
 		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.9.3</dependency.logcaptor.version>
+		<dependency.mokito.version>5.14.2</dependency.mokito.version>
 		<dependency.moxy.version>4.0.4</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.2</dependency.plexus-utils.version>
@@ -420,6 +421,11 @@
 						<artifactId>annotations</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+			    <groupId>org.mockito</groupId>
+			    <artifactId>mockito-core</artifactId>
+			    <version>${dependency.mokito.version}</version>
 			</dependency>
 	        <dependency>
 			    <groupId>com.github.seregamorph</groupId>

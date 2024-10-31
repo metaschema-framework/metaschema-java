@@ -26,11 +26,11 @@ public class ArraySequenceConstructor implements IExpression {
    * Construct a new array constructor expression that uses the provided
    * expression to initialize the array.
    *
-   * @param expr
+   * @param expression
    *          the expression used to produce the array members
    */
-  public ArraySequenceConstructor(@Nullable IExpression expr) {
-    this.expr = expr;
+  public ArraySequenceConstructor(@Nullable IExpression expression) {
+    this.expr = expression;
   }
 
   @SuppressWarnings("rawtypes")

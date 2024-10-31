@@ -21,6 +21,11 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ExpressionTestBase {
+  @NonNull
+  protected static final URI NS_URI = ObjectUtils.notNull(URI.create("http://example.com/ns"));
+  @NonNull
+  protected static final String NS = ObjectUtils.notNull(NS_URI.toASCIIString());
+
   @SuppressWarnings("exports")
   @NonNull
   @RegisterExtension
@@ -47,6 +52,7 @@ public class ExpressionTestBase {
 
     return new DynamicContext(StaticContext.builder()
         .baseUri(baseUri)
+        .defaultModelNamespace(NS_URI)
         .build());
   }
 

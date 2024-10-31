@@ -28,7 +28,7 @@ public abstract class Metapath10ParserBase
    */
   protected boolean isFuncCall() {
     return !(getInputStream().LA(1) == Metapath10.KW_ARRAY
-        || getInputStream().LA(1) == Metapath10.KW_ATTRIBUTE
+        || getInputStream().LA(1) == Metapath10.KW_FLAG
         || getInputStream().LA(1) == Metapath10.KW_COMMENT
         || getInputStream().LA(1) == Metapath10.KW_DOCUMENT_NODE
         || getInputStream().LA(1) == Metapath10.KW_ELEMENT

@@ -655,6 +655,15 @@ public class BuildCSTVisitor
       case Metapath10Lexer.KW_DESCENDANT_OR_SELF:
         axis = Axis.DESCENDANT_OR_SELF;
         break;
+      case Metapath10Lexer.KW_FLAG:
+        axis = Axis.FLAG;
+        break;
+      case Metapath10Lexer.KW_FOLLOWING_SIBLING:
+        axis = Axis.FOLLOWING_SIBLING;
+        break;
+      case Metapath10Lexer.KW_FOLLOWING:
+        axis = Axis.FOLLOWING;
+        break;
       default:
         throw new UnsupportedOperationException(token.getText());
       }
@@ -684,6 +693,12 @@ public class BuildCSTVisitor
       break;
     case Metapath10Lexer.KW_ANCESTOR_OR_SELF:
       axis = Axis.ANCESTOR_OR_SELF;
+      break;
+    case Metapath10Lexer.KW_PRECEDING_SIBLING:
+      axis = Axis.PRECEDING_SIBLING;
+      break;
+    case Metapath10Lexer.KW_PRECEDING:
+      axis = Axis.PRECEDING;
       break;
     default:
       throw new UnsupportedOperationException(token.getText());

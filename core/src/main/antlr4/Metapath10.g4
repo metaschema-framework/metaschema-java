@@ -55,12 +55,11 @@ stepexpr : postfixexpr | axisstep ;
 axisstep : (reversestep | forwardstep) predicatelist ;
 // [40]
 forwardstep : forwardaxis nodetest | abbrevforwardstep ;
-// forwardaxis : KW_CHILD COLONCOLON | KW_DESCENDANT COLONCOLON | KW_ATTRIBUTE COLONCOLON | KW_SELF COLONCOLON | KW_DESCENDANT_OR_SELF COLONCOLON | KW_FOLLOWING_SIBLING COLONCOLON | KW_FOLLOWING COLONCOLON | KW_NAMESPACE COLONCOLON ;
-forwardaxis : KW_CHILD COLONCOLON | KW_DESCENDANT COLONCOLON | KW_SELF COLONCOLON | KW_DESCENDANT_OR_SELF COLONCOLON ;
+// forwardaxis : KW_CHILD COLONCOLON | KW_DESCENDANT COLONCOLON | KW_FLAG COLONCOLON | KW_SELF COLONCOLON | KW_DESCENDANT_OR_SELF COLONCOLON | KW_FOLLOWING_SIBLING COLONCOLON | KW_FOLLOWING COLONCOLON | KW_NAMESPACE COLONCOLON ;
+forwardaxis : KW_CHILD COLONCOLON | KW_DESCENDANT COLONCOLON | KW_FLAG COLONCOLON | KW_SELF COLONCOLON | KW_DESCENDANT_OR_SELF COLONCOLON | KW_FOLLOWING_SIBLING COLONCOLON | KW_FOLLOWING COLONCOLON ;
 abbrevforwardstep : AT? nodetest ;
 reversestep : reverseaxis nodetest | abbrevreversestep ;
-// reverseaxis : KW_PARENT COLONCOLON | KW_ANCESTOR COLONCOLON | KW_PRECEDING_SIBLING COLONCOLON | KW_PRECEDING COLONCOLON | KW_ANCESTOR_OR_SELF COLONCOLON ;
-reverseaxis : KW_PARENT COLONCOLON | KW_ANCESTOR COLONCOLON | KW_ANCESTOR_OR_SELF COLONCOLON ;
+reverseaxis : KW_PARENT COLONCOLON | KW_ANCESTOR COLONCOLON | KW_PRECEDING_SIBLING COLONCOLON | KW_PRECEDING COLONCOLON | KW_ANCESTOR_OR_SELF COLONCOLON ;
 // [45]
 abbrevreversestep : DD ;
 // nodetest : kindtest | nametest ;
@@ -120,7 +119,7 @@ unarylookup : QM keyspecifier ;
 // namespacenodetest : KW_NAMESPACE_NODE OP CP ;
 // pitest : KW_PROCESSING_INSTRUCTION OP (NCName | StringLiteral)? CP ;
 // [90]
-// attributetest : KW_ATTRIBUTE OP (attribnameorwildcard ( COMMA typename_)?)? CP ;
+// attributetest : KW_FLAG OP (attribnameorwildcard ( COMMA typename_)?)? CP ;
 // attribnameorwildcard : attributename | STAR ;
 // schemaattributetest : KW_SCHEMA_ATTRIBUTE OP attributedeclaration CP ;
 // attributedeclaration : attributename ;
@@ -155,7 +154,7 @@ eqname : NCName | QName | URIQualifiedName
  | KW_AND
  | KW_ARRAY
  | KW_AS
- | KW_ATTRIBUTE
+ | KW_FLAG
  | KW_CAST
  | KW_CASTABLE
  | KW_CHILD

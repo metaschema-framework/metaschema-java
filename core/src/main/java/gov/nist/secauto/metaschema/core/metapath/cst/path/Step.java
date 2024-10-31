@@ -84,7 +84,6 @@ public class Step implements IExpression { // NOPMD - intentional
 
   @Override
   public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-
     ISequence<? extends INodeItem> axisResult = getAxis().accept(dynamicContext, focus);
     return getStep().accept(dynamicContext, axisResult);
   }

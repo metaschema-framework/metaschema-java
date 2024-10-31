@@ -23,6 +23,21 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents a queryable Metapath model node.
  */
 public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
+  /**
+   * Retrieve the relative position of this node relative to sibling nodes.
+   * <p>
+   * A singleton item in a sequence will have a position value of {@code 1}.
+   * <p>
+   * The value {@code 1} is used as the starting value to align with the XPath
+   * specification.
+   *
+   * @return a positive integer value designating this instance's position within
+   *         a collection
+   */
+  default int getPosition() {
+    // only model node items have positions other than 1
+    return 1;
+  }
 
   /**
    * Generate a path for this node in the directed node graph, using the provided
@@ -159,7 +174,7 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    * @return a stream of descendant node items
    */
   @NonNull
-  default Stream<? extends INodeItem> descendant() {
+  default Stream<? extends IModelNodeItem<?, ?>> descendant() {
     return decendantsOf(this);
   }
 
@@ -174,8 +189,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    * @return a stream of descendant node items
    */
   @NonNull
-  static Stream<? extends INodeItem> decendantsOf(@NonNull INodeItem item) {
-    Stream<? extends INodeItem> children = item.modelItems();
+  static Stream<? extends IModelNodeItem<?, ?>> decendantsOf(@NonNull INodeItem item) {
+    Stream<? extends IModelNodeItem<?, ?>> children = item.modelItems();
 
     return ObjectUtils.notNull(children.flatMap(child -> {
       assert child != null;
@@ -193,6 +208,48 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   @NonNull
   default Stream<? extends INodeItem> descendantOrSelf() {
     return ObjectUtils.notNull(Stream.concat(Stream.of(this), descendant()));
+  }
+
+  /**
+   * Get the children of this node's parent that occur after this node in a
+   * depth-first order.
+   *
+   * @return a stream of nodes
+   */
+  @NonNull
+  default Stream<? extends IModelNodeItem<?, ?>> followingSibling() {
+    return ObjectUtils.notNull(Stream.empty());
+  }
+
+  /**
+   * Get the children of this node's parent, and their descendants, that occur
+   * before this node in a depth-first order.
+   *
+   * @return a stream of nodes
+   */
+  @NonNull
+  default Stream<? extends IModelNodeItem<?, ?>> precedingSibling() {
+    return ObjectUtils.notNull(Stream.empty());
+  }
+
+  /**
+   * Get the children of this node's parent, and their descendants, that occur
+   * before this node in a depth-first order.
+   *
+   * @return a stream of nodes
+   */
+  default Stream<? extends IModelNodeItem<?, ?>> following() {
+    return ObjectUtils.notNull(Stream.empty());
+  }
+
+  /**
+   * Get the children of this node's parent, and their descendants, that occur
+   * after this node in a depth-first order.
+   *
+   * @return a stream of nodes
+   */
+  default Stream<? extends IModelNodeItem<?, ?>> preceding() {
+    return ObjectUtils.notNull(Stream.empty());
   }
 
   /**

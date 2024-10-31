@@ -52,7 +52,7 @@ KW_ANCESTOR_OR_SELF       : 'ancestor-or-self';
 KW_AND                    : 'and';
 KW_ARRAY                  : 'array';
 KW_AS                     : 'as';
-KW_ATTRIBUTE              : 'attribute';
+KW_FLAG                   : 'flag';
 KW_CAST                   : 'cast';
 KW_CASTABLE               : 'castable';
 KW_CHILD                  : 'child';
