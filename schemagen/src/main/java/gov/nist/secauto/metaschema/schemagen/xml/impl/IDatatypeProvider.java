@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.schemagen.datatype;
+package gov.nist.secauto.metaschema.schemagen.xml.impl;
 
 import org.codehaus.stax2.XMLStreamWriter2;
 

@@ -3,11 +3,15 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.schemagen.xml.datatype;
+package gov.nist.secauto.metaschema.schemagen.xml;
 
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.datatype.AbstractDatatypeManager;
-import gov.nist.secauto.metaschema.schemagen.datatype.IDatatypeProvider;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IDatatypeProvider;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlCoreDatatypeProvider;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlMarkupLineDatatypeProvider;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlMarkupMultilineDatatypeProvider;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlProseCompositDatatypeProvider;
 
 import org.codehaus.stax2.XMLStreamWriter2;
 
@@ -21,6 +25,10 @@ import javax.xml.stream.XMLStreamException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Support for managing Module data type implementations aligned with the XML
+ * schema format for use in schema generation.
+ */
 public class XmlDatatypeManager
     extends AbstractDatatypeManager {
   public static final String NS_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";

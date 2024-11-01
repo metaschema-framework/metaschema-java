@@ -72,11 +72,10 @@ public class FieldDefinitionJsonSchema
       }
 
       // generate flag properties
-      for (IFlagInstance flag : flags) {
+      flags.forEach(flag -> {
         assert flag != null;
-        new FlagInstanceJsonProperty(flag)
-            .generateProperty(properties, state); // NOPMD unavoidable instantiation
-      }
+        new FlagInstanceJsonProperty(flag).generateProperty(properties, state);
+      });
 
       // generate value property
       if (jsonValueKeyFlag == null) {

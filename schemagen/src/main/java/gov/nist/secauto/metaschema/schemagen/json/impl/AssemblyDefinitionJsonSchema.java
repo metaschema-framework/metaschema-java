@@ -78,7 +78,7 @@ public class AssemblyDefinitionJsonSchema
 
   @NonNull
   protected List<IGroupableModelInstanceJsonProperty<?>> getGroupableModelInstances() {
-    return groupableModelInstances.get();
+    return ObjectUtils.notNull(groupableModelInstances.get());
   }
 
   @Override

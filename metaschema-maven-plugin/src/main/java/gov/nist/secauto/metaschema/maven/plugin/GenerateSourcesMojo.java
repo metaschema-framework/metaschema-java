@@ -146,6 +146,7 @@ public class GenerateSourcesMojo
     }
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void performGeneration() throws MojoExecutionException {
     File outputDir = getOutputDirectory();
     if (getLog().isDebugEnabled()) {

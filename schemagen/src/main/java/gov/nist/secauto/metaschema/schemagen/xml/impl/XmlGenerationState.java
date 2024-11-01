@@ -20,15 +20,15 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
-import gov.nist.secauto.metaschema.schemagen.xml.datatype.XmlDatatypeManager;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.IXmlComplexType;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.IXmlSimpleType;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.IXmlType;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlComplexTypeAssemblyDefinition;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlComplexTypeFieldDefinition;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlSimpleTypeDataTypeReference;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlSimpleTypeDataTypeRestriction;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlSimpleTypeUnion;
+import gov.nist.secauto.metaschema.schemagen.xml.XmlDatatypeManager;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlComplexType;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlSimpleType;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlType;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlComplexTypeAssemblyDefinition;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlComplexTypeFieldDefinition;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeDataTypeReference;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeDataTypeRestriction;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeUnion;
 
 import org.codehaus.stax2.XMLStreamWriter2;
 

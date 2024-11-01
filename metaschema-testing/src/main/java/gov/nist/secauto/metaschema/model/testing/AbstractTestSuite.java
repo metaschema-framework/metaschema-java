@@ -264,6 +264,7 @@ public abstract class AbstractTestSuite {
     return OPEN_OPTIONS_TRUNCATE;
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private DynamicContainer generateScenario(
       @NonNull TestScenario scenario,
       @NonNull URI collectionUri,
@@ -346,7 +347,7 @@ public abstract class AbstractTestSuite {
             try {
               schemaPath = ObjectUtils.requireNonNull(lazySchema.get());
             } catch (Exception ex) {
-              throw new JUnitException( // NOPMD - cause is relevant, exception is not
+              throw new JUnitException(
                   "failed to generate schema", ex);
             }
             validateWithSchema(ObjectUtils.requireNonNull(supplier.get()), schemaPath);
@@ -416,13 +417,14 @@ public abstract class AbstractTestSuite {
       LOGGER.atInfo().log("Converting content '{}' to {} as '{}'", resource, toFormat, convertedContetPath);
     }
 
-    @SuppressWarnings("rawtypes") ISerializer serializer
+    ISerializer<?> serializer
         = context.newSerializer(toFormat, ObjectUtils.asType(object.getClass()));
     serializer.serialize(ObjectUtils.asType(object), convertedContetPath, getWriteOpenOptions());
 
     return convertedContetPath;
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private DynamicTest generateValidationCase(
       @NonNull ContentCaseType contentCase,
       @NonNull IBindingContext bindingContext,

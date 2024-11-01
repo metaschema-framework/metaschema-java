@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.schemagen.xml.datatype;
+package gov.nist.secauto.metaschema.schemagen.xml.impl;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.schemagen.datatype.IDatatypeContent;
 
 import org.jdom2.Element;
 

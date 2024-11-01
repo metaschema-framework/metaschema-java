@@ -8,4 +8,4 @@
  * flags, fields, assemblies).
  */
 
-package gov.nist.secauto.metaschema.schemagen.xml.schematype;
+package gov.nist.secauto.metaschema.schemagen.xml.impl.schematype;

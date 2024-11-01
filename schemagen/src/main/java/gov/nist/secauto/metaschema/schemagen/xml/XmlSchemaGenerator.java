@@ -16,9 +16,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
-import gov.nist.secauto.metaschema.schemagen.xml.datatype.XmlDatatypeManager;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.IXmlType;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlType;
 
 import org.codehaus.stax2.XMLOutputFactory2;
 import org.codehaus.stax2.XMLStreamWriter2;
