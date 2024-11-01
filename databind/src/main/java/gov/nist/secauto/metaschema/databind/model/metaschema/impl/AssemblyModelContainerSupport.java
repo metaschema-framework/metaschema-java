@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
 
@@ -95,7 +96,11 @@ class AssemblyModelContainerSupport
    * @param nodeItemFactory
    *          the node item factory used to generate child nodes
    */
-  @SuppressWarnings({ "PMD.AvoidInstantiatingObjectsInLoops", "PMD.UseConcurrentHashMap", "PMD.PrematureDeclaration" })
+  @SuppressWarnings({
+      "PMD.AvoidInstantiatingObjectsInLoops",
+      "PMD.UseConcurrentHashMap",
+      "PMD.PrematureDeclaration",
+      "PMD.NPathComplexity" })
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   protected AssemblyModelContainerSupport(
       @NonNull AssemblyModel model,
@@ -112,17 +117,17 @@ class AssemblyModelContainerSupport
     final Map<String, IChoiceGroupInstance> choiceGroupInstances = new LinkedHashMap<>();
 
     // create counters to track child positions
-    int assemblyReferencePosition = 0;
-    int assemblyInlineDefinitionPosition = 0;
-    int fieldReferencePosition = 0;
-    int fieldInlineDefinitionPosition = 0;
-    int choicePosition = 0;
-    int choiceGroupPosition = 0;
+    AtomicInteger assemblyReferencePosition = new AtomicInteger();
+    AtomicInteger assemblyInlineDefinitionPosition = new AtomicInteger();
+    AtomicInteger fieldReferencePosition = new AtomicInteger();
+    AtomicInteger fieldInlineDefinitionPosition = new AtomicInteger();
+    AtomicInteger choicePosition = new AtomicInteger();
+    AtomicInteger choiceGroupPosition = new AtomicInteger();
 
-    // TODO: make "instances" a constant
     IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(
-        modelInstance.getDefinition().getChoiceGroupInstanceByName("instances"));
-    for (Object obj : ObjectUtils.notNull(model.getInstances())) {
+        modelInstance.getDefinition()
+            .getChoiceGroupInstanceByName(BindingConstants.METASCHEMA_CHOICE_GROUP_GROUP_AS_NAME));
+    ObjectUtils.notNull(model.getInstances()).forEach(obj -> {
       assert obj != null;
 
       IBoundInstanceModelGroupedAssembly objInstance
@@ -132,14 +137,14 @@ class AssemblyModelContainerSupport
         IAssemblyInstanceAbsolute assembly = newInstance(
             (AssemblyReference) obj,
             objInstance,
-            assemblyReferencePosition++,
+            assemblyReferencePosition.getAndIncrement(),
             parent);
         addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);
       } else if (obj instanceof InlineDefineAssembly) {
         IAssemblyInstanceAbsolute assembly = new InstanceModelAssemblyInline(
             (InlineDefineAssembly) obj,
             objInstance,
-            assemblyInlineDefinitionPosition++,
+            assemblyInlineDefinitionPosition.getAndIncrement(),
             parent,
             nodeItemFactory);
         addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);
@@ -147,38 +152,36 @@ class AssemblyModelContainerSupport
         IFieldInstanceAbsolute field = newInstance(
             (FieldReference) obj,
             objInstance,
-            fieldReferencePosition++,
+            fieldReferencePosition.getAndIncrement(),
             parent);
         addInstance(field, modelInstances, namedModelInstances, fieldInstances);
       } else if (obj instanceof InlineDefineField) {
         IFieldInstanceAbsolute field = new InstanceModelFieldInline(
             (InlineDefineField) obj,
             objInstance,
-            fieldInlineDefinitionPosition++,
+            fieldInlineDefinitionPosition.getAndIncrement(),
             parent);
         addInstance(field, modelInstances, namedModelInstances, fieldInstances);
       } else if (obj instanceof AssemblyModel.Choice) {
         IChoiceInstance choice = new InstanceModelChoice(
             (Choice) obj,
             objInstance,
-            choicePosition++,
+            choicePosition.getAndIncrement(),
             parent,
             nodeItemFactory);
-        modelInstances.add(choice);
-        choiceInstances.add(choice);
+        addInstance(choice, modelInstances, choiceInstances);
       } else if (obj instanceof AssemblyModel.ChoiceGroup) {
         IChoiceGroupInstance choiceGroup = new InstanceModelChoiceGroup(
             (ChoiceGroup) obj,
             objInstance,
-            choiceGroupPosition++,
+            choiceGroupPosition.getAndIncrement(),
             parent,
             nodeItemFactory);
-        modelInstances.add(choiceGroup);
-        choiceGroupInstances.put(choiceGroup.getGroupAsName(), choiceGroup);
+        addInstance(choiceGroup, modelInstances, choiceGroupInstances);
       } else {
         throw new UnsupportedOperationException(String.format("Unknown model instance class: %s", obj.getClass()));
       }
-    }
+    });
 
     this.modelInstances = modelInstances.isEmpty()
         ? CollectionUtil.emptyList()

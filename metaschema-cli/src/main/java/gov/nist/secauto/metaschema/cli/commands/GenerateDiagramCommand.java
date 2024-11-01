@@ -7,18 +7,14 @@ package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
-import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
-import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.util.MermaidErDiagramGenerator;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 
 import org.apache.commons.cli.CommandLine;
@@ -35,7 +31,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.List;
@@ -81,14 +76,6 @@ public class GenerateDiagramCommand
   }
 
   @Override
-  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-    List<String> extraArgs = cmdLine.getArgList();
-    if (extraArgs.isEmpty() || extraArgs.size() > 2) {
-      throw new InvalidArgumentException("Illegal number of arguments.");
-    }
-  }
-
-  @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine cmdLine) {
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
@@ -108,92 +95,55 @@ public class GenerateDiagramCommand
   })
   @SuppressFBWarnings(value = "REC_CATCH_EXCEPTION",
       justification = "Catching generic exception for CLI error handling")
-  protected ExitStatus executeCommand(
+  protected void executeCommand(
       @NonNull CallingContext callingContext,
-      @NonNull CommandLine cmdLine) {
+      @NonNull CommandLine cmdLine) throws CommandExecutionException {
 
     List<String> extraArgs = cmdLine.getArgList();
 
     Path destination = null;
     if (extraArgs.size() > 1) {
-      destination = Paths.get(extraArgs.get(1)).toAbsolutePath();
+      destination = MetaschemaCommands.handleDestination(ObjectUtils.requireNonNull(extraArgs.get(1)), cmdLine);
     }
 
-    if (destination != null) {
-      if (Files.exists(destination)) {
-        if (!cmdLine.hasOption(MetaschemaCommands.OVERWRITE_OPTION)) {
-          return ExitCode.INVALID_ARGUMENTS.exitMessage( // NOPMD readability
-              String.format("The provided destination '%s' already exists and the '%s' option was not provided.",
-                  destination,
-                  OptionUtils.toArgument(MetaschemaCommands.OVERWRITE_OPTION)));
-        }
-        if (!Files.isWritable(destination)) {
-          return ExitCode.IO_ERROR.exitMessage( // NOPMD readability
-              "The provided destination '" + destination + "' is not writable.");
-        }
-      } else {
-        Path parent = destination.getParent();
-        if (parent != null) {
-          try {
-            Files.createDirectories(parent);
-          } catch (IOException ex) {
-            return ExitCode.INVALID_TARGET.exit().withThrowable(ex); // NOPMD readability
-          }
-        }
-      }
-    }
+    IBindingContext bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
 
-    IBindingContext bindingContext;
+    URI moduleUri;
     try {
-      bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
-    } catch (IOException ex) {
-      return ExitCode.PROCESSING_ERROR
-          .exitMessage(String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()))
-          .withThrowable(ex);
-    }
-
-    URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
-
-    IModule module;
-    try {
-      URI moduleUri = UriUtils.toUri(ObjectUtils.requireNonNull(extraArgs.get(0)), cwd);
-      module = MetaschemaCommands.handleModule(moduleUri, bindingContext);
+      moduleUri = resolveAgainstCWD(ObjectUtils.requireNonNull(extraArgs.get(0)));
     } catch (URISyntaxException ex) {
-      return ExitCode.INVALID_ARGUMENTS
-          .exitMessage(
-              String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()))
-          .withThrowable(ex);
-    } catch (IOException | MetaschemaException ex) {
-      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
+      throw new CommandExecutionException(
+          ExitCode.INVALID_ARGUMENTS,
+          String.format("Cannot load module as '%s' is not a valid file or URL. %s",
+              extraArgs.get(0),
+              ex.getLocalizedMessage()),
+          ex);
     }
+    IModule module = MetaschemaCommands.handleModule(moduleUri, bindingContext);
 
-    try {
-      if (destination == null) {
-        Writer stringWriter = new StringWriter();
-        try (PrintWriter writer = new PrintWriter(stringWriter)) {
-          MermaidErDiagramGenerator.generate(module, writer);
-        }
-
-        // Print the result
-        if (LOGGER.isInfoEnabled()) {
-          LOGGER.info(stringWriter.toString());
-        }
-      } else {
-        try (Writer writer = Files.newBufferedWriter(
-            destination,
-            StandardCharsets.UTF_8,
-            StandardOpenOption.CREATE,
-            StandardOpenOption.WRITE,
-            StandardOpenOption.TRUNCATE_EXISTING)) {
-          try (PrintWriter printWriter = new PrintWriter(writer)) {
-            MermaidErDiagramGenerator.generate(module, printWriter);
-          }
-        }
+    if (destination == null) {
+      Writer stringWriter = new StringWriter();
+      try (PrintWriter writer = new PrintWriter(stringWriter)) {
+        MermaidErDiagramGenerator.generate(module, writer);
       }
 
-      return ExitCode.OK.exit();
-    } catch (Exception ex) {
-      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
+      // Print the result
+      if (LOGGER.isInfoEnabled()) {
+        LOGGER.info(stringWriter.toString());
+      }
+    } else {
+      try (Writer writer = Files.newBufferedWriter(
+          destination,
+          StandardCharsets.UTF_8,
+          StandardOpenOption.CREATE,
+          StandardOpenOption.WRITE,
+          StandardOpenOption.TRUNCATE_EXISTING)) {
+        try (PrintWriter printWriter = new PrintWriter(writer)) {
+          MermaidErDiagramGenerator.generate(module, printWriter);
+        }
+      } catch (IOException ex) {
+        throw new CommandExecutionException(ExitCode.IO_ERROR, ex);
+      }
     }
   }
 }

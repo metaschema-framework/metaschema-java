@@ -6,10 +6,10 @@
 package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -28,9 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,35 +64,27 @@ public class ConvertContentUsingModuleCommand
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
 
-    return new OscalCommandExecutor(callingContext, commandLine);
+    return new CommandExecutor(callingContext, commandLine);
   }
 
-  private final class OscalCommandExecutor
+  private final class CommandExecutor
       extends AbstractConversionCommandExecutor {
 
-    private OscalCommandExecutor(
+    private CommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
     }
 
     @Override
-    protected IBindingContext getBindingContext() throws IOException, MetaschemaException {
+    protected IBindingContext getBindingContext() throws CommandExecutionException {
       IBindingContext retval = MetaschemaCommands.newBindingContextWithDynamicCompilation();
 
-      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
-
-      IModule module;
-      try {
-        module = MetaschemaCommands.handleModule(
-            getCommandLine(),
-            MetaschemaCommands.METASCHEMA_REQUIRED_OPTION,
-            cwd,
-            retval);
-      } catch (URISyntaxException ex) {
-        throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),
-            ex);
-      }
+      IModule module = MetaschemaCommands.handleModule(
+          getCommandLine(),
+          MetaschemaCommands.METASCHEMA_REQUIRED_OPTION,
+          ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),
+          retval);
       retval.registerModule(module);
       return retval;
     }

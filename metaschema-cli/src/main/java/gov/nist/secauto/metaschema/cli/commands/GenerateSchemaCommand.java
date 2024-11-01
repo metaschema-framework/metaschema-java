@@ -11,19 +11,16 @@ import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
 import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
-import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.AutoCloser;
-import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.UriUtils;
-import gov.nist.secauto.metaschema.databind.io.Format;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
@@ -36,16 +33,12 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -58,16 +51,6 @@ public class GenerateSchemaCommand
   @NonNull
   private static final List<ExtraArgument> EXTRA_ARGUMENTS;
 
-  @NonNull
-  private static final Option AS_OPTION = ObjectUtils.notNull(
-      Option.builder()
-          .longOpt("as")
-          .required()
-          .hasArg()
-          .argName("FORMAT")
-          .desc("source format: xml, json, or yaml")
-          .build());
-  @NonNull
   private static final Option INLINE_TYPES_OPTION = ObjectUtils.notNull(
       Option.builder()
           .longOpt("inline-types")
@@ -95,7 +78,7 @@ public class GenerateSchemaCommand
   public Collection<? extends Option> gatherOptions() {
     return List.of(
         MetaschemaCommands.OVERWRITE_OPTION,
-        AS_OPTION,
+        MetaschemaCommands.AS_SCHEMA_FORMAT_OPTION,
         INLINE_TYPES_OPTION);
   }
 
@@ -107,23 +90,6 @@ public class GenerateSchemaCommand
   @SuppressWarnings("PMD.PreserveStackTrace") // intended
   @Override
   public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-    try {
-      String asFormatText = cmdLine.getOptionValue(AS_OPTION);
-      if (asFormatText != null) {
-        SchemaFormat.valueOf(asFormatText.toUpperCase(Locale.ROOT));
-      }
-    } catch (IllegalArgumentException ex) {
-      InvalidArgumentException newEx = new InvalidArgumentException( // NOPMD - intentional
-          String.format("Invalid '%s' argument. The format must be one of: %s.",
-              OptionUtils.toArgument(AS_OPTION),
-              Arrays.asList(Format.values()).stream()
-                  .map(Enum::name)
-                  .collect(CustomCollectors.joiningWithOxfordComma("and"))));
-      newEx.setOption(AS_OPTION);
-      newEx.addSuppressed(ex);
-      throw newEx;
-    }
-
     List<String> extraArgs = cmdLine.getArgList();
     if (extraArgs.isEmpty() || extraArgs.size() > 2) {
       throw new InvalidArgumentException("Illegal number of arguments.");
@@ -143,13 +109,14 @@ public class GenerateSchemaCommand
    * @param cmdLine
    *          the parsed command line details
    * @return the execution result
+   * @throws CommandExecutionException
    */
   @SuppressWarnings({
       "PMD.OnlyOneReturn" // readability
   })
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,
-      @NonNull CommandLine cmdLine) {
+      @NonNull CommandLine cmdLine) throws CommandExecutionException {
     List<String> extraArgs = cmdLine.getArgList();
 
     Path destination = null;
@@ -181,8 +148,14 @@ public class GenerateSchemaCommand
       }
     }
 
-    String asFormatText = cmdLine.getOptionValue(AS_OPTION);
-    SchemaFormat asFormat = SchemaFormat.valueOf(asFormatText.toUpperCase(Locale.ROOT));
+    SchemaFormat asFormat;
+    try {
+      asFormat = MetaschemaCommands.getSchemaFormat(cmdLine, MetaschemaCommands.AS_SCHEMA_FORMAT_OPTION);
+    } catch (InvalidArgumentException ex) {
+      return ExitCode.INVALID_ARGUMENTS
+          .exitMessage(ex.getLocalizedMessage())
+          .withThrowable(ex);
+    }
 
     IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();
     if (cmdLine.hasOption(INLINE_TYPES_OPTION)) {
@@ -194,24 +167,16 @@ public class GenerateSchemaCommand
       }
     }
 
-    String inputName = ObjectUtils.notNull(extraArgs.get(0));
-    URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
+    IBindingContext bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
+    IModule module = MetaschemaCommands.handleModule(
+        ObjectUtils.requireNonNull(extraArgs.get(0)),
+        ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),
+        bindingContext);
+    bindingContext.registerModule(module);
 
-    URI input;
     try {
-      input = UriUtils.toUri(inputName, cwd);
-    } catch (URISyntaxException ex) {
-      return ExitCode.IO_ERROR.exitMessage(
-          String.format("Unable to load '%s' as it is not a valid file or URI.", inputName)).withThrowable(ex);
-    }
-    assert input != null;
-    try {
-      ModuleLoader loader = new ModuleLoader();
-      loader.allowEntityResolution();
-      IModule module = loader.load(input);
-
       if (LOGGER.isInfoEnabled()) {
-        LOGGER.info("Generating {} schema for '{}'.", asFormat.name(), input);
+        LOGGER.info("Generating {} schema for '{}'.", asFormat.name(), extraArgs.get(0));
       }
       if (destination == null) {
         @SuppressWarnings({ "resource", "PMD.CloseResource" }) // not owned
@@ -225,7 +190,7 @@ public class GenerateSchemaCommand
       } else {
         ISchemaGenerator.generateSchema(module, destination, asFormat, configuration);
       }
-    } catch (IOException | MetaschemaException ex) {
+    } catch (IOException ex) {
       return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex); // NOPMD readability
     }
     if (destination != null && LOGGER.isInfoEnabled()) {

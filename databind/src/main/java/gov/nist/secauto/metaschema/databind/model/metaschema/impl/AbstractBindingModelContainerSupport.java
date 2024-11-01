@@ -7,6 +7,8 @@ package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
+import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAbsolute;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
@@ -53,6 +55,22 @@ public abstract class AbstractBindingModelContainerSupport
     modelInstances.add(field);
     namedModelInstances.put(effectiveName, field);
     fieldInstances.put(effectiveName, field);
+  }
+
+  protected static void addInstance(
+      @NonNull IChoiceInstance choice,
+      @NonNull List<IModelInstanceAbsolute> modelInstances,
+      @NonNull List<IChoiceInstance> choiceInstances) {
+    modelInstances.add(choice);
+    choiceInstances.add(choice);
+  }
+
+  protected static void addInstance(
+      @NonNull IChoiceGroupInstance choiceGroup,
+      @NonNull List<IModelInstanceAbsolute> modelInstances,
+      @NonNull Map<String, IChoiceGroupInstance> choiceGroupInstances) {
+    modelInstances.add(choiceGroup);
+    choiceGroupInstances.put(choiceGroup.getGroupAsName(), choiceGroup);
   }
 
   @NonNull

@@ -134,7 +134,7 @@ public class DefaultItemWriter implements IItemWriter {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
     writer.close();
   }
 

@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
 
@@ -91,31 +92,35 @@ class ChoiceModelContainerSupport
     final Map<QName, IAssemblyInstanceAbsolute> assemblyInstances = new LinkedHashMap<>();
 
     // create counters to track child positions
-    int assemblyReferencePosition = 0;
-    int assemblyInlineDefinitionPosition = 0;
-    int fieldReferencePosition = 0;
-    int fieldInlineDefinitionPosition = 0;
+    AtomicInteger assemblyReferencePosition = new AtomicInteger();
+    AtomicInteger assemblyInlineDefinitionPosition = new AtomicInteger();
+    AtomicInteger fieldReferencePosition = new AtomicInteger();
+    AtomicInteger fieldInlineDefinitionPosition = new AtomicInteger();
 
     // TODO: make "instances" a constant
     IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(
         bindingInstance.getDefinition().getChoiceGroupInstanceByName("choices"));
-    for (Object obj : ObjectUtils.notNull(binding.getChoices())) {
+
+    ObjectUtils.notNull(binding.getChoices()).forEach(obj -> {
       assert obj != null;
       IBoundInstanceModelGroupedAssembly objInstance
           = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);
 
       if (obj instanceof AssemblyReference) {
-        IAssemblyInstanceAbsolute assembly = newInstance(
-            (AssemblyReference) obj,
-            objInstance,
-            assemblyReferencePosition++,
-            parent);
-        addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);
+        addInstance(
+            newInstance(
+                (AssemblyReference) obj,
+                objInstance,
+                assemblyReferencePosition.getAndIncrement(),
+                parent),
+            modelInstances,
+            namedModelInstances,
+            assemblyInstances);
       } else if (obj instanceof InlineDefineAssembly) {
         IAssemblyInstanceAbsolute assembly = new InstanceModelAssemblyInline(
             (InlineDefineAssembly) obj,
             objInstance,
-            assemblyInlineDefinitionPosition++,
+            assemblyInlineDefinitionPosition.getAndIncrement(),
             parent,
             nodeItemFactory);
         addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);
@@ -123,20 +128,20 @@ class ChoiceModelContainerSupport
         IFieldInstanceAbsolute field = newInstance(
             (FieldReference) obj,
             objInstance,
-            fieldReferencePosition++,
+            fieldReferencePosition.getAndIncrement(),
             parent);
         addInstance(field, modelInstances, namedModelInstances, fieldInstances);
       } else if (obj instanceof InlineDefineField) {
         IFieldInstanceAbsolute field = new InstanceModelFieldInline(
             (InlineDefineField) obj,
             objInstance,
-            fieldInlineDefinitionPosition++,
+            fieldInlineDefinitionPosition.getAndIncrement(),
             parent);
         addInstance(field, modelInstances, namedModelInstances, fieldInstances);
       } else {
         throw new UnsupportedOperationException(String.format("Unknown model instance class: %s", obj.getClass()));
       }
-    }
+    });
 
     this.modelInstances = modelInstances.isEmpty()
         ? CollectionUtil.emptyList()

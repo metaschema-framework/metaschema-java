@@ -6,11 +6,11 @@
 package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
@@ -32,10 +32,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -73,13 +70,13 @@ public class ValidateContentUsingModuleCommand
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-    return new OscalCommandExecutor(callingContext, commandLine);
+    return new CommandExecutor(callingContext, commandLine);
   }
 
-  private final class OscalCommandExecutor
+  private final class CommandExecutor
       extends AbstractValidationCommandExecutor {
 
-    private OscalCommandExecutor(
+    private CommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
@@ -87,29 +84,19 @@ public class ValidateContentUsingModuleCommand
 
     @Override
     protected IBindingContext getBindingContext(@NonNull Set<IConstraintSet> constraintSets)
-        throws MetaschemaException, IOException {
+        throws CommandExecutionException {
       return MetaschemaCommands.newBindingContextWithDynamicCompilation(constraintSets);
     }
 
     @Override
     protected IModule getModule(
         CommandLine commandLine,
-        IBindingContext bindingContext) throws IOException, MetaschemaException {
-
-      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
-
-      IModule module;
-      try {
-        module = MetaschemaCommands.handleModule(
-            commandLine,
-            MetaschemaCommands.METASCHEMA_REQUIRED_OPTION,
-            cwd,
-            bindingContext);
-      } catch (URISyntaxException ex) {
-        throw new IOException(String.format("Cannot load module as '%s' is not a valid file or URL.", ex.getInput()),
-            ex);
-      }
-      return module;
+        IBindingContext bindingContext) throws CommandExecutionException {
+      return MetaschemaCommands.handleModule(
+          commandLine,
+          MetaschemaCommands.METASCHEMA_REQUIRED_OPTION,
+          ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),
+          bindingContext);
     }
 
     @Override

@@ -42,7 +42,7 @@ public final class CLI {
   public static ExitStatus runCli(String... args) {
     System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
 
-    Map<String, IVersionInfo> versions = new LinkedHashMap<>();
+    @SuppressWarnings("PMD.UseConcurrentHashMap") Map<String, IVersionInfo> versions = new LinkedHashMap<>();
     versions.put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());
     versions.put(MetaschemaConstants.METASCHEMA_NAMESPACE, new MetaschemaVersion());
 

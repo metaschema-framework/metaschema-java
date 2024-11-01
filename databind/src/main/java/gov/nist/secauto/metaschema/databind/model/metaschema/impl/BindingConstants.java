@@ -13,6 +13,7 @@ public final class BindingConstants {
   public static final String METASCHEMA_FIELD_INLINE_DEFINTION_NAME = "define-field";
   public static final String METASCHEMA_CHOICE_NAME = "choice";
   public static final String METASCHEMA_CHOICE_GROUP_NAME = "choice-group";
+  public static final String METASCHEMA_CHOICE_GROUP_GROUP_AS_NAME = "instances";
 
   private BindingConstants() {
     // disable construction

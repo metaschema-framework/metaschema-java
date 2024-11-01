@@ -7,10 +7,12 @@ package gov.nist.secauto.metaschema.cli.processor;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandService;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -35,11 +37,10 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -164,6 +165,13 @@ public class CLIProcessor {
     assert commandArgs != null;
     CallingContext callingContext = new CallingContext(commandArgs);
 
+    if (LOGGER.isDebugEnabled()) {
+      String commandChain = callingContext.getCalledCommands().stream()
+          .map(ICommand::getName)
+          .collect(Collectors.joining(" -> "));
+      LOGGER.debug("Processing command chain: {}", commandChain);
+    }
+
     ExitStatus status;
     // the first two arguments should be the <command> and <operation>, where <type>
     // is the object type
@@ -177,10 +185,16 @@ public class CLIProcessor {
     return status;
   }
 
+  @NonNull
   protected final List<ICommand> getTopLevelCommands() {
-    List<ICommand> retval = Collections.unmodifiableList(commands);
-    assert retval != null;
-    return retval;
+    return CollectionUtil.unmodifiableList(commands);
+  }
+
+  @NonNull
+  protected final Map<String, ICommand> getTopLevelCommandsByName() {
+    return ObjectUtils.notNull(getTopLevelCommands()
+        .stream()
+        .collect(Collectors.toUnmodifiableMap(ICommand::getName, Function.identity())));
   }
 
   private static void handleNoColor() {
@@ -200,7 +214,8 @@ public class CLIProcessor {
   }
 
   protected void showVersion() {
-    @SuppressWarnings("resource") PrintStream out = AnsiConsole.out(); // NOPMD - not owner
+    @SuppressWarnings("resource")
+    PrintStream out = AnsiConsole.out(); // NOPMD - not owner
     getVersionInfos().values().stream().forEach(info -> {
       out.println(ansi()
           .bold().a(info.getName()).boldOff()
@@ -230,63 +245,44 @@ public class CLIProcessor {
     @NonNull
     private final List<Option> options;
     @NonNull
-    private final Deque<ICommand> calledCommands;
+    private final List<ICommand> calledCommands;
+    @Nullable
+    private final ICommand targetCommand;
     @NonNull
     private final List<String> extraArgs;
 
     @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
     public CallingContext(@NonNull List<String> args) {
-      Map<String, ICommand> topLevelCommandMap = getTopLevelCommands().stream()
-          .collect(Collectors.toUnmodifiableMap(ICommand::getName, Function.identity()));
-
+      @SuppressWarnings("PMD.LooseCoupling")
+      LinkedList<ICommand> calledCommands = new LinkedList<>();
       List<Option> options = new LinkedList<>(OPTIONS);
-      Deque<ICommand> calledCommands = new LinkedList<>();
       List<String> extraArgs = new LinkedList<>();
 
-      boolean endArgs = false;
-      for (String arg : args) {
-        if (endArgs || arg.startsWith("-")) {
+      AtomicBoolean endArgs = new AtomicBoolean();
+      args.forEach(arg -> {
+        if (endArgs.get() || arg.startsWith("-")) {
           extraArgs.add(arg);
         } else if ("--".equals(arg)) {
-          endArgs = true;
+          endArgs.set(true);
         } else {
-          ICommand command;
-          if (calledCommands.isEmpty()) {
-            command = topLevelCommandMap.get(arg);
-          } else {
-            command = calledCommands.getLast();
-            command = command.getSubCommandByName(arg);
-          }
+          ICommand command = calledCommands.isEmpty()
+              ? getTopLevelCommandsByName().get(arg)
+              : calledCommands.getLast().getSubCommandByName(arg);
 
           if (command == null) {
             extraArgs.add(arg);
-            endArgs = true;
+            endArgs.set(true);
           } else {
             calledCommands.add(command);
+            options.addAll(command.gatherOptions());
           }
         }
-      }
+      });
 
-      if (LOGGER.isDebugEnabled()) {
-        String commandChain = calledCommands.stream()
-            .map(ICommand::getName)
-            .collect(Collectors.joining(" -> "));
-        LOGGER.debug("Processing command chain: {}", commandChain);
-      }
-
-      for (ICommand cmd : calledCommands) {
-        options.addAll(cmd.gatherOptions());
-      }
-
-      options = Collections.unmodifiableList(options);
-      extraArgs = Collections.unmodifiableList(extraArgs);
-
-      assert options != null;
-      assert extraArgs != null;
-
-      this.options = options;
-      this.calledCommands = calledCommands;
-      this.extraArgs = extraArgs;
+      this.calledCommands = CollectionUtil.unmodifiableList(calledCommands);
+      this.targetCommand = calledCommands.peekLast();
+      this.options = CollectionUtil.unmodifiableList(options);
+      this.extraArgs = CollectionUtil.unmodifiableList(extraArgs);
     }
 
     @NonNull
@@ -296,7 +292,7 @@ public class CLIProcessor {
 
     @Nullable
     public ICommand getTargetCommand() {
-      return calledCommands.peekLast();
+      return targetCommand;
     }
 
     @NonNull
@@ -305,7 +301,7 @@ public class CLIProcessor {
     }
 
     @NonNull
-    private Deque<ICommand> getCalledCommands() {
+    private List<ICommand> getCalledCommands() {
       return calledCommands;
     }
 
@@ -326,57 +322,102 @@ public class CLIProcessor {
     @NonNull
     public ExitStatus processCommand() {
       CommandLineParser parser = new DefaultParser();
-      CommandLine cmdLine;
 
-      // this uses a two phase approach where:
+      // this uses a three phase approach where:
       // phase 1: checks if help or version are used
-      // phase 2: executes the command
+      // phase 2: parse and validate arguments
+      // phase 3: executes the command
 
       // phase 1
-      ExitStatus retval = null;
-      {
-        try {
-          Options phase1Options = new Options();
-          phase1Options.addOption(HELP_OPTION);
-          phase1Options.addOption(VERSION_OPTION);
+      CommandLine cmdLine;
+      try {
+        Options phase1Options = new Options();
+        phase1Options.addOption(HELP_OPTION);
+        phase1Options.addOption(VERSION_OPTION);
 
-          cmdLine = parser.parse(phase1Options, getExtraArgs().toArray(new String[0]), true);
-        } catch (ParseException ex) {
+        cmdLine = ObjectUtils.notNull(parser.parse(phase1Options, getExtraArgs().toArray(new String[0]), true));
+      } catch (ParseException ex) {
+        String msg = ex.getMessage();
+        assert msg != null;
+        return handleInvalidCommand(msg);
+      }
+
+      if (cmdLine.hasOption(VERSION_OPTION)) {
+        showVersion();
+        return ExitCode.OK.exit();
+      }
+      if (cmdLine.hasOption(HELP_OPTION)) {
+        showHelp();
+        return ExitCode.OK.exit();
+      }
+
+      // phase 2
+      try {
+        cmdLine = ObjectUtils.notNull(parser.parse(toOptions(), getExtraArgs().toArray(new String[0])));
+      } catch (ParseException ex) {
+        String msg = ex.getMessage();
+        assert msg != null;
+        return handleInvalidCommand(msg);
+      }
+
+      ICommand targetCommand = getTargetCommand();
+      if (targetCommand != null) {
+        if (targetCommand.isSubCommandRequired()) {
+          return handleError(
+              ExitCode.INVALID_ARGUMENTS
+                  .exitMessage("Please choose a valid sub-command."),
+              cmdLine,
+              true);
+        }
+
+        List<ExtraArgument> extraArguments = targetCommand.getExtraArguments();
+        int maxArguments = extraArguments.size();
+
+        List<String> actualArgs = cmdLine.getArgList();
+        int actualArgsSize = actualArgs.size();
+        if (actualArgs.size() > maxArguments) {
+          return handleError(
+              ExitCode.INVALID_ARGUMENTS
+                  .exitMessage("The provided extra arguments exceed the number of allowed arguments."),
+              cmdLine,
+              true);
+        }
+
+        List<ExtraArgument> requiredExtraArguments = targetCommand.getExtraArguments().stream()
+            .filter(ExtraArgument::isRequired)
+            .collect(Collectors.toUnmodifiableList());
+
+        if (actualArgsSize < requiredExtraArguments.size()) {
+          return handleError(
+              ExitCode.INVALID_ARGUMENTS
+                  .exitMessage("Please provide the required extra arguments."),
+              cmdLine,
+              true);
+        }
+      }
+
+      for (ICommand cmd : getCalledCommands()) {
+        try {
+          cmd.validateOptions(this, cmdLine);
+        } catch (InvalidArgumentException ex) {
           String msg = ex.getMessage();
           assert msg != null;
           return handleInvalidCommand(msg);
         }
-
-        if (cmdLine.hasOption(VERSION_OPTION)) {
-          showVersion();
-          retval = ExitCode.OK.exit();
-        } else if (cmdLine.hasOption(HELP_OPTION)) {
-          showHelp();
-          retval = ExitCode.OK.exit();
-        }
       }
 
-      if (retval == null) {
-        // phase 2
-        try {
-          cmdLine = parser.parse(toOptions(), getExtraArgs().toArray(new String[0]));
-        } catch (ParseException ex) {
-          String msg = ex.getMessage();
-          assert msg != null;
-          return handleInvalidCommand(msg);
-        }
-
-        if (cmdLine.hasOption(NO_COLOR_OPTION)) {
-          handleNoColor();
-        }
-
-        if (cmdLine.hasOption(QUIET_OPTION)) {
-          handleQuiet();
-        }
-        retval = invokeCommand(cmdLine);
+      // phase 3
+      if (cmdLine.hasOption(NO_COLOR_OPTION)) {
+        handleNoColor();
       }
 
-      retval.generateMessage(cmdLine.hasOption(SHOW_STACK_TRACE_OPTION));
+      if (cmdLine.hasOption(QUIET_OPTION)) {
+        handleQuiet();
+      }
+      ExitStatus retval = invokeCommand(cmdLine);
+      if (ExitCode.OK.equals(retval.getExitCode())) {
+        handleError(retval, cmdLine, false);
+      }
       return retval;
     }
 
@@ -387,22 +428,21 @@ public class CLIProcessor {
     protected ExitStatus invokeCommand(@NonNull CommandLine cmdLine) {
       ExitStatus retval;
       try {
-        for (ICommand cmd : getCalledCommands()) {
-          try {
-            cmd.validateOptions(this, cmdLine);
-          } catch (InvalidArgumentException ex) {
-            String msg = ex.getMessage();
-            assert msg != null;
-            return handleInvalidCommand(msg);
-          }
-        }
-
         ICommand targetCommand = getTargetCommand();
         if (targetCommand == null) {
           retval = ExitCode.INVALID_COMMAND.exit();
         } else {
           ICommandExecutor executor = targetCommand.newExecutor(this, cmdLine);
-          retval = executor.execute();
+          try {
+            executor.execute();
+            retval = ExitCode.OK.exit();
+          } catch (CommandExecutionException ex) {
+            retval = ex.toExitStatus();
+          } catch (RuntimeException ex) {
+            retval = ExitCode.RUNTIME_ERROR
+                .exitMessage("Unexpected error occured: " + ex.getLocalizedMessage())
+                .withThrowable(ex);
+          }
         }
 
         if (ExitCode.INVALID_COMMAND.equals(retval.getExitCode())) {
@@ -414,6 +454,18 @@ public class CLIProcessor {
             .withThrowable(ex);
       }
       return retval;
+    }
+
+    @NonNull
+    public ExitStatus handleError(
+        @NonNull ExitStatus exitStatus,
+        @NonNull CommandLine cmdLine,
+        boolean showHelp) {
+      exitStatus.generateMessage(cmdLine.hasOption(SHOW_STACK_TRACE_OPTION));
+      if (showHelp) {
+        showHelp();
+      }
+      return exitStatus;
     }
 
     @NonNull
@@ -499,7 +551,7 @@ public class CLIProcessor {
       StringBuilder builder = new StringBuilder(64);
       builder.append(getExec());
 
-      Deque<ICommand> calledCommands = getCalledCommands();
+      List<ICommand> calledCommands = getCalledCommands();
       if (!calledCommands.isEmpty()) {
         builder.append(calledCommands.stream()
             .map(ICommand::getName)
@@ -580,7 +632,8 @@ public class CLIProcessor {
       AnsiPrintStream out = AnsiConsole.out();
       int terminalWidth = Math.max(out.getTerminalWidth(), 40);
 
-      @SuppressWarnings("resource") PrintWriter writer = new PrintWriter( // NOPMD not owned
+      @SuppressWarnings("resource")
+      PrintWriter writer = new PrintWriter( // NOPMD not owned
           out,
           true,
           StandardCharsets.UTF_8);

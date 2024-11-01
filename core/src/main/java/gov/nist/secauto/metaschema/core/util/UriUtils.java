@@ -35,7 +35,7 @@ public final class UriUtils {
    *          the base URI to use for URI normalization
    * @return a new URI
    * @throws URISyntaxException
-   *           an error if the location string is not convertible to URI
+   *           if the location string is not convertible to URI
    */
   @SuppressWarnings("PMD.PreserveStackTrace")
   @NonNull
@@ -91,12 +91,11 @@ public final class UriUtils {
 
   private static boolean hasSameSchemeAndAuthority(URI base, URI other) {
     String baseScheme = base.getScheme();
-    boolean retval = (baseScheme == null && other.getScheme() == null)
-        || (baseScheme != null && baseScheme.equals(other.getScheme()));
+    boolean retval = baseScheme == null && other.getScheme() == null
+        || baseScheme != null && baseScheme.equals(other.getScheme());
     String baseAuthority = base.getAuthority();
-    retval = retval && ((baseAuthority == null && other.getAuthority() == null)
-        || (baseAuthority != null && baseAuthority.equals(other.getAuthority())));
-    return retval;
+    return retval && (baseAuthority == null && other.getAuthority() == null
+        || baseAuthority != null && baseAuthority.equals(other.getAuthority()));
   }
 
   /**
@@ -132,7 +131,7 @@ public final class UriUtils {
 
     // Construct the relative path
     StringBuilder retval = new StringBuilder();
-    for (int j = 0; j < (baseSegments.length - segmentIndex); j++) {
+    for (int j = 0; j < baseSegments.length - segmentIndex; j++) {
       retval.append("..");
       if (retval.length() != 0) {
         retval.append(URI_SEPERATOR);

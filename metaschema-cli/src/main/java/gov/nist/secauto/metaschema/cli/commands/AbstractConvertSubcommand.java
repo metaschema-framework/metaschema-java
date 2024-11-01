@@ -7,18 +7,14 @@ package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
-import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
-import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractCommandExecutor;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.AutoCloser;
-import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
@@ -33,15 +29,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -59,21 +52,6 @@ public abstract class AbstractConvertSubcommand
       new DefaultExtraArgument("source-file-or-URL", true),
       new DefaultExtraArgument("destination-file", false)));
 
-  @NonNull
-  private static final Option OVERWRITE_OPTION = ObjectUtils.notNull(
-      Option.builder()
-          .longOpt("overwrite")
-          .desc("overwrite the destination if it exists")
-          .build());
-  @NonNull
-  private static final Option TO_OPTION = ObjectUtils.notNull(
-      Option.builder()
-          .longOpt("to")
-          .required()
-          .hasArg().argName("FORMAT")
-          .desc("convert to format: xml, json, or yaml")
-          .build());
-
   @Override
   public String getName() {
     return COMMAND;
@@ -82,37 +60,13 @@ public abstract class AbstractConvertSubcommand
   @Override
   public Collection<? extends Option> gatherOptions() {
     return ObjectUtils.notNull(List.of(
-        OVERWRITE_OPTION,
-        TO_OPTION));
+        MetaschemaCommands.OVERWRITE_OPTION,
+        MetaschemaCommands.TO_OPTION));
   }
 
   @Override
   public List<ExtraArgument> getExtraArguments() {
     return EXTRA_ARGUMENTS;
-  }
-
-  @SuppressWarnings("PMD.PreserveStackTrace") // intended
-  @Override
-  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-
-    try {
-      String toFormatText = cmdLine.getOptionValue(TO_OPTION);
-      Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));
-    } catch (IllegalArgumentException ex) {
-      InvalidArgumentException newEx = new InvalidArgumentException(
-          String.format("Invalid '%s' argument. The format must be one of: %s.",
-              OptionUtils.toArgument(TO_OPTION),
-              Format.names().stream()
-                  .collect(CustomCollectors.joiningWithOxfordComma("and"))));
-      newEx.setOption(TO_OPTION);
-      newEx.addSuppressed(ex);
-      throw newEx;
-    }
-
-    List<String> extraArgs = cmdLine.getArgList();
-    if (extraArgs.isEmpty() || extraArgs.size() > 2) {
-      throw new InvalidArgumentException("Illegal number of arguments.");
-    }
   }
 
   /**
@@ -144,73 +98,34 @@ public abstract class AbstractConvertSubcommand
      *           if a Metaschema error occurred
      * @throws IOException
      *           if an error occurred while reading data
+     * @throws CommandExecutionException
      */
     @NonNull
-    protected abstract IBindingContext getBindingContext() throws MetaschemaException, IOException;
+    protected abstract IBindingContext getBindingContext() throws CommandExecutionException;
 
     @SuppressWarnings({
         "PMD.OnlyOneReturn", // readability
         "PMD.CyclomaticComplexity", "PMD.CognitiveComplexity" // reasonable
     })
     @Override
-    public ExitStatus execute() {
+    public void execute() throws CommandExecutionException {
       CommandLine cmdLine = getCommandLine();
 
       List<String> extraArgs = cmdLine.getArgList();
 
       Path destination = null;
       if (extraArgs.size() > 1) {
-        destination = Paths.get(extraArgs.get(1)).toAbsolutePath();
+        destination = MetaschemaCommands.handleDestination(ObjectUtils.requireNonNull(extraArgs.get(1)), cmdLine);
       }
 
-      if (destination != null) {
-        if (Files.exists(destination)) {
-          if (!cmdLine.hasOption(OVERWRITE_OPTION)) {
-            return ExitCode.INVALID_ARGUMENTS.exitMessage(
-                String.format("The provided destination '%s' already exists and the '%s' option was not provided.",
-                    destination,
-                    OptionUtils.toArgument(OVERWRITE_OPTION)));
-          }
-          if (!Files.isWritable(destination)) {
-            return ExitCode.IO_ERROR.exitMessage(
-                "The provided destination '" + destination + "' is not writable.");
-          }
-        } else {
-          Path parent = destination.getParent();
-          if (parent != null) {
-            try {
-              Files.createDirectories(parent);
-            } catch (IOException ex) {
-              return ExitCode.INVALID_TARGET.exit().withThrowable(ex); // NOPMD readability
-            }
-          }
-        }
-      }
+      URI source = MetaschemaCommands.handleSource(
+          ObjectUtils.requireNonNull(extraArgs.get(0)),
+          ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()));
 
-      String sourceName = ObjectUtils.notNull(extraArgs.get(0));
-      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
+      Format toFormat = MetaschemaCommands.getFormat(cmdLine, MetaschemaCommands.TO_OPTION);
 
-      URI source;
-      try {
-        source = UriUtils.toUri(sourceName, cwd);
-      } catch (URISyntaxException ex) {
-        return ExitCode.IO_ERROR
-            .exitMessage(String.format("Cannot load source '%s' as it is not a valid file or URI.", sourceName))
-            .withThrowable(ex);
-      }
-      assert source != null;
+      IBindingContext bindingContext = getBindingContext();
 
-      String toFormatText = cmdLine.getOptionValue(TO_OPTION);
-      Format toFormat = Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));
-
-      IBindingContext bindingContext;
-      try {
-        bindingContext = getBindingContext();
-      } catch (IOException | MetaschemaException ex) {
-        return ExitCode.PROCESSING_ERROR
-            .exitMessage(String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()))
-            .withThrowable(ex);
-      }
       try {
         IBoundLoader loader = bindingContext.newBoundLoader();
         if (LOGGER.isInfoEnabled()) {
@@ -235,12 +150,11 @@ public abstract class AbstractConvertSubcommand
           }
         }
       } catch (IOException | IllegalArgumentException ex) {
-        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex); // NOPMD readability
+        throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
       }
       if (destination != null && LOGGER.isInfoEnabled()) {
         LOGGER.info("Generated {} file: {}", toFormat.toString(), destination);
       }
-      return ExitCode.OK.exit();
     }
 
     /**

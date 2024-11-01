@@ -22,10 +22,6 @@ class EvaluateMetapathSubCommandTest {
           = {
               "metapath",
               "eval",
-              "-m",
-              "../databind/src/test/resources/metaschema/fields_with_flags/metaschema.xml",
-              "-i",
-              "../databind/src/test/resources/metaschema/fields_with_flags/example.json",
               "-e",
               "3 + 4 + 5",
               "--show-stack-trace" };

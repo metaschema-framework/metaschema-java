@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import org.eclipse.jdt.annotation.Owning;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -60,7 +61,7 @@ public class XmlSchemaContentValidator
    * @throws SAXException
    *           if an error occurred while parsing the provided XML schemas
    */
-  public XmlSchemaContentValidator(@NonNull List<? extends Source> schemaSources) throws SAXException {
+  public XmlSchemaContentValidator(@Owning @NonNull List<? extends Source> schemaSources) throws SAXException {
     this(toSchema(ObjectUtils.requireNonNull(schemaSources, "schemaSources")));
   }
 

@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.cli.processor.command;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.cli.CommandLine;
@@ -37,7 +36,7 @@ public abstract class AbstractCommandExecutor implements ICommandExecutor {
   }
 
   @Override
-  public abstract ExitStatus execute();
+  public abstract void execute() throws CommandExecutionException;
 
   @NonNull
   protected ICommand getCommand() {
