@@ -26,11 +26,6 @@ public interface IBoundDefinitionModelComplex
   @NonNull
   Map<String, IBoundProperty<?>> getJsonProperties(@Nullable Predicate<IBoundInstanceFlag> flagFilter);
 
-  @Override
-  default boolean isInline() {
-    return getBoundClass().getEnclosingClass() != null;
-  }
-
   @Nullable
   Method getBeforeDeserializeMethod();
 

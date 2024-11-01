@@ -194,9 +194,7 @@ public abstract class AbstractValidateContentCommand
 
       IValidationResult validationResult = null;
       try {
-        IModule module = bindingContext.registerModule(
-            getModule(getCommandLine(), bindingContext));
-
+        IModule module = bindingContext.registerModule(getModule(getCommandLine(), bindingContext));
         if (!cmdLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {
           // perform schema validation
           validationResult = getSchemaValidationProvider(module, getCommandLine(), bindingContext)

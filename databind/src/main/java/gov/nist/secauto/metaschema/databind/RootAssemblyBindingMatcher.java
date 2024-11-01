@@ -51,4 +51,9 @@ class RootAssemblyBindingMatcher implements IBindingMatcher {
   public Class<? extends IBoundObject> getBoundClassForJsonName(String rootName) {
     return getRootJsonName().equals(rootName) ? getClazz() : null;
   }
+
+  @Override
+  public String toString() {
+    return getDefinition().getRootXmlQName().toString();
+  }
 }

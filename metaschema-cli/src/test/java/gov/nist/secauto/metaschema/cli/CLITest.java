@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -44,7 +45,8 @@ public class CLITest {
   }
 
   private static Stream<Arguments> providesValues() {
-    @SuppressWarnings("serial") List<Arguments> values = new LinkedList<>() {
+    @SuppressWarnings("serial")
+    List<Arguments> values = new LinkedList<>() {
       {
         add(Arguments.of(new String[] {}, ExitCode.INVALID_COMMAND,
             NO_EXCEPTION_CLASS));
@@ -179,6 +181,15 @@ public class CLITest {
                 "../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml",
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
+        add(Arguments.of(
+            new String[] { "validate-content",
+                "-m",
+                "src/test/resources/content/215-module.xml",
+                "src/test/resources/content/215.xml",
+                "--disable-schema-validation",
+                "--show-stack-trace"
+            },
+            ExitCode.FAIL, NO_EXCEPTION_CLASS));
       }
     };
 
@@ -197,5 +208,17 @@ public class CLITest {
     } else {
       evaluateResult(CLI.runCli(fullArgs), expectedExitCode, expectedThrownClass);
     }
+  }
+
+  @Test
+  void test() {
+    String[] cliArgs = { "validate-content",
+        "-m",
+        "src/test/resources/content/215-module.xml",
+        "src/test/resources/content/215.xml",
+        "--disable-schema-validation",
+        "--show-stack-trace"
+    };
+    CLI.runCli(cliArgs);
   }
 }

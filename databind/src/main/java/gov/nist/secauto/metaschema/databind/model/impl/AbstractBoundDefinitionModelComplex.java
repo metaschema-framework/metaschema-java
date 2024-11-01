@@ -97,11 +97,6 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
   }
 
   @Override
-  public boolean isInline() {
-    return getBoundClass().getEnclosingClass() != null;
-  }
-
-  @Override
   public Method getBeforeDeserializeMethod() {
     return beforeDeserializeMethod;
   }
