@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.CommandService;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
+import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -624,31 +625,33 @@ public class CLIProcessor {
       return retval;
     }
 
+    /**
+     * Output the help text to the console.
+     */
     public void showHelp() {
 
       HelpFormatter formatter = new HelpFormatter();
       formatter.setLongOptSeparator("=");
 
-      AnsiPrintStream out = AnsiConsole.out();
-      int terminalWidth = Math.max(out.getTerminalWidth(), 40);
-
       @SuppressWarnings("resource")
-      PrintWriter writer = new PrintWriter( // NOPMD not owned
-          out,
+      AnsiPrintStream out = AnsiConsole.out();
+
+      try (PrintWriter writer = new PrintWriter( // NOPMD not owned
+          AutoCloser.preventClose(out),
           true,
-          StandardCharsets.UTF_8);
-      formatter.printHelp(
-          writer,
-          terminalWidth,
-          buildHelpCliSyntax(),
-          buildHelpHeader(),
-          toOptions(),
-          HelpFormatter.DEFAULT_LEFT_PAD,
-          HelpFormatter.DEFAULT_DESC_PAD,
-          buildHelpFooter(),
-          false);
-      writer.flush();
+          StandardCharsets.UTF_8)) {
+        formatter.printHelp(
+            writer,
+            Math.max(out.getTerminalWidth(), 50),
+            buildHelpCliSyntax(),
+            buildHelpHeader(),
+            toOptions(),
+            HelpFormatter.DEFAULT_LEFT_PAD,
+            HelpFormatter.DEFAULT_DESC_PAD,
+            buildHelpFooter(),
+            false);
+        writer.flush();
+      }
     }
   }
-
 }

@@ -38,7 +38,11 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public class GenerateDiagramCommand
+/**
+ * This command implementation supports generation of a diagram depicting the
+ * objects and relationships within a provided Metaschema module.
+ */
+class GenerateDiagramCommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(GenerateDiagramCommand.class);
 
@@ -66,8 +70,7 @@ public class GenerateDiagramCommand
   @SuppressWarnings("null")
   @Override
   public Collection<? extends Option> gatherOptions() {
-    return List.of(
-        MetaschemaCommands.OVERWRITE_OPTION);
+    return List.of(MetaschemaCommands.OVERWRITE_OPTION);
   }
 
   @Override
@@ -87,7 +90,8 @@ public class GenerateDiagramCommand
    *          information about the calling context
    * @param cmdLine
    *          the parsed command line details
-   * @return the execution result
+   * @throws CommandExecutionException
+   *           if an error occurred while executing the command
    */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
@@ -119,7 +123,7 @@ public class GenerateDiagramCommand
               ex.getLocalizedMessage()),
           ex);
     }
-    IModule module = MetaschemaCommands.handleModule(moduleUri, bindingContext);
+    IModule module = MetaschemaCommands.loadModule(moduleUri, bindingContext);
 
     if (destination == null) {
       Writer stringWriter = new StringWriter();

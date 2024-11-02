@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
 
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
@@ -110,7 +111,7 @@ class SarifValidationHandlerTest {
 
     // no need to cleanup this file, since it is created in the target directory
     Path sarifFile = ObjectUtils.requireNonNull(Paths.get("target/test.sarif"));
-    handler.write(sarifFile);
+    handler.write(sarifFile, IBindingContext.newInstance());
 
     Path sarifSchema = Paths.get("modules/sarif/sarif-schema-2.1.0.json");
 

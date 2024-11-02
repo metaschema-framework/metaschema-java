@@ -18,7 +18,6 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.ValidationFeature;
 import gov.nist.secauto.metaschema.core.model.validation.AggregateValidationResult;
@@ -47,7 +46,11 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Used by implementing classes to provide a content validation command.
+ */
 public abstract class AbstractValidateContentCommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(AbstractValidateContentCommand.class);
@@ -113,6 +116,9 @@ public abstract class AbstractValidateContentCommand
     return EXTRA_ARGUMENTS;
   }
 
+  /**
+   * Drives the validation execution.
+   */
   protected abstract class AbstractValidationCommandExecutor
       extends AbstractCommandExecutor {
 
@@ -136,27 +142,59 @@ public abstract class AbstractValidateContentCommand
      * @param constraintSets
      *          the constraints to configure in the resulting binding context
      * @return the context
-     * @throws MetaschemaException
-     *           if a Metaschema error occurred
-     * @throws IOException
-     *           if an error occurred while reading data
+     * @throws CommandExecutionException
+     *           if a error occurred while getting the binding context
      */
     @NonNull
     protected abstract IBindingContext getBindingContext(@NonNull Set<IConstraintSet> constraintSets)
         throws CommandExecutionException;
 
+    /**
+     * Get the module to use for validation.
+     * <p>
+     * This module is used to generate schemas and as a source of built-in
+     * constraints.
+     *
+     * @param commandLine
+     *          the provided command line argument information
+     * @param bindingContext
+     *          the context used to access Metaschema module information based on
+     *          Java class bindings
+     * @return the loaded Metaschema module
+     * @throws CommandExecutionException
+     *           if an error occurred while loading the module
+     */
     @NonNull
     protected abstract IModule getModule(
         @NonNull CommandLine commandLine,
         @NonNull IBindingContext bindingContext)
         throws CommandExecutionException;
 
+    /**
+     * Get the schema validation implementation requested based on the provided
+     * command line arguments.
+     * <p>
+     * It is typical for this call to result in the dynamic generation of a schema
+     * to use for validation.
+     *
+     * @param module
+     *          the Metaschema module to generate the schema from
+     * @param commandLine
+     *          the provided command line argument information
+     * @param bindingContext
+     *          the context used to access Metaschema module information based on
+     *          Java class bindings
+     * @return the provider
+     */
     @NonNull
     protected abstract ISchemaValidationProvider getSchemaValidationProvider(
         @NonNull IModule module,
         @NonNull CommandLine commandLine,
         @NonNull IBindingContext bindingContext);
 
+    /**
+     * Execute the validation operation.
+     */
     @SuppressWarnings("PMD.OnlyOneReturn") // readability
     @Override
     public void execute() throws CommandExecutionException {
@@ -168,40 +206,63 @@ public abstract class AbstractValidateContentCommand
           CONSTRAINTS_OPTION,
           currentWorkingDirectory);
 
-      IBindingContext bindingContext = getBindingContext(constraintSets);
-      IBoundLoader loader = bindingContext.newBoundLoader();
-
       List<String> extraArgs = cmdLine.getArgList();
 
       URI source = MetaschemaCommands.handleSource(
           ObjectUtils.requireNonNull(extraArgs.get(0)),
           currentWorkingDirectory);
 
+      IBindingContext bindingContext = getBindingContext(constraintSets);
+      IBoundLoader loader = bindingContext.newBoundLoader();
       Format asFormat = MetaschemaCommands.determineSourceFormat(
           cmdLine,
           MetaschemaCommands.AS_FORMAT_OPTION,
           loader,
           source);
 
+      IValidationResult validationResult = validate(source, asFormat, cmdLine, bindingContext);
+      handleOutput(source, validationResult, cmdLine, bindingContext);
+
+      if (validationResult == null || validationResult.isPassing()) {
+        if (LOGGER.isInfoEnabled()) {
+          LOGGER.info("The file '{}' is valid.", source);
+        }
+      } else if (LOGGER.isErrorEnabled()) {
+        LOGGER.error("The file '{}' is invalid.", source);
+      }
+
+      if (validationResult != null && !validationResult.isPassing()) {
+        throw new CommandExecutionException(ExitCode.FAIL);
+      }
+    }
+
+    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @Nullable
+    private IValidationResult validate(
+        @NonNull URI source,
+        @NonNull Format asFormat,
+        @NonNull CommandLine commandLine,
+        @NonNull IBindingContext bindingContext) throws CommandExecutionException {
+
       if (LOGGER.isInfoEnabled()) {
         LOGGER.info("Validating '{}' as {}.", source, asFormat.name());
       }
 
-      IMutableConfiguration<ValidationFeature<?>> configuration = new DefaultConfiguration<>();
-      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && cmdLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {
-        configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);
-      }
-
       IValidationResult validationResult = null;
       try {
-        IModule module = bindingContext.registerModule(getModule(getCommandLine(), bindingContext));
-        if (!cmdLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {
+        IModule module = bindingContext.registerModule(getModule(commandLine, bindingContext));
+        if (!commandLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {
           // perform schema validation
-          validationResult = getSchemaValidationProvider(module, getCommandLine(), bindingContext)
+          validationResult = getSchemaValidationProvider(module, commandLine, bindingContext)
               .validateWithSchema(source, asFormat, bindingContext);
         }
 
-        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {
+        if (!commandLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {
+          IMutableConfiguration<ValidationFeature<?>> configuration = new DefaultConfiguration<>();
+          if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && commandLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {
+            configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);
+          }
+
           // perform constraint validation
           IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);
           validationResult = validationResult == null
@@ -223,9 +284,16 @@ public abstract class AbstractValidateContentCommand
       } catch (MetapathException ex) {
         throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex.getLocalizedMessage(), ex);
       }
+      return validationResult;
+    }
 
-      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && LOGGER.isInfoEnabled()) {
-        Path sarifFile = ObjectUtils.notNull(Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));
+    private void handleOutput(
+        @NonNull URI source,
+        @Nullable IValidationResult validationResult,
+        @NonNull CommandLine commandLine,
+        @NonNull IBindingContext bindingContext) throws CommandExecutionException {
+      if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && LOGGER.isInfoEnabled()) {
+        Path sarifFile = ObjectUtils.notNull(Paths.get(commandLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));
 
         IVersionInfo version
             = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);
@@ -235,7 +303,7 @@ public abstract class AbstractValidateContentCommand
           if (validationResult != null) {
             sarifHandler.addFindings(validationResult.getFindings());
           }
-          sarifHandler.write(sarifFile);
+          sarifHandler.write(sarifFile, bindingContext);
         } catch (IOException ex) {
           throw new CommandExecutionException(ExitCode.IO_ERROR, ex.getLocalizedMessage(), ex);
         }
@@ -244,17 +312,6 @@ public abstract class AbstractValidateContentCommand
         LoggingValidationHandler.instance().handleResults(validationResult);
       }
 
-      if (validationResult == null || validationResult.isPassing()) {
-        if (LOGGER.isInfoEnabled()) {
-          LOGGER.info("The file '{}' is valid.", source);
-        }
-      } else if (LOGGER.isErrorEnabled()) {
-        LOGGER.error("The file '{}' is invalid.", source);
-      }
-
-      if (validationResult != null && !validationResult.isPassing()) {
-        throw new CommandExecutionException(ExitCode.FAIL);
-      }
     }
   }
 }

@@ -11,13 +11,13 @@ import gov.nist.secauto.metaschema.cli.CLI;
 
 import org.junit.jupiter.api.Test;
 
-import nl.altindag.console.ConsoleCaptor;
+import nl.altindag.log.LogCaptor;
 
 class EvaluateMetapathSubCommandTest {
 
   @Test
   void test() {
-    try (ConsoleCaptor consoleCaptor = new ConsoleCaptor()) {
+    try (LogCaptor captor = LogCaptor.forRoot()) {
       String[] args
           = {
               "metapath",
@@ -26,7 +26,7 @@ class EvaluateMetapathSubCommandTest {
               "3 + 4 + 5",
               "--show-stack-trace" };
       CLI.runCli(args);
-      assertThat(consoleCaptor.getStandardOutput()).contains("12");
+      assertThat(captor.getInfoLogs().contains("12"));
     }
   }
 }

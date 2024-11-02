@@ -28,7 +28,11 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ListFunctionsSubcommand
+/**
+ * This command list the Metapath functions currently provided by the Metaschema
+ * runtime.
+ */
+class ListFunctionsSubcommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(ListFunctionsSubcommand.class);
 
@@ -61,7 +65,8 @@ public class ListFunctionsSubcommand
    */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
-      "PMD.AvoidInstantiatingObjectsInLoops"
+      "PMD.AvoidInstantiatingObjectsInLoops",
+      "PMD.CognitiveComplexity"
   })
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,

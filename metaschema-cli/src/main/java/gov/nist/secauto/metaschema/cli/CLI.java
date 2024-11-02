@@ -19,6 +19,9 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The main entry point for the CLI application.
+ */
 @SuppressWarnings("PMD.ShortClassName")
 public final class CLI {
   /**

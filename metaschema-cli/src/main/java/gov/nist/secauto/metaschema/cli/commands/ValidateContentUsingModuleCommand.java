@@ -42,7 +42,11 @@ import javax.xml.transform.stream.StreamSource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ValidateContentUsingModuleCommand
+/**
+ * This command implementation supports validation of a content instance based
+ * on a provided Metaschema module.
+ */
+class ValidateContentUsingModuleCommand
     extends AbstractValidateContentCommand {
   @NonNull
   private static final String COMMAND = "validate-content";
@@ -92,7 +96,7 @@ public class ValidateContentUsingModuleCommand
     protected IModule getModule(
         CommandLine commandLine,
         IBindingContext bindingContext) throws CommandExecutionException {
-      return MetaschemaCommands.handleModule(
+      return MetaschemaCommands.loadModule(
           commandLine,
           MetaschemaCommands.METASCHEMA_REQUIRED_OPTION,
           ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),

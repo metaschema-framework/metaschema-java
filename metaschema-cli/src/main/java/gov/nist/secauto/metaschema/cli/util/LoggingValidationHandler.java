@@ -26,6 +26,10 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Supports logging validation findings to the console using ANSI color codes to
+ * improve the visibility of warnings and errors.
+ */
 public final class LoggingValidationHandler
     extends AbstractValidationResultProcessor {
   private static final Logger LOGGER = LogManager.getLogger(LoggingValidationHandler.class);

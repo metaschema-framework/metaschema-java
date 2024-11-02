@@ -35,7 +35,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ConvertContentUsingModuleCommand
+/**
+ * This command implementation supports the conversion of a content instance
+ * between supported formats based on a provided Metaschema module.
+ */
+class ConvertContentUsingModuleCommand
     extends AbstractConvertSubcommand {
   @NonNull
   private static final String COMMAND = "convert";
@@ -80,7 +84,7 @@ public class ConvertContentUsingModuleCommand
     protected IBindingContext getBindingContext() throws CommandExecutionException {
       IBindingContext retval = MetaschemaCommands.newBindingContextWithDynamicCompilation();
 
-      IModule module = MetaschemaCommands.handleModule(
+      IModule module = MetaschemaCommands.loadModule(
           getCommandLine(),
           MetaschemaCommands.METASCHEMA_REQUIRED_OPTION,
           ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),

@@ -41,7 +41,6 @@
 		<mojo.maven.version>3.8.1</mojo.maven.version>
 
 		<dependency.antlr4.version>4.13.2</dependency.antlr4.version>
-		<dependency.auto-service.version>1.1.1</dependency.auto-service.version>
 		<dependency.assertj.version>3.26.3</dependency.assertj.version>
 		<dependency.commons-cli.version>1.9.0</dependency.commons-cli.version>
 		<dependency.commons-collections4.version>4.4</dependency.commons-collections4.version>
@@ -176,12 +175,6 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>cli-processor</artifactId>
 				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.auto.service</groupId>
-				<artifactId>auto-service-annotations</artifactId>
-				<version>${dependency.auto-service.version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.xmlbeans</groupId>
@@ -515,24 +508,11 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<annotationProcessorPaths>
-							<path>
-								<groupId>com.google.auto.service</groupId>
-								<artifactId>auto-service</artifactId>
-								<version>${dependency.auto-service.version}</version>
-							</path>
-						</annotationProcessorPaths>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
 					<configuration>
-						<ignoredDependencies>
-							<ignoredDependency>
-								com.google.auto.service:auto-service</ignoredDependency>
-						</ignoredDependencies>
 						<usedDependencies>
 							<usedDependency>org.apache.logging.log4j:log4j-core</usedDependency>
 						</usedDependencies>

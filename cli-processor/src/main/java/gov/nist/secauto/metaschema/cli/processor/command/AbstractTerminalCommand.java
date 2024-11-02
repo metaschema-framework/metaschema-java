@@ -39,16 +39,16 @@ public abstract class AbstractTerminalCommand implements ICommand {
 
   @NonNull
   protected static Path resolveAgainstCWD(@NonNull Path path) {
-    return getCurrentWorkingDirectory().resolve(path).normalize();
+    return ObjectUtils.notNull(getCurrentWorkingDirectory().resolve(path).normalize());
   }
 
   @NonNull
   protected static URI resolveAgainstCWD(@NonNull URI uri) {
-    return getCurrentWorkingDirectory().toUri().resolve(uri.normalize());
+    return ObjectUtils.notNull(getCurrentWorkingDirectory().toUri().resolve(uri.normalize()));
   }
 
   @NonNull
   protected static URI resolveAgainstCWD(@NonNull String uri) throws URISyntaxException {
-    return UriUtils.toUri(uri, getCurrentWorkingDirectory().toUri());
+    return UriUtils.toUri(uri, ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()));
   }
 }

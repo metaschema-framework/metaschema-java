@@ -7,9 +7,6 @@ package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
-import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
-import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
@@ -34,34 +31,32 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class GenerateSchemaCommand
+/**
+ * This command implementation supports generation of schemas in a variety of
+ * formats based on a provided Metaschema module.
+ */
+class GenerateSchemaCommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(GenerateSchemaCommand.class);
 
   @NonNull
   private static final String COMMAND = "generate-schema";
   @NonNull
-  private static final List<ExtraArgument> EXTRA_ARGUMENTS;
+  private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
+      new DefaultExtraArgument("metaschema-module-file-or-URL", true),
+      new DefaultExtraArgument("destination-schema-file", false)));
 
   private static final Option INLINE_TYPES_OPTION = ObjectUtils.notNull(
       Option.builder()
           .longOpt("inline-types")
           .desc("definitions declared inline will be generated as inline types")
           .build());
-
-  static {
-    EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
-        new DefaultExtraArgument("metaschema-module-file-or-URL", true),
-        new DefaultExtraArgument("destination-schema-file", false)));
-  }
 
   @Override
   public String getName() {
@@ -87,75 +82,37 @@ public class GenerateSchemaCommand
     return EXTRA_ARGUMENTS;
   }
 
-  @SuppressWarnings("PMD.PreserveStackTrace") // intended
-  @Override
-  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-    List<String> extraArgs = cmdLine.getArgList();
-    if (extraArgs.isEmpty() || extraArgs.size() > 2) {
-      throw new InvalidArgumentException("Illegal number of arguments.");
-    }
-  }
-
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine cmdLine) {
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
   /**
-   * Called to execute the schema generation.
+   * Execute the schema generation operation.
    *
    * @param callingContext
    *          the context information for the execution
    * @param cmdLine
    *          the parsed command line details
-   * @return the execution result
    * @throws CommandExecutionException
+   *           if an error occurred while determining the source format
    */
   @SuppressWarnings({
-      "PMD.OnlyOneReturn" // readability
+      "PMD.OnlyOneReturn", // readability
+      "PMD.CyclomaticComplexity"
   })
-  protected ExitStatus executeCommand(
+  protected void executeCommand(
       @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) throws CommandExecutionException {
     List<String> extraArgs = cmdLine.getArgList();
 
-    Path destination = null;
-    if (extraArgs.size() > 1) {
-      destination = Paths.get(extraArgs.get(1)).toAbsolutePath();
-    }
+    Path destination = extraArgs.size() > 1
+        ? MetaschemaCommands.handleDestination(
+            ObjectUtils.requireNonNull(extraArgs.get(1)),
+            cmdLine)
+        : null;
 
-    if (destination != null) {
-      if (Files.exists(destination)) {
-        if (!cmdLine.hasOption(MetaschemaCommands.OVERWRITE_OPTION)) {
-          return ExitCode.INVALID_ARGUMENTS.exitMessage( // NOPMD readability
-              String.format("The provided destination '%s' already exists and the '%s' option was not provided.",
-                  destination,
-                  OptionUtils.toArgument(MetaschemaCommands.OVERWRITE_OPTION)));
-        }
-        if (!Files.isWritable(destination)) {
-          return ExitCode.IO_ERROR.exitMessage( // NOPMD readability
-              "The provided destination '" + destination + "' is not writable.");
-        }
-      } else {
-        Path parent = destination.getParent();
-        if (parent != null) {
-          try {
-            Files.createDirectories(parent);
-          } catch (IOException ex) {
-            return ExitCode.INVALID_TARGET.exit().withThrowable(ex); // NOPMD readability
-          }
-        }
-      }
-    }
-
-    SchemaFormat asFormat;
-    try {
-      asFormat = MetaschemaCommands.getSchemaFormat(cmdLine, MetaschemaCommands.AS_SCHEMA_FORMAT_OPTION);
-    } catch (InvalidArgumentException ex) {
-      return ExitCode.INVALID_ARGUMENTS
-          .exitMessage(ex.getLocalizedMessage())
-          .withThrowable(ex);
-    }
+    SchemaFormat asFormat = MetaschemaCommands.getSchemaFormat(cmdLine, MetaschemaCommands.AS_SCHEMA_FORMAT_OPTION);
 
     IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();
     if (cmdLine.hasOption(INLINE_TYPES_OPTION)) {
@@ -168,7 +125,7 @@ public class GenerateSchemaCommand
     }
 
     IBindingContext bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
-    IModule module = MetaschemaCommands.handleModule(
+    IModule module = MetaschemaCommands.loadModule(
         ObjectUtils.requireNonNull(extraArgs.get(0)),
         ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),
         bindingContext);
@@ -191,11 +148,10 @@ public class GenerateSchemaCommand
         ISchemaGenerator.generateSchema(module, destination, asFormat, configuration);
       }
     } catch (IOException ex) {
-      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex); // NOPMD readability
+      throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
     }
     if (destination != null && LOGGER.isInfoEnabled()) {
       LOGGER.info("Generated {} schema file: {}", asFormat.toString(), destination);
     }
-    return ExitCode.OK.exit();
   }
 }

@@ -45,6 +45,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,6 +57,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Supports building a Static Analysis Results Interchange Format (SARIF)
+ * document based on a set of validation findings.
+ */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class SarifValidationHandler {
   private enum Kind {
@@ -99,15 +104,15 @@ public final class SarifValidationHandler {
   }
 
   @NonNull
-  public static final String SARIF_NS = "https://docs.oasis-open.org/sarif/sarif/v2.1.0";
+  static final String SARIF_NS = "https://docs.oasis-open.org/sarif/sarif/v2.1.0";
   @NonNull
-  public static final IAttributable.Key SARIF_HELP_URL_KEY
+  static final IAttributable.Key SARIF_HELP_URL_KEY
       = IAttributable.key("help-url", SARIF_NS);
   @NonNull
-  public static final IAttributable.Key SARIF_HELP_TEXT_KEY
+  static final IAttributable.Key SARIF_HELP_TEXT_KEY
       = IAttributable.key("help-text", SARIF_NS);
   @NonNull
-  public static final IAttributable.Key SARIF_HELP_MARKDOWN_KEY
+  static final IAttributable.Key SARIF_HELP_MARKDOWN_KEY
       = IAttributable.key("help-markdown", SARIF_NS);
 
   @NonNull
@@ -131,6 +136,15 @@ public final class SarifValidationHandler {
   private final SchemaRuleRecord schemaRule = new SchemaRuleRecord();
   private boolean schemaValid = true;
 
+  /**
+   * Construct a new validation handler.
+   *
+   * @param source
+   *          the URI of the content that was validated
+   * @param toolVersion
+   *          the version information for the tool producing the validation
+   *          results
+   */
   public SarifValidationHandler(
       @NonNull URI source,
       @Nullable IVersionInfo toolVersion) {
@@ -147,17 +161,29 @@ public final class SarifValidationHandler {
     return source;
   }
 
-  public IVersionInfo getToolVersion() {
+  private IVersionInfo getToolVersion() {
     return toolVersion;
   }
 
-  public void addFindings(@NonNull List<? extends IValidationFinding> findings) {
+  /**
+   * Register a collection of validation finding.
+   *
+   * @param findings
+   *          the findings to register
+   */
+  public void addFindings(@NonNull Collection<? extends IValidationFinding> findings) {
     for (IValidationFinding finding : findings) {
       assert finding != null;
       addFinding(finding);
     }
   }
 
+  /**
+   * Register a validation finding.
+   *
+   * @param finding
+   *          the finding to register
+   */
   public void addFinding(@NonNull IValidationFinding finding) {
     if (finding instanceof JsonValidationFinding) {
       addJsonValidationFinding((JsonValidationFinding) finding);
@@ -207,7 +233,20 @@ public final class SarifValidationHandler {
     results.add(new ConstraintResult(finding));
   }
 
-  public void write(@NonNull Path outputFile) throws IOException {
+  /**
+   * Write the collection of findings to the provided output file.
+   *
+   * @param outputFile
+   *          the path to the output file to write to
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @throws IOException
+   *           if an error occurred while writing the SARIF file
+   */
+  public void write(
+      @NonNull Path outputFile,
+      @NonNull IBindingContext bindingContext) throws IOException {
 
     URI output = ObjectUtils.notNull(outputFile.toUri());
 
@@ -246,7 +285,6 @@ public final class SarifValidationHandler {
       run.setTool(tool);
     }
 
-    IBindingContext bindingContext = IBindingContext.newInstance();
     bindingContext.registerModule(SarifModule.class);
     bindingContext.newSerializer(Format.JSON, Sarif.class)
         .disableFeature(SerializationFeature.SERIALIZE_ROOT)
@@ -428,7 +466,8 @@ public final class SarifValidationHandler {
         assert constraint != null;
         ConstraintRuleRecord rule = getRuleRecord(constraint);
 
-        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") Result result = new Result();
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+        Result result = new Result();
 
         String id = constraint.getId();
         if (id != null) {

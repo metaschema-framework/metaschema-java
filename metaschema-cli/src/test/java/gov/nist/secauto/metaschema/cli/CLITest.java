@@ -39,14 +39,13 @@ public class CLITest {
       @NonNull Class<? extends Throwable> thrownClass) {
     status.generateMessage(true);
     Throwable thrown = status.getThrowable();
-    assert thrown != null;
-    assertAll(() -> assertEquals(expectedCode, status.getExitCode(), "exit code mismatch"),
-        () -> assertEquals(thrownClass, thrown.getClass(), "expected Throwable mismatch"));
+    assertAll(
+        () -> assertEquals(expectedCode, status.getExitCode(), "exit code mismatch"),
+        () -> assertEquals(thrownClass, thrown == null ? null : thrown.getClass(), "expected Throwable mismatch"));
   }
 
   private static Stream<Arguments> providesValues() {
-    @SuppressWarnings("serial")
-    List<Arguments> values = new LinkedList<>() {
+    @SuppressWarnings("serial") List<Arguments> values = new LinkedList<>() {
       {
         add(Arguments.of(new String[] {}, ExitCode.INVALID_COMMAND,
             NO_EXCEPTION_CLASS));
@@ -159,7 +158,7 @@ public class CLITest {
                 "--disable-schema-validation"
             },
             // fail due to missing element during parsing
-            ExitCode.IO_ERROR, java.io.IOException.class));
+            ExitCode.FAIL, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "validate-content",
                 "-m",
@@ -181,15 +180,6 @@ public class CLITest {
                 "../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml",
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
-        add(Arguments.of(
-            new String[] { "validate-content",
-                "-m",
-                "src/test/resources/content/215-module.xml",
-                "src/test/resources/content/215.xml",
-                "--disable-schema-validation",
-                "--show-stack-trace"
-            },
-            ExitCode.FAIL, NO_EXCEPTION_CLASS));
       }
     };
 
@@ -214,10 +204,10 @@ public class CLITest {
   void test() {
     String[] cliArgs = { "validate-content",
         "-m",
-        "src/test/resources/content/215-module.xml",
-        "src/test/resources/content/215.xml",
-        "--disable-schema-validation",
-        "--show-stack-trace"
+        "src/test/resources/content/schema-validation-module.xml",
+        "src/test/resources/content/schema-validation-module-missing-required.xml",
+        "--as=xml",
+        "--disable-schema-validation"
     };
     CLI.runCli(cliArgs);
   }

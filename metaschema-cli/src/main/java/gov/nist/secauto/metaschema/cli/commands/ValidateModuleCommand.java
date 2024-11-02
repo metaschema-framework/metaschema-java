@@ -38,7 +38,10 @@ import javax.xml.transform.stream.StreamSource;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
-public class ValidateModuleCommand
+/**
+ * This command implementation supports validation a Metaschema module.
+ */
+class ValidateModuleCommand
     extends AbstractValidateContentCommand {
   @NonNull
   private static final String COMMAND = "validate";
@@ -55,14 +58,14 @@ public class ValidateModuleCommand
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-    return new ValidateModuleCommandExecutor(callingContext, commandLine);
+    return new CommandExecutor(callingContext, commandLine);
   }
 
-  private final class ValidateModuleCommandExecutor
+  private final class CommandExecutor
       extends AbstractValidationCommandExecutor {
     private final Lazy<ValidationProvider> validationProvider = Lazy.lazy(ValidationProvider::new);
 
-    private ValidateModuleCommandExecutor(
+    private CommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);

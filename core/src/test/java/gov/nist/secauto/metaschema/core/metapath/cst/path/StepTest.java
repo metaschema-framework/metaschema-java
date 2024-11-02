@@ -398,27 +398,27 @@ class StepTest
         = MetapathExpression.compile("descendant::*", dynamicContext.getStaticContext())
             .evaluate(node2, dynamicContext);
 
-    IModelNodeItem<?, ?> a
+    IModelNodeItem<?, ?> nodeA
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "a"))).iterator().next();
-    IModelNodeItem<?, ?> b
+    IModelNodeItem<?, ?> nodeB
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "b"))).iterator().next();
-    IModelNodeItem<?, ?> c
+    IModelNodeItem<?, ?> nodeC
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "c"))).iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
-            a,
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
-            b,
-            ObjectUtils.requireNonNull(b.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(b.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(b.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
-            c,
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            nodeA,
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
+            nodeB,
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
+            nodeC,
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
   }
 
   @Test
@@ -435,28 +435,28 @@ class StepTest
         = MetapathExpression.compile("descendant-or-self::*", dynamicContext.getStaticContext())
             .evaluate(node2, dynamicContext);
 
-    IModelNodeItem<?, ?> a
+    IModelNodeItem<?, ?> nodeA
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "a"))).iterator().next();
-    IModelNodeItem<?, ?> b
+    IModelNodeItem<?, ?> nodeB
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "b"))).iterator().next();
-    IModelNodeItem<?, ?> c
+    IModelNodeItem<?, ?> nodeC
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "c"))).iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
             node2,
-            a,
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
-            b,
-            ObjectUtils.requireNonNull(b.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(b.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(b.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
-            c,
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            nodeA,
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
+            nodeB,
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
+            nodeC,
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
   }
 
   @Test
@@ -521,15 +521,15 @@ class StepTest
         .getModelItemsByName(new QName(NS, "node-2"))
         .iterator().next();
 
-    IModelNodeItem<?, ?> c
+    IModelNodeItem<?, ?> nodeC
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "c"))).iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
-            c,
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(c.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            nodeC,
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
   }
 
   @Test
@@ -550,14 +550,14 @@ class StepTest
         .getModelItemsByName(new QName(NS, "node-2"))
         .iterator().next();
 
-    IModelNodeItem<?, ?> a
+    IModelNodeItem<?, ?> nodeA
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "a"))).iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
-            a,
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(a.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            nodeA,
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
   }
 }

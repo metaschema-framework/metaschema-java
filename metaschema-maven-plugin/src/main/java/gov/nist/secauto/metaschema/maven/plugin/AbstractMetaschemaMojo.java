@@ -617,7 +617,7 @@ public abstract class AbstractMetaschemaMojo
       return production;
     }
 
-    public void compileClasses(@NonNull IProduction production, @NonNull Path classDir)
+    private void compileClasses(@NonNull IProduction production, @NonNull Path classDir)
         throws IOException, DependencyResolutionRequiredException {
       List<IGeneratedClass> classesToCompile = production.getGeneratedClasses().collect(Collectors.toList());
 

@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.commands.metapath.MetapathCommand;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
-import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
 import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
@@ -18,6 +17,7 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
+import gov.nist.secauto.metaschema.core.util.DeleteOnShutdown;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -44,7 +44,21 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * This class provides a variety of utility methods for processing
+ * Metaschema-related commands.
+ * <p>
+ * These methods handle the errors produced using the
+ * {@link CommandExecutionException}, which will return an exceptional result to
+ * the command line interface (CLI) processor. This approach keeps the command
+ * implementations fairly clean and simple.
+ */
+@SuppressWarnings("PMD.GodClass")
 public final class MetaschemaCommands {
+  /**
+   * A list of the Metaschema-related command pathways, for reuse in this and
+   * other CLI applications.
+   */
   @NonNull
   public static final List<ICommand> COMMANDS = ObjectUtils.notNull(List.of(
       new ValidateModuleCommand(),
@@ -54,6 +68,11 @@ public final class MetaschemaCommands {
       new ConvertContentUsingModuleCommand(),
       new MetapathCommand()));
 
+  /**
+   * Used by commands to declare a required Metaschema module for processing.
+   *
+   * @since 2.0.0
+   */
   @NonNull
   public static final Option METASCHEMA_REQUIRED_OPTION = ObjectUtils.notNull(
       Option.builder("m")
@@ -63,6 +82,11 @@ public final class MetaschemaCommands {
           .desc("metaschema resource")
           .numberOfArgs(1)
           .build());
+  /**
+   * Used by commands to declare an optional Metaschema module for processing.
+   *
+   * @since 2.0.0
+   */
   @NonNull
   public static final Option METASCHEMA_OPTIONAL_OPTION = ObjectUtils.notNull(
       Option.builder("m")
@@ -71,12 +95,22 @@ public final class MetaschemaCommands {
           .desc("metaschema resource")
           .numberOfArgs(1)
           .build());
+  /**
+   * Used by commands to protect existing files from being overwritten, unless
+   * this option is provided.
+   */
   @NonNull
   public static final Option OVERWRITE_OPTION = ObjectUtils.notNull(
       Option.builder()
           .longOpt("overwrite")
           .desc("overwrite the destination if it exists")
           .build());
+  /**
+   * Used by commands to identify the target format for a content conversion
+   * operation.
+   *
+   * @since 2.0.0
+   */
   @NonNull
   public static final Option TO_OPTION = ObjectUtils.notNull(
       Option.builder()
@@ -88,6 +122,12 @@ public final class MetaschemaCommands {
               .collect(CustomCollectors.joiningWithOxfordComma("or")))
           .numberOfArgs(1)
           .build());
+  /**
+   * Used by commands to identify the source format for a content-related
+   * operation.
+   *
+   * @since 2.0.0
+   */
   @NonNull
   public static final Option AS_FORMAT_OPTION = ObjectUtils.notNull(
       Option.builder()
@@ -99,6 +139,12 @@ public final class MetaschemaCommands {
               .collect(CustomCollectors.joiningWithOxfordComma("or")))
           .numberOfArgs(1)
           .build());
+  /**
+   * Used by commands that produce schemas to identify the schema format to
+   * produce.
+   *
+   * @since 2.0.0
+   */
   @NonNull
   public static final Option AS_SCHEMA_FORMAT_OPTION = ObjectUtils.notNull(
       Option.builder()
@@ -124,6 +170,7 @@ public final class MetaschemaCommands {
    * @return the absolute URI for the resource
    * @throws CommandExecutionException
    *           if the resulting URI is not a well-formed URI
+   * @since 2.0.0
    */
   @NonNull
   public static URI handleSource(
@@ -156,6 +203,7 @@ public final class MetaschemaCommands {
    * @return the absolute URI for the resource
    * @throws CommandExecutionException
    *           if the path exists and cannot be overwritten or is not writable
+   * @since 2.0.0
    */
   public static Path handleDestination(
       @NonNull String path,
@@ -202,14 +250,15 @@ public final class MetaschemaCommands {
    * @return the format
    * @throws CommandExecutionException
    *           if the format option was not provided or was an invalid choice
+   * @since 2.0.0
    */
   @SuppressWarnings("PMD.PreserveStackTrace")
   @NonNull
   public static Format getFormat(
-      @NonNull CommandLine cmdLine,
+      @NonNull CommandLine commandLine,
       @NonNull Option option) throws CommandExecutionException {
     // use the option
-    String toFormatText = cmdLine.getOptionValue(option);
+    String toFormatText = commandLine.getOptionValue(option);
     if (toFormatText == null) {
       throw new CommandExecutionException(
           ExitCode.INVALID_ARGUMENTS,
@@ -234,33 +283,81 @@ public final class MetaschemaCommands {
   }
 
   /**
+   * Parse the command line options to get the selected schema format.
    *
-   * @param cmdLine
+   * @param commandLine
+   *          the provided command line argument information
    * @param option
+   *          the option specifying the format, which must be present on the
+   *          command line
+   * @return the format
+   * @throws CommandExecutionException
+   *           if the format option was not provided or was an invalid choice
+   * @since 2.0.0
+   */
+  @SuppressWarnings("PMD.PreserveStackTrace")
+  @NonNull
+  public static SchemaFormat getSchemaFormat(
+      @NonNull CommandLine commandLine,
+      @NonNull Option option) throws CommandExecutionException {
+    // use the option
+    String toFormatText = commandLine.getOptionValue(option);
+    if (toFormatText == null) {
+      throw new CommandExecutionException(
+          ExitCode.INVALID_ARGUMENTS,
+          String.format("Option '%s' not provided.",
+              option.hasLongOpt()
+                  ? "--" + option.getLongOpt()
+                  : "-" + option.getOpt()));
+    }
+    try {
+      return SchemaFormat.valueOf(toFormatText.toUpperCase(Locale.ROOT));
+    } catch (IllegalArgumentException ex) {
+      throw new CommandExecutionException(
+          ExitCode.INVALID_ARGUMENTS,
+          String.format("Invalid '%s' argument. The schema format must be one of: %s.",
+              option.hasLongOpt()
+                  ? "--" + option.getLongOpt()
+                  : "-" + option.getOpt(),
+              Arrays.stream(SchemaFormat.values())
+                  .map(Enum::name)
+                  .collect(CustomCollectors.joiningWithOxfordComma("or"))),
+          ex);
+    }
+  }
+
+  /**
+   * Detect the source format for content identified using the provided option.
+   * <p>
+   * This method will first check if the source format is explicitly declared on
+   * the command line. If so, this format will be returned.
+   * <p>
+   * If not, then the content will be analyzed to determine the format.
+   *
+   * @param commandLine
+   *          the provided command line argument information
+   * @param option
+   *          the option specifying the format, which must be present on the
+   *          command line
    * @param loader
+   *          the content loader to use to load the content instance
    * @param resource
-   * @return
-   * @throws InvalidArgumentException
-   *           if the option is not a supported format
-   * @throws FileNotFoundException
-   *           if the URI is a file that was not found
-   * @throws IOException
-   *           if there was an error reading the file to determine the format of
-   *           the file
-   * @throws IllegalArgumentException
-   *           if the format of the source file was not recognized
+   *          the resource to load
+   * @return the identified content format
+   * @throws CommandExecutionException
+   *           if an error occurred while determining the source format
    * @since 2.0.0
    */
   @SuppressWarnings({ "PMD.PreserveStackTrace", "PMD.OnlyOneReturn" })
   @NonNull
   public static Format determineSourceFormat(
-      @NonNull CommandLine cmdLine,
+      @NonNull CommandLine commandLine,
       @NonNull Option option,
       @NonNull IBoundLoader loader,
       @NonNull URI resource) throws CommandExecutionException {
-    if (cmdLine.hasOption(option)) {
+    if (commandLine.hasOption(option)) {
       // use the option
-      return getFormat(cmdLine, option);
+      return getFormat(commandLine, option);
     }
 
     // attempt to determine the format
@@ -284,11 +381,29 @@ public final class MetaschemaCommands {
     }
   }
 
+  /**
+   * Load a Metaschema module based on the provided command line option.
+   *
+   * @param commandLine
+   *          the provided command line argument information
+   * @param option
+   *          the option specifying the module to load, which must be present on
+   *          the command line
+   * @param currentWorkingDirectory
+   *          the URI of the current working directory
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @return the loaded module
+   * @throws CommandExecutionException
+   *           if an error occurred while loading the module
+   * @since 2.0.0
+   */
   @NonNull
-  public static IModule handleModule(
+  public static IModule loadModule(
       @NonNull CommandLine commandLine,
       @NonNull Option option,
-      @NonNull URI cwd,
+      @NonNull URI currentWorkingDirectory,
       @NonNull IBindingContext bindingContext) throws CommandExecutionException {
     String moduleName = commandLine.getOptionValue(option);
     if (moduleName == null) {
@@ -302,7 +417,7 @@ public final class MetaschemaCommands {
 
     URI moduleUri;
     try {
-      moduleUri = UriUtils.toUri(moduleName, cwd);
+      moduleUri = UriUtils.toUri(moduleName, currentWorkingDirectory);
     } catch (URISyntaxException ex) {
       throw new CommandExecutionException(
           ExitCode.INVALID_ARGUMENTS,
@@ -311,11 +426,29 @@ public final class MetaschemaCommands {
               ex.getLocalizedMessage()),
           ex);
     }
-    return handleModule(moduleUri, bindingContext);
+    return loadModule(moduleUri, bindingContext);
   }
 
+  /**
+   * Load a Metaschema module from the provided relative resource path.
+   * <p>
+   * This method will resolve the provided resource against the current working
+   * directory to create an absolute URI.
+   *
+   * @param moduleResource
+   *          the relative path to the module resource to load
+   * @param currentWorkingDirectory
+   *          the URI of the current working directory
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @return the loaded module
+   * @throws CommandExecutionException
+   *           if an error occurred while loading the module
+   * @since 2.0.0
+   */
   @NonNull
-  public static IModule handleModule(
+  public static IModule loadModule(
       @NonNull String moduleResource,
       @NonNull URI currentWorkingDirectory,
       @NonNull IBindingContext bindingContext) throws CommandExecutionException {
@@ -323,7 +456,7 @@ public final class MetaschemaCommands {
       URI moduleUri = getResourceUri(
           moduleResource,
           currentWorkingDirectory);
-      return handleModule(moduleUri, bindingContext);
+      return loadModule(moduleUri, bindingContext);
     } catch (URISyntaxException ex) {
       throw new CommandExecutionException(
           ExitCode.INVALID_ARGUMENTS,
@@ -334,10 +467,24 @@ public final class MetaschemaCommands {
     }
   }
 
+  /**
+   * Load a Metaschema module from the provided resource path.
+   *
+   * @param moduleResource
+   *          the absolute path to the module resource to load
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @return the loaded module
+   * @throws CommandExecutionException
+   *           if an error occurred while loading the module
+   * @since 2.0.0
+   */
   @NonNull
-  public static IModule handleModule(
+  public static IModule loadModule(
       @NonNull URI moduleResource,
       @NonNull IBindingContext bindingContext) throws CommandExecutionException {
+    // TODO: ensure the resource URI is absolute
     try {
       IBindingModuleLoader loader = bindingContext.newModuleLoader();
       loader.allowEntityResolution();
@@ -352,7 +499,7 @@ public final class MetaschemaCommands {
    *
    * @param location
    *          the resource location
-   * @param cwd
+   * @param currentWorkingDirectory
    *          the URI of the current working directory
    * @return the resolved URI
    * @throws URISyntaxException
@@ -361,24 +508,40 @@ public final class MetaschemaCommands {
   @NonNull
   public static URI getResourceUri(
       @NonNull String location,
-      @NonNull URI cwd) throws URISyntaxException {
-    return UriUtils.toUri(location, cwd);
+      @NonNull URI currentWorkingDirectory) throws URISyntaxException {
+    return UriUtils.toUri(location, currentWorkingDirectory);
   }
 
+  /**
+   * Load a set of external Metaschema module constraints based on the provided
+   * command line option.
+   *
+   * @param commandLine
+   *          the provided command line argument information
+   * @param option
+   *          the option specifying the constraints to load, which must be present
+   *          on the command line
+   * @param currentWorkingDirectory
+   *          the URI of the current working directory
+   * @return the set of loaded constraints
+   * @throws CommandExecutionException
+   *           if an error occurred while loading the module
+   * @since 2.0.0
+   */
   @NonNull
   public static Set<IConstraintSet> loadConstraintSets(
-      @NonNull CommandLine cmdLine,
+      @NonNull CommandLine commandLine,
       @NonNull Option option,
-      @NonNull URI cwd) throws CommandExecutionException {
+      @NonNull URI currentWorkingDirectory) throws CommandExecutionException {
     Set<IConstraintSet> constraintSets;
-    if (cmdLine.hasOption(option)) {
+    if (commandLine.hasOption(option)) {
       IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();
       constraintSets = new LinkedHashSet<>();
-      String[] args = cmdLine.getOptionValues(option);
+      String[] args = commandLine.getOptionValues(option);
       for (String arg : args) {
         assert arg != null;
         try {
-          URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, cwd));
+          URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, currentWorkingDirectory));
           constraintSets.addAll(constraintLoader.load(constraintUri));
         } catch (URISyntaxException | IOException | MetaschemaException | MetapathException ex) {
           throw new CommandExecutionException(
@@ -395,24 +558,52 @@ public final class MetaschemaCommands {
     return constraintSets;
   }
 
+  /**
+   * Create a temporary directory for ephemeral files that will be deleted on
+   * shutdown.
+   *
+   * @return the temp directory path
+   * @throws IOException
+   *           if an error occurred while creating the temporary directory
+   */
   @NonNull
   public static Path newTempDir() throws IOException {
     Path retval = Files.createTempDirectory("metaschema-cli-");
-    retval.toFile().deleteOnExit();
-    return retval;
+    DeleteOnShutdown.register(retval);
+    return ObjectUtils.notNull(retval);
   }
 
+  /**
+   * Create a new {@link IBindingContext} that is configured for dynamic
+   * compilation.
+   *
+   * @return the binding context
+   * @throws CommandExecutionException
+   *           if an error occurred while creating the binding context
+   * @since 2.0.0
+   */
   @NonNull
   public static IBindingContext newBindingContextWithDynamicCompilation() throws CommandExecutionException {
     return newBindingContextWithDynamicCompilation(CollectionUtil.emptySet());
   }
 
+  /**
+   * Create a new {@link IBindingContext} that is configured for dynamic
+   * compilation and to use the provided constraints.
+   *
+   * @param constraintSets
+   *          the Metaschema module constraints to dynamicly bind to loaded
+   *          modules
+   * @return the binding context
+   * @throws CommandExecutionException
+   *           if an error occurred while creating the binding context
+   * @since 2.0.0
+   */
   @NonNull
   public static IBindingContext newBindingContextWithDynamicCompilation(@NonNull Set<IConstraintSet> constraintSets)
       throws CommandExecutionException {
     try {
       Path tempDir = newTempDir();
-      tempDir.toFile().deleteOnExit();
       return IBindingContext.builder()
           .compilePath(tempDir)
           .constraintSet(constraintSets)
@@ -421,34 +612,6 @@ public final class MetaschemaCommands {
       throw new CommandExecutionException(ExitCode.RUNTIME_ERROR,
           String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()),
           ex);
-    }
-  }
-
-  @SuppressWarnings("PMD.PreserveStackTrace")
-  @NonNull
-  public static SchemaFormat getSchemaFormat(
-      @NonNull CommandLine cmdLine,
-      @NonNull Option option) throws InvalidArgumentException {
-    // use the option
-    String toFormatText = cmdLine.getOptionValue(option);
-    if (toFormatText == null) {
-      throw new IllegalArgumentException(
-          String.format("Option '%s' not provided.",
-              option.hasLongOpt()
-                  ? "--" + option.getLongOpt()
-                  : "-" + option.getOpt()));
-    }
-    try {
-      return SchemaFormat.valueOf(toFormatText.toUpperCase(Locale.ROOT));
-    } catch (IllegalArgumentException ex) {
-      throw new InvalidArgumentException(
-          String.format("Invalid '%s' argument. The schema format must be one of: %s.",
-              option.hasLongOpt()
-                  ? "--" + option.getLongOpt()
-                  : "-" + option.getOpt(),
-              Arrays.stream(SchemaFormat.values())
-                  .map(Enum::name)
-                  .collect(CustomCollectors.joiningWithOxfordComma("or"))));
     }
   }
 

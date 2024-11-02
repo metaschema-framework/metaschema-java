@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.cli.commands.metapath;
 import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
-import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
@@ -44,7 +43,21 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public class EvaluateMetapathCommand
+/**
+ * This command implementation executes a Metapath query.
+ * <p>
+ * The query is executed using one of the following configurations:
+ * <ol>
+ * <li><b>module and content:</b> on a content instance parsed using a provided
+ * Metaschema module,</li>
+ * <li><b>module-only:</b> against the Metaschema module itself if no content
+ * instance is provided, or</li>
+ * <li><b>without content or module:</b> if both a module and content are
+ * omitted then the execution will be limited to operations that do not act on
+ * content.</li>
+ * </ol>
+ */
+class EvaluateMetapathCommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(EvaluateMetapathCommand.class);
 
@@ -92,21 +105,16 @@ public class EvaluateMetapathCommand
   }
 
   @Override
-  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-    List<String> extraArgs = cmdLine.getArgList();
-    if (!extraArgs.isEmpty()) {
-      throw new InvalidArgumentException("Illegal number of extra arguments.");
-    }
-  }
-
-  @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine cmdLine) {
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
-      "PMD.AvoidCatchingGenericException"
+      "PMD.AvoidCatchingGenericException",
+      "PMD.NPathComplexity",
+      "PMD.CognitiveComplexity",
+      "PMD.CyclomaticComplexity"
   })
   @SuppressFBWarnings(value = "REC_CATCH_EXCEPTION",
       justification = "Catching generic exception for CLI error handling")
@@ -119,12 +127,11 @@ public class EvaluateMetapathCommand
     if (cmdLine.hasOption(MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION)) {
       IBindingContext bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
 
-      module = MetaschemaCommands.handleModule(
+      module = bindingContext.registerModule(MetaschemaCommands.loadModule(
           cmdLine,
           MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION,
           ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),
-          bindingContext);
-      bindingContext.registerModule(module);
+          bindingContext));
 
       // determine if the query is evaluated against the module or the instance
       if (cmdLine.hasOption(CONTENT_OPTION)) {
@@ -158,16 +165,18 @@ public class EvaluateMetapathCommand
               ex);
         }
       } else {
+        // evaluate against the module
         item = INodeItemFactory.instance().newModuleNodeItem(module);
       }
     } else if (cmdLine.hasOption(CONTENT_OPTION)) {
       // content provided, but no module; require module
-      String contentLocation = ObjectUtils.requireNonNull(cmdLine.getOptionValue(CONTENT_OPTION));
       throw new CommandExecutionException(
           ExitCode.INVALID_ARGUMENTS,
-          String.format("Must use '%s' to specify the Metaschema module.", CONTENT_OPTION.getArgName()));
+          String.format("Must use '%s' to specify the Metaschema module.",
+              CONTENT_OPTION.getArgName()));
     }
 
+    // now setup to evaluate the metapath
     StaticContext.Builder builder = StaticContext.builder();
     if (module != null) {
       builder.defaultModelNamespace(module.getXmlNamespace());
@@ -186,6 +195,7 @@ public class EvaluateMetapathCommand
       MetapathExpression compiledMetapath = MetapathExpression.compile(expression, staticContext);
       ISequence<?> sequence = compiledMetapath.evaluate(item, new DynamicContext(staticContext));
 
+      // handle the metapath results
       try (Writer stringWriter = new StringWriter()) {
         try (PrintWriter writer = new PrintWriter(stringWriter)) {
           try (IItemWriter itemWriter = new DefaultItemWriter(writer)) {

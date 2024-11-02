@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -39,7 +38,7 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Used by implementing classes to declare a content conversion command.
+ * Used by implementing classes to provide a content conversion command.
  */
 public abstract class AbstractConvertSubcommand
     extends AbstractTerminalCommand {
@@ -94,11 +93,8 @@ public abstract class AbstractConvertSubcommand
      * Get the binding context to use for data processing.
      *
      * @return the context
-     * @throws MetaschemaException
-     *           if a Metaschema error occurred
-     * @throws IOException
-     *           if an error occurred while reading data
      * @throws CommandExecutionException
+     *           if an error occurred getting the binding context
      */
     @NonNull
     protected abstract IBindingContext getBindingContext() throws CommandExecutionException;
