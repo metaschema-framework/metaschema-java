@@ -60,9 +60,13 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
   /**
    * Determine if the definition is defined inline, meaning the definition is
    * declared where it is used.
+   * <p>
+   * If this method returns {@code false}, then {@link #getInlineInstance()} must
+   * return {@code null}.
    *
    * @return {@code true} if the definition is declared inline or {@code false} if
    *         the definition is able to be globally referenced
+   * @see #getInlineInstance()
    */
   default boolean isInline() {
     return getInlineInstance() != null;
@@ -71,8 +75,12 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
   /**
    * If {@link #isInline()} is {@code true}, return the instance the definition is
    * inlined for.
+   * <p>
+   * If this method returns {@code null}, then {@link #getInlineInstance()} must
+   * return {@code false}.
    *
    * @return the instance or {@code null} otherwise
+   * @see #isInline()
    */
   INamedInstance getInlineInstance();
 

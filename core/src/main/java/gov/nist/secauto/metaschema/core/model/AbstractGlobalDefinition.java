@@ -61,6 +61,12 @@ public abstract class AbstractGlobalDefinition<MODULE extends IModule, INSTANCE 
   }
 
   @Override
+  public boolean isInline() {
+    // never inline
+    return false;
+  }
+
+  @Override
   public final INSTANCE getInlineInstance() {
     // never inline
     return null;

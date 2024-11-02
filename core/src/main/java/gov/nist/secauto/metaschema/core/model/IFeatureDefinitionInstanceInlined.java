@@ -28,11 +28,6 @@ public interface IFeatureDefinitionInstanceInlined<
     DEFINITION extends IDefinition,
     INSTANCE extends INamedInstance>
     extends IDefinition, INamedInstance {
-  @Override
-  default boolean isInline() {
-    // has to be inline
-    return true;
-  }
 
   @Override
   default QName getDefinitionQName() {
@@ -42,6 +37,12 @@ public interface IFeatureDefinitionInstanceInlined<
   @Override
   default DEFINITION getDefinition() {
     return ObjectUtils.asType(this);
+  }
+
+  @Override
+  default boolean isInline() {
+    // has to be inline
+    return true;
   }
 
   @Override

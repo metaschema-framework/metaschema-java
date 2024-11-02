@@ -78,6 +78,12 @@ public interface IAssemblyDefinition
   }
 
   @Override
+  default boolean isInline() {
+    // not inline by default
+    return false;
+  }
+
+  @Override
   default IAssemblyInstance getInlineInstance() {
     // not inline by default
     return null;

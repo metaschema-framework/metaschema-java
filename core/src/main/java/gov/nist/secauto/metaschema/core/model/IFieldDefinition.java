@@ -9,6 +9,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IFieldDefinition extends IModelDefinition, IValuedDefinition, IField {
+
+  @Override
+  default boolean isInline() {
+    // not inline by default
+    return false;
+  }
+
   @Override
   default IFieldInstance getInlineInstance() {
     // not inline by default

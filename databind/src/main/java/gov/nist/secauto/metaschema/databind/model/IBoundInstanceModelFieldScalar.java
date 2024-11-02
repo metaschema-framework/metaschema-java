@@ -27,6 +27,11 @@ public interface IBoundInstanceModelFieldScalar
   }
 
   @Override
+  default boolean isInline() {
+    return IFeatureDefinitionInstanceInlined.super.isInline();
+  }
+
+  @Override
   default IBoundInstanceModelFieldScalar getInlineInstance() {
     return IFeatureDefinitionInstanceInlined.super.getInlineInstance();
   }

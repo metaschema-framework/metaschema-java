@@ -74,6 +74,11 @@ public abstract class AbstractInlineAssemblyDefinition<
   }
 
   @Override
+  public boolean isInline() {
+    return true;
+  }
+
+  @Override
   @NonNull
   public final INSTANCE getInlineInstance() {
     return ObjectUtils.asType(this);

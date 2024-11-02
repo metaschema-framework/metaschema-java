@@ -466,8 +466,7 @@ public final class SarifValidationHandler {
         assert constraint != null;
         ConstraintRuleRecord rule = getRuleRecord(constraint);
 
-        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-        Result result = new Result();
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") Result result = new Result();
 
         String id = constraint.getId();
         if (id != null) {
