@@ -70,7 +70,7 @@
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.2</dependency.plexus-utils.version>
 		<dependency.plexus-build-api.version>1.2.0</dependency.plexus-build-api.version>
-		<dependency.pmd.version>7.6.0</dependency.pmd.version>
+		<dependency.pmd.version>7.7.0</dependency.pmd.version>
 		<dependency.saxon.version>12.5</dependency.saxon.version>
 		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
 		<dependency.stax2-api.version>4.2.2</dependency.stax2-api.version>
