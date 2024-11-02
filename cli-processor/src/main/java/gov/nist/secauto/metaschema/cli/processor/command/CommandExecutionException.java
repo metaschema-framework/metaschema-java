@@ -48,7 +48,7 @@ public class CommandExecutionException
   }
 
   /**
-   * Constructs a new exception with the no message and provided the {@code code}
+   * Constructs a new exception with no message and the provided {@code code}
    * and {@code cause}.
    *
    * @param code
