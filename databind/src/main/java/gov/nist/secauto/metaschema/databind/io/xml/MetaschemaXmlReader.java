@@ -147,7 +147,7 @@ public class MetaschemaXmlReader
       Object value = definition.readItem(null, handler);
       if (value == null) {
         event = reader.peek();
-        throw new IOException(String.format("Unable to read data%s",
+        throw new IOException(String.format("Unable to read data.%s",
             event == null ? "" : XmlEventUtil.generateLocationMessage(event)));
       }
 
