@@ -56,6 +56,8 @@ public class BindingModuleLoader
    *
    * @param bindingContext
    *          the Metaschema binding context used to load bound resources
+   * @param postProcessor
+   *          the post processor to use when after loading a module
    */
   public BindingModuleLoader(
       @NonNull IBindingContext bindingContext,

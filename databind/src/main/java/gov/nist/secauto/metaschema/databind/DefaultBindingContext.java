@@ -125,8 +125,6 @@ public class DefaultBindingContext implements IBindingContext {
    * Get the binding matchers that are associated with this class.
    *
    * @return the list of matchers
-   * @see #registerBindingMatcher(Class)
-   * @see #registerBindingMatcher(IBoundDefinitionModelAssembly)
    */
   @NonNull
   protected Collection<IBindingMatcher> getBindingMatchers() {

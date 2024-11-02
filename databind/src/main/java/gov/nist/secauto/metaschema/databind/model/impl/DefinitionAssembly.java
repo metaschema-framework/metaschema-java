@@ -74,6 +74,10 @@ public final class DefinitionAssembly
    *
    * @param clazz
    *          the class the assembly is bound to
+   * @param annotation
+   *          the binding annotation associated with this class
+   * @param module
+   *          the module containing this class
    * @param bindingContext
    *          the Metaschema binding context managing this class used to lookup
    *          binding information

@@ -106,6 +106,8 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
    *
    * @param moduleClass
    *          the Module class
+   * @param bindingContext
+   *          the Metaschema binding context used to lookup binding information
    * @return the new Module instance
    */
   @NonNull

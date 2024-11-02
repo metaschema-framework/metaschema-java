@@ -94,8 +94,8 @@ public class JavaCompilerSupport {
   /**
    * Generate and compile Java classes.
    *
-   * @param classDir
-   *          the directory to generate the classes in
+   * @param classFiles
+   *          the files to compile
    * @param compileOut
    *          a Writer for additional output from the compiler; use System.err if
    *          null

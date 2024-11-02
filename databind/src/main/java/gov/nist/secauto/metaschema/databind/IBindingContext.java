@@ -257,8 +257,6 @@ public interface IBindingContext {
    *
    * @param module
    *          the Module module to generate classes for
-   * @param compilePath
-   *          the path to the directory to generate classes in
    * @return the registered module, which may be a different instance than what
    *         was provided if dynamic compilation was performed
    * @throws UnsupportedOperationException
@@ -304,7 +302,6 @@ public interface IBindingContext {
    * @param rootQName
    *          the root XML element's QName
    * @return the bound class or {@code null} if not recognized
-   * @see IBindingContext#registerBindingMatcher(Class)
    */
   @Nullable
   Class<? extends IBoundObject> getBoundClassForRootXmlQName(@NonNull QName rootQName);
@@ -316,7 +313,6 @@ public interface IBindingContext {
    * @param rootName
    *          the JSON/YAML property/item name
    * @return the bound class or {@code null} if not recognized
-   * @see IBindingContext#registerBindingMatcher(Class)
    */
   @Nullable
   Class<? extends IBoundObject> getBoundClassForRootJsonName(@NonNull String rootName);
@@ -830,7 +826,8 @@ public interface IBindingContext {
       switch (asFormat) {
       case JSON: {
         JSONObject json;
-        try (@SuppressWarnings("resource") InputStream is
+        try (@SuppressWarnings("resource")
+        InputStream is
             = new BufferedInputStream(ObjectUtils.notNull(targetResource.openStream()))) {
           json = new JSONObject(new JSONTokener(is));
         }
