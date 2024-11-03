@@ -8,6 +8,8 @@ package gov.nist.secauto.metaschema.core.model.xml;
 import gov.nist.secauto.metaschema.core.model.AbstractModuleLoader;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlModule;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.METASCHEMADocument;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -21,6 +23,7 @@ import org.xml.sax.XMLReader;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +50,18 @@ public class ModuleLoader
    * Construct a new Metaschema loader.
    */
   public ModuleLoader() {
-    this(CollectionUtil.emptyList());
+    this(CollectionUtil.<IModuleLoader.IModulePostProcessor>emptyList());
+  }
+
+  /**
+   * Construct a new Metaschema loader, which applies the provided constraints to
+   * loaded modules.
+   *
+   * @param constraints
+   *          a set of Metaschema module constraints
+   */
+  public ModuleLoader(@NonNull Collection<IConstraintSet> constraints) {
+    this(CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));
   }
 
   /**

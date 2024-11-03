@@ -24,9 +24,13 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Supports logging constraint findings to the configured Log4J2 instance.
+ */
 public class LoggingConstraintValidationHandler
     extends AbstractConstraintValidationHandler {
   private static final Logger LOGGER = LogManager.getLogger(DefaultConstraintValidator.class);
+  private static final Throwable NO_EXCEPTION = null;
 
   private static LogBuilder getLogBuilder(@NonNull Level level) {
     LogBuilder retval;
@@ -84,8 +88,9 @@ public class LoggingConstraintValidationHandler
     return retval;
   }
 
-  private void logConstraint(
+  private void logMessage(
       @NonNull Level level,
+      @Nullable String identifier,
       @NonNull INodeItem node,
       @NonNull CharSequence message,
       @Nullable Throwable cause) {
@@ -93,8 +98,11 @@ public class LoggingConstraintValidationHandler
     if (cause != null) {
       builder.withThrowable(cause);
     }
-
-    builder.log("{}: ({}) {}", level.name(), toPath(node), message);
+    builder.log("{}{}: ({}) {}",
+        identifier == null ? "" : "[" + identifier + "] ",
+        level.name(),
+        toPath(node),
+        message);
   }
 
   @Override
@@ -105,15 +113,16 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           node,
           newCardinalityMinimumViolationMessage(
               constraint,
               node,
               targets,
               dynamicContext),
-          null); // Null because there is no exeception, a Throwable cause.
+          NO_EXCEPTION); // Null because there is no exeception, a Throwable cause.
     }
   }
 
@@ -125,8 +134,9 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           node,
           newCardinalityMaximumViolationMessage(
               constraint,
@@ -146,8 +156,9 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           target,
           newIndexDuplicateKeyViolationMessage(
               constraint,
@@ -155,7 +166,7 @@ public class LoggingConstraintValidationHandler
               oldItem,
               target,
               dynamicContext),
-          null);
+          NO_EXCEPTION);
     }
   }
 
@@ -168,8 +179,9 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           target,
           newUniqueKeyViolationMessage(
               constraint,
@@ -177,7 +189,7 @@ public class LoggingConstraintValidationHandler
               oldItem,
               target,
               dynamicContext),
-          null);
+          NO_EXCEPTION);
     }
   }
 
@@ -191,7 +203,12 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(level, target, cause.getLocalizedMessage(), cause);
+      logMessage(
+          level,
+          constraint.getId(),
+          target,
+          cause.getLocalizedMessage(),
+          cause);
     }
   }
 
@@ -205,8 +222,9 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           target,
           newMatchPatternViolationMessage(
               constraint,
@@ -215,7 +233,7 @@ public class LoggingConstraintValidationHandler
               value,
               pattern,
               dynamicContext),
-          null);
+          NO_EXCEPTION);
     }
   }
 
@@ -230,8 +248,9 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           target,
           newMatchDatatypeViolationMessage(
               constraint,
@@ -252,15 +271,16 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           target,
           newExpectViolationMessage(
               constraint,
               node,
               target,
               dynamicContext),
-          null);
+          NO_EXCEPTION);
     }
   }
 
@@ -275,8 +295,9 @@ public class LoggingConstraintValidationHandler
         .max(Comparator.comparing(Level::ordinal))
         .get());
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          null,
           target,
           newAllowedValuesViolationMessage(
               failedConstraints,
@@ -293,13 +314,14 @@ public class LoggingConstraintValidationHandler
     // always log at level critical
     Level level = Level.CRITICAL;
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           node,
           newIndexDuplicateViolationMessage(
               constraint,
               node),
-          null);
+          NO_EXCEPTION);
     }
   }
 
@@ -312,8 +334,9 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           node,
           newIndexMissMessage(
               constraint,
@@ -321,7 +344,7 @@ public class LoggingConstraintValidationHandler
               target,
               key,
               dynamicContext),
-          null);
+          NO_EXCEPTION);
     }
   }
 
@@ -334,8 +357,9 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
-      logConstraint(
+      logMessage(
           level,
+          constraint.getId(),
           node,
           newMissingIndexViolationMessage(
               constraint,
@@ -343,7 +367,7 @@ public class LoggingConstraintValidationHandler
               target,
               message,
               dynamicContext),
-          null);
+          NO_EXCEPTION);
     }
   }
 
@@ -353,7 +377,14 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull DynamicContext dynamicContext) {
-    // do nothing
+    if (LOGGER.isDebugEnabled()) {
+      String identifier = constraint.getId();
+      LOGGER.atDebug().log("{}{}: ({}) {}",
+          identifier == null ? "" : "[" + identifier + "] ",
+          Level.INFORMATIONAL.name(),
+          toPath(node),
+          "Passed");
+    }
   }
 
   @Override
@@ -365,7 +396,12 @@ public class LoggingConstraintValidationHandler
       @NonNull DynamicContext dynamicContext) {
     Level level = Level.CRITICAL;
     if (isLogged(level)) {
-      logConstraint(level, node, message, exception);
+      logMessage(
+          level,
+          constraint.getId(),
+          node,
+          message,
+          exception);
     }
   }
 }
