@@ -127,7 +127,7 @@ public final class LoggingValidationHandler
 
     String id = finding.getIdentifier();
     if (id != null) {
-      ansi.format(" %s: ", id);
+      ansi.format(" %s:", id);
     }
 
     getLogger(finding).log(ansi.format(" %s", finding.getMessage()));
