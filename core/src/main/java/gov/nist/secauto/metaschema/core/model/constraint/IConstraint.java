@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.model.constraint;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDescribable;
@@ -110,6 +111,8 @@ public interface IConstraint extends IAttributable, IDescribable {
    * @param dynamicContext
    *          the Metapath evaluation context to use
    * @return the matching nodes as a sequence
+   * @throws MetapathException
+   *           if an error occurred during evaluation
    * @see #getTarget()
    */
   @NonNull
