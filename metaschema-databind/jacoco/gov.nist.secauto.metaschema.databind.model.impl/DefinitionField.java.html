@@ -8,12 +8,12 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
@@ -29,14 +29,21 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
-//TODO: implement getProperties()
+/**
+ * Implements a Metaschema module global field definition bound to a Java class.
+ */
+@SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)
 public final class DefinitionField
     extends AbstractBoundDefinitionModelComplex&lt;MetaschemaField&gt;
     implements IBoundDefinitionModelFieldComplex {
@@ -50,6 +57,8 @@ public final class DefinitionField
   private final Lazy&lt;IValueConstrained&gt; constraints;
   @NonNull
   private final Lazy&lt;Map&lt;String, IBoundProperty&lt;?&gt;&gt;&gt; jsonProperties;
+  @NonNull
+  private final Lazy&lt;Map&lt;IAttributable.Key, Set&lt;String&gt;&gt;&gt; properties;
 
   /**
    * Collect all fields that are part of the model for this class.
@@ -60,25 +69,25 @@ public final class DefinitionField
    */
   @Nullable
   private static Field getFieldValueField(Class&lt;?&gt; clazz) {
-<span class="fc" id="L63">    Field[] fields = clazz.getDeclaredFields();</span>
+<span class="fc" id="L72">    Field[] fields = clazz.getDeclaredFields();</span>
 
-<span class="fc" id="L65">    Field retval = null;</span>
-<span class="fc bfc" id="L66" title="All 2 branches covered.">    for (Field field : fields) {</span>
-<span class="pc bpc" id="L67" title="1 of 4 branches missed.">      if (!field.isAnnotationPresent(BoundFieldValue.class) || field.isAnnotationPresent(Ignore.class)) {</span>
+<span class="fc" id="L74">    Field retval = null;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    for (Field field : fields) {</span>
+<span class="pc bpc" id="L76" title="1 of 4 branches missed.">      if (!field.isAnnotationPresent(BoundFieldValue.class) || field.isAnnotationPresent(Ignore.class)) {</span>
         // skip this field, since it is ignored
-<span class="nc" id="L69">        continue;</span>
+<span class="nc" id="L78">        continue;</span>
       }
-<span class="fc" id="L71">      retval = field;</span>
+<span class="fc" id="L80">      retval = field;</span>
     }
 
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L75">      Class&lt;?&gt; superClass = clazz.getSuperclass();</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">      if (superClass != null) {</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L84">      Class&lt;?&gt; superClass = clazz.getSuperclass();</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">      if (superClass != null) {</span>
         // get instances from superclass
-<span class="nc" id="L78">        retval = getFieldValueField(superClass);</span>
+<span class="nc" id="L87">        retval = getFieldValueField(superClass);</span>
       }
     }
-<span class="fc" id="L81">    return retval;</span>
+<span class="fc" id="L90">    return retval;</span>
   }
 
   /**
@@ -86,49 +95,57 @@ public final class DefinitionField
    *
    * @param clazz
    *          the Java class the definition is bound to
+   * @param annotation
+   *          the binding annotation associated with this class
+   * @param module
+   *          the module containing this class
    * @param bindingContext
-   *          the Metaschema binding context managing this class
+   *          the Metaschema binding context managing this class used to lookup
+   *          binding information
    * @return the instance
    */
   @NonNull
   public static DefinitionField newInstance(
       @NonNull Class&lt;? extends IBoundObject&gt; clazz,
+      @NonNull MetaschemaField annotation,
+      @NonNull IBoundModule module,
       @NonNull IBindingContext bindingContext) {
-<span class="fc" id="L97">    MetaschemaField annotation = ModelUtil.getAnnotation(clazz, MetaschemaField.class);</span>
-<span class="fc" id="L98">    Class&lt;? extends IBoundModule&gt; moduleClass = annotation.moduleClass();</span>
-<span class="fc" id="L99">    return new DefinitionField(clazz, annotation, moduleClass, bindingContext);</span>
+<span class="fc" id="L113">    return new DefinitionField(clazz, annotation, module, bindingContext);</span>
   }
 
   private DefinitionField(
       @NonNull Class&lt;? extends IBoundObject&gt; clazz,
       @NonNull MetaschemaField annotation,
-      @NonNull Class&lt;? extends IBoundModule&gt; moduleClass,
+      @NonNull IBoundModule module,
       @NonNull IBindingContext bindingContext) {
-<span class="fc" id="L107">    super(clazz, annotation, moduleClass, bindingContext);</span>
-<span class="fc" id="L108">    Field field = getFieldValueField(getBoundClass());</span>
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">    if (field == null) {</span>
-<span class="nc" id="L110">      throw new IllegalArgumentException(</span>
-<span class="nc" id="L111">          String.format(&quot;Class '%s' is missing the '%s' annotation on one of its fields.&quot;,</span>
-<span class="nc" id="L112">              clazz.getName(),</span>
-<span class="nc" id="L113">              BoundFieldValue.class.getName())); // NOPMD false positive</span>
+<span class="fc" id="L121">    super(clazz, annotation, module, bindingContext);</span>
+<span class="fc" id="L122">    Field field = getFieldValueField(getBoundClass());</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">    if (field == null) {</span>
+<span class="nc" id="L124">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L125">          String.format(&quot;Class '%s' is missing the '%s' annotation on one of its fields.&quot;,</span>
+<span class="nc" id="L126">              clazz.getName(),</span>
+<span class="nc" id="L127">              BoundFieldValue.class.getName())); // NOPMD false positive</span>
     }
-<span class="fc" id="L115">    this.fieldValue = new FieldValue(field, BoundFieldValue.class, bindingContext);</span>
-<span class="fc" id="L116">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; new FlagContainerSupport(this, this::handleFlagInstance)));</span>
-
-<span class="fc" id="L118">    IModule module = getContainingModule();</span>
-
-<span class="fc" id="L120">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="nc" id="L121">      IModelConstrained retval = new AssemblyConstraintSet();</span>
-<span class="nc" id="L122">      ValueConstraints valueAnnotation = getAnnotation().valueConstraints();</span>
-<span class="nc" id="L123">      ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);</span>
-<span class="nc" id="L124">      return retval;</span>
+<span class="fc" id="L129">    this.fieldValue = new FieldValue(field, BoundFieldValue.class, bindingContext);</span>
+<span class="fc" id="L130">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; new FlagContainerSupport(this, this::handleFlagInstance)));</span>
+<span class="fc" id="L131">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="nc" id="L132">      IModelConstrained retval = new AssemblyConstraintSet();</span>
+<span class="nc" id="L133">      ValueConstraints valueAnnotation = getAnnotation().valueConstraints();</span>
+<span class="nc" id="L134">      ConstraintSupport.parse(valueAnnotation, module.getSource(), retval);</span>
+<span class="nc" id="L135">      return retval;</span>
     }));
-<span class="fc" id="L126">    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="nc" id="L127">      IBoundInstanceFlag jsonValueKey = getJsonValueKeyFlagInstance();</span>
-<span class="nc bnc" id="L128" title="All 4 branches missed.">      Predicate&lt;IBoundInstanceFlag&gt; flagFilter = jsonValueKey == null ? null : flag -&gt; !flag.equals(jsonValueKey);</span>
-<span class="nc" id="L129">      return getJsonProperties(flagFilter);</span>
+<span class="fc" id="L137">    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L138">      IBoundInstanceFlag jsonValueKey = getJsonValueKeyFlagInstance();</span>
+<span class="pc bpc" id="L139" title="3 of 4 branches missed.">      Predicate&lt;IBoundInstanceFlag&gt; flagFilter = jsonValueKey == null ? null : flag -&gt; !flag.equals(jsonValueKey);</span>
+<span class="fc" id="L140">      return getJsonProperties(flagFilter);</span>
     }));
-<span class="fc" id="L131">  }</span>
+<span class="fc" id="L142">    this.properties = ObjectUtils.notNull(</span>
+<span class="pc" id="L143">        Lazy.lazy(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="nc" id="L144">            Arrays.stream(annotation.properties())</span>
+<span class="nc" id="L145">                .map(ModelUtil::toPropertyEntry)</span>
+<span class="nc" id="L146">                .collect(</span>
+<span class="nc" id="L147">                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -&gt; v2, LinkedHashMap::new))))));</span>
+<span class="fc" id="L148">  }</span>
 
   /**
    * A callback used to identify the JSON value key flag.
@@ -137,31 +154,31 @@ public final class DefinitionField
    *          a flag instance
    */
   protected void handleFlagInstance(@NonNull IBoundInstanceFlag instance) {
-<span class="fc bfc" id="L140" title="All 2 branches covered.">    if (instance.isJsonValueKey()) {</span>
-<span class="fc" id="L141">      this.jsonValueKeyFlagInstance = instance;</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">    if (instance.isJsonValueKey()) {</span>
+<span class="fc" id="L158">      this.jsonValueKeyFlagInstance = instance;</span>
     }
-<span class="fc" id="L143">  }</span>
+<span class="fc" id="L160">  }</span>
 
   @Override
   @NonNull
   public FieldValue getFieldValue() {
-<span class="fc" id="L148">    return fieldValue;</span>
+<span class="fc" id="L165">    return fieldValue;</span>
   }
 
   @Override
   public IBoundInstanceFlag getJsonValueKeyFlagInstance() {
     // lazy load flags
-<span class="fc" id="L154">    getFlagContainer();</span>
-<span class="fc" id="L155">    return jsonValueKeyFlagInstance;</span>
+<span class="fc" id="L171">    getFlagContainer();</span>
+<span class="fc" id="L172">    return jsonValueKeyFlagInstance;</span>
   }
 
   @Override
   protected void deepCopyItemInternal(IBoundObject fromObject, IBoundObject toObject) throws BindingException {
     // copy the flags
-<span class="nc" id="L161">    super.deepCopyItemInternal(fromObject, toObject);</span>
+<span class="nc" id="L178">    super.deepCopyItemInternal(fromObject, toObject);</span>
 
-<span class="nc" id="L163">    getFieldValue().deepCopy(fromObject, toObject);</span>
-<span class="nc" id="L164">  }</span>
+<span class="nc" id="L180">    getFieldValue().deepCopy(fromObject, toObject);</span>
+<span class="nc" id="L181">  }</span>
 
   // ------------------------------------------
   // - Start annotation driven code - CPD-OFF -
@@ -171,50 +188,58 @@ public final class DefinitionField
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   public FlagContainerSupport getFlagContainer() {
-<span class="fc" id="L174">    return flagContainer.get();</span>
+<span class="fc" id="L191">    return flagContainer.get();</span>
   }
 
   @Override
   @NonNull
   public IValueConstrained getConstraintSupport() {
-<span class="nc" id="L180">    return ObjectUtils.notNull(constraints.get());</span>
+<span class="nc" id="L197">    return ObjectUtils.notNull(constraints.get());</span>
   }
 
   @Override
   public Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties() {
-<span class="nc" id="L185">    return ObjectUtils.notNull(jsonProperties.get());</span>
+<span class="fc" id="L202">    return ObjectUtils.notNull(jsonProperties.get());</span>
   }
 
   @Override
   @Nullable
   public String getFormalName() {
-<span class="nc" id="L191">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
+<span class="nc" id="L208">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
   }
 
   @Override
   @Nullable
   public MarkupLine getDescription() {
-<span class="nc" id="L197">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
+<span class="nc" id="L214">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
   }
 
   @Override
   @NonNull
   public String getName() {
-<span class="fc" id="L203">    return getAnnotation().name();</span>
+<span class="fc" id="L220">    return getAnnotation().name();</span>
+  }
+
+  @Override
+  public Map&lt;Key, Set&lt;String&gt;&gt; getProperties() {
+<span class="nc" id="L225">    return ObjectUtils.notNull(properties.get());</span>
   }
 
   @Override
   @Nullable
   public Integer getIndex() {
-<span class="nc" id="L209">    return ModelUtil.resolveDefaultInteger(getAnnotation().index());</span>
+<span class="nc" id="L231">    return ModelUtil.resolveDefaultInteger(getAnnotation().index());</span>
   }
 
   @Override
   @Nullable
   public MarkupMultiline getRemarks() {
-<span class="nc" id="L215">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().description());</span>
+<span class="nc" id="L237">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().description());</span>
   }
 
+  /**
+   * Implements a field definition value bound to a Java field.
+   */
   protected class FieldValue
       implements IBoundFieldValue {
     @NonNull
@@ -239,14 +264,14 @@ public final class DefinitionField
     protected FieldValue(
         @NonNull Field javaField,
         @NonNull Class&lt;BoundFieldValue&gt; annotationClass,
-<span class="fc" id="L242">        @NonNull IBindingContext bindingContext) {</span>
-<span class="fc" id="L243">      this.javaField = javaField;</span>
-<span class="fc" id="L244">      this.annotation = ModelUtil.getAnnotation(javaField, annotationClass);</span>
-<span class="fc" id="L245">      this.javaTypeAdapter = ModelUtil.getDataTypeAdapter(</span>
-<span class="fc" id="L246">          this.annotation.typeAdapter(),</span>
+<span class="fc" id="L267">        @NonNull IBindingContext bindingContext) {</span>
+<span class="fc" id="L268">      this.javaField = javaField;</span>
+<span class="fc" id="L269">      this.annotation = ModelUtil.getAnnotation(javaField, annotationClass);</span>
+<span class="fc" id="L270">      this.javaTypeAdapter = ModelUtil.getDataTypeAdapter(</span>
+<span class="fc" id="L271">          this.annotation.typeAdapter(),</span>
           bindingContext);
-<span class="fc" id="L248">      this.defaultValue = ModelUtil.resolveDefaultValue(this.annotation.defaultValue(), this.javaTypeAdapter);</span>
-<span class="fc" id="L249">    }</span>
+<span class="fc" id="L273">      this.defaultValue = ModelUtil.resolveDefaultValue(this.annotation.defaultValue(), this.javaTypeAdapter);</span>
+<span class="fc" id="L274">    }</span>
 
     /**
      * Get the bound Java field.
@@ -256,7 +281,7 @@ public final class DefinitionField
     @Override
     @NonNull
     public Field getField() {
-<span class="fc" id="L259">      return javaField;</span>
+<span class="fc" id="L284">      return javaField;</span>
     }
 
     /**
@@ -266,43 +291,43 @@ public final class DefinitionField
      */
     @NonNull
     public BoundFieldValue getAnnotation() {
-<span class="fc" id="L269">      return annotation;</span>
+<span class="fc" id="L294">      return annotation;</span>
     }
 
     @Override
     public IBoundDefinitionModelFieldComplex getParentFieldDefinition() {
-<span class="nc" id="L274">      return DefinitionField.this;</span>
+<span class="nc" id="L299">      return DefinitionField.this;</span>
     }
 
     @Override
     public String getJsonValueKeyName() {
-<span class="fc" id="L279">      String name = ModelUtil.resolveNoneOrValue(getAnnotation().valueKeyName());</span>
-<span class="fc bfc" id="L280" title="All 2 branches covered.">      return name == null ? getJavaTypeAdapter().getDefaultJsonValueKey() : name;</span>
+<span class="fc" id="L304">      String name = ModelUtil.resolveNoneOrValue(getAnnotation().valueKeyName());</span>
+<span class="fc bfc" id="L305" title="All 2 branches covered.">      return name == null ? getJavaTypeAdapter().getDefaultJsonValueKey() : name;</span>
     }
 
     @Override
     public String getJsonValueKeyFlagName() {
-<span class="nc" id="L285">      return ModelUtil.resolveNoneOrValue(getAnnotation().valueKeyName());</span>
+<span class="nc" id="L310">      return ModelUtil.resolveNoneOrValue(getAnnotation().valueKeyName());</span>
     }
 
     @Override
     public Object getDefaultValue() {
-<span class="fc" id="L290">      return defaultValue;</span>
+<span class="fc" id="L315">      return defaultValue;</span>
     }
 
     @Override
     public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {
-<span class="fc" id="L295">      return javaTypeAdapter;</span>
+<span class="fc" id="L320">      return javaTypeAdapter;</span>
     }
 
     @Override
     public Object getEffectiveDefaultValue() {
-<span class="nc" id="L300">      return getDefaultValue();</span>
+<span class="fc" id="L325">      return getDefaultValue();</span>
     }
 
     @Override
     public String getJsonName() {
-<span class="fc" id="L305">      return getEffectiveJsonValueKeyName();</span>
+<span class="fc" id="L330">      return getEffectiveJsonValueKeyName();</span>
     }
   }
   // ----------------------------------------

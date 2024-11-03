@@ -29,98 +29,98 @@
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IFlagInstance;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.ISource;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonKey;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> nl.talsmasoftware.lazy4j.Lazy;
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DefinitionAssemblyGlobal" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/impl/DefinitionAssemblyGlobal.html#DefinitionAssemblyGlobal">DefinitionAssemblyGlobal</a>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">extends</strong> AbstractGlobalAssemblyDefinition&lt;
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>          IBindingMetaschemaModule,
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>          IAssemblyInstance,
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>          IFlagInstance,
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          IModelInstanceAbsolute,
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>          INamedModelInstanceAbsolute,
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>          IFieldInstanceAbsolute,
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>          IAssemblyInstanceAbsolute,
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>          IChoiceInstance,
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>          IChoiceGroupInstance&gt;
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">implements</strong> <a name="IBindingDefinitionModelAssembly" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IBindingDefinitionModelAssembly.html#IBindingDefinitionModelAssembly">IBindingDefinitionModelAssembly</a> {
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>    @NonNull
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> METASCHEMA.DefineAssembly binding;
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>    @NonNull
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; properties;
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>    @NonNull
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IContainerFlagSupport&lt;IFlagInstance&gt;&gt; flagContainer;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    @NonNull
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IContainerModelAssemblySupport&lt;
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        IModelInstanceAbsolute,
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        INamedModelInstanceAbsolute,
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>        IFieldInstanceAbsolute,
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        IAssemblyInstanceAbsolute,
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        IChoiceInstance,
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>        IChoiceGroupInstance&gt;&gt; modelContainer;
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    @NonNull
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IModelConstrained&gt; modelConstraints;
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    @NonNull
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IAssemblyNodeItem&gt; boundNodeItem;
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   * Construct a new global assembly definition.</em>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   * @param binding</em>
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   *          the assembly reference object bound to a Java class</em>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   * @param bindingInstance</em>
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">   *          the Metaschema module instance for the bound assembly reference</em>
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   *          object</em>
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">   * @param position</em>
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">   *          the zero-based position of this instance relative to its bound</em>
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">   *          object siblings</em>
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">   * @param module</em>
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">   *          the containing Metaschema module</em>
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">   * @param nodeItemFactory</em>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">   *          the node item factory used to generate child nodes</em>
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>    <strong class="jxr_keyword">public</strong> <a name="DefinitionAssemblyGlobal" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/impl/DefinitionAssemblyGlobal.html#DefinitionAssemblyGlobal">DefinitionAssemblyGlobal</a>(
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>        @NonNull METASCHEMA.DefineAssembly binding,
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>        @NonNull <a name="IBoundInstanceModelGroupedAssembly" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/IBoundInstanceModelGroupedAssembly.html#IBoundInstanceModelGroupedAssembly">IBoundInstanceModelGroupedAssembly</a> bindingInstance,
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>        <strong class="jxr_keyword">int</strong> position,
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>        @NonNull <a name="IBindingMetaschemaModule" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IBindingMetaschemaModule.html#IBindingMetaschemaModule">IBindingMetaschemaModule</a> module,
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        @NonNull INodeItemFactory nodeItemFactory) {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">super</strong>(module);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">this</strong>.binding = binding;
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">this</strong>.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <strong class="jxr_keyword">this</strong>.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>        JsonKey jsonKey = getBinding().getJsonKey();
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>       <strong class="jxr_keyword">return</strong> FlagContainerSupport.newFlagContainer(
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>           binding.getFlags(),
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>           bindingInstance,
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>           <strong class="jxr_keyword">this</strong>,
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>           jsonKey == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : jsonKey.getFlagRef());
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     }));
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; AssemblyModelContainerSupport.of(
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>         binding.getModel(),
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>         ObjectUtils.requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(MODEL_QNAME)),
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonKey;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> nl.talsmasoftware.lazy4j.Lazy;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DefinitionAssemblyGlobal" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/impl/DefinitionAssemblyGlobal.html#DefinitionAssemblyGlobal">DefinitionAssemblyGlobal</a>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">extends</strong> AbstractGlobalAssemblyDefinition&lt;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          IBindingMetaschemaModule,
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          IAssemblyInstance,
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          IFlagInstance,
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          IModelInstanceAbsolute,
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          INamedModelInstanceAbsolute,
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>          IFieldInstanceAbsolute,
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          IAssemblyInstanceAbsolute,
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          IChoiceInstance,
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>          IChoiceGroupInstance&gt;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">implements</strong> <a name="IBindingDefinitionModelAssembly" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IBindingDefinitionModelAssembly.html#IBindingDefinitionModelAssembly">IBindingDefinitionModelAssembly</a> {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    @NonNull
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> METASCHEMA.DefineAssembly binding;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    @NonNull
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; properties;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    @NonNull
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IContainerFlagSupport&lt;IFlagInstance&gt;&gt; flagContainer;
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    @NonNull
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IContainerModelAssemblySupport&lt;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        IModelInstanceAbsolute,
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        INamedModelInstanceAbsolute,
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        IFieldInstanceAbsolute,
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        IAssemblyInstanceAbsolute,
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>        IChoiceInstance,
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>        IChoiceGroupInstance&gt;&gt; modelContainer;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    @NonNull
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IModelConstrained&gt; modelConstraints;
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    @NonNull
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IAssemblyNodeItem&gt; boundNodeItem;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">   * Construct a new global assembly definition.</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   * @param binding</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   *          the assembly reference object bound to a Java class</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   * @param bindingInstance</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   *          the Metaschema module instance for the bound assembly reference</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">   *          object</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   * @param position</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">   *          the zero-based position of this instance relative to its bound</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">   *          object siblings</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">   * @param module</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">   *          the containing Metaschema module</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">   * @param nodeItemFactory</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">   *          the node item factory used to generate child nodes</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">public</strong> <a name="DefinitionAssemblyGlobal" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/impl/DefinitionAssemblyGlobal.html#DefinitionAssemblyGlobal">DefinitionAssemblyGlobal</a>(
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>        @NonNull METASCHEMA.DefineAssembly binding,
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        @NonNull <a name="IBoundInstanceModelGroupedAssembly" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/IBoundInstanceModelGroupedAssembly.html#IBoundInstanceModelGroupedAssembly">IBoundInstanceModelGroupedAssembly</a> bindingInstance,
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>        <strong class="jxr_keyword">int</strong> position,
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>        @NonNull <a name="IBindingMetaschemaModule" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IBindingMetaschemaModule.html#IBindingMetaschemaModule">IBindingMetaschemaModule</a> module,
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>        @NonNull INodeItemFactory nodeItemFactory) {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">super</strong>(module);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">this</strong>.binding = binding;
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">this</strong>.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">this</strong>.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        JsonKey jsonKey = getBinding().getJsonKey();
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>        <strong class="jxr_keyword">return</strong> FlagContainerSupport.newFlagContainer(
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>           binding.getFlags(),
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>           bindingInstance,
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>           <strong class="jxr_keyword">this</strong>,
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>           jsonKey == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : jsonKey.getFlagRef());
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     }));
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; AssemblyModelContainerSupport.of(
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         binding.getModel(),
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         ObjectUtils.requireNonNull(bindingInstance.getDefinition()
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>             .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME)),
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">this</strong>,
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>         nodeItemFactory)));
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">this</strong>.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>       IModelConstrained retval = <strong class="jxr_keyword">new</strong> AssemblyConstraintSet();
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>       AssemblyConstraints constraints = getBinding().getConstraint();
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>       <strong class="jxr_keyword">if</strong> (constraints != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>         ConstraintBindingSupport.parse(retval, constraints, ISource.modelSource(module));
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         ConstraintBindingSupport.parse(retval, constraints, module.getSource());
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>       }
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>       <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>     }));
@@ -158,7 +158,7 @@
 <a class="jxr_linenumber" name="L150" href="#L150">150</a> 
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>   @Override
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>   <strong class="jxr_keyword">public</strong> IAssemblyNodeItem getSourceNodeItem() {
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <strong class="jxr_keyword">return</strong> boundNodeItem.get();
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(boundNodeItem.get());
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>   }
 <a class="jxr_linenumber" name="L155" href="#L155">155</a> 
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>   @Override
@@ -186,7 +186,7 @@
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>   }
 <a class="jxr_linenumber" name="L179" href="#L179">179</a> 
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>   @Override
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>   <strong class="jxr_keyword">public</strong> ModuleScopeEnum getModuleScope() {
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>   <strong class="jxr_keyword">public</strong> ModuleScope getModuleScope() {
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>     <strong class="jxr_keyword">return</strong> ModelSupport.moduleScope(ObjectUtils.requireNonNull(getBinding().getScope()));
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>   }
 <a class="jxr_linenumber" name="L184" href="#L184">184</a> 

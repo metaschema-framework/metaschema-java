@@ -23,55 +23,60 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-array-subarray&quot;&gt;array:subarray&lt;/a&gt;
+ * function.
+ */
 public final class ArraySubarray {
   private static final String NAME = &quot;subarray&quot;;
   @NonNull
-<span class="fc" id="L29">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
-<span class="fc" id="L30">      .name(NAME)</span>
-<span class="fc" id="L31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L32">      .deterministic()</span>
-<span class="fc" id="L33">      .contextIndependent()</span>
-<span class="fc" id="L34">      .focusIndependent()</span>
-<span class="fc" id="L35">      .argument(IArgument.builder()</span>
-<span class="fc" id="L36">          .name(&quot;array&quot;)</span>
-<span class="fc" id="L37">          .type(IArrayItem.class)</span>
-<span class="fc" id="L38">          .one()</span>
-<span class="fc" id="L39">          .build())</span>
+<span class="fc" id="L34">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
+<span class="fc" id="L35">      .name(NAME)</span>
+<span class="fc" id="L36">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L37">      .deterministic()</span>
+<span class="fc" id="L38">      .contextIndependent()</span>
+<span class="fc" id="L39">      .focusIndependent()</span>
 <span class="fc" id="L40">      .argument(IArgument.builder()</span>
-<span class="fc" id="L41">          .name(&quot;start&quot;)</span>
-<span class="fc" id="L42">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L41">          .name(&quot;array&quot;)</span>
+<span class="fc" id="L42">          .type(IArrayItem.class)</span>
 <span class="fc" id="L43">          .one()</span>
 <span class="fc" id="L44">          .build())</span>
-<span class="fc" id="L45">      .returnType(IArrayItem.class)</span>
-<span class="fc" id="L46">      .returnOne()</span>
-<span class="fc" id="L47">      .functionHandler(ArraySubarray::executeTwoArg)</span>
-<span class="fc" id="L48">      .build();</span>
+<span class="fc" id="L45">      .argument(IArgument.builder()</span>
+<span class="fc" id="L46">          .name(&quot;start&quot;)</span>
+<span class="fc" id="L47">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L48">          .one()</span>
+<span class="fc" id="L49">          .build())</span>
+<span class="fc" id="L50">      .returnType(IArrayItem.class)</span>
+<span class="fc" id="L51">      .returnOne()</span>
+<span class="fc" id="L52">      .functionHandler(ArraySubarray::executeTwoArg)</span>
+<span class="fc" id="L53">      .build();</span>
   @NonNull
-<span class="fc" id="L50">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
-<span class="fc" id="L51">      .name(NAME)</span>
-<span class="fc" id="L52">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="fc" id="L53">      .deterministic()</span>
-<span class="fc" id="L54">      .contextIndependent()</span>
-<span class="fc" id="L55">      .focusIndependent()</span>
-<span class="fc" id="L56">      .argument(IArgument.builder()</span>
-<span class="fc" id="L57">          .name(&quot;array&quot;)</span>
-<span class="fc" id="L58">          .type(IArrayItem.class)</span>
-<span class="fc" id="L59">          .one()</span>
-<span class="fc" id="L60">          .build())</span>
+<span class="fc" id="L55">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
+<span class="fc" id="L56">      .name(NAME)</span>
+<span class="fc" id="L57">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="fc" id="L58">      .deterministic()</span>
+<span class="fc" id="L59">      .contextIndependent()</span>
+<span class="fc" id="L60">      .focusIndependent()</span>
 <span class="fc" id="L61">      .argument(IArgument.builder()</span>
-<span class="fc" id="L62">          .name(&quot;start&quot;)</span>
-<span class="fc" id="L63">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L62">          .name(&quot;array&quot;)</span>
+<span class="fc" id="L63">          .type(IArrayItem.class)</span>
 <span class="fc" id="L64">          .one()</span>
 <span class="fc" id="L65">          .build())</span>
 <span class="fc" id="L66">      .argument(IArgument.builder()</span>
-<span class="fc" id="L67">          .name(&quot;length&quot;)</span>
+<span class="fc" id="L67">          .name(&quot;start&quot;)</span>
 <span class="fc" id="L68">          .type(IIntegerItem.class)</span>
 <span class="fc" id="L69">          .one()</span>
 <span class="fc" id="L70">          .build())</span>
-<span class="fc" id="L71">      .returnType(IArrayItem.class)</span>
-<span class="fc" id="L72">      .returnOne()</span>
-<span class="fc" id="L73">      .functionHandler(ArraySubarray::executeThreeArg)</span>
-<span class="fc" id="L74">      .build();</span>
+<span class="fc" id="L71">      .argument(IArgument.builder()</span>
+<span class="fc" id="L72">          .name(&quot;length&quot;)</span>
+<span class="fc" id="L73">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L74">          .one()</span>
+<span class="fc" id="L75">          .build())</span>
+<span class="fc" id="L76">      .returnType(IArrayItem.class)</span>
+<span class="fc" id="L77">      .returnOne()</span>
+<span class="fc" id="L78">      .functionHandler(ArraySubarray::executeThreeArg)</span>
+<span class="fc" id="L79">      .build();</span>
 
   private ArraySubarray() {
     // disable construction
@@ -83,11 +88,11 @@ public final class ArraySubarray {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L86">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L87">        arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L88">    IIntegerItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L91">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L92">        arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L93">    IIntegerItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
 
-<span class="fc" id="L90">    return ISequence.of(subarray(array, start));</span>
+<span class="fc" id="L95">    return ISequence.of(subarray(array, start));</span>
   }
 
   @SuppressWarnings(&quot;unused&quot;)
@@ -96,12 +101,12 @@ public final class ArraySubarray {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L99">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L100">        arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L101">    IIntegerItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L102">    IIntegerItem length = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2).getFirstItem(true)));</span>
+<span class="fc" id="L104">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L105">        arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L106">    IIntegerItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L107">    IIntegerItem length = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2).getFirstItem(true)));</span>
 
-<span class="fc" id="L104">    return ISequence.of(subarray(array, start, length));</span>
+<span class="fc" id="L109">    return ISequence.of(subarray(array, start, length));</span>
   }
 
   /**
@@ -123,7 +128,7 @@ public final class ArraySubarray {
   public static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; subarray(
       @NonNull IArrayItem&lt;T&gt; array,
       @NonNull IIntegerItem startItem) {
-<span class="fc" id="L126">    return subarray(array, startItem.asInteger().intValueExact());</span>
+<span class="fc" id="L131">    return subarray(array, startItem.asInteger().intValueExact());</span>
   }
 
   /**
@@ -150,7 +155,7 @@ public final class ArraySubarray {
       @NonNull IArrayItem&lt;T&gt; array,
       @NonNull IIntegerItem startItem,
       @NonNull IIntegerItem lengthItem) {
-<span class="fc" id="L153">    return subarray(array, startItem.asInteger().intValueExact(), lengthItem.asInteger().intValueExact());</span>
+<span class="fc" id="L158">    return subarray(array, startItem.asInteger().intValueExact(), lengthItem.asInteger().intValueExact());</span>
   }
 
   /**
@@ -172,7 +177,7 @@ public final class ArraySubarray {
   public static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; subarray(
       @NonNull IArrayItem&lt;T&gt; array,
       int start) {
-<span class="fc" id="L175">    return subarray(array, start, array.size() - start + 1);</span>
+<span class="fc" id="L180">    return subarray(array, start, array.size() - start + 1);</span>
   }
 
   /**
@@ -198,25 +203,25 @@ public final class ArraySubarray {
       @NonNull IArrayItem&lt;T&gt; array,
       int start,
       int length) {
-<span class="pc bpc" id="L201" title="1 of 2 branches missed.">    if (length &lt; 0) {</span>
-<span class="nc" id="L202">      throw new ArrayException(</span>
-<span class="nc" id="L203">          ArrayException.NEGATIVE_ARRAY_LENGTH, String.format(&quot;The length '%d' is negative.&quot;, length));</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">    if (length &lt; 0) {</span>
+<span class="nc" id="L207">      throw new ArrayException(</span>
+<span class="nc" id="L208">          ArrayException.NEGATIVE_ARRAY_LENGTH, String.format(&quot;The length '%d' is negative.&quot;, length));</span>
     }
 
     List&lt;T&gt; copy;
     try {
-<span class="fc" id="L208">      copy = array.subList(start - 1, start - 1 + length);</span>
-<span class="nc" id="L209">    } catch (IndexOutOfBoundsException ex) {</span>
-<span class="nc" id="L210">      throw new ArrayException(</span>
+<span class="fc" id="L213">      copy = array.subList(start - 1, start - 1 + length);</span>
+<span class="nc" id="L214">    } catch (IndexOutOfBoundsException ex) {</span>
+<span class="nc" id="L215">      throw new ArrayException(</span>
           ArrayException.INDEX_OUT_OF_BOUNDS,
-<span class="nc" id="L212">          String.format(&quot;The start + length (%d + %d) exceeds the array length '%d'.&quot;,</span>
-<span class="nc" id="L213">              start,</span>
-<span class="nc" id="L214">              length,</span>
-<span class="nc" id="L215">              array.size()),</span>
+<span class="nc" id="L217">          String.format(&quot;The start + length (%d + %d) exceeds the array length '%d'.&quot;,</span>
+<span class="nc" id="L218">              start,</span>
+<span class="nc" id="L219">              length,</span>
+<span class="nc" id="L220">              array.size()),</span>
           ex);
-<span class="fc" id="L217">    }</span>
+<span class="fc" id="L222">    }</span>
 
-<span class="fc" id="L219">    return IArrayItem.ofCollection(new ArrayList&lt;&gt;(copy));</span>
+<span class="fc" id="L224">    return IArrayItem.ofCollection(new ArrayList&lt;&gt;(copy));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

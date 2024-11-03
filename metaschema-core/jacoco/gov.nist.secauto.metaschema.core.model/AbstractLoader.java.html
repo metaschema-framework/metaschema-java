@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -19,23 +21,26 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="fc" id="L29">public abstract class AbstractLoader&lt;T&gt; implements ILoader&lt;T&gt; {</span>
-<span class="fc" id="L30">  private static final Logger LOGGER = LogManager.getLogger(AbstractLoader.class);</span>
+<span class="fc" id="L31">public abstract class AbstractLoader&lt;T&gt; implements ILoader&lt;T&gt; {</span>
+<span class="fc" id="L32">  private static final Logger LOGGER = LogManager.getLogger(AbstractLoader.class);</span>
 
-<span class="fc" id="L32">  @NonNull</span>
-  private final Map&lt;URI, T&gt; cache = new LinkedHashMap&lt;&gt;(); // NOPMD - intentional
+<span class="fc" id="L34">  @NonNull</span>
+<span class="fc" id="L35">  private final Map&lt;URI, T&gt; cache = ObjectUtils.notNull(Caffeine.newBuilder()</span>
+<span class="fc" id="L36">      .maximumSize(100)</span>
+<span class="fc" id="L37">      .expireAfterAccess(10, TimeUnit.MINUTES)</span>
+<span class="fc" id="L38">      .&lt;URI, T&gt;build().asMap());</span>
 
   @Override
   @NonNull
   public Collection&lt;T&gt; getLoadedResources() {
-<span class="nc" id="L38">    return CollectionUtil.unmodifiableCollection(ObjectUtils.notNull(cache.values()));</span>
+<span class="nc" id="L43">    return CollectionUtil.unmodifiableCollection(ObjectUtils.notNull(cache.values()));</span>
   }
 
   /**
@@ -45,16 +50,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    */
   @NonNull
   protected Map&lt;URI, T&gt; getCachedEntries() {
-<span class="nc" id="L48">    return CollectionUtil.unmodifiableMap(cache);</span>
+<span class="nc" id="L53">    return CollectionUtil.unmodifiableMap(cache);</span>
   }
 
   @Override
   @NonNull
   public T load(@NonNull URI resource) throws MetaschemaException, IOException {
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">    if (!resource.isAbsolute()) {</span>
-<span class="nc" id="L55">      throw new IllegalArgumentException(String.format(&quot;The URI '%s' must be absolute.&quot;, resource.toString()));</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">    if (!resource.isAbsolute()) {</span>
+<span class="nc" id="L60">      throw new IllegalArgumentException(String.format(&quot;The URI '%s' must be absolute.&quot;, resource.toString()));</span>
     }
-<span class="fc" id="L57">    return loadInternal(resource, new LinkedList&lt;&gt;());</span>
+<span class="fc" id="L62">    return loadInternal(resource, new LinkedList&lt;&gt;());</span>
   }
 
   /**
@@ -72,7 +77,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   @NonNull
   public T load(@NonNull Path path) throws MetaschemaException, IOException {
     // use toURL to normalize the URI
-<span class="fc" id="L75">    return load(ObjectUtils.notNull(path.toAbsolutePath().normalize().toUri().toURL()));</span>
+<span class="fc" id="L80">    return load(ObjectUtils.notNull(path.toAbsolutePath().normalize().toUri().toURL()));</span>
   }
 
   /**
@@ -90,12 +95,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   @NonNull
   public T load(@NonNull URL url) throws MetaschemaException, IOException {
     try {
-<span class="fc" id="L93">      URI resource = url.toURI();</span>
-<span class="fc" id="L94">      return loadInternal(ObjectUtils.notNull(resource), new LinkedList&lt;&gt;());</span>
-<span class="nc" id="L95">    } catch (URISyntaxException ex) {</span>
+<span class="fc" id="L98">      URI resource = url.toURI();</span>
+<span class="fc" id="L99">      return loadInternal(ObjectUtils.notNull(resource), new LinkedList&lt;&gt;());</span>
+<span class="nc" id="L100">    } catch (URISyntaxException ex) {</span>
       // this should not happen
-<span class="nc" id="L97">      LOGGER.error(&quot;Invalid url&quot;, ex);</span>
-<span class="nc" id="L98">      throw new IOException(ex);</span>
+<span class="nc" id="L102">      LOGGER.error(&quot;Invalid url&quot;, ex);</span>
+<span class="nc" id="L103">      throw new IOException(ex);</span>
     }
   }
 
@@ -126,28 +131,26 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   protected T loadInternal(@NonNull URI resource, @NonNull Deque&lt;URI&gt; visitedResources)
       throws MetaschemaException, MalformedURLException, IOException {
     // first check if the current resource has been visited to prevent cycles
-<span class="pc bpc" id="L129" title="1 of 2 branches missed.">    if (visitedResources.contains(resource)) {</span>
-<span class="nc" id="L130">      throw new MetaschemaException(&quot;Cycle detected in metaschema includes for '&quot; + resource + &quot;'. Call stack: '&quot;</span>
-<span class="nc" id="L131">          + visitedResources.stream().map(URI::toString).collect(Collectors.joining(&quot;,&quot;)));</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">    if (visitedResources.contains(resource)) {</span>
+<span class="nc" id="L135">      throw new MetaschemaException(&quot;Cycle detected in metaschema includes for '&quot; + resource + &quot;'. Call stack: '&quot;</span>
+<span class="nc" id="L136">          + visitedResources.stream().map(URI::toString).collect(Collectors.joining(&quot;,&quot;)));</span>
     }
 
-<span class="fc" id="L134">    T retval = cache.get(resource);</span>
-<span class="fc bfc" id="L135" title="All 2 branches covered.">    if (retval == null) {</span>
-<span class="fc" id="L136">      LOGGER.info(&quot;Loading '{}'&quot;, resource);</span>
+<span class="fc" id="L139">    T retval = cache.get(resource);</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L141">      LOGGER.info(&quot;Loading '{}'&quot;, resource);</span>
 
       try {
-<span class="fc" id="L139">        visitedResources.push(resource);</span>
-<span class="fc" id="L140">        retval = parseResource(resource, visitedResources);</span>
+<span class="fc" id="L144">        visitedResources.push(resource);</span>
+<span class="fc" id="L145">        retval = parseResource(resource, visitedResources);</span>
       } finally {
-<span class="fc" id="L142">        visitedResources.pop();</span>
+<span class="fc" id="L147">        visitedResources.pop();</span>
       }
-<span class="fc" id="L144">      cache.put(resource, retval);</span>
-    } else {
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">      if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L147">        LOGGER.debug(&quot;Found resource in cache '{}'&quot;, resource);</span>
-      }
+<span class="fc" id="L149">      cache.put(resource, retval);</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">    } else if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L151">      LOGGER.debug(&quot;Found resource in cache '{}'&quot;, resource);</span>
     }
-<span class="fc" id="L150">    return ObjectUtils.notNull(retval);</span>
+<span class="fc" id="L153">    return ObjectUtils.notNull(retval);</span>
   }
 
   /**

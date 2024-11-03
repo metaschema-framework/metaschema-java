@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 
@@ -26,19 +27,19 @@ import javax.xml.stream.events.Attribute;
  * collections for multi-valued model items and default values for flags and
  * single valued fields.
  */
-<span class="fc" id="L29">public class DefaultXmlProblemHandler</span>
+<span class="fc" id="L30">public class DefaultXmlProblemHandler</span>
     extends AbstractProblemHandler
     implements IXmlProblemHandler {
-<span class="fc" id="L32">  private static final Logger LOGGER = LogManager.getLogger(DefaultXmlProblemHandler.class);</span>
+<span class="fc" id="L33">  private static final Logger LOGGER = LogManager.getLogger(DefaultXmlProblemHandler.class);</span>
 
-<span class="fc" id="L34">  private static final QName XSI_SCHEMA_LOCATION</span>
+<span class="fc" id="L35">  private static final QName XSI_SCHEMA_LOCATION</span>
       = new QName(&quot;http://www.w3.org/2001/XMLSchema-instance&quot;, &quot;schemaLocation&quot;);
   private static final Set&lt;QName&gt; IGNORED_QNAMES;
 
   static {
-<span class="fc" id="L39">    IGNORED_QNAMES = new HashSet&lt;&gt;();</span>
-<span class="fc" id="L40">    IGNORED_QNAMES.add(XSI_SCHEMA_LOCATION);</span>
-<span class="fc" id="L41">  }</span>
+<span class="fc" id="L40">    IGNORED_QNAMES = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L41">    IGNORED_QNAMES.add(XSI_SCHEMA_LOCATION);</span>
+<span class="fc" id="L42">  }</span>
 
   @Override
   public boolean handleUnknownAttribute(
@@ -46,15 +47,15 @@ import javax.xml.stream.events.Attribute;
       IBoundObject targetObject,
       Attribute attribute,
       IXmlParsingContext parsingContext) {
-<span class="fc" id="L49">    QName qname = attribute.getName();</span>
+<span class="fc" id="L50">    QName qname = attribute.getName();</span>
     // check if warning is needed
-<span class="pc bpc" id="L51" title="2 of 4 branches missed.">    if (LOGGER.isWarnEnabled() &amp;&amp; !IGNORED_QNAMES.contains(qname)) {</span>
-<span class="nc" id="L52">      LOGGER.atWarn().log(&quot;Skipping unrecognized attribute '{}'{}.&quot;,</span>
+<span class="pc bpc" id="L52" title="2 of 4 branches missed.">    if (LOGGER.isWarnEnabled() &amp;&amp; !IGNORED_QNAMES.contains(qname)) {</span>
+<span class="nc" id="L53">      LOGGER.atWarn().log(&quot;Skipping unrecognized attribute '{}'{}.&quot;,</span>
           qname,
-<span class="nc" id="L54">          XmlEventUtil.generateLocationMessage(attribute.getLocation()));</span>
+<span class="nc" id="L55">          XmlEventUtil.generateLocationMessage(ObjectUtils.notNull(attribute.getLocation())));</span>
     }
     // always ignore
-<span class="fc" id="L57">    return true;</span>
+<span class="fc" id="L58">    return true;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -32,16 +32,16 @@
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.ISource;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.IGroupAs;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.binding.metaschema.InlineDefineAssembly;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonKey;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonKey;
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> java.math.BigInteger;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
@@ -126,8 +126,8 @@
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>     }));
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; AssemblyModelContainerSupport.of(
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>         binding.getModel(),
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>         ObjectUtils
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>             .requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(MODEL_QNAME)),
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>         ObjectUtils.requireNonNull(bindingInstance.getDefinition()
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>             .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME)),
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>         <strong class="jxr_keyword">this</strong>,
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>         nodeItemFactory)));
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">this</strong>.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
@@ -137,7 +137,7 @@
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>         ConstraintBindingSupport.parse(
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>             retval,
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>             constraints,
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>             ISource.modelSource(parent.getOwningDefinition().getContainingModule()));
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>             parent.getOwningDefinition().getContainingModule().getSource());
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>       }
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>       <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>     }));
@@ -166,72 +166,71 @@
 <a class="jxr_linenumber" name="L158" href="#L158">158</a> 
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>   @Override
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>   <strong class="jxr_keyword">public</strong> IAssemblyNodeItem getSourceNodeItem() {
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">return</strong> boundNodeItem.get();
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(boundNodeItem.get());
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>   }
 <a class="jxr_linenumber" name="L163" href="#L163">163</a> 
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>   @SuppressWarnings(<span class="jxr_string">"null"</span>)
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>   @Override
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>   <strong class="jxr_keyword">public</strong> IContainerFlagSupport&lt;IFlagInstance&gt; getFlagContainer() {
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <strong class="jxr_keyword">return</strong> flagContainer.get();
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>   }
-<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>   @Override
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>   <strong class="jxr_keyword">public</strong> IContainerModelAssemblySupport&lt;
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>       IModelInstanceAbsolute,
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>       INamedModelInstanceAbsolute,
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>       IFieldInstanceAbsolute,
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>       IAssemblyInstanceAbsolute,
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>       IChoiceInstance,
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>       IChoiceGroupInstance&gt; getModelContainer() {
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(modelContainer.get());
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>   }
-<a class="jxr_linenumber" name="L180" href="#L180">180</a> 
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>   @Override
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>   <strong class="jxr_keyword">public</strong> IModelConstrained getConstraintSupport() {
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(modelConstraints.get());
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>   }
-<a class="jxr_linenumber" name="L185" href="#L185">185</a> 
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>   <em class="jxr_comment">// ---------------------------------------</em>
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>   <em class="jxr_comment">// - Start binding driven code - CPD-OFF -</em>
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>   <em class="jxr_comment">// ---------------------------------------</em>
-<a class="jxr_linenumber" name="L189" href="#L189">189</a> 
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>   @Override
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>   <strong class="jxr_keyword">public</strong> String getName() {
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(getBinding().getName());
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>   }
-<a class="jxr_linenumber" name="L194" href="#L194">194</a> 
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>   @Override
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>   <strong class="jxr_keyword">public</strong> Integer getIndex() {
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>     <strong class="jxr_keyword">return</strong> ModelSupport.index(getBinding().getIndex());
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>   }
-<a class="jxr_linenumber" name="L199" href="#L199">199</a> 
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>   @Override
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>   <strong class="jxr_keyword">public</strong> String getFormalName() {
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>     <strong class="jxr_keyword">return</strong> getBinding().getFormalName();
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>   }
-<a class="jxr_linenumber" name="L204" href="#L204">204</a> 
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>   @Override
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>   <strong class="jxr_keyword">public</strong> MarkupLine getDescription() {
-<a class="jxr_linenumber" name="L207" href="#L207">207</a>     <strong class="jxr_keyword">return</strong> getBinding().getDescription();
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>   }
-<a class="jxr_linenumber" name="L209" href="#L209">209</a> 
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>   @Override
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>   <strong class="jxr_keyword">public</strong> MarkupMultiline getRemarks() {
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>     <strong class="jxr_keyword">return</strong> ModelSupport.remarks(getBinding().getRemarks());
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>   }
-<a class="jxr_linenumber" name="L214" href="#L214">214</a> 
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>   @Override
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMinOccurs() {
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>     BigInteger min = getBinding().getMinOccurs();
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>     <strong class="jxr_keyword">return</strong> min == <strong class="jxr_keyword">null</strong> ? DEFAULT_GROUP_AS_MIN_OCCURS : min.intValueExact();
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>   }
-<a class="jxr_linenumber" name="L220" href="#L220">220</a> 
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>   @Override
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMaxOccurs() {
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>     String max = getBinding().getMaxOccurs();
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>     <strong class="jxr_keyword">return</strong> max == <strong class="jxr_keyword">null</strong> ? DEFAULT_GROUP_AS_MAX_OCCURS : ModelSupport.maxOccurs(max);
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>   }
-<a class="jxr_linenumber" name="L226" href="#L226">226</a> }
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>   @Override
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>   <strong class="jxr_keyword">public</strong> IContainerFlagSupport&lt;IFlagInstance&gt; getFlagContainer() {
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(flagContainer.get());
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>   }
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>   @Override
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>   <strong class="jxr_keyword">public</strong> IContainerModelAssemblySupport&lt;
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>       IModelInstanceAbsolute,
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>       INamedModelInstanceAbsolute,
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>       IFieldInstanceAbsolute,
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>       IAssemblyInstanceAbsolute,
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>       IChoiceInstance,
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>       IChoiceGroupInstance&gt; getModelContainer() {
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(modelContainer.get());
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>   }
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> 
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>   @Override
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>   <strong class="jxr_keyword">public</strong> IModelConstrained getConstraintSupport() {
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(modelConstraints.get());
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>   }
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>   <em class="jxr_comment">// ---------------------------------------</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>   <em class="jxr_comment">// - Start binding driven code - CPD-OFF -</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>   <em class="jxr_comment">// ---------------------------------------</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> 
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>   @Override
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>   <strong class="jxr_keyword">public</strong> String getName() {
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(getBinding().getName());
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>   }
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> 
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>   @Override
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>   <strong class="jxr_keyword">public</strong> Integer getIndex() {
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>     <strong class="jxr_keyword">return</strong> ModelSupport.index(getBinding().getIndex());
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>   }
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> 
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>   @Override
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>   <strong class="jxr_keyword">public</strong> String getFormalName() {
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>     <strong class="jxr_keyword">return</strong> getBinding().getFormalName();
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>   }
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> 
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>   @Override
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>   <strong class="jxr_keyword">public</strong> MarkupLine getDescription() {
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>     <strong class="jxr_keyword">return</strong> getBinding().getDescription();
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>   }
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> 
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>   @Override
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>   <strong class="jxr_keyword">public</strong> MarkupMultiline getRemarks() {
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <strong class="jxr_keyword">return</strong> ModelSupport.remarks(getBinding().getRemarks());
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>   }
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> 
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>   @Override
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMinOccurs() {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     BigInteger min = getBinding().getMinOccurs();
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">return</strong> min == <strong class="jxr_keyword">null</strong> ? DEFAULT_GROUP_AS_MIN_OCCURS : min.intValueExact();
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>   }
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> 
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>   @Override
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMaxOccurs() {
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>     String max = getBinding().getMaxOccurs();
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     <strong class="jxr_keyword">return</strong> max == <strong class="jxr_keyword">null</strong> ? DEFAULT_GROUP_AS_MAX_OCCURS : ModelSupport.maxOccurs(max);
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>   }
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

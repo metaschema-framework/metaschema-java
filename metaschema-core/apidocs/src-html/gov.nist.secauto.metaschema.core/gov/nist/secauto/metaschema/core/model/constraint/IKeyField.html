@@ -20,80 +20,81 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultKeyField;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import java.util.regex.Pattern;</span>
-<span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">015</span><span id="line-15">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">/**</span>
-<span class="source-line-no">018</span><span id="line-18"> * Represents a component of a key used in a key-based index.</span>
-<span class="source-line-no">019</span><span id="line-19"> * &lt;p&gt;</span>
-<span class="source-line-no">020</span><span id="line-20"> * A key field is targeted at a Metaschema field or flag data object's value. An</span>
-<span class="source-line-no">021</span><span id="line-21"> * optional pattern can be used to extract a portion of the value for use in</span>
-<span class="source-line-no">022</span><span id="line-22"> * generating an index key.</span>
-<span class="source-line-no">023</span><span id="line-23"> */</span>
-<span class="source-line-no">024</span><span id="line-24">public interface IKeyField {</span>
-<span class="source-line-no">025</span><span id="line-25">  /**</span>
-<span class="source-line-no">026</span><span id="line-26">   * Construct a new key field based on the provided target. An optional pattern</span>
-<span class="source-line-no">027</span><span id="line-27">   * can be used to extract a portion of the resulting key value.</span>
-<span class="source-line-no">028</span><span id="line-28">   *</span>
-<span class="source-line-no">029</span><span id="line-29">   * @param target</span>
-<span class="source-line-no">030</span><span id="line-30">   *          a Metapath expression identifying the target of the key field</span>
-<span class="source-line-no">031</span><span id="line-31">   * @param pattern</span>
-<span class="source-line-no">032</span><span id="line-32">   *          an optional used to extract a portion of the resulting key value</span>
-<span class="source-line-no">033</span><span id="line-33">   * @param remarks</span>
-<span class="source-line-no">034</span><span id="line-34">   *          optional remarks describing the intent of the constraint</span>
-<span class="source-line-no">035</span><span id="line-35">   * @param source</span>
-<span class="source-line-no">036</span><span id="line-36">   *          the descriptor for the resource containing the constraint</span>
-<span class="source-line-no">037</span><span id="line-37">   * @return the new key field</span>
-<span class="source-line-no">038</span><span id="line-38">   */</span>
-<span class="source-line-no">039</span><span id="line-39">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">040</span><span id="line-40">  @NonNull</span>
-<span class="source-line-no">041</span><span id="line-41">  static IKeyField of(</span>
-<span class="source-line-no">042</span><span id="line-42">      @NonNull String target,</span>
-<span class="source-line-no">043</span><span id="line-43">      @Nullable Pattern pattern,</span>
-<span class="source-line-no">044</span><span id="line-44">      @Nullable MarkupMultiline remarks,</span>
-<span class="source-line-no">045</span><span id="line-45">      @NonNull ISource source) {</span>
-<span class="source-line-no">046</span><span id="line-46">    return new DefaultKeyField(target, pattern, remarks, source);</span>
-<span class="source-line-no">047</span><span id="line-47">  }</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">  /**</span>
-<span class="source-line-no">050</span><span id="line-50">   * Get the Metapath expression that identifies the node item whose value will be</span>
-<span class="source-line-no">051</span><span id="line-51">   * used as the key value.</span>
-<span class="source-line-no">052</span><span id="line-52">   *</span>
-<span class="source-line-no">053</span><span id="line-53">   * @return the Metapath expression identifying the key value target</span>
-<span class="source-line-no">054</span><span id="line-54">   */</span>
-<span class="source-line-no">055</span><span id="line-55">  @NonNull</span>
-<span class="source-line-no">056</span><span id="line-56">  String getTarget();</span>
-<span class="source-line-no">057</span><span id="line-57"></span>
-<span class="source-line-no">058</span><span id="line-58">  /**</span>
-<span class="source-line-no">059</span><span id="line-59">   * Get the compiled Metapath expression for the {@link #getTarget()}.</span>
-<span class="source-line-no">060</span><span id="line-60">   *</span>
-<span class="source-line-no">061</span><span id="line-61">   * @return the compiled Metapath expression</span>
-<span class="source-line-no">062</span><span id="line-62">   */</span>
-<span class="source-line-no">063</span><span id="line-63">  @NonNull</span>
-<span class="source-line-no">064</span><span id="line-64">  MetapathExpression getTargetMetapath();</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">  /**</span>
-<span class="source-line-no">067</span><span id="line-67">   * A pattern to use to retrieve the value. If non-{@code null}, the first</span>
-<span class="source-line-no">068</span><span id="line-68">   * capturing group is used to retrieve the value.</span>
-<span class="source-line-no">069</span><span id="line-69">   *</span>
-<span class="source-line-no">070</span><span id="line-70">   * @return a pattern to use to get the value or {@code null} if the full value</span>
-<span class="source-line-no">071</span><span id="line-71">   *         is to be used</span>
-<span class="source-line-no">072</span><span id="line-72">   */</span>
-<span class="source-line-no">073</span><span id="line-73">  @Nullable</span>
-<span class="source-line-no">074</span><span id="line-74">  Pattern getPattern();</span>
-<span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">  /**</span>
-<span class="source-line-no">077</span><span id="line-77">   * Any remarks about the key field as markup text.</span>
-<span class="source-line-no">078</span><span id="line-78">   *</span>
-<span class="source-line-no">079</span><span id="line-79">   * @return markup text or {@code null} if no text is provided</span>
-<span class="source-line-no">080</span><span id="line-80">   */</span>
-<span class="source-line-no">081</span><span id="line-81">  @Nullable</span>
-<span class="source-line-no">082</span><span id="line-82">  MarkupMultiline getRemarks();</span>
-<span class="source-line-no">083</span><span id="line-83">}</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.ISource;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultKeyField;</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">import java.util.regex.Pattern;</span>
+<span class="source-line-no">014</span><span id="line-14"></span>
+<span class="source-line-no">015</span><span id="line-15">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">/**</span>
+<span class="source-line-no">019</span><span id="line-19"> * Represents a component of a key used in a key-based index.</span>
+<span class="source-line-no">020</span><span id="line-20"> * &lt;p&gt;</span>
+<span class="source-line-no">021</span><span id="line-21"> * A key field is targeted at a Metaschema field or flag data object's value. An</span>
+<span class="source-line-no">022</span><span id="line-22"> * optional pattern can be used to extract a portion of the value for use in</span>
+<span class="source-line-no">023</span><span id="line-23"> * generating an index key.</span>
+<span class="source-line-no">024</span><span id="line-24"> */</span>
+<span class="source-line-no">025</span><span id="line-25">public interface IKeyField {</span>
+<span class="source-line-no">026</span><span id="line-26">  /**</span>
+<span class="source-line-no">027</span><span id="line-27">   * Construct a new key field based on the provided target. An optional pattern</span>
+<span class="source-line-no">028</span><span id="line-28">   * can be used to extract a portion of the resulting key value.</span>
+<span class="source-line-no">029</span><span id="line-29">   *</span>
+<span class="source-line-no">030</span><span id="line-30">   * @param target</span>
+<span class="source-line-no">031</span><span id="line-31">   *          a Metapath expression identifying the target of the key field</span>
+<span class="source-line-no">032</span><span id="line-32">   * @param pattern</span>
+<span class="source-line-no">033</span><span id="line-33">   *          an optional used to extract a portion of the resulting key value</span>
+<span class="source-line-no">034</span><span id="line-34">   * @param remarks</span>
+<span class="source-line-no">035</span><span id="line-35">   *          optional remarks describing the intent of the constraint</span>
+<span class="source-line-no">036</span><span id="line-36">   * @param source</span>
+<span class="source-line-no">037</span><span id="line-37">   *          the descriptor for the resource containing the constraint</span>
+<span class="source-line-no">038</span><span id="line-38">   * @return the new key field</span>
+<span class="source-line-no">039</span><span id="line-39">   */</span>
+<span class="source-line-no">040</span><span id="line-40">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">041</span><span id="line-41">  @NonNull</span>
+<span class="source-line-no">042</span><span id="line-42">  static IKeyField of(</span>
+<span class="source-line-no">043</span><span id="line-43">      @NonNull String target,</span>
+<span class="source-line-no">044</span><span id="line-44">      @Nullable Pattern pattern,</span>
+<span class="source-line-no">045</span><span id="line-45">      @Nullable MarkupMultiline remarks,</span>
+<span class="source-line-no">046</span><span id="line-46">      @NonNull ISource source) {</span>
+<span class="source-line-no">047</span><span id="line-47">    return new DefaultKeyField(target, pattern, remarks, source);</span>
+<span class="source-line-no">048</span><span id="line-48">  }</span>
+<span class="source-line-no">049</span><span id="line-49"></span>
+<span class="source-line-no">050</span><span id="line-50">  /**</span>
+<span class="source-line-no">051</span><span id="line-51">   * Get the Metapath expression that identifies the node item whose value will be</span>
+<span class="source-line-no">052</span><span id="line-52">   * used as the key value.</span>
+<span class="source-line-no">053</span><span id="line-53">   *</span>
+<span class="source-line-no">054</span><span id="line-54">   * @return the Metapath expression identifying the key value target</span>
+<span class="source-line-no">055</span><span id="line-55">   */</span>
+<span class="source-line-no">056</span><span id="line-56">  @NonNull</span>
+<span class="source-line-no">057</span><span id="line-57">  String getTarget();</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  /**</span>
+<span class="source-line-no">060</span><span id="line-60">   * Get the compiled Metapath expression for the {@link #getTarget()}.</span>
+<span class="source-line-no">061</span><span id="line-61">   *</span>
+<span class="source-line-no">062</span><span id="line-62">   * @return the compiled Metapath expression</span>
+<span class="source-line-no">063</span><span id="line-63">   */</span>
+<span class="source-line-no">064</span><span id="line-64">  @NonNull</span>
+<span class="source-line-no">065</span><span id="line-65">  MetapathExpression getTargetMetapath();</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">  /**</span>
+<span class="source-line-no">068</span><span id="line-68">   * A pattern to use to retrieve the value. If non-{@code null}, the first</span>
+<span class="source-line-no">069</span><span id="line-69">   * capturing group is used to retrieve the value.</span>
+<span class="source-line-no">070</span><span id="line-70">   *</span>
+<span class="source-line-no">071</span><span id="line-71">   * @return a pattern to use to get the value or {@code null} if the full value</span>
+<span class="source-line-no">072</span><span id="line-72">   *         is to be used</span>
+<span class="source-line-no">073</span><span id="line-73">   */</span>
+<span class="source-line-no">074</span><span id="line-74">  @Nullable</span>
+<span class="source-line-no">075</span><span id="line-75">  Pattern getPattern();</span>
+<span class="source-line-no">076</span><span id="line-76"></span>
+<span class="source-line-no">077</span><span id="line-77">  /**</span>
+<span class="source-line-no">078</span><span id="line-78">   * Any remarks about the key field as markup text.</span>
+<span class="source-line-no">079</span><span id="line-79">   *</span>
+<span class="source-line-no">080</span><span id="line-80">   * @return markup text or {@code null} if no text is provided</span>
+<span class="source-line-no">081</span><span id="line-81">   */</span>
+<span class="source-line-no">082</span><span id="line-82">  @Nullable</span>
+<span class="source-line-no">083</span><span id="line-83">  MarkupMultiline getRemarks();</span>
+<span class="source-line-no">084</span><span id="line-84">}</span>
 
 
 

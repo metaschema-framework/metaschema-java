@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Implements a
- * {@link gov.nist.secauto.metaschema.core.model.constraint.ISource.SourceType#MODEL}
+ * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#MODEL}
  * source with no associated resource.
  */
 public final class InternalModelSource implements ISource {
@@ -41,11 +41,11 @@ public final class InternalModelSource implements ISource {
    */
   @NonNull
   public static ISource instance(@NonNull IModule module) {
+<span class="fc" id="L44">    SOURCE_LOCK.lock();</span>
     try {
-<span class="fc" id="L45">      SOURCE_LOCK.lock();</span>
 <span class="fc" id="L46">      return ObjectUtils.notNull(sources.computeIfAbsent(</span>
           module,
-<span class="fc" id="L48">          (uri) -&gt; new InternalModelSource(module)));</span>
+<span class="fc" id="L48">          uri -&gt; new InternalModelSource(module)));</span>
     } finally {
 <span class="fc" id="L50">      SOURCE_LOCK.unlock();</span>
     }

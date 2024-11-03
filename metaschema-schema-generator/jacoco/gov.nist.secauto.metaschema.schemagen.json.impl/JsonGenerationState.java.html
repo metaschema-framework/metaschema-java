@@ -20,6 +20,7 @@ import gov.nist.secauto.metaschema.core.model.IValuedDefinition;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState;
+import gov.nist.secauto.metaschema.schemagen.ModuleIndex.DefinitionEntry;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
 import gov.nist.secauto.metaschema.schemagen.json.IDefineableJsonSchema.IKey;
@@ -36,25 +37,25 @@ import java.util.concurrent.ConcurrentHashMap;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-<span class="fc" id="L39">public class JsonGenerationState</span>
+<span class="fc" id="L40">public class JsonGenerationState</span>
     extends AbstractGenerationState&lt;JsonGenerator, JsonDatatypeManager&gt;
     implements IJsonGenerationState {
 
-<span class="fc" id="L43">  @NonNull</span>
+<span class="fc" id="L44">  @NonNull</span>
   private final JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(true);
-<span class="fc" id="L45">  @NonNull</span>
+<span class="fc" id="L46">  @NonNull</span>
   private final Map&lt;IKey, IDefinitionJsonSchema&lt;?&gt;&gt; schemaDefinitions = new HashMap&lt;&gt;();
-<span class="fc" id="L47">  @NonNull</span>
+<span class="fc" id="L48">  @NonNull</span>
   private final Map&lt;IValuedDefinition, IDataTypeJsonSchema&gt; definitionValueToDataTypeSchemaMap
       = new ConcurrentHashMap&lt;&gt;();
-<span class="fc" id="L50">  @NonNull</span>
+<span class="fc" id="L51">  @NonNull</span>
   private final Map&lt;IDataTypeAdapter&lt;?&gt;, IDataTypeJsonSchema&gt; dataTypeToSchemaMap = new ConcurrentHashMap&lt;&gt;();
 
   public JsonGenerationState(
       @NonNull IModule module,
       @NonNull JsonGenerator writer,
       @NonNull IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration) {
-<span class="fc" id="L57">    super(module, writer, configuration, new JsonDatatypeManager());</span>
+<span class="fc" id="L58">    super(module, writer, configuration, new JsonDatatypeManager());</span>
 
     // // seed definition schema mapping
     // this.schemaDefinitions =
@@ -68,26 +69,26 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     // Function.identity(),
     // (v1, v2) -&gt; v2,
     // ConcurrentHashMap::new)));
-<span class="fc" id="L71">  }</span>
+<span class="fc" id="L72">  }</span>
 
   @Override
   @NonNull
   public &lt;DEF extends IDefinition&gt; IDefinitionJsonSchema&lt;DEF&gt; getSchema(@NonNull IKey key) {
-<span class="fc" id="L76">    IDefinitionJsonSchema&lt;?&gt; retval = getDefinitionSchema(key, this);</span>
-<span class="fc" id="L77">    return ObjectUtils.asType(ObjectUtils.requireNonNull(retval));</span>
+<span class="fc" id="L77">    IDefinitionJsonSchema&lt;?&gt; retval = getDefinitionSchema(key, this);</span>
+<span class="fc" id="L78">    return ObjectUtils.asType(ObjectUtils.requireNonNull(retval));</span>
   }
 
   @Override
   @NonNull
   public IDataTypeJsonSchema getSchema(@NonNull IDataTypeAdapter&lt;?&gt; datatype) {
-<span class="fc" id="L83">    IDataTypeJsonSchema retval = dataTypeToSchemaMap.get(datatype);</span>
-<span class="fc bfc" id="L84" title="All 2 branches covered.">    if (retval == null) {</span>
-<span class="fc" id="L85">      retval = new DataTypeJsonSchema(</span>
-<span class="fc" id="L86">          getDatatypeManager().getTypeNameForDatatype(datatype),</span>
+<span class="fc" id="L84">    IDataTypeJsonSchema retval = dataTypeToSchemaMap.get(datatype);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L86">      retval = new DataTypeJsonSchema(</span>
+<span class="fc" id="L87">          getDatatypeManager().getTypeNameForDatatype(datatype),</span>
           datatype);
-<span class="fc" id="L88">      dataTypeToSchemaMap.put(datatype, retval);</span>
+<span class="fc" id="L89">      dataTypeToSchemaMap.put(datatype, retval);</span>
     }
-<span class="fc" id="L90">    return retval;</span>
+<span class="fc" id="L91">    return retval;</span>
   }
 
   /**
@@ -100,30 +101,30 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   private IDefinitionJsonSchema&lt;?&gt; getDefinitionSchema(
       @NonNull IKey key,
       @NonNull IJsonGenerationState state) {
-<span class="fc" id="L103">    synchronized (schemaDefinitions) {</span>
-<span class="fc" id="L104">      return schemaDefinitions.computeIfAbsent(key, (k) -&gt; {</span>
-<span class="fc" id="L105">        IDefinitionJsonSchema&lt;?&gt; retval = newJsonSchema(</span>
-<span class="fc" id="L106">            k.getDefinition(),</span>
-<span class="fc" id="L107">            k.getJsonKeyFlagName(),</span>
-<span class="fc" id="L108">            k.getDiscriminatorProperty(),</span>
-<span class="fc" id="L109">            k.getDiscriminatorValue(),</span>
+<span class="fc" id="L104">    synchronized (schemaDefinitions) {</span>
+<span class="fc" id="L105">      return schemaDefinitions.computeIfAbsent(key, k -&gt; {</span>
+<span class="fc" id="L106">        IDefinitionJsonSchema&lt;?&gt; retval = newJsonSchema(</span>
+<span class="fc" id="L107">            k.getDefinition(),</span>
+<span class="fc" id="L108">            k.getJsonKeyFlagName(),</span>
+<span class="fc" id="L109">            k.getDiscriminatorProperty(),</span>
+<span class="fc" id="L110">            k.getDiscriminatorValue(),</span>
             state);
-<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        assert key.equals(retval.getKey());</span>
-<span class="fc" id="L112">        return retval;</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        assert key.equals(retval.getKey());</span>
+<span class="fc" id="L113">        return retval;</span>
       });
     }
   }
 
   @Override
   public boolean isDefinitionRegistered(IDefinitionJsonSchema&lt;?&gt; schema) {
-<span class="nc" id="L119">    return schemaDefinitions.containsKey(schema.getKey());</span>
+<span class="nc" id="L120">    return schemaDefinitions.containsKey(schema.getKey());</span>
   }
 
   @Override
   public void registerDefinitionSchema(IDefinitionJsonSchema&lt;?&gt; schema) {
-<span class="nc" id="L124">    IDefinitionJsonSchema&lt;?&gt; old = schemaDefinitions.put(schema.getKey(), schema);</span>
-<span class="nc bnc" id="L125" title="All 2 branches missed.">    assert old == null;</span>
-<span class="nc" id="L126">  }</span>
+<span class="nc" id="L125">    IDefinitionJsonSchema&lt;?&gt; old = schemaDefinitions.put(schema.getKey(), schema);</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">    assert old == null;</span>
+<span class="nc" id="L127">  }</span>
 
   /**
    * Get the JSON schema info for the provided definition.
@@ -149,108 +150,109 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @Nullable String discriminatorValue,
       @NonNull IJsonGenerationState state) {
     IDefinitionJsonSchema&lt;?&gt; retval;
-<span class="fc bfc" id="L152" title="All 2 branches covered.">    if (definition instanceof IFlagDefinition) {</span>
-<span class="fc" id="L153">      retval = new FlagDefinitionJsonSchema((IFlagDefinition) definition, state);</span>
-<span class="fc bfc" id="L154" title="All 2 branches covered.">    } else if (definition instanceof IAssemblyDefinition) {</span>
-<span class="fc" id="L155">      retval = new AssemblyDefinitionJsonSchema(</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">    if (definition instanceof IFlagDefinition) {</span>
+<span class="fc" id="L154">      retval = new FlagDefinitionJsonSchema((IFlagDefinition) definition, state);</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">    } else if (definition instanceof IAssemblyDefinition) {</span>
+<span class="fc" id="L156">      retval = new AssemblyDefinitionJsonSchema(</span>
           (IAssemblyDefinition) definition,
           jsonKeyFlagName,
           discriminatorProperty,
           discriminatorValue,
           state);
-<span class="pc bpc" id="L161" title="1 of 2 branches missed.">    } else if (definition instanceof IFieldDefinition) {</span>
-<span class="fc" id="L162">      retval = new FieldDefinitionJsonSchema(</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">    } else if (definition instanceof IFieldDefinition) {</span>
+<span class="fc" id="L163">      retval = new FieldDefinitionJsonSchema(</span>
           (IFieldDefinition) definition,
           jsonKeyFlagName,
           discriminatorProperty,
           discriminatorValue,
           state);
     } else {
-<span class="nc" id="L169">      throw new IllegalArgumentException(&quot;Unsupported definition type&quot; + definition.getClass().getName());</span>
+<span class="nc" id="L170">      throw new IllegalArgumentException(&quot;Unsupported definition type&quot; + definition.getClass().getName());</span>
     }
-<span class="fc" id="L171">    return retval;</span>
+<span class="fc" id="L172">    return retval;</span>
   }
 
   public ObjectNode generateDefinitions() {
-<span class="fc" id="L175">    @NonNull Map&lt;IKey, IDefinitionJsonSchema&lt;?&gt;&gt; gatheredDefinitions = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L176">    @NonNull Map&lt;IKey, IDefinitionJsonSchema&lt;?&gt;&gt; gatheredDefinitions = new HashMap&lt;&gt;();</span>
 
-<span class="fc" id="L177">    getMetaschemaIndex().getDefinitions().stream()</span>
-<span class="fc" id="L178">        .filter(entry -&gt; entry.isRoot())</span>
-<span class="fc" id="L179">        .map(entry -&gt; entry.getDefinition())</span>
-<span class="fc" id="L180">        .forEachOrdered(def -&gt; {</span>
-<span class="fc" id="L181">          IDefinitionJsonSchema&lt;?&gt; definitionSchema = getSchema(IKey.of(def));</span>
-<span class="pc bpc" id="L182" title="1 of 2 branches missed.">          assert definitionSchema != null;</span>
-<span class="fc" id="L183">          definitionSchema.gatherDefinitions(gatheredDefinitions, this);</span>
-<span class="fc" id="L184">        });</span>
+<span class="fc" id="L178">    getMetaschemaIndex().getDefinitions().stream()</span>
+<span class="fc" id="L179">        .filter(DefinitionEntry::isRoot)</span>
+<span class="fc" id="L180">        .map(DefinitionEntry::getDefinition)</span>
+<span class="fc" id="L181">        .forEachOrdered(def -&gt; {</span>
+<span class="fc" id="L182">          IDefinitionJsonSchema&lt;?&gt; definitionSchema = getSchema(IKey.of(def));</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">          assert definitionSchema != null;</span>
+<span class="fc" id="L184">          definitionSchema.gatherDefinitions(gatheredDefinitions, this);</span>
+<span class="fc" id="L185">        });</span>
 
-<span class="fc" id="L186">    ObjectNode definitionsObject = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());</span>
+<span class="fc" id="L187">    ObjectNode definitionsObject = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());</span>
 
-<span class="fc" id="L188">    gatheredDefinitions.values().stream()</span>
-<span class="fc bfc" id="L189" title="All 2 branches covered.">        .filter(schema -&gt; !isInline(schema.getDefinition()))</span>
-<span class="fc" id="L190">        .sorted(Comparator.comparing(schema -&gt; schema.getDefinitionName(this)))</span>
-<span class="fc" id="L191">        .forEachOrdered(schema -&gt; {</span>
-<span class="fc" id="L192">          schema.generateDefinition(this, definitionsObject);</span>
-<span class="fc" id="L193">        });</span>
+<span class="fc" id="L189">    gatheredDefinitions.values().stream()</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        .filter(schema -&gt; !isInline(schema.getDefinition()))</span>
+<span class="fc" id="L191">        .sorted(Comparator.comparing(schema -&gt; schema.getDefinitionName(this)))</span>
+<span class="fc" id="L192">        .forEachOrdered(schema -&gt; {</span>
+<span class="fc" id="L193">          schema.generateDefinition(this, definitionsObject);</span>
+<span class="fc" id="L194">        });</span>
 
-<span class="fc" id="L195">    getDatatypeManager().generateDatatypes(definitionsObject);</span>
+<span class="fc" id="L196">    getDatatypeManager().generateDatatypes(definitionsObject);</span>
 
-<span class="fc" id="L197">    return definitionsObject;</span>
+<span class="fc" id="L198">    return definitionsObject;</span>
   }
 
   @Override
   public JsonNodeFactory getJsonNodeFactory() {
-<span class="fc" id="L202">    return jsonNodeFactory;</span>
+<span class="fc" id="L203">    return jsonNodeFactory;</span>
   }
 
   @Override
   @NonNull
   public IDataTypeJsonSchema getDataTypeSchemaForDefinition(@NonNull IValuedDefinition definition) {
-<span class="fc" id="L208">    IDataTypeJsonSchema retval = definitionValueToDataTypeSchemaMap.get(definition);</span>
-<span class="fc bfc" id="L209" title="All 2 branches covered.">    if (retval == null) {</span>
-<span class="fc" id="L210">      AllowedValueCollection allowedValuesCollection = getContextIndependentEnumeratedValues(definition);</span>
-<span class="fc" id="L211">      List&lt;IAllowedValue&gt; allowedValues = allowedValuesCollection.getValues();</span>
+<span class="fc" id="L209">    IDataTypeJsonSchema retval = definitionValueToDataTypeSchemaMap.get(definition);</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L211">      AllowedValueCollection allowedValuesCollection = getContextIndependentEnumeratedValues(definition);</span>
+<span class="fc" id="L212">      List&lt;IAllowedValue&gt; allowedValues = allowedValuesCollection.getValues();</span>
 
-<span class="fc" id="L213">      IDataTypeAdapter&lt;?&gt; dataTypeAdapter = definition.getJavaTypeAdapter();</span>
+<span class="fc" id="L214">      IDataTypeAdapter&lt;?&gt; dataTypeAdapter = definition.getJavaTypeAdapter();</span>
 
       // register data type use
-<span class="fc" id="L216">      retval = getSchema(dataTypeAdapter);</span>
-<span class="fc bfc" id="L217" title="All 2 branches covered.">      if (!allowedValues.isEmpty()) {</span>
+<span class="fc" id="L217">      retval = getSchema(dataTypeAdapter);</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">      if (!allowedValues.isEmpty()) {</span>
         // create restriction
-<span class="fc" id="L219">        retval = new DataTypeRestrictionDefinitionJsonSchema(definition, allowedValuesCollection);</span>
+<span class="fc" id="L220">        retval = new DataTypeRestrictionDefinitionJsonSchema(definition, allowedValuesCollection);</span>
       }
-<span class="fc" id="L221">      definitionValueToDataTypeSchemaMap.put(definition, retval);</span>
+<span class="fc" id="L222">      definitionValueToDataTypeSchemaMap.put(definition, retval);</span>
     }
-<span class="fc" id="L223">    return retval;</span>
+<span class="fc" id="L224">    return retval;</span>
   }
 
   @SuppressWarnings(&quot;resource&quot;)
   public void writeStartObject() throws IOException {
-<span class="fc" id="L228">    getWriter().writeStartObject();</span>
-<span class="fc" id="L229">  }</span>
+<span class="fc" id="L229">    getWriter().writeStartObject();</span>
+<span class="fc" id="L230">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   public void writeEndObject() throws IOException {
-<span class="fc" id="L233">    getWriter().writeEndObject();</span>
-<span class="fc" id="L234">  }</span>
+<span class="fc" id="L234">    getWriter().writeEndObject();</span>
+<span class="fc" id="L235">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   public void writeField(String fieldName, String value) throws IOException {
-<span class="fc" id="L238">    getWriter().writeStringField(fieldName, value);</span>
+<span class="fc" id="L239">    getWriter().writeStringField(fieldName, value);</span>
 
-<span class="fc" id="L240">  }</span>
+<span class="fc" id="L241">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   public void writeField(String fieldName, ObjectNode obj) throws IOException {
-<span class="fc" id="L244">    JsonGenerator writer = getWriter(); // NOPMD not closable here</span>
+<span class="fc" id="L245">    JsonGenerator writer = getWriter(); // NOPMD not closable here</span>
 
-<span class="fc" id="L246">    writer.writeFieldName(fieldName);</span>
-<span class="fc" id="L247">    writer.writeTree(obj);</span>
-<span class="fc" id="L248">  }</span>
+<span class="fc" id="L247">    writer.writeFieldName(fieldName);</span>
+<span class="fc" id="L248">    writer.writeTree(obj);</span>
+<span class="fc" id="L249">  }</span>
 
+  @SuppressWarnings(&quot;resource&quot;)
   @Override
   public void flushWriter() throws IOException {
-<span class="fc" id="L252">    getWriter().flush();</span>
-<span class="fc" id="L253">  }</span>
+<span class="fc" id="L254">    getWriter().flush();</span>
+<span class="fc" id="L255">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

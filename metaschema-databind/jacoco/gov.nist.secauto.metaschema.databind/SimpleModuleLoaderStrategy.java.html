@@ -5,76 +5,36 @@
 
 package gov.nist.secauto.metaschema.databind;
 
-import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.model.AbstractBoundModule;
-import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
+import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.databind.codegen.IModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
-import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
-import gov.nist.secauto.metaschema.databind.model.impl.DefinitionAssembly;
-import gov.nist.secauto.metaschema.databind.model.impl.DefinitionField;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
-public class SimpleModuleLoaderStrategy implements IBindingContext.IModuleLoaderStrategy {
+public class SimpleModuleLoaderStrategy
+    extends AbstractModuleLoaderStrategy {
   @NonNull
-  private final IBindingContext bindingContext;
-<span class="fc" id="L27">  @NonNull</span>
-  private final Map&lt;Class&lt;?&gt;, IBoundModule&gt; modulesByClass = new ConcurrentHashMap&lt;&gt;();
-<span class="fc" id="L29">  @NonNull</span>
-  private final Map&lt;Class&lt;?&gt;, IBoundDefinitionModelComplex&gt; definitionsByClass = new ConcurrentHashMap&lt;&gt;();
-
-<span class="fc" id="L32">  protected SimpleModuleLoaderStrategy(@NonNull IBindingContext bindingContext) {</span>
-<span class="fc" id="L33">    this.bindingContext = bindingContext;</span>
-<span class="fc" id="L34">  }</span>
+<span class="fc" id="L17">  private static final IModuleBindingGenerator COMPILATION_DISABLED_GENERATOR = module -&gt; {</span>
+<span class="nc" id="L18">    throw new UnsupportedOperationException(</span>
+        &quot;Dynamic compilation of Metaschema modules is not enabled by default.&quot; +
+            &quot; Configure a different IModuleBindingGenerator with the IModuleLoaderStrategy&quot; +
+            &quot; used with the IBindignContext.&quot;);
+  };
 
   @NonNull
-  private IBindingContext getBindingContext() {
-<span class="fc" id="L38">    return bindingContext;</span>
-  }
+  private final IModuleBindingGenerator generator;
+
+  public SimpleModuleLoaderStrategy() {
+<span class="fc" id="L28">    this(COMPILATION_DISABLED_GENERATOR);</span>
+<span class="fc" id="L29">  }</span>
+
+<span class="fc" id="L31">  public SimpleModuleLoaderStrategy(@NonNull IModuleBindingGenerator generator) {</span>
+<span class="fc" id="L32">    this.generator = generator;</span>
+<span class="fc" id="L33">  }</span>
 
   @Override
-  public IBoundModule loadModule(@NonNull Class&lt;? extends IBoundModule&gt; clazz) {
-    IBoundModule retval;
-<span class="fc" id="L44">    synchronized (this) {</span>
-<span class="fc" id="L45">      retval = modulesByClass.get(clazz);</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">      if (retval == null) {</span>
-<span class="fc" id="L47">        retval = AbstractBoundModule.createInstance(clazz, getBindingContext());</span>
-<span class="fc" id="L48">        modulesByClass.put(clazz, retval);</span>
-      }
-<span class="fc" id="L50">    }</span>
-<span class="fc" id="L51">    return ObjectUtils.notNull(retval);</span>
-  }
-
-  @Override
-  public IBoundDefinitionModelComplex getBoundDefinitionForClass(@NonNull Class&lt;? extends IBoundObject&gt; clazz) {
-    IBoundDefinitionModelComplex retval;
-<span class="fc" id="L57">    synchronized (this) {</span>
-<span class="fc" id="L58">      retval = definitionsByClass.get(clazz);</span>
-<span class="fc bfc" id="L59" title="All 2 branches covered.">      if (retval == null) {</span>
-<span class="fc" id="L60">        retval = newBoundDefinition(clazz);</span>
-<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        if (retval != null) {</span>
-<span class="fc" id="L62">          definitionsByClass.put(clazz, retval);</span>
-        }
-      }
-<span class="fc" id="L65">    }</span>
-<span class="fc" id="L66">    return retval;</span>
-  }
-
-  @Nullable
-  private IBoundDefinitionModelComplex newBoundDefinition(@NonNull Class&lt;? extends IBoundObject&gt; clazz) {
-<span class="fc" id="L71">    IBoundDefinitionModelComplex retval = null;</span>
-<span class="fc bfc" id="L72" title="All 2 branches covered.">    if (clazz.isAnnotationPresent(MetaschemaAssembly.class)) {</span>
-<span class="fc" id="L73">      retval = DefinitionAssembly.newInstance(clazz, getBindingContext());</span>
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">    } else if (clazz.isAnnotationPresent(MetaschemaField.class)) {</span>
-<span class="fc" id="L75">      retval = DefinitionField.newInstance(clazz, getBindingContext());</span>
-    }
-<span class="fc" id="L77">    return retval;</span>
+  protected Class&lt;? extends IBoundModule&gt; handleUnboundModule(IModule module) {
+<span class="fc" id="L37">    return generator.generate(module);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

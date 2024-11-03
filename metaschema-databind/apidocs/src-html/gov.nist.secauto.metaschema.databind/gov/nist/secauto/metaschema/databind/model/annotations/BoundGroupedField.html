@@ -107,41 +107,48 @@
 <span class="source-line-no">094</span><span id="line-94">  Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; typeAdapter() default NullJavaTypeAdapter.class;</span>
 <span class="source-line-no">095</span><span id="line-95"></span>
 <span class="source-line-no">096</span><span id="line-96">  /**</span>
-<span class="source-line-no">097</span><span id="line-97">   * Get any remarks for this field.</span>
+<span class="source-line-no">097</span><span id="line-97">   * An optional set of associated properties.</span>
 <span class="source-line-no">098</span><span id="line-98">   *</span>
-<span class="source-line-no">099</span><span id="line-99">   * @return a markdown string or {@code "##none"} if no remarks are provided</span>
+<span class="source-line-no">099</span><span id="line-99">   * @return the properties or an empty array with no properties</span>
 <span class="source-line-no">100</span><span id="line-100">   */</span>
-<span class="source-line-no">101</span><span id="line-101">  @NonNull</span>
-<span class="source-line-no">102</span><span id="line-102">  String remarks() default ModelUtil.NO_STRING_VALUE;</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  /**</span>
-<span class="source-line-no">105</span><span id="line-105">   * Get the value constraints defined for this Metaschema field inline</span>
-<span class="source-line-no">106</span><span id="line-106">   * definition.</span>
-<span class="source-line-no">107</span><span id="line-107">   *</span>
-<span class="source-line-no">108</span><span id="line-108">   * @return the value constraints</span>
-<span class="source-line-no">109</span><span id="line-109">   */</span>
-<span class="source-line-no">110</span><span id="line-110">  ValueConstraints valueConstraints() default @ValueConstraints;</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  /**</span>
-<span class="source-line-no">113</span><span id="line-113">   * Get any remarks for this field.</span>
+<span class="source-line-no">101</span><span id="line-101">  Property[] properties() default {};</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">  /**</span>
+<span class="source-line-no">104</span><span id="line-104">   * Get any remarks for this field.</span>
+<span class="source-line-no">105</span><span id="line-105">   *</span>
+<span class="source-line-no">106</span><span id="line-106">   * @return a markdown string or {@code "##none"} if no remarks are provided</span>
+<span class="source-line-no">107</span><span id="line-107">   */</span>
+<span class="source-line-no">108</span><span id="line-108">  @NonNull</span>
+<span class="source-line-no">109</span><span id="line-109">  String remarks() default ModelUtil.NO_STRING_VALUE;</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">  /**</span>
+<span class="source-line-no">112</span><span id="line-112">   * Get the value constraints defined for this Metaschema field inline</span>
+<span class="source-line-no">113</span><span id="line-113">   * definition.</span>
 <span class="source-line-no">114</span><span id="line-114">   *</span>
-<span class="source-line-no">115</span><span id="line-115">   * @return the discriminator string or {@code "##none"} if no discriminator is</span>
-<span class="source-line-no">116</span><span id="line-116">   *         provided</span>
-<span class="source-line-no">117</span><span id="line-117">   */</span>
-<span class="source-line-no">118</span><span id="line-118">  @NonNull</span>
-<span class="source-line-no">119</span><span id="line-119">  String discriminatorValue() default ModelUtil.NO_STRING_VALUE;</span>
-<span class="source-line-no">120</span><span id="line-120"></span>
-<span class="source-line-no">121</span><span id="line-121">  /**</span>
-<span class="source-line-no">122</span><span id="line-122">   * The bound class associated with this assembly.</span>
-<span class="source-line-no">123</span><span id="line-123">   * &lt;p&gt;</span>
-<span class="source-line-no">124</span><span id="line-124">   * This is optional when used on a field or method, and required when used with</span>
-<span class="source-line-no">125</span><span id="line-125">   * an annotation type value, i.e. {@link BoundChoiceGroup}.</span>
-<span class="source-line-no">126</span><span id="line-126">   *</span>
-<span class="source-line-no">127</span><span id="line-127">   * @return the bound class</span>
-<span class="source-line-no">128</span><span id="line-128">   */</span>
-<span class="source-line-no">129</span><span id="line-129">  @NonNull</span>
-<span class="source-line-no">130</span><span id="line-130">  Class&lt;? extends IBoundObject&gt; binding();</span>
-<span class="source-line-no">131</span><span id="line-131">}</span>
+<span class="source-line-no">115</span><span id="line-115">   * @return the value constraints</span>
+<span class="source-line-no">116</span><span id="line-116">   */</span>
+<span class="source-line-no">117</span><span id="line-117">  ValueConstraints valueConstraints() default @ValueConstraints;</span>
+<span class="source-line-no">118</span><span id="line-118"></span>
+<span class="source-line-no">119</span><span id="line-119">  /**</span>
+<span class="source-line-no">120</span><span id="line-120">   * Get any remarks for this field.</span>
+<span class="source-line-no">121</span><span id="line-121">   *</span>
+<span class="source-line-no">122</span><span id="line-122">   * @return the discriminator string or {@code "##none"} if no discriminator is</span>
+<span class="source-line-no">123</span><span id="line-123">   *         provided</span>
+<span class="source-line-no">124</span><span id="line-124">   */</span>
+<span class="source-line-no">125</span><span id="line-125">  @NonNull</span>
+<span class="source-line-no">126</span><span id="line-126">  String discriminatorValue() default ModelUtil.NO_STRING_VALUE;</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">  /**</span>
+<span class="source-line-no">129</span><span id="line-129">   * The bound class associated with this assembly.</span>
+<span class="source-line-no">130</span><span id="line-130">   * &lt;p&gt;</span>
+<span class="source-line-no">131</span><span id="line-131">   * This is optional when used on a field or method, and required when used with</span>
+<span class="source-line-no">132</span><span id="line-132">   * an annotation type value, i.e. {@link BoundChoiceGroup}.</span>
+<span class="source-line-no">133</span><span id="line-133">   *</span>
+<span class="source-line-no">134</span><span id="line-134">   * @return the bound class</span>
+<span class="source-line-no">135</span><span id="line-135">   */</span>
+<span class="source-line-no">136</span><span id="line-136">  @NonNull</span>
+<span class="source-line-no">137</span><span id="line-137">  Class&lt;? extends IBoundObject&gt; binding();</span>
+<span class="source-line-no">138</span><span id="line-138">}</span>
 
 
 

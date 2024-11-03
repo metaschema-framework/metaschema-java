@@ -22,26 +22,27 @@ public class Except
     extends AbstractFilterExpression {
 
   /**
-   * Construct a new Metapath except expression CST node.
+   * Construct a except filter expression, which removes the items resulting from
+   * the filter expression from the items expression.
    *
-   * @param left
+   * @param itemsExpression
    *          an expression indicating the items to filter
-   * @param right
+   * @param filterExpression
    *          an expression indicating the items to omit
    */
-  public Except(@NonNull IExpression left, @NonNull IExpression right) {
-<span class="nc" id="L33">    super(left, right);</span>
-<span class="nc" id="L34">  }</span>
+  public Except(@NonNull IExpression itemsExpression, @NonNull IExpression filterExpression) {
+<span class="nc" id="L34">    super(itemsExpression, filterExpression);</span>
+<span class="nc" id="L35">  }</span>
 
   @Override
   protected ISequence&lt;?&gt; applyFilterTo(@NonNull ISequence&lt;?&gt; result, @NonNull List&lt;? extends IItem&gt; items) {
-<span class="nc" id="L38">    return ISequence.of(ObjectUtils.notNull(result.stream()</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        .filter(item -&gt; !items.contains(item))));</span>
+<span class="nc" id="L39">    return ISequence.of(ObjectUtils.notNull(result.stream()</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        .filter(item -&gt; !items.contains(item))));</span>
   }
 
   @Override
   public &lt;RESULT, CONTEXT&gt; RESULT accept(@NonNull IExpressionVisitor&lt;RESULT, CONTEXT&gt; visitor, CONTEXT context) {
-<span class="nc" id="L44">    return visitor.visitExcept(this, context);</span>
+<span class="nc" id="L45">    return visitor.visitExcept(this, context);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

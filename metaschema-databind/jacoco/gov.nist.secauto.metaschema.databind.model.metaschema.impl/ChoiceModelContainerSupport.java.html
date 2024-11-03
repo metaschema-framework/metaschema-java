@@ -16,16 +16,17 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyModel.Choice;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyReference;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FieldReference;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.InlineDefineAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.InlineDefineField;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
 
@@ -33,7 +34,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-class ChoiceModelContainerSupport
+<span class="fc" id="L37">class ChoiceModelContainerSupport</span>
     extends AbstractBindingModelContainerSupport {
   @NonNull
   private final List&lt;IModelInstanceAbsolute&gt; modelInstances;
@@ -55,9 +56,9 @@ class ChoiceModelContainerSupport
           @NonNull IChoiceInstance parent,
           @NonNull INodeItemFactory nodeItemFactory) {
     List&lt;Object&gt; instances;
-<span class="pc bpc" id="L58" title="3 of 6 branches missed.">    return binding == null || (instances = binding.getChoices()) == null || instances.isEmpty()</span>
-<span class="nc" id="L59">        ? IContainerModelSupport.empty()</span>
-<span class="fc" id="L60">        : new ChoiceModelContainerSupport(</span>
+<span class="pc bpc" id="L59" title="3 of 6 branches missed.">    return binding == null || (instances = binding.getChoices()) == null || instances.isEmpty()</span>
+<span class="nc" id="L60">        ? IContainerModelSupport.empty()</span>
+<span class="fc" id="L61">        : new ChoiceModelContainerSupport(</span>
             binding,
             bindingInstance,
             parent,
@@ -82,93 +83,98 @@ class ChoiceModelContainerSupport
       @NonNull Choice binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
       @NonNull IChoiceInstance parent,
-<span class="fc" id="L85">      @NonNull INodeItemFactory nodeItemFactory) {</span>
+<span class="fc" id="L86">      @NonNull INodeItemFactory nodeItemFactory) {</span>
 
     // create temporary collections to store the child binding objects
-<span class="fc" id="L88">    final List&lt;IModelInstanceAbsolute&gt; modelInstances = new LinkedList&lt;&gt;();</span>
-<span class="fc" id="L89">    final Map&lt;QName, INamedModelInstanceAbsolute&gt; namedModelInstances = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L90">    final Map&lt;QName, IFieldInstanceAbsolute&gt; fieldInstances = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L91">    final Map&lt;QName, IAssemblyInstanceAbsolute&gt; assemblyInstances = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L89">    final List&lt;IModelInstanceAbsolute&gt; modelInstances = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L90">    final Map&lt;QName, INamedModelInstanceAbsolute&gt; namedModelInstances = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L91">    final Map&lt;QName, IFieldInstanceAbsolute&gt; fieldInstances = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L92">    final Map&lt;QName, IAssemblyInstanceAbsolute&gt; assemblyInstances = new LinkedHashMap&lt;&gt;();</span>
 
     // create counters to track child positions
-<span class="fc" id="L94">    int assemblyReferencePosition = 0;</span>
-<span class="fc" id="L95">    int assemblyInlineDefinitionPosition = 0;</span>
-<span class="fc" id="L96">    int fieldReferencePosition = 0;</span>
-<span class="fc" id="L97">    int fieldInlineDefinitionPosition = 0;</span>
+<span class="fc" id="L95">    AtomicInteger assemblyReferencePosition = new AtomicInteger();</span>
+<span class="fc" id="L96">    AtomicInteger assemblyInlineDefinitionPosition = new AtomicInteger();</span>
+<span class="fc" id="L97">    AtomicInteger fieldReferencePosition = new AtomicInteger();</span>
+<span class="fc" id="L98">    AtomicInteger fieldInlineDefinitionPosition = new AtomicInteger();</span>
 
     // TODO: make &quot;instances&quot; a constant
-<span class="fc" id="L100">    IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L101">        bindingInstance.getDefinition().getChoiceGroupInstanceByName(&quot;choices&quot;));</span>
-<span class="fc bfc" id="L102" title="All 2 branches covered.">    for (Object obj : ObjectUtils.notNull(binding.getChoices())) {</span>
-<span class="fc" id="L103">      IBoundInstanceModelGroupedAssembly objInstance</span>
-<span class="fc" id="L104">          = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);</span>
+<span class="fc" id="L101">    IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L102">        bindingInstance.getDefinition().getChoiceGroupInstanceByName(&quot;choices&quot;));</span>
 
-<span class="fc bfc" id="L106" title="All 2 branches covered.">      if (obj instanceof AssemblyReference) {</span>
-<span class="fc" id="L107">        IAssemblyInstanceAbsolute assembly = newInstance(</span>
-            (AssemblyReference) obj,
-            objInstance,
-            assemblyReferencePosition++,
-            parent);
-<span class="fc" id="L112">        addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">      } else if (obj instanceof InlineDefineAssembly) {</span>
-<span class="fc" id="L114">        IAssemblyInstanceAbsolute assembly = new InstanceModelAssemblyInline(</span>
+<span class="fc" id="L104">    ObjectUtils.notNull(binding.getChoices()).forEach(obj -&gt; {</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">      assert obj != null;</span>
+<span class="fc" id="L106">      IBoundInstanceModelGroupedAssembly objInstance</span>
+<span class="fc" id="L107">          = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);</span>
+
+<span class="fc bfc" id="L109" title="All 2 branches covered.">      if (obj instanceof AssemblyReference) {</span>
+<span class="fc" id="L110">        addInstance(</span>
+<span class="fc" id="L111">            newInstance(</span>
+                (AssemblyReference) obj,
+                objInstance,
+<span class="fc" id="L114">                assemblyReferencePosition.getAndIncrement(),</span>
+                parent),
+            modelInstances,
+            namedModelInstances,
+            assemblyInstances);
+<span class="fc bfc" id="L119" title="All 2 branches covered.">      } else if (obj instanceof InlineDefineAssembly) {</span>
+<span class="fc" id="L120">        IAssemblyInstanceAbsolute assembly = new InstanceModelAssemblyInline(</span>
             (InlineDefineAssembly) obj,
             objInstance,
-            assemblyInlineDefinitionPosition++,
+<span class="fc" id="L123">            assemblyInlineDefinitionPosition.getAndIncrement(),</span>
             parent,
             nodeItemFactory);
-<span class="fc" id="L120">        addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">      } else if (obj instanceof FieldReference) {</span>
-<span class="fc" id="L122">        IFieldInstanceAbsolute field = newInstance(</span>
+<span class="fc" id="L126">        addInstance(assembly, modelInstances, namedModelInstances, assemblyInstances);</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">      } else if (obj instanceof FieldReference) {</span>
+<span class="fc" id="L128">        IFieldInstanceAbsolute field = newInstance(</span>
             (FieldReference) obj,
             objInstance,
-            fieldReferencePosition++,
+<span class="fc" id="L131">            fieldReferencePosition.getAndIncrement(),</span>
             parent);
-<span class="fc" id="L127">        addInstance(field, modelInstances, namedModelInstances, fieldInstances);</span>
-<span class="pc bpc" id="L128" title="1 of 2 branches missed.">      } else if (obj instanceof InlineDefineField) {</span>
-<span class="fc" id="L129">        IFieldInstanceAbsolute field = new InstanceModelFieldInline(</span>
+<span class="fc" id="L133">        addInstance(field, modelInstances, namedModelInstances, fieldInstances);</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">      } else if (obj instanceof InlineDefineField) {</span>
+<span class="fc" id="L135">        IFieldInstanceAbsolute field = new InstanceModelFieldInline(</span>
             (InlineDefineField) obj,
             objInstance,
-            fieldInlineDefinitionPosition++,
+<span class="fc" id="L138">            fieldInlineDefinitionPosition.getAndIncrement(),</span>
             parent);
-<span class="fc" id="L134">        addInstance(field, modelInstances, namedModelInstances, fieldInstances);</span>
-<span class="fc" id="L135">      } else {</span>
-<span class="nc" id="L136">        throw new UnsupportedOperationException(String.format(&quot;Unknown model instance class: %s&quot;, obj.getClass()));</span>
+<span class="fc" id="L140">        addInstance(field, modelInstances, namedModelInstances, fieldInstances);</span>
+<span class="fc" id="L141">      } else {</span>
+<span class="nc" id="L142">        throw new UnsupportedOperationException(String.format(&quot;Unknown model instance class: %s&quot;, obj.getClass()));</span>
       }
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L144">    });</span>
 
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">    this.modelInstances = modelInstances.isEmpty()</span>
-<span class="nc" id="L141">        ? CollectionUtil.emptyList()</span>
-<span class="fc" id="L142">        : CollectionUtil.unmodifiableList(modelInstances);</span>
-<span class="pc bpc" id="L143" title="1 of 2 branches missed.">    this.namedModelInstances = namedModelInstances.isEmpty()</span>
-<span class="nc" id="L144">        ? CollectionUtil.emptyMap()</span>
-<span class="fc" id="L145">        : CollectionUtil.unmodifiableMap(namedModelInstances);</span>
-<span class="fc bfc" id="L146" title="All 2 branches covered.">    this.fieldInstances = fieldInstances.isEmpty()</span>
-<span class="fc" id="L147">        ? CollectionUtil.emptyMap()</span>
-<span class="fc" id="L148">        : CollectionUtil.unmodifiableMap(fieldInstances);</span>
-<span class="fc bfc" id="L149" title="All 2 branches covered.">    this.assemblyInstances = assemblyInstances.isEmpty()</span>
-<span class="fc" id="L150">        ? CollectionUtil.emptyMap()</span>
-<span class="fc" id="L151">        : CollectionUtil.unmodifiableMap(assemblyInstances);</span>
-<span class="fc" id="L152">  }</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">    this.modelInstances = modelInstances.isEmpty()</span>
+<span class="nc" id="L147">        ? CollectionUtil.emptyList()</span>
+<span class="fc" id="L148">        : CollectionUtil.unmodifiableList(modelInstances);</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">    this.namedModelInstances = namedModelInstances.isEmpty()</span>
+<span class="nc" id="L150">        ? CollectionUtil.emptyMap()</span>
+<span class="fc" id="L151">        : CollectionUtil.unmodifiableMap(namedModelInstances);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">    this.fieldInstances = fieldInstances.isEmpty()</span>
+<span class="fc" id="L153">        ? CollectionUtil.emptyMap()</span>
+<span class="fc" id="L154">        : CollectionUtil.unmodifiableMap(fieldInstances);</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">    this.assemblyInstances = assemblyInstances.isEmpty()</span>
+<span class="fc" id="L156">        ? CollectionUtil.emptyMap()</span>
+<span class="fc" id="L157">        : CollectionUtil.unmodifiableMap(assemblyInstances);</span>
+<span class="fc" id="L158">  }</span>
 
   @Override
   public List&lt;IModelInstanceAbsolute&gt; getModelInstances() {
-<span class="fc" id="L156">    return modelInstances;</span>
+<span class="fc" id="L162">    return modelInstances;</span>
   }
 
   @Override
   public Map&lt;QName, INamedModelInstanceAbsolute&gt; getNamedModelInstanceMap() {
-<span class="nc" id="L161">    return namedModelInstances;</span>
+<span class="nc" id="L167">    return namedModelInstances;</span>
   }
 
   @Override
   public Map&lt;QName, IFieldInstanceAbsolute&gt; getFieldInstanceMap() {
-<span class="nc" id="L166">    return fieldInstances;</span>
+<span class="nc" id="L172">    return fieldInstances;</span>
   }
 
   @Override
   public Map&lt;QName, IAssemblyInstanceAbsolute&gt; getAssemblyInstanceMap() {
-<span class="nc" id="L171">    return assemblyInstances;</span>
+<span class="nc" id="L177">    return assemblyInstances;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

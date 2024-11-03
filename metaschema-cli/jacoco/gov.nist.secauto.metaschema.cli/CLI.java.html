@@ -9,17 +9,20 @@ import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandService;
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.MetaschemaJavaVersion;
 import gov.nist.secauto.metaschema.core.model.MetaschemaVersion;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="fc" id="L22">@SuppressWarnings(&quot;PMD.ShortClassName&quot;)</span>
+/**
+ * The main entry point for the CLI application.
+ */
+<span class="fc" id="L25">@SuppressWarnings(&quot;PMD.ShortClassName&quot;)</span>
 public final class CLI {
   /**
    * The main command line entry point.
@@ -28,8 +31,8 @@ public final class CLI {
    *          the command line arguments
    */
   public static void main(String[] args) {
-<span class="nc" id="L31">    System.exit(runCli(args).getExitCode().getStatusCode());</span>
-<span class="nc" id="L32">  }</span>
+<span class="nc" id="L34">    System.exit(runCli(args).getExitCode().getStatusCode());</span>
+<span class="nc" id="L35">  }</span>
 
   /**
    * Execute a command line.
@@ -40,15 +43,12 @@ public final class CLI {
    */
   @NonNull
   public static ExitStatus runCli(String... args) {
-<span class="fc" id="L43">    System.setProperty(&quot;java.util.logging.manager&quot;, &quot;org.apache.logging.log4j.jul.LogManager&quot;);</span>
+<span class="fc" id="L46">    System.setProperty(&quot;java.util.logging.manager&quot;, &quot;org.apache.logging.log4j.jul.LogManager&quot;);</span>
 
-<span class="fc" id="L45">    @SuppressWarnings(&quot;serial&quot;) Map&lt;String, IVersionInfo&gt; versions = ObjectUtils.notNull(</span>
-<span class="fc" id="L46">        new LinkedHashMap&lt;&gt;() {</span>
-          {
-<span class="fc" id="L48">            put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());</span>
-<span class="fc" id="L49">            put(&quot;http://csrc.nist.gov/ns/oscal/metaschema/1.0&quot;, new MetaschemaVersion());</span>
-<span class="fc" id="L50">          }</span>
-        });
+<span class="fc" id="L48">    @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;String, IVersionInfo&gt; versions = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L49">    versions.put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());</span>
+<span class="fc" id="L50">    versions.put(MetaschemaConstants.METASCHEMA_NAMESPACE, new MetaschemaVersion());</span>
+
 <span class="fc" id="L52">    CLIProcessor processor = new CLIProcessor(&quot;metaschema-cli&quot;, versions);</span>
 <span class="fc" id="L53">    MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);</span>
 

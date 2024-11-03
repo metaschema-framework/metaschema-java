@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1728417688006">
-    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="1.2.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1730654163199">
+    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="2.0.0"/>
     <files>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/adapter/BooleanAdapterTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/adapter/DateAdapterTest.java" result="NOOP"/>
@@ -28,6 +28,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/RangeTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/RootSlashOnlyTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/ValueComparisonTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/path/StepTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/OperationFunctionsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/ArrayAppendTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/ArrayFlattenTest.java" result="NOOP"/>
@@ -48,12 +49,14 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnConcatTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnContainsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnCountTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDocumentAvailableTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnEmptyTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnEndsWithTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnExistsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnFalseTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnHeadTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnInsertBeforeTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnLowerCaseTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnMatchesTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnMinMaxTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnNormalizeSpaceTest.java" result="NOOP"/>
@@ -62,12 +65,16 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnReverseTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnRoundTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnStartsWithTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnStringLengthTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnStringTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnSubstringAfterTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnSubstringBeforeTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnSubstringTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnSumTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnTailTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnTokenizeTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnTrueTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnUpperCaseTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FunctionTestBase.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/MapContainsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/MapEntryTest.java" result="NOOP"/>
@@ -86,6 +93,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/function/IArrayItemTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/function/LookupTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidatorTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ExternalConstraintsModulePostProcessorTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/util/XmlObjectParserTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/ExamplesTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/MetaConstraintLoaderTest.java" result="NOOP"/>
@@ -93,6 +101,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/ModuleLoaderTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/UsedDefinitionModelWalkerTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/XmlbeansMarkupVisitorTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/impl/ModelFactoryTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/AbstractModelBuilder.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/AssemblyBuilder.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/FieldBuilder.java" result="NOOP"/>

@@ -18,91 +18,115 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model.constraint;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultLet;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.model.ISource;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultLet;</span>
 <span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">014</span><span id="line-14">import javax.xml.namespace.QName;</span>
 <span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">@SuppressWarnings("PMD.ShortClassName")</span>
-<span class="source-line-no">017</span><span id="line-17">public interface ILet {</span>
-<span class="source-line-no">018</span><span id="line-18">  /**</span>
-<span class="source-line-no">019</span><span id="line-19">   * Create a new Let expression by compiling the provided Metapath expression</span>
-<span class="source-line-no">020</span><span id="line-20">   * string.</span>
-<span class="source-line-no">021</span><span id="line-21">   *</span>
-<span class="source-line-no">022</span><span id="line-22">   * @param name</span>
-<span class="source-line-no">023</span><span id="line-23">   *          the let expression variable name</span>
-<span class="source-line-no">024</span><span id="line-24">   * @param valueExpression</span>
-<span class="source-line-no">025</span><span id="line-25">   *          a Metapath expression string representing the variable value</span>
-<span class="source-line-no">026</span><span id="line-26">   * @param source</span>
-<span class="source-line-no">027</span><span id="line-27">   *          the source descriptor for the resource containing the constraint</span>
-<span class="source-line-no">028</span><span id="line-28">   * @return the original let statement with the same name or {@code null}</span>
-<span class="source-line-no">029</span><span id="line-29">   */</span>
-<span class="source-line-no">030</span><span id="line-30">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
-<span class="source-line-no">032</span><span id="line-32">  static ILet of(</span>
-<span class="source-line-no">033</span><span id="line-33">      @NonNull QName name,</span>
-<span class="source-line-no">034</span><span id="line-34">      @NonNull String valueExpression,</span>
-<span class="source-line-no">035</span><span id="line-35">      @NonNull ISource source) {</span>
-<span class="source-line-no">036</span><span id="line-36">    try {</span>
-<span class="source-line-no">037</span><span id="line-37">      return of(name, MetapathExpression.compile(valueExpression, source.getStaticContext()), source);</span>
-<span class="source-line-no">038</span><span id="line-38">    } catch (MetapathException ex) {</span>
-<span class="source-line-no">039</span><span id="line-39">      throw new MetapathException(</span>
-<span class="source-line-no">040</span><span id="line-40">          String.format("Unable to compile the let expression '%s=%s'%s. %s",</span>
-<span class="source-line-no">041</span><span id="line-41">              name,</span>
-<span class="source-line-no">042</span><span id="line-42">              valueExpression,</span>
-<span class="source-line-no">043</span><span id="line-43">              source.getSource() == null ? "" : " in " + source.getSource(),</span>
-<span class="source-line-no">044</span><span id="line-44">              ex.getMessage()),</span>
-<span class="source-line-no">045</span><span id="line-45">          ex);</span>
-<span class="source-line-no">046</span><span id="line-46">    }</span>
-<span class="source-line-no">047</span><span id="line-47">  }</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">  /**</span>
-<span class="source-line-no">050</span><span id="line-50">   * Create a new Let expression.</span>
-<span class="source-line-no">051</span><span id="line-51">   *</span>
-<span class="source-line-no">052</span><span id="line-52">   * @param name</span>
-<span class="source-line-no">053</span><span id="line-53">   *          the let expression variable name</span>
-<span class="source-line-no">054</span><span id="line-54">   * @param valueExpression</span>
-<span class="source-line-no">055</span><span id="line-55">   *          a Metapath expression representing the variable value</span>
-<span class="source-line-no">056</span><span id="line-56">   * @param source</span>
-<span class="source-line-no">057</span><span id="line-57">   *          the source descriptor for the resource containing the constraint</span>
-<span class="source-line-no">058</span><span id="line-58">   * @return the original let statement with the same name or {@code null}</span>
-<span class="source-line-no">059</span><span id="line-59">   */</span>
-<span class="source-line-no">060</span><span id="line-60">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">061</span><span id="line-61">  @NonNull</span>
-<span class="source-line-no">062</span><span id="line-62">  static ILet of(</span>
-<span class="source-line-no">063</span><span id="line-63">      @NonNull QName name,</span>
-<span class="source-line-no">064</span><span id="line-64">      @NonNull MetapathExpression valueExpression,</span>
-<span class="source-line-no">065</span><span id="line-65">      @NonNull ISource source) {</span>
-<span class="source-line-no">066</span><span id="line-66">    return new DefaultLet(name, valueExpression, source);</span>
-<span class="source-line-no">067</span><span id="line-67">  }</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  /**</span>
-<span class="source-line-no">070</span><span id="line-70">   * Get the name of the let variable.</span>
-<span class="source-line-no">071</span><span id="line-71">   *</span>
-<span class="source-line-no">072</span><span id="line-72">   * @return the name</span>
-<span class="source-line-no">073</span><span id="line-73">   */</span>
-<span class="source-line-no">074</span><span id="line-74">  @NonNull</span>
-<span class="source-line-no">075</span><span id="line-75">  QName getName();</span>
-<span class="source-line-no">076</span><span id="line-76"></span>
-<span class="source-line-no">077</span><span id="line-77">  /**</span>
-<span class="source-line-no">078</span><span id="line-78">   * Get the Metapath expression to use to query the value.</span>
-<span class="source-line-no">079</span><span id="line-79">   *</span>
-<span class="source-line-no">080</span><span id="line-80">   * @return the Metapath expression to use to query the value</span>
-<span class="source-line-no">081</span><span id="line-81">   */</span>
-<span class="source-line-no">082</span><span id="line-82">  @NonNull</span>
-<span class="source-line-no">083</span><span id="line-83">  MetapathExpression getValueExpression();</span>
+<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">017</span><span id="line-17">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">/**</span>
+<span class="source-line-no">020</span><span id="line-20"> * Represents a variable assignment for use in Metaschema module constraints.</span>
+<span class="source-line-no">021</span><span id="line-21"> */</span>
+<span class="source-line-no">022</span><span id="line-22">@SuppressWarnings("PMD.ShortClassName")</span>
+<span class="source-line-no">023</span><span id="line-23">public interface ILet {</span>
+<span class="source-line-no">024</span><span id="line-24">  /**</span>
+<span class="source-line-no">025</span><span id="line-25">   * Create a new Let expression by compiling the provided Metapath expression</span>
+<span class="source-line-no">026</span><span id="line-26">   * string.</span>
+<span class="source-line-no">027</span><span id="line-27">   *</span>
+<span class="source-line-no">028</span><span id="line-28">   * @param name</span>
+<span class="source-line-no">029</span><span id="line-29">   *          the let expression variable name</span>
+<span class="source-line-no">030</span><span id="line-30">   * @param valueExpression</span>
+<span class="source-line-no">031</span><span id="line-31">   *          a Metapath expression string representing the variable value</span>
+<span class="source-line-no">032</span><span id="line-32">   * @param source</span>
+<span class="source-line-no">033</span><span id="line-33">   *          the source descriptor for the resource containing the constraint</span>
+<span class="source-line-no">034</span><span id="line-34">   * @param remarks</span>
+<span class="source-line-no">035</span><span id="line-35">   *          remarks about the let statement</span>
+<span class="source-line-no">036</span><span id="line-36">   * @return the original let statement with the same name or {@code null}</span>
+<span class="source-line-no">037</span><span id="line-37">   */</span>
+<span class="source-line-no">038</span><span id="line-38">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
+<span class="source-line-no">040</span><span id="line-40">  static ILet of(</span>
+<span class="source-line-no">041</span><span id="line-41">      @NonNull QName name,</span>
+<span class="source-line-no">042</span><span id="line-42">      @NonNull String valueExpression,</span>
+<span class="source-line-no">043</span><span id="line-43">      @NonNull ISource source,</span>
+<span class="source-line-no">044</span><span id="line-44">      @Nullable MarkupMultiline remarks) {</span>
+<span class="source-line-no">045</span><span id="line-45">    try {</span>
+<span class="source-line-no">046</span><span id="line-46">      return of(</span>
+<span class="source-line-no">047</span><span id="line-47">          name,</span>
+<span class="source-line-no">048</span><span id="line-48">          MetapathExpression.compile(valueExpression, source.getStaticContext()),</span>
+<span class="source-line-no">049</span><span id="line-49">          source,</span>
+<span class="source-line-no">050</span><span id="line-50">          remarks);</span>
+<span class="source-line-no">051</span><span id="line-51">    } catch (MetapathException ex) {</span>
+<span class="source-line-no">052</span><span id="line-52">      throw new MetapathException(</span>
+<span class="source-line-no">053</span><span id="line-53">          String.format("Unable to compile the let expression '%s=%s'%s. %s",</span>
+<span class="source-line-no">054</span><span id="line-54">              name,</span>
+<span class="source-line-no">055</span><span id="line-55">              valueExpression,</span>
+<span class="source-line-no">056</span><span id="line-56">              source.getSource() == null ? "" : " in " + source.getSource(),</span>
+<span class="source-line-no">057</span><span id="line-57">              ex.getMessage()),</span>
+<span class="source-line-no">058</span><span id="line-58">          ex);</span>
+<span class="source-line-no">059</span><span id="line-59">    }</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  /**</span>
+<span class="source-line-no">063</span><span id="line-63">   * Create a new Let expression.</span>
+<span class="source-line-no">064</span><span id="line-64">   *</span>
+<span class="source-line-no">065</span><span id="line-65">   * @param name</span>
+<span class="source-line-no">066</span><span id="line-66">   *          the let expression variable name</span>
+<span class="source-line-no">067</span><span id="line-67">   * @param valueExpression</span>
+<span class="source-line-no">068</span><span id="line-68">   *          a Metapath expression representing the variable value</span>
+<span class="source-line-no">069</span><span id="line-69">   * @param source</span>
+<span class="source-line-no">070</span><span id="line-70">   *          the source descriptor for the resource containing the constraint</span>
+<span class="source-line-no">071</span><span id="line-71">   * @param remarks</span>
+<span class="source-line-no">072</span><span id="line-72">   *          remarks about the let statement</span>
+<span class="source-line-no">073</span><span id="line-73">   * @return the original let statement with the same name or {@code null}</span>
+<span class="source-line-no">074</span><span id="line-74">   */</span>
+<span class="source-line-no">075</span><span id="line-75">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">076</span><span id="line-76">  @NonNull</span>
+<span class="source-line-no">077</span><span id="line-77">  static ILet of(</span>
+<span class="source-line-no">078</span><span id="line-78">      @NonNull QName name,</span>
+<span class="source-line-no">079</span><span id="line-79">      @NonNull MetapathExpression valueExpression,</span>
+<span class="source-line-no">080</span><span id="line-80">      @NonNull ISource source,</span>
+<span class="source-line-no">081</span><span id="line-81">      @Nullable MarkupMultiline remarks) {</span>
+<span class="source-line-no">082</span><span id="line-82">    return new DefaultLet(name, valueExpression, source, remarks);</span>
+<span class="source-line-no">083</span><span id="line-83">  }</span>
 <span class="source-line-no">084</span><span id="line-84"></span>
 <span class="source-line-no">085</span><span id="line-85">  /**</span>
-<span class="source-line-no">086</span><span id="line-86">   * Information about the source resource containing the let statement.</span>
+<span class="source-line-no">086</span><span id="line-86">   * Get the name of the let variable.</span>
 <span class="source-line-no">087</span><span id="line-87">   *</span>
-<span class="source-line-no">088</span><span id="line-88">   * @return the source information</span>
+<span class="source-line-no">088</span><span id="line-88">   * @return the name</span>
 <span class="source-line-no">089</span><span id="line-89">   */</span>
 <span class="source-line-no">090</span><span id="line-90">  @NonNull</span>
-<span class="source-line-no">091</span><span id="line-91">  ISource getSource();</span>
-<span class="source-line-no">092</span><span id="line-92">}</span>
+<span class="source-line-no">091</span><span id="line-91">  QName getName();</span>
+<span class="source-line-no">092</span><span id="line-92"></span>
+<span class="source-line-no">093</span><span id="line-93">  /**</span>
+<span class="source-line-no">094</span><span id="line-94">   * Get the Metapath expression to use to query the value.</span>
+<span class="source-line-no">095</span><span id="line-95">   *</span>
+<span class="source-line-no">096</span><span id="line-96">   * @return the Metapath expression to use to query the value</span>
+<span class="source-line-no">097</span><span id="line-97">   */</span>
+<span class="source-line-no">098</span><span id="line-98">  @NonNull</span>
+<span class="source-line-no">099</span><span id="line-99">  MetapathExpression getValueExpression();</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">  /**</span>
+<span class="source-line-no">102</span><span id="line-102">   * Information about the source resource containing the let statement.</span>
+<span class="source-line-no">103</span><span id="line-103">   *</span>
+<span class="source-line-no">104</span><span id="line-104">   * @return the source information</span>
+<span class="source-line-no">105</span><span id="line-105">   */</span>
+<span class="source-line-no">106</span><span id="line-106">  @NonNull</span>
+<span class="source-line-no">107</span><span id="line-107">  ISource getSource();</span>
+<span class="source-line-no">108</span><span id="line-108"></span>
+<span class="source-line-no">109</span><span id="line-109">  /**</span>
+<span class="source-line-no">110</span><span id="line-110">   * Get the remarks associated with the let statement.</span>
+<span class="source-line-no">111</span><span id="line-111">   *</span>
+<span class="source-line-no">112</span><span id="line-112">   * @return the remark or {@code null} if no remarks are defined</span>
+<span class="source-line-no">113</span><span id="line-113">   */</span>
+<span class="source-line-no">114</span><span id="line-114">  @Nullable</span>
+<span class="source-line-no">115</span><span id="line-115">  MarkupMultiline getRemarks();</span>
+<span class="source-line-no">116</span><span id="line-116">}</span>
 
 
 

@@ -19,7 +19,6 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.InlineFieldDefinitionType;
@@ -65,21 +64,21 @@ class XmlInlineFieldDefinition
   public XmlInlineFieldDefinition(
       @NonNull InlineFieldDefinitionType xmlObject,
       @NonNull IContainerModel parent) {
-<span class="fc" id="L68">    super(parent);</span>
-<span class="fc" id="L69">    this.xmlObject = xmlObject;</span>
-<span class="fc bfc" id="L70" title="All 2 branches covered.">    this.defaultValue = xmlObject.isSetDefault()</span>
-<span class="fc" id="L71">        ? getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))</span>
-<span class="fc" id="L72">        : null;</span>
-<span class="fc" id="L73">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(xmlObject, this)));</span>
-<span class="fc" id="L74">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="nc" id="L75">      IValueConstrained retval = new ValueConstraintSet();</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">      if (getXmlObject().isSetConstraint()) {</span>
-<span class="nc" id="L77">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()),</span>
-<span class="nc" id="L78">            ISource.modelSource(getContainingModule()));</span>
+<span class="fc" id="L67">    super(parent);</span>
+<span class="fc" id="L68">    this.xmlObject = xmlObject;</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">    this.defaultValue = xmlObject.isSetDefault()</span>
+<span class="fc" id="L70">        ? getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))</span>
+<span class="fc" id="L71">        : null;</span>
+<span class="fc" id="L72">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(xmlObject, this)));</span>
+<span class="fc" id="L73">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="nc" id="L74">      IValueConstrained retval = new ValueConstraintSet();</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">      if (getXmlObject().isSetConstraint()) {</span>
+<span class="nc" id="L76">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()),</span>
+<span class="nc" id="L77">            getContainingModule().getSource());</span>
       }
-<span class="nc" id="L80">      return retval;</span>
+<span class="nc" id="L79">      return retval;</span>
     }));
-<span class="fc" id="L82">  }</span>
+<span class="fc" id="L81">  }</span>
 
   // ----------------------------------------
   // - Start XmlBeans driven code - CPD-OFF -
@@ -92,13 +91,13 @@ class XmlInlineFieldDefinition
    */
   @NonNull
   protected final InlineFieldDefinitionType getXmlObject() {
-<span class="fc" id="L95">    return xmlObject;</span>
+<span class="fc" id="L94">    return xmlObject;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public IContainerFlagSupport&lt;IFlagInstance&gt; getFlagContainer() {
-<span class="fc" id="L101">    return flagContainer.get();</span>
+<span class="fc" id="L100">    return flagContainer.get();</span>
   }
 
   /**
@@ -110,104 +109,104 @@ class XmlInlineFieldDefinition
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public IValueConstrained getConstraintSupport() {
-<span class="nc" id="L113">    return constraints.get();</span>
+<span class="nc" id="L112">    return constraints.get();</span>
   }
 
   @Override
   public Object getDefaultValue() {
-<span class="nc" id="L118">    return defaultValue;</span>
+<span class="nc" id="L117">    return defaultValue;</span>
   }
 
   @Override
   public boolean isInXmlWrapped() {
-<span class="nc" id="L123">    return getXmlObject().getInXml();</span>
+<span class="nc" id="L122">    return getXmlObject().getInXml();</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="nc bnc" id="L128" title="All 2 branches missed.">    return getXmlObject().isSetFormalName() ? getXmlObject().getFormalName() : null;</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">    return getXmlObject().isSetFormalName() ? getXmlObject().getFormalName() : null;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupLine getDescription() {
-<span class="nc bnc" id="L134" title="All 2 branches missed.">    return getXmlObject().isSetDescription() ? MarkupStringConverter.toMarkupString(getXmlObject().getDescription())</span>
-<span class="nc" id="L135">        : null;</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">    return getXmlObject().isSetDescription() ? MarkupStringConverter.toMarkupString(getXmlObject().getDescription())</span>
+<span class="nc" id="L134">        : null;</span>
   }
 
   @Override
   public Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; getProperties() {
-<span class="nc" id="L140">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlObject().getPropList()));</span>
+<span class="nc" id="L139">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlObject().getPropList()));</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String getName() {
-<span class="fc" id="L146">    return getXmlObject().getName();</span>
+<span class="fc" id="L145">    return getXmlObject().getName();</span>
   }
 
   @Override
   public Integer getIndex() {
-<span class="nc bnc" id="L151" title="All 2 branches missed.">    return getXmlObject().isSetIndex() ? getXmlObject().getIndex().intValue() : null;</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">    return getXmlObject().isSetIndex() ? getXmlObject().getIndex().intValue() : null;</span>
   }
 
   @Override
   public String getGroupAsName() {
-<span class="nc bnc" id="L156" title="All 2 branches missed.">    return getXmlObject().isSetGroupAs() ? getXmlObject().getGroupAs().getName() : null;</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">    return getXmlObject().isSetGroupAs() ? getXmlObject().getGroupAs().getName() : null;</span>
   }
 
   @Override
   public int getMinOccurs() {
-<span class="fc" id="L161">    return XmlModelParser.getMinOccurs(getXmlObject().getMinOccurs());</span>
+<span class="fc" id="L160">    return XmlModelParser.getMinOccurs(getXmlObject().getMinOccurs());</span>
   }
 
   @Override
   public int getMaxOccurs() {
-<span class="fc" id="L166">    return XmlModelParser.getMaxOccurs(getXmlObject().getMaxOccurs());</span>
+<span class="fc" id="L165">    return XmlModelParser.getMaxOccurs(getXmlObject().getMaxOccurs());</span>
   }
 
   @Override
   public JsonGroupAsBehavior getJsonGroupAsBehavior() {
-<span class="nc" id="L171">    return XmlModelParser.getJsonGroupAsBehavior(getXmlObject().getGroupAs());</span>
+<span class="nc" id="L170">    return XmlModelParser.getJsonGroupAsBehavior(getXmlObject().getGroupAs());</span>
   }
 
   @Override
   public XmlGroupAsBehavior getXmlGroupAsBehavior() {
-<span class="nc" id="L176">    return XmlModelParser.getXmlGroupAsBehavior(getXmlObject().getGroupAs());</span>
+<span class="nc" id="L175">    return XmlModelParser.getXmlGroupAsBehavior(getXmlObject().getGroupAs());</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc bnc" id="L182" title="All 2 branches missed.">    return getXmlObject().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlObject().getRemarks()) : null;</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">    return getXmlObject().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlObject().getRemarks()) : null;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public final IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {
-<span class="fc bfc" id="L188" title="All 2 branches covered.">    return getXmlObject().isSetAsType() ? getXmlObject().getAsType() : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">    return getXmlObject().isSetAsType() ? getXmlObject().getAsType() : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
   }
 
   @Override
   public boolean hasJsonValueKeyFlagInstance() {
-<span class="nc bnc" id="L193" title="All 4 branches missed.">    return getXmlObject().isSetJsonValueKeyFlag() &amp;&amp; getXmlObject().getJsonValueKeyFlag().isSetFlagRef();</span>
+<span class="nc bnc" id="L192" title="All 4 branches missed.">    return getXmlObject().isSetJsonValueKeyFlag() &amp;&amp; getXmlObject().getJsonValueKeyFlag().isSetFlagRef();</span>
   }
 
   @Override
   public IFlagInstance getJsonValueKeyFlagInstance() {
-<span class="nc" id="L198">    IFlagInstance retval = null;</span>
-<span class="nc bnc" id="L199" title="All 4 branches missed.">    if (getXmlObject().isSetJsonValueKeyFlag() &amp;&amp; getXmlObject().getJsonValueKeyFlag().isSetFlagRef()) {</span>
-<span class="nc" id="L200">      retval = getFlagInstanceByName(</span>
+<span class="nc" id="L197">    IFlagInstance retval = null;</span>
+<span class="nc bnc" id="L198" title="All 4 branches missed.">    if (getXmlObject().isSetJsonValueKeyFlag() &amp;&amp; getXmlObject().getJsonValueKeyFlag().isSetFlagRef()) {</span>
+<span class="nc" id="L199">      retval = getFlagInstanceByName(</span>
           new QName(
-<span class="nc" id="L202">              getXmlNamespace(),</span>
-<span class="nc" id="L203">              ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef())));</span>
+<span class="nc" id="L201">              getXmlNamespace(),</span>
+<span class="nc" id="L202">              ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef())));</span>
     }
-<span class="nc" id="L205">    return retval;</span>
+<span class="nc" id="L204">    return retval;</span>
   }
 
   @Override
   public String getJsonValueKeyName() {
-<span class="nc" id="L210">    return getXmlObject().getJsonValueKey();</span>
+<span class="nc" id="L209">    return getXmlObject().getJsonValueKey();</span>
   }
 
   // @Override

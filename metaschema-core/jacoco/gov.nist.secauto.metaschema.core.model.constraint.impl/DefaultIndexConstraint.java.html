@@ -8,9 +8,9 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +20,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Represents an index constraint.
+ * &lt;p&gt;
+ * Uses a set of key fields to build a key and check that that key is unique
+ * compared to other keys.
+ */
 public final class DefaultIndexConstraint
     extends AbstractKeyConstraint
     implements IIndexConstraint {
@@ -27,7 +33,7 @@ public final class DefaultIndexConstraint
   private final String name;
 
   /**
-   * Create a index constraint, which uses a set of key fields to build a key.
+   * Construct a new index constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -48,6 +54,8 @@ public final class DefaultIndexConstraint
    *          the name of the index
    * @param keyFields
    *          a list of key fields associated with the constraint
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -63,17 +71,18 @@ public final class DefaultIndexConstraint
       @NonNull Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; properties,
       @NonNull String name,
       @NonNull List&lt;IKeyField&gt; keyFields,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-<span class="nc" id="L67">    super(id, formalName, description, source, level, target, properties, keyFields, remarks);</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">    if (name.isBlank()) {</span>
-<span class="nc" id="L69">      throw new IllegalArgumentException(&quot;The index name must be a non-blank string&quot;);</span>
+<span class="nc" id="L76">    super(id, formalName, description, source, level, target, properties, keyFields, message, remarks);</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">    if (name.isBlank()) {</span>
+<span class="nc" id="L78">      throw new IllegalArgumentException(&quot;The index name must be a non-blank string&quot;);</span>
     }
-<span class="nc" id="L71">    this.name = name;</span>
-<span class="nc" id="L72">  }</span>
+<span class="nc" id="L80">    this.name = name;</span>
+<span class="nc" id="L81">  }</span>
 
   @Override
   public String getName() {
-<span class="nc" id="L76">    return name;</span>
+<span class="nc" id="L85">    return name;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

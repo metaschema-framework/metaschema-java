@@ -7,6 +7,8 @@ package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import javax.xml.namespace.QName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -37,15 +39,22 @@ public abstract class AbstractAssemblyInstance&lt;
    *          the parent container for this instance
    */
   protected AbstractAssemblyInstance(@NonNull PARENT parent) {
-<span class="fc" id="L40">    super(parent);</span>
-<span class="fc" id="L41">  }</span>
+<span class="fc" id="L42">    super(parent);</span>
+<span class="fc" id="L43">  }</span>
 
   @Override
   public DEFINITION getDefinition() {
+<span class="fc" id="L47">    QName qname = getReferencedDefinitionQName();</span>
     // this should always be not null
-<span class="fc" id="L46">    return ObjectUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L47">        getContainingModule()</span>
-<span class="fc" id="L48">            .getScopedAssemblyDefinitionByName(getReferencedDefinitionQName())));</span>
+<span class="fc" id="L49">    IAssemblyDefinition definition = getContainingModule().getScopedAssemblyDefinitionByName(qname);</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">    if (definition == null) {</span>
+<span class="nc" id="L51">      throw new IllegalStateException(</span>
+<span class="nc" id="L52">          String.format(&quot;Unable to resolve assembly reference '%s' in definition '%s' in module '%s'&quot;,</span>
+              qname,
+<span class="nc" id="L54">              getParentContainer().getOwningDefinition().getName(),</span>
+<span class="nc" id="L55">              getContainingModule().getShortName()));</span>
+    }
+<span class="fc" id="L57">    return ObjectUtils.asType(definition);</span>
   }
 
   /**
@@ -56,13 +65,13 @@ public abstract class AbstractAssemblyInstance&lt;
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String toCoordinates() {
-<span class="nc" id="L59">    IDefinition definition = getDefinition();</span>
-<span class="nc" id="L60">    return String.format(&quot;assembly instance %s -&gt; %s in module %s (@%d(%d)&quot;,</span>
-<span class="nc" id="L61">        getXmlQName(),</span>
-<span class="nc" id="L62">        definition.getDefinitionQName(),</span>
-<span class="nc" id="L63">        getContainingDefinition().getContainingModule().getShortName(),</span>
-<span class="nc" id="L64">        hashCode(),</span>
-<span class="nc" id="L65">        definition.hashCode());</span>
+<span class="nc" id="L68">    IDefinition definition = getDefinition();</span>
+<span class="nc" id="L69">    return String.format(&quot;assembly instance %s -&gt; %s in module %s (@%d(%d)&quot;,</span>
+<span class="nc" id="L70">        getXmlQName(),</span>
+<span class="nc" id="L71">        definition.getDefinitionQName(),</span>
+<span class="nc" id="L72">        getContainingDefinition().getContainingModule().getShortName(),</span>
+<span class="nc" id="L73">        hashCode(),</span>
+<span class="nc" id="L74">        definition.hashCode());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

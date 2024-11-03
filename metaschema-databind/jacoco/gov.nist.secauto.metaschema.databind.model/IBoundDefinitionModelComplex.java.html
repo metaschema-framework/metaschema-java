@@ -26,11 +26,6 @@ public interface IBoundDefinitionModelComplex
   @NonNull
   Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties(@Nullable Predicate&lt;IBoundInstanceFlag&gt; flagFilter);
 
-  @Override
-  default boolean isInline() {
-<span class="nc bnc" id="L31" title="All 2 branches missed.">    return getBoundClass().getEnclosingClass() != null;</span>
-  }
-
   @Nullable
   Method getBeforeDeserializeMethod();
 
@@ -51,15 +46,15 @@ public interface IBoundDefinitionModelComplex
    */
   @Override
   default void callBeforeDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {
-<span class="fc" id="L54">    Method beforeDeserializeMethod = getBeforeDeserializeMethod();</span>
-<span class="pc bpc" id="L55" title="1 of 2 branches missed.">    if (beforeDeserializeMethod != null) {</span>
+<span class="fc" id="L49">    Method beforeDeserializeMethod = getBeforeDeserializeMethod();</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">    if (beforeDeserializeMethod != null) {</span>
       try {
-<span class="nc" id="L57">        beforeDeserializeMethod.invoke(targetObject, parentObject);</span>
-<span class="nc" id="L58">      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {</span>
-<span class="nc" id="L59">        throw new BindingException(ex);</span>
-<span class="nc" id="L60">      }</span>
+<span class="nc" id="L52">        beforeDeserializeMethod.invoke(targetObject, parentObject);</span>
+<span class="nc" id="L53">      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {</span>
+<span class="nc" id="L54">        throw new BindingException(ex);</span>
+<span class="nc" id="L55">      }</span>
     }
-<span class="fc" id="L62">  }</span>
+<span class="fc" id="L57">  }</span>
 
   @Nullable
   Method getAfterDeserializeMethod();
@@ -81,15 +76,15 @@ public interface IBoundDefinitionModelComplex
    */
   @Override
   default void callAfterDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {
-<span class="fc" id="L84">    Method afterDeserializeMethod = getAfterDeserializeMethod();</span>
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">    if (afterDeserializeMethod != null) {</span>
+<span class="fc" id="L79">    Method afterDeserializeMethod = getAfterDeserializeMethod();</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">    if (afterDeserializeMethod != null) {</span>
       try {
-<span class="nc" id="L87">        afterDeserializeMethod.invoke(targetObject, parentObject);</span>
-<span class="nc" id="L88">      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {</span>
-<span class="nc" id="L89">        throw new BindingException(ex);</span>
-<span class="nc" id="L90">      }</span>
+<span class="nc" id="L82">        afterDeserializeMethod.invoke(targetObject, parentObject);</span>
+<span class="nc" id="L83">      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {</span>
+<span class="nc" id="L84">        throw new BindingException(ex);</span>
+<span class="nc" id="L85">      }</span>
     }
-<span class="fc" id="L92">  }</span>
+<span class="fc" id="L87">  }</span>
 
   // @Override
   // public String getJsonKeyFlagName() {

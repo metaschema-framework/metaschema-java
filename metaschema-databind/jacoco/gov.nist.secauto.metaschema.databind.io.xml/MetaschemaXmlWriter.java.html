@@ -99,7 +99,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
     // instantiating
 <span class="fc" id="L100">    IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
 <span class="pc bpc" id="L101" title="1 of 2 branches missed.">    if (!collectionInfo.isEmpty(value)) {</span>
-<span class="fc" id="L102">      QName currentQName = itemWriter.getParentQName();</span>
+<span class="fc" id="L102">      QName currentQName = itemWriter.getObjectQName();</span>
 <span class="fc" id="L103">      QName groupAsQName = instance.getEffectiveXmlGroupAsQName();</span>
       try {
 <span class="fc bfc" id="L105" title="All 2 branches covered.">        if (groupAsQName != null) {</span>
@@ -143,8 +143,8 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 <span class="fc" id="L143">  private class ItemWriter</span>
       extends AbstractItemWriter {
 
-<span class="fc" id="L146">    public ItemWriter(@NonNull QName parentQName) {</span>
-<span class="fc" id="L147">      super(parentQName);</span>
+<span class="fc" id="L146">    public ItemWriter(@NonNull QName qname) {</span>
+<span class="fc" id="L147">      super(qname);</span>
 <span class="fc" id="L148">    }</span>
 
     private &lt;T extends IBoundInstanceModelNamed&lt;IBoundObject&gt; &amp; IFeatureComplexItemValueHandler&gt; void writeFlags(
@@ -244,21 +244,21 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 <span class="nc" id="L244">    }</span>
 
     private &lt;T extends IFeatureComplexItemValueHandler &amp; IBoundDefinitionModelComplex&gt; void writeDefinitionObject(
-        @NonNull T instance,
+        @NonNull T definition,
         @NonNull IBoundObject parentItem,
         @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {
 
       try {
-<span class="fc" id="L252">        QName wrapperQName = instance.getXmlQName();</span>
+<span class="fc" id="L252">        QName qname = getObjectQName();</span>
 <span class="fc" id="L253">        NamespaceContext nsContext = writer.getNamespaceContext();</span>
-<span class="fc" id="L254">        String prefix = nsContext.getPrefix(wrapperQName.getNamespaceURI());</span>
+<span class="fc" id="L254">        String prefix = nsContext.getPrefix(qname.getNamespaceURI());</span>
 <span class="pc bpc" id="L255" title="1 of 2 branches missed.">        if (prefix == null) {</span>
 <span class="fc" id="L256">          prefix = &quot;&quot;;</span>
         }
 
-<span class="fc" id="L259">        writer.writeStartElement(prefix, wrapperQName.getLocalPart(), wrapperQName.getNamespaceURI());</span>
+<span class="fc" id="L259">        writer.writeStartElement(prefix, qname.getLocalPart(), qname.getNamespaceURI());</span>
 
-<span class="fc" id="L261">        propertyWriter.accept(parentItem, instance);</span>
+<span class="fc" id="L261">        propertyWriter.accept(parentItem, definition);</span>
 
 <span class="fc" id="L263">        writer.writeEndElement();</span>
 <span class="nc" id="L264">      } catch (XMLStreamException ex) {</span>
@@ -290,7 +290,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 <span class="fc" id="L290">          instance.getJavaTypeAdapter().writeXmlValue(item, wrapperQName, writer);</span>
 <span class="fc" id="L291">          writer.writeEndElement();</span>
 <span class="fc" id="L292">        } else {</span>
-<span class="nc" id="L293">          instance.getJavaTypeAdapter().writeXmlValue(item, getParentQName(), writer);</span>
+<span class="nc" id="L293">          instance.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);</span>
         }
 <span class="nc" id="L295">      } catch (XMLStreamException ex) {</span>
 <span class="nc" id="L296">        throw new IOException(ex);</span>
@@ -332,7 +332,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 <span class="fc" id="L332">      Object item = fieldValue.getValue(parentItem);</span>
 <span class="pc bpc" id="L333" title="1 of 2 branches missed.">      if (item != null) {</span>
         try {
-<span class="fc" id="L335">          fieldValue.getJavaTypeAdapter().writeXmlValue(item, getParentQName(), writer);</span>
+<span class="fc" id="L335">          fieldValue.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);</span>
 <span class="nc" id="L336">        } catch (XMLStreamException ex) {</span>
 <span class="nc" id="L337">          throw new IOException(ex);</span>
 <span class="fc" id="L338">        }</span>
@@ -361,29 +361,30 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemAssembly(IBoundObject item, IBoundDefinitionModelAssembly definition) throws IOException {
-<span class="fc" id="L364">      ItemWriter itemWriter = new ItemWriter(definition.getXmlQName());</span>
-<span class="fc" id="L365">      writeDefinitionObject(</span>
+      // this is a special case where we are writing a top-level, potentially root,
+      // element. Need to take the object qname passed in
+<span class="fc" id="L366">      writeDefinitionObject(</span>
           definition,
           item,
           ((ObjectWriter&lt;IBoundDefinitionModelAssembly&gt;) this::writeFlags)
-<span class="fc" id="L369">              .andThen(itemWriter::writeAssemblyModel));</span>
-<span class="fc" id="L370">    }</span>
+<span class="fc" id="L370">              .andThen(this::writeAssemblyModel));</span>
+<span class="fc" id="L371">    }</span>
 
     @Override
     public void writeChoiceGroupItem(IBoundObject item, IBoundInstanceModelChoiceGroup instance) throws IOException {
-<span class="nc" id="L374">      IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
-<span class="nc bnc" id="L375" title="All 2 branches missed.">      assert actualInstance != null;</span>
-<span class="nc" id="L376">      actualInstance.writeItem(item, this);</span>
-<span class="nc" id="L377">    }</span>
+<span class="nc" id="L375">      IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">      assert actualInstance != null;</span>
+<span class="nc" id="L377">      actualInstance.writeItem(item, this);</span>
+<span class="nc" id="L378">    }</span>
   }
 
   private abstract static class AbstractItemWriter implements IItemWriteHandler {
     @NonNull
-    private final QName parentQName;
+    private final QName objectQName;
 
-<span class="fc" id="L384">    protected AbstractItemWriter(@NonNull QName parentQName) {</span>
-<span class="fc" id="L385">      this.parentQName = parentQName;</span>
-<span class="fc" id="L386">    }</span>
+<span class="fc" id="L385">    protected AbstractItemWriter(@NonNull QName qname) {</span>
+<span class="fc" id="L386">      this.objectQName = qname;</span>
+<span class="fc" id="L387">    }</span>
 
     /**
      * Get the qualified name of the item's parent.
@@ -391,8 +392,8 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
      * @return the qualified name
      */
     @NonNull
-    protected QName getParentQName() {
-<span class="fc" id="L395">      return parentQName;</span>
+    protected QName getObjectQName() {
+<span class="fc" id="L396">      return objectQName;</span>
     }
   }
 }

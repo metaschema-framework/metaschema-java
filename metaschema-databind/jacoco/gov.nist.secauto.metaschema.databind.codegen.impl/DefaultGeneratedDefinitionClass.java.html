@@ -18,7 +18,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Contains information about a generated class for a Module definition.
  */
-// TODO: make package private
 public class DefaultGeneratedDefinitionClass
     extends DefaultGeneratedClass
     implements IGeneratedDefinitionClass {
@@ -37,18 +36,18 @@ public class DefaultGeneratedDefinitionClass
    */
   public DefaultGeneratedDefinitionClass(@NonNull Path classFile, @NonNull ClassName className,
       @NonNull IModelDefinition definition) {
-<span class="fc" id="L40">    super(classFile, className);</span>
-<span class="fc" id="L41">    this.definition = definition;</span>
-<span class="fc" id="L42">  }</span>
+<span class="fc" id="L39">    super(classFile, className);</span>
+<span class="fc" id="L40">    this.definition = definition;</span>
+<span class="fc" id="L41">  }</span>
 
   @Override
   public IModelDefinition getDefinition() {
-<span class="fc" id="L46">    return definition;</span>
+<span class="fc" id="L45">    return definition;</span>
   }
 
   @Override
   public boolean isRootClass() {
-<span class="nc bnc" id="L51" title="All 4 branches missed.">    return definition instanceof IAssemblyDefinition &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
+<span class="nc bnc" id="L50" title="All 4 branches missed.">    return definition instanceof IAssemblyDefinition &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

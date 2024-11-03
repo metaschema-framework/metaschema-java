@@ -18,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents a rule requiring the value of a field or flag to match a pattern
  * and/or conform to an identified data type.
  */
-public interface IMatchesConstraint extends IConstraint {
+public interface IMatchesConstraint extends IConfigurableMessageConstraint {
   /**
    * Get the expected pattern.
    *
@@ -51,8 +51,11 @@ public interface IMatchesConstraint extends IConstraint {
 <span class="fc" id="L51">    return new Builder();</span>
   }
 
+  /**
+   * Provides a builder pattern for constructing a new {@link IMatchesConstraint}.
+   */
   final class Builder
-      extends AbstractConstraintBuilder&lt;Builder, IMatchesConstraint&gt; {
+      extends AbstractConfigurableMessageConstraintBuilder&lt;Builder, IMatchesConstraint&gt; {
     private Pattern pattern;
     private IDataTypeAdapter&lt;?&gt; datatype;
 
@@ -68,7 +71,7 @@ public interface IMatchesConstraint extends IConstraint {
      * @return this builder
      */
     public Builder regex(@NonNull String pattern) {
-<span class="nc" id="L71">      return regex(ObjectUtils.notNull(Pattern.compile(pattern)));</span>
+<span class="nc" id="L74">      return regex(ObjectUtils.notNull(Pattern.compile(pattern)));</span>
     }
 
     /**
@@ -79,8 +82,8 @@ public interface IMatchesConstraint extends IConstraint {
      * @return this builder
      */
     public Builder regex(@NonNull Pattern pattern) {
-<span class="nc" id="L82">      this.pattern = pattern;</span>
-<span class="nc" id="L83">      return this;</span>
+<span class="nc" id="L85">      this.pattern = pattern;</span>
+<span class="nc" id="L86">      return this;</span>
     }
 
     /**
@@ -91,45 +94,46 @@ public interface IMatchesConstraint extends IConstraint {
      * @return this builder
      */
     public Builder datatype(@NonNull IDataTypeAdapter&lt;?&gt; datatype) {
-<span class="fc" id="L94">      this.datatype = datatype;</span>
-<span class="fc" id="L95">      return this;</span>
+<span class="fc" id="L97">      this.datatype = datatype;</span>
+<span class="fc" id="L98">      return this;</span>
     }
 
     @Override
     protected Builder getThis() {
-<span class="fc" id="L100">      return this;</span>
+<span class="fc" id="L103">      return this;</span>
     }
 
     @Override
     protected void validate() {
-<span class="fc" id="L105">      super.validate();</span>
+<span class="fc" id="L108">      super.validate();</span>
 
-<span class="pc bpc" id="L107" title="2 of 4 branches missed.">      if (getPattern() == null &amp;&amp; getDatatype() == null) {</span>
-<span class="nc" id="L108">        throw new IllegalStateException(&quot;A pattern or data type must be provided at minimum.&quot;);</span>
+<span class="pc bpc" id="L110" title="2 of 4 branches missed.">      if (getPattern() == null &amp;&amp; getDatatype() == null) {</span>
+<span class="nc" id="L111">        throw new IllegalStateException(&quot;A pattern or data type must be provided at minimum.&quot;);</span>
       }
-<span class="fc" id="L110">    }</span>
+<span class="fc" id="L113">    }</span>
 
     private Pattern getPattern() {
-<span class="fc" id="L113">      return pattern;</span>
+<span class="fc" id="L116">      return pattern;</span>
     }
 
     private IDataTypeAdapter&lt;?&gt; getDatatype() {
-<span class="fc" id="L117">      return datatype;</span>
+<span class="fc" id="L120">      return datatype;</span>
     }
 
     @Override
     protected IMatchesConstraint newInstance() {
-<span class="fc" id="L122">      return new DefaultMatchesConstraint(</span>
-<span class="fc" id="L123">          getId(),</span>
-<span class="fc" id="L124">          getFormalName(),</span>
-<span class="fc" id="L125">          getDescription(),</span>
-<span class="fc" id="L126">          ObjectUtils.notNull(getSource()),</span>
-<span class="fc" id="L127">          getLevel(),</span>
-<span class="fc" id="L128">          getTarget(),</span>
-<span class="fc" id="L129">          getProperties(),</span>
-<span class="fc" id="L130">          getPattern(),</span>
-<span class="fc" id="L131">          getDatatype(),</span>
-<span class="fc" id="L132">          getRemarks());</span>
+<span class="fc" id="L125">      return new DefaultMatchesConstraint(</span>
+<span class="fc" id="L126">          getId(),</span>
+<span class="fc" id="L127">          getFormalName(),</span>
+<span class="fc" id="L128">          getDescription(),</span>
+<span class="fc" id="L129">          ObjectUtils.notNull(getSource()),</span>
+<span class="fc" id="L130">          getLevel(),</span>
+<span class="fc" id="L131">          getTarget(),</span>
+<span class="fc" id="L132">          getProperties(),</span>
+<span class="fc" id="L133">          getPattern(),</span>
+<span class="fc" id="L134">          getDatatype(),</span>
+<span class="fc" id="L135">          getMessage(),</span>
+<span class="fc" id="L136">          getRemarks());</span>
     }
   }
 }

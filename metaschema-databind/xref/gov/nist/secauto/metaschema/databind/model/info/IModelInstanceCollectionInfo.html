@@ -160,17 +160,18 @@
 <a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">   * @param handler</em>
 <a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">   *          the item parsing handler</em>
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">   * @return the item collection object</em>
-<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">   * @throws IOException</em>
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">   *           if there was an error when reading the data</em>
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>   @NonNull
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>   Object readItems(@NonNull IModelInstanceReadHandler&lt;ITEM&gt; handler) <strong class="jxr_keyword">throws</strong> IOException;
-<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>   <strong class="jxr_keyword">void</strong> writeItems(
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>       @NonNull IModelInstanceWriteHandler&lt;ITEM&gt; handler,
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>       @NonNull Object value) <strong class="jxr_keyword">throws</strong> IOException;
-<a class="jxr_linenumber" name="L165" href="#L165">165</a> }
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">   * @return the item collection object or {@code null} if the instance is not</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">   *         defined</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">   * @throws IOException</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">   *           if there was an error when reading the data</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>   @Nullable
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>   Object readItems(@NonNull IModelInstanceReadHandler&lt;ITEM&gt; handler) <strong class="jxr_keyword">throws</strong> IOException;
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>   <strong class="jxr_keyword">void</strong> writeItems(
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>       @NonNull IModelInstanceWriteHandler&lt;ITEM&gt; handler,
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>       @NonNull Object value) <strong class="jxr_keyword">throws</strong> IOException;
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

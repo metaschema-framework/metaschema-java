@@ -138,11 +138,11 @@
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> 
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>   @SuppressWarnings({ <span class="jxr_string">"unused"</span>, <span class="jxr_string">"PMD.UnusedPrivateMethod"</span> }) <em class="jxr_comment">// used by lambda</em>
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;DEF <strong class="jxr_keyword">extends</strong> IDefinition&gt; DEF handleShadowedDefinitions(
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>       @SuppressWarnings(<span class="jxr_string">"unused"</span>) @NonNull QName key,
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>       @NonNull QName key,
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>       @NonNull DEF oldDef,
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>       @NonNull DEF newDef) {
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">if</strong> (!oldDef.equals(newDef) &amp;&amp; LOGGER.isInfoEnabled()) {
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>       LOGGER.info(<span class="jxr_string">"The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'"</span>,
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">if</strong> (!oldDef.equals(newDef) &amp;&amp; LOGGER.isWarnEnabled()) {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>       LOGGER.warn(<span class="jxr_string">"The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'"</span>,
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>           newDef.getModelType().name().toLowerCase(Locale.ROOT),
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>           newDef.getName(),
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>           newDef.getContainingModule().getShortName(),

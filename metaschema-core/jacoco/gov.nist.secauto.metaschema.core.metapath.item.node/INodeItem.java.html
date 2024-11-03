@@ -23,6 +23,21 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents a queryable Metapath model node.
  */
 <span class="pc bpc" id="L25" title="1 of 2 branches missed.">public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {</span>
+  /**
+   * Retrieve the relative position of this node relative to sibling nodes.
+   * &lt;p&gt;
+   * A singleton item in a sequence will have a position value of {@code 1}.
+   * &lt;p&gt;
+   * The value {@code 1} is used as the starting value to align with the XPath
+   * specification.
+   *
+   * @return a positive integer value designating this instance's position within
+   *         a collection
+   */
+  default int getPosition() {
+    // only model node items have positions other than 1
+<span class="nc" id="L39">    return 1;</span>
+  }
 
   /**
    * Generate a path for this node in the directed node graph, using the provided
@@ -49,13 +64,13 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   @NonNull
   static &lt;CLASS&gt; CLASS toValue(@NonNull INodeItem item) {
     INodeItem valuedItem;
-<span class="nc bnc" id="L52" title="All 2 branches missed.">    if (item instanceof IDocumentNodeItem) {</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">    if (item instanceof IDocumentNodeItem) {</span>
       // get first child item, since the document has no value
-<span class="nc" id="L54">      valuedItem = item.modelItems().findFirst().get();</span>
+<span class="nc" id="L69">      valuedItem = item.modelItems().findFirst().get();</span>
     } else {
-<span class="nc" id="L56">      valuedItem = item;</span>
+<span class="nc" id="L71">      valuedItem = item;</span>
     }
-<span class="nc" id="L58">    return ObjectUtils.requireNonNull((CLASS) valuedItem.getValue());</span>
+<span class="nc" id="L73">    return ObjectUtils.requireNonNull((CLASS) valuedItem.getValue());</span>
   }
 
   /**
@@ -105,14 +120,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   default String getMetapath() {
-<span class="fc" id="L108">    return toPath(IPathFormatter.METAPATH_PATH_FORMATER);</span>
+<span class="fc" id="L123">    return toPath(IPathFormatter.METAPATH_PATH_FORMATER);</span>
   }
 
   @Override
   default Stream&lt;? extends INodeItem&gt; getPathStream() {
-<span class="fc" id="L113">    INodeItem parent = getParentNodeItem();</span>
-<span class="fc" id="L114">    return ObjectUtils.notNull(</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">        parent == null ? Stream.of(this) : Stream.concat(getParentNodeItem().getPathStream(), Stream.of(this)));</span>
+<span class="fc" id="L128">    INodeItem parent = getParentNodeItem();</span>
+<span class="fc" id="L129">    return ObjectUtils.notNull(</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        parent == null ? Stream.of(this) : Stream.concat(getParentNodeItem().getPathStream(), Stream.of(this)));</span>
   }
 
   /**
@@ -123,7 +138,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   default Stream&lt;? extends INodeItem&gt; ancestor() {
-<span class="fc" id="L126">    return ancestorsOf(this);</span>
+<span class="fc" id="L141">    return ancestorsOf(this);</span>
   }
 
   /**
@@ -134,7 +149,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   default Stream&lt;? extends INodeItem&gt; ancestorOrSelf() {
-<span class="fc" id="L137">    return ObjectUtils.notNull(Stream.concat(Stream.of(this), ancestor()));</span>
+<span class="fc" id="L152">    return ObjectUtils.notNull(Stream.concat(Stream.of(this), ancestor()));</span>
   }
 
   /**
@@ -148,8 +163,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   static Stream&lt;? extends INodeItem&gt; ancestorsOf(@NonNull INodeItem item) {
-<span class="fc" id="L151">    INodeItem parent = item.getParentNodeItem();</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">    return ObjectUtils.notNull(parent == null ? Stream.empty() : Stream.concat(Stream.of(parent), ancestorsOf(parent)));</span>
+<span class="fc" id="L166">    INodeItem parent = item.getParentNodeItem();</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">    return ObjectUtils.notNull(parent == null ? Stream.empty() : Stream.concat(Stream.of(parent), ancestorsOf(parent)));</span>
   }
 
   /**
@@ -159,8 +174,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    * @return a stream of descendant node items
    */
   @NonNull
-  default Stream&lt;? extends INodeItem&gt; descendant() {
-<span class="nc" id="L163">    return decendantsOf(this);</span>
+  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; descendant() {
+<span class="fc" id="L178">    return decendantsOf(this);</span>
   }
 
   /**
@@ -174,12 +189,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    * @return a stream of descendant node items
    */
   @NonNull
-  static Stream&lt;? extends INodeItem&gt; decendantsOf(@NonNull INodeItem item) {
-<span class="nc" id="L178">    Stream&lt;? extends INodeItem&gt; children = item.modelItems();</span>
+  static Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; decendantsOf(@NonNull INodeItem item) {
+<span class="fc" id="L193">    Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; children = item.modelItems();</span>
 
-<span class="nc" id="L180">    return ObjectUtils.notNull(children.flatMap(child -&gt; {</span>
-<span class="nc bnc" id="L181" title="All 4 branches missed.">      assert child != null;</span>
-<span class="nc" id="L182">      return Stream.concat(Stream.of(child), decendantsOf(child));</span>
+<span class="fc" id="L195">    return ObjectUtils.notNull(children.flatMap(child -&gt; {</span>
+<span class="pc bpc" id="L196" title="2 of 4 branches missed.">      assert child != null;</span>
+<span class="fc" id="L197">      return Stream.concat(Stream.of(child), decendantsOf(child));</span>
     }));
   }
 
@@ -192,7 +207,49 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   default Stream&lt;? extends INodeItem&gt; descendantOrSelf() {
-<span class="nc" id="L195">    return ObjectUtils.notNull(Stream.concat(Stream.of(this), descendant()));</span>
+<span class="nc" id="L210">    return ObjectUtils.notNull(Stream.concat(Stream.of(this), descendant()));</span>
+  }
+
+  /**
+   * Get the children of this node's parent that occur after this node in a
+   * depth-first order.
+   *
+   * @return a stream of nodes
+   */
+  @NonNull
+  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; followingSibling() {
+<span class="nc" id="L221">    return ObjectUtils.notNull(Stream.empty());</span>
+  }
+
+  /**
+   * Get the children of this node's parent, and their descendants, that occur
+   * before this node in a depth-first order.
+   *
+   * @return a stream of nodes
+   */
+  @NonNull
+  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; precedingSibling() {
+<span class="nc" id="L232">    return ObjectUtils.notNull(Stream.empty());</span>
+  }
+
+  /**
+   * Get the children of this node's parent, and their descendants, that occur
+   * before this node in a depth-first order.
+   *
+   * @return a stream of nodes
+   */
+  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; following() {
+<span class="nc" id="L242">    return ObjectUtils.notNull(Stream.empty());</span>
+  }
+
+  /**
+   * Get the children of this node's parent, and their descendants, that occur
+   * after this node in a depth-first order.
+   *
+   * @return a stream of nodes
+   */
+  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; preceding() {
+<span class="nc" id="L252">    return ObjectUtils.notNull(Stream.empty());</span>
   }
 
   /**
@@ -226,7 +283,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   default Stream&lt;? extends IFlagNodeItem&gt; flags() {
-<span class="fc" id="L229">    return getFlags().stream();</span>
+<span class="fc" id="L286">    return getFlags().stream();</span>
   }
 
   /**
@@ -268,7 +325,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; modelItems() {
-<span class="fc" id="L271">    return getModelItems().stream().flatMap(Collection::stream);</span>
+<span class="fc" id="L328">    return getModelItems().stream().flatMap(Collection::stream);</span>
   }
 
   /**
@@ -297,7 +354,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
   @Override
   default void accept(IItemVisitor visitor) {
-<span class="nc" id="L300">    visitor.visit(this);</span>
-<span class="nc" id="L301">  }</span>
+<span class="nc" id="L357">    visitor.visit(this);</span>
+<span class="nc" id="L358">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

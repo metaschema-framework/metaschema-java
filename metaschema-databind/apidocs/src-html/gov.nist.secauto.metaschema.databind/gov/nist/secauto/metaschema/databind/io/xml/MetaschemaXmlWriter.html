@@ -112,7 +112,7 @@
 <span class="source-line-no">099</span><span id="line-99">    // instantiating</span>
 <span class="source-line-no">100</span><span id="line-100">    IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
 <span class="source-line-no">101</span><span id="line-101">    if (!collectionInfo.isEmpty(value)) {</span>
-<span class="source-line-no">102</span><span id="line-102">      QName currentQName = itemWriter.getParentQName();</span>
+<span class="source-line-no">102</span><span id="line-102">      QName currentQName = itemWriter.getObjectQName();</span>
 <span class="source-line-no">103</span><span id="line-103">      QName groupAsQName = instance.getEffectiveXmlGroupAsQName();</span>
 <span class="source-line-no">104</span><span id="line-104">      try {</span>
 <span class="source-line-no">105</span><span id="line-105">        if (groupAsQName != null) {</span>
@@ -156,8 +156,8 @@
 <span class="source-line-no">143</span><span id="line-143">  private class ItemWriter</span>
 <span class="source-line-no">144</span><span id="line-144">      extends AbstractItemWriter {</span>
 <span class="source-line-no">145</span><span id="line-145"></span>
-<span class="source-line-no">146</span><span id="line-146">    public ItemWriter(@NonNull QName parentQName) {</span>
-<span class="source-line-no">147</span><span id="line-147">      super(parentQName);</span>
+<span class="source-line-no">146</span><span id="line-146">    public ItemWriter(@NonNull QName qname) {</span>
+<span class="source-line-no">147</span><span id="line-147">      super(qname);</span>
 <span class="source-line-no">148</span><span id="line-148">    }</span>
 <span class="source-line-no">149</span><span id="line-149"></span>
 <span class="source-line-no">150</span><span id="line-150">    private &lt;T extends IBoundInstanceModelNamed&lt;IBoundObject&gt; &amp; IFeatureComplexItemValueHandler&gt; void writeFlags(</span>
@@ -257,21 +257,21 @@
 <span class="source-line-no">244</span><span id="line-244">    }</span>
 <span class="source-line-no">245</span><span id="line-245"></span>
 <span class="source-line-no">246</span><span id="line-246">    private &lt;T extends IFeatureComplexItemValueHandler &amp; IBoundDefinitionModelComplex&gt; void writeDefinitionObject(</span>
-<span class="source-line-no">247</span><span id="line-247">        @NonNull T instance,</span>
+<span class="source-line-no">247</span><span id="line-247">        @NonNull T definition,</span>
 <span class="source-line-no">248</span><span id="line-248">        @NonNull IBoundObject parentItem,</span>
 <span class="source-line-no">249</span><span id="line-249">        @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {</span>
 <span class="source-line-no">250</span><span id="line-250"></span>
 <span class="source-line-no">251</span><span id="line-251">      try {</span>
-<span class="source-line-no">252</span><span id="line-252">        QName wrapperQName = instance.getXmlQName();</span>
+<span class="source-line-no">252</span><span id="line-252">        QName qname = getObjectQName();</span>
 <span class="source-line-no">253</span><span id="line-253">        NamespaceContext nsContext = writer.getNamespaceContext();</span>
-<span class="source-line-no">254</span><span id="line-254">        String prefix = nsContext.getPrefix(wrapperQName.getNamespaceURI());</span>
+<span class="source-line-no">254</span><span id="line-254">        String prefix = nsContext.getPrefix(qname.getNamespaceURI());</span>
 <span class="source-line-no">255</span><span id="line-255">        if (prefix == null) {</span>
 <span class="source-line-no">256</span><span id="line-256">          prefix = "";</span>
 <span class="source-line-no">257</span><span id="line-257">        }</span>
 <span class="source-line-no">258</span><span id="line-258"></span>
-<span class="source-line-no">259</span><span id="line-259">        writer.writeStartElement(prefix, wrapperQName.getLocalPart(), wrapperQName.getNamespaceURI());</span>
+<span class="source-line-no">259</span><span id="line-259">        writer.writeStartElement(prefix, qname.getLocalPart(), qname.getNamespaceURI());</span>
 <span class="source-line-no">260</span><span id="line-260"></span>
-<span class="source-line-no">261</span><span id="line-261">        propertyWriter.accept(parentItem, instance);</span>
+<span class="source-line-no">261</span><span id="line-261">        propertyWriter.accept(parentItem, definition);</span>
 <span class="source-line-no">262</span><span id="line-262"></span>
 <span class="source-line-no">263</span><span id="line-263">        writer.writeEndElement();</span>
 <span class="source-line-no">264</span><span id="line-264">      } catch (XMLStreamException ex) {</span>
@@ -303,7 +303,7 @@
 <span class="source-line-no">290</span><span id="line-290">          instance.getJavaTypeAdapter().writeXmlValue(item, wrapperQName, writer);</span>
 <span class="source-line-no">291</span><span id="line-291">          writer.writeEndElement();</span>
 <span class="source-line-no">292</span><span id="line-292">        } else {</span>
-<span class="source-line-no">293</span><span id="line-293">          instance.getJavaTypeAdapter().writeXmlValue(item, getParentQName(), writer);</span>
+<span class="source-line-no">293</span><span id="line-293">          instance.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);</span>
 <span class="source-line-no">294</span><span id="line-294">        }</span>
 <span class="source-line-no">295</span><span id="line-295">      } catch (XMLStreamException ex) {</span>
 <span class="source-line-no">296</span><span id="line-296">        throw new IOException(ex);</span>
@@ -345,7 +345,7 @@
 <span class="source-line-no">332</span><span id="line-332">      Object item = fieldValue.getValue(parentItem);</span>
 <span class="source-line-no">333</span><span id="line-333">      if (item != null) {</span>
 <span class="source-line-no">334</span><span id="line-334">        try {</span>
-<span class="source-line-no">335</span><span id="line-335">          fieldValue.getJavaTypeAdapter().writeXmlValue(item, getParentQName(), writer);</span>
+<span class="source-line-no">335</span><span id="line-335">          fieldValue.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);</span>
 <span class="source-line-no">336</span><span id="line-336">        } catch (XMLStreamException ex) {</span>
 <span class="source-line-no">337</span><span id="line-337">          throw new IOException(ex);</span>
 <span class="source-line-no">338</span><span id="line-338">        }</span>
@@ -374,41 +374,42 @@
 <span class="source-line-no">361</span><span id="line-361"></span>
 <span class="source-line-no">362</span><span id="line-362">    @Override</span>
 <span class="source-line-no">363</span><span id="line-363">    public void writeItemAssembly(IBoundObject item, IBoundDefinitionModelAssembly definition) throws IOException {</span>
-<span class="source-line-no">364</span><span id="line-364">      ItemWriter itemWriter = new ItemWriter(definition.getXmlQName());</span>
-<span class="source-line-no">365</span><span id="line-365">      writeDefinitionObject(</span>
-<span class="source-line-no">366</span><span id="line-366">          definition,</span>
-<span class="source-line-no">367</span><span id="line-367">          item,</span>
-<span class="source-line-no">368</span><span id="line-368">          ((ObjectWriter&lt;IBoundDefinitionModelAssembly&gt;) this::writeFlags)</span>
-<span class="source-line-no">369</span><span id="line-369">              .andThen(itemWriter::writeAssemblyModel));</span>
-<span class="source-line-no">370</span><span id="line-370">    }</span>
-<span class="source-line-no">371</span><span id="line-371"></span>
-<span class="source-line-no">372</span><span id="line-372">    @Override</span>
-<span class="source-line-no">373</span><span id="line-373">    public void writeChoiceGroupItem(IBoundObject item, IBoundInstanceModelChoiceGroup instance) throws IOException {</span>
-<span class="source-line-no">374</span><span id="line-374">      IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
-<span class="source-line-no">375</span><span id="line-375">      assert actualInstance != null;</span>
-<span class="source-line-no">376</span><span id="line-376">      actualInstance.writeItem(item, this);</span>
-<span class="source-line-no">377</span><span id="line-377">    }</span>
-<span class="source-line-no">378</span><span id="line-378">  }</span>
-<span class="source-line-no">379</span><span id="line-379"></span>
-<span class="source-line-no">380</span><span id="line-380">  private abstract static class AbstractItemWriter implements IItemWriteHandler {</span>
-<span class="source-line-no">381</span><span id="line-381">    @NonNull</span>
-<span class="source-line-no">382</span><span id="line-382">    private final QName parentQName;</span>
-<span class="source-line-no">383</span><span id="line-383"></span>
-<span class="source-line-no">384</span><span id="line-384">    protected AbstractItemWriter(@NonNull QName parentQName) {</span>
-<span class="source-line-no">385</span><span id="line-385">      this.parentQName = parentQName;</span>
-<span class="source-line-no">386</span><span id="line-386">    }</span>
-<span class="source-line-no">387</span><span id="line-387"></span>
-<span class="source-line-no">388</span><span id="line-388">    /**</span>
-<span class="source-line-no">389</span><span id="line-389">     * Get the qualified name of the item's parent.</span>
-<span class="source-line-no">390</span><span id="line-390">     *</span>
-<span class="source-line-no">391</span><span id="line-391">     * @return the qualified name</span>
-<span class="source-line-no">392</span><span id="line-392">     */</span>
-<span class="source-line-no">393</span><span id="line-393">    @NonNull</span>
-<span class="source-line-no">394</span><span id="line-394">    protected QName getParentQName() {</span>
-<span class="source-line-no">395</span><span id="line-395">      return parentQName;</span>
-<span class="source-line-no">396</span><span id="line-396">    }</span>
-<span class="source-line-no">397</span><span id="line-397">  }</span>
-<span class="source-line-no">398</span><span id="line-398">}</span>
+<span class="source-line-no">364</span><span id="line-364">      // this is a special case where we are writing a top-level, potentially root,</span>
+<span class="source-line-no">365</span><span id="line-365">      // element. Need to take the object qname passed in</span>
+<span class="source-line-no">366</span><span id="line-366">      writeDefinitionObject(</span>
+<span class="source-line-no">367</span><span id="line-367">          definition,</span>
+<span class="source-line-no">368</span><span id="line-368">          item,</span>
+<span class="source-line-no">369</span><span id="line-369">          ((ObjectWriter&lt;IBoundDefinitionModelAssembly&gt;) this::writeFlags)</span>
+<span class="source-line-no">370</span><span id="line-370">              .andThen(this::writeAssemblyModel));</span>
+<span class="source-line-no">371</span><span id="line-371">    }</span>
+<span class="source-line-no">372</span><span id="line-372"></span>
+<span class="source-line-no">373</span><span id="line-373">    @Override</span>
+<span class="source-line-no">374</span><span id="line-374">    public void writeChoiceGroupItem(IBoundObject item, IBoundInstanceModelChoiceGroup instance) throws IOException {</span>
+<span class="source-line-no">375</span><span id="line-375">      IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
+<span class="source-line-no">376</span><span id="line-376">      assert actualInstance != null;</span>
+<span class="source-line-no">377</span><span id="line-377">      actualInstance.writeItem(item, this);</span>
+<span class="source-line-no">378</span><span id="line-378">    }</span>
+<span class="source-line-no">379</span><span id="line-379">  }</span>
+<span class="source-line-no">380</span><span id="line-380"></span>
+<span class="source-line-no">381</span><span id="line-381">  private abstract static class AbstractItemWriter implements IItemWriteHandler {</span>
+<span class="source-line-no">382</span><span id="line-382">    @NonNull</span>
+<span class="source-line-no">383</span><span id="line-383">    private final QName objectQName;</span>
+<span class="source-line-no">384</span><span id="line-384"></span>
+<span class="source-line-no">385</span><span id="line-385">    protected AbstractItemWriter(@NonNull QName qname) {</span>
+<span class="source-line-no">386</span><span id="line-386">      this.objectQName = qname;</span>
+<span class="source-line-no">387</span><span id="line-387">    }</span>
+<span class="source-line-no">388</span><span id="line-388"></span>
+<span class="source-line-no">389</span><span id="line-389">    /**</span>
+<span class="source-line-no">390</span><span id="line-390">     * Get the qualified name of the item's parent.</span>
+<span class="source-line-no">391</span><span id="line-391">     *</span>
+<span class="source-line-no">392</span><span id="line-392">     * @return the qualified name</span>
+<span class="source-line-no">393</span><span id="line-393">     */</span>
+<span class="source-line-no">394</span><span id="line-394">    @NonNull</span>
+<span class="source-line-no">395</span><span id="line-395">    protected QName getObjectQName() {</span>
+<span class="source-line-no">396</span><span id="line-396">      return objectQName;</span>
+<span class="source-line-no">397</span><span id="line-397">    }</span>
+<span class="source-line-no">398</span><span id="line-398">  }</span>
+<span class="source-line-no">399</span><span id="line-399">}</span>
 
 
 

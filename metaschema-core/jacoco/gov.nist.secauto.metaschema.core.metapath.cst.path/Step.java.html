@@ -84,15 +84,14 @@ public class Step implements IExpression { // NOPMD - intentional
 
   @Override
   public ISequence&lt;?&gt; accept(DynamicContext dynamicContext, ISequence&lt;?&gt; focus) {
-
-<span class="fc" id="L88">    ISequence&lt;? extends INodeItem&gt; axisResult = getAxis().accept(dynamicContext, focus);</span>
-<span class="fc" id="L89">    return getStep().accept(dynamicContext, axisResult);</span>
+<span class="fc" id="L87">    ISequence&lt;? extends INodeItem&gt; axisResult = getAxis().accept(dynamicContext, focus);</span>
+<span class="fc" id="L88">    return getStep().accept(dynamicContext, axisResult);</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String toASTString() {
-<span class="nc" id="L95">    return String.format(&quot;%s[axis=%s]&quot;, getClass().getName(), getAxis().name());</span>
+<span class="nc" id="L94">    return String.format(&quot;%s[axis=%s]&quot;, getClass().getName(), getAxis().name());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

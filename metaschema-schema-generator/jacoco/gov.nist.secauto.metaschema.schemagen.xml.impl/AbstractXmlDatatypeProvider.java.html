@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractXmlDatatypeProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema XML and JSON Schema Generator</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.schemagen.xml.impl</a> &gt; <span class="el_source">AbstractXmlDatatypeProvider.java</span></div><h1>AbstractXmlDatatypeProvider.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.schemagen.xml.impl;
+
+import org.codehaus.stax2.XMLStreamWriter2;
+import org.eclipse.jdt.annotation.Owning;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.stream.XMLStreamException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+<span class="fc" id="L26">public abstract class AbstractXmlDatatypeProvider implements IDatatypeProvider {</span>
+  private Map&lt;String, IDatatypeContent&gt; datatypes;
+
+  @Owning
+  @NonNull
+  protected abstract InputStream getSchemaResource();
+
+  private void initSchema() {
+<span class="fc" id="L34">    synchronized (this) {</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">      if (datatypes == null) {</span>
+<span class="fc" id="L36">        try (InputStream is = getSchemaResource()) {</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">          assert is != null;</span>
+<span class="fc" id="L38">          JDom2XmlSchemaLoader loader = new JDom2XmlSchemaLoader(is);</span>
+
+<span class="fc" id="L40">          List&lt;Element&gt; elements = queryElements(loader);</span>
+
+<span class="fc" id="L42">          datatypes = Collections.unmodifiableMap(handleResults(elements));</span>
+<span class="nc" id="L43">        } catch (JDOMException | IOException ex) {</span>
+<span class="nc" id="L44">          throw new IllegalStateException(ex);</span>
+<span class="fc" id="L45">        }</span>
+      }
+<span class="fc" id="L47">    }</span>
+<span class="fc" id="L48">  }</span>
+
+  @NonNull
+  protected abstract List&lt;Element&gt; queryElements(JDom2XmlSchemaLoader loader);
+
+  @NonNull
+  protected abstract Map&lt;String, IDatatypeContent&gt; handleResults(@NonNull List&lt;Element&gt; items);
+
+  @Override
+  @SuppressFBWarnings({ &quot;IS2_INCONSISTENT_SYNC&quot;, &quot;MT_CORRECTNESS&quot;, &quot;EI_EXPOSE_REP&quot; })
+  public Map&lt;String, IDatatypeContent&gt; getDatatypes() {
+<span class="fc" id="L59">    initSchema();</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">    assert datatypes != null;</span>
+<span class="fc" id="L61">    return datatypes;</span>
+  }
+
+  @Override
+  public Set&lt;String&gt; generateDatatypes(Set&lt;String&gt; requiredTypes, @NonNull XMLStreamWriter2 writer)
+      throws XMLStreamException {
+<span class="fc" id="L67">    Map&lt;String, IDatatypeContent&gt; datatypes = getDatatypes();</span>
+
+<span class="fc" id="L69">    Set&lt;String&gt; providedDatatypes = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">    for (IDatatypeContent datatype : datatypes.values()) {</span>
+<span class="fc" id="L71">      String type = datatype.getTypeName();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">      if (requiredTypes.contains(type)) {</span>
+<span class="fc" id="L73">        providedDatatypes.add(type);</span>
+<span class="fc" id="L74">        providedDatatypes.addAll(datatype.getDependencies());</span>
+      }
+<span class="fc" id="L76">    }</span>
+
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    for (IDatatypeContent datatype : datatypes.values()) {</span>
+<span class="fc" id="L79">      String type = datatype.getTypeName();</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">      if (providedDatatypes.contains(type)) {</span>
+<span class="fc" id="L81">        datatype.write(writer);</span>
+      }
+<span class="fc" id="L83">    }</span>
+<span class="fc" id="L84">    return providedDatatypes;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

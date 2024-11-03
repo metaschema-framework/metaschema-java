@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
+import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
@@ -22,10 +23,11 @@ import java.io.Reader;
 import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
-<span class="fc" id="L26">public class DefaultJsonDeserializer&lt;CLASS extends IBoundObject&gt;</span>
+public class DefaultJsonDeserializer&lt;CLASS extends IBoundObject&gt;
     extends AbstractDeserializer&lt;CLASS&gt; {
-  private JsonFactory jsonFactory;
+  private Lazy&lt;JsonFactory&gt; factory;
 
   /**
    * Construct a new JSON deserializer that will parse the bound class identified
@@ -36,8 +38,19 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          operating on
    */
   public DefaultJsonDeserializer(@NonNull IBoundDefinitionModelAssembly definition) {
-<span class="fc" id="L39">    super(definition);</span>
-<span class="fc" id="L40">  }</span>
+<span class="fc" id="L41">    super(definition);</span>
+<span class="fc" id="L42">    resetFactory();</span>
+<span class="fc" id="L43">  }</span>
+
+  protected final void resetFactory() {
+<span class="fc" id="L46">    this.factory = Lazy.lazy(this::newFactoryInstance);</span>
+<span class="fc" id="L47">  }</span>
+
+  @Override
+  protected void configurationChanged(IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; config) {
+<span class="fc" id="L51">    super.configurationChanged(config);</span>
+<span class="fc" id="L52">    resetFactory();</span>
+<span class="fc" id="L53">  }</span>
 
   /**
    * Get a JSON factory instance.
@@ -48,8 +61,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    * @return the factory
    */
   @NonNull
-  protected JsonFactory newJsonFactoryInstance() {
-<span class="fc" id="L52">    return JsonFactoryFactory.instance();</span>
+  protected JsonFactory newFactoryInstance() {
+<span class="fc" id="L65">    return JsonFactoryFactory.instance();</span>
   }
 
   /**
@@ -59,13 +72,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    */
   @NonNull
   protected JsonFactory getJsonFactory() {
-<span class="fc" id="L62">    synchronized (this) {</span>
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">      if (jsonFactory == null) {</span>
-<span class="fc" id="L64">        jsonFactory = newJsonFactoryInstance();</span>
-      }
-<span class="pc bpc" id="L66" title="1 of 2 branches missed.">      assert jsonFactory != null;</span>
-<span class="fc" id="L67">      return jsonFactory;</span>
-    }
+<span class="fc" id="L75">    return ObjectUtils.notNull(factory.get());</span>
   }
 
   /**
@@ -81,53 +88,57 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   @SuppressWarnings(&quot;resource&quot;) // reader resource not owned
   @NonNull
   protected final JsonParser newJsonParser(@NonNull Reader reader) throws IOException {
-<span class="fc" id="L84">    return ObjectUtils.notNull(getJsonFactory().createParser(reader));</span>
+<span class="fc" id="L91">    return ObjectUtils.notNull(getJsonFactory().createParser(reader));</span>
   }
 
   @Override
   protected INodeItem deserializeToNodeItemInternal(@NonNull Reader reader, @NonNull URI documentUri)
       throws IOException {
     INodeItem retval;
-<span class="fc" id="L91">    try (JsonParser jsonParser = newJsonParser(reader)) {</span>
-<span class="fc" id="L92">      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);</span>
-<span class="fc" id="L93">      IBoundDefinitionModelAssembly definition = getDefinition();</span>
-<span class="fc" id="L94">      IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration = getConfiguration();</span>
+<span class="fc" id="L98">    try (JsonParser jsonParser = newJsonParser(reader)) {</span>
+<span class="fc" id="L99">      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);</span>
+<span class="fc" id="L100">      IBoundDefinitionModelAssembly definition = getDefinition();</span>
+<span class="fc" id="L101">      IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration = getConfiguration();</span>
 
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">      if (definition.isRoot()</span>
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">          &amp;&amp; configuration.isFeatureEnabled(DeserializationFeature.DESERIALIZE_JSON_ROOT_PROPERTY)) {</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">      if (definition.isRoot()</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">          &amp;&amp; configuration.isFeatureEnabled(DeserializationFeature.DESERIALIZE_JSON_ROOT_PROPERTY)) {</span>
         // now parse the root property
-<span class="fc" id="L99">        CLASS value = ObjectUtils.requireNonNull(parser.readObjectRoot(definition, definition.getRootJsonName()));</span>
+<span class="fc" id="L106">        CLASS value = ObjectUtils.requireNonNull(parser.readObjectRoot(</span>
+            definition,
+<span class="fc" id="L108">            ObjectUtils.notNull(definition.getRootJsonName())));</span>
 
-<span class="fc" id="L101">        retval = INodeItemFactory.instance().newDocumentNodeItem(definition, documentUri, value);</span>
-<span class="fc" id="L102">      } else {</span>
+<span class="fc" id="L110">        retval = INodeItemFactory.instance().newDocumentNodeItem(definition, documentUri, value);</span>
+<span class="fc" id="L111">      } else {</span>
         // read the top-level definition
-<span class="nc" id="L104">        CLASS value = ObjectUtils.asType(parser.readObject(definition));</span>
+<span class="nc" id="L113">        CLASS value = ObjectUtils.asType(parser.readObject(definition));</span>
 
-<span class="nc" id="L106">        retval = INodeItemFactory.instance().newAssemblyNodeItem(definition, documentUri, value);</span>
+<span class="nc" id="L115">        retval = INodeItemFactory.instance().newAssemblyNodeItem(definition, documentUri, value);</span>
       }
-<span class="fc" id="L108">      return retval;</span>
+<span class="fc" id="L117">      return retval;</span>
     }
   }
 
   @Override
   public CLASS deserializeToValueInternal(@NonNull Reader reader, @NonNull URI documentUri) throws IOException {
-<span class="fc" id="L114">    try (JsonParser jsonParser = newJsonParser(reader)) {</span>
-<span class="fc" id="L115">      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);</span>
-<span class="fc" id="L116">      IBoundDefinitionModelAssembly definition = getDefinition();</span>
-<span class="fc" id="L117">      IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration = getConfiguration();</span>
+<span class="fc" id="L123">    try (JsonParser jsonParser = newJsonParser(reader)) {</span>
+<span class="fc" id="L124">      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);</span>
+<span class="fc" id="L125">      IBoundDefinitionModelAssembly definition = getDefinition();</span>
+<span class="fc" id="L126">      IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration = getConfiguration();</span>
 
       CLASS retval;
-<span class="pc bpc" id="L120" title="1 of 2 branches missed.">      if (definition.isRoot()</span>
-<span class="pc bpc" id="L121" title="1 of 2 branches missed.">          &amp;&amp; configuration.isFeatureEnabled(DeserializationFeature.DESERIALIZE_JSON_ROOT_PROPERTY)) {</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">      if (definition.isRoot()</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">          &amp;&amp; configuration.isFeatureEnabled(DeserializationFeature.DESERIALIZE_JSON_ROOT_PROPERTY)) {</span>
 
         // now parse the root property
-<span class="fc" id="L124">        retval = ObjectUtils.requireNonNull(parser.readObjectRoot(definition, definition.getRootJsonName()));</span>
+<span class="fc" id="L133">        retval = ObjectUtils.requireNonNull(parser.readObjectRoot(</span>
+            definition,
+<span class="fc" id="L135">            ObjectUtils.notNull(definition.getRootJsonName())));</span>
       } else {
         // read the top-level definition
-<span class="nc" id="L127">        retval = ObjectUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="nc" id="L128">            parser.readObject(definition)));</span>
+<span class="nc" id="L138">        retval = ObjectUtils.asType(ObjectUtils.requireNonNull(</span>
+<span class="nc" id="L139">            parser.readObject(definition)));</span>
       }
-<span class="fc" id="L130">      return retval;</span>
+<span class="fc" id="L141">      return retval;</span>
     }
   }
 }

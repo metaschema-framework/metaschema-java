@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"gov.nist.secauto.metaschema.modules.sarif"},{"l":"org.schemastore.json.sarif.x210"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.metaschema"},{"l":"gov.nist.secauto.metaschema.modules.sarif"},{"l":"org.schemastore.json.sarif.x210"}];updateSearchResults();

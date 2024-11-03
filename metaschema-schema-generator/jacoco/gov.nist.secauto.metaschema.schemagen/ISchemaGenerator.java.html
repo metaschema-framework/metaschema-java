@@ -11,8 +11,6 @@ import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -21,7 +19,7 @@ import java.nio.file.StandardOpenOption;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="nc bnc" id="L24" title="All 2 branches missed.">public interface ISchemaGenerator {</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">public interface ISchemaGenerator {</span>
   /**
    * Generate and write a schema for the provided {@code metaschema} to the
    * {@link Writer} provided by {@code writer} using the provided
@@ -47,57 +45,56 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       @NonNull SchemaFormat asFormat,
       @NonNull IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration)
       throws IOException {
-<span class="nc" id="L50">    ISchemaGenerator schemaGenerator = asFormat.getSchemaGenerator();</span>
+<span class="nc" id="L48">    ISchemaGenerator schemaGenerator = asFormat.getSchemaGenerator();</span>
 
-<span class="nc" id="L52">    try (Writer writer = Files.newBufferedWriter(</span>
+<span class="nc" id="L50">    try (Writer writer = Files.newBufferedWriter(</span>
         destination,
         StandardCharsets.UTF_8,
         StandardOpenOption.CREATE,
         StandardOpenOption.WRITE,
         StandardOpenOption.TRUNCATE_EXISTING)) {
-<span class="nc bnc" id="L58" title="All 4 branches missed.">      assert writer != null;</span>
-<span class="nc" id="L59">      schemaGenerator.generateFromModule(module, writer, configuration);</span>
-<span class="nc" id="L60">      writer.flush();</span>
+<span class="nc bnc" id="L56" title="All 4 branches missed.">      assert writer != null;</span>
+<span class="nc" id="L57">      schemaGenerator.generateFromModule(module, writer, configuration);</span>
+<span class="nc" id="L58">      writer.flush();</span>
     }
-<span class="nc" id="L62">  }</span>
+<span class="nc" id="L60">  }</span>
 
   static void generateSchema(
       @NonNull IModule module,
-      @NonNull OutputStream os,
+      @NonNull Writer writer,
       @NonNull SchemaFormat asFormat,
       @NonNull IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration)
       throws IOException {
-<span class="nc" id="L70">    ISchemaGenerator schemaGenerator = asFormat.getSchemaGenerator();</span>
+<span class="nc" id="L68">    ISchemaGenerator schemaGenerator = asFormat.getSchemaGenerator();</span>
 
-<span class="nc" id="L72">    Writer writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);</span>
-<span class="nc" id="L73">    schemaGenerator.generateFromModule(module, writer, configuration);</span>
-<span class="nc" id="L74">    writer.flush();</span>
+<span class="nc" id="L70">    schemaGenerator.generateFromModule(module, writer, configuration);</span>
+<span class="nc" id="L71">    writer.flush();</span>
     // we don't want to close os, since we do not own it
-<span class="nc" id="L76">  }</span>
+<span class="nc" id="L73">  }</span>
 
   /**
    * Identifies the supported schema generation formats.
    */
-<span class="nc" id="L81">  enum SchemaFormat {</span>
+<span class="nc" id="L78">  enum SchemaFormat {</span>
     /**
      * a JSON Schema.
      */
-<span class="nc" id="L85">    JSON(new JsonSchemaGenerator()),</span>
+<span class="nc" id="L82">    JSON(new JsonSchemaGenerator()),</span>
     /**
      * an XML Schema.
      */
-<span class="nc" id="L89">    XML(new XmlSchemaGenerator());</span>
+<span class="nc" id="L86">    XML(new XmlSchemaGenerator());</span>
 
     @NonNull
     private final ISchemaGenerator schemaGenerator;
 
-<span class="nc" id="L94">    SchemaFormat(@NonNull ISchemaGenerator schemaGenerator) {</span>
-<span class="nc" id="L95">      this.schemaGenerator = schemaGenerator;</span>
-<span class="nc" id="L96">    }</span>
+<span class="nc" id="L91">    SchemaFormat(@NonNull ISchemaGenerator schemaGenerator) {</span>
+<span class="nc" id="L92">      this.schemaGenerator = schemaGenerator;</span>
+<span class="nc" id="L93">    }</span>
 
     @NonNull
     public ISchemaGenerator getSchemaGenerator() {
-<span class="nc" id="L100">      return schemaGenerator;</span>
+<span class="nc" id="L97">      return schemaGenerator;</span>
     }
   }
 }

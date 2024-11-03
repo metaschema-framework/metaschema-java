@@ -20,9 +20,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Based on the XPath 3.1
+ * Implements the XPath 3.1
  * &lt;a href= &quot;https://www.w3.org/TR/xpath-functions-31/#func-round&quot;&gt;fn:round&lt;/a&gt;
- * functions.
+ * function.
  */
 public final class FnCeiling {
   private static final String NAME = &quot;ceiling&quot;;
@@ -48,6 +48,7 @@ public final class FnCeiling {
     // disable construction
   }
 
+  // CPD-OFF
   @SuppressWarnings(&quot;unused&quot;)
   @NonNull
   private static ISequence&lt;INumericItem&gt; execute(
@@ -55,15 +56,16 @@ public final class FnCeiling {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L58">    ISequence&lt;? extends INumericItem&gt; sequence = FunctionUtils.asType(</span>
-<span class="fc" id="L59">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L59">    ISequence&lt;? extends INumericItem&gt; sequence = FunctionUtils.asType(</span>
+<span class="fc" id="L60">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
 
-<span class="fc" id="L61">    INumericItem item = sequence.getFirstItem(true);</span>
-<span class="fc bfc" id="L62" title="All 2 branches covered.">    if (item == null) {</span>
-<span class="fc" id="L63">      return ISequence.empty(); // NOPMD - readability</span>
+<span class="fc" id="L62">    INumericItem item = sequence.getFirstItem(true);</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">    if (item == null) {</span>
+<span class="fc" id="L64">      return ISequence.empty(); // NOPMD - readability</span>
     }
 
-<span class="fc" id="L66">    return ISequence.of(item.castAsType(item.ceiling()));</span>
+<span class="fc" id="L67">    return ISequence.of(item.castAsType(item.ceiling()));</span>
+    // CPD-ON
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

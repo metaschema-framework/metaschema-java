@@ -119,22 +119,14 @@
 <span class="source-line-no">106</span><span id="line-106">  IAllowedValuesConstraint.Extensible extensible() default IAllowedValuesConstraint.Extensible.EXTERNAL;</span>
 <span class="source-line-no">107</span><span id="line-107"></span>
 <span class="source-line-no">108</span><span id="line-108">  /**</span>
-<span class="source-line-no">109</span><span id="line-109">   * The message to emit when the constraint is violated.</span>
+<span class="source-line-no">109</span><span id="line-109">   * Any remarks about the constraint, encoded as an escaped Markdown string.</span>
 <span class="source-line-no">110</span><span id="line-110">   *</span>
-<span class="source-line-no">111</span><span id="line-111">   * @return the message or an empty string otherwise</span>
-<span class="source-line-no">112</span><span id="line-112">   */</span>
-<span class="source-line-no">113</span><span id="line-113">  @NonNull</span>
-<span class="source-line-no">114</span><span id="line-114">  String message() default "";</span>
-<span class="source-line-no">115</span><span id="line-115"></span>
-<span class="source-line-no">116</span><span id="line-116">  /**</span>
-<span class="source-line-no">117</span><span id="line-117">   * Any remarks about the constraint, encoded as an escaped Markdown string.</span>
-<span class="source-line-no">118</span><span id="line-118">   *</span>
-<span class="source-line-no">119</span><span id="line-119">   * @return an encoded markdown string or an empty string if no remarks are</span>
-<span class="source-line-no">120</span><span id="line-120">   *         provided</span>
-<span class="source-line-no">121</span><span id="line-121">   */</span>
-<span class="source-line-no">122</span><span id="line-122">  @NonNull</span>
-<span class="source-line-no">123</span><span id="line-123">  String remarks() default "";</span>
-<span class="source-line-no">124</span><span id="line-124">}</span>
+<span class="source-line-no">111</span><span id="line-111">   * @return an encoded markdown string or an empty string if no remarks are</span>
+<span class="source-line-no">112</span><span id="line-112">   *         provided</span>
+<span class="source-line-no">113</span><span id="line-113">   */</span>
+<span class="source-line-no">114</span><span id="line-114">  @NonNull</span>
+<span class="source-line-no">115</span><span id="line-115">  String remarks() default "";</span>
+<span class="source-line-no">116</span><span id="line-116">}</span>
 
 
 

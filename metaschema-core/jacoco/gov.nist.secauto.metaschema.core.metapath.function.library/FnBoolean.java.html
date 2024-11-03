@@ -25,24 +25,29 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-boolean&quot;&gt;fn:boolean&lt;/a&gt;
+ * function.
+ */
 public final class FnBoolean {
   private static final String NAME = &quot;boolean&quot;;
   @NonNull
-<span class="fc" id="L31">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L32">      .name(NAME)</span>
-<span class="fc" id="L33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L34">      .deterministic()</span>
-<span class="fc" id="L35">      .contextIndependent()</span>
-<span class="fc" id="L36">      .focusIndependent()</span>
-<span class="fc" id="L37">      .argument(IArgument.builder()</span>
-<span class="fc" id="L38">          .name(&quot;arg&quot;)</span>
-<span class="fc" id="L39">          .type(IItem.class)</span>
-<span class="fc" id="L40">          .zeroOrMore()</span>
-<span class="fc" id="L41">          .build())</span>
-<span class="fc" id="L42">      .returnType(IBooleanItem.class)</span>
-<span class="fc" id="L43">      .returnOne()</span>
-<span class="fc" id="L44">      .functionHandler(FnBoolean::execute)</span>
-<span class="fc" id="L45">      .build();</span>
+<span class="fc" id="L36">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L37">      .name(NAME)</span>
+<span class="fc" id="L38">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L39">      .deterministic()</span>
+<span class="fc" id="L40">      .contextIndependent()</span>
+<span class="fc" id="L41">      .focusIndependent()</span>
+<span class="fc" id="L42">      .argument(IArgument.builder()</span>
+<span class="fc" id="L43">          .name(&quot;arg&quot;)</span>
+<span class="fc" id="L44">          .type(IItem.class)</span>
+<span class="fc" id="L45">          .zeroOrMore()</span>
+<span class="fc" id="L46">          .build())</span>
+<span class="fc" id="L47">      .returnType(IBooleanItem.class)</span>
+<span class="fc" id="L48">      .returnOne()</span>
+<span class="fc" id="L49">      .functionHandler(FnBoolean::execute)</span>
+<span class="fc" id="L50">      .build();</span>
 
   private FnBoolean() {
     // disable construction
@@ -55,10 +60,10 @@ public final class FnBoolean {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-<span class="fc" id="L58">    ISequence&lt;?&gt; items = ObjectUtils.requireNonNull(arguments.get(0));</span>
+<span class="fc" id="L63">    ISequence&lt;?&gt; items = ObjectUtils.requireNonNull(arguments.get(0));</span>
 
-<span class="fc" id="L60">    IBooleanItem result = fnBoolean(items);</span>
-<span class="fc" id="L61">    return ISequence.of(result);</span>
+<span class="fc" id="L65">    IBooleanItem result = fnBoolean(items);</span>
+<span class="fc" id="L66">    return ISequence.of(result);</span>
   }
 
   /**
@@ -74,7 +79,7 @@ public final class FnBoolean {
    */
   @NonNull
   public static IBooleanItem fnBoolean(@NonNull ISequence&lt;?&gt; sequence) {
-<span class="fc" id="L77">    return IBooleanItem.valueOf(fnBooleanAsPrimitive(sequence));</span>
+<span class="fc" id="L82">    return IBooleanItem.valueOf(fnBooleanAsPrimitive(sequence));</span>
   }
 
   /**
@@ -87,16 +92,16 @@ public final class FnBoolean {
    * @return the effective boolean value
    */
   public static boolean fnBooleanAsPrimitive(@NonNull ISequence&lt;?&gt; sequence) {
-<span class="fc" id="L90">    boolean retval = false;</span>
-<span class="fc" id="L91">    IItem first = sequence.getFirstItem(false);</span>
-<span class="fc bfc" id="L92" title="All 2 branches covered.">    if (first != null) {</span>
-<span class="fc bfc" id="L93" title="All 2 branches covered.">      if (first instanceof INodeItem) {</span>
-<span class="fc" id="L94">        retval = true;</span>
-<span class="fc bfc" id="L95" title="All 2 branches covered.">      } else if (sequence.size() == 1) {</span>
-<span class="fc" id="L96">        retval = fnBooleanAsPrimitive(first);</span>
+<span class="fc" id="L95">    boolean retval = false;</span>
+<span class="fc" id="L96">    IItem first = sequence.getFirstItem(false);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">    if (first != null) {</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">      if (first instanceof INodeItem) {</span>
+<span class="fc" id="L99">        retval = true;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">      } else if (sequence.size() == 1) {</span>
+<span class="fc" id="L101">        retval = fnBooleanAsPrimitive(first);</span>
       }
     }
-<span class="fc" id="L99">    return retval;</span>
+<span class="fc" id="L104">    return retval;</span>
   }
 
   /**
@@ -109,21 +114,21 @@ public final class FnBoolean {
    */
   public static boolean fnBooleanAsPrimitive(@NonNull IItem item) {
     boolean retval;
-<span class="fc bfc" id="L112" title="All 2 branches covered.">    if (item instanceof IBooleanItem) {</span>
-<span class="fc" id="L113">      retval = ((IBooleanItem) item).toBoolean();</span>
-<span class="fc bfc" id="L114" title="All 2 branches covered.">    } else if (item instanceof INumericItem) {</span>
-<span class="fc" id="L115">      retval = ((INumericItem) item).toEffectiveBoolean();</span>
-<span class="fc bfc" id="L116" title="All 6 branches covered.">    } else if (item instanceof IStringItem</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    if (item instanceof IBooleanItem) {</span>
+<span class="fc" id="L118">      retval = ((IBooleanItem) item).toBoolean();</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">    } else if (item instanceof INumericItem) {</span>
+<span class="fc" id="L120">      retval = ((INumericItem) item).toEffectiveBoolean();</span>
+<span class="fc bfc" id="L121" title="All 6 branches covered.">    } else if (item instanceof IStringItem</span>
         || item instanceof IAnyUriItem
         || item instanceof IUntypedAtomicItem) {
-<span class="fc" id="L119">      String string = ((IAnyAtomicItem) item).asString();</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">      retval = !string.isBlank();</span>
-<span class="fc" id="L121">    } else {</span>
-<span class="fc" id="L122">      throw new InvalidArgumentFunctionException(</span>
+<span class="fc" id="L124">      String string = ((IAnyAtomicItem) item).asString();</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">      retval = !string.isBlank();</span>
+<span class="fc" id="L126">    } else {</span>
+<span class="fc" id="L127">      throw new InvalidArgumentFunctionException(</span>
           InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
-<span class="fc" id="L124">          String.format(&quot;Invalid argument type '%s'&quot;, item.getClass().getName()));</span>
+<span class="fc" id="L129">          String.format(&quot;Invalid argument type '%s'&quot;, item.getClass().getName()));</span>
     }
-<span class="fc" id="L126">    return retval;</span>
+<span class="fc" id="L131">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

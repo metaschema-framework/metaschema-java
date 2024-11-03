@@ -15,7 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="nc" id="L15">public abstract class AbstractKeyConstraintBuilder&lt;</span>
     T extends AbstractKeyConstraintBuilder&lt;T, R&gt;,
     R extends IKeyConstraint&gt;
-    extends AbstractConstraintBuilder&lt;T, R&gt; {
+    extends AbstractConfigurableMessageConstraintBuilder&lt;T, R&gt; {
 <span class="nc" id="L19">  @NonNull</span>
   private final List&lt;IKeyField&gt; keyFields = new LinkedList&lt;&gt;();
 

@@ -265,79 +265,78 @@ public abstract class AbstractMarkupWriter&lt;T, E extends Throwable&gt; // NOPM
 
   @SuppressWarnings({
       &quot;unchecked&quot;,
-      &quot;unused&quot;,
       &quot;PMD.UnusedPrivateMethod&quot;
   }) // while unused, keeping code for when inline HTML is supported
   private void writeHtml(Node node) throws E {
-<span class="nc" id="L272">    Document doc = Jsoup.parse(node.getChars().toString());</span>
+<span class="nc" id="L271">    Document doc = Jsoup.parse(node.getChars().toString());</span>
     try {
-<span class="nc" id="L274">      doc.body().traverse(new MarkupNodeVisitor());</span>
-<span class="nc" id="L275">    } catch (NodeVisitorException ex) {</span>
-<span class="nc" id="L276">      throw (E) ex.getCause(); // NOPMD exception is wrapper</span>
-<span class="nc" id="L277">    }</span>
-<span class="nc" id="L278">  }</span>
+<span class="nc" id="L273">      doc.body().traverse(new MarkupNodeVisitor());</span>
+<span class="nc" id="L274">    } catch (NodeVisitorException ex) {</span>
+<span class="nc" id="L275">      throw (E) ex.getCause(); // NOPMD exception is wrapper</span>
+<span class="nc" id="L276">    }</span>
+<span class="nc" id="L277">  }</span>
 
   @Override
   public final void writeText(Text node) throws E {
-<span class="fc" id="L282">    BasedSequence text = node.getChars();</span>
-<span class="fc" id="L283">    Node prev = node.getPrevious();</span>
-<span class="fc bfc" id="L284" title="All 2 branches covered.">    if (prev instanceof HardLineBreak) {</span>
+<span class="fc" id="L281">    BasedSequence text = node.getChars();</span>
+<span class="fc" id="L282">    Node prev = node.getPrevious();</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">    if (prev instanceof HardLineBreak) {</span>
       // strip leading after hard line break
-<span class="pc bpc" id="L286" title="1 of 2 branches missed.">      assert text != null;</span>
-<span class="fc" id="L287">      text = text.trimStart();</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">      assert text != null;</span>
+<span class="fc" id="L286">      text = text.trimStart();</span>
     }
-<span class="pc bpc" id="L289" title="1 of 2 branches missed.">    assert text != null;</span>
-<span class="fc" id="L290">    writeText(text);</span>
-<span class="fc" id="L291">  }</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">    assert text != null;</span>
+<span class="fc" id="L289">    writeText(text);</span>
+<span class="fc" id="L290">  }</span>
 
   @Override
   public void writeText(@NonNull TextBase node) throws E {
-<span class="fc" id="L295">    StringBuilder buf = new StringBuilder(node.getChars().length());</span>
-<span class="fc bfc" id="L296" title="All 2 branches covered.">    for (Node child : node.getChildren()) {</span>
+<span class="fc" id="L294">    StringBuilder buf = new StringBuilder(node.getChars().length());</span>
+<span class="fc bfc" id="L295" title="All 2 branches covered.">    for (Node child : node.getChildren()) {</span>
       CharSequence chars;
-<span class="fc bfc" id="L298" title="All 2 branches covered.">      if (child instanceof Text) {</span>
-<span class="fc" id="L299">        Text text = (Text) child;</span>
-<span class="fc" id="L300">        chars = text.getChars();</span>
-<span class="pc bpc" id="L301" title="1 of 2 branches missed.">      } else if (child instanceof EscapedCharacter) {</span>
-<span class="fc" id="L302">        EscapedCharacter ec = (EscapedCharacter) child;</span>
-<span class="fc" id="L303">        chars = ec.getChars().unescape();</span>
-<span class="fc" id="L304">      } else {</span>
-<span class="nc" id="L305">        throw new UnsupportedOperationException(&quot;Node type: &quot; + child.getNodeName());</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">      if (child instanceof Text) {</span>
+<span class="fc" id="L298">        Text text = (Text) child;</span>
+<span class="fc" id="L299">        chars = text.getChars();</span>
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">      } else if (child instanceof EscapedCharacter) {</span>
+<span class="fc" id="L301">        EscapedCharacter ec = (EscapedCharacter) child;</span>
+<span class="fc" id="L302">        chars = ec.getChars().unescape();</span>
+<span class="fc" id="L303">      } else {</span>
+<span class="nc" id="L304">        throw new UnsupportedOperationException(&quot;Node type: &quot; + child.getNodeName());</span>
       }
-<span class="fc" id="L307">      buf.append(chars);</span>
-<span class="fc" id="L308">    }</span>
-<span class="fc" id="L309">    writeText(buf);</span>
-<span class="fc" id="L310">  }</span>
+<span class="fc" id="L306">      buf.append(chars);</span>
+<span class="fc" id="L307">    }</span>
+<span class="fc" id="L308">    writeText(buf);</span>
+<span class="fc" id="L309">  }</span>
 
   @Override
   public void writeHtmlEntity(@NonNull HtmlEntity node) throws E {
-<span class="fc" id="L314">    String text = node.getChars().unescape();</span>
-<span class="pc bpc" id="L315" title="1 of 2 branches missed.">    assert text != null;</span>
-<span class="fc" id="L316">    writeHtmlEntity(text);</span>
-<span class="fc" id="L317">  }</span>
+<span class="fc" id="L313">    String text = node.getChars().unescape();</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">    assert text != null;</span>
+<span class="fc" id="L315">    writeHtmlEntity(text);</span>
+<span class="fc" id="L316">  }</span>
 
   @Override
   public void writeHtmlEntity(@NonNull TypographicSmarts node) throws E {
-<span class="nc" id="L321">    String text = ObjectUtils.requireNonNull(node.getTypographicText());</span>
-<span class="nc bnc" id="L322" title="All 2 branches missed.">    assert text != null;</span>
-<span class="nc" id="L323">    writeHtmlEntity(text);</span>
-<span class="nc" id="L324">  }</span>
+<span class="nc" id="L320">    String text = ObjectUtils.requireNonNull(node.getTypographicText());</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">    assert text != null;</span>
+<span class="nc" id="L322">    writeHtmlEntity(text);</span>
+<span class="nc" id="L323">  }</span>
 
   private void writeHtmlEntity(String entityText) throws E {
-<span class="fc" id="L327">    String replacement = ENTITY_MAP.get(entityText);</span>
-<span class="pc bpc" id="L328" title="1 of 2 branches missed.">    if (replacement != null) {</span>
-<span class="nc" id="L329">      Matcher matcher = ENTITY_PATTERN.matcher(replacement);</span>
-<span class="nc bnc" id="L330" title="All 2 branches missed.">      if (matcher.matches()) {</span>
-<span class="nc" id="L331">        writeHtmlEntityInternal(ObjectUtils.notNull(matcher.group(1)));</span>
+<span class="fc" id="L326">    String replacement = ENTITY_MAP.get(entityText);</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">    if (replacement != null) {</span>
+<span class="nc" id="L328">      Matcher matcher = ENTITY_PATTERN.matcher(replacement);</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">      if (matcher.matches()) {</span>
+<span class="nc" id="L330">        writeHtmlEntityInternal(ObjectUtils.notNull(matcher.group(1)));</span>
       } else {
-<span class="nc" id="L333">        writeText(replacement);</span>
+<span class="nc" id="L332">        writeText(replacement);</span>
       }
-<span class="nc" id="L335">    } else {</span>
-<span class="fc" id="L336">      String value = StringEscapeUtils.unescapeHtml4(entityText);</span>
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">      assert value != null;</span>
-<span class="fc" id="L338">      writeText(value);</span>
+<span class="nc" id="L334">    } else {</span>
+<span class="fc" id="L335">      String value = StringEscapeUtils.unescapeHtml4(entityText);</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">      assert value != null;</span>
+<span class="fc" id="L337">      writeText(value);</span>
     }
-<span class="fc" id="L340">  }</span>
+<span class="fc" id="L339">  }</span>
 
   /**
    * Write an HTML entity.
@@ -348,250 +347,250 @@ public abstract class AbstractMarkupWriter&lt;T, E extends Throwable&gt; // NOPM
    *           if an error occurred while writing
    */
   protected void writeHtmlEntityInternal(@NonNull String text) throws E {
-<span class="nc" id="L351">    writeText(text);</span>
-<span class="nc" id="L352">  }</span>
+<span class="nc" id="L350">    writeText(text);</span>
+<span class="nc" id="L351">  }</span>
 
   @Override
   public void writeParagraph(
       @NonNull Paragraph node,
       @NonNull ChildHandler&lt;T, E&gt; childHandler) throws E {
-<span class="fc bfc" id="L358" title="All 4 branches covered.">    if (node.getParent() instanceof ParagraphItemContainer &amp;&amp; getOptions().isInTightListItem(node)) {</span>
-<span class="fc bfc" id="L359" title="All 2 branches covered.">      if (node.getPrevious() != null) {</span>
-<span class="fc" id="L360">        writeText(&quot;\n&quot;);</span>
+<span class="fc bfc" id="L357" title="All 4 branches covered.">    if (node.getParent() instanceof ParagraphItemContainer &amp;&amp; getOptions().isInTightListItem(node)) {</span>
+<span class="fc bfc" id="L358" title="All 2 branches covered.">      if (node.getPrevious() != null) {</span>
+<span class="fc" id="L359">        writeText(&quot;\n&quot;);</span>
       }
-<span class="fc" id="L362">      visitChildren(node, childHandler);</span>
+<span class="fc" id="L361">      visitChildren(node, childHandler);</span>
     } else {
-<span class="fc" id="L364">      writePrecedingNewline(node);</span>
-<span class="fc" id="L365">      writeElement(&quot;p&quot;, node, childHandler);</span>
-<span class="fc" id="L366">      writeTrailingNewline(node);</span>
+<span class="fc" id="L363">      writePrecedingNewline(node);</span>
+<span class="fc" id="L364">      writeElement(&quot;p&quot;, node, childHandler);</span>
+<span class="fc" id="L365">      writeTrailingNewline(node);</span>
     }
-<span class="fc" id="L368">  }</span>
+<span class="fc" id="L367">  }</span>
 
   @Override
   public void writeLink(
       @NonNull Link node,
       @NonNull ChildHandler&lt;T, E&gt; childHandler) throws E {
-<span class="fc" id="L374">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
-<span class="fc" id="L375">    String href = Escaping.percentEncodeUrl(node.getUrl().unescape());</span>
+<span class="fc" id="L373">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
+<span class="fc" id="L374">    String href = Escaping.percentEncodeUrl(node.getUrl().unescape());</span>
     try {
-<span class="fc" id="L377">      attributes.put(&quot;href&quot;, new URI(href).toASCIIString());</span>
-<span class="nc" id="L378">    } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L379">      throw new IllegalStateException(ex);</span>
-<span class="fc" id="L380">    }</span>
+<span class="fc" id="L376">      attributes.put(&quot;href&quot;, new URI(href).toASCIIString());</span>
+<span class="nc" id="L377">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L378">      throw new IllegalStateException(ex);</span>
+<span class="fc" id="L379">    }</span>
 
-<span class="fc bfc" id="L382" title="All 2 branches covered.">    if (!node.getTitle().isBlank()) {</span>
-<span class="fc" id="L383">      String title = ObjectUtils.notNull(node.getTitle().unescape());</span>
-<span class="fc" id="L384">      attributes.put(&quot;title&quot;, title);</span>
+<span class="fc bfc" id="L381" title="All 2 branches covered.">    if (!node.getTitle().isBlank()) {</span>
+<span class="fc" id="L382">      String title = ObjectUtils.notNull(node.getTitle().unescape());</span>
+<span class="fc" id="L383">      attributes.put(&quot;title&quot;, title);</span>
     }
 
     // writeElement(&quot;a&quot;, node, attributes, childHandler);
-<span class="fc" id="L388">    QName qname = asQName(&quot;a&quot;);</span>
-<span class="fc" id="L389">    writeElementStart(qname, attributes);</span>
-<span class="fc bfc" id="L390" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
-<span class="fc" id="L391">      visitChildren(node, childHandler);</span>
+<span class="fc" id="L387">    QName qname = asQName(&quot;a&quot;);</span>
+<span class="fc" id="L388">    writeElementStart(qname, attributes);</span>
+<span class="fc bfc" id="L389" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
+<span class="fc" id="L390">      visitChildren(node, childHandler);</span>
     } else {
-<span class="fc" id="L393">      writeText(&quot;&quot;);</span>
+<span class="fc" id="L392">      writeText(&quot;&quot;);</span>
     }
-<span class="fc" id="L395">    writeElementEnd(qname);</span>
-<span class="fc" id="L396">  }</span>
+<span class="fc" id="L394">    writeElementEnd(qname);</span>
+<span class="fc" id="L395">  }</span>
 
   @Override
   public void writeLink(@NonNull MailLink node) throws E {
-<span class="fc" id="L400">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
+<span class="fc" id="L399">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
 
-<span class="fc" id="L402">    String href = Escaping.percentEncodeUrl(node.getText().unescape());</span>
+<span class="fc" id="L401">    String href = Escaping.percentEncodeUrl(node.getText().unescape());</span>
     try {
-<span class="fc" id="L404">      attributes.put(&quot;href&quot;, new URI(&quot;mailto:&quot; + href).toASCIIString());</span>
-<span class="nc" id="L405">    } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L406">      throw new IllegalStateException(ex);</span>
-<span class="fc" id="L407">    }</span>
+<span class="fc" id="L403">      attributes.put(&quot;href&quot;, new URI(&quot;mailto:&quot; + href).toASCIIString());</span>
+<span class="nc" id="L404">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L405">      throw new IllegalStateException(ex);</span>
+<span class="fc" id="L406">    }</span>
 
-<span class="fc" id="L409">    QName qname = asQName(&quot;a&quot;);</span>
-<span class="fc" id="L410">    writeElementStart(qname, attributes);</span>
+<span class="fc" id="L408">    QName qname = asQName(&quot;a&quot;);</span>
+<span class="fc" id="L409">    writeElementStart(qname, attributes);</span>
 
-<span class="fc" id="L412">    BasedSequence text = node.getText();</span>
-<span class="pc bpc" id="L413" title="1 of 2 branches missed.">    writeText(text == null ? &quot;\n&quot; : ObjectUtils.notNull(text.unescape()));</span>
-<span class="fc" id="L414">    writeElementEnd(qname);</span>
-<span class="fc" id="L415">  }</span>
+<span class="fc" id="L411">    BasedSequence text = node.getText();</span>
+<span class="pc bpc" id="L412" title="1 of 2 branches missed.">    writeText(text == null ? &quot;\n&quot; : ObjectUtils.notNull(text.unescape()));</span>
+<span class="fc" id="L413">    writeElementEnd(qname);</span>
+<span class="fc" id="L414">  }</span>
 
   @Override
   public void writeLink(@NonNull AutoLink node) throws E {
-<span class="fc" id="L419">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
+<span class="fc" id="L418">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
 
-<span class="fc" id="L421">    String href = Escaping.percentEncodeUrl(node.getUrl().unescape());</span>
+<span class="fc" id="L420">    String href = Escaping.percentEncodeUrl(node.getUrl().unescape());</span>
     try {
-<span class="fc" id="L423">      attributes.put(&quot;href&quot;, new URI(href).toASCIIString());</span>
-<span class="nc" id="L424">    } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L425">      throw new IllegalStateException(ex);</span>
-<span class="fc" id="L426">    }</span>
+<span class="fc" id="L422">      attributes.put(&quot;href&quot;, new URI(href).toASCIIString());</span>
+<span class="nc" id="L423">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L424">      throw new IllegalStateException(ex);</span>
+<span class="fc" id="L425">    }</span>
 
-<span class="fc" id="L428">    QName qname = asQName(&quot;a&quot;);</span>
-<span class="fc" id="L429">    writeElementStart(qname, attributes);</span>
-<span class="fc" id="L430">    writeText(ObjectUtils.notNull(node.getText().unescape()));</span>
-<span class="fc" id="L431">    writeElementEnd(qname);</span>
-<span class="fc" id="L432">  }</span>
+<span class="fc" id="L427">    QName qname = asQName(&quot;a&quot;);</span>
+<span class="fc" id="L428">    writeElementStart(qname, attributes);</span>
+<span class="fc" id="L429">    writeText(ObjectUtils.notNull(node.getText().unescape()));</span>
+<span class="fc" id="L430">    writeElementEnd(qname);</span>
+<span class="fc" id="L431">  }</span>
 
   @Override
   public final void writeTypographicQuotes(
       TypographicQuotes node,
       ChildHandler&lt;T, E&gt; childHandler) throws E {
-<span class="pc bpc" id="L438" title="1 of 2 branches missed.">    if (node instanceof DoubleQuoteNode) {</span>
-<span class="fc" id="L439">      writeElement(&quot;q&quot;, node, childHandler);</span>
+<span class="pc bpc" id="L437" title="1 of 2 branches missed.">    if (node instanceof DoubleQuoteNode) {</span>
+<span class="fc" id="L438">      writeElement(&quot;q&quot;, node, childHandler);</span>
     } else {
-<span class="nc" id="L441">      String opening = node.getTypographicOpening();</span>
-<span class="nc bnc" id="L442" title="All 4 branches missed.">      if (opening != null &amp;&amp; !opening.isEmpty()) {</span>
-<span class="nc" id="L443">        writeHtmlEntity(opening);</span>
+<span class="nc" id="L440">      String opening = node.getTypographicOpening();</span>
+<span class="nc bnc" id="L441" title="All 4 branches missed.">      if (opening != null &amp;&amp; !opening.isEmpty()) {</span>
+<span class="nc" id="L442">        writeHtmlEntity(opening);</span>
       }
 
-<span class="nc" id="L446">      visitChildren(node, childHandler);</span>
+<span class="nc" id="L445">      visitChildren(node, childHandler);</span>
 
-<span class="nc" id="L448">      String closing = node.getTypographicClosing();</span>
-<span class="nc bnc" id="L449" title="All 4 branches missed.">      if (closing != null &amp;&amp; !closing.isEmpty()) {</span>
-<span class="nc" id="L450">        writeHtmlEntity(closing);</span>
+<span class="nc" id="L447">      String closing = node.getTypographicClosing();</span>
+<span class="nc bnc" id="L448" title="All 4 branches missed.">      if (closing != null &amp;&amp; !closing.isEmpty()) {</span>
+<span class="nc" id="L449">        writeHtmlEntity(closing);</span>
       }
     }
-<span class="fc" id="L453">  }</span>
+<span class="fc" id="L452">  }</span>
 
   @Override
   public final void writeInlineHtml(HtmlInline node) throws E {
     // throw new UnsupportedOperationException(
     // String.format(&quot;Inline HTML is not supported. Found: %s&quot;, node.getChars()));
-<span class="nc" id="L459">    writeHtml(node);</span>
-<span class="nc" id="L460">  }</span>
+<span class="nc" id="L458">    writeHtml(node);</span>
+<span class="nc" id="L459">  }</span>
 
   @Override
   public final void writeBlockHtml(HtmlBlock node) throws E {
     // throw new UnsupportedOperationException(
     // String.format(&quot;Inline HTML is not supported. Found: %s&quot;, node.getChars()));
 
-<span class="nc" id="L467">    writePrecedingNewline(node);</span>
-<span class="nc" id="L468">    writeHtml(node);</span>
-<span class="nc" id="L469">    writeTrailingNewline(node);</span>
-<span class="nc" id="L470">  }</span>
+<span class="nc" id="L466">    writePrecedingNewline(node);</span>
+<span class="nc" id="L467">    writeHtml(node);</span>
+<span class="nc" id="L468">    writeTrailingNewline(node);</span>
+<span class="nc" id="L469">  }</span>
 
   @Override
   public final void writeTable(
       TableBlock node,
       ChildHandler&lt;T, E&gt; cellChildHandler) throws E {
-<span class="fc" id="L476">    writePrecedingNewline(node);</span>
-<span class="fc" id="L477">    QName qname = asQName(&quot;table&quot;);</span>
-<span class="fc" id="L478">    writeElementStart(qname);</span>
+<span class="fc" id="L475">    writePrecedingNewline(node);</span>
+<span class="fc" id="L476">    QName qname = asQName(&quot;table&quot;);</span>
+<span class="fc" id="L477">    writeElementStart(qname);</span>
 
-<span class="fc" id="L480">    TableHead head = (TableHead) node.getChildOfType(TableHead.class);</span>
+<span class="fc" id="L479">    TableHead head = (TableHead) node.getChildOfType(TableHead.class);</span>
 
-<span class="fc" id="L482">    QName theadQName = asQName(&quot;thead&quot;);</span>
-<span class="pc bpc" id="L483" title="1 of 2 branches missed.">    if (head != null) {</span>
-<span class="fc" id="L484">      writeText(&quot;\n&quot;);</span>
-<span class="fc" id="L485">      writeElementStart(theadQName);</span>
-<span class="fc bfc" id="L486" title="All 2 branches covered.">      for (Node childNode : head.getChildren()) {</span>
-<span class="pc bpc" id="L487" title="1 of 2 branches missed.">        if (childNode instanceof TableRow) {</span>
-<span class="fc" id="L488">          writeTableRow((TableRow) childNode, cellChildHandler);</span>
+<span class="fc" id="L481">    QName theadQName = asQName(&quot;thead&quot;);</span>
+<span class="pc bpc" id="L482" title="1 of 2 branches missed.">    if (head != null) {</span>
+<span class="fc" id="L483">      writeText(&quot;\n&quot;);</span>
+<span class="fc" id="L484">      writeElementStart(theadQName);</span>
+<span class="fc bfc" id="L485" title="All 2 branches covered.">      for (Node childNode : head.getChildren()) {</span>
+<span class="pc bpc" id="L486" title="1 of 2 branches missed.">        if (childNode instanceof TableRow) {</span>
+<span class="fc" id="L487">          writeTableRow((TableRow) childNode, cellChildHandler);</span>
         }
-<span class="fc" id="L490">      }</span>
-<span class="fc" id="L491">      writeElementEnd(theadQName);</span>
+<span class="fc" id="L489">      }</span>
+<span class="fc" id="L490">      writeElementEnd(theadQName);</span>
     }
 
-<span class="fc" id="L494">    TableBody body = (TableBody) node.getChildOfType(TableBody.class);</span>
+<span class="fc" id="L493">    TableBody body = (TableBody) node.getChildOfType(TableBody.class);</span>
 
-<span class="pc bpc" id="L496" title="1 of 2 branches missed.">    if (body != null) {</span>
-<span class="fc" id="L497">      QName tbodyQName = asQName(&quot;tbody&quot;);</span>
-<span class="fc" id="L498">      writeText(&quot;\n&quot;);</span>
-<span class="fc" id="L499">      writeElementStart(tbodyQName);</span>
-<span class="fc bfc" id="L500" title="All 2 branches covered.">      for (Node childNode : body.getChildren()) {</span>
-<span class="pc bpc" id="L501" title="1 of 2 branches missed.">        if (childNode instanceof TableRow) {</span>
-<span class="fc" id="L502">          writeTableRow((TableRow) childNode, cellChildHandler);</span>
+<span class="pc bpc" id="L495" title="1 of 2 branches missed.">    if (body != null) {</span>
+<span class="fc" id="L496">      QName tbodyQName = asQName(&quot;tbody&quot;);</span>
+<span class="fc" id="L497">      writeText(&quot;\n&quot;);</span>
+<span class="fc" id="L498">      writeElementStart(tbodyQName);</span>
+<span class="fc bfc" id="L499" title="All 2 branches covered.">      for (Node childNode : body.getChildren()) {</span>
+<span class="pc bpc" id="L500" title="1 of 2 branches missed.">        if (childNode instanceof TableRow) {</span>
+<span class="fc" id="L501">          writeTableRow((TableRow) childNode, cellChildHandler);</span>
         }
-<span class="fc" id="L504">      }</span>
-<span class="fc" id="L505">      writeElementEnd(tbodyQName);</span>
+<span class="fc" id="L503">      }</span>
+<span class="fc" id="L504">      writeElementEnd(tbodyQName);</span>
     }
 
-<span class="fc" id="L508">    writeText(&quot;\n&quot;);</span>
-<span class="fc" id="L509">    writeElementEnd(qname);</span>
-<span class="fc" id="L510">    writeTrailingNewline(node);</span>
-<span class="fc" id="L511">  }</span>
+<span class="fc" id="L507">    writeText(&quot;\n&quot;);</span>
+<span class="fc" id="L508">    writeElementEnd(qname);</span>
+<span class="fc" id="L509">    writeTrailingNewline(node);</span>
+<span class="fc" id="L510">  }</span>
 
   private void writeTableRow(
       @NonNull TableRow node,
       @NonNull ChildHandler&lt;T, E&gt; cellChildHandler) throws E {
-<span class="fc" id="L516">    writeText(&quot;\n&quot;);</span>
-<span class="fc" id="L517">    QName qname = asQName(&quot;tr&quot;);</span>
-<span class="fc" id="L518">    writeElementStart(qname);</span>
+<span class="fc" id="L515">    writeText(&quot;\n&quot;);</span>
+<span class="fc" id="L516">    QName qname = asQName(&quot;tr&quot;);</span>
+<span class="fc" id="L517">    writeElementStart(qname);</span>
 
-<span class="fc bfc" id="L520" title="All 2 branches covered.">    for (Node childNode : node.getChildren()) {</span>
-<span class="pc bpc" id="L521" title="1 of 2 branches missed.">      if (childNode instanceof TableCell) {</span>
-<span class="fc" id="L522">        writeTableCell((TableCell) childNode, cellChildHandler);</span>
+<span class="fc bfc" id="L519" title="All 2 branches covered.">    for (Node childNode : node.getChildren()) {</span>
+<span class="pc bpc" id="L520" title="1 of 2 branches missed.">      if (childNode instanceof TableCell) {</span>
+<span class="fc" id="L521">        writeTableCell((TableCell) childNode, cellChildHandler);</span>
       }
-<span class="fc" id="L524">    }</span>
+<span class="fc" id="L523">    }</span>
 
-<span class="fc" id="L526">    writeElementEnd(qname);</span>
-<span class="fc bfc" id="L527" title="All 2 branches covered.">    if (node.getNext() == null) {</span>
-<span class="fc" id="L528">      writeText(&quot;\n&quot;);</span>
+<span class="fc" id="L525">    writeElementEnd(qname);</span>
+<span class="fc bfc" id="L526" title="All 2 branches covered.">    if (node.getNext() == null) {</span>
+<span class="fc" id="L527">      writeText(&quot;\n&quot;);</span>
     }
-<span class="fc" id="L530">  }</span>
+<span class="fc" id="L529">  }</span>
 
   private void writeTableCell(
       @NonNull TableCell node,
       @NonNull ChildHandler&lt;T, E&gt; cellChildHandler) throws E {
-<span class="fc bfc" id="L535" title="All 2 branches covered.">    QName qname = node.isHeader() ? asQName(&quot;th&quot;) : asQName(&quot;td&quot;);</span>
+<span class="fc bfc" id="L534" title="All 2 branches covered.">    QName qname = node.isHeader() ? asQName(&quot;th&quot;) : asQName(&quot;td&quot;);</span>
 
-<span class="fc" id="L537">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
-<span class="pc bpc" id="L538" title="1 of 2 branches missed.">    if (node.getAlignment() != null) {</span>
-<span class="nc" id="L539">      attributes.put(&quot;align&quot;, ObjectUtils.requireNonNull(node.getAlignment().toString()));</span>
+<span class="fc" id="L536">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
+<span class="pc bpc" id="L537" title="1 of 2 branches missed.">    if (node.getAlignment() != null) {</span>
+<span class="nc" id="L538">      attributes.put(&quot;align&quot;, ObjectUtils.requireNonNull(node.getAlignment().toString()));</span>
     }
 
-<span class="fc" id="L542">    writeElementStart(qname, attributes);</span>
-<span class="fc" id="L543">    visitChildren(node, cellChildHandler);</span>
-<span class="fc" id="L544">    writeElementEnd(qname);</span>
-<span class="fc" id="L545">  }</span>
+<span class="fc" id="L541">    writeElementStart(qname, attributes);</span>
+<span class="fc" id="L542">    visitChildren(node, cellChildHandler);</span>
+<span class="fc" id="L543">    writeElementEnd(qname);</span>
+<span class="fc" id="L544">  }</span>
 
   @Override
   public void writeImage(
       @NonNull Image node) throws E {
-<span class="fc" id="L550">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
-<span class="fc" id="L551">    String href = ObjectUtils.requireNonNull(Escaping.percentEncodeUrl(node.getUrl().unescape()));</span>
+<span class="fc" id="L549">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
+<span class="fc" id="L550">    String href = ObjectUtils.requireNonNull(Escaping.percentEncodeUrl(node.getUrl().unescape()));</span>
     try {
-<span class="fc" id="L553">      attributes.put(&quot;src&quot;, new URI(href).toASCIIString());</span>
-<span class="nc" id="L554">    } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L555">      throw new IllegalStateException(ex);</span>
-<span class="fc" id="L556">    }</span>
+<span class="fc" id="L552">      attributes.put(&quot;src&quot;, new URI(href).toASCIIString());</span>
+<span class="nc" id="L553">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L554">      throw new IllegalStateException(ex);</span>
+<span class="fc" id="L555">    }</span>
 
-<span class="fc" id="L558">    attributes.put(&quot;alt&quot;, ObjectUtils.requireNonNull(node.getText().toString()));</span>
+<span class="fc" id="L557">    attributes.put(&quot;alt&quot;, ObjectUtils.requireNonNull(node.getText().toString()));</span>
 
-<span class="fc bfc" id="L560" title="All 2 branches covered.">    if (!node.getTitle().isBlank()) {</span>
-<span class="fc" id="L561">      attributes.put(&quot;title&quot;, ObjectUtils.requireNonNull(node.getTitle().toString()));</span>
+<span class="fc bfc" id="L559" title="All 2 branches covered.">    if (!node.getTitle().isBlank()) {</span>
+<span class="fc" id="L560">      attributes.put(&quot;title&quot;, ObjectUtils.requireNonNull(node.getTitle().toString()));</span>
     }
 
-<span class="fc" id="L564">    writeEmptyElement(&quot;img&quot;, attributes);</span>
-<span class="fc" id="L565">  }</span>
+<span class="fc" id="L563">    writeEmptyElement(&quot;img&quot;, attributes);</span>
+<span class="fc" id="L564">  }</span>
 
   @Override
   public void writeInsertAnchor(@NonNull InsertAnchorNode node) throws E {
-<span class="fc" id="L569">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
-<span class="fc" id="L570">    attributes.put(&quot;type&quot;, ObjectUtils.requireNonNull(node.getType().toString()));</span>
-<span class="fc" id="L571">    attributes.put(&quot;id-ref&quot;, ObjectUtils.requireNonNull(node.getIdReference().toString()));</span>
+<span class="fc" id="L568">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
+<span class="fc" id="L569">    attributes.put(&quot;type&quot;, ObjectUtils.requireNonNull(node.getType().toString()));</span>
+<span class="fc" id="L570">    attributes.put(&quot;id-ref&quot;, ObjectUtils.requireNonNull(node.getIdReference().toString()));</span>
 
-<span class="fc" id="L573">    writeElement(&quot;insert&quot;, node, attributes, null);</span>
-<span class="fc" id="L574">  }</span>
+<span class="fc" id="L572">    writeElement(&quot;insert&quot;, node, attributes, null);</span>
+<span class="fc" id="L573">  }</span>
 
   @Override
   public void writeHeading(
       @NonNull Heading node,
       @NonNull ChildHandler&lt;T, E&gt; childHandler) throws E {
-<span class="fc" id="L580">    writePrecedingNewline(node);</span>
-<span class="fc" id="L581">    int level = node.getLevel();</span>
+<span class="fc" id="L579">    writePrecedingNewline(node);</span>
+<span class="fc" id="L580">    int level = node.getLevel();</span>
 
-<span class="fc" id="L583">    QName qname = asQName(ObjectUtils.notNull(String.format(&quot;h%d&quot;, level)));</span>
+<span class="fc" id="L582">    QName qname = asQName(ObjectUtils.notNull(String.format(&quot;h%d&quot;, level)));</span>
 
-<span class="fc" id="L585">    writeElementStart(qname);</span>
-<span class="fc bfc" id="L586" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
-<span class="fc" id="L587">      visitChildren(node, childHandler);</span>
+<span class="fc" id="L584">    writeElementStart(qname);</span>
+<span class="fc bfc" id="L585" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
+<span class="fc" id="L586">      visitChildren(node, childHandler);</span>
     } else {
       // ensure empty tags are created
-<span class="fc" id="L590">      writeText(&quot;&quot;);</span>
+<span class="fc" id="L589">      writeText(&quot;&quot;);</span>
     }
-<span class="fc" id="L592">    writeElementEnd(qname);</span>
-<span class="fc" id="L593">    writeTrailingNewline(node);</span>
-<span class="fc" id="L594">  }</span>
+<span class="fc" id="L591">    writeElementEnd(qname);</span>
+<span class="fc" id="L592">    writeTrailingNewline(node);</span>
+<span class="fc" id="L593">  }</span>
 
   /**
    * Normalize whitespace according to
@@ -603,209 +602,209 @@ public abstract class AbstractMarkupWriter&lt;T, E extends Throwable&gt; // NOPM
    */
   @NonNull
   protected static String collapseWhitespace(@NonNull CharSequence text) {
-<span class="fc" id="L606">    StringBuilder sb = new StringBuilder(text.length());</span>
-<span class="fc" id="L607">    int length = text.length();</span>
-<span class="fc" id="L608">    boolean needsSpace = false;</span>
-<span class="fc bfc" id="L609" title="All 2 branches covered.">    for (int i = 0; i &lt; length; i++) {</span>
-<span class="fc" id="L610">      char ch = text.charAt(i);</span>
+<span class="fc" id="L605">    StringBuilder sb = new StringBuilder(text.length());</span>
+<span class="fc" id="L606">    int length = text.length();</span>
+<span class="fc" id="L607">    boolean needsSpace = false;</span>
+<span class="fc bfc" id="L608" title="All 2 branches covered.">    for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L609">      char ch = text.charAt(i);</span>
       // convert line endings to spaces
-<span class="pc bpc" id="L612" title="1 of 4 branches missed.">      if (ch == '\n' || ch == '\r') {</span>
-<span class="fc bfc" id="L613" title="All 2 branches covered.">        if (sb.length() &gt; 0) {</span>
+<span class="pc bpc" id="L611" title="1 of 4 branches missed.">      if (ch == '\n' || ch == '\r') {</span>
+<span class="fc bfc" id="L612" title="All 2 branches covered.">        if (sb.length() &gt; 0) {</span>
           // ignore leading
-<span class="fc" id="L615">          needsSpace = true;</span>
+<span class="fc" id="L614">          needsSpace = true;</span>
         }
       } else {
-<span class="fc bfc" id="L618" title="All 2 branches covered.">        if (needsSpace) {</span>
-<span class="fc" id="L619">          sb.append(' ');</span>
-<span class="fc" id="L620">          needsSpace = false;</span>
+<span class="fc bfc" id="L617" title="All 2 branches covered.">        if (needsSpace) {</span>
+<span class="fc" id="L618">          sb.append(' ');</span>
+<span class="fc" id="L619">          needsSpace = false;</span>
         }
-<span class="fc" id="L622">        sb.append(ch);</span>
+<span class="fc" id="L621">        sb.append(ch);</span>
       }
     }
 
-<span class="fc" id="L626">    String result = sb.toString();</span>
-<span class="fc bfc" id="L627" title="All 2 branches covered.">    if (result.matches(&quot;^[ ]{1,}[^ ].* $&quot;)) {</span>
+<span class="fc" id="L625">    String result = sb.toString();</span>
+<span class="fc bfc" id="L626" title="All 2 branches covered.">    if (result.matches(&quot;^[ ]{1,}[^ ].* $&quot;)) {</span>
       // if there is a space at the start and end, remove them
-<span class="fc" id="L629">      result = result.substring(1, result.length() - 1);</span>
+<span class="fc" id="L628">      result = result.substring(1, result.length() - 1);</span>
     }
-<span class="fc" id="L631">    return ObjectUtils.notNull(result);</span>
+<span class="fc" id="L630">    return ObjectUtils.notNull(result);</span>
   }
 
   @Override
   public void writeCode(Code node, ChildHandler&lt;T, E&gt; childHandler) throws E {
-<span class="fc" id="L636">    QName qname = asQName(&quot;code&quot;);</span>
-<span class="fc" id="L637">    writeElementStart(qname);</span>
-<span class="fc" id="L638">    visitChildren(node, (child, writer) -&gt; {</span>
-<span class="pc bpc" id="L639" title="1 of 4 branches missed.">      if (child instanceof Text || child instanceof TextBase) {</span>
-<span class="fc" id="L640">        String text = collapseWhitespace(ObjectUtils.notNull(child.getChars()));</span>
-<span class="fc" id="L641">        writeText(text);</span>
-<span class="fc" id="L642">      } else {</span>
-<span class="nc" id="L643">        childHandler.accept(child, writer);</span>
+<span class="fc" id="L635">    QName qname = asQName(&quot;code&quot;);</span>
+<span class="fc" id="L636">    writeElementStart(qname);</span>
+<span class="fc" id="L637">    visitChildren(node, (child, writer) -&gt; {</span>
+<span class="pc bpc" id="L638" title="1 of 4 branches missed.">      if (child instanceof Text || child instanceof TextBase) {</span>
+<span class="fc" id="L639">        String text = collapseWhitespace(ObjectUtils.notNull(child.getChars()));</span>
+<span class="fc" id="L640">        writeText(text);</span>
+<span class="fc" id="L641">      } else {</span>
+<span class="nc" id="L642">        childHandler.accept(child, writer);</span>
       }
-<span class="fc" id="L645">    });</span>
-<span class="fc" id="L646">    writeElementEnd(qname);</span>
-<span class="fc" id="L647">  }</span>
+<span class="fc" id="L644">    });</span>
+<span class="fc" id="L645">    writeElementEnd(qname);</span>
+<span class="fc" id="L646">  }</span>
 
   @Override
   public final void writeCodeBlock(
       IndentedCodeBlock node,
       ChildHandler&lt;T, E&gt; childHandler) throws E {
-<span class="fc" id="L653">    writePrecedingNewline(node);</span>
-<span class="fc" id="L654">    QName preQName = asQName(&quot;pre&quot;);</span>
+<span class="fc" id="L652">    writePrecedingNewline(node);</span>
+<span class="fc" id="L653">    QName preQName = asQName(&quot;pre&quot;);</span>
 
-<span class="fc" id="L656">    writeElementStart(preQName);</span>
+<span class="fc" id="L655">    writeElementStart(preQName);</span>
 
-<span class="fc" id="L658">    QName codeQName = asQName(&quot;code&quot;);</span>
+<span class="fc" id="L657">    QName codeQName = asQName(&quot;code&quot;);</span>
 
-<span class="fc" id="L660">    writeElementStart(codeQName);</span>
+<span class="fc" id="L659">    writeElementStart(codeQName);</span>
 
-<span class="pc bpc" id="L662" title="1 of 2 branches missed.">    if (node.hasChildren()) {</span>
-<span class="fc" id="L663">      visitChildren(node, childHandler);</span>
+<span class="pc bpc" id="L661" title="1 of 2 branches missed.">    if (node.hasChildren()) {</span>
+<span class="fc" id="L662">      visitChildren(node, childHandler);</span>
     } else {
       // ensure empty tags are created
-<span class="nc" id="L666">      writeText(&quot;&quot;);</span>
+<span class="nc" id="L665">      writeText(&quot;&quot;);</span>
     }
 
-<span class="fc" id="L669">    writeElementEnd(codeQName);</span>
+<span class="fc" id="L668">    writeElementEnd(codeQName);</span>
 
-<span class="fc" id="L671">    writeElementEnd(preQName);</span>
-<span class="fc" id="L672">    writeTrailingNewline(node);</span>
-<span class="fc" id="L673">  }</span>
+<span class="fc" id="L670">    writeElementEnd(preQName);</span>
+<span class="fc" id="L671">    writeTrailingNewline(node);</span>
+<span class="fc" id="L672">  }</span>
 
   @Override
   public final void writeCodeBlock(
       FencedCodeBlock node,
       ChildHandler&lt;T, E&gt; childHandler) throws E {
-<span class="fc" id="L679">    writePrecedingNewline(node);</span>
-<span class="fc" id="L680">    QName preQName = asQName(&quot;pre&quot;);</span>
+<span class="fc" id="L678">    writePrecedingNewline(node);</span>
+<span class="fc" id="L679">    QName preQName = asQName(&quot;pre&quot;);</span>
 
-<span class="fc" id="L682">    writeElementStart(preQName);</span>
+<span class="fc" id="L681">    writeElementStart(preQName);</span>
 
-<span class="fc" id="L684">    QName codeQName = asQName(&quot;code&quot;);</span>
-<span class="fc" id="L685">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
-<span class="fc bfc" id="L686" title="All 2 branches covered.">    if (node.getInfo().isNotNull()) {</span>
-<span class="fc" id="L687">      attributes.put(&quot;class&quot;, &quot;language-&quot; + node.getInfo().unescape());</span>
+<span class="fc" id="L683">    QName codeQName = asQName(&quot;code&quot;);</span>
+<span class="fc" id="L684">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
+<span class="fc bfc" id="L685" title="All 2 branches covered.">    if (node.getInfo().isNotNull()) {</span>
+<span class="fc" id="L686">      attributes.put(&quot;class&quot;, &quot;language-&quot; + node.getInfo().unescape());</span>
     }
 
-<span class="fc" id="L690">    writeElementStart(codeQName, attributes);</span>
+<span class="fc" id="L689">    writeElementStart(codeQName, attributes);</span>
 
-<span class="fc bfc" id="L692" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
-<span class="fc" id="L693">      visitChildren(node, childHandler);</span>
+<span class="fc bfc" id="L691" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
+<span class="fc" id="L692">      visitChildren(node, childHandler);</span>
     } else {
       // ensure empty tags are created
-<span class="fc" id="L696">      writeText(&quot;&quot;);</span>
+<span class="fc" id="L695">      writeText(&quot;&quot;);</span>
     }
 
-<span class="fc" id="L699">    writeElementEnd(codeQName);</span>
+<span class="fc" id="L698">    writeElementEnd(codeQName);</span>
 
-<span class="fc" id="L701">    writeElementEnd(preQName);</span>
-<span class="fc" id="L702">    writeTrailingNewline(node);</span>
-<span class="fc" id="L703">  }</span>
+<span class="fc" id="L700">    writeElementEnd(preQName);</span>
+<span class="fc" id="L701">    writeTrailingNewline(node);</span>
+<span class="fc" id="L702">  }</span>
 
   @Override
   public void writeCodeBlock(CodeBlock node, ChildHandler&lt;T, E&gt; childHandler) throws E {
     String text;
-<span class="fc bfc" id="L708" title="All 2 branches covered.">    if (node.getParent() instanceof IndentedCodeBlock) {</span>
-<span class="fc" id="L709">      text = node.getContentChars().trimTailBlankLines().toString();</span>
+<span class="fc bfc" id="L707" title="All 2 branches covered.">    if (node.getParent() instanceof IndentedCodeBlock) {</span>
+<span class="fc" id="L708">      text = node.getContentChars().trimTailBlankLines().toString();</span>
     } else {
-<span class="fc" id="L711">      text = node.getContentChars().toString();</span>
+<span class="fc" id="L710">      text = node.getContentChars().toString();</span>
     }
-<span class="fc" id="L713">    writeText(ObjectUtils.notNull(text));</span>
-<span class="fc" id="L714">  }</span>
+<span class="fc" id="L712">    writeText(ObjectUtils.notNull(text));</span>
+<span class="fc" id="L713">  }</span>
 
   @Override
   public void writeBlockQuote(BlockQuote node, ChildHandler&lt;T, E&gt; childHandler) throws E {
-<span class="fc" id="L718">    writePrecedingNewline(node);</span>
-<span class="fc" id="L719">    QName qname = asQName(&quot;blockquote&quot;);</span>
-<span class="fc" id="L720">    writeElementStart(qname);</span>
+<span class="fc" id="L717">    writePrecedingNewline(node);</span>
+<span class="fc" id="L718">    QName qname = asQName(&quot;blockquote&quot;);</span>
+<span class="fc" id="L719">    writeElementStart(qname);</span>
     // writeText(&quot;\n&quot;);
 
-<span class="fc bfc" id="L723" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
-<span class="fc" id="L724">      visitChildren(node, childHandler);</span>
+<span class="fc bfc" id="L722" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
+<span class="fc" id="L723">      visitChildren(node, childHandler);</span>
     } else {
       // ensure empty tags are created
-<span class="fc" id="L727">      writeText(&quot;\n&quot;);</span>
+<span class="fc" id="L726">      writeText(&quot;\n&quot;);</span>
     }
 
     // writeText(&quot;\n&quot;);
-<span class="fc" id="L731">    writeElementEnd(qname);</span>
-<span class="fc" id="L732">    writeTrailingNewline(node);</span>
-<span class="fc" id="L733">  }</span>
+<span class="fc" id="L730">    writeElementEnd(qname);</span>
+<span class="fc" id="L731">    writeTrailingNewline(node);</span>
+<span class="fc" id="L732">  }</span>
 
   @Override
   public void writeList(
       @NonNull String localName,
       @NonNull ListBlock node,
       @NonNull ChildHandler&lt;T, E&gt; listItemHandler) throws E {
-<span class="fc" id="L740">    QName qname = asQName(localName);</span>
-<span class="fc" id="L741">    writeList(qname, node, listItemHandler);</span>
-<span class="fc" id="L742">  }</span>
+<span class="fc" id="L739">    QName qname = asQName(localName);</span>
+<span class="fc" id="L740">    writeList(qname, node, listItemHandler);</span>
+<span class="fc" id="L741">  }</span>
 
   private void writeList(
       @NonNull QName qname,
       @NonNull ListBlock node,
       @NonNull ChildHandler&lt;T, E&gt; listItemHandler) throws E {
-<span class="fc" id="L748">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
-<span class="fc bfc" id="L749" title="All 2 branches covered.">    if (node instanceof OrderedList) {</span>
-<span class="fc" id="L750">      OrderedList ol = (OrderedList) node;</span>
-<span class="fc" id="L751">      int start = ol.getStartNumber();</span>
-<span class="fc bfc" id="L752" title="All 2 branches covered.">      if (start != 1) {</span>
-<span class="fc" id="L753">        attributes.put(&quot;start&quot;, String.valueOf(start));</span>
+<span class="fc" id="L747">    Map&lt;String, String&gt; attributes = new LinkedHashMap&lt;&gt;(); // NOPMD local use; thread-safe</span>
+<span class="fc bfc" id="L748" title="All 2 branches covered.">    if (node instanceof OrderedList) {</span>
+<span class="fc" id="L749">      OrderedList ol = (OrderedList) node;</span>
+<span class="fc" id="L750">      int start = ol.getStartNumber();</span>
+<span class="fc bfc" id="L751" title="All 2 branches covered.">      if (start != 1) {</span>
+<span class="fc" id="L752">        attributes.put(&quot;start&quot;, String.valueOf(start));</span>
       }
     }
 
-<span class="fc" id="L757">    writePrecedingNewline(node);</span>
-<span class="fc" id="L758">    writeElementStart(qname, attributes);</span>
+<span class="fc" id="L756">    writePrecedingNewline(node);</span>
+<span class="fc" id="L757">    writeElementStart(qname, attributes);</span>
 
-<span class="fc" id="L760">    visitChildren(node, (child, writer) -&gt; {</span>
-<span class="fc" id="L761">      ListItem item = (ListItem) child;</span>
-<span class="fc" id="L762">      writeListItem(item, listItemHandler);</span>
-<span class="fc" id="L763">    });</span>
+<span class="fc" id="L759">    visitChildren(node, (child, writer) -&gt; {</span>
+<span class="fc" id="L760">      ListItem item = (ListItem) child;</span>
+<span class="fc" id="L761">      writeListItem(item, listItemHandler);</span>
+<span class="fc" id="L762">    });</span>
 
-<span class="fc" id="L765">    writeElementEnd(qname);</span>
-<span class="fc" id="L766">    writeTrailingNewline(node);</span>
-<span class="fc" id="L767">  }</span>
+<span class="fc" id="L764">    writeElementEnd(qname);</span>
+<span class="fc" id="L765">    writeTrailingNewline(node);</span>
+<span class="fc" id="L766">  }</span>
 
   private void writeListItem(
       @NonNull ListItem node,
       @NonNull ChildHandler&lt;T, E&gt; listItemHandler) throws E {
-<span class="fc" id="L772">    QName qname = asQName(&quot;li&quot;);</span>
-<span class="fc" id="L773">    writePrecedingNewline(node);</span>
-<span class="fc" id="L774">    writeElementStart(qname);</span>
+<span class="fc" id="L771">    QName qname = asQName(&quot;li&quot;);</span>
+<span class="fc" id="L772">    writePrecedingNewline(node);</span>
+<span class="fc" id="L773">    writeElementStart(qname);</span>
 
-<span class="fc bfc" id="L776" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
-<span class="fc" id="L777">      visitChildren(node, listItemHandler);</span>
+<span class="fc bfc" id="L775" title="All 2 branches covered.">    if (node.hasChildren()) {</span>
+<span class="fc" id="L776">      visitChildren(node, listItemHandler);</span>
     } else {
       // ensure empty tags are created
-<span class="fc" id="L780">      writeText(&quot;&quot;);</span>
+<span class="fc" id="L779">      writeText(&quot;&quot;);</span>
     }
-<span class="fc" id="L782">    writeElementEnd(qname);</span>
-<span class="fc" id="L783">    writeTrailingNewline(node);</span>
-<span class="fc" id="L784">  }</span>
+<span class="fc" id="L781">    writeElementEnd(qname);</span>
+<span class="fc" id="L782">    writeTrailingNewline(node);</span>
+<span class="fc" id="L783">  }</span>
 
   @Override
   public void writeBreak(HardLineBreak node) throws E {
-<span class="fc" id="L788">    writeElement(&quot;br&quot;, node, null);</span>
-<span class="fc" id="L789">    writeText(&quot;\n&quot;);</span>
-<span class="fc" id="L790">  }</span>
+<span class="fc" id="L787">    writeElement(&quot;br&quot;, node, null);</span>
+<span class="fc" id="L788">    writeText(&quot;\n&quot;);</span>
+<span class="fc" id="L789">  }</span>
 
   @Override
   public void writeBreak(ThematicBreak node) throws E {
-<span class="fc" id="L794">    writePrecedingNewline(node);</span>
-<span class="fc" id="L795">    writeElement(&quot;hr&quot;, node, null);</span>
-<span class="fc" id="L796">    writeTrailingNewline(node);</span>
-<span class="fc" id="L797">  }</span>
+<span class="fc" id="L793">    writePrecedingNewline(node);</span>
+<span class="fc" id="L794">    writeElement(&quot;hr&quot;, node, null);</span>
+<span class="fc" id="L795">    writeTrailingNewline(node);</span>
+<span class="fc" id="L796">  }</span>
 
   @Override
   public void writeComment(HtmlCommentBlock node) throws E {
-<span class="fc" id="L801">    writePrecedingNewline(node);</span>
+<span class="fc" id="L800">    writePrecedingNewline(node);</span>
 
-<span class="fc" id="L803">    BasedSequence text = node.getChars();</span>
-<span class="fc" id="L804">    text = text.subSequence(4, text.length() - 4);</span>
-<span class="fc" id="L805">    writeComment(ObjectUtils.notNull(text.unescape()));</span>
-<span class="fc" id="L806">    writeTrailingNewline(node);</span>
+<span class="fc" id="L802">    BasedSequence text = node.getChars();</span>
+<span class="fc" id="L803">    text = text.subSequence(4, text.length() - 4);</span>
+<span class="fc" id="L804">    writeComment(ObjectUtils.notNull(text.unescape()));</span>
+<span class="fc" id="L805">    writeTrailingNewline(node);</span>
 
-<span class="fc" id="L808">  }</span>
+<span class="fc" id="L807">  }</span>
 
   /**
    * Write a comment.
@@ -825,60 +824,60 @@ public abstract class AbstractMarkupWriter&lt;T, E extends Throwable&gt; // NOPM
     private static final long serialVersionUID = 1L;
 
     public NodeVisitorException(Throwable cause) {
-<span class="nc" id="L828">      super(cause);</span>
-<span class="nc" id="L829">    }</span>
+<span class="nc" id="L827">      super(cause);</span>
+<span class="nc" id="L828">    }</span>
   }
 
-<span class="nc" id="L832">  private final class MarkupNodeVisitor implements NodeVisitor {</span>
+<span class="nc" id="L831">  private final class MarkupNodeVisitor implements NodeVisitor {</span>
     @Override
     public void head(org.jsoup.nodes.Node node, int depth) { // NOPMD acceptable
-<span class="nc bnc" id="L835" title="All 2 branches missed.">      if (depth &gt; 0) {</span>
+<span class="nc bnc" id="L834" title="All 2 branches missed.">      if (depth &gt; 0) {</span>
         try {
-<span class="nc bnc" id="L837" title="All 2 branches missed.">          if (node instanceof org.jsoup.nodes.Element) {</span>
-<span class="nc" id="L838">            org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) node;</span>
+<span class="nc bnc" id="L836" title="All 2 branches missed.">          if (node instanceof org.jsoup.nodes.Element) {</span>
+<span class="nc" id="L837">            org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) node;</span>
 
-<span class="nc" id="L840">            Attributes attributes = element.attributes();</span>
+<span class="nc" id="L839">            Attributes attributes = element.attributes();</span>
 
             Map&lt;String, String&gt; attrMap;
-<span class="nc bnc" id="L843" title="All 2 branches missed.">            if (attributes.isEmpty()) {</span>
-<span class="nc" id="L844">              attrMap = CollectionUtil.emptyMap();</span>
+<span class="nc bnc" id="L842" title="All 2 branches missed.">            if (attributes.isEmpty()) {</span>
+<span class="nc" id="L843">              attrMap = CollectionUtil.emptyMap();</span>
             } else {
-<span class="nc" id="L846">              attrMap = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc bnc" id="L847" title="All 2 branches missed.">              for (org.jsoup.nodes.Attribute attr : attributes) {</span>
-<span class="nc" id="L848">                attrMap.put(attr.getKey(), attr.getValue());</span>
-<span class="nc" id="L849">              }</span>
+<span class="nc" id="L845">              attrMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L846" title="All 2 branches missed.">              for (org.jsoup.nodes.Attribute attr : attributes) {</span>
+<span class="nc" id="L847">                attrMap.put(attr.getKey(), attr.getValue());</span>
+<span class="nc" id="L848">              }</span>
             }
 
-<span class="nc" id="L852">            QName qname = asQName(ObjectUtils.notNull(element.tagName()));</span>
-<span class="nc bnc" id="L853" title="All 2 branches missed.">            if (element.childNodes().isEmpty()) {</span>
-<span class="nc" id="L854">              writeEmptyElement(qname, attrMap);</span>
+<span class="nc" id="L851">            QName qname = asQName(ObjectUtils.notNull(element.tagName()));</span>
+<span class="nc bnc" id="L852" title="All 2 branches missed.">            if (element.childNodes().isEmpty()) {</span>
+<span class="nc" id="L853">              writeEmptyElement(qname, attrMap);</span>
             } else {
-<span class="nc" id="L856">              writeElementStart(qname, attrMap);</span>
+<span class="nc" id="L855">              writeElementStart(qname, attrMap);</span>
             }
-<span class="nc bnc" id="L858" title="All 2 branches missed.">          } else if (node instanceof org.jsoup.nodes.TextNode) {</span>
-<span class="nc" id="L859">            org.jsoup.nodes.TextNode text = (org.jsoup.nodes.TextNode) node;</span>
-<span class="nc" id="L860">            writeText(ObjectUtils.requireNonNull(text.text()));</span>
+<span class="nc bnc" id="L857" title="All 2 branches missed.">          } else if (node instanceof org.jsoup.nodes.TextNode) {</span>
+<span class="nc" id="L858">            org.jsoup.nodes.TextNode text = (org.jsoup.nodes.TextNode) node;</span>
+<span class="nc" id="L859">            writeText(ObjectUtils.requireNonNull(text.text()));</span>
           }
-<span class="nc" id="L862">        } catch (Throwable ex) { // NOPMD need to catch Throwable</span>
-<span class="nc" id="L863">          throw new NodeVisitorException(ex);</span>
-<span class="nc" id="L864">        }</span>
+<span class="nc" id="L861">        } catch (Throwable ex) { // NOPMD need to catch Throwable</span>
+<span class="nc" id="L862">          throw new NodeVisitorException(ex);</span>
+<span class="nc" id="L863">        }</span>
       }
-<span class="nc" id="L866">    }</span>
+<span class="nc" id="L865">    }</span>
 
     @Override
     public void tail(org.jsoup.nodes.Node node, int depth) {
-<span class="nc bnc" id="L870" title="All 4 branches missed.">      if (depth &gt; 0 &amp;&amp; node instanceof org.jsoup.nodes.Element) {</span>
-<span class="nc" id="L871">        org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) node;</span>
-<span class="nc bnc" id="L872" title="All 2 branches missed.">        if (!element.childNodes().isEmpty()) {</span>
-<span class="nc" id="L873">          QName qname = asQName(ObjectUtils.notNull(element.tagName()));</span>
+<span class="nc bnc" id="L869" title="All 4 branches missed.">      if (depth &gt; 0 &amp;&amp; node instanceof org.jsoup.nodes.Element) {</span>
+<span class="nc" id="L870">        org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) node;</span>
+<span class="nc bnc" id="L871" title="All 2 branches missed.">        if (!element.childNodes().isEmpty()) {</span>
+<span class="nc" id="L872">          QName qname = asQName(ObjectUtils.notNull(element.tagName()));</span>
           try {
-<span class="nc" id="L875">            writeElementEnd(qname);</span>
-<span class="nc" id="L876">          } catch (Throwable ex) { // NOPMD need to catch Throwable</span>
-<span class="nc" id="L877">            throw new NodeVisitorException(ex);</span>
-<span class="nc" id="L878">          }</span>
+<span class="nc" id="L874">            writeElementEnd(qname);</span>
+<span class="nc" id="L875">          } catch (Throwable ex) { // NOPMD need to catch Throwable</span>
+<span class="nc" id="L876">            throw new NodeVisitorException(ex);</span>
+<span class="nc" id="L877">          }</span>
         }
       }
-<span class="nc" id="L881">    }</span>
+<span class="nc" id="L880">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

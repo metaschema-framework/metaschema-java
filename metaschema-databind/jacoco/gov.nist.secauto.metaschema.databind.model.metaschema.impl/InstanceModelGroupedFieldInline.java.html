@@ -16,18 +16,17 @@ import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyModel;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FieldConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonValueKeyFlag;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModel;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonValueKeyFlag;
 
 import java.util.Map;
 import java.util.Set;
@@ -66,71 +65,71 @@ public class InstanceModelGroupedFieldInline
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
       int position,
       @NonNull IChoiceGroupInstance parent) {
-<span class="nc" id="L69">    super(parent);</span>
-<span class="nc" id="L70">    this.binding = binding;</span>
-<span class="nc" id="L71">    this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));</span>
-<span class="nc" id="L72">    this.javaTypeAdapter = ModelSupport.dataType(binding.getAsType());</span>
-<span class="nc" id="L73">    this.defaultValue = ModelSupport.defaultValue(binding.getDefault(), this.javaTypeAdapter);</span>
-<span class="nc" id="L74">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; FlagContainerSupport.newFlagContainer(</span>
-<span class="nc" id="L75">        binding.getFlags(),</span>
+<span class="nc" id="L68">    super(parent);</span>
+<span class="nc" id="L69">    this.binding = binding;</span>
+<span class="nc" id="L70">    this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));</span>
+<span class="nc" id="L71">    this.javaTypeAdapter = ModelSupport.dataType(binding.getAsType());</span>
+<span class="nc" id="L72">    this.defaultValue = ModelSupport.defaultValue(binding.getDefault(), this.javaTypeAdapter);</span>
+<span class="nc" id="L73">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; FlagContainerSupport.newFlagContainer(</span>
+<span class="nc" id="L74">        binding.getFlags(),</span>
         bindingInstance,
         this,
-<span class="nc" id="L78">        getParentContainer().getJsonKeyFlagInstanceName())));</span>
-<span class="nc" id="L79">    this.valueConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="nc" id="L80">      IValueConstrained retval = new ValueConstraintSet();</span>
-<span class="nc" id="L81">      FieldConstraints constraints = binding.getConstraint();</span>
-<span class="nc bnc" id="L82" title="All 2 branches missed.">      if (constraints != null) {</span>
-<span class="nc" id="L83">        ConstraintBindingSupport.parse(</span>
+<span class="nc" id="L77">        getParentContainer().getJsonKeyFlagInstanceName())));</span>
+<span class="nc" id="L78">    this.valueConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="nc" id="L79">      IValueConstrained retval = new ValueConstraintSet();</span>
+<span class="nc" id="L80">      FieldConstraints constraints = binding.getConstraint();</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">      if (constraints != null) {</span>
+<span class="nc" id="L82">        ConstraintBindingSupport.parse(</span>
             retval,
             constraints,
-<span class="nc" id="L86">            ISource.modelSource(parent.getOwningDefinition().getContainingModule()));</span>
+<span class="nc" id="L85">            parent.getOwningDefinition().getContainingModule().getSource());</span>
       }
-<span class="nc" id="L88">      return retval;</span>
+<span class="nc" id="L87">      return retval;</span>
     }));
-<span class="nc" id="L90">    this.boundNodeItem = ObjectUtils.notNull(</span>
-<span class="nc" id="L91">        Lazy.lazy(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())</span>
-<span class="nc" id="L92">            .getModelItemsByName(bindingInstance.getXmlQName())</span>
-<span class="nc" id="L93">            .get(position)));</span>
-<span class="nc" id="L94">  }</span>
+<span class="nc" id="L89">    this.boundNodeItem = ObjectUtils.notNull(</span>
+<span class="nc" id="L90">        Lazy.lazy(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())</span>
+<span class="nc" id="L91">            .getModelItemsByName(bindingInstance.getXmlQName())</span>
+<span class="nc" id="L92">            .get(position)));</span>
+<span class="nc" id="L93">  }</span>
 
   @NonNull
-  protected AssemblyModel.ChoiceGroup.DefineField getBinding() {
-<span class="nc" id="L98">    return binding;</span>
+  private AssemblyModel.ChoiceGroup.DefineField getBinding() {
+<span class="nc" id="L97">    return binding;</span>
   }
 
   @Override
   public IBindingMetaschemaModule getContainingModule() {
-<span class="nc" id="L103">    return getContainingDefinition().getContainingModule();</span>
+<span class="nc" id="L102">    return getContainingDefinition().getContainingModule();</span>
   }
 
   @Override
   public Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; getProperties() {
-<span class="nc" id="L108">    return properties;</span>
+<span class="nc" id="L107">    return properties;</span>
   }
 
   @Override
   public IContainerFlagSupport&lt;IFlagInstance&gt; getFlagContainer() {
-<span class="nc" id="L113">    return ObjectUtils.notNull(flagContainer.get());</span>
+<span class="nc" id="L112">    return ObjectUtils.notNull(flagContainer.get());</span>
   }
 
   @Override
   public IValueConstrained getConstraintSupport() {
-<span class="nc" id="L118">    return ObjectUtils.notNull(valueConstraints.get());</span>
+<span class="nc" id="L117">    return ObjectUtils.notNull(valueConstraints.get());</span>
   }
 
   @Override
   public IAssemblyNodeItem getSourceNodeItem() {
-<span class="nc" id="L123">    return boundNodeItem.get();</span>
+<span class="nc" id="L122">    return ObjectUtils.notNull(boundNodeItem.get());</span>
   }
 
   @Override
   public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {
-<span class="nc" id="L128">    return javaTypeAdapter;</span>
+<span class="nc" id="L127">    return javaTypeAdapter;</span>
   }
 
   @Override
   public Object getDefaultValue() {
-<span class="nc" id="L133">    return defaultValue;</span>
+<span class="nc" id="L132">    return defaultValue;</span>
   }
 
   // ---------------------------------------
@@ -139,44 +138,44 @@ public class InstanceModelGroupedFieldInline
 
   @Override
   public String getName() {
-<span class="nc" id="L142">    return ObjectUtils.notNull(getBinding().getName());</span>
+<span class="nc" id="L141">    return ObjectUtils.notNull(getBinding().getName());</span>
   }
 
   @Override
   public Integer getIndex() {
-<span class="nc" id="L147">    return ModelSupport.index(getBinding().getIndex());</span>
+<span class="nc" id="L146">    return ModelSupport.index(getBinding().getIndex());</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="nc" id="L152">    return getBinding().getFormalName();</span>
+<span class="nc" id="L151">    return getBinding().getFormalName();</span>
   }
 
   @Override
   public MarkupLine getDescription() {
-<span class="nc" id="L157">    return getBinding().getDescription();</span>
+<span class="nc" id="L156">    return getBinding().getDescription();</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc" id="L162">    return ModelSupport.remarks(getBinding().getRemarks());</span>
+<span class="nc" id="L161">    return ModelSupport.remarks(getBinding().getRemarks());</span>
   }
 
   @Override
   public String getDiscriminatorValue() {
-<span class="nc" id="L167">    return getBinding().getDiscriminatorValue();</span>
+<span class="nc" id="L166">    return getBinding().getDiscriminatorValue();</span>
   }
 
   @Override
   public IFlagInstance getJsonValueKeyFlagInstance() {
-<span class="nc" id="L172">    JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();</span>
-<span class="nc bnc" id="L173" title="All 2 branches missed.">    String flagName = obj == null ? null : obj.getFlagRef();</span>
-<span class="nc bnc" id="L174" title="All 2 branches missed.">    return flagName == null ? null : getFlagInstanceByName(new QName(getXmlNamespace(), flagName));</span>
+<span class="nc" id="L171">    JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">    String flagName = obj == null ? null : obj.getFlagRef();</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">    return flagName == null ? null : getFlagInstanceByName(new QName(getXmlNamespace(), flagName));</span>
   }
 
   @Override
   public String getJsonValueKeyName() {
-<span class="nc" id="L179">    return getBinding().getJsonValueKey();</span>
+<span class="nc" id="L178">    return getBinding().getJsonValueKey();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model.xml.impl;
 
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.MarkupLineDatatype;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.MarkupMultilineDatatype;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -52,8 +52,8 @@ public final class MarkupStringConverter {
    */
   @NonNull
   public static MarkupMultiline toMarkupString(@NonNull MarkupMultilineDatatype content) {
-<span class="nc" id="L55">    String html = processHTML(content);</span>
-<span class="nc" id="L56">    return MarkupMultiline.fromHtml(html);</span>
+<span class="fc" id="L55">    String html = processHTML(content);</span>
+<span class="fc" id="L56">    return MarkupMultiline.fromHtml(html);</span>
   }
 
   /**
@@ -66,7 +66,7 @@ public final class MarkupStringConverter {
   @NonNull
   public static MarkupLineDatatype toMarkupLineDatatype(@NonNull MarkupLine markup) {
 <span class="nc" id="L68">    MarkupLineDatatype retval = ObjectUtils.notNull(MarkupLineDatatype.Factory.newInstance());</span>
-<span class="nc" id="L69">    XmlbeansMarkupVisitor.visit(markup, IModule.XML_NAMESPACE, retval);</span>
+<span class="nc" id="L69">    XmlbeansMarkupWriter.visit(markup, MetaschemaConstants.METASCHEMA_NAMESPACE, retval);</span>
 <span class="nc" id="L70">    return retval;</span>
   }
 

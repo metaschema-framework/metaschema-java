@@ -95,7 +95,7 @@ public interface ISequence&lt;ITEM extends IItem&gt; extends List&lt;ITEM&gt;, I
    *           {@code true}
    */
   static &lt;T extends IItem&gt; T getFirstItem(@NonNull ISequence&lt;T&gt; items, boolean requireSingleton) {
-<span class="fc" id="L98">    return getFirstItem(items.stream(), requireSingleton);</span>
+<span class="fc" id="L98">    return getFirstItem(items.safeStream(), requireSingleton);</span>
   }
 
   /**

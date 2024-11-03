@@ -39,100 +39,105 @@
 <span class="source-line-no">026</span><span id="line-26"></span>
 <span class="source-line-no">027</span><span id="line-27">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">public final class ArrayRemove {</span>
-<span class="source-line-no">030</span><span id="line-30">  private static final String NAME = "remove";</span>
-<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
-<span class="source-line-no">032</span><span id="line-32">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">033</span><span id="line-33">      .name(NAME)</span>
-<span class="source-line-no">034</span><span id="line-34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="source-line-no">035</span><span id="line-35">      .deterministic()</span>
-<span class="source-line-no">036</span><span id="line-36">      .contextIndependent()</span>
-<span class="source-line-no">037</span><span id="line-37">      .focusIndependent()</span>
-<span class="source-line-no">038</span><span id="line-38">      .argument(IArgument.builder()</span>
-<span class="source-line-no">039</span><span id="line-39">          .name("array")</span>
-<span class="source-line-no">040</span><span id="line-40">          .type(IArrayItem.class)</span>
-<span class="source-line-no">041</span><span id="line-41">          .one()</span>
-<span class="source-line-no">042</span><span id="line-42">          .build())</span>
+<span class="source-line-no">029</span><span id="line-29">/**</span>
+<span class="source-line-no">030</span><span id="line-30"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">031</span><span id="line-31"> * "https://www.w3.org/TR/xpath-functions-31/#func-array-remove"&gt;array:remove&lt;/a&gt;</span>
+<span class="source-line-no">032</span><span id="line-32"> * function.</span>
+<span class="source-line-no">033</span><span id="line-33"> */</span>
+<span class="source-line-no">034</span><span id="line-34">public final class ArrayRemove {</span>
+<span class="source-line-no">035</span><span id="line-35">  private static final String NAME = "remove";</span>
+<span class="source-line-no">036</span><span id="line-36">  @NonNull</span>
+<span class="source-line-no">037</span><span id="line-37">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">038</span><span id="line-38">      .name(NAME)</span>
+<span class="source-line-no">039</span><span id="line-39">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="source-line-no">040</span><span id="line-40">      .deterministic()</span>
+<span class="source-line-no">041</span><span id="line-41">      .contextIndependent()</span>
+<span class="source-line-no">042</span><span id="line-42">      .focusIndependent()</span>
 <span class="source-line-no">043</span><span id="line-43">      .argument(IArgument.builder()</span>
-<span class="source-line-no">044</span><span id="line-44">          .name("positions")</span>
-<span class="source-line-no">045</span><span id="line-45">          .type(IIntegerItem.class)</span>
-<span class="source-line-no">046</span><span id="line-46">          .zeroOrMore()</span>
+<span class="source-line-no">044</span><span id="line-44">          .name("array")</span>
+<span class="source-line-no">045</span><span id="line-45">          .type(IArrayItem.class)</span>
+<span class="source-line-no">046</span><span id="line-46">          .one()</span>
 <span class="source-line-no">047</span><span id="line-47">          .build())</span>
-<span class="source-line-no">048</span><span id="line-48">      .returnType(IArrayItem.class)</span>
-<span class="source-line-no">049</span><span id="line-49">      .returnOne()</span>
-<span class="source-line-no">050</span><span id="line-50">      .functionHandler(ArrayRemove::execute)</span>
-<span class="source-line-no">051</span><span id="line-51">      .build();</span>
-<span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">  private ArrayRemove() {</span>
-<span class="source-line-no">054</span><span id="line-54">    // disable construction</span>
-<span class="source-line-no">055</span><span id="line-55">  }</span>
-<span class="source-line-no">056</span><span id="line-56"></span>
-<span class="source-line-no">057</span><span id="line-57">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
-<span class="source-line-no">059</span><span id="line-59">  private static &lt;T extends IItem&gt; ISequence&lt;IArrayItem&lt;T&gt;&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">060</span><span id="line-60">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">061</span><span id="line-61">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">062</span><span id="line-62">      IItem focus) {</span>
-<span class="source-line-no">063</span><span id="line-63">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">064</span><span id="line-64">        arguments.get(0).getFirstItem(true)));</span>
-<span class="source-line-no">065</span><span id="line-65">    ISequence&lt;? extends IIntegerItem&gt; positions = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">    return ISequence.of(removeItems(array, positions));</span>
-<span class="source-line-no">068</span><span id="line-68">  }</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">  /**</span>
-<span class="source-line-no">071</span><span id="line-71">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">072</span><span id="line-72">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-remove"&gt;array:remove&lt;/a&gt;.</span>
-<span class="source-line-no">073</span><span id="line-73">   *</span>
-<span class="source-line-no">074</span><span id="line-74">   * @param &lt;T&gt;</span>
-<span class="source-line-no">075</span><span id="line-75">   *          the type of items in the given Metapath array</span>
-<span class="source-line-no">076</span><span id="line-76">   * @param array</span>
-<span class="source-line-no">077</span><span id="line-77">   *          the target Metapath array</span>
-<span class="source-line-no">078</span><span id="line-78">   * @param positions</span>
-<span class="source-line-no">079</span><span id="line-79">   *          the integer position of the items to remove</span>
-<span class="source-line-no">080</span><span id="line-80">   * @return a new array containing the modification</span>
-<span class="source-line-no">081</span><span id="line-81">   * @throws ArrayException</span>
-<span class="source-line-no">082</span><span id="line-82">   *           if the position is not in the range of 1 to array:size</span>
-<span class="source-line-no">083</span><span id="line-83">   */</span>
-<span class="source-line-no">084</span><span id="line-84">  @NonNull</span>
-<span class="source-line-no">085</span><span id="line-85">  public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; removeItems(</span>
-<span class="source-line-no">086</span><span id="line-86">      @NonNull IArrayItem&lt;T&gt; array,</span>
-<span class="source-line-no">087</span><span id="line-87">      @NonNull Collection&lt;? extends IIntegerItem&gt; positions) {</span>
-<span class="source-line-no">088</span><span id="line-88">    return remove(</span>
-<span class="source-line-no">089</span><span id="line-89">        array,</span>
-<span class="source-line-no">090</span><span id="line-90">        ObjectUtils.notNull(positions.stream()</span>
-<span class="source-line-no">091</span><span id="line-91">            .map(position -&gt; position.asInteger().intValueExact())</span>
-<span class="source-line-no">092</span><span id="line-92">            .collect(Collectors.toSet())));</span>
-<span class="source-line-no">093</span><span id="line-93">  }</span>
-<span class="source-line-no">094</span><span id="line-94"></span>
-<span class="source-line-no">095</span><span id="line-95">  /**</span>
-<span class="source-line-no">096</span><span id="line-96">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">097</span><span id="line-97">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-remove"&gt;array:remove&lt;/a&gt;.</span>
-<span class="source-line-no">098</span><span id="line-98">   *</span>
-<span class="source-line-no">099</span><span id="line-99">   * @param &lt;T&gt;</span>
-<span class="source-line-no">100</span><span id="line-100">   *          the type of items in the given Metapath array</span>
-<span class="source-line-no">101</span><span id="line-101">   * @param array</span>
-<span class="source-line-no">102</span><span id="line-102">   *          the target Metapath array</span>
-<span class="source-line-no">103</span><span id="line-103">   * @param positions</span>
-<span class="source-line-no">104</span><span id="line-104">   *          the integer position of the items to remove</span>
-<span class="source-line-no">105</span><span id="line-105">   * @return a new array containing the modification</span>
-<span class="source-line-no">106</span><span id="line-106">   * @throws ArrayException</span>
-<span class="source-line-no">107</span><span id="line-107">   *           if the position is not in the range of 1 to array:size</span>
-<span class="source-line-no">108</span><span id="line-108">   */</span>
-<span class="source-line-no">109</span><span id="line-109">  @NonNull</span>
-<span class="source-line-no">110</span><span id="line-110">  public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; remove(</span>
-<span class="source-line-no">111</span><span id="line-111">      @NonNull IArrayItem&lt;T&gt; array,</span>
-<span class="source-line-no">112</span><span id="line-112">      @NonNull Collection&lt;Integer&gt; positions) {</span>
-<span class="source-line-no">113</span><span id="line-113">    Set&lt;Integer&gt; positionSet = positions instanceof Set ? (Set&lt;Integer&gt;) positions : new HashSet&lt;&gt;(positions);</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">    List&lt;T&gt; remaining = ObjectUtils.notNull(IntStream.range(1, array.size() + 1)</span>
-<span class="source-line-no">116</span><span id="line-116">        .filter(index -&gt; !positionSet.contains(index))</span>
-<span class="source-line-no">117</span><span id="line-117">        .mapToObj(index -&gt; array.get(index - 1))</span>
-<span class="source-line-no">118</span><span id="line-118">        .collect(Collectors.toList()));</span>
+<span class="source-line-no">048</span><span id="line-48">      .argument(IArgument.builder()</span>
+<span class="source-line-no">049</span><span id="line-49">          .name("positions")</span>
+<span class="source-line-no">050</span><span id="line-50">          .type(IIntegerItem.class)</span>
+<span class="source-line-no">051</span><span id="line-51">          .zeroOrMore()</span>
+<span class="source-line-no">052</span><span id="line-52">          .build())</span>
+<span class="source-line-no">053</span><span id="line-53">      .returnType(IArrayItem.class)</span>
+<span class="source-line-no">054</span><span id="line-54">      .returnOne()</span>
+<span class="source-line-no">055</span><span id="line-55">      .functionHandler(ArrayRemove::execute)</span>
+<span class="source-line-no">056</span><span id="line-56">      .build();</span>
+<span class="source-line-no">057</span><span id="line-57"></span>
+<span class="source-line-no">058</span><span id="line-58">  private ArrayRemove() {</span>
+<span class="source-line-no">059</span><span id="line-59">    // disable construction</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">063</span><span id="line-63">  @NonNull</span>
+<span class="source-line-no">064</span><span id="line-64">  private static &lt;T extends IItem&gt; ISequence&lt;IArrayItem&lt;T&gt;&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">065</span><span id="line-65">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">066</span><span id="line-66">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">067</span><span id="line-67">      IItem focus) {</span>
+<span class="source-line-no">068</span><span id="line-68">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
+<span class="source-line-no">069</span><span id="line-69">        arguments.get(0).getFirstItem(true)));</span>
+<span class="source-line-no">070</span><span id="line-70">    ISequence&lt;? extends IIntegerItem&gt; positions = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
+<span class="source-line-no">071</span><span id="line-71"></span>
+<span class="source-line-no">072</span><span id="line-72">    return ISequence.of(removeItems(array, positions));</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  /**</span>
+<span class="source-line-no">076</span><span id="line-76">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">077</span><span id="line-77">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-remove"&gt;array:remove&lt;/a&gt;.</span>
+<span class="source-line-no">078</span><span id="line-78">   *</span>
+<span class="source-line-no">079</span><span id="line-79">   * @param &lt;T&gt;</span>
+<span class="source-line-no">080</span><span id="line-80">   *          the type of items in the given Metapath array</span>
+<span class="source-line-no">081</span><span id="line-81">   * @param array</span>
+<span class="source-line-no">082</span><span id="line-82">   *          the target Metapath array</span>
+<span class="source-line-no">083</span><span id="line-83">   * @param positions</span>
+<span class="source-line-no">084</span><span id="line-84">   *          the integer position of the items to remove</span>
+<span class="source-line-no">085</span><span id="line-85">   * @return a new array containing the modification</span>
+<span class="source-line-no">086</span><span id="line-86">   * @throws ArrayException</span>
+<span class="source-line-no">087</span><span id="line-87">   *           if the position is not in the range of 1 to array:size</span>
+<span class="source-line-no">088</span><span id="line-88">   */</span>
+<span class="source-line-no">089</span><span id="line-89">  @NonNull</span>
+<span class="source-line-no">090</span><span id="line-90">  public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; removeItems(</span>
+<span class="source-line-no">091</span><span id="line-91">      @NonNull IArrayItem&lt;T&gt; array,</span>
+<span class="source-line-no">092</span><span id="line-92">      @NonNull Collection&lt;? extends IIntegerItem&gt; positions) {</span>
+<span class="source-line-no">093</span><span id="line-93">    return remove(</span>
+<span class="source-line-no">094</span><span id="line-94">        array,</span>
+<span class="source-line-no">095</span><span id="line-95">        ObjectUtils.notNull(positions.stream()</span>
+<span class="source-line-no">096</span><span id="line-96">            .map(position -&gt; position.asInteger().intValueExact())</span>
+<span class="source-line-no">097</span><span id="line-97">            .collect(Collectors.toSet())));</span>
+<span class="source-line-no">098</span><span id="line-98">  }</span>
+<span class="source-line-no">099</span><span id="line-99"></span>
+<span class="source-line-no">100</span><span id="line-100">  /**</span>
+<span class="source-line-no">101</span><span id="line-101">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">102</span><span id="line-102">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-remove"&gt;array:remove&lt;/a&gt;.</span>
+<span class="source-line-no">103</span><span id="line-103">   *</span>
+<span class="source-line-no">104</span><span id="line-104">   * @param &lt;T&gt;</span>
+<span class="source-line-no">105</span><span id="line-105">   *          the type of items in the given Metapath array</span>
+<span class="source-line-no">106</span><span id="line-106">   * @param array</span>
+<span class="source-line-no">107</span><span id="line-107">   *          the target Metapath array</span>
+<span class="source-line-no">108</span><span id="line-108">   * @param positions</span>
+<span class="source-line-no">109</span><span id="line-109">   *          the integer position of the items to remove</span>
+<span class="source-line-no">110</span><span id="line-110">   * @return a new array containing the modification</span>
+<span class="source-line-no">111</span><span id="line-111">   * @throws ArrayException</span>
+<span class="source-line-no">112</span><span id="line-112">   *           if the position is not in the range of 1 to array:size</span>
+<span class="source-line-no">113</span><span id="line-113">   */</span>
+<span class="source-line-no">114</span><span id="line-114">  @NonNull</span>
+<span class="source-line-no">115</span><span id="line-115">  public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; remove(</span>
+<span class="source-line-no">116</span><span id="line-116">      @NonNull IArrayItem&lt;T&gt; array,</span>
+<span class="source-line-no">117</span><span id="line-117">      @NonNull Collection&lt;Integer&gt; positions) {</span>
+<span class="source-line-no">118</span><span id="line-118">    Set&lt;Integer&gt; positionSet = positions instanceof Set ? (Set&lt;Integer&gt;) positions : new HashSet&lt;&gt;(positions);</span>
 <span class="source-line-no">119</span><span id="line-119"></span>
-<span class="source-line-no">120</span><span id="line-120">    return IArrayItem.ofCollection(remaining);</span>
-<span class="source-line-no">121</span><span id="line-121">  }</span>
-<span class="source-line-no">122</span><span id="line-122">}</span>
+<span class="source-line-no">120</span><span id="line-120">    List&lt;T&gt; remaining = ObjectUtils.notNull(IntStream.range(1, array.size() + 1)</span>
+<span class="source-line-no">121</span><span id="line-121">        .filter(index -&gt; !positionSet.contains(index))</span>
+<span class="source-line-no">122</span><span id="line-122">        .mapToObj(index -&gt; array.get(index - 1))</span>
+<span class="source-line-no">123</span><span id="line-123">        .collect(Collectors.toList()));</span>
+<span class="source-line-no">124</span><span id="line-124"></span>
+<span class="source-line-no">125</span><span id="line-125">    return IArrayItem.ofCollection(remaining);</span>
+<span class="source-line-no">126</span><span id="line-126">  }</span>
+<span class="source-line-no">127</span><span id="line-127">}</span>
 
 
 

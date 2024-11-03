@@ -9,7 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
-import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyTargetedConstraints;
@@ -20,7 +20,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.FlagTargetedConstraints
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IScopedContraints;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ITargetedConstraints;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
@@ -60,39 +59,36 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * automatically.
  */
 @SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)
-<span class="fc" id="L63">public class XmlConstraintLoader</span>
+<span class="fc" id="L62">public class XmlConstraintLoader</span>
     extends AbstractLoader&lt;List&lt;IConstraintSet&gt;&gt;
     implements IConstraintLoader {
 
   @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;)
   @NonNull
   private static final Map&lt;QName,
-<span class="fc" id="L70">      Handler&lt;Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt;&gt;&gt; SCOPE_OBJECT_MAPPING = ObjectUtils.notNull(</span>
-<span class="fc" id="L71">          Map.ofEntries(</span>
-<span class="fc" id="L72">              Map.entry(new QName(IModule.XML_NAMESPACE, &quot;assembly&quot;),</span>
-                  XmlConstraintLoader::handleScopedAssembly),
-<span class="fc" id="L74">              Map.entry(new QName(IModule.XML_NAMESPACE, &quot;field&quot;),</span>
-                  XmlConstraintLoader::handleScopedField),
-<span class="fc" id="L76">              Map.entry(new QName(IModule.XML_NAMESPACE, &quot;flag&quot;),</span>
-                  XmlConstraintLoader::handleScopedFlag)));
+<span class="fc" id="L69">      Handler&lt;Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt;&gt;&gt; SCOPE_OBJECT_MAPPING = ObjectUtils.notNull(</span>
+<span class="fc" id="L70">          Map.ofEntries(</span>
+<span class="fc" id="L71">              Map.entry(XmlModuleConstants.ASSEMBLY_QNAME, XmlConstraintLoader::handleScopedAssembly),</span>
+<span class="fc" id="L72">              Map.entry(XmlModuleConstants.FIELD_QNAME, XmlConstraintLoader::handleScopedField),</span>
+<span class="fc" id="L73">              Map.entry(XmlModuleConstants.FLAG_QNAME, XmlConstraintLoader::handleScopedFlag)));</span>
 
   @NonNull
-<span class="fc" id="L80">  private static final XmlObjectParser&lt;Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt;&gt; SCOPE_PARSER</span>
-<span class="fc" id="L81">      = new XmlObjectParser&lt;&gt;(SCOPE_OBJECT_MAPPING) {</span>
+<span class="fc" id="L76">  private static final XmlObjectParser&lt;Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt;&gt; SCOPE_PARSER</span>
+<span class="fc" id="L77">      = new XmlObjectParser&lt;&gt;(SCOPE_OBJECT_MAPPING) {</span>
 
         @Override
         protected Handler&lt;Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt;&gt; identifyHandler(XmlCursor cursor, XmlObject obj) {
           Handler&lt;Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt;&gt; retval;
-<span class="pc bpc" id="L86" title="1 of 2 branches missed.">          if (obj instanceof Scope.Assembly) {</span>
-<span class="fc" id="L87">            retval = XmlConstraintLoader::handleScopedAssembly;</span>
-<span class="nc bnc" id="L88" title="All 2 branches missed.">          } else if (obj instanceof Scope.Field) {</span>
-<span class="nc" id="L89">            retval = XmlConstraintLoader::handleScopedField;</span>
-<span class="nc bnc" id="L90" title="All 2 branches missed.">          } else if (obj instanceof Scope.Flag) {</span>
-<span class="nc" id="L91">            retval = XmlConstraintLoader::handleScopedFlag;</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">          if (obj instanceof Scope.Assembly) {</span>
+<span class="fc" id="L83">            retval = XmlConstraintLoader::handleScopedAssembly;</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">          } else if (obj instanceof Scope.Field) {</span>
+<span class="nc" id="L85">            retval = XmlConstraintLoader::handleScopedField;</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">          } else if (obj instanceof Scope.Flag) {</span>
+<span class="nc" id="L87">            retval = XmlConstraintLoader::handleScopedFlag;</span>
           } else {
-<span class="nc" id="L93">            throw new IllegalStateException(String.format(&quot;Unhandled element type '%s'.&quot;, obj.getClass().getName()));</span>
+<span class="nc" id="L89">            throw new IllegalStateException(String.format(&quot;Unhandled element type '%s'.&quot;, obj.getClass().getName()));</span>
           }
-<span class="fc" id="L95">          return retval;</span>
+<span class="fc" id="L91">          return retval;</span>
         }
 
       };
@@ -102,31 +98,31 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       throws IOException {
 
     // parse this metaschema
-<span class="fc" id="L105">    METASCHEMACONSTRAINTSDocument xmlObject = parseConstraintSet(resource);</span>
+<span class="fc" id="L101">    METASCHEMACONSTRAINTSDocument xmlObject = parseConstraintSet(resource);</span>
 
     // now check if this constraint set imports other constraint sets
-<span class="fc" id="L108">    int size = xmlObject.getMETASCHEMACONSTRAINTS().sizeOfImportArray();</span>
+<span class="fc" id="L104">    int size = xmlObject.getMETASCHEMACONSTRAINTS().sizeOfImportArray();</span>
     Set&lt;IConstraintSet&gt; importedConstraints;
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">    if (size == 0) {</span>
-<span class="fc" id="L111">      importedConstraints = CollectionUtil.emptySet();</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">    if (size == 0) {</span>
+<span class="fc" id="L107">      importedConstraints = CollectionUtil.emptySet();</span>
     } else {
       try {
-<span class="nc" id="L114">        importedConstraints = new LinkedHashSet&lt;&gt;();</span>
-<span class="nc bnc" id="L115" title="All 2 branches missed.">        for (METASCHEMACONSTRAINTSDocument.METASCHEMACONSTRAINTS.Import imported : xmlObject.getMETASCHEMACONSTRAINTS()</span>
-<span class="nc" id="L116">            .getImportList()) {</span>
-<span class="nc" id="L117">          URI importedResource = URI.create(imported.getHref());</span>
-<span class="nc" id="L118">          importedResource = ObjectUtils.notNull(resource.resolve(importedResource));</span>
-<span class="nc" id="L119">          importedConstraints.addAll(loadInternal(importedResource, visitedResources));</span>
-<span class="nc" id="L120">        }</span>
-<span class="nc" id="L121">      } catch (MetaschemaException ex) {</span>
-<span class="nc" id="L122">        throw new IOException(ex);</span>
-<span class="nc" id="L123">      }</span>
+<span class="nc" id="L110">        importedConstraints = new LinkedHashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        for (METASCHEMACONSTRAINTSDocument.METASCHEMACONSTRAINTS.Import imported : xmlObject.getMETASCHEMACONSTRAINTS()</span>
+<span class="nc" id="L112">            .getImportList()) {</span>
+<span class="nc" id="L113">          URI importedResource = URI.create(imported.getHref());</span>
+<span class="nc" id="L114">          importedResource = ObjectUtils.notNull(resource.resolve(importedResource));</span>
+<span class="nc" id="L115">          importedConstraints.addAll(loadInternal(importedResource, visitedResources));</span>
+<span class="nc" id="L116">        }</span>
+<span class="nc" id="L117">      } catch (MetaschemaException ex) {</span>
+<span class="nc" id="L118">        throw new IOException(ex);</span>
+<span class="nc" id="L119">      }</span>
     }
 
     // now create this constraint set
-<span class="fc" id="L127">    return CollectionUtil.singletonList(new DefaultConstraintSet(</span>
+<span class="fc" id="L123">    return CollectionUtil.singletonList(new DefaultConstraintSet(</span>
         resource,
-<span class="fc" id="L129">        parseScopedConstraints(xmlObject, resource),</span>
+<span class="fc" id="L125">        parseScopedConstraints(xmlObject, resource),</span>
         importedConstraints));
   }
 
@@ -142,12 +138,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   @NonNull
   private static METASCHEMACONSTRAINTSDocument parseConstraintSet(@NonNull URI resource) throws IOException {
     try {
-<span class="fc" id="L145">      XmlOptions options = new XmlOptions();</span>
-<span class="fc" id="L146">      options.setBaseURI(resource);</span>
-<span class="fc" id="L147">      options.setLoadLineNumbers();</span>
-<span class="fc" id="L148">      return ObjectUtils.notNull(METASCHEMACONSTRAINTSDocument.Factory.parse(resource.toURL(), options));</span>
-<span class="nc" id="L149">    } catch (XmlException ex) {</span>
-<span class="nc" id="L150">      throw new IOException(ex);</span>
+<span class="fc" id="L141">      XmlOptions options = new XmlOptions();</span>
+<span class="fc" id="L142">      options.setBaseURI(resource);</span>
+<span class="fc" id="L143">      options.setLoadLineNumbers();</span>
+<span class="fc" id="L144">      return ObjectUtils.notNull(METASCHEMACONSTRAINTSDocument.Factory.parse(resource.toURL(), options));</span>
+<span class="nc" id="L145">    } catch (XmlException ex) {</span>
+<span class="nc" id="L146">      throw new IOException(ex);</span>
     }
   }
 
@@ -165,86 +161,86 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   protected List&lt;IScopedContraints&gt; parseScopedConstraints(
       @NonNull METASCHEMACONSTRAINTSDocument xmlObject,
       @NonNull URI resource) {
-<span class="fc" id="L168">    List&lt;IScopedContraints&gt; scopedConstraints = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L164">    List&lt;IScopedContraints&gt; scopedConstraints = new LinkedList&lt;&gt;();</span>
 
-<span class="fc" id="L170">    StaticContext.Builder builder = StaticContext.builder()</span>
-<span class="fc" id="L171">        .baseUri(resource);</span>
+<span class="fc" id="L166">    StaticContext.Builder builder = StaticContext.builder()</span>
+<span class="fc" id="L167">        .baseUri(resource);</span>
 
-<span class="fc" id="L173">    METASCHEMACONSTRAINTSDocument.METASCHEMACONSTRAINTS constraints = xmlObject.getMETASCHEMACONSTRAINTS();</span>
+<span class="fc" id="L169">    METASCHEMACONSTRAINTSDocument.METASCHEMACONSTRAINTS constraints = xmlObject.getMETASCHEMACONSTRAINTS();</span>
 
-<span class="fc" id="L175">    constraints.getNamespaceBindingList().stream()</span>
-<span class="pc" id="L176">        .forEach(binding -&gt; builder.namespace(</span>
-<span class="nc" id="L177">            ObjectUtils.notNull(binding.getPrefix()), ObjectUtils.notNull(binding.getUri())));</span>
+<span class="fc" id="L171">    constraints.getNamespaceBindingList().stream()</span>
+<span class="pc" id="L172">        .forEach(binding -&gt; builder.namespace(</span>
+<span class="nc" id="L173">            ObjectUtils.notNull(binding.getPrefix()), ObjectUtils.notNull(binding.getUri())));</span>
 
-<span class="fc" id="L179">    builder.useWildcardWhenNamespaceNotDefaulted(true);</span>
+<span class="fc" id="L175">    builder.useWildcardWhenNamespaceNotDefaulted(true);</span>
 
-<span class="fc" id="L181">    ISource source = ISource.externalSource(builder.build());</span>
+<span class="fc" id="L177">    ISource source = ISource.externalSource(builder.build());</span>
 
-<span class="fc bfc" id="L183" title="All 2 branches covered.">    for (Scope scope : constraints.getScopeList()) {</span>
-<span class="pc bpc" id="L184" title="1 of 2 branches missed.">      assert scope != null;</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">    for (Scope scope : constraints.getScopeList()) {</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">      assert scope != null;</span>
 
-<span class="fc" id="L186">      List&lt;ITargetedConstraints&gt; targetedConstraints = new LinkedList&lt;&gt;(); // NOPMD - intentional</span>
+<span class="fc" id="L182">      List&lt;ITargetedConstraints&gt; targetedConstraints = new LinkedList&lt;&gt;(); // NOPMD - intentional</span>
       try {
-<span class="fc" id="L188">        SCOPE_PARSER.parse(scope, Pair.of(source, targetedConstraints));</span>
-<span class="nc" id="L189">      } catch (MetapathException | XmlValueNotSupportedException ex) {</span>
-<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (ex.getCause() instanceof MetapathException) {</span>
-<span class="nc" id="L191">          throw new MetapathException(</span>
-<span class="nc" id="L192">              String.format(&quot;Unable to compile a Metapath in '%s'. %s&quot;,</span>
-<span class="nc" id="L193">                  source.getSource(),</span>
-<span class="nc" id="L194">                  ex.getLocalizedMessage()),</span>
+<span class="fc" id="L184">        SCOPE_PARSER.parse(scope, Pair.of(source, targetedConstraints));</span>
+<span class="nc" id="L185">      } catch (MetapathException | XmlValueNotSupportedException ex) {</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (ex.getCause() instanceof MetapathException) {</span>
+<span class="nc" id="L187">          throw new MetapathException(</span>
+<span class="nc" id="L188">              String.format(&quot;Unable to compile a Metapath in '%s'. %s&quot;,</span>
+<span class="nc" id="L189">                  source.getSource(),</span>
+<span class="nc" id="L190">                  ex.getLocalizedMessage()),</span>
               ex);
         }
-<span class="nc" id="L197">        throw ex;</span>
-<span class="fc" id="L198">      }</span>
+<span class="nc" id="L193">        throw ex;</span>
+<span class="fc" id="L194">      }</span>
 
-<span class="fc" id="L200">      URI namespace = ObjectUtils.notNull(URI.create(scope.getMetaschemaNamespace()));</span>
-<span class="fc" id="L201">      String shortName = ObjectUtils.requireNonNull(scope.getMetaschemaShortName());</span>
+<span class="fc" id="L196">      URI namespace = ObjectUtils.notNull(URI.create(scope.getMetaschemaNamespace()));</span>
+<span class="fc" id="L197">      String shortName = ObjectUtils.requireNonNull(scope.getMetaschemaShortName());</span>
 
-<span class="fc" id="L203">      scopedConstraints.add(new DefaultScopedContraints(</span>
+<span class="fc" id="L199">      scopedConstraints.add(new DefaultScopedContraints(</span>
           namespace,
           shortName,
-<span class="fc" id="L206">          CollectionUtil.unmodifiableList(targetedConstraints)));</span>
-<span class="fc" id="L207">    }</span>
-<span class="fc" id="L208">    return CollectionUtil.unmodifiableList(scopedConstraints);</span>
+<span class="fc" id="L202">          CollectionUtil.unmodifiableList(targetedConstraints)));</span>
+<span class="fc" id="L203">    }</span>
+<span class="fc" id="L204">    return CollectionUtil.unmodifiableList(scopedConstraints);</span>
   }
 
   private static void handleScopedAssembly( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt; state) {
-<span class="fc" id="L214">    Scope.Assembly assembly = (Scope.Assembly) obj;</span>
+<span class="fc" id="L210">    Scope.Assembly assembly = (Scope.Assembly) obj;</span>
 
-<span class="fc" id="L216">    IModelConstrained constraints = new AssemblyConstraintSet();</span>
-<span class="fc" id="L217">    ConstraintXmlSupport.parse(constraints, assembly, ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L212">    IModelConstrained constraints = new AssemblyConstraintSet();</span>
+<span class="fc" id="L213">    ConstraintXmlSupport.parse(constraints, assembly, ObjectUtils.notNull(state.getLeft()));</span>
 
-<span class="fc" id="L219">    state.getRight().add(new AssemblyTargetedConstraints(</span>
-<span class="fc" id="L220">        ObjectUtils.requireNonNull(assembly.getTarget()),</span>
+<span class="fc" id="L215">    state.getRight().add(new AssemblyTargetedConstraints(</span>
+<span class="fc" id="L216">        ObjectUtils.requireNonNull(assembly.getTarget()),</span>
         constraints));
-<span class="fc" id="L222">  }</span>
+<span class="fc" id="L218">  }</span>
 
   private static void handleScopedField( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt; state) {
-<span class="nc" id="L227">    Scope.Field field = (Scope.Field) obj;</span>
+<span class="nc" id="L223">    Scope.Field field = (Scope.Field) obj;</span>
 
-<span class="nc" id="L229">    IValueConstrained constraints = new ValueConstraintSet();</span>
-<span class="nc" id="L230">    ConstraintXmlSupport.parse(constraints, field, ObjectUtils.notNull(state.getLeft()));</span>
+<span class="nc" id="L225">    IValueConstrained constraints = new ValueConstraintSet();</span>
+<span class="nc" id="L226">    ConstraintXmlSupport.parse(constraints, field, ObjectUtils.notNull(state.getLeft()));</span>
 
-<span class="nc" id="L232">    state.getRight().add(new FieldTargetedConstraints(</span>
-<span class="nc" id="L233">        ObjectUtils.requireNonNull(field.getTarget()),</span>
+<span class="nc" id="L228">    state.getRight().add(new FieldTargetedConstraints(</span>
+<span class="nc" id="L229">        ObjectUtils.requireNonNull(field.getTarget()),</span>
         constraints));
-<span class="nc" id="L235">  }</span>
+<span class="nc" id="L231">  }</span>
 
   private static void handleScopedFlag( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;ISource, List&lt;ITargetedConstraints&gt;&gt; state) {
-<span class="nc" id="L240">    Scope.Flag flag = (Scope.Flag) obj;</span>
+<span class="nc" id="L236">    Scope.Flag flag = (Scope.Flag) obj;</span>
 
-<span class="nc" id="L242">    IValueConstrained constraints = new ValueConstraintSet();</span>
-<span class="nc" id="L243">    ConstraintXmlSupport.parse(constraints, flag, ObjectUtils.notNull(state.getLeft()));</span>
+<span class="nc" id="L238">    IValueConstrained constraints = new ValueConstraintSet();</span>
+<span class="nc" id="L239">    ConstraintXmlSupport.parse(constraints, flag, ObjectUtils.notNull(state.getLeft()));</span>
 
-<span class="nc" id="L245">    state.getRight().add(new FlagTargetedConstraints(</span>
-<span class="nc" id="L246">        ObjectUtils.requireNonNull(flag.getTarget()),</span>
+<span class="nc" id="L241">    state.getRight().add(new FlagTargetedConstraints(</span>
+<span class="nc" id="L242">        ObjectUtils.requireNonNull(flag.getTarget()),</span>
         constraints));
-<span class="nc" id="L248">  }</span>
+<span class="nc" id="L244">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

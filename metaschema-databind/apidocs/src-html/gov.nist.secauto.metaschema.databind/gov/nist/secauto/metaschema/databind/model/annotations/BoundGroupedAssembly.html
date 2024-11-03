@@ -89,33 +89,40 @@
 <span class="source-line-no">076</span><span id="line-76">  int useIndex() default Integer.MIN_VALUE;</span>
 <span class="source-line-no">077</span><span id="line-77"></span>
 <span class="source-line-no">078</span><span id="line-78">  /**</span>
-<span class="source-line-no">079</span><span id="line-79">   * Get any remarks for this field.</span>
+<span class="source-line-no">079</span><span id="line-79">   * An optional set of associated properties.</span>
 <span class="source-line-no">080</span><span id="line-80">   *</span>
-<span class="source-line-no">081</span><span id="line-81">   * @return a markdown string or {@code "##none"} if no remarks are provided</span>
+<span class="source-line-no">081</span><span id="line-81">   * @return the properties or an empty array with no properties</span>
 <span class="source-line-no">082</span><span id="line-82">   */</span>
-<span class="source-line-no">083</span><span id="line-83">  @NonNull</span>
-<span class="source-line-no">084</span><span id="line-84">  String remarks() default ModelUtil.NO_STRING_VALUE;</span>
-<span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">  /**</span>
-<span class="source-line-no">087</span><span id="line-87">   * Get any remarks for this field.</span>
-<span class="source-line-no">088</span><span id="line-88">   *</span>
-<span class="source-line-no">089</span><span id="line-89">   * @return the discriminator string or {@code "##none"} if no discriminator is</span>
-<span class="source-line-no">090</span><span id="line-90">   *         provided</span>
-<span class="source-line-no">091</span><span id="line-91">   */</span>
-<span class="source-line-no">092</span><span id="line-92">  @NonNull</span>
-<span class="source-line-no">093</span><span id="line-93">  String discriminatorValue() default ModelUtil.NO_STRING_VALUE;</span>
-<span class="source-line-no">094</span><span id="line-94"></span>
-<span class="source-line-no">095</span><span id="line-95">  /**</span>
-<span class="source-line-no">096</span><span id="line-96">   * The bound class associated with this assembly.</span>
-<span class="source-line-no">097</span><span id="line-97">   * &lt;p&gt;</span>
-<span class="source-line-no">098</span><span id="line-98">   * This is optional when used on a field or method, and required when used with</span>
-<span class="source-line-no">099</span><span id="line-99">   * an annotation type value, i.e. {@link BoundChoiceGroup}.</span>
-<span class="source-line-no">100</span><span id="line-100">   *</span>
-<span class="source-line-no">101</span><span id="line-101">   * @return the bound class</span>
-<span class="source-line-no">102</span><span id="line-102">   */</span>
-<span class="source-line-no">103</span><span id="line-103">  @NonNull</span>
-<span class="source-line-no">104</span><span id="line-104">  Class&lt;? extends IBoundObject&gt; binding();</span>
-<span class="source-line-no">105</span><span id="line-105">}</span>
+<span class="source-line-no">083</span><span id="line-83">  Property[] properties() default {};</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">  /**</span>
+<span class="source-line-no">086</span><span id="line-86">   * Get any remarks for this field.</span>
+<span class="source-line-no">087</span><span id="line-87">   *</span>
+<span class="source-line-no">088</span><span id="line-88">   * @return a markdown string or {@code "##none"} if no remarks are provided</span>
+<span class="source-line-no">089</span><span id="line-89">   */</span>
+<span class="source-line-no">090</span><span id="line-90">  @NonNull</span>
+<span class="source-line-no">091</span><span id="line-91">  String remarks() default ModelUtil.NO_STRING_VALUE;</span>
+<span class="source-line-no">092</span><span id="line-92"></span>
+<span class="source-line-no">093</span><span id="line-93">  /**</span>
+<span class="source-line-no">094</span><span id="line-94">   * Get any remarks for this field.</span>
+<span class="source-line-no">095</span><span id="line-95">   *</span>
+<span class="source-line-no">096</span><span id="line-96">   * @return the discriminator string or {@code "##none"} if no discriminator is</span>
+<span class="source-line-no">097</span><span id="line-97">   *         provided</span>
+<span class="source-line-no">098</span><span id="line-98">   */</span>
+<span class="source-line-no">099</span><span id="line-99">  @NonNull</span>
+<span class="source-line-no">100</span><span id="line-100">  String discriminatorValue() default ModelUtil.NO_STRING_VALUE;</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">  /**</span>
+<span class="source-line-no">103</span><span id="line-103">   * The bound class associated with this assembly.</span>
+<span class="source-line-no">104</span><span id="line-104">   * &lt;p&gt;</span>
+<span class="source-line-no">105</span><span id="line-105">   * This is optional when used on a field or method, and required when used with</span>
+<span class="source-line-no">106</span><span id="line-106">   * an annotation type value, i.e. {@link BoundChoiceGroup}.</span>
+<span class="source-line-no">107</span><span id="line-107">   *</span>
+<span class="source-line-no">108</span><span id="line-108">   * @return the bound class</span>
+<span class="source-line-no">109</span><span id="line-109">   */</span>
+<span class="source-line-no">110</span><span id="line-110">  @NonNull</span>
+<span class="source-line-no">111</span><span id="line-111">  Class&lt;? extends IBoundObject&gt; binding();</span>
+<span class="source-line-no">112</span><span id="line-112">}</span>
 
 
 

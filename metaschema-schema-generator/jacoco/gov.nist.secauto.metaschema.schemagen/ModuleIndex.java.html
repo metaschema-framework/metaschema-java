@@ -19,10 +19,6 @@ import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.ModelWalker;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.codegen.JavaGenerator;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -33,44 +29,42 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="fc" id="L36">public class ModuleIndex {</span>
-<span class="fc" id="L37">  private static final Logger LOGGER = LogManager.getLogger(JavaGenerator.class);</span>
-
-<span class="fc" id="L39">  private final Map&lt;IDefinition, DefinitionEntry&gt; index = new LinkedHashMap&lt;&gt;();// new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L32">public class ModuleIndex {</span>
+<span class="fc" id="L33">  private final Map&lt;IDefinition, DefinitionEntry&gt; index = new LinkedHashMap&lt;&gt;();// new ConcurrentHashMap&lt;&gt;();</span>
 
   @NonNull
   public static ModuleIndex indexDefinitions(@NonNull IModule module, @NonNull IInlineStrategy inlineStrategy) {
-<span class="fc" id="L43">    Collection&lt;? extends IAssemblyDefinition&gt; definitions = module.getExportedRootAssemblyDefinitions();</span>
-<span class="fc" id="L44">    ModuleIndex index = new ModuleIndex();</span>
-<span class="pc bpc" id="L45" title="1 of 2 branches missed.">    if (!definitions.isEmpty()) {</span>
-<span class="fc" id="L46">      IndexVisitor visitor = new IndexVisitor(index, inlineStrategy);</span>
-<span class="fc bfc" id="L47" title="All 2 branches covered.">      for (IAssemblyDefinition definition : definitions) {</span>
-<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        assert definition != null;</span>
+<span class="fc" id="L37">    Collection&lt;? extends IAssemblyDefinition&gt; definitions = module.getExportedRootAssemblyDefinitions();</span>
+<span class="fc" id="L38">    ModuleIndex index = new ModuleIndex();</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">    if (!definitions.isEmpty()) {</span>
+<span class="fc" id="L40">      IndexVisitor visitor = new IndexVisitor(index, inlineStrategy);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">      for (IAssemblyDefinition definition : definitions) {</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        assert definition != null;</span>
 
         // // add the root definition to the index
         // index.getEntry(definition).incrementReferenceCount();
 
         // walk the definition
-<span class="fc" id="L54">        visitor.walk(ObjectUtils.requireNonNull(definition));</span>
-<span class="fc" id="L55">      }</span>
+<span class="fc" id="L48">        visitor.walk(ObjectUtils.requireNonNull(definition));</span>
+<span class="fc" id="L49">      }</span>
     }
-<span class="fc" id="L57">    return index;</span>
+<span class="fc" id="L51">    return index;</span>
   }
 
   public boolean hasEntry(@NonNull IDefinition definition) {
-<span class="nc" id="L61">    return index.containsKey(definition);</span>
+<span class="nc" id="L55">    return index.containsKey(definition);</span>
   }
 
   @NonNull
   public DefinitionEntry getEntry(@NonNull IDefinition definition) {
-<span class="fc" id="L66">    return ObjectUtils.notNull(index.computeIfAbsent(</span>
+<span class="fc" id="L60">    return ObjectUtils.notNull(index.computeIfAbsent(</span>
         definition,
-<span class="fc" id="L68">        k -&gt; new ModuleIndex.DefinitionEntry(ObjectUtils.notNull(k))));</span>
+<span class="fc" id="L62">        k -&gt; new ModuleIndex.DefinitionEntry(ObjectUtils.notNull(k))));</span>
   }
 
   @NonNull
   public Collection&lt;DefinitionEntry&gt; getDefinitions() {
-<span class="fc" id="L73">    return ObjectUtils.notNull(index.values());</span>
+<span class="fc" id="L67">    return ObjectUtils.notNull(index.values());</span>
   }
 
   private static class IndexVisitor
@@ -80,38 +74,38 @@ import edu.umd.cs.findbugs.annotations.NonNull;
     @NonNull
     private final ModuleIndex index;
 
-<span class="fc" id="L83">    public IndexVisitor(@NonNull ModuleIndex index, @NonNull IInlineStrategy inlineStrategy) {</span>
-<span class="fc" id="L84">      this.index = index;</span>
-<span class="fc" id="L85">      this.inlineStrategy = inlineStrategy;</span>
-<span class="fc" id="L86">    }</span>
+<span class="fc" id="L77">    public IndexVisitor(@NonNull ModuleIndex index, @NonNull IInlineStrategy inlineStrategy) {</span>
+<span class="fc" id="L78">      this.index = index;</span>
+<span class="fc" id="L79">      this.inlineStrategy = inlineStrategy;</span>
+<span class="fc" id="L80">    }</span>
 
     @Override
     protected ModuleIndex getDefaultData() {
-<span class="fc" id="L90">      return index;</span>
+<span class="fc" id="L84">      return index;</span>
     }
 
     @Override
     protected boolean visit(IFlagInstance instance, ModuleIndex index) {
+<span class="fc" id="L89">      handleInstance(instance);</span>
+<span class="fc" id="L90">      return true;</span>
+    }
+
+    @Override
+    protected boolean visit(IFieldInstance instance, ModuleIndex index) {
 <span class="fc" id="L95">      handleInstance(instance);</span>
 <span class="fc" id="L96">      return true;</span>
     }
 
     @Override
-    protected boolean visit(IFieldInstance instance, ModuleIndex index) {
+    protected boolean visit(IAssemblyInstance instance, ModuleIndex index) {
 <span class="fc" id="L101">      handleInstance(instance);</span>
 <span class="fc" id="L102">      return true;</span>
     }
 
     @Override
-    protected boolean visit(IAssemblyInstance instance, ModuleIndex index) {
-<span class="fc" id="L107">      handleInstance(instance);</span>
-<span class="fc" id="L108">      return true;</span>
-    }
-
-    @Override
     protected void visit(IFlagDefinition def, ModuleIndex data) {
-<span class="fc" id="L113">      handleDefinition(def);</span>
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L107">      handleDefinition(def);</span>
+<span class="fc" id="L108">    }</span>
 
     // @Override
     // protected boolean visit(IAssemblyDefinition def, ModuleIndex data) {
@@ -121,25 +115,25 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
     @Override
     protected boolean visit(IFieldDefinition def, ModuleIndex data) {
-<span class="fc" id="L124">      return handleDefinition(def);</span>
+<span class="fc" id="L118">      return handleDefinition(def);</span>
     }
 
     @Override
     protected boolean visit(IAssemblyDefinition def, ModuleIndex data) {
-<span class="fc" id="L129">      return handleDefinition(def);</span>
+<span class="fc" id="L123">      return handleDefinition(def);</span>
     }
 
     private boolean handleDefinition(@NonNull IDefinition definition) {
-<span class="fc" id="L133">      DefinitionEntry entry = getDefaultData().getEntry(definition);</span>
-<span class="fc" id="L134">      boolean visited = entry.isVisited();</span>
-<span class="fc bfc" id="L135" title="All 2 branches covered.">      if (!visited) {</span>
-<span class="fc" id="L136">        entry.markVisited();</span>
+<span class="fc" id="L127">      DefinitionEntry entry = getDefaultData().getEntry(definition);</span>
+<span class="fc" id="L128">      boolean visited = entry.isVisited();</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">      if (!visited) {</span>
+<span class="fc" id="L130">        entry.markVisited();</span>
 
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (inlineStrategy.isInline(definition, index)) {</span>
-<span class="fc" id="L139">          entry.markInline();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (inlineStrategy.isInline(definition, index)) {</span>
+<span class="fc" id="L133">          entry.markInline();</span>
         }
       }
-<span class="fc bfc" id="L142" title="All 2 branches covered.">      return !visited;</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">      return !visited;</span>
     }
 
     /**
@@ -150,118 +144,118 @@ import edu.umd.cs.findbugs.annotations.NonNull;
      */
     @NonNull
     private DefinitionEntry handleInstance(INamedInstance instance) {
-<span class="fc" id="L153">      IDefinition definition = instance.getDefinition();</span>
+<span class="fc" id="L147">      IDefinition definition = instance.getDefinition();</span>
       // check if this will be a new entry, which needs to be called before getEntry,
       // which will create it
-<span class="fc" id="L156">      DefinitionEntry entry = getDefaultData().getEntry(definition);</span>
-<span class="fc" id="L157">      entry.addReference(instance);</span>
+<span class="fc" id="L150">      DefinitionEntry entry = getDefaultData().getEntry(definition);</span>
+<span class="fc" id="L151">      entry.addReference(instance);</span>
 
-<span class="fc bfc" id="L159" title="All 2 branches covered.">      if (isChoice(instance)) {</span>
-<span class="fc" id="L160">        entry.markUsedAsChoice();</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">      if (isChoice(instance)) {</span>
+<span class="fc" id="L154">        entry.markUsedAsChoice();</span>
       }
 
-<span class="fc bfc" id="L163" title="All 2 branches covered.">      if (isChoiceSibling(instance)) {</span>
-<span class="fc" id="L164">        entry.markAsChoiceSibling();</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">      if (isChoiceSibling(instance)) {</span>
+<span class="fc" id="L158">        entry.markAsChoiceSibling();</span>
       }
-<span class="fc" id="L166">      return entry;</span>
+<span class="fc" id="L160">      return entry;</span>
     }
 
     private static boolean isChoice(@NonNull INamedInstance instance) {
-<span class="fc" id="L170">      return instance.getParentContainer() instanceof IChoiceInstance;</span>
+<span class="fc" id="L164">      return instance.getParentContainer() instanceof IChoiceInstance;</span>
     }
 
     private static boolean isChoiceSibling(@NonNull INamedInstance instance) {
-<span class="fc" id="L174">      IDefinition containingDefinition = instance.getContainingDefinition();</span>
-<span class="fc bfc" id="L175" title="All 2 branches covered.">      return containingDefinition instanceof IAssemblyDefinition</span>
-<span class="fc bfc" id="L176" title="All 2 branches covered.">          &amp;&amp; !((IAssemblyDefinition) containingDefinition).getChoiceInstances().isEmpty();</span>
+<span class="fc" id="L168">      IDefinition containingDefinition = instance.getContainingDefinition();</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">      return containingDefinition instanceof IAssemblyDefinition</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">          &amp;&amp; !((IAssemblyDefinition) containingDefinition).getChoiceInstances().isEmpty();</span>
     }
   }
 
   public static class DefinitionEntry {
     @NonNull
     private final IDefinition definition;
-<span class="fc" id="L183">    private final Set&lt;INamedInstance&gt; references = new HashSet&lt;&gt;();</span>
-<span class="fc" id="L184">    private final AtomicBoolean inline = new AtomicBoolean(); // false</span>
-<span class="fc" id="L185">    private final AtomicBoolean visited = new AtomicBoolean(); // false</span>
-<span class="fc" id="L186">    private final AtomicBoolean usedAsChoice = new AtomicBoolean(); // false</span>
-<span class="fc" id="L187">    private final AtomicBoolean choiceSibling = new AtomicBoolean(); // false</span>
+<span class="fc" id="L177">    private final Set&lt;INamedInstance&gt; references = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L178">    private final AtomicBoolean inline = new AtomicBoolean(); // false</span>
+<span class="fc" id="L179">    private final AtomicBoolean visited = new AtomicBoolean(); // false</span>
+<span class="fc" id="L180">    private final AtomicBoolean usedAsChoice = new AtomicBoolean(); // false</span>
+<span class="fc" id="L181">    private final AtomicBoolean choiceSibling = new AtomicBoolean(); // false</span>
 
-<span class="fc" id="L189">    public DefinitionEntry(@NonNull IDefinition definition) {</span>
-<span class="fc" id="L190">      this.definition = definition;</span>
-<span class="fc" id="L191">    }</span>
+<span class="fc" id="L183">    public DefinitionEntry(@NonNull IDefinition definition) {</span>
+<span class="fc" id="L184">      this.definition = definition;</span>
+<span class="fc" id="L185">    }</span>
 
     @NonNull
     public IDefinition getDefinition() {
-<span class="fc" id="L195">      return definition;</span>
+<span class="fc" id="L189">      return definition;</span>
     }
 
     public boolean isRoot() {
-<span class="fc bfc" id="L199" title="All 2 branches covered.">      return definition instanceof IAssemblyDefinition</span>
-<span class="fc bfc" id="L200" title="All 2 branches covered.">          &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">      return definition instanceof IAssemblyDefinition</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">          &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
     }
 
     public boolean isReferenced() {
-<span class="fc bfc" id="L204" title="All 2 branches covered.">      return !references.isEmpty()</span>
-<span class="pc bpc" id="L205" title="1 of 2 branches missed.">          || isRoot();</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">      return !references.isEmpty()</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">          || isRoot();</span>
     }
 
     public Set&lt;INamedInstance&gt; getReferences() {
-<span class="nc" id="L209">      return references;</span>
+<span class="nc" id="L203">      return references;</span>
     }
 
     public boolean addReference(@NonNull INamedInstance reference) {
-<span class="fc" id="L213">      return references.add(reference);</span>
+<span class="fc" id="L207">      return references.add(reference);</span>
     }
 
     public void markVisited() {
-<span class="fc" id="L217">      visited.compareAndSet(false, true);</span>
-<span class="fc" id="L218">    }</span>
+<span class="fc" id="L211">      visited.compareAndSet(false, true);</span>
+<span class="fc" id="L212">    }</span>
 
     public boolean isVisited() {
-<span class="fc" id="L221">      return visited.get();</span>
+<span class="fc" id="L215">      return visited.get();</span>
     }
 
     public void markInline() {
-<span class="fc" id="L225">      inline.compareAndSet(false, true);</span>
-<span class="fc" id="L226">    }</span>
+<span class="fc" id="L219">      inline.compareAndSet(false, true);</span>
+<span class="fc" id="L220">    }</span>
 
     public boolean isInline() {
-<span class="fc" id="L229">      return inline.get();</span>
+<span class="fc" id="L223">      return inline.get();</span>
     }
 
     public void markUsedAsChoice() {
-<span class="fc" id="L233">      usedAsChoice.compareAndSet(false, true);</span>
-<span class="fc" id="L234">    }</span>
+<span class="fc" id="L227">      usedAsChoice.compareAndSet(false, true);</span>
+<span class="fc" id="L228">    }</span>
 
     public boolean isUsedAsChoice() {
-<span class="nc" id="L237">      return usedAsChoice.get();</span>
+<span class="nc" id="L231">      return usedAsChoice.get();</span>
     }
 
     public void markAsChoiceSibling() {
-<span class="fc" id="L241">      choiceSibling.compareAndSet(false, true);</span>
-<span class="fc" id="L242">    }</span>
+<span class="fc" id="L235">      choiceSibling.compareAndSet(false, true);</span>
+<span class="fc" id="L236">    }</span>
 
     public boolean isChoiceSibling() {
-<span class="nc" id="L245">      return choiceSibling.get();</span>
+<span class="nc" id="L239">      return choiceSibling.get();</span>
     }
 
     public boolean isUsedAsJsonKey() {
-<span class="nc" id="L249">      return references.stream()</span>
-<span class="nc bnc" id="L250" title="All 2 branches missed.">          .anyMatch(ref -&gt; ref instanceof INamedModelInstance</span>
-<span class="nc bnc" id="L251" title="All 2 branches missed.">              &amp;&amp; ((INamedModelInstance) ref).hasJsonKey());</span>
+<span class="nc" id="L243">      return references.stream()</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">          .anyMatch(ref -&gt; ref instanceof INamedModelInstance</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">              &amp;&amp; ((INamedModelInstance) ref).hasJsonKey());</span>
     }
 
     public boolean isUsedWithoutJsonKey() {
-<span class="nc bnc" id="L255" title="All 2 branches missed.">      return definition instanceof IFlagDefinition</span>
-<span class="nc bnc" id="L256" title="All 2 branches missed.">          || references.isEmpty()</span>
-<span class="nc" id="L257">          || references.stream()</span>
-<span class="nc bnc" id="L258" title="All 4 branches missed.">              .anyMatch(ref -&gt; ref instanceof INamedModelInstance</span>
-<span class="nc bnc" id="L259" title="All 2 branches missed.">                  &amp;&amp; !((INamedModelInstance) ref).hasJsonKey());</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">      return definition instanceof IFlagDefinition</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">          || references.isEmpty()</span>
+<span class="nc" id="L251">          || references.stream()</span>
+<span class="nc bnc" id="L252" title="All 4 branches missed.">              .anyMatch(ref -&gt; ref instanceof INamedModelInstance</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                  &amp;&amp; !((INamedModelInstance) ref).hasJsonKey());</span>
     }
 
     public boolean isChoiceGroupMember() {
-<span class="nc" id="L263">      return references.stream()</span>
-<span class="nc" id="L264">          .anyMatch(INamedModelInstanceGrouped.class::isInstance);</span>
+<span class="nc" id="L257">      return references.stream()</span>
+<span class="nc" id="L258">          .anyMatch(INamedModelInstanceGrouped.class::isInstance);</span>
     }
   }
 }

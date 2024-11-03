@@ -8,7 +8,9 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractFieldInstance;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
@@ -24,8 +26,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -56,50 +62,63 @@ public final class InstanceModelFieldComplex
   private final Lazy&lt;Object&gt; defaultValue;
   @NonNull
   private final Lazy&lt;Map&lt;String, IBoundProperty&lt;?&gt;&gt;&gt; jsonProperties;
+  @NonNull
+  private final Lazy&lt;Map&lt;IAttributable.Key, Set&lt;String&gt;&gt;&gt; properties;
 
+  /**
+   * Construct a new field instance.
+   *
+   * @param javaField
+   *          the Java field bound to this instance
+   * @param definition
+   *          the associated field definition
+   * @param parent
+   *          the definition containing this instance
+   * @return the field instance
+   */
   @NonNull
   public static InstanceModelFieldComplex newInstance(
       @NonNull Field javaField,
       @NonNull DefinitionField definition,
       @NonNull IBoundDefinitionModelAssembly parent) {
-<span class="fc" id="L65">    BoundField annotation = ModelUtil.getAnnotation(javaField, BoundField.class);</span>
-<span class="pc bpc" id="L66" title="1 of 2 branches missed.">    if (!annotation.inXmlWrapped()) {</span>
-<span class="nc bnc" id="L67" title="All 2 branches missed.">      if (definition.hasChildren()) { // NOPMD efficiency</span>
-<span class="nc" id="L68">        throw new IllegalStateException(</span>
-<span class="nc" id="L69">            String.format(&quot;Field '%s' on class '%s' is requested to be unwrapped, but it has flags preventing this.&quot;,</span>
-<span class="nc" id="L70">                javaField.getName(),</span>
-<span class="nc" id="L71">                parent.getBoundClass().getName()));</span>
+<span class="fc" id="L84">    BoundField annotation = ModelUtil.getAnnotation(javaField, BoundField.class);</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">    if (!annotation.inXmlWrapped()) {</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">      if (definition.hasChildren()) { // NOPMD efficiency</span>
+<span class="nc" id="L87">        throw new IllegalStateException(</span>
+<span class="nc" id="L88">            String.format(&quot;Field '%s' on class '%s' is requested to be unwrapped, but it has flags preventing this.&quot;,</span>
+<span class="nc" id="L89">                javaField.getName(),</span>
+<span class="nc" id="L90">                parent.getBoundClass().getName()));</span>
       }
-<span class="nc bnc" id="L73" title="All 2 branches missed.">      if (!definition.getJavaTypeAdapter().isUnrappedValueAllowedInXml()) {</span>
-<span class="nc" id="L74">        throw new IllegalStateException(</span>
-<span class="nc" id="L75">            String.format(</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">      if (!definition.getJavaTypeAdapter().isUnrappedValueAllowedInXml()) {</span>
+<span class="nc" id="L93">        throw new IllegalStateException(</span>
+<span class="nc" id="L94">            String.format(</span>
                 &quot;Field '%s' on class '%s' is requested to be unwrapped, but its data type '%s' does not allow this.&quot;,
-<span class="nc" id="L77">                javaField.getName(),</span>
-<span class="nc" id="L78">                parent.getBoundClass().getName(),</span>
-<span class="nc" id="L79">                definition.getJavaTypeAdapter().getPreferredName()));</span>
+<span class="nc" id="L96">                javaField.getName(),</span>
+<span class="nc" id="L97">                parent.getBoundClass().getName(),</span>
+<span class="nc" id="L98">                definition.getJavaTypeAdapter().getPreferredName()));</span>
       }
     }
 
-<span class="fc" id="L83">    IGroupAs groupAs = ModelUtil.resolveDefaultGroupAs(</span>
-<span class="fc" id="L84">        annotation.groupAs(),</span>
-<span class="fc" id="L85">        parent.getContainingModule());</span>
-<span class="pc bpc" id="L86" title="1 of 4 branches missed.">    if (annotation.maxOccurs() == -1 || annotation.maxOccurs() &gt; 1) {</span>
-<span class="pc bpc" id="L87" title="1 of 2 branches missed.">      if (IGroupAs.SINGLETON_GROUP_AS.equals(groupAs)) {</span>
-<span class="nc" id="L88">        throw new IllegalStateException(String.format(&quot;Field '%s' on class '%s' is missing the '%s' annotation.&quot;,</span>
-<span class="nc" id="L89">            javaField.getName(),</span>
-<span class="nc" id="L90">            javaField.getDeclaringClass().getName(),</span>
-<span class="nc" id="L91">            GroupAs.class.getName())); // NOPMD false positive</span>
+<span class="fc" id="L102">    IGroupAs groupAs = ModelUtil.resolveDefaultGroupAs(</span>
+<span class="fc" id="L103">        annotation.groupAs(),</span>
+<span class="fc" id="L104">        parent.getContainingModule());</span>
+<span class="pc bpc" id="L105" title="1 of 4 branches missed.">    if (annotation.maxOccurs() == -1 || annotation.maxOccurs() &gt; 1) {</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">      if (IGroupAs.SINGLETON_GROUP_AS.equals(groupAs)) {</span>
+<span class="nc" id="L107">        throw new IllegalStateException(String.format(&quot;Field '%s' on class '%s' is missing the '%s' annotation.&quot;,</span>
+<span class="nc" id="L108">            javaField.getName(),</span>
+<span class="nc" id="L109">            javaField.getDeclaringClass().getName(),</span>
+<span class="nc" id="L110">            GroupAs.class.getName())); // NOPMD false positive</span>
       }
-<span class="pc bpc" id="L93" title="1 of 2 branches missed.">    } else if (!IGroupAs.SINGLETON_GROUP_AS.equals(groupAs)) {</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">    } else if (!IGroupAs.SINGLETON_GROUP_AS.equals(groupAs)) {</span>
       // max is 1 and a groupAs is set
-<span class="nc" id="L95">      throw new IllegalStateException(</span>
-<span class="nc" id="L96">          String.format(</span>
+<span class="nc" id="L114">      throw new IllegalStateException(</span>
+<span class="nc" id="L115">          String.format(</span>
               &quot;Field '%s' on class '%s' has the '%s' annotation, but maxOccurs=1. A groupAs must not be specfied.&quot;,
-<span class="nc" id="L98">              javaField.getName(),</span>
-<span class="nc" id="L99">              javaField.getDeclaringClass().getName(),</span>
-<span class="nc" id="L100">              GroupAs.class.getName())); // NOPMD false positive</span>
+<span class="nc" id="L117">              javaField.getName(),</span>
+<span class="nc" id="L118">              javaField.getDeclaringClass().getName(),</span>
+<span class="nc" id="L119">              GroupAs.class.getName())); // NOPMD false positive</span>
     }
-<span class="fc" id="L102">    return new InstanceModelFieldComplex(javaField, annotation, groupAs, definition, parent);</span>
+<span class="fc" id="L121">    return new InstanceModelFieldComplex(javaField, annotation, groupAs, definition, parent);</span>
   }
 
   /**
@@ -120,42 +139,47 @@ public final class InstanceModelFieldComplex
       @NonNull IGroupAs groupAs,
       @NonNull DefinitionField definition,
       @NonNull IBoundDefinitionModelAssembly parent) {
-<span class="fc" id="L123">    super(parent);</span>
-<span class="fc" id="L124">    this.javaField = javaField;</span>
-<span class="fc" id="L125">    this.annotation = annotation;</span>
-<span class="fc" id="L126">    this.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -&gt; IModelInstanceCollectionInfo.of(this)));</span>
-<span class="fc" id="L127">    this.groupAs = groupAs;</span>
-<span class="fc" id="L128">    this.definition = definition;</span>
+<span class="fc" id="L142">    super(parent);</span>
+<span class="fc" id="L143">    this.javaField = javaField;</span>
+<span class="fc" id="L144">    this.annotation = annotation;</span>
+<span class="fc" id="L145">    this.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -&gt; IModelInstanceCollectionInfo.of(this)));</span>
+<span class="fc" id="L146">    this.groupAs = groupAs;</span>
+<span class="fc" id="L147">    this.definition = definition;</span>
+<span class="fc" id="L148">    this.defaultValue = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L149">      Object retval = null;</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">      if (getMaxOccurs() == 1) {</span>
+<span class="fc" id="L151">        IBoundFieldValue fieldValue = definition.getFieldValue();</span>
 
-<span class="fc" id="L130">    this.defaultValue = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L131">      Object retval = null;</span>
-<span class="fc bfc" id="L132" title="All 2 branches covered.">      if (getMaxOccurs() == 1) {</span>
-<span class="fc" id="L133">        IBoundFieldValue fieldValue = definition.getFieldValue();</span>
+<span class="fc" id="L153">        Object fieldValueDefault = fieldValue.getDefaultValue();</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if (fieldValueDefault != null) {</span>
+<span class="nc" id="L155">          retval = newInstance(null);</span>
+<span class="nc" id="L156">          fieldValue.setValue(retval, fieldValueDefault);</span>
 
-<span class="fc" id="L135">        Object fieldValueDefault = fieldValue.getDefaultValue();</span>
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (fieldValueDefault != null) {</span>
-<span class="nc" id="L137">          retval = newInstance(null);</span>
-<span class="nc" id="L138">          fieldValue.setValue(retval, fieldValueDefault);</span>
-
-<span class="nc bnc" id="L140" title="All 2 branches missed.">          for (IBoundInstanceFlag flag : definition.getFlagInstances()) {</span>
-<span class="nc" id="L141">            Object flagDefault = flag.getResolvedDefaultValue();</span>
-<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (flagDefault != null) {</span>
-<span class="nc" id="L143">              flag.setValue(retval, flagDefault);</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">          for (IBoundInstanceFlag flag : definition.getFlagInstances()) {</span>
+<span class="nc" id="L159">            Object flagDefault = flag.getResolvedDefaultValue();</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            if (flagDefault != null) {</span>
+<span class="nc" id="L161">              flag.setValue(retval, flagDefault);</span>
             }
-<span class="nc" id="L145">          }</span>
+<span class="nc" id="L163">          }</span>
         }
       }
-<span class="fc" id="L148">      return retval;</span>
+<span class="fc" id="L166">      return retval;</span>
     }));
-<span class="fc" id="L150">    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L151">      Predicate&lt;IBoundInstanceFlag&gt; flagFilter = null;</span>
-<span class="fc" id="L152">      IBoundInstanceFlag jsonKey = getEffectiveJsonKey();</span>
-<span class="fc bfc" id="L153" title="All 2 branches covered.">      if (jsonKey != null) {</span>
-<span class="fc bfc" id="L154" title="All 2 branches covered.">        flagFilter = flag -&gt; !jsonKey.equals(flag);</span>
+<span class="fc" id="L168">    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L169">      Predicate&lt;IBoundInstanceFlag&gt; flagFilter = null;</span>
+<span class="fc" id="L170">      IBoundInstanceFlag jsonKey = getEffectiveJsonKey();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">      if (jsonKey != null) {</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        flagFilter = flag -&gt; !jsonKey.equals(flag);</span>
       }
-<span class="fc" id="L156">      return getDefinition().getJsonProperties(flagFilter);</span>
+<span class="fc" id="L174">      return getDefinition().getJsonProperties(flagFilter);</span>
     }));
-<span class="fc" id="L158">  }</span>
+<span class="fc" id="L176">    this.properties = ObjectUtils.notNull(</span>
+<span class="pc" id="L177">        Lazy.lazy(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="nc" id="L178">            Arrays.stream(annotation.properties())</span>
+<span class="nc" id="L179">                .map(ModelUtil::toPropertyEntry)</span>
+<span class="nc" id="L180">                .collect(</span>
+<span class="nc" id="L181">                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -&gt; v2, LinkedHashMap::new))))));</span>
+<span class="fc" id="L182">  }</span>
 
   // ------------------------------------------
   // - Start annotation driven code - CPD-OFF -
@@ -163,7 +187,7 @@ public final class InstanceModelFieldComplex
 
   @Override
   public Field getField() {
-<span class="fc" id="L166">    return javaField;</span>
+<span class="fc" id="L190">    return javaField;</span>
   }
 
   /**
@@ -173,79 +197,84 @@ public final class InstanceModelFieldComplex
    */
   @NonNull
   public BoundField getAnnotation() {
-<span class="fc" id="L176">    return annotation;</span>
+<span class="fc" id="L200">    return annotation;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public IModelInstanceCollectionInfo&lt;IBoundObject&gt; getCollectionInfo() {
-<span class="fc" id="L182">    return collectionInfo.get();</span>
+<span class="fc" id="L206">    return collectionInfo.get();</span>
   }
 
   @Override
   public DefinitionField getDefinition() {
-<span class="fc" id="L187">    return definition;</span>
+<span class="fc" id="L211">    return definition;</span>
   }
 
   @Override
   public IBoundModule getContainingModule() {
-<span class="fc" id="L192">    return getContainingDefinition().getContainingModule();</span>
+<span class="fc" id="L216">    return getContainingDefinition().getContainingModule();</span>
   }
 
   @Override
   public Object getDefaultValue() {
-<span class="fc" id="L197">    return defaultValue.get();</span>
+<span class="fc" id="L221">    return defaultValue.get();</span>
   }
 
   @Override
   public Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties() {
-<span class="fc" id="L202">    return ObjectUtils.notNull(jsonProperties.get());</span>
+<span class="fc" id="L226">    return ObjectUtils.notNull(jsonProperties.get());</span>
   }
 
   @Override
   public IGroupAs getGroupAs() {
-<span class="fc" id="L207">    return groupAs;</span>
+<span class="fc" id="L231">    return groupAs;</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="fc" id="L212">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
+<span class="fc" id="L236">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
   }
 
   @Override
   public MarkupLine getDescription() {
-<span class="fc" id="L217">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
+<span class="fc" id="L241">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
   }
 
   @Override
   public String getUseName() {
-<span class="fc" id="L222">    return ModelUtil.resolveNoneOrValue(getAnnotation().useName());</span>
+<span class="fc" id="L246">    return ModelUtil.resolveNoneOrValue(getAnnotation().useName());</span>
   }
 
   @Override
   public Integer getUseIndex() {
-<span class="nc" id="L227">    int value = getAnnotation().useIndex();</span>
-<span class="nc bnc" id="L228" title="All 2 branches missed.">    return value == Integer.MIN_VALUE ? null : value;</span>
+<span class="nc" id="L251">    int value = getAnnotation().useIndex();</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">    return value == Integer.MIN_VALUE ? null : value;</span>
   }
 
   @Override
   public boolean isInXmlWrapped() {
-<span class="fc" id="L233">    return getAnnotation().inXmlWrapped();</span>
+<span class="fc" id="L257">    return getAnnotation().inXmlWrapped();</span>
   }
 
   @Override
   public int getMinOccurs() {
-<span class="fc" id="L238">    return getAnnotation().minOccurs();</span>
+<span class="fc" id="L262">    return getAnnotation().minOccurs();</span>
   }
 
   @Override
   public int getMaxOccurs() {
-<span class="fc" id="L243">    return getAnnotation().maxOccurs();</span>
+<span class="fc" id="L267">    return getAnnotation().maxOccurs();</span>
+  }
+
+  @Override
+  public Map&lt;Key, Set&lt;String&gt;&gt; getProperties() {
+<span class="nc" id="L272">    return ObjectUtils.notNull(properties.get());</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="fc" id="L248">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().remarks());</span>
+<span class="fc" id="L277">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().remarks());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

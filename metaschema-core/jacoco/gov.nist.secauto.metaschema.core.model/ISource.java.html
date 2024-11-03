@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ISource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Core API</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.core.model</a> &gt; <span class="el_source">ISource.java</span></div><h1>ISource.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.model;
+
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.model.constraint.impl.InternalModelSource;
+import gov.nist.secauto.metaschema.core.model.constraint.impl.StaticContextSource;
+
+import java.net.URI;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+/**
+ * A descriptor that identifies where a given constraint was defined.
+ */
+public interface ISource {
+<span class="nc" id="L21">  enum SourceType {</span>
+    /**
+     * A constraint embedded in a model.
+     */
+<span class="nc" id="L25">    MODEL,</span>
+    /**
+     * A constraint defined externally from a model.
+     */
+<span class="nc" id="L29">    EXTERNAL;</span>
+  }
+
+  /**
+   * Get the descriptor for a
+   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#MODEL}
+   * source with as associated resource.
+   *
+   * @param module
+   *          the Metaschema module the constraint was defined in
+   * @return the source descriptor
+   * @since 2.0.0
+   */
+  @NonNull
+  static ISource moduleSource(@NonNull IModule module) {
+<span class="fc" id="L44">    return InternalModelSource.instance(module);</span>
+  }
+
+  /**
+   * Get the descriptor for a
+   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#EXTERNAL}
+   * source with as associated resource.
+   * &lt;p&gt;
+   * The provided static context idenfies the location of this source based on the
+   * {@link StaticContext#getBaseUri()} method.
+   *
+   * @param staticContext
+   *          the static Metapath context to use for compiling Metapath
+   *          expressions in this source
+   *
+   * @return the source descriptor
+   */
+  @NonNull
+  static ISource externalSource(@NonNull StaticContext staticContext) {
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">    if (staticContext.getBaseUri() == null) {</span>
+<span class="nc" id="L64">      throw new IllegalArgumentException(&quot;The static content must define a baseUri identifing the source resource.&quot;);</span>
+    }
+<span class="fc" id="L66">    return StaticContextSource.instance(staticContext);</span>
+  }
+
+  /**
+   * Get the type of source.
+   *
+   * @return the type
+   */
+  @NonNull
+  ISource.SourceType getSourceType();
+
+  /**
+   * Get the resource where the constraint was defined, if known.
+   *
+   * @return the resource or {@code null} if the resource is not known
+   */
+  @Nullable
+  URI getSource();
+
+  /**
+   * Get the static Metapath context to use when compiling Metapath expressions.
+   *
+   * @return the static Metapath context
+   */
+  @NonNull
+  StaticContext getStaticContext();
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

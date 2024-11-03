@@ -63,16 +63,21 @@
 <span class="source-line-no">050</span><span id="line-50">  }</span>
 <span class="source-line-no">051</span><span id="line-51"></span>
 <span class="source-line-no">052</span><span id="line-52">  @Override</span>
-<span class="source-line-no">053</span><span id="line-53">  @NonNull</span>
-<span class="source-line-no">054</span><span id="line-54">  public final INSTANCE getInlineInstance() {</span>
-<span class="source-line-no">055</span><span id="line-55">    return ObjectUtils.asType(this);</span>
-<span class="source-line-no">056</span><span id="line-56">  }</span>
-<span class="source-line-no">057</span><span id="line-57"></span>
-<span class="source-line-no">058</span><span id="line-58">  @Override</span>
-<span class="source-line-no">059</span><span id="line-59">  public final FLAG getJsonKey() {</span>
-<span class="source-line-no">060</span><span id="line-60">    return IFeatureContainerFlag.super.getJsonKey();</span>
+<span class="source-line-no">053</span><span id="line-53">  public boolean isInline() {</span>
+<span class="source-line-no">054</span><span id="line-54">    return true;</span>
+<span class="source-line-no">055</span><span id="line-55">  }</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">  @Override</span>
+<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
+<span class="source-line-no">059</span><span id="line-59">  public final INSTANCE getInlineInstance() {</span>
+<span class="source-line-no">060</span><span id="line-60">    return ObjectUtils.asType(this);</span>
 <span class="source-line-no">061</span><span id="line-61">  }</span>
-<span class="source-line-no">062</span><span id="line-62">}</span>
+<span class="source-line-no">062</span><span id="line-62"></span>
+<span class="source-line-no">063</span><span id="line-63">  @Override</span>
+<span class="source-line-no">064</span><span id="line-64">  public final FLAG getJsonKey() {</span>
+<span class="source-line-no">065</span><span id="line-65">    return IFeatureContainerFlag.super.getJsonKey();</span>
+<span class="source-line-no">066</span><span id="line-66">  }</span>
+<span class="source-line-no">067</span><span id="line-67">}</span>
 
 
 

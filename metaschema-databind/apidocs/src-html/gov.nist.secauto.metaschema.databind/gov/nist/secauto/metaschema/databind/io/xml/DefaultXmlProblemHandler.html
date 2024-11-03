@@ -20,56 +20,57 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.IBoundObject;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">import org.apache.logging.log4j.LogManager;</span>
-<span class="source-line-no">014</span><span id="line-14">import org.apache.logging.log4j.Logger;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.HashSet;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.util.Set;</span>
-<span class="source-line-no">018</span><span id="line-18"></span>
-<span class="source-line-no">019</span><span id="line-19">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">020</span><span id="line-20">import javax.xml.stream.events.Attribute;</span>
-<span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">/**</span>
-<span class="source-line-no">023</span><span id="line-23"> * Handles problems identified in the parsed XML.</span>
-<span class="source-line-no">024</span><span id="line-24"> * &lt;p&gt;</span>
-<span class="source-line-no">025</span><span id="line-25"> * The default problem handler will report unknown attributes, and provide empty</span>
-<span class="source-line-no">026</span><span id="line-26"> * collections for multi-valued model items and default values for flags and</span>
-<span class="source-line-no">027</span><span id="line-27"> * single valued fields.</span>
-<span class="source-line-no">028</span><span id="line-28"> */</span>
-<span class="source-line-no">029</span><span id="line-29">public class DefaultXmlProblemHandler</span>
-<span class="source-line-no">030</span><span id="line-30">    extends AbstractProblemHandler</span>
-<span class="source-line-no">031</span><span id="line-31">    implements IXmlProblemHandler {</span>
-<span class="source-line-no">032</span><span id="line-32">  private static final Logger LOGGER = LogManager.getLogger(DefaultXmlProblemHandler.class);</span>
-<span class="source-line-no">033</span><span id="line-33"></span>
-<span class="source-line-no">034</span><span id="line-34">  private static final QName XSI_SCHEMA_LOCATION</span>
-<span class="source-line-no">035</span><span id="line-35">      = new QName("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation");</span>
-<span class="source-line-no">036</span><span id="line-36">  private static final Set&lt;QName&gt; IGNORED_QNAMES;</span>
-<span class="source-line-no">037</span><span id="line-37"></span>
-<span class="source-line-no">038</span><span id="line-38">  static {</span>
-<span class="source-line-no">039</span><span id="line-39">    IGNORED_QNAMES = new HashSet&lt;&gt;();</span>
-<span class="source-line-no">040</span><span id="line-40">    IGNORED_QNAMES.add(XSI_SCHEMA_LOCATION);</span>
-<span class="source-line-no">041</span><span id="line-41">  }</span>
-<span class="source-line-no">042</span><span id="line-42"></span>
-<span class="source-line-no">043</span><span id="line-43">  @Override</span>
-<span class="source-line-no">044</span><span id="line-44">  public boolean handleUnknownAttribute(</span>
-<span class="source-line-no">045</span><span id="line-45">      IBoundDefinitionModelComplex parentDefinition,</span>
-<span class="source-line-no">046</span><span id="line-46">      IBoundObject targetObject,</span>
-<span class="source-line-no">047</span><span id="line-47">      Attribute attribute,</span>
-<span class="source-line-no">048</span><span id="line-48">      IXmlParsingContext parsingContext) {</span>
-<span class="source-line-no">049</span><span id="line-49">    QName qname = attribute.getName();</span>
-<span class="source-line-no">050</span><span id="line-50">    // check if warning is needed</span>
-<span class="source-line-no">051</span><span id="line-51">    if (LOGGER.isWarnEnabled() &amp;&amp; !IGNORED_QNAMES.contains(qname)) {</span>
-<span class="source-line-no">052</span><span id="line-52">      LOGGER.atWarn().log("Skipping unrecognized attribute '{}'{}.",</span>
-<span class="source-line-no">053</span><span id="line-53">          qname,</span>
-<span class="source-line-no">054</span><span id="line-54">          XmlEventUtil.generateLocationMessage(attribute.getLocation()));</span>
-<span class="source-line-no">055</span><span id="line-55">    }</span>
-<span class="source-line-no">056</span><span id="line-56">    // always ignore</span>
-<span class="source-line-no">057</span><span id="line-57">    return true;</span>
-<span class="source-line-no">058</span><span id="line-58">  }</span>
-<span class="source-line-no">059</span><span id="line-59">}</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">import org.apache.logging.log4j.LogManager;</span>
+<span class="source-line-no">015</span><span id="line-15">import org.apache.logging.log4j.Logger;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">import java.util.HashSet;</span>
+<span class="source-line-no">018</span><span id="line-18">import java.util.Set;</span>
+<span class="source-line-no">019</span><span id="line-19"></span>
+<span class="source-line-no">020</span><span id="line-20">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">021</span><span id="line-21">import javax.xml.stream.events.Attribute;</span>
+<span class="source-line-no">022</span><span id="line-22"></span>
+<span class="source-line-no">023</span><span id="line-23">/**</span>
+<span class="source-line-no">024</span><span id="line-24"> * Handles problems identified in the parsed XML.</span>
+<span class="source-line-no">025</span><span id="line-25"> * &lt;p&gt;</span>
+<span class="source-line-no">026</span><span id="line-26"> * The default problem handler will report unknown attributes, and provide empty</span>
+<span class="source-line-no">027</span><span id="line-27"> * collections for multi-valued model items and default values for flags and</span>
+<span class="source-line-no">028</span><span id="line-28"> * single valued fields.</span>
+<span class="source-line-no">029</span><span id="line-29"> */</span>
+<span class="source-line-no">030</span><span id="line-30">public class DefaultXmlProblemHandler</span>
+<span class="source-line-no">031</span><span id="line-31">    extends AbstractProblemHandler</span>
+<span class="source-line-no">032</span><span id="line-32">    implements IXmlProblemHandler {</span>
+<span class="source-line-no">033</span><span id="line-33">  private static final Logger LOGGER = LogManager.getLogger(DefaultXmlProblemHandler.class);</span>
+<span class="source-line-no">034</span><span id="line-34"></span>
+<span class="source-line-no">035</span><span id="line-35">  private static final QName XSI_SCHEMA_LOCATION</span>
+<span class="source-line-no">036</span><span id="line-36">      = new QName("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation");</span>
+<span class="source-line-no">037</span><span id="line-37">  private static final Set&lt;QName&gt; IGNORED_QNAMES;</span>
+<span class="source-line-no">038</span><span id="line-38"></span>
+<span class="source-line-no">039</span><span id="line-39">  static {</span>
+<span class="source-line-no">040</span><span id="line-40">    IGNORED_QNAMES = new HashSet&lt;&gt;();</span>
+<span class="source-line-no">041</span><span id="line-41">    IGNORED_QNAMES.add(XSI_SCHEMA_LOCATION);</span>
+<span class="source-line-no">042</span><span id="line-42">  }</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  @Override</span>
+<span class="source-line-no">045</span><span id="line-45">  public boolean handleUnknownAttribute(</span>
+<span class="source-line-no">046</span><span id="line-46">      IBoundDefinitionModelComplex parentDefinition,</span>
+<span class="source-line-no">047</span><span id="line-47">      IBoundObject targetObject,</span>
+<span class="source-line-no">048</span><span id="line-48">      Attribute attribute,</span>
+<span class="source-line-no">049</span><span id="line-49">      IXmlParsingContext parsingContext) {</span>
+<span class="source-line-no">050</span><span id="line-50">    QName qname = attribute.getName();</span>
+<span class="source-line-no">051</span><span id="line-51">    // check if warning is needed</span>
+<span class="source-line-no">052</span><span id="line-52">    if (LOGGER.isWarnEnabled() &amp;&amp; !IGNORED_QNAMES.contains(qname)) {</span>
+<span class="source-line-no">053</span><span id="line-53">      LOGGER.atWarn().log("Skipping unrecognized attribute '{}'{}.",</span>
+<span class="source-line-no">054</span><span id="line-54">          qname,</span>
+<span class="source-line-no">055</span><span id="line-55">          XmlEventUtil.generateLocationMessage(ObjectUtils.notNull(attribute.getLocation())));</span>
+<span class="source-line-no">056</span><span id="line-56">    }</span>
+<span class="source-line-no">057</span><span id="line-57">    // always ignore</span>
+<span class="source-line-no">058</span><span id="line-58">    return true;</span>
+<span class="source-line-no">059</span><span id="line-59">  }</span>
+<span class="source-line-no">060</span><span id="line-60">}</span>
 
 
 

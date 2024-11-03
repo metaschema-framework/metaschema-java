@@ -21,12 +21,12 @@
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IModule;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.AbstractTargetedConstraints;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IFeatureModelConstrained;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.ISource;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.ISource;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.AbstractTargetedConstraints;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IFeatureModelConstrained;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.ITargetedConstraints;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.impl.ConstraintXmlSupport;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.xmlbeans.MetaschemaMetaConstraintsDocument;
@@ -71,7 +71,7 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>              ObjectUtils.notNull(binding.getPrefix()), ObjectUtils.notNull(binding.getUri())));
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      builder.useWildcardWhenNamespaceNotDefaulted(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <a name="ISource" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ISource.html#ISource">ISource</a> source = ISource.externalSource(builder.build());
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <a name="ISource" href="../../../../../../../gov/nist/secauto/metaschema/core/model/ISource.html#ISource">ISource</a> source = ISource.externalSource(builder.build());
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      List&lt;ITargetedConstraints&gt; targetedConstraints = ObjectUtils.notNull(constraints.getContextList().stream()
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          .flatMap(context -&gt; parseContext(ObjectUtils.notNull(context), <strong class="jxr_keyword">null</strong>, source).getTargetedConstraints().stream())
@@ -82,7 +82,7 @@
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">private</strong> Context parseContext(
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>        @NonNull ModelContextType contextObj,
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        @Nullable Context parent,
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>        @NonNull <a name="ISource" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ISource.html#ISource">ISource</a> source) {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>        @NonNull <a name="ISource" href="../../../../../../../gov/nist/secauto/metaschema/core/model/ISource.html#ISource">ISource</a> source) {
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      List&lt;String&gt; metapaths;
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">if</strong> (parent == <strong class="jxr_keyword">null</strong>) {

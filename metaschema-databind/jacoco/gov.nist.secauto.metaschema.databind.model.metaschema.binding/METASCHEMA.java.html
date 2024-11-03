@@ -1,0 +1,1492 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>METASCHEMA.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.model.metaschema.binding</a> &gt; <span class="el_source">METASCHEMA.java</span></div><h1>METASCHEMA.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.UriAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundChoiceGroup;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFieldValue;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundGroupedAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.Expect;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.Index;
+import gov.nist.secauto.metaschema.databind.model.annotations.IsUnique;
+import gov.nist.secauto.metaschema.databind.model.annotations.KeyField;
+import gov.nist.secauto.metaschema.databind.model.annotations.Let;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
+import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * A declaration of the Metaschema module.
+ */
+@SuppressWarnings({
+    &quot;PMD.CouplingBetweenObjects&quot;,
+    &quot;PMD.DataClass&quot;,
+    &quot;PMD.ExcessivePublicCount&quot;,
+    &quot;PMD.FieldNamingConventions&quot;,
+    &quot;PMD.TooManyFields&quot;
+})
+@MetaschemaAssembly(
+    formalName = &quot;Metaschema Module&quot;,
+    description = &quot;A declaration of the Metaschema module.&quot;,
+    name = &quot;METASCHEMA&quot;,
+    moduleClass = MetaschemaModelModule.class,
+    rootName = &quot;METASCHEMA&quot;,
+    valueConstraints = @ValueConstraints(lets = {
+        @Let(name = &quot;all-imports&quot;,
+            target = &quot;recurse-depth('for $import in ./import return doc(resolve-uri($import/@href))/METASCHEMA')&quot;),
+        @Let(name = &quot;deprecated-type-map&quot;,
+            target = &quot;map { 'base64Binary':'base64','dateTime':'date-time','dateTime-with-timezone':'date-time-with-timezone','email':'email-address','nonNegativeInteger':'non-negative-integer','positiveInteger':'positive-integer' }&quot;) },
+        expect = {
+            @Expect(id = &quot;module-top-level-version-required&quot;,
+                formalName = &quot;Require Schema Version for Top-Level Modules&quot;,
+                description = &quot;A top-level module, a module that is not marked as @abstract='yes', must have a schema version specified.&quot;,
+                level = IConstraint.Level.WARNING, target = &quot;.[not(@abstract) or @abstract='no']&quot;,
+                test = &quot;schema-version&quot;,
+                message = &quot;Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have a schema version.&quot;),
+            @Expect(id = &quot;module-top-level-root-required&quot;,
+                formalName = &quot;Require Root Assembly for Top-Level Modules&quot;,
+                description = &quot;A top-level module, a module that is not marked as @abstract='yes', must have at least one assembly with a root-name.&quot;,
+                level = IConstraint.Level.WARNING, target = &quot;.[not(@abstract) or @abstract='no']&quot;,
+                test = &quot;exists($all-imports/define-assembly/root-name)&quot;,
+                message = &quot;Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have at least one assembly with a root-name.&quot;),
+            @Expect(id = &quot;module-import-href-available&quot;, formalName = &quot;Import is Resolvable&quot;,
+                description = &quot;Ensure each import has a resolvable @href.&quot;, level = IConstraint.Level.ERROR,
+                target = &quot;import&quot;, test = &quot;doc-available(resolve-uri(@href))&quot;,
+                message = &quot;Unable to access a Metaschema module at '{{ resolve-uri(@href) }}'.&quot;),
+            @Expect(id = &quot;module-import-href-is-module&quot;, formalName = &quot;Import is a Metaschema module&quot;,
+                description = &quot;Ensure each import is a Metaschema module.&quot;, level = IConstraint.Level.ERROR,
+                target = &quot;import&quot;, test = &quot;doc(resolve-uri(@href))/METASCHEMA ! exists(.)&quot;,
+                message = &quot;Unable the resource at '{{ resolve-uri(@href) }}' is not a Metaschema module.&quot;),
+            @Expect(id = &quot;metaschema-deprecated-types&quot;, formalName = &quot;Avoid Deprecated Data Type Use&quot;,
+                description = &quot;Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger).&quot;,
+                level = IConstraint.Level.WARNING,
+                target = &quot;.//matches/@datatype|.//(define-field|define-flag)/@as-type&quot;,
+                test = &quot;not(.=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))&quot;,
+                message = &quot;Use of the type '{ . }' is deprecated. Use '{ $deprecated-type-map(.)}' instead.&quot;) }),
+    modelConstraints = @gov.nist.secauto.metaschema.databind.model.annotations.AssemblyConstraints(
+        index = @Index(id = &quot;module-short-name-unique&quot;, formalName = &quot;Unique Module Short Names&quot;,
+            description = &quot;Ensures that the current and all imported modules have a unique short name.&quot;,
+            level = IConstraint.Level.ERROR, target = &quot;(.|$all-imports)&quot;, name = &quot;metaschema-metadata-short-name-index&quot;,
+            keyFields = @KeyField(target = &quot;@short-name&quot;)),
+        unique = { @IsUnique(id = &quot;module-namespace-unique-entry&quot;, formalName = &quot;Require Unique Namespace Entries&quot;,
+            description = &quot;Ensures that all declared namespace entries are unique.&quot;, level = IConstraint.Level.ERROR,
+            target = &quot;namespace-binding&quot;, keyFields = { @KeyField(target = &quot;@prefix&quot;), @KeyField(target = &quot;@uri&quot;) }),
+            @IsUnique(id = &quot;module-namespace-unique-prefix&quot;, formalName = &quot;Require Unique Namespace Entry Prefixes&quot;,
+                description = &quot;Ensures that all declared namespace entries have a unique prefix.&quot;,
+                level = IConstraint.Level.ERROR, target = &quot;namespace-binding&quot;,
+                keyFields = @KeyField(target = &quot;@prefix&quot;)) }))
+public class METASCHEMA implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  /**
+   * &quot;Determines if the Metaschema module is abstract (&amp;lsquo;yes&amp;rsquo;) or not
+   * (&amp;lsquo;no&amp;rsquo;).&quot;
+   */
+  @BoundFlag(
+      formalName = &quot;Is Abstract?&quot;,
+      description = &quot;Determines if the Metaschema module is abstract ('yes') or not ('no').&quot;,
+      name = &quot;abstract&quot;,
+      defaultValue = &quot;no&quot;,
+      typeAdapter = TokenAdapter.class,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+          values = { @AllowedValue(value = &quot;yes&quot;, description = &quot;The module is abstract.&quot;),
+              @AllowedValue(value = &quot;no&quot;, description = &quot;The module is not abstract.&quot;) })))
+  private String _abstract;
+
+  @BoundField(
+      formalName = &quot;Module Name&quot;,
+      description = &quot;The name of the information model represented by this Metaschema definition.&quot;,
+      useName = &quot;schema-name&quot;,
+      minOccurs = 1,
+      typeAdapter = MarkupLineAdapter.class)
+  private MarkupLine _schemaName;
+
+  @BoundField(
+      description = &quot;A version string used to distinguish between multiple revisions of the same Metaschema module.&quot;,
+      useName = &quot;schema-version&quot;,
+      minOccurs = 1)
+  private String _schemaVersion;
+
+  @BoundField(
+      formalName = &quot;Module Short Name&quot;,
+      description = &quot;A short (code) name to be used for the Metaschema module. This name may be used as a constituent of names assigned to derived artifacts, such as schemas and conversion utilities.&quot;,
+      useName = &quot;short-name&quot;,
+      minOccurs = 1,
+      typeAdapter = TokenAdapter.class)
+  private String _shortName;
+
+  @BoundField(
+      formalName = &quot;Module Collection Namespace&quot;,
+      description = &quot;The namespace for the collection of Metaschema module this Metaschema module belongs to. This value is also used as the XML namespace governing the names of elements in XML documents. By using this namespace, documents and document fragments used in mixed-format environments may be distinguished from neighbor XML formats using another namespaces. This value is not reflected in Metaschema JSON.&quot;,
+      useName = &quot;namespace&quot;,
+      minOccurs = 1,
+      typeAdapter = UriAdapter.class)
+  private URI _namespace;
+
+  @BoundField(
+      formalName = &quot;JSON Base URI&quot;,
+      description = &quot;The JSON Base URI is the nominal base URI assigned to a JSON Schema instance expressing the model defined by this Metaschema module.&quot;,
+      useName = &quot;json-base-uri&quot;,
+      minOccurs = 1,
+      typeAdapter = UriAdapter.class)
+  private URI _jsonBaseUri;
+
+  @BoundField(
+      formalName = &quot;Remarks&quot;,
+      description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+      useName = &quot;remarks&quot;)
+  private Remarks _remarks;
+
+  @BoundAssembly(
+      formalName = &quot;Module Import&quot;,
+      description = &quot;Imports a set of Metaschema modules contained in another resource. Imports support the reuse of common information structures.&quot;,
+      useName = &quot;import&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;imports&quot;, inJson = JsonGroupAsBehavior.LIST))
+  private List&lt;Import&gt; _imports;
+
+  @BoundAssembly(
+      formalName = &quot;Metapath Namespace Declaration&quot;,
+      description = &quot;Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.&quot;,
+      useName = &quot;namespace-binding&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;namespace-bindings&quot;))
+  private List&lt;MetapathNamespace&gt; _namespaceBindings;
+
+  @BoundChoiceGroup(
+      maxOccurs = -1,
+      assemblies = {
+          @BoundGroupedAssembly(formalName = &quot;Global Assembly Definition&quot;,
+              description = &quot;In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the `model` of any assembly (another assembly type, or itself), by `assembly` reference.&quot;,
+              useName = &quot;define-assembly&quot;, binding = DefineAssembly.class),
+          @BoundGroupedAssembly(formalName = &quot;Global Field Definition&quot;, useName = &quot;define-field&quot;,
+              binding = DefineField.class),
+          @BoundGroupedAssembly(formalName = &quot;Global Flag Definition&quot;, useName = &quot;define-flag&quot;,
+              binding = DefineFlag.class)
+      },
+      groupAs = @GroupAs(name = &quot;definitions&quot;, inJson = JsonGroupAsBehavior.LIST))
+  private List&lt;Object&gt; _definitions;
+
+  public METASCHEMA() {
+<span class="nc" id="L200">    this(null);</span>
+<span class="nc" id="L201">  }</span>
+
+<span class="fc" id="L203">  public METASCHEMA(IMetaschemaData data) {</span>
+<span class="fc" id="L204">    this.__metaschemaData = data;</span>
+<span class="fc" id="L205">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L209">    return __metaschemaData;</span>
+  }
+
+  public String getAbstract() {
+<span class="nc" id="L213">    return _abstract;</span>
+  }
+
+  public void setAbstract(String value) {
+<span class="nc" id="L217">    _abstract = value;</span>
+<span class="nc" id="L218">  }</span>
+
+  public MarkupLine getSchemaName() {
+<span class="fc" id="L221">    return _schemaName;</span>
+  }
+
+  public void setSchemaName(MarkupLine value) {
+<span class="nc" id="L225">    _schemaName = value;</span>
+<span class="nc" id="L226">  }</span>
+
+  public String getSchemaVersion() {
+<span class="fc" id="L229">    return _schemaVersion;</span>
+  }
+
+  public void setSchemaVersion(String value) {
+<span class="nc" id="L233">    _schemaVersion = value;</span>
+<span class="nc" id="L234">  }</span>
+
+  public String getShortName() {
+<span class="fc" id="L237">    return _shortName;</span>
+  }
+
+  public void setShortName(String value) {
+<span class="nc" id="L241">    _shortName = value;</span>
+<span class="nc" id="L242">  }</span>
+
+  public URI getNamespace() {
+<span class="fc" id="L245">    return _namespace;</span>
+  }
+
+  public void setNamespace(URI value) {
+<span class="nc" id="L249">    _namespace = value;</span>
+<span class="nc" id="L250">  }</span>
+
+  public URI getJsonBaseUri() {
+<span class="fc" id="L253">    return _jsonBaseUri;</span>
+  }
+
+  public void setJsonBaseUri(URI value) {
+<span class="nc" id="L257">    _jsonBaseUri = value;</span>
+<span class="nc" id="L258">  }</span>
+
+  public Remarks getRemarks() {
+<span class="fc" id="L261">    return _remarks;</span>
+  }
+
+  public void setRemarks(Remarks value) {
+<span class="nc" id="L265">    _remarks = value;</span>
+<span class="nc" id="L266">  }</span>
+
+  public List&lt;Import&gt; getImports() {
+<span class="fc" id="L269">    return _imports;</span>
+  }
+
+  public void setImports(List&lt;Import&gt; value) {
+<span class="nc" id="L273">    _imports = value;</span>
+<span class="nc" id="L274">  }</span>
+
+  /**
+   * Add a new {@link Import} item to the underlying collection.
+   *
+   * @param item
+   *          the item to add
+   * @return {@code true}
+   */
+  public boolean addImport(Import item) {
+<span class="nc" id="L284">    Import value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">    if (_imports == null) {</span>
+<span class="nc" id="L286">      _imports = new LinkedList&lt;&gt;();</span>
+    }
+<span class="nc" id="L288">    return _imports.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link Import} item from the underlying collection.
+   *
+   * @param item
+   *          the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeImport(Import item) {
+<span class="nc" id="L299">    Import value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L300" title="All 4 branches missed.">    return _imports != null &amp;&amp; _imports.remove(value);</span>
+  }
+
+  public List&lt;MetapathNamespace&gt; getNamespaceBindings() {
+<span class="fc" id="L304">    return _namespaceBindings;</span>
+  }
+
+  public void setNamespaceBindings(List&lt;MetapathNamespace&gt; value) {
+<span class="nc" id="L308">    _namespaceBindings = value;</span>
+<span class="nc" id="L309">  }</span>
+
+  /**
+   * Add a new {@link MetapathNamespace} item to the underlying collection.
+   *
+   * @param item
+   *          the item to add
+   * @return {@code true}
+   */
+  public boolean addNamespaceBinding(MetapathNamespace item) {
+<span class="nc" id="L319">    MetapathNamespace value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">    if (_namespaceBindings == null) {</span>
+<span class="nc" id="L321">      _namespaceBindings = new LinkedList&lt;&gt;();</span>
+    }
+<span class="nc" id="L323">    return _namespaceBindings.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link MetapathNamespace} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeNamespaceBinding(MetapathNamespace item) {
+<span class="nc" id="L335">    MetapathNamespace value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L336" title="All 4 branches missed.">    return _namespaceBindings != null &amp;&amp; _namespaceBindings.remove(value);</span>
+  }
+
+  public List&lt;Object&gt; getDefinitions() {
+<span class="fc" id="L340">    return _definitions;</span>
+  }
+
+  public void setDefinitions(List&lt;Object&gt; value) {
+<span class="nc" id="L344">    _definitions = value;</span>
+<span class="nc" id="L345">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L349">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+
+  /**
+   * Imports a set of Metaschema modules contained in another resource. Imports
+   * support the reuse of common information structures.
+   */
+  @MetaschemaAssembly(
+      formalName = &quot;Module Import&quot;,
+      description = &quot;Imports a set of Metaschema modules contained in another resource. Imports support the reuse of common information structures.&quot;,
+      name = &quot;import&quot;,
+      moduleClass = MetaschemaModelModule.class)
+  public static class Import implements IBoundObject {
+    private final IMetaschemaData __metaschemaData;
+
+    /**
+     * &quot;A relative or absolute URI for retrieving an out-of-line Metaschema
+     * definition.&quot;
+     */
+    @BoundFlag(
+        formalName = &quot;Import URI Reference&quot;,
+        description = &quot;A relative or absolute URI for retrieving an out-of-line Metaschema definition.&quot;,
+        name = &quot;href&quot;,
+        required = true,
+        typeAdapter = UriReferenceAdapter.class)
+    private URI _href;
+
+    public Import() {
+<span class="nc" id="L377">      this(null);</span>
+<span class="nc" id="L378">    }</span>
+
+<span class="fc" id="L380">    public Import(IMetaschemaData data) {</span>
+<span class="fc" id="L381">      this.__metaschemaData = data;</span>
+<span class="fc" id="L382">    }</span>
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L386">      return __metaschemaData;</span>
+    }
+
+    public URI getHref() {
+<span class="fc" id="L390">      return _href;</span>
+    }
+
+    public void setHref(URI value) {
+<span class="nc" id="L394">      _href = value;</span>
+<span class="nc" id="L395">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L399">      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+    }
+  }
+
+  /**
+   * In XML, an element with structured element content. In JSON, an object with
+   * properties. Defined globally, an assembly can be assigned to appear in the
+   * &lt;code&gt;model&lt;/code&gt; of any assembly (another assembly type, or itself), by
+   * &lt;code&gt;assembly&lt;/code&gt; reference.
+   */
+  @MetaschemaAssembly(
+      formalName = &quot;Global Assembly Definition&quot;,
+      description = &quot;In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the `model` of any assembly (another assembly type, or itself), by `assembly` reference.&quot;,
+      name = &quot;define-assembly&quot;,
+      moduleClass = MetaschemaModelModule.class)
+  public static class DefineAssembly implements IBoundObject {
+    private final IMetaschemaData __metaschemaData;
+
+    @BoundFlag(
+        formalName = &quot;Global Assembly Name&quot;,
+        name = &quot;name&quot;,
+        required = true,
+        typeAdapter = TokenAdapter.class)
+    private String _name;
+
+    @BoundFlag(
+        formalName = &quot;Global Assembly Binary Name&quot;,
+        name = &quot;index&quot;,
+        typeAdapter = PositiveIntegerAdapter.class)
+    private BigInteger _index;
+
+    @BoundFlag(
+        formalName = &quot;Definition Scope&quot;,
+        name = &quot;scope&quot;,
+        defaultValue = &quot;global&quot;,
+        typeAdapter = TokenAdapter.class,
+        valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+            @AllowedValue(value = &quot;local&quot;,
+                description = &quot;This definition is only available in the context of the current Metaschema module.&quot;),
+            @AllowedValue(value = &quot;global&quot;,
+                description = &quot;This definition will be made available to any Metaschema module that includes this one either directly or indirectly through a chain of imported Metaschemas.&quot;) })))
+    private String _scope;
+
+    @BoundFlag(
+        formalName = &quot;Deprecated Version&quot;,
+        name = &quot;deprecated&quot;,
+        typeAdapter = StringAdapter.class)
+    private String _deprecated;
+
+    @BoundField(
+        formalName = &quot;Formal Name&quot;,
+        description = &quot;A formal name for the data construct, to be presented in documentation.&quot;,
+        useName = &quot;formal-name&quot;)
+    private String _formalName;
+
+    @BoundField(
+        formalName = &quot;Description&quot;,
+        description = &quot;A short description of the data construct's purpose, describing the constructs semantics.&quot;,
+        useName = &quot;description&quot;,
+        typeAdapter = MarkupLineAdapter.class)
+    private MarkupLine _description;
+
+    @BoundAssembly(
+        formalName = &quot;Property&quot;,
+        useName = &quot;prop&quot;,
+        maxOccurs = -1,
+        groupAs = @GroupAs(name = &quot;props&quot;, inJson = JsonGroupAsBehavior.LIST))
+    private List&lt;Property&gt; _props;
+
+    @BoundField(
+        formalName = &quot;Use Name&quot;,
+        description = &quot;Allows the name of the definition to be overridden.&quot;,
+        useName = &quot;use-name&quot;)
+    private UseName _useName;
+
+    @BoundField(
+        formalName = &quot;Root Name&quot;,
+        description = &quot;Provides a root name, for when the definition is used as the root of a node hierarchy.&quot;,
+        useName = &quot;root-name&quot;,
+        minOccurs = 1)
+    private RootName _rootName;
+
+    @BoundAssembly(
+        formalName = &quot;JSON Key&quot;,
+        description = &quot;Used in JSON (and similar formats) to identify a flag that will be used as the property name in an object hold a collection of sibling objects. Requires that siblings must never share `json-key` values.&quot;,
+        useName = &quot;json-key&quot;)
+    private JsonKey _jsonKey;
+
+    @BoundChoiceGroup(
+        maxOccurs = -1,
+        assemblies = {
+            @BoundGroupedAssembly(formalName = &quot;Inline Flag Definition&quot;, useName = &quot;define-flag&quot;,
+                binding = InlineDefineFlag.class),
+            @BoundGroupedAssembly(formalName = &quot;Flag Reference&quot;, useName = &quot;flag&quot;, binding = FlagReference.class)
+        },
+        groupAs = @GroupAs(name = &quot;flags&quot;, inJson = JsonGroupAsBehavior.LIST))
+    private List&lt;Object&gt; _flags;
+
+    @BoundAssembly(
+        useName = &quot;model&quot;)
+    private AssemblyModel _model;
+
+    @BoundAssembly(
+        useName = &quot;constraint&quot;)
+    private AssemblyConstraints _constraint;
+
+    @BoundField(
+        formalName = &quot;Remarks&quot;,
+        description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+        useName = &quot;remarks&quot;)
+    private Remarks _remarks;
+
+    @BoundAssembly(
+        formalName = &quot;Example&quot;,
+        useName = &quot;example&quot;,
+        maxOccurs = -1,
+        groupAs = @GroupAs(name = &quot;examples&quot;, inJson = JsonGroupAsBehavior.LIST))
+    private List&lt;Example&gt; _examples;
+
+    public DefineAssembly() {
+<span class="nc" id="L519">      this(null);</span>
+<span class="nc" id="L520">    }</span>
+
+<span class="fc" id="L522">    public DefineAssembly(IMetaschemaData data) {</span>
+<span class="fc" id="L523">      this.__metaschemaData = data;</span>
+<span class="fc" id="L524">    }</span>
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L528">      return __metaschemaData;</span>
+    }
+
+    public String getName() {
+<span class="fc" id="L532">      return _name;</span>
+    }
+
+    public void setName(String value) {
+<span class="nc" id="L536">      _name = value;</span>
+<span class="nc" id="L537">    }</span>
+
+    public BigInteger getIndex() {
+<span class="fc" id="L540">      return _index;</span>
+    }
+
+    public void setIndex(BigInteger value) {
+<span class="nc" id="L544">      _index = value;</span>
+<span class="nc" id="L545">    }</span>
+
+    public String getScope() {
+<span class="fc" id="L548">      return _scope;</span>
+    }
+
+    public void setScope(String value) {
+<span class="nc" id="L552">      _scope = value;</span>
+<span class="nc" id="L553">    }</span>
+
+    public String getDeprecated() {
+<span class="nc" id="L556">      return _deprecated;</span>
+    }
+
+    public void setDeprecated(String value) {
+<span class="nc" id="L560">      _deprecated = value;</span>
+<span class="nc" id="L561">    }</span>
+
+    public String getFormalName() {
+<span class="fc" id="L564">      return _formalName;</span>
+    }
+
+    public void setFormalName(String value) {
+<span class="nc" id="L568">      _formalName = value;</span>
+<span class="nc" id="L569">    }</span>
+
+    public MarkupLine getDescription() {
+<span class="fc" id="L572">      return _description;</span>
+    }
+
+    public void setDescription(MarkupLine value) {
+<span class="nc" id="L576">      _description = value;</span>
+<span class="nc" id="L577">    }</span>
+
+    public List&lt;Property&gt; getProps() {
+<span class="fc" id="L580">      return _props;</span>
+    }
+
+    public void setProps(List&lt;Property&gt; value) {
+<span class="nc" id="L584">      _props = value;</span>
+<span class="nc" id="L585">    }</span>
+
+    /**
+     * Add a new {@link Property} item to the underlying collection.
+     *
+     * @param item
+     *          the item to add
+     * @return {@code true}
+     */
+    public boolean addProp(Property item) {
+<span class="nc" id="L595">      Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L596" title="All 2 branches missed.">      if (_props == null) {</span>
+<span class="nc" id="L597">        _props = new LinkedList&lt;&gt;();</span>
+      }
+<span class="nc" id="L599">      return _props.add(value);</span>
+    }
+
+    /**
+     * Remove the first matching {@link Property} item from the underlying
+     * collection.
+     *
+     * @param item
+     *          the item to remove
+     * @return {@code true} if the item was removed or {@code false} otherwise
+     */
+    public boolean removeProp(Property item) {
+<span class="nc" id="L611">      Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L612" title="All 4 branches missed.">      return _props != null &amp;&amp; _props.remove(value);</span>
+    }
+
+    public UseName getUseName() {
+<span class="fc" id="L616">      return _useName;</span>
+    }
+
+    public void setUseName(UseName value) {
+<span class="nc" id="L620">      _useName = value;</span>
+<span class="nc" id="L621">    }</span>
+
+    public RootName getRootName() {
+<span class="fc" id="L624">      return _rootName;</span>
+    }
+
+    public void setRootName(RootName value) {
+<span class="nc" id="L628">      _rootName = value;</span>
+<span class="nc" id="L629">    }</span>
+
+    public JsonKey getJsonKey() {
+<span class="fc" id="L632">      return _jsonKey;</span>
+    }
+
+    public void setJsonKey(JsonKey value) {
+<span class="nc" id="L636">      _jsonKey = value;</span>
+<span class="nc" id="L637">    }</span>
+
+    public List&lt;Object&gt; getFlags() {
+<span class="fc" id="L640">      return _flags;</span>
+    }
+
+    public void setFlags(List&lt;Object&gt; value) {
+<span class="nc" id="L644">      _flags = value;</span>
+<span class="nc" id="L645">    }</span>
+
+    public AssemblyModel getModel() {
+<span class="fc" id="L648">      return _model;</span>
+    }
+
+    public void setModel(AssemblyModel value) {
+<span class="nc" id="L652">      _model = value;</span>
+<span class="nc" id="L653">    }</span>
+
+    public AssemblyConstraints getConstraint() {
+<span class="fc" id="L656">      return _constraint;</span>
+    }
+
+    public void setConstraint(AssemblyConstraints value) {
+<span class="nc" id="L660">      _constraint = value;</span>
+<span class="nc" id="L661">    }</span>
+
+    public Remarks getRemarks() {
+<span class="fc" id="L664">      return _remarks;</span>
+    }
+
+    public void setRemarks(Remarks value) {
+<span class="nc" id="L668">      _remarks = value;</span>
+<span class="nc" id="L669">    }</span>
+
+    public List&lt;Example&gt; getExamples() {
+<span class="nc" id="L672">      return _examples;</span>
+    }
+
+    public void setExamples(List&lt;Example&gt; value) {
+<span class="nc" id="L676">      _examples = value;</span>
+<span class="nc" id="L677">    }</span>
+
+    /**
+     * Add a new {@link Example} item to the underlying collection.
+     *
+     * @param item
+     *          the item to add
+     * @return {@code true}
+     */
+    public boolean addExample(Example item) {
+<span class="nc" id="L687">      Example value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L688" title="All 2 branches missed.">      if (_examples == null) {</span>
+<span class="nc" id="L689">        _examples = new LinkedList&lt;&gt;();</span>
+      }
+<span class="nc" id="L691">      return _examples.add(value);</span>
+    }
+
+    /**
+     * Remove the first matching {@link Example} item from the underlying
+     * collection.
+     *
+     * @param item
+     *          the item to remove
+     * @return {@code true} if the item was removed or {@code false} otherwise
+     */
+    public boolean removeExample(Example item) {
+<span class="nc" id="L703">      Example value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L704" title="All 4 branches missed.">      return _examples != null &amp;&amp; _examples.remove(value);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L709">      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+    }
+
+    /**
+     * Provides a root name, for when the definition is used as the root of a node
+     * hierarchy.
+     */
+    @MetaschemaField(
+        formalName = &quot;Root Name&quot;,
+        description = &quot;Provides a root name, for when the definition is used as the root of a node hierarchy.&quot;,
+        name = &quot;root-name&quot;,
+        moduleClass = MetaschemaModelModule.class)
+    public static class RootName implements IBoundObject {
+      private final IMetaschemaData __metaschemaData;
+
+      /**
+       * &quot;Used for binary formats instead of the textual name.&quot;
+       */
+      @BoundFlag(
+          formalName = &quot;Numeric Index&quot;,
+          description = &quot;Used for binary formats instead of the textual name.&quot;,
+          name = &quot;index&quot;,
+          typeAdapter = NonNegativeIntegerAdapter.class)
+      private BigInteger _index;
+
+      @BoundFieldValue(
+          valueKeyName = &quot;name&quot;,
+          typeAdapter = TokenAdapter.class)
+      private String _name;
+
+      public RootName() {
+<span class="nc" id="L740">        this(null);</span>
+<span class="nc" id="L741">      }</span>
+
+<span class="fc" id="L743">      public RootName(IMetaschemaData data) {</span>
+<span class="fc" id="L744">        this.__metaschemaData = data;</span>
+<span class="fc" id="L745">      }</span>
+
+      @Override
+      public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L749">        return __metaschemaData;</span>
+      }
+
+      public BigInteger getIndex() {
+<span class="nc" id="L753">        return _index;</span>
+      }
+
+      public void setIndex(BigInteger value) {
+<span class="nc" id="L757">        _index = value;</span>
+<span class="nc" id="L758">      }</span>
+
+      public String getName() {
+<span class="fc" id="L761">        return _name;</span>
+      }
+
+      public void setName(String value) {
+<span class="nc" id="L765">        _name = value;</span>
+<span class="nc" id="L766">      }</span>
+
+      @Override
+      public String toString() {
+<span class="nc" id="L770">        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+      }
+    }
+  }
+
+  @MetaschemaAssembly(
+      formalName = &quot;Global Field Definition&quot;,
+      name = &quot;define-field&quot;,
+      moduleClass = MetaschemaModelModule.class)
+  public static class DefineField implements IBoundObject {
+    private final IMetaschemaData __metaschemaData;
+
+    @BoundFlag(
+        formalName = &quot;Global Field Name&quot;,
+        name = &quot;name&quot;,
+        required = true,
+        typeAdapter = TokenAdapter.class)
+    private String _name;
+
+    @BoundFlag(
+        formalName = &quot;Global Field Binary Name&quot;,
+        name = &quot;index&quot;,
+        typeAdapter = PositiveIntegerAdapter.class)
+    private BigInteger _index;
+
+    @BoundFlag(
+        formalName = &quot;Definition Scope&quot;,
+        name = &quot;scope&quot;,
+        defaultValue = &quot;global&quot;,
+        typeAdapter = TokenAdapter.class,
+        valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+            @AllowedValue(value = &quot;local&quot;,
+                description = &quot;This definition is only available in the context of the current Metaschema module.&quot;),
+            @AllowedValue(value = &quot;global&quot;,
+                description = &quot;This definition will be made available to any Metaschema module that includes this one either directly or indirectly through a chain of imported Metaschemas.&quot;) })))
+    private String _scope;
+
+    @BoundFlag(
+        formalName = &quot;Deprecated Version&quot;,
+        name = &quot;deprecated&quot;,
+        typeAdapter = StringAdapter.class)
+    private String _deprecated;
+
+    @BoundFlag(
+        formalName = &quot;Field Value Data Type&quot;,
+        name = &quot;as-type&quot;,
+        defaultValue = &quot;string&quot;,
+        typeAdapter = TokenAdapter.class,
+        valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+            allowOthers = true,
+            values = { @AllowedValue(value = &quot;markup-line&quot;,
+                description = &quot;The [markup-line](https://pages.nist.gov/metaschema/specification/datatypes/#markup-line) data type.&quot;),
+                @AllowedValue(value = &quot;markup-multiline&quot;,
+                    description = &quot;The [markup-multiline](https://pages.nist.gov/metaschema/specification/datatypes/#markup-multiline) data type.&quot;),
+                @AllowedValue(value = &quot;base64&quot;,
+                    description = &quot;The [base64](https://pages.nist.gov/metaschema/specification/datatypes/#base64) data type.&quot;),
+                @AllowedValue(value = &quot;boolean&quot;,
+                    description = &quot;The [boolean](https://pages.nist.gov/metaschema/specification/datatypes/#boolean) data type.&quot;),
+                @AllowedValue(value = &quot;date&quot;,
+                    description = &quot;The [date](https://pages.nist.gov/metaschema/specification/datatypes/#date) data type.&quot;),
+                @AllowedValue(value = &quot;date-time&quot;,
+                    description = &quot;The [date-time](https://pages.nist.gov/metaschema/specification/datatypes/#date-time) data type.&quot;),
+                @AllowedValue(value = &quot;date-time-with-timezone&quot;,
+                    description = &quot;The [date-time-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-time-with-timezone) data type.&quot;),
+                @AllowedValue(value = &quot;date-with-timezone&quot;,
+                    description = &quot;The [date-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-with-timezone) data type.&quot;),
+                @AllowedValue(value = &quot;day-time-duration&quot;,
+                    description = &quot;The [day-time-duration](https://pages.nist.gov/metaschema/specification/datatypes/#day-time-duration) data type.&quot;),
+                @AllowedValue(value = &quot;decimal&quot;,
+                    description = &quot;The [decimal](https://pages.nist.gov/metaschema/specification/datatypes/#decimal) data type.&quot;),
+                @AllowedValue(value = &quot;email-address&quot;,
+                    description = &quot;The [email-address](https://pages.nist.gov/metaschema/specification/datatypes/#email-address) data type.&quot;),
+                @AllowedValue(value = &quot;hostname&quot;,
+                    description = &quot;The [hostname](https://pages.nist.gov/metaschema/specification/datatypes/#hostname) data type.&quot;),
+                @AllowedValue(value = &quot;integer&quot;,
+                    description = &quot;The [integer](https://pages.nist.gov/metaschema/specification/datatypes/#integer) data type.&quot;),
+                @AllowedValue(value = &quot;ip-v4-address&quot;,
+                    description = &quot;The [ip-v4-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address) data type.&quot;),
+                @AllowedValue(value = &quot;ip-v6-address&quot;,
+                    description = &quot;The [ip-v6-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address) data type.&quot;),
+                @AllowedValue(value = &quot;non-negative-integer&quot;,
+                    description = &quot;The [non-negative-integer](https://pages.nist.gov/metaschema/specification/datatypes/#non-negative-integer) data type.&quot;),
+                @AllowedValue(value = &quot;positive-integer&quot;,
+                    description = &quot;The [positive-integer](https://pages.nist.gov/metaschema/specification/datatypes/#positive-integer) data type.&quot;),
+                @AllowedValue(value = &quot;string&quot;,
+                    description = &quot;The [string](https://pages.nist.gov/metaschema/specification/datatypes/#string) data type.&quot;),
+                @AllowedValue(value = &quot;token&quot;,
+                    description = &quot;The [token](https://pages.nist.gov/metaschema/specification/datatypes/#token) data type.&quot;),
+                @AllowedValue(value = &quot;uri&quot;,
+                    description = &quot;The [uri](https://pages.nist.gov/metaschema/specification/datatypes/#uri) data type.&quot;),
+                @AllowedValue(value = &quot;uri-reference&quot;,
+                    description = &quot;The [uri-reference](https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference) data type.&quot;),
+                @AllowedValue(value = &quot;uuid&quot;,
+                    description = &quot;The [uuid](https://pages.nist.gov/metaschema/specification/datatypes/#uuid) data type.&quot;),
+                @AllowedValue(value = &quot;base64Binary&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'base64' data type.&quot;),
+                @AllowedValue(value = &quot;dateTime&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'date-time' data type.&quot;),
+                @AllowedValue(value = &quot;dateTime-with-timezone&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type.&quot;),
+                @AllowedValue(value = &quot;email&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'email-address' data type.&quot;),
+                @AllowedValue(value = &quot;nonNegativeInteger&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'non-negative-integer' data type.&quot;),
+                @AllowedValue(value = &quot;positiveInteger&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'positive-integer' data type.&quot;) })))
+    private String _asType;
+
+    @BoundFlag(
+        formalName = &quot;Default Field Value&quot;,
+        name = &quot;default&quot;,
+        typeAdapter = StringAdapter.class)
+    private String _default;
+
+    @BoundField(
+        formalName = &quot;Formal Name&quot;,
+        description = &quot;A formal name for the data construct, to be presented in documentation.&quot;,
+        useName = &quot;formal-name&quot;)
+    private String _formalName;
+
+    @BoundField(
+        formalName = &quot;Description&quot;,
+        description = &quot;A short description of the data construct's purpose, describing the constructs semantics.&quot;,
+        useName = &quot;description&quot;,
+        typeAdapter = MarkupLineAdapter.class)
+    private MarkupLine _description;
+
+    @BoundAssembly(
+        formalName = &quot;Property&quot;,
+        useName = &quot;prop&quot;,
+        maxOccurs = -1,
+        groupAs = @GroupAs(name = &quot;props&quot;, inJson = JsonGroupAsBehavior.LIST))
+    private List&lt;Property&gt; _props;
+
+    @BoundField(
+        formalName = &quot;Use Name&quot;,
+        description = &quot;Allows the name of the definition to be overridden.&quot;,
+        useName = &quot;use-name&quot;)
+    private UseName _useName;
+
+    @BoundAssembly(
+        formalName = &quot;JSON Key&quot;,
+        description = &quot;Used in JSON (and similar formats) to identify a flag that will be used as the property name in an object hold a collection of sibling objects. Requires that siblings must never share `json-key` values.&quot;,
+        useName = &quot;json-key&quot;)
+    private JsonKey _jsonKey;
+
+    @BoundField(
+        formalName = &quot;Field Value JSON Property Name&quot;,
+        useName = &quot;json-value-key&quot;,
+        typeAdapter = TokenAdapter.class)
+    private String _jsonValueKey;
+
+    @BoundAssembly(
+        formalName = &quot;Flag Used as the Field Value's JSON Property Name&quot;,
+        useName = &quot;json-value-key-flag&quot;)
+    private JsonValueKeyFlag _jsonValueKeyFlag;
+
+    @BoundChoiceGroup(
+        maxOccurs = -1,
+        assemblies = {
+            @BoundGroupedAssembly(formalName = &quot;Inline Flag Definition&quot;, useName = &quot;define-flag&quot;,
+                binding = InlineDefineFlag.class),
+            @BoundGroupedAssembly(formalName = &quot;Flag Reference&quot;, useName = &quot;flag&quot;, binding = FlagReference.class)
+        },
+        groupAs = @GroupAs(name = &quot;flags&quot;, inJson = JsonGroupAsBehavior.LIST))
+    private List&lt;Object&gt; _flags;
+
+    @BoundAssembly(
+        useName = &quot;constraint&quot;)
+    private FieldConstraints _constraint;
+
+    @BoundField(
+        formalName = &quot;Remarks&quot;,
+        description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+        useName = &quot;remarks&quot;)
+    private Remarks _remarks;
+
+    @BoundAssembly(
+        formalName = &quot;Example&quot;,
+        useName = &quot;example&quot;,
+        maxOccurs = -1,
+        groupAs = @GroupAs(name = &quot;examples&quot;, inJson = JsonGroupAsBehavior.LIST))
+    private List&lt;Example&gt; _examples;
+
+    public DefineField() {
+<span class="nc" id="L955">      this(null);</span>
+<span class="nc" id="L956">    }</span>
+
+<span class="fc" id="L958">    public DefineField(IMetaschemaData data) {</span>
+<span class="fc" id="L959">      this.__metaschemaData = data;</span>
+<span class="fc" id="L960">    }</span>
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L964">      return __metaschemaData;</span>
+    }
+
+    public String getName() {
+<span class="fc" id="L968">      return _name;</span>
+    }
+
+    public void setName(String value) {
+<span class="nc" id="L972">      _name = value;</span>
+<span class="nc" id="L973">    }</span>
+
+    public BigInteger getIndex() {
+<span class="fc" id="L976">      return _index;</span>
+    }
+
+    public void setIndex(BigInteger value) {
+<span class="nc" id="L980">      _index = value;</span>
+<span class="nc" id="L981">    }</span>
+
+    public String getScope() {
+<span class="fc" id="L984">      return _scope;</span>
+    }
+
+    public void setScope(String value) {
+<span class="nc" id="L988">      _scope = value;</span>
+<span class="nc" id="L989">    }</span>
+
+    public String getDeprecated() {
+<span class="nc" id="L992">      return _deprecated;</span>
+    }
+
+    public void setDeprecated(String value) {
+<span class="nc" id="L996">      _deprecated = value;</span>
+<span class="nc" id="L997">    }</span>
+
+    public String getAsType() {
+<span class="fc" id="L1000">      return _asType;</span>
+    }
+
+    public void setAsType(String value) {
+<span class="nc" id="L1004">      _asType = value;</span>
+<span class="nc" id="L1005">    }</span>
+
+    public String getDefault() {
+<span class="fc" id="L1008">      return _default;</span>
+    }
+
+    public void setDefault(String value) {
+<span class="nc" id="L1012">      _default = value;</span>
+<span class="nc" id="L1013">    }</span>
+
+    public String getFormalName() {
+<span class="fc" id="L1016">      return _formalName;</span>
+    }
+
+    public void setFormalName(String value) {
+<span class="nc" id="L1020">      _formalName = value;</span>
+<span class="nc" id="L1021">    }</span>
+
+    public MarkupLine getDescription() {
+<span class="fc" id="L1024">      return _description;</span>
+    }
+
+    public void setDescription(MarkupLine value) {
+<span class="nc" id="L1028">      _description = value;</span>
+<span class="nc" id="L1029">    }</span>
+
+    public List&lt;Property&gt; getProps() {
+<span class="fc" id="L1032">      return _props;</span>
+    }
+
+    public void setProps(List&lt;Property&gt; value) {
+<span class="nc" id="L1036">      _props = value;</span>
+<span class="nc" id="L1037">    }</span>
+
+    /**
+     * Add a new {@link Property} item to the underlying collection.
+     *
+     * @param item
+     *          the item to add
+     * @return {@code true}
+     */
+    public boolean addProp(Property item) {
+<span class="nc" id="L1047">      Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L1048" title="All 2 branches missed.">      if (_props == null) {</span>
+<span class="nc" id="L1049">        _props = new LinkedList&lt;&gt;();</span>
+      }
+<span class="nc" id="L1051">      return _props.add(value);</span>
+    }
+
+    /**
+     * Remove the first matching {@link Property} item from the underlying
+     * collection.
+     *
+     * @param item
+     *          the item to remove
+     * @return {@code true} if the item was removed or {@code false} otherwise
+     */
+    public boolean removeProp(Property item) {
+<span class="nc" id="L1063">      Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L1064" title="All 4 branches missed.">      return _props != null &amp;&amp; _props.remove(value);</span>
+    }
+
+    public UseName getUseName() {
+<span class="fc" id="L1068">      return _useName;</span>
+    }
+
+    public void setUseName(UseName value) {
+<span class="nc" id="L1072">      _useName = value;</span>
+<span class="nc" id="L1073">    }</span>
+
+    public JsonKey getJsonKey() {
+<span class="fc" id="L1076">      return _jsonKey;</span>
+    }
+
+    public void setJsonKey(JsonKey value) {
+<span class="nc" id="L1080">      _jsonKey = value;</span>
+<span class="nc" id="L1081">    }</span>
+
+    public String getJsonValueKey() {
+<span class="fc" id="L1084">      return _jsonValueKey;</span>
+    }
+
+    public void setJsonValueKey(String value) {
+<span class="nc" id="L1088">      _jsonValueKey = value;</span>
+<span class="nc" id="L1089">    }</span>
+
+    public JsonValueKeyFlag getJsonValueKeyFlag() {
+<span class="fc" id="L1092">      return _jsonValueKeyFlag;</span>
+    }
+
+    public void setJsonValueKeyFlag(JsonValueKeyFlag value) {
+<span class="nc" id="L1096">      _jsonValueKeyFlag = value;</span>
+<span class="nc" id="L1097">    }</span>
+
+    public List&lt;Object&gt; getFlags() {
+<span class="fc" id="L1100">      return _flags;</span>
+    }
+
+    public void setFlags(List&lt;Object&gt; value) {
+<span class="nc" id="L1104">      _flags = value;</span>
+<span class="nc" id="L1105">    }</span>
+
+    public FieldConstraints getConstraint() {
+<span class="fc" id="L1108">      return _constraint;</span>
+    }
+
+    public void setConstraint(FieldConstraints value) {
+<span class="nc" id="L1112">      _constraint = value;</span>
+<span class="nc" id="L1113">    }</span>
+
+    public Remarks getRemarks() {
+<span class="nc" id="L1116">      return _remarks;</span>
+    }
+
+    public void setRemarks(Remarks value) {
+<span class="nc" id="L1120">      _remarks = value;</span>
+<span class="nc" id="L1121">    }</span>
+
+    public List&lt;Example&gt; getExamples() {
+<span class="nc" id="L1124">      return _examples;</span>
+    }
+
+    public void setExamples(List&lt;Example&gt; value) {
+<span class="nc" id="L1128">      _examples = value;</span>
+<span class="nc" id="L1129">    }</span>
+
+    /**
+     * Add a new {@link Example} item to the underlying collection.
+     *
+     * @param item
+     *          the item to add
+     * @return {@code true}
+     */
+    public boolean addExample(Example item) {
+<span class="nc" id="L1139">      Example value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L1140" title="All 2 branches missed.">      if (_examples == null) {</span>
+<span class="nc" id="L1141">        _examples = new LinkedList&lt;&gt;();</span>
+      }
+<span class="nc" id="L1143">      return _examples.add(value);</span>
+    }
+
+    /**
+     * Remove the first matching {@link Example} item from the underlying
+     * collection.
+     *
+     * @param item
+     *          the item to remove
+     * @return {@code true} if the item was removed or {@code false} otherwise
+     */
+    public boolean removeExample(Example item) {
+<span class="nc" id="L1155">      Example value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L1156" title="All 4 branches missed.">      return _examples != null &amp;&amp; _examples.remove(value);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L1161">      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+    }
+  }
+
+  @MetaschemaAssembly(
+      formalName = &quot;Global Flag Definition&quot;,
+      name = &quot;define-flag&quot;,
+      moduleClass = MetaschemaModelModule.class)
+  public static class DefineFlag implements IBoundObject {
+    private final IMetaschemaData __metaschemaData;
+
+    @BoundFlag(
+        formalName = &quot;Global Flag Name&quot;,
+        name = &quot;name&quot;,
+        required = true,
+        typeAdapter = TokenAdapter.class)
+    private String _name;
+
+    @BoundFlag(
+        formalName = &quot;Global Flag Binary Name&quot;,
+        name = &quot;index&quot;,
+        typeAdapter = PositiveIntegerAdapter.class)
+    private BigInteger _index;
+
+    @BoundFlag(
+        formalName = &quot;Definition Scope&quot;,
+        name = &quot;scope&quot;,
+        defaultValue = &quot;global&quot;,
+        typeAdapter = TokenAdapter.class,
+        valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+            @AllowedValue(value = &quot;local&quot;,
+                description = &quot;This definition is only available in the context of the current Metaschema module.&quot;),
+            @AllowedValue(value = &quot;global&quot;,
+                description = &quot;This definition will be made available to any Metaschema module that includes this one either directly or indirectly through a chain of imported Metaschemas.&quot;) })))
+    private String _scope;
+
+    @BoundFlag(
+        formalName = &quot;Deprecated Version&quot;,
+        name = &quot;deprecated&quot;,
+        typeAdapter = StringAdapter.class)
+    private String _deprecated;
+
+    @BoundFlag(
+        formalName = &quot;Flag Value Data Type&quot;,
+        name = &quot;as-type&quot;,
+        defaultValue = &quot;string&quot;,
+        typeAdapter = TokenAdapter.class,
+        valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+            allowOthers = true,
+            values = { @AllowedValue(value = &quot;base64&quot;,
+                description = &quot;The [base64](https://pages.nist.gov/metaschema/specification/datatypes/#base64) data type.&quot;),
+                @AllowedValue(value = &quot;boolean&quot;,
+                    description = &quot;The [boolean](https://pages.nist.gov/metaschema/specification/datatypes/#boolean) data type.&quot;),
+                @AllowedValue(value = &quot;date&quot;,
+                    description = &quot;The [date](https://pages.nist.gov/metaschema/specification/datatypes/#date) data type.&quot;),
+                @AllowedValue(value = &quot;date-time&quot;,
+                    description = &quot;The [date-time](https://pages.nist.gov/metaschema/specification/datatypes/#date-time) data type.&quot;),
+                @AllowedValue(value = &quot;date-time-with-timezone&quot;,
+                    description = &quot;The [date-time-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-time-with-timezone) data type.&quot;),
+                @AllowedValue(value = &quot;date-with-timezone&quot;,
+                    description = &quot;The [date-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-with-timezone) data type.&quot;),
+                @AllowedValue(value = &quot;day-time-duration&quot;,
+                    description = &quot;The [day-time-duration](https://pages.nist.gov/metaschema/specification/datatypes/#day-time-duration) data type.&quot;),
+                @AllowedValue(value = &quot;decimal&quot;,
+                    description = &quot;The [decimal](https://pages.nist.gov/metaschema/specification/datatypes/#decimal) data type.&quot;),
+                @AllowedValue(value = &quot;email-address&quot;,
+                    description = &quot;The [email-address](https://pages.nist.gov/metaschema/specification/datatypes/#email-address) data type.&quot;),
+                @AllowedValue(value = &quot;hostname&quot;,
+                    description = &quot;The [hostname](https://pages.nist.gov/metaschema/specification/datatypes/#hostname) data type.&quot;),
+                @AllowedValue(value = &quot;integer&quot;,
+                    description = &quot;The [integer](https://pages.nist.gov/metaschema/specification/datatypes/#integer) data type.&quot;),
+                @AllowedValue(value = &quot;ip-v4-address&quot;,
+                    description = &quot;The [ip-v4-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address) data type.&quot;),
+                @AllowedValue(value = &quot;ip-v6-address&quot;,
+                    description = &quot;The [ip-v6-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address) data type.&quot;),
+                @AllowedValue(value = &quot;non-negative-integer&quot;,
+                    description = &quot;The [non-negative-integer](https://pages.nist.gov/metaschema/specification/datatypes/#non-negative-integer) data type.&quot;),
+                @AllowedValue(value = &quot;positive-integer&quot;,
+                    description = &quot;The [positive-integer](https://pages.nist.gov/metaschema/specification/datatypes/#positive-integer) data type.&quot;),
+                @AllowedValue(value = &quot;string&quot;,
+                    description = &quot;The [string](https://pages.nist.gov/metaschema/specification/datatypes/#string) data type.&quot;),
+                @AllowedValue(value = &quot;token&quot;,
+                    description = &quot;The [token](https://pages.nist.gov/metaschema/specification/datatypes/#token) data type.&quot;),
+                @AllowedValue(value = &quot;uri&quot;,
+                    description = &quot;The [uri](https://pages.nist.gov/metaschema/specification/datatypes/#uri) data type.&quot;),
+                @AllowedValue(value = &quot;uri-reference&quot;,
+                    description = &quot;The [uri-reference](https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference) data type.&quot;),
+                @AllowedValue(value = &quot;uuid&quot;,
+                    description = &quot;The [uuid](https://pages.nist.gov/metaschema/specification/datatypes/#uuid) data type.&quot;),
+                @AllowedValue(value = &quot;base64Binary&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'base64' data type.&quot;),
+                @AllowedValue(value = &quot;dateTime&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'date-time' data type.&quot;),
+                @AllowedValue(value = &quot;dateTime-with-timezone&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type.&quot;),
+                @AllowedValue(value = &quot;email&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'email-address' data type.&quot;),
+                @AllowedValue(value = &quot;nonNegativeInteger&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'non-negative-integer' data type.&quot;),
+                @AllowedValue(value = &quot;positiveInteger&quot;,
+                    description = &quot;An old name which is deprecated for use in favor of the 'positive-integer' data type.&quot;) })))
+    private String _asType;
+
+    @BoundFlag(
+        formalName = &quot;Default Flag Value&quot;,
+        name = &quot;default&quot;,
+        typeAdapter = StringAdapter.class)
+    private String _default;
+
+    @BoundField(
+        formalName = &quot;Formal Name&quot;,
+        description = &quot;A formal name for the data construct, to be presented in documentation.&quot;,
+        useName = &quot;formal-name&quot;)
+    private String _formalName;
+
+    @BoundField(
+        formalName = &quot;Description&quot;,
+        description = &quot;A short description of the data construct's purpose, describing the constructs semantics.&quot;,
+        useName = &quot;description&quot;,
+        typeAdapter = MarkupLineAdapter.class)
+    private MarkupLine _description;
+
+    @BoundAssembly(
+        formalName = &quot;Property&quot;,
+        useName = &quot;prop&quot;,
+        maxOccurs = -1,
+        groupAs = @GroupAs(name = &quot;props&quot;, inJson = JsonGroupAsBehavior.LIST))
+    private List&lt;Property&gt; _props;
+
+    @BoundField(
+        formalName = &quot;Use Name&quot;,
+        description = &quot;Allows the name of the definition to be overridden.&quot;,
+        useName = &quot;use-name&quot;)
+    private UseName _useName;
+
+    @BoundAssembly(
+        useName = &quot;constraint&quot;)
+    private FlagConstraints _constraint;
+
+    @BoundField(
+        formalName = &quot;Remarks&quot;,
+        description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+        useName = &quot;remarks&quot;)
+    private Remarks _remarks;
+
+    @BoundAssembly(
+        formalName = &quot;Example&quot;,
+        useName = &quot;example&quot;,
+        maxOccurs = -1,
+        groupAs = @GroupAs(name = &quot;examples&quot;, inJson = JsonGroupAsBehavior.LIST))
+    private List&lt;Example&gt; _examples;
+
+    public DefineFlag() {
+<span class="nc" id="L1314">      this(null);</span>
+<span class="nc" id="L1315">    }</span>
+
+<span class="fc" id="L1317">    public DefineFlag(IMetaschemaData data) {</span>
+<span class="fc" id="L1318">      this.__metaschemaData = data;</span>
+<span class="fc" id="L1319">    }</span>
+
+    @Override
+    public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L1323">      return __metaschemaData;</span>
+    }
+
+    public String getName() {
+<span class="fc" id="L1327">      return _name;</span>
+    }
+
+    public void setName(String value) {
+<span class="nc" id="L1331">      _name = value;</span>
+<span class="nc" id="L1332">    }</span>
+
+    public BigInteger getIndex() {
+<span class="fc" id="L1335">      return _index;</span>
+    }
+
+    public void setIndex(BigInteger value) {
+<span class="nc" id="L1339">      _index = value;</span>
+<span class="nc" id="L1340">    }</span>
+
+    public String getScope() {
+<span class="fc" id="L1343">      return _scope;</span>
+    }
+
+    public void setScope(String value) {
+<span class="nc" id="L1347">      _scope = value;</span>
+<span class="nc" id="L1348">    }</span>
+
+    public String getDeprecated() {
+<span class="nc" id="L1351">      return _deprecated;</span>
+    }
+
+    public void setDeprecated(String value) {
+<span class="nc" id="L1355">      _deprecated = value;</span>
+<span class="nc" id="L1356">    }</span>
+
+    public String getAsType() {
+<span class="fc" id="L1359">      return _asType;</span>
+    }
+
+    public void setAsType(String value) {
+<span class="nc" id="L1363">      _asType = value;</span>
+<span class="nc" id="L1364">    }</span>
+
+    public String getDefault() {
+<span class="fc" id="L1367">      return _default;</span>
+    }
+
+    public void setDefault(String value) {
+<span class="nc" id="L1371">      _default = value;</span>
+<span class="nc" id="L1372">    }</span>
+
+    public String getFormalName() {
+<span class="fc" id="L1375">      return _formalName;</span>
+    }
+
+    public void setFormalName(String value) {
+<span class="nc" id="L1379">      _formalName = value;</span>
+<span class="nc" id="L1380">    }</span>
+
+    public MarkupLine getDescription() {
+<span class="fc" id="L1383">      return _description;</span>
+    }
+
+    public void setDescription(MarkupLine value) {
+<span class="nc" id="L1387">      _description = value;</span>
+<span class="nc" id="L1388">    }</span>
+
+    public List&lt;Property&gt; getProps() {
+<span class="fc" id="L1391">      return _props;</span>
+    }
+
+    public void setProps(List&lt;Property&gt; value) {
+<span class="nc" id="L1395">      _props = value;</span>
+<span class="nc" id="L1396">    }</span>
+
+    /**
+     * Add a new {@link Property} item to the underlying collection.
+     *
+     * @param item
+     *          the item to add
+     * @return {@code true}
+     */
+    public boolean addProp(Property item) {
+<span class="nc" id="L1406">      Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L1407" title="All 2 branches missed.">      if (_props == null) {</span>
+<span class="nc" id="L1408">        _props = new LinkedList&lt;&gt;();</span>
+      }
+<span class="nc" id="L1410">      return _props.add(value);</span>
+    }
+
+    /**
+     * Remove the first matching {@link Property} item from the underlying
+     * collection.
+     *
+     * @param item
+     *          the item to remove
+     * @return {@code true} if the item was removed or {@code false} otherwise
+     */
+    public boolean removeProp(Property item) {
+<span class="nc" id="L1422">      Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L1423" title="All 4 branches missed.">      return _props != null &amp;&amp; _props.remove(value);</span>
+    }
+
+    public UseName getUseName() {
+<span class="fc" id="L1427">      return _useName;</span>
+    }
+
+    public void setUseName(UseName value) {
+<span class="nc" id="L1431">      _useName = value;</span>
+<span class="nc" id="L1432">    }</span>
+
+    public FlagConstraints getConstraint() {
+<span class="fc" id="L1435">      return _constraint;</span>
+    }
+
+    public void setConstraint(FlagConstraints value) {
+<span class="nc" id="L1439">      _constraint = value;</span>
+<span class="nc" id="L1440">    }</span>
+
+    public Remarks getRemarks() {
+<span class="nc" id="L1443">      return _remarks;</span>
+    }
+
+    public void setRemarks(Remarks value) {
+<span class="nc" id="L1447">      _remarks = value;</span>
+<span class="nc" id="L1448">    }</span>
+
+    public List&lt;Example&gt; getExamples() {
+<span class="nc" id="L1451">      return _examples;</span>
+    }
+
+    public void setExamples(List&lt;Example&gt; value) {
+<span class="nc" id="L1455">      _examples = value;</span>
+<span class="nc" id="L1456">    }</span>
+
+    /**
+     * Add a new {@link Example} item to the underlying collection.
+     *
+     * @param item
+     *          the item to add
+     * @return {@code true}
+     */
+    public boolean addExample(Example item) {
+<span class="nc" id="L1466">      Example value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L1467" title="All 2 branches missed.">      if (_examples == null) {</span>
+<span class="nc" id="L1468">        _examples = new LinkedList&lt;&gt;();</span>
+      }
+<span class="nc" id="L1470">      return _examples.add(value);</span>
+    }
+
+    /**
+     * Remove the first matching {@link Example} item from the underlying
+     * collection.
+     *
+     * @param item
+     *          the item to remove
+     * @return {@code true} if the item was removed or {@code false} otherwise
+     */
+    public boolean removeExample(Example item) {
+<span class="nc" id="L1482">      Example value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L1483" title="All 4 branches missed.">      return _examples != null &amp;&amp; _examples.remove(value);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L1488">      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

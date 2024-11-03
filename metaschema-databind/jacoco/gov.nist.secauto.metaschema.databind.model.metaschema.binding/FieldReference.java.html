@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FieldReference.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.model.metaschema.binding</a> &gt; <span class="el_source">FieldReference.java</span></div><h1>FieldReference.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigInteger;
+import java.util.LinkedList;
+import java.util.List;
+
+@SuppressWarnings({
+    &quot;PMD.DataClass&quot;,
+    &quot;PMD.FieldNamingConventions&quot;
+})
+@MetaschemaAssembly(
+    formalName = &quot;Field Reference&quot;,
+    name = &quot;field-reference&quot;,
+    moduleClass = MetaschemaModelModule.class)
+public class FieldReference implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundFlag(
+      formalName = &quot;Global Field Reference&quot;,
+      name = &quot;ref&quot;,
+      required = true,
+      typeAdapter = TokenAdapter.class)
+  private String _ref;
+
+  @BoundFlag(
+      formalName = &quot;Field Reference Binary Name&quot;,
+      name = &quot;index&quot;,
+      typeAdapter = PositiveIntegerAdapter.class)
+  private BigInteger _index;
+
+  @BoundFlag(
+      formalName = &quot;Deprecated Version&quot;,
+      name = &quot;deprecated&quot;,
+      typeAdapter = StringAdapter.class)
+  private String _deprecated;
+
+  @BoundFlag(
+      formalName = &quot;Default Field Value&quot;,
+      name = &quot;default&quot;,
+      typeAdapter = StringAdapter.class)
+  private String _default;
+
+  @BoundFlag(
+      formalName = &quot;Minimum Occurrence&quot;,
+      name = &quot;min-occurs&quot;,
+      defaultValue = &quot;0&quot;,
+      typeAdapter = NonNegativeIntegerAdapter.class)
+  private BigInteger _minOccurs;
+
+  @BoundFlag(
+      formalName = &quot;Maximum Occurrence&quot;,
+      name = &quot;max-occurs&quot;,
+      defaultValue = &quot;1&quot;,
+      typeAdapter = StringAdapter.class,
+      valueConstraints = @ValueConstraints(
+          matches = @Matches(level = IConstraint.Level.ERROR, pattern = &quot;^[1-9][0-9]*|unbounded$&quot;)))
+  private String _maxOccurs;
+
+  @BoundFlag(
+      formalName = &quot;Field In XML&quot;,
+      name = &quot;in-xml&quot;,
+      defaultValue = &quot;WRAPPED&quot;,
+      typeAdapter = TokenAdapter.class,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+          @AllowedValue(value = &quot;WRAPPED&quot;,
+              description = &quot;Block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML.&quot;),
+          @AllowedValue(value = &quot;UNWRAPPED&quot;,
+              description = &quot;Block contents of a markup-multiline will be represented in the XML with no wrapper, making the field implicit. Among sibling fields in a given model, only one of them may be designated as UNWRAPPED.&quot;),
+          @AllowedValue(value = &quot;WITH_WRAPPER&quot;, description = &quot;Alias for WRAPPED.&quot;) })))
+  private String _inXml;
+
+  @BoundField(
+      formalName = &quot;Formal Name&quot;,
+      description = &quot;A formal name for the data construct, to be presented in documentation.&quot;,
+      useName = &quot;formal-name&quot;)
+  private String _formalName;
+
+  @BoundField(
+      formalName = &quot;Description&quot;,
+      description = &quot;A short description of the data construct's purpose, describing the constructs semantics.&quot;,
+      useName = &quot;description&quot;,
+      typeAdapter = MarkupLineAdapter.class)
+  private MarkupLine _description;
+
+  @BoundAssembly(
+      formalName = &quot;Property&quot;,
+      useName = &quot;prop&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;props&quot;, inJson = JsonGroupAsBehavior.LIST))
+  private List&lt;Property&gt; _props;
+
+  @BoundField(
+      formalName = &quot;Use Name&quot;,
+      description = &quot;Allows the name of the definition to be overridden.&quot;,
+      useName = &quot;use-name&quot;)
+  private UseName _useName;
+
+  @BoundAssembly(
+      formalName = &quot;Group As&quot;,
+      useName = &quot;group-as&quot;)
+  private GroupingAs _groupAs;
+
+  @BoundField(
+      formalName = &quot;Remarks&quot;,
+      description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+      useName = &quot;remarks&quot;)
+  private Remarks _remarks;
+
+  public FieldReference() {
+<span class="nc" id="L139">    this(null);</span>
+<span class="nc" id="L140">  }</span>
+
+<span class="fc" id="L142">  public FieldReference(IMetaschemaData data) {</span>
+<span class="fc" id="L143">    this.__metaschemaData = data;</span>
+<span class="fc" id="L144">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L148">    return __metaschemaData;</span>
+  }
+
+  public String getRef() {
+<span class="fc" id="L152">    return _ref;</span>
+  }
+
+  public void setRef(String value) {
+<span class="nc" id="L156">    _ref = value;</span>
+<span class="nc" id="L157">  }</span>
+
+  public BigInteger getIndex() {
+<span class="nc" id="L160">    return _index;</span>
+  }
+
+  public void setIndex(BigInteger value) {
+<span class="nc" id="L164">    _index = value;</span>
+<span class="nc" id="L165">  }</span>
+
+  public String getDeprecated() {
+<span class="nc" id="L168">    return _deprecated;</span>
+  }
+
+  public void setDeprecated(String value) {
+<span class="nc" id="L172">    _deprecated = value;</span>
+<span class="nc" id="L173">  }</span>
+
+  public String getDefault() {
+<span class="fc" id="L176">    return _default;</span>
+  }
+
+  public void setDefault(String value) {
+<span class="nc" id="L180">    _default = value;</span>
+<span class="nc" id="L181">  }</span>
+
+  public BigInteger getMinOccurs() {
+<span class="fc" id="L184">    return _minOccurs;</span>
+  }
+
+  public void setMinOccurs(BigInteger value) {
+<span class="nc" id="L188">    _minOccurs = value;</span>
+<span class="nc" id="L189">  }</span>
+
+  public String getMaxOccurs() {
+<span class="fc" id="L192">    return _maxOccurs;</span>
+  }
+
+  public void setMaxOccurs(String value) {
+<span class="nc" id="L196">    _maxOccurs = value;</span>
+<span class="nc" id="L197">  }</span>
+
+  public String getInXml() {
+<span class="fc" id="L200">    return _inXml;</span>
+  }
+
+  public void setInXml(String value) {
+<span class="nc" id="L204">    _inXml = value;</span>
+<span class="nc" id="L205">  }</span>
+
+  public String getFormalName() {
+<span class="fc" id="L208">    return _formalName;</span>
+  }
+
+  public void setFormalName(String value) {
+<span class="nc" id="L212">    _formalName = value;</span>
+<span class="nc" id="L213">  }</span>
+
+  public MarkupLine getDescription() {
+<span class="fc" id="L216">    return _description;</span>
+  }
+
+  public void setDescription(MarkupLine value) {
+<span class="nc" id="L220">    _description = value;</span>
+<span class="nc" id="L221">  }</span>
+
+  public List&lt;Property&gt; getProps() {
+<span class="fc" id="L224">    return _props;</span>
+  }
+
+  public void setProps(List&lt;Property&gt; value) {
+<span class="nc" id="L228">    _props = value;</span>
+<span class="nc" id="L229">  }</span>
+
+  /**
+   * Add a new {@link Property} item to the underlying collection.
+   *
+   * @param item
+   *          the item to add
+   * @return {@code true}
+   */
+  public boolean addProp(Property item) {
+<span class="nc" id="L239">    Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">    if (_props == null) {</span>
+<span class="nc" id="L241">      _props = new LinkedList&lt;&gt;();</span>
+    }
+<span class="nc" id="L243">    return _props.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link Property} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeProp(Property item) {
+<span class="nc" id="L255">    Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L256" title="All 4 branches missed.">    return _props != null &amp;&amp; _props.remove(value);</span>
+  }
+
+  public UseName getUseName() {
+<span class="fc" id="L260">    return _useName;</span>
+  }
+
+  public void setUseName(UseName value) {
+<span class="nc" id="L264">    _useName = value;</span>
+<span class="nc" id="L265">  }</span>
+
+  public GroupingAs getGroupAs() {
+<span class="fc" id="L268">    return _groupAs;</span>
+  }
+
+  public void setGroupAs(GroupingAs value) {
+<span class="nc" id="L272">    _groupAs = value;</span>
+<span class="nc" id="L273">  }</span>
+
+  public Remarks getRemarks() {
+<span class="fc" id="L276">    return _remarks;</span>
+  }
+
+  public void setRemarks(Remarks value) {
+<span class="nc" id="L280">    _remarks = value;</span>
+<span class="nc" id="L281">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L285">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -32,185 +32,195 @@
 <span class="source-line-no">019</span><span id="line-19"> * one entry in a set of enumerated values.</span>
 <span class="source-line-no">020</span><span id="line-20"> */</span>
 <span class="source-line-no">021</span><span id="line-21">public interface IAllowedValuesConstraint extends IConstraint {</span>
-<span class="source-line-no">022</span><span id="line-22">  boolean ALLOW_OTHER_DEFAULT = false;</span>
-<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
-<span class="source-line-no">024</span><span id="line-24">  Extensible EXTENSIBLE_DEFAULT = Extensible.EXTERNAL;</span>
-<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">022</span><span id="line-22">  /**</span>
+<span class="source-line-no">023</span><span id="line-23">   * The default allow other value.</span>
+<span class="source-line-no">024</span><span id="line-24">   */</span>
+<span class="source-line-no">025</span><span id="line-25">  boolean ALLOW_OTHER_DEFAULT = false;</span>
 <span class="source-line-no">026</span><span id="line-26">  /**</span>
-<span class="source-line-no">027</span><span id="line-27">   * Indicates how an allowed values constraint can be extended, or if it can be.</span>
+<span class="source-line-no">027</span><span id="line-27">   * The default extensible value.</span>
 <span class="source-line-no">028</span><span id="line-28">   */</span>
-<span class="source-line-no">029</span><span id="line-29">  enum Extensible {</span>
-<span class="source-line-no">030</span><span id="line-30">    /**</span>
-<span class="source-line-no">031</span><span id="line-31">     * Can be extended by external constraints. The most permissive level.</span>
-<span class="source-line-no">032</span><span id="line-32">     */</span>
-<span class="source-line-no">033</span><span id="line-33">    EXTERNAL,</span>
-<span class="source-line-no">034</span><span id="line-34">    /**</span>
-<span class="source-line-no">035</span><span id="line-35">     * Can be extended by constraints in the same model.</span>
-<span class="source-line-no">036</span><span id="line-36">     */</span>
-<span class="source-line-no">037</span><span id="line-37">    MODEL,</span>
-<span class="source-line-no">038</span><span id="line-38">    /**</span>
-<span class="source-line-no">039</span><span id="line-39">     * Cannot be extended. The most restrictive level.</span>
-<span class="source-line-no">040</span><span id="line-40">     */</span>
-<span class="source-line-no">041</span><span id="line-41">    NONE;</span>
-<span class="source-line-no">042</span><span id="line-42">  }</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  /**</span>
-<span class="source-line-no">045</span><span id="line-45">   * Get the collection allowed values associated with this constraint.</span>
-<span class="source-line-no">046</span><span id="line-46">   *</span>
-<span class="source-line-no">047</span><span id="line-47">   * @return a mapping of value to the associated {@link IAllowedValue} item</span>
-<span class="source-line-no">048</span><span id="line-48">   */</span>
-<span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
-<span class="source-line-no">050</span><span id="line-50">  Map&lt;String, ? extends IAllowedValue&gt; getAllowedValues();</span>
-<span class="source-line-no">051</span><span id="line-51"></span>
-<span class="source-line-no">052</span><span id="line-52">  /**</span>
-<span class="source-line-no">053</span><span id="line-53">   * Get a specific allowed value by name, if it is defined for this constraint.</span>
-<span class="source-line-no">054</span><span id="line-54">   *</span>
-<span class="source-line-no">055</span><span id="line-55">   * @param name</span>
-<span class="source-line-no">056</span><span id="line-56">   *          the value name</span>
-<span class="source-line-no">057</span><span id="line-57">   * @return the allowed value or {@code null} if the value is not defined</span>
-<span class="source-line-no">058</span><span id="line-58">   */</span>
-<span class="source-line-no">059</span><span id="line-59">  @Nullable</span>
-<span class="source-line-no">060</span><span id="line-60">  default IAllowedValue getAllowedValue(String name) {</span>
-<span class="source-line-no">061</span><span id="line-61">    return getAllowedValues().get(name);</span>
-<span class="source-line-no">062</span><span id="line-62">  }</span>
-<span class="source-line-no">063</span><span id="line-63"></span>
-<span class="source-line-no">064</span><span id="line-64">  /**</span>
-<span class="source-line-no">065</span><span id="line-65">   * Determines if this allowed value constraint is open-ended ({@code true}) or</span>
-<span class="source-line-no">066</span><span id="line-66">   * closed. If "open-ended", the constraint allows the target's value to by any</span>
-<span class="source-line-no">067</span><span id="line-67">   * additional unspecified value. If "closed", the constraint requries the</span>
-<span class="source-line-no">068</span><span id="line-68">   * target's value to be one of the specified values.</span>
-<span class="source-line-no">069</span><span id="line-69">   *</span>
-<span class="source-line-no">070</span><span id="line-70">   * @return {@code true} if the constraint is "open-ended", or {@code false}</span>
-<span class="source-line-no">071</span><span id="line-71">   *         otherwise</span>
-<span class="source-line-no">072</span><span id="line-72">   */</span>
-<span class="source-line-no">073</span><span id="line-73">  boolean isAllowedOther();</span>
-<span class="source-line-no">074</span><span id="line-74"></span>
-<span class="source-line-no">075</span><span id="line-75">  /**</span>
-<span class="source-line-no">076</span><span id="line-76">   * Determines the degree to which this constraint can be extended by other</span>
-<span class="source-line-no">077</span><span id="line-77">   * constraints applied to the same value.</span>
-<span class="source-line-no">078</span><span id="line-78">   *</span>
-<span class="source-line-no">079</span><span id="line-79">   * @return the enumeration value</span>
-<span class="source-line-no">080</span><span id="line-80">   */</span>
-<span class="source-line-no">081</span><span id="line-81">  @NonNull</span>
-<span class="source-line-no">082</span><span id="line-82">  Extensible getExtensible();</span>
-<span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">  @Override</span>
-<span class="source-line-no">085</span><span id="line-85">  default &lt;T, R&gt; R accept(IConstraintVisitor&lt;T, R&gt; visitor, T state) {</span>
-<span class="source-line-no">086</span><span id="line-86">    return visitor.visitAllowedValues(this, state);</span>
-<span class="source-line-no">087</span><span id="line-87">  }</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">  /**</span>
-<span class="source-line-no">090</span><span id="line-90">   * Create a new constraint builder.</span>
-<span class="source-line-no">091</span><span id="line-91">   *</span>
-<span class="source-line-no">092</span><span id="line-92">   * @return the builder</span>
-<span class="source-line-no">093</span><span id="line-93">   */</span>
-<span class="source-line-no">094</span><span id="line-94">  @NonNull</span>
-<span class="source-line-no">095</span><span id="line-95">  static Builder builder() {</span>
-<span class="source-line-no">096</span><span id="line-96">    return new Builder();</span>
-<span class="source-line-no">097</span><span id="line-97">  }</span>
-<span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">  final class Builder</span>
-<span class="source-line-no">100</span><span id="line-100">      extends AbstractConstraintBuilder&lt;Builder, IAllowedValuesConstraint&gt; {</span>
-<span class="source-line-no">101</span><span id="line-101">    @NonNull</span>
-<span class="source-line-no">102</span><span id="line-102">    private final Map&lt;String, IAllowedValue&gt; allowedValues = new LinkedHashMap&lt;&gt;(); // NOPMD not thread safe</span>
-<span class="source-line-no">103</span><span id="line-103">    private boolean allowedOther = ALLOW_OTHER_DEFAULT;</span>
-<span class="source-line-no">104</span><span id="line-104">    @NonNull</span>
-<span class="source-line-no">105</span><span id="line-105">    private Extensible extensible = EXTENSIBLE_DEFAULT;</span>
-<span class="source-line-no">106</span><span id="line-106"></span>
-<span class="source-line-no">107</span><span id="line-107">    private Builder() {</span>
-<span class="source-line-no">108</span><span id="line-108">      // disable construction</span>
-<span class="source-line-no">109</span><span id="line-109">    }</span>
-<span class="source-line-no">110</span><span id="line-110"></span>
-<span class="source-line-no">111</span><span id="line-111">    /**</span>
-<span class="source-line-no">112</span><span id="line-112">     * Use the provided allowed value to validate associated values.</span>
-<span class="source-line-no">113</span><span id="line-113">     *</span>
-<span class="source-line-no">114</span><span id="line-114">     * @param allowedValue</span>
-<span class="source-line-no">115</span><span id="line-115">     *          an expected allowed value</span>
-<span class="source-line-no">116</span><span id="line-116">     * @return this builder</span>
-<span class="source-line-no">117</span><span id="line-117">     */</span>
-<span class="source-line-no">118</span><span id="line-118">    @NonNull</span>
-<span class="source-line-no">119</span><span id="line-119">    public Builder allowedValue(@NonNull IAllowedValue allowedValue) {</span>
-<span class="source-line-no">120</span><span id="line-120">      this.allowedValues.put(allowedValue.getValue(), allowedValue);</span>
-<span class="source-line-no">121</span><span id="line-121">      return this;</span>
-<span class="source-line-no">122</span><span id="line-122">    }</span>
-<span class="source-line-no">123</span><span id="line-123"></span>
-<span class="source-line-no">124</span><span id="line-124">    /**</span>
-<span class="source-line-no">125</span><span id="line-125">     * Use the provided allowed values to validate associated values.</span>
-<span class="source-line-no">126</span><span id="line-126">     *</span>
-<span class="source-line-no">127</span><span id="line-127">     * @param allowedValues</span>
-<span class="source-line-no">128</span><span id="line-128">     *          an expected allowed values</span>
-<span class="source-line-no">129</span><span id="line-129">     * @return this builder</span>
-<span class="source-line-no">130</span><span id="line-130">     */</span>
-<span class="source-line-no">131</span><span id="line-131">    @NonNull</span>
-<span class="source-line-no">132</span><span id="line-132">    public Builder allowedValues(@NonNull Map&lt;String, IAllowedValue&gt; allowedValues) {</span>
-<span class="source-line-no">133</span><span id="line-133">      this.allowedValues.putAll(allowedValues);</span>
-<span class="source-line-no">134</span><span id="line-134">      return this;</span>
-<span class="source-line-no">135</span><span id="line-135">    }</span>
-<span class="source-line-no">136</span><span id="line-136"></span>
-<span class="source-line-no">137</span><span id="line-137">    /**</span>
-<span class="source-line-no">138</span><span id="line-138">     * Determine if unspecified values are allowed and will result in the constraint</span>
-<span class="source-line-no">139</span><span id="line-139">     * always passing.</span>
-<span class="source-line-no">140</span><span id="line-140">     *</span>
-<span class="source-line-no">141</span><span id="line-141">     * @param bool</span>
-<span class="source-line-no">142</span><span id="line-142">     *          {@code true} if other values are allowed or {@code false} otherwise</span>
-<span class="source-line-no">143</span><span id="line-143">     * @return this builder</span>
-<span class="source-line-no">144</span><span id="line-144">     */</span>
-<span class="source-line-no">145</span><span id="line-145">    @NonNull</span>
-<span class="source-line-no">146</span><span id="line-146">    public Builder allowsOther(boolean bool) {</span>
-<span class="source-line-no">147</span><span id="line-147">      this.allowedOther = bool;</span>
-<span class="source-line-no">148</span><span id="line-148">      return this;</span>
-<span class="source-line-no">149</span><span id="line-149">    }</span>
-<span class="source-line-no">150</span><span id="line-150"></span>
-<span class="source-line-no">151</span><span id="line-151">    /**</span>
-<span class="source-line-no">152</span><span id="line-152">     * Determine the allowed scope of extension for other constraints matching this</span>
-<span class="source-line-no">153</span><span id="line-153">     * constraint's target.</span>
-<span class="source-line-no">154</span><span id="line-154">     *</span>
-<span class="source-line-no">155</span><span id="line-155">     * @param extensible</span>
-<span class="source-line-no">156</span><span id="line-156">     *          the degree of allowed extension</span>
-<span class="source-line-no">157</span><span id="line-157">     * @return this builder</span>
-<span class="source-line-no">158</span><span id="line-158">     */</span>
-<span class="source-line-no">159</span><span id="line-159">    @NonNull</span>
-<span class="source-line-no">160</span><span id="line-160">    public Builder extensible(@NonNull Extensible extensible) {</span>
-<span class="source-line-no">161</span><span id="line-161">      this.extensible = extensible;</span>
-<span class="source-line-no">162</span><span id="line-162">      return this;</span>
-<span class="source-line-no">163</span><span id="line-163">    }</span>
-<span class="source-line-no">164</span><span id="line-164"></span>
-<span class="source-line-no">165</span><span id="line-165">    @Override</span>
-<span class="source-line-no">166</span><span id="line-166">    protected Builder getThis() {</span>
-<span class="source-line-no">167</span><span id="line-167">      return this;</span>
-<span class="source-line-no">168</span><span id="line-168">    }</span>
-<span class="source-line-no">169</span><span id="line-169"></span>
-<span class="source-line-no">170</span><span id="line-170">    @NonNull</span>
-<span class="source-line-no">171</span><span id="line-171">    private Map&lt;String, IAllowedValue&gt; getAllowedValues() {</span>
-<span class="source-line-no">172</span><span id="line-172">      return allowedValues;</span>
+<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
+<span class="source-line-no">030</span><span id="line-30">  Extensible EXTENSIBLE_DEFAULT = Extensible.EXTERNAL;</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">  /**</span>
+<span class="source-line-no">033</span><span id="line-33">   * Indicates how an allowed values constraint can be extended, or if it can be.</span>
+<span class="source-line-no">034</span><span id="line-34">   */</span>
+<span class="source-line-no">035</span><span id="line-35">  enum Extensible {</span>
+<span class="source-line-no">036</span><span id="line-36">    /**</span>
+<span class="source-line-no">037</span><span id="line-37">     * Can be extended by external constraints. The most permissive level.</span>
+<span class="source-line-no">038</span><span id="line-38">     */</span>
+<span class="source-line-no">039</span><span id="line-39">    EXTERNAL,</span>
+<span class="source-line-no">040</span><span id="line-40">    /**</span>
+<span class="source-line-no">041</span><span id="line-41">     * Can be extended by constraints in the same model.</span>
+<span class="source-line-no">042</span><span id="line-42">     */</span>
+<span class="source-line-no">043</span><span id="line-43">    MODEL,</span>
+<span class="source-line-no">044</span><span id="line-44">    /**</span>
+<span class="source-line-no">045</span><span id="line-45">     * Cannot be extended. The most restrictive level.</span>
+<span class="source-line-no">046</span><span id="line-46">     */</span>
+<span class="source-line-no">047</span><span id="line-47">    NONE;</span>
+<span class="source-line-no">048</span><span id="line-48">  }</span>
+<span class="source-line-no">049</span><span id="line-49"></span>
+<span class="source-line-no">050</span><span id="line-50">  /**</span>
+<span class="source-line-no">051</span><span id="line-51">   * Get the collection allowed values associated with this constraint.</span>
+<span class="source-line-no">052</span><span id="line-52">   *</span>
+<span class="source-line-no">053</span><span id="line-53">   * @return a mapping of value to the associated {@link IAllowedValue} item</span>
+<span class="source-line-no">054</span><span id="line-54">   */</span>
+<span class="source-line-no">055</span><span id="line-55">  @NonNull</span>
+<span class="source-line-no">056</span><span id="line-56">  Map&lt;String, ? extends IAllowedValue&gt; getAllowedValues();</span>
+<span class="source-line-no">057</span><span id="line-57"></span>
+<span class="source-line-no">058</span><span id="line-58">  /**</span>
+<span class="source-line-no">059</span><span id="line-59">   * Get a specific allowed value by name, if it is defined for this constraint.</span>
+<span class="source-line-no">060</span><span id="line-60">   *</span>
+<span class="source-line-no">061</span><span id="line-61">   * @param name</span>
+<span class="source-line-no">062</span><span id="line-62">   *          the value name</span>
+<span class="source-line-no">063</span><span id="line-63">   * @return the allowed value or {@code null} if the value is not defined</span>
+<span class="source-line-no">064</span><span id="line-64">   */</span>
+<span class="source-line-no">065</span><span id="line-65">  @Nullable</span>
+<span class="source-line-no">066</span><span id="line-66">  default IAllowedValue getAllowedValue(String name) {</span>
+<span class="source-line-no">067</span><span id="line-67">    return getAllowedValues().get(name);</span>
+<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  /**</span>
+<span class="source-line-no">071</span><span id="line-71">   * Determines if this allowed value constraint is open-ended ({@code true}) or</span>
+<span class="source-line-no">072</span><span id="line-72">   * closed. If "open-ended", the constraint allows the target's value to by any</span>
+<span class="source-line-no">073</span><span id="line-73">   * additional unspecified value. If "closed", the constraint requries the</span>
+<span class="source-line-no">074</span><span id="line-74">   * target's value to be one of the specified values.</span>
+<span class="source-line-no">075</span><span id="line-75">   *</span>
+<span class="source-line-no">076</span><span id="line-76">   * @return {@code true} if the constraint is "open-ended", or {@code false}</span>
+<span class="source-line-no">077</span><span id="line-77">   *         otherwise</span>
+<span class="source-line-no">078</span><span id="line-78">   */</span>
+<span class="source-line-no">079</span><span id="line-79">  boolean isAllowedOther();</span>
+<span class="source-line-no">080</span><span id="line-80"></span>
+<span class="source-line-no">081</span><span id="line-81">  /**</span>
+<span class="source-line-no">082</span><span id="line-82">   * Determines the degree to which this constraint can be extended by other</span>
+<span class="source-line-no">083</span><span id="line-83">   * constraints applied to the same value.</span>
+<span class="source-line-no">084</span><span id="line-84">   *</span>
+<span class="source-line-no">085</span><span id="line-85">   * @return the enumeration value</span>
+<span class="source-line-no">086</span><span id="line-86">   */</span>
+<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
+<span class="source-line-no">088</span><span id="line-88">  Extensible getExtensible();</span>
+<span class="source-line-no">089</span><span id="line-89"></span>
+<span class="source-line-no">090</span><span id="line-90">  @Override</span>
+<span class="source-line-no">091</span><span id="line-91">  default &lt;T, R&gt; R accept(IConstraintVisitor&lt;T, R&gt; visitor, T state) {</span>
+<span class="source-line-no">092</span><span id="line-92">    return visitor.visitAllowedValues(this, state);</span>
+<span class="source-line-no">093</span><span id="line-93">  }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">  /**</span>
+<span class="source-line-no">096</span><span id="line-96">   * Create a new constraint builder.</span>
+<span class="source-line-no">097</span><span id="line-97">   *</span>
+<span class="source-line-no">098</span><span id="line-98">   * @return the builder</span>
+<span class="source-line-no">099</span><span id="line-99">   */</span>
+<span class="source-line-no">100</span><span id="line-100">  @NonNull</span>
+<span class="source-line-no">101</span><span id="line-101">  static Builder builder() {</span>
+<span class="source-line-no">102</span><span id="line-102">    return new Builder();</span>
+<span class="source-line-no">103</span><span id="line-103">  }</span>
+<span class="source-line-no">104</span><span id="line-104"></span>
+<span class="source-line-no">105</span><span id="line-105">  /**</span>
+<span class="source-line-no">106</span><span id="line-106">   * Provides a builder pattern for constructing a new</span>
+<span class="source-line-no">107</span><span id="line-107">   * {@link IAllowedValuesConstraint}.</span>
+<span class="source-line-no">108</span><span id="line-108">   */</span>
+<span class="source-line-no">109</span><span id="line-109">  final class Builder</span>
+<span class="source-line-no">110</span><span id="line-110">      extends AbstractConstraintBuilder&lt;Builder, IAllowedValuesConstraint&gt; {</span>
+<span class="source-line-no">111</span><span id="line-111">    @NonNull</span>
+<span class="source-line-no">112</span><span id="line-112">    private final Map&lt;String, IAllowedValue&gt; allowedValues = new LinkedHashMap&lt;&gt;(); // NOPMD not thread safe</span>
+<span class="source-line-no">113</span><span id="line-113">    private boolean allowedOther = ALLOW_OTHER_DEFAULT;</span>
+<span class="source-line-no">114</span><span id="line-114">    @NonNull</span>
+<span class="source-line-no">115</span><span id="line-115">    private Extensible extensible = EXTENSIBLE_DEFAULT;</span>
+<span class="source-line-no">116</span><span id="line-116"></span>
+<span class="source-line-no">117</span><span id="line-117">    private Builder() {</span>
+<span class="source-line-no">118</span><span id="line-118">      // disable construction</span>
+<span class="source-line-no">119</span><span id="line-119">    }</span>
+<span class="source-line-no">120</span><span id="line-120"></span>
+<span class="source-line-no">121</span><span id="line-121">    /**</span>
+<span class="source-line-no">122</span><span id="line-122">     * Use the provided allowed value to validate associated values.</span>
+<span class="source-line-no">123</span><span id="line-123">     *</span>
+<span class="source-line-no">124</span><span id="line-124">     * @param allowedValue</span>
+<span class="source-line-no">125</span><span id="line-125">     *          an expected allowed value</span>
+<span class="source-line-no">126</span><span id="line-126">     * @return this builder</span>
+<span class="source-line-no">127</span><span id="line-127">     */</span>
+<span class="source-line-no">128</span><span id="line-128">    @NonNull</span>
+<span class="source-line-no">129</span><span id="line-129">    public Builder allowedValue(@NonNull IAllowedValue allowedValue) {</span>
+<span class="source-line-no">130</span><span id="line-130">      this.allowedValues.put(allowedValue.getValue(), allowedValue);</span>
+<span class="source-line-no">131</span><span id="line-131">      return this;</span>
+<span class="source-line-no">132</span><span id="line-132">    }</span>
+<span class="source-line-no">133</span><span id="line-133"></span>
+<span class="source-line-no">134</span><span id="line-134">    /**</span>
+<span class="source-line-no">135</span><span id="line-135">     * Use the provided allowed values to validate associated values.</span>
+<span class="source-line-no">136</span><span id="line-136">     *</span>
+<span class="source-line-no">137</span><span id="line-137">     * @param allowedValues</span>
+<span class="source-line-no">138</span><span id="line-138">     *          an expected allowed values</span>
+<span class="source-line-no">139</span><span id="line-139">     * @return this builder</span>
+<span class="source-line-no">140</span><span id="line-140">     */</span>
+<span class="source-line-no">141</span><span id="line-141">    @NonNull</span>
+<span class="source-line-no">142</span><span id="line-142">    public Builder allowedValues(@NonNull Map&lt;String, IAllowedValue&gt; allowedValues) {</span>
+<span class="source-line-no">143</span><span id="line-143">      this.allowedValues.putAll(allowedValues);</span>
+<span class="source-line-no">144</span><span id="line-144">      return this;</span>
+<span class="source-line-no">145</span><span id="line-145">    }</span>
+<span class="source-line-no">146</span><span id="line-146"></span>
+<span class="source-line-no">147</span><span id="line-147">    /**</span>
+<span class="source-line-no">148</span><span id="line-148">     * Determine if unspecified values are allowed and will result in the constraint</span>
+<span class="source-line-no">149</span><span id="line-149">     * always passing.</span>
+<span class="source-line-no">150</span><span id="line-150">     *</span>
+<span class="source-line-no">151</span><span id="line-151">     * @param bool</span>
+<span class="source-line-no">152</span><span id="line-152">     *          {@code true} if other values are allowed or {@code false} otherwise</span>
+<span class="source-line-no">153</span><span id="line-153">     * @return this builder</span>
+<span class="source-line-no">154</span><span id="line-154">     */</span>
+<span class="source-line-no">155</span><span id="line-155">    @NonNull</span>
+<span class="source-line-no">156</span><span id="line-156">    public Builder allowsOther(boolean bool) {</span>
+<span class="source-line-no">157</span><span id="line-157">      this.allowedOther = bool;</span>
+<span class="source-line-no">158</span><span id="line-158">      return this;</span>
+<span class="source-line-no">159</span><span id="line-159">    }</span>
+<span class="source-line-no">160</span><span id="line-160"></span>
+<span class="source-line-no">161</span><span id="line-161">    /**</span>
+<span class="source-line-no">162</span><span id="line-162">     * Determine the allowed scope of extension for other constraints matching this</span>
+<span class="source-line-no">163</span><span id="line-163">     * constraint's target.</span>
+<span class="source-line-no">164</span><span id="line-164">     *</span>
+<span class="source-line-no">165</span><span id="line-165">     * @param extensible</span>
+<span class="source-line-no">166</span><span id="line-166">     *          the degree of allowed extension</span>
+<span class="source-line-no">167</span><span id="line-167">     * @return this builder</span>
+<span class="source-line-no">168</span><span id="line-168">     */</span>
+<span class="source-line-no">169</span><span id="line-169">    @NonNull</span>
+<span class="source-line-no">170</span><span id="line-170">    public Builder extensible(@NonNull Extensible extensible) {</span>
+<span class="source-line-no">171</span><span id="line-171">      this.extensible = extensible;</span>
+<span class="source-line-no">172</span><span id="line-172">      return this;</span>
 <span class="source-line-no">173</span><span id="line-173">    }</span>
 <span class="source-line-no">174</span><span id="line-174"></span>
-<span class="source-line-no">175</span><span id="line-175">    private boolean isAllowedOther() {</span>
-<span class="source-line-no">176</span><span id="line-176">      return allowedOther;</span>
-<span class="source-line-no">177</span><span id="line-177">    }</span>
-<span class="source-line-no">178</span><span id="line-178"></span>
-<span class="source-line-no">179</span><span id="line-179">    @NonNull</span>
-<span class="source-line-no">180</span><span id="line-180">    private Extensible getExtensible() {</span>
-<span class="source-line-no">181</span><span id="line-181">      return extensible;</span>
-<span class="source-line-no">182</span><span id="line-182">    }</span>
-<span class="source-line-no">183</span><span id="line-183"></span>
-<span class="source-line-no">184</span><span id="line-184">    @Override</span>
-<span class="source-line-no">185</span><span id="line-185">    protected IAllowedValuesConstraint newInstance() {</span>
-<span class="source-line-no">186</span><span id="line-186">      return new DefaultAllowedValuesConstraint(</span>
-<span class="source-line-no">187</span><span id="line-187">          getId(),</span>
-<span class="source-line-no">188</span><span id="line-188">          getFormalName(),</span>
-<span class="source-line-no">189</span><span id="line-189">          getDescription(),</span>
-<span class="source-line-no">190</span><span id="line-190">          ObjectUtils.notNull(getSource()),</span>
-<span class="source-line-no">191</span><span id="line-191">          getLevel(),</span>
-<span class="source-line-no">192</span><span id="line-192">          getTarget(),</span>
-<span class="source-line-no">193</span><span id="line-193">          getProperties(),</span>
-<span class="source-line-no">194</span><span id="line-194">          getAllowedValues(),</span>
-<span class="source-line-no">195</span><span id="line-195">          isAllowedOther(),</span>
-<span class="source-line-no">196</span><span id="line-196">          getExtensible(),</span>
-<span class="source-line-no">197</span><span id="line-197">          getRemarks());</span>
-<span class="source-line-no">198</span><span id="line-198">    }</span>
-<span class="source-line-no">199</span><span id="line-199">  }</span>
-<span class="source-line-no">200</span><span id="line-200">}</span>
+<span class="source-line-no">175</span><span id="line-175">    @Override</span>
+<span class="source-line-no">176</span><span id="line-176">    protected Builder getThis() {</span>
+<span class="source-line-no">177</span><span id="line-177">      return this;</span>
+<span class="source-line-no">178</span><span id="line-178">    }</span>
+<span class="source-line-no">179</span><span id="line-179"></span>
+<span class="source-line-no">180</span><span id="line-180">    @NonNull</span>
+<span class="source-line-no">181</span><span id="line-181">    private Map&lt;String, IAllowedValue&gt; getAllowedValues() {</span>
+<span class="source-line-no">182</span><span id="line-182">      return allowedValues;</span>
+<span class="source-line-no">183</span><span id="line-183">    }</span>
+<span class="source-line-no">184</span><span id="line-184"></span>
+<span class="source-line-no">185</span><span id="line-185">    private boolean isAllowedOther() {</span>
+<span class="source-line-no">186</span><span id="line-186">      return allowedOther;</span>
+<span class="source-line-no">187</span><span id="line-187">    }</span>
+<span class="source-line-no">188</span><span id="line-188"></span>
+<span class="source-line-no">189</span><span id="line-189">    @NonNull</span>
+<span class="source-line-no">190</span><span id="line-190">    private Extensible getExtensible() {</span>
+<span class="source-line-no">191</span><span id="line-191">      return extensible;</span>
+<span class="source-line-no">192</span><span id="line-192">    }</span>
+<span class="source-line-no">193</span><span id="line-193"></span>
+<span class="source-line-no">194</span><span id="line-194">    @Override</span>
+<span class="source-line-no">195</span><span id="line-195">    protected IAllowedValuesConstraint newInstance() {</span>
+<span class="source-line-no">196</span><span id="line-196">      return new DefaultAllowedValuesConstraint(</span>
+<span class="source-line-no">197</span><span id="line-197">          getId(),</span>
+<span class="source-line-no">198</span><span id="line-198">          getFormalName(),</span>
+<span class="source-line-no">199</span><span id="line-199">          getDescription(),</span>
+<span class="source-line-no">200</span><span id="line-200">          ObjectUtils.notNull(getSource()),</span>
+<span class="source-line-no">201</span><span id="line-201">          getLevel(),</span>
+<span class="source-line-no">202</span><span id="line-202">          getTarget(),</span>
+<span class="source-line-no">203</span><span id="line-203">          getProperties(),</span>
+<span class="source-line-no">204</span><span id="line-204">          getAllowedValues(),</span>
+<span class="source-line-no">205</span><span id="line-205">          isAllowedOther(),</span>
+<span class="source-line-no">206</span><span id="line-206">          getExtensible(),</span>
+<span class="source-line-no">207</span><span id="line-207">          getRemarks());</span>
+<span class="source-line-no">208</span><span id="line-208">    }</span>
+<span class="source-line-no">209</span><span id="line-209">  }</span>
+<span class="source-line-no">210</span><span id="line-210">}</span>
 
 
 

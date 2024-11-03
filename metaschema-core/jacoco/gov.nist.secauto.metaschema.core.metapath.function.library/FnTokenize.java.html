@@ -28,115 +28,122 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Implements &lt;a href=
- * &quot;https://www.w3.org/TR/xpath-functions-31/#func-tokenize&quot;&gt;fn:tokenize&lt;/a&gt;.
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-tokenize&quot;&gt;fn:tokenize&lt;/a&gt;
+ * function.
  */
 public final class FnTokenize {
+  // CPD-OFF
+  @NonNull
   private static final String NAME = &quot;tokenize&quot;;
   @NonNull
-<span class="fc" id="L37">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="fc" id="L38">      .name(NAME)</span>
-<span class="fc" id="L39">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L40">      .deterministic()</span>
-<span class="fc" id="L41">      .contextIndependent()</span>
-<span class="fc" id="L42">      .focusIndependent()</span>
-<span class="fc" id="L43">      .argument(IArgument.builder()</span>
-<span class="fc" id="L44">          .name(&quot;input&quot;)</span>
-<span class="fc" id="L45">          .type(IStringItem.class)</span>
-<span class="fc" id="L46">          .zeroOrOne()</span>
-<span class="fc" id="L47">          .build())</span>
-<span class="fc" id="L48">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L49">      .returnZeroOrMore()</span>
-<span class="fc" id="L50">      .functionHandler(FnTokenize::executeOneArg)</span>
-<span class="fc" id="L51">      .build();</span>
+<span class="fc" id="L40">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="fc" id="L41">      .name(NAME)</span>
+<span class="fc" id="L42">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L43">      .deterministic()</span>
+<span class="fc" id="L44">      .contextIndependent()</span>
+<span class="fc" id="L45">      .focusIndependent()</span>
+<span class="fc" id="L46">      .argument(IArgument.builder()</span>
+<span class="fc" id="L47">          .name(&quot;input&quot;)</span>
+<span class="fc" id="L48">          .type(IStringItem.class)</span>
+<span class="fc" id="L49">          .zeroOrOne()</span>
+<span class="fc" id="L50">          .build())</span>
+<span class="fc" id="L51">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L52">      .returnZeroOrMore()</span>
+<span class="fc" id="L53">      .functionHandler(FnTokenize::executeOneArg)</span>
+<span class="fc" id="L54">      .build();</span>
   @NonNull
-<span class="fc" id="L53">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
-<span class="fc" id="L54">      .name(NAME)</span>
-<span class="fc" id="L55">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L56">      .deterministic()</span>
-<span class="fc" id="L57">      .contextIndependent()</span>
-<span class="fc" id="L58">      .focusIndependent()</span>
-<span class="fc" id="L59">      .argument(IArgument.builder()</span>
-<span class="fc" id="L60">          .name(&quot;input&quot;)</span>
-<span class="fc" id="L61">          .type(IStringItem.class)</span>
-<span class="fc" id="L62">          .zeroOrOne()</span>
-<span class="fc" id="L63">          .build())</span>
-<span class="fc" id="L64">      .argument(IArgument.builder()</span>
-<span class="fc" id="L65">          .name(&quot;pattern&quot;)</span>
-<span class="fc" id="L66">          .type(IStringItem.class)</span>
-<span class="fc" id="L67">          .one()</span>
-<span class="fc" id="L68">          .build())</span>
-<span class="fc" id="L69">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L70">      .returnZeroOrMore()</span>
-<span class="fc" id="L71">      .functionHandler(FnTokenize::executeTwoArg)</span>
-<span class="fc" id="L72">      .build();</span>
+<span class="fc" id="L56">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
+<span class="fc" id="L57">      .name(NAME)</span>
+<span class="fc" id="L58">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L59">      .deterministic()</span>
+<span class="fc" id="L60">      .contextIndependent()</span>
+<span class="fc" id="L61">      .focusIndependent()</span>
+<span class="fc" id="L62">      .argument(IArgument.builder()</span>
+<span class="fc" id="L63">          .name(&quot;input&quot;)</span>
+<span class="fc" id="L64">          .type(IStringItem.class)</span>
+<span class="fc" id="L65">          .zeroOrOne()</span>
+<span class="fc" id="L66">          .build())</span>
+<span class="fc" id="L67">      .argument(IArgument.builder()</span>
+<span class="fc" id="L68">          .name(&quot;pattern&quot;)</span>
+<span class="fc" id="L69">          .type(IStringItem.class)</span>
+<span class="fc" id="L70">          .one()</span>
+<span class="fc" id="L71">          .build())</span>
+<span class="fc" id="L72">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L73">      .returnZeroOrMore()</span>
+<span class="fc" id="L74">      .functionHandler(FnTokenize::executeTwoArg)</span>
+<span class="fc" id="L75">      .build();</span>
 
   @NonNull
-<span class="fc" id="L75">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
-<span class="fc" id="L76">      .name(NAME)</span>
-<span class="fc" id="L77">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L78">      .deterministic()</span>
-<span class="fc" id="L79">      .contextIndependent()</span>
-<span class="fc" id="L80">      .focusIndependent()</span>
-<span class="fc" id="L81">      .argument(IArgument.builder()</span>
-<span class="fc" id="L82">          .name(&quot;input&quot;)</span>
-<span class="fc" id="L83">          .type(IStringItem.class)</span>
-<span class="fc" id="L84">          .zeroOrOne()</span>
-<span class="fc" id="L85">          .build())</span>
-<span class="fc" id="L86">      .argument(IArgument.builder()</span>
-<span class="fc" id="L87">          .name(&quot;pattern&quot;)</span>
-<span class="fc" id="L88">          .type(IStringItem.class)</span>
-<span class="fc" id="L89">          .one()</span>
-<span class="fc" id="L90">          .build())</span>
-<span class="fc" id="L91">      .argument(IArgument.builder()</span>
-<span class="fc" id="L92">          .name(&quot;flags&quot;)</span>
-<span class="fc" id="L93">          .type(IStringItem.class)</span>
-<span class="fc" id="L94">          .one()</span>
-<span class="fc" id="L95">          .build())</span>
-<span class="fc" id="L96">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L97">      .returnZeroOrMore()</span>
-<span class="fc" id="L98">      .functionHandler(FnTokenize::executeThreeArg)</span>
-<span class="fc" id="L99">      .build();</span>
+<span class="fc" id="L78">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
+<span class="fc" id="L79">      .name(NAME)</span>
+<span class="fc" id="L80">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L81">      .deterministic()</span>
+<span class="fc" id="L82">      .contextIndependent()</span>
+<span class="fc" id="L83">      .focusIndependent()</span>
+<span class="fc" id="L84">      .argument(IArgument.builder()</span>
+<span class="fc" id="L85">          .name(&quot;input&quot;)</span>
+<span class="fc" id="L86">          .type(IStringItem.class)</span>
+<span class="fc" id="L87">          .zeroOrOne()</span>
+<span class="fc" id="L88">          .build())</span>
+<span class="fc" id="L89">      .argument(IArgument.builder()</span>
+<span class="fc" id="L90">          .name(&quot;pattern&quot;)</span>
+<span class="fc" id="L91">          .type(IStringItem.class)</span>
+<span class="fc" id="L92">          .one()</span>
+<span class="fc" id="L93">          .build())</span>
+<span class="fc" id="L94">      .argument(IArgument.builder()</span>
+<span class="fc" id="L95">          .name(&quot;flags&quot;)</span>
+<span class="fc" id="L96">          .type(IStringItem.class)</span>
+<span class="fc" id="L97">          .one()</span>
+<span class="fc" id="L98">          .build())</span>
+<span class="fc" id="L99">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L100">      .returnZeroOrMore()</span>
+<span class="fc" id="L101">      .functionHandler(FnTokenize::executeThreeArg)</span>
+<span class="fc" id="L102">      .build();</span>
+  // CPD-ON
 
+  @SuppressWarnings({ &quot;PMD.UnusedFormalParameter&quot;, &quot;unused&quot; })
   @NonNull
   private static ISequence&lt;IStringItem&gt; executeOneArg(
-      @SuppressWarnings(&quot;unused&quot;) @NonNull IFunction function,
+      @NonNull IFunction function,
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
-      @SuppressWarnings(&quot;unused&quot;) @NonNull DynamicContext dynamicContext,
-      @SuppressWarnings(&quot;unused&quot;) IItem focus) {
-<span class="fc" id="L107">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+<span class="fc" id="L112">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
 
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">    return input == null</span>
-<span class="nc" id="L110">        ? ISequence.empty()</span>
-<span class="fc" id="L111">        : ISequence.of(ObjectUtils.notNull(</span>
-<span class="fc" id="L112">            fnTokenize(input.normalizeSpace().asString(), &quot; &quot;, &quot;&quot;).stream()</span>
-<span class="fc" id="L113">                .map(IStringItem::valueOf)));</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">    return input == null</span>
+<span class="nc" id="L115">        ? ISequence.empty()</span>
+<span class="fc" id="L116">        : ISequence.of(ObjectUtils.notNull(</span>
+<span class="fc" id="L117">            fnTokenize(input.normalizeSpace().asString(), &quot; &quot;, &quot;&quot;).stream()</span>
+<span class="fc" id="L118">                .map(IStringItem::valueOf)));</span>
   }
 
+  @SuppressWarnings({ &quot;PMD.UnusedFormalParameter&quot;, &quot;unused&quot; })
   @NonNull
   private static ISequence&lt;IStringItem&gt; executeTwoArg(
-      @SuppressWarnings(&quot;unused&quot;) @NonNull IFunction function,
+      @NonNull IFunction function,
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
-      @SuppressWarnings(&quot;unused&quot;) @NonNull DynamicContext dynamicContext,
-      @SuppressWarnings(&quot;unused&quot;) IItem focus) {
-<span class="fc" id="L122">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="fc" id="L123">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+<span class="fc" id="L128">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="fc" id="L129">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
 
-<span class="fc" id="L125">    return execute(input, pattern, IStringItem.valueOf(&quot;&quot;));</span>
+<span class="fc" id="L131">    return execute(input, pattern, IStringItem.valueOf(&quot;&quot;));</span>
   }
 
+  @SuppressWarnings({ &quot;PMD.UnusedFormalParameter&quot;, &quot;unused&quot; })
   @NonNull
   private static ISequence&lt;IStringItem&gt; executeThreeArg(
-      @SuppressWarnings(&quot;unused&quot;) @NonNull IFunction function,
+      @NonNull IFunction function,
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
-      @SuppressWarnings(&quot;unused&quot;) @NonNull DynamicContext dynamicContext,
-      @SuppressWarnings(&quot;unused&quot;) IItem focus) {
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
 
-<span class="fc" id="L135">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="fc" id="L136">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L137">    IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));</span>
+<span class="fc" id="L142">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="fc" id="L143">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L144">    IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));</span>
 
-<span class="fc" id="L139">    return execute(input, pattern, flags);</span>
+<span class="fc" id="L146">    return execute(input, pattern, flags);</span>
   }
 
   @SuppressWarnings(&quot;PMD.OnlyOneReturn&quot;)
@@ -145,9 +152,9 @@ public final class FnTokenize {
       @Nullable IStringItem input,
       @NonNull IStringItem pattern,
       @NonNull IStringItem flags) {
-<span class="pc bpc" id="L148" title="1 of 2 branches missed.">    return input == null</span>
-<span class="nc" id="L149">        ? ISequence.empty()</span>
-<span class="fc" id="L150">        : fnTokenize(input, pattern, flags);</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">    return input == null</span>
+<span class="nc" id="L156">        ? ISequence.empty()</span>
+<span class="fc" id="L157">        : fnTokenize(input, pattern, flags);</span>
   }
 
   /**
@@ -167,9 +174,9 @@ public final class FnTokenize {
       @NonNull IStringItem input,
       @NonNull IStringItem pattern,
       @NonNull IStringItem flags) {
-<span class="fc" id="L170">    return ISequence.of(ObjectUtils.notNull(</span>
-<span class="fc" id="L171">        fnTokenize(input.asString(), pattern.asString(), flags.asString()).stream()</span>
-<span class="fc" id="L172">            .map(IStringItem::valueOf)));</span>
+<span class="fc" id="L177">    return ISequence.of(ObjectUtils.notNull(</span>
+<span class="fc" id="L178">        fnTokenize(input.asString(), pattern.asString(), flags.asString()).stream()</span>
+<span class="fc" id="L179">            .map(IStringItem::valueOf)));</span>
   }
 
   /**
@@ -187,45 +194,45 @@ public final class FnTokenize {
   @SuppressWarnings({ &quot;PMD.OnlyOneReturn&quot;, &quot;PMD.CyclomaticComplexity&quot; })
   @NonNull
   public static List&lt;String&gt; fnTokenize(@NonNull String input, @NonNull String pattern, @NonNull String flags) {
-<span class="pc bpc" id="L190" title="1 of 2 branches missed.">    if (input.isEmpty()) {</span>
-<span class="nc" id="L191">      return CollectionUtil.emptyList();</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">    if (input.isEmpty()) {</span>
+<span class="nc" id="L198">      return CollectionUtil.emptyList();</span>
     }
 
     try {
-<span class="fc" id="L195">      Matcher matcher = Pattern.compile(pattern, RegexUtil.parseFlags(flags)).matcher(input);</span>
+<span class="fc" id="L202">      Matcher matcher = Pattern.compile(pattern, RegexUtil.parseFlags(flags)).matcher(input);</span>
 
-<span class="fc" id="L197">      int lastPosition = 0;</span>
-<span class="fc" id="L198">      int length = input.length();</span>
+<span class="fc" id="L204">      int lastPosition = 0;</span>
+<span class="fc" id="L205">      int length = input.length();</span>
 
-<span class="fc" id="L200">      List&lt;String&gt; result = new LinkedList&lt;&gt;();</span>
-<span class="fc bfc" id="L201" title="All 2 branches covered.">      while (matcher.find()) {</span>
-<span class="fc" id="L202">        String group = matcher.group();</span>
-<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (group.isEmpty()) {</span>
-<span class="fc" id="L204">          throw new RegularExpressionMetapathException(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING,</span>
-<span class="fc" id="L205">              String.format(&quot;Pattern '%s' will match a zero-length string.&quot;, pattern));</span>
+<span class="fc" id="L207">      List&lt;String&gt; result = new LinkedList&lt;&gt;();</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">      while (matcher.find()) {</span>
+<span class="fc" id="L209">        String group = matcher.group();</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (group.isEmpty()) {</span>
+<span class="fc" id="L211">          throw new RegularExpressionMetapathException(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING,</span>
+<span class="fc" id="L212">              String.format(&quot;Pattern '%s' will match a zero-length string.&quot;, pattern));</span>
         }
 
-<span class="fc" id="L208">        int start = matcher.start();</span>
-<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (start == 0) {</span>
-<span class="fc" id="L210">          result.add(&quot;&quot;);</span>
+<span class="fc" id="L215">        int start = matcher.start();</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">        if (start == 0) {</span>
+<span class="fc" id="L217">          result.add(&quot;&quot;);</span>
         } else {
-<span class="fc" id="L212">          result.add(input.substring(lastPosition, start));</span>
+<span class="fc" id="L219">          result.add(input.substring(lastPosition, start));</span>
         }
 
-<span class="fc" id="L215">        lastPosition = matcher.end();</span>
-<span class="fc" id="L216">      }</span>
+<span class="fc" id="L222">        lastPosition = matcher.end();</span>
+<span class="fc" id="L223">      }</span>
 
-<span class="fc bfc" id="L218" title="All 2 branches covered.">      if (lastPosition == length) {</span>
-<span class="fc" id="L219">        result.add(&quot;&quot;);</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">      if (lastPosition == length) {</span>
+<span class="fc" id="L226">        result.add(&quot;&quot;);</span>
       } else {
-<span class="fc" id="L221">        result.add(input.substring(lastPosition, length));</span>
+<span class="fc" id="L228">        result.add(input.substring(lastPosition, length));</span>
       }
 
-<span class="fc" id="L224">      return result;</span>
-<span class="fc" id="L225">    } catch (PatternSyntaxException ex) {</span>
-<span class="fc" id="L226">      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_EXPRESSION, ex);</span>
-<span class="nc" id="L227">    } catch (IllegalArgumentException ex) {</span>
-<span class="nc" id="L228">      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_FLAG, ex);</span>
+<span class="fc" id="L231">      return result;</span>
+<span class="fc" id="L232">    } catch (PatternSyntaxException ex) {</span>
+<span class="fc" id="L233">      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_EXPRESSION, ex);</span>
+<span class="nc" id="L234">    } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L235">      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_FLAG, ex);</span>
     }
   }
 

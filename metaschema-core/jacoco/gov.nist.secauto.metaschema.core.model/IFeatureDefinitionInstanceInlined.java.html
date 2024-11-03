@@ -28,47 +28,48 @@ public interface IFeatureDefinitionInstanceInlined&lt;
     DEFINITION extends IDefinition,
     INSTANCE extends INamedInstance&gt;
     extends IDefinition, INamedInstance {
-  @Override
-  default boolean isInline() {
-    // has to be inline
-<span class="fc" id="L34">    return true;</span>
-  }
 
   @Override
   default QName getDefinitionQName() {
-<span class="nc" id="L39">    return getReferencedDefinitionQName();</span>
+<span class="nc" id="L34">    return getReferencedDefinitionQName();</span>
   }
 
   @Override
   default DEFINITION getDefinition() {
-<span class="nc" id="L44">    return ObjectUtils.asType(this);</span>
+<span class="nc" id="L39">    return ObjectUtils.asType(this);</span>
+  }
+
+  @Override
+  default boolean isInline() {
+    // has to be inline
+<span class="nc" id="L45">    return true;</span>
   }
 
   @Override
   @NonNull
   default INSTANCE getInlineInstance() {
-<span class="nc" id="L50">    return ObjectUtils.asType(this);</span>
+<span class="nc" id="L51">    return ObjectUtils.asType(this);</span>
   }
 
   @Override
   default String getEffectiveFormalName() {
-<span class="nc" id="L55">    return getFormalName();</span>
+<span class="nc" id="L56">    return getFormalName();</span>
   }
 
   @Override
   default MarkupLine getEffectiveDescription() {
-<span class="nc" id="L60">    return getDescription();</span>
+<span class="nc" id="L61">    return getDescription();</span>
   }
 
   @Override
   default String getEffectiveName() {
     // don't use use-name
-<span class="fc" id="L66">    return getName();</span>
+<span class="fc" id="L67">    return getName();</span>
   }
 
   @Override
   default Integer getEffectiveIndex() {
-<span class="nc" id="L71">    return getIndex();</span>
+<span class="nc" id="L72">    return getIndex();</span>
   }
 
   @Override
@@ -76,7 +77,7 @@ public interface IFeatureDefinitionInstanceInlined&lt;
   default Object getEffectiveDefaultValue() {
     // This is an inline instance that is both a definition and an instance. Don't
     // delegate to the definition, since this would be redundant.
-<span class="nc" id="L79">    return getDefaultValue();</span>
+<span class="nc" id="L80">    return getDefaultValue();</span>
   }
 
   /**
@@ -95,13 +96,13 @@ public interface IFeatureDefinitionInstanceInlined&lt;
   @SuppressWarnings(&quot;null&quot;)
   @Override
   default String toCoordinates() {
-<span class="nc" id="L98">    IModule module = getContainingModule();</span>
-<span class="nc" id="L99">    return String.format(&quot;%s-inline-definition:%s:%s/%s@%d&quot;,</span>
-<span class="nc" id="L100">        getModelType().toString().toLowerCase(Locale.ROOT),</span>
-<span class="nc" id="L101">        module.getShortName(),</span>
-<span class="nc" id="L102">        getContainingDefinition().getName(),</span>
-<span class="nc" id="L103">        getName(),</span>
-<span class="nc" id="L104">        hashCode());</span>
+<span class="nc" id="L99">    IModule module = getContainingModule();</span>
+<span class="nc" id="L100">    return String.format(&quot;%s-inline-definition:%s:%s/%s@%d&quot;,</span>
+<span class="nc" id="L101">        getModelType().toString().toLowerCase(Locale.ROOT),</span>
+<span class="nc" id="L102">        module.getShortName(),</span>
+<span class="nc" id="L103">        getContainingDefinition().getName(),</span>
+<span class="nc" id="L104">        getName(),</span>
+<span class="nc" id="L105">        hashCode());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

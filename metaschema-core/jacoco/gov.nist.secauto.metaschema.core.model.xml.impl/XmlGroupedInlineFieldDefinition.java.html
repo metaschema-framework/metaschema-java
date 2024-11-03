@@ -17,7 +17,6 @@ import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedInlineFieldDefinitionType;
@@ -32,6 +31,10 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Represents a Metaschema field definition declared locally as an instance
+ * within a choice group.
+ */
 public class XmlGroupedInlineFieldDefinition
     extends AbstractInlineFieldDefinition&lt;
         IChoiceGroupInstance,
@@ -61,30 +64,30 @@ public class XmlGroupedInlineFieldDefinition
   public XmlGroupedInlineFieldDefinition(
       @NonNull GroupedInlineFieldDefinitionType xmlObject,
       @NonNull IChoiceGroupInstance parent) {
-<span class="nc" id="L64">    super(parent);</span>
-<span class="nc" id="L65">    this.xmlObject = xmlObject;</span>
-<span class="nc" id="L66">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(</span>
+<span class="nc" id="L67">    super(parent);</span>
+<span class="nc" id="L68">    this.xmlObject = xmlObject;</span>
+<span class="nc" id="L69">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(</span>
         xmlObject,
         this,
-<span class="nc" id="L69">        parent.getJsonKeyFlagInstanceName())));</span>
-<span class="nc" id="L70">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="nc" id="L71">      IValueConstrained retval = new ValueConstraintSet();</span>
-<span class="nc bnc" id="L72" title="All 2 branches missed.">      if (getXmlObject().isSetConstraint()) {</span>
-<span class="nc" id="L73">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()),</span>
-<span class="nc" id="L74">            ISource.modelSource(getContainingModule()));</span>
+<span class="nc" id="L72">        parent.getJsonKeyFlagInstanceName())));</span>
+<span class="nc" id="L73">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="nc" id="L74">      IValueConstrained retval = new ValueConstraintSet();</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">      if (getXmlObject().isSetConstraint()) {</span>
+<span class="nc" id="L76">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()),</span>
+<span class="nc" id="L77">            getContainingModule().getSource());</span>
       }
-<span class="nc" id="L76">      return retval;</span>
+<span class="nc" id="L79">      return retval;</span>
     }));
-<span class="nc" id="L78">  }</span>
+<span class="nc" id="L81">  }</span>
 
   @Override
   public IContainerFlagSupport&lt;IFlagInstance&gt; getFlagContainer() {
-<span class="nc" id="L82">    return ObjectUtils.notNull(flagContainer.get());</span>
+<span class="nc" id="L85">    return ObjectUtils.notNull(flagContainer.get());</span>
   }
 
   @Override
   public IValueConstrained getConstraintSupport() {
-<span class="nc" id="L87">    return ObjectUtils.notNull(constraints.get());</span>
+<span class="nc" id="L90">    return ObjectUtils.notNull(constraints.get());</span>
   }
 
   // ----------------------------------------
@@ -97,74 +100,74 @@ public class XmlGroupedInlineFieldDefinition
    * @return the XML model
    */
   protected GroupedInlineFieldDefinitionType getXmlObject() {
-<span class="nc" id="L100">    return xmlObject;</span>
+<span class="nc" id="L103">    return xmlObject;</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="nc bnc" id="L105" title="All 2 branches missed.">    return getXmlObject().isSetFormalName() ? getXmlObject().getFormalName() : null;</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">    return getXmlObject().isSetFormalName() ? getXmlObject().getFormalName() : null;</span>
   }
 
   @Override
   public MarkupLine getDescription() {
-<span class="nc bnc" id="L110" title="All 2 branches missed.">    return getXmlObject().isSetDescription()</span>
-<span class="nc" id="L111">        ? MarkupStringConverter.toMarkupString(ObjectUtils.notNull(getXmlObject().getDescription()))</span>
-<span class="nc" id="L112">        : null;</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">    return getXmlObject().isSetDescription()</span>
+<span class="nc" id="L114">        ? MarkupStringConverter.toMarkupString(ObjectUtils.notNull(getXmlObject().getDescription()))</span>
+<span class="nc" id="L115">        : null;</span>
   }
 
   @Override
   public Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; getProperties() {
-<span class="nc" id="L117">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlObject().getPropList()));</span>
+<span class="nc" id="L120">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlObject().getPropList()));</span>
   }
 
   @Override
   public String getName() {
-<span class="nc" id="L122">    return ObjectUtils.notNull(getXmlObject().getName());</span>
+<span class="nc" id="L125">    return ObjectUtils.notNull(getXmlObject().getName());</span>
   }
 
   @Override
   public Integer getIndex() {
-<span class="nc bnc" id="L127" title="All 2 branches missed.">    return getXmlObject().isSetIndex() ? getXmlObject().getIndex().intValue() : null;</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">    return getXmlObject().isSetIndex() ? getXmlObject().getIndex().intValue() : null;</span>
   }
 
   @Override
   public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {
-<span class="nc bnc" id="L132" title="All 2 branches missed.">    return getXmlObject().isSetAsType() ? ObjectUtils.notNull(getXmlObject().getAsType())</span>
-<span class="nc" id="L133">        : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">    return getXmlObject().isSetAsType() ? ObjectUtils.notNull(getXmlObject().getAsType())</span>
+<span class="nc" id="L136">        : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc bnc" id="L138" title="All 2 branches missed.">    return getXmlObject().isSetRemarks()</span>
-<span class="nc" id="L139">        ? MarkupStringConverter.toMarkupString(ObjectUtils.notNull(getXmlObject().getRemarks()))</span>
-<span class="nc" id="L140">        : null;</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">    return getXmlObject().isSetRemarks()</span>
+<span class="nc" id="L142">        ? MarkupStringConverter.toMarkupString(ObjectUtils.notNull(getXmlObject().getRemarks()))</span>
+<span class="nc" id="L143">        : null;</span>
   }
 
   @Override
   public String getDiscriminatorValue() {
-<span class="nc" id="L145">    return getXmlObject().getDiscriminatorValue();</span>
+<span class="nc" id="L148">    return getXmlObject().getDiscriminatorValue();</span>
   }
 
   @Override
   public boolean hasJsonValueKeyFlagInstance() {
-<span class="nc bnc" id="L150" title="All 4 branches missed.">    return getXmlObject().isSetJsonValueKeyFlag() &amp;&amp; getXmlObject().getJsonValueKeyFlag().isSetFlagRef();</span>
+<span class="nc bnc" id="L153" title="All 4 branches missed.">    return getXmlObject().isSetJsonValueKeyFlag() &amp;&amp; getXmlObject().getJsonValueKeyFlag().isSetFlagRef();</span>
   }
 
   @Override
   public IFlagInstance getJsonValueKeyFlagInstance() {
-<span class="nc" id="L155">    IFlagInstance retval = null;</span>
-<span class="nc bnc" id="L156" title="All 4 branches missed.">    if (getXmlObject().isSetJsonValueKeyFlag() &amp;&amp; getXmlObject().getJsonValueKeyFlag().isSetFlagRef()) {</span>
-<span class="nc" id="L157">      retval = getFlagInstanceByName(</span>
+<span class="nc" id="L158">    IFlagInstance retval = null;</span>
+<span class="nc bnc" id="L159" title="All 4 branches missed.">    if (getXmlObject().isSetJsonValueKeyFlag() &amp;&amp; getXmlObject().getJsonValueKeyFlag().isSetFlagRef()) {</span>
+<span class="nc" id="L160">      retval = getFlagInstanceByName(</span>
           new QName(
-<span class="nc" id="L159">              getXmlNamespace(),</span>
-<span class="nc" id="L160">              ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef())));</span>
+<span class="nc" id="L162">              getXmlNamespace(),</span>
+<span class="nc" id="L163">              ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef())));</span>
     }
-<span class="nc" id="L162">    return retval;</span>
+<span class="nc" id="L165">    return retval;</span>
   }
 
   @Override
   public String getJsonValueKeyName() {
-<span class="nc" id="L167">    return getXmlObject().getJsonValueKey();</span>
+<span class="nc" id="L170">    return getXmlObject().getJsonValueKey();</span>
   }
 
   // -------------------------------------

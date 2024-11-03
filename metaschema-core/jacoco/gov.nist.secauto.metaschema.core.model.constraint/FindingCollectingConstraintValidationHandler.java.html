@@ -25,26 +25,32 @@ import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A validation result handler that collects the resulting findings for later
+ * retrieval using the {@link #getFindings()} method.
+ * &lt;p&gt;
+ * This class is not thread safe.
+ */
 @SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)
-<span class="fc" id="L29">public class FindingCollectingConstraintValidationHandler</span>
+<span class="fc" id="L35">public class FindingCollectingConstraintValidationHandler</span>
     extends AbstractConstraintValidationHandler
     implements IValidationResult {
-<span class="fc" id="L32">  private static final Logger LOGGER = LogManager.getLogger(FindingCollectingConstraintValidationHandler.class);</span>
-<span class="fc" id="L33">  @NonNull</span>
+<span class="fc" id="L38">  private static final Logger LOGGER = LogManager.getLogger(FindingCollectingConstraintValidationHandler.class);</span>
+<span class="fc" id="L39">  @NonNull</span>
   private final List&lt;ConstraintValidationFinding&gt; findings = new LinkedList&lt;&gt;();
-<span class="fc" id="L35">  @NonNull</span>
+<span class="fc" id="L41">  @NonNull</span>
   private Level highestLevel = IConstraint.Level.INFORMATIONAL;
 
   @Override
   @NonNull
   public List&lt;ConstraintValidationFinding&gt; getFindings() {
-<span class="fc" id="L41">    return CollectionUtil.unmodifiableList(findings);</span>
+<span class="fc" id="L47">    return CollectionUtil.unmodifiableList(findings);</span>
   }
 
   @Override
   @NonNull
   public Level getHighestSeverity() {
-<span class="fc" id="L47">    return highestLevel;</span>
+<span class="fc" id="L53">    return highestLevel;</span>
   }
 
   /**
@@ -54,92 +60,96 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          the finding to add
    */
   protected void addFinding(@NonNull ConstraintValidationFinding finding) {
-<span class="fc" id="L57">    findings.add(finding);</span>
+<span class="fc" id="L63">    findings.add(finding);</span>
 
-<span class="fc" id="L59">    Level severity = finding.getSeverity();</span>
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">    if (severity.ordinal() &gt; highestLevel.ordinal()) {</span>
-<span class="fc" id="L61">      highestLevel = severity;</span>
+<span class="fc" id="L65">    Level severity = finding.getSeverity();</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">    if (severity.ordinal() &gt; highestLevel.ordinal()) {</span>
+<span class="fc" id="L67">      highestLevel = severity;</span>
     }
-<span class="fc" id="L63">  }</span>
+<span class="fc" id="L69">  }</span>
 
   @NonNull
   private static Kind toKind(@NonNull Level level) {
     Kind retval;
-<span class="pc bpc" id="L68" title="3 of 4 branches missed.">    switch (level) {</span>
+<span class="pc bpc" id="L74" title="3 of 4 branches missed.">    switch (level) {</span>
     case CRITICAL:
     case ERROR:
-<span class="fc" id="L71">      retval = Kind.FAIL;</span>
-<span class="fc" id="L72">      break;</span>
+<span class="fc" id="L77">      retval = Kind.FAIL;</span>
+<span class="fc" id="L78">      break;</span>
     case INFORMATIONAL:
     case DEBUG:
     case NONE:
-<span class="nc" id="L76">      retval = Kind.INFORMATIONAL;</span>
-<span class="nc" id="L77">      break;</span>
+<span class="nc" id="L82">      retval = Kind.INFORMATIONAL;</span>
+<span class="nc" id="L83">      break;</span>
     case WARNING:
-<span class="nc" id="L79">      retval = Kind.PASS;</span>
-<span class="nc" id="L80">      break;</span>
+<span class="nc" id="L85">      retval = Kind.PASS;</span>
+<span class="nc" id="L86">      break;</span>
     default:
-<span class="nc" id="L82">      throw new IllegalArgumentException(String.format(&quot;Unsupported level '%s'.&quot;, level));</span>
+<span class="nc" id="L88">      throw new IllegalArgumentException(String.format(&quot;Unsupported level '%s'.&quot;, level));</span>
     }
 
-<span class="fc" id="L85">    return retval;</span>
+<span class="fc" id="L91">    return retval;</span>
   }
 
   @Override
   public void handleCardinalityMinimumViolation(
       @NonNull ICardinalityConstraint constraint,
-      @NonNull INodeItem node,
-      @NonNull ISequence&lt;? extends INodeItem&gt; targets) {
-<span class="nc" id="L93">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L94">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L95">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L96">        .target(node)</span>
-<span class="nc" id="L97">        .subjects(targets.getValue())</span>
-<span class="nc" id="L98">        .message(newCardinalityMinimumViolationMessage(constraint, node, targets))</span>
-<span class="nc" id="L99">        .build());</span>
-<span class="nc" id="L100">  }</span>
+      @NonNull INodeItem target,
+      @NonNull ISequence&lt;? extends INodeItem&gt; testedItems,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L100">    addFinding(ConstraintValidationFinding.builder(constraint, target)</span>
+<span class="nc" id="L101">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L102">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L103">        .target(target)</span>
+<span class="nc" id="L104">        .subjects(testedItems.getValue())</span>
+<span class="nc" id="L105">        .message(newCardinalityMinimumViolationMessage(constraint, target, testedItems, dynamicContext))</span>
+<span class="nc" id="L106">        .build());</span>
+<span class="nc" id="L107">  }</span>
 
   @Override
   public void handleCardinalityMaximumViolation(
       @NonNull ICardinalityConstraint constraint,
-      @NonNull INodeItem node,
-      @NonNull ISequence&lt;? extends INodeItem&gt; targets) {
-<span class="nc" id="L107">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L108">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L109">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L110">        .target(node)</span>
-<span class="nc" id="L111">        .subjects(targets.getValue())</span>
-<span class="nc" id="L112">        .message(newCardinalityMaximumViolationMessage(constraint, node, targets))</span>
-<span class="nc" id="L113">        .build());</span>
-<span class="nc" id="L114">  }</span>
+      @NonNull INodeItem target,
+      @NonNull ISequence&lt;? extends INodeItem&gt; testedItems,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L115">    addFinding(ConstraintValidationFinding.builder(constraint, target)</span>
+<span class="nc" id="L116">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L117">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L118">        .target(target)</span>
+<span class="nc" id="L119">        .subjects(testedItems.getValue())</span>
+<span class="nc" id="L120">        .message(newCardinalityMaximumViolationMessage(constraint, target, testedItems, dynamicContext))</span>
+<span class="nc" id="L121">        .build());</span>
+<span class="nc" id="L122">  }</span>
 
   @Override
   public void handleIndexDuplicateKeyViolation(
       @NonNull IIndexConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem target) {
-<span class="nc" id="L122">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L123">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L124">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L125">        .target(target)</span>
-<span class="nc" id="L126">        .message(newIndexDuplicateKeyViolationMessage(constraint, node, oldItem, target))</span>
-<span class="nc" id="L127">        .build());</span>
-<span class="nc" id="L128">  }</span>
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L131">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L132">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L133">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L134">        .target(target)</span>
+<span class="nc" id="L135">        .message(newIndexDuplicateKeyViolationMessage(constraint, node, oldItem, target, dynamicContext))</span>
+<span class="nc" id="L136">        .build());</span>
+<span class="nc" id="L137">  }</span>
 
   @Override
   public void handleUniqueKeyViolation(
       @NonNull IUniqueConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem target) {
-<span class="nc" id="L136">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L137">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L138">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L139">        .target(target)</span>
-<span class="nc" id="L140">        .message(newUniqueKeyViolationMessage(constraint, node, oldItem, target))</span>
-<span class="nc" id="L141">        .build());</span>
-<span class="nc" id="L142">  }</span>
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L146">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L147">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L148">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L149">        .target(target)</span>
+<span class="nc" id="L150">        .message(newUniqueKeyViolationMessage(constraint, node, oldItem, target, dynamicContext))</span>
+<span class="nc" id="L151">        .build());</span>
+<span class="nc" id="L152">  }</span>
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
@@ -147,15 +157,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       @NonNull IKeyConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull MetapathException cause) {
-<span class="nc" id="L151">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L152">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L153">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L154">        .target(target)</span>
-<span class="nc" id="L155">        .message(cause.getLocalizedMessage())</span>
-<span class="nc" id="L156">        .cause(cause)</span>
-<span class="nc" id="L157">        .build());</span>
-<span class="nc" id="L158">  }</span>
+      @NonNull MetapathException cause,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L162">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L163">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L164">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L165">        .target(target)</span>
+<span class="nc" id="L166">        .message(cause.getLocalizedMessage())</span>
+<span class="nc" id="L167">        .cause(cause)</span>
+<span class="nc" id="L168">        .build());</span>
+<span class="nc" id="L169">  }</span>
 
   @Override
   public void handleMatchPatternViolation(
@@ -163,14 +174,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull String value,
-      @NonNull Pattern pattern) {
-<span class="nc" id="L167">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L168">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L169">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L170">        .target(target)</span>
-<span class="nc" id="L171">        .message(newMatchPatternViolationMessage(constraint, node, target, value, pattern))</span>
-<span class="nc" id="L172">        .build());</span>
-<span class="nc" id="L173">  }</span>
+      @NonNull Pattern pattern,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L179">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L180">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L181">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L182">        .target(target)</span>
+<span class="nc" id="L183">        .message(newMatchPatternViolationMessage(constraint, node, target, value, pattern, dynamicContext))</span>
+<span class="nc" id="L184">        .build());</span>
+<span class="nc" id="L185">  }</span>
 
   @Override
   public void handleMatchDatatypeViolation(
@@ -179,15 +191,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull IDataTypeAdapter&lt;?&gt; adapter,
-      @NonNull IllegalArgumentException cause) {
-<span class="nc" id="L183">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L184">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L185">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L186">        .target(target)</span>
-<span class="nc" id="L187">        .message(newMatchDatatypeViolationMessage(constraint, node, target, value, adapter))</span>
-<span class="nc" id="L188">        .cause(cause)</span>
-<span class="nc" id="L189">        .build());</span>
-<span class="nc" id="L190">  }</span>
+      @NonNull IllegalArgumentException cause,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L196">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L197">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L198">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L199">        .target(target)</span>
+<span class="nc" id="L200">        .message(newMatchDatatypeViolationMessage(constraint, node, target, value, adapter, dynamicContext))</span>
+<span class="nc" id="L201">        .cause(cause)</span>
+<span class="nc" id="L202">        .build());</span>
+<span class="nc" id="L203">  }</span>
 
   @Override
   public void handleExpectViolation(
@@ -195,87 +208,102 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull DynamicContext dynamicContext) {
-<span class="nc" id="L198">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L199">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L200">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L201">        .target(target)</span>
-<span class="nc" id="L202">        .message(newExpectViolationMessage(constraint, node, target, dynamicContext))</span>
-<span class="nc" id="L203">        .build());</span>
-<span class="nc" id="L204">  }</span>
+<span class="nc" id="L211">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L212">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L213">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L214">        .target(target)</span>
+<span class="nc" id="L215">        .message(newExpectViolationMessage(constraint, node, target, dynamicContext))</span>
+<span class="nc" id="L216">        .build());</span>
+<span class="nc" id="L217">  }</span>
 
   @Override
   public void handleAllowedValuesViolation(
       @NonNull List&lt;IAllowedValuesConstraint&gt; failedConstraints,
-      @NonNull INodeItem target) {
-<span class="fc" id="L210">    Level maxLevel = ObjectUtils.notNull(failedConstraints.stream()</span>
-<span class="fc" id="L211">        .map(IAllowedValuesConstraint::getLevel)</span>
-<span class="fc bfc" id="L212" title="All 2 branches covered.">        .reduce(Level.NONE, (l1, l2) -&gt; l1.ordinal() &gt;= l2.ordinal() ? l1 : l2));</span>
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
+<span class="fc" id="L224">    Level maxLevel = ObjectUtils.notNull(failedConstraints.stream()</span>
+<span class="fc" id="L225">        .map(IAllowedValuesConstraint::getLevel)</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        .reduce(Level.NONE, (l1, l2) -&gt; l1.ordinal() &gt;= l2.ordinal() ? l1 : l2));</span>
 
-<span class="fc" id="L214">    addFinding(ConstraintValidationFinding.builder(failedConstraints, target)</span>
-<span class="fc" id="L215">        .severity(maxLevel)</span>
-<span class="fc" id="L216">        .kind(toKind(maxLevel))</span>
-<span class="fc" id="L217">        .target(target)</span>
-<span class="fc" id="L218">        .message(newAllowedValuesViolationMessage(failedConstraints, target))</span>
-<span class="fc" id="L219">        .build());</span>
-<span class="fc" id="L220">  }</span>
-
-  @Override
-  public void handleIndexDuplicateViolation(IIndexConstraint constraint, INodeItem node) {
-<span class="nc" id="L224">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L225">        .kind(Kind.FAIL)</span>
-<span class="nc" id="L226">        .severity(Level.CRITICAL)</span>
-<span class="nc" id="L227">        .target(node)</span>
-<span class="nc" id="L228">        .message(newIndexDuplicateViolationMessage(constraint, node))</span>
-<span class="nc" id="L229">        .build());</span>
-<span class="nc" id="L230">  }</span>
+<span class="fc" id="L228">    addFinding(ConstraintValidationFinding.builder(failedConstraints, target)</span>
+<span class="fc" id="L229">        .severity(maxLevel)</span>
+<span class="fc" id="L230">        .kind(toKind(maxLevel))</span>
+<span class="fc" id="L231">        .target(target)</span>
+<span class="fc" id="L232">        .message(newAllowedValuesViolationMessage(failedConstraints, target))</span>
+<span class="fc" id="L233">        .build());</span>
+<span class="fc" id="L234">  }</span>
 
   @Override
-  public void handleIndexMiss(IIndexHasKeyConstraint constraint, INodeItem node, INodeItem target, List&lt;String&gt; key) {
-<span class="nc" id="L234">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L235">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L236">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L237">        .target(target)</span>
-<span class="nc" id="L238">        .message(newIndexMissMessage(constraint, node, target, key))</span>
-<span class="nc" id="L239">        .build());</span>
-<span class="nc" id="L240">  }</span>
+  public void handleIndexDuplicateViolation(
+      IIndexConstraint constraint,
+      INodeItem node,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L241">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L242">        .kind(Kind.FAIL)</span>
+<span class="nc" id="L243">        .severity(Level.CRITICAL)</span>
+<span class="nc" id="L244">        .target(node)</span>
+<span class="nc" id="L245">        .message(newIndexDuplicateViolationMessage(constraint, node))</span>
+<span class="nc" id="L246">        .build());</span>
+<span class="nc" id="L247">  }</span>
+
+  @Override
+  public void handleIndexMiss(
+      @NonNull IIndexHasKeyConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull List&lt;String&gt; key,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L256">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L257">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L258">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L259">        .target(target)</span>
+<span class="nc" id="L260">        .message(newIndexMissMessage(constraint, node, target, key, dynamicContext))</span>
+<span class="nc" id="L261">        .build());</span>
+<span class="nc" id="L262">  }</span>
 
   @Override
   public void handleMissingIndexViolation(
-      IIndexHasKeyConstraint constraint,
-      INodeItem node,
-      INodeItem target,
-      String message) {
-<span class="nc" id="L248">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L249">        .severity(constraint.getLevel())</span>
-<span class="nc" id="L250">        .kind(toKind(constraint.getLevel()))</span>
-<span class="nc" id="L251">        .target(target)</span>
-<span class="nc" id="L252">        .message(newMissingIndexViolationMessage(constraint, node, target, message))</span>
-<span class="nc" id="L253">        .build());</span>
-<span class="nc" id="L254">  }</span>
+      @NonNull IIndexHasKeyConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull String message,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L271">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L272">        .severity(constraint.getLevel())</span>
+<span class="nc" id="L273">        .kind(toKind(constraint.getLevel()))</span>
+<span class="nc" id="L274">        .target(target)</span>
+<span class="nc" id="L275">        .message(newMissingIndexViolationMessage(constraint, node, target, message, dynamicContext))</span>
+<span class="nc" id="L276">        .build());</span>
+<span class="nc" id="L277">  }</span>
 
   @Override
-  public void handlePass(IConstraint constraint, INodeItem node, INodeItem target) {
-<span class="nc" id="L258">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L259">        .kind(Kind.PASS)</span>
-<span class="nc" id="L260">        .severity(Level.NONE)</span>
-<span class="nc" id="L261">        .target(target)</span>
-<span class="nc" id="L262">        .build());</span>
-<span class="nc" id="L263">  }</span>
+  public void handlePass(
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L285">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L286">        .kind(Kind.PASS)</span>
+<span class="nc" id="L287">        .severity(Level.NONE)</span>
+<span class="nc" id="L288">        .target(target)</span>
+<span class="nc" id="L289">        .build());</span>
+<span class="nc" id="L290">  }</span>
 
   @Override
   public void handleError(
-      IConstraint constraint,
-      INodeItem node,
-      String message,
-      Throwable exception) {
-<span class="nc" id="L271">    LOGGER.atError().withThrowable(exception).log(message);</span>
-<span class="nc" id="L272">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
-<span class="nc" id="L273">        .kind(Kind.FAIL)</span>
-<span class="nc" id="L274">        .severity(Level.CRITICAL)</span>
-<span class="nc" id="L275">        .target(node)</span>
-<span class="nc" id="L276">        .message(message)</span>
-<span class="nc" id="L277">        .cause(exception)</span>
-<span class="nc" id="L278">        .build());</span>
-<span class="nc" id="L279">  }</span>
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull String message,
+      @NonNull Throwable exception,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L299">    LOGGER.atError().withThrowable(exception).log(message);</span>
+<span class="nc" id="L300">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
+<span class="nc" id="L301">        .kind(Kind.FAIL)</span>
+<span class="nc" id="L302">        .severity(Level.CRITICAL)</span>
+<span class="nc" id="L303">        .target(node)</span>
+<span class="nc" id="L304">        .message(message)</span>
+<span class="nc" id="L305">        .cause(exception)</span>
+<span class="nc" id="L306">        .build());</span>
+<span class="nc" id="L307">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

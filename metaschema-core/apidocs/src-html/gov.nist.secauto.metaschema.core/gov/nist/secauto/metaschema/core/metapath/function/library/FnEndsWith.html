@@ -32,76 +32,84 @@
 <span class="source-line-no">019</span><span id="line-19"></span>
 <span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">public final class FnEndsWith {</span>
-<span class="source-line-no">023</span><span id="line-23">  private static final String NAME = "ends-with";</span>
-<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
-<span class="source-line-no">025</span><span id="line-25">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">026</span><span id="line-26">      .name(NAME)</span>
-<span class="source-line-no">027</span><span id="line-27">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">028</span><span id="line-28">      .deterministic()</span>
-<span class="source-line-no">029</span><span id="line-29">      .contextDependent()</span>
-<span class="source-line-no">030</span><span id="line-30">      .focusIndependent()</span>
-<span class="source-line-no">031</span><span id="line-31">      .argument(IArgument.builder()</span>
-<span class="source-line-no">032</span><span id="line-32">          .name("arg1").type(IStringItem.class)</span>
-<span class="source-line-no">033</span><span id="line-33">          .zeroOrOne()</span>
-<span class="source-line-no">034</span><span id="line-34">          .build())</span>
-<span class="source-line-no">035</span><span id="line-35">      .argument(IArgument.builder()</span>
-<span class="source-line-no">036</span><span id="line-36">          .name("arg2")</span>
-<span class="source-line-no">037</span><span id="line-37">          .type(IStringItem.class)</span>
-<span class="source-line-no">038</span><span id="line-38">          .zeroOrOne()</span>
-<span class="source-line-no">039</span><span id="line-39">          .build())</span>
-<span class="source-line-no">040</span><span id="line-40">      .returnType(IBooleanItem.class)</span>
-<span class="source-line-no">041</span><span id="line-41">      .returnOne()</span>
-<span class="source-line-no">042</span><span id="line-42">      .functionHandler(FnEndsWith::execute)</span>
-<span class="source-line-no">043</span><span id="line-43">      .build();</span>
-<span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">046</span><span id="line-46">  @NonNull</span>
-<span class="source-line-no">047</span><span id="line-47">  private static ISequence&lt;IBooleanItem&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">048</span><span id="line-48">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">049</span><span id="line-49">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">050</span><span id="line-50">      IItem focus) {</span>
-<span class="source-line-no">051</span><span id="line-51">    IStringItem arg1 = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="source-line-no">022</span><span id="line-22">/**</span>
+<span class="source-line-no">023</span><span id="line-23"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">024</span><span id="line-24"> * "https://www.w3.org/TR/xpath-functions-31/#func-ends-with"&gt;fn:ends-with&lt;/a&gt;</span>
+<span class="source-line-no">025</span><span id="line-25"> * function.</span>
+<span class="source-line-no">026</span><span id="line-26"> */</span>
+<span class="source-line-no">027</span><span id="line-27">public final class FnEndsWith {</span>
+<span class="source-line-no">028</span><span id="line-28">  // CPD-OFF</span>
+<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
+<span class="source-line-no">030</span><span id="line-30">  private static final String NAME = "ends-with";</span>
+<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
+<span class="source-line-no">032</span><span id="line-32">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">033</span><span id="line-33">      .name(NAME)</span>
+<span class="source-line-no">034</span><span id="line-34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">035</span><span id="line-35">      .deterministic()</span>
+<span class="source-line-no">036</span><span id="line-36">      .contextDependent()</span>
+<span class="source-line-no">037</span><span id="line-37">      .focusIndependent()</span>
+<span class="source-line-no">038</span><span id="line-38">      .argument(IArgument.builder()</span>
+<span class="source-line-no">039</span><span id="line-39">          .name("arg1").type(IStringItem.class)</span>
+<span class="source-line-no">040</span><span id="line-40">          .zeroOrOne()</span>
+<span class="source-line-no">041</span><span id="line-41">          .build())</span>
+<span class="source-line-no">042</span><span id="line-42">      .argument(IArgument.builder()</span>
+<span class="source-line-no">043</span><span id="line-43">          .name("arg2")</span>
+<span class="source-line-no">044</span><span id="line-44">          .type(IStringItem.class)</span>
+<span class="source-line-no">045</span><span id="line-45">          .zeroOrOne()</span>
+<span class="source-line-no">046</span><span id="line-46">          .build())</span>
+<span class="source-line-no">047</span><span id="line-47">      .returnType(IBooleanItem.class)</span>
+<span class="source-line-no">048</span><span id="line-48">      .returnOne()</span>
+<span class="source-line-no">049</span><span id="line-49">      .functionHandler(FnEndsWith::execute)</span>
+<span class="source-line-no">050</span><span id="line-50">      .build();</span>
+<span class="source-line-no">051</span><span id="line-51">  // CPD-ON</span>
 <span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">    IStringItem arg2 = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));</span>
-<span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">    return ISequence.of(IBooleanItem.valueOf(</span>
-<span class="source-line-no">056</span><span id="line-56">        fnEndsWith(</span>
-<span class="source-line-no">057</span><span id="line-57">            arg1 == null ? "" : arg1.asString(),</span>
-<span class="source-line-no">058</span><span id="line-58">            arg2 == null ? "" : arg2.asString())));</span>
-<span class="source-line-no">059</span><span id="line-59">  }</span>
+<span class="source-line-no">053</span><span id="line-53">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">054</span><span id="line-54">  @NonNull</span>
+<span class="source-line-no">055</span><span id="line-55">  private static ISequence&lt;IBooleanItem&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">056</span><span id="line-56">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">057</span><span id="line-57">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">058</span><span id="line-58">      IItem focus) {</span>
+<span class="source-line-no">059</span><span id="line-59">    IStringItem arg1 = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
 <span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  /**</span>
-<span class="source-line-no">062</span><span id="line-62">   * Determine if the string provided in the first argument ends with the string</span>
-<span class="source-line-no">063</span><span id="line-63">   * in the second argument.</span>
-<span class="source-line-no">064</span><span id="line-64">   * &lt;p&gt;</span>
-<span class="source-line-no">065</span><span id="line-65">   * Based on the XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">066</span><span id="line-66">   * "https://www.w3.org/TR/xpath-functions-31/#func-ends-with"&gt;fn:ends-with&lt;/a&gt;</span>
-<span class="source-line-no">067</span><span id="line-67">   * function.</span>
-<span class="source-line-no">068</span><span id="line-68">   *</span>
-<span class="source-line-no">069</span><span id="line-69">   * @param arg1</span>
-<span class="source-line-no">070</span><span id="line-70">   *          the string to examine</span>
-<span class="source-line-no">071</span><span id="line-71">   * @param arg2</span>
-<span class="source-line-no">072</span><span id="line-72">   *          the string to check as the leading substring</span>
-<span class="source-line-no">073</span><span id="line-73">   * @return {@code true} if {@code arg1} ends with {@code arg2}, or {@code false}</span>
-<span class="source-line-no">074</span><span id="line-74">   *         otherwise</span>
-<span class="source-line-no">075</span><span id="line-75">   */</span>
-<span class="source-line-no">076</span><span id="line-76">  public static boolean fnEndsWith(@NonNull String arg1, @NonNull String arg2) {</span>
-<span class="source-line-no">077</span><span id="line-77">    boolean retval;</span>
-<span class="source-line-no">078</span><span id="line-78">    if (arg2.isEmpty()) {</span>
-<span class="source-line-no">079</span><span id="line-79">      retval = true;</span>
-<span class="source-line-no">080</span><span id="line-80">    } else if (arg1.isEmpty()) {</span>
-<span class="source-line-no">081</span><span id="line-81">      retval = false;</span>
-<span class="source-line-no">082</span><span id="line-82">    } else {</span>
-<span class="source-line-no">083</span><span id="line-83">      retval = arg1.endsWith(arg2);</span>
-<span class="source-line-no">084</span><span id="line-84">    }</span>
-<span class="source-line-no">085</span><span id="line-85">    return retval;</span>
-<span class="source-line-no">086</span><span id="line-86">  }</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">  private FnEndsWith() {</span>
-<span class="source-line-no">089</span><span id="line-89">    // disable construction</span>
-<span class="source-line-no">090</span><span id="line-90">  }</span>
-<span class="source-line-no">091</span><span id="line-91">}</span>
+<span class="source-line-no">061</span><span id="line-61">    IStringItem arg2 = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));</span>
+<span class="source-line-no">062</span><span id="line-62"></span>
+<span class="source-line-no">063</span><span id="line-63">    return ISequence.of(IBooleanItem.valueOf(</span>
+<span class="source-line-no">064</span><span id="line-64">        fnEndsWith(</span>
+<span class="source-line-no">065</span><span id="line-65">            arg1 == null ? "" : arg1.asString(),</span>
+<span class="source-line-no">066</span><span id="line-66">            arg2 == null ? "" : arg2.asString())));</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  /**</span>
+<span class="source-line-no">070</span><span id="line-70">   * Determine if the string provided in the first argument ends with the string</span>
+<span class="source-line-no">071</span><span id="line-71">   * in the second argument.</span>
+<span class="source-line-no">072</span><span id="line-72">   * &lt;p&gt;</span>
+<span class="source-line-no">073</span><span id="line-73">   * Based on the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">074</span><span id="line-74">   * "https://www.w3.org/TR/xpath-functions-31/#func-ends-with"&gt;fn:ends-with&lt;/a&gt;</span>
+<span class="source-line-no">075</span><span id="line-75">   * function.</span>
+<span class="source-line-no">076</span><span id="line-76">   *</span>
+<span class="source-line-no">077</span><span id="line-77">   * @param arg1</span>
+<span class="source-line-no">078</span><span id="line-78">   *          the string to examine</span>
+<span class="source-line-no">079</span><span id="line-79">   * @param arg2</span>
+<span class="source-line-no">080</span><span id="line-80">   *          the string to check as the leading substring</span>
+<span class="source-line-no">081</span><span id="line-81">   * @return {@code true} if {@code arg1} ends with {@code arg2}, or {@code false}</span>
+<span class="source-line-no">082</span><span id="line-82">   *         otherwise</span>
+<span class="source-line-no">083</span><span id="line-83">   */</span>
+<span class="source-line-no">084</span><span id="line-84">  public static boolean fnEndsWith(@NonNull String arg1, @NonNull String arg2) {</span>
+<span class="source-line-no">085</span><span id="line-85">    boolean retval;</span>
+<span class="source-line-no">086</span><span id="line-86">    if (arg2.isEmpty()) {</span>
+<span class="source-line-no">087</span><span id="line-87">      retval = true;</span>
+<span class="source-line-no">088</span><span id="line-88">    } else if (arg1.isEmpty()) {</span>
+<span class="source-line-no">089</span><span id="line-89">      retval = false;</span>
+<span class="source-line-no">090</span><span id="line-90">    } else {</span>
+<span class="source-line-no">091</span><span id="line-91">      retval = arg1.endsWith(arg2);</span>
+<span class="source-line-no">092</span><span id="line-92">    }</span>
+<span class="source-line-no">093</span><span id="line-93">    return retval;</span>
+<span class="source-line-no">094</span><span id="line-94">  }</span>
+<span class="source-line-no">095</span><span id="line-95"></span>
+<span class="source-line-no">096</span><span id="line-96">  private FnEndsWith() {</span>
+<span class="source-line-no">097</span><span id="line-97">    // disable construction</span>
+<span class="source-line-no">098</span><span id="line-98">  }</span>
+<span class="source-line-no">099</span><span id="line-99">}</span>
 
 
 

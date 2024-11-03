@@ -12,6 +12,9 @@ import java.nio.ByteBuffer;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a Base64 encoded data value.
+ */
 public interface IBase64BinaryItem extends IAnyAtomicItem {
 
   /**
@@ -24,7 +27,7 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
    */
   @NonNull
   static IBase64BinaryItem valueOf(@NonNull String value) {
-<span class="nc" id="L27">    return cast(IStringItem.valueOf(value));</span>
+<span class="nc" id="L30">    return cast(IStringItem.valueOf(value));</span>
   }
 
   /**
@@ -37,7 +40,7 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
    */
   @NonNull
   static IBase64BinaryItem valueOf(@NonNull ByteBuffer value) {
-<span class="fc" id="L40">    return new Base64BinaryItemImpl(value);</span>
+<span class="fc" id="L43">    return new Base64BinaryItemImpl(value);</span>
   }
 
   /**
@@ -52,12 +55,12 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
    */
   @NonNull
   static IBase64BinaryItem cast(@NonNull IAnyAtomicItem item) {
-<span class="fc" id="L55">    return MetaschemaDataTypeProvider.BASE64.cast(item);</span>
+<span class="fc" id="L58">    return MetaschemaDataTypeProvider.BASE64.cast(item);</span>
   }
 
   @Override
   default IBase64BinaryItem castAsType(IAnyAtomicItem item) {
-<span class="nc" id="L60">    return cast(item);</span>
+<span class="nc" id="L63">    return cast(item);</span>
   }
 
   /**
@@ -70,7 +73,7 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
 
   @Override
   default int compareTo(IAnyAtomicItem item) {
-<span class="nc" id="L73">    return compareTo(cast(item));</span>
+<span class="nc" id="L76">    return compareTo(cast(item));</span>
   }
 
   /**
@@ -82,7 +85,7 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
    *         than, equal to, or greater than the {@code item}.
    */
   default int compareTo(@NonNull IBase64BinaryItem item) {
-<span class="nc" id="L85">    return asByteBuffer().compareTo(item.asByteBuffer());</span>
+<span class="nc" id="L88">    return asByteBuffer().compareTo(item.asByteBuffer());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

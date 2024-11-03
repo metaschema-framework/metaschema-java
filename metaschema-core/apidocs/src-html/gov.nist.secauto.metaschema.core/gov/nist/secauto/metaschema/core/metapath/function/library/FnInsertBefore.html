@@ -34,104 +34,105 @@
 <span class="source-line-no">021</span><span id="line-21">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">022</span><span id="line-22"></span>
 <span class="source-line-no">023</span><span id="line-23">/**</span>
-<span class="source-line-no">024</span><span id="line-24"> * Implements &lt;a href=</span>
-<span class="source-line-no">025</span><span id="line-25"> * "https://www.w3.org/TR/xpath-functions-31/#func-insert-before"&gt;fn:insert-before&lt;/a&gt;.</span>
-<span class="source-line-no">026</span><span id="line-26"> */</span>
-<span class="source-line-no">027</span><span id="line-27">public final class FnInsertBefore {</span>
-<span class="source-line-no">028</span><span id="line-28">  private static final String NAME = "insert-before";</span>
-<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
-<span class="source-line-no">030</span><span id="line-30">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">031</span><span id="line-31">      .name(NAME)</span>
-<span class="source-line-no">032</span><span id="line-32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">033</span><span id="line-33">      .deterministic()</span>
-<span class="source-line-no">034</span><span id="line-34">      .contextIndependent()</span>
-<span class="source-line-no">035</span><span id="line-35">      .focusIndependent()</span>
-<span class="source-line-no">036</span><span id="line-36">      .argument(IArgument.builder()</span>
-<span class="source-line-no">037</span><span id="line-37">          .name("target")</span>
-<span class="source-line-no">038</span><span id="line-38">          .type(IItem.class)</span>
-<span class="source-line-no">039</span><span id="line-39">          .zeroOrMore()</span>
-<span class="source-line-no">040</span><span id="line-40">          .build())</span>
-<span class="source-line-no">041</span><span id="line-41">      .argument(IArgument.builder()</span>
-<span class="source-line-no">042</span><span id="line-42">          .name("position")</span>
-<span class="source-line-no">043</span><span id="line-43">          .type(IIntegerItem.class)</span>
-<span class="source-line-no">044</span><span id="line-44">          .one()</span>
-<span class="source-line-no">045</span><span id="line-45">          .build())</span>
-<span class="source-line-no">046</span><span id="line-46">      .argument(IArgument.builder()</span>
-<span class="source-line-no">047</span><span id="line-47">          .name("inserts")</span>
-<span class="source-line-no">048</span><span id="line-48">          .type(IItem.class)</span>
-<span class="source-line-no">049</span><span id="line-49">          .zeroOrMore()</span>
-<span class="source-line-no">050</span><span id="line-50">          .build())</span>
-<span class="source-line-no">051</span><span id="line-51">      .returnType(IItem.class)</span>
-<span class="source-line-no">052</span><span id="line-52">      .returnZeroOrMore()</span>
-<span class="source-line-no">053</span><span id="line-53">      .functionHandler(FnInsertBefore::execute)</span>
-<span class="source-line-no">054</span><span id="line-54">      .build();</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  private FnInsertBefore() {</span>
-<span class="source-line-no">057</span><span id="line-57">    // disable construction</span>
-<span class="source-line-no">058</span><span id="line-58">  }</span>
-<span class="source-line-no">059</span><span id="line-59"></span>
-<span class="source-line-no">060</span><span id="line-60">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">061</span><span id="line-61">  @NonNull</span>
-<span class="source-line-no">062</span><span id="line-62">  private static ISequence&lt;?&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">063</span><span id="line-63">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">064</span><span id="line-64">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">065</span><span id="line-65">      IItem focus) {</span>
-<span class="source-line-no">066</span><span id="line-66">    ISequence&lt;IItem&gt; target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">069</span><span id="line-69">    ISequence&lt;IItem&gt; inserts = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2)));</span>
-<span class="source-line-no">070</span><span id="line-70">    return ISequence.ofCollection(fnInsertBefore(target, position, inserts));</span>
-<span class="source-line-no">071</span><span id="line-71">  }</span>
-<span class="source-line-no">072</span><span id="line-72"></span>
-<span class="source-line-no">073</span><span id="line-73">  /**</span>
-<span class="source-line-no">074</span><span id="line-74">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">075</span><span id="line-75">   * "https://www.w3.org/TR/xpath-functions-31/#func-insert-before"&gt;fn:insert-before&lt;/a&gt;.</span>
-<span class="source-line-no">076</span><span id="line-76">   *</span>
-<span class="source-line-no">077</span><span id="line-77">   * @param &lt;T&gt;</span>
-<span class="source-line-no">078</span><span id="line-78">   *          the type for the given Metapath sequence</span>
-<span class="source-line-no">079</span><span id="line-79">   * @param target</span>
-<span class="source-line-no">080</span><span id="line-80">   *          the sequence of Metapath items that is the target of insertion</span>
-<span class="source-line-no">081</span><span id="line-81">   * @param positionItem</span>
-<span class="source-line-no">082</span><span id="line-82">   *          the integer position of the item to insert before</span>
-<span class="source-line-no">083</span><span id="line-83">   * @param inserts</span>
-<span class="source-line-no">084</span><span id="line-84">   *          the sequence of Metapath items to be inserted into the target</span>
-<span class="source-line-no">085</span><span id="line-85">   * @return the sequence of Metapath items with insertions</span>
-<span class="source-line-no">086</span><span id="line-86">   */</span>
-<span class="source-line-no">087</span><span id="line-87">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
-<span class="source-line-no">088</span><span id="line-88">  @NonNull</span>
-<span class="source-line-no">089</span><span id="line-89">  public static &lt;T extends IItem&gt; List&lt;T&gt; fnInsertBefore(</span>
-<span class="source-line-no">090</span><span id="line-90">      @NonNull List&lt;T&gt; target,</span>
-<span class="source-line-no">091</span><span id="line-91">      @NonNull IIntegerItem positionItem,</span>
-<span class="source-line-no">092</span><span id="line-92">      @NonNull List&lt;T&gt; inserts) {</span>
-<span class="source-line-no">093</span><span id="line-93">    if (target.isEmpty()) {</span>
-<span class="source-line-no">094</span><span id="line-94">      return inserts;</span>
-<span class="source-line-no">095</span><span id="line-95">    }</span>
-<span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">    if (inserts.isEmpty()) {</span>
-<span class="source-line-no">098</span><span id="line-98">      return target;</span>
-<span class="source-line-no">099</span><span id="line-99">    }</span>
-<span class="source-line-no">100</span><span id="line-100"></span>
-<span class="source-line-no">101</span><span id="line-101">    int position = positionItem.asInteger().intValue();</span>
-<span class="source-line-no">102</span><span id="line-102"></span>
-<span class="source-line-no">103</span><span id="line-103">    if (position &lt; 1) {</span>
-<span class="source-line-no">104</span><span id="line-104">      position = 1;</span>
-<span class="source-line-no">105</span><span id="line-105">    } else if (position &gt; target.size()) {</span>
-<span class="source-line-no">106</span><span id="line-106">      position = target.size() + 1;</span>
-<span class="source-line-no">107</span><span id="line-107">    }</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target.size() + inserts.size());</span>
-<span class="source-line-no">110</span><span id="line-110"></span>
-<span class="source-line-no">111</span><span id="line-111">    if (position == 1) {</span>
-<span class="source-line-no">112</span><span id="line-112">      newSequence.addAll(inserts);</span>
-<span class="source-line-no">113</span><span id="line-113">      newSequence.addAll(target);</span>
-<span class="source-line-no">114</span><span id="line-114">    } else {</span>
-<span class="source-line-no">115</span><span id="line-115">      newSequence.addAll(target.subList(0, position - 1));</span>
-<span class="source-line-no">116</span><span id="line-116">      newSequence.addAll(inserts);</span>
-<span class="source-line-no">117</span><span id="line-117">      newSequence.addAll(target.subList(position - 1, target.size()));</span>
-<span class="source-line-no">118</span><span id="line-118">    }</span>
-<span class="source-line-no">119</span><span id="line-119">    return newSequence;</span>
-<span class="source-line-no">120</span><span id="line-120">  }</span>
-<span class="source-line-no">121</span><span id="line-121">}</span>
+<span class="source-line-no">024</span><span id="line-24"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">025</span><span id="line-25"> * "https://www.w3.org/TR/xpath-functions-31/#func-insert-before"&gt;fn:insert-before&lt;/a&gt;</span>
+<span class="source-line-no">026</span><span id="line-26"> * function.</span>
+<span class="source-line-no">027</span><span id="line-27"> */</span>
+<span class="source-line-no">028</span><span id="line-28">public final class FnInsertBefore {</span>
+<span class="source-line-no">029</span><span id="line-29">  private static final String NAME = "insert-before";</span>
+<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
+<span class="source-line-no">031</span><span id="line-31">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">032</span><span id="line-32">      .name(NAME)</span>
+<span class="source-line-no">033</span><span id="line-33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">034</span><span id="line-34">      .deterministic()</span>
+<span class="source-line-no">035</span><span id="line-35">      .contextIndependent()</span>
+<span class="source-line-no">036</span><span id="line-36">      .focusIndependent()</span>
+<span class="source-line-no">037</span><span id="line-37">      .argument(IArgument.builder()</span>
+<span class="source-line-no">038</span><span id="line-38">          .name("target")</span>
+<span class="source-line-no">039</span><span id="line-39">          .type(IItem.class)</span>
+<span class="source-line-no">040</span><span id="line-40">          .zeroOrMore()</span>
+<span class="source-line-no">041</span><span id="line-41">          .build())</span>
+<span class="source-line-no">042</span><span id="line-42">      .argument(IArgument.builder()</span>
+<span class="source-line-no">043</span><span id="line-43">          .name("position")</span>
+<span class="source-line-no">044</span><span id="line-44">          .type(IIntegerItem.class)</span>
+<span class="source-line-no">045</span><span id="line-45">          .one()</span>
+<span class="source-line-no">046</span><span id="line-46">          .build())</span>
+<span class="source-line-no">047</span><span id="line-47">      .argument(IArgument.builder()</span>
+<span class="source-line-no">048</span><span id="line-48">          .name("inserts")</span>
+<span class="source-line-no">049</span><span id="line-49">          .type(IItem.class)</span>
+<span class="source-line-no">050</span><span id="line-50">          .zeroOrMore()</span>
+<span class="source-line-no">051</span><span id="line-51">          .build())</span>
+<span class="source-line-no">052</span><span id="line-52">      .returnType(IItem.class)</span>
+<span class="source-line-no">053</span><span id="line-53">      .returnZeroOrMore()</span>
+<span class="source-line-no">054</span><span id="line-54">      .functionHandler(FnInsertBefore::execute)</span>
+<span class="source-line-no">055</span><span id="line-55">      .build();</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">  private FnInsertBefore() {</span>
+<span class="source-line-no">058</span><span id="line-58">    // disable construction</span>
+<span class="source-line-no">059</span><span id="line-59">  }</span>
+<span class="source-line-no">060</span><span id="line-60"></span>
+<span class="source-line-no">061</span><span id="line-61">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">062</span><span id="line-62">  @NonNull</span>
+<span class="source-line-no">063</span><span id="line-63">  private static ISequence&lt;?&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">064</span><span id="line-64">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">065</span><span id="line-65">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">066</span><span id="line-66">      IItem focus) {</span>
+<span class="source-line-no">067</span><span id="line-67">    ISequence&lt;IItem&gt; target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="source-line-no">070</span><span id="line-70">    ISequence&lt;IItem&gt; inserts = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(2)));</span>
+<span class="source-line-no">071</span><span id="line-71">    return ISequence.ofCollection(fnInsertBefore(target, position, inserts));</span>
+<span class="source-line-no">072</span><span id="line-72">  }</span>
+<span class="source-line-no">073</span><span id="line-73"></span>
+<span class="source-line-no">074</span><span id="line-74">  /**</span>
+<span class="source-line-no">075</span><span id="line-75">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">076</span><span id="line-76">   * "https://www.w3.org/TR/xpath-functions-31/#func-insert-before"&gt;fn:insert-before&lt;/a&gt;.</span>
+<span class="source-line-no">077</span><span id="line-77">   *</span>
+<span class="source-line-no">078</span><span id="line-78">   * @param &lt;T&gt;</span>
+<span class="source-line-no">079</span><span id="line-79">   *          the type for the given Metapath sequence</span>
+<span class="source-line-no">080</span><span id="line-80">   * @param target</span>
+<span class="source-line-no">081</span><span id="line-81">   *          the sequence of Metapath items that is the target of insertion</span>
+<span class="source-line-no">082</span><span id="line-82">   * @param positionItem</span>
+<span class="source-line-no">083</span><span id="line-83">   *          the integer position of the item to insert before</span>
+<span class="source-line-no">084</span><span id="line-84">   * @param inserts</span>
+<span class="source-line-no">085</span><span id="line-85">   *          the sequence of Metapath items to be inserted into the target</span>
+<span class="source-line-no">086</span><span id="line-86">   * @return the sequence of Metapath items with insertions</span>
+<span class="source-line-no">087</span><span id="line-87">   */</span>
+<span class="source-line-no">088</span><span id="line-88">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
+<span class="source-line-no">089</span><span id="line-89">  @NonNull</span>
+<span class="source-line-no">090</span><span id="line-90">  public static &lt;T extends IItem&gt; List&lt;T&gt; fnInsertBefore(</span>
+<span class="source-line-no">091</span><span id="line-91">      @NonNull List&lt;T&gt; target,</span>
+<span class="source-line-no">092</span><span id="line-92">      @NonNull IIntegerItem positionItem,</span>
+<span class="source-line-no">093</span><span id="line-93">      @NonNull List&lt;T&gt; inserts) {</span>
+<span class="source-line-no">094</span><span id="line-94">    if (target.isEmpty()) {</span>
+<span class="source-line-no">095</span><span id="line-95">      return inserts;</span>
+<span class="source-line-no">096</span><span id="line-96">    }</span>
+<span class="source-line-no">097</span><span id="line-97"></span>
+<span class="source-line-no">098</span><span id="line-98">    if (inserts.isEmpty()) {</span>
+<span class="source-line-no">099</span><span id="line-99">      return target;</span>
+<span class="source-line-no">100</span><span id="line-100">    }</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">    int position = positionItem.asInteger().intValue();</span>
+<span class="source-line-no">103</span><span id="line-103"></span>
+<span class="source-line-no">104</span><span id="line-104">    if (position &lt; 1) {</span>
+<span class="source-line-no">105</span><span id="line-105">      position = 1;</span>
+<span class="source-line-no">106</span><span id="line-106">    } else if (position &gt; target.size()) {</span>
+<span class="source-line-no">107</span><span id="line-107">      position = target.size() + 1;</span>
+<span class="source-line-no">108</span><span id="line-108">    }</span>
+<span class="source-line-no">109</span><span id="line-109"></span>
+<span class="source-line-no">110</span><span id="line-110">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target.size() + inserts.size());</span>
+<span class="source-line-no">111</span><span id="line-111"></span>
+<span class="source-line-no">112</span><span id="line-112">    if (position == 1) {</span>
+<span class="source-line-no">113</span><span id="line-113">      newSequence.addAll(inserts);</span>
+<span class="source-line-no">114</span><span id="line-114">      newSequence.addAll(target);</span>
+<span class="source-line-no">115</span><span id="line-115">    } else {</span>
+<span class="source-line-no">116</span><span id="line-116">      newSequence.addAll(target.subList(0, position - 1));</span>
+<span class="source-line-no">117</span><span id="line-117">      newSequence.addAll(inserts);</span>
+<span class="source-line-no">118</span><span id="line-118">      newSequence.addAll(target.subList(position - 1, target.size()));</span>
+<span class="source-line-no">119</span><span id="line-119">    }</span>
+<span class="source-line-no">120</span><span id="line-120">    return newSequence;</span>
+<span class="source-line-no">121</span><span id="line-121">  }</span>
+<span class="source-line-no">122</span><span id="line-122">}</span>
 
 
 

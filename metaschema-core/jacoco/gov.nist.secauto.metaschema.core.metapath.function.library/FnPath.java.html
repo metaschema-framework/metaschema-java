@@ -24,39 +24,43 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Since a node doesn't have a base URI in Metaschema, this is an alias for the
- * document-uri function.
+ * Implements the XPath 3.1
+ * &lt;a href= &quot;https://www.w3.org/TR/xpath-functions-31/#func-path&quot;&gt;fn:path&lt;/a&gt;
+ * functions.
+ * &lt;p&gt;
+ * This implementation differs from the XPath specification by returning a
+ * Metapath expression instead of an XPath expression.
  */
 public final class FnPath {
   private static final String NAME = &quot;path&quot;;
   @NonNull
-<span class="fc" id="L33">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
-<span class="fc" id="L34">      .name(NAME)</span>
-<span class="fc" id="L35">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L36">      .deterministic()</span>
-<span class="fc" id="L37">      .contextDependent()</span>
-<span class="fc" id="L38">      .focusDependent()</span>
-<span class="fc" id="L39">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L40">      .returnZeroOrOne()</span>
-<span class="fc" id="L41">      .functionHandler(FnPath::executeNoArg)</span>
-<span class="fc" id="L42">      .build();</span>
+<span class="fc" id="L37">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
+<span class="fc" id="L38">      .name(NAME)</span>
+<span class="fc" id="L39">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L40">      .deterministic()</span>
+<span class="fc" id="L41">      .contextDependent()</span>
+<span class="fc" id="L42">      .focusDependent()</span>
+<span class="fc" id="L43">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L44">      .returnZeroOrOne()</span>
+<span class="fc" id="L45">      .functionHandler(FnPath::executeNoArg)</span>
+<span class="fc" id="L46">      .build();</span>
 
   @NonNull
-<span class="fc" id="L45">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="fc" id="L46">      .name(NAME)</span>
-<span class="fc" id="L47">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L48">      .deterministic()</span>
-<span class="fc" id="L49">      .contextIndependent()</span>
-<span class="fc" id="L50">      .focusIndependent()</span>
-<span class="fc" id="L51">      .argument(IArgument.builder()</span>
-<span class="fc" id="L52">          .name(&quot;arg1&quot;)</span>
-<span class="fc" id="L53">          .type(INodeItem.class)</span>
-<span class="fc" id="L54">          .zeroOrOne()</span>
-<span class="fc" id="L55">          .build())</span>
-<span class="fc" id="L56">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L57">      .returnZeroOrOne()</span>
-<span class="fc" id="L58">      .functionHandler(FnPath::executeOneArg)</span>
-<span class="fc" id="L59">      .build();</span>
+<span class="fc" id="L49">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="fc" id="L50">      .name(NAME)</span>
+<span class="fc" id="L51">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L52">      .deterministic()</span>
+<span class="fc" id="L53">      .contextIndependent()</span>
+<span class="fc" id="L54">      .focusIndependent()</span>
+<span class="fc" id="L55">      .argument(IArgument.builder()</span>
+<span class="fc" id="L56">          .name(&quot;arg1&quot;)</span>
+<span class="fc" id="L57">          .type(INodeItem.class)</span>
+<span class="fc" id="L58">          .zeroOrOne()</span>
+<span class="fc" id="L59">          .build())</span>
+<span class="fc" id="L60">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L61">      .returnZeroOrOne()</span>
+<span class="fc" id="L62">      .functionHandler(FnPath::executeOneArg)</span>
+<span class="fc" id="L63">      .build();</span>
 
   private FnPath() {
     // disable construction
@@ -69,15 +73,15 @@ public final class FnPath {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-<span class="nc" id="L72">    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);</span>
+<span class="nc" id="L76">    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);</span>
 
     ISequence&lt;IStringItem&gt; retval;
-<span class="nc bnc" id="L75" title="All 2 branches missed.">    if (item == null) {</span>
-<span class="nc" id="L76">      retval = ISequence.empty();</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">    if (item == null) {</span>
+<span class="nc" id="L80">      retval = ISequence.empty();</span>
     } else {
-<span class="nc" id="L78">      retval = ISequence.of(IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER)));</span>
+<span class="nc" id="L82">      retval = ISequence.of(IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER)));</span>
     }
-<span class="nc" id="L80">    return retval;</span>
+<span class="nc" id="L84">    return retval;</span>
   }
 
   @SuppressWarnings(&quot;unused&quot;)
@@ -87,7 +91,7 @@ public final class FnPath {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-<span class="nc" id="L90">    return fnPath(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="nc" id="L94">    return fnPath(ObjectUtils.requireNonNull(arguments.get(0)));</span>
   }
 
   /**
@@ -100,24 +104,24 @@ public final class FnPath {
    */
   @NonNull
   public static ISequence&lt;IStringItem&gt; fnPath(@NonNull ISequence&lt;?&gt; sequence) {
-<span class="nc" id="L103">    IItem item = sequence.getFirstItem(true);</span>
+<span class="nc" id="L107">    IItem item = sequence.getFirstItem(true);</span>
 
     ISequence&lt;IStringItem&gt; retval;
-<span class="nc bnc" id="L106" title="All 2 branches missed.">    if (item == null) {</span>
-<span class="nc" id="L107">      retval = ISequence.empty();</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">    if (item == null) {</span>
+<span class="nc" id="L111">      retval = ISequence.empty();</span>
     } else {
       try {
-<span class="nc" id="L110">        retval = ISequence.of(fnPath((INodeItem) item));</span>
-<span class="nc" id="L111">      } catch (ClassCastException ex) {</span>
-<span class="nc" id="L112">        throw new InvalidTypeMetapathException(</span>
+<span class="nc" id="L114">        retval = ISequence.of(fnPath((INodeItem) item));</span>
+<span class="nc" id="L115">      } catch (ClassCastException ex) {</span>
+<span class="nc" id="L116">        throw new InvalidTypeMetapathException(</span>
             item,
-<span class="nc" id="L114">            String.format(&quot;Expected a '%s', but received a '%s'&quot;,</span>
-<span class="nc" id="L115">                INodeItem.class.getName(),</span>
-<span class="nc" id="L116">                item.getClass().getName()),</span>
+<span class="nc" id="L118">            String.format(&quot;Expected a '%s', but received a '%s'&quot;,</span>
+<span class="nc" id="L119">                INodeItem.class.getName(),</span>
+<span class="nc" id="L120">                item.getClass().getName()),</span>
             ex);
-<span class="nc" id="L118">      }</span>
+<span class="nc" id="L122">      }</span>
     }
-<span class="nc" id="L120">    return retval;</span>
+<span class="nc" id="L124">    return retval;</span>
   }
 
   /**
@@ -129,7 +133,7 @@ public final class FnPath {
    */
   @Nullable
   public static IStringItem fnPath(@Nullable INodeItem item) {
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">    return item == null ? null : IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER));</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">    return item == null ? null : IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

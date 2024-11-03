@@ -34,6 +34,9 @@ public interface IUniqueConstraint extends IKeyConstraint {
 <span class="nc" id="L34">    return new Builder();</span>
   }
 
+  /**
+   * Provides a builder pattern for constructing a new {@link IUniqueConstraint}.
+   */
   final class Builder
       extends AbstractKeyConstraintBuilder&lt;Builder, IUniqueConstraint&gt; {
     private Builder() {
@@ -42,21 +45,22 @@ public interface IUniqueConstraint extends IKeyConstraint {
 
     @Override
     protected Builder getThis() {
-<span class="nc" id="L45">      return this;</span>
+<span class="nc" id="L48">      return this;</span>
     }
 
     @Override
     protected IUniqueConstraint newInstance() {
-<span class="nc" id="L50">      return new DefaultUniqueConstraint(</span>
-<span class="nc" id="L51">          getId(),</span>
-<span class="nc" id="L52">          getFormalName(),</span>
-<span class="nc" id="L53">          getDescription(),</span>
-<span class="nc" id="L54">          ObjectUtils.notNull(getSource()),</span>
-<span class="nc" id="L55">          getLevel(),</span>
-<span class="nc" id="L56">          getTarget(),</span>
-<span class="nc" id="L57">          getProperties(),</span>
-<span class="nc" id="L58">          getKeyFields(),</span>
-<span class="nc" id="L59">          getRemarks());</span>
+<span class="nc" id="L53">      return new DefaultUniqueConstraint(</span>
+<span class="nc" id="L54">          getId(),</span>
+<span class="nc" id="L55">          getFormalName(),</span>
+<span class="nc" id="L56">          getDescription(),</span>
+<span class="nc" id="L57">          ObjectUtils.notNull(getSource()),</span>
+<span class="nc" id="L58">          getLevel(),</span>
+<span class="nc" id="L59">          getTarget(),</span>
+<span class="nc" id="L60">          getProperties(),</span>
+<span class="nc" id="L61">          getKeyFields(),</span>
+<span class="nc" id="L62">          getMessage(),</span>
+<span class="nc" id="L63">          getRemarks());</span>
     }
   }
 }

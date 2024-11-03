@@ -8,6 +8,6 @@ gov.nist.secauto.metaschema.databind.io.xml
 gov.nist.secauto.metaschema.databind.io.yaml
 gov.nist.secauto.metaschema.databind.model
 gov.nist.secauto.metaschema.databind.model.annotations
-gov.nist.secauto.metaschema.databind.model.binding.metaschema
 gov.nist.secauto.metaschema.databind.model.info
 gov.nist.secauto.metaschema.databind.model.metaschema
+gov.nist.secauto.metaschema.databind.model.metaschema.binding

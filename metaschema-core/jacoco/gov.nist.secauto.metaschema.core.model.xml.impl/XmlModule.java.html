@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.IXmlMetaschemaModule;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalAssemblyDefinitionType;
@@ -42,6 +43,9 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Represents a Metaschema module based on XMLBeans-based data.
+ */
 @SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)
 public class XmlModule
     extends AbstractModule&lt;
@@ -51,13 +55,28 @@ public class XmlModule
         IFieldDefinition,
         IAssemblyDefinition&gt;
     implements IXmlMetaschemaModule {
-<span class="fc" id="L54">  private static final Logger LOGGER = LogManager.getLogger(XmlModule.class);</span>
+<span class="fc" id="L58">  private static final Logger LOGGER = LogManager.getLogger(XmlModule.class);</span>
+
+  @NonNull
+  private static final String METASCHEMA_NS_DECLARATION_XPATH
+      = &quot;declare namespace m='http://csrc.nist.gov/ns/oscal/metaschema/1.0';&quot;;
+  @NonNull
+  private static final String FLAG_DEFINITION_XPATH
+      = METASCHEMA_NS_DECLARATION_XPATH + &quot;$this/m:define-flag&quot;;
+  @NonNull
+  private static final String FIELD_DEFINITION_XPATH
+      = METASCHEMA_NS_DECLARATION_XPATH + &quot;$this/m:define-field&quot;;
+  @NonNull
+  private static final String ASSEMBLY_DEFINITION_XPATH
+      = METASCHEMA_NS_DECLARATION_XPATH + &quot;$this/m:define-assembly&quot;;
 
   @NonNull
   private final Lazy&lt;StaticContext&gt; staticContext;
   @NonNull
   private final METASCHEMADocument module;
   private final Lazy&lt;Definitions&gt; definitions;
+  @NonNull
+  private final ISource source;
 
   /**
    * Constructs a new Metaschema instance.
@@ -75,35 +94,40 @@ public class XmlModule
       @NonNull URI resource,
       @NonNull METASCHEMADocument xmlObject,
       @NonNull List&lt;? extends IXmlMetaschemaModule&gt; importedModules) throws MetaschemaException {
-<span class="fc" id="L78">    super(importedModules);</span>
+<span class="fc" id="L97">    super(importedModules);</span>
 
-<span class="fc" id="L80">    METASCHEMADocument.METASCHEMA moduleXml = ObjectUtils.requireNonNull(xmlObject.getMETASCHEMA());</span>
+<span class="fc" id="L99">    METASCHEMADocument.METASCHEMA moduleXml = ObjectUtils.requireNonNull(xmlObject.getMETASCHEMA());</span>
 
-<span class="fc" id="L82">    this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L83">      StaticContext.Builder builder = StaticContext.builder()</span>
-<span class="fc" id="L84">          .baseUri(resource)</span>
-<span class="fc" id="L85">          .defaultModelNamespace(ObjectUtils.requireNonNull(moduleXml.getNamespace()));</span>
+<span class="fc" id="L101">    this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L102">      StaticContext.Builder builder = StaticContext.builder()</span>
+<span class="fc" id="L103">          .baseUri(resource)</span>
+<span class="fc" id="L104">          .defaultModelNamespace(ObjectUtils.requireNonNull(moduleXml.getNamespace()));</span>
 
-<span class="fc" id="L87">      getNamespaceBindings()</span>
-<span class="pc" id="L88">          .forEach((prefix, ns) -&gt; builder.namespace(</span>
-<span class="nc" id="L89">              ObjectUtils.notNull(prefix), ObjectUtils.notNull(ns)));</span>
+<span class="fc" id="L106">      getNamespaceBindings()</span>
+<span class="pc" id="L107">          .forEach((prefix, ns) -&gt; builder.namespace(</span>
+<span class="nc" id="L108">              ObjectUtils.notNull(prefix), ObjectUtils.notNull(ns)));</span>
 
-<span class="fc" id="L91">      return builder.build();</span>
+<span class="fc" id="L110">      return builder.build();</span>
     }));
-<span class="fc" id="L93">    this.module = xmlObject;</span>
-
-<span class="fc" id="L95">    this.definitions = Lazy.lazy(() -&gt; new Definitions(moduleXml));</span>
-<span class="fc" id="L96">  }</span>
+<span class="fc" id="L112">    this.module = xmlObject;</span>
+<span class="fc" id="L113">    this.definitions = Lazy.lazy(() -&gt; new Definitions(moduleXml));</span>
+<span class="fc" id="L114">    this.source = ISource.moduleSource(this);</span>
+<span class="fc" id="L115">  }</span>
 
   @Override
   public StaticContext getModuleStaticContext() {
-<span class="fc" id="L100">    return ObjectUtils.notNull(staticContext.get());</span>
+<span class="fc" id="L119">    return ObjectUtils.notNull(staticContext.get());</span>
+  }
+
+  @Override
+  public ISource getSource() {
+<span class="fc" id="L124">    return source;</span>
   }
 
   @NonNull
   @Override
   public URI getLocation() {
-<span class="nc" id="L106">    return ObjectUtils.notNull(getModuleStaticContext().getBaseUri());</span>
+<span class="nc" id="L130">    return ObjectUtils.notNull(getModuleStaticContext().getBaseUri());</span>
   }
 
   /**
@@ -113,166 +137,166 @@ public class XmlModule
    */
   @NonNull
   protected METASCHEMADocument.METASCHEMA getXmlModule() {
-<span class="fc" id="L116">    return ObjectUtils.notNull(module.getMETASCHEMA());</span>
+<span class="fc" id="L140">    return ObjectUtils.notNull(module.getMETASCHEMA());</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupLine getName() {
-<span class="nc" id="L122">    return MarkupStringConverter.toMarkupString(getXmlModule().getSchemaName());</span>
+<span class="nc" id="L146">    return MarkupStringConverter.toMarkupString(getXmlModule().getSchemaName());</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String getVersion() {
-<span class="nc" id="L128">    return getXmlModule().getSchemaVersion();</span>
+<span class="nc" id="L152">    return getXmlModule().getSchemaVersion();</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc bnc" id="L134" title="All 2 branches missed.">    return getXmlModule().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlModule().getRemarks())</span>
-<span class="nc" id="L135">        : null;</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">    return getXmlModule().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlModule().getRemarks())</span>
+<span class="nc" id="L159">        : null;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String getShortName() {
-<span class="fc" id="L141">    return getXmlModule().getShortName();</span>
+<span class="fc" id="L165">    return getXmlModule().getShortName();</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public URI getXmlNamespace() {
-<span class="fc" id="L147">    return URI.create(getXmlModule().getNamespace());</span>
+<span class="fc" id="L171">    return URI.create(getXmlModule().getNamespace());</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public URI getJsonBaseUri() {
-<span class="nc" id="L153">    return URI.create(getXmlModule().getJsonBaseUri());</span>
+<span class="nc" id="L177">    return URI.create(getXmlModule().getJsonBaseUri());</span>
   }
 
   @Override
   public Map&lt;String, String&gt; getNamespaceBindings() {
-<span class="fc" id="L158">    return ObjectUtils.notNull(getXmlModule().getNamespaceBindingList().stream()</span>
-<span class="fc" id="L159">        .collect(Collectors.toMap(</span>
+<span class="fc" id="L182">    return ObjectUtils.notNull(getXmlModule().getNamespaceBindingList().stream()</span>
+<span class="fc" id="L183">        .collect(Collectors.toMap(</span>
             NamespaceBindingType::getPrefix,
             NamespaceBindingType::getUri,
-<span class="nc" id="L162">            (v1, v2) -&gt; v2,</span>
+<span class="nc" id="L186">            (v1, v2) -&gt; v2,</span>
             LinkedHashMap::new)));
   }
 
   @NonNull
   private Definitions getDefinitions() {
-<span class="fc" id="L168">    return ObjectUtils.notNull(definitions.get());</span>
+<span class="fc" id="L192">    return ObjectUtils.notNull(definitions.get());</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;IAssemblyDefinition&gt; getAssemblyDefinitions() {
-<span class="fc" id="L174">    return getDefinitions().getAssemblyDefinitionMap().values();</span>
+<span class="fc" id="L198">    return getDefinitions().getAssemblyDefinitionMap().values();</span>
   }
 
   @Override
   public IAssemblyDefinition getAssemblyDefinitionByName(@NonNull QName name) {
-<span class="fc" id="L179">    return getDefinitions().getAssemblyDefinitionMap().get(name);</span>
+<span class="fc" id="L203">    return getDefinitions().getAssemblyDefinitionMap().get(name);</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;IFieldDefinition&gt; getFieldDefinitions() {
-<span class="fc" id="L185">    return getDefinitions().getFieldDefinitionMap().values();</span>
+<span class="fc" id="L209">    return getDefinitions().getFieldDefinitionMap().values();</span>
   }
 
   @Override
   public IFieldDefinition getFieldDefinitionByName(@NonNull QName name) {
-<span class="fc" id="L190">    return getDefinitions().getFieldDefinitionMap().get(name);</span>
+<span class="fc" id="L214">    return getDefinitions().getFieldDefinitionMap().get(name);</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public List&lt;IModelDefinition&gt; getAssemblyAndFieldDefinitions() {
-<span class="nc" id="L196">    return Stream.concat(getAssemblyDefinitions().stream(), getFieldDefinitions().stream())</span>
-<span class="nc" id="L197">        .collect(Collectors.toList());</span>
+<span class="nc" id="L220">    return Stream.concat(getAssemblyDefinitions().stream(), getFieldDefinitions().stream())</span>
+<span class="nc" id="L221">        .collect(Collectors.toList());</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;IFlagDefinition&gt; getFlagDefinitions() {
-<span class="fc" id="L203">    return getDefinitions().getFlagDefinitionMap().values();</span>
+<span class="fc" id="L227">    return getDefinitions().getFlagDefinitionMap().values();</span>
   }
 
   @Override
   public IFlagDefinition getFlagDefinitionByName(@NonNull QName name) {
-<span class="fc" id="L208">    return getDefinitions().getFlagDefinitionMap().get(name);</span>
+<span class="fc" id="L232">    return getDefinitions().getFlagDefinitionMap().get(name);</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;? extends IAssemblyDefinition&gt; getRootAssemblyDefinitions() {
-<span class="nc" id="L214">    return getDefinitions().getRootAssemblyDefinitionMap().values();</span>
+<span class="nc" id="L238">    return getDefinitions().getRootAssemblyDefinitionMap().values();</span>
   }
 
-<span class="fc" id="L217">  private final class Definitions {</span>
+<span class="fc" id="L241">  private final class Definitions {</span>
     private final Map&lt;QName, IFlagDefinition&gt; flagDefinitions;
     private final Map&lt;QName, IFieldDefinition&gt; fieldDefinitions;
     private final Map&lt;QName, IAssemblyDefinition&gt; assemblyDefinitions;
     private final Map&lt;QName, IAssemblyDefinition&gt; rootAssemblyDefinitions;
 
     @SuppressWarnings(&quot;PMD.AvoidInstantiatingObjectsInLoops&quot;)
-<span class="fc" id="L224">    private Definitions(@NonNull METASCHEMA metaschemaNode) {</span>
+<span class="fc" id="L248">    private Definitions(@NonNull METASCHEMA metaschemaNode) {</span>
 
       // handle definitions in this module
       // TODO: switch implementation to use the XmlObjectParser
-<span class="fc" id="L228">      try (XmlCursor cursor = metaschemaNode.newCursor()) {</span>
-<span class="pc bpc" id="L229" title="1 of 2 branches missed.">        assert cursor != null;</span>
+<span class="fc" id="L252">      try (XmlCursor cursor = metaschemaNode.newCursor()) {</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">        assert cursor != null;</span>
 
-<span class="fc" id="L231">        this.flagDefinitions = parseFlags(cursor);</span>
-<span class="fc" id="L232">        this.fieldDefinitions = parseFields(cursor);</span>
-<span class="fc" id="L233">        this.assemblyDefinitions = parseAssemblies(cursor);</span>
-<span class="fc bfc" id="L234" title="All 2 branches covered.">        this.rootAssemblyDefinitions = this.assemblyDefinitions.isEmpty()</span>
-<span class="fc" id="L235">            ? Collections.emptyMap()</span>
-<span class="fc" id="L236">            : Collections.unmodifiableMap(this.assemblyDefinitions.values().stream()</span>
-<span class="fc" id="L237">                .filter(IAssemblyDefinition::isRoot)</span>
-<span class="fc" id="L238">                .collect(Collectors.toMap(</span>
+<span class="fc" id="L255">        this.flagDefinitions = parseFlags(cursor);</span>
+<span class="fc" id="L256">        this.fieldDefinitions = parseFields(cursor);</span>
+<span class="fc" id="L257">        this.assemblyDefinitions = parseAssemblies(cursor);</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">        this.rootAssemblyDefinitions = this.assemblyDefinitions.isEmpty()</span>
+<span class="fc" id="L259">            ? Collections.emptyMap()</span>
+<span class="fc" id="L260">            : Collections.unmodifiableMap(this.assemblyDefinitions.values().stream()</span>
+<span class="fc" id="L261">                .filter(IAssemblyDefinition::isRoot)</span>
+<span class="fc" id="L262">                .collect(Collectors.toMap(</span>
                     IAssemblyDefinition::getRootXmlQName,
-<span class="fc" id="L240">                    Function.identity(),</span>
+<span class="fc" id="L264">                    Function.identity(),</span>
                     (v1, v2) -&gt; {
-<span class="nc" id="L242">                      throw new IllegalStateException(</span>
-<span class="nc" id="L243">                          String.format(&quot;Duplicate root QName '%s' for root assemblies: %s and %s.&quot;,</span>
-<span class="nc" id="L244">                              v1.getName(),</span>
-<span class="nc" id="L245">                              v2.getName()));</span>
+<span class="nc" id="L266">                      throw new IllegalStateException(</span>
+<span class="nc" id="L267">                          String.format(&quot;Duplicate root QName '%s' for root assemblies: %s and %s.&quot;,</span>
+<span class="nc" id="L268">                              v1.getName(),</span>
+<span class="nc" id="L269">                              v2.getName()));</span>
                     },
                     LinkedHashMap::new)));
       }
-<span class="fc" id="L249">    }</span>
+<span class="fc" id="L273">    }</span>
 
     @SuppressWarnings({
         &quot;PMD.UseConcurrentHashMap&quot;,
         &quot;PMD.AvoidInstantiatingObjectsInLoops&quot;
     })
     private Map&lt;QName, IFlagDefinition&gt; parseFlags(@NonNull XmlCursor cursor) {
-<span class="fc" id="L256">      cursor.push();</span>
+<span class="fc" id="L280">      cursor.push();</span>
 
       // start with flag definitions
-<span class="fc" id="L259">      cursor.selectPath(&quot;declare namespace m='http://csrc.nist.gov/ns/oscal/metaschema/1.0';$this/m:define-flag&quot;);</span>
+<span class="fc" id="L283">      cursor.selectPath(FLAG_DEFINITION_XPATH);</span>
 
-<span class="fc" id="L261">      Map&lt;QName, IFlagDefinition&gt; flags = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L262" title="All 2 branches covered.">      while (cursor.toNextSelection()) {</span>
-<span class="fc" id="L263">        GlobalFlagDefinitionType obj = ObjectUtils.notNull((GlobalFlagDefinitionType) cursor.getObject());</span>
-<span class="fc" id="L264">        XmlGlobalFlagDefinition flag = new XmlGlobalFlagDefinition(obj, XmlModule.this);</span>
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        if (LOGGER.isTraceEnabled()) {</span>
-<span class="nc" id="L266">          LOGGER.trace(&quot;New flag definition '{}'&quot;, flag.toCoordinates());</span>
+<span class="fc" id="L285">      Map&lt;QName, IFlagDefinition&gt; flags = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">      while (cursor.toNextSelection()) {</span>
+<span class="fc" id="L287">        GlobalFlagDefinitionType obj = ObjectUtils.notNull((GlobalFlagDefinitionType) cursor.getObject());</span>
+<span class="fc" id="L288">        XmlGlobalFlagDefinition flag = new XmlGlobalFlagDefinition(obj, XmlModule.this);</span>
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">        if (LOGGER.isTraceEnabled()) {</span>
+<span class="nc" id="L290">          LOGGER.trace(&quot;New flag definition '{}'&quot;, flag.toCoordinates());</span>
         }
-<span class="fc" id="L268">        flags.put(flag.getDefinitionQName(), flag);</span>
-<span class="fc" id="L269">      }</span>
+<span class="fc" id="L292">        flags.put(flag.getDefinitionQName(), flag);</span>
+<span class="fc" id="L293">      }</span>
 
-<span class="fc" id="L271">      cursor.pop();</span>
+<span class="fc" id="L295">      cursor.pop();</span>
 
-<span class="fc bfc" id="L273" title="All 2 branches covered.">      return flags.isEmpty()</span>
-<span class="fc" id="L274">          ? Collections.emptyMap()</span>
-<span class="fc" id="L275">          : Collections.unmodifiableMap(flags);</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">      return flags.isEmpty()</span>
+<span class="fc" id="L298">          ? Collections.emptyMap()</span>
+<span class="fc" id="L299">          : Collections.unmodifiableMap(flags);</span>
     }
 
     @SuppressWarnings({
@@ -280,26 +304,26 @@ public class XmlModule
         &quot;PMD.AvoidInstantiatingObjectsInLoops&quot;
     })
     private Map&lt;QName, IFieldDefinition&gt; parseFields(@NonNull XmlCursor cursor) {
-<span class="fc" id="L283">      cursor.push();</span>
+<span class="fc" id="L307">      cursor.push();</span>
 
       // now field definitions
-<span class="fc" id="L286">      cursor.selectPath(&quot;declare namespace m='http://csrc.nist.gov/ns/oscal/metaschema/1.0';$this/m:define-field&quot;);</span>
+<span class="fc" id="L310">      cursor.selectPath(FIELD_DEFINITION_XPATH);</span>
 
-<span class="fc" id="L288">      Map&lt;QName, IFieldDefinition&gt; fields = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L289" title="All 2 branches covered.">      while (cursor.toNextSelection()) {</span>
-<span class="fc" id="L290">        GlobalFieldDefinitionType obj = ObjectUtils.notNull((GlobalFieldDefinitionType) cursor.getObject());</span>
-<span class="fc" id="L291">        XmlGlobalFieldDefinition field = new XmlGlobalFieldDefinition(obj, XmlModule.this);</span>
-<span class="pc bpc" id="L292" title="1 of 2 branches missed.">        if (LOGGER.isTraceEnabled()) {</span>
-<span class="nc" id="L293">          LOGGER.trace(&quot;New field definition '{}'&quot;, field.toCoordinates());</span>
+<span class="fc" id="L312">      Map&lt;QName, IFieldDefinition&gt; fields = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">      while (cursor.toNextSelection()) {</span>
+<span class="fc" id="L314">        GlobalFieldDefinitionType obj = ObjectUtils.notNull((GlobalFieldDefinitionType) cursor.getObject());</span>
+<span class="fc" id="L315">        XmlGlobalFieldDefinition field = new XmlGlobalFieldDefinition(obj, XmlModule.this);</span>
+<span class="pc bpc" id="L316" title="1 of 2 branches missed.">        if (LOGGER.isTraceEnabled()) {</span>
+<span class="nc" id="L317">          LOGGER.trace(&quot;New field definition '{}'&quot;, field.toCoordinates());</span>
         }
-<span class="fc" id="L295">        fields.put(field.getDefinitionQName(), field);</span>
-<span class="fc" id="L296">      }</span>
+<span class="fc" id="L319">        fields.put(field.getDefinitionQName(), field);</span>
+<span class="fc" id="L320">      }</span>
 
-<span class="fc" id="L298">      cursor.pop();</span>
+<span class="fc" id="L322">      cursor.pop();</span>
 
-<span class="fc bfc" id="L300" title="All 2 branches covered.">      return fields.isEmpty()</span>
-<span class="fc" id="L301">          ? Collections.emptyMap()</span>
-<span class="fc" id="L302">          : Collections.unmodifiableMap(fields);</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">      return fields.isEmpty()</span>
+<span class="fc" id="L325">          ? Collections.emptyMap()</span>
+<span class="fc" id="L326">          : Collections.unmodifiableMap(fields);</span>
     }
 
     @SuppressWarnings({
@@ -307,43 +331,42 @@ public class XmlModule
         &quot;PMD.AvoidInstantiatingObjectsInLoops&quot;
     })
     private Map&lt;QName, IAssemblyDefinition&gt; parseAssemblies(XmlCursor cursor) {
-<span class="fc" id="L310">      cursor.push();</span>
+<span class="fc" id="L334">      cursor.push();</span>
 
       // finally assembly definitions
-<span class="fc" id="L313">      cursor.selectPath(</span>
-          &quot;declare namespace m='http://csrc.nist.gov/ns/oscal/metaschema/1.0';$this/m:define-assembly&quot;);
+<span class="fc" id="L337">      cursor.selectPath(ASSEMBLY_DEFINITION_XPATH);</span>
 
-<span class="fc" id="L316">      Map&lt;QName, IAssemblyDefinition&gt; assemblies = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L317" title="All 2 branches covered.">      while (cursor.toNextSelection()) {</span>
-<span class="fc" id="L318">        GlobalAssemblyDefinitionType obj = ObjectUtils.notNull((GlobalAssemblyDefinitionType) cursor.getObject());</span>
-<span class="fc" id="L319">        XmlGlobalAssemblyDefinition assembly = new XmlGlobalAssemblyDefinition(obj, XmlModule.this);</span>
-<span class="pc bpc" id="L320" title="1 of 2 branches missed.">        if (LOGGER.isTraceEnabled()) {</span>
-<span class="nc" id="L321">          LOGGER.trace(&quot;New assembly definition '{}'&quot;, assembly.toCoordinates());</span>
+<span class="fc" id="L339">      Map&lt;QName, IAssemblyDefinition&gt; assemblies = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L340" title="All 2 branches covered.">      while (cursor.toNextSelection()) {</span>
+<span class="fc" id="L341">        GlobalAssemblyDefinitionType obj = ObjectUtils.notNull((GlobalAssemblyDefinitionType) cursor.getObject());</span>
+<span class="fc" id="L342">        XmlGlobalAssemblyDefinition assembly = new XmlGlobalAssemblyDefinition(obj, XmlModule.this);</span>
+<span class="pc bpc" id="L343" title="1 of 2 branches missed.">        if (LOGGER.isTraceEnabled()) {</span>
+<span class="nc" id="L344">          LOGGER.trace(&quot;New assembly definition '{}'&quot;, assembly.toCoordinates());</span>
         }
-<span class="fc" id="L323">        assemblies.put(assembly.getDefinitionQName(), assembly);</span>
-<span class="fc" id="L324">      }</span>
+<span class="fc" id="L346">        assemblies.put(assembly.getDefinitionQName(), assembly);</span>
+<span class="fc" id="L347">      }</span>
 
-<span class="fc" id="L326">      cursor.pop();</span>
+<span class="fc" id="L349">      cursor.pop();</span>
 
-<span class="fc bfc" id="L328" title="All 2 branches covered.">      return assemblies.isEmpty()</span>
-<span class="fc" id="L329">          ? Collections.emptyMap()</span>
-<span class="fc" id="L330">          : Collections.unmodifiableMap(assemblies);</span>
+<span class="fc bfc" id="L351" title="All 2 branches covered.">      return assemblies.isEmpty()</span>
+<span class="fc" id="L352">          ? Collections.emptyMap()</span>
+<span class="fc" id="L353">          : Collections.unmodifiableMap(assemblies);</span>
     }
 
     public Map&lt;QName, IFlagDefinition&gt; getFlagDefinitionMap() {
-<span class="fc" id="L334">      return flagDefinitions;</span>
+<span class="fc" id="L357">      return flagDefinitions;</span>
     }
 
     public Map&lt;QName, IFieldDefinition&gt; getFieldDefinitionMap() {
-<span class="fc" id="L338">      return fieldDefinitions;</span>
+<span class="fc" id="L361">      return fieldDefinitions;</span>
     }
 
     public Map&lt;QName, IAssemblyDefinition&gt; getAssemblyDefinitionMap() {
-<span class="fc" id="L342">      return assemblyDefinitions;</span>
+<span class="fc" id="L365">      return assemblyDefinitions;</span>
     }
 
     public Map&lt;QName, ? extends IAssemblyDefinition&gt; getRootAssemblyDefinitionMap() {
-<span class="nc" id="L346">      return rootAssemblyDefinitions;</span>
+<span class="nc" id="L369">      return rootAssemblyDefinitions;</span>
     }
 
   }

@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.model.xml.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractKeyConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
@@ -20,7 +21,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.AllowedValueType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.AllowedValuesType;
@@ -53,6 +53,10 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Produces Metaschema module data objects from XML-based XMLBeans data
+ * bindings.
+ */
 @SuppressWarnings({ &quot;PMD.CouplingBetweenObjects&quot;, &quot;PMD.GodClass&quot; })
 public final class ModelFactory {
   private ModelFactory() {
@@ -61,17 +65,17 @@ public final class ModelFactory {
 
   @NonNull
   private static String target(@Nullable String target) {
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">    return target == null ? IConstraint.DEFAULT_TARGET_METAPATH : target;</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">    return target == null ? IConstraint.DEFAULT_TARGET_METAPATH : target;</span>
   }
 
   @NonNull
   private static Level level(@Nullable Level level) {
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">    return level == null ? IConstraint.DEFAULT_LEVEL : level;</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">    return level == null ? IConstraint.DEFAULT_LEVEL : level;</span>
   }
 
   @NonNull
   private static MarkupMultiline remarks(@NonNull RemarksType remarks) {
-<span class="nc" id="L74">    return MarkupStringConverter.toMarkupString(remarks);</span>
+<span class="fc" id="L78">    return MarkupStringConverter.toMarkupString(remarks);</span>
   }
 
   /**
@@ -85,17 +89,17 @@ public final class ModelFactory {
   @NonNull
   public static Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; toProperties(
       @NonNull List&lt;PropertyType&gt; properties) {
-<span class="nc" id="L88">    return properties.stream()</span>
-<span class="nc" id="L89">        .map(prop -&gt; {</span>
-<span class="nc" id="L90">          String name = prop.getName();</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">          String namespace = prop.isSetNamespace() ? prop.getNamespace() : IAttributable.DEFAULT_PROPERY_NAMESPACE;</span>
-<span class="nc" id="L92">          IAttributable.Key key = IAttributable.key(name, namespace);</span>
-<span class="nc" id="L93">          String value = prop.getValue();</span>
+<span class="nc" id="L92">    return properties.stream()</span>
+<span class="nc" id="L93">        .map(prop -&gt; {</span>
+<span class="nc" id="L94">          String name = prop.getName();</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">          String namespace = prop.isSetNamespace() ? prop.getNamespace() : IAttributable.DEFAULT_PROPERY_NAMESPACE;</span>
+<span class="nc" id="L96">          IAttributable.Key key = IAttributable.key(name, namespace);</span>
+<span class="nc" id="L97">          String value = prop.getValue();</span>
 
-<span class="nc" id="L95">          return Map.entry(key, value);</span>
+<span class="nc" id="L99">          return Map.entry(key, value);</span>
         })
-<span class="nc" id="L97">        .collect(Collectors.groupingBy(Map.Entry&lt;IAttributable.Key, String&gt;::getKey,</span>
-<span class="nc" id="L98">            Collectors.mapping(Map.Entry&lt;IAttributable.Key, String&gt;::getValue, Collectors.toSet())));</span>
+<span class="nc" id="L101">        .collect(Collectors.groupingBy(Map.Entry&lt;IAttributable.Key, String&gt;::getKey,</span>
+<span class="nc" id="L102">            Collectors.mapping(Map.Entry&lt;IAttributable.Key, String&gt;::getValue, Collectors.toSet())));</span>
   }
 
   /**
@@ -108,21 +112,22 @@ public final class ModelFactory {
   @NonNull
   private static Map&lt;String, IAllowedValue&gt; toAllowedValues(
       @NonNull AllowedValuesType xmlObject) {
-<span class="fc" id="L111">    Map&lt;String, IAllowedValue&gt; allowedValues // NOPMD - intentional</span>
-<span class="fc" id="L112">        = new LinkedHashMap&lt;&gt;(xmlObject.sizeOfEnumArray());</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">    for (AllowedValueType xmlEnum : xmlObject.getEnumList()) {</span>
-<span class="fc" id="L114">      String value = xmlEnum.getValue();</span>
-<span class="pc bpc" id="L115" title="1 of 2 branches missed.">      if (value == null) {</span>
-<span class="nc" id="L116">        throw new IllegalStateException(String.format(&quot;Null value found in allowed value enumeration: %s&quot;,</span>
-<span class="nc" id="L117">            xmlObject.xmlText()));</span>
+<span class="fc" id="L115">    Map&lt;String, IAllowedValue&gt; allowedValues // NOPMD - intentional</span>
+<span class="fc" id="L116">        = new LinkedHashMap&lt;&gt;(xmlObject.sizeOfEnumArray());</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    for (AllowedValueType xmlEnum : xmlObject.getEnumList()) {</span>
+<span class="fc" id="L118">      String value = xmlEnum.getValue();</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">      if (value == null) {</span>
+<span class="nc" id="L120">        throw new IllegalStateException(String.format(&quot;Null value found in allowed value enumeration: %s&quot;,</span>
+<span class="nc" id="L121">            xmlObject.xmlText()));</span>
       }
 
-<span class="fc" id="L120">      IAllowedValue allowedValue = IAllowedValue.of(</span>
+<span class="fc" id="L124">      IAllowedValue allowedValue = IAllowedValue.of(</span>
           value,
-<span class="fc" id="L122">          MarkupStringConverter.toMarkupString(xmlEnum));</span>
-<span class="fc" id="L123">      allowedValues.put(allowedValue.getValue(), allowedValue);</span>
-<span class="fc" id="L124">    }</span>
-<span class="fc" id="L125">    return CollectionUtil.unmodifiableMap(allowedValues);</span>
+<span class="fc" id="L126">          MarkupStringConverter.toMarkupString(xmlEnum),</span>
+<span class="fc" id="L127">          xmlEnum.getDeprecated());</span>
+<span class="fc" id="L128">      allowedValues.put(allowedValue.getValue(), allowedValue);</span>
+<span class="fc" id="L129">    }</span>
+<span class="fc" id="L130">    return CollectionUtil.unmodifiableMap(allowedValues);</span>
   }
 
   /**
@@ -138,7 +143,7 @@ public final class ModelFactory {
   public static IAllowedValuesConstraint newAllowedValuesConstraint(
       @NonNull TargetedAllowedValuesConstraintType xmlObject,
       @NonNull ISource source) {
-<span class="fc" id="L141">    return newAllowedValuesConstraint(xmlObject, target(xmlObject.getTarget()), source);</span>
+<span class="fc" id="L146">    return newAllowedValuesConstraint(xmlObject, target(xmlObject.getTarget()), source);</span>
   }
 
   /**
@@ -154,7 +159,7 @@ public final class ModelFactory {
   public static IAllowedValuesConstraint newAllowedValuesConstraint(
       @NonNull AllowedValuesType xmlObject,
       @NonNull ISource source) {
-<span class="fc" id="L157">    return newAllowedValuesConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);</span>
+<span class="fc" id="L162">    return newAllowedValuesConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);</span>
   }
 
   @NonNull
@@ -163,23 +168,23 @@ public final class ModelFactory {
       @NonNull String target,
       @NonNull ISource source) {
 
-<span class="fc" id="L166">    IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder();</span>
+<span class="fc" id="L171">    IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder();</span>
 
-<span class="fc" id="L168">    applyToBuilder(xmlObject, target, source, builder);</span>
+<span class="fc" id="L173">    applyToBuilder(xmlObject, target, source, builder);</span>
 
-<span class="pc bpc" id="L170" title="1 of 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
-<span class="nc" id="L171">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
+<span class="nc" id="L176">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
     }
 
-<span class="fc" id="L174">    builder.allowedValues(toAllowedValues(xmlObject));</span>
-<span class="fc bfc" id="L175" title="All 2 branches covered.">    if (xmlObject.isSetAllowOther()) {</span>
-<span class="fc" id="L176">      builder.allowsOther(xmlObject.getAllowOther());</span>
+<span class="fc" id="L179">    builder.allowedValues(toAllowedValues(xmlObject));</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">    if (xmlObject.isSetAllowOther()) {</span>
+<span class="fc" id="L181">      builder.allowsOther(xmlObject.getAllowOther());</span>
     }
-<span class="pc bpc" id="L178" title="1 of 2 branches missed.">    if (xmlObject.isSetExtensible()) {</span>
-<span class="nc" id="L179">      builder.extensible(ObjectUtils.notNull(xmlObject.getExtensible()));</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">    if (xmlObject.isSetExtensible()) {</span>
+<span class="nc" id="L184">      builder.extensible(ObjectUtils.notNull(xmlObject.getExtensible()));</span>
     }
 
-<span class="fc" id="L182">    return builder.build();</span>
+<span class="fc" id="L187">    return builder.build();</span>
   }
 
   @NonNull
@@ -189,13 +194,13 @@ public final class ModelFactory {
       @NonNull ISource source,
       @NonNull T builder) {
 
-<span class="pc bpc" id="L192" title="1 of 2 branches missed.">    if (xmlObject.isSetId()) {</span>
-<span class="nc" id="L193">      builder.identifier(ObjectUtils.notNull(xmlObject.getId()));</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">    if (xmlObject.isSetId()) {</span>
+<span class="nc" id="L198">      builder.identifier(ObjectUtils.notNull(xmlObject.getId()));</span>
     }
-<span class="fc" id="L195">    builder.target(target);</span>
-<span class="fc" id="L196">    builder.source(source);</span>
-<span class="fc" id="L197">    builder.level(level(xmlObject.getLevel()));</span>
-<span class="fc" id="L198">    return builder;</span>
+<span class="fc" id="L200">    builder.target(target);</span>
+<span class="fc" id="L201">    builder.source(source);</span>
+<span class="fc" id="L202">    builder.level(level(xmlObject.getLevel()));</span>
+<span class="fc" id="L203">    return builder;</span>
   }
 
   /**
@@ -211,7 +216,7 @@ public final class ModelFactory {
   public static IMatchesConstraint newMatchesConstraint(
       @NonNull TargetedMatchesConstraintType xmlObject,
       @NonNull ISource source) {
-<span class="fc" id="L214">    return newMatchesConstraint(xmlObject, target(xmlObject.getTarget()), source);</span>
+<span class="fc" id="L219">    return newMatchesConstraint(xmlObject, target(xmlObject.getTarget()), source);</span>
   }
 
   /**
@@ -227,7 +232,7 @@ public final class ModelFactory {
   public static IMatchesConstraint newMatchesConstraint(
       @NonNull MatchesConstraintType xmlConstraint,
       @NonNull ISource source) {
-<span class="nc" id="L230">    return newMatchesConstraint(xmlConstraint, IConstraint.DEFAULT_TARGET_METAPATH, source);</span>
+<span class="nc" id="L235">    return newMatchesConstraint(xmlConstraint, IConstraint.DEFAULT_TARGET_METAPATH, source);</span>
   }
 
   @NonNull
@@ -235,37 +240,41 @@ public final class ModelFactory {
       @NonNull MatchesConstraintType xmlObject,
       @NonNull String target,
       @NonNull ISource source) {
-<span class="fc" id="L238">    IMatchesConstraint.Builder builder = IMatchesConstraint.builder();</span>
+<span class="fc" id="L243">    IMatchesConstraint.Builder builder = IMatchesConstraint.builder();</span>
 
-<span class="fc" id="L240">    applyToBuilder(xmlObject, target, source, builder);</span>
+<span class="fc" id="L245">    applyToBuilder(xmlObject, target, source, builder);</span>
 
-<span class="pc bpc" id="L242" title="1 of 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
-<span class="nc" id="L243">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">    if (xmlObject.isSetMessage()) {</span>
+<span class="nc" id="L248">      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));</span>
     }
 
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">    if (xmlObject.isSetRegex()) {</span>
-<span class="nc" id="L247">      builder.regex(ObjectUtils.notNull(xmlObject.getRegex()));</span>
-    }
-<span class="pc bpc" id="L249" title="1 of 2 branches missed.">    if (xmlObject.isSetDatatype()) {</span>
-<span class="fc" id="L250">      builder.datatype(ObjectUtils.notNull(xmlObject.getDatatype()));</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
+<span class="fc" id="L252">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
     }
 
-<span class="fc" id="L253">    return builder.build();</span>
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">    if (xmlObject.isSetRegex()) {</span>
+<span class="nc" id="L256">      builder.regex(ObjectUtils.notNull(xmlObject.getRegex()));</span>
+    }
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">    if (xmlObject.isSetDatatype()) {</span>
+<span class="fc" id="L259">      builder.datatype(ObjectUtils.notNull(xmlObject.getDatatype()));</span>
+    }
+
+<span class="fc" id="L262">    return builder.build();</span>
   }
 
   private static void buildKeyFields(
       @NonNull KeyConstraintType xmlObject,
       @NonNull AbstractKeyConstraintBuilder&lt;?, ?&gt; builder,
       @NonNull ISource source) {
-<span class="nc bnc" id="L260" title="All 2 branches missed.">    for (KeyConstraintType.KeyField xmlKeyField : xmlObject.getKeyFieldList()) {</span>
-<span class="nc" id="L261">      IKeyField keyField = IKeyField.of(</span>
-<span class="nc" id="L262">          ObjectUtils.requireNonNull(xmlKeyField.getTarget()),</span>
-<span class="nc bnc" id="L263" title="All 2 branches missed.">          xmlKeyField.isSetPattern() ? xmlKeyField.getPattern() : null, // NOPMD - intentional</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">          xmlKeyField.isSetRemarks() ? remarks(ObjectUtils.notNull(xmlKeyField.getRemarks())) : null,</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">    for (KeyConstraintType.KeyField xmlKeyField : xmlObject.getKeyFieldList()) {</span>
+<span class="nc" id="L270">      IKeyField keyField = IKeyField.of(</span>
+<span class="nc" id="L271">          ObjectUtils.requireNonNull(xmlKeyField.getTarget()),</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">          xmlKeyField.isSetPattern() ? xmlKeyField.getPattern() : null, // NOPMD - intentional</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">          xmlKeyField.isSetRemarks() ? remarks(ObjectUtils.notNull(xmlKeyField.getRemarks())) : null,</span>
           source);
-<span class="nc" id="L266">      builder.keyField(keyField);</span>
-<span class="nc" id="L267">    }</span>
-<span class="nc" id="L268">  }</span>
+<span class="nc" id="L275">      builder.keyField(keyField);</span>
+<span class="nc" id="L276">    }</span>
+<span class="nc" id="L277">  }</span>
 
   /**
    * Parse the constraint XMLBeans representation.
@@ -280,17 +289,21 @@ public final class ModelFactory {
   public static IUniqueConstraint newUniqueConstraint(
       @NonNull TargetedKeyConstraintType xmlObject,
       @NonNull ISource source) {
-<span class="nc" id="L283">    IUniqueConstraint.Builder builder = IUniqueConstraint.builder();</span>
+<span class="nc" id="L292">    IUniqueConstraint.Builder builder = IUniqueConstraint.builder();</span>
 
-<span class="nc" id="L285">    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);</span>
+<span class="nc" id="L294">    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);</span>
 
-<span class="nc bnc" id="L287" title="All 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
-<span class="nc" id="L288">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">    if (xmlObject.isSetMessage()) {</span>
+<span class="nc" id="L297">      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));</span>
     }
 
-<span class="nc" id="L291">    buildKeyFields(xmlObject, builder, source);</span>
+<span class="nc bnc" id="L300" title="All 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
+<span class="nc" id="L301">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+    }
 
-<span class="nc" id="L293">    return builder.build();</span>
+<span class="nc" id="L304">    buildKeyFields(xmlObject, builder, source);</span>
+
+<span class="nc" id="L306">    return builder.build();</span>
   }
 
   /**
@@ -306,17 +319,21 @@ public final class ModelFactory {
   public static IIndexConstraint newIndexConstraint(
       @NonNull TargetedIndexConstraintType xmlObject,
       @NonNull ISource source) {
-<span class="nc" id="L309">    IIndexConstraint.Builder builder = IIndexConstraint.builder(ObjectUtils.requireNonNull(xmlObject.getName()));</span>
+<span class="nc" id="L322">    IIndexConstraint.Builder builder = IIndexConstraint.builder(ObjectUtils.requireNonNull(xmlObject.getName()));</span>
 
-<span class="nc" id="L311">    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);</span>
+<span class="nc" id="L324">    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);</span>
 
-<span class="nc bnc" id="L313" title="All 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
-<span class="nc" id="L314">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+<span class="nc bnc" id="L326" title="All 2 branches missed.">    if (xmlObject.isSetMessage()) {</span>
+<span class="nc" id="L327">      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));</span>
     }
 
-<span class="nc" id="L317">    buildKeyFields(xmlObject, builder, source);</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
+<span class="nc" id="L331">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+    }
 
-<span class="nc" id="L319">    return builder.build();</span>
+<span class="nc" id="L334">    buildKeyFields(xmlObject, builder, source);</span>
+
+<span class="nc" id="L336">    return builder.build();</span>
   }
 
   /**
@@ -332,7 +349,7 @@ public final class ModelFactory {
   public static IIndexHasKeyConstraint newIndexHasKeyConstraint(
       @NonNull TargetedIndexHasKeyConstraintType xmlObject,
       @NonNull ISource source) {
-<span class="nc" id="L335">    return newIndexHasKeyConstraint(xmlObject, target(xmlObject.getTarget()), source);</span>
+<span class="nc" id="L352">    return newIndexHasKeyConstraint(xmlObject, target(xmlObject.getTarget()), source);</span>
   }
 
   /**
@@ -348,7 +365,7 @@ public final class ModelFactory {
   public static IIndexHasKeyConstraint newIndexHasKeyConstraint(
       @NonNull IndexHasKeyConstraintType xmlObject,
       @NonNull ISource source) {
-<span class="nc" id="L351">    return newIndexHasKeyConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);</span>
+<span class="nc" id="L368">    return newIndexHasKeyConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);</span>
   }
 
   @NonNull
@@ -356,18 +373,22 @@ public final class ModelFactory {
       @NonNull IndexHasKeyConstraintType xmlObject,
       @NonNull String target,
       @NonNull ISource source) {
-<span class="nc" id="L359">    IIndexHasKeyConstraint.Builder builder</span>
-<span class="nc" id="L360">        = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(xmlObject.getName()));</span>
+<span class="nc" id="L376">    IIndexHasKeyConstraint.Builder builder</span>
+<span class="nc" id="L377">        = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(xmlObject.getName()));</span>
 
-<span class="nc" id="L362">    applyToBuilder(xmlObject, target, source, builder);</span>
+<span class="nc" id="L379">    applyToBuilder(xmlObject, target, source, builder);</span>
 
-<span class="nc bnc" id="L364" title="All 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
-<span class="nc" id="L365">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+<span class="nc bnc" id="L381" title="All 2 branches missed.">    if (xmlObject.isSetMessage()) {</span>
+<span class="nc" id="L382">      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));</span>
     }
 
-<span class="nc" id="L368">    buildKeyFields(xmlObject, builder, source);</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
+<span class="nc" id="L386">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+    }
 
-<span class="nc" id="L370">    return builder.build();</span>
+<span class="nc" id="L389">    buildKeyFields(xmlObject, builder, source);</span>
+
+<span class="nc" id="L391">    return builder.build();</span>
   }
 
   /**
@@ -383,7 +404,7 @@ public final class ModelFactory {
   public static IExpectConstraint newExpectConstraint(
       @NonNull TargetedExpectConstraintType xmlObject,
       @NonNull ISource source) {
-<span class="fc" id="L386">    return newExpectConstraint(xmlObject, target(xmlObject.getTarget()), source);</span>
+<span class="fc" id="L407">    return newExpectConstraint(xmlObject, target(xmlObject.getTarget()), source);</span>
   }
 
   /**
@@ -399,30 +420,30 @@ public final class ModelFactory {
   public static IExpectConstraint newExpectConstraint(
       @NonNull ExpectConstraintType xmlObject,
       @NonNull ISource source) {
-<span class="nc" id="L402">    return newExpectConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);</span>
+<span class="nc" id="L423">    return newExpectConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);</span>
   }
 
   @NonNull
   private static IExpectConstraint newExpectConstraint(
-      @NonNull ExpectConstraintType xmlConstraint,
+      @NonNull ExpectConstraintType xmlObject,
       @NonNull String target,
       @NonNull ISource source) {
 
-<span class="fc" id="L411">    IExpectConstraint.Builder builder = IExpectConstraint.builder();</span>
+<span class="fc" id="L432">    IExpectConstraint.Builder builder = IExpectConstraint.builder();</span>
 
-<span class="fc" id="L413">    applyToBuilder(xmlConstraint, target, source, builder);</span>
+<span class="fc" id="L434">    applyToBuilder(xmlObject, target, source, builder);</span>
 
-<span class="pc bpc" id="L415" title="1 of 2 branches missed.">    if (xmlConstraint.isSetRemarks()) {</span>
-<span class="nc" id="L416">      builder.remarks(remarks(ObjectUtils.notNull(xmlConstraint.getRemarks())));</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">    if (xmlObject.isSetMessage()) {</span>
+<span class="nc" id="L437">      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));</span>
     }
 
-<span class="pc bpc" id="L419" title="1 of 2 branches missed.">    if (xmlConstraint.isSetMessage()) {</span>
-<span class="nc" id="L420">      builder.message(ObjectUtils.notNull(xmlConstraint.getMessage()));</span>
+<span class="pc bpc" id="L440" title="1 of 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
+<span class="nc" id="L441">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
     }
 
-<span class="fc" id="L423">    builder.test(ObjectUtils.requireNonNull(xmlConstraint.getTest()));</span>
+<span class="fc" id="L444">    builder.test(ObjectUtils.requireNonNull(xmlObject.getTest()));</span>
 
-<span class="fc" id="L425">    return builder.build();</span>
+<span class="fc" id="L446">    return builder.build();</span>
   }
 
   /**
@@ -439,23 +460,27 @@ public final class ModelFactory {
       @NonNull TargetedHasCardinalityConstraintType xmlObject,
       @NonNull ISource source) {
 
-<span class="nc" id="L442">    ICardinalityConstraint.Builder builder = ICardinalityConstraint.builder();</span>
+<span class="nc" id="L463">    ICardinalityConstraint.Builder builder = ICardinalityConstraint.builder();</span>
 
-<span class="nc" id="L444">    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);</span>
+<span class="nc" id="L465">    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);</span>
 
-<span class="nc bnc" id="L446" title="All 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
-<span class="nc" id="L447">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
+<span class="nc bnc" id="L467" title="All 2 branches missed.">    if (xmlObject.isSetMessage()) {</span>
+<span class="nc" id="L468">      builder.message(ObjectUtils.notNull(xmlObject.getMessage()));</span>
     }
 
-<span class="nc bnc" id="L450" title="All 2 branches missed.">    if (xmlObject.isSetMinOccurs()) {</span>
-<span class="nc" id="L451">      builder.minOccurs(xmlObject.getMinOccurs().intValueExact());</span>
+<span class="nc bnc" id="L471" title="All 2 branches missed.">    if (xmlObject.isSetRemarks()) {</span>
+<span class="nc" id="L472">      builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));</span>
     }
 
-<span class="nc bnc" id="L454" title="All 2 branches missed.">    if (xmlObject.isSetMaxOccurs()) {</span>
-<span class="nc" id="L455">      builder.maxOccurs(xmlObject.getMaxOccurs().intValueExact());</span>
+<span class="nc bnc" id="L475" title="All 2 branches missed.">    if (xmlObject.isSetMinOccurs()) {</span>
+<span class="nc" id="L476">      builder.minOccurs(xmlObject.getMinOccurs().intValueExact());</span>
     }
 
-<span class="nc" id="L458">    return builder.build();</span>
+<span class="nc bnc" id="L479" title="All 2 branches missed.">    if (xmlObject.isSetMaxOccurs()) {</span>
+<span class="nc" id="L480">      builder.maxOccurs(xmlObject.getMaxOccurs().intValueExact());</span>
+    }
+
+<span class="nc" id="L483">    return builder.build();</span>
   }
 
   /**
@@ -471,11 +496,15 @@ public final class ModelFactory {
   public static ILet newLet(
       @NonNull ConstraintLetType xmlObject,
       @NonNull ISource source) {
+
     // TODO: figure out how to resolve the namespace prefix on var
-<span class="nc" id="L475">    return ILet.of(</span>
-<span class="nc" id="L476">        new QName(xmlObject.getVar()),</span>
-<span class="nc" id="L477">        ObjectUtils.notNull(xmlObject.getExpression()),</span>
-        source);
+<span class="fc" id="L501">    return ILet.of(</span>
+<span class="fc" id="L502">        new QName(xmlObject.getVar()),</span>
+<span class="fc" id="L503">        ObjectUtils.notNull(xmlObject.getExpression()),</span>
+        source,
+<span class="pc bpc" id="L505" title="1 of 2 branches missed.">        xmlObject.isSetRemarks()</span>
+<span class="fc" id="L506">            ? remarks(ObjectUtils.notNull(xmlObject.getRemarks()))</span>
+<span class="nc" id="L507">            : null);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

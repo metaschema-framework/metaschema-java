@@ -15,8 +15,8 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.ISource;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.ISource;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> java.util.regex.Pattern;
@@ -51,7 +51,7 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>        @NonNull String target,
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>        @Nullable Pattern pattern,
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>        @Nullable <a name="MarkupMultiline" href="../../../../../../../../gov/nist/secauto/metaschema/core/datatype/markup/MarkupMultiline.html#MarkupMultiline">MarkupMultiline</a> remarks,
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>        @NonNull <a name="ISource" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ISource.html#ISource">ISource</a> source) {
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>        @NonNull <a name="ISource" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/ISource.html#ISource">ISource</a> source) {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">this</strong>.pattern = pattern;
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">this</strong>.target = ObjectUtils.notNull(Lazy.lazy(() -&gt; MetapathExpression.compile(target, source.getStaticContext())));
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">this</strong>.remarks = remarks;

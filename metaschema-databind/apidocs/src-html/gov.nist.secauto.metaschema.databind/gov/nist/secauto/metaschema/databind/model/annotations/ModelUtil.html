@@ -22,264 +22,289 @@
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;</span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.model.IBoundObject;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.model.IMetaschemaData;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.model.IModule;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.databind.model.IGroupAs;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.databind.model.impl.DefaultGroupAs;</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">import java.lang.annotation.Annotation;</span>
-<span class="source-line-no">021</span><span id="line-21">import java.lang.reflect.Field;</span>
-<span class="source-line-no">022</span><span id="line-22">import java.net.URI;</span>
-<span class="source-line-no">023</span><span id="line-23"></span>
-<span class="source-line-no">024</span><span id="line-24">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">025</span><span id="line-25">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">public final class ModelUtil {</span>
-<span class="source-line-no">028</span><span id="line-28">  // TODO: replace NO_STRING_VALUE with NULL_VALUE where possible. URIs will not</span>
-<span class="source-line-no">029</span><span id="line-29">  // allow NULL_VALUE.</span>
-<span class="source-line-no">030</span><span id="line-30">  public static final String NO_STRING_VALUE = "##none";</span>
-<span class="source-line-no">031</span><span id="line-31">  public static final String DEFAULT_STRING_VALUE = "##default";</span>
-<span class="source-line-no">032</span><span id="line-32">  /**</span>
-<span class="source-line-no">033</span><span id="line-33">   * A placeholder for a {@code null} value for use in annotations, which cannot</span>
-<span class="source-line-no">034</span><span id="line-34">   * be null by default.</span>
-<span class="source-line-no">035</span><span id="line-35">   * &lt;p&gt;</span>
-<span class="source-line-no">036</span><span id="line-36">   * Use of {@code "\u0000"} simple substitute for {@code null} to allow</span>
-<span class="source-line-no">037</span><span id="line-37">   * implementations to recognize the "no default value" state.</span>
-<span class="source-line-no">038</span><span id="line-38">   */</span>
-<span class="source-line-no">039</span><span id="line-39">  public static final String NULL_VALUE = "\u0000";</span>
-<span class="source-line-no">040</span><span id="line-40"></span>
-<span class="source-line-no">041</span><span id="line-41">  private ModelUtil() {</span>
-<span class="source-line-no">042</span><span id="line-42">    // disable construction</span>
-<span class="source-line-no">043</span><span id="line-43">  }</span>
-<span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">  /**</span>
-<span class="source-line-no">046</span><span id="line-46">   * Get the requested annotation from the provided Java class.</span>
-<span class="source-line-no">047</span><span id="line-47">   *</span>
-<span class="source-line-no">048</span><span id="line-48">   * @param &lt;A&gt;</span>
-<span class="source-line-no">049</span><span id="line-49">   *          the annotation Java type</span>
-<span class="source-line-no">050</span><span id="line-50">   * @param clazz</span>
-<span class="source-line-no">051</span><span id="line-51">   *          the Java class to get the annotation from</span>
-<span class="source-line-no">052</span><span id="line-52">   * @param annotationClass</span>
-<span class="source-line-no">053</span><span id="line-53">   *          the annotation class instance</span>
-<span class="source-line-no">054</span><span id="line-54">   * @return the annotation</span>
-<span class="source-line-no">055</span><span id="line-55">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">056</span><span id="line-56">   *           if the annotation was not present on the class</span>
-<span class="source-line-no">057</span><span id="line-57">   */</span>
-<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
-<span class="source-line-no">059</span><span id="line-59">  public static &lt;A extends Annotation&gt; A getAnnotation(</span>
-<span class="source-line-no">060</span><span id="line-60">      @NonNull Class&lt;?&gt; clazz,</span>
-<span class="source-line-no">061</span><span id="line-61">      Class&lt;A&gt; annotationClass) {</span>
-<span class="source-line-no">062</span><span id="line-62">    A annotation = clazz.getAnnotation(annotationClass);</span>
-<span class="source-line-no">063</span><span id="line-63">    if (annotation == null) {</span>
-<span class="source-line-no">064</span><span id="line-64">      throw new IllegalArgumentException(</span>
-<span class="source-line-no">065</span><span id="line-65">          String.format("Class '%s' is missing the '%s' annotation.",</span>
-<span class="source-line-no">066</span><span id="line-66">              clazz.getName(),</span>
-<span class="source-line-no">067</span><span id="line-67">              annotationClass.getName()));</span>
-<span class="source-line-no">068</span><span id="line-68">    }</span>
-<span class="source-line-no">069</span><span id="line-69">    return annotation;</span>
-<span class="source-line-no">070</span><span id="line-70">  }</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">  /**</span>
-<span class="source-line-no">073</span><span id="line-73">   * Get the requested annotation from the provided Java field.</span>
-<span class="source-line-no">074</span><span id="line-74">   *</span>
-<span class="source-line-no">075</span><span id="line-75">   * @param &lt;A&gt;</span>
-<span class="source-line-no">076</span><span id="line-76">   *          the annotation Java type</span>
-<span class="source-line-no">077</span><span id="line-77">   * @param javaField</span>
-<span class="source-line-no">078</span><span id="line-78">   *          the Java field to get the annotation from</span>
-<span class="source-line-no">079</span><span id="line-79">   * @param annotationClass</span>
-<span class="source-line-no">080</span><span id="line-80">   *          the annotation class instance</span>
-<span class="source-line-no">081</span><span id="line-81">   * @return the annotation</span>
-<span class="source-line-no">082</span><span id="line-82">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">083</span><span id="line-83">   *           if the annotation was not present on the field</span>
-<span class="source-line-no">084</span><span id="line-84">   */</span>
-<span class="source-line-no">085</span><span id="line-85">  @NonNull</span>
-<span class="source-line-no">086</span><span id="line-86">  public static &lt;A extends Annotation&gt; A getAnnotation(</span>
-<span class="source-line-no">087</span><span id="line-87">      @NonNull Field javaField,</span>
-<span class="source-line-no">088</span><span id="line-88">      Class&lt;A&gt; annotationClass) {</span>
-<span class="source-line-no">089</span><span id="line-89">    A annotation = javaField.getAnnotation(annotationClass);</span>
-<span class="source-line-no">090</span><span id="line-90">    if (annotation == null) {</span>
-<span class="source-line-no">091</span><span id="line-91">      throw new IllegalArgumentException(</span>
-<span class="source-line-no">092</span><span id="line-92">          String.format("Field '%s' is missing the '%s' annotation.",</span>
-<span class="source-line-no">093</span><span id="line-93">              javaField.toGenericString(),</span>
-<span class="source-line-no">094</span><span id="line-94">              annotationClass.getName()));</span>
-<span class="source-line-no">095</span><span id="line-95">    }</span>
-<span class="source-line-no">096</span><span id="line-96">    return annotation;</span>
-<span class="source-line-no">097</span><span id="line-97">  }</span>
-<span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">  /**</span>
-<span class="source-line-no">100</span><span id="line-100">   * Resolves a string value. If the value is {@code null} or "##default", then</span>
-<span class="source-line-no">101</span><span id="line-101">   * the provided default value will be used instead. If the value is "##none",</span>
-<span class="source-line-no">102</span><span id="line-102">   * then the value will be {@code null}. Otherwise, the value is returned.</span>
-<span class="source-line-no">103</span><span id="line-103">   *</span>
-<span class="source-line-no">104</span><span id="line-104">   * @param value</span>
-<span class="source-line-no">105</span><span id="line-105">   *          the requested value</span>
-<span class="source-line-no">106</span><span id="line-106">   * @param defaultValue</span>
-<span class="source-line-no">107</span><span id="line-107">   *          the default value</span>
-<span class="source-line-no">108</span><span id="line-108">   * @return the resolved value or {@code null}</span>
-<span class="source-line-no">109</span><span id="line-109">   */</span>
-<span class="source-line-no">110</span><span id="line-110">  @Nullable</span>
-<span class="source-line-no">111</span><span id="line-111">  public static String resolveNoneOrDefault(@Nullable String value, @Nullable String defaultValue) {</span>
-<span class="source-line-no">112</span><span id="line-112">    String retval;</span>
-<span class="source-line-no">113</span><span id="line-113">    if (value == null || DEFAULT_STRING_VALUE.equals(value)) {</span>
-<span class="source-line-no">114</span><span id="line-114">      retval = defaultValue;</span>
-<span class="source-line-no">115</span><span id="line-115">    } else if (NO_STRING_VALUE.equals(value)) {</span>
-<span class="source-line-no">116</span><span id="line-116">      retval = null; // NOPMD - intentional</span>
-<span class="source-line-no">117</span><span id="line-117">    } else {</span>
-<span class="source-line-no">118</span><span id="line-118">      retval = value;</span>
-<span class="source-line-no">119</span><span id="line-119">    }</span>
-<span class="source-line-no">120</span><span id="line-120">    return retval;</span>
-<span class="source-line-no">121</span><span id="line-121">  }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">  /**</span>
-<span class="source-line-no">124</span><span id="line-124">   * Get the processed value of a string. If the value is "##none", then the value</span>
-<span class="source-line-no">125</span><span id="line-125">   * will be {@code null}. Otherwise the value is returned.</span>
-<span class="source-line-no">126</span><span id="line-126">   *</span>
-<span class="source-line-no">127</span><span id="line-127">   * @param value</span>
-<span class="source-line-no">128</span><span id="line-128">   *          text or {@code "##none"} if no text is provided</span>
-<span class="source-line-no">129</span><span id="line-129">   * @return the resolved value or {@code null}</span>
-<span class="source-line-no">130</span><span id="line-130">   */</span>
-<span class="source-line-no">131</span><span id="line-131">  @Nullable</span>
-<span class="source-line-no">132</span><span id="line-132">  public static String resolveNoneOrValue(@NonNull String value) {</span>
-<span class="source-line-no">133</span><span id="line-133">    return NO_STRING_VALUE.equals(value) ? null : value;</span>
-<span class="source-line-no">134</span><span id="line-134">  }</span>
-<span class="source-line-no">135</span><span id="line-135"></span>
-<span class="source-line-no">136</span><span id="line-136">  /**</span>
-<span class="source-line-no">137</span><span id="line-137">   * Get the markup value of a markdown string.</span>
-<span class="source-line-no">138</span><span id="line-138">   *</span>
-<span class="source-line-no">139</span><span id="line-139">   * @param value</span>
-<span class="source-line-no">140</span><span id="line-140">   *          markdown text or {@code "##none"} if no text is provided</span>
-<span class="source-line-no">141</span><span id="line-141">   * @return the markup line content or {@code null} if no markup content was</span>
-<span class="source-line-no">142</span><span id="line-142">   *         provided</span>
-<span class="source-line-no">143</span><span id="line-143">   */</span>
-<span class="source-line-no">144</span><span id="line-144">  @Nullable</span>
-<span class="source-line-no">145</span><span id="line-145">  public static MarkupLine resolveToMarkupLine(@NonNull String value) {</span>
-<span class="source-line-no">146</span><span id="line-146">    return resolveNoneOrValue(value) == null ? null : MarkupLine.fromMarkdown(value);</span>
-<span class="source-line-no">147</span><span id="line-147">  }</span>
-<span class="source-line-no">148</span><span id="line-148"></span>
-<span class="source-line-no">149</span><span id="line-149">  /**</span>
-<span class="source-line-no">150</span><span id="line-150">   * Get the markup value of a markdown string.</span>
-<span class="source-line-no">151</span><span id="line-151">   *</span>
-<span class="source-line-no">152</span><span id="line-152">   * @param value</span>
-<span class="source-line-no">153</span><span id="line-153">   *          markdown text or {@code "##none"} if no text is provided</span>
-<span class="source-line-no">154</span><span id="line-154">   * @return the markup line content or {@code null} if no markup content was</span>
-<span class="source-line-no">155</span><span id="line-155">   *         provided</span>
-<span class="source-line-no">156</span><span id="line-156">   */</span>
-<span class="source-line-no">157</span><span id="line-157">  @Nullable</span>
-<span class="source-line-no">158</span><span id="line-158">  public static MarkupMultiline resolveToMarkupMultiline(@NonNull String value) {</span>
-<span class="source-line-no">159</span><span id="line-159">    return resolveNoneOrValue(value) == null ? null : MarkupMultiline.fromMarkdown(value);</span>
-<span class="source-line-no">160</span><span id="line-160">  }</span>
-<span class="source-line-no">161</span><span id="line-161"></span>
-<span class="source-line-no">162</span><span id="line-162">  /**</span>
-<span class="source-line-no">163</span><span id="line-163">   * Get the data type adapter instance of the provided adapter class.</span>
-<span class="source-line-no">164</span><span id="line-164">   * &lt;p&gt;</span>
-<span class="source-line-no">165</span><span id="line-165">   * If the provided adapter Java class is the {@link NullJavaTypeAdapter} class,</span>
-<span class="source-line-no">166</span><span id="line-166">   * then the default data type adapter will be returned.</span>
-<span class="source-line-no">167</span><span id="line-167">   *</span>
-<span class="source-line-no">168</span><span id="line-168">   * @param adapterClass</span>
-<span class="source-line-no">169</span><span id="line-169">   *          the data type adapter class to get the data type adapter instance</span>
-<span class="source-line-no">170</span><span id="line-170">   *          for</span>
-<span class="source-line-no">171</span><span id="line-171">   * @param bindingContext</span>
-<span class="source-line-no">172</span><span id="line-172">   *          the Metaschema binding context used to lookup the data type adapter</span>
-<span class="source-line-no">173</span><span id="line-173">   * @return the data type adapter</span>
-<span class="source-line-no">174</span><span id="line-174">   */</span>
-<span class="source-line-no">175</span><span id="line-175">  @NonNull</span>
-<span class="source-line-no">176</span><span id="line-176">  public static IDataTypeAdapter&lt;?&gt; getDataTypeAdapter(</span>
-<span class="source-line-no">177</span><span id="line-177">      @NonNull Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; adapterClass,</span>
-<span class="source-line-no">178</span><span id="line-178">      @NonNull IBindingContext bindingContext) {</span>
-<span class="source-line-no">179</span><span id="line-179">    IDataTypeAdapter&lt;?&gt; retval;</span>
-<span class="source-line-no">180</span><span id="line-180">    if (NullJavaTypeAdapter.class.equals(adapterClass)) {</span>
-<span class="source-line-no">181</span><span id="line-181">      retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
-<span class="source-line-no">182</span><span id="line-182">    } else {</span>
-<span class="source-line-no">183</span><span id="line-183">      retval = ObjectUtils.requireNonNull(bindingContext.getJavaTypeAdapterInstance(adapterClass));</span>
-<span class="source-line-no">184</span><span id="line-184">    }</span>
-<span class="source-line-no">185</span><span id="line-185">    return retval;</span>
-<span class="source-line-no">186</span><span id="line-186">  }</span>
-<span class="source-line-no">187</span><span id="line-187"></span>
-<span class="source-line-no">188</span><span id="line-188">  /**</span>
-<span class="source-line-no">189</span><span id="line-189">   * Given a provided default value string, get the data type specific default</span>
-<span class="source-line-no">190</span><span id="line-190">   * value using the provided data type adapter.</span>
-<span class="source-line-no">191</span><span id="line-191">   * &lt;p&gt;</span>
-<span class="source-line-no">192</span><span id="line-192">   * If the provided default value is {@link ModelUtil#NULL_VALUE}, then this</span>
-<span class="source-line-no">193</span><span id="line-193">   * method will return a {@code null} value.</span>
-<span class="source-line-no">194</span><span id="line-194">   *</span>
-<span class="source-line-no">195</span><span id="line-195">   * @param defaultValue</span>
-<span class="source-line-no">196</span><span id="line-196">   *          the string representation of the default value</span>
-<span class="source-line-no">197</span><span id="line-197">   * @param adapter</span>
-<span class="source-line-no">198</span><span id="line-198">   *          the data type adapter instance used to cast the default string value</span>
-<span class="source-line-no">199</span><span id="line-199">   *          to a data type specific object</span>
-<span class="source-line-no">200</span><span id="line-200">   * @return the data type specific object or {@code null} if the provided default</span>
-<span class="source-line-no">201</span><span id="line-201">   *         value was {@link ModelUtil#NULL_VALUE}</span>
-<span class="source-line-no">202</span><span id="line-202">   */</span>
-<span class="source-line-no">203</span><span id="line-203">  @Nullable</span>
-<span class="source-line-no">204</span><span id="line-204">  public static Object resolveDefaultValue(@NonNull String defaultValue, IDataTypeAdapter&lt;?&gt; adapter) {</span>
-<span class="source-line-no">205</span><span id="line-205">    Object retval = null;</span>
-<span class="source-line-no">206</span><span id="line-206">    if (!NULL_VALUE.equals(defaultValue)) {</span>
-<span class="source-line-no">207</span><span id="line-207">      retval = adapter.parse(defaultValue);</span>
-<span class="source-line-no">208</span><span id="line-208">    }</span>
-<span class="source-line-no">209</span><span id="line-209">    return retval;</span>
-<span class="source-line-no">210</span><span id="line-210">  }</span>
-<span class="source-line-no">211</span><span id="line-211"></span>
-<span class="source-line-no">212</span><span id="line-212">  /**</span>
-<span class="source-line-no">213</span><span id="line-213">   * Resolves an integer value by determining if an actual value is provided or</span>
-<span class="source-line-no">214</span><span id="line-214">   * -2^31, which indicates that no actual value was provided.</span>
-<span class="source-line-no">215</span><span id="line-215">   * &lt;p&gt;</span>
-<span class="source-line-no">216</span><span id="line-216">   * The integer value -2^31 cannot be used, since this indicates no value.</span>
-<span class="source-line-no">217</span><span id="line-217">   *</span>
-<span class="source-line-no">218</span><span id="line-218">   * @param value</span>
-<span class="source-line-no">219</span><span id="line-219">   *          the integer value to resolve</span>
-<span class="source-line-no">220</span><span id="line-220">   * @return the integer value or {@code null} if the provided value was -2^31</span>
-<span class="source-line-no">221</span><span id="line-221">   */</span>
-<span class="source-line-no">222</span><span id="line-222">  public static Integer resolveDefaultInteger(int value) {</span>
-<span class="source-line-no">223</span><span id="line-223">    return value == Integer.MIN_VALUE ? null : value;</span>
-<span class="source-line-no">224</span><span id="line-224">  }</span>
-<span class="source-line-no">225</span><span id="line-225"></span>
-<span class="source-line-no">226</span><span id="line-226">  /**</span>
-<span class="source-line-no">227</span><span id="line-227">   * Resolves a {@link GroupAs} annotation determining if an actual value is</span>
-<span class="source-line-no">228</span><span id="line-228">   * provided or if the value is the default, which indicates that no actual</span>
-<span class="source-line-no">229</span><span id="line-229">   * GroupAs was provided.</span>
-<span class="source-line-no">230</span><span id="line-230">   *</span>
-<span class="source-line-no">231</span><span id="line-231">   * @param groupAs</span>
-<span class="source-line-no">232</span><span id="line-232">   *          the GroupAs value to resolve</span>
-<span class="source-line-no">233</span><span id="line-233">   * @param module</span>
-<span class="source-line-no">234</span><span id="line-234">   *          the containing module instance</span>
-<span class="source-line-no">235</span><span id="line-235">   * @return a new {@link IGroupAs} instance or a singleton group as if the</span>
-<span class="source-line-no">236</span><span id="line-236">   *         provided value was the default value</span>
-<span class="source-line-no">237</span><span id="line-237">   */</span>
-<span class="source-line-no">238</span><span id="line-238">  @NonNull</span>
-<span class="source-line-no">239</span><span id="line-239">  public static IGroupAs resolveDefaultGroupAs(</span>
-<span class="source-line-no">240</span><span id="line-240">      @NonNull GroupAs groupAs,</span>
-<span class="source-line-no">241</span><span id="line-241">      @NonNull IModule module) {</span>
-<span class="source-line-no">242</span><span id="line-242">    return NULL_VALUE.equals(groupAs.name())</span>
-<span class="source-line-no">243</span><span id="line-243">        ? IGroupAs.SINGLETON_GROUP_AS</span>
-<span class="source-line-no">244</span><span id="line-244">        : new DefaultGroupAs(groupAs, module);</span>
-<span class="source-line-no">245</span><span id="line-245">  }</span>
-<span class="source-line-no">246</span><span id="line-246"></span>
-<span class="source-line-no">247</span><span id="line-247">  public static String toLocation(@NonNull IBoundObject obj) {</span>
-<span class="source-line-no">248</span><span id="line-248">    IMetaschemaData data = obj.getMetaschemaData();</span>
-<span class="source-line-no">249</span><span id="line-249"></span>
-<span class="source-line-no">250</span><span id="line-250">    String retval = "";</span>
-<span class="source-line-no">251</span><span id="line-251">    if (data != null) {</span>
-<span class="source-line-no">252</span><span id="line-252">      int line = data.getLine();</span>
-<span class="source-line-no">253</span><span id="line-253">      if (line &gt; -1) {</span>
-<span class="source-line-no">254</span><span id="line-254">        retval = line + ":" + data.getColumn();</span>
-<span class="source-line-no">255</span><span id="line-255">      }</span>
-<span class="source-line-no">256</span><span id="line-256">    }</span>
-<span class="source-line-no">257</span><span id="line-257">    return retval;</span>
-<span class="source-line-no">258</span><span id="line-258">  }</span>
-<span class="source-line-no">259</span><span id="line-259"></span>
-<span class="source-line-no">260</span><span id="line-260">  public static String toLocation(@NonNull IBoundObject obj, @Nullable URI uri) {</span>
-<span class="source-line-no">261</span><span id="line-261">    String retval = uri == null ? "" : uri.toASCIIString();</span>
-<span class="source-line-no">262</span><span id="line-262"></span>
-<span class="source-line-no">263</span><span id="line-263">    String location = toLocation(obj);</span>
-<span class="source-line-no">264</span><span id="line-264">    if (!location.isEmpty()) {</span>
-<span class="source-line-no">265</span><span id="line-265">      retval = retval.isEmpty() ? location : retval + "@" + location;</span>
-<span class="source-line-no">266</span><span id="line-266">    }</span>
-<span class="source-line-no">267</span><span id="line-267">    return retval;</span>
-<span class="source-line-no">268</span><span id="line-268">  }</span>
-<span class="source-line-no">269</span><span id="line-269">}</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.model.IAttributable;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.model.IBoundObject;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.model.IMetaschemaData;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.model.IModule;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.databind.model.IGroupAs;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.databind.model.impl.DefaultGroupAs;</span>
+<span class="source-line-no">020</span><span id="line-20"></span>
+<span class="source-line-no">021</span><span id="line-21">import java.lang.annotation.Annotation;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.lang.reflect.Field;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.net.URI;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.util.Arrays;</span>
+<span class="source-line-no">025</span><span id="line-25">import java.util.LinkedHashSet;</span>
+<span class="source-line-no">026</span><span id="line-26">import java.util.List;</span>
+<span class="source-line-no">027</span><span id="line-27">import java.util.Map;</span>
+<span class="source-line-no">028</span><span id="line-28">import java.util.Set;</span>
+<span class="source-line-no">029</span><span id="line-29"></span>
+<span class="source-line-no">030</span><span id="line-30">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">031</span><span id="line-31">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">032</span><span id="line-32"></span>
+<span class="source-line-no">033</span><span id="line-33">public final class ModelUtil {</span>
+<span class="source-line-no">034</span><span id="line-34">  // TODO: replace NO_STRING_VALUE with NULL_VALUE where possible. URIs will not</span>
+<span class="source-line-no">035</span><span id="line-35">  // allow NULL_VALUE.</span>
+<span class="source-line-no">036</span><span id="line-36">  public static final String NO_STRING_VALUE = "##none";</span>
+<span class="source-line-no">037</span><span id="line-37">  public static final String DEFAULT_STRING_VALUE = "##default";</span>
+<span class="source-line-no">038</span><span id="line-38">  /**</span>
+<span class="source-line-no">039</span><span id="line-39">   * A placeholder for a {@code null} value for use in annotations, which cannot</span>
+<span class="source-line-no">040</span><span id="line-40">   * be null by default.</span>
+<span class="source-line-no">041</span><span id="line-41">   * &lt;p&gt;</span>
+<span class="source-line-no">042</span><span id="line-42">   * Use of {@code "\u0000"} simple substitute for {@code null} to allow</span>
+<span class="source-line-no">043</span><span id="line-43">   * implementations to recognize the "no default value" state.</span>
+<span class="source-line-no">044</span><span id="line-44">   */</span>
+<span class="source-line-no">045</span><span id="line-45">  public static final String NULL_VALUE = "\u0000";</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">  private ModelUtil() {</span>
+<span class="source-line-no">048</span><span id="line-48">    // disable construction</span>
+<span class="source-line-no">049</span><span id="line-49">  }</span>
+<span class="source-line-no">050</span><span id="line-50"></span>
+<span class="source-line-no">051</span><span id="line-51">  /**</span>
+<span class="source-line-no">052</span><span id="line-52">   * Get the requested annotation from the provided Java class.</span>
+<span class="source-line-no">053</span><span id="line-53">   *</span>
+<span class="source-line-no">054</span><span id="line-54">   * @param &lt;A&gt;</span>
+<span class="source-line-no">055</span><span id="line-55">   *          the annotation Java type</span>
+<span class="source-line-no">056</span><span id="line-56">   * @param clazz</span>
+<span class="source-line-no">057</span><span id="line-57">   *          the Java class to get the annotation from</span>
+<span class="source-line-no">058</span><span id="line-58">   * @param annotationClass</span>
+<span class="source-line-no">059</span><span id="line-59">   *          the annotation class instance</span>
+<span class="source-line-no">060</span><span id="line-60">   * @return the annotation</span>
+<span class="source-line-no">061</span><span id="line-61">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">062</span><span id="line-62">   *           if the annotation was not present on the class</span>
+<span class="source-line-no">063</span><span id="line-63">   */</span>
+<span class="source-line-no">064</span><span id="line-64">  @NonNull</span>
+<span class="source-line-no">065</span><span id="line-65">  public static &lt;A extends Annotation&gt; A getAnnotation(</span>
+<span class="source-line-no">066</span><span id="line-66">      @NonNull Class&lt;?&gt; clazz,</span>
+<span class="source-line-no">067</span><span id="line-67">      Class&lt;A&gt; annotationClass) {</span>
+<span class="source-line-no">068</span><span id="line-68">    A annotation = clazz.getAnnotation(annotationClass);</span>
+<span class="source-line-no">069</span><span id="line-69">    if (annotation == null) {</span>
+<span class="source-line-no">070</span><span id="line-70">      throw new IllegalArgumentException(</span>
+<span class="source-line-no">071</span><span id="line-71">          String.format("Class '%s' is missing the '%s' annotation.",</span>
+<span class="source-line-no">072</span><span id="line-72">              clazz.getName(),</span>
+<span class="source-line-no">073</span><span id="line-73">              annotationClass.getName()));</span>
+<span class="source-line-no">074</span><span id="line-74">    }</span>
+<span class="source-line-no">075</span><span id="line-75">    return annotation;</span>
+<span class="source-line-no">076</span><span id="line-76">  }</span>
+<span class="source-line-no">077</span><span id="line-77"></span>
+<span class="source-line-no">078</span><span id="line-78">  /**</span>
+<span class="source-line-no">079</span><span id="line-79">   * Get the requested annotation from the provided Java field.</span>
+<span class="source-line-no">080</span><span id="line-80">   *</span>
+<span class="source-line-no">081</span><span id="line-81">   * @param &lt;A&gt;</span>
+<span class="source-line-no">082</span><span id="line-82">   *          the annotation Java type</span>
+<span class="source-line-no">083</span><span id="line-83">   * @param javaField</span>
+<span class="source-line-no">084</span><span id="line-84">   *          the Java field to get the annotation from</span>
+<span class="source-line-no">085</span><span id="line-85">   * @param annotationClass</span>
+<span class="source-line-no">086</span><span id="line-86">   *          the annotation class instance</span>
+<span class="source-line-no">087</span><span id="line-87">   * @return the annotation</span>
+<span class="source-line-no">088</span><span id="line-88">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">089</span><span id="line-89">   *           if the annotation was not present on the field</span>
+<span class="source-line-no">090</span><span id="line-90">   */</span>
+<span class="source-line-no">091</span><span id="line-91">  @NonNull</span>
+<span class="source-line-no">092</span><span id="line-92">  public static &lt;A extends Annotation&gt; A getAnnotation(</span>
+<span class="source-line-no">093</span><span id="line-93">      @NonNull Field javaField,</span>
+<span class="source-line-no">094</span><span id="line-94">      Class&lt;A&gt; annotationClass) {</span>
+<span class="source-line-no">095</span><span id="line-95">    A annotation = javaField.getAnnotation(annotationClass);</span>
+<span class="source-line-no">096</span><span id="line-96">    if (annotation == null) {</span>
+<span class="source-line-no">097</span><span id="line-97">      throw new IllegalArgumentException(</span>
+<span class="source-line-no">098</span><span id="line-98">          String.format("Field '%s' is missing the '%s' annotation.",</span>
+<span class="source-line-no">099</span><span id="line-99">              javaField.toGenericString(),</span>
+<span class="source-line-no">100</span><span id="line-100">              annotationClass.getName()));</span>
+<span class="source-line-no">101</span><span id="line-101">    }</span>
+<span class="source-line-no">102</span><span id="line-102">    return annotation;</span>
+<span class="source-line-no">103</span><span id="line-103">  }</span>
+<span class="source-line-no">104</span><span id="line-104"></span>
+<span class="source-line-no">105</span><span id="line-105">  /**</span>
+<span class="source-line-no">106</span><span id="line-106">   * Resolves a string value. If the value is {@code null} or "##default", then</span>
+<span class="source-line-no">107</span><span id="line-107">   * the provided default value will be used instead. If the value is "##none",</span>
+<span class="source-line-no">108</span><span id="line-108">   * then the value will be {@code null}. Otherwise, the value is returned.</span>
+<span class="source-line-no">109</span><span id="line-109">   *</span>
+<span class="source-line-no">110</span><span id="line-110">   * @param value</span>
+<span class="source-line-no">111</span><span id="line-111">   *          the requested value</span>
+<span class="source-line-no">112</span><span id="line-112">   * @param defaultValue</span>
+<span class="source-line-no">113</span><span id="line-113">   *          the default value</span>
+<span class="source-line-no">114</span><span id="line-114">   * @return the resolved value or {@code null}</span>
+<span class="source-line-no">115</span><span id="line-115">   */</span>
+<span class="source-line-no">116</span><span id="line-116">  @Nullable</span>
+<span class="source-line-no">117</span><span id="line-117">  public static String resolveNoneOrDefault(@Nullable String value, @Nullable String defaultValue) {</span>
+<span class="source-line-no">118</span><span id="line-118">    String retval;</span>
+<span class="source-line-no">119</span><span id="line-119">    if (value == null || DEFAULT_STRING_VALUE.equals(value)) {</span>
+<span class="source-line-no">120</span><span id="line-120">      retval = defaultValue;</span>
+<span class="source-line-no">121</span><span id="line-121">    } else if (NO_STRING_VALUE.equals(value)) {</span>
+<span class="source-line-no">122</span><span id="line-122">      retval = null; // NOPMD - intentional</span>
+<span class="source-line-no">123</span><span id="line-123">    } else {</span>
+<span class="source-line-no">124</span><span id="line-124">      retval = value;</span>
+<span class="source-line-no">125</span><span id="line-125">    }</span>
+<span class="source-line-no">126</span><span id="line-126">    return retval;</span>
+<span class="source-line-no">127</span><span id="line-127">  }</span>
+<span class="source-line-no">128</span><span id="line-128"></span>
+<span class="source-line-no">129</span><span id="line-129">  /**</span>
+<span class="source-line-no">130</span><span id="line-130">   * Get the processed value of a string. If the value is "##none", then the value</span>
+<span class="source-line-no">131</span><span id="line-131">   * will be {@code null}. Otherwise the value is returned.</span>
+<span class="source-line-no">132</span><span id="line-132">   *</span>
+<span class="source-line-no">133</span><span id="line-133">   * @param value</span>
+<span class="source-line-no">134</span><span id="line-134">   *          text or {@code "##none"} if no text is provided</span>
+<span class="source-line-no">135</span><span id="line-135">   * @return the resolved value or {@code null}</span>
+<span class="source-line-no">136</span><span id="line-136">   */</span>
+<span class="source-line-no">137</span><span id="line-137">  @Nullable</span>
+<span class="source-line-no">138</span><span id="line-138">  public static String resolveNoneOrValue(@NonNull String value) {</span>
+<span class="source-line-no">139</span><span id="line-139">    return NO_STRING_VALUE.equals(value) ? null : value;</span>
+<span class="source-line-no">140</span><span id="line-140">  }</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">  /**</span>
+<span class="source-line-no">143</span><span id="line-143">   * Get the markup value of a markdown string.</span>
+<span class="source-line-no">144</span><span id="line-144">   *</span>
+<span class="source-line-no">145</span><span id="line-145">   * @param value</span>
+<span class="source-line-no">146</span><span id="line-146">   *          markdown text or {@code "##none"} if no text is provided</span>
+<span class="source-line-no">147</span><span id="line-147">   * @return the markup line content or {@code null} if no markup content was</span>
+<span class="source-line-no">148</span><span id="line-148">   *         provided</span>
+<span class="source-line-no">149</span><span id="line-149">   */</span>
+<span class="source-line-no">150</span><span id="line-150">  @Nullable</span>
+<span class="source-line-no">151</span><span id="line-151">  public static MarkupLine resolveToMarkupLine(@NonNull String value) {</span>
+<span class="source-line-no">152</span><span id="line-152">    return resolveNoneOrValue(value) == null ? null : MarkupLine.fromMarkdown(value);</span>
+<span class="source-line-no">153</span><span id="line-153">  }</span>
+<span class="source-line-no">154</span><span id="line-154"></span>
+<span class="source-line-no">155</span><span id="line-155">  /**</span>
+<span class="source-line-no">156</span><span id="line-156">   * Get the markup value of a markdown string.</span>
+<span class="source-line-no">157</span><span id="line-157">   *</span>
+<span class="source-line-no">158</span><span id="line-158">   * @param value</span>
+<span class="source-line-no">159</span><span id="line-159">   *          markdown text or {@code "##none"} if no text is provided</span>
+<span class="source-line-no">160</span><span id="line-160">   * @return the markup line content or {@code null} if no markup content was</span>
+<span class="source-line-no">161</span><span id="line-161">   *         provided</span>
+<span class="source-line-no">162</span><span id="line-162">   */</span>
+<span class="source-line-no">163</span><span id="line-163">  @Nullable</span>
+<span class="source-line-no">164</span><span id="line-164">  public static MarkupMultiline resolveToMarkupMultiline(@NonNull String value) {</span>
+<span class="source-line-no">165</span><span id="line-165">    return resolveNoneOrValue(value) == null ? null : MarkupMultiline.fromMarkdown(value);</span>
+<span class="source-line-no">166</span><span id="line-166">  }</span>
+<span class="source-line-no">167</span><span id="line-167"></span>
+<span class="source-line-no">168</span><span id="line-168">  /**</span>
+<span class="source-line-no">169</span><span id="line-169">   * Get the data type adapter instance of the provided adapter class.</span>
+<span class="source-line-no">170</span><span id="line-170">   * &lt;p&gt;</span>
+<span class="source-line-no">171</span><span id="line-171">   * If the provided adapter Java class is the {@link NullJavaTypeAdapter} class,</span>
+<span class="source-line-no">172</span><span id="line-172">   * then the default data type adapter will be returned.</span>
+<span class="source-line-no">173</span><span id="line-173">   *</span>
+<span class="source-line-no">174</span><span id="line-174">   * @param adapterClass</span>
+<span class="source-line-no">175</span><span id="line-175">   *          the data type adapter class to get the data type adapter instance</span>
+<span class="source-line-no">176</span><span id="line-176">   *          for</span>
+<span class="source-line-no">177</span><span id="line-177">   * @param bindingContext</span>
+<span class="source-line-no">178</span><span id="line-178">   *          the Metaschema binding context used to lookup the data type adapter</span>
+<span class="source-line-no">179</span><span id="line-179">   * @return the data type adapter</span>
+<span class="source-line-no">180</span><span id="line-180">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">181</span><span id="line-181">   *           if the provided adapter is not registered with the binding context</span>
+<span class="source-line-no">182</span><span id="line-182">   */</span>
+<span class="source-line-no">183</span><span id="line-183">  @NonNull</span>
+<span class="source-line-no">184</span><span id="line-184">  public static IDataTypeAdapter&lt;?&gt; getDataTypeAdapter(</span>
+<span class="source-line-no">185</span><span id="line-185">      @NonNull Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; adapterClass,</span>
+<span class="source-line-no">186</span><span id="line-186">      @NonNull IBindingContext bindingContext) {</span>
+<span class="source-line-no">187</span><span id="line-187">    IDataTypeAdapter&lt;?&gt; retval;</span>
+<span class="source-line-no">188</span><span id="line-188">    if (NullJavaTypeAdapter.class.equals(adapterClass)) {</span>
+<span class="source-line-no">189</span><span id="line-189">      retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
+<span class="source-line-no">190</span><span id="line-190">    } else {</span>
+<span class="source-line-no">191</span><span id="line-191">      retval = bindingContext.getJavaTypeAdapterInstance(adapterClass);</span>
+<span class="source-line-no">192</span><span id="line-192">      if (retval == null) {</span>
+<span class="source-line-no">193</span><span id="line-193">        throw new IllegalArgumentException("Unable to get type adapter instance for class: " + adapterClass.getName());</span>
+<span class="source-line-no">194</span><span id="line-194">      }</span>
+<span class="source-line-no">195</span><span id="line-195">    }</span>
+<span class="source-line-no">196</span><span id="line-196">    return retval;</span>
+<span class="source-line-no">197</span><span id="line-197">  }</span>
+<span class="source-line-no">198</span><span id="line-198"></span>
+<span class="source-line-no">199</span><span id="line-199">  /**</span>
+<span class="source-line-no">200</span><span id="line-200">   * Given a provided default value string, get the data type specific default</span>
+<span class="source-line-no">201</span><span id="line-201">   * value using the provided data type adapter.</span>
+<span class="source-line-no">202</span><span id="line-202">   * &lt;p&gt;</span>
+<span class="source-line-no">203</span><span id="line-203">   * If the provided default value is {@link ModelUtil#NULL_VALUE}, then this</span>
+<span class="source-line-no">204</span><span id="line-204">   * method will return a {@code null} value.</span>
+<span class="source-line-no">205</span><span id="line-205">   *</span>
+<span class="source-line-no">206</span><span id="line-206">   * @param defaultValue</span>
+<span class="source-line-no">207</span><span id="line-207">   *          the string representation of the default value</span>
+<span class="source-line-no">208</span><span id="line-208">   * @param adapter</span>
+<span class="source-line-no">209</span><span id="line-209">   *          the data type adapter instance used to cast the default string value</span>
+<span class="source-line-no">210</span><span id="line-210">   *          to a data type specific object</span>
+<span class="source-line-no">211</span><span id="line-211">   * @return the data type specific object or {@code null} if the provided default</span>
+<span class="source-line-no">212</span><span id="line-212">   *         value was {@link ModelUtil#NULL_VALUE}</span>
+<span class="source-line-no">213</span><span id="line-213">   */</span>
+<span class="source-line-no">214</span><span id="line-214">  @Nullable</span>
+<span class="source-line-no">215</span><span id="line-215">  public static Object resolveDefaultValue(@NonNull String defaultValue, IDataTypeAdapter&lt;?&gt; adapter) {</span>
+<span class="source-line-no">216</span><span id="line-216">    Object retval = null;</span>
+<span class="source-line-no">217</span><span id="line-217">    if (!NULL_VALUE.equals(defaultValue)) {</span>
+<span class="source-line-no">218</span><span id="line-218">      retval = adapter.parse(defaultValue);</span>
+<span class="source-line-no">219</span><span id="line-219">    }</span>
+<span class="source-line-no">220</span><span id="line-220">    return retval;</span>
+<span class="source-line-no">221</span><span id="line-221">  }</span>
+<span class="source-line-no">222</span><span id="line-222"></span>
+<span class="source-line-no">223</span><span id="line-223">  /**</span>
+<span class="source-line-no">224</span><span id="line-224">   * Resolves an integer value by determining if an actual value is provided or</span>
+<span class="source-line-no">225</span><span id="line-225">   * -2^31, which indicates that no actual value was provided.</span>
+<span class="source-line-no">226</span><span id="line-226">   * &lt;p&gt;</span>
+<span class="source-line-no">227</span><span id="line-227">   * The integer value -2^31 cannot be used, since this indicates no value.</span>
+<span class="source-line-no">228</span><span id="line-228">   *</span>
+<span class="source-line-no">229</span><span id="line-229">   * @param value</span>
+<span class="source-line-no">230</span><span id="line-230">   *          the integer value to resolve</span>
+<span class="source-line-no">231</span><span id="line-231">   * @return the integer value or {@code null} if the provided value was -2^31</span>
+<span class="source-line-no">232</span><span id="line-232">   */</span>
+<span class="source-line-no">233</span><span id="line-233">  public static Integer resolveDefaultInteger(int value) {</span>
+<span class="source-line-no">234</span><span id="line-234">    return value == Integer.MIN_VALUE ? null : value;</span>
+<span class="source-line-no">235</span><span id="line-235">  }</span>
+<span class="source-line-no">236</span><span id="line-236"></span>
+<span class="source-line-no">237</span><span id="line-237">  /**</span>
+<span class="source-line-no">238</span><span id="line-238">   * Resolves a {@link GroupAs} annotation determining if an actual value is</span>
+<span class="source-line-no">239</span><span id="line-239">   * provided or if the value is the default, which indicates that no actual</span>
+<span class="source-line-no">240</span><span id="line-240">   * GroupAs was provided.</span>
+<span class="source-line-no">241</span><span id="line-241">   *</span>
+<span class="source-line-no">242</span><span id="line-242">   * @param groupAs</span>
+<span class="source-line-no">243</span><span id="line-243">   *          the GroupAs value to resolve</span>
+<span class="source-line-no">244</span><span id="line-244">   * @param module</span>
+<span class="source-line-no">245</span><span id="line-245">   *          the containing module instance</span>
+<span class="source-line-no">246</span><span id="line-246">   * @return a new {@link IGroupAs} instance or a singleton group as if the</span>
+<span class="source-line-no">247</span><span id="line-247">   *         provided value was the default value</span>
+<span class="source-line-no">248</span><span id="line-248">   */</span>
+<span class="source-line-no">249</span><span id="line-249">  @NonNull</span>
+<span class="source-line-no">250</span><span id="line-250">  public static IGroupAs resolveDefaultGroupAs(</span>
+<span class="source-line-no">251</span><span id="line-251">      @NonNull GroupAs groupAs,</span>
+<span class="source-line-no">252</span><span id="line-252">      @NonNull IModule module) {</span>
+<span class="source-line-no">253</span><span id="line-253">    return NULL_VALUE.equals(groupAs.name())</span>
+<span class="source-line-no">254</span><span id="line-254">        ? IGroupAs.SINGLETON_GROUP_AS</span>
+<span class="source-line-no">255</span><span id="line-255">        : new DefaultGroupAs(groupAs, module);</span>
+<span class="source-line-no">256</span><span id="line-256">  }</span>
+<span class="source-line-no">257</span><span id="line-257"></span>
+<span class="source-line-no">258</span><span id="line-258">  public static String toLocation(@NonNull IBoundObject obj) {</span>
+<span class="source-line-no">259</span><span id="line-259">    IMetaschemaData data = obj.getMetaschemaData();</span>
+<span class="source-line-no">260</span><span id="line-260"></span>
+<span class="source-line-no">261</span><span id="line-261">    String retval = "";</span>
+<span class="source-line-no">262</span><span id="line-262">    if (data != null) {</span>
+<span class="source-line-no">263</span><span id="line-263">      int line = data.getLine();</span>
+<span class="source-line-no">264</span><span id="line-264">      if (line &gt; -1) {</span>
+<span class="source-line-no">265</span><span id="line-265">        retval = line + ":" + data.getColumn();</span>
+<span class="source-line-no">266</span><span id="line-266">      }</span>
+<span class="source-line-no">267</span><span id="line-267">    }</span>
+<span class="source-line-no">268</span><span id="line-268">    return retval;</span>
+<span class="source-line-no">269</span><span id="line-269">  }</span>
+<span class="source-line-no">270</span><span id="line-270"></span>
+<span class="source-line-no">271</span><span id="line-271">  public static String toLocation(@NonNull IBoundObject obj, @Nullable URI uri) {</span>
+<span class="source-line-no">272</span><span id="line-272">    String retval = uri == null ? "" : uri.toASCIIString();</span>
+<span class="source-line-no">273</span><span id="line-273"></span>
+<span class="source-line-no">274</span><span id="line-274">    String location = toLocation(obj);</span>
+<span class="source-line-no">275</span><span id="line-275">    if (!location.isEmpty()) {</span>
+<span class="source-line-no">276</span><span id="line-276">      retval = retval.isEmpty() ? location : retval + "@" + location;</span>
+<span class="source-line-no">277</span><span id="line-277">    }</span>
+<span class="source-line-no">278</span><span id="line-278">    return retval;</span>
+<span class="source-line-no">279</span><span id="line-279">  }</span>
+<span class="source-line-no">280</span><span id="line-280"></span>
+<span class="source-line-no">281</span><span id="line-281">  public static Map.Entry&lt;IAttributable.Key, Set&lt;String&gt;&gt; toPropertyEntry(@NonNull Property property) {</span>
+<span class="source-line-no">282</span><span id="line-282">    String name = property.name();</span>
+<span class="source-line-no">283</span><span id="line-283">    String namespace = property.namespace();</span>
+<span class="source-line-no">284</span><span id="line-284">    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ok</span>
+<span class="source-line-no">285</span><span id="line-285">    IAttributable.Key key = IAttributable.key(namespace, name);</span>
+<span class="source-line-no">286</span><span id="line-286"></span>
+<span class="source-line-no">287</span><span id="line-287">    String[] values = property.values();</span>
+<span class="source-line-no">288</span><span id="line-288">    List&lt;String&gt; valueList = Arrays.asList(values);</span>
+<span class="source-line-no">289</span><span id="line-289">    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ok</span>
+<span class="source-line-no">290</span><span id="line-290">    Set&lt;String&gt; valueSet = new LinkedHashSet&lt;&gt;(valueList);</span>
+<span class="source-line-no">291</span><span id="line-291"></span>
+<span class="source-line-no">292</span><span id="line-292">    return Map.entry(key, CollectionUtil.unmodifiableSet(valueSet));</span>
+<span class="source-line-no">293</span><span id="line-293">  }</span>
+<span class="source-line-no">294</span><span id="line-294">}</span>
 
 
 

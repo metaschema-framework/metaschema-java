@@ -8,6 +8,8 @@ package gov.nist.secauto.metaschema.core.model.xml;
 import gov.nist.secauto.metaschema.core.model.AbstractModuleLoader;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlModule;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.METASCHEMADocument;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -15,13 +17,13 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,13 +43,26 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class ModuleLoader
     extends AbstractModuleLoader&lt;METASCHEMADocument, IXmlMetaschemaModule&gt; {
   private boolean resolveEntities; // = false;
+  @NonNull
+  private final List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors;
 
   /**
    * Construct a new Metaschema loader.
    */
   public ModuleLoader() {
-<span class="fc" id="L49">    this(CollectionUtil.emptyList());</span>
-<span class="fc" id="L50">  }</span>
+<span class="fc" id="L53">    this(CollectionUtil.&lt;IModuleLoader.IModulePostProcessor&gt;emptyList());</span>
+<span class="fc" id="L54">  }</span>
+
+  /**
+   * Construct a new Metaschema loader, which applies the provided constraints to
+   * loaded modules.
+   *
+   * @param constraints
+   *          a set of Metaschema module constraints
+   */
+  public ModuleLoader(@NonNull Collection&lt;IConstraintSet&gt; constraints) {
+<span class="nc" id="L64">    this(CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));</span>
+<span class="nc" id="L65">  }</span>
 
   /**
    * Construct a new Metaschema loader, which use the provided module post
@@ -57,9 +72,9 @@ public class ModuleLoader
    *          post processors to perform additional module customization when
    *          loading
    */
-  public ModuleLoader(@NonNull List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors) {
-<span class="fc" id="L61">    super(modulePostProcessors);</span>
-<span class="fc" id="L62">  }</span>
+<span class="fc" id="L75">  public ModuleLoader(@NonNull List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors) {</span>
+<span class="fc" id="L76">    this.modulePostProcessors = modulePostProcessors;</span>
+<span class="fc" id="L77">  }</span>
 
   /**
    * Enable a mode that allows XML entity resolution. This may be needed to parse
@@ -67,21 +82,28 @@ public class ModuleLoader
    * less secure, which requires trust in the resource content being parsed.
    */
   public void allowEntityResolution() {
-<span class="fc" id="L70">    resolveEntities = true;</span>
-<span class="fc" id="L71">  }</span>
+<span class="fc" id="L85">    resolveEntities = true;</span>
+<span class="fc" id="L86">  }</span>
 
   @Override
-  protected IXmlMetaschemaModule newModule(URI resource, METASCHEMADocument binding,
+  protected IXmlMetaschemaModule newModule(
+      URI resource,
+      METASCHEMADocument binding,
       List&lt;? extends IXmlMetaschemaModule&gt; importedModules)
       throws MetaschemaException {
-<span class="fc" id="L77">    return new XmlModule(resource, binding, importedModules);</span>
+<span class="fc" id="L94">    IXmlMetaschemaModule module = new XmlModule(resource, binding, importedModules);</span>
+
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    for (IModuleLoader.IModulePostProcessor postProcessor : modulePostProcessors) {</span>
+<span class="fc" id="L97">      postProcessor.processModule(module);</span>
+<span class="fc" id="L98">    }</span>
+<span class="fc" id="L99">    return module;</span>
   }
 
   @Override
   protected List&lt;URI&gt; getImports(METASCHEMADocument binding) {
-<span class="fc" id="L82">    return ObjectUtils.notNull(binding.getMETASCHEMA().getImportList().stream()</span>
-<span class="fc" id="L83">        .map(imported -&gt; URI.create(imported.getHref()))</span>
-<span class="fc" id="L84">        .collect(Collectors.toList()));</span>
+<span class="fc" id="L104">    return ObjectUtils.notNull(binding.getMETASCHEMA().getImportList().stream()</span>
+<span class="fc" id="L105">        .map(imported -&gt; URI.create(imported.getHref()))</span>
+<span class="fc" id="L106">        .collect(Collectors.toList()));</span>
   }
 
   /**
@@ -97,55 +119,43 @@ public class ModuleLoader
   protected METASCHEMADocument parseModule(@NonNull URI resource) throws IOException {
     METASCHEMADocument metaschemaXml;
     try {
-<span class="fc" id="L100">      XmlOptions options = new XmlOptions();</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">      if (resolveEntities) {</span>
-<span class="fc" id="L102">        SAXParserFactory factory = SAXParserFactory.newInstance();</span>
+<span class="fc" id="L122">      XmlOptions options = new XmlOptions();</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">      if (resolveEntities) {</span>
+<span class="fc" id="L124">        SAXParserFactory factory = SAXParserFactory.newInstance();</span>
 
         try {
           // factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-<span class="fc" id="L106">          factory.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, false);</span>
-<span class="fc" id="L107">          factory.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, true);</span>
-<span class="fc" id="L108">          factory.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, true);</span>
-<span class="fc" id="L109">          SAXParser parser = factory.newSAXParser();</span>
-<span class="fc" id="L110">          parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;file&quot;); // ,jar:file</span>
-<span class="fc" id="L111">          XMLReader reader = parser.getXMLReader();</span>
-<span class="fc" id="L112">          reader.setEntityResolver(new EntityResolver() {</span>
-
-            @Override
-            public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-<span class="nc" id="L116">              return null;</span>
-            }
-
-          });
-<span class="fc" id="L120">          options.setLoadUseXMLReader(reader);</span>
-<span class="nc" id="L121">        } catch (SAXException | ParserConfigurationException ex) {</span>
-<span class="nc" id="L122">          throw new IOException(ex);</span>
-<span class="fc" id="L123">        }</span>
+<span class="fc" id="L128">          factory.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, false);</span>
+<span class="fc" id="L129">          factory.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, true);</span>
+<span class="fc" id="L130">          factory.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, true);</span>
+<span class="fc" id="L131">          SAXParser parser = factory.newSAXParser();</span>
+<span class="fc" id="L132">          parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;file&quot;); // ,jar:file</span>
+<span class="fc" id="L133">          XMLReader reader = parser.getXMLReader();</span>
+<span class="pc" id="L134">          reader.setEntityResolver((publicId, systemId) -&gt; null);</span>
+<span class="fc" id="L135">          options.setLoadUseXMLReader(reader);</span>
+<span class="nc" id="L136">        } catch (SAXException | ParserConfigurationException ex) {</span>
+<span class="nc" id="L137">          throw new IOException(ex);</span>
+<span class="fc" id="L138">        }</span>
         // options.setLoadEntityBytesLimit(204800);
         // options.setLoadUseDefaultResolver();
-<span class="fc" id="L126">        options.setEntityResolver(new EntityResolver() {</span>
-
-          @Override
-          public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-<span class="fc" id="L130">            String effectiveSystemId = systemId;</span>
-            // TODO: It's very odd that the system id looks like this. Need to investigate.
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">            if (effectiveSystemId.startsWith(&quot;file://file://&quot;)) {</span>
-<span class="fc" id="L133">              effectiveSystemId = effectiveSystemId.substring(14);</span>
-            }
-<span class="fc" id="L135">            URI resolvedSystemId = resource.resolve(effectiveSystemId);</span>
-<span class="fc" id="L136">            return new InputSource(resolvedSystemId.toString());</span>
+<span class="fc" id="L141">        options.setEntityResolver((publicId, systemId) -&gt; {</span>
+<span class="fc" id="L142">          String effectiveSystemId = systemId;</span>
+          // TODO: It's very odd that the system id looks like this. Need to investigate.
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">          if (effectiveSystemId.startsWith(&quot;file://file://&quot;)) {</span>
+<span class="fc" id="L145">            effectiveSystemId = effectiveSystemId.substring(14);</span>
           }
-
+<span class="fc" id="L147">          URI resolvedSystemId = resource.resolve(effectiveSystemId);</span>
+<span class="fc" id="L148">          return new InputSource(resolvedSystemId.toString());</span>
         });
-<span class="fc" id="L140">        options.setLoadDTDGrammar(true);</span>
+<span class="fc" id="L150">        options.setLoadDTDGrammar(true);</span>
       }
-<span class="fc" id="L142">      options.setBaseURI(resource);</span>
-<span class="fc" id="L143">      options.setLoadLineNumbers();</span>
-<span class="fc" id="L144">      metaschemaXml = ObjectUtils.notNull(METASCHEMADocument.Factory.parse(resource.toURL(), options));</span>
-<span class="nc" id="L145">    } catch (XmlException ex) {</span>
-<span class="nc" id="L146">      throw new IOException(ex);</span>
-<span class="fc" id="L147">    }</span>
-<span class="fc" id="L148">    return metaschemaXml;</span>
+<span class="fc" id="L152">      options.setBaseURI(resource);</span>
+<span class="fc" id="L153">      options.setLoadLineNumbers();</span>
+<span class="fc" id="L154">      metaschemaXml = ObjectUtils.notNull(METASCHEMADocument.Factory.parse(resource.toURL(), options));</span>
+<span class="nc" id="L155">    } catch (XmlException ex) {</span>
+<span class="nc" id="L156">      throw new IOException(ex);</span>
+<span class="fc" id="L157">    }</span>
+<span class="fc" id="L158">    return metaschemaXml;</span>
   }
 
 }

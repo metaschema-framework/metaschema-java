@@ -25,401 +25,401 @@
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
 <span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.ISequenceType;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapItem;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.impl.MapItemN;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
-<span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">import java.util.LinkedHashMap;</span>
-<span class="source-line-no">023</span><span id="line-23">import java.util.List;</span>
-<span class="source-line-no">024</span><span id="line-24">import java.util.Map;</span>
-<span class="source-line-no">025</span><span id="line-25">import java.util.Set;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">030</span><span id="line-30"></span>
-<span class="source-line-no">031</span><span id="line-31">/**</span>
-<span class="source-line-no">032</span><span id="line-32"> * Represents a mapping of {@link IMapKey} keys to values.</span>
-<span class="source-line-no">033</span><span id="line-33"> *</span>
-<span class="source-line-no">034</span><span id="line-34"> * @param &lt;VALUE&gt;</span>
-<span class="source-line-no">035</span><span id="line-35"> *          the value type</span>
-<span class="source-line-no">036</span><span id="line-36"> */</span>
-<span class="source-line-no">037</span><span id="line-37">public interface IMapItem&lt;VALUE extends ICollectionValue&gt;</span>
-<span class="source-line-no">038</span><span id="line-38">    extends IFunction, IItem, Map&lt;IMapKey, VALUE&gt;, IPrintable {</span>
-<span class="source-line-no">039</span><span id="line-39">  /**</span>
-<span class="source-line-no">040</span><span id="line-40">   * Get an empty, immutable map item.</span>
-<span class="source-line-no">041</span><span id="line-41">   *</span>
-<span class="source-line-no">042</span><span id="line-42">   * @param &lt;V&gt;</span>
-<span class="source-line-no">043</span><span id="line-43">   *          the value Java type</span>
-<span class="source-line-no">044</span><span id="line-44">   * @return an immutable map item</span>
-<span class="source-line-no">045</span><span id="line-45">   */</span>
-<span class="source-line-no">046</span><span id="line-46">  @NonNull</span>
-<span class="source-line-no">047</span><span id="line-47">  static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; empty() {</span>
-<span class="source-line-no">048</span><span id="line-48">    return AbstractMapItem.empty();</span>
-<span class="source-line-no">049</span><span id="line-49">  }</span>
-<span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">  @Override</span>
-<span class="source-line-no">052</span><span id="line-52">  default QName getQName() {</span>
-<span class="source-line-no">053</span><span id="line-53">    return AbstractArrayItem.QNAME;</span>
-<span class="source-line-no">054</span><span id="line-54">  }</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  @Override</span>
-<span class="source-line-no">057</span><span id="line-57">  default Set&lt;FunctionProperty&gt; getProperties() {</span>
-<span class="source-line-no">058</span><span id="line-58">    return AbstractArrayItem.PROPERTIES;</span>
-<span class="source-line-no">059</span><span id="line-59">  }</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  @Override</span>
-<span class="source-line-no">062</span><span id="line-62">  default boolean isDeterministic() {</span>
-<span class="source-line-no">063</span><span id="line-63">    return true;</span>
-<span class="source-line-no">064</span><span id="line-64">  }</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">  @Override</span>
-<span class="source-line-no">067</span><span id="line-67">  default boolean isContextDepenent() {</span>
-<span class="source-line-no">068</span><span id="line-68">    return false;</span>
-<span class="source-line-no">069</span><span id="line-69">  }</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  @Override</span>
-<span class="source-line-no">072</span><span id="line-72">  default boolean isFocusDepenent() {</span>
-<span class="source-line-no">073</span><span id="line-73">    return false;</span>
-<span class="source-line-no">074</span><span id="line-74">  }</span>
-<span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">  @Override</span>
-<span class="source-line-no">077</span><span id="line-77">  default List&lt;IArgument&gt; getArguments() {</span>
-<span class="source-line-no">078</span><span id="line-78">    return AbstractArrayItem.ARGUMENTS;</span>
-<span class="source-line-no">079</span><span id="line-79">  }</span>
-<span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">  @Override</span>
-<span class="source-line-no">082</span><span id="line-82">  default int arity() {</span>
-<span class="source-line-no">083</span><span id="line-83">    return 1;</span>
-<span class="source-line-no">084</span><span id="line-84">  }</span>
-<span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">  @Override</span>
-<span class="source-line-no">087</span><span id="line-87">  default boolean isArityUnbounded() {</span>
-<span class="source-line-no">088</span><span id="line-88">    return false;</span>
-<span class="source-line-no">089</span><span id="line-89">  }</span>
-<span class="source-line-no">090</span><span id="line-90"></span>
-<span class="source-line-no">091</span><span id="line-91">  @Override</span>
-<span class="source-line-no">092</span><span id="line-92">  default ISequenceType getResult() {</span>
-<span class="source-line-no">093</span><span id="line-93">    return AbstractArrayItem.RESULT;</span>
-<span class="source-line-no">094</span><span id="line-94">  }</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">  @Override</span>
-<span class="source-line-no">097</span><span id="line-97">  ISequence&lt;?&gt; execute(List&lt;? extends ISequence&lt;?&gt;&gt; arguments, DynamicContext dynamicContext, ISequence&lt;?&gt; focus);</span>
-<span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">  @Override</span>
-<span class="source-line-no">100</span><span id="line-100">  default String toSignature() {</span>
-<span class="source-line-no">101</span><span id="line-101">    return "array()";</span>
-<span class="source-line-no">102</span><span id="line-102">  }</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  @Override</span>
-<span class="source-line-no">105</span><span id="line-105">  Map&lt;IMapKey, VALUE&gt; getValue();</span>
-<span class="source-line-no">106</span><span id="line-106"></span>
-<span class="source-line-no">107</span><span id="line-107">  @Override</span>
-<span class="source-line-no">108</span><span id="line-108">  default boolean hasValue() {</span>
-<span class="source-line-no">109</span><span id="line-109">    return true;</span>
-<span class="source-line-no">110</span><span id="line-110">  }</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  /**</span>
-<span class="source-line-no">113</span><span id="line-113">   * Determine if this sequence is empty.</span>
-<span class="source-line-no">114</span><span id="line-114">   *</span>
-<span class="source-line-no">115</span><span id="line-115">   * @return {@code true} if the sequence contains no items, or {@code false}</span>
-<span class="source-line-no">116</span><span id="line-116">   *         otherwise</span>
-<span class="source-line-no">117</span><span id="line-117">   */</span>
-<span class="source-line-no">118</span><span id="line-118">  @Override</span>
-<span class="source-line-no">119</span><span id="line-119">  default boolean isEmpty() {</span>
-<span class="source-line-no">120</span><span id="line-120">    return getValue().isEmpty();</span>
-<span class="source-line-no">121</span><span id="line-121">  }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">  /**</span>
-<span class="source-line-no">124</span><span id="line-124">   * Get the count of items in this sequence.</span>
-<span class="source-line-no">125</span><span id="line-125">   *</span>
-<span class="source-line-no">126</span><span id="line-126">   * @return the count of items</span>
-<span class="source-line-no">127</span><span id="line-127">   */</span>
-<span class="source-line-no">128</span><span id="line-128">  @Override</span>
-<span class="source-line-no">129</span><span id="line-129">  default int size() {</span>
-<span class="source-line-no">130</span><span id="line-130">    return getValue().size();</span>
-<span class="source-line-no">131</span><span id="line-131"></span>
-<span class="source-line-no">132</span><span id="line-132">  }</span>
-<span class="source-line-no">133</span><span id="line-133"></span>
-<span class="source-line-no">134</span><span id="line-134">  @Override</span>
-<span class="source-line-no">135</span><span id="line-135">  default ISequence&lt;IMapItem&lt;VALUE&gt;&gt; asSequence() {</span>
-<span class="source-line-no">136</span><span id="line-136">    return ISequence.of(this);</span>
-<span class="source-line-no">137</span><span id="line-137">  }</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">  /**</span>
-<span class="source-line-no">140</span><span id="line-140">   * Get a new, immutable map item that contains the items in the provided map.</span>
-<span class="source-line-no">141</span><span id="line-141">   *</span>
-<span class="source-line-no">142</span><span id="line-142">   * @param &lt;V&gt;</span>
-<span class="source-line-no">143</span><span id="line-143">   *          the value Java type</span>
-<span class="source-line-no">144</span><span id="line-144">   * @param map</span>
-<span class="source-line-no">145</span><span id="line-145">   *          the map whose items are to be added to the new map</span>
-<span class="source-line-no">146</span><span id="line-146">   * @return a map item containing the specified entries</span>
-<span class="source-line-no">147</span><span id="line-147">   */</span>
-<span class="source-line-no">148</span><span id="line-148">  @NonNull</span>
-<span class="source-line-no">149</span><span id="line-149">  static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; ofCollection( // NOPMD - intentional</span>
-<span class="source-line-no">150</span><span id="line-150">      @NonNull Map&lt;IMapKey, V&gt; map) {</span>
-<span class="source-line-no">151</span><span id="line-151">    return map.isEmpty() ? empty() : new MapItemN&lt;&gt;(map);</span>
-<span class="source-line-no">152</span><span id="line-152">  }</span>
-<span class="source-line-no">153</span><span id="line-153"></span>
-<span class="source-line-no">154</span><span id="line-154">  /**</span>
-<span class="source-line-no">155</span><span id="line-155">   * Returns an unmodifiable map item containing zero mappings.</span>
-<span class="source-line-no">156</span><span id="line-156">   *</span>
-<span class="source-line-no">157</span><span id="line-157">   * @param &lt;V&gt;</span>
-<span class="source-line-no">158</span><span id="line-158">   *          the value Java type</span>
-<span class="source-line-no">159</span><span id="line-159">   * @return an empty {@code IMapItem}</span>
-<span class="source-line-no">160</span><span id="line-160">   */</span>
-<span class="source-line-no">161</span><span id="line-161">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">162</span><span id="line-162">  @NonNull</span>
-<span class="source-line-no">163</span><span id="line-163">  static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; of() {</span>
-<span class="source-line-no">164</span><span id="line-164">    return AbstractMapItem.empty();</span>
-<span class="source-line-no">165</span><span id="line-165">  }</span>
-<span class="source-line-no">166</span><span id="line-166"></span>
-<span class="source-line-no">167</span><span id="line-167">  /**</span>
-<span class="source-line-no">168</span><span id="line-168">   * Returns an unmodifiable map item containing a single mapping.</span>
-<span class="source-line-no">169</span><span id="line-169">   *</span>
-<span class="source-line-no">170</span><span id="line-170">   * @param &lt;K&gt;</span>
-<span class="source-line-no">171</span><span id="line-171">   *          the map item's key type</span>
-<span class="source-line-no">172</span><span id="line-172">   * @param &lt;V&gt;</span>
-<span class="source-line-no">173</span><span id="line-173">   *          the map item's value type</span>
-<span class="source-line-no">174</span><span id="line-174">   * @param k1</span>
-<span class="source-line-no">175</span><span id="line-175">   *          the mapping's key</span>
-<span class="source-line-no">176</span><span id="line-176">   * @param v1</span>
-<span class="source-line-no">177</span><span id="line-177">   *          the mapping's value</span>
-<span class="source-line-no">178</span><span id="line-178">   * @return a map item containing the specified mapping</span>
-<span class="source-line-no">179</span><span id="line-179">   * @throws NullPointerException</span>
-<span class="source-line-no">180</span><span id="line-180">   *           if the key or the value is {@code null}</span>
-<span class="source-line-no">181</span><span id="line-181">   */</span>
-<span class="source-line-no">182</span><span id="line-182">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">183</span><span id="line-183">  @NonNull</span>
-<span class="source-line-no">184</span><span id="line-184">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt; IMapItem&lt;V&gt; of(@NonNull K k1, @NonNull V v1) {</span>
-<span class="source-line-no">185</span><span id="line-185">    return new MapItemN&lt;&gt;(entry(k1, v1));</span>
-<span class="source-line-no">186</span><span id="line-186">  }</span>
-<span class="source-line-no">187</span><span id="line-187"></span>
-<span class="source-line-no">188</span><span id="line-188">  /**</span>
-<span class="source-line-no">189</span><span id="line-189">   * Returns an unmodifiable map item containing two mappings.</span>
-<span class="source-line-no">190</span><span id="line-190">   *</span>
-<span class="source-line-no">191</span><span id="line-191">   * @param &lt;K&gt;</span>
-<span class="source-line-no">192</span><span id="line-192">   *          the map item's key type</span>
-<span class="source-line-no">193</span><span id="line-193">   * @param &lt;V&gt;</span>
-<span class="source-line-no">194</span><span id="line-194">   *          the map item's value type</span>
-<span class="source-line-no">195</span><span id="line-195">   * @param k1</span>
-<span class="source-line-no">196</span><span id="line-196">   *          the first mapping's key</span>
-<span class="source-line-no">197</span><span id="line-197">   * @param v1</span>
-<span class="source-line-no">198</span><span id="line-198">   *          the first mapping's value</span>
-<span class="source-line-no">199</span><span id="line-199">   * @param k2</span>
-<span class="source-line-no">200</span><span id="line-200">   *          the second mapping's key</span>
-<span class="source-line-no">201</span><span id="line-201">   * @param v2</span>
-<span class="source-line-no">202</span><span id="line-202">   *          the second mapping's value</span>
-<span class="source-line-no">203</span><span id="line-203">   * @return a map item containing the specified mappings</span>
-<span class="source-line-no">204</span><span id="line-204">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">205</span><span id="line-205">   *           if the keys are duplicates</span>
-<span class="source-line-no">206</span><span id="line-206">   * @throws NullPointerException</span>
-<span class="source-line-no">207</span><span id="line-207">   *           if any key or value is {@code null}</span>
-<span class="source-line-no">208</span><span id="line-208">   */</span>
-<span class="source-line-no">209</span><span id="line-209">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">210</span><span id="line-210">  @NonNull</span>
-<span class="source-line-no">211</span><span id="line-211">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt; IMapItem&lt;V&gt; of(</span>
-<span class="source-line-no">212</span><span id="line-212">      @NonNull K k1, @NonNull V v1,</span>
-<span class="source-line-no">213</span><span id="line-213">      @NonNull K k2, @NonNull V v2) {</span>
-<span class="source-line-no">214</span><span id="line-214">    return new MapItemN&lt;&gt;(</span>
-<span class="source-line-no">215</span><span id="line-215">        entry(k1, v1),</span>
-<span class="source-line-no">216</span><span id="line-216">        entry(k2, v2));</span>
-<span class="source-line-no">217</span><span id="line-217">  }</span>
-<span class="source-line-no">218</span><span id="line-218"></span>
-<span class="source-line-no">219</span><span id="line-219">  /**</span>
-<span class="source-line-no">220</span><span id="line-220">   * Returns an unmodifiable map item containing three mappings.</span>
-<span class="source-line-no">221</span><span id="line-221">   *</span>
-<span class="source-line-no">222</span><span id="line-222">   * @param &lt;K&gt;</span>
-<span class="source-line-no">223</span><span id="line-223">   *          the map item's key type</span>
-<span class="source-line-no">224</span><span id="line-224">   * @param &lt;V&gt;</span>
-<span class="source-line-no">225</span><span id="line-225">   *          the map item's value type</span>
-<span class="source-line-no">226</span><span id="line-226">   * @param k1</span>
-<span class="source-line-no">227</span><span id="line-227">   *          the first mapping's key</span>
-<span class="source-line-no">228</span><span id="line-228">   * @param v1</span>
-<span class="source-line-no">229</span><span id="line-229">   *          the first mapping's value</span>
-<span class="source-line-no">230</span><span id="line-230">   * @param k2</span>
-<span class="source-line-no">231</span><span id="line-231">   *          the second mapping's key</span>
-<span class="source-line-no">232</span><span id="line-232">   * @param v2</span>
-<span class="source-line-no">233</span><span id="line-233">   *          the second mapping's value</span>
-<span class="source-line-no">234</span><span id="line-234">   * @param k3</span>
-<span class="source-line-no">235</span><span id="line-235">   *          the third mapping's key</span>
-<span class="source-line-no">236</span><span id="line-236">   * @param v3</span>
-<span class="source-line-no">237</span><span id="line-237">   *          the third mapping's value</span>
-<span class="source-line-no">238</span><span id="line-238">   * @return a map item containing the specified mappings</span>
-<span class="source-line-no">239</span><span id="line-239">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">240</span><span id="line-240">   *           if there are any duplicate keys</span>
-<span class="source-line-no">241</span><span id="line-241">   * @throws NullPointerException</span>
-<span class="source-line-no">242</span><span id="line-242">   *           if any key or value is {@code null}</span>
-<span class="source-line-no">243</span><span id="line-243">   */</span>
-<span class="source-line-no">244</span><span id="line-244">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">245</span><span id="line-245">  @NonNull</span>
-<span class="source-line-no">246</span><span id="line-246">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
-<span class="source-line-no">247</span><span id="line-247">      IMapItem&lt;V&gt; of(</span>
-<span class="source-line-no">248</span><span id="line-248">          @NonNull K k1, @NonNull V v1,</span>
-<span class="source-line-no">249</span><span id="line-249">          @NonNull K k2, @NonNull V v2,</span>
-<span class="source-line-no">250</span><span id="line-250">          @NonNull K k3, @NonNull V v3) {</span>
-<span class="source-line-no">251</span><span id="line-251">    return new MapItemN&lt;&gt;(</span>
-<span class="source-line-no">252</span><span id="line-252">        entry(k1, v1),</span>
-<span class="source-line-no">253</span><span id="line-253">        entry(k2, v2),</span>
-<span class="source-line-no">254</span><span id="line-254">        entry(k3, v3));</span>
-<span class="source-line-no">255</span><span id="line-255">  }</span>
-<span class="source-line-no">256</span><span id="line-256"></span>
-<span class="source-line-no">257</span><span id="line-257">  /**</span>
-<span class="source-line-no">258</span><span id="line-258">   * Returns an unmodifiable map item containing four mappings.</span>
-<span class="source-line-no">259</span><span id="line-259">   *</span>
-<span class="source-line-no">260</span><span id="line-260">   * @param &lt;K&gt;</span>
-<span class="source-line-no">261</span><span id="line-261">   *          the map item's key type</span>
-<span class="source-line-no">262</span><span id="line-262">   * @param &lt;V&gt;</span>
-<span class="source-line-no">263</span><span id="line-263">   *          the map item's value type</span>
-<span class="source-line-no">264</span><span id="line-264">   * @param k1</span>
-<span class="source-line-no">265</span><span id="line-265">   *          the first mapping's key</span>
-<span class="source-line-no">266</span><span id="line-266">   * @param v1</span>
-<span class="source-line-no">267</span><span id="line-267">   *          the first mapping's value</span>
-<span class="source-line-no">268</span><span id="line-268">   * @param k2</span>
-<span class="source-line-no">269</span><span id="line-269">   *          the second mapping's key</span>
-<span class="source-line-no">270</span><span id="line-270">   * @param v2</span>
-<span class="source-line-no">271</span><span id="line-271">   *          the second mapping's value</span>
-<span class="source-line-no">272</span><span id="line-272">   * @param k3</span>
-<span class="source-line-no">273</span><span id="line-273">   *          the third mapping's key</span>
-<span class="source-line-no">274</span><span id="line-274">   * @param v3</span>
-<span class="source-line-no">275</span><span id="line-275">   *          the third mapping's value</span>
-<span class="source-line-no">276</span><span id="line-276">   * @param k4</span>
-<span class="source-line-no">277</span><span id="line-277">   *          the fourth mapping's key</span>
-<span class="source-line-no">278</span><span id="line-278">   * @param v4</span>
-<span class="source-line-no">279</span><span id="line-279">   *          the fourth mapping's value</span>
-<span class="source-line-no">280</span><span id="line-280">   * @return a map item containing the specified mappings</span>
-<span class="source-line-no">281</span><span id="line-281">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">282</span><span id="line-282">   *           if there are any duplicate keys</span>
-<span class="source-line-no">283</span><span id="line-283">   * @throws NullPointerException</span>
-<span class="source-line-no">284</span><span id="line-284">   *           if any key or value is {@code null}</span>
-<span class="source-line-no">285</span><span id="line-285">   */</span>
-<span class="source-line-no">286</span><span id="line-286">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">287</span><span id="line-287">  @NonNull</span>
-<span class="source-line-no">288</span><span id="line-288">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
-<span class="source-line-no">289</span><span id="line-289">      IMapItem&lt;V&gt; of(</span>
-<span class="source-line-no">290</span><span id="line-290">          @NonNull K k1, @NonNull V v1,</span>
-<span class="source-line-no">291</span><span id="line-291">          @NonNull K k2, @NonNull V v2,</span>
-<span class="source-line-no">292</span><span id="line-292">          @NonNull K k3, @NonNull V v3,</span>
-<span class="source-line-no">293</span><span id="line-293">          @NonNull K k4, @NonNull V v4) {</span>
-<span class="source-line-no">294</span><span id="line-294">    return new MapItemN&lt;&gt;(</span>
-<span class="source-line-no">295</span><span id="line-295">        entry(k1, v1),</span>
-<span class="source-line-no">296</span><span id="line-296">        entry(k2, v2),</span>
-<span class="source-line-no">297</span><span id="line-297">        entry(k3, v3),</span>
-<span class="source-line-no">298</span><span id="line-298">        entry(k4, v4));</span>
-<span class="source-line-no">299</span><span id="line-299">  }</span>
-<span class="source-line-no">300</span><span id="line-300"></span>
-<span class="source-line-no">301</span><span id="line-301">  /**</span>
-<span class="source-line-no">302</span><span id="line-302">   * Returns an unmodifiable map item containing five mappings.</span>
-<span class="source-line-no">303</span><span id="line-303">   *</span>
-<span class="source-line-no">304</span><span id="line-304">   * @param &lt;K&gt;</span>
-<span class="source-line-no">305</span><span id="line-305">   *          the map item's key type</span>
-<span class="source-line-no">306</span><span id="line-306">   * @param &lt;V&gt;</span>
-<span class="source-line-no">307</span><span id="line-307">   *          the map item's value type</span>
-<span class="source-line-no">308</span><span id="line-308">   * @param k1</span>
-<span class="source-line-no">309</span><span id="line-309">   *          the first mapping's key</span>
-<span class="source-line-no">310</span><span id="line-310">   * @param v1</span>
-<span class="source-line-no">311</span><span id="line-311">   *          the first mapping's value</span>
-<span class="source-line-no">312</span><span id="line-312">   * @param k2</span>
-<span class="source-line-no">313</span><span id="line-313">   *          the second mapping's key</span>
-<span class="source-line-no">314</span><span id="line-314">   * @param v2</span>
-<span class="source-line-no">315</span><span id="line-315">   *          the second mapping's value</span>
-<span class="source-line-no">316</span><span id="line-316">   * @param k3</span>
-<span class="source-line-no">317</span><span id="line-317">   *          the third mapping's key</span>
-<span class="source-line-no">318</span><span id="line-318">   * @param v3</span>
-<span class="source-line-no">319</span><span id="line-319">   *          the third mapping's value</span>
-<span class="source-line-no">320</span><span id="line-320">   * @param k4</span>
-<span class="source-line-no">321</span><span id="line-321">   *          the fourth mapping's key</span>
-<span class="source-line-no">322</span><span id="line-322">   * @param v4</span>
-<span class="source-line-no">323</span><span id="line-323">   *          the fourth mapping's value</span>
-<span class="source-line-no">324</span><span id="line-324">   * @param k5</span>
-<span class="source-line-no">325</span><span id="line-325">   *          the fifth mapping's key</span>
-<span class="source-line-no">326</span><span id="line-326">   * @param v5</span>
-<span class="source-line-no">327</span><span id="line-327">   *          the fifth mapping's value</span>
-<span class="source-line-no">328</span><span id="line-328">   * @return a map item containing the specified mappings</span>
-<span class="source-line-no">329</span><span id="line-329">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">330</span><span id="line-330">   *           if there are any duplicate keys</span>
-<span class="source-line-no">331</span><span id="line-331">   * @throws NullPointerException</span>
-<span class="source-line-no">332</span><span id="line-332">   *           if any key or value is {@code null}</span>
-<span class="source-line-no">333</span><span id="line-333">   */</span>
-<span class="source-line-no">334</span><span id="line-334">  @SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">335</span><span id="line-335">  @NonNull</span>
-<span class="source-line-no">336</span><span id="line-336">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
-<span class="source-line-no">337</span><span id="line-337">      IMapItem&lt;V&gt; of(</span>
-<span class="source-line-no">338</span><span id="line-338">          @NonNull K k1, @NonNull V v1,</span>
-<span class="source-line-no">339</span><span id="line-339">          @NonNull K k2, @NonNull V v2,</span>
-<span class="source-line-no">340</span><span id="line-340">          @NonNull K k3, @NonNull V v3,</span>
-<span class="source-line-no">341</span><span id="line-341">          @NonNull K k4, @NonNull V v4,</span>
-<span class="source-line-no">342</span><span id="line-342">          @NonNull K k5, @NonNull V v5) {</span>
-<span class="source-line-no">343</span><span id="line-343">    return new MapItemN&lt;&gt;(</span>
-<span class="source-line-no">344</span><span id="line-344">        entry(k1, v1),</span>
-<span class="source-line-no">345</span><span id="line-345">        entry(k2, v2),</span>
-<span class="source-line-no">346</span><span id="line-346">        entry(k3, v3),</span>
-<span class="source-line-no">347</span><span id="line-347">        entry(k4, v4),</span>
-<span class="source-line-no">348</span><span id="line-348">        entry(k5, v5));</span>
-<span class="source-line-no">349</span><span id="line-349">  }</span>
-<span class="source-line-no">350</span><span id="line-350"></span>
-<span class="source-line-no">351</span><span id="line-351">  /**</span>
-<span class="source-line-no">352</span><span id="line-352">   * Returns an unmodifiable map item containing six mappings.</span>
-<span class="source-line-no">353</span><span id="line-353">   *</span>
-<span class="source-line-no">354</span><span id="line-354">   * @param &lt;K&gt;</span>
-<span class="source-line-no">355</span><span id="line-355">   *          the map item's key type</span>
-<span class="source-line-no">356</span><span id="line-356">   * @param &lt;V&gt;</span>
-<span class="source-line-no">357</span><span id="line-357">   *          the map item's value type</span>
-<span class="source-line-no">358</span><span id="line-358">   * @param k1</span>
-<span class="source-line-no">359</span><span id="line-359">   *          the first mapping's key</span>
-<span class="source-line-no">360</span><span id="line-360">   * @param v1</span>
-<span class="source-line-no">361</span><span id="line-361">   *          the first mapping's value</span>
-<span class="source-line-no">362</span><span id="line-362">   * @param k2</span>
-<span class="source-line-no">363</span><span id="line-363">   *          the second mapping's key</span>
-<span class="source-line-no">364</span><span id="line-364">   * @param v2</span>
-<span class="source-line-no">365</span><span id="line-365">   *          the second mapping's value</span>
-<span class="source-line-no">366</span><span id="line-366">   * @param k3</span>
-<span class="source-line-no">367</span><span id="line-367">   *          the third mapping's key</span>
-<span class="source-line-no">368</span><span id="line-368">   * @param v3</span>
-<span class="source-line-no">369</span><span id="line-369">   *          the third mapping's value</span>
-<span class="source-line-no">370</span><span id="line-370">   * @param k4</span>
-<span class="source-line-no">371</span><span id="line-371">   *          the fourth mapping's key</span>
-<span class="source-line-no">372</span><span id="line-372">   * @param v4</span>
-<span class="source-line-no">373</span><span id="line-373">   *          the fourth mapping's value</span>
-<span class="source-line-no">374</span><span id="line-374">   * @param k5</span>
-<span class="source-line-no">375</span><span id="line-375">   *          the fifth mapping's key</span>
-<span class="source-line-no">376</span><span id="line-376">   * @param v5</span>
-<span class="source-line-no">377</span><span id="line-377">   *          the fifth mapping's value</span>
-<span class="source-line-no">378</span><span id="line-378">   * @param k6</span>
-<span class="source-line-no">379</span><span id="line-379">   *          the sixth mapping's key</span>
-<span class="source-line-no">380</span><span id="line-380">   * @param v6</span>
-<span class="source-line-no">381</span><span id="line-381">   *          the sixth mapping's value</span>
-<span class="source-line-no">382</span><span id="line-382">   * @return a map item containing the specified mappings</span>
-<span class="source-line-no">383</span><span id="line-383">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">384</span><span id="line-384">   *           if there are any duplicate keys</span>
-<span class="source-line-no">385</span><span id="line-385">   * @throws NullPointerException</span>
-<span class="source-line-no">386</span><span id="line-386">   *           if any key or value is {@code null}</span>
-<span class="source-line-no">387</span><span id="line-387">   */</span>
-<span class="source-line-no">388</span><span id="line-388">  @SuppressWarnings({</span>
-<span class="source-line-no">389</span><span id="line-389">      "PMD.ExcessiveParameterList",</span>
-<span class="source-line-no">390</span><span id="line-390">      "PMD.ShortMethodName"</span>
-<span class="source-line-no">391</span><span id="line-391">  })</span>
-<span class="source-line-no">392</span><span id="line-392">  @NonNull</span>
-<span class="source-line-no">393</span><span id="line-393">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
-<span class="source-line-no">394</span><span id="line-394">      IMapItem&lt;V&gt; of(</span>
-<span class="source-line-no">395</span><span id="line-395">          @NonNull K k1, @NonNull V v1,</span>
-<span class="source-line-no">396</span><span id="line-396">          @NonNull K k2, @NonNull V v2,</span>
-<span class="source-line-no">397</span><span id="line-397">          @NonNull K k3, @NonNull V v3,</span>
-<span class="source-line-no">398</span><span id="line-398">          @NonNull K k4, @NonNull V v4,</span>
-<span class="source-line-no">399</span><span id="line-399">          @NonNull K k5, @NonNull V v5,</span>
-<span class="source-line-no">400</span><span id="line-400">          @NonNull K k6, @NonNull V v6) {</span>
-<span class="source-line-no">401</span><span id="line-401">    return new MapItemN&lt;&gt;(</span>
-<span class="source-line-no">402</span><span id="line-402">        entry(k1, v1),</span>
-<span class="source-line-no">403</span><span id="line-403">        entry(k2, v2),</span>
-<span class="source-line-no">404</span><span id="line-404">        entry(k3, v3),</span>
-<span class="source-line-no">405</span><span id="line-405">        entry(k4, v4),</span>
-<span class="source-line-no">406</span><span id="line-406">        entry(k5, v5),</span>
-<span class="source-line-no">407</span><span id="line-407">        entry(k6, v6));</span>
-<span class="source-line-no">408</span><span id="line-408">  }</span>
-<span class="source-line-no">409</span><span id="line-409"></span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapItem;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.impl.MapItemN;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
+<span class="source-line-no">020</span><span id="line-20"></span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.LinkedHashMap;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.List;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.util.Map;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.util.Set;</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">029</span><span id="line-29"></span>
+<span class="source-line-no">030</span><span id="line-30">/**</span>
+<span class="source-line-no">031</span><span id="line-31"> * Represents a mapping of {@link IMapKey} keys to values.</span>
+<span class="source-line-no">032</span><span id="line-32"> *</span>
+<span class="source-line-no">033</span><span id="line-33"> * @param &lt;VALUE&gt;</span>
+<span class="source-line-no">034</span><span id="line-34"> *          the value type</span>
+<span class="source-line-no">035</span><span id="line-35"> */</span>
+<span class="source-line-no">036</span><span id="line-36">public interface IMapItem&lt;VALUE extends ICollectionValue&gt;</span>
+<span class="source-line-no">037</span><span id="line-37">    extends IFunction, IItem, Map&lt;IMapKey, VALUE&gt;, IPrintable {</span>
+<span class="source-line-no">038</span><span id="line-38">  /**</span>
+<span class="source-line-no">039</span><span id="line-39">   * Get an empty, immutable map item.</span>
+<span class="source-line-no">040</span><span id="line-40">   *</span>
+<span class="source-line-no">041</span><span id="line-41">   * @param &lt;V&gt;</span>
+<span class="source-line-no">042</span><span id="line-42">   *          the value Java type</span>
+<span class="source-line-no">043</span><span id="line-43">   * @return an immutable map item</span>
+<span class="source-line-no">044</span><span id="line-44">   */</span>
+<span class="source-line-no">045</span><span id="line-45">  @NonNull</span>
+<span class="source-line-no">046</span><span id="line-46">  static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; empty() {</span>
+<span class="source-line-no">047</span><span id="line-47">    return AbstractMapItem.empty();</span>
+<span class="source-line-no">048</span><span id="line-48">  }</span>
+<span class="source-line-no">049</span><span id="line-49"></span>
+<span class="source-line-no">050</span><span id="line-50">  @Override</span>
+<span class="source-line-no">051</span><span id="line-51">  default QName getQName() {</span>
+<span class="source-line-no">052</span><span id="line-52">    return AbstractMapItem.QNAME;</span>
+<span class="source-line-no">053</span><span id="line-53">  }</span>
+<span class="source-line-no">054</span><span id="line-54"></span>
+<span class="source-line-no">055</span><span id="line-55">  @Override</span>
+<span class="source-line-no">056</span><span id="line-56">  default Set&lt;FunctionProperty&gt; getProperties() {</span>
+<span class="source-line-no">057</span><span id="line-57">    return AbstractMapItem.PROPERTIES;</span>
+<span class="source-line-no">058</span><span id="line-58">  }</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  @Override</span>
+<span class="source-line-no">061</span><span id="line-61">  default boolean isDeterministic() {</span>
+<span class="source-line-no">062</span><span id="line-62">    return true;</span>
+<span class="source-line-no">063</span><span id="line-63">  }</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">  @Override</span>
+<span class="source-line-no">066</span><span id="line-66">  default boolean isContextDepenent() {</span>
+<span class="source-line-no">067</span><span id="line-67">    return false;</span>
+<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  @Override</span>
+<span class="source-line-no">071</span><span id="line-71">  default boolean isFocusDepenent() {</span>
+<span class="source-line-no">072</span><span id="line-72">    return false;</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  @Override</span>
+<span class="source-line-no">076</span><span id="line-76">  default List&lt;IArgument&gt; getArguments() {</span>
+<span class="source-line-no">077</span><span id="line-77">    return AbstractMapItem.ARGUMENTS;</span>
+<span class="source-line-no">078</span><span id="line-78">  }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">  @Override</span>
+<span class="source-line-no">081</span><span id="line-81">  default int arity() {</span>
+<span class="source-line-no">082</span><span id="line-82">    return 1;</span>
+<span class="source-line-no">083</span><span id="line-83">  }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">  @Override</span>
+<span class="source-line-no">086</span><span id="line-86">  default boolean isArityUnbounded() {</span>
+<span class="source-line-no">087</span><span id="line-87">    return false;</span>
+<span class="source-line-no">088</span><span id="line-88">  }</span>
+<span class="source-line-no">089</span><span id="line-89"></span>
+<span class="source-line-no">090</span><span id="line-90">  @Override</span>
+<span class="source-line-no">091</span><span id="line-91">  default ISequenceType getResult() {</span>
+<span class="source-line-no">092</span><span id="line-92">    return AbstractMapItem.RESULT;</span>
+<span class="source-line-no">093</span><span id="line-93">  }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">  @Override</span>
+<span class="source-line-no">096</span><span id="line-96">  ISequence&lt;?&gt; execute(List&lt;? extends ISequence&lt;?&gt;&gt; arguments, DynamicContext dynamicContext, ISequence&lt;?&gt; focus);</span>
+<span class="source-line-no">097</span><span id="line-97"></span>
+<span class="source-line-no">098</span><span id="line-98">  @Override</span>
+<span class="source-line-no">099</span><span id="line-99">  default String toSignature() {</span>
+<span class="source-line-no">100</span><span id="line-100">    return "array()";</span>
+<span class="source-line-no">101</span><span id="line-101">  }</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">  @Override</span>
+<span class="source-line-no">104</span><span id="line-104">  Map&lt;IMapKey, VALUE&gt; getValue();</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">  @Override</span>
+<span class="source-line-no">107</span><span id="line-107">  default boolean hasValue() {</span>
+<span class="source-line-no">108</span><span id="line-108">    return true;</span>
+<span class="source-line-no">109</span><span id="line-109">  }</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">  /**</span>
+<span class="source-line-no">112</span><span id="line-112">   * Determine if this sequence is empty.</span>
+<span class="source-line-no">113</span><span id="line-113">   *</span>
+<span class="source-line-no">114</span><span id="line-114">   * @return {@code true} if the sequence contains no items, or {@code false}</span>
+<span class="source-line-no">115</span><span id="line-115">   *         otherwise</span>
+<span class="source-line-no">116</span><span id="line-116">   */</span>
+<span class="source-line-no">117</span><span id="line-117">  @Override</span>
+<span class="source-line-no">118</span><span id="line-118">  default boolean isEmpty() {</span>
+<span class="source-line-no">119</span><span id="line-119">    return getValue().isEmpty();</span>
+<span class="source-line-no">120</span><span id="line-120">  }</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">  /**</span>
+<span class="source-line-no">123</span><span id="line-123">   * Get the count of items in this sequence.</span>
+<span class="source-line-no">124</span><span id="line-124">   *</span>
+<span class="source-line-no">125</span><span id="line-125">   * @return the count of items</span>
+<span class="source-line-no">126</span><span id="line-126">   */</span>
+<span class="source-line-no">127</span><span id="line-127">  @Override</span>
+<span class="source-line-no">128</span><span id="line-128">  default int size() {</span>
+<span class="source-line-no">129</span><span id="line-129">    return getValue().size();</span>
+<span class="source-line-no">130</span><span id="line-130"></span>
+<span class="source-line-no">131</span><span id="line-131">  }</span>
+<span class="source-line-no">132</span><span id="line-132"></span>
+<span class="source-line-no">133</span><span id="line-133">  @Override</span>
+<span class="source-line-no">134</span><span id="line-134">  default ISequence&lt;IMapItem&lt;VALUE&gt;&gt; asSequence() {</span>
+<span class="source-line-no">135</span><span id="line-135">    return ISequence.of(this);</span>
+<span class="source-line-no">136</span><span id="line-136">  }</span>
+<span class="source-line-no">137</span><span id="line-137"></span>
+<span class="source-line-no">138</span><span id="line-138">  /**</span>
+<span class="source-line-no">139</span><span id="line-139">   * Get a new, immutable map item that contains the items in the provided map.</span>
+<span class="source-line-no">140</span><span id="line-140">   *</span>
+<span class="source-line-no">141</span><span id="line-141">   * @param &lt;V&gt;</span>
+<span class="source-line-no">142</span><span id="line-142">   *          the value Java type</span>
+<span class="source-line-no">143</span><span id="line-143">   * @param map</span>
+<span class="source-line-no">144</span><span id="line-144">   *          the map whose items are to be added to the new map</span>
+<span class="source-line-no">145</span><span id="line-145">   * @return a map item containing the specified entries</span>
+<span class="source-line-no">146</span><span id="line-146">   */</span>
+<span class="source-line-no">147</span><span id="line-147">  @NonNull</span>
+<span class="source-line-no">148</span><span id="line-148">  static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; ofCollection( // NOPMD - intentional</span>
+<span class="source-line-no">149</span><span id="line-149">      @NonNull Map&lt;IMapKey, V&gt; map) {</span>
+<span class="source-line-no">150</span><span id="line-150">    return map.isEmpty() ? empty() : new MapItemN&lt;&gt;(map);</span>
+<span class="source-line-no">151</span><span id="line-151">  }</span>
+<span class="source-line-no">152</span><span id="line-152"></span>
+<span class="source-line-no">153</span><span id="line-153">  /**</span>
+<span class="source-line-no">154</span><span id="line-154">   * Returns an unmodifiable map item containing zero mappings.</span>
+<span class="source-line-no">155</span><span id="line-155">   *</span>
+<span class="source-line-no">156</span><span id="line-156">   * @param &lt;V&gt;</span>
+<span class="source-line-no">157</span><span id="line-157">   *          the value Java type</span>
+<span class="source-line-no">158</span><span id="line-158">   * @return an empty {@code IMapItem}</span>
+<span class="source-line-no">159</span><span id="line-159">   */</span>
+<span class="source-line-no">160</span><span id="line-160">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">161</span><span id="line-161">  @NonNull</span>
+<span class="source-line-no">162</span><span id="line-162">  static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; of() {</span>
+<span class="source-line-no">163</span><span id="line-163">    return AbstractMapItem.empty();</span>
+<span class="source-line-no">164</span><span id="line-164">  }</span>
+<span class="source-line-no">165</span><span id="line-165"></span>
+<span class="source-line-no">166</span><span id="line-166">  /**</span>
+<span class="source-line-no">167</span><span id="line-167">   * Returns an unmodifiable map item containing a single mapping.</span>
+<span class="source-line-no">168</span><span id="line-168">   *</span>
+<span class="source-line-no">169</span><span id="line-169">   * @param &lt;K&gt;</span>
+<span class="source-line-no">170</span><span id="line-170">   *          the map item's key type</span>
+<span class="source-line-no">171</span><span id="line-171">   * @param &lt;V&gt;</span>
+<span class="source-line-no">172</span><span id="line-172">   *          the map item's value type</span>
+<span class="source-line-no">173</span><span id="line-173">   * @param k1</span>
+<span class="source-line-no">174</span><span id="line-174">   *          the mapping's key</span>
+<span class="source-line-no">175</span><span id="line-175">   * @param v1</span>
+<span class="source-line-no">176</span><span id="line-176">   *          the mapping's value</span>
+<span class="source-line-no">177</span><span id="line-177">   * @return a map item containing the specified mapping</span>
+<span class="source-line-no">178</span><span id="line-178">   * @throws NullPointerException</span>
+<span class="source-line-no">179</span><span id="line-179">   *           if the key or the value is {@code null}</span>
+<span class="source-line-no">180</span><span id="line-180">   */</span>
+<span class="source-line-no">181</span><span id="line-181">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">182</span><span id="line-182">  @NonNull</span>
+<span class="source-line-no">183</span><span id="line-183">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt; IMapItem&lt;V&gt; of(@NonNull K k1, @NonNull V v1) {</span>
+<span class="source-line-no">184</span><span id="line-184">    return new MapItemN&lt;&gt;(entry(k1, v1));</span>
+<span class="source-line-no">185</span><span id="line-185">  }</span>
+<span class="source-line-no">186</span><span id="line-186"></span>
+<span class="source-line-no">187</span><span id="line-187">  /**</span>
+<span class="source-line-no">188</span><span id="line-188">   * Returns an unmodifiable map item containing two mappings.</span>
+<span class="source-line-no">189</span><span id="line-189">   *</span>
+<span class="source-line-no">190</span><span id="line-190">   * @param &lt;K&gt;</span>
+<span class="source-line-no">191</span><span id="line-191">   *          the map item's key type</span>
+<span class="source-line-no">192</span><span id="line-192">   * @param &lt;V&gt;</span>
+<span class="source-line-no">193</span><span id="line-193">   *          the map item's value type</span>
+<span class="source-line-no">194</span><span id="line-194">   * @param k1</span>
+<span class="source-line-no">195</span><span id="line-195">   *          the first mapping's key</span>
+<span class="source-line-no">196</span><span id="line-196">   * @param v1</span>
+<span class="source-line-no">197</span><span id="line-197">   *          the first mapping's value</span>
+<span class="source-line-no">198</span><span id="line-198">   * @param k2</span>
+<span class="source-line-no">199</span><span id="line-199">   *          the second mapping's key</span>
+<span class="source-line-no">200</span><span id="line-200">   * @param v2</span>
+<span class="source-line-no">201</span><span id="line-201">   *          the second mapping's value</span>
+<span class="source-line-no">202</span><span id="line-202">   * @return a map item containing the specified mappings</span>
+<span class="source-line-no">203</span><span id="line-203">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">204</span><span id="line-204">   *           if the keys are duplicates</span>
+<span class="source-line-no">205</span><span id="line-205">   * @throws NullPointerException</span>
+<span class="source-line-no">206</span><span id="line-206">   *           if any key or value is {@code null}</span>
+<span class="source-line-no">207</span><span id="line-207">   */</span>
+<span class="source-line-no">208</span><span id="line-208">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">209</span><span id="line-209">  @NonNull</span>
+<span class="source-line-no">210</span><span id="line-210">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt; IMapItem&lt;V&gt; of(</span>
+<span class="source-line-no">211</span><span id="line-211">      @NonNull K k1, @NonNull V v1,</span>
+<span class="source-line-no">212</span><span id="line-212">      @NonNull K k2, @NonNull V v2) {</span>
+<span class="source-line-no">213</span><span id="line-213">    return new MapItemN&lt;&gt;(</span>
+<span class="source-line-no">214</span><span id="line-214">        entry(k1, v1),</span>
+<span class="source-line-no">215</span><span id="line-215">        entry(k2, v2));</span>
+<span class="source-line-no">216</span><span id="line-216">  }</span>
+<span class="source-line-no">217</span><span id="line-217"></span>
+<span class="source-line-no">218</span><span id="line-218">  /**</span>
+<span class="source-line-no">219</span><span id="line-219">   * Returns an unmodifiable map item containing three mappings.</span>
+<span class="source-line-no">220</span><span id="line-220">   *</span>
+<span class="source-line-no">221</span><span id="line-221">   * @param &lt;K&gt;</span>
+<span class="source-line-no">222</span><span id="line-222">   *          the map item's key type</span>
+<span class="source-line-no">223</span><span id="line-223">   * @param &lt;V&gt;</span>
+<span class="source-line-no">224</span><span id="line-224">   *          the map item's value type</span>
+<span class="source-line-no">225</span><span id="line-225">   * @param k1</span>
+<span class="source-line-no">226</span><span id="line-226">   *          the first mapping's key</span>
+<span class="source-line-no">227</span><span id="line-227">   * @param v1</span>
+<span class="source-line-no">228</span><span id="line-228">   *          the first mapping's value</span>
+<span class="source-line-no">229</span><span id="line-229">   * @param k2</span>
+<span class="source-line-no">230</span><span id="line-230">   *          the second mapping's key</span>
+<span class="source-line-no">231</span><span id="line-231">   * @param v2</span>
+<span class="source-line-no">232</span><span id="line-232">   *          the second mapping's value</span>
+<span class="source-line-no">233</span><span id="line-233">   * @param k3</span>
+<span class="source-line-no">234</span><span id="line-234">   *          the third mapping's key</span>
+<span class="source-line-no">235</span><span id="line-235">   * @param v3</span>
+<span class="source-line-no">236</span><span id="line-236">   *          the third mapping's value</span>
+<span class="source-line-no">237</span><span id="line-237">   * @return a map item containing the specified mappings</span>
+<span class="source-line-no">238</span><span id="line-238">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">239</span><span id="line-239">   *           if there are any duplicate keys</span>
+<span class="source-line-no">240</span><span id="line-240">   * @throws NullPointerException</span>
+<span class="source-line-no">241</span><span id="line-241">   *           if any key or value is {@code null}</span>
+<span class="source-line-no">242</span><span id="line-242">   */</span>
+<span class="source-line-no">243</span><span id="line-243">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">244</span><span id="line-244">  @NonNull</span>
+<span class="source-line-no">245</span><span id="line-245">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
+<span class="source-line-no">246</span><span id="line-246">      IMapItem&lt;V&gt; of(</span>
+<span class="source-line-no">247</span><span id="line-247">          @NonNull K k1, @NonNull V v1,</span>
+<span class="source-line-no">248</span><span id="line-248">          @NonNull K k2, @NonNull V v2,</span>
+<span class="source-line-no">249</span><span id="line-249">          @NonNull K k3, @NonNull V v3) {</span>
+<span class="source-line-no">250</span><span id="line-250">    return new MapItemN&lt;&gt;(</span>
+<span class="source-line-no">251</span><span id="line-251">        entry(k1, v1),</span>
+<span class="source-line-no">252</span><span id="line-252">        entry(k2, v2),</span>
+<span class="source-line-no">253</span><span id="line-253">        entry(k3, v3));</span>
+<span class="source-line-no">254</span><span id="line-254">  }</span>
+<span class="source-line-no">255</span><span id="line-255"></span>
+<span class="source-line-no">256</span><span id="line-256">  /**</span>
+<span class="source-line-no">257</span><span id="line-257">   * Returns an unmodifiable map item containing four mappings.</span>
+<span class="source-line-no">258</span><span id="line-258">   *</span>
+<span class="source-line-no">259</span><span id="line-259">   * @param &lt;K&gt;</span>
+<span class="source-line-no">260</span><span id="line-260">   *          the map item's key type</span>
+<span class="source-line-no">261</span><span id="line-261">   * @param &lt;V&gt;</span>
+<span class="source-line-no">262</span><span id="line-262">   *          the map item's value type</span>
+<span class="source-line-no">263</span><span id="line-263">   * @param k1</span>
+<span class="source-line-no">264</span><span id="line-264">   *          the first mapping's key</span>
+<span class="source-line-no">265</span><span id="line-265">   * @param v1</span>
+<span class="source-line-no">266</span><span id="line-266">   *          the first mapping's value</span>
+<span class="source-line-no">267</span><span id="line-267">   * @param k2</span>
+<span class="source-line-no">268</span><span id="line-268">   *          the second mapping's key</span>
+<span class="source-line-no">269</span><span id="line-269">   * @param v2</span>
+<span class="source-line-no">270</span><span id="line-270">   *          the second mapping's value</span>
+<span class="source-line-no">271</span><span id="line-271">   * @param k3</span>
+<span class="source-line-no">272</span><span id="line-272">   *          the third mapping's key</span>
+<span class="source-line-no">273</span><span id="line-273">   * @param v3</span>
+<span class="source-line-no">274</span><span id="line-274">   *          the third mapping's value</span>
+<span class="source-line-no">275</span><span id="line-275">   * @param k4</span>
+<span class="source-line-no">276</span><span id="line-276">   *          the fourth mapping's key</span>
+<span class="source-line-no">277</span><span id="line-277">   * @param v4</span>
+<span class="source-line-no">278</span><span id="line-278">   *          the fourth mapping's value</span>
+<span class="source-line-no">279</span><span id="line-279">   * @return a map item containing the specified mappings</span>
+<span class="source-line-no">280</span><span id="line-280">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">281</span><span id="line-281">   *           if there are any duplicate keys</span>
+<span class="source-line-no">282</span><span id="line-282">   * @throws NullPointerException</span>
+<span class="source-line-no">283</span><span id="line-283">   *           if any key or value is {@code null}</span>
+<span class="source-line-no">284</span><span id="line-284">   */</span>
+<span class="source-line-no">285</span><span id="line-285">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">286</span><span id="line-286">  @NonNull</span>
+<span class="source-line-no">287</span><span id="line-287">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
+<span class="source-line-no">288</span><span id="line-288">      IMapItem&lt;V&gt; of(</span>
+<span class="source-line-no">289</span><span id="line-289">          @NonNull K k1, @NonNull V v1,</span>
+<span class="source-line-no">290</span><span id="line-290">          @NonNull K k2, @NonNull V v2,</span>
+<span class="source-line-no">291</span><span id="line-291">          @NonNull K k3, @NonNull V v3,</span>
+<span class="source-line-no">292</span><span id="line-292">          @NonNull K k4, @NonNull V v4) {</span>
+<span class="source-line-no">293</span><span id="line-293">    return new MapItemN&lt;&gt;(</span>
+<span class="source-line-no">294</span><span id="line-294">        entry(k1, v1),</span>
+<span class="source-line-no">295</span><span id="line-295">        entry(k2, v2),</span>
+<span class="source-line-no">296</span><span id="line-296">        entry(k3, v3),</span>
+<span class="source-line-no">297</span><span id="line-297">        entry(k4, v4));</span>
+<span class="source-line-no">298</span><span id="line-298">  }</span>
+<span class="source-line-no">299</span><span id="line-299"></span>
+<span class="source-line-no">300</span><span id="line-300">  /**</span>
+<span class="source-line-no">301</span><span id="line-301">   * Returns an unmodifiable map item containing five mappings.</span>
+<span class="source-line-no">302</span><span id="line-302">   *</span>
+<span class="source-line-no">303</span><span id="line-303">   * @param &lt;K&gt;</span>
+<span class="source-line-no">304</span><span id="line-304">   *          the map item's key type</span>
+<span class="source-line-no">305</span><span id="line-305">   * @param &lt;V&gt;</span>
+<span class="source-line-no">306</span><span id="line-306">   *          the map item's value type</span>
+<span class="source-line-no">307</span><span id="line-307">   * @param k1</span>
+<span class="source-line-no">308</span><span id="line-308">   *          the first mapping's key</span>
+<span class="source-line-no">309</span><span id="line-309">   * @param v1</span>
+<span class="source-line-no">310</span><span id="line-310">   *          the first mapping's value</span>
+<span class="source-line-no">311</span><span id="line-311">   * @param k2</span>
+<span class="source-line-no">312</span><span id="line-312">   *          the second mapping's key</span>
+<span class="source-line-no">313</span><span id="line-313">   * @param v2</span>
+<span class="source-line-no">314</span><span id="line-314">   *          the second mapping's value</span>
+<span class="source-line-no">315</span><span id="line-315">   * @param k3</span>
+<span class="source-line-no">316</span><span id="line-316">   *          the third mapping's key</span>
+<span class="source-line-no">317</span><span id="line-317">   * @param v3</span>
+<span class="source-line-no">318</span><span id="line-318">   *          the third mapping's value</span>
+<span class="source-line-no">319</span><span id="line-319">   * @param k4</span>
+<span class="source-line-no">320</span><span id="line-320">   *          the fourth mapping's key</span>
+<span class="source-line-no">321</span><span id="line-321">   * @param v4</span>
+<span class="source-line-no">322</span><span id="line-322">   *          the fourth mapping's value</span>
+<span class="source-line-no">323</span><span id="line-323">   * @param k5</span>
+<span class="source-line-no">324</span><span id="line-324">   *          the fifth mapping's key</span>
+<span class="source-line-no">325</span><span id="line-325">   * @param v5</span>
+<span class="source-line-no">326</span><span id="line-326">   *          the fifth mapping's value</span>
+<span class="source-line-no">327</span><span id="line-327">   * @return a map item containing the specified mappings</span>
+<span class="source-line-no">328</span><span id="line-328">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">329</span><span id="line-329">   *           if there are any duplicate keys</span>
+<span class="source-line-no">330</span><span id="line-330">   * @throws NullPointerException</span>
+<span class="source-line-no">331</span><span id="line-331">   *           if any key or value is {@code null}</span>
+<span class="source-line-no">332</span><span id="line-332">   */</span>
+<span class="source-line-no">333</span><span id="line-333">  @SuppressWarnings("PMD.ShortMethodName")</span>
+<span class="source-line-no">334</span><span id="line-334">  @NonNull</span>
+<span class="source-line-no">335</span><span id="line-335">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
+<span class="source-line-no">336</span><span id="line-336">      IMapItem&lt;V&gt; of(</span>
+<span class="source-line-no">337</span><span id="line-337">          @NonNull K k1, @NonNull V v1,</span>
+<span class="source-line-no">338</span><span id="line-338">          @NonNull K k2, @NonNull V v2,</span>
+<span class="source-line-no">339</span><span id="line-339">          @NonNull K k3, @NonNull V v3,</span>
+<span class="source-line-no">340</span><span id="line-340">          @NonNull K k4, @NonNull V v4,</span>
+<span class="source-line-no">341</span><span id="line-341">          @NonNull K k5, @NonNull V v5) {</span>
+<span class="source-line-no">342</span><span id="line-342">    return new MapItemN&lt;&gt;(</span>
+<span class="source-line-no">343</span><span id="line-343">        entry(k1, v1),</span>
+<span class="source-line-no">344</span><span id="line-344">        entry(k2, v2),</span>
+<span class="source-line-no">345</span><span id="line-345">        entry(k3, v3),</span>
+<span class="source-line-no">346</span><span id="line-346">        entry(k4, v4),</span>
+<span class="source-line-no">347</span><span id="line-347">        entry(k5, v5));</span>
+<span class="source-line-no">348</span><span id="line-348">  }</span>
+<span class="source-line-no">349</span><span id="line-349"></span>
+<span class="source-line-no">350</span><span id="line-350">  /**</span>
+<span class="source-line-no">351</span><span id="line-351">   * Returns an unmodifiable map item containing six mappings.</span>
+<span class="source-line-no">352</span><span id="line-352">   *</span>
+<span class="source-line-no">353</span><span id="line-353">   * @param &lt;K&gt;</span>
+<span class="source-line-no">354</span><span id="line-354">   *          the map item's key type</span>
+<span class="source-line-no">355</span><span id="line-355">   * @param &lt;V&gt;</span>
+<span class="source-line-no">356</span><span id="line-356">   *          the map item's value type</span>
+<span class="source-line-no">357</span><span id="line-357">   * @param k1</span>
+<span class="source-line-no">358</span><span id="line-358">   *          the first mapping's key</span>
+<span class="source-line-no">359</span><span id="line-359">   * @param v1</span>
+<span class="source-line-no">360</span><span id="line-360">   *          the first mapping's value</span>
+<span class="source-line-no">361</span><span id="line-361">   * @param k2</span>
+<span class="source-line-no">362</span><span id="line-362">   *          the second mapping's key</span>
+<span class="source-line-no">363</span><span id="line-363">   * @param v2</span>
+<span class="source-line-no">364</span><span id="line-364">   *          the second mapping's value</span>
+<span class="source-line-no">365</span><span id="line-365">   * @param k3</span>
+<span class="source-line-no">366</span><span id="line-366">   *          the third mapping's key</span>
+<span class="source-line-no">367</span><span id="line-367">   * @param v3</span>
+<span class="source-line-no">368</span><span id="line-368">   *          the third mapping's value</span>
+<span class="source-line-no">369</span><span id="line-369">   * @param k4</span>
+<span class="source-line-no">370</span><span id="line-370">   *          the fourth mapping's key</span>
+<span class="source-line-no">371</span><span id="line-371">   * @param v4</span>
+<span class="source-line-no">372</span><span id="line-372">   *          the fourth mapping's value</span>
+<span class="source-line-no">373</span><span id="line-373">   * @param k5</span>
+<span class="source-line-no">374</span><span id="line-374">   *          the fifth mapping's key</span>
+<span class="source-line-no">375</span><span id="line-375">   * @param v5</span>
+<span class="source-line-no">376</span><span id="line-376">   *          the fifth mapping's value</span>
+<span class="source-line-no">377</span><span id="line-377">   * @param k6</span>
+<span class="source-line-no">378</span><span id="line-378">   *          the sixth mapping's key</span>
+<span class="source-line-no">379</span><span id="line-379">   * @param v6</span>
+<span class="source-line-no">380</span><span id="line-380">   *          the sixth mapping's value</span>
+<span class="source-line-no">381</span><span id="line-381">   * @return a map item containing the specified mappings</span>
+<span class="source-line-no">382</span><span id="line-382">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">383</span><span id="line-383">   *           if there are any duplicate keys</span>
+<span class="source-line-no">384</span><span id="line-384">   * @throws NullPointerException</span>
+<span class="source-line-no">385</span><span id="line-385">   *           if any key or value is {@code null}</span>
+<span class="source-line-no">386</span><span id="line-386">   */</span>
+<span class="source-line-no">387</span><span id="line-387">  @SuppressWarnings({</span>
+<span class="source-line-no">388</span><span id="line-388">      "PMD.ExcessiveParameterList",</span>
+<span class="source-line-no">389</span><span id="line-389">      "PMD.ShortMethodName"</span>
+<span class="source-line-no">390</span><span id="line-390">  })</span>
+<span class="source-line-no">391</span><span id="line-391">  @NonNull</span>
+<span class="source-line-no">392</span><span id="line-392">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
+<span class="source-line-no">393</span><span id="line-393">      IMapItem&lt;V&gt; of(</span>
+<span class="source-line-no">394</span><span id="line-394">          @NonNull K k1, @NonNull V v1,</span>
+<span class="source-line-no">395</span><span id="line-395">          @NonNull K k2, @NonNull V v2,</span>
+<span class="source-line-no">396</span><span id="line-396">          @NonNull K k3, @NonNull V v3,</span>
+<span class="source-line-no">397</span><span id="line-397">          @NonNull K k4, @NonNull V v4,</span>
+<span class="source-line-no">398</span><span id="line-398">          @NonNull K k5, @NonNull V v5,</span>
+<span class="source-line-no">399</span><span id="line-399">          @NonNull K k6, @NonNull V v6) {</span>
+<span class="source-line-no">400</span><span id="line-400">    return new MapItemN&lt;&gt;(</span>
+<span class="source-line-no">401</span><span id="line-401">        entry(k1, v1),</span>
+<span class="source-line-no">402</span><span id="line-402">        entry(k2, v2),</span>
+<span class="source-line-no">403</span><span id="line-403">        entry(k3, v3),</span>
+<span class="source-line-no">404</span><span id="line-404">        entry(k4, v4),</span>
+<span class="source-line-no">405</span><span id="line-405">        entry(k5, v5),</span>
+<span class="source-line-no">406</span><span id="line-406">        entry(k6, v6));</span>
+<span class="source-line-no">407</span><span id="line-407">  }</span>
+<span class="source-line-no">408</span><span id="line-408"></span>
+<span class="source-line-no">409</span><span id="line-409">  // CPD-OFF</span>
 <span class="source-line-no">410</span><span id="line-410">  /**</span>
 <span class="source-line-no">411</span><span id="line-411">   * Returns an unmodifiable map item containing seven mappings.</span>
 <span class="source-line-no">412</span><span id="line-412">   *</span>
@@ -705,103 +705,106 @@
 <span class="source-line-no">692</span><span id="line-692">        entry(k8, v8),</span>
 <span class="source-line-no">693</span><span id="line-693">        entry(k9, v9),</span>
 <span class="source-line-no">694</span><span id="line-694">        entry(k10, v10));</span>
-<span class="source-line-no">695</span><span id="line-695">  }</span>
-<span class="source-line-no">696</span><span id="line-696"></span>
-<span class="source-line-no">697</span><span id="line-697">  /**</span>
-<span class="source-line-no">698</span><span id="line-698">   * Returns an unmodifiable map item containing keys and values extracted from</span>
-<span class="source-line-no">699</span><span id="line-699">   * the given entries. The entries themselves are not stored in the map.</span>
-<span class="source-line-no">700</span><span id="line-700">   *</span>
-<span class="source-line-no">701</span><span id="line-701">   * @param &lt;K&gt;</span>
-<span class="source-line-no">702</span><span id="line-702">   *          the map item's key type</span>
-<span class="source-line-no">703</span><span id="line-703">   * @param &lt;V&gt;</span>
-<span class="source-line-no">704</span><span id="line-704">   *          the map item's value type</span>
-<span class="source-line-no">705</span><span id="line-705">   * @param entries</span>
-<span class="source-line-no">706</span><span id="line-706">   *          {@code Map.Entry}s containing the keys and values from which the map</span>
-<span class="source-line-no">707</span><span id="line-707">   *          is populated</span>
-<span class="source-line-no">708</span><span id="line-708">   * @return a map item containing the specified mappings</span>
-<span class="source-line-no">709</span><span id="line-709">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">710</span><span id="line-710">   *           if there are any duplicate keys</span>
-<span class="source-line-no">711</span><span id="line-711">   * @throws NullPointerException</span>
-<span class="source-line-no">712</span><span id="line-712">   *           if any entry, key, or value is {@code null}, or if the</span>
-<span class="source-line-no">713</span><span id="line-713">   *           {@code entries} array is {@code null}</span>
-<span class="source-line-no">714</span><span id="line-714">   */</span>
-<span class="source-line-no">715</span><span id="line-715">  @SafeVarargs</span>
-<span class="source-line-no">716</span><span id="line-716">  @SuppressWarnings("varargs")</span>
-<span class="source-line-no">717</span><span id="line-717">  @NonNull</span>
-<span class="source-line-no">718</span><span id="line-718">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
-<span class="source-line-no">719</span><span id="line-719">      IMapItem&lt;V&gt; ofEntries(Map.Entry&lt;IMapKey, ? extends V&gt;... entries) {</span>
-<span class="source-line-no">720</span><span id="line-720">    return entries.length == 0 ? empty() : new MapItemN&lt;&gt;(entries);</span>
-<span class="source-line-no">721</span><span id="line-721">  }</span>
-<span class="source-line-no">722</span><span id="line-722"></span>
-<span class="source-line-no">723</span><span id="line-723">  /**</span>
-<span class="source-line-no">724</span><span id="line-724">   * Returns an unmodifiable {@link Entry} containing the given key and value.</span>
-<span class="source-line-no">725</span><span id="line-725">   *</span>
-<span class="source-line-no">726</span><span id="line-726">   * @param &lt;V&gt;</span>
-<span class="source-line-no">727</span><span id="line-727">   *          the value's type</span>
-<span class="source-line-no">728</span><span id="line-728">   * @param key</span>
-<span class="source-line-no">729</span><span id="line-729">   *          the key</span>
-<span class="source-line-no">730</span><span id="line-730">   * @param value</span>
-<span class="source-line-no">731</span><span id="line-731">   *          the value</span>
-<span class="source-line-no">732</span><span id="line-732">   * @return an {@code Map.Entry} containing the specified key and value</span>
-<span class="source-line-no">733</span><span id="line-733">   * @throws NullPointerException</span>
-<span class="source-line-no">734</span><span id="line-734">   *           if the key or value is {@code null}</span>
-<span class="source-line-no">735</span><span id="line-735">   */</span>
-<span class="source-line-no">736</span><span id="line-736">  @NonNull</span>
-<span class="source-line-no">737</span><span id="line-737">  static &lt;V extends ICollectionValue&gt; Map.Entry&lt;IMapKey, V&gt; entry(@NonNull IAnyAtomicItem key, @NonNull V value) {</span>
-<span class="source-line-no">738</span><span id="line-738">    return entry(key.asMapKey(), value);</span>
-<span class="source-line-no">739</span><span id="line-739">  }</span>
-<span class="source-line-no">740</span><span id="line-740"></span>
-<span class="source-line-no">741</span><span id="line-741">  /**</span>
-<span class="source-line-no">742</span><span id="line-742">   * Returns an unmodifiable {@link Entry} containing the given key and value.</span>
-<span class="source-line-no">743</span><span id="line-743">   *</span>
-<span class="source-line-no">744</span><span id="line-744">   * @param &lt;V&gt;</span>
-<span class="source-line-no">745</span><span id="line-745">   *          the value's type</span>
-<span class="source-line-no">746</span><span id="line-746">   * @param key</span>
-<span class="source-line-no">747</span><span id="line-747">   *          the key</span>
-<span class="source-line-no">748</span><span id="line-748">   * @param value</span>
-<span class="source-line-no">749</span><span id="line-749">   *          the value</span>
-<span class="source-line-no">750</span><span id="line-750">   * @return an {@code Map.Entry} containing the specified key and value</span>
-<span class="source-line-no">751</span><span id="line-751">   * @throws NullPointerException</span>
-<span class="source-line-no">752</span><span id="line-752">   *           if the key or value is {@code null}</span>
-<span class="source-line-no">753</span><span id="line-753">   */</span>
-<span class="source-line-no">754</span><span id="line-754">  @SuppressWarnings("null")</span>
-<span class="source-line-no">755</span><span id="line-755">  @NonNull</span>
-<span class="source-line-no">756</span><span id="line-756">  static &lt;V extends ICollectionValue&gt; Map.Entry&lt;IMapKey, V&gt; entry(@NonNull IMapKey key, @NonNull V value) {</span>
-<span class="source-line-no">757</span><span id="line-757">    return Map.entry(key, value);</span>
-<span class="source-line-no">758</span><span id="line-758">  }</span>
-<span class="source-line-no">759</span><span id="line-759"></span>
-<span class="source-line-no">760</span><span id="line-760">  /**</span>
-<span class="source-line-no">761</span><span id="line-761">   * Returns an unmodifiable Map item containing the entries of the given Map. The</span>
-<span class="source-line-no">762</span><span id="line-762">   * given Map must not be null, and it must not contain any null keys or values.</span>
-<span class="source-line-no">763</span><span id="line-763">   * If the given Map is subsequently modified, the returned Map will not reflect</span>
-<span class="source-line-no">764</span><span id="line-764">   * such modifications.</span>
-<span class="source-line-no">765</span><span id="line-765">   *</span>
-<span class="source-line-no">766</span><span id="line-766">   * @param &lt;K&gt;</span>
-<span class="source-line-no">767</span><span id="line-767">   *          the map item's key type</span>
-<span class="source-line-no">768</span><span id="line-768">   * @param &lt;V&gt;</span>
-<span class="source-line-no">769</span><span id="line-769">   *          the map item's value type</span>
-<span class="source-line-no">770</span><span id="line-770">   * @param map</span>
-<span class="source-line-no">771</span><span id="line-771">   *          a map item from which entries are drawn, must be non-null</span>
-<span class="source-line-no">772</span><span id="line-772">   * @return a map item containing the entries of the given {@code Map}</span>
-<span class="source-line-no">773</span><span id="line-773">   * @throws NullPointerException</span>
-<span class="source-line-no">774</span><span id="line-774">   *           if map is null, or if it contains any null keys or values</span>
-<span class="source-line-no">775</span><span id="line-775">   */</span>
-<span class="source-line-no">776</span><span id="line-776">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">777</span><span id="line-777">  @NonNull</span>
-<span class="source-line-no">778</span><span id="line-778">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
-<span class="source-line-no">779</span><span id="line-779">      IMapItem&lt;V&gt; copyOf(Map&lt;? extends IMapKey, ? extends V&gt; map) {</span>
-<span class="source-line-no">780</span><span id="line-780">    return map instanceof IMapItem</span>
-<span class="source-line-no">781</span><span id="line-781">        ? (IMapItem&lt;V&gt;) map</span>
-<span class="source-line-no">782</span><span id="line-782">        : map.isEmpty()</span>
-<span class="source-line-no">783</span><span id="line-783">            ? empty()</span>
-<span class="source-line-no">784</span><span id="line-784">            : new MapItemN&lt;&gt;(new LinkedHashMap&lt;&gt;(map));</span>
-<span class="source-line-no">785</span><span id="line-785">  }</span>
-<span class="source-line-no">786</span><span id="line-786"></span>
-<span class="source-line-no">787</span><span id="line-787">  @Override</span>
-<span class="source-line-no">788</span><span id="line-788">  default void accept(IItemVisitor visitor) {</span>
-<span class="source-line-no">789</span><span id="line-789">    visitor.visit(this);</span>
-<span class="source-line-no">790</span><span id="line-790">  }</span>
-<span class="source-line-no">791</span><span id="line-791">}</span>
+<span class="source-line-no">695</span><span id="line-695">    // CPD-ON</span>
+<span class="source-line-no">696</span><span id="line-696">  }</span>
+<span class="source-line-no">697</span><span id="line-697"></span>
+<span class="source-line-no">698</span><span id="line-698">  /**</span>
+<span class="source-line-no">699</span><span id="line-699">   * Returns an unmodifiable map item containing keys and values extracted from</span>
+<span class="source-line-no">700</span><span id="line-700">   * the given entries. The entries themselves are not stored in the map.</span>
+<span class="source-line-no">701</span><span id="line-701">   *</span>
+<span class="source-line-no">702</span><span id="line-702">   * @param &lt;K&gt;</span>
+<span class="source-line-no">703</span><span id="line-703">   *          the map item's key type</span>
+<span class="source-line-no">704</span><span id="line-704">   * @param &lt;V&gt;</span>
+<span class="source-line-no">705</span><span id="line-705">   *          the map item's value type</span>
+<span class="source-line-no">706</span><span id="line-706">   * @param entries</span>
+<span class="source-line-no">707</span><span id="line-707">   *          {@code Map.Entry}s containing the keys and values from which the map</span>
+<span class="source-line-no">708</span><span id="line-708">   *          is populated</span>
+<span class="source-line-no">709</span><span id="line-709">   * @return a map item containing the specified mappings</span>
+<span class="source-line-no">710</span><span id="line-710">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">711</span><span id="line-711">   *           if there are any duplicate keys</span>
+<span class="source-line-no">712</span><span id="line-712">   * @throws NullPointerException</span>
+<span class="source-line-no">713</span><span id="line-713">   *           if any entry, key, or value is {@code null}, or if the</span>
+<span class="source-line-no">714</span><span id="line-714">   *           {@code entries} array is {@code null}</span>
+<span class="source-line-no">715</span><span id="line-715">   */</span>
+<span class="source-line-no">716</span><span id="line-716">  @SafeVarargs</span>
+<span class="source-line-no">717</span><span id="line-717">  @SuppressWarnings("varargs")</span>
+<span class="source-line-no">718</span><span id="line-718">  @NonNull</span>
+<span class="source-line-no">719</span><span id="line-719">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
+<span class="source-line-no">720</span><span id="line-720">      IMapItem&lt;V&gt; ofEntries(Map.Entry&lt;IMapKey, ? extends V&gt;... entries) {</span>
+<span class="source-line-no">721</span><span id="line-721">    return entries.length == 0 ? empty() : new MapItemN&lt;&gt;(entries);</span>
+<span class="source-line-no">722</span><span id="line-722">  }</span>
+<span class="source-line-no">723</span><span id="line-723"></span>
+<span class="source-line-no">724</span><span id="line-724">  /**</span>
+<span class="source-line-no">725</span><span id="line-725">   * Returns an unmodifiable {@link java.util.Map.Entry} containing the given key</span>
+<span class="source-line-no">726</span><span id="line-726">   * and value.</span>
+<span class="source-line-no">727</span><span id="line-727">   *</span>
+<span class="source-line-no">728</span><span id="line-728">   * @param &lt;V&gt;</span>
+<span class="source-line-no">729</span><span id="line-729">   *          the value's type</span>
+<span class="source-line-no">730</span><span id="line-730">   * @param key</span>
+<span class="source-line-no">731</span><span id="line-731">   *          the key</span>
+<span class="source-line-no">732</span><span id="line-732">   * @param value</span>
+<span class="source-line-no">733</span><span id="line-733">   *          the value</span>
+<span class="source-line-no">734</span><span id="line-734">   * @return an {@code Map.Entry} containing the specified key and value</span>
+<span class="source-line-no">735</span><span id="line-735">   * @throws NullPointerException</span>
+<span class="source-line-no">736</span><span id="line-736">   *           if the key or value is {@code null}</span>
+<span class="source-line-no">737</span><span id="line-737">   */</span>
+<span class="source-line-no">738</span><span id="line-738">  @NonNull</span>
+<span class="source-line-no">739</span><span id="line-739">  static &lt;V extends ICollectionValue&gt; Map.Entry&lt;IMapKey, V&gt; entry(@NonNull IAnyAtomicItem key, @NonNull V value) {</span>
+<span class="source-line-no">740</span><span id="line-740">    return entry(key.asMapKey(), value);</span>
+<span class="source-line-no">741</span><span id="line-741">  }</span>
+<span class="source-line-no">742</span><span id="line-742"></span>
+<span class="source-line-no">743</span><span id="line-743">  /**</span>
+<span class="source-line-no">744</span><span id="line-744">   * Returns an unmodifiable {@link java.util.Map.Entry} containing the given key</span>
+<span class="source-line-no">745</span><span id="line-745">   * and value.</span>
+<span class="source-line-no">746</span><span id="line-746">   *</span>
+<span class="source-line-no">747</span><span id="line-747">   * @param &lt;V&gt;</span>
+<span class="source-line-no">748</span><span id="line-748">   *          the value's type</span>
+<span class="source-line-no">749</span><span id="line-749">   * @param key</span>
+<span class="source-line-no">750</span><span id="line-750">   *          the key</span>
+<span class="source-line-no">751</span><span id="line-751">   * @param value</span>
+<span class="source-line-no">752</span><span id="line-752">   *          the value</span>
+<span class="source-line-no">753</span><span id="line-753">   * @return an {@code Map.Entry} containing the specified key and value</span>
+<span class="source-line-no">754</span><span id="line-754">   * @throws NullPointerException</span>
+<span class="source-line-no">755</span><span id="line-755">   *           if the key or value is {@code null}</span>
+<span class="source-line-no">756</span><span id="line-756">   */</span>
+<span class="source-line-no">757</span><span id="line-757">  @SuppressWarnings("null")</span>
+<span class="source-line-no">758</span><span id="line-758">  @NonNull</span>
+<span class="source-line-no">759</span><span id="line-759">  static &lt;V extends ICollectionValue&gt; Map.Entry&lt;IMapKey, V&gt; entry(@NonNull IMapKey key, @NonNull V value) {</span>
+<span class="source-line-no">760</span><span id="line-760">    return Map.entry(key, value);</span>
+<span class="source-line-no">761</span><span id="line-761">  }</span>
+<span class="source-line-no">762</span><span id="line-762"></span>
+<span class="source-line-no">763</span><span id="line-763">  /**</span>
+<span class="source-line-no">764</span><span id="line-764">   * Returns an unmodifiable Map item containing the entries of the given Map. The</span>
+<span class="source-line-no">765</span><span id="line-765">   * given Map must not be null, and it must not contain any null keys or values.</span>
+<span class="source-line-no">766</span><span id="line-766">   * If the given Map is subsequently modified, the returned Map will not reflect</span>
+<span class="source-line-no">767</span><span id="line-767">   * such modifications.</span>
+<span class="source-line-no">768</span><span id="line-768">   *</span>
+<span class="source-line-no">769</span><span id="line-769">   * @param &lt;K&gt;</span>
+<span class="source-line-no">770</span><span id="line-770">   *          the map item's key type</span>
+<span class="source-line-no">771</span><span id="line-771">   * @param &lt;V&gt;</span>
+<span class="source-line-no">772</span><span id="line-772">   *          the map item's value type</span>
+<span class="source-line-no">773</span><span id="line-773">   * @param map</span>
+<span class="source-line-no">774</span><span id="line-774">   *          a map item from which entries are drawn, must be non-null</span>
+<span class="source-line-no">775</span><span id="line-775">   * @return a map item containing the entries of the given {@code Map}</span>
+<span class="source-line-no">776</span><span id="line-776">   * @throws NullPointerException</span>
+<span class="source-line-no">777</span><span id="line-777">   *           if map is null, or if it contains any null keys or values</span>
+<span class="source-line-no">778</span><span id="line-778">   */</span>
+<span class="source-line-no">779</span><span id="line-779">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">780</span><span id="line-780">  @NonNull</span>
+<span class="source-line-no">781</span><span id="line-781">  static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;</span>
+<span class="source-line-no">782</span><span id="line-782">      IMapItem&lt;V&gt; copyOf(Map&lt;? extends IMapKey, ? extends V&gt; map) {</span>
+<span class="source-line-no">783</span><span id="line-783">    return map instanceof IMapItem</span>
+<span class="source-line-no">784</span><span id="line-784">        ? (IMapItem&lt;V&gt;) map</span>
+<span class="source-line-no">785</span><span id="line-785">        : map.isEmpty()</span>
+<span class="source-line-no">786</span><span id="line-786">            ? empty()</span>
+<span class="source-line-no">787</span><span id="line-787">            : new MapItemN&lt;&gt;(new LinkedHashMap&lt;&gt;(map));</span>
+<span class="source-line-no">788</span><span id="line-788">  }</span>
+<span class="source-line-no">789</span><span id="line-789"></span>
+<span class="source-line-no">790</span><span id="line-790">  @Override</span>
+<span class="source-line-no">791</span><span id="line-791">  default void accept(IItemVisitor visitor) {</span>
+<span class="source-line-no">792</span><span id="line-792">    visitor.visit(this);</span>
+<span class="source-line-no">793</span><span id="line-793">  }</span>
+<span class="source-line-no">794</span><span id="line-794">}</span>
 
 
 

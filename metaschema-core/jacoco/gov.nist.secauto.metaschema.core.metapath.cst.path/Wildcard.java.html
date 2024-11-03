@@ -53,6 +53,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   /**
    * Check the provided items to determine if each item matches the wildcard. All
    * items that match are returned.
+   * &lt;p&gt;
+   * This is an intermediate stream operation.
    *
    * @param &lt;T&gt;
    *          the item Java type
@@ -61,23 +63,23 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    * @return the matching items
    */
   @NonNull
-  public &lt;T extends INodeItem&gt; Stream&lt;T&gt; match(@NonNull Stream&lt;T&gt; items) {
-<span class="fc" id="L65">    Stream&lt;T&gt; nodes = items;</span>
-<span class="pc bpc" id="L66" title="1 of 2 branches missed.">    if (matcher != null) {</span>
-<span class="nc" id="L67">      Predicate&lt;IDefinitionNodeItem&lt;?, ?&gt;&gt; test = matcher;</span>
-<span class="nc" id="L68">      nodes = ObjectUtils.notNull(nodes.filter(item -&gt; {</span>
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        assert matcher != null;</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        return !(item instanceof IDefinitionNodeItem) ||</span>
-<span class="nc bnc" id="L71" title="All 2 branches missed.">            test.test((IDefinitionNodeItem&lt;?, ?&gt;) item);</span>
+  public &lt;T extends INodeItem&gt; Stream&lt;T&gt; match(@SuppressWarnings(&quot;resource&quot;) @NonNull Stream&lt;T&gt; items) {
+<span class="fc" id="L67">    Stream&lt;T&gt; nodes = items;</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">    if (matcher != null) {</span>
+<span class="nc" id="L69">      Predicate&lt;IDefinitionNodeItem&lt;?, ?&gt;&gt; test = matcher;</span>
+<span class="nc" id="L70">      nodes = ObjectUtils.notNull(nodes.filter(item -&gt; {</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        assert matcher != null;</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        return !(item instanceof IDefinitionNodeItem) ||</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">            test.test((IDefinitionNodeItem&lt;?, ?&gt;) item);</span>
       }));
     }
-<span class="fc" id="L74">    return nodes;</span>
+<span class="fc" id="L76">    return nodes;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String toASTString() {
-<span class="nc bnc" id="L80" title="All 2 branches missed.">    return String.format(&quot;%s[%s]&quot;, getClass().getName(), matcher == null ? &quot;*:*&quot; : matcher.toString());</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">    return String.format(&quot;%s[%s]&quot;, getClass().getName(), matcher == null ? &quot;*:*&quot; : matcher.toString());</span>
   }
 
   public interface IWildcardMatcher extends Predicate&lt;IDefinitionNodeItem&lt;?, ?&gt;&gt; {
@@ -99,18 +101,18 @@ import edu.umd.cs.findbugs.annotations.Nullable;
      * @param localName
      *          the name used to match nodes
      */
-<span class="nc" id="L102">    public MatchAnyNamespace(@NonNull String localName) {</span>
-<span class="nc" id="L103">      this.localName = localName;</span>
-<span class="nc" id="L104">    }</span>
+<span class="nc" id="L104">    public MatchAnyNamespace(@NonNull String localName) {</span>
+<span class="nc" id="L105">      this.localName = localName;</span>
+<span class="nc" id="L106">    }</span>
 
     @Override
     public boolean test(IDefinitionNodeItem&lt;?, ?&gt; item) {
-<span class="nc" id="L108">      return localName.equals(item.getQName().getLocalPart());</span>
+<span class="nc" id="L110">      return localName.equals(item.getQName().getLocalPart());</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L113">      return &quot;*:&quot; + localName;</span>
+<span class="nc" id="L115">      return &quot;*:&quot; + localName;</span>
     }
   }
 
@@ -127,18 +129,18 @@ import edu.umd.cs.findbugs.annotations.Nullable;
      * @param namespace
      *          the namespace used to match nodes
      */
-<span class="nc" id="L130">    public MatchAnyLocalName(@NonNull String namespace) {</span>
-<span class="nc" id="L131">      this.namespace = namespace;</span>
-<span class="nc" id="L132">    }</span>
+<span class="nc" id="L132">    public MatchAnyLocalName(@NonNull String namespace) {</span>
+<span class="nc" id="L133">      this.namespace = namespace;</span>
+<span class="nc" id="L134">    }</span>
 
     @Override
     public boolean test(IDefinitionNodeItem&lt;?, ?&gt; item) {
-<span class="nc" id="L136">      return namespace.equals(item.getQName().getNamespaceURI());</span>
+<span class="nc" id="L138">      return namespace.equals(item.getQName().getNamespaceURI());</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L141">      return namespace + &quot;:*&quot;;</span>
+<span class="nc" id="L143">      return namespace + &quot;:*&quot;;</span>
     }
   }
 }

@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.ISequenceType;
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.MapItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -45,52 +44,52 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
    */
   @NonNull
   static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; empty() {
-<span class="fc" id="L48">    return AbstractMapItem.empty();</span>
+<span class="fc" id="L47">    return AbstractMapItem.empty();</span>
   }
 
   @Override
   default QName getQName() {
-<span class="nc" id="L53">    return AbstractArrayItem.QNAME;</span>
+<span class="nc" id="L52">    return AbstractMapItem.QNAME;</span>
   }
 
   @Override
   default Set&lt;FunctionProperty&gt; getProperties() {
-<span class="nc" id="L58">    return AbstractArrayItem.PROPERTIES;</span>
+<span class="nc" id="L57">    return AbstractMapItem.PROPERTIES;</span>
   }
 
   @Override
   default boolean isDeterministic() {
-<span class="nc" id="L63">    return true;</span>
+<span class="nc" id="L62">    return true;</span>
   }
 
   @Override
   default boolean isContextDepenent() {
-<span class="nc" id="L68">    return false;</span>
+<span class="nc" id="L67">    return false;</span>
   }
 
   @Override
   default boolean isFocusDepenent() {
-<span class="nc" id="L73">    return false;</span>
+<span class="nc" id="L72">    return false;</span>
   }
 
   @Override
   default List&lt;IArgument&gt; getArguments() {
-<span class="nc" id="L78">    return AbstractArrayItem.ARGUMENTS;</span>
+<span class="nc" id="L77">    return AbstractMapItem.ARGUMENTS;</span>
   }
 
   @Override
   default int arity() {
-<span class="nc" id="L83">    return 1;</span>
+<span class="nc" id="L82">    return 1;</span>
   }
 
   @Override
   default boolean isArityUnbounded() {
-<span class="nc" id="L88">    return false;</span>
+<span class="nc" id="L87">    return false;</span>
   }
 
   @Override
   default ISequenceType getResult() {
-<span class="nc" id="L93">    return AbstractArrayItem.RESULT;</span>
+<span class="nc" id="L92">    return AbstractMapItem.RESULT;</span>
   }
 
   @Override
@@ -98,7 +97,7 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
 
   @Override
   default String toSignature() {
-<span class="nc" id="L101">    return &quot;array()&quot;;</span>
+<span class="nc" id="L100">    return &quot;array()&quot;;</span>
   }
 
   @Override
@@ -106,7 +105,7 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
 
   @Override
   default boolean hasValue() {
-<span class="nc" id="L109">    return true;</span>
+<span class="nc" id="L108">    return true;</span>
   }
 
   /**
@@ -117,7 +116,7 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
    */
   @Override
   default boolean isEmpty() {
-<span class="nc" id="L120">    return getValue().isEmpty();</span>
+<span class="nc" id="L119">    return getValue().isEmpty();</span>
   }
 
   /**
@@ -127,13 +126,13 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
    */
   @Override
   default int size() {
-<span class="nc" id="L130">    return getValue().size();</span>
+<span class="nc" id="L129">    return getValue().size();</span>
 
   }
 
   @Override
   default ISequence&lt;IMapItem&lt;VALUE&gt;&gt; asSequence() {
-<span class="fc" id="L136">    return ISequence.of(this);</span>
+<span class="fc" id="L135">    return ISequence.of(this);</span>
   }
 
   /**
@@ -148,7 +147,7 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
   @NonNull
   static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; ofCollection( // NOPMD - intentional
       @NonNull Map&lt;IMapKey, V&gt; map) {
-<span class="fc bfc" id="L151" title="All 2 branches covered.">    return map.isEmpty() ? empty() : new MapItemN&lt;&gt;(map);</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">    return map.isEmpty() ? empty() : new MapItemN&lt;&gt;(map);</span>
   }
 
   /**
@@ -161,7 +160,7 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
   @SuppressWarnings(&quot;PMD.ShortMethodName&quot;)
   @NonNull
   static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; of() {
-<span class="nc" id="L164">    return AbstractMapItem.empty();</span>
+<span class="nc" id="L163">    return AbstractMapItem.empty();</span>
   }
 
   /**
@@ -182,7 +181,7 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
   @SuppressWarnings(&quot;PMD.ShortMethodName&quot;)
   @NonNull
   static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt; IMapItem&lt;V&gt; of(@NonNull K k1, @NonNull V v1) {
-<span class="nc" id="L185">    return new MapItemN&lt;&gt;(entry(k1, v1));</span>
+<span class="nc" id="L184">    return new MapItemN&lt;&gt;(entry(k1, v1));</span>
   }
 
   /**
@@ -211,9 +210,9 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
   static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt; IMapItem&lt;V&gt; of(
       @NonNull K k1, @NonNull V v1,
       @NonNull K k2, @NonNull V v2) {
-<span class="nc" id="L214">    return new MapItemN&lt;&gt;(</span>
-<span class="nc" id="L215">        entry(k1, v1),</span>
-<span class="nc" id="L216">        entry(k2, v2));</span>
+<span class="nc" id="L213">    return new MapItemN&lt;&gt;(</span>
+<span class="nc" id="L214">        entry(k1, v1),</span>
+<span class="nc" id="L215">        entry(k2, v2));</span>
   }
 
   /**
@@ -248,10 +247,10 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
           @NonNull K k1, @NonNull V v1,
           @NonNull K k2, @NonNull V v2,
           @NonNull K k3, @NonNull V v3) {
-<span class="nc" id="L251">    return new MapItemN&lt;&gt;(</span>
-<span class="nc" id="L252">        entry(k1, v1),</span>
-<span class="nc" id="L253">        entry(k2, v2),</span>
-<span class="nc" id="L254">        entry(k3, v3));</span>
+<span class="nc" id="L250">    return new MapItemN&lt;&gt;(</span>
+<span class="nc" id="L251">        entry(k1, v1),</span>
+<span class="nc" id="L252">        entry(k2, v2),</span>
+<span class="nc" id="L253">        entry(k3, v3));</span>
   }
 
   /**
@@ -291,11 +290,11 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
           @NonNull K k2, @NonNull V v2,
           @NonNull K k3, @NonNull V v3,
           @NonNull K k4, @NonNull V v4) {
-<span class="nc" id="L294">    return new MapItemN&lt;&gt;(</span>
-<span class="nc" id="L295">        entry(k1, v1),</span>
-<span class="nc" id="L296">        entry(k2, v2),</span>
-<span class="nc" id="L297">        entry(k3, v3),</span>
-<span class="nc" id="L298">        entry(k4, v4));</span>
+<span class="nc" id="L293">    return new MapItemN&lt;&gt;(</span>
+<span class="nc" id="L294">        entry(k1, v1),</span>
+<span class="nc" id="L295">        entry(k2, v2),</span>
+<span class="nc" id="L296">        entry(k3, v3),</span>
+<span class="nc" id="L297">        entry(k4, v4));</span>
   }
 
   /**
@@ -340,12 +339,12 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
           @NonNull K k3, @NonNull V v3,
           @NonNull K k4, @NonNull V v4,
           @NonNull K k5, @NonNull V v5) {
-<span class="nc" id="L343">    return new MapItemN&lt;&gt;(</span>
-<span class="nc" id="L344">        entry(k1, v1),</span>
-<span class="nc" id="L345">        entry(k2, v2),</span>
-<span class="nc" id="L346">        entry(k3, v3),</span>
-<span class="nc" id="L347">        entry(k4, v4),</span>
-<span class="nc" id="L348">        entry(k5, v5));</span>
+<span class="nc" id="L342">    return new MapItemN&lt;&gt;(</span>
+<span class="nc" id="L343">        entry(k1, v1),</span>
+<span class="nc" id="L344">        entry(k2, v2),</span>
+<span class="nc" id="L345">        entry(k3, v3),</span>
+<span class="nc" id="L346">        entry(k4, v4),</span>
+<span class="nc" id="L347">        entry(k5, v5));</span>
   }
 
   /**
@@ -398,15 +397,16 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
           @NonNull K k4, @NonNull V v4,
           @NonNull K k5, @NonNull V v5,
           @NonNull K k6, @NonNull V v6) {
-<span class="nc" id="L401">    return new MapItemN&lt;&gt;(</span>
-<span class="nc" id="L402">        entry(k1, v1),</span>
-<span class="nc" id="L403">        entry(k2, v2),</span>
-<span class="nc" id="L404">        entry(k3, v3),</span>
-<span class="nc" id="L405">        entry(k4, v4),</span>
-<span class="nc" id="L406">        entry(k5, v5),</span>
-<span class="nc" id="L407">        entry(k6, v6));</span>
+<span class="nc" id="L400">    return new MapItemN&lt;&gt;(</span>
+<span class="nc" id="L401">        entry(k1, v1),</span>
+<span class="nc" id="L402">        entry(k2, v2),</span>
+<span class="nc" id="L403">        entry(k3, v3),</span>
+<span class="nc" id="L404">        entry(k4, v4),</span>
+<span class="nc" id="L405">        entry(k5, v5),</span>
+<span class="nc" id="L406">        entry(k6, v6));</span>
   }
 
+  // CPD-OFF
   /**
    * Returns an unmodifiable map item containing seven mappings.
    *
@@ -692,6 +692,7 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
 <span class="nc" id="L692">        entry(k8, v8),</span>
 <span class="nc" id="L693">        entry(k9, v9),</span>
 <span class="nc" id="L694">        entry(k10, v10));</span>
+    // CPD-ON
   }
 
   /**
@@ -717,11 +718,12 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
   @NonNull
   static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;
       IMapItem&lt;V&gt; ofEntries(Map.Entry&lt;IMapKey, ? extends V&gt;... entries) {
-<span class="fc bfc" id="L720" title="All 2 branches covered.">    return entries.length == 0 ? empty() : new MapItemN&lt;&gt;(entries);</span>
+<span class="fc bfc" id="L721" title="All 2 branches covered.">    return entries.length == 0 ? empty() : new MapItemN&lt;&gt;(entries);</span>
   }
 
   /**
-   * Returns an unmodifiable {@link Entry} containing the given key and value.
+   * Returns an unmodifiable {@link java.util.Map.Entry} containing the given key
+   * and value.
    *
    * @param &lt;V&gt;
    *          the value's type
@@ -735,11 +737,12 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
    */
   @NonNull
   static &lt;V extends ICollectionValue&gt; Map.Entry&lt;IMapKey, V&gt; entry(@NonNull IAnyAtomicItem key, @NonNull V value) {
-<span class="fc" id="L738">    return entry(key.asMapKey(), value);</span>
+<span class="fc" id="L740">    return entry(key.asMapKey(), value);</span>
   }
 
   /**
-   * Returns an unmodifiable {@link Entry} containing the given key and value.
+   * Returns an unmodifiable {@link java.util.Map.Entry} containing the given key
+   * and value.
    *
    * @param &lt;V&gt;
    *          the value's type
@@ -754,7 +757,7 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   static &lt;V extends ICollectionValue&gt; Map.Entry&lt;IMapKey, V&gt; entry(@NonNull IMapKey key, @NonNull V value) {
-<span class="fc" id="L757">    return Map.entry(key, value);</span>
+<span class="fc" id="L760">    return Map.entry(key, value);</span>
   }
 
   /**
@@ -777,16 +780,16 @@ public interface IMapItem&lt;VALUE extends ICollectionValue&gt;
   @NonNull
   static &lt;K extends IAnyAtomicItem, V extends ICollectionValue&gt;
       IMapItem&lt;V&gt; copyOf(Map&lt;? extends IMapKey, ? extends V&gt; map) {
-<span class="nc bnc" id="L780" title="All 2 branches missed.">    return map instanceof IMapItem</span>
-<span class="nc" id="L781">        ? (IMapItem&lt;V&gt;) map</span>
-<span class="nc bnc" id="L782" title="All 2 branches missed.">        : map.isEmpty()</span>
-<span class="nc" id="L783">            ? empty()</span>
-<span class="nc" id="L784">            : new MapItemN&lt;&gt;(new LinkedHashMap&lt;&gt;(map));</span>
+<span class="nc bnc" id="L783" title="All 2 branches missed.">    return map instanceof IMapItem</span>
+<span class="nc" id="L784">        ? (IMapItem&lt;V&gt;) map</span>
+<span class="nc bnc" id="L785" title="All 2 branches missed.">        : map.isEmpty()</span>
+<span class="nc" id="L786">            ? empty()</span>
+<span class="nc" id="L787">            : new MapItemN&lt;&gt;(new LinkedHashMap&lt;&gt;(map));</span>
   }
 
   @Override
   default void accept(IItemVisitor visitor) {
-<span class="nc" id="L789">    visitor.visit(this);</span>
-<span class="nc" id="L790">  }</span>
+<span class="nc" id="L792">    visitor.visit(this);</span>
+<span class="nc" id="L793">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

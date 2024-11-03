@@ -56,42 +56,43 @@
 <span class="source-line-no">043</span><span id="line-43">   * @throws IOException</span>
 <span class="source-line-no">044</span><span id="line-44">   *           if an error occurred while generating the class</span>
 <span class="source-line-no">045</span><span id="line-45">   */</span>
-<span class="source-line-no">046</span><span id="line-46">  public static IProduction generate(</span>
-<span class="source-line-no">047</span><span id="line-47">      @NonNull IModule module,</span>
-<span class="source-line-no">048</span><span id="line-48">      @NonNull Path targetDir,</span>
-<span class="source-line-no">049</span><span id="line-49">      @NonNull IBindingConfiguration bindingConfiguration) throws IOException {</span>
-<span class="source-line-no">050</span><span id="line-50">    return generate(CollectionUtil.singletonList(module), targetDir, bindingConfiguration);</span>
-<span class="source-line-no">051</span><span id="line-51">  }</span>
-<span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">  /**</span>
-<span class="source-line-no">054</span><span id="line-54">   * Generates Java classes for Module fields and flags.</span>
-<span class="source-line-no">055</span><span id="line-55">   *</span>
-<span class="source-line-no">056</span><span id="line-56">   * @param modules</span>
-<span class="source-line-no">057</span><span id="line-57">   *          the Metaschema modules to build classes for</span>
-<span class="source-line-no">058</span><span id="line-58">   * @param targetDirectory</span>
-<span class="source-line-no">059</span><span id="line-59">   *          the directory to generate classes in</span>
-<span class="source-line-no">060</span><span id="line-60">   * @param bindingConfiguration</span>
-<span class="source-line-no">061</span><span id="line-61">   *          binding customizations that can be used to set namespaces, class</span>
-<span class="source-line-no">062</span><span id="line-62">   *          names, and other aspects of generated classes</span>
-<span class="source-line-no">063</span><span id="line-63">   * @return information about all the produced classes</span>
-<span class="source-line-no">064</span><span id="line-64">   * @throws IOException</span>
-<span class="source-line-no">065</span><span id="line-65">   *           if a build error occurred while generating the class</span>
-<span class="source-line-no">066</span><span id="line-66">   */</span>
-<span class="source-line-no">067</span><span id="line-67">  @NonNull</span>
-<span class="source-line-no">068</span><span id="line-68">  public static IProduction generate(</span>
-<span class="source-line-no">069</span><span id="line-69">      @NonNull Collection&lt;? extends IModule&gt; modules,</span>
-<span class="source-line-no">070</span><span id="line-70">      @NonNull Path targetDirectory,</span>
-<span class="source-line-no">071</span><span id="line-71">      @NonNull IBindingConfiguration bindingConfiguration) throws IOException {</span>
-<span class="source-line-no">072</span><span id="line-72">    Objects.requireNonNull(modules, "metaschemas");</span>
-<span class="source-line-no">073</span><span id="line-73">    Objects.requireNonNull(targetDirectory, "generationTargetDirectory");</span>
-<span class="source-line-no">074</span><span id="line-74">    Objects.requireNonNull(bindingConfiguration, "bindingConfiguration");</span>
-<span class="source-line-no">075</span><span id="line-75">    if (LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">076</span><span id="line-76">      LOGGER.info("Generating Java classes in: {}", targetDirectory);</span>
-<span class="source-line-no">077</span><span id="line-77">    }</span>
-<span class="source-line-no">078</span><span id="line-78"></span>
-<span class="source-line-no">079</span><span id="line-79">    return IProduction.of(modules, bindingConfiguration, targetDirectory);</span>
-<span class="source-line-no">080</span><span id="line-80">  }</span>
-<span class="source-line-no">081</span><span id="line-81">}</span>
+<span class="source-line-no">046</span><span id="line-46">  @NonNull</span>
+<span class="source-line-no">047</span><span id="line-47">  public static IProduction generate(</span>
+<span class="source-line-no">048</span><span id="line-48">      @NonNull IModule module,</span>
+<span class="source-line-no">049</span><span id="line-49">      @NonNull Path targetDir,</span>
+<span class="source-line-no">050</span><span id="line-50">      @NonNull IBindingConfiguration bindingConfiguration) throws IOException {</span>
+<span class="source-line-no">051</span><span id="line-51">    return generate(CollectionUtil.singletonList(module), targetDir, bindingConfiguration);</span>
+<span class="source-line-no">052</span><span id="line-52">  }</span>
+<span class="source-line-no">053</span><span id="line-53"></span>
+<span class="source-line-no">054</span><span id="line-54">  /**</span>
+<span class="source-line-no">055</span><span id="line-55">   * Generates Java classes for Module fields and flags.</span>
+<span class="source-line-no">056</span><span id="line-56">   *</span>
+<span class="source-line-no">057</span><span id="line-57">   * @param modules</span>
+<span class="source-line-no">058</span><span id="line-58">   *          the Metaschema modules to build classes for</span>
+<span class="source-line-no">059</span><span id="line-59">   * @param targetDirectory</span>
+<span class="source-line-no">060</span><span id="line-60">   *          the directory to generate classes in</span>
+<span class="source-line-no">061</span><span id="line-61">   * @param bindingConfiguration</span>
+<span class="source-line-no">062</span><span id="line-62">   *          binding customizations that can be used to set namespaces, class</span>
+<span class="source-line-no">063</span><span id="line-63">   *          names, and other aspects of generated classes</span>
+<span class="source-line-no">064</span><span id="line-64">   * @return information about all the produced classes</span>
+<span class="source-line-no">065</span><span id="line-65">   * @throws IOException</span>
+<span class="source-line-no">066</span><span id="line-66">   *           if a build error occurred while generating the class</span>
+<span class="source-line-no">067</span><span id="line-67">   */</span>
+<span class="source-line-no">068</span><span id="line-68">  @NonNull</span>
+<span class="source-line-no">069</span><span id="line-69">  public static IProduction generate(</span>
+<span class="source-line-no">070</span><span id="line-70">      @NonNull Collection&lt;? extends IModule&gt; modules,</span>
+<span class="source-line-no">071</span><span id="line-71">      @NonNull Path targetDirectory,</span>
+<span class="source-line-no">072</span><span id="line-72">      @NonNull IBindingConfiguration bindingConfiguration) throws IOException {</span>
+<span class="source-line-no">073</span><span id="line-73">    Objects.requireNonNull(modules, "metaschemas");</span>
+<span class="source-line-no">074</span><span id="line-74">    Objects.requireNonNull(targetDirectory, "generationTargetDirectory");</span>
+<span class="source-line-no">075</span><span id="line-75">    Objects.requireNonNull(bindingConfiguration, "bindingConfiguration");</span>
+<span class="source-line-no">076</span><span id="line-76">    if (LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">077</span><span id="line-77">      LOGGER.info("Generating Java classes in: {}", targetDirectory);</span>
+<span class="source-line-no">078</span><span id="line-78">    }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">    return IProduction.of(modules, bindingConfiguration, targetDirectory);</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82">}</span>
 
 
 

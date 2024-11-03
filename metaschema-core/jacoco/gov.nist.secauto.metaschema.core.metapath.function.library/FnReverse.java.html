@@ -21,27 +21,28 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements &lt;a href=
- * &quot;https://www.w3.org/TR/xpath-functions-31/#func-reverse&quot;&gt;fn:reverse&lt;/a&gt;.
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-reverse&quot;&gt;fn:reverse&lt;/a&gt;
+ * function.
  */
 public final class FnReverse {
   private static final String NAME = &quot;reverse&quot;;
   @NonNull
-<span class="fc" id="L30">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="fc" id="L31">      .name(NAME)</span>
-<span class="fc" id="L32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L33">      .deterministic()</span>
-<span class="fc" id="L34">      .contextIndependent()</span>
-<span class="fc" id="L35">      .focusIndependent()</span>
-<span class="fc" id="L36">      .argument(IArgument.builder()</span>
-<span class="fc" id="L37">          .name(&quot;target&quot;)</span>
-<span class="fc" id="L38">          .type(IItem.class)</span>
-<span class="fc" id="L39">          .zeroOrMore()</span>
-<span class="fc" id="L40">          .build())</span>
-<span class="fc" id="L41">      .returnType(IItem.class)</span>
-<span class="fc" id="L42">      .returnZeroOrMore()</span>
-<span class="fc" id="L43">      .functionHandler(FnReverse::execute)</span>
-<span class="fc" id="L44">      .build();</span>
+<span class="fc" id="L31">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="fc" id="L32">      .name(NAME)</span>
+<span class="fc" id="L33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L34">      .deterministic()</span>
+<span class="fc" id="L35">      .contextIndependent()</span>
+<span class="fc" id="L36">      .focusIndependent()</span>
+<span class="fc" id="L37">      .argument(IArgument.builder()</span>
+<span class="fc" id="L38">          .name(&quot;target&quot;)</span>
+<span class="fc" id="L39">          .type(IItem.class)</span>
+<span class="fc" id="L40">          .zeroOrMore()</span>
+<span class="fc" id="L41">          .build())</span>
+<span class="fc" id="L42">      .returnType(IItem.class)</span>
+<span class="fc" id="L43">      .returnZeroOrMore()</span>
+<span class="fc" id="L44">      .functionHandler(FnReverse::execute)</span>
+<span class="fc" id="L45">      .build();</span>
 
   private FnReverse() {
     // disable construction
@@ -53,8 +54,8 @@ public final class FnReverse {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L56">    ISequence&lt;?&gt; target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="fc" id="L57">    return ISequence.ofCollection(fnReverse(target));</span>
+<span class="fc" id="L57">    ISequence&lt;?&gt; target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L58">    return ISequence.ofCollection(fnReverse(target));</span>
   }
 
   /**
@@ -70,12 +71,12 @@ public final class FnReverse {
   @SuppressWarnings(&quot;PMD.OnlyOneReturn&quot;)
   @NonNull
   public static &lt;T extends IItem&gt; List&lt;T&gt; fnReverse(@NonNull List&lt;T&gt; target) {
-<span class="fc bfc" id="L73" title="All 2 branches covered.">    if (target.size() &lt;= 1) {</span>
-<span class="fc" id="L74">      return target;</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">    if (target.size() &lt;= 1) {</span>
+<span class="fc" id="L75">      return target;</span>
     }
-<span class="fc" id="L76">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target);</span>
-<span class="fc" id="L77">    Collections.reverse(newSequence);</span>
-<span class="fc" id="L78">    return newSequence;</span>
+<span class="fc" id="L77">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target);</span>
+<span class="fc" id="L78">    Collections.reverse(newSequence);</span>
+<span class="fc" id="L79">    return newSequence;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

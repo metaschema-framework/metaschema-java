@@ -10,32 +10,35 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A Metapath node valued item representing a Metaschema module assembly.
+ */
 public interface IAssemblyNodeItem extends IModelNodeItem&lt;IAssemblyDefinition, IAssemblyInstance&gt; {
   @Override
   default NodeItemType getNodeItemType() {
-<span class="nc" id="L16">    return NodeItemType.ASSEMBLY;</span>
+<span class="nc" id="L19">    return NodeItemType.ASSEMBLY;</span>
   }
 
   @Override
   default IAssemblyNodeItem getNodeItem() {
-<span class="nc" id="L21">    return this;</span>
+<span class="nc" id="L24">    return this;</span>
   }
 
   @Override
   @Nullable
   default URI getBaseUri() {
-<span class="nc" id="L27">    INodeItem parent = getParentNodeItem();</span>
-<span class="nc bnc" id="L28" title="All 2 branches missed.">    return parent == null ? null : parent.getBaseUri();</span>
+<span class="nc" id="L30">    INodeItem parent = getParentNodeItem();</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">    return parent == null ? null : parent.getBaseUri();</span>
   }
 
   @Override
   default String format(@NonNull IPathFormatter formatter) {
-<span class="fc" id="L33">    return formatter.formatAssembly(this);</span>
+<span class="fc" id="L36">    return formatter.formatAssembly(this);</span>
   }
 
   @Override
   default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull INodeItemVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {
-<span class="fc" id="L38">    return visitor.visitAssembly(this, context);</span>
+<span class="fc" id="L41">    return visitor.visitAssembly(this, context);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

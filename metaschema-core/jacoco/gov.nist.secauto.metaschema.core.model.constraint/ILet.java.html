@@ -5,14 +5,20 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultLet;
 
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a variable assignment for use in Metaschema module constraints.
+ */
 @SuppressWarnings(&quot;PMD.ShortClassName&quot;)
 public interface ILet {
   /**
@@ -25,6 +31,8 @@ public interface ILet {
    *          a Metapath expression string representing the variable value
    * @param source
    *          the source descriptor for the resource containing the constraint
+   * @param remarks
+   *          remarks about the let statement
    * @return the original let statement with the same name or {@code null}
    */
   @SuppressWarnings(&quot;PMD.ShortMethodName&quot;)
@@ -32,16 +40,21 @@ public interface ILet {
   static ILet of(
       @NonNull QName name,
       @NonNull String valueExpression,
-      @NonNull ISource source) {
+      @NonNull ISource source,
+      @Nullable MarkupMultiline remarks) {
     try {
-<span class="nc" id="L37">      return of(name, MetapathExpression.compile(valueExpression, source.getStaticContext()), source);</span>
-<span class="nc" id="L38">    } catch (MetapathException ex) {</span>
-<span class="nc" id="L39">      throw new MetapathException(</span>
-<span class="nc" id="L40">          String.format(&quot;Unable to compile the let expression '%s=%s'%s. %s&quot;,</span>
+<span class="fc" id="L46">      return of(</span>
+          name,
+<span class="fc" id="L48">          MetapathExpression.compile(valueExpression, source.getStaticContext()),</span>
+          source,
+          remarks);
+<span class="nc" id="L51">    } catch (MetapathException ex) {</span>
+<span class="nc" id="L52">      throw new MetapathException(</span>
+<span class="nc" id="L53">          String.format(&quot;Unable to compile the let expression '%s=%s'%s. %s&quot;,</span>
               name,
               valueExpression,
-<span class="nc bnc" id="L43" title="All 2 branches missed.">              source.getSource() == null ? &quot;&quot; : &quot; in &quot; + source.getSource(),</span>
-<span class="nc" id="L44">              ex.getMessage()),</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">              source.getSource() == null ? &quot;&quot; : &quot; in &quot; + source.getSource(),</span>
+<span class="nc" id="L57">              ex.getMessage()),</span>
           ex);
     }
   }
@@ -55,6 +68,8 @@ public interface ILet {
    *          a Metapath expression representing the variable value
    * @param source
    *          the source descriptor for the resource containing the constraint
+   * @param remarks
+   *          remarks about the let statement
    * @return the original let statement with the same name or {@code null}
    */
   @SuppressWarnings(&quot;PMD.ShortMethodName&quot;)
@@ -62,8 +77,9 @@ public interface ILet {
   static ILet of(
       @NonNull QName name,
       @NonNull MetapathExpression valueExpression,
-      @NonNull ISource source) {
-<span class="nc" id="L66">    return new DefaultLet(name, valueExpression, source);</span>
+      @NonNull ISource source,
+      @Nullable MarkupMultiline remarks) {
+<span class="fc" id="L82">    return new DefaultLet(name, valueExpression, source, remarks);</span>
   }
 
   /**
@@ -89,5 +105,13 @@ public interface ILet {
    */
   @NonNull
   ISource getSource();
+
+  /**
+   * Get the remarks associated with the let statement.
+   *
+   * @return the remark or {@code null} if no remarks are defined
+   */
+  @Nullable
+  MarkupMultiline getRemarks();
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -27,35 +27,39 @@
 <span class="source-line-no">014</span><span id="line-14"></span>
 <span class="source-line-no">015</span><span id="line-15">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">@Documented</span>
-<span class="source-line-no">018</span><span id="line-18">@Retention(RUNTIME)</span>
-<span class="source-line-no">019</span><span id="line-19">@Target(ElementType.ANNOTATION_TYPE)</span>
-<span class="source-line-no">020</span><span id="line-20">public @interface Let {</span>
-<span class="source-line-no">021</span><span id="line-21">  /**</span>
-<span class="source-line-no">022</span><span id="line-22">   * The variable name.</span>
-<span class="source-line-no">023</span><span id="line-23">   *</span>
-<span class="source-line-no">024</span><span id="line-24">   * @return the variable name</span>
-<span class="source-line-no">025</span><span id="line-25">   */</span>
-<span class="source-line-no">026</span><span id="line-26">  @NonNull</span>
-<span class="source-line-no">027</span><span id="line-27">  String name();</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">  /**</span>
-<span class="source-line-no">030</span><span id="line-30">   * A Metapath to use the query the values assigned to the variable.</span>
-<span class="source-line-no">031</span><span id="line-31">   *</span>
-<span class="source-line-no">032</span><span id="line-32">   * @return the value Metapath</span>
-<span class="source-line-no">033</span><span id="line-33">   */</span>
-<span class="source-line-no">034</span><span id="line-34">  @NonNull</span>
-<span class="source-line-no">035</span><span id="line-35">  String target();</span>
-<span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37">  /**</span>
-<span class="source-line-no">038</span><span id="line-38">   * Any remarks about the let statement, encoded as an escaped Markdown string.</span>
-<span class="source-line-no">039</span><span id="line-39">   *</span>
-<span class="source-line-no">040</span><span id="line-40">   * @return an encoded Markdown string or an empty string if no remarks are</span>
-<span class="source-line-no">041</span><span id="line-41">   *         provided</span>
-<span class="source-line-no">042</span><span id="line-42">   */</span>
-<span class="source-line-no">043</span><span id="line-43">  @NonNull</span>
-<span class="source-line-no">044</span><span id="line-44">  String remarks() default "";</span>
-<span class="source-line-no">045</span><span id="line-45">}</span>
+<span class="source-line-no">017</span><span id="line-17">/**</span>
+<span class="source-line-no">018</span><span id="line-18"> * Represents a constraint let statement used to assign the result of a Metapath</span>
+<span class="source-line-no">019</span><span id="line-19"> * expression to a variable.</span>
+<span class="source-line-no">020</span><span id="line-20"> */</span>
+<span class="source-line-no">021</span><span id="line-21">@Documented</span>
+<span class="source-line-no">022</span><span id="line-22">@Retention(RUNTIME)</span>
+<span class="source-line-no">023</span><span id="line-23">@Target(ElementType.ANNOTATION_TYPE)</span>
+<span class="source-line-no">024</span><span id="line-24">public @interface Let {</span>
+<span class="source-line-no">025</span><span id="line-25">  /**</span>
+<span class="source-line-no">026</span><span id="line-26">   * The variable name.</span>
+<span class="source-line-no">027</span><span id="line-27">   *</span>
+<span class="source-line-no">028</span><span id="line-28">   * @return the variable name</span>
+<span class="source-line-no">029</span><span id="line-29">   */</span>
+<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
+<span class="source-line-no">031</span><span id="line-31">  String name();</span>
+<span class="source-line-no">032</span><span id="line-32"></span>
+<span class="source-line-no">033</span><span id="line-33">  /**</span>
+<span class="source-line-no">034</span><span id="line-34">   * A Metapath to use the query the values assigned to the variable.</span>
+<span class="source-line-no">035</span><span id="line-35">   *</span>
+<span class="source-line-no">036</span><span id="line-36">   * @return the value Metapath</span>
+<span class="source-line-no">037</span><span id="line-37">   */</span>
+<span class="source-line-no">038</span><span id="line-38">  @NonNull</span>
+<span class="source-line-no">039</span><span id="line-39">  String target();</span>
+<span class="source-line-no">040</span><span id="line-40"></span>
+<span class="source-line-no">041</span><span id="line-41">  /**</span>
+<span class="source-line-no">042</span><span id="line-42">   * Any remarks about the let statement, encoded as an escaped Markdown string.</span>
+<span class="source-line-no">043</span><span id="line-43">   *</span>
+<span class="source-line-no">044</span><span id="line-44">   * @return an encoded Markdown string or an empty string if no remarks are</span>
+<span class="source-line-no">045</span><span id="line-45">   *         provided</span>
+<span class="source-line-no">046</span><span id="line-46">   */</span>
+<span class="source-line-no">047</span><span id="line-47">  @NonNull</span>
+<span class="source-line-no">048</span><span id="line-48">  String remarks() default "";</span>
+<span class="source-line-no">049</span><span id="line-49">}</span>
 
 
 

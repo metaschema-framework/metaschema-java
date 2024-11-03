@@ -10,8 +10,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 import javax.xml.namespace.QName;
@@ -20,13 +18,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 public final class FunctionService {
-<span class="fc" id="L23">  private static final Lazy&lt;FunctionService&gt; INSTANCE = Lazy.lazy(() -&gt; new FunctionService());</span>
+<span class="fc" id="L21">  private static final Lazy&lt;FunctionService&gt; INSTANCE = Lazy.lazy(FunctionService::new);</span>
   @NonNull
   private final ServiceLoader&lt;IFunctionLibrary&gt; loader;
   @NonNull
   private final Lazy&lt;IFunctionLibrary&gt; library;
-<span class="fc" id="L28">  @NonNull</span>
-  private final Lock instanceLock = new ReentrantLock();
 
   /**
    * Get the singleton instance of the function service.
@@ -34,26 +30,26 @@ public final class FunctionService {
    * @return the service instance
    */
   public static FunctionService getInstance() {
-<span class="fc" id="L37">    return INSTANCE.get();</span>
+<span class="fc" id="L33">    return INSTANCE.get();</span>
   }
 
   /**
    * Construct a new function service.
    */
   @SuppressWarnings(&quot;null&quot;)
-<span class="fc" id="L44">  public FunctionService() {</span>
-<span class="fc" id="L45">    this.loader = ServiceLoader.load(IFunctionLibrary.class);</span>
-<span class="fc" id="L46">    ServiceLoader&lt;IFunctionLibrary&gt; loader = getLoader();</span>
+<span class="fc" id="L40">  public FunctionService() {</span>
+<span class="fc" id="L41">    this.loader = ServiceLoader.load(IFunctionLibrary.class);</span>
+<span class="fc" id="L42">    ServiceLoader&lt;IFunctionLibrary&gt; loader = getLoader();</span>
 
-<span class="fc" id="L48">    this.library = Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L49">      FunctionLibrary functionLibrary = new FunctionLibrary();</span>
-<span class="fc" id="L50">      loader.stream()</span>
-<span class="fc" id="L51">          .map(Provider&lt;IFunctionLibrary&gt;::get)</span>
-<span class="fc" id="L52">          .flatMap(IFunctionLibrary::stream)</span>
-<span class="fc" id="L53">          .forEachOrdered(function -&gt; functionLibrary.registerFunction(ObjectUtils.notNull(function)));</span>
-<span class="fc" id="L54">      return functionLibrary;</span>
+<span class="fc" id="L44">    this.library = Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L45">      FunctionLibrary functionLibrary = new FunctionLibrary();</span>
+<span class="fc" id="L46">      loader.stream()</span>
+<span class="fc" id="L47">          .map(Provider&lt;IFunctionLibrary&gt;::get)</span>
+<span class="fc" id="L48">          .flatMap(IFunctionLibrary::stream)</span>
+<span class="fc" id="L49">          .forEachOrdered(function -&gt; functionLibrary.registerFunction(ObjectUtils.notNull(function)));</span>
+<span class="fc" id="L50">      return functionLibrary;</span>
     });
-<span class="fc" id="L56">  }</span>
+<span class="fc" id="L52">  }</span>
 
   /**
    * Get the function service loader instance.
@@ -62,12 +58,12 @@ public final class FunctionService {
    */
   @NonNull
   private ServiceLoader&lt;IFunctionLibrary&gt; getLoader() {
-<span class="fc" id="L65">    return loader;</span>
+<span class="fc" id="L61">    return loader;</span>
   }
 
   @NonNull
   private IFunctionLibrary getLibrary() {
-<span class="fc" id="L70">    return ObjectUtils.notNull(library.get());</span>
+<span class="fc" id="L66">    return ObjectUtils.notNull(library.get());</span>
   }
 
   /**
@@ -76,7 +72,7 @@ public final class FunctionService {
    * @return a stream of function signatures
    */
   public Stream&lt;IFunction&gt; stream() {
-<span class="nc" id="L79">    return getLibrary().stream();</span>
+<span class="nc" id="L75">    return getLibrary().stream();</span>
   }
 
   /**
@@ -93,19 +89,13 @@ public final class FunctionService {
    *           if a matching function was not found
    */
   public IFunction getFunction(@NonNull String name, int arity) {
-    IFunction retval;
-    try {
-<span class="nc" id="L98">      instanceLock.lock();</span>
-<span class="nc" id="L99">      retval = getLibrary().getFunction(name, arity);</span>
-    } finally {
-<span class="nc" id="L101">      instanceLock.unlock();</span>
-    }
+<span class="nc" id="L92">    IFunction retval = getLibrary().getFunction(name, arity);</span>
 
-<span class="nc bnc" id="L104" title="All 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L105">      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,</span>
-<span class="nc" id="L106">          String.format(&quot;unable to find function with name '%s' having arity '%d'&quot;, name, arity));</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L95">      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,</span>
+<span class="nc" id="L96">          String.format(&quot;unable to find function with name '%s' having arity '%d'&quot;, name, arity));</span>
     }
-<span class="nc" id="L108">    return retval;</span>
+<span class="nc" id="L98">    return retval;</span>
   }
 
   /**
@@ -122,19 +112,13 @@ public final class FunctionService {
    *           if a matching function was not found
    */
   public IFunction getFunction(@NonNull QName name, int arity) {
-    IFunction retval;
-    try {
-<span class="fc" id="L127">      instanceLock.lock();</span>
-<span class="fc" id="L128">      retval = getLibrary().getFunction(name, arity);</span>
-    } finally {
-<span class="fc" id="L130">      instanceLock.unlock();</span>
-    }
+<span class="fc" id="L115">    IFunction retval = getLibrary().getFunction(name, arity);</span>
 
-<span class="pc bpc" id="L133" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L134">      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,</span>
-<span class="nc" id="L135">          String.format(&quot;unable to find function with name '%s' having arity '%d'&quot;, name, arity));</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L118">      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,</span>
+<span class="nc" id="L119">          String.format(&quot;unable to find function with name '%s' having arity '%d'&quot;, name, arity));</span>
     }
-<span class="fc" id="L137">    return retval;</span>
+<span class="fc" id="L121">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

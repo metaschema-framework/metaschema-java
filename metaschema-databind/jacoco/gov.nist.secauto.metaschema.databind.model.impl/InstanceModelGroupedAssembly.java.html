@@ -8,7 +8,9 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractAssemblyInstance;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
@@ -17,7 +19,11 @@ import gov.nist.secauto.metaschema.databind.model.IBoundProperty;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -32,7 +38,6 @@ public class InstanceModelGroupedAssembly
         IBoundDefinitionModelAssembly,
         IBoundInstanceModelGroupedAssembly,
         IBoundDefinitionModelAssembly&gt;
-    // extends AbstractBoundInstanceModelGroupedNamed&lt;BoundGroupedAssembly&gt;
     implements IBoundInstanceModelGroupedAssembly {
   @NonNull
   private final BoundGroupedAssembly annotation;
@@ -40,9 +45,11 @@ public class InstanceModelGroupedAssembly
   private final IBoundDefinitionModelAssembly definition;
   @NonNull
   private final Lazy&lt;Map&lt;String, IBoundProperty&lt;?&gt;&gt;&gt; jsonProperties;
+  @NonNull
+  private final Lazy&lt;Map&lt;IAttributable.Key, Set&lt;String&gt;&gt;&gt; properties;
 
   /**
-   * Construct a new field model instance instance that is a member of a choice
+   * Construct a new assembly model instance instance that is a member of a choice
    * group instance.
    *
    * @param annotation
@@ -56,18 +63,24 @@ public class InstanceModelGroupedAssembly
       @NonNull BoundGroupedAssembly annotation,
       @NonNull IBoundDefinitionModelAssembly definition,
       @NonNull IBoundInstanceModelChoiceGroup container) {
-<span class="fc" id="L59">    super(container);</span>
-<span class="fc" id="L60">    this.annotation = annotation;</span>
-<span class="fc" id="L61">    this.definition = definition;</span>
+<span class="fc" id="L66">    super(container);</span>
+<span class="fc" id="L67">    this.annotation = annotation;</span>
+<span class="fc" id="L68">    this.definition = definition;</span>
     // IBoundInstanceFlag jsonKey = getEffectiveJsonKey();
     // Predicate&lt;IBoundInstanceFlag&gt; flagFilter = jsonKey == null ? null : (flag) -&gt;
     // !jsonKey.equals(flag);
     // return getDefinition().getJsonProperties(flagFilter);
-<span class="pc" id="L66">    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; getDefinition().getJsonProperties(null)));</span>
-<span class="fc" id="L67">  }</span>
+<span class="pc" id="L73">    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; getDefinition().getJsonProperties(null)));</span>
+<span class="fc" id="L74">    this.properties = ObjectUtils.notNull(</span>
+<span class="pc" id="L75">        Lazy.lazy(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="nc" id="L76">            Arrays.stream(annotation.properties())</span>
+<span class="nc" id="L77">                .map(ModelUtil::toPropertyEntry)</span>
+<span class="nc" id="L78">                .collect(</span>
+<span class="nc" id="L79">                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -&gt; v2, LinkedHashMap::new))))));</span>
+<span class="fc" id="L80">  }</span>
 
   private BoundGroupedAssembly getAnnotation() {
-<span class="fc" id="L70">    return annotation;</span>
+<span class="fc" id="L83">    return annotation;</span>
   }
 
   // ------------------------------------------
@@ -76,47 +89,52 @@ public class InstanceModelGroupedAssembly
 
   @Override
   public Class&lt;? extends IBoundObject&gt; getBoundClass() {
-<span class="nc" id="L79">    return getAnnotation().binding();</span>
+<span class="nc" id="L92">    return getAnnotation().binding();</span>
   }
 
   @Override
   public Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties() {
-<span class="nc" id="L84">    return ObjectUtils.notNull(jsonProperties.get());</span>
+<span class="nc" id="L97">    return ObjectUtils.notNull(jsonProperties.get());</span>
   }
 
   @Override
   public IBoundDefinitionModelAssembly getDefinition() {
-<span class="fc" id="L89">    return definition;</span>
+<span class="fc" id="L102">    return definition;</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="nc" id="L94">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
+<span class="nc" id="L107">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
   }
 
   @Override
   public MarkupLine getDescription() {
-<span class="nc" id="L99">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
+<span class="nc" id="L112">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
+  }
+
+  @Override
+  public Map&lt;Key, Set&lt;String&gt;&gt; getProperties() {
+<span class="nc" id="L117">    return ObjectUtils.notNull(properties.get());</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc" id="L104">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().remarks());</span>
+<span class="nc" id="L122">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().remarks());</span>
   }
 
   @Override
   public String getDiscriminatorValue() {
-<span class="nc" id="L109">    return ModelUtil.resolveNoneOrValue(getAnnotation().discriminatorValue());</span>
+<span class="nc" id="L127">    return ModelUtil.resolveNoneOrValue(getAnnotation().discriminatorValue());</span>
   }
 
   @Override
   public String getUseName() {
-<span class="fc" id="L114">    return ModelUtil.resolveNoneOrValue(getAnnotation().useName());</span>
+<span class="fc" id="L132">    return ModelUtil.resolveNoneOrValue(getAnnotation().useName());</span>
   }
 
   @Override
   public Integer getUseIndex() {
-<span class="nc" id="L119">    return ModelUtil.resolveDefaultInteger(getAnnotation().useIndex());</span>
+<span class="nc" id="L137">    return ModelUtil.resolveDefaultInteger(getAnnotation().useIndex());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

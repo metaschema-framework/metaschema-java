@@ -54,41 +54,46 @@
 <span class="source-line-no">041</span><span id="line-41">    return new Builder(useIndex);</span>
 <span class="source-line-no">042</span><span id="line-42">  }</span>
 <span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  final class Builder</span>
-<span class="source-line-no">045</span><span id="line-45">      extends AbstractKeyConstraintBuilder&lt;Builder, IIndexHasKeyConstraint&gt; {</span>
-<span class="source-line-no">046</span><span id="line-46">    @NonNull</span>
-<span class="source-line-no">047</span><span id="line-47">    private final String indexName;</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">    private Builder(@NonNull String useIndex) {</span>
-<span class="source-line-no">050</span><span id="line-50">      this.indexName = useIndex;</span>
-<span class="source-line-no">051</span><span id="line-51">    }</span>
+<span class="source-line-no">044</span><span id="line-44">  /**</span>
+<span class="source-line-no">045</span><span id="line-45">   * Provides a builder pattern for constructing a new</span>
+<span class="source-line-no">046</span><span id="line-46">   * {@link IIndexHasKeyConstraint}.</span>
+<span class="source-line-no">047</span><span id="line-47">   */</span>
+<span class="source-line-no">048</span><span id="line-48">  final class Builder</span>
+<span class="source-line-no">049</span><span id="line-49">      extends AbstractKeyConstraintBuilder&lt;Builder, IIndexHasKeyConstraint&gt; {</span>
+<span class="source-line-no">050</span><span id="line-50">    @NonNull</span>
+<span class="source-line-no">051</span><span id="line-51">    private final String indexName;</span>
 <span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">    @Override</span>
-<span class="source-line-no">054</span><span id="line-54">    protected Builder getThis() {</span>
-<span class="source-line-no">055</span><span id="line-55">      return this;</span>
-<span class="source-line-no">056</span><span id="line-56">    }</span>
-<span class="source-line-no">057</span><span id="line-57"></span>
-<span class="source-line-no">058</span><span id="line-58">    @NonNull</span>
-<span class="source-line-no">059</span><span id="line-59">    private String getIndexName() {</span>
-<span class="source-line-no">060</span><span id="line-60">      return indexName;</span>
-<span class="source-line-no">061</span><span id="line-61">    }</span>
-<span class="source-line-no">062</span><span id="line-62"></span>
-<span class="source-line-no">063</span><span id="line-63">    @Override</span>
-<span class="source-line-no">064</span><span id="line-64">    protected IIndexHasKeyConstraint newInstance() {</span>
-<span class="source-line-no">065</span><span id="line-65">      return new DefaultIndexHasKeyConstraint(</span>
-<span class="source-line-no">066</span><span id="line-66">          getId(),</span>
-<span class="source-line-no">067</span><span id="line-67">          getFormalName(),</span>
-<span class="source-line-no">068</span><span id="line-68">          getDescription(),</span>
-<span class="source-line-no">069</span><span id="line-69">          ObjectUtils.notNull(getSource()),</span>
-<span class="source-line-no">070</span><span id="line-70">          getLevel(),</span>
-<span class="source-line-no">071</span><span id="line-71">          getTarget(),</span>
-<span class="source-line-no">072</span><span id="line-72">          getProperties(),</span>
-<span class="source-line-no">073</span><span id="line-73">          getIndexName(),</span>
-<span class="source-line-no">074</span><span id="line-74">          getKeyFields(),</span>
-<span class="source-line-no">075</span><span id="line-75">          getRemarks());</span>
-<span class="source-line-no">076</span><span id="line-76">    }</span>
-<span class="source-line-no">077</span><span id="line-77">  }</span>
-<span class="source-line-no">078</span><span id="line-78">}</span>
+<span class="source-line-no">053</span><span id="line-53">    private Builder(@NonNull String useIndex) {</span>
+<span class="source-line-no">054</span><span id="line-54">      this.indexName = useIndex;</span>
+<span class="source-line-no">055</span><span id="line-55">    }</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">    @Override</span>
+<span class="source-line-no">058</span><span id="line-58">    protected Builder getThis() {</span>
+<span class="source-line-no">059</span><span id="line-59">      return this;</span>
+<span class="source-line-no">060</span><span id="line-60">    }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">    @NonNull</span>
+<span class="source-line-no">063</span><span id="line-63">    private String getIndexName() {</span>
+<span class="source-line-no">064</span><span id="line-64">      return indexName;</span>
+<span class="source-line-no">065</span><span id="line-65">    }</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">    @Override</span>
+<span class="source-line-no">068</span><span id="line-68">    protected IIndexHasKeyConstraint newInstance() {</span>
+<span class="source-line-no">069</span><span id="line-69">      return new DefaultIndexHasKeyConstraint(</span>
+<span class="source-line-no">070</span><span id="line-70">          getId(),</span>
+<span class="source-line-no">071</span><span id="line-71">          getFormalName(),</span>
+<span class="source-line-no">072</span><span id="line-72">          getDescription(),</span>
+<span class="source-line-no">073</span><span id="line-73">          ObjectUtils.notNull(getSource()),</span>
+<span class="source-line-no">074</span><span id="line-74">          getLevel(),</span>
+<span class="source-line-no">075</span><span id="line-75">          getTarget(),</span>
+<span class="source-line-no">076</span><span id="line-76">          getProperties(),</span>
+<span class="source-line-no">077</span><span id="line-77">          getIndexName(),</span>
+<span class="source-line-no">078</span><span id="line-78">          getKeyFields(),</span>
+<span class="source-line-no">079</span><span id="line-79">          getMessage(),</span>
+<span class="source-line-no">080</span><span id="line-80">          getRemarks());</span>
+<span class="source-line-no">081</span><span id="line-81">    }</span>
+<span class="source-line-no">082</span><span id="line-82">  }</span>
+<span class="source-line-no">083</span><span id="line-83">}</span>
 
 
 

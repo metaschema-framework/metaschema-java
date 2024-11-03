@@ -21,17 +21,16 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
+import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonKey;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonKey;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 
 import java.util.Map;
 import java.util.Set;
@@ -92,27 +91,28 @@ public class DefinitionAssemblyGlobal
       int position,
       @NonNull IBindingMetaschemaModule module,
       @NonNull INodeItemFactory nodeItemFactory) {
-<span class="fc" id="L95">    super(module);</span>
-<span class="fc" id="L96">    this.binding = binding;</span>
-<span class="fc" id="L97">    this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));</span>
-<span class="fc" id="L98">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L99">      JsonKey jsonKey = getBinding().getJsonKey();</span>
-<span class="fc" id="L100">      return FlagContainerSupport.newFlagContainer(</span>
-<span class="fc" id="L101">          binding.getFlags(),</span>
+<span class="fc" id="L94">    super(module);</span>
+<span class="fc" id="L95">    this.binding = binding;</span>
+<span class="fc" id="L96">    this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));</span>
+<span class="fc" id="L97">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L98">      JsonKey jsonKey = getBinding().getJsonKey();</span>
+<span class="fc" id="L99">      return FlagContainerSupport.newFlagContainer(</span>
+<span class="fc" id="L100">          binding.getFlags(),</span>
           bindingInstance,
           this,
-<span class="fc bfc" id="L104" title="All 2 branches covered.">          jsonKey == null ? null : jsonKey.getFlagRef());</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">          jsonKey == null ? null : jsonKey.getFlagRef());</span>
     }));
-<span class="fc" id="L106">    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; AssemblyModelContainerSupport.of(</span>
-<span class="fc" id="L107">        binding.getModel(),</span>
-<span class="fc" id="L108">        ObjectUtils.requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(MODEL_QNAME)),</span>
+<span class="fc" id="L105">    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; AssemblyModelContainerSupport.of(</span>
+<span class="fc" id="L106">        binding.getModel(),</span>
+<span class="fc" id="L107">        ObjectUtils.requireNonNull(bindingInstance.getDefinition()</span>
+<span class="fc" id="L108">            .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME)),</span>
         this,
         nodeItemFactory)));
 <span class="fc" id="L111">    this.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
 <span class="fc" id="L112">      IModelConstrained retval = new AssemblyConstraintSet();</span>
 <span class="fc" id="L113">      AssemblyConstraints constraints = getBinding().getConstraint();</span>
 <span class="fc bfc" id="L114" title="All 2 branches covered.">      if (constraints != null) {</span>
-<span class="fc" id="L115">        ConstraintBindingSupport.parse(retval, constraints, ISource.modelSource(module));</span>
+<span class="fc" id="L115">        ConstraintBindingSupport.parse(retval, constraints, module.getSource());</span>
       }
 <span class="fc" id="L117">      return retval;</span>
     }));
@@ -150,7 +150,7 @@ public class DefinitionAssemblyGlobal
 
   @Override
   public IAssemblyNodeItem getSourceNodeItem() {
-<span class="nc" id="L153">    return boundNodeItem.get();</span>
+<span class="nc" id="L153">    return ObjectUtils.notNull(boundNodeItem.get());</span>
   }
 
   @Override
@@ -178,7 +178,7 @@ public class DefinitionAssemblyGlobal
   }
 
   @Override
-  public ModuleScopeEnum getModuleScope() {
+  public ModuleScope getModuleScope() {
 <span class="fc" id="L182">    return ModelSupport.moduleScope(ObjectUtils.requireNonNull(getBinding().getScope()));</span>
   }
 

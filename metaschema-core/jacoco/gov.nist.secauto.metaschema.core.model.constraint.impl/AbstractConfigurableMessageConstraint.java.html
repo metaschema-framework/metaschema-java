@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractConfigurableMessageConstraint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Core API</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.core.model.constraint.impl</a> &gt; <span class="el_source">AbstractConfigurableMessageConstraint.java</span></div><h1>AbstractConfigurableMessageConstraint.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.model.constraint.impl;
+
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.constraint.IConfigurableMessageConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.ReplacementScanner;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+/**
+ * The base class for all constraint implementations that allow a configurable
+ * message.
+ *
+ * @since 2.0.0
+ */
+public abstract class AbstractConfigurableMessageConstraint
+    extends AbstractConstraint
+    implements IConfigurableMessageConstraint {
+  @NonNull
+<span class="fc" id="L36">  private static final Pattern METAPATH_VALUE_TEMPLATE_PATTERN</span>
+<span class="fc" id="L37">      = ObjectUtils.notNull(Pattern.compile(&quot;(?&lt;!\\\\)(\\{\\s*((?:(?:\\\\})|[^}])*)\\s*\\})&quot;));</span>
+
+  @Nullable
+  private final String message;
+
+  /**
+   * Construct a new Metaschema constraint.
+   *
+   * @param id
+   *          the optional identifier for the constraint
+   * @param formalName
+   *          the constraint's formal name or {@code null} if not provided
+   * @param description
+   *          the constraint's semantic description or {@code null} if not
+   *          provided
+   * @param source
+   *          information about the constraint source
+   * @param level
+   *          the significance of a violation of this constraint
+   * @param target
+   *          the Metapath expression identifying the nodes the constraint targets
+   * @param properties
+   *          a collection of associated properties
+   * @param message
+   *          an optional message to emit when the constraint is violated
+   * @param remarks
+   *          optional remarks describing the intent of the constraint
+   */
+  protected AbstractConfigurableMessageConstraint(
+      @Nullable String id,
+      @Nullable String formalName,
+      @Nullable MarkupLine description,
+      @NonNull ISource source,
+      @NonNull Level level,
+      @NonNull String target,
+      @NonNull Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; properties,
+      @Nullable String message,
+      @Nullable MarkupMultiline remarks) {
+<span class="fc" id="L75">    super(id, formalName, description, source, level, target, properties, remarks);</span>
+<span class="fc" id="L76">    this.message = message;</span>
+<span class="fc" id="L77">  }</span>
+
+  @Override
+  public String getMessage() {
+<span class="nc" id="L81">    return message;</span>
+  }
+
+  @Override
+  public String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context) {
+<span class="nc" id="L86">    String message = getMessage();</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">    if (message == null) {</span>
+<span class="nc" id="L88">      throw new IllegalStateException(&quot;A custom message is not defined.&quot;);</span>
+    }
+
+<span class="nc" id="L91">    return ObjectUtils.notNull(ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -&gt; {</span>
+<span class="nc" id="L92">      String metapath = ObjectUtils.notNull(match.group(2));</span>
+<span class="nc" id="L93">      MetapathExpression expr = MetapathExpression.compile(metapath, context.getStaticContext());</span>
+<span class="nc" id="L94">      return expr.evaluateAs(item, MetapathExpression.ResultType.STRING, context);</span>
+<span class="nc" id="L95">    }).toString());</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -74,7 +74,7 @@
 <span class="source-line-no">061</span><span id="line-61">  @NonNull</span>
 <span class="source-line-no">062</span><span id="line-62">  private static Predicate&lt;IFlagInstance&gt;</span>
 <span class="source-line-no">063</span><span id="line-63">      filterFlag(@NonNull IFlagInstance flagToFilter) {</span>
-<span class="source-line-no">064</span><span id="line-64">    return flag -&gt; flag != flagToFilter;</span>
+<span class="source-line-no">064</span><span id="line-64">    return flag -&gt; !flagToFilter.equals(flag);</span>
 <span class="source-line-no">065</span><span id="line-65">  }</span>
 <span class="source-line-no">066</span><span id="line-66"></span>
 <span class="source-line-no">067</span><span id="line-67">  @NonNull</span>

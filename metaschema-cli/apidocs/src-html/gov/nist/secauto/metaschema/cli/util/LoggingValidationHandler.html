@@ -22,8 +22,8 @@
 <span class="source-line-no">009</span><span id="line-9"></span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.model.validation.AbstractValidationResultProcessor;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;</span>
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;</span>
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;</span>
 <span class="source-line-no">016</span><span id="line-16"></span>
@@ -35,193 +35,174 @@
 <span class="source-line-no">022</span><span id="line-22">import org.xml.sax.SAXParseException;</span>
 <span class="source-line-no">023</span><span id="line-23"></span>
 <span class="source-line-no">024</span><span id="line-24">import java.net.URI;</span>
-<span class="source-line-no">025</span><span id="line-25">import java.util.List;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">028</span><span id="line-28">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">public final class LoggingValidationHandler {</span>
-<span class="source-line-no">031</span><span id="line-31">  private static final Logger LOGGER = LogManager.getLogger(LoggingValidationHandler.class);</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
-<span class="source-line-no">034</span><span id="line-34">  private static final LoggingValidationHandler NO_LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(false);</span>
-<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
-<span class="source-line-no">036</span><span id="line-36">  private static final LoggingValidationHandler LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(true);</span>
-<span class="source-line-no">037</span><span id="line-37"></span>
-<span class="source-line-no">038</span><span id="line-38">  private final boolean logExceptions;</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">  /**</span>
-<span class="source-line-no">041</span><span id="line-41">   * Get a singleton instance of the logging validation handler.</span>
-<span class="source-line-no">042</span><span id="line-42">   * &lt;p&gt;</span>
-<span class="source-line-no">043</span><span id="line-43">   * This instance will not log exceptions.</span>
-<span class="source-line-no">044</span><span id="line-44">   *</span>
-<span class="source-line-no">045</span><span id="line-45">   * @return the instance</span>
-<span class="source-line-no">046</span><span id="line-46">   */</span>
-<span class="source-line-no">047</span><span id="line-47">  @NonNull</span>
-<span class="source-line-no">048</span><span id="line-48">  public static LoggingValidationHandler instance() {</span>
-<span class="source-line-no">049</span><span id="line-49">    return instance(false);</span>
-<span class="source-line-no">050</span><span id="line-50">  }</span>
-<span class="source-line-no">051</span><span id="line-51"></span>
-<span class="source-line-no">052</span><span id="line-52">  /**</span>
-<span class="source-line-no">053</span><span id="line-53">   * Get a singleton instance of the logging validation handler.</span>
-<span class="source-line-no">054</span><span id="line-54">   *</span>
-<span class="source-line-no">055</span><span id="line-55">   * @param logExceptions</span>
-<span class="source-line-no">056</span><span id="line-56">   *          {@code true} if this instance will log exceptions or {@code false}</span>
-<span class="source-line-no">057</span><span id="line-57">   *          otherwise</span>
-<span class="source-line-no">058</span><span id="line-58">   * @return the instance</span>
-<span class="source-line-no">059</span><span id="line-59">   */</span>
-<span class="source-line-no">060</span><span id="line-60">  @SuppressFBWarnings(value = "SING_SINGLETON_GETTER_NOT_SYNCHRONIZED",</span>
-<span class="source-line-no">061</span><span id="line-61">      justification = "both values are class initialized")</span>
-<span class="source-line-no">062</span><span id="line-62">  @NonNull</span>
-<span class="source-line-no">063</span><span id="line-63">  public static LoggingValidationHandler instance(boolean logExceptions) {</span>
-<span class="source-line-no">064</span><span id="line-64">    return logExceptions ? LOG_EXCPTION_INSTANCE : NO_LOG_EXCPTION_INSTANCE;</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  private LoggingValidationHandler(boolean logExceptions) {</span>
-<span class="source-line-no">068</span><span id="line-68">    this.logExceptions = logExceptions;</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">027</span><span id="line-27">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</span>
+<span class="source-line-no">028</span><span id="line-28"></span>
+<span class="source-line-no">029</span><span id="line-29">/**</span>
+<span class="source-line-no">030</span><span id="line-30"> * Supports logging validation findings to the console using ANSI color codes to</span>
+<span class="source-line-no">031</span><span id="line-31"> * improve the visibility of warnings and errors.</span>
+<span class="source-line-no">032</span><span id="line-32"> */</span>
+<span class="source-line-no">033</span><span id="line-33">public final class LoggingValidationHandler</span>
+<span class="source-line-no">034</span><span id="line-34">    extends AbstractValidationResultProcessor {</span>
+<span class="source-line-no">035</span><span id="line-35">  private static final Logger LOGGER = LogManager.getLogger(LoggingValidationHandler.class);</span>
+<span class="source-line-no">036</span><span id="line-36"></span>
+<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
+<span class="source-line-no">038</span><span id="line-38">  private static final LoggingValidationHandler NO_LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(false);</span>
+<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
+<span class="source-line-no">040</span><span id="line-40">  private static final LoggingValidationHandler LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(true);</span>
+<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">042</span><span id="line-42">  private final boolean logExceptions;</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  /**</span>
+<span class="source-line-no">045</span><span id="line-45">   * Get a singleton instance of the logging validation handler.</span>
+<span class="source-line-no">046</span><span id="line-46">   * &lt;p&gt;</span>
+<span class="source-line-no">047</span><span id="line-47">   * This instance will not log exceptions.</span>
+<span class="source-line-no">048</span><span id="line-48">   *</span>
+<span class="source-line-no">049</span><span id="line-49">   * @return the instance</span>
+<span class="source-line-no">050</span><span id="line-50">   */</span>
+<span class="source-line-no">051</span><span id="line-51">  @NonNull</span>
+<span class="source-line-no">052</span><span id="line-52">  public static LoggingValidationHandler instance() {</span>
+<span class="source-line-no">053</span><span id="line-53">    return instance(false);</span>
+<span class="source-line-no">054</span><span id="line-54">  }</span>
+<span class="source-line-no">055</span><span id="line-55"></span>
+<span class="source-line-no">056</span><span id="line-56">  /**</span>
+<span class="source-line-no">057</span><span id="line-57">   * Get a singleton instance of the logging validation handler.</span>
+<span class="source-line-no">058</span><span id="line-58">   *</span>
+<span class="source-line-no">059</span><span id="line-59">   * @param logExceptions</span>
+<span class="source-line-no">060</span><span id="line-60">   *          {@code true} if this instance will log exceptions or {@code false}</span>
+<span class="source-line-no">061</span><span id="line-61">   *          otherwise</span>
+<span class="source-line-no">062</span><span id="line-62">   * @return the instance</span>
+<span class="source-line-no">063</span><span id="line-63">   */</span>
+<span class="source-line-no">064</span><span id="line-64">  @SuppressFBWarnings(value = "SING_SINGLETON_GETTER_NOT_SYNCHRONIZED",</span>
+<span class="source-line-no">065</span><span id="line-65">      justification = "both values are class initialized")</span>
+<span class="source-line-no">066</span><span id="line-66">  @NonNull</span>
+<span class="source-line-no">067</span><span id="line-67">  public static LoggingValidationHandler instance(boolean logExceptions) {</span>
+<span class="source-line-no">068</span><span id="line-68">    return logExceptions ? LOG_EXCPTION_INSTANCE : NO_LOG_EXCPTION_INSTANCE;</span>
 <span class="source-line-no">069</span><span id="line-69">  }</span>
 <span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  /**</span>
-<span class="source-line-no">072</span><span id="line-72">   * Determine if exceptions should be logged.</span>
-<span class="source-line-no">073</span><span id="line-73">   *</span>
-<span class="source-line-no">074</span><span id="line-74">   * @return {@code true} if exceptions are logged or {@code false} otherwise</span>
-<span class="source-line-no">075</span><span id="line-75">   */</span>
-<span class="source-line-no">076</span><span id="line-76">  public boolean isLogExceptions() {</span>
-<span class="source-line-no">077</span><span id="line-77">    return logExceptions;</span>
-<span class="source-line-no">078</span><span id="line-78">  }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">  /**</span>
-<span class="source-line-no">081</span><span id="line-81">   * Handle the provided collection of validation results.</span>
-<span class="source-line-no">082</span><span id="line-82">   *</span>
-<span class="source-line-no">083</span><span id="line-83">   * @param result</span>
-<span class="source-line-no">084</span><span id="line-84">   *          the validation results</span>
-<span class="source-line-no">085</span><span id="line-85">   * @return {@code true} if the result is passing or {@code false} otherwise</span>
-<span class="source-line-no">086</span><span id="line-86">   */</span>
-<span class="source-line-no">087</span><span id="line-87">  public boolean handleValidationResults(IValidationResult result) {</span>
-<span class="source-line-no">088</span><span id="line-88">    handleValidationFindings(result.getFindings());</span>
-<span class="source-line-no">089</span><span id="line-89">    return result.isPassing();</span>
-<span class="source-line-no">090</span><span id="line-90">  }</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">  /**</span>
-<span class="source-line-no">093</span><span id="line-93">   * Handle the provided collection of validation findings.</span>
-<span class="source-line-no">094</span><span id="line-94">   *</span>
-<span class="source-line-no">095</span><span id="line-95">   * @param findings</span>
-<span class="source-line-no">096</span><span id="line-96">   *          the findings to process</span>
-<span class="source-line-no">097</span><span id="line-97">   */</span>
-<span class="source-line-no">098</span><span id="line-98">  public void handleValidationFindings(@NonNull List&lt;? extends IValidationFinding&gt; findings) {</span>
-<span class="source-line-no">099</span><span id="line-99">    for (IValidationFinding finding : findings) {</span>
-<span class="source-line-no">100</span><span id="line-100">      if (finding instanceof JsonValidationFinding) {</span>
-<span class="source-line-no">101</span><span id="line-101">        handleJsonValidationFinding((JsonValidationFinding) finding);</span>
-<span class="source-line-no">102</span><span id="line-102">      } else if (finding instanceof XmlValidationFinding) {</span>
-<span class="source-line-no">103</span><span id="line-103">        handleXmlValidationFinding((XmlValidationFinding) finding);</span>
-<span class="source-line-no">104</span><span id="line-104">      } else if (finding instanceof ConstraintValidationFinding) {</span>
-<span class="source-line-no">105</span><span id="line-105">        handleConstraintValidationFinding((ConstraintValidationFinding) finding);</span>
-<span class="source-line-no">106</span><span id="line-106">      } else {</span>
-<span class="source-line-no">107</span><span id="line-107">        throw new IllegalStateException();</span>
-<span class="source-line-no">108</span><span id="line-108">      }</span>
-<span class="source-line-no">109</span><span id="line-109">    }</span>
-<span class="source-line-no">110</span><span id="line-110">  }</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  private void handleJsonValidationFinding(@NonNull JsonValidationFinding finding) {</span>
-<span class="source-line-no">113</span><span id="line-113">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">    ansi = ansi.a('[')</span>
-<span class="source-line-no">116</span><span id="line-116">        .fgBright(Color.WHITE)</span>
-<span class="source-line-no">117</span><span id="line-117">        .a(finding.getCause().getPointerToViolation())</span>
-<span class="source-line-no">118</span><span id="line-118">        .reset()</span>
-<span class="source-line-no">119</span><span id="line-119">        .a(']');</span>
-<span class="source-line-no">120</span><span id="line-120"></span>
-<span class="source-line-no">121</span><span id="line-121">    URI documentUri = finding.getDocumentUri();</span>
-<span class="source-line-no">122</span><span id="line-122">    ansi = documentUri == null</span>
-<span class="source-line-no">123</span><span id="line-123">        ? ansi.format(" %s", finding.getMessage())</span>
-<span class="source-line-no">124</span><span id="line-124">        : ansi.format(" %s [%s]", finding.getMessage(), documentUri.toString());</span>
+<span class="source-line-no">071</span><span id="line-71">  private LoggingValidationHandler(boolean logExceptions) {</span>
+<span class="source-line-no">072</span><span id="line-72">    this.logExceptions = logExceptions;</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  /**</span>
+<span class="source-line-no">076</span><span id="line-76">   * Determine if exceptions should be logged.</span>
+<span class="source-line-no">077</span><span id="line-77">   *</span>
+<span class="source-line-no">078</span><span id="line-78">   * @return {@code true} if exceptions are logged or {@code false} otherwise</span>
+<span class="source-line-no">079</span><span id="line-79">   */</span>
+<span class="source-line-no">080</span><span id="line-80">  public boolean isLogExceptions() {</span>
+<span class="source-line-no">081</span><span id="line-81">    return logExceptions;</span>
+<span class="source-line-no">082</span><span id="line-82">  }</span>
+<span class="source-line-no">083</span><span id="line-83"></span>
+<span class="source-line-no">084</span><span id="line-84">  @Override</span>
+<span class="source-line-no">085</span><span id="line-85">  protected void handleJsonValidationFinding(@NonNull JsonValidationFinding finding) {</span>
+<span class="source-line-no">086</span><span id="line-86">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
+<span class="source-line-no">087</span><span id="line-87"></span>
+<span class="source-line-no">088</span><span id="line-88">    ansi = ansi.a('[')</span>
+<span class="source-line-no">089</span><span id="line-89">        .fgBright(Color.WHITE)</span>
+<span class="source-line-no">090</span><span id="line-90">        .a(finding.getCause().getPointerToViolation())</span>
+<span class="source-line-no">091</span><span id="line-91">        .reset()</span>
+<span class="source-line-no">092</span><span id="line-92">        .a(']');</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">    URI documentUri = finding.getDocumentUri();</span>
+<span class="source-line-no">095</span><span id="line-95">    ansi = documentUri == null</span>
+<span class="source-line-no">096</span><span id="line-96">        ? ansi.format(" %s", finding.getMessage())</span>
+<span class="source-line-no">097</span><span id="line-97">        : ansi.format(" %s [%s]", finding.getMessage(), documentUri.toString());</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">    getLogger(finding).log(ansi);</span>
+<span class="source-line-no">100</span><span id="line-100">  }</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">  @Override</span>
+<span class="source-line-no">103</span><span id="line-103">  protected void handleXmlValidationFinding(XmlValidationFinding finding) {</span>
+<span class="source-line-no">104</span><span id="line-104">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
+<span class="source-line-no">105</span><span id="line-105">    SAXParseException ex = finding.getCause();</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">    URI documentUri = finding.getDocumentUri();</span>
+<span class="source-line-no">108</span><span id="line-108">    ansi = documentUri == null</span>
+<span class="source-line-no">109</span><span id="line-109">        ? ansi.format("%s [{%d,%d}]",</span>
+<span class="source-line-no">110</span><span id="line-110">            finding.getMessage(),</span>
+<span class="source-line-no">111</span><span id="line-111">            ex.getLineNumber(),</span>
+<span class="source-line-no">112</span><span id="line-112">            ex.getColumnNumber())</span>
+<span class="source-line-no">113</span><span id="line-113">        : ansi.format("%s [%s{%d,%d}]",</span>
+<span class="source-line-no">114</span><span id="line-114">            finding.getMessage(),</span>
+<span class="source-line-no">115</span><span id="line-115">            documentUri.toString(),</span>
+<span class="source-line-no">116</span><span id="line-116">            ex.getLineNumber(),</span>
+<span class="source-line-no">117</span><span id="line-117">            ex.getColumnNumber());</span>
+<span class="source-line-no">118</span><span id="line-118"></span>
+<span class="source-line-no">119</span><span id="line-119">    getLogger(finding).log(ansi);</span>
+<span class="source-line-no">120</span><span id="line-120">  }</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">  @Override</span>
+<span class="source-line-no">123</span><span id="line-123">  protected void handleConstraintValidationFinding(@NonNull ConstraintValidationFinding finding) {</span>
+<span class="source-line-no">124</span><span id="line-124">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
 <span class="source-line-no">125</span><span id="line-125"></span>
-<span class="source-line-no">126</span><span id="line-126">    getLogger(finding).log(ansi);</span>
-<span class="source-line-no">127</span><span id="line-127">  }</span>
-<span class="source-line-no">128</span><span id="line-128"></span>
-<span class="source-line-no">129</span><span id="line-129">  private void handleXmlValidationFinding(XmlValidationFinding finding) {</span>
-<span class="source-line-no">130</span><span id="line-130">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
-<span class="source-line-no">131</span><span id="line-131">    SAXParseException ex = finding.getCause();</span>
+<span class="source-line-no">126</span><span id="line-126">    ansi.format("[%s]", finding.getTarget().getMetapath());</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">    String id = finding.getIdentifier();</span>
+<span class="source-line-no">129</span><span id="line-129">    if (id != null) {</span>
+<span class="source-line-no">130</span><span id="line-130">      ansi.format(" %s:", id);</span>
+<span class="source-line-no">131</span><span id="line-131">    }</span>
 <span class="source-line-no">132</span><span id="line-132"></span>
-<span class="source-line-no">133</span><span id="line-133">    URI documentUri = finding.getDocumentUri();</span>
-<span class="source-line-no">134</span><span id="line-134">    ansi = documentUri == null</span>
-<span class="source-line-no">135</span><span id="line-135">        ? ansi.format("%s [{%d,%d}]",</span>
-<span class="source-line-no">136</span><span id="line-136">            finding.getMessage(),</span>
-<span class="source-line-no">137</span><span id="line-137">            ex.getLineNumber(),</span>
-<span class="source-line-no">138</span><span id="line-138">            ex.getColumnNumber())</span>
-<span class="source-line-no">139</span><span id="line-139">        : ansi.format("%s [%s{%d,%d}]",</span>
-<span class="source-line-no">140</span><span id="line-140">            finding.getMessage(),</span>
-<span class="source-line-no">141</span><span id="line-141">            documentUri.toString(),</span>
-<span class="source-line-no">142</span><span id="line-142">            ex.getLineNumber(),</span>
-<span class="source-line-no">143</span><span id="line-143">            ex.getColumnNumber());</span>
-<span class="source-line-no">144</span><span id="line-144"></span>
-<span class="source-line-no">145</span><span id="line-145">    getLogger(finding).log(ansi);</span>
-<span class="source-line-no">146</span><span id="line-146">  }</span>
-<span class="source-line-no">147</span><span id="line-147"></span>
-<span class="source-line-no">148</span><span id="line-148">  private void handleConstraintValidationFinding(@NonNull ConstraintValidationFinding finding) {</span>
-<span class="source-line-no">149</span><span id="line-149">    Ansi ansi = generatePreamble(finding.getSeverity());</span>
-<span class="source-line-no">150</span><span id="line-150"></span>
-<span class="source-line-no">151</span><span id="line-151">    getLogger(finding).log(</span>
-<span class="source-line-no">152</span><span id="line-152">        ansi.format("[%s] %s", finding.getTarget().getMetapath(), finding.getMessage()));</span>
-<span class="source-line-no">153</span><span id="line-153">  }</span>
-<span class="source-line-no">154</span><span id="line-154"></span>
-<span class="source-line-no">155</span><span id="line-155">  @NonNull</span>
-<span class="source-line-no">156</span><span id="line-156">  private LogBuilder getLogger(@NonNull IValidationFinding finding) {</span>
-<span class="source-line-no">157</span><span id="line-157">    LogBuilder retval;</span>
-<span class="source-line-no">158</span><span id="line-158">    switch (finding.getSeverity()) {</span>
-<span class="source-line-no">159</span><span id="line-159">    case CRITICAL:</span>
-<span class="source-line-no">160</span><span id="line-160">      retval = LOGGER.atFatal();</span>
-<span class="source-line-no">161</span><span id="line-161">      break;</span>
-<span class="source-line-no">162</span><span id="line-162">    case ERROR:</span>
-<span class="source-line-no">163</span><span id="line-163">      retval = LOGGER.atError();</span>
-<span class="source-line-no">164</span><span id="line-164">      break;</span>
-<span class="source-line-no">165</span><span id="line-165">    case WARNING:</span>
-<span class="source-line-no">166</span><span id="line-166">      retval = LOGGER.atWarn();</span>
-<span class="source-line-no">167</span><span id="line-167">      break;</span>
-<span class="source-line-no">168</span><span id="line-168">    case INFORMATIONAL:</span>
-<span class="source-line-no">169</span><span id="line-169">      retval = LOGGER.atInfo();</span>
-<span class="source-line-no">170</span><span id="line-170">      break;</span>
-<span class="source-line-no">171</span><span id="line-171">    default:</span>
-<span class="source-line-no">172</span><span id="line-172">      throw new IllegalArgumentException("Unknown level: " + finding.getSeverity().name());</span>
-<span class="source-line-no">173</span><span id="line-173">    }</span>
-<span class="source-line-no">174</span><span id="line-174"></span>
-<span class="source-line-no">175</span><span id="line-175">    assert retval != null;</span>
-<span class="source-line-no">176</span><span id="line-176"></span>
-<span class="source-line-no">177</span><span id="line-177">    if (finding.getCause() != null &amp;&amp; isLogExceptions()) {</span>
-<span class="source-line-no">178</span><span id="line-178">      retval.withThrowable(finding.getCause());</span>
-<span class="source-line-no">179</span><span id="line-179">    }</span>
-<span class="source-line-no">180</span><span id="line-180"></span>
-<span class="source-line-no">181</span><span id="line-181">    return retval;</span>
-<span class="source-line-no">182</span><span id="line-182">  }</span>
-<span class="source-line-no">183</span><span id="line-183"></span>
-<span class="source-line-no">184</span><span id="line-184">  @SuppressWarnings("static-method")</span>
-<span class="source-line-no">185</span><span id="line-185">  @NonNull</span>
-<span class="source-line-no">186</span><span id="line-186">  private Ansi generatePreamble(@NonNull Level level) {</span>
-<span class="source-line-no">187</span><span id="line-187">    Ansi ansi = ansi().fgBright(Color.WHITE).a('[').reset();</span>
+<span class="source-line-no">133</span><span id="line-133">    getLogger(finding).log(ansi.format(" %s", finding.getMessage()));</span>
+<span class="source-line-no">134</span><span id="line-134">  }</span>
+<span class="source-line-no">135</span><span id="line-135"></span>
+<span class="source-line-no">136</span><span id="line-136">  @NonNull</span>
+<span class="source-line-no">137</span><span id="line-137">  private LogBuilder getLogger(@NonNull IValidationFinding finding) {</span>
+<span class="source-line-no">138</span><span id="line-138">    LogBuilder retval;</span>
+<span class="source-line-no">139</span><span id="line-139">    switch (finding.getSeverity()) {</span>
+<span class="source-line-no">140</span><span id="line-140">    case CRITICAL:</span>
+<span class="source-line-no">141</span><span id="line-141">      retval = LOGGER.atFatal();</span>
+<span class="source-line-no">142</span><span id="line-142">      break;</span>
+<span class="source-line-no">143</span><span id="line-143">    case ERROR:</span>
+<span class="source-line-no">144</span><span id="line-144">      retval = LOGGER.atError();</span>
+<span class="source-line-no">145</span><span id="line-145">      break;</span>
+<span class="source-line-no">146</span><span id="line-146">    case WARNING:</span>
+<span class="source-line-no">147</span><span id="line-147">      retval = LOGGER.atWarn();</span>
+<span class="source-line-no">148</span><span id="line-148">      break;</span>
+<span class="source-line-no">149</span><span id="line-149">    case INFORMATIONAL:</span>
+<span class="source-line-no">150</span><span id="line-150">      retval = LOGGER.atInfo();</span>
+<span class="source-line-no">151</span><span id="line-151">      break;</span>
+<span class="source-line-no">152</span><span id="line-152">    default:</span>
+<span class="source-line-no">153</span><span id="line-153">      throw new IllegalArgumentException("Unknown level: " + finding.getSeverity().name());</span>
+<span class="source-line-no">154</span><span id="line-154">    }</span>
+<span class="source-line-no">155</span><span id="line-155"></span>
+<span class="source-line-no">156</span><span id="line-156">    assert retval != null;</span>
+<span class="source-line-no">157</span><span id="line-157"></span>
+<span class="source-line-no">158</span><span id="line-158">    if (finding.getCause() != null &amp;&amp; isLogExceptions()) {</span>
+<span class="source-line-no">159</span><span id="line-159">      retval.withThrowable(finding.getCause());</span>
+<span class="source-line-no">160</span><span id="line-160">    }</span>
+<span class="source-line-no">161</span><span id="line-161"></span>
+<span class="source-line-no">162</span><span id="line-162">    return retval;</span>
+<span class="source-line-no">163</span><span id="line-163">  }</span>
+<span class="source-line-no">164</span><span id="line-164"></span>
+<span class="source-line-no">165</span><span id="line-165">  @SuppressWarnings("static-method")</span>
+<span class="source-line-no">166</span><span id="line-166">  @NonNull</span>
+<span class="source-line-no">167</span><span id="line-167">  private Ansi generatePreamble(@NonNull Level level) {</span>
+<span class="source-line-no">168</span><span id="line-168">    Ansi ansi = ansi().fgBright(Color.WHITE).a('[').reset();</span>
+<span class="source-line-no">169</span><span id="line-169"></span>
+<span class="source-line-no">170</span><span id="line-170">    switch (level) {</span>
+<span class="source-line-no">171</span><span id="line-171">    case CRITICAL:</span>
+<span class="source-line-no">172</span><span id="line-172">      ansi = ansi.fgRed().a("CRITICAL").reset();</span>
+<span class="source-line-no">173</span><span id="line-173">      break;</span>
+<span class="source-line-no">174</span><span id="line-174">    case ERROR:</span>
+<span class="source-line-no">175</span><span id="line-175">      ansi = ansi.fgBrightRed().a("ERROR").reset();</span>
+<span class="source-line-no">176</span><span id="line-176">      break;</span>
+<span class="source-line-no">177</span><span id="line-177">    case WARNING:</span>
+<span class="source-line-no">178</span><span id="line-178">      ansi = ansi.fgBrightYellow().a("WARNING").reset();</span>
+<span class="source-line-no">179</span><span id="line-179">      break;</span>
+<span class="source-line-no">180</span><span id="line-180">    case INFORMATIONAL:</span>
+<span class="source-line-no">181</span><span id="line-181">      ansi = ansi.fgBrightBlue().a("INFO").reset();</span>
+<span class="source-line-no">182</span><span id="line-182">      break;</span>
+<span class="source-line-no">183</span><span id="line-183">    default:</span>
+<span class="source-line-no">184</span><span id="line-184">      ansi = ansi().fgBright(Color.MAGENTA).a(level.name()).reset();</span>
+<span class="source-line-no">185</span><span id="line-185">      break;</span>
+<span class="source-line-no">186</span><span id="line-186">    }</span>
+<span class="source-line-no">187</span><span id="line-187">    ansi = ansi.fgBright(Color.WHITE).a("] ").reset();</span>
 <span class="source-line-no">188</span><span id="line-188"></span>
-<span class="source-line-no">189</span><span id="line-189">    switch (level) {</span>
-<span class="source-line-no">190</span><span id="line-190">    case CRITICAL:</span>
-<span class="source-line-no">191</span><span id="line-191">      ansi = ansi.fgRed().a("CRITICAL").reset();</span>
-<span class="source-line-no">192</span><span id="line-192">      break;</span>
-<span class="source-line-no">193</span><span id="line-193">    case ERROR:</span>
-<span class="source-line-no">194</span><span id="line-194">      ansi = ansi.fgBrightRed().a("ERROR").reset();</span>
-<span class="source-line-no">195</span><span id="line-195">      break;</span>
-<span class="source-line-no">196</span><span id="line-196">    case WARNING:</span>
-<span class="source-line-no">197</span><span id="line-197">      ansi = ansi.fgBrightYellow().a("WARNING").reset();</span>
-<span class="source-line-no">198</span><span id="line-198">      break;</span>
-<span class="source-line-no">199</span><span id="line-199">    case INFORMATIONAL:</span>
-<span class="source-line-no">200</span><span id="line-200">      ansi = ansi.fgBrightBlue().a("INFO").reset();</span>
-<span class="source-line-no">201</span><span id="line-201">      break;</span>
-<span class="source-line-no">202</span><span id="line-202">    default:</span>
-<span class="source-line-no">203</span><span id="line-203">      ansi = ansi().fgBright(Color.MAGENTA).a(level.name()).reset();</span>
-<span class="source-line-no">204</span><span id="line-204">      break;</span>
-<span class="source-line-no">205</span><span id="line-205">    }</span>
-<span class="source-line-no">206</span><span id="line-206">    ansi = ansi.fgBright(Color.WHITE).a("] ").reset();</span>
-<span class="source-line-no">207</span><span id="line-207"></span>
-<span class="source-line-no">208</span><span id="line-208">    assert ansi != null;</span>
-<span class="source-line-no">209</span><span id="line-209">    return ansi;</span>
-<span class="source-line-no">210</span><span id="line-210">  }</span>
-<span class="source-line-no">211</span><span id="line-211">}</span>
+<span class="source-line-no">189</span><span id="line-189">    assert ansi != null;</span>
+<span class="source-line-no">190</span><span id="line-190">    return ansi;</span>
+<span class="source-line-no">191</span><span id="line-191">  }</span>
+<span class="source-line-no">192</span><span id="line-192">}</span>
 
 
 

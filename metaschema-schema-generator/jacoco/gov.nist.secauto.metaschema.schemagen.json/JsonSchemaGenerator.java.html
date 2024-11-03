@@ -17,6 +17,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractSchemaGenerator;
+import gov.nist.secauto.metaschema.schemagen.ModuleIndex.DefinitionEntry;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import gov.nist.secauto.metaschema.schemagen.json.IDefineableJsonSchema.IKey;
@@ -32,34 +33,34 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="fc" id="L35">public class JsonSchemaGenerator</span>
+<span class="fc" id="L36">public class JsonSchemaGenerator</span>
     extends AbstractSchemaGenerator&lt;JsonGenerator, JsonDatatypeManager, JsonGenerationState&gt; {
   @NonNull
   private final JsonFactory jsonFactory;
 
   public JsonSchemaGenerator() {
-<span class="fc" id="L41">    this(new JsonFactory());</span>
-<span class="fc" id="L42">  }</span>
+<span class="fc" id="L42">    this(new JsonFactory());</span>
+<span class="fc" id="L43">  }</span>
 
-<span class="fc" id="L44">  public JsonSchemaGenerator(@NonNull JsonFactory jsonFactory) {</span>
-<span class="fc" id="L45">    this.jsonFactory = jsonFactory;</span>
-<span class="fc" id="L46">  }</span>
+<span class="fc" id="L45">  public JsonSchemaGenerator(@NonNull JsonFactory jsonFactory) {</span>
+<span class="fc" id="L46">    this.jsonFactory = jsonFactory;</span>
+<span class="fc" id="L47">  }</span>
 
   @NonNull
   public JsonFactory getJsonFactory() {
-<span class="fc" id="L50">    return jsonFactory;</span>
+<span class="fc" id="L51">    return jsonFactory;</span>
   }
 
   @SuppressWarnings(&quot;resource&quot;)
   @Override
   protected JsonGenerator newWriter(Writer out) {
     try {
-<span class="fc" id="L57">      return ObjectUtils.notNull(getJsonFactory().createGenerator(out)</span>
-<span class="fc" id="L58">          .setCodec(new ObjectMapper())</span>
-<span class="fc" id="L59">          .useDefaultPrettyPrinter()</span>
-<span class="fc" id="L60">          .disable(Feature.AUTO_CLOSE_TARGET));</span>
-<span class="nc" id="L61">    } catch (IOException ex) {</span>
-<span class="nc" id="L62">      throw new SchemaGenerationException(ex);</span>
+<span class="fc" id="L58">      return ObjectUtils.notNull(getJsonFactory().createGenerator(out)</span>
+<span class="fc" id="L59">          .setCodec(new ObjectMapper())</span>
+<span class="fc" id="L60">          .useDefaultPrettyPrinter()</span>
+<span class="fc" id="L61">          .disable(Feature.AUTO_CLOSE_TARGET));</span>
+<span class="nc" id="L62">    } catch (IOException ex) {</span>
+<span class="nc" id="L63">      throw new SchemaGenerationException(ex);</span>
     }
   }
 
@@ -68,88 +69,88 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       IModule module,
       JsonGenerator schemaWriter,
       IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration) {
-<span class="fc" id="L71">    return new JsonGenerationState(module, schemaWriter, configuration);</span>
+<span class="fc" id="L72">    return new JsonGenerationState(module, schemaWriter, configuration);</span>
   }
 
   @Override
   protected void generateSchema(JsonGenerationState state) {
-<span class="fc" id="L76">    IModule module = state.getModule();</span>
+<span class="fc" id="L77">    IModule module = state.getModule();</span>
     try {
-<span class="fc" id="L78">      state.writeStartObject();</span>
+<span class="fc" id="L79">      state.writeStartObject();</span>
 
-<span class="fc" id="L80">      state.writeField(&quot;$schema&quot;, &quot;http://json-schema.org/draft-07/schema#&quot;);</span>
-<span class="fc" id="L81">      state.writeField(&quot;$id&quot;,</span>
-<span class="fc" id="L82">          String.format(&quot;%s/%s-%s-schema.json&quot;,</span>
-<span class="fc" id="L83">              module.getXmlNamespace(),</span>
-<span class="fc" id="L84">              module.getShortName(),</span>
-<span class="fc" id="L85">              module.getVersion()));</span>
-<span class="fc" id="L86">      state.writeField(&quot;$comment&quot;, module.getName().toMarkdown());</span>
-<span class="fc" id="L87">      state.writeField(&quot;type&quot;, &quot;object&quot;);</span>
+<span class="fc" id="L81">      state.writeField(&quot;$schema&quot;, &quot;http://json-schema.org/draft-07/schema#&quot;);</span>
+<span class="fc" id="L82">      state.writeField(&quot;$id&quot;,</span>
+<span class="fc" id="L83">          String.format(&quot;%s/%s-%s-schema.json&quot;,</span>
+<span class="fc" id="L84">              module.getXmlNamespace(),</span>
+<span class="fc" id="L85">              module.getShortName(),</span>
+<span class="fc" id="L86">              module.getVersion()));</span>
+<span class="fc" id="L87">      state.writeField(&quot;$comment&quot;, module.getName().toMarkdown());</span>
+<span class="fc" id="L88">      state.writeField(&quot;type&quot;, &quot;object&quot;);</span>
 
-<span class="fc" id="L89">      ObjectNode definitionsObject = state.generateDefinitions();</span>
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">      if (!definitionsObject.isEmpty()) {</span>
-<span class="fc" id="L91">        state.writeField(&quot;definitions&quot;, definitionsObject);</span>
+<span class="fc" id="L90">      ObjectNode definitionsObject = state.generateDefinitions();</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">      if (!definitionsObject.isEmpty()) {</span>
+<span class="fc" id="L92">        state.writeField(&quot;definitions&quot;, definitionsObject);</span>
       }
 
-<span class="fc" id="L94">      List&lt;IAssemblyDefinition&gt; rootAssemblyDefinitions = state.getMetaschemaIndex().getDefinitions().stream()</span>
-<span class="fc" id="L95">          .map(entry -&gt; entry.getDefinition())</span>
-<span class="fc" id="L96">          .filter(</span>
-<span class="fc bfc" id="L97" title="All 4 branches covered.">              definition -&gt; definition instanceof IAssemblyDefinition &amp;&amp; ((IAssemblyDefinition) definition).isRoot())</span>
-<span class="fc" id="L98">          .map(definition -&gt; (IAssemblyDefinition) definition)</span>
-<span class="fc" id="L99">          .collect(Collectors.toUnmodifiableList());</span>
+<span class="fc" id="L95">      List&lt;IAssemblyDefinition&gt; rootAssemblyDefinitions = state.getMetaschemaIndex().getDefinitions().stream()</span>
+<span class="fc" id="L96">          .map(DefinitionEntry::getDefinition)</span>
+<span class="fc" id="L97">          .filter(</span>
+<span class="fc bfc" id="L98" title="All 4 branches covered.">              definition -&gt; definition instanceof IAssemblyDefinition &amp;&amp; ((IAssemblyDefinition) definition).isRoot())</span>
+<span class="fc" id="L99">          .map(definition -&gt; (IAssemblyDefinition) definition)</span>
+<span class="fc" id="L100">          .collect(Collectors.toUnmodifiableList());</span>
 
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">      if (rootAssemblyDefinitions.isEmpty()) {</span>
-<span class="nc" id="L102">        throw new SchemaGenerationException(&quot;No root definitions found&quot;);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">      if (rootAssemblyDefinitions.isEmpty()) {</span>
+<span class="nc" id="L103">        throw new SchemaGenerationException(&quot;No root definitions found&quot;);</span>
       }
 
       // generate the properties first to ensure all definitions are identified
-<span class="fc" id="L106">      List&lt;RootPropertyEntry&gt; rootEntries = rootAssemblyDefinitions.stream()</span>
-<span class="fc" id="L107">          .map(root -&gt; {</span>
-<span class="pc bpc" id="L108" title="1 of 2 branches missed.">            assert root != null;</span>
-<span class="fc" id="L109">            return new RootPropertyEntry(root, state);</span>
+<span class="fc" id="L107">      List&lt;RootPropertyEntry&gt; rootEntries = rootAssemblyDefinitions.stream()</span>
+<span class="fc" id="L108">          .map(root -&gt; {</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            assert root != null;</span>
+<span class="fc" id="L110">            return new RootPropertyEntry(root, state);</span>
           })
-<span class="fc" id="L111">          .collect(Collectors.toUnmodifiableList());</span>
+<span class="fc" id="L112">          .collect(Collectors.toUnmodifiableList());</span>
 
-<span class="fc" id="L113">      @SuppressWarnings(&quot;resource&quot;) JsonGenerator writer = state.getWriter(); // NOPMD not owned</span>
+<span class="fc" id="L114">      @SuppressWarnings(&quot;resource&quot;) JsonGenerator writer = state.getWriter(); // NOPMD not owned</span>
 
-<span class="fc bfc" id="L115" title="All 2 branches covered.">      if (rootEntries.size() == 1) {</span>
-<span class="fc" id="L116">        rootEntries.iterator().next().write(writer);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">      if (rootEntries.size() == 1) {</span>
+<span class="fc" id="L117">        rootEntries.iterator().next().write(writer);</span>
       } else {
-<span class="fc" id="L118">        writer.writeFieldName(&quot;oneOf&quot;);</span>
-<span class="fc" id="L119">        writer.writeStartArray();</span>
+<span class="fc" id="L119">        writer.writeFieldName(&quot;oneOf&quot;);</span>
+<span class="fc" id="L120">        writer.writeStartArray();</span>
 
-<span class="fc bfc" id="L121" title="All 2 branches covered.">        for (RootPropertyEntry root : rootEntries) {</span>
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">          assert root != null;</span>
-<span class="fc" id="L123">          writer.writeStartObject();</span>
-<span class="fc" id="L124">          root.write(writer);</span>
-<span class="fc" id="L125">          writer.writeEndObject();</span>
-<span class="fc" id="L126">        }</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for (RootPropertyEntry root : rootEntries) {</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">          assert root != null;</span>
+<span class="fc" id="L124">          writer.writeStartObject();</span>
+<span class="fc" id="L125">          root.write(writer);</span>
+<span class="fc" id="L126">          writer.writeEndObject();</span>
+<span class="fc" id="L127">        }</span>
 
-<span class="fc" id="L128">        writer.writeEndArray();</span>
+<span class="fc" id="L129">        writer.writeEndArray();</span>
       }
 
-<span class="fc" id="L131">      state.writeEndObject();</span>
-<span class="nc" id="L132">    } catch (IOException ex) {</span>
-<span class="nc" id="L133">      throw new SchemaGenerationException(ex);</span>
-<span class="fc" id="L134">    }</span>
-<span class="fc" id="L135">  }</span>
+<span class="fc" id="L132">      state.writeEndObject();</span>
+<span class="nc" id="L133">    } catch (IOException ex) {</span>
+<span class="nc" id="L134">      throw new SchemaGenerationException(ex);</span>
+<span class="fc" id="L135">    }</span>
+<span class="fc" id="L136">  }</span>
 
   @NonNull
   private static Map&lt;String, ObjectNode&gt; generateRootProperties(
       @NonNull IAssemblyDefinition definition,
       @NonNull JsonGenerationState state) {
-<span class="fc" id="L141">    Map&lt;String, ObjectNode&gt; properties = new LinkedHashMap&lt;&gt;(); // NOPMD no concurrent access</span>
+<span class="fc" id="L142">    Map&lt;String, ObjectNode&gt; properties = new LinkedHashMap&lt;&gt;(); // NOPMD no concurrent access</span>
 
-<span class="fc" id="L143">    properties.put(&quot;$schema&quot;, JsonNodeFactory.instance.objectNode()</span>
-<span class="fc" id="L144">        .put(&quot;type&quot;, &quot;string&quot;)</span>
-<span class="fc" id="L145">        .put(&quot;format&quot;, &quot;uri-reference&quot;));</span>
+<span class="fc" id="L144">    properties.put(&quot;$schema&quot;, JsonNodeFactory.instance.objectNode()</span>
+<span class="fc" id="L145">        .put(&quot;type&quot;, &quot;string&quot;)</span>
+<span class="fc" id="L146">        .put(&quot;format&quot;, &quot;uri-reference&quot;));</span>
 
-<span class="fc" id="L147">    ObjectNode rootObj = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());</span>
-<span class="fc" id="L148">    IDefinitionJsonSchema&lt;IAssemblyDefinition&gt; schema = state.getSchema(IKey.of(definition));</span>
-<span class="fc" id="L149">    schema.generateSchemaOrRef(rootObj, state);</span>
+<span class="fc" id="L148">    ObjectNode rootObj = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());</span>
+<span class="fc" id="L149">    IDefinitionJsonSchema&lt;IAssemblyDefinition&gt; schema = state.getSchema(IKey.of(definition));</span>
+<span class="fc" id="L150">    schema.generateSchemaOrRef(rootObj, state);</span>
 
-<span class="fc" id="L151">    properties.put(definition.getRootJsonName(), rootObj);</span>
-<span class="fc" id="L152">    return properties;</span>
+<span class="fc" id="L152">    properties.put(definition.getRootJsonName(), rootObj);</span>
+<span class="fc" id="L153">    return properties;</span>
   }
 
   private static class RootPropertyEntry {
@@ -160,39 +161,39 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
     public RootPropertyEntry(
         @NonNull IAssemblyDefinition definition,
-<span class="fc" id="L163">        @NonNull JsonGenerationState state) {</span>
-<span class="fc" id="L164">      this.definition = definition;</span>
-<span class="fc" id="L165">      this.properties = generateRootProperties(definition, state);</span>
-<span class="fc" id="L166">    }</span>
+<span class="fc" id="L164">        @NonNull JsonGenerationState state) {</span>
+<span class="fc" id="L165">      this.definition = definition;</span>
+<span class="fc" id="L166">      this.properties = generateRootProperties(definition, state);</span>
+<span class="fc" id="L167">    }</span>
 
     @NonNull
     protected IAssemblyDefinition getDefinition() {
-<span class="fc" id="L170">      return definition;</span>
+<span class="fc" id="L171">      return definition;</span>
     }
 
     @NonNull
     protected Map&lt;String, ObjectNode&gt; getProperties() {
-<span class="fc" id="L175">      return properties;</span>
+<span class="fc" id="L176">      return properties;</span>
     }
 
     public void write(JsonGenerator writer) throws IOException {
-<span class="fc" id="L179">      writer.writeFieldName(&quot;properties&quot;);</span>
-<span class="fc" id="L180">      writer.writeStartObject();</span>
+<span class="fc" id="L180">      writer.writeFieldName(&quot;properties&quot;);</span>
+<span class="fc" id="L181">      writer.writeStartObject();</span>
 
-<span class="fc bfc" id="L182" title="All 2 branches covered.">      for (Map.Entry&lt;String, ObjectNode&gt; entry : getProperties().entrySet()) {</span>
-<span class="fc" id="L183">        writer.writeFieldName(entry.getKey());</span>
-<span class="fc" id="L184">        writer.writeTree(entry.getValue());</span>
-<span class="fc" id="L185">      }</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">      for (Map.Entry&lt;String, ObjectNode&gt; entry : getProperties().entrySet()) {</span>
+<span class="fc" id="L184">        writer.writeFieldName(entry.getKey());</span>
+<span class="fc" id="L185">        writer.writeTree(entry.getValue());</span>
+<span class="fc" id="L186">      }</span>
 
-<span class="fc" id="L187">      writer.writeEndObject();</span>
+<span class="fc" id="L188">      writer.writeEndObject();</span>
 
-<span class="fc" id="L189">      writer.writeFieldName(&quot;required&quot;);</span>
-<span class="fc" id="L190">      writer.writeStartArray();</span>
-<span class="fc" id="L191">      writer.writeString(getDefinition().getRootJsonName());</span>
-<span class="fc" id="L192">      writer.writeEndArray();</span>
+<span class="fc" id="L190">      writer.writeFieldName(&quot;required&quot;);</span>
+<span class="fc" id="L191">      writer.writeStartArray();</span>
+<span class="fc" id="L192">      writer.writeString(getDefinition().getRootJsonName());</span>
+<span class="fc" id="L193">      writer.writeEndArray();</span>
 
-<span class="fc" id="L194">      writer.writeBooleanField(&quot;additionalProperties&quot;, false);</span>
-<span class="fc" id="L195">    }</span>
+<span class="fc" id="L195">      writer.writeBooleanField(&quot;additionalProperties&quot;, false);</span>
+<span class="fc" id="L196">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -24,34 +24,38 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-<span class="nc" id="L27">public class LoggingConstraintValidationHandler</span>
+/**
+ * Supports logging constraint findings to the configured Log4J2 instance.
+ */
+<span class="nc" id="L30">public class LoggingConstraintValidationHandler</span>
     extends AbstractConstraintValidationHandler {
-<span class="nc" id="L29">  private static final Logger LOGGER = LogManager.getLogger(DefaultConstraintValidator.class);</span>
+<span class="nc" id="L32">  private static final Logger LOGGER = LogManager.getLogger(DefaultConstraintValidator.class);</span>
+<span class="nc" id="L33">  private static final Throwable NO_EXCEPTION = null;</span>
 
   private static LogBuilder getLogBuilder(@NonNull Level level) {
     LogBuilder retval;
-<span class="nc bnc" id="L33" title="All 5 branches missed.">    switch (level) {</span>
+<span class="nc bnc" id="L37" title="All 5 branches missed.">    switch (level) {</span>
     case CRITICAL:
-<span class="nc" id="L35">      retval = LOGGER.atFatal();</span>
-<span class="nc" id="L36">      break;</span>
+<span class="nc" id="L39">      retval = LOGGER.atFatal();</span>
+<span class="nc" id="L40">      break;</span>
     case ERROR:
-<span class="nc" id="L38">      retval = LOGGER.atError();</span>
-<span class="nc" id="L39">      break;</span>
+<span class="nc" id="L42">      retval = LOGGER.atError();</span>
+<span class="nc" id="L43">      break;</span>
     case WARNING:
-<span class="nc" id="L41">      retval = LOGGER.atWarn();</span>
-<span class="nc" id="L42">      break;</span>
+<span class="nc" id="L45">      retval = LOGGER.atWarn();</span>
+<span class="nc" id="L46">      break;</span>
     case INFORMATIONAL:
-<span class="nc" id="L44">      retval = LOGGER.atInfo();</span>
-<span class="nc" id="L45">      break;</span>
+<span class="nc" id="L48">      retval = LOGGER.atInfo();</span>
+<span class="nc" id="L49">      break;</span>
     default:
-<span class="nc" id="L47">      throw new UnsupportedOperationException(String.format(&quot;unsupported level '%s'&quot;, level));</span>
+<span class="nc" id="L51">      throw new UnsupportedOperationException(String.format(&quot;unsupported level '%s'&quot;, level));</span>
     }
-<span class="nc" id="L49">    return retval;</span>
+<span class="nc" id="L53">    return retval;</span>
   }
 
   @Override
   protected String toPath(@NonNull INodeItem nodeItem) {
-<span class="nc" id="L54">    return nodeItem.toPath(getPathFormatter());</span>
+<span class="nc" id="L58">    return nodeItem.toPath(getPathFormatter());</span>
   }
 
   /**
@@ -65,83 +69,129 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   private static boolean isLogged(@NonNull Level level) {
     boolean retval;
-<span class="nc bnc" id="L68" title="All 5 branches missed.">    switch (level) {</span>
+<span class="nc bnc" id="L72" title="All 5 branches missed.">    switch (level) {</span>
     case CRITICAL:
-<span class="nc" id="L70">      retval = LOGGER.isFatalEnabled();</span>
-<span class="nc" id="L71">      break;</span>
+<span class="nc" id="L74">      retval = LOGGER.isFatalEnabled();</span>
+<span class="nc" id="L75">      break;</span>
     case ERROR:
-<span class="nc" id="L73">      retval = LOGGER.isErrorEnabled();</span>
-<span class="nc" id="L74">      break;</span>
+<span class="nc" id="L77">      retval = LOGGER.isErrorEnabled();</span>
+<span class="nc" id="L78">      break;</span>
     case WARNING:
-<span class="nc" id="L76">      retval = LOGGER.isWarnEnabled();</span>
-<span class="nc" id="L77">      break;</span>
+<span class="nc" id="L80">      retval = LOGGER.isWarnEnabled();</span>
+<span class="nc" id="L81">      break;</span>
     case INFORMATIONAL:
-<span class="nc" id="L79">      retval = LOGGER.isInfoEnabled();</span>
-<span class="nc" id="L80">      break;</span>
+<span class="nc" id="L83">      retval = LOGGER.isInfoEnabled();</span>
+<span class="nc" id="L84">      break;</span>
     default:
-<span class="nc" id="L82">      throw new UnsupportedOperationException(String.format(&quot;unsupported level '%s'&quot;, level));</span>
+<span class="nc" id="L86">      throw new UnsupportedOperationException(String.format(&quot;unsupported level '%s'&quot;, level));</span>
     }
-<span class="nc" id="L84">    return retval;</span>
+<span class="nc" id="L88">    return retval;</span>
   }
 
-  private void logConstraint(
+  private void logMessage(
       @NonNull Level level,
+      @Nullable String identifier,
       @NonNull INodeItem node,
       @NonNull CharSequence message,
       @Nullable Throwable cause) {
-<span class="nc" id="L92">    LogBuilder builder = getLogBuilder(level);</span>
-<span class="nc bnc" id="L93" title="All 2 branches missed.">    if (cause != null) {</span>
-<span class="nc" id="L94">      builder.withThrowable(cause);</span>
+<span class="nc" id="L97">    LogBuilder builder = getLogBuilder(level);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">    if (cause != null) {</span>
+<span class="nc" id="L99">      builder.withThrowable(cause);</span>
     }
-
-<span class="nc" id="L97">    builder.log(&quot;{}: ({}) {}&quot;, level.name(), toPath(node), message);</span>
-<span class="nc" id="L98">  }</span>
+<span class="nc" id="L101">    builder.log(&quot;{}{}: ({}) {}&quot;,</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        identifier == null ? &quot;&quot; : &quot;[&quot; + identifier + &quot;] &quot;,</span>
+<span class="nc" id="L103">        level.name(),</span>
+<span class="nc" id="L104">        toPath(node),</span>
+        message);
+<span class="nc" id="L106">  }</span>
 
   @Override
   public void handleCardinalityMinimumViolation(
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem node,
-      @NonNull ISequence&lt;? extends INodeItem&gt; targets) {
-<span class="nc" id="L105">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L107">      logConstraint(level, node, newCardinalityMinimumViolationMessage(constraint, node, targets), null);</span>
+      @NonNull ISequence&lt;? extends INodeItem&gt; targets,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L114">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L116">      logMessage(</span>
+          level,
+<span class="nc" id="L118">          constraint.getId(),</span>
+          node,
+<span class="nc" id="L120">          newCardinalityMinimumViolationMessage(</span>
+              constraint,
+              node,
+              targets,
+              dynamicContext),
+          NO_EXCEPTION); // Null because there is no exeception, a Throwable cause.
     }
-<span class="nc" id="L109">  }</span>
+<span class="nc" id="L127">  }</span>
 
   @Override
   public void handleCardinalityMaximumViolation(
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem node,
-      @NonNull ISequence&lt;? extends INodeItem&gt; targets) {
-<span class="nc" id="L116">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L117" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L118">      logConstraint(level, node, newCardinalityMaximumViolationMessage(constraint, node, targets), null);</span>
+      @NonNull ISequence&lt;? extends INodeItem&gt; targets,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L135">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L137">      logMessage(</span>
+          level,
+<span class="nc" id="L139">          constraint.getId(),</span>
+          node,
+<span class="nc" id="L141">          newCardinalityMaximumViolationMessage(</span>
+              constraint,
+              node,
+              targets,
+              dynamicContext),
+          null);
     }
-<span class="nc" id="L120">  }</span>
+<span class="nc" id="L148">  }</span>
 
   @Override
   public void handleIndexDuplicateKeyViolation(
       @NonNull IIndexConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem target) {
-<span class="nc" id="L128">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L129" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L130">      logConstraint(level, target, newIndexDuplicateKeyViolationMessage(constraint, node, oldItem, target), null);</span>
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L157">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L159">      logMessage(</span>
+          level,
+<span class="nc" id="L161">          constraint.getId(),</span>
+          target,
+<span class="nc" id="L163">          newIndexDuplicateKeyViolationMessage(</span>
+              constraint,
+              node,
+              oldItem,
+              target,
+              dynamicContext),
+          NO_EXCEPTION);
     }
-<span class="nc" id="L132">  }</span>
+<span class="nc" id="L171">  }</span>
 
   @Override
   public void handleUniqueKeyViolation(
       @NonNull IUniqueConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
-      @NonNull INodeItem target) {
-<span class="nc" id="L140">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L141" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L142">      logConstraint(level, target, newUniqueKeyViolationMessage(constraint, node, oldItem, target), null);</span>
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L180">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L182">      logMessage(</span>
+          level,
+<span class="nc" id="L184">          constraint.getId(),</span>
+          target,
+<span class="nc" id="L186">          newUniqueKeyViolationMessage(</span>
+              constraint,
+              node,
+              oldItem,
+              target,
+              dynamicContext),
+          NO_EXCEPTION);
     }
-<span class="nc" id="L144">  }</span>
+<span class="nc" id="L194">  }</span>
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
@@ -149,12 +199,18 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull IKeyConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull MetapathException cause) {
-<span class="nc" id="L153">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L155">      logConstraint(level, target, cause.getLocalizedMessage(), cause);</span>
+      @NonNull MetapathException cause,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L204">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L206">      logMessage(</span>
+          level,
+<span class="nc" id="L208">          constraint.getId(),</span>
+          target,
+<span class="nc" id="L210">          cause.getLocalizedMessage(),</span>
+          cause);
     }
-<span class="nc" id="L157">  }</span>
+<span class="nc" id="L213">  }</span>
 
   @Override
   public void handleMatchPatternViolation(
@@ -162,12 +218,24 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull String value,
-      @NonNull Pattern pattern) {
-<span class="nc" id="L166">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L167" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L168">      logConstraint(level, target, newMatchPatternViolationMessage(constraint, node, target, value, pattern), null);</span>
+      @NonNull Pattern pattern,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L223">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L225">      logMessage(</span>
+          level,
+<span class="nc" id="L227">          constraint.getId(),</span>
+          target,
+<span class="nc" id="L229">          newMatchPatternViolationMessage(</span>
+              constraint,
+              node,
+              target,
+              value,
+              pattern,
+              dynamicContext),
+          NO_EXCEPTION);
     }
-<span class="nc" id="L170">  }</span>
+<span class="nc" id="L238">  }</span>
 
   @Override
   public void handleMatchDatatypeViolation(
@@ -176,12 +244,24 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull IDataTypeAdapter&lt;?&gt; adapter,
-      @NonNull IllegalArgumentException cause) {
-<span class="nc" id="L180">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L181" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L182">      logConstraint(level, target, newMatchDatatypeViolationMessage(constraint, node, target, value, adapter), cause);</span>
+      @NonNull IllegalArgumentException cause,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L249">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L251">      logMessage(</span>
+          level,
+<span class="nc" id="L253">          constraint.getId(),</span>
+          target,
+<span class="nc" id="L255">          newMatchDatatypeViolationMessage(</span>
+              constraint,
+              node,
+              target,
+              value,
+              adapter,
+              dynamicContext),
+          cause);
     }
-<span class="nc" id="L184">  }</span>
+<span class="nc" id="L264">  }</span>
 
   @Override
   public void handleExpectViolation(
@@ -189,65 +269,140 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull DynamicContext dynamicContext) {
-<span class="nc" id="L192">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L193" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L194">      logConstraint(level, target, newExpectViolationMessage(constraint, node, target, dynamicContext), null);</span>
+<span class="nc" id="L272">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L274">      logMessage(</span>
+          level,
+<span class="nc" id="L276">          constraint.getId(),</span>
+          target,
+<span class="nc" id="L278">          newExpectViolationMessage(</span>
+              constraint,
+              node,
+              target,
+              dynamicContext),
+          NO_EXCEPTION);
     }
-<span class="nc" id="L196">  }</span>
+<span class="nc" id="L285">  }</span>
 
   @Override
-  public void handleAllowedValuesViolation(@NonNull List&lt;IAllowedValuesConstraint&gt; failedConstraints,
-      @NonNull INodeItem target) {
+  public void handleAllowedValuesViolation(
+      List&lt;IAllowedValuesConstraint&gt; failedConstraints,
+      INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
 
-<span class="nc" id="L202">    Level level = ObjectUtils.notNull(failedConstraints.stream()</span>
-<span class="nc" id="L203">        .map(IConstraint::getLevel)</span>
-<span class="nc" id="L204">        .max(Comparator.comparing(Level::ordinal))</span>
-<span class="nc" id="L205">        .get());</span>
-<span class="nc bnc" id="L206" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L207">      logConstraint(level, target, newAllowedValuesViolationMessage(failedConstraints, target), null);</span>
+<span class="nc" id="L293">    Level level = ObjectUtils.notNull(failedConstraints.stream()</span>
+<span class="nc" id="L294">        .map(IConstraint::getLevel)</span>
+<span class="nc" id="L295">        .max(Comparator.comparing(Level::ordinal))</span>
+<span class="nc" id="L296">        .get());</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L298">      logMessage(</span>
+          level,
+          null,
+          target,
+<span class="nc" id="L302">          newAllowedValuesViolationMessage(</span>
+              failedConstraints,
+              target),
+          null);
     }
-<span class="nc" id="L209">  }</span>
+<span class="nc" id="L307">  }</span>
 
   @Override
-  public void handleIndexDuplicateViolation(IIndexConstraint constraint, INodeItem node) {
-<span class="nc" id="L213">    Level level = Level.CRITICAL;</span>
-<span class="nc bnc" id="L214" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L215">      logConstraint(level, node, newIndexDuplicateViolationMessage(constraint, node), null);</span>
+  public void handleIndexDuplicateViolation(
+      @NonNull IIndexConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull DynamicContext dynamicContext) {
+    // always log at level critical
+<span class="nc" id="L315">    Level level = Level.CRITICAL;</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L317">      logMessage(</span>
+          level,
+<span class="nc" id="L319">          constraint.getId(),</span>
+          node,
+<span class="nc" id="L321">          newIndexDuplicateViolationMessage(</span>
+              constraint,
+              node),
+          NO_EXCEPTION);
     }
-<span class="nc" id="L217">  }</span>
+<span class="nc" id="L326">  }</span>
 
   @Override
-  public void handleIndexMiss(IIndexHasKeyConstraint constraint, INodeItem node, INodeItem target, List&lt;String&gt; key) {
-<span class="nc" id="L221">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L222" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L223">      logConstraint(level, node, newIndexMissMessage(constraint, node, target, key), null);</span>
+  public void handleIndexMiss(
+      @NonNull IIndexHasKeyConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull List&lt;String&gt; key,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L335">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L336" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L337">      logMessage(</span>
+          level,
+<span class="nc" id="L339">          constraint.getId(),</span>
+          node,
+<span class="nc" id="L341">          newIndexMissMessage(</span>
+              constraint,
+              node,
+              target,
+              key,
+              dynamicContext),
+          NO_EXCEPTION);
     }
-<span class="nc" id="L225">  }</span>
+<span class="nc" id="L349">  }</span>
 
   @Override
-  public void handleMissingIndexViolation(IIndexHasKeyConstraint constraint, INodeItem node, INodeItem target,
-      String message) {
-<span class="nc" id="L230">    Level level = constraint.getLevel();</span>
-<span class="nc bnc" id="L231" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L232">      logConstraint(level, node, newMissingIndexViolationMessage(constraint, node, target, message), null);</span>
+  public void handleMissingIndexViolation(
+      @NonNull IIndexHasKeyConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull String message,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L358">    Level level = constraint.getLevel();</span>
+<span class="nc bnc" id="L359" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L360">      logMessage(</span>
+          level,
+<span class="nc" id="L362">          constraint.getId(),</span>
+          node,
+<span class="nc" id="L364">          newMissingIndexViolationMessage(</span>
+              constraint,
+              node,
+              target,
+              message,
+              dynamicContext),
+          NO_EXCEPTION);
     }
-<span class="nc" id="L234">  }</span>
+<span class="nc" id="L372">  }</span>
 
   @Override
-  public void handlePass(IConstraint constraint, INodeItem node, INodeItem target) {
-    // do nothing
-<span class="nc" id="L239">  }</span>
+  public void handlePass(
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc bnc" id="L380" title="All 2 branches missed.">    if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L381">      String identifier = constraint.getId();</span>
+<span class="nc" id="L382">      LOGGER.atDebug().log(&quot;{}{}: ({}) {}&quot;,</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">          identifier == null ? &quot;&quot; : &quot;[&quot; + identifier + &quot;] &quot;,</span>
+<span class="nc" id="L384">          Level.INFORMATIONAL.name(),</span>
+<span class="nc" id="L385">          toPath(node),</span>
+          &quot;Passed&quot;);
+    }
+<span class="nc" id="L388">  }</span>
 
   @Override
   public void handleError(
-      IConstraint constraint,
-      INodeItem node,
-      String message,
-      Throwable exception) {
-<span class="nc" id="L247">    Level level = Level.CRITICAL;</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">    if (isLogged(level)) {</span>
-<span class="nc" id="L249">      logConstraint(level, node, message, exception);</span>
+      @NonNull IConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull String message,
+      @NonNull Throwable exception,
+      @NonNull DynamicContext dynamicContext) {
+<span class="nc" id="L397">    Level level = Level.CRITICAL;</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">    if (isLogged(level)) {</span>
+<span class="nc" id="L399">      logMessage(</span>
+          level,
+<span class="nc" id="L401">          constraint.getId(),</span>
+          node,
+          message,
+          exception);
     }
-<span class="nc" id="L251">  }</span>
+<span class="nc" id="L406">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

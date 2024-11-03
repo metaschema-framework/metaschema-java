@@ -184,13 +184,16 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 <span class="fc bfc" id="L184" title="All 2 branches covered.">      if (!&quot;$schema&quot;.equals(name)) {</span>
 <span class="fc" id="L185">        IBindingContext bindingContext = getBindingContext();</span>
 <span class="fc" id="L186">        retval = bindingContext.getBoundClassForRootJsonName(name);</span>
-<span class="fc" id="L187">        break outer;</span>
+<span class="pc bpc" id="L187" title="1 of 2 branches missed.">        if (retval == null) {</span>
+<span class="nc" id="L188">          throw new IOException(&quot;Unrecognized JSON field name: &quot; + name);</span>
+        }
+        break outer;
       }
       // do nothing
-<span class="fc" id="L190">      parser.nextToken();</span>
+<span class="fc" id="L193">      parser.nextToken();</span>
       // JsonUtil.skipNextValue(parser);
-<span class="fc" id="L192">    }</span>
-<span class="fc" id="L193">    return retval;</span>
+<span class="fc" id="L195">    }</span>
+<span class="fc" id="L196">    return retval;</span>
   }
 
   public static final class Result implements Closeable {
@@ -202,10 +205,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     private Result(
         @NonNull Class&lt;? extends IBoundObject&gt; clazz,
         @NonNull InputStream is,
-<span class="fc" id="L205">        @NonNull byte[] buf) {</span>
-<span class="fc" id="L206">      this.boundClass = clazz;</span>
-<span class="fc" id="L207">      this.dataStream = new MergedStream(null, is, buf, 0, buf.length);</span>
-<span class="fc" id="L208">    }</span>
+<span class="fc" id="L208">        @NonNull byte[] buf) {</span>
+<span class="fc" id="L209">      this.boundClass = clazz;</span>
+<span class="fc" id="L210">      this.dataStream = new MergedStream(null, is, buf, 0, buf.length);</span>
+<span class="fc" id="L211">    }</span>
 
     /**
      * Get the Java class representing the detected bound object.
@@ -214,7 +217,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
      */
     @NonNull
     public Class&lt;? extends IBoundObject&gt; getBoundClass() {
-<span class="fc" id="L217">      return boundClass;</span>
+<span class="fc" id="L220">      return boundClass;</span>
     }
 
     /**
@@ -226,14 +229,15 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     @NonNull
     @Owning
     public InputStream getDataStream() {
-<span class="fc" id="L229">      return ObjectUtils.requireNonNull(dataStream, &quot;data stream already closed&quot;);</span>
+<span class="fc" id="L232">      return ObjectUtils.requireNonNull(dataStream, &quot;data stream already closed&quot;);</span>
     }
 
+    @SuppressWarnings(&quot;PMD.NullAssignment&quot;)
     @Override
     public void close() throws IOException {
-<span class="fc" id="L234">      this.dataStream.close();</span>
-<span class="fc" id="L235">      this.dataStream = null;</span>
-<span class="fc" id="L236">    }</span>
+<span class="fc" id="L238">      this.dataStream.close();</span>
+<span class="fc" id="L239">      this.dataStream = null;</span>
+<span class="fc" id="L240">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

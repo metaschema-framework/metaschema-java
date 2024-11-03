@@ -16,34 +16,71 @@
 <span class="source-line-no">003</span><span id="line-3"></span>
 <span class="source-line-no">004</span><span id="line-4">import gov.nist.secauto.metaschema.core.model.IModelDefinition;</span>
 <span class="source-line-no">005</span><span id="line-5">import gov.nist.secauto.metaschema.core.model.INamedModelInstance;</span>
-<span class="source-line-no">006</span><span id="line-6"></span>
-<span class="source-line-no">007</span><span id="line-7">public interface IModelNodeItem&lt;D extends IModelDefinition, I extends INamedModelInstance&gt;</span>
-<span class="source-line-no">008</span><span id="line-8">    extends IDefinitionNodeItem&lt;D, I&gt; {</span>
+<span class="source-line-no">006</span><span id="line-6">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">007</span><span id="line-7"></span>
+<span class="source-line-no">008</span><span id="line-8">import java.util.stream.Stream;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">  /**</span>
-<span class="source-line-no">011</span><span id="line-11">   * Retrieve the relative position of this node relative to sibling nodes.</span>
-<span class="source-line-no">012</span><span id="line-12">   * &lt;p&gt;</span>
-<span class="source-line-no">013</span><span id="line-13">   * A singleton item in a sequence will have a position value of {@code 1}.</span>
-<span class="source-line-no">014</span><span id="line-14">   * &lt;p&gt;</span>
-<span class="source-line-no">015</span><span id="line-15">   * The value {@code 1} is used as the starting value to align with the XPath</span>
-<span class="source-line-no">016</span><span id="line-16">   * specification.</span>
-<span class="source-line-no">017</span><span id="line-17">   *</span>
-<span class="source-line-no">018</span><span id="line-18">   * @return a positive integer value designating this instance's position within</span>
-<span class="source-line-no">019</span><span id="line-19">   *         a collection</span>
-<span class="source-line-no">020</span><span id="line-20">   */</span>
-<span class="source-line-no">021</span><span id="line-21">  int getPosition();</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">  /**</span>
-<span class="source-line-no">024</span><span id="line-24">   * {@inheritDoc}</span>
-<span class="source-line-no">025</span><span id="line-25">   * &lt;p&gt;</span>
-<span class="source-line-no">026</span><span id="line-26">   * The parent can be an assembly or a document (in the case of a root assembly.</span>
-<span class="source-line-no">027</span><span id="line-27">   */</span>
-<span class="source-line-no">028</span><span id="line-28">  @Override</span>
-<span class="source-line-no">029</span><span id="line-29">  INodeItem getParentNodeItem();</span>
-<span class="source-line-no">030</span><span id="line-30"></span>
-<span class="source-line-no">031</span><span id="line-31">  @Override</span>
-<span class="source-line-no">032</span><span id="line-32">  IAssemblyNodeItem getParentContentNodeItem();</span>
-<span class="source-line-no">033</span><span id="line-33">}</span>
+<span class="source-line-no">010</span><span id="line-10">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">011</span><span id="line-11"></span>
+<span class="source-line-no">012</span><span id="line-12">public interface IModelNodeItem&lt;D extends IModelDefinition, I extends INamedModelInstance&gt;</span>
+<span class="source-line-no">013</span><span id="line-13">    extends IDefinitionNodeItem&lt;D, I&gt; {</span>
+<span class="source-line-no">014</span><span id="line-14"></span>
+<span class="source-line-no">015</span><span id="line-15">  @Override</span>
+<span class="source-line-no">016</span><span id="line-16">  int getPosition();</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">  /**</span>
+<span class="source-line-no">019</span><span id="line-19">   * {@inheritDoc}</span>
+<span class="source-line-no">020</span><span id="line-20">   * &lt;p&gt;</span>
+<span class="source-line-no">021</span><span id="line-21">   * The parent can be an assembly or a document (in the case of a root assembly.</span>
+<span class="source-line-no">022</span><span id="line-22">   */</span>
+<span class="source-line-no">023</span><span id="line-23">  @Override</span>
+<span class="source-line-no">024</span><span id="line-24">  INodeItem getParentNodeItem();</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">  @Override</span>
+<span class="source-line-no">027</span><span id="line-27">  IAssemblyNodeItem getParentContentNodeItem();</span>
+<span class="source-line-no">028</span><span id="line-28"></span>
+<span class="source-line-no">029</span><span id="line-29">  @Override</span>
+<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
+<span class="source-line-no">031</span><span id="line-31">  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; descendantOrSelf() {</span>
+<span class="source-line-no">032</span><span id="line-32">    return ObjectUtils.notNull(Stream.concat(Stream.of(this), descendant()));</span>
+<span class="source-line-no">033</span><span id="line-33">  }</span>
+<span class="source-line-no">034</span><span id="line-34"></span>
+<span class="source-line-no">035</span><span id="line-35">  @SuppressWarnings("PMD.CompareObjectsWithEquals")</span>
+<span class="source-line-no">036</span><span id="line-36">  @Override</span>
+<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
+<span class="source-line-no">038</span><span id="line-38">  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; followingSibling() {</span>
+<span class="source-line-no">039</span><span id="line-39">    IModelNodeItem&lt;?, ?&gt; parent = getParentContentNodeItem();</span>
+<span class="source-line-no">040</span><span id="line-40">    return ObjectUtils.notNull(parent == null</span>
+<span class="source-line-no">041</span><span id="line-41">        ? Stream.empty()</span>
+<span class="source-line-no">042</span><span id="line-42">        : parent.modelItems()</span>
+<span class="source-line-no">043</span><span id="line-43">            // need to use != vs !Object.equals to ensure we are matching the same object</span>
+<span class="source-line-no">044</span><span id="line-44">            .dropWhile(item -&gt; this != item)</span>
+<span class="source-line-no">045</span><span id="line-45">            .skip(1));</span>
+<span class="source-line-no">046</span><span id="line-46">  }</span>
+<span class="source-line-no">047</span><span id="line-47"></span>
+<span class="source-line-no">048</span><span id="line-48">  @SuppressWarnings("PMD.CompareObjectsWithEquals")</span>
+<span class="source-line-no">049</span><span id="line-49">  @Override</span>
+<span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
+<span class="source-line-no">051</span><span id="line-51">  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; precedingSibling() {</span>
+<span class="source-line-no">052</span><span id="line-52">    IModelNodeItem&lt;?, ?&gt; parent = getParentContentNodeItem();</span>
+<span class="source-line-no">053</span><span id="line-53">    return ObjectUtils.notNull(parent == null</span>
+<span class="source-line-no">054</span><span id="line-54">        ? Stream.empty()</span>
+<span class="source-line-no">055</span><span id="line-55">        // need to use != vs !Object.equals to ensure we are matching the same object</span>
+<span class="source-line-no">056</span><span id="line-56">        : parent.modelItems().takeWhile(item -&gt; this != item));</span>
+<span class="source-line-no">057</span><span id="line-57">  }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  @Override</span>
+<span class="source-line-no">060</span><span id="line-60">  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; following() {</span>
+<span class="source-line-no">061</span><span id="line-61">    return followingSibling()</span>
+<span class="source-line-no">062</span><span id="line-62">        .flatMap(IModelNodeItem::descendantOrSelf);</span>
+<span class="source-line-no">063</span><span id="line-63">  }</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">  @Override</span>
+<span class="source-line-no">066</span><span id="line-66">  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; preceding() {</span>
+<span class="source-line-no">067</span><span id="line-67">    return precedingSibling()</span>
+<span class="source-line-no">068</span><span id="line-68">        .flatMap(IModelNodeItem::descendantOrSelf);</span>
+<span class="source-line-no">069</span><span id="line-69">  }</span>
+<span class="source-line-no">070</span><span id="line-70">}</span>
 
 
 

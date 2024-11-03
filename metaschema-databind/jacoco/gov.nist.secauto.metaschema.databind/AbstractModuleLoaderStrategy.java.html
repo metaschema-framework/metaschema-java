@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractModuleLoaderStrategy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind</a> &gt; <span class="el_source">AbstractModuleLoaderStrategy.java</span></div><h1>AbstractModuleLoaderStrategy.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind;
+
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext.IBindingMatcher;
+import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
+import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
+import gov.nist.secauto.metaschema.databind.model.IBoundModule;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
+import gov.nist.secauto.metaschema.databind.model.impl.DefinitionAssembly;
+import gov.nist.secauto.metaschema.databind.model.impl.DefinitionField;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Provides basic module loading capabilities.
+ *
+ * @since 2.0.0
+ */
+<span class="fc" id="L39">public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IModuleLoaderStrategy {</span>
+<span class="fc" id="L40">  @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;)</span>
+  @NonNull
+  private final Map&lt;IBoundDefinitionModelAssembly, IBindingMatcher&gt; bindingMatchers = new HashMap&lt;&gt;();
+<span class="fc" id="L43">  @NonNull</span>
+  private final Map&lt;IModule, IBoundModule&gt; moduleToBoundModuleMap = new ConcurrentHashMap&lt;&gt;();
+<span class="fc" id="L45">  @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;)</span>
+  @NonNull
+  private final Map&lt;Class&lt;? extends IBoundModule&gt;, IBoundModule&gt; modulesByClass = new HashMap&lt;&gt;();
+
+<span class="fc" id="L49">  @NonNull</span>
+  private final Lock modulesLock = new ReentrantLock();
+<span class="fc" id="L51">  @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;)</span>
+  @NonNull
+  private final Map&lt;Class&lt;? extends IBoundObject&gt;, IBoundDefinitionModelComplex&gt; definitionsByClass
+      = new HashMap&lt;&gt;();
+<span class="fc" id="L55">  @NonNull</span>
+  private final Lock definitionsLock = new ReentrantLock();
+
+  @Override
+  public IBoundModule loadModule(
+      @NonNull Class&lt;? extends IBoundModule&gt; clazz,
+      @NonNull IBindingContext bindingContext) {
+<span class="fc" id="L62">    return lookupInstance(clazz, bindingContext);</span>
+  }
+
+  @Override
+  public IBoundModule registerModule(
+      IModule module,
+      IBindingContext bindingContext) {
+<span class="fc" id="L69">    modulesLock.lock();</span>
+    try {
+<span class="fc" id="L71">      return ObjectUtils.notNull(moduleToBoundModuleMap.computeIfAbsent(module, key -&gt; {</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        assert key != null;</span>
+
+        IBoundModule boundModule;
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (key instanceof IBoundModule) {</span>
+<span class="fc" id="L76">          boundModule = (IBoundModule) key;</span>
+        } else {
+<span class="fc" id="L78">          Class&lt;? extends IBoundModule&gt; moduleClass = handleUnboundModule(key);</span>
+<span class="fc" id="L79">          boundModule = lookupInstance(moduleClass, bindingContext);</span>
+        }
+
+<span class="fc" id="L82">        boundModule.getExportedAssemblyDefinitions().forEach(assembly -&gt; {</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">          assert assembly != null;</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">          if (assembly.isRoot()) {</span>
+            // force the binding matchers to load
+<span class="fc" id="L86">            registerBindingMatcher(assembly);</span>
+          }
+<span class="fc" id="L88">        });</span>
+
+<span class="fc" id="L90">        return boundModule;</span>
+      }));
+    } finally {
+<span class="fc" id="L93">      modulesLock.unlock();</span>
+    }
+  }
+
+  @NonNull
+  protected abstract Class&lt;? extends IBoundModule&gt; handleUnboundModule(@NonNull IModule key);
+
+  /**
+   * Get the Module instance for a given class annotated by the
+   * {@link MetaschemaModule} annotation, instantiating it if needed.
+   * &lt;p&gt;
+   * Will also load any imported Metaschemas.
+   *
+   *
+   * @param moduleClass
+   *          the Module class
+   * @param bindingContext
+   *          the Metaschema binding context used to lookup binding information
+   * @return the new Module instance
+   */
+  @NonNull
+  protected IBoundModule lookupInstance(
+      @NonNull Class&lt;? extends IBoundModule&gt; moduleClass,
+      @NonNull IBindingContext bindingContext) {
+    IBoundModule retval;
+<span class="fc" id="L118">    modulesLock.lock();</span>
+    try {
+<span class="fc" id="L120">      retval = modulesByClass.get(moduleClass);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">      if (retval == null) {</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (!moduleClass.isAnnotationPresent(MetaschemaModule.class)) {</span>
+<span class="nc" id="L123">          throw new IllegalStateException(String.format(&quot;The class '%s' is missing the '%s' annotation&quot;,</span>
+<span class="nc" id="L124">              moduleClass.getCanonicalName(), MetaschemaModule.class.getCanonicalName()));</span>
+        }
+
+<span class="fc" id="L127">        retval = IBoundModule.newInstance(moduleClass, bindingContext, getImportedModules(moduleClass, bindingContext));</span>
+<span class="fc" id="L128">        modulesByClass.put(moduleClass, retval);</span>
+      }
+    } finally {
+<span class="fc" id="L131">      modulesLock.unlock();</span>
+    }
+<span class="fc" id="L133">    return retval;</span>
+  }
+
+  @NonNull
+  protected IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
+    IBindingMatcher retval;
+<span class="fc" id="L139">    modulesLock.lock();</span>
+    try {
+<span class="fc" id="L141">      retval = bindingMatchers.get(definition);</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">      if (retval == null) {</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (!definition.isRoot()) {</span>
+<span class="nc" id="L144">          throw new IllegalArgumentException(</span>
+<span class="nc" id="L145">              String.format(&quot;The provided definition '%s' is not a root assembly.&quot;,</span>
+<span class="nc" id="L146">                  definition.getBoundClass().getName()));</span>
+        }
+
+<span class="fc" id="L149">        retval = IBindingMatcher.of(definition);</span>
+<span class="fc" id="L150">        bindingMatchers.put(definition, retval);</span>
+      }
+    } finally {
+<span class="fc" id="L153">      modulesLock.unlock();</span>
+    }
+<span class="fc" id="L155">    return retval;</span>
+  }
+
+  @Override
+  public final List&lt;IBindingMatcher&gt; getBindingMatchers() {
+<span class="fc" id="L160">    modulesLock.lock();</span>
+    try {
+      // make a defensive copy
+<span class="fc" id="L163">      return new ArrayList&lt;&gt;(bindingMatchers.values());</span>
+    } finally {
+<span class="fc" id="L165">      modulesLock.unlock();</span>
+    }
+  }
+
+  @NonNull
+  private List&lt;IBoundModule&gt; getImportedModules(
+      @NonNull Class&lt;? extends IBoundModule&gt; moduleClass,
+      @NonNull IBindingContext bindingContext) {
+<span class="fc" id="L173">    MetaschemaModule moduleAnnotation = moduleClass.getAnnotation(MetaschemaModule.class);</span>
+
+<span class="fc" id="L175">    return ObjectUtils.notNull(Arrays.stream(moduleAnnotation.imports())</span>
+<span class="fc" id="L176">        .map(clazz -&gt; lookupInstance(ObjectUtils.requireNonNull(clazz), bindingContext))</span>
+<span class="fc" id="L177">        .collect(Collectors.toUnmodifiableList()));</span>
+  }
+
+  @Override
+  public IBoundDefinitionModelComplex getBoundDefinitionForClass(
+      @NonNull Class&lt;? extends IBoundObject&gt; clazz,
+      @NonNull IBindingContext bindingContext) {
+
+    IBoundDefinitionModelComplex retval;
+<span class="fc" id="L186">    definitionsLock.lock();</span>
+    try {
+<span class="fc" id="L188">      retval = definitionsByClass.get(clazz);</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">      if (retval == null) {</span>
+<span class="fc" id="L190">        retval = newBoundDefinition(clazz, bindingContext);</span>
+<span class="fc" id="L191">        definitionsByClass.put(clazz, retval);</span>
+      }
+
+      // // force loading of metaschema information to apply constraints
+      // IModule module = retval.getContainingModule();
+      // registerModule(module, bindingContext);
+<span class="fc" id="L197">      return retval;</span>
+    } finally {
+<span class="fc" id="L199">      definitionsLock.unlock();</span>
+    }
+  }
+
+  @NonNull
+  private IBoundDefinitionModelComplex newBoundDefinition(
+      @NonNull Class&lt;? extends IBoundObject&gt; clazz,
+      @NonNull IBindingContext bindingContext) {
+    IBoundDefinitionModelComplex retval;
+<span class="fc bfc" id="L208" title="All 2 branches covered.">    if (clazz.isAnnotationPresent(MetaschemaAssembly.class)) {</span>
+<span class="fc" id="L209">      MetaschemaAssembly annotation = ModelUtil.getAnnotation(clazz, MetaschemaAssembly.class);</span>
+<span class="fc" id="L210">      Class&lt;? extends IBoundModule&gt; moduleClass = annotation.moduleClass();</span>
+<span class="fc" id="L211">      IBoundModule module = loadModule(moduleClass, bindingContext);</span>
+<span class="fc" id="L212">      retval = DefinitionAssembly.newInstance(clazz, annotation, module, bindingContext);</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">    } else if (clazz.isAnnotationPresent(MetaschemaField.class)) {</span>
+<span class="fc" id="L214">      MetaschemaField annotation = ModelUtil.getAnnotation(clazz, MetaschemaField.class);</span>
+<span class="fc" id="L215">      Class&lt;? extends IBoundModule&gt; moduleClass = annotation.moduleClass();</span>
+<span class="fc" id="L216">      IBoundModule module = loadModule(moduleClass, bindingContext);</span>
+<span class="fc" id="L217">      retval = DefinitionField.newInstance(clazz, annotation, module, bindingContext);</span>
+<span class="fc" id="L218">    } else {</span>
+<span class="nc" id="L219">      throw new IllegalArgumentException(String.format(&quot;Unable to find bound definition for class '%s'.&quot;,</span>
+<span class="nc" id="L220">          clazz.getName()));</span>
+    }
+<span class="fc" id="L222">    return retval;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

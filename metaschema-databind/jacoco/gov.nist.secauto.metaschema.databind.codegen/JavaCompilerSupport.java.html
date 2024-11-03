@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JavaCompilerSupport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.codegen</a> &gt; <span class="el_source">JavaCompilerSupport.java</span></div><h1>JavaCompilerSupport.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.codegen;
+
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Path;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+public class JavaCompilerSupport {
+<span class="fc" id="L32">  private static final Logger LOGGER = LogManager.getLogger(JavaCompilerSupport.class);</span>
+
+  @NonNull
+  private final Path classDir;
+<span class="fc" id="L36">  @NonNull</span>
+  private final Set&lt;String&gt; classPath = new LinkedHashSet&lt;&gt;();
+<span class="fc" id="L38">  @NonNull</span>
+  private final Set&lt;String&gt; modulePath = new LinkedHashSet&lt;&gt;();
+<span class="fc" id="L40">  @NonNull</span>
+  private final Set&lt;String&gt; rootModuleNames = new LinkedHashSet&lt;&gt;();
+
+<span class="fc" id="L43">  public JavaCompilerSupport(@NonNull Path classDir) {</span>
+<span class="fc" id="L44">    this.classDir = classDir;</span>
+<span class="fc" id="L45">  }</span>
+
+  public Set&lt;String&gt; getClassPath() {
+<span class="nc" id="L48">    return classPath;</span>
+  }
+
+  public Set&lt;String&gt; getModulePath() {
+<span class="nc" id="L52">    return modulePath;</span>
+  }
+
+  public Set&lt;String&gt; getRootModuleNames() {
+<span class="nc" id="L56">    return rootModuleNames;</span>
+  }
+
+  public void addToClassPath(@NonNull String entry) {
+<span class="fc" id="L60">    classPath.add(entry);</span>
+<span class="fc" id="L61">  }</span>
+
+  public void addToModulePath(@NonNull String entry) {
+<span class="nc" id="L64">    modulePath.add(entry);</span>
+<span class="nc" id="L65">  }</span>
+
+  public void addRootModule(@NonNull String entry) {
+<span class="nc" id="L68">    rootModuleNames.add(entry);</span>
+<span class="nc" id="L69">  }</span>
+
+  @NonNull
+  protected List&lt;String&gt; generateCompilerOptions() {
+<span class="fc" id="L73">    List&lt;String&gt; options = new LinkedList&lt;&gt;();</span>
+    // options.add(&quot;-verbose&quot;);
+    // options.add(&quot;-g&quot;);
+<span class="fc" id="L76">    options.add(&quot;-d&quot;);</span>
+<span class="fc" id="L77">    options.add(classDir.toString());</span>
+
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">    if (!classPath.isEmpty()) {</span>
+<span class="fc" id="L80">      options.add(&quot;-classpath&quot;);</span>
+<span class="fc" id="L81">      options.add(classPath.stream()</span>
+<span class="fc" id="L82">          .collect(Collectors.joining(&quot;:&quot;)));</span>
+    }
+
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">    if (!modulePath.isEmpty()) {</span>
+<span class="nc" id="L86">      options.add(&quot;-p&quot;);</span>
+<span class="nc" id="L87">      options.add(modulePath.stream()</span>
+<span class="nc" id="L88">          .collect(Collectors.joining(&quot;:&quot;)));</span>
+    }
+
+<span class="fc" id="L91">    return options;</span>
+  }
+
+  /**
+   * Generate and compile Java classes.
+   *
+   * @param classFiles
+   *          the files to compile
+   * @param compileOut
+   *          a Writer for additional output from the compiler; use System.err if
+   *          null
+   * @return information about the generated classes
+   * @throws IOException
+   *           if an error occurred while compiling the classes
+   * @throws IllegalArgumentException
+   *           if any of the options are invalid, or if any of the given
+   *           compilation units are of other kind than
+   *           {@link javax.tools.JavaFileObject.Kind#SOURCE}
+   */
+
+  public CompilationResult compile(@NonNull List&lt;Path&gt; classFiles, @Nullable Writer compileOut) throws IOException {
+<span class="fc" id="L112">    DiagnosticCollector&lt;JavaFileObject&gt; diagnostics = new DiagnosticCollector&lt;&gt;();</span>
+
+<span class="fc" id="L114">    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();</span>
+
+    List&lt;JavaFileObject&gt; compilationUnits;
+<span class="fc" id="L117">    try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {</span>
+
+<span class="fc" id="L119">      compilationUnits = classFiles.stream()</span>
+<span class="fc" id="L120">          .map(fileManager::getJavaFileObjects)</span>
+<span class="fc" id="L121">          .map(CollectionUtil::toList)</span>
+<span class="fc" id="L122">          .flatMap(List::stream)</span>
+<span class="fc" id="L123">          .collect(Collectors.toUnmodifiableList());</span>
+
+<span class="fc" id="L125">      List&lt;String&gt; options = generateCompilerOptions();</span>
+
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">      if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L128">        LOGGER.atDebug().log(&quot;Using options: {}&quot;, options);</span>
+      }
+
+<span class="fc" id="L131">      JavaCompiler.CompilationTask task = compiler.getTask(</span>
+          compileOut,
+          fileManager,
+          diagnostics,
+          options,
+          null,
+          compilationUnits);
+
+<span class="fc" id="L139">      task.addModules(rootModuleNames);</span>
+
+<span class="fc" id="L141">      return new CompilationResult(task.call(), diagnostics);</span>
+    }
+  }
+
+  public static final class CompilationResult {
+    private final boolean successful;
+    @NonNull
+    private final DiagnosticCollector&lt;JavaFileObject&gt; diagnostics;
+
+<span class="fc" id="L150">    private CompilationResult(boolean successful, @NonNull DiagnosticCollector&lt;JavaFileObject&gt; diagnostics) {</span>
+<span class="fc" id="L151">      this.successful = successful;</span>
+<span class="fc" id="L152">      this.diagnostics = diagnostics;</span>
+<span class="fc" id="L153">    }</span>
+
+    public boolean isSuccessful() {
+<span class="fc" id="L156">      return successful;</span>
+    }
+
+    public DiagnosticCollector&lt;?&gt; getDiagnostics() {
+<span class="nc" id="L160">      return diagnostics;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

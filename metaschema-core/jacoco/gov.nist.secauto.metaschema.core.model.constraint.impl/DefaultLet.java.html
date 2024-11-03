@@ -5,14 +5,22 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A variable assignment for use in Metaschema module constraints.
+ * &lt;p&gt;
+ * This class is immutable.
+ */
+@SuppressWarnings(&quot;PMD.DataClass&quot;)
 public class DefaultLet implements ILet {
   @NonNull
   private final QName name;
@@ -20,6 +28,8 @@ public class DefaultLet implements ILet {
   private final MetapathExpression valueExpression;
   @NonNull
   private final ISource source;
+  @Nullable
+  private final MarkupMultiline remarks;
 
   /**
    * Construct a new let statement.
@@ -30,30 +40,39 @@ public class DefaultLet implements ILet {
    *          the Metapath expression used to query the value
    * @param source
    *          the source of the let statement
+   * @param remarks
+   *          remarks about the let statement
    */
   public DefaultLet(
       @NonNull QName name,
       @NonNull MetapathExpression metapath,
-<span class="nc" id="L37">      @NonNull ISource source) {</span>
-<span class="nc" id="L38">    this.name = name;</span>
-<span class="nc" id="L39">    this.valueExpression = metapath;</span>
-<span class="nc" id="L40">    this.source = source;</span>
-<span class="nc" id="L41">  }</span>
+      @NonNull ISource source,
+<span class="fc" id="L50">      @Nullable MarkupMultiline remarks) {</span>
+<span class="fc" id="L51">    this.name = name;</span>
+<span class="fc" id="L52">    this.valueExpression = metapath;</span>
+<span class="fc" id="L53">    this.source = source;</span>
+<span class="fc" id="L54">    this.remarks = remarks;</span>
+<span class="fc" id="L55">  }</span>
 
   @Override
   public QName getName() {
-<span class="nc" id="L45">    return name;</span>
+<span class="fc" id="L59">    return name;</span>
   }
 
   @Override
   public MetapathExpression getValueExpression() {
-<span class="nc" id="L50">    return valueExpression;</span>
+<span class="fc" id="L64">    return valueExpression;</span>
   }
 
   @Override
   @NonNull
   public ISource getSource() {
-<span class="nc" id="L56">    return source;</span>
+<span class="fc" id="L70">    return source;</span>
+  }
+
+  @Override
+  public MarkupMultiline getRemarks() {
+<span class="fc" id="L75">    return remarks;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

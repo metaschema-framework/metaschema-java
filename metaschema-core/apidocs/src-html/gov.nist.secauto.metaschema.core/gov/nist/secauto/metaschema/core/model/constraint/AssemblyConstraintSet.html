@@ -18,90 +18,98 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model.constraint;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import java.util.LinkedList;</span>
-<span class="source-line-no">009</span><span id="line-9">import java.util.List;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">/**</span>
-<span class="source-line-no">014</span><span id="line-14"> * Provides support for maintaining a set of Metaschema constraints.</span>
-<span class="source-line-no">015</span><span id="line-15"> */</span>
-<span class="source-line-no">016</span><span id="line-16">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
-<span class="source-line-no">017</span><span id="line-17">public class AssemblyConstraintSet</span>
-<span class="source-line-no">018</span><span id="line-18">    extends ValueConstraintSet</span>
-<span class="source-line-no">019</span><span id="line-19">    implements IModelConstrained {</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">  @NonNull</span>
-<span class="source-line-no">022</span><span id="line-22">  private final List&lt;IIndexConstraint&gt; indexConstraints = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
-<span class="source-line-no">024</span><span id="line-24">  private final List&lt;IUniqueConstraint&gt; uniqueConstraints = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
-<span class="source-line-no">026</span><span id="line-26">  private final List&lt;ICardinalityConstraint&gt; cardinalityConstraints = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  @Override</span>
-<span class="source-line-no">029</span><span id="line-29">  public List&lt;IIndexConstraint&gt; getIndexConstraints() {</span>
-<span class="source-line-no">030</span><span id="line-30">    try {</span>
-<span class="source-line-no">031</span><span id="line-31">      instanceLock.lock();</span>
-<span class="source-line-no">032</span><span id="line-32">      return indexConstraints;</span>
-<span class="source-line-no">033</span><span id="line-33">    } finally {</span>
-<span class="source-line-no">034</span><span id="line-34">      instanceLock.unlock();</span>
-<span class="source-line-no">035</span><span id="line-35">    }</span>
-<span class="source-line-no">036</span><span id="line-36">  }</span>
-<span class="source-line-no">037</span><span id="line-37"></span>
-<span class="source-line-no">038</span><span id="line-38">  @Override</span>
-<span class="source-line-no">039</span><span id="line-39">  public List&lt;IUniqueConstraint&gt; getUniqueConstraints() {</span>
-<span class="source-line-no">040</span><span id="line-40">    try {</span>
-<span class="source-line-no">041</span><span id="line-41">      instanceLock.lock();</span>
-<span class="source-line-no">042</span><span id="line-42">      return uniqueConstraints;</span>
-<span class="source-line-no">043</span><span id="line-43">    } finally {</span>
-<span class="source-line-no">044</span><span id="line-44">      instanceLock.unlock();</span>
-<span class="source-line-no">045</span><span id="line-45">    }</span>
-<span class="source-line-no">046</span><span id="line-46">  }</span>
-<span class="source-line-no">047</span><span id="line-47"></span>
-<span class="source-line-no">048</span><span id="line-48">  @Override</span>
-<span class="source-line-no">049</span><span id="line-49">  public List&lt;ICardinalityConstraint&gt; getHasCardinalityConstraints() {</span>
-<span class="source-line-no">050</span><span id="line-50">    try {</span>
-<span class="source-line-no">051</span><span id="line-51">      instanceLock.lock();</span>
-<span class="source-line-no">052</span><span id="line-52">      return cardinalityConstraints;</span>
-<span class="source-line-no">053</span><span id="line-53">    } finally {</span>
-<span class="source-line-no">054</span><span id="line-54">      instanceLock.unlock();</span>
-<span class="source-line-no">055</span><span id="line-55">    }</span>
-<span class="source-line-no">056</span><span id="line-56">  }</span>
-<span class="source-line-no">057</span><span id="line-57"></span>
-<span class="source-line-no">058</span><span id="line-58">  @Override</span>
-<span class="source-line-no">059</span><span id="line-59">  public final void addConstraint(@NonNull IIndexConstraint constraint) {</span>
-<span class="source-line-no">060</span><span id="line-60">    try {</span>
-<span class="source-line-no">061</span><span id="line-61">      instanceLock.lock();</span>
-<span class="source-line-no">062</span><span id="line-62">      getConstraints().add(constraint);</span>
-<span class="source-line-no">063</span><span id="line-63">      indexConstraints.add(constraint);</span>
-<span class="source-line-no">064</span><span id="line-64">    } finally {</span>
-<span class="source-line-no">065</span><span id="line-65">      instanceLock.unlock();</span>
-<span class="source-line-no">066</span><span id="line-66">    }</span>
-<span class="source-line-no">067</span><span id="line-67">  }</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  @Override</span>
-<span class="source-line-no">070</span><span id="line-70">  public final void addConstraint(@NonNull IUniqueConstraint constraint) {</span>
-<span class="source-line-no">071</span><span id="line-71">    try {</span>
-<span class="source-line-no">072</span><span id="line-72">      instanceLock.lock();</span>
-<span class="source-line-no">073</span><span id="line-73">      getConstraints().add(constraint);</span>
-<span class="source-line-no">074</span><span id="line-74">      uniqueConstraints.add(constraint);</span>
-<span class="source-line-no">075</span><span id="line-75">    } finally {</span>
-<span class="source-line-no">076</span><span id="line-76">      instanceLock.unlock();</span>
-<span class="source-line-no">077</span><span id="line-77">    }</span>
-<span class="source-line-no">078</span><span id="line-78">  }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">  @Override</span>
-<span class="source-line-no">081</span><span id="line-81">  public final void addConstraint(@NonNull ICardinalityConstraint constraint) {</span>
-<span class="source-line-no">082</span><span id="line-82">    try {</span>
-<span class="source-line-no">083</span><span id="line-83">      instanceLock.lock();</span>
-<span class="source-line-no">084</span><span id="line-84">      getConstraints().add(constraint);</span>
-<span class="source-line-no">085</span><span id="line-85">      cardinalityConstraints.add(constraint);</span>
-<span class="source-line-no">086</span><span id="line-86">    } finally {</span>
-<span class="source-line-no">087</span><span id="line-87">      instanceLock.unlock();</span>
-<span class="source-line-no">088</span><span id="line-88">    }</span>
-<span class="source-line-no">089</span><span id="line-89">  }</span>
-<span class="source-line-no">090</span><span id="line-90"></span>
-<span class="source-line-no">091</span><span id="line-91">}</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">009</span><span id="line-9"></span>
+<span class="source-line-no">010</span><span id="line-10">import java.util.LinkedList;</span>
+<span class="source-line-no">011</span><span id="line-11">import java.util.List;</span>
+<span class="source-line-no">012</span><span id="line-12">import java.util.concurrent.locks.Lock;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">015</span><span id="line-15"></span>
+<span class="source-line-no">016</span><span id="line-16">/**</span>
+<span class="source-line-no">017</span><span id="line-17"> * Provides support for maintaining a set of Metaschema constraints.</span>
+<span class="source-line-no">018</span><span id="line-18"> */</span>
+<span class="source-line-no">019</span><span id="line-19">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
+<span class="source-line-no">020</span><span id="line-20">public class AssemblyConstraintSet</span>
+<span class="source-line-no">021</span><span id="line-21">    extends ValueConstraintSet</span>
+<span class="source-line-no">022</span><span id="line-22">    implements IModelConstrained {</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
+<span class="source-line-no">025</span><span id="line-25">  private final List&lt;IIndexConstraint&gt; indexConstraints = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">026</span><span id="line-26">  @NonNull</span>
+<span class="source-line-no">027</span><span id="line-27">  private final List&lt;IUniqueConstraint&gt; uniqueConstraints = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
+<span class="source-line-no">029</span><span id="line-29">  private final List&lt;ICardinalityConstraint&gt; cardinalityConstraints = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">  @Override</span>
+<span class="source-line-no">032</span><span id="line-32">  public List&lt;IIndexConstraint&gt; getIndexConstraints() {</span>
+<span class="source-line-no">033</span><span id="line-33">    Lock readLock = instanceLock.readLock();</span>
+<span class="source-line-no">034</span><span id="line-34">    readLock.lock();</span>
+<span class="source-line-no">035</span><span id="line-35">    try {</span>
+<span class="source-line-no">036</span><span id="line-36">      return CollectionUtil.unmodifiableList(indexConstraints);</span>
+<span class="source-line-no">037</span><span id="line-37">    } finally {</span>
+<span class="source-line-no">038</span><span id="line-38">      readLock.unlock();</span>
+<span class="source-line-no">039</span><span id="line-39">    }</span>
+<span class="source-line-no">040</span><span id="line-40">  }</span>
+<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">042</span><span id="line-42">  @Override</span>
+<span class="source-line-no">043</span><span id="line-43">  public List&lt;IUniqueConstraint&gt; getUniqueConstraints() {</span>
+<span class="source-line-no">044</span><span id="line-44">    Lock readLock = instanceLock.readLock();</span>
+<span class="source-line-no">045</span><span id="line-45">    readLock.lock();</span>
+<span class="source-line-no">046</span><span id="line-46">    try {</span>
+<span class="source-line-no">047</span><span id="line-47">      return CollectionUtil.unmodifiableList(uniqueConstraints);</span>
+<span class="source-line-no">048</span><span id="line-48">    } finally {</span>
+<span class="source-line-no">049</span><span id="line-49">      readLock.unlock();</span>
+<span class="source-line-no">050</span><span id="line-50">    }</span>
+<span class="source-line-no">051</span><span id="line-51">  }</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">  @Override</span>
+<span class="source-line-no">054</span><span id="line-54">  public List&lt;ICardinalityConstraint&gt; getHasCardinalityConstraints() {</span>
+<span class="source-line-no">055</span><span id="line-55">    Lock readLock = instanceLock.readLock();</span>
+<span class="source-line-no">056</span><span id="line-56">    readLock.lock();</span>
+<span class="source-line-no">057</span><span id="line-57">    try {</span>
+<span class="source-line-no">058</span><span id="line-58">      return CollectionUtil.unmodifiableList(cardinalityConstraints);</span>
+<span class="source-line-no">059</span><span id="line-59">    } finally {</span>
+<span class="source-line-no">060</span><span id="line-60">      readLock.unlock();</span>
+<span class="source-line-no">061</span><span id="line-61">    }</span>
+<span class="source-line-no">062</span><span id="line-62">  }</span>
+<span class="source-line-no">063</span><span id="line-63"></span>
+<span class="source-line-no">064</span><span id="line-64">  @Override</span>
+<span class="source-line-no">065</span><span id="line-65">  public final void addConstraint(@NonNull IIndexConstraint constraint) {</span>
+<span class="source-line-no">066</span><span id="line-66">    Lock writeLock = instanceLock.writeLock();</span>
+<span class="source-line-no">067</span><span id="line-67">    writeLock.lock();</span>
+<span class="source-line-no">068</span><span id="line-68">    try {</span>
+<span class="source-line-no">069</span><span id="line-69">      constraints.add(constraint);</span>
+<span class="source-line-no">070</span><span id="line-70">      indexConstraints.add(constraint);</span>
+<span class="source-line-no">071</span><span id="line-71">    } finally {</span>
+<span class="source-line-no">072</span><span id="line-72">      writeLock.unlock();</span>
+<span class="source-line-no">073</span><span id="line-73">    }</span>
+<span class="source-line-no">074</span><span id="line-74">  }</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">  @Override</span>
+<span class="source-line-no">077</span><span id="line-77">  public final void addConstraint(@NonNull IUniqueConstraint constraint) {</span>
+<span class="source-line-no">078</span><span id="line-78">    Lock writeLock = instanceLock.writeLock();</span>
+<span class="source-line-no">079</span><span id="line-79">    writeLock.lock();</span>
+<span class="source-line-no">080</span><span id="line-80">    try {</span>
+<span class="source-line-no">081</span><span id="line-81">      constraints.add(constraint);</span>
+<span class="source-line-no">082</span><span id="line-82">      uniqueConstraints.add(constraint);</span>
+<span class="source-line-no">083</span><span id="line-83">    } finally {</span>
+<span class="source-line-no">084</span><span id="line-84">      writeLock.unlock();</span>
+<span class="source-line-no">085</span><span id="line-85">    }</span>
+<span class="source-line-no">086</span><span id="line-86">  }</span>
+<span class="source-line-no">087</span><span id="line-87"></span>
+<span class="source-line-no">088</span><span id="line-88">  @Override</span>
+<span class="source-line-no">089</span><span id="line-89">  public final void addConstraint(@NonNull ICardinalityConstraint constraint) {</span>
+<span class="source-line-no">090</span><span id="line-90">    Lock writeLock = instanceLock.writeLock();</span>
+<span class="source-line-no">091</span><span id="line-91">    writeLock.lock();</span>
+<span class="source-line-no">092</span><span id="line-92">    try {</span>
+<span class="source-line-no">093</span><span id="line-93">      constraints.add(constraint);</span>
+<span class="source-line-no">094</span><span id="line-94">      cardinalityConstraints.add(constraint);</span>
+<span class="source-line-no">095</span><span id="line-95">    } finally {</span>
+<span class="source-line-no">096</span><span id="line-96">      writeLock.unlock();</span>
+<span class="source-line-no">097</span><span id="line-97">    }</span>
+<span class="source-line-no">098</span><span id="line-98">  }</span>
+<span class="source-line-no">099</span><span id="line-99">}</span>
 
 
 

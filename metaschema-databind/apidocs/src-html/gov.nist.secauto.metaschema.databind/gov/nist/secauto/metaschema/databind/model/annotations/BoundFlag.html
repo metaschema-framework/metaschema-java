@@ -110,20 +110,27 @@
 <span class="source-line-no">097</span><span id="line-97">  Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; typeAdapter() default NullJavaTypeAdapter.class;</span>
 <span class="source-line-no">098</span><span id="line-98"></span>
 <span class="source-line-no">099</span><span id="line-99">  /**</span>
-<span class="source-line-no">100</span><span id="line-100">   * Get any remarks for this flag.</span>
+<span class="source-line-no">100</span><span id="line-100">   * An optional set of associated properties.</span>
 <span class="source-line-no">101</span><span id="line-101">   *</span>
-<span class="source-line-no">102</span><span id="line-102">   * @return a markdown string or {@code "##none"} if no remarks are provided</span>
+<span class="source-line-no">102</span><span id="line-102">   * @return the properties or an empty array with no properties</span>
 <span class="source-line-no">103</span><span id="line-103">   */</span>
-<span class="source-line-no">104</span><span id="line-104">  @NonNull</span>
-<span class="source-line-no">105</span><span id="line-105">  String remarks() default ModelUtil.NO_STRING_VALUE;</span>
-<span class="source-line-no">106</span><span id="line-106"></span>
-<span class="source-line-no">107</span><span id="line-107">  /**</span>
-<span class="source-line-no">108</span><span id="line-108">   * Get the value constraints defined for this Metaschema flag inline definition.</span>
-<span class="source-line-no">109</span><span id="line-109">   *</span>
-<span class="source-line-no">110</span><span id="line-110">   * @return the value constraints</span>
-<span class="source-line-no">111</span><span id="line-111">   */</span>
-<span class="source-line-no">112</span><span id="line-112">  ValueConstraints valueConstraints() default @ValueConstraints;</span>
-<span class="source-line-no">113</span><span id="line-113">}</span>
+<span class="source-line-no">104</span><span id="line-104">  Property[] properties() default {};</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">  /**</span>
+<span class="source-line-no">107</span><span id="line-107">   * Get any remarks for this flag.</span>
+<span class="source-line-no">108</span><span id="line-108">   *</span>
+<span class="source-line-no">109</span><span id="line-109">   * @return a markdown string or {@code "##none"} if no remarks are provided</span>
+<span class="source-line-no">110</span><span id="line-110">   */</span>
+<span class="source-line-no">111</span><span id="line-111">  @NonNull</span>
+<span class="source-line-no">112</span><span id="line-112">  String remarks() default ModelUtil.NO_STRING_VALUE;</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">  /**</span>
+<span class="source-line-no">115</span><span id="line-115">   * Get the value constraints defined for this Metaschema flag inline definition.</span>
+<span class="source-line-no">116</span><span id="line-116">   *</span>
+<span class="source-line-no">117</span><span id="line-117">   * @return the value constraints</span>
+<span class="source-line-no">118</span><span id="line-118">   */</span>
+<span class="source-line-no">119</span><span id="line-119">  ValueConstraints valueConstraints() default @ValueConstraints;</span>
+<span class="source-line-no">120</span><span id="line-120">}</span>
 
 
 

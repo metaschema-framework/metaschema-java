@@ -13,50 +13,51 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.metapath.function.library;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ISequence;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.MethodSource;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Stream;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ISequence;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.MethodSource;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Stream;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">class</strong> <a name="FnReverseTest" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/FnReverseTest.html#FnReverseTest">FnReverseTest</a>
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>      <strong class="jxr_keyword">extends</strong> <a name="ExpressionTestBase" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/ExpressionTestBase.html#ExpressionTestBase">ExpressionTestBase</a> {
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Stream&lt;Arguments&gt; provideValues() { <em class="jxr_comment">// NOPMD - false positive</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>      <strong class="jxr_keyword">return</strong> Stream.of(
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>          Arguments.of(
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>              ISequence.of(string(<span class="jxr_string">"c"</span>), string(<span class="jxr_string">"b"</span>), string(<span class="jxr_string">"a"</span>)),
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>              <span class="jxr_string">"reverse(('a', 'b', 'c'))"</span>),
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>          Arguments.of(
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>              ISequence.of(string(<span class="jxr_string">"hello"</span>)),
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>              <span class="jxr_string">"reverse(('hello'))"</span>),
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>          Arguments.of(
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>              ISequence.empty(),
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>              <span class="jxr_string">"reverse(())"</span>));
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <em class="jxr_comment">// TODO: Add tests when Metapath array syntax supported.</em>
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <em class="jxr_comment">// Arguments.of(</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <em class="jxr_comment">// ISequence.of(array([1, 2, 3])),</em>
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <em class="jxr_comment">// "reverse(([1,2,3]))"),</em>
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <em class="jxr_comment">// Arguments.of(</em>
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <em class="jxr_comment">// ISequence.of(array([1, 2, 3]), array([1, 2, 3])),</em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <em class="jxr_comment">// "reverse(([1,2,3],[4,5,6]))");</em>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    }
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    @ParameterizedTest
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    @MethodSource(<span class="jxr_string">"provideValues"</span>)
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">void</strong> test(@NonNull ISequence&lt;?&gt; expected, @NonNull String metapath) {
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      assertEquals(expected, MetapathExpression.compile(metapath).evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.SEQUENCE,
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>          newDynamicContext()));
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>    }
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  }
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">class</strong> <a name="FnReverseTest" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/FnReverseTest.html#FnReverseTest">FnReverseTest</a>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>      <strong class="jxr_keyword">extends</strong> <a name="ExpressionTestBase" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/ExpressionTestBase.html#ExpressionTestBase">ExpressionTestBase</a> {
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Stream&lt;Arguments&gt; provideValues() { <em class="jxr_comment">// NOPMD - false positive</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">return</strong> Stream.of(
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>          Arguments.of(
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>              ISequence.of(string(<span class="jxr_string">"c"</span>), string(<span class="jxr_string">"b"</span>), string(<span class="jxr_string">"a"</span>)),
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>              <span class="jxr_string">"reverse(('a', 'b', 'c'))"</span>),
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>          Arguments.of(
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>              ISequence.of(string(<span class="jxr_string">"hello"</span>)),
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>              <span class="jxr_string">"reverse(('hello'))"</span>),
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>          Arguments.of(
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>              ISequence.empty(),
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>              <span class="jxr_string">"reverse(())"</span>),
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          Arguments.of(
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>              ISequence.of(array(integer(1), integer(2), integer(3))),
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>              <span class="jxr_string">"reverse(([1,2,3]))"</span>),
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>          Arguments.of(
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>              ISequence.of(array(integer(4), integer(5), integer(6)), array(integer(1), integer(2), integer(3))),
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>              <span class="jxr_string">"reverse(([1,2,3],[4,5,6]))"</span>));
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    }
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    @ParameterizedTest
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    @MethodSource(<span class="jxr_string">"provideValues"</span>)
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> test(@NonNull ISequence&lt;?&gt; expected, @NonNull String metapath) {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      assertEquals(expected, MetapathExpression.compile(metapath).evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.SEQUENCE,
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          newDynamicContext()));
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    }
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

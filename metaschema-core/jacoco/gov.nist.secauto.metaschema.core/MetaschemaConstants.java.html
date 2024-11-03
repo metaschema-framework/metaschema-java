@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaschemaConstants.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Core API</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.core</a> &gt; <span class="el_source">MetaschemaConstants.java</span></div><h1>MetaschemaConstants.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core;
+
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.net.URI;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+public final class MetaschemaConstants {
+  /**
+   * This is the namespace used by Metaschema in formats that require or use a
+   * namespace, and in properties that are defined by the Metaschema
+   * specification.
+   */
+  @NonNull
+  public static final String METASCHEMA_NAMESPACE = &quot;http://csrc.nist.gov/ns/oscal/metaschema/1.0&quot;;
+
+  /**
+   * The {@link #METASCHEMA_NAMESPACE} as a {@link URI}.
+   */
+  @NonNull
+<span class="nc" id="L27">  public static final URI METASCHEMA_NAMESPACE_URI = ObjectUtils.notNull(URI.create(METASCHEMA_NAMESPACE));</span>
+
+  private MetaschemaConstants() {
+    // disable construction
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

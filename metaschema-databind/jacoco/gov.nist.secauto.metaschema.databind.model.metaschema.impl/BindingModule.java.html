@@ -16,15 +16,16 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetapathNamespace;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathNamespace;
 
 import java.net.URI;
 import java.util.Collection;
@@ -40,6 +41,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+@SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)
 public class BindingModule
     extends AbstractModule&lt;
         IBindingMetaschemaModule,
@@ -58,6 +60,8 @@ public class BindingModule
   private final Lazy&lt;IModuleNodeItem&gt; moduleNodeItem;
   @NonNull
   private final Lazy&lt;Definitions&gt; definitions;
+  @NonNull
+  private final ISource source;
 
   /**
    * Constructs a new Metaschema instance.
@@ -80,186 +84,192 @@ public class BindingModule
       @NonNull IBoundDefinitionModelAssembly rootDefinition,
       @NonNull METASCHEMA binding,
       @NonNull List&lt;? extends IBindingMetaschemaModule&gt; importedModules) throws MetaschemaException {
-<span class="fc" id="L83">    super(importedModules);</span>
+<span class="fc" id="L87">    super(importedModules);</span>
 
-<span class="fc" id="L85">    this.binding = binding;</span>
+<span class="fc" id="L89">    this.binding = binding;</span>
 
-<span class="fc" id="L87">    this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L88">      StaticContext.Builder builder = StaticContext.builder()</span>
-<span class="fc" id="L89">          .baseUri(resource)</span>
-<span class="fc" id="L90">          .defaultModelNamespace(getXmlNamespace());</span>
+<span class="fc" id="L91">    this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L92">      StaticContext.Builder builder = StaticContext.builder()</span>
+<span class="fc" id="L93">          .baseUri(resource)</span>
+<span class="fc" id="L94">          .defaultModelNamespace(getXmlNamespace());</span>
 
-<span class="fc" id="L92">      getNamespaceBindings()</span>
-<span class="pc" id="L93">          .forEach((prefix, ns) -&gt; builder.namespace(</span>
-<span class="nc" id="L94">              ObjectUtils.notNull(prefix), ObjectUtils.notNull(ns)));</span>
-<span class="fc" id="L95">      return builder.build();</span>
+<span class="fc" id="L96">      getNamespaceBindings()</span>
+<span class="fc" id="L97">          .forEach((prefix, ns) -&gt; builder.namespace(</span>
+<span class="fc" id="L98">              ObjectUtils.notNull(prefix), ObjectUtils.notNull(ns)));</span>
+<span class="fc" id="L99">      return builder.build();</span>
     }));
 
-<span class="fc" id="L98">    INodeItemFactory nodeItemFactory = INodeItemFactory.instance();</span>
-<span class="fc" id="L99">    this.definitions = ObjectUtils.notNull(Lazy.lazy(() -&gt; new Definitions(resource, rootDefinition, nodeItemFactory)));</span>
-<span class="fc" id="L100">    this.documentNodeItem</span>
-<span class="fc" id="L101">        = ObjectUtils.notNull(Lazy.lazy(() -&gt; nodeItemFactory.newDocumentNodeItem(rootDefinition, resource, binding)));</span>
-<span class="fc" id="L102">    this.moduleNodeItem</span>
-<span class="pc" id="L103">        = ObjectUtils.notNull(Lazy.lazy(() -&gt; nodeItemFactory.newModuleNodeItem(this)));</span>
-<span class="fc" id="L104">  }</span>
+<span class="fc" id="L102">    INodeItemFactory nodeItemFactory = INodeItemFactory.instance();</span>
+<span class="fc" id="L103">    this.definitions = ObjectUtils.notNull(Lazy.lazy(() -&gt; new Definitions(resource, rootDefinition, nodeItemFactory)));</span>
+<span class="fc" id="L104">    this.documentNodeItem</span>
+<span class="fc" id="L105">        = ObjectUtils.notNull(Lazy.lazy(() -&gt; nodeItemFactory.newDocumentNodeItem(rootDefinition, resource, binding)));</span>
+<span class="fc" id="L106">    this.moduleNodeItem</span>
+<span class="pc" id="L107">        = ObjectUtils.notNull(Lazy.lazy(() -&gt; nodeItemFactory.newModuleNodeItem(this)));</span>
+<span class="fc" id="L108">    this.source = ISource.moduleSource(this);</span>
+<span class="fc" id="L109">  }</span>
+
+  @Override
+  public ISource getSource() {
+<span class="fc" id="L113">    return source;</span>
+  }
 
   @Override
   public final METASCHEMA getBinding() {
-<span class="fc" id="L108">    return binding;</span>
+<span class="fc" id="L118">    return binding;</span>
   }
 
   @Override
   public IDocumentNodeItem getSourceNodeItem() {
-<span class="fc" id="L113">    return ObjectUtils.notNull(documentNodeItem.get());</span>
+<span class="fc" id="L123">    return ObjectUtils.notNull(documentNodeItem.get());</span>
   }
 
   @Override
   public IModuleNodeItem getModuleNodeItem() {
-<span class="nc" id="L118">    return ObjectUtils.notNull(moduleNodeItem.get());</span>
+<span class="nc" id="L128">    return ObjectUtils.notNull(moduleNodeItem.get());</span>
   }
 
   @Override
   public final StaticContext getModuleStaticContext() {
-<span class="fc" id="L123">    return staticContext.get();</span>
+<span class="fc" id="L133">    return ObjectUtils.notNull(staticContext.get());</span>
   }
 
   @Override
   @NonNull
   public final URI getLocation() {
-<span class="fc" id="L129">    return ObjectUtils.notNull(getModuleStaticContext().getBaseUri());</span>
+<span class="fc" id="L139">    return ObjectUtils.notNull(getModuleStaticContext().getBaseUri());</span>
   }
 
   @Override
   public MarkupLine getName() {
-<span class="fc" id="L134">    MarkupLine retval = getBinding().getSchemaName();</span>
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L136">      throw new IllegalStateException(String.format(&quot;The schema name is NULL for module '%s'.&quot;, getLocation()));</span>
+<span class="fc" id="L144">    MarkupLine retval = getBinding().getSchemaName();</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L146">      throw new IllegalStateException(String.format(&quot;The schema name is NULL for module '%s'.&quot;, getLocation()));</span>
     }
-<span class="fc" id="L138">    return retval;</span>
+<span class="fc" id="L148">    return retval;</span>
   }
 
   @Override
   public String getVersion() {
-<span class="fc" id="L143">    String retval = getBinding().getSchemaVersion();</span>
-<span class="pc bpc" id="L144" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L145">      throw new IllegalStateException(String.format(&quot;The schema version is NULL for module '%s'.&quot;, getLocation()));</span>
+<span class="fc" id="L153">    String retval = getBinding().getSchemaVersion();</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L155">      throw new IllegalStateException(String.format(&quot;The schema version is NULL for module '%s'.&quot;, getLocation()));</span>
     }
-<span class="fc" id="L147">    return retval;</span>
+<span class="fc" id="L157">    return retval;</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="fc" id="L152">    return ModelSupport.remarks(getBinding().getRemarks());</span>
+<span class="fc" id="L162">    return ModelSupport.remarks(getBinding().getRemarks());</span>
   }
 
   @Override
   public String getShortName() {
-<span class="fc" id="L157">    String retval = getBinding().getShortName();</span>
-<span class="pc bpc" id="L158" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L159">      throw new IllegalStateException(String.format(&quot;The schema short name is NULL for module '%s'.&quot;, getLocation()));</span>
-    }
-<span class="fc" id="L161">    return retval;</span>
-  }
-
-  @Override
-  public final URI getXmlNamespace() {
-<span class="fc" id="L166">    URI retval = getBinding().getNamespace();</span>
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L168">      throw new IllegalStateException(</span>
-<span class="nc" id="L169">          String.format(&quot;The XML schema namespace is NULL for module '%s'.&quot;, getLocation()));</span>
+<span class="fc" id="L167">    String retval = getBinding().getShortName();</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L169">      throw new IllegalStateException(String.format(&quot;The schema short name is NULL for module '%s'.&quot;, getLocation()));</span>
     }
 <span class="fc" id="L171">    return retval;</span>
   }
 
   @Override
-  public URI getJsonBaseUri() {
-<span class="fc" id="L176">    URI retval = getBinding().getJsonBaseUri();</span>
+  public final URI getXmlNamespace() {
+<span class="fc" id="L176">    URI retval = getBinding().getNamespace();</span>
 <span class="pc bpc" id="L177" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L178">      throw new IllegalStateException(String.format(&quot;The JSON schema URI is NULL for module '%s'.&quot;, getLocation()));</span>
+<span class="nc" id="L178">      throw new IllegalStateException(</span>
+<span class="nc" id="L179">          String.format(&quot;The XML schema namespace is NULL for module '%s'.&quot;, getLocation()));</span>
     }
-<span class="fc" id="L180">    return retval;</span>
+<span class="fc" id="L181">    return retval;</span>
+  }
+
+  @Override
+  public URI getJsonBaseUri() {
+<span class="fc" id="L186">    URI retval = getBinding().getJsonBaseUri();</span>
+<span class="pc bpc" id="L187" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L188">      throw new IllegalStateException(String.format(&quot;The JSON schema URI is NULL for module '%s'.&quot;, getLocation()));</span>
+    }
+<span class="fc" id="L190">    return retval;</span>
   }
 
   @Override
   public Map&lt;String, String&gt; getNamespaceBindings() {
-<span class="fc" id="L185">    return ObjectUtils.notNull(CollectionUtil.listOrEmpty(binding.getNamespaceBindings()).stream()</span>
-<span class="fc" id="L186">        .collect(Collectors.toMap(</span>
+<span class="fc" id="L195">    return ObjectUtils.notNull(CollectionUtil.listOrEmpty(binding.getNamespaceBindings()).stream()</span>
+<span class="fc" id="L196">        .collect(Collectors.toMap(</span>
             MetapathNamespace::getPrefix,
-<span class="nc" id="L188">            binding -&gt; binding.getUri().toASCIIString(),</span>
-<span class="nc" id="L189">            (v1, v2) -&gt; v2,</span>
+<span class="fc" id="L198">            binding -&gt; binding.getUri().toASCIIString(),</span>
+<span class="nc" id="L199">            (v1, v2) -&gt; v2,</span>
             LinkedHashMap::new)));
   }
 
   @NonNull
   private Definitions getDefinitions() {
-<span class="fc" id="L195">    return ObjectUtils.notNull(definitions.get());</span>
+<span class="fc" id="L205">    return ObjectUtils.notNull(definitions.get());</span>
   }
 
   @NonNull
   private Map&lt;QName, IAssemblyDefinition&gt; getAssemblyDefinitionMap() {
-<span class="fc" id="L200">    return getDefinitions().assemblyDefinitions;</span>
+<span class="fc" id="L210">    return getDefinitions().assemblyDefinitions;</span>
   }
 
   @Override
   public Collection&lt;IAssemblyDefinition&gt; getAssemblyDefinitions() {
-<span class="fc" id="L205">    return ObjectUtils.notNull(getAssemblyDefinitionMap().values());</span>
+<span class="fc" id="L215">    return ObjectUtils.notNull(getAssemblyDefinitionMap().values());</span>
   }
 
   @Override
   public IAssemblyDefinition getAssemblyDefinitionByName(@NonNull QName name) {
-<span class="fc" id="L210">    return getAssemblyDefinitionMap().get(name);</span>
+<span class="fc" id="L220">    return getAssemblyDefinitionMap().get(name);</span>
   }
 
   @NonNull
   private Map&lt;QName, IFieldDefinition&gt; getFieldDefinitionMap() {
-<span class="fc" id="L215">    return getDefinitions().fieldDefinitions;</span>
+<span class="fc" id="L225">    return getDefinitions().fieldDefinitions;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;IFieldDefinition&gt; getFieldDefinitions() {
-<span class="fc" id="L221">    return getFieldDefinitionMap().values();</span>
+<span class="fc" id="L231">    return getFieldDefinitionMap().values();</span>
   }
 
   @Override
   public IFieldDefinition getFieldDefinitionByName(@NonNull QName name) {
-<span class="fc" id="L226">    return getFieldDefinitionMap().get(name);</span>
+<span class="fc" id="L236">    return getFieldDefinitionMap().get(name);</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public List&lt;IModelDefinition&gt; getAssemblyAndFieldDefinitions() {
-<span class="nc" id="L232">    return Stream.concat(getAssemblyDefinitions().stream(), getFieldDefinitions().stream())</span>
-<span class="nc" id="L233">        .collect(Collectors.toList());</span>
+<span class="nc" id="L242">    return Stream.concat(getAssemblyDefinitions().stream(), getFieldDefinitions().stream())</span>
+<span class="nc" id="L243">        .collect(Collectors.toList());</span>
   }
 
   @NonNull
   private Map&lt;QName, IFlagDefinition&gt; getFlagDefinitionMap() {
-<span class="fc" id="L238">    return getDefinitions().flagDefinitions;</span>
+<span class="fc" id="L248">    return getDefinitions().flagDefinitions;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;IFlagDefinition&gt; getFlagDefinitions() {
-<span class="fc" id="L244">    return getFlagDefinitionMap().values();</span>
+<span class="fc" id="L254">    return getFlagDefinitionMap().values();</span>
   }
 
   @Override
   public IFlagDefinition getFlagDefinitionByName(@NonNull QName name) {
-<span class="fc" id="L249">    return getFlagDefinitionMap().get(name);</span>
+<span class="fc" id="L259">    return getFlagDefinitionMap().get(name);</span>
   }
 
   private Map&lt;QName, ? extends IAssemblyDefinition&gt; getRootAssemblyDefinitionMap() {
-<span class="nc" id="L253">    return getDefinitions().rootAssemblyDefinitions;</span>
+<span class="fc" id="L263">    return getDefinitions().rootAssemblyDefinitions;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;? extends IAssemblyDefinition&gt; getRootAssemblyDefinitions() {
-<span class="nc" id="L259">    return getRootAssemblyDefinitionMap().values();</span>
+<span class="fc" id="L269">    return getRootAssemblyDefinitionMap().values();</span>
   }
 
-  private final class Definitions {
+<span class="fc" id="L272">  private final class Definitions {</span>
     @NonNull
     private final Map&lt;QName, IFlagDefinition&gt; flagDefinitions;
     @NonNull
@@ -269,64 +279,67 @@ public class BindingModule
     @NonNull
     private final Map&lt;QName, IAssemblyDefinition&gt; rootAssemblyDefinitions;
 
+    @SuppressWarnings(&quot;PMD.AvoidInstantiatingObjectsInLoops&quot;)
     private Definitions(
         @NonNull URI resource,
         @NonNull IBoundDefinitionModelAssembly rootDefinition,
-<span class="fc" id="L275">        @NonNull INodeItemFactory nodeItemFactory) {</span>
+<span class="fc" id="L286">        @NonNull INodeItemFactory nodeItemFactory) {</span>
 
-<span class="fc" id="L277">      this.flagDefinitions = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L278">      this.fieldDefinitions = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L279">      this.assemblyDefinitions = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L280">      this.rootAssemblyDefinitions = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L288">      this.flagDefinitions = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L289">      this.fieldDefinitions = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L290">      this.assemblyDefinitions = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L291">      this.rootAssemblyDefinitions = new LinkedHashMap&lt;&gt;();</span>
 
       // create instance position counters
-<span class="fc" id="L283">      int globalFlagPosition = 0;</span>
-<span class="fc" id="L284">      int globalFieldPosition = 0;</span>
-<span class="fc" id="L285">      int globalAssemblyPosition = 0;</span>
+<span class="fc" id="L294">      int globalFlagPosition = 0;</span>
+<span class="fc" id="L295">      int globalFieldPosition = 0;</span>
+<span class="fc" id="L296">      int globalAssemblyPosition = 0;</span>
 
-<span class="fc" id="L287">      IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L288">          rootDefinition.getChoiceGroupInstanceByName(&quot;definitions&quot;));</span>
+<span class="fc" id="L298">      IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L299">          rootDefinition.getChoiceGroupInstanceByName(&quot;definitions&quot;));</span>
 
-<span class="fc bfc" id="L290" title="All 2 branches covered.">      for (Object obj : binding.getDefinitions()) {</span>
-<span class="fc" id="L291">        IBoundInstanceModelGroupedAssembly objInstance</span>
-<span class="fc" id="L292">            = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">      for (Object obj : binding.getDefinitions()) {</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        assert obj != null : &quot;Object was null&quot;;</span>
 
-<span class="fc bfc" id="L294" title="All 2 branches covered.">        if (obj instanceof METASCHEMA.DefineAssembly) {</span>
-<span class="fc" id="L295">          IAssemblyDefinition definition = new DefinitionAssemblyGlobal(</span>
+<span class="fc" id="L304">        IBoundInstanceModelGroupedAssembly objInstance</span>
+<span class="fc" id="L305">            = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);</span>
+
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        if (obj instanceof METASCHEMA.DefineAssembly) {</span>
+<span class="fc" id="L308">          IAssemblyDefinition definition = new DefinitionAssemblyGlobal(</span>
               (METASCHEMA.DefineAssembly) obj,
               objInstance,
               globalAssemblyPosition++,
               BindingModule.this,
               nodeItemFactory);
-<span class="fc" id="L301">          QName name = definition.getDefinitionQName();</span>
-<span class="fc" id="L302">          assemblyDefinitions.put(name, definition);</span>
-<span class="fc bfc" id="L303" title="All 2 branches covered.">          if (definition.isRoot()) {</span>
-<span class="fc" id="L304">            rootAssemblyDefinitions.put(name, definition);</span>
+<span class="fc" id="L314">          QName name = definition.getDefinitionQName();</span>
+<span class="fc" id="L315">          assemblyDefinitions.put(name, definition);</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">          if (definition.isRoot()) {</span>
+<span class="fc" id="L317">            rootAssemblyDefinitions.put(name, definition);</span>
           }
-<span class="fc bfc" id="L306" title="All 2 branches covered.">        } else if (obj instanceof METASCHEMA.DefineField) {</span>
-<span class="fc" id="L307">          IFieldDefinition definition = new DefinitionFieldGlobal(</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        } else if (obj instanceof METASCHEMA.DefineField) {</span>
+<span class="fc" id="L320">          IFieldDefinition definition = new DefinitionFieldGlobal(</span>
               (METASCHEMA.DefineField) obj,
               objInstance,
               globalFieldPosition++,
               BindingModule.this);
-<span class="fc" id="L312">          QName name = definition.getDefinitionQName();</span>
-<span class="fc" id="L313">          fieldDefinitions.put(name, definition);</span>
-<span class="pc bpc" id="L314" title="1 of 2 branches missed.">        } else if (obj instanceof METASCHEMA.DefineFlag) {</span>
-<span class="fc" id="L315">          IFlagDefinition definition = new DefinitionFlagGlobal(</span>
+<span class="fc" id="L325">          QName name = definition.getDefinitionQName();</span>
+<span class="fc" id="L326">          fieldDefinitions.put(name, definition);</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">        } else if (obj instanceof METASCHEMA.DefineFlag) {</span>
+<span class="fc" id="L328">          IFlagDefinition definition = new DefinitionFlagGlobal(</span>
               (METASCHEMA.DefineFlag) obj,
               objInstance,
               globalFlagPosition++,
               BindingModule.this);
-<span class="fc" id="L320">          QName name = definition.getDefinitionQName();</span>
-<span class="fc" id="L321">          flagDefinitions.put(name, definition);</span>
-<span class="fc" id="L322">        } else {</span>
-<span class="nc" id="L323">          throw new IllegalStateException(</span>
-<span class="nc" id="L324">              String.format(&quot;Unrecognized definition class '%s' in module '%s'.&quot;,</span>
-<span class="nc" id="L325">                  obj.getClass(),</span>
-<span class="nc" id="L326">                  resource.toASCIIString()));</span>
+<span class="fc" id="L333">          QName name = definition.getDefinitionQName();</span>
+<span class="fc" id="L334">          flagDefinitions.put(name, definition);</span>
+<span class="fc" id="L335">        } else {</span>
+<span class="nc" id="L336">          throw new IllegalStateException(</span>
+<span class="nc" id="L337">              String.format(&quot;Unrecognized definition class '%s' in module '%s'.&quot;,</span>
+<span class="nc" id="L338">                  obj.getClass(),</span>
+<span class="nc" id="L339">                  resource.toASCIIString()));</span>
         }
-<span class="fc" id="L328">      }</span>
-<span class="fc" id="L329">    }</span>
+<span class="fc" id="L341">      }</span>
+<span class="fc" id="L342">    }</span>
   }
 
 }

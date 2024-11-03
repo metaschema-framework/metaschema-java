@@ -21,32 +21,33 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements &lt;a href=
- * &quot;https://www.w3.org/TR/xpath-functions-31/#func-remove&quot;&gt;fn:remove&lt;/a&gt;.
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-remove&quot;&gt;fn:remove&lt;/a&gt;
+ * function.
  */
 public final class FnRemove {
   private static final String NAME = &quot;remove&quot;;
   @NonNull
-<span class="fc" id="L30">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L31">      .name(NAME)</span>
-<span class="fc" id="L32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L33">      .deterministic()</span>
-<span class="fc" id="L34">      .contextIndependent()</span>
-<span class="fc" id="L35">      .focusIndependent()</span>
-<span class="fc" id="L36">      .argument(IArgument.builder()</span>
-<span class="fc" id="L37">          .name(&quot;target&quot;)</span>
-<span class="fc" id="L38">          .type(IItem.class)</span>
-<span class="fc" id="L39">          .zeroOrMore()</span>
-<span class="fc" id="L40">          .build())</span>
-<span class="fc" id="L41">      .argument(IArgument.builder()</span>
-<span class="fc" id="L42">          .name(&quot;position&quot;)</span>
-<span class="fc" id="L43">          .type(IIntegerItem.class)</span>
-<span class="fc" id="L44">          .one()</span>
-<span class="fc" id="L45">          .build())</span>
-<span class="fc" id="L46">      .returnType(IItem.class)</span>
-<span class="fc" id="L47">      .returnZeroOrMore()</span>
-<span class="fc" id="L48">      .functionHandler(FnRemove::execute)</span>
-<span class="fc" id="L49">      .build();</span>
+<span class="fc" id="L31">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L32">      .name(NAME)</span>
+<span class="fc" id="L33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L34">      .deterministic()</span>
+<span class="fc" id="L35">      .contextIndependent()</span>
+<span class="fc" id="L36">      .focusIndependent()</span>
+<span class="fc" id="L37">      .argument(IArgument.builder()</span>
+<span class="fc" id="L38">          .name(&quot;target&quot;)</span>
+<span class="fc" id="L39">          .type(IItem.class)</span>
+<span class="fc" id="L40">          .zeroOrMore()</span>
+<span class="fc" id="L41">          .build())</span>
+<span class="fc" id="L42">      .argument(IArgument.builder()</span>
+<span class="fc" id="L43">          .name(&quot;position&quot;)</span>
+<span class="fc" id="L44">          .type(IIntegerItem.class)</span>
+<span class="fc" id="L45">          .one()</span>
+<span class="fc" id="L46">          .build())</span>
+<span class="fc" id="L47">      .returnType(IItem.class)</span>
+<span class="fc" id="L48">      .returnZeroOrMore()</span>
+<span class="fc" id="L49">      .functionHandler(FnRemove::execute)</span>
+<span class="fc" id="L50">      .build();</span>
 
   private FnRemove() {
     // disable construction
@@ -58,9 +59,9 @@ public final class FnRemove {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L61">    ISequence&lt;?&gt; target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="fc" id="L62">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L63">    return ISequence.ofCollection(fnRemove(target, position));</span>
+<span class="fc" id="L62">    ISequence&lt;?&gt; target = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L63">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L64">    return ISequence.ofCollection(fnRemove(target, position));</span>
   }
 
   /**
@@ -79,15 +80,15 @@ public final class FnRemove {
   public static &lt;T extends IItem&gt; List&lt;T&gt; fnRemove(
       @NonNull List&lt;T&gt; target,
       @NonNull IIntegerItem positionItem) {
-<span class="fc" id="L82">    int position = positionItem.asInteger().intValue();</span>
+<span class="fc" id="L83">    int position = positionItem.asInteger().intValue();</span>
 
-<span class="fc bfc" id="L84" title="All 4 branches covered.">    if ((position == 0) || (position &gt; target.size())) {</span>
-<span class="fc" id="L85">      return target;</span>
+<span class="fc bfc" id="L85" title="All 4 branches covered.">    if (position == 0 || position &gt; target.size()) {</span>
+<span class="fc" id="L86">      return target;</span>
     }
 
-<span class="fc" id="L88">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target);</span>
-<span class="fc" id="L89">    newSequence.remove(position - 1);</span>
-<span class="fc" id="L90">    return newSequence;</span>
+<span class="fc" id="L89">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target);</span>
+<span class="fc" id="L90">    newSequence.remove(position - 1);</span>
+<span class="fc" id="L91">    return newSequence;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

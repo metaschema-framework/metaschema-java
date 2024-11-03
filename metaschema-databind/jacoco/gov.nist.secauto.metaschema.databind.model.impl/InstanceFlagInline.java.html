@@ -9,11 +9,12 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractInlineFlagDefinition;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionFlag;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModel;
@@ -26,7 +27,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -36,10 +42,8 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Implements a Metaschema module inline flag instance/definition bound to a
  * Java field.
  */
-// TODO: implement getProperties()
 public class InstanceFlagInline
     extends AbstractInlineFlagDefinition&lt;IBoundDefinitionModel&lt;IBoundObject&gt;, IBoundDefinitionFlag, IBoundInstanceFlag&gt;
-    // extends AbstractBoundInstanceJavaField&lt;BoundFlag, IBoundDefinitionModel&gt;
     implements IBoundInstanceFlag {
   @NonNull
   private final Field javaField;
@@ -51,36 +55,44 @@ public class InstanceFlagInline
   private final Object defaultValue;
   @NonNull
   private final Lazy&lt;IValueConstrained&gt; constraints;
+  @NonNull
+  private final Lazy&lt;Map&lt;IAttributable.Key, Set&lt;String&gt;&gt;&gt; properties;
 
   /**
    * Construct a new inline field instance/definition.
    *
    * @param javaField
    *          the Java field bound to this instance
-   * @param containingDefinition
+   * @param parent
    *          the definition containing this instance
    */
   public InstanceFlagInline(
       @NonNull Field javaField,
-      @NonNull IBoundDefinitionModel&lt;IBoundObject&gt; containingDefinition) {
-<span class="fc" id="L66">    super(containingDefinition);</span>
-<span class="fc" id="L67">    this.javaField = javaField;</span>
-<span class="fc" id="L68">    this.annotation = ModelUtil.getAnnotation(javaField, BoundFlag.class);</span>
-<span class="fc" id="L69">    Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; adapterClass = ObjectUtils.notNull(getAnnotation().typeAdapter());</span>
-<span class="fc" id="L70">    this.javaTypeAdapter = ModelUtil.getDataTypeAdapter(</span>
+      @NonNull IBoundDefinitionModel&lt;IBoundObject&gt; parent) {
+<span class="fc" id="L72">    super(parent);</span>
+<span class="fc" id="L73">    this.javaField = javaField;</span>
+<span class="fc" id="L74">    this.annotation = ModelUtil.getAnnotation(javaField, BoundFlag.class);</span>
+<span class="fc" id="L75">    Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; adapterClass = ObjectUtils.notNull(getAnnotation().typeAdapter());</span>
+<span class="fc" id="L76">    this.javaTypeAdapter = ModelUtil.getDataTypeAdapter(</span>
         adapterClass,
-<span class="fc" id="L72">        containingDefinition.getBindingContext());</span>
-<span class="fc" id="L73">    this.defaultValue = ModelUtil.resolveDefaultValue(getAnnotation().defaultValue(), this.javaTypeAdapter);</span>
+<span class="fc" id="L78">        parent.getBindingContext());</span>
+<span class="fc" id="L79">    this.defaultValue = ModelUtil.resolveDefaultValue(getAnnotation().defaultValue(), this.javaTypeAdapter);</span>
 
-<span class="fc" id="L75">    IModule module = containingDefinition.getContainingModule();</span>
+<span class="fc" id="L81">    IModule module = parent.getContainingModule();</span>
 
-<span class="fc" id="L77">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L78">      IValueConstrained retval = new ValueConstraintSet();</span>
-<span class="fc" id="L79">      ValueConstraints valueAnnotation = getAnnotation().valueConstraints();</span>
-<span class="fc" id="L80">      ConstraintSupport.parse(valueAnnotation, ISource.modelSource(module), retval);</span>
-<span class="fc" id="L81">      return retval;</span>
+<span class="fc" id="L83">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L84">      IValueConstrained retval = new ValueConstraintSet();</span>
+<span class="fc" id="L85">      ValueConstraints valueAnnotation = getAnnotation().valueConstraints();</span>
+<span class="fc" id="L86">      ConstraintSupport.parse(valueAnnotation, module.getSource(), retval);</span>
+<span class="fc" id="L87">      return retval;</span>
     }));
-<span class="fc" id="L83">  }</span>
+<span class="fc" id="L89">    this.properties = ObjectUtils.notNull(</span>
+<span class="pc" id="L90">        Lazy.lazy(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="nc" id="L91">            Arrays.stream(annotation.properties())</span>
+<span class="nc" id="L92">                .map(ModelUtil::toPropertyEntry)</span>
+<span class="nc" id="L93">                .collect(</span>
+<span class="nc" id="L94">                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -&gt; v2, LinkedHashMap::new))))));</span>
+<span class="fc" id="L95">  }</span>
 
   /**
    * Get the bound Java field.
@@ -90,7 +102,7 @@ public class InstanceFlagInline
   @Override
   @NonNull
   public Field getField() {
-<span class="fc" id="L93">    return javaField;</span>
+<span class="fc" id="L105">    return javaField;</span>
   }
 
   /**
@@ -100,12 +112,12 @@ public class InstanceFlagInline
    */
   @NonNull
   private BoundFlag getAnnotation() {
-<span class="fc" id="L103">    return annotation;</span>
+<span class="fc" id="L115">    return annotation;</span>
   }
 
   @Override
   public IBoundModule getContainingModule() {
-<span class="nc" id="L108">    return getContainingDefinition().getContainingModule();</span>
+<span class="nc" id="L120">    return getContainingDefinition().getContainingModule();</span>
   }
 
   // ------------------------------------------
@@ -116,61 +128,66 @@ public class InstanceFlagInline
   @Override
   @NonNull
   public IValueConstrained getConstraintSupport() {
-<span class="fc" id="L119">    return constraints.get();</span>
+<span class="fc" id="L131">    return constraints.get();</span>
   }
 
   @Override
   public boolean isRequired() {
-<span class="fc" id="L124">    return getAnnotation().required();</span>
+<span class="fc" id="L136">    return getAnnotation().required();</span>
   }
 
   @Override
   public Object getDefaultValue() {
-<span class="fc" id="L129">    return defaultValue;</span>
+<span class="fc" id="L141">    return defaultValue;</span>
   }
 
   @Override
   public boolean isJsonKey() {
-<span class="fc" id="L134">    return getField().isAnnotationPresent(JsonKey.class);</span>
+<span class="fc" id="L146">    return getField().isAnnotationPresent(JsonKey.class);</span>
   }
 
   @Override
   public boolean isJsonValueKey() {
-<span class="fc" id="L139">    return getField().isAnnotationPresent(JsonFieldValueKeyFlag.class);</span>
+<span class="fc" id="L151">    return getField().isAnnotationPresent(JsonFieldValueKeyFlag.class);</span>
   }
 
   @Override
   public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {
-<span class="fc" id="L144">    return javaTypeAdapter;</span>
+<span class="fc" id="L156">    return javaTypeAdapter;</span>
   }
 
   @Override
   @Nullable
   public String getFormalName() {
-<span class="fc" id="L150">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
+<span class="fc" id="L162">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
   }
 
   @Override
   @Nullable
   public MarkupLine getDescription() {
-<span class="fc" id="L156">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
+<span class="fc" id="L168">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
   }
 
   @Override
   public String getName() {
-<span class="fc" id="L161">    return ObjectUtils.notNull(</span>
-<span class="fc" id="L162">        Optional.ofNullable(ModelUtil.resolveNoneOrValue(getAnnotation().name())).orElse(getField().getName()));</span>
+<span class="fc" id="L173">    return ObjectUtils.notNull(</span>
+<span class="fc" id="L174">        Optional.ofNullable(ModelUtil.resolveNoneOrValue(getAnnotation().name())).orElse(getField().getName()));</span>
   }
 
   @Override
   public Integer getUseIndex() {
-<span class="nc" id="L167">    return getAnnotation().useIndex();</span>
+<span class="nc" id="L179">    return getAnnotation().useIndex();</span>
+  }
+
+  @Override
+  public Map&lt;Key, Set&lt;String&gt;&gt; getProperties() {
+<span class="nc" id="L184">    return ObjectUtils.notNull(properties.get());</span>
   }
 
   @Override
   @Nullable
   public MarkupMultiline getRemarks() {
-<span class="fc" id="L173">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().remarks());</span>
+<span class="fc" id="L190">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().remarks());</span>
   }
 
   // ----------------------------------------

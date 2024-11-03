@@ -5,28 +5,51 @@
 
 package gov.nist.secauto.metaschema.cli.processor.command;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.UriUtils;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
-<span class="nc" id="L15">public abstract class AbstractTerminalCommand implements ICommand {</span>
+<span class="nc" id="L21">public abstract class AbstractTerminalCommand implements ICommand {</span>
+<span class="nc" id="L22">  private static Lazy&lt;Path&gt; currentWorkingDirectory = Lazy.lazy(() -&gt; Paths.get(&quot;&quot;).toAbsolutePath());</span>
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;ICommand&gt; getSubCommands() {
-<span class="nc" id="L20">    return Collections.emptyList();</span>
+<span class="nc" id="L27">    return Collections.emptyList();</span>
   }
 
   @Override
   public boolean isSubCommandRequired() {
-<span class="nc" id="L25">    return false;</span>
+<span class="nc" id="L32">    return false;</span>
   }
 
-  protected static Path resolvePathAgainstCWD(@NonNull Path path) {
-<span class="nc" id="L29">    return Paths.get(&quot;&quot;).toAbsolutePath().resolve(path).normalize();</span>
+  @NonNull
+  protected static Path getCurrentWorkingDirectory() {
+<span class="nc" id="L37">    return ObjectUtils.notNull(currentWorkingDirectory.get());</span>
+  }
+
+  @NonNull
+  protected static Path resolveAgainstCWD(@NonNull Path path) {
+<span class="nc" id="L42">    return ObjectUtils.notNull(getCurrentWorkingDirectory().resolve(path).normalize());</span>
+  }
+
+  @NonNull
+  protected static URI resolveAgainstCWD(@NonNull URI uri) {
+<span class="nc" id="L47">    return ObjectUtils.notNull(getCurrentWorkingDirectory().toUri().resolve(uri.normalize()));</span>
+  }
+
+  @NonNull
+  protected static URI resolveAgainstCWD(@NonNull String uri) throws URISyntaxException {
+<span class="nc" id="L52">    return UriUtils.toUri(uri, ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -39,6 +39,7 @@ import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionI
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.annotation.NotOwning;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -56,9 +57,9 @@ import nl.talsmasoftware.lazy4j.Lazy;
 
 public class MetaschemaJsonReader
     implements IJsonParsingContext, IItemReadHandler {
-<span class="fc" id="L59">  private static final Logger LOGGER = LogManager.getLogger(MetaschemaJsonReader.class);</span>
+<span class="fc" id="L60">  private static final Logger LOGGER = LogManager.getLogger(MetaschemaJsonReader.class);</span>
 
-<span class="fc" id="L61">  @NonNull</span>
+<span class="fc" id="L62">  @NonNull</span>
   private final Deque&lt;JsonParser&gt; parserStack = new LinkedList&lt;&gt;();
   // @NonNull
   // private final InstanceReader instanceReader = new InstanceReader();
@@ -80,8 +81,8 @@ public class MetaschemaJsonReader
   @SuppressFBWarnings(value = &quot;CT_CONSTRUCTOR_THROW&quot;, justification = &quot;Use of final fields&quot;)
   public MetaschemaJsonReader(
       @NonNull JsonParser parser) throws IOException {
-<span class="fc" id="L83">    this(parser, new DefaultJsonProblemHandler());</span>
-<span class="fc" id="L84">  }</span>
+<span class="fc" id="L84">    this(parser, new DefaultJsonProblemHandler());</span>
+<span class="fc" id="L85">  }</span>
 
   /**
    * Construct a new Module-aware JSON parser.
@@ -96,16 +97,17 @@ public class MetaschemaJsonReader
   @SuppressFBWarnings(value = &quot;CT_CONSTRUCTOR_THROW&quot;, justification = &quot;Use of final fields&quot;)
   public MetaschemaJsonReader(
       @NonNull JsonParser parser,
-<span class="fc" id="L99">      @NonNull IJsonProblemHandler problemHandler) throws IOException {</span>
-<span class="fc" id="L100">    this.problemHandler = problemHandler;</span>
-<span class="fc" id="L101">    this.objectMapper = ObjectUtils.notNull(Lazy.lazy(ObjectMapper::new));</span>
-<span class="fc" id="L102">    push(parser);</span>
-<span class="fc" id="L103">  }</span>
+<span class="fc" id="L100">      @NonNull IJsonProblemHandler problemHandler) throws IOException {</span>
+<span class="fc" id="L101">    this.problemHandler = problemHandler;</span>
+<span class="fc" id="L102">    this.objectMapper = ObjectUtils.notNull(Lazy.lazy(ObjectMapper::new));</span>
+<span class="fc" id="L103">    push(parser);</span>
+<span class="fc" id="L104">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
+  @NotOwning
   @Override
   public JsonParser getReader() {
-<span class="fc" id="L108">    return ObjectUtils.notNull(parserStack.peek());</span>
+<span class="fc" id="L110">    return ObjectUtils.notNull(parserStack.peek());</span>
   }
 
   // protected void analyzeParserStack(@NonNull String action) throws IOException
@@ -133,229 +135,245 @@ public class MetaschemaJsonReader
 
   @SuppressWarnings(&quot;resource&quot;)
   public final void push(JsonParser parser) throws IOException {
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">    assert !parser.equals(parserStack.peek());</span>
-<span class="fc bfc" id="L137" title="All 2 branches covered.">    if (parser.getCurrentToken() == null) {</span>
-<span class="fc" id="L138">      parser.nextToken();</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">    assert !parser.equals(parserStack.peek());</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">    if (parser.getCurrentToken() == null) {</span>
+<span class="fc" id="L140">      parser.nextToken();</span>
     }
-<span class="fc" id="L140">    parserStack.push(parser);</span>
-<span class="fc" id="L141">  }</span>
+<span class="fc" id="L142">    parserStack.push(parser);</span>
+<span class="fc" id="L143">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   @NonNull
   public final JsonParser pop(@NonNull JsonParser parser) {
-<span class="nc" id="L146">    JsonParser old = parserStack.pop();</span>
-<span class="nc bnc" id="L147" title="All 2 branches missed.">    assert parser.equals(old);</span>
-<span class="nc" id="L148">    return ObjectUtils.notNull(parserStack.peek());</span>
+<span class="nc" id="L148">    JsonParser old = parserStack.pop();</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">    assert parser.equals(old);</span>
+<span class="nc" id="L150">    return ObjectUtils.notNull(parserStack.peek());</span>
   }
 
   @Override
   public IJsonProblemHandler getProblemHandler() {
-<span class="fc" id="L153">    return problemHandler;</span>
+<span class="fc" id="L155">    return problemHandler;</span>
   }
 
   @NonNull
   protected ObjectMapper getObjectMapper() {
-<span class="nc" id="L158">    return ObjectUtils.notNull(objectMapper.get());</span>
+<span class="nc" id="L160">    return ObjectUtils.notNull(objectMapper.get());</span>
   }
 
   @SuppressWarnings(&quot;unchecked&quot;)
   @NonNull
   public &lt;T&gt; T readObject(@NonNull IBoundDefinitionModelComplex definition) throws IOException {
-<span class="fc" id="L164">    return (T) definition.readItem(null, this);</span>
+<span class="fc" id="L166">    T value = (T) definition.readItem(null, this);</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">    if (value == null) {</span>
+<span class="nc" id="L168">      throw new IOException(String.format(&quot;Failed to read object '%s'%s.&quot;,</span>
+<span class="nc" id="L169">          definition.getDefinitionQName(),</span>
+<span class="nc" id="L170">          JsonUtil.generateLocationMessage(getReader())));</span>
+    }
+<span class="fc" id="L172">    return value;</span>
   }
 
-  @SuppressWarnings({ &quot;unchecked&quot;, &quot;resource&quot; })
+  @SuppressWarnings({ &quot;unchecked&quot; })
   @NonNull
   public &lt;T&gt; T readObjectRoot(
       @NonNull IBoundDefinitionModelComplex definition,
       @NonNull String expectedFieldName) throws IOException {
-<span class="fc" id="L172">    JsonParser parser = getReader();</span>
+<span class="fc" id="L180">    JsonParser parser = getReader();</span>
 
-<span class="fc" id="L174">    boolean hasStartObject = JsonToken.START_OBJECT.equals(parser.currentToken());</span>
-<span class="pc bpc" id="L175" title="1 of 2 branches missed.">    if (hasStartObject) {</span>
+<span class="fc" id="L182">    boolean hasStartObject = JsonToken.START_OBJECT.equals(parser.currentToken());</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">    if (hasStartObject) {</span>
       // advance past the start object
-<span class="fc" id="L177">      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);</span>
+<span class="fc" id="L185">      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);</span>
     }
 
-<span class="fc" id="L180">    T retval = null;</span>
+<span class="fc" id="L188">    T retval = null;</span>
     JsonToken token;
-<span class="pc bpc" id="L182" title="2 of 4 branches missed.">    while (!JsonToken.END_OBJECT.equals(token = parser.currentToken()) &amp;&amp; token != null) {</span>
-<span class="pc bpc" id="L183" title="1 of 2 branches missed.">      if (!JsonToken.FIELD_NAME.equals(token)) {</span>
-<span class="nc" id="L184">        throw new IOException(String.format(&quot;Expected FIELD_NAME token, found '%s'&quot;, token.toString()));</span>
+<span class="pc bpc" id="L190" title="2 of 4 branches missed.">    while (!JsonToken.END_OBJECT.equals(token = parser.currentToken()) &amp;&amp; token != null) {</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">      if (!JsonToken.FIELD_NAME.equals(token)) {</span>
+<span class="nc" id="L192">        throw new IOException(String.format(&quot;Expected FIELD_NAME token, found '%s'&quot;, token.toString()));</span>
       }
 
-<span class="fc" id="L187">      String propertyName = ObjectUtils.notNull(parser.currentName());</span>
-<span class="fc bfc" id="L188" title="All 2 branches covered.">      if (expectedFieldName.equals(propertyName)) {</span>
+<span class="fc" id="L195">      String propertyName = ObjectUtils.notNull(parser.currentName());</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">      if (expectedFieldName.equals(propertyName)) {</span>
         // process the object value, bound to the requested class
-<span class="fc" id="L190">        JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);</span>
+<span class="fc" id="L198">        JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);</span>
 
         // stop now, since we found the field
-<span class="fc" id="L193">        retval = (T) definition.readItem(null, this);</span>
-<span class="fc" id="L194">        break;</span>
+<span class="fc" id="L201">        retval = (T) definition.readItem(null, this);</span>
+<span class="fc" id="L202">        break;</span>
       }
 
-<span class="pc bpc" id="L197" title="1 of 2 branches missed.">      if (!getProblemHandler().handleUnknownProperty(</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">      if (!getProblemHandler().handleUnknownProperty(</span>
           definition,
           null,
           propertyName,
-<span class="fc" id="L201">          getReader())) {</span>
-<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (LOGGER.isWarnEnabled()) {</span>
-<span class="nc" id="L203">          LOGGER.warn(&quot;Skipping unhandled JSON field '{}'{}.&quot;, propertyName, JsonUtil.toString(parser));</span>
+<span class="fc" id="L209">          getReader())) {</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (LOGGER.isWarnEnabled()) {</span>
+<span class="nc" id="L211">          LOGGER.warn(&quot;Skipping unhandled JSON field '{}'{}.&quot;, propertyName, JsonUtil.toString(parser));</span>
         }
-<span class="nc" id="L205">        JsonUtil.skipNextValue(parser);</span>
+<span class="nc" id="L213">        JsonUtil.skipNextValue(parser);</span>
       }
-<span class="fc" id="L207">    }</span>
+<span class="fc" id="L215">    }</span>
 
-<span class="pc bpc" id="L209" title="1 of 2 branches missed.">    if (hasStartObject) {</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">    if (hasStartObject) {</span>
       // advance past the end object
-<span class="fc" id="L211">      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);</span>
+<span class="fc" id="L219">      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);</span>
     }
 
-<span class="pc bpc" id="L214" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L215">      throw new IOException(String.format(&quot;Failed to find property with name '%s'%s.&quot;,</span>
+<span class="pc bpc" id="L222" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L223">      throw new IOException(String.format(&quot;Failed to find property with name '%s'%s.&quot;,</span>
           expectedFieldName,
-<span class="nc" id="L217">          JsonUtil.generateLocationMessage(parser)));</span>
+<span class="nc" id="L225">          JsonUtil.generateLocationMessage(parser)));</span>
     }
-<span class="fc" id="L219">    return retval;</span>
+<span class="fc" id="L227">    return retval;</span>
   }
 
   // ================
   // Instance readers
   // ================
 
-  @NonNull
+  @Nullable
   private Object readInstance(
       @NonNull IBoundProperty&lt;?&gt; instance,
       @NonNull IBoundObject parent) throws IOException {
-<span class="fc" id="L230">    return instance.readItem(parent, this);</span>
+<span class="fc" id="L238">    return instance.readItem(parent, this);</span>
   }
 
-  @NonNull
+  @Nullable
   private &lt;T&gt; Object readModelInstance(
       @NonNull IBoundInstanceModel&lt;T&gt; instance,
       @NonNull IBoundObject parent) throws IOException {
-<span class="fc" id="L237">    IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
-<span class="fc" id="L238">    return collectionInfo.readItems(new ModelInstanceReadHandler&lt;&gt;(instance, parent));</span>
+<span class="fc" id="L245">    IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
+<span class="fc" id="L246">    return collectionInfo.readItems(new ModelInstanceReadHandler&lt;&gt;(instance, parent));</span>
   }
 
   private Object readFieldValue(
       @NonNull IBoundFieldValue instance,
       @NonNull IBoundObject parent) throws IOException {
     // handle the value key name case
-<span class="fc" id="L245">    return instance.readItem(parent, this);</span>
+<span class="fc" id="L253">    return instance.readItem(parent, this);</span>
   }
 
+  @Nullable
   private Object readObjectProperty(
       @NonNull IBoundObject parent,
       @NonNull IBoundProperty&lt;?&gt; property) throws IOException {
     Object retval;
-<span class="fc bfc" id="L252" title="All 2 branches covered.">    if (property instanceof IBoundInstanceModel) {</span>
-<span class="fc" id="L253">      retval = readModelInstance((IBoundInstanceModel&lt;?&gt;) property, parent);</span>
-<span class="fc bfc" id="L254" title="All 2 branches covered.">    } else if (property instanceof IBoundInstance) {</span>
-<span class="fc" id="L255">      retval = readInstance(property, parent);</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">    if (property instanceof IBoundInstanceModel) {</span>
+<span class="fc" id="L262">      retval = readModelInstance((IBoundInstanceModel&lt;?&gt;) property, parent);</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">    } else if (property instanceof IBoundInstance) {</span>
+<span class="fc" id="L264">      retval = readInstance(property, parent);</span>
     } else { // IBoundFieldValue
-<span class="fc" id="L257">      retval = readFieldValue((IBoundFieldValue) property, parent);</span>
+<span class="fc" id="L266">      retval = readFieldValue((IBoundFieldValue) property, parent);</span>
     }
-<span class="fc" id="L259">    return retval;</span>
+<span class="fc" id="L268">    return retval;</span>
   }
 
   @Override
   public Object readItemFlag(IBoundObject parentItem, IBoundInstanceFlag instance) throws IOException {
-<span class="fc" id="L264">    return readScalarItem(instance);</span>
+<span class="fc" id="L273">    return readScalarItem(instance);</span>
   }
 
   @Override
   public Object readItemField(IBoundObject parentItem, IBoundInstanceModelFieldScalar instance) throws IOException {
-<span class="fc" id="L269">    return readScalarItem(instance);</span>
+<span class="fc" id="L278">    return readScalarItem(instance);</span>
   }
 
   @Override
   public IBoundObject readItemField(IBoundObject parentItem, IBoundInstanceModelFieldComplex instance)
       throws IOException {
-<span class="fc" id="L275">    return readFieldObject(</span>
+<span class="fc" id="L284">    return readFieldObject(</span>
         parentItem,
-<span class="fc" id="L277">        instance.getDefinition(),</span>
-<span class="fc" id="L278">        instance.getJsonProperties(),</span>
-<span class="fc" id="L279">        instance.getEffectiveJsonKey(),</span>
-<span class="fc" id="L280">        getProblemHandler());</span>
+<span class="fc" id="L286">        instance.getDefinition(),</span>
+<span class="fc" id="L287">        instance.getJsonProperties(),</span>
+<span class="fc" id="L288">        instance.getEffectiveJsonKey(),</span>
+<span class="fc" id="L289">        getProblemHandler());</span>
   }
 
   @Override
   public IBoundObject readItemField(IBoundObject parentItem, IBoundInstanceModelGroupedField instance)
       throws IOException {
-<span class="nc" id="L286">    IJsonProblemHandler problemHandler = new GroupedInstanceProblemHandler(instance, getProblemHandler());</span>
-<span class="nc" id="L287">    IBoundDefinitionModelFieldComplex definition = instance.getDefinition();</span>
-<span class="nc" id="L288">    IBoundInstanceFlag jsonValueKeyFlag = definition.getJsonValueKeyFlagInstance();</span>
+<span class="nc" id="L295">    IJsonProblemHandler problemHandler = new GroupedInstanceProblemHandler(instance, getProblemHandler());</span>
+<span class="nc" id="L296">    IBoundDefinitionModelFieldComplex definition = instance.getDefinition();</span>
+<span class="nc" id="L297">    IBoundInstanceFlag jsonValueKeyFlag = definition.getJsonValueKeyFlagInstance();</span>
 
-<span class="nc bnc" id="L290" title="All 2 branches missed.">    IJsonProblemHandler actualProblemHandler = jsonValueKeyFlag == null</span>
-<span class="nc" id="L291">        ? problemHandler</span>
-<span class="nc" id="L292">        : new JsomValueKeyProblemHandler(problemHandler, jsonValueKeyFlag);</span>
+<span class="nc bnc" id="L299" title="All 2 branches missed.">    IJsonProblemHandler actualProblemHandler = jsonValueKeyFlag == null</span>
+<span class="nc" id="L300">        ? problemHandler</span>
+<span class="nc" id="L301">        : new JsomValueKeyProblemHandler(problemHandler, jsonValueKeyFlag);</span>
 
-<span class="nc" id="L294">    return readComplexDefinitionObject(</span>
+<span class="nc" id="L303">    return readComplexDefinitionObject(</span>
         parentItem,
         definition,
-<span class="nc" id="L297">        instance.getEffectiveJsonKey(),</span>
-<span class="nc" id="L298">        new PropertyBodyHandler(instance.getJsonProperties()),</span>
+<span class="nc" id="L306">        instance.getEffectiveJsonKey(),</span>
+<span class="nc" id="L307">        new PropertyBodyHandler(instance.getJsonProperties()),</span>
         actualProblemHandler);
   }
 
   @Override
   public IBoundObject readItemField(IBoundObject parentItem, IBoundDefinitionModelFieldComplex definition)
       throws IOException {
-<span class="nc" id="L305">    return readFieldObject(</span>
+<span class="fc" id="L314">    return readFieldObject(</span>
         parentItem,
         definition,
-<span class="nc" id="L308">        definition.getJsonProperties(),</span>
+<span class="fc" id="L317">        definition.getJsonProperties(),</span>
         null,
-<span class="nc" id="L310">        getProblemHandler());</span>
+<span class="fc" id="L319">        getProblemHandler());</span>
   }
 
   @Override
   public Object readItemFieldValue(IBoundObject parentItem, IBoundFieldValue fieldValue) throws IOException {
     // read the field value's value
-<span class="fc" id="L316">    return readScalarItem(fieldValue);</span>
+<span class="fc" id="L325">    return checkMissingFieldValue(readScalarItem(fieldValue));</span>
+  }
+
+  @Nullable
+  private Object checkMissingFieldValue(Object value) throws IOException {
+<span class="pc bpc" id="L330" title="3 of 4 branches missed.">    if (value == null &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="nc" id="L331">      LOGGER.atWarn().log(&quot;Missing property value{}&quot;,</span>
+<span class="nc" id="L332">          JsonUtil.generateLocationMessage(getReader()));</span>
+    }
+    // TODO: change nullness annotations to be @Nullable
+<span class="fc" id="L335">    return value;</span>
   }
 
   @Override
   public IBoundObject readItemAssembly(IBoundObject parentItem, IBoundInstanceModelAssembly instance)
       throws IOException {
-<span class="fc" id="L322">    IBoundInstanceFlag jsonKey = instance.getJsonKey();</span>
-<span class="fc" id="L323">    IBoundDefinitionModelComplex definition = instance.getDefinition();</span>
-<span class="fc" id="L324">    return readComplexDefinitionObject(</span>
+<span class="fc" id="L341">    IBoundInstanceFlag jsonKey = instance.getJsonKey();</span>
+<span class="fc" id="L342">    IBoundDefinitionModelComplex definition = instance.getDefinition();</span>
+<span class="fc" id="L343">    return readComplexDefinitionObject(</span>
         parentItem,
         definition,
         jsonKey,
-<span class="fc" id="L328">        new PropertyBodyHandler(instance.getJsonProperties()),</span>
-<span class="fc" id="L329">        getProblemHandler());</span>
+<span class="fc" id="L347">        new PropertyBodyHandler(instance.getJsonProperties()),</span>
+<span class="fc" id="L348">        getProblemHandler());</span>
   }
 
   @Override
   public IBoundObject readItemAssembly(IBoundObject parentItem, IBoundInstanceModelGroupedAssembly instance)
       throws IOException {
-<span class="nc" id="L335">    return readComplexDefinitionObject(</span>
+<span class="nc" id="L354">    return readComplexDefinitionObject(</span>
         parentItem,
-<span class="nc" id="L337">        instance.getDefinition(),</span>
-<span class="nc" id="L338">        instance.getEffectiveJsonKey(),</span>
-<span class="nc" id="L339">        new PropertyBodyHandler(instance.getJsonProperties()),</span>
-<span class="nc" id="L340">        new GroupedInstanceProblemHandler(instance, getProblemHandler()));</span>
+<span class="nc" id="L356">        instance.getDefinition(),</span>
+<span class="nc" id="L357">        instance.getEffectiveJsonKey(),</span>
+<span class="nc" id="L358">        new PropertyBodyHandler(instance.getJsonProperties()),</span>
+<span class="nc" id="L359">        new GroupedInstanceProblemHandler(instance, getProblemHandler()));</span>
   }
 
   @Override
   public IBoundObject readItemAssembly(IBoundObject parentItem, IBoundDefinitionModelAssembly definition)
       throws IOException {
-<span class="fc" id="L346">    return readComplexDefinitionObject(</span>
+<span class="fc" id="L365">    return readComplexDefinitionObject(</span>
         parentItem,
         definition,
         null,
-<span class="fc" id="L350">        new PropertyBodyHandler(definition.getJsonProperties()),</span>
-<span class="fc" id="L351">        getProblemHandler());</span>
+<span class="fc" id="L369">        new PropertyBodyHandler(definition.getJsonProperties()),</span>
+<span class="fc" id="L370">        getProblemHandler());</span>
   }
 
-  @SuppressWarnings(&quot;resource&quot;)
   @NonNull
   private Object readScalarItem(@NonNull IFeatureScalarItemValueHandler handler)
       throws IOException {
-<span class="fc" id="L358">    return handler.getJavaTypeAdapter().parse(getReader());</span>
+<span class="fc" id="L376">    return handler.getJavaTypeAdapter().parse(getReader());</span>
   }
 
   @NonNull
@@ -365,33 +383,35 @@ public class MetaschemaJsonReader
       @NonNull Map&lt;String, IBoundProperty&lt;?&gt;&gt; jsonProperties,
       @Nullable IBoundInstanceFlag jsonKey,
       @NonNull IJsonProblemHandler problemHandler) throws IOException {
-<span class="fc" id="L368">    IBoundInstanceFlag jsonValueKey = definition.getJsonValueKeyFlagInstance();</span>
-<span class="fc bfc" id="L369" title="All 2 branches covered.">    IJsonProblemHandler actualProblemHandler = jsonValueKey == null</span>
-<span class="fc" id="L370">        ? problemHandler</span>
-<span class="fc" id="L371">        : new JsomValueKeyProblemHandler(problemHandler, jsonValueKey);</span>
+<span class="fc" id="L386">    IBoundInstanceFlag jsonValueKey = definition.getJsonValueKeyFlagInstance();</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">    IJsonProblemHandler actualProblemHandler = jsonValueKey == null</span>
+<span class="fc" id="L388">        ? problemHandler</span>
+<span class="fc" id="L389">        : new JsomValueKeyProblemHandler(problemHandler, jsonValueKey);</span>
 
     IBoundObject retval;
-<span class="fc bfc" id="L374" title="All 4 branches covered.">    if (jsonProperties.isEmpty() &amp;&amp; jsonValueKey == null) {</span>
-<span class="fc" id="L375">      retval = readComplexDefinitionObject(</span>
+<span class="fc bfc" id="L392" title="All 4 branches covered.">    if (jsonProperties.isEmpty() &amp;&amp; jsonValueKey == null) {</span>
+<span class="fc" id="L393">      retval = readComplexDefinitionObject(</span>
           parentItem,
           definition,
           jsonKey,
           (def, parent, problem) -&gt; {
-<span class="fc" id="L380">            IBoundFieldValue fieldValue = definition.getFieldValue();</span>
-<span class="fc" id="L381">            Object item = readItemFieldValue(parent, fieldValue);</span>
-<span class="fc" id="L382">            fieldValue.setValue(parent, item);</span>
-<span class="fc" id="L383">          },</span>
+<span class="fc" id="L398">            IBoundFieldValue fieldValue = definition.getFieldValue();</span>
+<span class="fc" id="L399">            Object item = readItemFieldValue(parent, fieldValue);</span>
+<span class="pc bpc" id="L400" title="1 of 2 branches missed.">            if (item != null) {</span>
+<span class="fc" id="L401">              fieldValue.setValue(parent, item);</span>
+            }
+<span class="fc" id="L403">          },</span>
           actualProblemHandler);
 
     } else {
-<span class="fc" id="L387">      retval = readComplexDefinitionObject(</span>
+<span class="fc" id="L407">      retval = readComplexDefinitionObject(</span>
           parentItem,
           definition,
           jsonKey,
           new PropertyBodyHandler(jsonProperties),
           actualProblemHandler);
     }
-<span class="fc" id="L394">    return retval;</span>
+<span class="fc" id="L414">    return retval;</span>
   }
 
   @NonNull
@@ -401,68 +421,68 @@ public class MetaschemaJsonReader
       @Nullable IBoundInstanceFlag jsonKey,
       @NonNull DefinitionBodyHandler&lt;IBoundDefinitionModelComplex&gt; bodyHandler,
       @NonNull IJsonProblemHandler problemHandler) throws IOException {
-<span class="fc bfc" id="L404" title="All 2 branches covered.">    DefinitionBodyHandler&lt;IBoundDefinitionModelComplex&gt; actualBodyHandler = jsonKey == null</span>
-<span class="fc" id="L405">        ? bodyHandler</span>
-<span class="fc" id="L406">        : new JsonKeyBodyHandler(jsonKey, bodyHandler);</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">    DefinitionBodyHandler&lt;IBoundDefinitionModelComplex&gt; actualBodyHandler = jsonKey == null</span>
+<span class="fc" id="L425">        ? bodyHandler</span>
+<span class="fc" id="L426">        : new JsonKeyBodyHandler(jsonKey, bodyHandler);</span>
 
-<span class="fc" id="L408">    JsonLocation location = getReader().currentLocation();</span>
+<span class="fc" id="L428">    @SuppressWarnings(&quot;resource&quot;) JsonLocation location = getReader().currentLocation();</span>
 
     // construct the item
-<span class="fc" id="L411">    IBoundObject item = definition.newInstance(</span>
-<span class="pc bpc" id="L412" title="1 of 2 branches missed.">        JsonLocation.NA.equals(location)</span>
-<span class="nc" id="L413">            ? null</span>
-<span class="fc" id="L414">            : () -&gt; new MetaschemaData(location));</span>
+<span class="fc" id="L431">    IBoundObject item = definition.newInstance(</span>
+<span class="pc bpc" id="L432" title="1 of 2 branches missed.">        JsonLocation.NA.equals(location)</span>
+<span class="nc" id="L433">            ? null</span>
+<span class="fc" id="L434">            : () -&gt; new MetaschemaData(ObjectUtils.requireNonNull(location)));</span>
 
     try {
       // call pre-parse initialization hook
-<span class="fc" id="L418">      definition.callBeforeDeserialize(item, parentItem);</span>
+<span class="fc" id="L438">      definition.callBeforeDeserialize(item, parentItem);</span>
 
       // read the property values
-<span class="fc" id="L421">      actualBodyHandler.accept(definition, item, problemHandler);</span>
+<span class="fc" id="L441">      actualBodyHandler.accept(definition, item, problemHandler);</span>
 
       // call post-parse initialization hook
-<span class="fc" id="L424">      definition.callAfterDeserialize(item, parentItem);</span>
-<span class="nc" id="L425">    } catch (BindingException ex) {</span>
-<span class="nc" id="L426">      throw new IOException(ex);</span>
-<span class="fc" id="L427">    }</span>
+<span class="fc" id="L444">      definition.callAfterDeserialize(item, parentItem);</span>
+<span class="nc" id="L445">    } catch (BindingException ex) {</span>
+<span class="nc" id="L446">      throw new IOException(ex);</span>
+<span class="fc" id="L447">    }</span>
 
-<span class="fc" id="L429">    return item;</span>
+<span class="fc" id="L449">    return item;</span>
   }
 
   @SuppressWarnings(&quot;resource&quot;)
   @Override
   public IBoundObject readChoiceGroupItem(IBoundObject parentItem, IBoundInstanceModelChoiceGroup instance)
       throws IOException {
-<span class="nc" id="L436">    JsonParser parser = getReader();</span>
-<span class="nc" id="L437">    ObjectNode node = parser.readValueAsTree();</span>
+<span class="nc" id="L456">    JsonParser parser = getReader();</span>
+<span class="nc" id="L457">    ObjectNode node = parser.readValueAsTree();</span>
 
-<span class="nc" id="L439">    String discriminatorProperty = instance.getJsonDiscriminatorProperty();</span>
-<span class="nc" id="L440">    JsonNode discriminatorNode = node.get(discriminatorProperty);</span>
-<span class="nc bnc" id="L441" title="All 2 branches missed.">    if (discriminatorNode == null) {</span>
-<span class="nc" id="L442">      throw new IllegalArgumentException(String.format(</span>
+<span class="nc" id="L459">    String discriminatorProperty = instance.getJsonDiscriminatorProperty();</span>
+<span class="nc" id="L460">    JsonNode discriminatorNode = node.get(discriminatorProperty);</span>
+<span class="nc bnc" id="L461" title="All 2 branches missed.">    if (discriminatorNode == null) {</span>
+<span class="nc" id="L462">      throw new IllegalArgumentException(String.format(</span>
           &quot;Unable to find discriminator property '%s' for object at '%s'.&quot;,
           discriminatorProperty,
-<span class="nc" id="L445">          JsonUtil.toString(parser)));</span>
+<span class="nc" id="L465">          JsonUtil.toString(parser)));</span>
     }
-<span class="nc" id="L447">    String discriminator = ObjectUtils.requireNonNull(discriminatorNode.asText());</span>
+<span class="nc" id="L467">    String discriminator = ObjectUtils.requireNonNull(discriminatorNode.asText());</span>
 
-<span class="nc" id="L449">    IBoundInstanceModelGroupedNamed actualInstance = instance.getGroupedModelInstance(discriminator);</span>
-<span class="nc bnc" id="L450" title="All 2 branches missed.">    assert actualInstance != null;</span>
+<span class="nc" id="L469">    IBoundInstanceModelGroupedNamed actualInstance = instance.getGroupedModelInstance(discriminator);</span>
+<span class="nc bnc" id="L470" title="All 2 branches missed.">    assert actualInstance != null;</span>
 
     IBoundObject retval;
-<span class="nc" id="L453">    try (JsonParser newParser = node.traverse(parser.getCodec())) {</span>
-<span class="nc" id="L454">      push(newParser);</span>
+<span class="nc" id="L473">    try (JsonParser newParser = node.traverse(parser.getCodec())) {</span>
+<span class="nc" id="L474">      push(newParser);</span>
 
       // get initial token
-<span class="nc" id="L457">      retval = actualInstance.readItem(parentItem, this);</span>
-<span class="nc bnc" id="L458" title="All 2 branches missed.">      assert newParser.currentToken() == null;</span>
-<span class="nc" id="L459">      pop(newParser);</span>
+<span class="nc" id="L477">      retval = actualInstance.readItem(parentItem, this);</span>
+<span class="nc bnc" id="L478" title="All 2 branches missed.">      assert newParser.currentToken() == null;</span>
+<span class="nc" id="L479">      pop(newParser);</span>
     }
 
     // advance the original parser to the next token
-<span class="nc" id="L463">    parser.nextToken();</span>
+<span class="nc" id="L483">    parser.nextToken();</span>
 
-<span class="nc" id="L465">    return retval;</span>
+<span class="nc" id="L485">    return retval;</span>
   }
 
   private final class JsonKeyBodyHandler implements DefinitionBodyHandler&lt;IBoundDefinitionModelComplex&gt; {
@@ -473,10 +493,10 @@ public class MetaschemaJsonReader
 
     private JsonKeyBodyHandler(
         @NonNull IBoundInstanceFlag jsonKey,
-<span class="fc" id="L476">        @NonNull DefinitionBodyHandler&lt;IBoundDefinitionModelComplex&gt; bodyHandler) {</span>
-<span class="fc" id="L477">      this.jsonKey = jsonKey;</span>
-<span class="fc" id="L478">      this.bodyHandler = bodyHandler;</span>
-<span class="fc" id="L479">    }</span>
+<span class="fc" id="L496">        @NonNull DefinitionBodyHandler&lt;IBoundDefinitionModelComplex&gt; bodyHandler) {</span>
+<span class="fc" id="L497">      this.jsonKey = jsonKey;</span>
+<span class="fc" id="L498">      this.bodyHandler = bodyHandler;</span>
+<span class="fc" id="L499">    }</span>
 
     @Override
     public void accept(
@@ -484,36 +504,45 @@ public class MetaschemaJsonReader
         IBoundObject parent,
         IJsonProblemHandler problemHandler)
         throws IOException {
-<span class="fc" id="L487">      @SuppressWarnings(&quot;resource&quot;) JsonParser parser = getReader();</span>
-<span class="fc" id="L488">      JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME);</span>
+<span class="fc" id="L507">      @SuppressWarnings(&quot;resource&quot;) JsonParser parser = getReader();</span>
+<span class="fc" id="L508">      JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME);</span>
 
       // the field will be the JSON key
-<span class="fc" id="L491">      String key = ObjectUtils.notNull(parser.currentName());</span>
-<span class="fc" id="L492">      Object value = jsonKey.getDefinition().getJavaTypeAdapter().parse(key);</span>
-<span class="fc" id="L493">      jsonKey.setValue(parent, ObjectUtils.notNull(value.toString()));</span>
+<span class="fc" id="L511">      String key = ObjectUtils.notNull(parser.currentName());</span>
+      try {
+<span class="fc" id="L513">        Object value = jsonKey.getDefinition().getJavaTypeAdapter().parse(key);</span>
+<span class="fc" id="L514">        jsonKey.setValue(parent, ObjectUtils.notNull(value.toString()));</span>
+<span class="nc" id="L515">      } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L516">        throw new IOException(</span>
+<span class="nc" id="L517">            String.format(&quot;Malformed data '%s'%s. %s&quot;,</span>
+                key,
+<span class="nc" id="L519">                JsonUtil.generateLocationMessage(parser),</span>
+<span class="nc" id="L520">                ex.getLocalizedMessage()),</span>
+            ex);
+<span class="fc" id="L522">      }</span>
 
       // skip to the next token
-<span class="fc" id="L496">      parser.nextToken();</span>
+<span class="fc" id="L525">      parser.nextToken();</span>
       // JsonUtil.assertCurrent(parser, JsonToken.START_OBJECT);
 
       // // advance past the JSON key's start object
       // JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);
 
       // read the property values
-<span class="fc" id="L503">      bodyHandler.accept(definition, parent, problemHandler);</span>
+<span class="fc" id="L532">      bodyHandler.accept(definition, parent, problemHandler);</span>
 
       // // advance past the JSON key's end object
       // JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);
-<span class="fc" id="L507">    }</span>
+<span class="fc" id="L536">    }</span>
   }
 
   private final class PropertyBodyHandler implements DefinitionBodyHandler&lt;IBoundDefinitionModelComplex&gt; {
     @NonNull
     private final Map&lt;String, IBoundProperty&lt;?&gt;&gt; jsonProperties;
 
-<span class="fc" id="L514">    private PropertyBodyHandler(@NonNull Map&lt;String, IBoundProperty&lt;?&gt;&gt; jsonProperties) {</span>
-<span class="fc" id="L515">      this.jsonProperties = jsonProperties;</span>
-<span class="fc" id="L516">    }</span>
+<span class="fc" id="L543">    private PropertyBodyHandler(@NonNull Map&lt;String, IBoundProperty&lt;?&gt;&gt; jsonProperties) {</span>
+<span class="fc" id="L544">      this.jsonProperties = jsonProperties;</span>
+<span class="fc" id="L545">    }</span>
 
     @Override
     public void accept(
@@ -521,63 +550,65 @@ public class MetaschemaJsonReader
         IBoundObject parent,
         IJsonProblemHandler problemHandler)
         throws IOException {
-<span class="fc" id="L524">      @SuppressWarnings(&quot;resource&quot;) JsonParser parser = getReader();</span>
+<span class="fc" id="L553">      @SuppressWarnings(&quot;resource&quot;) JsonParser parser = getReader();</span>
 
       // advance past the start object
-<span class="fc" id="L527">      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);</span>
+<span class="fc" id="L556">      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);</span>
 
       // make a copy, since we use the remaining values to initialize default values
-<span class="fc" id="L530">      Map&lt;String, IBoundProperty&lt;?&gt;&gt; remainingInstances = new HashMap&lt;&gt;(jsonProperties); // NOPMD not concurrent</span>
+<span class="fc" id="L559">      Map&lt;String, IBoundProperty&lt;?&gt;&gt; remainingInstances = new HashMap&lt;&gt;(jsonProperties); // NOPMD not concurrent</span>
 
       // handle each property
-<span class="fc bfc" id="L533" title="All 2 branches covered.">      while (JsonToken.FIELD_NAME.equals(parser.currentToken())) {</span>
+<span class="fc bfc" id="L562" title="All 2 branches covered.">      while (JsonToken.FIELD_NAME.equals(parser.currentToken())) {</span>
 
         // the parser's current token should be the JSON field name
-<span class="fc" id="L536">        String propertyName = ObjectUtils.notNull(parser.currentName());</span>
-<span class="pc bpc" id="L537" title="1 of 2 branches missed.">        if (LOGGER.isTraceEnabled()) {</span>
-<span class="nc" id="L538">          LOGGER.trace(&quot;reading property {}&quot;, propertyName);</span>
+<span class="fc" id="L565">        String propertyName = ObjectUtils.notNull(parser.currentName());</span>
+<span class="pc bpc" id="L566" title="1 of 2 branches missed.">        if (LOGGER.isTraceEnabled()) {</span>
+<span class="nc" id="L567">          LOGGER.trace(&quot;reading property {}&quot;, propertyName);</span>
         }
 
-<span class="fc" id="L541">        IBoundProperty&lt;?&gt; property = remainingInstances.get(propertyName);</span>
+<span class="fc" id="L570">        IBoundProperty&lt;?&gt; property = remainingInstances.get(propertyName);</span>
 
-<span class="fc" id="L543">        boolean handled = false;</span>
-<span class="fc bfc" id="L544" title="All 2 branches covered.">        if (property != null) {</span>
+<span class="fc" id="L572">        boolean handled = false;</span>
+<span class="fc bfc" id="L573" title="All 2 branches covered.">        if (property != null) {</span>
           // advance past the field name
-<span class="fc" id="L546">          parser.nextToken();</span>
+<span class="fc" id="L575">          parser.nextToken();</span>
 
-<span class="fc" id="L548">          Object value = readObjectProperty(parent, property);</span>
-<span class="fc" id="L549">          property.setValue(parent, value);</span>
+<span class="fc" id="L577">          Object value = readObjectProperty(parent, property);</span>
+<span class="pc bpc" id="L578" title="1 of 2 branches missed.">          if (value != null) {</span>
+<span class="fc" id="L579">            property.setValue(parent, value);</span>
+          }
 
           // mark handled
-<span class="fc" id="L552">          remainingInstances.remove(propertyName);</span>
-<span class="fc" id="L553">          handled = true;</span>
+<span class="fc" id="L583">          remainingInstances.remove(propertyName);</span>
+<span class="fc" id="L584">          handled = true;</span>
         }
 
-<span class="pc bpc" id="L556" title="1 of 4 branches missed.">        if (!handled &amp;&amp; !problemHandler.handleUnknownProperty(</span>
+<span class="pc bpc" id="L587" title="1 of 4 branches missed.">        if (!handled &amp;&amp; !problemHandler.handleUnknownProperty(</span>
             definition,
             parent,
             propertyName,
-<span class="fc" id="L560">            getReader())) {</span>
-<span class="nc bnc" id="L561" title="All 2 branches missed.">          if (LOGGER.isWarnEnabled()) {</span>
-<span class="nc" id="L562">            LOGGER.warn(&quot;Skipping unhandled JSON field '{}' {}.&quot;, propertyName, JsonUtil.toString(parser));</span>
+<span class="fc" id="L591">            getReader())) {</span>
+<span class="nc bnc" id="L592" title="All 2 branches missed.">          if (LOGGER.isWarnEnabled()) {</span>
+<span class="nc" id="L593">            LOGGER.warn(&quot;Skipping unhandled JSON field '{}' {}.&quot;, propertyName, JsonUtil.toString(parser));</span>
           }
-<span class="nc" id="L564">          JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);</span>
-<span class="nc" id="L565">          JsonUtil.skipNextValue(parser);</span>
+<span class="nc" id="L595">          JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);</span>
+<span class="nc" id="L596">          JsonUtil.skipNextValue(parser);</span>
         }
 
         // the current token will be either the next instance field name or the end of
         // the parent object
-<span class="fc" id="L570">        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);</span>
-<span class="fc" id="L571">      }</span>
+<span class="fc" id="L601">        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);</span>
+<span class="fc" id="L602">      }</span>
 
-<span class="fc" id="L573">      problemHandler.handleMissingInstances(</span>
+<span class="fc" id="L604">      problemHandler.handleMissingInstances(</span>
           definition,
           parent,
-<span class="fc" id="L576">          ObjectUtils.notNull(remainingInstances.values()));</span>
+<span class="fc" id="L607">          ObjectUtils.notNull(remainingInstances.values()));</span>
 
       // advance past the end object
-<span class="fc" id="L579">      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);</span>
-<span class="fc" id="L580">    }</span>
+<span class="fc" id="L610">      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);</span>
+<span class="fc" id="L611">    }</span>
   }
 
   private final class GroupedInstanceProblemHandler implements IJsonProblemHandler {
@@ -588,20 +619,19 @@ public class MetaschemaJsonReader
 
     private GroupedInstanceProblemHandler(
         @NonNull IBoundInstanceModelGroupedNamed instance,
-<span class="nc" id="L591">        @NonNull IJsonProblemHandler delegate) {</span>
-<span class="nc" id="L592">      this.instance = instance;</span>
-<span class="nc" id="L593">      this.delegate = delegate;</span>
-<span class="nc" id="L594">    }</span>
+<span class="nc" id="L622">        @NonNull IJsonProblemHandler delegate) {</span>
+<span class="nc" id="L623">      this.instance = instance;</span>
+<span class="nc" id="L624">      this.delegate = delegate;</span>
+<span class="nc" id="L625">    }</span>
 
     @Override
     public void handleMissingInstances(
         IBoundDefinitionModelComplex parentDefinition,
         IBoundObject targetObject,
         Collection&lt;? extends IBoundProperty&lt;?&gt;&gt; unhandledInstances) throws IOException {
-<span class="nc" id="L601">      delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances);</span>
-<span class="nc" id="L602">    }</span>
+<span class="nc" id="L632">      delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances);</span>
+<span class="nc" id="L633">    }</span>
 
-    @SuppressWarnings(&quot;resource&quot;)
     @Override
     public boolean handleUnknownProperty(
         IBoundDefinitionModelComplex definition,
@@ -609,13 +639,13 @@ public class MetaschemaJsonReader
         String fieldName,
         JsonParser parser) throws IOException {
       boolean retval;
-<span class="nc bnc" id="L612" title="All 2 branches missed.">      if (instance.getParentContainer().getJsonDiscriminatorProperty().equals(fieldName)) {</span>
-<span class="nc" id="L613">        JsonUtil.skipNextValue(parser);</span>
-<span class="nc" id="L614">        retval = true;</span>
+<span class="nc bnc" id="L642" title="All 2 branches missed.">      if (instance.getParentContainer().getJsonDiscriminatorProperty().equals(fieldName)) {</span>
+<span class="nc" id="L643">        JsonUtil.skipNextValue(parser);</span>
+<span class="nc" id="L644">        retval = true;</span>
       } else {
-<span class="nc" id="L616">        retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, getReader());</span>
+<span class="nc" id="L646">        retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, getReader());</span>
       }
-<span class="nc" id="L618">      return retval;</span>
+<span class="nc" id="L648">      return retval;</span>
     }
   }
 
@@ -623,23 +653,23 @@ public class MetaschemaJsonReader
     @NonNull
     private final IJsonProblemHandler delegate;
     @NonNull
-    private final IBoundInstanceFlag jsonValueKyeFlag;
+    private final IBoundInstanceFlag jsonValueKeyFlag;
     private boolean foundJsonValueKey; // false
 
     private JsomValueKeyProblemHandler(
         @NonNull IJsonProblemHandler delegate,
-<span class="fc" id="L631">        @NonNull IBoundInstanceFlag jsonValueKyeFlag) {</span>
-<span class="fc" id="L632">      this.delegate = delegate;</span>
-<span class="fc" id="L633">      this.jsonValueKyeFlag = jsonValueKyeFlag;</span>
-<span class="fc" id="L634">    }</span>
+<span class="fc" id="L661">        @NonNull IBoundInstanceFlag jsonValueKeyFlag) {</span>
+<span class="fc" id="L662">      this.delegate = delegate;</span>
+<span class="fc" id="L663">      this.jsonValueKeyFlag = jsonValueKeyFlag;</span>
+<span class="fc" id="L664">    }</span>
 
     @Override
     public void handleMissingInstances(
         IBoundDefinitionModelComplex parentDefinition,
         IBoundObject targetObject,
         Collection&lt;? extends IBoundProperty&lt;?&gt;&gt; unhandledInstances) throws IOException {
-<span class="fc" id="L641">      delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances);</span>
-<span class="fc" id="L642">    }</span>
+<span class="fc" id="L671">      delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances);</span>
+<span class="fc" id="L672">    }</span>
 
     @Override
     public boolean handleUnknownProperty(
@@ -648,119 +678,128 @@ public class MetaschemaJsonReader
         String fieldName,
         JsonParser parser) throws IOException {
       boolean retval;
-<span class="pc bpc" id="L651" title="1 of 2 branches missed.">      if (foundJsonValueKey) {</span>
-<span class="nc" id="L652">        retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, parser);</span>
+<span class="pc bpc" id="L681" title="1 of 2 branches missed.">      if (foundJsonValueKey) {</span>
+<span class="nc" id="L682">        retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, parser);</span>
       } else {
         // handle JSON value key
-<span class="fc" id="L655">        String key = ObjectUtils.notNull(parser.currentName());</span>
-<span class="fc" id="L656">        Object keyValue = jsonValueKyeFlag.getJavaTypeAdapter().parse(key);</span>
-<span class="fc" id="L657">        jsonValueKyeFlag.setValue(ObjectUtils.notNull(parentItem), keyValue);</span>
-
+<span class="fc" id="L685">        String key = ObjectUtils.notNull(parser.currentName());</span>
+        try {
+<span class="fc" id="L687">          Object keyValue = jsonValueKeyFlag.getJavaTypeAdapter().parse(key);</span>
+<span class="fc" id="L688">          jsonValueKeyFlag.setValue(ObjectUtils.notNull(parentItem), keyValue);</span>
+<span class="nc" id="L689">        } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L690">          throw new IOException(</span>
+<span class="nc" id="L691">              String.format(&quot;Malformed data '%s'%s. %s&quot;,</span>
+                  key,
+<span class="nc" id="L693">                  JsonUtil.generateLocationMessage(parser),</span>
+<span class="nc" id="L694">                  ex.getLocalizedMessage()),</span>
+              ex);
+<span class="fc" id="L696">        }</span>
         // advance past the field name
-<span class="fc" id="L660">        JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);</span>
+<span class="fc" id="L698">        JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);</span>
 
-<span class="fc" id="L662">        IBoundFieldValue fieldValue = ((IBoundDefinitionModelFieldComplex) definition).getFieldValue();</span>
-<span class="fc" id="L663">        Object value = readItemFieldValue(</span>
-<span class="fc" id="L664">            ObjectUtils.notNull(parentItem),</span>
-            fieldValue);
-<span class="fc" id="L666">        fieldValue.setValue(ObjectUtils.notNull(parentItem), value);</span>
+<span class="fc" id="L700">        IBoundFieldValue fieldValue = ((IBoundDefinitionModelFieldComplex) definition).getFieldValue();</span>
+<span class="fc" id="L701">        Object value = readItemFieldValue(ObjectUtils.notNull(parentItem), fieldValue);</span>
+<span class="pc bpc" id="L702" title="1 of 2 branches missed.">        if (value != null) {</span>
+<span class="fc" id="L703">          fieldValue.setValue(ObjectUtils.notNull(parentItem), value);</span>
+        }
 
-<span class="fc" id="L668">        retval = foundJsonValueKey = true;</span>
+<span class="fc" id="L706">        retval = foundJsonValueKey = true;</span>
       }
-<span class="fc" id="L670">      return retval;</span>
+<span class="fc" id="L708">      return retval;</span>
     }
-
   }
 
-<span class="fc" id="L675">  private class ModelInstanceReadHandler&lt;ITEM&gt;</span>
+<span class="fc" id="L712">  private class ModelInstanceReadHandler&lt;ITEM&gt;</span>
       extends AbstractModelInstanceReadHandler&lt;ITEM&gt; {
 
     protected ModelInstanceReadHandler(
         @NonNull IBoundInstanceModel&lt;ITEM&gt; instance,
-<span class="fc" id="L680">        @NonNull IBoundObject parentItem) {</span>
-<span class="fc" id="L681">      super(instance, parentItem);</span>
-<span class="fc" id="L682">    }</span>
+<span class="fc" id="L717">        @NonNull IBoundObject parentItem) {</span>
+<span class="fc" id="L718">      super(instance, parentItem);</span>
+<span class="fc" id="L719">    }</span>
 
-    @SuppressWarnings(&quot;resource&quot;) // no need to close parser
     @Override
     public List&lt;ITEM&gt; readList() throws IOException {
-<span class="fc" id="L687">      JsonParser parser = getReader();</span>
+<span class="fc" id="L723">      JsonParser parser = getReader();</span>
 
-<span class="fc" id="L689">      List&lt;ITEM&gt; items = new LinkedList&lt;&gt;();</span>
-<span class="pc bpc" id="L690" title="1 of 3 branches missed.">      switch (parser.currentToken()) {</span>
+<span class="fc" id="L725">      List&lt;ITEM&gt; items = new LinkedList&lt;&gt;();</span>
+<span class="pc bpc" id="L726" title="1 of 3 branches missed.">      switch (parser.currentToken()) {</span>
       case START_ARRAY:
         // this is an array, we need to parse the array wrapper then each item
-<span class="fc" id="L693">        JsonUtil.assertAndAdvance(parser, JsonToken.START_ARRAY);</span>
+<span class="fc" id="L729">        JsonUtil.assertAndAdvance(parser, JsonToken.START_ARRAY);</span>
 
         // parse items
-<span class="fc bfc" id="L696" title="All 2 branches covered.">        while (!JsonToken.END_ARRAY.equals(parser.currentToken())) {</span>
-<span class="fc" id="L697">          items.add(readItem());</span>
+<span class="fc bfc" id="L732" title="All 2 branches covered.">        while (!JsonToken.END_ARRAY.equals(parser.currentToken())) {</span>
+<span class="fc" id="L733">          items.add(readItem());</span>
         }
 
         // this is the other side of the array wrapper, advance past it
-<span class="fc" id="L701">        JsonUtil.assertAndAdvance(parser, JsonToken.END_ARRAY);</span>
-<span class="fc" id="L702">        break;</span>
+<span class="fc" id="L737">        JsonUtil.assertAndAdvance(parser, JsonToken.END_ARRAY);</span>
+<span class="fc" id="L738">        break;</span>
       case VALUE_NULL:
-<span class="nc" id="L704">        JsonUtil.assertAndAdvance(parser, JsonToken.VALUE_NULL);</span>
-<span class="nc" id="L705">        break;</span>
+<span class="nc" id="L740">        JsonUtil.assertAndAdvance(parser, JsonToken.VALUE_NULL);</span>
+<span class="nc" id="L741">        break;</span>
       default:
         // this is a singleton, just parse the value as a single item
-<span class="fc" id="L708">        items.add(readItem());</span>
+<span class="fc" id="L744">        items.add(readItem());</span>
         break;
       }
-<span class="fc" id="L711">      return items;</span>
+<span class="fc" id="L747">      return items;</span>
     }
 
-    @SuppressWarnings(&quot;resource&quot;) // no need to close parser
     @Override
     public Map&lt;String, ITEM&gt; readMap() throws IOException {
-<span class="fc" id="L717">      JsonParser parser = getReader();</span>
+<span class="fc" id="L752">      JsonParser parser = getReader();</span>
 
-<span class="fc" id="L719">      IBoundInstanceModel&lt;?&gt; instance = getCollectionInfo().getInstance();</span>
+<span class="fc" id="L754">      IBoundInstanceModel&lt;?&gt; instance = getCollectionInfo().getInstance();</span>
 
-<span class="fc" id="L721">      @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;String, ITEM&gt; items = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L756">      @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;String, ITEM&gt; items = new LinkedHashMap&lt;&gt;();</span>
 
       // A map value is always wrapped in a START_OBJECT, since fields are used for
       // the keys
-<span class="fc" id="L725">      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);</span>
+<span class="fc" id="L760">      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);</span>
 
       // process all map items
-<span class="fc bfc" id="L728" title="All 2 branches covered.">      while (!JsonToken.END_OBJECT.equals(parser.currentToken())) {</span>
+<span class="fc bfc" id="L763" title="All 2 branches covered.">      while (!JsonToken.END_OBJECT.equals(parser.currentToken())) {</span>
 
         // a map item will always start with a FIELD_NAME, since this represents the key
-<span class="fc" id="L731">        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME);</span>
+<span class="fc" id="L766">        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME);</span>
 
-<span class="fc" id="L733">        ITEM item = readItem();</span>
+        // get the object, since it must have a JSON key
+<span class="fc" id="L769">        ITEM item = readItem();</span>
+<span class="pc bpc" id="L770" title="1 of 2 branches missed.">        if (item == null) {</span>
+<span class="nc" id="L771">          throw new IOException(String.format(&quot;Null object encountered'%s.&quot;,</span>
+<span class="nc" id="L772">              JsonUtil.generateLocationMessage(parser)));</span>
+        }
 
         // lookup the key
-<span class="fc" id="L736">        IBoundInstanceFlag jsonKey = instance.getItemJsonKey(item);</span>
-<span class="pc bpc" id="L737" title="1 of 2 branches missed.">        assert jsonKey != null;</span>
+<span class="fc" id="L776">        IBoundInstanceFlag jsonKey = instance.getItemJsonKey(item);</span>
+<span class="pc bpc" id="L777" title="1 of 2 branches missed.">        assert jsonKey != null;</span>
 
-<span class="fc" id="L739">        Object keyValue = jsonKey.getValue(item);</span>
-<span class="pc bpc" id="L740" title="1 of 2 branches missed.">        if (keyValue == null) {</span>
-<span class="nc" id="L741">          throw new IOException(String.format(&quot;Null value for json-key for definition '%s'&quot;,</span>
-<span class="nc" id="L742">              jsonKey.getContainingDefinition().toCoordinates()));</span>
+<span class="fc" id="L779">        Object keyValue = jsonKey.getValue(item);</span>
+<span class="pc bpc" id="L780" title="1 of 2 branches missed.">        if (keyValue == null) {</span>
+<span class="nc" id="L781">          throw new IOException(String.format(&quot;Null value for json-key for definition '%s'&quot;,</span>
+<span class="nc" id="L782">              jsonKey.getContainingDefinition().toCoordinates()));</span>
         }
-<span class="fc" id="L744">        String key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
-<span class="fc" id="L745">        items.put(key, item);</span>
+<span class="fc" id="L784">        String key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
+<span class="fc" id="L785">        items.put(key, item);</span>
 
         // the next item will be a FIELD_NAME, or we will encounter an END_OBJECT if all
         // items have been
         // read
-<span class="fc" id="L750">        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);</span>
-<span class="fc" id="L751">      }</span>
+<span class="fc" id="L790">        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);</span>
+<span class="fc" id="L791">      }</span>
 
       // A map value will always end with an end object, which needs to be consumed
-<span class="fc" id="L754">      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);</span>
+<span class="fc" id="L794">      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);</span>
 
-<span class="fc" id="L756">      return items;</span>
+<span class="fc" id="L796">      return items;</span>
     }
 
     @Override
-    @NonNull
     public ITEM readItem() throws IOException {
-<span class="fc" id="L762">      IBoundInstanceModel&lt;ITEM&gt; instance = getCollectionInfo().getInstance();</span>
-<span class="fc" id="L763">      return instance.readItem(getParentObject(), MetaschemaJsonReader.this);</span>
+<span class="fc" id="L801">      IBoundInstanceModel&lt;ITEM&gt; instance = getCollectionInfo().getInstance();</span>
+<span class="fc" id="L802">      return instance.readItem(getParentObject(), MetaschemaJsonReader.this);</span>
     }
   }
 
@@ -770,31 +809,31 @@ public class MetaschemaJsonReader
     private final long charOffset;
     private final long byteOffset;
 
-<span class="fc" id="L773">    public MetaschemaData(@NonNull JsonLocation location) {</span>
-<span class="fc" id="L774">      this.line = location.getLineNr();</span>
-<span class="fc" id="L775">      this.column = location.getColumnNr();</span>
-<span class="fc" id="L776">      this.charOffset = location.getCharOffset();</span>
-<span class="fc" id="L777">      this.byteOffset = location.getByteOffset();</span>
-<span class="fc" id="L778">    }</span>
+<span class="fc" id="L812">    public MetaschemaData(@NonNull JsonLocation location) {</span>
+<span class="fc" id="L813">      this.line = location.getLineNr();</span>
+<span class="fc" id="L814">      this.column = location.getColumnNr();</span>
+<span class="fc" id="L815">      this.charOffset = location.getCharOffset();</span>
+<span class="fc" id="L816">      this.byteOffset = location.getByteOffset();</span>
+<span class="fc" id="L817">    }</span>
 
     @Override
     public int getLine() {
-<span class="nc" id="L782">      return line;</span>
+<span class="nc" id="L821">      return line;</span>
     }
 
     @Override
     public int getColumn() {
-<span class="nc" id="L787">      return column;</span>
+<span class="nc" id="L826">      return column;</span>
     }
 
     @Override
     public long getCharOffset() {
-<span class="nc" id="L792">      return charOffset;</span>
+<span class="nc" id="L831">      return charOffset;</span>
     }
 
     @Override
     public long getByteOffset() {
-<span class="nc" id="L797">      return byteOffset;</span>
+<span class="nc" id="L836">      return byteOffset;</span>
     }
   }
 

@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    @MethodSource(<span class="jxr_string">"squareConstructorValues"</span>)
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">void</strong> testSquareConstructor(@NonNull IArrayItem&lt;?&gt; expected, @NonNull String metapath) {
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      IArrayItem&lt;?&gt; result = MetapathExpression.compile(metapath)
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.NODE, newDynamicContext());
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.ITEM, newDynamicContext());
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      assertEquals(expected, result);
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    }
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>    @MethodSource(<span class="jxr_string">"curlyConstructorValues"</span>)
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">void</strong> testCurlyConstructor(@NonNull IArrayItem&lt;?&gt; expected, @NonNull String metapath) {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      IArrayItem&lt;?&gt; result = MetapathExpression.compile(metapath)
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.NODE, newDynamicContext());
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.ITEM, newDynamicContext());
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      assertEquals(expected, result);
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  

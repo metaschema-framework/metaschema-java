@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XmlProseCompositDatatypeProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema XML and JSON Schema Generator</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.schemagen.xml.impl</a> &gt; <span class="el_source">XmlProseCompositDatatypeProvider.java</span></div><h1>XmlProseCompositDatatypeProvider.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.schemagen.xml.impl;
+
+import org.codehaus.stax2.XMLStreamWriter2;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.xml.stream.XMLStreamException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+public class XmlProseCompositDatatypeProvider
+    extends CompositeDatatypeProvider {
+
+<span class="fc" id="L22">  private final XmlProseBaseDatatypeProvider proseBaseProvider = new XmlProseBaseDatatypeProvider();</span>
+
+  public XmlProseCompositDatatypeProvider(@NonNull List&lt;IDatatypeProvider&gt; proxiedProviders) {
+<span class="fc" id="L25">    super(proxiedProviders);</span>
+<span class="fc" id="L26">  }</span>
+
+  @Override
+  public @NonNull Set&lt;String&gt; generateDatatypes(Set&lt;String&gt; requiredTypes,
+      @NonNull XMLStreamWriter2 writer) throws XMLStreamException {
+<span class="fc" id="L31">    Set&lt;String&gt; result = super.generateDatatypes(requiredTypes, writer);</span>
+
+<span class="fc bfc" id="L33" title="All 2 branches covered.">    if (!result.isEmpty()) {</span>
+      // apply core markup types
+<span class="fc" id="L35">      Collection&lt;IDatatypeContent&gt; datatypes = proseBaseProvider.getDatatypes().values();</span>
+<span class="fc" id="L36">      Set&lt;String&gt; proseBaseTypes = datatypes.stream().map(IDatatypeContent::getTypeName).collect(Collectors.toSet());</span>
+<span class="fc" id="L37">      proseBaseProvider.generateDatatypes(proseBaseTypes, writer);</span>
+    }
+<span class="fc" id="L39">    return result;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

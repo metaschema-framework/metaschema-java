@@ -75,13 +75,13 @@ public class ModelInstance
     Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; retval;
 
 <span class="fc" id="L77">    INodeTestExpression test = getTest();</span>
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">    if (test instanceof NameTest) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    if (test instanceof NameTest) {</span>
 <span class="fc" id="L79">      QName name = ((NameTest) getTest()).getName();</span>
 <span class="fc" id="L80">      List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; items = focusedItem.getModelItemsByName(name);</span>
 <span class="fc" id="L81">      retval = items.stream();</span>
-<span class="pc bnc" id="L82" title="All 2 branches missed.">    } else if (test instanceof Wildcard) {</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">    } else if (test instanceof Wildcard) {</span>
       // match all items
-<span class="nc" id="L84">      retval = ((Wildcard) test).match(focusedItem.modelItems());</span>
+<span class="fc" id="L84">      retval = ((Wildcard) test).match(focusedItem.modelItems());</span>
     } else {
 <span class="nc" id="L86">      throw new UnsupportedOperationException(test.getClass().getName());</span>
     }

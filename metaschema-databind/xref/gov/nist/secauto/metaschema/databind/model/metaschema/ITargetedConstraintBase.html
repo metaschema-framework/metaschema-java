@@ -15,10 +15,22 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.Nullable;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="ITargetedConstraintBase" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/ITargetedConstraintBase.html#ITargetedConstraintBase">ITargetedConstraintBase</a> <strong class="jxr_keyword">extends</strong> <a name="IConstraintBase" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IConstraintBase.html#IConstraintBase">IConstraintBase</a> {
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>    @Nullable
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>    String getTarget();
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  }
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> * Represents constraint metadata that is common to all constraints that are</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> * targeted at a specific set of nodes matching the target.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="ITargetedConstraintBase" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/ITargetedConstraintBase.html#ITargetedConstraintBase">ITargetedConstraintBase</a> <strong class="jxr_keyword">extends</strong> <a name="IConstraintBase" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IConstraintBase.html#IConstraintBase">IConstraintBase</a> {
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment">   * The target to match to determine the nodes to check against the constraint.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">   * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">   * If a target is not provided the the current context node is used as the</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">   * target.</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">   * @return the target or {@code null} if the default target is to be used</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>    @Nullable
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>    String getTarget();
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

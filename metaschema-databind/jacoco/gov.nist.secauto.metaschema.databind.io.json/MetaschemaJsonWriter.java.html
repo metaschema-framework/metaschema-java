@@ -35,7 +35,8 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="nc" id="L38">public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHandler {</span>
+<span class="nc" id="L38">@SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)</span>
+public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHandler {
   @NonNull
   private final JsonGenerator generator;
 
@@ -46,13 +47,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          the JSON generator to write with
    * @see DefaultJsonProblemHandler
    */
-<span class="nc" id="L49">  public MetaschemaJsonWriter(@NonNull JsonGenerator generator) {</span>
-<span class="nc" id="L50">    this.generator = generator;</span>
-<span class="nc" id="L51">  }</span>
+<span class="nc" id="L50">  public MetaschemaJsonWriter(@NonNull JsonGenerator generator) {</span>
+<span class="nc" id="L51">    this.generator = generator;</span>
+<span class="nc" id="L52">  }</span>
 
   @Override
   public JsonGenerator getWriter() {
-<span class="nc" id="L55">    return generator;</span>
+<span class="nc" id="L56">    return generator;</span>
   }
 
   // =====================================
@@ -63,8 +64,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   public void write(
       @NonNull IBoundDefinitionModelComplex definition,
       @NonNull IBoundObject item) throws IOException {
-<span class="nc" id="L66">    definition.writeItem(item, this);</span>
-<span class="nc" id="L67">  }</span>
+<span class="nc" id="L67">    definition.writeItem(item, this);</span>
+<span class="nc" id="L68">  }</span>
 
   // ================
   // Instance writers
@@ -73,136 +74,137 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   private &lt;T&gt; void writeInstance(
       @NonNull IBoundProperty&lt;T&gt; instance,
       @NonNull IBoundObject parentItem) throws IOException {
-<span class="nc" id="L76">    @SuppressWarnings(&quot;unchecked&quot;) T value = (T) instance.getValue(parentItem);</span>
-<span class="nc bnc" id="L77" title="All 4 branches missed.">    if (value != null &amp;&amp; !value.equals(instance.getResolvedDefaultValue())) {</span>
-<span class="nc" id="L78">      generator.writeFieldName(instance.getJsonName());</span>
-<span class="nc" id="L79">      instance.writeItem(value, this);</span>
+<span class="nc" id="L77">    @SuppressWarnings(&quot;unchecked&quot;) T value = (T) instance.getValue(parentItem);</span>
+<span class="nc bnc" id="L78" title="All 4 branches missed.">    if (value != null &amp;&amp; !value.equals(instance.getResolvedDefaultValue())) {</span>
+<span class="nc" id="L79">      generator.writeFieldName(instance.getJsonName());</span>
+<span class="nc" id="L80">      instance.writeItem(value, this);</span>
     }
-<span class="nc" id="L81">  }</span>
+<span class="nc" id="L82">  }</span>
 
   private &lt;T&gt; void writeModelInstance(
       @NonNull IBoundInstanceModel&lt;T&gt; instance,
       @NonNull Object parentItem) throws IOException {
-<span class="nc" id="L86">    Object value = instance.getValue(parentItem);</span>
-<span class="nc bnc" id="L87" title="All 2 branches missed.">    if (value != null) {</span>
+<span class="nc" id="L87">    Object value = instance.getValue(parentItem);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">    if (value != null) {</span>
       // this if is not strictly needed, since isEmpty will return false on a null
       // value
       // checking null here potentially avoids the expensive operation of instatiating
-<span class="nc" id="L91">      IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
-<span class="nc bnc" id="L92" title="All 2 branches missed.">      if (!collectionInfo.isEmpty(value)) {</span>
-<span class="nc" id="L93">        generator.writeFieldName(instance.getJsonName());</span>
-<span class="nc" id="L94">        collectionInfo.writeItems(new ModelInstanceWriteHandler&lt;&gt;(instance), value);</span>
+<span class="nc" id="L92">      IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">      if (!collectionInfo.isEmpty(value)) {</span>
+<span class="nc" id="L94">        generator.writeFieldName(instance.getJsonName());</span>
+<span class="nc" id="L95">        collectionInfo.writeItems(new ModelInstanceWriteHandler&lt;&gt;(instance), value);</span>
       }
     }
-<span class="nc" id="L97">  }</span>
+<span class="nc" id="L98">  }</span>
 
+  @SuppressWarnings(&quot;PMD.NullAssignment&quot;)
   private void writeFieldValue(@NonNull IBoundFieldValue fieldValue, @NonNull Object parentItem) throws IOException {
-<span class="nc" id="L100">    Object item = fieldValue.getValue(parentItem);</span>
+<span class="nc" id="L102">    Object item = fieldValue.getValue(parentItem);</span>
 
     // handle json value key
-<span class="nc" id="L103">    IBoundInstanceFlag jsonValueKey = fieldValue.getParentFieldDefinition().getJsonValueKeyFlagInstance();</span>
-<span class="nc bnc" id="L104" title="All 2 branches missed.">    if (item == null) {</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">      if (jsonValueKey != null) {</span>
-<span class="nc" id="L106">        item = fieldValue.getDefaultValue();</span>
+<span class="nc" id="L105">    IBoundInstanceFlag jsonValueKey = fieldValue.getParentFieldDefinition().getJsonValueKeyFlagInstance();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">    if (item == null) {</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">      if (jsonValueKey != null) {</span>
+<span class="nc" id="L108">        item = fieldValue.getDefaultValue();</span>
       }
-<span class="nc bnc" id="L108" title="All 2 branches missed.">    } else if (item.equals(fieldValue.getResolvedDefaultValue())) {</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">    } else if (item.equals(fieldValue.getResolvedDefaultValue())) {</span>
       // same as default
-<span class="nc" id="L110">      item = null;</span>
+<span class="nc" id="L112">      item = null;</span>
     }
 
-<span class="nc bnc" id="L113" title="All 2 branches missed.">    if (item != null) {</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">    if (item != null) {</span>
       // There are two modes:
       // 1) use of a JSON value key, or
       // 2) a simple value named &quot;value&quot;
 
       String valueKeyName;
-<span class="nc bnc" id="L119" title="All 2 branches missed.">      if (jsonValueKey != null) {</span>
-<span class="nc" id="L120">        Object keyValue = jsonValueKey.getValue(parentItem);</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (keyValue == null) {</span>
-<span class="nc" id="L122">          throw new IOException(String.format(&quot;Null value for json-value-key for definition '%s'&quot;,</span>
-<span class="nc" id="L123">              jsonValueKey.getContainingDefinition().toCoordinates()));</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">      if (jsonValueKey != null) {</span>
+<span class="nc" id="L122">        Object keyValue = jsonValueKey.getValue(parentItem);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (keyValue == null) {</span>
+<span class="nc" id="L124">          throw new IOException(String.format(&quot;Null value for json-value-key for definition '%s'&quot;,</span>
+<span class="nc" id="L125">              jsonValueKey.getContainingDefinition().toCoordinates()));</span>
         }
         // this is the JSON value key case
-<span class="nc" id="L126">        valueKeyName = jsonValueKey.getJavaTypeAdapter().asString(keyValue);</span>
-<span class="nc" id="L127">      } else {</span>
-<span class="nc" id="L128">        valueKeyName = fieldValue.getParentFieldDefinition().getEffectiveJsonValueKeyName();</span>
+<span class="nc" id="L128">        valueKeyName = jsonValueKey.getJavaTypeAdapter().asString(keyValue);</span>
+<span class="nc" id="L129">      } else {</span>
+<span class="nc" id="L130">        valueKeyName = fieldValue.getParentFieldDefinition().getEffectiveJsonValueKeyName();</span>
       }
-<span class="nc" id="L130">      generator.writeFieldName(valueKeyName);</span>
+<span class="nc" id="L132">      generator.writeFieldName(valueKeyName);</span>
       // LOGGER.info(&quot;FIELD: {}&quot;, valueKeyName);
 
-<span class="nc" id="L133">      writeItemFieldValue(item, fieldValue);</span>
+<span class="nc" id="L135">      writeItemFieldValue(item, fieldValue);</span>
     }
-<span class="nc" id="L135">  }</span>
+<span class="nc" id="L137">  }</span>
 
   @Override
   public void writeItemFlag(Object item, IBoundInstanceFlag instance) throws IOException {
-<span class="nc" id="L139">    writeScalarItem(item, instance);</span>
-<span class="nc" id="L140">  }</span>
+<span class="nc" id="L141">    writeScalarItem(item, instance);</span>
+<span class="nc" id="L142">  }</span>
 
   @Override
   public void writeItemField(Object item, IBoundInstanceModelFieldScalar instance) throws IOException {
-<span class="nc" id="L144">    writeScalarItem(item, instance);</span>
-<span class="nc" id="L145">  }</span>
+<span class="nc" id="L146">    writeScalarItem(item, instance);</span>
+<span class="nc" id="L147">  }</span>
 
   @Override
   public void writeItemField(IBoundObject item, IBoundInstanceModelFieldComplex instance) throws IOException {
-<span class="nc" id="L149">    writeModelObject(</span>
+<span class="nc" id="L151">    writeModelObject(</span>
         instance,
         item,
         this::writeObjectProperties);
-<span class="nc" id="L153">  }</span>
+<span class="nc" id="L155">  }</span>
 
   @Override
   public void writeItemField(IBoundObject item, IBoundInstanceModelGroupedField instance) throws IOException {
-<span class="nc" id="L157">    writeGroupedModelObject(</span>
+<span class="nc" id="L159">    writeGroupedModelObject(</span>
         instance,
         item,
         (parent, handler) -&gt; {
-<span class="nc" id="L161">          writeDiscriminatorProperty(handler);</span>
-<span class="nc" id="L162">          writeObjectProperties(parent, handler);</span>
-<span class="nc" id="L163">        });</span>
-<span class="nc" id="L164">  }</span>
+<span class="nc" id="L163">          writeDiscriminatorProperty(handler);</span>
+<span class="nc" id="L164">          writeObjectProperties(parent, handler);</span>
+<span class="nc" id="L165">        });</span>
+<span class="nc" id="L166">  }</span>
 
   @Override
   public void writeItemField(IBoundObject item, IBoundDefinitionModelFieldComplex definition) throws IOException {
-<span class="nc" id="L168">    writeDefinitionObject(</span>
+<span class="nc" id="L170">    writeDefinitionObject(</span>
         definition,
         item,
         (ObjectWriter&lt;IBoundDefinitionModelFieldComplex&gt;) this::writeObjectProperties);
-<span class="nc" id="L172">  }</span>
+<span class="nc" id="L174">  }</span>
 
   @Override
   public void writeItemFieldValue(Object item, IBoundFieldValue fieldValue) throws IOException {
-<span class="nc" id="L176">    fieldValue.getJavaTypeAdapter().writeJsonValue(item, generator);</span>
-<span class="nc" id="L177">  }</span>
+<span class="nc" id="L178">    fieldValue.getJavaTypeAdapter().writeJsonValue(item, generator);</span>
+<span class="nc" id="L179">  }</span>
 
   @Override
   public void writeItemAssembly(IBoundObject item, IBoundInstanceModelAssembly instance) throws IOException {
-<span class="nc" id="L181">    writeModelObject(instance, item, this::writeObjectProperties);</span>
-<span class="nc" id="L182">  }</span>
+<span class="nc" id="L183">    writeModelObject(instance, item, this::writeObjectProperties);</span>
+<span class="nc" id="L184">  }</span>
 
   @Override
   public void writeItemAssembly(IBoundObject item, IBoundInstanceModelGroupedAssembly instance) throws IOException {
-<span class="nc" id="L186">    writeGroupedModelObject(</span>
+<span class="nc" id="L188">    writeGroupedModelObject(</span>
         instance,
         item,
         (parent, handler) -&gt; {
-<span class="nc" id="L190">          writeDiscriminatorProperty(handler);</span>
-<span class="nc" id="L191">          writeObjectProperties(parent, handler);</span>
-<span class="nc" id="L192">        });</span>
-<span class="nc" id="L193">  }</span>
+<span class="nc" id="L192">          writeDiscriminatorProperty(handler);</span>
+<span class="nc" id="L193">          writeObjectProperties(parent, handler);</span>
+<span class="nc" id="L194">        });</span>
+<span class="nc" id="L195">  }</span>
 
   @Override
   public void writeItemAssembly(IBoundObject item, IBoundDefinitionModelAssembly definition) throws IOException {
-<span class="nc" id="L197">    writeDefinitionObject(definition, item, this::writeObjectProperties);</span>
-<span class="nc" id="L198">  }</span>
+<span class="nc" id="L199">    writeDefinitionObject(definition, item, this::writeObjectProperties);</span>
+<span class="nc" id="L200">  }</span>
 
   @Override
   public void writeChoiceGroupItem(IBoundObject item, IBoundInstanceModelChoiceGroup instance) throws IOException {
-<span class="nc" id="L202">    IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
-<span class="nc bnc" id="L203" title="All 2 branches missed.">    assert actualInstance != null;</span>
-<span class="nc" id="L204">    actualInstance.writeItem(item, this);</span>
-<span class="nc" id="L205">  }</span>
+<span class="nc" id="L204">    IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">    assert actualInstance != null;</span>
+<span class="nc" id="L206">    actualInstance.writeItem(item, this);</span>
+<span class="nc" id="L207">  }</span>
 
   /**
    * Writes a scalar item.
@@ -216,110 +218,110 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    */
   private void writeScalarItem(@NonNull Object item, @NonNull IFeatureScalarItemValueHandler handler)
       throws IOException {
-<span class="nc" id="L219">    handler.getJavaTypeAdapter().writeJsonValue(item, generator);</span>
-<span class="nc" id="L220">  }</span>
+<span class="nc" id="L221">    handler.getJavaTypeAdapter().writeJsonValue(item, generator);</span>
+<span class="nc" id="L222">  }</span>
 
   private &lt;T extends IBoundInstanceModelGroupedNamed&gt; void writeDiscriminatorProperty(
       @NonNull T instance) throws IOException {
 
-<span class="nc" id="L225">    IBoundInstanceModelChoiceGroup choiceGroup = instance.getParentContainer();</span>
+<span class="nc" id="L227">    IBoundInstanceModelChoiceGroup choiceGroup = instance.getParentContainer();</span>
 
     // write JSON object discriminator
-<span class="nc" id="L228">    String discriminatorProperty = choiceGroup.getJsonDiscriminatorProperty();</span>
-<span class="nc" id="L229">    String discriminatorValue = instance.getEffectiveDisciminatorValue();</span>
+<span class="nc" id="L230">    String discriminatorProperty = choiceGroup.getJsonDiscriminatorProperty();</span>
+<span class="nc" id="L231">    String discriminatorValue = instance.getEffectiveDisciminatorValue();</span>
 
-<span class="nc" id="L231">    generator.writeStringField(discriminatorProperty, discriminatorValue);</span>
-<span class="nc" id="L232">  }</span>
+<span class="nc" id="L233">    generator.writeStringField(discriminatorProperty, discriminatorValue);</span>
+<span class="nc" id="L234">  }</span>
 
   private &lt;T extends IFeatureComplexItemValueHandler&gt; void writeObjectProperties(
       @NonNull IBoundObject parent,
       @NonNull T handler) throws IOException {
-<span class="nc bnc" id="L237" title="All 2 branches missed.">    for (IBoundProperty&lt;?&gt; property : handler.getJsonProperties().values()) {</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">      assert property != null;</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">    for (IBoundProperty&lt;?&gt; property : handler.getJsonProperties().values()) {</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">      assert property != null;</span>
 
-<span class="nc bnc" id="L240" title="All 2 branches missed.">      if (property instanceof IBoundInstanceModel) {</span>
-<span class="nc" id="L241">        writeModelInstance((IBoundInstanceModel&lt;?&gt;) property, parent);</span>
-<span class="nc bnc" id="L242" title="All 2 branches missed.">      } else if (property instanceof IBoundInstance) {</span>
-<span class="nc" id="L243">        writeInstance(property, parent);</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">      if (property instanceof IBoundInstanceModel) {</span>
+<span class="nc" id="L243">        writeModelInstance((IBoundInstanceModel&lt;?&gt;) property, parent);</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">      } else if (property instanceof IBoundInstance) {</span>
+<span class="nc" id="L245">        writeInstance(property, parent);</span>
       } else { // IBoundFieldValue
-<span class="nc" id="L245">        writeFieldValue((IBoundFieldValue) property, parent);</span>
+<span class="nc" id="L247">        writeFieldValue((IBoundFieldValue) property, parent);</span>
       }
-<span class="nc" id="L247">    }</span>
-<span class="nc" id="L248">  }</span>
+<span class="nc" id="L249">    }</span>
+<span class="nc" id="L250">  }</span>
 
   private &lt;T extends IFeatureComplexItemValueHandler&gt; void writeDefinitionObject(
       @NonNull T handler,
       @NonNull IBoundObject parent,
       @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {
-<span class="nc" id="L254">    generator.writeStartObject();</span>
+<span class="nc" id="L256">    generator.writeStartObject();</span>
 
-<span class="nc" id="L256">    propertyWriter.accept(parent, handler);</span>
-<span class="nc" id="L257">    generator.writeEndObject();</span>
-<span class="nc" id="L258">  }</span>
+<span class="nc" id="L258">    propertyWriter.accept(parent, handler);</span>
+<span class="nc" id="L259">    generator.writeEndObject();</span>
+<span class="nc" id="L260">  }</span>
 
   private &lt;T extends IFeatureComplexItemValueHandler &amp; IBoundInstanceModel&lt;IBoundObject&gt;&gt;
       void writeModelObject(
           @NonNull T handler,
           @NonNull IBoundObject parent,
           @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {
-<span class="nc" id="L265">    generator.writeStartObject();</span>
+<span class="nc" id="L267">    generator.writeStartObject();</span>
 
-<span class="nc" id="L267">    IBoundInstanceFlag jsonKey = handler.getItemJsonKey(parent);</span>
-<span class="nc bnc" id="L268" title="All 2 branches missed.">    if (jsonKey != null) {</span>
-<span class="nc" id="L269">      Object keyValue = jsonKey.getValue(parent);</span>
-<span class="nc bnc" id="L270" title="All 2 branches missed.">      if (keyValue == null) {</span>
-<span class="nc" id="L271">        throw new IOException(String.format(&quot;Null value for json-key for definition '%s'&quot;,</span>
-<span class="nc" id="L272">            jsonKey.getContainingDefinition().toCoordinates()));</span>
+<span class="nc" id="L269">    IBoundInstanceFlag jsonKey = handler.getItemJsonKey(parent);</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">    if (jsonKey != null) {</span>
+<span class="nc" id="L271">      Object keyValue = jsonKey.getValue(parent);</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">      if (keyValue == null) {</span>
+<span class="nc" id="L273">        throw new IOException(String.format(&quot;Null value for json-key for definition '%s'&quot;,</span>
+<span class="nc" id="L274">            jsonKey.getContainingDefinition().toCoordinates()));</span>
       }
 
       // the field will be the JSON key value
-<span class="nc" id="L276">      String key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
-<span class="nc" id="L277">      generator.writeFieldName(key);</span>
+<span class="nc" id="L278">      String key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
+<span class="nc" id="L279">      generator.writeFieldName(key);</span>
 
       // next the value will be a start object
-<span class="nc" id="L280">      generator.writeStartObject();</span>
+<span class="nc" id="L282">      generator.writeStartObject();</span>
     }
 
-<span class="nc" id="L283">    propertyWriter.accept(parent, handler);</span>
+<span class="nc" id="L285">    propertyWriter.accept(parent, handler);</span>
 
-<span class="nc bnc" id="L285" title="All 2 branches missed.">    if (jsonKey != null) {</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">    if (jsonKey != null) {</span>
       // next the value will be a start object
-<span class="nc" id="L287">      generator.writeEndObject();</span>
+<span class="nc" id="L289">      generator.writeEndObject();</span>
     }
-<span class="nc" id="L289">    generator.writeEndObject();</span>
-<span class="nc" id="L290">  }</span>
+<span class="nc" id="L291">    generator.writeEndObject();</span>
+<span class="nc" id="L292">  }</span>
 
   private &lt;T extends IFeatureComplexItemValueHandler &amp; IBoundInstanceModelGroupedNamed&gt; void writeGroupedModelObject(
       @NonNull T handler,
       @NonNull IBoundObject parent,
       @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {
-<span class="nc" id="L296">    generator.writeStartObject();</span>
+<span class="nc" id="L298">    generator.writeStartObject();</span>
 
-<span class="nc" id="L298">    IBoundInstanceModelChoiceGroup choiceGroup = handler.getParentContainer();</span>
-<span class="nc" id="L299">    IBoundInstanceFlag jsonKey = choiceGroup.getItemJsonKey(parent);</span>
-<span class="nc bnc" id="L300" title="All 2 branches missed.">    if (jsonKey != null) {</span>
-<span class="nc" id="L301">      Object keyValue = jsonKey.getValue(parent);</span>
-<span class="nc bnc" id="L302" title="All 2 branches missed.">      if (keyValue == null) {</span>
-<span class="nc" id="L303">        throw new IOException(String.format(&quot;Null value for json-key for definition '%s'&quot;,</span>
-<span class="nc" id="L304">            jsonKey.getContainingDefinition().toCoordinates()));</span>
+<span class="nc" id="L300">    IBoundInstanceModelChoiceGroup choiceGroup = handler.getParentContainer();</span>
+<span class="nc" id="L301">    IBoundInstanceFlag jsonKey = choiceGroup.getItemJsonKey(parent);</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">    if (jsonKey != null) {</span>
+<span class="nc" id="L303">      Object keyValue = jsonKey.getValue(parent);</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">      if (keyValue == null) {</span>
+<span class="nc" id="L305">        throw new IOException(String.format(&quot;Null value for json-key for definition '%s'&quot;,</span>
+<span class="nc" id="L306">            jsonKey.getContainingDefinition().toCoordinates()));</span>
       }
 
       // the field will be the JSON key value
-<span class="nc" id="L308">      String key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
-<span class="nc" id="L309">      generator.writeFieldName(key);</span>
+<span class="nc" id="L310">      String key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
+<span class="nc" id="L311">      generator.writeFieldName(key);</span>
 
       // next the value will be a start object
-<span class="nc" id="L312">      generator.writeStartObject();</span>
+<span class="nc" id="L314">      generator.writeStartObject();</span>
     }
 
-<span class="nc" id="L315">    propertyWriter.accept(parent, handler);</span>
+<span class="nc" id="L317">    propertyWriter.accept(parent, handler);</span>
 
-<span class="nc bnc" id="L317" title="All 2 branches missed.">    if (jsonKey != null) {</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">    if (jsonKey != null) {</span>
       // next the value will be a start object
-<span class="nc" id="L319">      generator.writeEndObject();</span>
+<span class="nc" id="L321">      generator.writeEndObject();</span>
     }
-<span class="nc" id="L321">    generator.writeEndObject();</span>
-<span class="nc" id="L322">  }</span>
+<span class="nc" id="L323">    generator.writeEndObject();</span>
+<span class="nc" id="L324">  }</span>
 
   /**
    * Supports writing items that are {@link IBoundInstanceModel}-based.
@@ -330,36 +332,36 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   private class ModelInstanceWriteHandler&lt;ITEM&gt;
       extends AbstractModelInstanceWriteHandler&lt;ITEM&gt; {
     public ModelInstanceWriteHandler(
-<span class="nc" id="L333">        @NonNull IBoundInstanceModel&lt;ITEM&gt; instance) {</span>
-<span class="nc" id="L334">      super(instance);</span>
-<span class="nc" id="L335">    }</span>
+<span class="nc" id="L335">        @NonNull IBoundInstanceModel&lt;ITEM&gt; instance) {</span>
+<span class="nc" id="L336">      super(instance);</span>
+<span class="nc" id="L337">    }</span>
 
     @Override
     public void writeList(List&lt;ITEM&gt; items) throws IOException {
-<span class="nc" id="L339">      IBoundInstanceModel&lt;ITEM&gt; instance = getCollectionInfo().getInstance();</span>
+<span class="nc" id="L341">      IBoundInstanceModel&lt;ITEM&gt; instance = getCollectionInfo().getInstance();</span>
 
-<span class="nc" id="L341">      boolean writeArray = false;</span>
-<span class="nc bnc" id="L342" title="All 2 branches missed.">      if (JsonGroupAsBehavior.LIST.equals(instance.getJsonGroupAsBehavior())</span>
-<span class="nc bnc" id="L343" title="All 2 branches missed.">          || JsonGroupAsBehavior.SINGLETON_OR_LIST.equals(instance.getJsonGroupAsBehavior())</span>
-<span class="nc bnc" id="L344" title="All 2 branches missed.">              &amp;&amp; items.size() &gt; 1) {</span>
+<span class="nc" id="L343">      boolean writeArray = false;</span>
+<span class="nc bnc" id="L344" title="All 2 branches missed.">      if (JsonGroupAsBehavior.LIST.equals(instance.getJsonGroupAsBehavior())</span>
+<span class="nc bnc" id="L345" title="All 2 branches missed.">          || JsonGroupAsBehavior.SINGLETON_OR_LIST.equals(instance.getJsonGroupAsBehavior())</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">              &amp;&amp; items.size() &gt; 1) {</span>
         // write array, then items
-<span class="nc" id="L346">        writeArray = true;</span>
-<span class="nc" id="L347">        generator.writeStartArray();</span>
+<span class="nc" id="L348">        writeArray = true;</span>
+<span class="nc" id="L349">        generator.writeStartArray();</span>
       } // only other option is a singleton value, write item
 
-<span class="nc" id="L350">      super.writeList(items);</span>
+<span class="nc" id="L352">      super.writeList(items);</span>
 
-<span class="nc bnc" id="L352" title="All 2 branches missed.">      if (writeArray) {</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">      if (writeArray) {</span>
         // write the end array
-<span class="nc" id="L354">        generator.writeEndArray();</span>
+<span class="nc" id="L356">        generator.writeEndArray();</span>
       }
-<span class="nc" id="L356">    }</span>
+<span class="nc" id="L358">    }</span>
 
     @Override
     public void writeItem(ITEM item) throws IOException {
-<span class="nc" id="L360">      IBoundInstanceModel&lt;ITEM&gt; instance = getInstance();</span>
-<span class="nc" id="L361">      instance.writeItem(item, MetaschemaJsonWriter.this);</span>
-<span class="nc" id="L362">    }</span>
+<span class="nc" id="L362">      IBoundInstanceModel&lt;ITEM&gt; instance = getInstance();</span>
+<span class="nc" id="L363">      instance.writeItem(item, MetaschemaJsonWriter.this);</span>
+<span class="nc" id="L364">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

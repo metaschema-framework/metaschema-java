@@ -13,11 +13,12 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagReference;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.InlineDefineFlag;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModel;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagReference;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineFlag;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
 
@@ -25,7 +26,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressWarnings(&quot;PMD.OnlyOneReturn&quot;)
+<span class="fc" id="L29">@SuppressWarnings(&quot;PMD.OnlyOneReturn&quot;)</span>
 public final class FlagContainerSupport {
   @SuppressFBWarnings(value = &quot;CT_CONSTRUCTOR_THROW&quot;, justification = &quot;Use of final fields&quot;)
   @NonNull
@@ -34,46 +35,48 @@ public final class FlagContainerSupport {
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
       @NonNull IBindingDefinitionModel parent,
       @Nullable String jsonKeyName) {
-<span class="pc bpc" id="L37" title="1 of 4 branches missed.">    if (flags == null || flags.isEmpty()) {</span>
-<span class="fc" id="L38">      return IContainerFlagSupport.empty();</span>
+<span class="pc bpc" id="L38" title="1 of 4 branches missed.">    if (flags == null || flags.isEmpty()) {</span>
+<span class="fc" id="L39">      return IContainerFlagSupport.empty();</span>
     }
 
     // create temporary collections to store the child binding objects
-<span class="fc bfc" id="L42" title="All 2 branches covered.">    IFlagContainerBuilder&lt;IFlagInstance&gt; builder = jsonKeyName == null</span>
-<span class="fc" id="L43">        ? IContainerFlagSupport.builder()</span>
-<span class="fc" id="L44">        : IContainerFlagSupport.builder(parent.getContainingModule().toFlagQName(jsonKeyName));</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">    IFlagContainerBuilder&lt;IFlagInstance&gt; builder = jsonKeyName == null</span>
+<span class="fc" id="L44">        ? IContainerFlagSupport.builder()</span>
+<span class="fc" id="L45">        : IContainerFlagSupport.builder(parent.getContainingModule().toFlagQName(jsonKeyName));</span>
 
     // create counter to track child positions
-<span class="fc" id="L47">    int flagReferencePosition = 0;</span>
-<span class="fc" id="L48">    int flagInlineDefinitionPosition = 0;</span>
+<span class="fc" id="L48">    AtomicInteger flagReferencePosition = new AtomicInteger();</span>
+<span class="fc" id="L49">    AtomicInteger flagInlineDefinitionPosition = new AtomicInteger();</span>
 
-<span class="fc" id="L50">    IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(</span>
-<span class="fc" id="L51">        bindingInstance.getDefinition().getChoiceGroupInstanceByName(&quot;flags&quot;));</span>
-<span class="fc bfc" id="L52" title="All 2 branches covered.">    for (Object obj : flags) {</span>
-<span class="fc" id="L53">      IBoundInstanceModelGroupedAssembly objInstance</span>
-<span class="fc" id="L54">          = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);</span>
+<span class="fc" id="L51">    IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(</span>
+<span class="fc" id="L52">        bindingInstance.getDefinition().getChoiceGroupInstanceByName(&quot;flags&quot;));</span>
 
-      IFlagInstance flag;
-<span class="fc bfc" id="L57" title="All 2 branches covered.">      if (obj instanceof InlineDefineFlag) {</span>
-<span class="fc" id="L58">        flag = new InstanceFlagInline(</span>
-            (InlineDefineFlag) obj,
-            objInstance,
-            flagInlineDefinitionPosition++,
-            parent);
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">      } else if (obj instanceof FlagReference) {</span>
-<span class="fc" id="L64">        flag = newFlagInstance(</span>
-            (FlagReference) obj,
-            objInstance,
-            flagReferencePosition++,
-            parent);
-      } else {
-<span class="nc" id="L70">        throw new UnsupportedOperationException(String.format(&quot;Unknown flag instance class: %s&quot;, obj.getClass()));</span>
-      }
+<span class="fc" id="L54">    flags.stream()</span>
+<span class="fc" id="L55">        .map(obj -&gt; {</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">          assert obj != null;</span>
+<span class="fc" id="L57">          IBoundInstanceModelGroupedAssembly objInstance</span>
+<span class="fc" id="L58">              = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);</span>
 
-<span class="fc" id="L73">      builder.flag(flag);</span>
-<span class="fc" id="L74">    }</span>
+          IFlagInstance flag;
+<span class="fc bfc" id="L61" title="All 2 branches covered.">          if (obj instanceof InlineDefineFlag) {</span>
+<span class="fc" id="L62">            flag = new InstanceFlagInline(</span>
+                (InlineDefineFlag) obj,
+                objInstance,
+<span class="fc" id="L65">                flagInlineDefinitionPosition.incrementAndGet(),</span>
+                parent);
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">          } else if (obj instanceof FlagReference) {</span>
+<span class="fc" id="L68">            flag = newFlagInstance(</span>
+                (FlagReference) obj,
+                objInstance,
+<span class="fc" id="L71">                flagReferencePosition.incrementAndGet(),</span>
+                parent);
+          } else {
+<span class="nc" id="L74">            throw new UnsupportedOperationException(String.format(&quot;Unknown flag instance class: %s&quot;, obj.getClass()));</span>
+          }
+<span class="fc" id="L76">          return flag;</span>
+<span class="fc" id="L77">        }).forEachOrdered(builder::flag);</span>
 
-<span class="fc" id="L76">    return builder.build();</span>
+<span class="fc" id="L79">    return builder.build();</span>
   }
 
   @NonNull
@@ -82,18 +85,18 @@ public final class FlagContainerSupport {
       @NonNull IBoundInstanceModelGroupedAssembly objInstance,
       int position,
       @NonNull IBindingDefinitionModel parent) {
-<span class="fc" id="L85">    IModule module = parent.getContainingModule();</span>
+<span class="fc" id="L88">    IModule module = parent.getContainingModule();</span>
 
-<span class="fc" id="L87">    QName qname = module.toFlagQName(ObjectUtils.requireNonNull(obj.getRef()));</span>
-<span class="fc" id="L88">    IFlagDefinition definition = module.getScopedFlagDefinitionByName(qname);</span>
-<span class="pc bpc" id="L89" title="1 of 2 branches missed.">    if (definition == null) {</span>
-<span class="nc" id="L90">      throw new IllegalStateException(</span>
-<span class="nc" id="L91">          String.format(&quot;Unable to resolve flag reference '%s' in definition '%s' in module '%s'&quot;,</span>
+<span class="fc" id="L90">    QName qname = module.toFlagQName(ObjectUtils.requireNonNull(obj.getRef()));</span>
+<span class="fc" id="L91">    IFlagDefinition definition = module.getScopedFlagDefinitionByName(qname);</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">    if (definition == null) {</span>
+<span class="nc" id="L93">      throw new IllegalStateException(</span>
+<span class="nc" id="L94">          String.format(&quot;Unable to resolve flag reference '%s' in definition '%s' in module '%s'&quot;,</span>
               qname,
-<span class="nc" id="L93">              parent.getName(),</span>
-<span class="nc" id="L94">              module.getShortName()));</span>
+<span class="nc" id="L96">              parent.getName(),</span>
+<span class="nc" id="L97">              module.getShortName()));</span>
     }
-<span class="fc" id="L96">    return new InstanceFlagReference(obj, objInstance, position, definition, parent);</span>
+<span class="fc" id="L99">    return new InstanceFlagReference(obj, objInstance, position, definition, parent);</span>
   }
 
   private FlagContainerSupport() {

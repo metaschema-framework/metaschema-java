@@ -8,11 +8,11 @@ package gov.nist.secauto.metaschema.schemagen.datatype;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -48,7 +48,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="fc" id="L48">  }</span>
 
 <span class="fc" id="L50">  @NonNull</span>
-  private final Map&lt;IDataTypeAdapter&lt;?&gt;, String&gt; datatypeToTypeMap = new HashMap&lt;&gt;(); // NOPMD - intentional
+  private final Map&lt;IDataTypeAdapter&lt;?&gt;, String&gt; datatypeToTypeMap = new ConcurrentHashMap&lt;&gt;(); // NOPMD - intentional
 
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
@@ -65,14 +65,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   @Override
   @NonNull
   public String getTypeNameForDatatype(@NonNull IDataTypeAdapter&lt;?&gt; datatype) {
-<span class="fc" id="L68">    synchronized (this) {</span>
-<span class="fc" id="L69">      String name = datatypeToTypeMap.get(datatype);</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">      if (name == null) {</span>
-<span class="fc" id="L71">        name = getDatatypeTranslationMap().get(datatype.getPreferredName().getLocalPart());</span>
-<span class="fc" id="L72">        datatypeToTypeMap.put(datatype, name);</span>
-      }
-<span class="fc" id="L74">      return name;</span>
-    }
+<span class="fc" id="L68">    return datatypeToTypeMap.computeIfAbsent(</span>
+        datatype,
+<span class="fc" id="L70">        key -&gt; getDatatypeTranslationMap().get(key.getPreferredName().getLocalPart()));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

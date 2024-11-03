@@ -12,8 +12,6 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractGlobalFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalFlagDefinitionType;
@@ -48,22 +46,21 @@ class XmlGlobalFlagDefinition
   public XmlGlobalFlagDefinition(
       @NonNull GlobalFlagDefinitionType xmlFlag,
       @NonNull XmlModule module) {
-<span class="fc" id="L51">    super(module);</span>
-<span class="fc" id="L52">    this.xmlFlag = xmlFlag;</span>
-<span class="fc" id="L53">    Object defaultValue = null;</span>
-<span class="fc bfc" id="L54" title="All 2 branches covered.">    if (xmlFlag.isSetDefault()) {</span>
-<span class="fc" id="L55">      defaultValue = getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlFlag.getDefault()));</span>
+<span class="fc" id="L49">    super(module);</span>
+<span class="fc" id="L50">    this.xmlFlag = xmlFlag;</span>
+<span class="fc" id="L51">    Object defaultValue = null;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">    if (xmlFlag.isSetDefault()) {</span>
+<span class="fc" id="L53">      defaultValue = getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlFlag.getDefault()));</span>
     }
-<span class="fc" id="L57">    this.defaultValue = defaultValue;</span>
-<span class="fc" id="L58">    this.constraints = Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L59">      IValueConstrained retval = new ValueConstraintSet();</span>
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">      if (getXmlFlag().isSetConstraint()) {</span>
-<span class="fc" id="L61">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlFlag().getConstraint()),</span>
-<span class="fc" id="L62">            ISource.modelSource(module));</span>
+<span class="fc" id="L55">    this.defaultValue = defaultValue;</span>
+<span class="fc" id="L56">    this.constraints = Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L57">      IValueConstrained retval = new ValueConstraintSet();</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">      if (getXmlFlag().isSetConstraint()) {</span>
+<span class="fc" id="L59">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlFlag().getConstraint()), module.getSource());</span>
       }
-<span class="fc" id="L64">      return retval;</span>
+<span class="fc" id="L61">      return retval;</span>
     });
-<span class="fc" id="L66">  }</span>
+<span class="fc" id="L63">  }</span>
 
   /**
    * Used to generate the instances for the constraints in a lazy fashion when the
@@ -74,12 +71,12 @@ class XmlGlobalFlagDefinition
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public IValueConstrained getConstraintSupport() {
-<span class="fc" id="L77">    return constraints.get();</span>
+<span class="fc" id="L74">    return constraints.get();</span>
   }
 
   @Override
   public Object getDefaultValue() {
-<span class="nc" id="L82">    return defaultValue;</span>
+<span class="nc" id="L79">    return defaultValue;</span>
   }
 
   // ----------------------------------------
@@ -92,69 +89,69 @@ class XmlGlobalFlagDefinition
    * @return the underlying XML data
    */
   protected final GlobalFlagDefinitionType getXmlFlag() {
-<span class="fc" id="L95">    return xmlFlag;</span>
+<span class="fc" id="L92">    return xmlFlag;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
-  public ModuleScopeEnum getModuleScope() {
-<span class="fc bfc" id="L101" title="All 2 branches covered.">    return getXmlFlag().isSetScope() ? getXmlFlag().getScope() : DEFAULT_DEFINITION_MODEL_SCOPE;</span>
+  public ModuleScope getModuleScope() {
+<span class="fc bfc" id="L98" title="All 2 branches covered.">    return getXmlFlag().isSetScope() ? getXmlFlag().getScope() : DEFAULT_MODULE_SCOPE;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String getName() {
-<span class="fc" id="L107">    return getXmlFlag().getName();</span>
+<span class="fc" id="L104">    return getXmlFlag().getName();</span>
   }
 
   @Override
   public Integer getIndex() {
-<span class="nc bnc" id="L112" title="All 2 branches missed.">    return getXmlFlag().isSetIndex() ? getXmlFlag().getIndex().intValue() : null;</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">    return getXmlFlag().isSetIndex() ? getXmlFlag().getIndex().intValue() : null;</span>
   }
 
   @Override
   public String getUseName() {
-<span class="fc bfc" id="L117" title="All 2 branches covered.">    return getXmlFlag().isSetUseName() ? getXmlFlag().getUseName().getStringValue() : null;</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">    return getXmlFlag().isSetUseName() ? getXmlFlag().getUseName().getStringValue() : null;</span>
   }
 
   @Override
   public Integer getUseIndex() {
-<span class="nc" id="L122">    Integer retval = null;</span>
-<span class="nc bnc" id="L123" title="All 2 branches missed.">    if (getXmlFlag().isSetUseName()) {</span>
-<span class="nc" id="L124">      UseNameType useName = getXmlFlag().getUseName();</span>
-<span class="nc bnc" id="L125" title="All 2 branches missed.">      if (useName.isSetIndex()) {</span>
-<span class="nc" id="L126">        retval = useName.getIndex().intValue();</span>
+<span class="nc" id="L119">    Integer retval = null;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">    if (getXmlFlag().isSetUseName()) {</span>
+<span class="nc" id="L121">      UseNameType useName = getXmlFlag().getUseName();</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">      if (useName.isSetIndex()) {</span>
+<span class="nc" id="L123">        retval = useName.getIndex().intValue();</span>
       }
     }
-<span class="nc" id="L129">    return retval;</span>
+<span class="nc" id="L126">    return retval;</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="nc bnc" id="L134" title="All 2 branches missed.">    return getXmlFlag().isSetFormalName() ? getXmlFlag().getFormalName() : null;</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">    return getXmlFlag().isSetFormalName() ? getXmlFlag().getFormalName() : null;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupLine getDescription() {
-<span class="nc bnc" id="L140" title="All 2 branches missed.">    return getXmlFlag().isSetDescription() ? MarkupStringConverter.toMarkupString(getXmlFlag().getDescription()) : null;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">    return getXmlFlag().isSetDescription() ? MarkupStringConverter.toMarkupString(getXmlFlag().getDescription()) : null;</span>
   }
 
   @Override
   public Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; getProperties() {
-<span class="nc" id="L145">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlFlag().getPropList()));</span>
+<span class="nc" id="L142">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlFlag().getPropList()));</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public final IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {
-<span class="pc bpc" id="L151" title="1 of 2 branches missed.">    return getXmlFlag().isSetAsType() ? getXmlFlag().getAsType() : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">    return getXmlFlag().isSetAsType() ? getXmlFlag().getAsType() : MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc bnc" id="L157" title="All 2 branches missed.">    return getXmlFlag().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlFlag().getRemarks()) : null;</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">    return getXmlFlag().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlFlag().getRemarks()) : null;</span>
   }
 
   // --------------------------------------

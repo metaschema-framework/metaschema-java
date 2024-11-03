@@ -7,11 +7,10 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +18,15 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents an allowed values constraint.
+ * &lt;p&gt;
+ * Ensures that a target instance's value matches one of the allowed values.
+ * This match is required if {@link #isAllowedOther()} is {@code false},
+ * otherwise the constraint will generate a validation warning message if the
+ * target instance's value does not match any of the associated allowed value
+ * constraints targeting it.
+ */
 public final class DefaultAllowedValuesConstraint
     extends AbstractConstraint
     implements IAllowedValuesConstraint {
@@ -29,14 +37,7 @@ public final class DefaultAllowedValuesConstraint
   private final Map&lt;String, IAllowedValue&gt; allowedValues;
 
   /**
-   * Construct a new allowed values constraint which ensures that a target
-   * instance's value match one of the allowed values. This match is required if
-   * {@link #isAllowedOther()} is {@code false}, otherwise the constraint will
-   * generate a validation warning message if the target instance's value does not
-   * match any of the associated allowed value constraints targeting it.
-   *
-   * the associated test evaluates to {@link IBooleanItem#TRUE} against the
-   * target.
+   * Construct a new allowed values constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -75,25 +76,25 @@ public final class DefaultAllowedValuesConstraint
       boolean allowedOther,
       @NonNull Extensible extensible,
       @Nullable MarkupMultiline remarks) {
-<span class="fc" id="L78">    super(id, formalName, description, source, level, target, properties, remarks);</span>
-<span class="fc" id="L79">    this.allowedValues = allowedValues;</span>
-<span class="fc" id="L80">    this.allowedOther = allowedOther;</span>
-<span class="fc" id="L81">    this.extensible = extensible;</span>
-<span class="fc" id="L82">  }</span>
+<span class="fc" id="L79">    super(id, formalName, description, source, level, target, properties, remarks);</span>
+<span class="fc" id="L80">    this.allowedValues = allowedValues;</span>
+<span class="fc" id="L81">    this.allowedOther = allowedOther;</span>
+<span class="fc" id="L82">    this.extensible = extensible;</span>
+<span class="fc" id="L83">  }</span>
 
   @Override
   public Map&lt;String, IAllowedValue&gt; getAllowedValues() {
-<span class="fc" id="L86">    return allowedValues;</span>
+<span class="fc" id="L87">    return allowedValues;</span>
   }
 
   @Override
   public boolean isAllowedOther() {
-<span class="fc" id="L91">    return allowedOther;</span>
+<span class="fc" id="L92">    return allowedOther;</span>
   }
 
   @Override
   public Extensible getExtensible() {
-<span class="fc" id="L96">    return extensible;</span>
+<span class="fc" id="L97">    return extensible;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

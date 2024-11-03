@@ -19,28 +19,36 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-starts-with&quot;&gt;fn:starts-with&lt;/a&gt;
+ * function.
+ */
 public final class FnStartsWith {
+  // CPD-OFF
+  @NonNull
   private static final String NAME = &quot;starts-with&quot;;
   @NonNull
-<span class="fc" id="L25">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L26">      .name(NAME)</span>
-<span class="fc" id="L27">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L28">      .deterministic()</span>
-<span class="fc" id="L29">      .contextDependent()</span>
-<span class="fc" id="L30">      .focusIndependent()</span>
-<span class="fc" id="L31">      .argument(IArgument.builder()</span>
-<span class="fc" id="L32">          .name(&quot;arg1&quot;).type(IStringItem.class)</span>
-<span class="fc" id="L33">          .zeroOrOne()</span>
-<span class="fc" id="L34">          .build())</span>
-<span class="fc" id="L35">      .argument(IArgument.builder()</span>
-<span class="fc" id="L36">          .name(&quot;arg2&quot;)</span>
-<span class="fc" id="L37">          .type(IStringItem.class)</span>
-<span class="fc" id="L38">          .zeroOrOne()</span>
-<span class="fc" id="L39">          .build())</span>
-<span class="fc" id="L40">      .returnType(IBooleanItem.class)</span>
-<span class="fc" id="L41">      .returnOne()</span>
-<span class="fc" id="L42">      .functionHandler(FnStartsWith::execute)</span>
-<span class="fc" id="L43">      .build();</span>
+<span class="fc" id="L32">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L33">      .name(NAME)</span>
+<span class="fc" id="L34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L35">      .deterministic()</span>
+<span class="fc" id="L36">      .contextDependent()</span>
+<span class="fc" id="L37">      .focusIndependent()</span>
+<span class="fc" id="L38">      .argument(IArgument.builder()</span>
+<span class="fc" id="L39">          .name(&quot;arg1&quot;).type(IStringItem.class)</span>
+<span class="fc" id="L40">          .zeroOrOne()</span>
+<span class="fc" id="L41">          .build())</span>
+<span class="fc" id="L42">      .argument(IArgument.builder()</span>
+<span class="fc" id="L43">          .name(&quot;arg2&quot;)</span>
+<span class="fc" id="L44">          .type(IStringItem.class)</span>
+<span class="fc" id="L45">          .zeroOrOne()</span>
+<span class="fc" id="L46">          .build())</span>
+<span class="fc" id="L47">      .returnType(IBooleanItem.class)</span>
+<span class="fc" id="L48">      .returnOne()</span>
+<span class="fc" id="L49">      .functionHandler(FnStartsWith::execute)</span>
+<span class="fc" id="L50">      .build();</span>
+  // CPD-ON
 
   @SuppressWarnings(&quot;unused&quot;)
   @NonNull
@@ -48,14 +56,14 @@ public final class FnStartsWith {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L51">    IStringItem arg1 = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="fc" id="L59">    IStringItem arg1 = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
 
-<span class="fc" id="L53">    IStringItem arg2 = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));</span>
+<span class="fc" id="L61">    IStringItem arg2 = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));</span>
 
-<span class="fc" id="L55">    return ISequence.of(IBooleanItem.valueOf(</span>
-<span class="fc" id="L56">        fnStartsWith(</span>
-<span class="fc bfc" id="L57" title="All 2 branches covered.">            arg1 == null ? &quot;&quot; : arg1.asString(),</span>
-<span class="fc bfc" id="L58" title="All 2 branches covered.">            arg2 == null ? &quot;&quot; : arg2.asString())));</span>
+<span class="fc" id="L63">    return ISequence.of(IBooleanItem.valueOf(</span>
+<span class="fc" id="L64">        fnStartsWith(</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            arg1 == null ? &quot;&quot; : arg1.asString(),</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            arg2 == null ? &quot;&quot; : arg2.asString())));</span>
   }
 
   /**
@@ -75,14 +83,14 @@ public final class FnStartsWith {
    */
   public static boolean fnStartsWith(@NonNull String arg1, @NonNull String arg2) {
     boolean retval;
-<span class="fc bfc" id="L78" title="All 2 branches covered.">    if (arg2.isEmpty()) {</span>
-<span class="fc" id="L79">      retval = true;</span>
-<span class="fc bfc" id="L80" title="All 2 branches covered.">    } else if (arg1.isEmpty()) {</span>
-<span class="fc" id="L81">      retval = false;</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">    if (arg2.isEmpty()) {</span>
+<span class="fc" id="L87">      retval = true;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">    } else if (arg1.isEmpty()) {</span>
+<span class="fc" id="L89">      retval = false;</span>
     } else {
-<span class="fc" id="L83">      retval = arg1.startsWith(arg2);</span>
+<span class="fc" id="L91">      retval = arg1.startsWith(arg2);</span>
     }
-<span class="fc" id="L85">    return retval;</span>
+<span class="fc" id="L93">    return retval;</span>
   }
 
   private FnStartsWith() {

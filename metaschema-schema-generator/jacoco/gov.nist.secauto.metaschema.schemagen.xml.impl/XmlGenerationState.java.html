@@ -20,15 +20,15 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
-import gov.nist.secauto.metaschema.schemagen.xml.datatype.XmlDatatypeManager;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.IXmlComplexType;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.IXmlSimpleType;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.IXmlType;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlComplexTypeAssemblyDefinition;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlComplexTypeFieldDefinition;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlSimpleTypeDataTypeReference;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlSimpleTypeDataTypeRestriction;
-import gov.nist.secauto.metaschema.schemagen.xml.schematype.XmlSimpleTypeUnion;
+import gov.nist.secauto.metaschema.schemagen.xml.XmlDatatypeManager;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlComplexType;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlSimpleType;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlType;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlComplexTypeAssemblyDefinition;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlComplexTypeFieldDefinition;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeDataTypeReference;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeDataTypeRestriction;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeUnion;
 
 import org.codehaus.stax2.XMLStreamWriter2;
 
@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -43,226 +44,223 @@ import javax.xml.stream.XMLStreamException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-<span class="fc" id="L46">public class XmlGenerationState</span>
+<span class="fc" id="L47">public class XmlGenerationState</span>
     extends AbstractGenerationState&lt;AutoCloser&lt;XMLStreamWriter2, SchemaGenerationException&gt;, XmlDatatypeManager&gt; {
   @NonNull
   private final String defaultNS;
-<span class="fc" id="L50">  @NonNull</span>
+<span class="fc" id="L51">  @NonNull</span>
   private final Map&lt;String, String&gt; namespaceToPrefixMap = new ConcurrentHashMap&lt;&gt;();
-<span class="fc" id="L52">  @NonNull</span>
+<span class="fc" id="L53">  @NonNull</span>
   private final Map&lt;IDataTypeAdapter&lt;?&gt;, IXmlSimpleType&gt; dataTypeToSimpleTypeMap = new ConcurrentHashMap&lt;&gt;();
-<span class="fc" id="L54">  @NonNull</span>
+<span class="fc" id="L55">  @NonNull</span>
   private final Map&lt;IValuedDefinition, IXmlSimpleType&gt; definitionToSimpleTypeMap = new ConcurrentHashMap&lt;&gt;();
-<span class="fc" id="L56">  @NonNull</span>
+<span class="fc" id="L57">  @NonNull</span>
   private final Map&lt;IDefinition, IXmlType&gt; definitionToTypeMap = new ConcurrentHashMap&lt;&gt;();
 
-  private int prefixNum; // 0
+<span class="fc" id="L60">  private final AtomicInteger prefixNum = new AtomicInteger(); // 0</span>
 
   public XmlGenerationState(
       @NonNull IModule module,
       @NonNull AutoCloser&lt;XMLStreamWriter2, SchemaGenerationException&gt; writer,
       @NonNull IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration) {
-<span class="fc" id="L65">    super(module, writer, configuration, new XmlDatatypeManager());</span>
-<span class="fc" id="L66">    this.defaultNS = ObjectUtils.notNull(module.getXmlNamespace().toASCIIString());</span>
-<span class="fc" id="L67">  }</span>
+<span class="fc" id="L66">    super(module, writer, configuration, new XmlDatatypeManager());</span>
+<span class="fc" id="L67">    this.defaultNS = ObjectUtils.notNull(module.getXmlNamespace().toASCIIString());</span>
+<span class="fc" id="L68">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   @NonNull
   public XMLStreamWriter2 getXMLStreamWriter() {
-<span class="fc" id="L72">    return getWriter().getResource();</span>
+<span class="fc" id="L73">    return getWriter().getResource();</span>
   }
 
   @NonNull
   public String getDefaultNS() {
-<span class="fc" id="L77">    return defaultNS;</span>
+<span class="fc" id="L78">    return defaultNS;</span>
   }
 
   @NonNull
   public String getDatatypeNS() {
-<span class="fc" id="L82">    return getDefaultNS();</span>
+<span class="fc" id="L83">    return getDefaultNS();</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   public String getNS(@NonNull IModelElement modelElement) {
-<span class="fc" id="L88">    return modelElement.getContainingModule().getXmlNamespace().toASCIIString();</span>
+<span class="fc" id="L89">    return modelElement.getContainingModule().getXmlNamespace().toASCIIString();</span>
   }
 
   public String getNSPrefix(String namespace) {
-<span class="nc" id="L92">    String retval = null;</span>
-<span class="nc bnc" id="L93" title="All 2 branches missed.">    if (!getDefaultNS().equals(namespace)) {</span>
-<span class="nc" id="L94">      synchronized (this) {</span>
-<span class="nc" id="L95">        retval = namespaceToPrefixMap.get(namespace);</span>
-<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (retval == null) {</span>
-<span class="nc" id="L97">          retval = String.format(&quot;ns%d&quot;, ++prefixNum);</span>
-<span class="nc" id="L98">          namespaceToPrefixMap.put(namespace, retval);</span>
-        }
-<span class="nc" id="L100">      }</span>
+<span class="nc" id="L93">    String retval = null;</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">    if (!getDefaultNS().equals(namespace)) {</span>
+<span class="nc" id="L95">      retval = namespaceToPrefixMap.computeIfAbsent(</span>
+          namespace,
+<span class="nc" id="L97">          key -&gt; String.format(&quot;ns%d&quot;, prefixNum.incrementAndGet()));</span>
     }
-<span class="nc" id="L102">    return retval;</span>
+<span class="nc" id="L99">    return retval;</span>
   }
 
   @NonNull
   protected QName newQName(
       @NonNull String localName,
       @NonNull String namespace) {
-<span class="fc" id="L109">    String prefix = null;</span>
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">    if (!getDefaultNS().equals(namespace)) {</span>
-<span class="nc" id="L111">      prefix = getNSPrefix(namespace);</span>
+<span class="fc" id="L106">    String prefix = null;</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">    if (!getDefaultNS().equals(namespace)) {</span>
+<span class="nc" id="L108">      prefix = getNSPrefix(namespace);</span>
     }
 
-<span class="fc" id="L114">    return ObjectUtils.notNull(</span>
-<span class="pc bpc" id="L115" title="1 of 2 branches missed.">        prefix == null ? new QName(namespace, localName) : new QName(namespace, localName, prefix));</span>
+<span class="fc" id="L111">    return ObjectUtils.notNull(</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        prefix == null ? new QName(namespace, localName) : new QName(namespace, localName, prefix));</span>
   }
 
   @NonNull
   protected QName newQName(
       @NonNull IDefinition definition,
       @Nullable String suffix) {
-<span class="fc" id="L122">    return newQName(</span>
-<span class="fc" id="L123">        getTypeNameForDefinition(definition, suffix),</span>
-<span class="fc" id="L124">        getNS(definition));</span>
+<span class="fc" id="L119">    return newQName(</span>
+<span class="fc" id="L120">        getTypeNameForDefinition(definition, suffix),</span>
+<span class="fc" id="L121">        getNS(definition));</span>
   }
 
   public IXmlType getXmlForDefinition(@NonNull IDefinition definition) {
-<span class="fc" id="L128">    IXmlType retval = definitionToTypeMap.get(definition);</span>
-<span class="fc bfc" id="L129" title="All 2 branches covered.">    if (retval == null) {</span>
-<span class="pc bpc" id="L130" title="1 of 4 branches missed.">      switch (definition.getModelType()) {</span>
+<span class="fc" id="L125">    IXmlType retval = definitionToTypeMap.get(definition);</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="pc bpc" id="L127" title="1 of 4 branches missed.">      switch (definition.getModelType()) {</span>
       case FIELD: {
-<span class="fc" id="L132">        IFieldDefinition field = (IFieldDefinition) definition;</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (field.getFlagInstances().isEmpty()) {</span>
-<span class="fc" id="L134">          retval = getSimpleType(field);</span>
+<span class="fc" id="L129">        IFieldDefinition field = (IFieldDefinition) definition;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (field.getFlagInstances().isEmpty()) {</span>
+<span class="fc" id="L131">          retval = getSimpleType(field);</span>
         } else {
-<span class="fc" id="L136">          retval = newComplexType(field);</span>
+<span class="fc" id="L133">          retval = newComplexType(field);</span>
         }
-<span class="fc" id="L138">        break;</span>
+<span class="fc" id="L135">        break;</span>
       }
       case ASSEMBLY: {
-<span class="fc" id="L141">        retval = newComplexType((IAssemblyDefinition) definition);</span>
-<span class="fc" id="L142">        break;</span>
+<span class="fc" id="L138">        retval = newComplexType((IAssemblyDefinition) definition);</span>
+<span class="fc" id="L139">        break;</span>
       }
       case FLAG:
-<span class="fc" id="L145">        retval = getSimpleType((IFlagDefinition) definition);</span>
-<span class="fc" id="L146">        break;</span>
+<span class="fc" id="L142">        retval = getSimpleType((IFlagDefinition) definition);</span>
+<span class="fc" id="L143">        break;</span>
       case CHOICE_GROUP:
       case CHOICE:
       default:
-<span class="nc" id="L150">        throw new UnsupportedOperationException(definition.getModelType().toString());</span>
+<span class="nc" id="L147">        throw new UnsupportedOperationException(definition.getModelType().toString());</span>
       }
-<span class="fc" id="L152">      definitionToTypeMap.put(definition, retval);</span>
+<span class="fc" id="L149">      definitionToTypeMap.put(definition, retval);</span>
     }
-<span class="fc" id="L154">    return retval;</span>
+<span class="fc" id="L151">    return retval;</span>
   }
 
   @NonNull
   public IXmlSimpleType getSimpleType(@NonNull IDataTypeAdapter&lt;?&gt; dataType) {
-<span class="fc" id="L159">    IXmlSimpleType type = dataTypeToSimpleTypeMap.get(dataType);</span>
-<span class="fc bfc" id="L160" title="All 2 branches covered.">    if (type == null) {</span>
+<span class="fc" id="L156">    IXmlSimpleType type = dataTypeToSimpleTypeMap.get(dataType);</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">    if (type == null) {</span>
       // lazy initialize and cache the type
-<span class="fc" id="L162">      QName qname = newQName(</span>
-<span class="fc" id="L163">          getDatatypeManager().getTypeNameForDatatype(dataType),</span>
-<span class="fc" id="L164">          getDatatypeNS());</span>
-<span class="fc" id="L165">      type = new XmlSimpleTypeDataTypeReference(qname, dataType);</span>
-<span class="fc" id="L166">      dataTypeToSimpleTypeMap.put(dataType, type);</span>
+<span class="fc" id="L159">      QName qname = newQName(</span>
+<span class="fc" id="L160">          getDatatypeManager().getTypeNameForDatatype(dataType),</span>
+<span class="fc" id="L161">          getDatatypeNS());</span>
+<span class="fc" id="L162">      type = new XmlSimpleTypeDataTypeReference(qname, dataType);</span>
+<span class="fc" id="L163">      dataTypeToSimpleTypeMap.put(dataType, type);</span>
     }
-<span class="fc" id="L168">    return type;</span>
+<span class="fc" id="L165">    return type;</span>
   }
 
   @NonNull
   public IXmlSimpleType getSimpleType(@NonNull IValuedDefinition definition) {
-<span class="fc" id="L173">    IXmlSimpleType simpleType = definitionToSimpleTypeMap.get(definition);</span>
-<span class="pc bpc" id="L174" title="1 of 2 branches missed.">    if (simpleType == null) {</span>
-<span class="fc" id="L175">      AllowedValueCollection allowedValuesCollection = getContextIndependentEnumeratedValues(definition);</span>
-<span class="fc" id="L176">      List&lt;IAllowedValue&gt; allowedValues = allowedValuesCollection.getValues();</span>
+<span class="fc" id="L170">    IXmlSimpleType simpleType = definitionToSimpleTypeMap.get(definition);</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">    if (simpleType == null) {</span>
+<span class="fc" id="L172">      AllowedValueCollection allowedValuesCollection = getContextIndependentEnumeratedValues(definition);</span>
+<span class="fc" id="L173">      List&lt;IAllowedValue&gt; allowedValues = allowedValuesCollection.getValues();</span>
 
-<span class="fc" id="L178">      IDataTypeAdapter&lt;?&gt; dataType = definition.getJavaTypeAdapter();</span>
-<span class="fc bfc" id="L179" title="All 2 branches covered.">      if (allowedValues.isEmpty()) {</span>
+<span class="fc" id="L175">      IDataTypeAdapter&lt;?&gt; dataType = definition.getJavaTypeAdapter();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">      if (allowedValues.isEmpty()) {</span>
         // just use the built-in type
-<span class="fc" id="L181">        simpleType = getSimpleType(dataType);</span>
+<span class="fc" id="L178">        simpleType = getSimpleType(dataType);</span>
       } else {
 
         // generate a restriction on the built-in type for the enumerated values
-<span class="fc" id="L185">        simpleType = new XmlSimpleTypeDataTypeRestriction(</span>
-<span class="fc" id="L186">            newQName(definition, null),</span>
+<span class="fc" id="L182">        simpleType = new XmlSimpleTypeDataTypeRestriction(</span>
+<span class="fc" id="L183">            newQName(definition, null),</span>
             definition,
             allowedValuesCollection);
 
-<span class="fc bfc" id="L190" title="All 2 branches covered.">        if (!allowedValuesCollection.isClosed()) {</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        if (!allowedValuesCollection.isClosed()) {</span>
           // if other values are allowed, we need to make a union of the restriction type
           // and the base
           // built-in type
-<span class="fc" id="L194">          simpleType = new XmlSimpleTypeUnion(</span>
-<span class="fc" id="L195">              newQName(definition, &quot;Union&quot;),</span>
+<span class="fc" id="L191">          simpleType = new XmlSimpleTypeUnion(</span>
+<span class="fc" id="L192">              newQName(definition, &quot;Union&quot;),</span>
               definition,
-<span class="fc" id="L197">              getSimpleType(dataType),</span>
+<span class="fc" id="L194">              getSimpleType(dataType),</span>
               simpleType);
         }
       }
 
-<span class="fc" id="L202">      definitionToSimpleTypeMap.put(definition, simpleType);</span>
+<span class="fc" id="L199">      definitionToSimpleTypeMap.put(definition, simpleType);</span>
     }
-<span class="fc" id="L204">    return simpleType;</span>
+<span class="fc" id="L201">    return simpleType;</span>
   }
 
   @NonNull
   protected IXmlComplexType newComplexType(@NonNull IFieldDefinition definition) {
-<span class="fc" id="L209">    QName qname = newQName(definition, null);</span>
-<span class="fc" id="L210">    return new XmlComplexTypeFieldDefinition(qname, definition);</span>
+<span class="fc" id="L206">    QName qname = newQName(definition, null);</span>
+<span class="fc" id="L207">    return new XmlComplexTypeFieldDefinition(qname, definition);</span>
   }
 
   @NonNull
   protected IXmlComplexType newComplexType(@NonNull IAssemblyDefinition definition) {
-<span class="fc" id="L215">    QName qname = newQName(definition, null);</span>
-<span class="fc" id="L216">    return new XmlComplexTypeAssemblyDefinition(qname, definition);</span>
+<span class="fc" id="L212">    QName qname = newQName(definition, null);</span>
+<span class="fc" id="L213">    return new XmlComplexTypeAssemblyDefinition(qname, definition);</span>
   }
 
   public void generateXmlTypes() throws XMLStreamException {
 
-<span class="fc bfc" id="L221" title="All 2 branches covered.">    for (IXmlType type : definitionToTypeMap.values()) {</span>
-<span class="pc bpc" id="L222" title="1 of 6 branches missed.">      if (!type.isInline(this) &amp;&amp; type.isGeneratedType(this) &amp;&amp; type.isReferenced(this)) {</span>
-<span class="fc" id="L223">        type.generate(this);</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">    for (IXmlType type : definitionToTypeMap.values()) {</span>
+<span class="pc bpc" id="L219" title="1 of 6 branches missed.">      if (!type.isInline(this) &amp;&amp; type.isGeneratedType(this) &amp;&amp; type.isReferenced(this)) {</span>
+<span class="fc" id="L220">        type.generate(this);</span>
       } else {
-<span class="pc bpc" id="L225" title="3 of 6 branches missed.">        assert !type.isGeneratedType(this) || type.isInline(this) || !type.isReferenced(this);</span>
+<span class="pc bpc" id="L222" title="3 of 6 branches missed.">        assert !type.isGeneratedType(this) || type.isInline(this) || !type.isReferenced(this);</span>
       }
-<span class="fc" id="L227">    }</span>
-<span class="fc" id="L228">    getDatatypeManager().generateDatatypes(getXMLStreamWriter());</span>
-<span class="fc" id="L229">  }</span>
+<span class="fc" id="L224">    }</span>
+<span class="fc" id="L225">    getDatatypeManager().generateDatatypes(getXMLStreamWriter());</span>
+<span class="fc" id="L226">  }</span>
 
   public void writeAttribute(@NonNull String localName, @NonNull String value) throws XMLStreamException {
-<span class="fc" id="L232">    getXMLStreamWriter().writeAttribute(localName, value);</span>
-<span class="fc" id="L233">  }</span>
+<span class="fc" id="L229">    getXMLStreamWriter().writeAttribute(localName, value);</span>
+<span class="fc" id="L230">  }</span>
 
   public void writeStartElement(@NonNull String namespaceUri, @NonNull String localName) throws XMLStreamException {
-<span class="fc" id="L236">    getXMLStreamWriter().writeStartElement(namespaceUri, localName);</span>
-<span class="fc" id="L237">  }</span>
+<span class="fc" id="L233">    getXMLStreamWriter().writeStartElement(namespaceUri, localName);</span>
+<span class="fc" id="L234">  }</span>
 
   public void writeStartElement(
       @NonNull String prefix,
       @NonNull String localName,
       @NonNull String namespaceUri) throws XMLStreamException {
-<span class="fc" id="L243">    getXMLStreamWriter().writeStartElement(prefix, localName, namespaceUri);</span>
+<span class="fc" id="L240">    getXMLStreamWriter().writeStartElement(prefix, localName, namespaceUri);</span>
 
-<span class="fc" id="L245">  }</span>
+<span class="fc" id="L242">  }</span>
 
   public void writeEndElement() throws XMLStreamException {
-<span class="fc" id="L248">    getXMLStreamWriter().writeEndElement();</span>
-<span class="fc" id="L249">  }</span>
+<span class="fc" id="L245">    getXMLStreamWriter().writeEndElement();</span>
+<span class="fc" id="L246">  }</span>
 
   public void writeCharacters(@NonNull String text) throws XMLStreamException {
-<span class="fc" id="L252">    getXMLStreamWriter().writeCharacters(text);</span>
-<span class="fc" id="L253">  }</span>
+<span class="fc" id="L249">    getXMLStreamWriter().writeCharacters(text);</span>
+<span class="fc" id="L250">  }</span>
 
   public void writeNamespace(String prefix, String namespaceUri) throws XMLStreamException {
-<span class="fc" id="L256">    getXMLStreamWriter().writeNamespace(prefix, namespaceUri);</span>
-<span class="fc" id="L257">  }</span>
+<span class="fc" id="L253">    getXMLStreamWriter().writeNamespace(prefix, namespaceUri);</span>
+<span class="fc" id="L254">  }</span>
 
+  @SuppressWarnings(&quot;resource&quot;)
   @Override
   public void flushWriter() throws IOException {
     try {
-<span class="fc" id="L262">      getWriter().getResource().flush();</span>
-<span class="nc" id="L263">    } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L264">      throw new IOException(ex);</span>
-<span class="fc" id="L265">    }</span>
-<span class="fc" id="L266">  }</span>
+<span class="fc" id="L260">      getWriter().getResource().flush();</span>
+<span class="nc" id="L261">    } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L262">      throw new IOException(ex);</span>
+<span class="fc" id="L263">    }</span>
+<span class="fc" id="L264">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

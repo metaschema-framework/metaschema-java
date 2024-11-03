@@ -74,7 +74,7 @@ public class Division
 <span class="nc" id="L74">        retval = OperationFunctions.opDivideYearMonthDuration(left, (INumericItem) divisor);</span>
 <span class="nc bnc" id="L75" title="All 2 branches missed.">      } else if (divisor instanceof IYearMonthDurationItem) {</span>
         // TODO: find a way to support this
-<span class="nc" id="L77">        throw new UnsupportedOperationException();</span>
+<span class="nc" id="L77">        throw new UnsupportedOperationException(&quot;year month division is not supported&quot;);</span>
       }
 <span class="nc bnc" id="L79" title="All 2 branches missed.">    } else if (dividend instanceof IDayTimeDurationItem) {</span>
 <span class="nc" id="L80">      IDayTimeDurationItem left = (IDayTimeDurationItem) dividend;</span>

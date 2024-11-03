@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConstraintLetExpression.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.model.metaschema.binding</a> &gt; <span class="el_source">ConstraintLetExpression.java</span></div><h1>ConstraintLetExpression.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+@SuppressWarnings({
+    &quot;PMD.DataClass&quot;,
+    &quot;PMD.FieldNamingConventions&quot;
+})
+@MetaschemaAssembly(
+    formalName = &quot;Constraint Let Expression&quot;,
+    name = &quot;constraint-let-expression&quot;,
+    moduleClass = MetaschemaModelModule.class)
+public class ConstraintLetExpression implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundFlag(
+      formalName = &quot;Let Variable Name&quot;,
+      name = &quot;var&quot;,
+      required = true,
+      typeAdapter = TokenAdapter.class)
+  private String _var;
+
+  @BoundFlag(
+      formalName = &quot;Let Value Metapath Expression&quot;,
+      name = &quot;expression&quot;,
+      required = true,
+      typeAdapter = StringAdapter.class)
+  private String _expression;
+
+  @BoundField(
+      formalName = &quot;Remarks&quot;,
+      description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+      useName = &quot;remarks&quot;)
+  private Remarks _remarks;
+
+  public ConstraintLetExpression() {
+<span class="nc" id="L51">    this(null);</span>
+<span class="nc" id="L52">  }</span>
+
+<span class="fc" id="L54">  public ConstraintLetExpression(IMetaschemaData data) {</span>
+<span class="fc" id="L55">    this.__metaschemaData = data;</span>
+<span class="fc" id="L56">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L60">    return __metaschemaData;</span>
+  }
+
+  public String getVar() {
+<span class="fc" id="L64">    return _var;</span>
+  }
+
+  public void setVar(String value) {
+<span class="nc" id="L68">    _var = value;</span>
+<span class="nc" id="L69">  }</span>
+
+  public String getExpression() {
+<span class="fc" id="L72">    return _expression;</span>
+  }
+
+  public void setExpression(String value) {
+<span class="nc" id="L76">    _expression = value;</span>
+<span class="nc" id="L77">  }</span>
+
+  public Remarks getRemarks() {
+<span class="fc" id="L80">    return _remarks;</span>
+  }
+
+  public void setRemarks(Remarks value) {
+<span class="nc" id="L84">    _remarks = value;</span>
+<span class="nc" id="L85">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L89">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

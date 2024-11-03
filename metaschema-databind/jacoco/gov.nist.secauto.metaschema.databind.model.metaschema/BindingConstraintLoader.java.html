@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractTargetedConstraints;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
@@ -26,7 +27,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IFeatureModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IScopedContraints;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ITargetedConstraints;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
@@ -35,11 +35,12 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetapathContext;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaMetaConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaMetapath;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.MetaschemaModuleConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathContext;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetapath;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.impl.ConstraintBindingSupport;
 
 import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
@@ -66,17 +67,16 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * every use. Any constraint set imported is also loaded and cached
  * automatically.
  */
-<span class="fc" id="L69">public class BindingConstraintLoader</span>
+<span class="fc" id="L70">public class BindingConstraintLoader</span>
     extends AbstractLoader&lt;List&lt;IConstraintSet&gt;&gt;
     implements IConstraintLoader {
 
   @NonNull
   private final IBoundLoader loader;
 
-<span class="fc" id="L76">  public BindingConstraintLoader(@NonNull IBindingContext bindingContext) {</span>
+<span class="fc" id="L77">  public BindingConstraintLoader(@NonNull IBindingContext bindingContext) {</span>
     // ensure the bindings are registered
-<span class="fc" id="L78">    bindingContext.registerBindingMatcher(MetaschemaMetaConstraints.class);</span>
-<span class="fc" id="L79">    bindingContext.registerBindingMatcher(MetaschemaModuleConstraints.class);</span>
+<span class="fc" id="L79">    bindingContext.registerModule(MetaschemaModelModule.class);</span>
 
 <span class="fc" id="L81">    this.loader = bindingContext.newBoundLoader();</span>
 <span class="fc" id="L82">    this.loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);</span>
@@ -94,15 +94,15 @@ import nl.talsmasoftware.lazy4j.Lazy;
 <span class="fc" id="L94">    builder.useWildcardWhenNamespaceNotDefaulted(true);</span>
 
     List&lt;IConstraintSet&gt; retval;
-<span class="fc bfc" id="L97" title="All 2 branches covered.">    if (constraintsDocument instanceof MetaschemaModuleConstraints) {</span>
-<span class="fc" id="L98">      MetaschemaModuleConstraints obj = (MetaschemaModuleConstraints) constraintsDocument;</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">    if (constraintsDocument instanceof MetaschemaModuleConstraints) {</span>
+<span class="nc" id="L98">      MetaschemaModuleConstraints obj = (MetaschemaModuleConstraints) constraintsDocument;</span>
 
       // now check if this constraint set imports other constraint sets
-<span class="fc" id="L101">      List&lt;MetaschemaModuleConstraints.Import&gt; imports = CollectionUtil.listOrEmpty(obj.getImports());</span>
+<span class="nc" id="L101">      List&lt;MetaschemaModuleConstraints.Import&gt; imports = CollectionUtil.listOrEmpty(obj.getImports());</span>
 
       @NonNull Set&lt;IConstraintSet&gt; importedConstraints;
-<span class="pc bpc" id="L104" title="1 of 2 branches missed.">      if (imports.isEmpty()) {</span>
-<span class="fc" id="L105">        importedConstraints = CollectionUtil.emptySet();</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">      if (imports.isEmpty()) {</span>
+<span class="nc" id="L105">        importedConstraints = CollectionUtil.emptySet();</span>
       } else {
         try {
 <span class="nc" id="L108">          importedConstraints = new LinkedHashSet&lt;&gt;();</span>
@@ -116,16 +116,16 @@ import nl.talsmasoftware.lazy4j.Lazy;
 <span class="nc" id="L116">        }</span>
       }
 
-<span class="fc" id="L119">      CollectionUtil.listOrEmpty(obj.getNamespaceBindings()).stream()</span>
-<span class="pc" id="L120">          .forEach(binding -&gt; builder.namespace(</span>
+<span class="nc" id="L119">      CollectionUtil.listOrEmpty(obj.getNamespaceBindings()).stream()</span>
+<span class="nc" id="L120">          .forEach(binding -&gt; builder.namespace(</span>
 <span class="nc" id="L121">              ObjectUtils.notNull(binding.getPrefix()),</span>
 <span class="nc" id="L122">              ObjectUtils.notNull(binding.getUri())));</span>
-<span class="fc" id="L123">      ISource source = ISource.externalSource(builder.build());</span>
+<span class="nc" id="L123">      ISource source = ISource.externalSource(builder.build());</span>
 
       // now create this constraint set
-<span class="fc" id="L126">      retval = CollectionUtil.singletonList(new DefaultConstraintSet(</span>
+<span class="nc" id="L126">      retval = CollectionUtil.singletonList(new DefaultConstraintSet(</span>
           resource,
-<span class="fc" id="L128">          parseScopedConstraints(obj, source),</span>
+<span class="nc" id="L128">          parseScopedConstraints(obj, source),</span>
           new LinkedHashSet&lt;&gt;(importedConstraints)));
 <span class="pc bpc" id="L130" title="1 of 2 branches missed.">    } else if (constraintsDocument instanceof MetaschemaMetaConstraints) {</span>
 <span class="fc" id="L131">      MetaschemaMetaConstraints obj = (MetaschemaMetaConstraints) constraintsDocument;</span>
@@ -153,17 +153,18 @@ import nl.talsmasoftware.lazy4j.Lazy;
 
 <span class="fc" id="L154">      ISource source = ISource.externalSource(builder.build());</span>
 
-<span class="fc" id="L156">      List&lt;ITargetedConstraints&gt; targetedConstraints = CollectionUtil.listOrEmpty(obj.getContexts()).stream()</span>
-<span class="fc" id="L157">          .flatMap(context -&gt; parseContext(ObjectUtils.notNull(context), null, source)</span>
-<span class="fc" id="L158">              .getTargetedConstraints().stream())</span>
-<span class="fc" id="L159">          .collect(Collectors.toList());</span>
-<span class="fc" id="L160">      retval.add(new MetaConstraintSet(targetedConstraints));</span>
+<span class="fc" id="L156">      List&lt;ITargetedConstraints&gt; targetedConstraints = ObjectUtils.notNull(CollectionUtil.listOrEmpty(obj.getContexts())</span>
+<span class="fc" id="L157">          .stream()</span>
+<span class="fc" id="L158">          .flatMap(context -&gt; parseContext(ObjectUtils.notNull(context), null, source)</span>
+<span class="fc" id="L159">              .getTargetedConstraints().stream())</span>
+<span class="fc" id="L160">          .collect(Collectors.toList()));</span>
+<span class="fc" id="L161">      retval.add(new MetaConstraintSet(targetedConstraints));</span>
 
-<span class="fc" id="L162">      retval = CollectionUtil.unmodifiableList(retval);</span>
-<span class="fc" id="L163">    } else {</span>
-<span class="nc" id="L164">      throw new UnsupportedOperationException(String.format(&quot;Unsupported constraint content '%s'.&quot;, resource));</span>
+<span class="fc" id="L163">      retval = CollectionUtil.unmodifiableList(retval);</span>
+<span class="fc" id="L164">    } else {</span>
+<span class="nc" id="L165">      throw new UnsupportedOperationException(String.format(&quot;Unsupported constraint content '%s'.&quot;, resource));</span>
     }
-<span class="fc" id="L166">    return retval;</span>
+<span class="fc" id="L167">    return retval;</span>
   }
 
   /**
@@ -180,79 +181,79 @@ import nl.talsmasoftware.lazy4j.Lazy;
   protected List&lt;IScopedContraints&gt; parseScopedConstraints(
       @NonNull MetaschemaModuleConstraints obj,
       @NonNull ISource source) {
-<span class="fc" id="L183">    List&lt;IScopedContraints&gt; scopedConstraints = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L184">    List&lt;IScopedContraints&gt; scopedConstraints = new LinkedList&lt;&gt;();</span>
 
-<span class="fc bfc" id="L185" title="All 2 branches covered.">    for (MetaschemaModuleConstraints.Scope scope : CollectionUtil.listOrEmpty(obj.getScopes())) {</span>
-<span class="pc bpc" id="L186" title="1 of 2 branches missed.">      assert scope != null;</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">    for (MetaschemaModuleConstraints.Scope scope : CollectionUtil.listOrEmpty(obj.getScopes())) {</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">      assert scope != null;</span>
 
-<span class="fc" id="L188">      List&lt;ITargetedConstraints&gt; targetedConstraints = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L189">      List&lt;ITargetedConstraints&gt; targetedConstraints = new LinkedList&lt;&gt;();</span>
       try {
-<span class="fc bfc" id="L190" title="All 2 branches covered.">        for (IValueConstraintsBase constraintsObj : CollectionUtil.listOrEmpty(scope.getConstraints())) {</span>
-<span class="pc bpc" id="L191" title="1 of 2 branches missed.">          if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Assembly) {</span>
-<span class="fc" id="L192">            targetedConstraints.add(handleScopedAssembly(</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        for (IValueConstraintsBase constraintsObj : CollectionUtil.listOrEmpty(scope.getConstraints())) {</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">          if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Assembly) {</span>
+<span class="nc" id="L193">            targetedConstraints.add(handleScopedAssembly(</span>
                 (MetaschemaModuleConstraints.Scope.Assembly) constraintsObj,
                 source));
-<span class="nc bnc" id="L195" title="All 2 branches missed.">          } else if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Field) {</span>
-<span class="nc" id="L196">            targetedConstraints.add(handleScopedField(</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">          } else if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Field) {</span>
+<span class="nc" id="L197">            targetedConstraints.add(handleScopedField(</span>
                 (MetaschemaModuleConstraints.Scope.Field) constraintsObj,
                 source));
-<span class="nc bnc" id="L199" title="All 2 branches missed.">          } else if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Flag) {</span>
-<span class="nc" id="L200">            targetedConstraints.add(handleScopedFlag(</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">          } else if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Flag) {</span>
+<span class="nc" id="L201">            targetedConstraints.add(handleScopedFlag(</span>
                 (MetaschemaModuleConstraints.Scope.Flag) constraintsObj,
                 source));
           }
-<span class="fc" id="L204">        }</span>
-<span class="nc" id="L205">      } catch (MetapathException | XmlValueNotSupportedException ex) {</span>
-<span class="nc bnc" id="L206" title="All 2 branches missed.">        if (ex.getCause() instanceof MetapathException) {</span>
-<span class="nc" id="L207">          throw new MetapathException(</span>
-<span class="nc" id="L208">              String.format(&quot;Unable to compile a Metapath in '%s'. %s&quot;,</span>
-<span class="nc" id="L209">                  source.getSource(),</span>
-<span class="nc" id="L210">                  ex.getLocalizedMessage()),</span>
+<span class="nc" id="L205">        }</span>
+<span class="nc" id="L206">      } catch (MetapathException | XmlValueNotSupportedException ex) {</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (ex.getCause() instanceof MetapathException) {</span>
+<span class="nc" id="L208">          throw new MetapathException(</span>
+<span class="nc" id="L209">              String.format(&quot;Unable to compile a Metapath in '%s'. %s&quot;,</span>
+<span class="nc" id="L210">                  source.getSource(),</span>
+<span class="nc" id="L211">                  ex.getLocalizedMessage()),</span>
               ex);
         }
-<span class="nc" id="L213">        throw ex;</span>
-<span class="fc" id="L214">      }</span>
+<span class="nc" id="L214">        throw ex;</span>
+<span class="nc" id="L215">      }</span>
 
-<span class="fc" id="L216">      URI namespace = ObjectUtils.requireNonNull(scope.getMetaschemaNamespace());</span>
-<span class="fc" id="L217">      String shortName = ObjectUtils.requireNonNull(scope.getMetaschemaShortName());</span>
+<span class="nc" id="L217">      URI namespace = ObjectUtils.requireNonNull(scope.getMetaschemaNamespace());</span>
+<span class="nc" id="L218">      String shortName = ObjectUtils.requireNonNull(scope.getMetaschemaShortName());</span>
 
-<span class="fc" id="L219">      scopedConstraints.add(new DefaultScopedContraints(</span>
+<span class="nc" id="L220">      scopedConstraints.add(new DefaultScopedContraints(</span>
           namespace,
           shortName,
-<span class="fc" id="L222">          CollectionUtil.unmodifiableList(targetedConstraints)));</span>
-<span class="fc" id="L223">    }</span>
-<span class="fc" id="L224">    return CollectionUtil.unmodifiableList(scopedConstraints);</span>
+<span class="nc" id="L223">          CollectionUtil.unmodifiableList(targetedConstraints)));</span>
+<span class="nc" id="L224">    }</span>
+<span class="nc" id="L225">    return CollectionUtil.unmodifiableList(scopedConstraints);</span>
   }
 
   private static AssemblyTargetedConstraints handleScopedAssembly(
       @NonNull MetaschemaModuleConstraints.Scope.Assembly obj,
       @NonNull ISource source) {
-<span class="fc" id="L230">    IModelConstrained constraints = new AssemblyConstraintSet();</span>
-<span class="fc" id="L231">    ConstraintBindingSupport.parse(constraints, obj, source);</span>
-<span class="fc" id="L232">    return new AssemblyTargetedConstraints(</span>
-<span class="fc" id="L233">        ObjectUtils.requireNonNull(obj.getTarget()),</span>
+<span class="nc" id="L231">    IModelConstrained constraints = new AssemblyConstraintSet();</span>
+<span class="nc" id="L232">    ConstraintBindingSupport.parse(constraints, obj, source);</span>
+<span class="nc" id="L233">    return new AssemblyTargetedConstraints(</span>
+<span class="nc" id="L234">        ObjectUtils.requireNonNull(obj.getTarget()),</span>
         constraints);
   }
 
   private static FieldTargetedConstraints handleScopedField(
       @NonNull MetaschemaModuleConstraints.Scope.Field obj,
       @NonNull ISource source) {
-<span class="nc" id="L240">    IValueConstrained constraints = new ValueConstraintSet();</span>
-<span class="nc" id="L241">    ConstraintBindingSupport.parse(constraints, obj, source);</span>
+<span class="nc" id="L241">    IValueConstrained constraints = new ValueConstraintSet();</span>
+<span class="nc" id="L242">    ConstraintBindingSupport.parse(constraints, obj, source);</span>
 
-<span class="nc" id="L243">    return new FieldTargetedConstraints(</span>
-<span class="nc" id="L244">        ObjectUtils.requireNonNull(obj.getTarget()),</span>
+<span class="nc" id="L244">    return new FieldTargetedConstraints(</span>
+<span class="nc" id="L245">        ObjectUtils.requireNonNull(obj.getTarget()),</span>
         constraints);
   }
 
   private static FlagTargetedConstraints handleScopedFlag(
       @NonNull MetaschemaModuleConstraints.Scope.Flag obj,
       @NonNull ISource source) {
-<span class="nc" id="L251">    IValueConstrained constraints = new ValueConstraintSet();</span>
-<span class="nc" id="L252">    ConstraintBindingSupport.parse(constraints, obj, source);</span>
+<span class="nc" id="L252">    IValueConstrained constraints = new ValueConstraintSet();</span>
+<span class="nc" id="L253">    ConstraintBindingSupport.parse(constraints, obj, source);</span>
 
-<span class="nc" id="L254">    return new FlagTargetedConstraints(</span>
-<span class="nc" id="L255">        ObjectUtils.requireNonNull(obj.getTarget()),</span>
+<span class="nc" id="L255">    return new FlagTargetedConstraints(</span>
+<span class="nc" id="L256">        ObjectUtils.requireNonNull(obj.getTarget()),</span>
         constraints);
   }
 
@@ -262,72 +263,72 @@ import nl.talsmasoftware.lazy4j.Lazy;
       @NonNull ISource source) {
 
     List&lt;String&gt; metapaths;
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">    if (parent == null) {</span>
-<span class="fc" id="L266">      metapaths = CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()</span>
-<span class="fc" id="L267">          .map(MetaschemaMetapath::getTarget)</span>
-<span class="fc" id="L268">          .collect(Collectors.toList());</span>
+<span class="pc bpc" id="L266" title="1 of 2 branches missed.">    if (parent == null) {</span>
+<span class="fc" id="L267">      metapaths = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()</span>
+<span class="fc" id="L268">          .map(MetaschemaMetapath::getTarget)</span>
+<span class="fc" id="L269">          .collect(Collectors.toList()));</span>
     } else {
-<span class="nc" id="L270">      List&lt;String&gt; parentMetapaths = parent.getMetapaths().stream()</span>
-<span class="nc" id="L271">          .collect(Collectors.toList());</span>
-<span class="nc" id="L272">      metapaths = CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()</span>
-<span class="nc" id="L273">          .map(MetaschemaMetapath::getTarget)</span>
-<span class="nc" id="L274">          .flatMap(childPath -&gt; parentMetapaths.stream()</span>
-<span class="nc" id="L275">              .map(parentPath -&gt; parentPath + '/' + childPath))</span>
-<span class="nc" id="L276">          .collect(Collectors.toList());</span>
+<span class="nc" id="L271">      List&lt;String&gt; parentMetapaths = parent.getMetapaths().stream()</span>
+<span class="nc" id="L272">          .collect(Collectors.toList());</span>
+<span class="nc" id="L273">      metapaths = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()</span>
+<span class="nc" id="L274">          .map(MetaschemaMetapath::getTarget)</span>
+<span class="nc" id="L275">          .flatMap(childPath -&gt; parentMetapaths.stream()</span>
+<span class="nc" id="L276">              .map(parentPath -&gt; parentPath + '/' + childPath))</span>
+<span class="nc" id="L277">          .collect(Collectors.toList()));</span>
     }
 
-<span class="fc" id="L279">    AssemblyConstraints contextConstraints = contextObj.getConstraints();</span>
-<span class="fc" id="L280">    IModelConstrained constraints = new AssemblyConstraintSet();</span>
-<span class="pc bpc" id="L281" title="1 of 2 branches missed.">    if (contextConstraints != null) {</span>
-<span class="fc" id="L282">      ConstraintBindingSupport.parse(constraints, contextConstraints, source);</span>
+<span class="fc" id="L280">    AssemblyConstraints contextConstraints = contextObj.getConstraints();</span>
+<span class="fc" id="L281">    IModelConstrained constraints = new AssemblyConstraintSet();</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">    if (contextConstraints != null) {</span>
+<span class="fc" id="L283">      ConstraintBindingSupport.parse(constraints, contextConstraints, source);</span>
     }
-<span class="fc" id="L284">    Context context = new Context(metapaths, constraints);</span>
+<span class="fc" id="L285">    Context context = new Context(metapaths, constraints);</span>
 
-<span class="fc" id="L286">    List&lt;Context&gt; childContexts = CollectionUtil.listOrEmpty(contextObj.getContexts()).stream()</span>
-<span class="pc" id="L287">        .map(childObj -&gt; parseContext(ObjectUtils.notNull(childObj), context, source))</span>
-<span class="fc" id="L288">        .collect(Collectors.toList());</span>
+<span class="fc" id="L287">    List&lt;Context&gt; childContexts = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getContexts()).stream()</span>
+<span class="pc" id="L288">        .map(childObj -&gt; parseContext(ObjectUtils.notNull(childObj), context, source))</span>
+<span class="fc" id="L289">        .collect(Collectors.toList()));</span>
 
-<span class="fc" id="L290">    context.addAll(childContexts);</span>
+<span class="fc" id="L291">    context.addAll(childContexts);</span>
 
-<span class="fc" id="L292">    return context;</span>
+<span class="fc" id="L293">    return context;</span>
   }
 
   private static class Context {
     @NonNull
     private final List&lt;String&gt; metapaths;
-<span class="fc" id="L298">    @NonNull</span>
+<span class="fc" id="L299">    @NonNull</span>
     private final List&lt;Context&gt; childContexts = new LinkedList&lt;&gt;();
     @NonNull
     private final Lazy&lt;List&lt;ITargetedConstraints&gt;&gt; targetedConstraints;
 
     public Context(
         @NonNull List&lt;String&gt; metapaths,
-<span class="fc" id="L305">        @NonNull IModelConstrained constraints) {</span>
-<span class="fc" id="L306">      this.metapaths = metapaths;</span>
-<span class="fc" id="L307">      this.targetedConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L306">        @NonNull IModelConstrained constraints) {</span>
+<span class="fc" id="L307">      this.metapaths = metapaths;</span>
+<span class="fc" id="L308">      this.targetedConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
 
-<span class="fc" id="L309">        Stream&lt;ITargetedConstraints&gt; paths = getMetapaths().stream()</span>
-<span class="fc" id="L310">            .map(metapath -&gt; new MetaTargetedContraints(ObjectUtils.notNull(metapath), constraints));</span>
-<span class="fc" id="L311">        Stream&lt;ITargetedConstraints&gt; childPaths = childContexts.stream()</span>
-<span class="pc" id="L312">            .flatMap(child -&gt; child.getTargetedConstraints().stream());</span>
+<span class="fc" id="L310">        Stream&lt;ITargetedConstraints&gt; paths = getMetapaths().stream()</span>
+<span class="fc" id="L311">            .map(metapath -&gt; new MetaTargetedContraints(ObjectUtils.notNull(metapath), constraints));</span>
+<span class="fc" id="L312">        Stream&lt;ITargetedConstraints&gt; childPaths = childContexts.stream()</span>
+<span class="pc" id="L313">            .flatMap(child -&gt; child.getTargetedConstraints().stream());</span>
 
-<span class="fc" id="L314">        return Stream.concat(paths, childPaths)</span>
-<span class="fc" id="L315">            .collect(Collectors.toUnmodifiableList());</span>
+<span class="fc" id="L315">        return Stream.concat(paths, childPaths)</span>
+<span class="fc" id="L316">            .collect(Collectors.toUnmodifiableList());</span>
       }));
-<span class="fc" id="L317">    }</span>
+<span class="fc" id="L318">    }</span>
 
     @NonNull
     public List&lt;ITargetedConstraints&gt; getTargetedConstraints() {
-<span class="fc" id="L321">      return ObjectUtils.notNull(targetedConstraints.get());</span>
+<span class="fc" id="L322">      return ObjectUtils.notNull(targetedConstraints.get());</span>
     }
 
     public void addAll(@NonNull Collection&lt;Context&gt; childContexts) {
-<span class="fc" id="L325">      childContexts.addAll(childContexts);</span>
-<span class="fc" id="L326">    }</span>
+<span class="fc" id="L326">      childContexts.addAll(childContexts);</span>
+<span class="fc" id="L327">    }</span>
 
     @NonNull
     public List&lt;String&gt; getMetapaths() {
-<span class="fc" id="L330">      return metapaths;</span>
+<span class="fc" id="L331">      return metapaths;</span>
     }
   }
 
@@ -338,8 +339,8 @@ import nl.talsmasoftware.lazy4j.Lazy;
     protected MetaTargetedContraints(
         @NonNull String target,
         @NonNull IModelConstrained constraints) {
-<span class="fc" id="L341">      super(target, constraints);</span>
-<span class="fc" id="L342">    }</span>
+<span class="fc" id="L342">      super(target, constraints);</span>
+<span class="fc" id="L343">    }</span>
 
     /**
      * Apply the constraints to the provided {@code definition}.
@@ -351,52 +352,52 @@ import nl.talsmasoftware.lazy4j.Lazy;
      *          the definition to apply the constraints to.
      */
     protected void applyTo(@NonNull IDefinition definition) {
-<span class="fc" id="L354">      getLetExpressions().values().forEach(definition::addLetExpression);</span>
-<span class="fc" id="L355">      getAllowedValuesConstraints().forEach(definition::addConstraint);</span>
-<span class="fc" id="L356">      getMatchesConstraints().forEach(definition::addConstraint);</span>
-<span class="fc" id="L357">      getIndexHasKeyConstraints().forEach(definition::addConstraint);</span>
-<span class="fc" id="L358">      getExpectConstraints().forEach(definition::addConstraint);</span>
-<span class="fc" id="L359">    }</span>
+<span class="fc" id="L355">      getLetExpressions().values().forEach(definition::addLetExpression);</span>
+<span class="fc" id="L356">      getAllowedValuesConstraints().forEach(definition::addConstraint);</span>
+<span class="fc" id="L357">      getMatchesConstraints().forEach(definition::addConstraint);</span>
+<span class="fc" id="L358">      getIndexHasKeyConstraints().forEach(definition::addConstraint);</span>
+<span class="fc" id="L359">      getExpectConstraints().forEach(definition::addConstraint);</span>
+<span class="fc" id="L360">    }</span>
 
     protected void applyTo(@NonNull IAssemblyDefinition definition) {
-<span class="fc" id="L362">      applyTo((IDefinition) definition);</span>
-<span class="fc" id="L363">      getIndexConstraints().forEach(definition::addConstraint);</span>
-<span class="fc" id="L364">      getUniqueConstraints().forEach(definition::addConstraint);</span>
-<span class="fc" id="L365">      getHasCardinalityConstraints().forEach(definition::addConstraint);</span>
-<span class="fc" id="L366">    }</span>
+<span class="fc" id="L363">      applyTo((IDefinition) definition);</span>
+<span class="fc" id="L364">      getIndexConstraints().forEach(definition::addConstraint);</span>
+<span class="fc" id="L365">      getUniqueConstraints().forEach(definition::addConstraint);</span>
+<span class="fc" id="L366">      getHasCardinalityConstraints().forEach(definition::addConstraint);</span>
+<span class="fc" id="L367">    }</span>
 
     @Override
     public void target(IFlagDefinition definition) {
-<span class="nc" id="L370">      applyTo(definition);</span>
-<span class="nc" id="L371">    }</span>
+<span class="nc" id="L371">      applyTo(definition);</span>
+<span class="nc" id="L372">    }</span>
 
     @Override
     public void target(IFieldDefinition definition) {
-<span class="nc" id="L375">      applyTo(definition);</span>
-<span class="nc" id="L376">    }</span>
+<span class="nc" id="L376">      applyTo(definition);</span>
+<span class="nc" id="L377">    }</span>
 
     @Override
     public void target(IAssemblyDefinition definition) {
-<span class="fc" id="L380">      applyTo(definition);</span>
-<span class="fc" id="L381">    }</span>
+<span class="fc" id="L381">      applyTo(definition);</span>
+<span class="fc" id="L382">    }</span>
   }
 
   private static final class MetaConstraintSet implements IConstraintSet {
     @NonNull
     private final List&lt;ITargetedConstraints&gt; targetedConstraints;
 
-<span class="fc" id="L388">    private MetaConstraintSet(@NonNull List&lt;ITargetedConstraints&gt; targetedConstraints) {</span>
-<span class="fc" id="L389">      this.targetedConstraints = targetedConstraints;</span>
-<span class="fc" id="L390">    }</span>
+<span class="fc" id="L389">    private MetaConstraintSet(@NonNull List&lt;ITargetedConstraints&gt; targetedConstraints) {</span>
+<span class="fc" id="L390">      this.targetedConstraints = targetedConstraints;</span>
+<span class="fc" id="L391">    }</span>
 
     @Override
     public Iterable&lt;ITargetedConstraints&gt; getTargetedConstraintsForModule(IModule module) {
-<span class="fc" id="L394">      return targetedConstraints;</span>
+<span class="fc" id="L395">      return targetedConstraints;</span>
     }
 
     @Override
     public Collection&lt;IConstraintSet&gt; getImportedConstraintSets() {
-<span class="fc" id="L399">      return CollectionUtil.emptyList();</span>
+<span class="fc" id="L400">      return CollectionUtil.emptyList();</span>
     }
 
   }

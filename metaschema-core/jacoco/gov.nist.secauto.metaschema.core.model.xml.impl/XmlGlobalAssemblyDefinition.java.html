@@ -20,10 +20,8 @@ import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalAssemblyDefinitionType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.UseNameType;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -76,24 +74,23 @@ class XmlGlobalAssemblyDefinition
   public XmlGlobalAssemblyDefinition(
       @NonNull GlobalAssemblyDefinitionType xmlObject,
       @NonNull XmlModule module) {
-<span class="fc" id="L79">    super(module);</span>
-<span class="fc" id="L80">    this.xmlAssembly = xmlObject;</span>
-<span class="fc" id="L81">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(xmlObject, this)));</span>
-<span class="fc" id="L82">    this.modelContainer = ObjectUtils.notNull(</span>
-<span class="fc" id="L83">        Lazy.lazy(() -&gt; XmlAssemblyModelContainer.of(xmlObject.getModel(), this)));</span>
-<span class="fc" id="L84">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="fc" id="L85">      IModelConstrained retval = new AssemblyConstraintSet();</span>
-<span class="pc bpc" id="L86" title="1 of 2 branches missed.">      if (xmlObject.isSetConstraint()) {</span>
-<span class="fc" id="L87">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(xmlObject.getConstraint()),</span>
-<span class="fc" id="L88">            ISource.modelSource(module));</span>
+<span class="fc" id="L77">    super(module);</span>
+<span class="fc" id="L78">    this.xmlAssembly = xmlObject;</span>
+<span class="fc" id="L79">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(xmlObject, this)));</span>
+<span class="fc" id="L80">    this.modelContainer = ObjectUtils.notNull(</span>
+<span class="fc" id="L81">        Lazy.lazy(() -&gt; XmlAssemblyModelContainerSupport.of(xmlObject.getModel(), this)));</span>
+<span class="fc" id="L82">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="fc" id="L83">      IModelConstrained retval = new AssemblyConstraintSet();</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">      if (xmlObject.isSetConstraint()) {</span>
+<span class="fc" id="L85">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(xmlObject.getConstraint()), module.getSource());</span>
       }
-<span class="fc" id="L90">      return retval;</span>
+<span class="fc" id="L87">      return retval;</span>
     }));
-<span class="fc" id="L92">  }</span>
+<span class="fc" id="L89">  }</span>
 
   @Override
   public IContainerFlagSupport&lt;IFlagInstance&gt; getFlagContainer() {
-<span class="fc" id="L96">    return ObjectUtils.notNull(flagContainer.get());</span>
+<span class="fc" id="L93">    return ObjectUtils.notNull(flagContainer.get());</span>
   }
 
   @Override
@@ -104,12 +101,12 @@ class XmlGlobalAssemblyDefinition
       IAssemblyInstanceAbsolute,
       IChoiceInstance,
       IChoiceGroupInstance&gt; getModelContainer() {
-<span class="fc" id="L107">    return ObjectUtils.notNull(modelContainer.get());</span>
+<span class="fc" id="L104">    return ObjectUtils.notNull(modelContainer.get());</span>
   }
 
   @Override
   public IModelConstrained getConstraintSupport() {
-<span class="fc" id="L112">    return ObjectUtils.notNull(constraints.get());</span>
+<span class="fc" id="L109">    return ObjectUtils.notNull(constraints.get());</span>
   }
 
   // ----------------------------------------
@@ -124,90 +121,90 @@ class XmlGlobalAssemblyDefinition
   @Override
   @NonNull
   public GlobalAssemblyDefinitionType getXmlObject() {
-<span class="fc" id="L127">    return xmlAssembly;</span>
+<span class="fc" id="L124">    return xmlAssembly;</span>
   }
 
   @Override
   public IResourceLocation getLocation(Object itemValue) {
-<span class="nc" id="L132">    return null;</span>
+<span class="nc" id="L129">    return null;</span>
   }
 
   @Override
   public String getName() {
-<span class="fc" id="L137">    return ObjectUtils.requireNonNull(getXmlObject().getName());</span>
+<span class="fc" id="L134">    return ObjectUtils.requireNonNull(getXmlObject().getName());</span>
   }
 
   @Override
   public Integer getIndex() {
-<span class="nc bnc" id="L142" title="All 2 branches missed.">    return getXmlObject().isSetIndex() ? getXmlObject().getIndex().intValue() : null;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">    return getXmlObject().isSetIndex() ? getXmlObject().getIndex().intValue() : null;</span>
   }
 
   @Override
   public String getUseName() {
-<span class="fc bfc" id="L147" title="All 2 branches covered.">    return getXmlObject().isSetUseName() ? getXmlObject().getUseName().getStringValue() : null;</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">    return getXmlObject().isSetUseName() ? getXmlObject().getUseName().getStringValue() : null;</span>
   }
 
   @Override
   public Integer getUseIndex() {
-<span class="nc" id="L152">    Integer retval = null;</span>
-<span class="nc bnc" id="L153" title="All 2 branches missed.">    if (getXmlObject().isSetUseName()) {</span>
-<span class="nc" id="L154">      UseNameType useName = getXmlObject().getUseName();</span>
-<span class="nc bnc" id="L155" title="All 2 branches missed.">      if (useName.isSetIndex()) {</span>
-<span class="nc" id="L156">        retval = useName.getIndex().intValue();</span>
+<span class="nc" id="L149">    Integer retval = null;</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">    if (getXmlObject().isSetUseName()) {</span>
+<span class="nc" id="L151">      UseNameType useName = getXmlObject().getUseName();</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">      if (useName.isSetIndex()) {</span>
+<span class="nc" id="L153">        retval = useName.getIndex().intValue();</span>
       }
     }
-<span class="nc" id="L159">    return retval;</span>
+<span class="nc" id="L156">    return retval;</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="fc bfc" id="L164" title="All 2 branches covered.">    return getXmlObject().isSetFormalName() ? getXmlObject().getFormalName() : null;</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">    return getXmlObject().isSetFormalName() ? getXmlObject().getFormalName() : null;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupLine getDescription() {
-<span class="nc bnc" id="L170" title="All 2 branches missed.">    return getXmlObject().isSetDescription() ? MarkupStringConverter.toMarkupString(getXmlObject().getDescription())</span>
-<span class="nc" id="L171">        : null;</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">    return getXmlObject().isSetDescription() ? MarkupStringConverter.toMarkupString(getXmlObject().getDescription())</span>
+<span class="nc" id="L168">        : null;</span>
   }
 
   @Override
   public Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; getProperties() {
-<span class="nc" id="L176">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlObject().getPropList()));</span>
+<span class="nc" id="L173">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlObject().getPropList()));</span>
   }
 
   @Override
   public boolean isRoot() {
-<span class="fc" id="L181">    return getXmlObject().isSetRootName();</span>
+<span class="fc" id="L178">    return getXmlObject().isSetRootName();</span>
   }
 
   @Override
   public String getRootName() {
-<span class="pc bpc" id="L186" title="1 of 2 branches missed.">    return getXmlObject().isSetRootName() ? getXmlObject().getRootName().getStringValue() : null;</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">    return getXmlObject().isSetRootName() ? getXmlObject().getRootName().getStringValue() : null;</span>
   }
 
   @Override
   public Integer getRootIndex() {
-<span class="nc" id="L191">    Integer retval = null;</span>
-<span class="nc bnc" id="L192" title="All 2 branches missed.">    if (getXmlObject().isSetRootName()) {</span>
-<span class="nc" id="L193">      GlobalAssemblyDefinitionType.RootName rootName = getXmlObject().getRootName();</span>
-<span class="nc bnc" id="L194" title="All 2 branches missed.">      if (rootName.isSetIndex()) {</span>
-<span class="nc" id="L195">        retval = rootName.getIndex().intValue();</span>
+<span class="nc" id="L188">    Integer retval = null;</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">    if (getXmlObject().isSetRootName()) {</span>
+<span class="nc" id="L190">      GlobalAssemblyDefinitionType.RootName rootName = getXmlObject().getRootName();</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">      if (rootName.isSetIndex()) {</span>
+<span class="nc" id="L192">        retval = rootName.getIndex().intValue();</span>
       }
     }
-<span class="nc" id="L198">    return retval;</span>
+<span class="nc" id="L195">    return retval;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
-  public ModuleScopeEnum getModuleScope() {
-<span class="fc bfc" id="L204" title="All 2 branches covered.">    return getXmlObject().isSetScope() ? getXmlObject().getScope() : DEFAULT_DEFINITION_MODEL_SCOPE;</span>
+  public ModuleScope getModuleScope() {
+<span class="fc bfc" id="L201" title="All 2 branches covered.">    return getXmlObject().isSetScope() ? getXmlObject().getScope() : DEFAULT_MODULE_SCOPE;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc bnc" id="L210" title="All 2 branches missed.">    return getXmlObject().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlObject().getRemarks()) : null;</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">    return getXmlObject().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlObject().getRemarks()) : null;</span>
   }
 
   // -------------------------------------

@@ -6,10 +6,14 @@
 package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.IModuleExtended;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Collection;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -23,6 +27,26 @@ public interface IBoundModule
         IBoundDefinitionModelField&lt;?&gt;,
         IBoundDefinitionModelAssembly&gt; {
 
+  @NonNull
+  static IBoundModule newInstance(
+      @NonNull Class&lt;? extends IBoundModule&gt; clazz,
+      @NonNull IBindingContext bindingContext,
+      @NonNull List&lt;? extends IBoundModule&gt; importedModules) {
+
+    Constructor&lt;? extends IBoundModule&gt; constructor;
+    try {
+<span class="fc" id="L38">      constructor = clazz.getDeclaredConstructor(List.class, IBindingContext.class);</span>
+<span class="nc" id="L39">    } catch (NoSuchMethodException ex) {</span>
+<span class="nc" id="L40">      throw new IllegalArgumentException(ex);</span>
+<span class="fc" id="L41">    }</span>
+
+    try {
+<span class="fc" id="L44">      return ObjectUtils.notNull(constructor.newInstance(importedModules, bindingContext));</span>
+<span class="nc" id="L45">    } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {</span>
+<span class="nc" id="L46">      throw new IllegalArgumentException(ex);</span>
+    }
+  }
+
   /**
    * Get the Module binding context.
    *
@@ -34,7 +58,7 @@ public interface IBoundModule
   @Override
   default URI getLocation() { // NOPMD - intentional
     // not known
-<span class="fc" id="L37">    return null;</span>
+<span class="fc" id="L61">    return null;</span>
   }
 
   @Override

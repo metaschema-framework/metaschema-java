@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExternalConstraintsModulePostProcessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Core API</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.core.model.constraint</a> &gt; <span class="el_source">ExternalConstraintsModulePostProcessor.java</span></div><h1>ExternalConstraintsModulePostProcessor.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.model.constraint;
+
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ResultType;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.model.IDefinition;
+import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.IModuleLoader;
+import gov.nist.secauto.metaschema.core.model.constraint.impl.ConstraintComposingVisitor;
+import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * A module loading post processor that integrates applicable external
+ * constraints into a given module when loaded.
+ *
+ * @see ModuleLoader#ModuleLoader(List)
+ */
+public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IModulePostProcessor {
+<span class="fc" id="L44">  private static final Logger LOGGER = LogManager.getLogger(ExternalConstraintsModulePostProcessor.class);</span>
+  @NonNull
+  private final List&lt;IConstraintSet&gt; registeredConstraintSets;
+
+  /**
+   * Create a new post processor.
+   *
+   * @param additionalConstraintSets
+   *          the external constraint sets to apply
+   */
+<span class="fc" id="L54">  public ExternalConstraintsModulePostProcessor(@NonNull Collection&lt;IConstraintSet&gt; additionalConstraintSets) {</span>
+<span class="fc" id="L55">    this.registeredConstraintSets = ObjectUtils.notNull(additionalConstraintSets.stream()</span>
+<span class="fc" id="L56">        .flatMap(set -&gt; Stream.concat(</span>
+<span class="fc" id="L57">            Stream.of(set),</span>
+<span class="fc" id="L58">            set.getImportedConstraintSets().stream()))</span>
+<span class="fc" id="L59">        .distinct()</span>
+<span class="fc" id="L60">        .collect(Collectors.toUnmodifiableList()));</span>
+<span class="fc" id="L61">  }</span>
+
+  /**
+   * Get the external constraint sets associated with this post processor.
+   *
+   * @return the list of constraint sets
+   */
+  protected List&lt;IConstraintSet&gt; getRegisteredConstraintSets() {
+<span class="fc" id="L69">    return registeredConstraintSets;</span>
+  }
+
+  @Override
+  public void processModule(IModule module) {
+<span class="fc" id="L74">    ConstraintComposingVisitor visitor = new ConstraintComposingVisitor();</span>
+<span class="fc" id="L75">    IModuleNodeItem moduleItem = INodeItemFactory.instance().newModuleNodeItem(module);</span>
+
+<span class="fc" id="L77">    StaticContext staticContext = StaticContext.builder()</span>
+<span class="fc" id="L78">        .defaultModelNamespace(module.getXmlNamespace())</span>
+<span class="fc" id="L79">        .build();</span>
+<span class="fc" id="L80">    DynamicContext dynamicContext = new DynamicContext(staticContext);</span>
+
+<span class="fc bfc" id="L82" title="All 2 branches covered.">    for (IConstraintSet set : getRegisteredConstraintSets()) {</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">      assert set != null;</span>
+<span class="fc" id="L84">      applyConstraints(module, moduleItem, set, visitor, dynamicContext);</span>
+<span class="fc" id="L85">    }</span>
+<span class="fc" id="L86">  }</span>
+
+  private static void applyConstraints(
+      @NonNull IModule module,
+      @NonNull IModuleNodeItem moduleItem,
+      @NonNull IConstraintSet set,
+      @NonNull ConstraintComposingVisitor visitor,
+      @NonNull DynamicContext dynamicContext) {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    for (ITargetedConstraints targeted : set.getTargetedConstraintsForModule(module)) {</span>
+      // apply targeted constraints
+<span class="fc" id="L96">      String targetExpression = targeted.getTargetExpression();</span>
+<span class="fc" id="L97">      MetapathExpression metapath = MetapathExpression.compile(targetExpression, dynamicContext.getStaticContext());</span>
+<span class="fc" id="L98">      ISequence&lt;?&gt; items = metapath.evaluateAs(moduleItem, ResultType.SEQUENCE, dynamicContext);</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">      assert items != null;</span>
+
+      // first build a map to ensure the constraint is only applied once to each
+      // underlying definition
+<span class="fc" id="L103">      Map&lt;IDefinition, IDefinitionNodeItem&lt;?, ?&gt;&gt; definitions = items.stream()</span>
+<span class="fc" id="L104">          .filter(item -&gt; filterNonDefinitionItem(item, metapath))</span>
+<span class="fc" id="L105">          .map(item -&gt; (IDefinitionNodeItem&lt;?, ?&gt;) item)</span>
+<span class="fc" id="L106">          .collect(Collectors.toMap(IDefinitionNodeItem::getDefinition, Function.identity(), (v1, v2) -&gt; v1,</span>
+              LinkedHashMap::new));
+
+      // apply the constraints
+<span class="fc" id="L110">      definitions.values().forEach(item -&gt; {</span>
+<span class="fc" id="L111">        item.accept(visitor, targeted);</span>
+<span class="fc" id="L112">      });</span>
+<span class="fc" id="L113">    }</span>
+<span class="fc" id="L114">  }</span>
+
+  private static boolean filterNonDefinitionItem(IItem item, @NonNull MetapathExpression metapath) {
+<span class="fc" id="L117">    boolean retval = item instanceof IDefinitionNodeItem;</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">    if (!retval) {</span>
+<span class="nc" id="L119">      LOGGER.atError().log(</span>
+          &quot;Found non-definition item '{}' while applying external constraints using target expression '{}'.&quot;,
+<span class="nc" id="L121">          item.toString(),</span>
+<span class="nc" id="L122">          metapath.getPath());</span>
+    }
+<span class="fc" id="L124">    return retval;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

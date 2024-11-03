@@ -143,11 +143,11 @@
 <span class="source-line-no">130</span><span id="line-130"></span>
 <span class="source-line-no">131</span><span id="line-131">  @SuppressWarnings({ "unused", "PMD.UnusedPrivateMethod" }) // used by lambda</span>
 <span class="source-line-no">132</span><span id="line-132">  private static &lt;DEF extends IDefinition&gt; DEF handleShadowedDefinitions(</span>
-<span class="source-line-no">133</span><span id="line-133">      @SuppressWarnings("unused") @NonNull QName key,</span>
+<span class="source-line-no">133</span><span id="line-133">      @NonNull QName key,</span>
 <span class="source-line-no">134</span><span id="line-134">      @NonNull DEF oldDef,</span>
 <span class="source-line-no">135</span><span id="line-135">      @NonNull DEF newDef) {</span>
-<span class="source-line-no">136</span><span id="line-136">    if (!oldDef.equals(newDef) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">137</span><span id="line-137">      LOGGER.info("The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'",</span>
+<span class="source-line-no">136</span><span id="line-136">    if (!oldDef.equals(newDef) &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">137</span><span id="line-137">      LOGGER.warn("The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'",</span>
 <span class="source-line-no">138</span><span id="line-138">          newDef.getModelType().name().toLowerCase(Locale.ROOT),</span>
 <span class="source-line-no">139</span><span id="line-139">          newDef.getName(),</span>
 <span class="source-line-no">140</span><span id="line-140">          newDef.getContainingModule().getShortName(),</span>

@@ -24,16 +24,16 @@ import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
+import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.InlineDefineAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.JsonKey;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonKey;
 
 import java.math.BigInteger;
 import java.util.Map;
@@ -118,8 +118,8 @@ public class InstanceModelAssemblyInline
     }));
 <span class="fc" id="L119">    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; AssemblyModelContainerSupport.of(</span>
 <span class="fc" id="L120">        binding.getModel(),</span>
-        ObjectUtils
-<span class="fc" id="L122">            .requireNonNull(bindingInstance.getDefinition().getAssemblyInstanceByName(MODEL_QNAME)),</span>
+<span class="fc" id="L121">        ObjectUtils.requireNonNull(bindingInstance.getDefinition()</span>
+<span class="fc" id="L122">            .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME)),</span>
         this,
         nodeItemFactory)));
 <span class="fc" id="L125">    this.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
@@ -129,7 +129,7 @@ public class InstanceModelAssemblyInline
 <span class="fc" id="L129">        ConstraintBindingSupport.parse(</span>
             retval,
             constraints,
-<span class="fc" id="L132">            ISource.modelSource(parent.getOwningDefinition().getContainingModule()));</span>
+<span class="fc" id="L132">            parent.getOwningDefinition().getContainingModule().getSource());</span>
       }
 <span class="fc" id="L134">      return retval;</span>
     }));
@@ -158,13 +158,12 @@ public class InstanceModelAssemblyInline
 
   @Override
   public IAssemblyNodeItem getSourceNodeItem() {
-<span class="nc" id="L161">    return boundNodeItem.get();</span>
+<span class="nc" id="L161">    return ObjectUtils.notNull(boundNodeItem.get());</span>
   }
 
-  @SuppressWarnings(&quot;null&quot;)
   @Override
   public IContainerFlagSupport&lt;IFlagInstance&gt; getFlagContainer() {
-<span class="fc" id="L167">    return flagContainer.get();</span>
+<span class="fc" id="L166">    return ObjectUtils.notNull(flagContainer.get());</span>
   }
 
   @Override
@@ -175,12 +174,12 @@ public class InstanceModelAssemblyInline
       IAssemblyInstanceAbsolute,
       IChoiceInstance,
       IChoiceGroupInstance&gt; getModelContainer() {
-<span class="fc" id="L178">    return ObjectUtils.notNull(modelContainer.get());</span>
+<span class="fc" id="L177">    return ObjectUtils.notNull(modelContainer.get());</span>
   }
 
   @Override
   public IModelConstrained getConstraintSupport() {
-<span class="fc" id="L183">    return ObjectUtils.notNull(modelConstraints.get());</span>
+<span class="fc" id="L182">    return ObjectUtils.notNull(modelConstraints.get());</span>
   }
 
   // ---------------------------------------
@@ -189,39 +188,39 @@ public class InstanceModelAssemblyInline
 
   @Override
   public String getName() {
-<span class="fc" id="L192">    return ObjectUtils.notNull(getBinding().getName());</span>
+<span class="fc" id="L191">    return ObjectUtils.notNull(getBinding().getName());</span>
   }
 
   @Override
   public Integer getIndex() {
-<span class="fc" id="L197">    return ModelSupport.index(getBinding().getIndex());</span>
+<span class="fc" id="L196">    return ModelSupport.index(getBinding().getIndex());</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="fc" id="L202">    return getBinding().getFormalName();</span>
+<span class="fc" id="L201">    return getBinding().getFormalName();</span>
   }
 
   @Override
   public MarkupLine getDescription() {
-<span class="fc" id="L207">    return getBinding().getDescription();</span>
+<span class="fc" id="L206">    return getBinding().getDescription();</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="fc" id="L212">    return ModelSupport.remarks(getBinding().getRemarks());</span>
+<span class="fc" id="L211">    return ModelSupport.remarks(getBinding().getRemarks());</span>
   }
 
   @Override
   public int getMinOccurs() {
-<span class="fc" id="L217">    BigInteger min = getBinding().getMinOccurs();</span>
-<span class="pc bpc" id="L218" title="1 of 2 branches missed.">    return min == null ? DEFAULT_GROUP_AS_MIN_OCCURS : min.intValueExact();</span>
+<span class="fc" id="L216">    BigInteger min = getBinding().getMinOccurs();</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">    return min == null ? DEFAULT_GROUP_AS_MIN_OCCURS : min.intValueExact();</span>
   }
 
   @Override
   public int getMaxOccurs() {
-<span class="fc" id="L223">    String max = getBinding().getMaxOccurs();</span>
-<span class="pc bpc" id="L224" title="1 of 2 branches missed.">    return max == null ? DEFAULT_GROUP_AS_MAX_OCCURS : ModelSupport.maxOccurs(max);</span>
+<span class="fc" id="L222">    String max = getBinding().getMaxOccurs();</span>
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">    return max == null ? DEFAULT_GROUP_AS_MAX_OCCURS : ModelSupport.maxOccurs(max);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.codegen;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
@@ -22,17 +23,11 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -43,10 +38,37 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * this class.
  */
 public final class ModuleCompilerHelper {
-<span class="fc" id="L46">  private static final Logger LOGGER = LogManager.getLogger(ModuleCompilerHelper.class);</span>
+<span class="fc" id="L41">  private static final Logger LOGGER = LogManager.getLogger(ModuleCompilerHelper.class);</span>
 
   private ModuleCompilerHelper() {
     // disable construction
+  }
+
+  /**
+   * Create a new classloader capable of loading Java classes generated in the
+   * provided {@code classDir}.
+   *
+   * @param classDir
+   *          the directory where generated Java classes have been compiled
+   * @param parent
+   *          the classloader to delegate to when the created class loader cannot
+   *          load a class
+   * @return the new class loader
+   */
+  @SuppressWarnings(&quot;resource&quot;)
+  @Owning
+  @NonNull
+  public static ClassLoader newClassLoader(
+      @NonNull final Path classDir,
+      @NonNull final ClassLoader parent) {
+<span class="fc" id="L64">    return ObjectUtils.notNull(AccessController.doPrivileged(</span>
+        (PrivilegedAction&lt;ClassLoader&gt;) () -&gt; {
+          try {
+<span class="fc" id="L67">            return new URLClassLoader(new URL[] { classDir.toUri().toURL() }, parent);</span>
+<span class="nc" id="L68">          } catch (MalformedURLException ex) {</span>
+<span class="nc" id="L69">            throw new IllegalStateException(&quot;unable to configure class loader&quot;, ex);</span>
+          }
+        }));
   }
 
   /**
@@ -67,7 +89,7 @@ public final class ModuleCompilerHelper {
       @NonNull IModule module,
       @NonNull Path classDir)
       throws IOException {
-<span class="fc" id="L70">    return compileModule(module, classDir, new DefaultBindingConfiguration());</span>
+<span class="fc" id="L92">    return compileModule(module, classDir, new DefaultBindingConfiguration());</span>
   }
 
   /**
@@ -91,139 +113,66 @@ public final class ModuleCompilerHelper {
       @NonNull IModule module,
       @NonNull Path classDir,
       @NonNull IBindingConfiguration bindingConfiguration) throws IOException {
-<span class="fc" id="L94">    IProduction production = JavaGenerator.generate(module, classDir, bindingConfiguration);</span>
-<span class="fc" id="L95">    List&lt;IGeneratedClass&gt; classesToCompile = production.getGeneratedClasses().collect(Collectors.toList());</span>
+<span class="fc" id="L116">    IProduction production = JavaGenerator.generate(module, classDir, bindingConfiguration);</span>
+<span class="fc" id="L117">    List&lt;IGeneratedClass&gt; classesToCompile = production.getGeneratedClasses().collect(Collectors.toList());</span>
 
-<span class="fc" id="L97">    DiagnosticCollector&lt;JavaFileObject&gt; diagnostics = new DiagnosticCollector&lt;&gt;();</span>
-<span class="pc bpc" id="L98" title="1 of 2 branches missed.">    if (!compileGeneratedClasses(classesToCompile, diagnostics, classDir)) {</span>
-<span class="nc bnc" id="L99" title="All 2 branches missed.">      if (LOGGER.isErrorEnabled()) {</span>
-<span class="nc" id="L100">        LOGGER.error(diagnostics.getDiagnostics().toString());</span>
-      }
-<span class="nc" id="L102">      throw new IllegalStateException(String.format(&quot;failed to compile classes: %s&quot;,</span>
-<span class="nc" id="L103">          classesToCompile.stream()</span>
-<span class="nc" id="L104">              .map(clazz -&gt; clazz.getClassName().canonicalName())</span>
-<span class="nc" id="L105">              .collect(Collectors.joining(&quot;,&quot;))));</span>
-    }
-<span class="fc" id="L107">    return production;</span>
-  }
+<span class="fc" id="L119">    List&lt;Path&gt; classes = ObjectUtils.notNull(classesToCompile.stream()</span>
+<span class="fc" id="L120">        .map(IGeneratedClass::getClassFile)</span>
+<span class="fc" id="L121">        .collect(Collectors.toUnmodifiableList()));</span>
 
-  /**
-   * Create a new classloader capable of loading Java classes generated in the
-   * provided {@code classDir}.
-   *
-   * @param classDir
-   *          the directory where generated Java classes have been compiled
-   * @param parent
-   *          the classloader to delegate to when the created class loader cannot
-   *          load a class
-   * @return the new class loader
-   */
-  @NonNull
-  public static ClassLoader newClassLoader(
-      @NonNull final Path classDir,
-      @NonNull final ClassLoader parent) {
-<span class="fc" id="L125">    ClassLoader retval = AccessController</span>
-<span class="fc" id="L126">        .doPrivileged((PrivilegedAction&lt;ClassLoader&gt;) () -&gt; newClassLoaderInternal(classDir, parent));</span>
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">    assert retval != null;</span>
-<span class="fc" id="L128">    return retval;</span>
-  }
+<span class="fc" id="L123">    JavaCompilerSupport compiler = new JavaCompilerSupport(classDir);</span>
 
-  @Owning
-  @NonNull
-  private static ClassLoader newClassLoaderInternal(
-      @NonNull final Path classDir,
-      @NonNull final ClassLoader parent) {
-    try {
-<span class="fc" id="L137">      return new URLClassLoader(new URL[] { classDir.toUri().toURL() }, parent);</span>
-<span class="nc" id="L138">    } catch (MalformedURLException ex) {</span>
-<span class="nc" id="L139">      throw new IllegalStateException(&quot;unable to configure class loader&quot;, ex);</span>
-    }
-  }
-
-  @SuppressWarnings({
-      &quot;PMD.CyclomaticComplexity&quot;, &quot;PMD.CognitiveComplexity&quot;, // acceptable
-  })
-  private static boolean compile(
-      JavaCompiler compiler,
-      JavaFileManager fileManager,
-      DiagnosticCollector&lt;JavaFileObject&gt; diagnostics,
-      List&lt;JavaFileObject&gt; compilationUnits,
-      Path classDir) {
-
-<span class="fc" id="L153">    String moduleName = null;</span>
-<span class="fc" id="L154">    Module module = IBindingContext.class.getModule();</span>
-<span class="pc bpc" id="L155" title="1 of 2 branches missed.">    if (module != null) {</span>
-<span class="fc" id="L156">      ModuleDescriptor descriptor = module.getDescriptor();</span>
-<span class="pc bpc" id="L157" title="1 of 2 branches missed.">      if (descriptor != null) {</span>
+<span class="fc" id="L125">    boolean usingModule = false;</span>
+<span class="fc" id="L126">    Module databindModule = IBindingContext.class.getModule();</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">    if (databindModule != null) {</span>
+<span class="fc" id="L128">      ModuleDescriptor descriptor = databindModule.getDescriptor();</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">      if (descriptor != null) {</span>
         // add the databind module to the task
-<span class="nc" id="L159">        moduleName = descriptor.name();</span>
+<span class="nc" id="L131">        compiler.addRootModule(ObjectUtils.notNull(descriptor.name()));</span>
+<span class="nc" id="L132">        usingModule = true;</span>
       }
     }
 
-<span class="fc" id="L163">    List&lt;String&gt; options = new LinkedList&lt;&gt;();</span>
-    // options.add(&quot;-verbose&quot;);
-    // options.add(&quot;-g&quot;);
-<span class="fc" id="L166">    options.add(&quot;-d&quot;);</span>
-<span class="fc" id="L167">    options.add(classDir.toString());</span>
-
-<span class="fc" id="L169">    String classPath = System.getProperty(&quot;java.class.path&quot;);</span>
-<span class="fc" id="L170">    String modulePath = System.getProperty(&quot;jdk.module.path&quot;);</span>
-<span class="pc bpc" id="L171" title="1 of 2 branches missed.">    if (moduleName == null) {</span>
-      // use classpath only
-<span class="fc" id="L173">      String path = null;</span>
-<span class="pc bpc" id="L174" title="1 of 2 branches missed.">      if (classPath != null) {</span>
-<span class="fc" id="L175">        path = classPath;</span>
-      }
-
-<span class="pc bpc" id="L178" title="1 of 2 branches missed.">      if (modulePath != null) {</span>
-<span class="nc bnc" id="L179" title="All 2 branches missed.">        path = path == null ? modulePath : path + &quot;:&quot; + modulePath;</span>
-      }
-
-<span class="pc bpc" id="L182" title="1 of 2 branches missed.">      if (path != null) {</span>
-<span class="fc" id="L183">        options.add(&quot;-classpath&quot;);</span>
-<span class="fc" id="L184">        options.add(path);</span>
-      }
-<span class="fc" id="L186">    } else {</span>
+<span class="fc" id="L136">    String classPath = System.getProperty(&quot;java.class.path&quot;);</span>
+<span class="fc" id="L137">    String modulePath = System.getProperty(&quot;jdk.module.path&quot;);</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">    if (usingModule) {</span>
       // use classpath and modulepath from the JDK
-<span class="nc bnc" id="L188" title="All 2 branches missed.">      if (classPath != null) {</span>
-<span class="nc" id="L189">        options.add(&quot;-classpath&quot;);</span>
-<span class="nc" id="L190">        options.add(classPath);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">      if (classPath != null) {</span>
+<span class="nc" id="L141">        Arrays.stream(classPath.split(&quot;:&quot;)).forEachOrdered(compiler::addToClassPath);</span>
       }
 
-<span class="nc bnc" id="L193" title="All 2 branches missed.">      if (modulePath != null) {</span>
-<span class="nc" id="L194">        options.add(&quot;-p&quot;);</span>
-<span class="nc" id="L195">        options.add(modulePath);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">      if (modulePath != null) {</span>
+<span class="nc" id="L145">        Arrays.stream(modulePath.split(&quot;:&quot;)).forEachOrdered(compiler::addToModulePath);</span>
+      }
+    } else {
+      // use classpath only
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">      if (classPath != null) {</span>
+<span class="fc" id="L150">        Arrays.stream(classPath.split(&quot;:&quot;)).forEachOrdered(compiler::addToClassPath);</span>
+      }
+
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">      if (modulePath != null) {</span>
+<span class="nc" id="L154">        Arrays.stream(modulePath.split(&quot;:&quot;)).forEachOrdered(compiler::addToClassPath);</span>
       }
     }
 
-<span class="pc bpc" id="L199" title="1 of 2 branches missed.">    if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L200">      LOGGER.atDebug().log(&quot;Using options: {}&quot;, options);</span>
+<span class="fc" id="L158">    JavaCompilerSupport.CompilationResult result = compiler.compile(classes, null);</span>
+
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">    if (!result.isSuccessful()) {</span>
+<span class="nc" id="L161">      DiagnosticCollector&lt;?&gt; diagnostics = new DiagnosticCollector&lt;&gt;();</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">      if (LOGGER.isErrorEnabled()) {</span>
+<span class="nc" id="L163">        LOGGER.error(diagnostics.getDiagnostics().toString());</span>
+      }
+<span class="nc" id="L165">      throw new IllegalStateException(String.format(&quot;failed to compile classes: %s%nClasspath: %s%nModule Path: %s%n%s&quot;,</span>
+<span class="nc" id="L166">          classesToCompile.stream()</span>
+<span class="nc" id="L167">              .map(clazz -&gt; clazz.getClassName().canonicalName())</span>
+<span class="nc" id="L168">              .collect(Collectors.joining(&quot;,&quot;)),</span>
+<span class="nc" id="L169">          diagnostics.getDiagnostics().toString(),</span>
+<span class="nc" id="L170">          compiler.getClassPath().stream()</span>
+<span class="nc" id="L171">              .collect(Collectors.joining(&quot;:&quot;)),</span>
+<span class="nc" id="L172">          compiler.getModulePath().stream()</span>
+<span class="nc" id="L173">              .collect(Collectors.joining(&quot;:&quot;))));</span>
     }
-
-<span class="fc" id="L203">    JavaCompiler.CompilationTask task</span>
-<span class="fc" id="L204">        = compiler.getTask(null, fileManager, diagnostics, options, null, compilationUnits);</span>
-
-<span class="pc bpc" id="L206" title="1 of 2 branches missed.">    if (moduleName != null) {</span>
-<span class="nc" id="L207">      task.addModules(List.of(moduleName));</span>
-    }
-<span class="fc" id="L209">    return task.call();</span>
-  }
-
-  private static boolean compileGeneratedClasses(
-      List&lt;IGeneratedClass&gt; classesToCompile,
-      DiagnosticCollector&lt;JavaFileObject&gt; diagnostics,
-      Path classDir) throws IOException {
-<span class="fc" id="L216">    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();</span>
-
-<span class="fc" id="L218">    try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {</span>
-
-<span class="fc" id="L220">      List&lt;JavaFileObject&gt; compilationUnits = new ArrayList&lt;&gt;(classesToCompile.size());</span>
-<span class="fc bfc" id="L221" title="All 2 branches covered.">      for (IGeneratedClass generatedClass : classesToCompile) {</span>
-<span class="fc" id="L222">        compilationUnits.add(fileManager.getJavaFileObjects(generatedClass.getClassFile()).iterator().next());</span>
-<span class="fc" id="L223">      }</span>
-
-<span class="fc" id="L225">      return compile(compiler, fileManager, diagnostics, compilationUnits, classDir);</span>
-    }
+<span class="fc" id="L175">    return production;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

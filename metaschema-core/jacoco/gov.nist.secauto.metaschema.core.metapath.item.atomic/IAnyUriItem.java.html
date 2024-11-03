@@ -25,7 +25,7 @@ public interface IAnyUriItem extends IAnyAtomicItem {
    */
   @NonNull
   static IAnyUriItem valueOf(@NonNull String value) {
-<span class="nc" id="L28">    return valueOf(ObjectUtils.notNull(URI.create(value)));</span>
+<span class="fc" id="L28">    return valueOf(ObjectUtils.notNull(URI.create(value)));</span>
   }
 
   /**
@@ -39,8 +39,8 @@ public interface IAnyUriItem extends IAnyAtomicItem {
   @NonNull
   static IAnyUriItem valueOf(@NonNull URI value) {
     IAnyUriItem retval;
-<span class="pc bpc" id="L42" title="2 of 4 branches missed.">    if (value.isAbsolute() || value.isOpaque()) {</span>
-<span class="nc" id="L43">      retval = new AnyUriItemImpl(value);</span>
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">    if (value.isAbsolute() || value.isOpaque()) {</span>
+<span class="fc" id="L43">      retval = new AnyUriItemImpl(value);</span>
     } else {
 <span class="fc" id="L45">      retval = IUriReferenceItem.valueOf(value);</span>
     }
@@ -76,7 +76,7 @@ public interface IAnyUriItem extends IAnyAtomicItem {
    * @return {@code true} if the URI is absolute, or {@code false} otherwise
    */
   default boolean isAbsolute() {
-<span class="nc" id="L79">    return asUri().isAbsolute();</span>
+<span class="fc" id="L79">    return asUri().isAbsolute();</span>
   }
 
   /**

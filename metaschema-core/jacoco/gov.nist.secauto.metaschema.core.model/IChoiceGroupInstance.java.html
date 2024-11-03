@@ -12,10 +12,23 @@ import java.util.Locale;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * An Metaschema model instance representing a grouped set of objects consisting
+ * of heterogeneous object types.
+ */
 public interface IChoiceGroupInstance
     extends IModelInstanceAbsolute, IContainerModelGrouped {
 
+  /**
+   * The default max-occurs value for a choice group. {@code -1} represents an
+   * unbounded occurance.
+   */
   int DEFAULT_CHOICE_GROUP_GROUP_AS_MAX_OCCURS = -1;
+
+  /**
+   * The default JSON property value used to identify the specific type of the
+   * object.
+   */
   @NonNull
   String DEFAULT_JSON_DISCRIMINATOR_PROPERTY_NAME = &quot;object-type&quot;;
 
@@ -26,7 +39,7 @@ public interface IChoiceGroupInstance
    */
   @Override
   default int getMaxOccurs() {
-<span class="nc" id="L29">    return DEFAULT_CHOICE_GROUP_GROUP_AS_MAX_OCCURS;</span>
+<span class="nc" id="L42">    return DEFAULT_CHOICE_GROUP_GROUP_AS_MAX_OCCURS;</span>
   }
 
   /**
@@ -36,7 +49,7 @@ public interface IChoiceGroupInstance
    */
   @Override
   default ModelType getModelType() {
-<span class="nc" id="L39">    return ModelType.CHOICE_GROUP;</span>
+<span class="nc" id="L52">    return ModelType.CHOICE_GROUP;</span>
   }
 
   /**
@@ -50,7 +63,7 @@ public interface IChoiceGroupInstance
 
   @Override
   default boolean isEffectiveValueWrappedInXml() {
-<span class="nc" id="L53">    return true;</span>
+<span class="nc" id="L66">    return true;</span>
   }
 
   /**
@@ -74,24 +87,24 @@ public interface IChoiceGroupInstance
    */
   @NonNull
   default INamedModelInstanceGrouped getItemInstance(@NonNull Object item) {
-<span class="nc" id="L77">    throw new UnsupportedOperationException(&quot;no value&quot;);</span>
+<span class="nc" id="L90">    throw new UnsupportedOperationException(&quot;no value&quot;);</span>
   }
 
   @Override
   default MarkupMultiline getRemarks() {
     // no remarks
-<span class="nc" id="L83">    return null;</span>
+<span class="nc" id="L96">    return null;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   default String toCoordinates() {
-<span class="nc" id="L89">    return String.format(&quot;%s-instance:%s:%s/%s@%d&quot;,</span>
-<span class="nc" id="L90">        getModelType().toString().toLowerCase(Locale.ROOT),</span>
-<span class="nc" id="L91">        getContainingDefinition().getContainingModule().getShortName(),</span>
-<span class="nc" id="L92">        getContainingDefinition().getName(),</span>
-<span class="nc" id="L93">        getGroupAsName(),</span>
-<span class="nc" id="L94">        hashCode());</span>
+<span class="nc" id="L102">    return String.format(&quot;%s-instance:%s:%s/%s@%d&quot;,</span>
+<span class="nc" id="L103">        getModelType().toString().toLowerCase(Locale.ROOT),</span>
+<span class="nc" id="L104">        getContainingDefinition().getContainingModule().getShortName(),</span>
+<span class="nc" id="L105">        getContainingDefinition().getName(),</span>
+<span class="nc" id="L106">        getGroupAsName(),</span>
+<span class="nc" id="L107">        hashCode());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

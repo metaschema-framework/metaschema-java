@@ -20,24 +20,29 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-map-size&quot;&gt;map:size&lt;/a&gt;
+ * function.
+ */
 public final class MapSize {
   private static final String NAME = &quot;size&quot;;
   @NonNull
-<span class="fc" id="L26">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L27">      .name(NAME)</span>
-<span class="fc" id="L28">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="fc" id="L29">      .deterministic()</span>
-<span class="fc" id="L30">      .contextIndependent()</span>
-<span class="fc" id="L31">      .focusIndependent()</span>
-<span class="fc" id="L32">      .argument(IArgument.builder()</span>
-<span class="fc" id="L33">          .name(&quot;map&quot;)</span>
-<span class="fc" id="L34">          .type(IMapItem.class)</span>
-<span class="fc" id="L35">          .one()</span>
-<span class="fc" id="L36">          .build())</span>
-<span class="fc" id="L37">      .returnType(IIntegerItem.class)</span>
-<span class="fc" id="L38">      .returnOne()</span>
-<span class="fc" id="L39">      .functionHandler(MapSize::execute)</span>
-<span class="fc" id="L40">      .build();</span>
+<span class="fc" id="L31">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L32">      .name(NAME)</span>
+<span class="fc" id="L33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="fc" id="L34">      .deterministic()</span>
+<span class="fc" id="L35">      .contextIndependent()</span>
+<span class="fc" id="L36">      .focusIndependent()</span>
+<span class="fc" id="L37">      .argument(IArgument.builder()</span>
+<span class="fc" id="L38">          .name(&quot;map&quot;)</span>
+<span class="fc" id="L39">          .type(IMapItem.class)</span>
+<span class="fc" id="L40">          .one()</span>
+<span class="fc" id="L41">          .build())</span>
+<span class="fc" id="L42">      .returnType(IIntegerItem.class)</span>
+<span class="fc" id="L43">      .returnOne()</span>
+<span class="fc" id="L44">      .functionHandler(MapSize::execute)</span>
+<span class="fc" id="L45">      .build();</span>
 
   /**
    * An implementation of XPath 3.1 &lt;a href=
@@ -53,9 +58,9 @@ public final class MapSize {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L56">    IMapItem&lt;?&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L61">    IMapItem&lt;?&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
 
-<span class="fc" id="L58">    return ISequence.of(IIntegerItem.valueOf(map.size()));</span>
+<span class="fc" id="L63">    return ISequence.of(IIntegerItem.valueOf(map.size()));</span>
   }
 
   private MapSize() {

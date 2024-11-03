@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.model.constraint.IFeatureModelConstrained;
 
 import javax.xml.namespace.QName;
@@ -13,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IAssemblyDefinition
     extends IModelDefinition, IContainerModelAssembly, IAssembly, IFeatureModelConstrained {
-<span class="fc" id="L16">  QName MODEL_QNAME = new QName(IModule.XML_NAMESPACE, &quot;model&quot;);</span>
+<span class="fc" id="L17">  QName MODEL_QNAME = new QName(MetaschemaConstants.METASCHEMA_NAMESPACE, &quot;model&quot;);</span>
 
   /**
    * Check if the assembly is a top-level root assembly.
@@ -23,7 +24,7 @@ public interface IAssemblyDefinition
    */
   default boolean isRoot() {
     // not a root by default
-<span class="nc" id="L26">    return false;</span>
+<span class="nc" id="L27">    return false;</span>
   }
 
   /**
@@ -35,7 +36,7 @@ public interface IAssemblyDefinition
   @Nullable
   default String getRootName() {
     // not a root by default
-<span class="nc" id="L38">    return null;</span>
+<span class="nc" id="L39">    return null;</span>
   }
 
   /**
@@ -48,7 +49,7 @@ public interface IAssemblyDefinition
   @Nullable
   default Integer getRootIndex() {
     // not a root by default
-<span class="nc" id="L51">    return null;</span>
+<span class="nc" id="L52">    return null;</span>
   }
 
   /**
@@ -58,12 +59,12 @@ public interface IAssemblyDefinition
    *         {@code null} otherwise
    */
   default QName getRootXmlQName() {
-<span class="fc" id="L61">    QName retval = null;</span>
-<span class="fc" id="L62">    String rootName = getRootName();</span>
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">    if (rootName != null) {</span>
-<span class="fc" id="L64">      retval = getContainingModule().toModelQName(rootName);</span>
+<span class="fc" id="L62">    QName retval = null;</span>
+<span class="fc" id="L63">    String rootName = getRootName();</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">    if (rootName != null) {</span>
+<span class="fc" id="L65">      retval = getContainingModule().toModelQName(rootName);</span>
     }
-<span class="fc" id="L66">    return retval;</span>
+<span class="fc" id="L67">    return retval;</span>
   }
 
   /**
@@ -73,18 +74,24 @@ public interface IAssemblyDefinition
    *         {@code null} otherwise
    */
   default String getRootJsonName() {
-<span class="nc" id="L76">    return getRootName();</span>
+<span class="nc" id="L77">    return getRootName();</span>
+  }
+
+  @Override
+  default boolean isInline() {
+    // not inline by default
+<span class="nc" id="L83">    return false;</span>
   }
 
   @Override
   default IAssemblyInstance getInlineInstance() {
     // not inline by default
-<span class="nc" id="L82">    return null;</span>
+<span class="nc" id="L89">    return null;</span>
   }
 
   @Override
   default IAssemblyDefinition getOwningDefinition() {
-<span class="fc" id="L87">    return this;</span>
+<span class="fc" id="L94">    return this;</span>
   }
   //
   // @Override
@@ -94,7 +101,7 @@ public interface IAssemblyDefinition
 
   @Override
   default boolean hasChildren() {
-<span class="nc bnc" id="L97" title="All 4 branches missed.">    return IModelDefinition.super.hasChildren() || IContainerModelAssembly.super.hasChildren();</span>
+<span class="nc bnc" id="L104" title="All 4 branches missed.">    return IModelDefinition.super.hasChildren() || IContainerModelAssembly.super.hasChildren();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

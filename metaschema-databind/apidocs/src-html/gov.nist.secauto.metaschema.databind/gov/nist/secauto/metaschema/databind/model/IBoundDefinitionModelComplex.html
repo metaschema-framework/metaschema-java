@@ -39,78 +39,73 @@
 <span class="source-line-no">026</span><span id="line-26">  @NonNull</span>
 <span class="source-line-no">027</span><span id="line-27">  Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties(@Nullable Predicate&lt;IBoundInstanceFlag&gt; flagFilter);</span>
 <span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">  @Override</span>
-<span class="source-line-no">030</span><span id="line-30">  default boolean isInline() {</span>
-<span class="source-line-no">031</span><span id="line-31">    return getBoundClass().getEnclosingClass() != null;</span>
-<span class="source-line-no">032</span><span id="line-32">  }</span>
-<span class="source-line-no">033</span><span id="line-33"></span>
-<span class="source-line-no">034</span><span id="line-34">  @Nullable</span>
-<span class="source-line-no">035</span><span id="line-35">  Method getBeforeDeserializeMethod();</span>
-<span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37">  /**</span>
-<span class="source-line-no">038</span><span id="line-38">   * Calls the method named "beforeDeserialize" on each class in the object's</span>
-<span class="source-line-no">039</span><span id="line-39">   * hierarchy if the method exists on the class.</span>
-<span class="source-line-no">040</span><span id="line-40">   * &lt;p&gt;</span>
-<span class="source-line-no">041</span><span id="line-41">   * These methods can be used to set the initial state of the target bound object</span>
-<span class="source-line-no">042</span><span id="line-42">   * before data is read and applied during deserialization.</span>
-<span class="source-line-no">043</span><span id="line-43">   *</span>
-<span class="source-line-no">044</span><span id="line-44">   * @param targetObject</span>
-<span class="source-line-no">045</span><span id="line-45">   *          the data object target to call the method(s) on</span>
-<span class="source-line-no">046</span><span id="line-46">   * @param parentObject</span>
-<span class="source-line-no">047</span><span id="line-47">   *          the object target's parent object, which is used as the method</span>
-<span class="source-line-no">048</span><span id="line-48">   *          argument</span>
-<span class="source-line-no">049</span><span id="line-49">   * @throws BindingException</span>
-<span class="source-line-no">050</span><span id="line-50">   *           if an error occurs while calling the method</span>
-<span class="source-line-no">051</span><span id="line-51">   */</span>
-<span class="source-line-no">052</span><span id="line-52">  @Override</span>
-<span class="source-line-no">053</span><span id="line-53">  default void callBeforeDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {</span>
-<span class="source-line-no">054</span><span id="line-54">    Method beforeDeserializeMethod = getBeforeDeserializeMethod();</span>
-<span class="source-line-no">055</span><span id="line-55">    if (beforeDeserializeMethod != null) {</span>
-<span class="source-line-no">056</span><span id="line-56">      try {</span>
-<span class="source-line-no">057</span><span id="line-57">        beforeDeserializeMethod.invoke(targetObject, parentObject);</span>
-<span class="source-line-no">058</span><span id="line-58">      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {</span>
-<span class="source-line-no">059</span><span id="line-59">        throw new BindingException(ex);</span>
-<span class="source-line-no">060</span><span id="line-60">      }</span>
-<span class="source-line-no">061</span><span id="line-61">    }</span>
-<span class="source-line-no">062</span><span id="line-62">  }</span>
-<span class="source-line-no">063</span><span id="line-63"></span>
-<span class="source-line-no">064</span><span id="line-64">  @Nullable</span>
-<span class="source-line-no">065</span><span id="line-65">  Method getAfterDeserializeMethod();</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  /**</span>
-<span class="source-line-no">068</span><span id="line-68">   * Calls the method named "afterDeserialize" on each class in the object's</span>
-<span class="source-line-no">069</span><span id="line-69">   * hierarchy if the method exists.</span>
-<span class="source-line-no">070</span><span id="line-70">   * &lt;p&gt;</span>
-<span class="source-line-no">071</span><span id="line-71">   * These methods can be used to modify the state of the target bound object</span>
-<span class="source-line-no">072</span><span id="line-72">   * after data is read and applied during deserialization.</span>
-<span class="source-line-no">073</span><span id="line-73">   *</span>
-<span class="source-line-no">074</span><span id="line-74">   * @param targetObject</span>
-<span class="source-line-no">075</span><span id="line-75">   *          the data object target to call the method(s) on</span>
-<span class="source-line-no">076</span><span id="line-76">   * @param parentObject</span>
-<span class="source-line-no">077</span><span id="line-77">   *          the object target's parent object, which is used as the method</span>
-<span class="source-line-no">078</span><span id="line-78">   *          argument</span>
-<span class="source-line-no">079</span><span id="line-79">   * @throws BindingException</span>
-<span class="source-line-no">080</span><span id="line-80">   *           if an error occurs while calling the method</span>
-<span class="source-line-no">081</span><span id="line-81">   */</span>
-<span class="source-line-no">082</span><span id="line-82">  @Override</span>
-<span class="source-line-no">083</span><span id="line-83">  default void callAfterDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {</span>
-<span class="source-line-no">084</span><span id="line-84">    Method afterDeserializeMethod = getAfterDeserializeMethod();</span>
-<span class="source-line-no">085</span><span id="line-85">    if (afterDeserializeMethod != null) {</span>
-<span class="source-line-no">086</span><span id="line-86">      try {</span>
-<span class="source-line-no">087</span><span id="line-87">        afterDeserializeMethod.invoke(targetObject, parentObject);</span>
-<span class="source-line-no">088</span><span id="line-88">      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {</span>
-<span class="source-line-no">089</span><span id="line-89">        throw new BindingException(ex);</span>
-<span class="source-line-no">090</span><span id="line-90">      }</span>
-<span class="source-line-no">091</span><span id="line-91">    }</span>
-<span class="source-line-no">092</span><span id="line-92">  }</span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">  // @Override</span>
-<span class="source-line-no">095</span><span id="line-95">  // public String getJsonKeyFlagName() {</span>
-<span class="source-line-no">096</span><span id="line-96">  // // definition items never have a JSON key</span>
-<span class="source-line-no">097</span><span id="line-97">  // return null;</span>
-<span class="source-line-no">098</span><span id="line-98">  // }</span>
-<span class="source-line-no">099</span><span id="line-99"></span>
-<span class="source-line-no">100</span><span id="line-100">}</span>
+<span class="source-line-no">029</span><span id="line-29">  @Nullable</span>
+<span class="source-line-no">030</span><span id="line-30">  Method getBeforeDeserializeMethod();</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">  /**</span>
+<span class="source-line-no">033</span><span id="line-33">   * Calls the method named "beforeDeserialize" on each class in the object's</span>
+<span class="source-line-no">034</span><span id="line-34">   * hierarchy if the method exists on the class.</span>
+<span class="source-line-no">035</span><span id="line-35">   * &lt;p&gt;</span>
+<span class="source-line-no">036</span><span id="line-36">   * These methods can be used to set the initial state of the target bound object</span>
+<span class="source-line-no">037</span><span id="line-37">   * before data is read and applied during deserialization.</span>
+<span class="source-line-no">038</span><span id="line-38">   *</span>
+<span class="source-line-no">039</span><span id="line-39">   * @param targetObject</span>
+<span class="source-line-no">040</span><span id="line-40">   *          the data object target to call the method(s) on</span>
+<span class="source-line-no">041</span><span id="line-41">   * @param parentObject</span>
+<span class="source-line-no">042</span><span id="line-42">   *          the object target's parent object, which is used as the method</span>
+<span class="source-line-no">043</span><span id="line-43">   *          argument</span>
+<span class="source-line-no">044</span><span id="line-44">   * @throws BindingException</span>
+<span class="source-line-no">045</span><span id="line-45">   *           if an error occurs while calling the method</span>
+<span class="source-line-no">046</span><span id="line-46">   */</span>
+<span class="source-line-no">047</span><span id="line-47">  @Override</span>
+<span class="source-line-no">048</span><span id="line-48">  default void callBeforeDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {</span>
+<span class="source-line-no">049</span><span id="line-49">    Method beforeDeserializeMethod = getBeforeDeserializeMethod();</span>
+<span class="source-line-no">050</span><span id="line-50">    if (beforeDeserializeMethod != null) {</span>
+<span class="source-line-no">051</span><span id="line-51">      try {</span>
+<span class="source-line-no">052</span><span id="line-52">        beforeDeserializeMethod.invoke(targetObject, parentObject);</span>
+<span class="source-line-no">053</span><span id="line-53">      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {</span>
+<span class="source-line-no">054</span><span id="line-54">        throw new BindingException(ex);</span>
+<span class="source-line-no">055</span><span id="line-55">      }</span>
+<span class="source-line-no">056</span><span id="line-56">    }</span>
+<span class="source-line-no">057</span><span id="line-57">  }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  @Nullable</span>
+<span class="source-line-no">060</span><span id="line-60">  Method getAfterDeserializeMethod();</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  /**</span>
+<span class="source-line-no">063</span><span id="line-63">   * Calls the method named "afterDeserialize" on each class in the object's</span>
+<span class="source-line-no">064</span><span id="line-64">   * hierarchy if the method exists.</span>
+<span class="source-line-no">065</span><span id="line-65">   * &lt;p&gt;</span>
+<span class="source-line-no">066</span><span id="line-66">   * These methods can be used to modify the state of the target bound object</span>
+<span class="source-line-no">067</span><span id="line-67">   * after data is read and applied during deserialization.</span>
+<span class="source-line-no">068</span><span id="line-68">   *</span>
+<span class="source-line-no">069</span><span id="line-69">   * @param targetObject</span>
+<span class="source-line-no">070</span><span id="line-70">   *          the data object target to call the method(s) on</span>
+<span class="source-line-no">071</span><span id="line-71">   * @param parentObject</span>
+<span class="source-line-no">072</span><span id="line-72">   *          the object target's parent object, which is used as the method</span>
+<span class="source-line-no">073</span><span id="line-73">   *          argument</span>
+<span class="source-line-no">074</span><span id="line-74">   * @throws BindingException</span>
+<span class="source-line-no">075</span><span id="line-75">   *           if an error occurs while calling the method</span>
+<span class="source-line-no">076</span><span id="line-76">   */</span>
+<span class="source-line-no">077</span><span id="line-77">  @Override</span>
+<span class="source-line-no">078</span><span id="line-78">  default void callAfterDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {</span>
+<span class="source-line-no">079</span><span id="line-79">    Method afterDeserializeMethod = getAfterDeserializeMethod();</span>
+<span class="source-line-no">080</span><span id="line-80">    if (afterDeserializeMethod != null) {</span>
+<span class="source-line-no">081</span><span id="line-81">      try {</span>
+<span class="source-line-no">082</span><span id="line-82">        afterDeserializeMethod.invoke(targetObject, parentObject);</span>
+<span class="source-line-no">083</span><span id="line-83">      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {</span>
+<span class="source-line-no">084</span><span id="line-84">        throw new BindingException(ex);</span>
+<span class="source-line-no">085</span><span id="line-85">      }</span>
+<span class="source-line-no">086</span><span id="line-86">    }</span>
+<span class="source-line-no">087</span><span id="line-87">  }</span>
+<span class="source-line-no">088</span><span id="line-88"></span>
+<span class="source-line-no">089</span><span id="line-89">  // @Override</span>
+<span class="source-line-no">090</span><span id="line-90">  // public String getJsonKeyFlagName() {</span>
+<span class="source-line-no">091</span><span id="line-91">  // // definition items never have a JSON key</span>
+<span class="source-line-no">092</span><span id="line-92">  // return null;</span>
+<span class="source-line-no">093</span><span id="line-93">  // }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">}</span>
 
 
 

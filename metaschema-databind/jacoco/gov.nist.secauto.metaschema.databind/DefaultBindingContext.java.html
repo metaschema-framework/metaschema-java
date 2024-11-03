@@ -5,16 +5,10 @@
 
 package gov.nist.secauto.metaschema.databind;
 
-import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.IModuleLoader;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.codegen.IProduction;
-import gov.nist.secauto.metaschema.databind.codegen.ModuleCompilerHelper;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
-import gov.nist.secauto.metaschema.databind.io.DefaultBoundLoader;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IDeserializer;
 import gov.nist.secauto.metaschema.databind.io.ISerializer;
@@ -27,10 +21,16 @@ import gov.nist.secauto.metaschema.databind.io.yaml.DefaultYamlSerializer;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.ModuleLoadingPostProcessor;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +42,7 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * The implementation of a {@link IBindingContext} provided by this library.
@@ -57,107 +58,88 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * &lt;p&gt;
  * This class is synchronized and is thread-safe.
  */
+@SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)
 public class DefaultBindingContext implements IBindingContext {
-  private static DefaultBindingContext singleton;
+<span class="fc" id="L63">  private static Lazy&lt;DefaultBindingContext&gt; singleton = Lazy.lazy(DefaultBindingContext::new);</span>
   @NonNull
   private final IModuleLoaderStrategy moduleLoaderStrategy;
-<span class="fc" id="L64">  @NonNull</span>
-  private final Map&lt;Class&lt;?&gt;, IBoundDefinitionModelComplex&gt; boundClassToStrategyMap = new ConcurrentHashMap&lt;&gt;();
 <span class="fc" id="L66">  @NonNull</span>
-  private final Map&lt;IBoundDefinitionModelAssembly, IBindingMatcher&gt; bindingMatchers = new ConcurrentHashMap&lt;&gt;();
+  private final Map&lt;Class&lt;?&gt;, IBoundDefinitionModelComplex&gt; boundClassToStrategyMap = new ConcurrentHashMap&lt;&gt;();
 
   /**
    * Get the singleton instance of this binding context.
+   * &lt;p&gt;
+   * Note: It is general a better practice to use a new {@link IBindingContext}
+   * and reuse that instance instead of this global instance.
    *
    * @return the binding context
+   * @see IBindingContext#newInstance()
    */
   @NonNull
-  public static DefaultBindingContext instance() {
-<span class="fc" id="L76">    synchronized (DefaultBindingContext.class) {</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">      if (singleton == null) {</span>
-<span class="fc" id="L78">        singleton = new DefaultBindingContext();</span>
-      }
-<span class="fc" id="L80">    }</span>
-<span class="fc" id="L81">    return ObjectUtils.notNull(singleton);</span>
+  static DefaultBindingContext instance() {
+<span class="fc" id="L80">    return ObjectUtils.notNull(singleton.get());</span>
   }
 
   /**
    * Construct a new binding context.
-   *
-   * @param modulePostProcessors
-   *          a list of module post processors to call after loading a module
    */
   @SuppressFBWarnings(&quot;CT_CONSTRUCTOR_THROW&quot;)
-<span class="fc" id="L91">  public DefaultBindingContext(@NonNull List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors) {</span>
-    // only allow extended classes
-<span class="fc" id="L93">    moduleLoaderStrategy = new PostProcessingModuleLoaderStrategy(this, modulePostProcessors);</span>
-<span class="fc" id="L94">    registerBindingMatcher(METASCHEMA.class);</span>
-<span class="fc" id="L95">  }</span>
+  public DefaultBindingContext() {
+<span class="fc" id="L88">    this(new SimpleModuleLoaderStrategy());</span>
+<span class="fc" id="L89">  }</span>
 
   /**
    * Construct a new binding context.
+   *
+   * @param strategy
+   *          the behavior class to use for loading Metaschema modules
+   * @since 2.0.0
    */
-  @SuppressFBWarnings(&quot;CT_CONSTRUCTOR_THROW&quot;)
-<span class="fc" id="L101">  public DefaultBindingContext() {</span>
+<span class="fc" id="L98">  public DefaultBindingContext(@NonNull IBindingContext.IModuleLoaderStrategy strategy) {</span>
     // only allow extended classes
-<span class="fc" id="L103">    moduleLoaderStrategy = new SimpleModuleLoaderStrategy(this);</span>
-<span class="fc" id="L104">    registerBindingMatcher(METASCHEMA.class);</span>
-<span class="fc" id="L105">  }</span>
+<span class="fc" id="L100">    moduleLoaderStrategy = strategy;</span>
+<span class="fc" id="L101">    registerModule(MetaschemaModelModule.class);</span>
+<span class="fc" id="L102">  }</span>
 
+  @Override
   @NonNull
-  protected IModuleLoaderStrategy getModuleLoaderStrategy() {
-<span class="fc" id="L109">    return moduleLoaderStrategy;</span>
+  public final IModuleLoaderStrategy getModuleLoaderStrategy() {
+<span class="fc" id="L107">    return moduleLoaderStrategy;</span>
+  }
+
+  @Override
+  public IBindingModuleLoader newModuleLoader() {
+<span class="fc" id="L112">    return new ModuleLoader(this, getModuleLoaderStrategy());</span>
+  }
+
+  @Override
+  @NonNull
+  public final IBoundModule registerModule(@NonNull Class&lt;? extends IBoundModule&gt; clazz) {
+<span class="fc" id="L118">    IModuleLoaderStrategy strategy = getModuleLoaderStrategy();</span>
+<span class="fc" id="L119">    IBoundModule module = strategy.loadModule(clazz, this);</span>
+<span class="fc" id="L120">    strategy.registerModule(module, this);</span>
+<span class="fc" id="L121">    return module;</span>
   }
 
   /**
    * Get the binding matchers that are associated with this class.
    *
    * @return the list of matchers
-   * @see #registerBindingMatcher(Class)
-   * @see #registerBindingMatcher(IBoundDefinitionModelAssembly)
    */
   @NonNull
   protected Collection&lt;IBindingMatcher&gt; getBindingMatchers() {
-<span class="fc" id="L121">    return ObjectUtils.notNull(bindingMatchers.values());</span>
-  }
-
-  @Override
-  @NonNull
-  public final IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
-<span class="fc" id="L127">    return ObjectUtils.notNull(bindingMatchers.computeIfAbsent(definition, key -&gt; IBindingMatcher.of(definition)));</span>
-  }
-
-  @Override
-  public final IBindingMatcher registerBindingMatcher(@NonNull Class&lt;? extends IBoundObject&gt; clazz) {
-<span class="fc" id="L132">    IBoundDefinitionModelComplex definition = getBoundDefinitionForClass(clazz);</span>
-<span class="pc bpc" id="L133" title="1 of 2 branches missed.">    if (definition == null) {</span>
-<span class="nc" id="L134">      throw new IllegalArgumentException(String.format(&quot;Unable to find bound definition for class '%s'.&quot;,</span>
-<span class="nc" id="L135">          clazz.getName()));</span>
-    }
-
-    try {
-<span class="fc" id="L139">      IBoundDefinitionModelAssembly assemblyDefinition = IBoundDefinitionModelAssembly.class.cast(definition);</span>
-<span class="fc" id="L140">      return registerBindingMatcher(ObjectUtils.notNull(assemblyDefinition));</span>
-<span class="nc" id="L141">    } catch (ClassCastException ex) {</span>
-<span class="nc" id="L142">      throw new IllegalArgumentException(</span>
-<span class="nc" id="L143">          String.format(&quot;The provided class '%s' is not a root assembly.&quot;, clazz.getName()), ex);</span>
-    }
+<span class="fc" id="L131">    return getModuleLoaderStrategy().getBindingMatchers();</span>
   }
 
   @Override
   public final IBoundDefinitionModelComplex registerClassBinding(IBoundDefinitionModelComplex definition) {
-<span class="nc" id="L149">    Class&lt;?&gt; clazz = definition.getBoundClass();</span>
-<span class="nc" id="L150">    return boundClassToStrategyMap.computeIfAbsent(clazz, k -&gt; definition);</span>
+<span class="nc" id="L136">    Class&lt;?&gt; clazz = definition.getBoundClass();</span>
+<span class="nc" id="L137">    return boundClassToStrategyMap.computeIfAbsent(clazz, k -&gt; definition);</span>
   }
 
   @Override
   public final IBoundDefinitionModelComplex getBoundDefinitionForClass(@NonNull Class&lt;? extends IBoundObject&gt; clazz) {
-<span class="fc" id="L155">    return moduleLoaderStrategy.getBoundDefinitionForClass(clazz);</span>
-  }
-
-  @Override
-  public &lt;TYPE extends IDataTypeAdapter&lt;?&gt;&gt; TYPE getJavaTypeAdapterInstance(@NonNull Class&lt;TYPE&gt; clazz) {
-<span class="fc" id="L160">    return DataTypeService.getInstance().getJavaTypeAdapterByClass(clazz);</span>
+<span class="fc" id="L142">    return moduleLoaderStrategy.getBoundDefinitionForClass(clazz, this);</span>
   }
 
   /**
@@ -169,32 +151,32 @@ public class DefaultBindingContext implements IBindingContext {
   public &lt;CLASS extends IBoundObject&gt; ISerializer&lt;CLASS&gt; newSerializer(
       @NonNull Format format,
       @NonNull Class&lt;CLASS&gt; clazz) {
-<span class="fc" id="L172">    Objects.requireNonNull(format, &quot;format&quot;);</span>
+<span class="fc" id="L154">    Objects.requireNonNull(format, &quot;format&quot;);</span>
     IBoundDefinitionModelAssembly definition;
     try {
-<span class="fc" id="L175">      definition = IBoundDefinitionModelAssembly.class.cast(getBoundDefinitionForClass(clazz));</span>
-<span class="nc" id="L176">    } catch (ClassCastException ex) {</span>
-<span class="nc" id="L177">      throw new IllegalStateException(</span>
-<span class="nc" id="L178">          String.format(&quot;Class '%s' is not a bound assembly.&quot;, clazz.getClass().getName()), ex);</span>
-<span class="fc" id="L179">    }</span>
-<span class="pc bpc" id="L180" title="1 of 2 branches missed.">    if (definition == null) {</span>
-<span class="nc" id="L181">      throw new IllegalStateException(String.format(&quot;Class '%s' is not bound&quot;, clazz.getClass().getName()));</span>
+<span class="fc" id="L157">      definition = IBoundDefinitionModelAssembly.class.cast(getBoundDefinitionForClass(clazz));</span>
+<span class="nc" id="L158">    } catch (ClassCastException ex) {</span>
+<span class="nc" id="L159">      throw new IllegalStateException(</span>
+<span class="nc" id="L160">          String.format(&quot;Class '%s' is not a bound assembly.&quot;, clazz.getClass().getName()), ex);</span>
+<span class="fc" id="L161">    }</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">    if (definition == null) {</span>
+<span class="nc" id="L163">      throw new IllegalStateException(String.format(&quot;Class '%s' is not bound&quot;, clazz.getClass().getName()));</span>
     }
     ISerializer&lt;CLASS&gt; retval;
-<span class="pc bpc" id="L184" title="3 of 4 branches missed.">    switch (format) {</span>
+<span class="pc bpc" id="L166" title="3 of 4 branches missed.">    switch (format) {</span>
     case JSON:
-<span class="nc" id="L186">      retval = new DefaultJsonSerializer&lt;&gt;(definition);</span>
-<span class="nc" id="L187">      break;</span>
+<span class="nc" id="L168">      retval = new DefaultJsonSerializer&lt;&gt;(definition);</span>
+<span class="nc" id="L169">      break;</span>
     case XML:
-<span class="fc" id="L189">      retval = new DefaultXmlSerializer&lt;&gt;(definition);</span>
-<span class="fc" id="L190">      break;</span>
+<span class="fc" id="L171">      retval = new DefaultXmlSerializer&lt;&gt;(definition);</span>
+<span class="fc" id="L172">      break;</span>
     case YAML:
-<span class="nc" id="L192">      retval = new DefaultYamlSerializer&lt;&gt;(definition);</span>
-<span class="nc" id="L193">      break;</span>
+<span class="nc" id="L174">      retval = new DefaultYamlSerializer&lt;&gt;(definition);</span>
+<span class="nc" id="L175">      break;</span>
     default:
-<span class="nc" id="L195">      throw new UnsupportedOperationException(String.format(&quot;Unsupported format '%s'&quot;, format));</span>
+<span class="nc" id="L177">      throw new UnsupportedOperationException(String.format(&quot;Unsupported format '%s'&quot;, format));</span>
     }
-<span class="fc" id="L197">    return retval;</span>
+<span class="fc" id="L179">    return retval;</span>
   }
 
   /**
@@ -208,111 +190,105 @@ public class DefaultBindingContext implements IBindingContext {
       @NonNull Class&lt;CLASS&gt; clazz) {
     IBoundDefinitionModelAssembly definition;
     try {
-<span class="fc" id="L211">      definition = IBoundDefinitionModelAssembly.class.cast(getBoundDefinitionForClass(clazz));</span>
-<span class="nc" id="L212">    } catch (ClassCastException ex) {</span>
-<span class="nc" id="L213">      throw new IllegalStateException(</span>
-<span class="nc" id="L214">          String.format(&quot;Class '%s' is not a bound assembly.&quot;, clazz.getClass().getName()),</span>
+<span class="fc" id="L193">      definition = IBoundDefinitionModelAssembly.class.cast(getBoundDefinitionForClass(clazz));</span>
+<span class="nc" id="L194">    } catch (ClassCastException ex) {</span>
+<span class="nc" id="L195">      throw new IllegalStateException(</span>
+<span class="nc" id="L196">          String.format(&quot;Class '%s' is not a bound assembly.&quot;, clazz.getClass().getName()),</span>
           ex);
-<span class="fc" id="L216">    }</span>
-<span class="pc bpc" id="L217" title="1 of 2 branches missed.">    if (definition == null) {</span>
-<span class="nc" id="L218">      throw new IllegalStateException(String.format(&quot;Class '%s' is not bound&quot;, clazz.getName()));</span>
+<span class="fc" id="L198">    }</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">    if (definition == null) {</span>
+<span class="nc" id="L200">      throw new IllegalStateException(String.format(&quot;Class '%s' is not bound&quot;, clazz.getName()));</span>
     }
     IDeserializer&lt;CLASS&gt; retval;
-<span class="pc bpc" id="L221" title="2 of 4 branches missed.">    switch (format) {</span>
+<span class="pc bpc" id="L203" title="2 of 4 branches missed.">    switch (format) {</span>
     case JSON:
-<span class="fc" id="L223">      retval = new DefaultJsonDeserializer&lt;&gt;(definition);</span>
-<span class="fc" id="L224">      break;</span>
+<span class="fc" id="L205">      retval = new DefaultJsonDeserializer&lt;&gt;(definition);</span>
+<span class="fc" id="L206">      break;</span>
     case XML:
-<span class="fc" id="L226">      retval = new DefaultXmlDeserializer&lt;&gt;(definition);</span>
-<span class="fc" id="L227">      break;</span>
+<span class="fc" id="L208">      retval = new DefaultXmlDeserializer&lt;&gt;(definition);</span>
+<span class="fc" id="L209">      break;</span>
     case YAML:
-<span class="nc" id="L229">      retval = new DefaultYamlDeserializer&lt;&gt;(definition);</span>
-<span class="nc" id="L230">      break;</span>
+<span class="nc" id="L211">      retval = new DefaultYamlDeserializer&lt;&gt;(definition);</span>
+<span class="nc" id="L212">      break;</span>
     default:
-<span class="nc" id="L232">      throw new UnsupportedOperationException(String.format(&quot;Unsupported format '%s'&quot;, format));</span>
+<span class="nc" id="L214">      throw new UnsupportedOperationException(String.format(&quot;Unsupported format '%s'&quot;, format));</span>
     }
 
-<span class="fc" id="L235">    return retval;</span>
-  }
-
-  @Override
-  @SuppressWarnings({ &quot;PMD.UseProperClassLoader&quot;, &quot;unchecked&quot; }) // false positive
-  @NonNull
-  public IBindingContext registerModule(
-      @NonNull IModule module,
-      @NonNull Path compilePath) throws IOException {
-<span class="pc bpc" id="L244" title="1 of 2 branches missed.">    if (!(module instanceof IBoundModule)) {</span>
-<span class="fc" id="L245">      Files.createDirectories(compilePath);</span>
-
-<span class="fc" id="L247">      ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(</span>
-          compilePath,
-<span class="fc" id="L249">          ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));</span>
-
-<span class="fc" id="L251">      IProduction production = ModuleCompilerHelper.compileMetaschema(module, compilePath);</span>
-<span class="fc" id="L252">      production.getModuleProductions().stream()</span>
-<span class="fc" id="L253">          .map(item -&gt; {</span>
-            try {
-<span class="fc" id="L255">              return (Class&lt;? extends IBoundModule&gt;) classLoader.loadClass(item.getClassName().reflectionName());</span>
-<span class="nc" id="L256">            } catch (ClassNotFoundException ex) {</span>
-<span class="nc" id="L257">              throw new IllegalStateException(ex);</span>
-            }
-          })
-<span class="fc" id="L260">          .forEachOrdered(clazz -&gt; {</span>
-<span class="fc" id="L261">            IBoundModule boundModule = registerModule(ObjectUtils.notNull(clazz));</span>
-            // force the binding matchers to load
-<span class="fc" id="L263">            boundModule.getRootAssemblyDefinitions();</span>
-<span class="fc" id="L264">          });</span>
-    }
-<span class="fc" id="L266">    return this;</span>
-  }
-
-  @Override
-  public IBoundModule registerModule(Class&lt;? extends IBoundModule&gt; clazz) {
-<span class="fc" id="L271">    return getModuleLoaderStrategy().loadModule(clazz);</span>
-    // retval.getExportedAssemblyDefinitions().stream()
-    // .map(def -&gt; (IBoundDefinitionModelAssembly) def)
-    // .filter(def -&gt; def.isRoot())
-    // .forEachOrdered(def -&gt; registerBindingMatcher(ObjectUtils.notNull(def)));
-    // return retval;
+<span class="fc" id="L217">    return retval;</span>
   }
 
   @Override
   public Class&lt;? extends IBoundObject&gt; getBoundClassForRootXmlQName(@NonNull QName rootQName) {
-<span class="fc" id="L281">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
-<span class="pc bpc" id="L282" title="1 of 2 branches missed.">    for (IBindingMatcher matcher : getBindingMatchers()) {</span>
-<span class="fc" id="L283">      retval = matcher.getBoundClassForXmlQName(rootQName);</span>
-<span class="fc bfc" id="L284" title="All 2 branches covered.">      if (retval != null) {</span>
-<span class="fc" id="L285">        break;</span>
+<span class="fc" id="L222">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">    for (IBindingMatcher matcher : getBindingMatchers()) {</span>
+<span class="fc" id="L224">      retval = matcher.getBoundClassForXmlQName(rootQName);</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">      if (retval != null) {</span>
+<span class="fc" id="L226">        break;</span>
       }
-<span class="fc" id="L287">    }</span>
-<span class="fc" id="L288">    return retval;</span>
+<span class="fc" id="L228">    }</span>
+<span class="fc" id="L229">    return retval;</span>
   }
 
   @Override
   public Class&lt;? extends IBoundObject&gt; getBoundClassForRootJsonName(@NonNull String rootName) {
-<span class="fc" id="L293">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
-<span class="pc bpc" id="L294" title="1 of 2 branches missed.">    for (IBindingMatcher matcher : getBindingMatchers()) {</span>
-<span class="fc" id="L295">      retval = matcher.getBoundClassForJsonName(rootName);</span>
-<span class="fc bfc" id="L296" title="All 2 branches covered.">      if (retval != null) {</span>
-<span class="fc" id="L297">        break;</span>
+<span class="fc" id="L234">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">    for (IBindingMatcher matcher : getBindingMatchers()) {</span>
+<span class="fc" id="L236">      retval = matcher.getBoundClassForJsonName(rootName);</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">      if (retval != null) {</span>
+<span class="fc" id="L238">        break;</span>
       }
-<span class="fc" id="L299">    }</span>
-<span class="fc" id="L300">    return retval;</span>
-  }
-
-  @Override
-  public DefaultBoundLoader newBoundLoader() {
-<span class="fc" id="L305">    return new DefaultBoundLoader(this);</span>
+<span class="fc" id="L240">    }</span>
+<span class="fc" id="L241">    return retval;</span>
   }
 
   @Override
   public &lt;CLASS extends IBoundObject&gt; CLASS deepCopy(@NonNull CLASS other, IBoundObject parentInstance)
       throws BindingException {
-<span class="nc" id="L311">    IBoundDefinitionModelComplex definition = getBoundDefinitionForClass(other.getClass());</span>
-<span class="nc bnc" id="L312" title="All 2 branches missed.">    if (definition == null) {</span>
-<span class="nc" id="L313">      throw new IllegalStateException(String.format(&quot;Class '%s' is not bound&quot;, other.getClass().getName()));</span>
+<span class="nc" id="L247">    IBoundDefinitionModelComplex definition = getBoundDefinitionForClass(other.getClass());</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">    if (definition == null) {</span>
+<span class="nc" id="L249">      throw new IllegalStateException(String.format(&quot;Class '%s' is not bound&quot;, other.getClass().getName()));</span>
     }
-<span class="nc" id="L315">    return ObjectUtils.asType(definition.deepCopyItem(other, parentInstance));</span>
+<span class="nc" id="L251">    return ObjectUtils.asType(definition.deepCopyItem(other, parentInstance));</span>
+  }
+
+  private static class ModuleLoader
+      extends BindingModuleLoader {
+
+    public ModuleLoader(
+        @NonNull IBindingContext bindingContext,
+        @NonNull ModuleLoadingPostProcessor postProcessor) {
+<span class="fc" id="L260">      super(bindingContext, postProcessor);</span>
+<span class="fc" id="L261">    }</span>
+
+    @Override
+    public IBindingMetaschemaModule load(URI resource) throws MetaschemaException, IOException {
+<span class="fc" id="L265">      IBindingMetaschemaModule module = super.load(resource);</span>
+<span class="fc" id="L266">      getBindingContext().registerModule(module);</span>
+<span class="fc" id="L267">      return module;</span>
+    }
+
+    @Override
+    public IBindingMetaschemaModule load(Path path) throws MetaschemaException, IOException {
+<span class="fc" id="L272">      IBindingMetaschemaModule module = super.load(path);</span>
+<span class="fc" id="L273">      getBindingContext().registerModule(module);</span>
+<span class="fc" id="L274">      return module;</span>
+    }
+
+    @Override
+    public IBindingMetaschemaModule load(URL url) throws MetaschemaException, IOException {
+<span class="fc" id="L279">      IBindingMetaschemaModule module = super.load(url);</span>
+<span class="fc" id="L280">      getBindingContext().registerModule(module);</span>
+<span class="fc" id="L281">      return module;</span>
+    }
+
+    @Override
+    protected IBindingMetaschemaModule newModule(
+        URI resource,
+        METASCHEMA binding,
+        List&lt;? extends IBindingMetaschemaModule&gt; importedModules) throws MetaschemaException {
+<span class="fc" id="L289">      return super.newModule(resource, binding, importedModules);</span>
+    }
+
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

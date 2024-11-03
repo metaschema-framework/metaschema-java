@@ -34,151 +34,160 @@
 <span class="source-line-no">021</span><span id="line-21">import java.io.IOException;</span>
 <span class="source-line-no">022</span><span id="line-22">import java.io.Reader;</span>
 <span class="source-line-no">023</span><span id="line-23">import java.net.URI;</span>
-<span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.util.concurrent.locks.Lock;</span>
+<span class="source-line-no">025</span><span id="line-25">import java.util.concurrent.locks.ReentrantLock;</span>
 <span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">/**</span>
-<span class="source-line-no">028</span><span id="line-28"> * The base class of all format-specific deserializers.</span>
-<span class="source-line-no">029</span><span id="line-29"> *</span>
-<span class="source-line-no">030</span><span id="line-30"> * @param &lt;CLASS&gt;</span>
-<span class="source-line-no">031</span><span id="line-31"> *          the bound class to deserialize to</span>
-<span class="source-line-no">032</span><span id="line-32"> */</span>
-<span class="source-line-no">033</span><span id="line-33">public abstract class AbstractDeserializer&lt;CLASS extends IBoundObject&gt;</span>
-<span class="source-line-no">034</span><span id="line-34">    extends AbstractSerializationBase&lt;DeserializationFeature&lt;?&gt;&gt;</span>
-<span class="source-line-no">035</span><span id="line-35">    implements IDeserializer&lt;CLASS&gt; {</span>
-<span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37">  private IConstraintValidationHandler constraintValidationHandler;</span>
+<span class="source-line-no">027</span><span id="line-27">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">028</span><span id="line-28"></span>
+<span class="source-line-no">029</span><span id="line-29">/**</span>
+<span class="source-line-no">030</span><span id="line-30"> * The base class of all format-specific deserializers.</span>
+<span class="source-line-no">031</span><span id="line-31"> *</span>
+<span class="source-line-no">032</span><span id="line-32"> * @param &lt;CLASS&gt;</span>
+<span class="source-line-no">033</span><span id="line-33"> *          the bound class to deserialize to</span>
+<span class="source-line-no">034</span><span id="line-34"> */</span>
+<span class="source-line-no">035</span><span id="line-35">public abstract class AbstractDeserializer&lt;CLASS extends IBoundObject&gt;</span>
+<span class="source-line-no">036</span><span id="line-36">    extends AbstractSerializationBase&lt;DeserializationFeature&lt;?&gt;&gt;</span>
+<span class="source-line-no">037</span><span id="line-37">    implements IDeserializer&lt;CLASS&gt; {</span>
 <span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  /**</span>
-<span class="source-line-no">040</span><span id="line-40">   * Construct a new deserializer.</span>
-<span class="source-line-no">041</span><span id="line-41">   *</span>
-<span class="source-line-no">042</span><span id="line-42">   * @param definition</span>
-<span class="source-line-no">043</span><span id="line-43">   *          the bound class information for the Java type this deserializer is</span>
-<span class="source-line-no">044</span><span id="line-44">   *          operating on</span>
-<span class="source-line-no">045</span><span id="line-45">   */</span>
-<span class="source-line-no">046</span><span id="line-46">  protected AbstractDeserializer(@NonNull IBoundDefinitionModelAssembly definition) {</span>
-<span class="source-line-no">047</span><span id="line-47">    super(definition);</span>
-<span class="source-line-no">048</span><span id="line-48">  }</span>
-<span class="source-line-no">049</span><span id="line-49"></span>
-<span class="source-line-no">050</span><span id="line-50">  /**</span>
-<span class="source-line-no">051</span><span id="line-51">   * Get the constraint validation handler configured for this deserializer, which</span>
-<span class="source-line-no">052</span><span id="line-52">   * will be used to validate loaded data.</span>
-<span class="source-line-no">053</span><span id="line-53">   *</span>
-<span class="source-line-no">054</span><span id="line-54">   * @return the deserializer</span>
-<span class="source-line-no">055</span><span id="line-55">   */</span>
-<span class="source-line-no">056</span><span id="line-56">  @Override</span>
-<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
-<span class="source-line-no">058</span><span id="line-58">  public IConstraintValidationHandler getConstraintValidationHandler() {</span>
-<span class="source-line-no">059</span><span id="line-59">    synchronized (this) {</span>
-<span class="source-line-no">060</span><span id="line-60">      if (constraintValidationHandler == null) {</span>
-<span class="source-line-no">061</span><span id="line-61">        constraintValidationHandler = new LoggingConstraintValidationHandler();</span>
-<span class="source-line-no">062</span><span id="line-62">      }</span>
-<span class="source-line-no">063</span><span id="line-63">      return ObjectUtils.notNull(constraintValidationHandler);</span>
-<span class="source-line-no">064</span><span id="line-64">    }</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  @Override</span>
-<span class="source-line-no">068</span><span id="line-68">  public void setConstraintValidationHandler(@NonNull IConstraintValidationHandler constraintValidationHandler) {</span>
-<span class="source-line-no">069</span><span id="line-69">    synchronized (this) {</span>
-<span class="source-line-no">070</span><span id="line-70">      this.constraintValidationHandler = constraintValidationHandler;</span>
-<span class="source-line-no">071</span><span id="line-71">    }</span>
-<span class="source-line-no">072</span><span id="line-72">  }</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">  @Override</span>
-<span class="source-line-no">075</span><span id="line-75">  public INodeItem deserializeToNodeItem(Reader reader, URI documentUri) throws IOException {</span>
-<span class="source-line-no">076</span><span id="line-76"></span>
-<span class="source-line-no">077</span><span id="line-77">    INodeItem nodeItem;</span>
-<span class="source-line-no">078</span><span id="line-78">    try {</span>
-<span class="source-line-no">079</span><span id="line-79">      nodeItem = deserializeToNodeItemInternal(reader, documentUri);</span>
-<span class="source-line-no">080</span><span id="line-80">    } catch (Exception ex) { // NOPMD - this is intentional</span>
-<span class="source-line-no">081</span><span id="line-81">      throw new IOException(ex);</span>
-<span class="source-line-no">082</span><span id="line-82">    }</span>
-<span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">    if (isValidating()) {</span>
-<span class="source-line-no">085</span><span id="line-85">      validate(nodeItem);</span>
-<span class="source-line-no">086</span><span id="line-86">    }</span>
-<span class="source-line-no">087</span><span id="line-87">    return nodeItem;</span>
-<span class="source-line-no">088</span><span id="line-88">  }</span>
-<span class="source-line-no">089</span><span id="line-89"></span>
-<span class="source-line-no">090</span><span id="line-90">  /**</span>
-<span class="source-line-no">091</span><span id="line-91">   * This abstract method delegates parsing to the concrete implementation.</span>
-<span class="source-line-no">092</span><span id="line-92">   *</span>
-<span class="source-line-no">093</span><span id="line-93">   * @param reader</span>
-<span class="source-line-no">094</span><span id="line-94">   *          the reader instance to read data from</span>
-<span class="source-line-no">095</span><span id="line-95">   * @param documentUri</span>
-<span class="source-line-no">096</span><span id="line-96">   *          the URI of the document that is being read</span>
-<span class="source-line-no">097</span><span id="line-97">   * @return a new node item containing the read contents</span>
-<span class="source-line-no">098</span><span id="line-98">   * @throws IOException</span>
-<span class="source-line-no">099</span><span id="line-99">   *           if an error occurred while reading data from the stream</span>
-<span class="source-line-no">100</span><span id="line-100">   */</span>
-<span class="source-line-no">101</span><span id="line-101">  @NonNull</span>
-<span class="source-line-no">102</span><span id="line-102">  protected abstract INodeItem deserializeToNodeItemInternal(@NonNull Reader reader, @NonNull URI documentUri)</span>
-<span class="source-line-no">103</span><span id="line-103">      throws IOException;</span>
-<span class="source-line-no">104</span><span id="line-104"></span>
-<span class="source-line-no">105</span><span id="line-105">  @Override</span>
-<span class="source-line-no">106</span><span id="line-106">  public final CLASS deserializeToValue(Reader reader, URI documentUri) throws IOException {</span>
-<span class="source-line-no">107</span><span id="line-107">    CLASS retval;</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">    if (isValidating()) {</span>
-<span class="source-line-no">110</span><span id="line-110">      INodeItem nodeItem = deserializeToNodeItemInternal(reader, documentUri);</span>
-<span class="source-line-no">111</span><span id="line-111">      validate(nodeItem);</span>
-<span class="source-line-no">112</span><span id="line-112">      retval = ObjectUtils.asType(ObjectUtils.requireNonNull(nodeItem.getValue()));</span>
-<span class="source-line-no">113</span><span id="line-113">    } else {</span>
-<span class="source-line-no">114</span><span id="line-114">      retval = deserializeToValueInternal(reader, documentUri);</span>
-<span class="source-line-no">115</span><span id="line-115">    }</span>
-<span class="source-line-no">116</span><span id="line-116">    return retval;</span>
-<span class="source-line-no">117</span><span id="line-117">  }</span>
-<span class="source-line-no">118</span><span id="line-118"></span>
-<span class="source-line-no">119</span><span id="line-119">  private void validate(@NonNull INodeItem nodeItem) {</span>
-<span class="source-line-no">120</span><span id="line-120">    IDefinitionNodeItem&lt;?, ?&gt; definitionNodeItem;</span>
-<span class="source-line-no">121</span><span id="line-121">    if (nodeItem instanceof IDocumentNodeItem) {</span>
-<span class="source-line-no">122</span><span id="line-122">      definitionNodeItem = ((IDocumentNodeItem) nodeItem).getRootAssemblyNodeItem();</span>
-<span class="source-line-no">123</span><span id="line-123">    } else if (nodeItem instanceof IDefinitionNodeItem) {</span>
-<span class="source-line-no">124</span><span id="line-124">      definitionNodeItem = (IDefinitionNodeItem&lt;?, ?&gt;) nodeItem;</span>
-<span class="source-line-no">125</span><span id="line-125">    } else {</span>
-<span class="source-line-no">126</span><span id="line-126">      throw new UnsupportedOperationException(String.format(</span>
-<span class="source-line-no">127</span><span id="line-127">          "The node item type '%s' is not supported for validation.",</span>
-<span class="source-line-no">128</span><span id="line-128">          nodeItem.getClass().getName()));</span>
-<span class="source-line-no">129</span><span id="line-129">    }</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">    DynamicContext dynamicContext = new DynamicContext(nodeItem.getStaticContext());</span>
-<span class="source-line-no">132</span><span id="line-132">    dynamicContext.setDocumentLoader(getBindingContext().newBoundLoader());</span>
-<span class="source-line-no">133</span><span id="line-133">    DefaultConstraintValidator validator = new DefaultConstraintValidator(getConstraintValidationHandler());</span>
-<span class="source-line-no">134</span><span id="line-134">    validator.validate(definitionNodeItem, dynamicContext);</span>
-<span class="source-line-no">135</span><span id="line-135">    validator.finalizeValidation(dynamicContext);</span>
-<span class="source-line-no">136</span><span id="line-136">  }</span>
-<span class="source-line-no">137</span><span id="line-137"></span>
-<span class="source-line-no">138</span><span id="line-138">  @NonNull</span>
-<span class="source-line-no">139</span><span id="line-139">  protected abstract CLASS deserializeToValueInternal(@NonNull Reader reader, @NonNull URI documentUri)</span>
-<span class="source-line-no">140</span><span id="line-140">      throws IOException;</span>
-<span class="source-line-no">141</span><span id="line-141"></span>
-<span class="source-line-no">142</span><span id="line-142">  @Override</span>
-<span class="source-line-no">143</span><span id="line-143">  public IDeserializer&lt;CLASS&gt; enableFeature(DeserializationFeature&lt;?&gt; feature) {</span>
-<span class="source-line-no">144</span><span id="line-144">    return set(feature, true);</span>
+<span class="source-line-no">039</span><span id="line-39">  private IConstraintValidationHandler constraintValidationHandler;</span>
+<span class="source-line-no">040</span><span id="line-40">  private final Lock handlerLock = new ReentrantLock();</span>
+<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">042</span><span id="line-42">  /**</span>
+<span class="source-line-no">043</span><span id="line-43">   * Construct a new deserializer.</span>
+<span class="source-line-no">044</span><span id="line-44">   *</span>
+<span class="source-line-no">045</span><span id="line-45">   * @param definition</span>
+<span class="source-line-no">046</span><span id="line-46">   *          the bound class information for the Java type this deserializer is</span>
+<span class="source-line-no">047</span><span id="line-47">   *          operating on</span>
+<span class="source-line-no">048</span><span id="line-48">   */</span>
+<span class="source-line-no">049</span><span id="line-49">  protected AbstractDeserializer(@NonNull IBoundDefinitionModelAssembly definition) {</span>
+<span class="source-line-no">050</span><span id="line-50">    super(definition);</span>
+<span class="source-line-no">051</span><span id="line-51">  }</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">  /**</span>
+<span class="source-line-no">054</span><span id="line-54">   * Get the constraint validation handler configured for this deserializer, which</span>
+<span class="source-line-no">055</span><span id="line-55">   * will be used to validate loaded data.</span>
+<span class="source-line-no">056</span><span id="line-56">   *</span>
+<span class="source-line-no">057</span><span id="line-57">   * @return the deserializer</span>
+<span class="source-line-no">058</span><span id="line-58">   */</span>
+<span class="source-line-no">059</span><span id="line-59">  @Override</span>
+<span class="source-line-no">060</span><span id="line-60">  @NonNull</span>
+<span class="source-line-no">061</span><span id="line-61">  public IConstraintValidationHandler getConstraintValidationHandler() {</span>
+<span class="source-line-no">062</span><span id="line-62">    handlerLock.lock();</span>
+<span class="source-line-no">063</span><span id="line-63">    try {</span>
+<span class="source-line-no">064</span><span id="line-64">      if (constraintValidationHandler == null) {</span>
+<span class="source-line-no">065</span><span id="line-65">        constraintValidationHandler = new LoggingConstraintValidationHandler();</span>
+<span class="source-line-no">066</span><span id="line-66">      }</span>
+<span class="source-line-no">067</span><span id="line-67">      return ObjectUtils.notNull(constraintValidationHandler);</span>
+<span class="source-line-no">068</span><span id="line-68">    } finally {</span>
+<span class="source-line-no">069</span><span id="line-69">      handlerLock.unlock();</span>
+<span class="source-line-no">070</span><span id="line-70">    }</span>
+<span class="source-line-no">071</span><span id="line-71">  }</span>
+<span class="source-line-no">072</span><span id="line-72"></span>
+<span class="source-line-no">073</span><span id="line-73">  @Override</span>
+<span class="source-line-no">074</span><span id="line-74">  public void setConstraintValidationHandler(@NonNull IConstraintValidationHandler constraintValidationHandler) {</span>
+<span class="source-line-no">075</span><span id="line-75">    handlerLock.lock();</span>
+<span class="source-line-no">076</span><span id="line-76">    try {</span>
+<span class="source-line-no">077</span><span id="line-77">      this.constraintValidationHandler = constraintValidationHandler;</span>
+<span class="source-line-no">078</span><span id="line-78">    } finally {</span>
+<span class="source-line-no">079</span><span id="line-79">      handlerLock.unlock();</span>
+<span class="source-line-no">080</span><span id="line-80">    }</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">  @Override</span>
+<span class="source-line-no">084</span><span id="line-84">  public INodeItem deserializeToNodeItem(Reader reader, URI documentUri) throws IOException {</span>
+<span class="source-line-no">085</span><span id="line-85"></span>
+<span class="source-line-no">086</span><span id="line-86">    INodeItem nodeItem;</span>
+<span class="source-line-no">087</span><span id="line-87">    try {</span>
+<span class="source-line-no">088</span><span id="line-88">      nodeItem = deserializeToNodeItemInternal(reader, documentUri);</span>
+<span class="source-line-no">089</span><span id="line-89">    } catch (Exception ex) { // NOPMD - this is intentional</span>
+<span class="source-line-no">090</span><span id="line-90">      throw new IOException(ex);</span>
+<span class="source-line-no">091</span><span id="line-91">    }</span>
+<span class="source-line-no">092</span><span id="line-92"></span>
+<span class="source-line-no">093</span><span id="line-93">    if (isValidating()) {</span>
+<span class="source-line-no">094</span><span id="line-94">      validate(nodeItem);</span>
+<span class="source-line-no">095</span><span id="line-95">    }</span>
+<span class="source-line-no">096</span><span id="line-96">    return nodeItem;</span>
+<span class="source-line-no">097</span><span id="line-97">  }</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">  /**</span>
+<span class="source-line-no">100</span><span id="line-100">   * This abstract method delegates parsing to the concrete implementation.</span>
+<span class="source-line-no">101</span><span id="line-101">   *</span>
+<span class="source-line-no">102</span><span id="line-102">   * @param reader</span>
+<span class="source-line-no">103</span><span id="line-103">   *          the reader instance to read data from</span>
+<span class="source-line-no">104</span><span id="line-104">   * @param documentUri</span>
+<span class="source-line-no">105</span><span id="line-105">   *          the URI of the document that is being read</span>
+<span class="source-line-no">106</span><span id="line-106">   * @return a new node item containing the read contents</span>
+<span class="source-line-no">107</span><span id="line-107">   * @throws IOException</span>
+<span class="source-line-no">108</span><span id="line-108">   *           if an error occurred while reading data from the stream</span>
+<span class="source-line-no">109</span><span id="line-109">   */</span>
+<span class="source-line-no">110</span><span id="line-110">  @NonNull</span>
+<span class="source-line-no">111</span><span id="line-111">  protected abstract INodeItem deserializeToNodeItemInternal(@NonNull Reader reader, @NonNull URI documentUri)</span>
+<span class="source-line-no">112</span><span id="line-112">      throws IOException;</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">  @Override</span>
+<span class="source-line-no">115</span><span id="line-115">  public final CLASS deserializeToValue(Reader reader, URI documentUri) throws IOException {</span>
+<span class="source-line-no">116</span><span id="line-116">    CLASS retval;</span>
+<span class="source-line-no">117</span><span id="line-117"></span>
+<span class="source-line-no">118</span><span id="line-118">    if (isValidating()) {</span>
+<span class="source-line-no">119</span><span id="line-119">      INodeItem nodeItem = deserializeToNodeItemInternal(reader, documentUri);</span>
+<span class="source-line-no">120</span><span id="line-120">      validate(nodeItem);</span>
+<span class="source-line-no">121</span><span id="line-121">      retval = ObjectUtils.asType(ObjectUtils.requireNonNull(nodeItem.getValue()));</span>
+<span class="source-line-no">122</span><span id="line-122">    } else {</span>
+<span class="source-line-no">123</span><span id="line-123">      retval = deserializeToValueInternal(reader, documentUri);</span>
+<span class="source-line-no">124</span><span id="line-124">    }</span>
+<span class="source-line-no">125</span><span id="line-125">    return retval;</span>
+<span class="source-line-no">126</span><span id="line-126">  }</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">  private void validate(@NonNull INodeItem nodeItem) {</span>
+<span class="source-line-no">129</span><span id="line-129">    IDefinitionNodeItem&lt;?, ?&gt; definitionNodeItem;</span>
+<span class="source-line-no">130</span><span id="line-130">    if (nodeItem instanceof IDocumentNodeItem) {</span>
+<span class="source-line-no">131</span><span id="line-131">      definitionNodeItem = ((IDocumentNodeItem) nodeItem).getRootAssemblyNodeItem();</span>
+<span class="source-line-no">132</span><span id="line-132">    } else if (nodeItem instanceof IDefinitionNodeItem) {</span>
+<span class="source-line-no">133</span><span id="line-133">      definitionNodeItem = (IDefinitionNodeItem&lt;?, ?&gt;) nodeItem;</span>
+<span class="source-line-no">134</span><span id="line-134">    } else {</span>
+<span class="source-line-no">135</span><span id="line-135">      throw new UnsupportedOperationException(String.format(</span>
+<span class="source-line-no">136</span><span id="line-136">          "The node item type '%s' is not supported for validation.",</span>
+<span class="source-line-no">137</span><span id="line-137">          nodeItem.getClass().getName()));</span>
+<span class="source-line-no">138</span><span id="line-138">    }</span>
+<span class="source-line-no">139</span><span id="line-139"></span>
+<span class="source-line-no">140</span><span id="line-140">    DynamicContext dynamicContext = new DynamicContext(nodeItem.getStaticContext());</span>
+<span class="source-line-no">141</span><span id="line-141">    dynamicContext.setDocumentLoader(getBindingContext().newBoundLoader());</span>
+<span class="source-line-no">142</span><span id="line-142">    DefaultConstraintValidator validator = new DefaultConstraintValidator(getConstraintValidationHandler());</span>
+<span class="source-line-no">143</span><span id="line-143">    validator.validate(definitionNodeItem, dynamicContext);</span>
+<span class="source-line-no">144</span><span id="line-144">    validator.finalizeValidation(dynamicContext);</span>
 <span class="source-line-no">145</span><span id="line-145">  }</span>
 <span class="source-line-no">146</span><span id="line-146"></span>
-<span class="source-line-no">147</span><span id="line-147">  @Override</span>
-<span class="source-line-no">148</span><span id="line-148">  public IDeserializer&lt;CLASS&gt; disableFeature(DeserializationFeature&lt;?&gt; feature) {</span>
-<span class="source-line-no">149</span><span id="line-149">    return set(feature, false);</span>
-<span class="source-line-no">150</span><span id="line-150">  }</span>
-<span class="source-line-no">151</span><span id="line-151"></span>
-<span class="source-line-no">152</span><span id="line-152">  @Override</span>
-<span class="source-line-no">153</span><span id="line-153">  public IDeserializer&lt;CLASS&gt; applyConfiguration(</span>
-<span class="source-line-no">154</span><span id="line-154">      @NonNull IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; other) {</span>
-<span class="source-line-no">155</span><span id="line-155">    IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; config = getConfiguration();</span>
-<span class="source-line-no">156</span><span id="line-156">    config.applyConfiguration(other);</span>
-<span class="source-line-no">157</span><span id="line-157">    configurationChanged(config);</span>
-<span class="source-line-no">158</span><span id="line-158">    return this;</span>
+<span class="source-line-no">147</span><span id="line-147">  @NonNull</span>
+<span class="source-line-no">148</span><span id="line-148">  protected abstract CLASS deserializeToValueInternal(@NonNull Reader reader, @NonNull URI documentUri)</span>
+<span class="source-line-no">149</span><span id="line-149">      throws IOException;</span>
+<span class="source-line-no">150</span><span id="line-150"></span>
+<span class="source-line-no">151</span><span id="line-151">  @Override</span>
+<span class="source-line-no">152</span><span id="line-152">  public IDeserializer&lt;CLASS&gt; enableFeature(DeserializationFeature&lt;?&gt; feature) {</span>
+<span class="source-line-no">153</span><span id="line-153">    return set(feature, true);</span>
+<span class="source-line-no">154</span><span id="line-154">  }</span>
+<span class="source-line-no">155</span><span id="line-155"></span>
+<span class="source-line-no">156</span><span id="line-156">  @Override</span>
+<span class="source-line-no">157</span><span id="line-157">  public IDeserializer&lt;CLASS&gt; disableFeature(DeserializationFeature&lt;?&gt; feature) {</span>
+<span class="source-line-no">158</span><span id="line-158">    return set(feature, false);</span>
 <span class="source-line-no">159</span><span id="line-159">  }</span>
 <span class="source-line-no">160</span><span id="line-160"></span>
 <span class="source-line-no">161</span><span id="line-161">  @Override</span>
-<span class="source-line-no">162</span><span id="line-162">  public IDeserializer&lt;CLASS&gt; set(DeserializationFeature&lt;?&gt; feature, Object value) {</span>
-<span class="source-line-no">163</span><span id="line-163">    IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; config = getConfiguration();</span>
-<span class="source-line-no">164</span><span id="line-164">    config.set(feature, value);</span>
-<span class="source-line-no">165</span><span id="line-165">    configurationChanged(config);</span>
-<span class="source-line-no">166</span><span id="line-166">    return this;</span>
-<span class="source-line-no">167</span><span id="line-167">  }</span>
-<span class="source-line-no">168</span><span id="line-168">}</span>
+<span class="source-line-no">162</span><span id="line-162">  public IDeserializer&lt;CLASS&gt; applyConfiguration(</span>
+<span class="source-line-no">163</span><span id="line-163">      @NonNull IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; other) {</span>
+<span class="source-line-no">164</span><span id="line-164">    IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; config = getConfiguration();</span>
+<span class="source-line-no">165</span><span id="line-165">    config.applyConfiguration(other);</span>
+<span class="source-line-no">166</span><span id="line-166">    configurationChanged(config);</span>
+<span class="source-line-no">167</span><span id="line-167">    return this;</span>
+<span class="source-line-no">168</span><span id="line-168">  }</span>
+<span class="source-line-no">169</span><span id="line-169"></span>
+<span class="source-line-no">170</span><span id="line-170">  @Override</span>
+<span class="source-line-no">171</span><span id="line-171">  public IDeserializer&lt;CLASS&gt; set(DeserializationFeature&lt;?&gt; feature, Object value) {</span>
+<span class="source-line-no">172</span><span id="line-172">    IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; config = getConfiguration();</span>
+<span class="source-line-no">173</span><span id="line-173">    config.set(feature, value);</span>
+<span class="source-line-no">174</span><span id="line-174">    configurationChanged(config);</span>
+<span class="source-line-no">175</span><span id="line-175">    return this;</span>
+<span class="source-line-no">176</span><span id="line-176">  }</span>
+<span class="source-line-no">177</span><span id="line-177">}</span>
 
 
 

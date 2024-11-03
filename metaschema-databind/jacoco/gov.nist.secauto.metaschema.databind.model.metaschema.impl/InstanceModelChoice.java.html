@@ -17,11 +17,10 @@ import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyModel;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyModel.Choice;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -34,8 +33,6 @@ public class InstanceModelChoice
         IFieldInstanceAbsolute,
         IAssemblyInstanceAbsolute&gt;
     implements IBindingInstance {
-  @NonNull
-  private final AssemblyModel.Choice binding;
   @NonNull
   private final Lazy&lt;IContainerModelSupport&lt;
       IModelInstanceAbsolute,
@@ -51,27 +48,21 @@ public class InstanceModelChoice
       int position,
       @NonNull IBindingDefinitionModelAssembly parent,
       @NonNull INodeItemFactory nodeItemFactory) {
-<span class="fc" id="L54">    super(parent);</span>
-<span class="fc" id="L55">    this.binding = binding;</span>
-<span class="fc" id="L56">    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; ChoiceModelContainerSupport.of(</span>
+<span class="fc" id="L51">    super(parent);</span>
+<span class="fc" id="L52">    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; ChoiceModelContainerSupport.of(</span>
         binding,
         bindingInstance,
         this,
         nodeItemFactory)));
-<span class="fc" id="L61">    this.boundNodeItem = ObjectUtils.notNull(</span>
-<span class="pc" id="L62">        Lazy.lazy(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())</span>
-<span class="nc" id="L63">            .getModelItemsByName(bindingInstance.getXmlQName())</span>
-<span class="nc" id="L64">            .get(position)));</span>
-<span class="fc" id="L65">  }</span>
-
-  @NonNull
-  protected AssemblyModel.Choice getBinding() {
-<span class="nc" id="L69">    return binding;</span>
-  }
+<span class="fc" id="L57">    this.boundNodeItem = ObjectUtils.notNull(</span>
+<span class="pc" id="L58">        Lazy.lazy(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())</span>
+<span class="nc" id="L59">            .getModelItemsByName(bindingInstance.getXmlQName())</span>
+<span class="nc" id="L60">            .get(position)));</span>
+<span class="fc" id="L61">  }</span>
 
   @Override
   public IBindingMetaschemaModule getContainingModule() {
-<span class="nc" id="L74">    return getContainingDefinition().getContainingModule();</span>
+<span class="nc" id="L65">    return getContainingDefinition().getContainingModule();</span>
   }
 
   @Override
@@ -80,28 +71,28 @@ public class InstanceModelChoice
       INamedModelInstanceAbsolute,
       IFieldInstanceAbsolute,
       IAssemblyInstanceAbsolute&gt; getModelContainer() {
-<span class="fc" id="L83">    return ObjectUtils.notNull(modelContainer.get());</span>
+<span class="fc" id="L74">    return ObjectUtils.notNull(modelContainer.get());</span>
   }
 
   @Override
   public IAssemblyNodeItem getSourceNodeItem() {
-<span class="nc" id="L88">    return boundNodeItem.get();</span>
+<span class="nc" id="L79">    return ObjectUtils.notNull(boundNodeItem.get());</span>
   }
 
   @Override
   public IAssemblyDefinition getOwningDefinition() {
-<span class="fc" id="L93">    return getContainingDefinition();</span>
+<span class="fc" id="L84">    return getContainingDefinition();</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
     // no remarks
-<span class="nc" id="L99">    return null;</span>
+<span class="nc" id="L90">    return null;</span>
   }
 
   @Override
   public String getGroupAsXmlNamespace() {
-<span class="nc" id="L104">    return null;</span>
+<span class="nc" id="L95">    return null;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

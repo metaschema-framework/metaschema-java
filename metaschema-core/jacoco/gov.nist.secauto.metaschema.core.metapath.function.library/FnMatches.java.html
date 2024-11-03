@@ -26,59 +26,63 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Implements &lt;a href=
- * &quot;https://www.w3.org/TR/xpath-functions-31/#func-matches&quot;&gt;fn:matches&lt;/a&gt;.
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-matches&quot;&gt;fn:matches&lt;/a&gt;
+ * functions.
  */
 public final class FnMatches {
-  private static final String NAME = &quot;matches&quot;;
   @NonNull
-<span class="fc" id="L35">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
-<span class="fc" id="L36">      .name(NAME)</span>
-<span class="fc" id="L37">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L38">      .deterministic()</span>
-<span class="fc" id="L39">      .contextIndependent()</span>
-<span class="fc" id="L40">      .focusIndependent()</span>
-<span class="fc" id="L41">      .argument(IArgument.builder()</span>
-<span class="fc" id="L42">          .name(&quot;input&quot;)</span>
-<span class="fc" id="L43">          .type(IStringItem.class)</span>
-<span class="fc" id="L44">          .zeroOrOne()</span>
-<span class="fc" id="L45">          .build())</span>
-<span class="fc" id="L46">      .argument(IArgument.builder()</span>
-<span class="fc" id="L47">          .name(&quot;pattern&quot;)</span>
-<span class="fc" id="L48">          .type(IStringItem.class)</span>
-<span class="fc" id="L49">          .one()</span>
-<span class="fc" id="L50">          .build())</span>
-<span class="fc" id="L51">      .returnType(IBooleanItem.class)</span>
-<span class="fc" id="L52">      .returnOne()</span>
-<span class="fc" id="L53">      .functionHandler(FnMatches::executeTwoArg)</span>
-<span class="fc" id="L54">      .build();</span>
+  private static final String NAME = &quot;matches&quot;;
+  // CPD-OFF
+  @NonNull
+<span class="fc" id="L38">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
+<span class="fc" id="L39">      .name(NAME)</span>
+<span class="fc" id="L40">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L41">      .deterministic()</span>
+<span class="fc" id="L42">      .contextIndependent()</span>
+<span class="fc" id="L43">      .focusIndependent()</span>
+<span class="fc" id="L44">      .argument(IArgument.builder()</span>
+<span class="fc" id="L45">          .name(&quot;input&quot;)</span>
+<span class="fc" id="L46">          .type(IStringItem.class)</span>
+<span class="fc" id="L47">          .zeroOrOne()</span>
+<span class="fc" id="L48">          .build())</span>
+<span class="fc" id="L49">      .argument(IArgument.builder()</span>
+<span class="fc" id="L50">          .name(&quot;pattern&quot;)</span>
+<span class="fc" id="L51">          .type(IStringItem.class)</span>
+<span class="fc" id="L52">          .one()</span>
+<span class="fc" id="L53">          .build())</span>
+<span class="fc" id="L54">      .returnType(IBooleanItem.class)</span>
+<span class="fc" id="L55">      .returnOne()</span>
+<span class="fc" id="L56">      .functionHandler(FnMatches::executeTwoArg)</span>
+<span class="fc" id="L57">      .build();</span>
 
   @NonNull
-<span class="fc" id="L57">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
-<span class="fc" id="L58">      .name(NAME)</span>
-<span class="fc" id="L59">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L60">      .deterministic()</span>
-<span class="fc" id="L61">      .contextIndependent()</span>
-<span class="fc" id="L62">      .focusIndependent()</span>
-<span class="fc" id="L63">      .argument(IArgument.builder()</span>
-<span class="fc" id="L64">          .name(&quot;input&quot;)</span>
-<span class="fc" id="L65">          .type(IStringItem.class)</span>
-<span class="fc" id="L66">          .zeroOrOne()</span>
-<span class="fc" id="L67">          .build())</span>
-<span class="fc" id="L68">      .argument(IArgument.builder()</span>
-<span class="fc" id="L69">          .name(&quot;pattern&quot;)</span>
-<span class="fc" id="L70">          .type(IStringItem.class)</span>
-<span class="fc" id="L71">          .one()</span>
-<span class="fc" id="L72">          .build())</span>
-<span class="fc" id="L73">      .argument(IArgument.builder()</span>
-<span class="fc" id="L74">          .name(&quot;flags&quot;)</span>
-<span class="fc" id="L75">          .type(IStringItem.class)</span>
-<span class="fc" id="L76">          .one()</span>
-<span class="fc" id="L77">          .build())</span>
-<span class="fc" id="L78">      .returnType(IBooleanItem.class)</span>
-<span class="fc" id="L79">      .returnOne()</span>
-<span class="fc" id="L80">      .functionHandler(FnMatches::executeThreeArg)</span>
-<span class="fc" id="L81">      .build();</span>
+<span class="fc" id="L60">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
+<span class="fc" id="L61">      .name(NAME)</span>
+<span class="fc" id="L62">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L63">      .deterministic()</span>
+<span class="fc" id="L64">      .contextIndependent()</span>
+<span class="fc" id="L65">      .focusIndependent()</span>
+<span class="fc" id="L66">      .argument(IArgument.builder()</span>
+<span class="fc" id="L67">          .name(&quot;input&quot;)</span>
+<span class="fc" id="L68">          .type(IStringItem.class)</span>
+<span class="fc" id="L69">          .zeroOrOne()</span>
+<span class="fc" id="L70">          .build())</span>
+<span class="fc" id="L71">      .argument(IArgument.builder()</span>
+<span class="fc" id="L72">          .name(&quot;pattern&quot;)</span>
+<span class="fc" id="L73">          .type(IStringItem.class)</span>
+<span class="fc" id="L74">          .one()</span>
+<span class="fc" id="L75">          .build())</span>
+<span class="fc" id="L76">      .argument(IArgument.builder()</span>
+<span class="fc" id="L77">          .name(&quot;flags&quot;)</span>
+<span class="fc" id="L78">          .type(IStringItem.class)</span>
+<span class="fc" id="L79">          .one()</span>
+<span class="fc" id="L80">          .build())</span>
+<span class="fc" id="L81">      .returnType(IBooleanItem.class)</span>
+<span class="fc" id="L82">      .returnOne()</span>
+<span class="fc" id="L83">      .functionHandler(FnMatches::executeThreeArg)</span>
+<span class="fc" id="L84">      .build();</span>
+  // CPD-ON
 
   @NonNull
   private static ISequence&lt;IBooleanItem&gt; executeTwoArg(
@@ -86,10 +90,10 @@ public final class FnMatches {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @SuppressWarnings(&quot;unused&quot;) @NonNull DynamicContext dynamicContext,
       @SuppressWarnings(&quot;unused&quot;) IItem focus) {
-<span class="fc" id="L89">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="fc" id="L90">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L93">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="fc" id="L94">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
 
-<span class="fc" id="L92">    return execute(input, pattern, IStringItem.valueOf(&quot;&quot;));</span>
+<span class="fc" id="L96">    return execute(input, pattern, IStringItem.valueOf(&quot;&quot;));</span>
   }
 
   @NonNull
@@ -98,11 +102,11 @@ public final class FnMatches {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @SuppressWarnings(&quot;unused&quot;) @NonNull DynamicContext dynamicContext,
       @SuppressWarnings(&quot;unused&quot;) IItem focus) {
-<span class="fc" id="L101">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="fc" id="L102">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L103">    IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));</span>
+<span class="fc" id="L105">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="fc" id="L106">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L107">    IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));</span>
 
-<span class="fc" id="L105">    return execute(input, pattern, flags);</span>
+<span class="fc" id="L109">    return execute(input, pattern, flags);</span>
   }
 
   @NonNull
@@ -110,11 +114,11 @@ public final class FnMatches {
       @Nullable IStringItem input,
       @NonNull IStringItem pattern,
       @NonNull IStringItem flags) {
-<span class="pc bpc" id="L113" title="1 of 2 branches missed.">    return input == null</span>
-<span class="nc" id="L114">        ? ISequence.empty()</span>
-<span class="fc" id="L115">        : ISequence.of(</span>
-<span class="fc" id="L116">            IBooleanItem.valueOf(</span>
-<span class="fc" id="L117">                fnMatches(input.asString(), pattern.asString(), flags.asString())));</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">    return input == null</span>
+<span class="nc" id="L118">        ? ISequence.empty()</span>
+<span class="fc" id="L119">        : ISequence.of(</span>
+<span class="fc" id="L120">            IBooleanItem.valueOf(</span>
+<span class="fc" id="L121">                fnMatches(input.asString(), pattern.asString(), flags.asString())));</span>
   }
 
   /**
@@ -131,15 +135,15 @@ public final class FnMatches {
    */
   public static boolean fnMatches(@NonNull String input, @NonNull String pattern, @NonNull String flags) {
     try {
-<span class="fc" id="L134">      return Pattern.compile(pattern, RegexUtil.parseFlags(flags))</span>
-<span class="fc" id="L135">          .matcher(input).find();</span>
-<span class="fc" id="L136">    } catch (PatternSyntaxException ex) {</span>
-<span class="fc" id="L137">      throw new RegularExpressionMetapathException(</span>
+<span class="fc" id="L138">      return Pattern.compile(pattern, RegexUtil.parseFlags(flags))</span>
+<span class="fc" id="L139">          .matcher(input).find();</span>
+<span class="fc" id="L140">    } catch (PatternSyntaxException ex) {</span>
+<span class="fc" id="L141">      throw new RegularExpressionMetapathException(</span>
           RegularExpressionMetapathException.INVALID_EXPRESSION,
           &quot;Invalid regular expression pattern: '&quot; + pattern + &quot;'&quot;,
           ex);
-<span class="nc" id="L141">    } catch (IllegalArgumentException ex) {</span>
-<span class="nc" id="L142">      throw new RegularExpressionMetapathException(</span>
+<span class="nc" id="L145">    } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L146">      throw new RegularExpressionMetapathException(</span>
           RegularExpressionMetapathException.INVALID_FLAG,
           &quot;Invalid regular expression flags: '&quot; + flags + &quot;'&quot;,
           ex);

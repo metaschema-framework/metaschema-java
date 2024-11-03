@@ -94,6 +94,10 @@ public final class NumericFunction implements IFunctionExecutor {
 <span class="nc" id="L94">    return ISequence.of(result);</span>
   }
 
+  /**
+   * Implementations of this interface are used to execute a numeric opertaion on
+   * the provided item.
+   */
   @FunctionalInterface
   public interface INumericExecutor {
     /**

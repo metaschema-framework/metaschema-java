@@ -140,7 +140,7 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 <span class="fc bfc" id="L140" title="All 2 branches covered.">              if (definition instanceof IAssemblyDefinition) {</span>
 <span class="fc" id="L141">                typeInfo = IAssemblyDefinitionTypeInfo.newTypeInfo((IAssemblyDefinition) definition, typeResolver);</span>
 <span class="pc bpc" id="L142" title="1 of 2 branches missed.">              } else if (definition instanceof IFieldDefinition</span>
-<span class="fc bfc" id="L143" title="All 2 branches covered.">                  &amp;&amp; !((IFieldDefinition) definition).getFlagInstances().isEmpty()) {</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                  &amp;&amp; !definition.getFlagInstances().isEmpty()) {</span>
 <span class="fc" id="L144">                typeInfo = IFieldDefinitionTypeInfo.newTypeInfo((IFieldDefinition) definition, typeResolver);</span>
               } // otherwise field is just a simple data value, then no class is needed
 <span class="fc bfc" id="L146" title="All 2 branches covered.">              return typeInfo == null ? null : Stream.of(typeInfo);</span>
@@ -231,8 +231,8 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
   }
 
   /**
-   * Creates and configures a builder, for a Module module, that can be used to
-   * generate a Java class.
+   * Creates and configures a builder for a module that can be used to generate a
+   * Java class.
    *
    * @param module
    *          a parsed Module module
@@ -251,148 +251,105 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 <span class="fc" id="L251">        .addModifiers(Modifier.FINAL);</span>
 
 <span class="fc" id="L253">    builder.superclass(AbstractBoundModule.class);</span>
+<span class="fc" id="L254">    builder.addAnnotation(buildModuleAnnotation(module).build());</span>
 
-<span class="fc" id="L255">    AnnotationSpec.Builder moduleAnnotation = AnnotationSpec.builder(MetaschemaModule.class);</span>
+<span class="fc" id="L256">    builder.addField(</span>
+<span class="fc" id="L257">        FieldSpec.builder(MarkupLine.class, &quot;NAME&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
+<span class="fc" id="L258">            .initializer(&quot;$T.fromMarkdown($S)&quot;, MarkupLine.class, module.getName().toMarkdown())</span>
+<span class="fc" id="L259">            .build());</span>
 
-<span class="fc" id="L257">    ITypeResolver typeResolver = getTypeResolver();</span>
-<span class="fc bfc" id="L258" title="All 2 branches covered.">    for (IFieldDefinition definition : module.getFieldDefinitions()) {</span>
-<span class="fc bfc" id="L259" title="All 2 branches covered.">      if (definition.hasChildren()) {</span>
-<span class="fc" id="L260">        moduleAnnotation.addMember(&quot;fields&quot;, &quot;$T.class&quot;, typeResolver.getClassName(definition));</span>
-      }
-<span class="fc" id="L262">    }</span>
+<span class="fc" id="L261">    builder.addField(</span>
+<span class="fc" id="L262">        FieldSpec.builder(String.class, &quot;SHORT_NAME&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
+<span class="fc" id="L263">            .initializer(&quot;$S&quot;, module.getShortName())</span>
+<span class="fc" id="L264">            .build());</span>
 
-<span class="fc bfc" id="L264" title="All 2 branches covered.">    for (IAssemblyDefinition definition : module.getAssemblyDefinitions()) {</span>
-<span class="fc" id="L265">      moduleAnnotation.addMember(</span>
-          &quot;assemblies&quot;,
-          &quot;$T.class&quot;,
-<span class="fc" id="L268">          typeResolver.getClassName(ObjectUtils.notNull(definition)));</span>
-<span class="fc" id="L269">    }</span>
+<span class="fc" id="L266">    builder.addField(</span>
+<span class="fc" id="L267">        FieldSpec.builder(String.class, &quot;VERSION&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
+<span class="fc" id="L268">            .initializer(&quot;$S&quot;, module.getVersion())</span>
+<span class="fc" id="L269">            .build());</span>
 
-<span class="fc bfc" id="L271" title="All 2 branches covered.">    for (IModule moduleImport : module.getImportedModules()) {</span>
-<span class="fc" id="L272">      moduleAnnotation.addMember(</span>
-          &quot;imports&quot;,
-          &quot;$T.class&quot;,
-<span class="fc" id="L275">          typeResolver.getClassName(ObjectUtils.notNull(moduleImport)));</span>
-<span class="fc" id="L276">    }</span>
+<span class="fc" id="L271">    builder.addField(</span>
+<span class="fc" id="L272">        FieldSpec.builder(URI.class, &quot;XML_NAMESPACE&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
+<span class="fc" id="L273">            .initializer(&quot;$T.create($S)&quot;, URI.class, module.getXmlNamespace())</span>
+<span class="fc" id="L274">            .build());</span>
 
-<span class="fc" id="L278">    Map&lt;String, String&gt; bindings = module.getNamespaceBindings();</span>
-<span class="pc bpc" id="L279" title="1 of 2 branches missed.">    if (!bindings.isEmpty()) {</span>
-<span class="nc bnc" id="L280" title="All 2 branches missed.">      for (Map.Entry&lt;String, String&gt; binding : bindings.entrySet()) {</span>
-<span class="nc" id="L281">        moduleAnnotation.addMember(</span>
-            &quot;nsBindings&quot;,
-            &quot;$L&quot;,
-<span class="nc" id="L284">            AnnotationSpec.builder(NsBinding.class)</span>
-<span class="nc" id="L285">                .addMember(&quot;prefix&quot;, &quot;$S&quot;, binding.getKey())</span>
-<span class="nc" id="L286">                .addMember(&quot;uri&quot;, &quot;$S&quot;, binding.getValue()));</span>
-<span class="nc" id="L287">      }</span>
+<span class="fc" id="L276">    builder.addField(</span>
+<span class="fc" id="L277">        FieldSpec.builder(URI.class, &quot;JSON_BASE_URI&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
+<span class="fc" id="L278">            .initializer(&quot;$T.create($S)&quot;, URI.class, module.getJsonBaseUri())</span>
+<span class="fc" id="L279">            .build());</span>
+
+<span class="fc" id="L281">    MarkupMultiline remarks = module.getRemarks();</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">    if (remarks != null) {</span>
+<span class="fc" id="L283">      builder.addField(</span>
+<span class="fc" id="L284">          FieldSpec.builder(MarkupMultiline.class, &quot;REMARKS&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
+<span class="fc" id="L285">              .initializer(&quot;$T.fromMarkdown($S)&quot;, MarkupMultiline.class, remarks.toMarkdown())</span>
+<span class="fc" id="L286">              .build());</span>
     }
 
-    {
-<span class="fc" id="L291">      MarkupMultiline remarks = module.getRemarks();</span>
-<span class="fc bfc" id="L292" title="All 2 branches covered.">      if (remarks != null) {</span>
-<span class="fc" id="L293">        moduleAnnotation.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
-      }
-    }
-
-<span class="fc" id="L297">    builder.addAnnotation(moduleAnnotation.build());</span>
-
-<span class="fc" id="L299">    builder.addField(</span>
-<span class="fc" id="L300">        FieldSpec.builder(MarkupLine.class, &quot;NAME&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
-<span class="fc" id="L301">            .initializer(&quot;$T.fromMarkdown($S)&quot;, MarkupLine.class, module.getName().toMarkdown())</span>
-<span class="fc" id="L302">            .build());</span>
-
-<span class="fc" id="L304">    builder.addField(</span>
-<span class="fc" id="L305">        FieldSpec.builder(String.class, &quot;SHORT_NAME&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
-<span class="fc" id="L306">            .initializer(&quot;$S&quot;, module.getShortName())</span>
-<span class="fc" id="L307">            .build());</span>
-
-<span class="fc" id="L309">    builder.addField(</span>
-<span class="fc" id="L310">        FieldSpec.builder(String.class, &quot;VERSION&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
-<span class="fc" id="L311">            .initializer(&quot;$S&quot;, module.getVersion())</span>
-<span class="fc" id="L312">            .build());</span>
-
-<span class="fc" id="L314">    builder.addField(</span>
-<span class="fc" id="L315">        FieldSpec.builder(URI.class, &quot;XML_NAMESPACE&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
-<span class="fc" id="L316">            .initializer(&quot;$T.create($S)&quot;, URI.class, module.getXmlNamespace())</span>
-<span class="fc" id="L317">            .build());</span>
-
-<span class="fc" id="L319">    builder.addField(</span>
-<span class="fc" id="L320">        FieldSpec.builder(URI.class, &quot;JSON_BASE_URI&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
-<span class="fc" id="L321">            .initializer(&quot;$T.create($S)&quot;, URI.class, module.getJsonBaseUri())</span>
-<span class="fc" id="L322">            .build());</span>
-
-<span class="fc" id="L324">    MarkupMultiline remarks = module.getRemarks();</span>
-<span class="fc bfc" id="L325" title="All 2 branches covered.">    if (remarks != null) {</span>
-<span class="fc" id="L326">      builder.addField(</span>
-<span class="fc" id="L327">          FieldSpec.builder(MarkupMultiline.class, &quot;REMARKS&quot;, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)</span>
-<span class="fc" id="L328">              .initializer(&quot;$T.fromMarkdown($S)&quot;, MarkupMultiline.class, remarks.toMarkdown())</span>
-<span class="fc" id="L329">              .build());</span>
-    }
-
-<span class="fc" id="L332">    builder.addMethod(</span>
-<span class="fc" id="L333">        MethodSpec.constructorBuilder()</span>
-<span class="fc" id="L334">            .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L335">            .addParameter(</span>
-<span class="fc" id="L336">                ParameterizedTypeName.get(ClassName.get(List.class),</span>
-<span class="fc" id="L337">                    WildcardTypeName.subtypeOf(IBoundModule.class).box()),</span>
+<span class="fc" id="L289">    builder.addMethod(</span>
+<span class="fc" id="L290">        MethodSpec.constructorBuilder()</span>
+<span class="fc" id="L291">            .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L292">            .addParameter(</span>
+<span class="fc" id="L293">                ParameterizedTypeName.get(ClassName.get(List.class),</span>
+<span class="fc" id="L294">                    WildcardTypeName.subtypeOf(IBoundModule.class).box()),</span>
                 &quot;importedModules&quot;)
-<span class="fc" id="L339">            .addParameter(IBindingContext.class, &quot;bindingContext&quot;)</span>
-<span class="fc" id="L340">            .addStatement(&quot;super($N, $N)&quot;, &quot;importedModules&quot;, &quot;bindingContext&quot;)</span>
-<span class="fc" id="L341">            .build());</span>
-<span class="fc" id="L342">    builder.addMethod(</span>
-<span class="fc" id="L343">        MethodSpec.methodBuilder(&quot;getName&quot;)</span>
-<span class="fc" id="L344">            .addAnnotation(Override.class)</span>
-<span class="fc" id="L345">            .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L346">            .returns(MarkupLine.class)</span>
-<span class="fc" id="L347">            .addStatement(&quot;return NAME&quot;)</span>
-<span class="fc" id="L348">            .build());</span>
+<span class="fc" id="L296">            .addParameter(IBindingContext.class, &quot;bindingContext&quot;)</span>
+<span class="fc" id="L297">            .addStatement(&quot;super($N, $N)&quot;, &quot;importedModules&quot;, &quot;bindingContext&quot;)</span>
+<span class="fc" id="L298">            .build());</span>
+<span class="fc" id="L299">    builder.addMethod(</span>
+<span class="fc" id="L300">        MethodSpec.methodBuilder(&quot;getName&quot;)</span>
+<span class="fc" id="L301">            .addAnnotation(Override.class)</span>
+<span class="fc" id="L302">            .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L303">            .returns(MarkupLine.class)</span>
+<span class="fc" id="L304">            .addStatement(&quot;return NAME&quot;)</span>
+<span class="fc" id="L305">            .build());</span>
 
-<span class="fc" id="L350">    builder.addMethod(</span>
-<span class="fc" id="L351">        MethodSpec.methodBuilder(&quot;getShortName&quot;)</span>
-<span class="fc" id="L352">            .addAnnotation(Override.class)</span>
-<span class="fc" id="L353">            .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L354">            .returns(String.class)</span>
-<span class="fc" id="L355">            .addStatement(&quot;return SHORT_NAME&quot;)</span>
-<span class="fc" id="L356">            .build());</span>
+<span class="fc" id="L307">    builder.addMethod(</span>
+<span class="fc" id="L308">        MethodSpec.methodBuilder(&quot;getShortName&quot;)</span>
+<span class="fc" id="L309">            .addAnnotation(Override.class)</span>
+<span class="fc" id="L310">            .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L311">            .returns(String.class)</span>
+<span class="fc" id="L312">            .addStatement(&quot;return SHORT_NAME&quot;)</span>
+<span class="fc" id="L313">            .build());</span>
 
-<span class="fc" id="L358">    builder.addMethod(</span>
-<span class="fc" id="L359">        MethodSpec.methodBuilder(&quot;getVersion&quot;)</span>
-<span class="fc" id="L360">            .addAnnotation(Override.class)</span>
-<span class="fc" id="L361">            .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L362">            .returns(String.class)</span>
-<span class="fc" id="L363">            .addStatement(&quot;return VERSION&quot;)</span>
-<span class="fc" id="L364">            .build());</span>
+<span class="fc" id="L315">    builder.addMethod(</span>
+<span class="fc" id="L316">        MethodSpec.methodBuilder(&quot;getVersion&quot;)</span>
+<span class="fc" id="L317">            .addAnnotation(Override.class)</span>
+<span class="fc" id="L318">            .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L319">            .returns(String.class)</span>
+<span class="fc" id="L320">            .addStatement(&quot;return VERSION&quot;)</span>
+<span class="fc" id="L321">            .build());</span>
 
-<span class="fc" id="L366">    builder.addMethod(</span>
-<span class="fc" id="L367">        MethodSpec.methodBuilder(&quot;getXmlNamespace&quot;)</span>
-<span class="fc" id="L368">            .addAnnotation(Override.class)</span>
-<span class="fc" id="L369">            .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L370">            .returns(URI.class)</span>
-<span class="fc" id="L371">            .addStatement(&quot;return XML_NAMESPACE&quot;)</span>
-<span class="fc" id="L372">            .build());</span>
+<span class="fc" id="L323">    builder.addMethod(</span>
+<span class="fc" id="L324">        MethodSpec.methodBuilder(&quot;getXmlNamespace&quot;)</span>
+<span class="fc" id="L325">            .addAnnotation(Override.class)</span>
+<span class="fc" id="L326">            .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L327">            .returns(URI.class)</span>
+<span class="fc" id="L328">            .addStatement(&quot;return XML_NAMESPACE&quot;)</span>
+<span class="fc" id="L329">            .build());</span>
 
-<span class="fc" id="L374">    builder.addMethod(</span>
-<span class="fc" id="L375">        MethodSpec.methodBuilder(&quot;getJsonBaseUri&quot;)</span>
-<span class="fc" id="L376">            .addAnnotation(Override.class)</span>
-<span class="fc" id="L377">            .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L378">            .returns(URI.class)</span>
-<span class="fc" id="L379">            .addStatement(&quot;return JSON_BASE_URI&quot;)</span>
-<span class="fc" id="L380">            .build());</span>
+<span class="fc" id="L331">    builder.addMethod(</span>
+<span class="fc" id="L332">        MethodSpec.methodBuilder(&quot;getJsonBaseUri&quot;)</span>
+<span class="fc" id="L333">            .addAnnotation(Override.class)</span>
+<span class="fc" id="L334">            .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L335">            .returns(URI.class)</span>
+<span class="fc" id="L336">            .addStatement(&quot;return JSON_BASE_URI&quot;)</span>
+<span class="fc" id="L337">            .build());</span>
 
-<span class="fc" id="L382">    MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(&quot;getRemarks&quot;)</span>
-<span class="fc" id="L383">        .addAnnotation(Override.class)</span>
-<span class="fc" id="L384">        .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L385">        .returns(MarkupMultiline.class);</span>
+<span class="fc" id="L339">    MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(&quot;getRemarks&quot;)</span>
+<span class="fc" id="L340">        .addAnnotation(Override.class)</span>
+<span class="fc" id="L341">        .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L342">        .returns(MarkupMultiline.class);</span>
 
-<span class="fc bfc" id="L387" title="All 2 branches covered.">    if (remarks == null) {</span>
-<span class="fc" id="L388">      methodBuilder.addStatement(&quot;return null&quot;);</span>
+<span class="fc bfc" id="L344" title="All 2 branches covered.">    if (remarks == null) {</span>
+<span class="fc" id="L345">      methodBuilder.addStatement(&quot;return null&quot;);</span>
     } else {
-<span class="fc" id="L390">      methodBuilder.addStatement(&quot;return REMARKS&quot;);</span>
+<span class="fc" id="L347">      methodBuilder.addStatement(&quot;return REMARKS&quot;);</span>
     }
 
-<span class="fc" id="L393">    builder.addMethod(methodBuilder.build());</span>
+<span class="fc" id="L350">    builder.addMethod(methodBuilder.build());</span>
 
-<span class="fc" id="L395">    return builder;</span>
+<span class="fc" id="L352">    return builder;</span>
   }
 
   /**
@@ -413,67 +370,111 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
       @NonNull IModelDefinitionTypeInfo typeInfo,
       boolean isChild) throws IOException {
     // create the class
-<span class="fc" id="L416">    TypeSpec.Builder builder = TypeSpec.classBuilder(typeInfo.getClassName())</span>
-<span class="fc" id="L417">        .addModifiers(Modifier.PUBLIC);</span>
-<span class="pc bpc" id="L418" title="1 of 2 branches missed.">    assert builder != null;</span>
-<span class="fc bfc" id="L419" title="All 2 branches covered.">    if (isChild) {</span>
-<span class="fc" id="L420">      builder.addModifiers(Modifier.STATIC);</span>
+<span class="fc" id="L373">    TypeSpec.Builder builder = TypeSpec.classBuilder(typeInfo.getClassName())</span>
+<span class="fc" id="L374">        .addModifiers(Modifier.PUBLIC);</span>
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">    assert builder != null;</span>
+<span class="fc bfc" id="L376" title="All 2 branches covered.">    if (isChild) {</span>
+<span class="fc" id="L377">      builder.addModifiers(Modifier.STATIC);</span>
     }
     // builder.addModifiers(Modifier.FINAL);
 
-<span class="fc" id="L424">    builder.addSuperinterface(ClassName.get(IBoundObject.class));</span>
+<span class="fc" id="L381">    builder.addSuperinterface(ClassName.get(IBoundObject.class));</span>
 
     // add field for Metaschema info
-<span class="fc" id="L427">    builder.addField(FieldSpec.builder(IMetaschemaData.class, &quot;__metaschemaData&quot;, Modifier.PRIVATE, Modifier.FINAL)</span>
-<span class="fc" id="L428">        .build());</span>
+<span class="fc" id="L384">    builder.addField(FieldSpec.builder(IMetaschemaData.class, &quot;__metaschemaData&quot;, Modifier.PRIVATE, Modifier.FINAL)</span>
+<span class="fc" id="L385">        .build());</span>
 
-<span class="fc" id="L430">    builder.addMethod(MethodSpec.constructorBuilder()</span>
-<span class="fc" id="L431">        .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L432">        .addStatement(&quot;this(null)&quot;)</span>
-<span class="fc" id="L433">        .build());</span>
+<span class="fc" id="L387">    builder.addMethod(MethodSpec.constructorBuilder()</span>
+<span class="fc" id="L388">        .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L389">        .addStatement(&quot;this(null)&quot;)</span>
+<span class="fc" id="L390">        .build());</span>
 
-<span class="fc" id="L435">    builder.addMethod(MethodSpec.constructorBuilder()</span>
-<span class="fc" id="L436">        .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L437">        .addParameter(IMetaschemaData.class, &quot;data&quot;)</span>
-<span class="fc" id="L438">        .addStatement(&quot;this.$N = $N&quot;, &quot;__metaschemaData&quot;, &quot;data&quot;)</span>
-<span class="fc" id="L439">        .build());</span>
+<span class="fc" id="L392">    builder.addMethod(MethodSpec.constructorBuilder()</span>
+<span class="fc" id="L393">        .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L394">        .addParameter(IMetaschemaData.class, &quot;data&quot;)</span>
+<span class="fc" id="L395">        .addStatement(&quot;this.$N = $N&quot;, &quot;__metaschemaData&quot;, &quot;data&quot;)</span>
+<span class="fc" id="L396">        .build());</span>
 
     // generate a toString method that will help with debugging
-<span class="fc" id="L442">    MethodSpec.Builder getMetaschemaData = MethodSpec.methodBuilder(&quot;getMetaschemaData&quot;)</span>
-<span class="fc" id="L443">        .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L444">        .returns(IMetaschemaData.class)</span>
-<span class="fc" id="L445">        .addAnnotation(Override.class)</span>
-<span class="fc" id="L446">        .addStatement(&quot;return __metaschemaData&quot;);</span>
-<span class="fc" id="L447">    builder.addMethod(getMetaschemaData.build());</span>
+<span class="fc" id="L399">    MethodSpec.Builder getMetaschemaData = MethodSpec.methodBuilder(&quot;getMetaschemaData&quot;)</span>
+<span class="fc" id="L400">        .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L401">        .returns(IMetaschemaData.class)</span>
+<span class="fc" id="L402">        .addAnnotation(Override.class)</span>
+<span class="fc" id="L403">        .addStatement(&quot;return __metaschemaData&quot;);</span>
+<span class="fc" id="L404">    builder.addMethod(getMetaschemaData.build());</span>
 
-<span class="fc" id="L449">    ClassName baseClassName = typeInfo.getBaseClassName();</span>
-<span class="pc bpc" id="L450" title="1 of 2 branches missed.">    if (baseClassName != null) {</span>
-<span class="nc" id="L451">      builder.superclass(baseClassName);</span>
+<span class="fc" id="L406">    ClassName baseClassName = typeInfo.getBaseClassName();</span>
+<span class="pc bpc" id="L407" title="1 of 2 branches missed.">    if (baseClassName != null) {</span>
+<span class="nc" id="L408">      builder.superclass(baseClassName);</span>
     }
 
-<span class="pc bpc" id="L454" title="1 of 2 branches missed.">    for (ClassName superinterface : typeInfo.getSuperinterfaces()) {</span>
-<span class="nc" id="L455">      builder.addSuperinterface(superinterface);</span>
-<span class="nc" id="L456">    }</span>
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">    for (ClassName superinterface : typeInfo.getSuperinterfaces()) {</span>
+<span class="nc" id="L412">      builder.addSuperinterface(superinterface);</span>
+<span class="nc" id="L413">    }</span>
 
     Set&lt;IModelDefinition&gt; additionalChildClasses;
-<span class="fc bfc" id="L459" title="All 2 branches covered.">    if (typeInfo instanceof IAssemblyDefinitionTypeInfo) {</span>
-<span class="fc" id="L460">      additionalChildClasses = buildClass((IAssemblyDefinitionTypeInfo) typeInfo, builder);</span>
-<span class="pc bpc" id="L461" title="1 of 2 branches missed.">    } else if (typeInfo instanceof IFieldDefinitionTypeInfo) {</span>
-<span class="fc" id="L462">      additionalChildClasses = buildClass((IFieldDefinitionTypeInfo) typeInfo, builder);</span>
+<span class="fc bfc" id="L416" title="All 2 branches covered.">    if (typeInfo instanceof IAssemblyDefinitionTypeInfo) {</span>
+<span class="fc" id="L417">      additionalChildClasses = buildClass((IAssemblyDefinitionTypeInfo) typeInfo, builder);</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">    } else if (typeInfo instanceof IFieldDefinitionTypeInfo) {</span>
+<span class="fc" id="L419">      additionalChildClasses = buildClass((IFieldDefinitionTypeInfo) typeInfo, builder);</span>
     } else {
-<span class="nc" id="L464">      throw new UnsupportedOperationException(</span>
-<span class="nc" id="L465">          String.format(&quot;Unsupported type: %s&quot;, typeInfo.getClass().getName()));</span>
+<span class="nc" id="L421">      throw new UnsupportedOperationException(</span>
+<span class="nc" id="L422">          String.format(&quot;Unsupported type: %s&quot;, typeInfo.getClass().getName()));</span>
     }
 
-<span class="fc" id="L468">    ITypeResolver typeResolver = getTypeResolver();</span>
+<span class="fc" id="L425">    ITypeResolver typeResolver = getTypeResolver();</span>
 
-<span class="fc bfc" id="L470" title="All 2 branches covered.">    for (IModelDefinition definition : additionalChildClasses) {</span>
-<span class="pc bpc" id="L471" title="1 of 2 branches missed.">      assert definition != null;</span>
-<span class="fc" id="L472">      IModelDefinitionTypeInfo childTypeInfo = typeResolver.getTypeInfo(definition);</span>
-<span class="fc" id="L473">      TypeSpec childClass = newClassBuilder(childTypeInfo, true).build();</span>
-<span class="fc" id="L474">      builder.addType(childClass);</span>
-<span class="fc" id="L475">    }</span>
-<span class="fc" id="L476">    return ObjectUtils.notNull(builder);</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">    for (IModelDefinition definition : additionalChildClasses) {</span>
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">      assert definition != null;</span>
+<span class="fc" id="L429">      IModelDefinitionTypeInfo childTypeInfo = typeResolver.getTypeInfo(definition);</span>
+<span class="fc" id="L430">      TypeSpec childClass = newClassBuilder(childTypeInfo, true).build();</span>
+<span class="fc" id="L431">      builder.addType(childClass);</span>
+<span class="fc" id="L432">    }</span>
+<span class="fc" id="L433">    return ObjectUtils.notNull(builder);</span>
+  }
+
+  private AnnotationSpec.Builder buildModuleAnnotation(@NonNull IModule module) {
+<span class="fc" id="L437">    AnnotationSpec.Builder retval = AnnotationSpec.builder(MetaschemaModule.class);</span>
+
+<span class="fc" id="L439">    ITypeResolver typeResolver = getTypeResolver();</span>
+<span class="fc bfc" id="L440" title="All 2 branches covered.">    for (IFieldDefinition definition : module.getFieldDefinitions()) {</span>
+<span class="fc bfc" id="L441" title="All 2 branches covered.">      if (definition.hasChildren()) {</span>
+<span class="fc" id="L442">        retval.addMember(&quot;fields&quot;, &quot;$T.class&quot;, typeResolver.getClassName(definition));</span>
+      }
+<span class="fc" id="L444">    }</span>
+
+<span class="fc bfc" id="L446" title="All 2 branches covered.">    for (IAssemblyDefinition definition : module.getAssemblyDefinitions()) {</span>
+<span class="fc" id="L447">      retval.addMember(</span>
+          &quot;assemblies&quot;,
+          &quot;$T.class&quot;,
+<span class="fc" id="L450">          typeResolver.getClassName(ObjectUtils.notNull(definition)));</span>
+<span class="fc" id="L451">    }</span>
+
+<span class="fc bfc" id="L453" title="All 2 branches covered.">    for (IModule moduleImport : module.getImportedModules()) {</span>
+<span class="fc" id="L454">      retval.addMember(</span>
+          &quot;imports&quot;,
+          &quot;$T.class&quot;,
+<span class="fc" id="L457">          typeResolver.getClassName(ObjectUtils.notNull(moduleImport)));</span>
+<span class="fc" id="L458">    }</span>
+
+<span class="fc" id="L460">    Map&lt;String, String&gt; bindings = module.getNamespaceBindings();</span>
+<span class="fc bfc" id="L461" title="All 2 branches covered.">    if (!bindings.isEmpty()) {</span>
+<span class="fc bfc" id="L462" title="All 2 branches covered.">      for (Map.Entry&lt;String, String&gt; binding : bindings.entrySet()) {</span>
+<span class="fc" id="L463">        retval.addMember(</span>
+            &quot;nsBindings&quot;,
+            &quot;$L&quot;,
+<span class="fc" id="L466">            AnnotationSpec.builder(NsBinding.class)</span>
+<span class="fc" id="L467">                .addMember(&quot;prefix&quot;, &quot;$S&quot;, binding.getKey())</span>
+<span class="fc" id="L468">                .addMember(&quot;uri&quot;, &quot;$S&quot;, binding.getValue())</span>
+<span class="fc" id="L469">                .build());</span>
+<span class="fc" id="L470">      }</span>
+    }
+
+<span class="fc" id="L473">    MarkupMultiline remarks = module.getRemarks();</span>
+<span class="fc bfc" id="L474" title="All 2 branches covered.">    if (remarks != null) {</span>
+<span class="fc" id="L475">      retval.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+    }
+<span class="fc" id="L477">    return retval;</span>
   }
 
   /**
@@ -490,26 +491,26 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
   protected Set&lt;IModelDefinition&gt; buildClass(
       @NonNull IAssemblyDefinitionTypeInfo typeInfo,
       @NonNull TypeSpec.Builder builder) {
-<span class="fc" id="L493">    AnnotationSpec.Builder metaschemaAssembly = ObjectUtils.notNull(AnnotationSpec.builder(MetaschemaAssembly.class));</span>
+<span class="fc" id="L494">    AnnotationSpec.Builder metaschemaAssembly = ObjectUtils.notNull(AnnotationSpec.builder(MetaschemaAssembly.class));</span>
 
-<span class="fc" id="L495">    buildCommonProperties(typeInfo, metaschemaAssembly);</span>
+<span class="fc" id="L496">    buildCommonProperties(typeInfo, metaschemaAssembly);</span>
 
-<span class="fc" id="L497">    IAssemblyDefinition definition = typeInfo.getDefinition();</span>
-<span class="fc bfc" id="L498" title="All 2 branches covered.">    if (definition.isRoot()) {</span>
-<span class="fc" id="L499">      metaschemaAssembly.addMember(&quot;rootName&quot;, &quot;$S&quot;, definition.getRootName());</span>
+<span class="fc" id="L498">    IAssemblyDefinition definition = typeInfo.getDefinition();</span>
+<span class="fc bfc" id="L499" title="All 2 branches covered.">    if (definition.isRoot()) {</span>
+<span class="fc" id="L500">      metaschemaAssembly.addMember(&quot;rootName&quot;, &quot;$S&quot;, definition.getRootName());</span>
     }
 
-<span class="fc" id="L502">    MarkupMultiline remarks = definition.getRemarks();</span>
-<span class="fc bfc" id="L503" title="All 2 branches covered.">    if (remarks != null) {</span>
-<span class="fc" id="L504">      metaschemaAssembly.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
+<span class="fc" id="L503">    MarkupMultiline remarks = definition.getRemarks();</span>
+<span class="fc bfc" id="L504" title="All 2 branches covered.">    if (remarks != null) {</span>
+<span class="fc" id="L505">      metaschemaAssembly.addMember(&quot;remarks&quot;, &quot;$S&quot;, remarks.toMarkdown());</span>
     }
 
-<span class="fc" id="L507">    AnnotationGenerator.buildValueConstraints(metaschemaAssembly, definition);</span>
-<span class="fc" id="L508">    AnnotationGenerator.buildAssemblyConstraints(metaschemaAssembly, definition);</span>
+<span class="fc" id="L508">    AnnotationGenerator.buildValueConstraints(metaschemaAssembly, definition);</span>
+<span class="fc" id="L509">    AnnotationGenerator.buildAssemblyConstraints(metaschemaAssembly, definition);</span>
 
-<span class="fc" id="L510">    builder.addAnnotation(metaschemaAssembly.build());</span>
+<span class="fc" id="L511">    builder.addAnnotation(metaschemaAssembly.build());</span>
 
-<span class="fc" id="L512">    return new LinkedHashSet&lt;&gt;(buildClass((IModelDefinitionTypeInfo) typeInfo, builder));</span>
+<span class="fc" id="L513">    return new LinkedHashSet&lt;&gt;(buildClass((IModelDefinitionTypeInfo) typeInfo, builder));</span>
   }
 
   /**
@@ -526,16 +527,16 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
   protected Set&lt;IModelDefinition&gt; buildClass(
       @NonNull IFieldDefinitionTypeInfo typeInfo,
       @NonNull TypeSpec.Builder builder) {
-<span class="fc" id="L529">    AnnotationSpec.Builder metaschemaField = ObjectUtils.notNull(AnnotationSpec.builder(MetaschemaField.class));</span>
+<span class="fc" id="L530">    AnnotationSpec.Builder metaschemaField = ObjectUtils.notNull(AnnotationSpec.builder(MetaschemaField.class));</span>
 
-<span class="fc" id="L531">    buildCommonProperties(typeInfo, metaschemaField);</span>
+<span class="fc" id="L532">    buildCommonProperties(typeInfo, metaschemaField);</span>
 
-<span class="fc" id="L533">    IFieldDefinition definition = typeInfo.getDefinition();</span>
-<span class="fc" id="L534">    AnnotationGenerator.buildValueConstraints(metaschemaField, definition);</span>
+<span class="fc" id="L534">    IFieldDefinition definition = typeInfo.getDefinition();</span>
+<span class="fc" id="L535">    AnnotationGenerator.buildValueConstraints(metaschemaField, definition);</span>
 
-<span class="fc" id="L536">    builder.addAnnotation(metaschemaField.build());</span>
+<span class="fc" id="L537">    builder.addAnnotation(metaschemaField.build());</span>
 
-<span class="fc" id="L538">    return new LinkedHashSet&lt;&gt;(buildClass((IModelDefinitionTypeInfo) typeInfo, builder));</span>
+<span class="fc" id="L539">    return new LinkedHashSet&lt;&gt;(buildClass((IModelDefinitionTypeInfo) typeInfo, builder));</span>
   }
 
   /**
@@ -553,12 +554,12 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
   protected Set&lt;IModelDefinition&gt; buildClass(
       @NonNull IModelDefinitionTypeInfo typeInfo,
       @NonNull TypeSpec.Builder builder) {
-<span class="fc" id="L556">    MarkupLine description = typeInfo.getDefinition().getDescription();</span>
-<span class="fc bfc" id="L557" title="All 2 branches covered.">    if (description != null) {</span>
-<span class="fc" id="L558">      builder.addJavadoc(description.toHtml());</span>
+<span class="fc" id="L557">    MarkupLine description = typeInfo.getDefinition().getDescription();</span>
+<span class="fc bfc" id="L558" title="All 2 branches covered.">    if (description != null) {</span>
+<span class="fc" id="L559">      builder.addJavadoc(description.toHtml());</span>
     }
 
-<span class="fc" id="L561">    Set&lt;IModelDefinition&gt; additionalChildClasses = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L562">    Set&lt;IModelDefinition&gt; additionalChildClasses = new LinkedHashSet&lt;&gt;();</span>
 
     // // generate a no-arg constructor
     // builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
@@ -574,18 +575,18 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
     // builder.addMethod(copyBuilder.build());
 
     // generate all the properties and access methods
-<span class="fc bfc" id="L577" title="All 2 branches covered.">    for (IPropertyTypeInfo property : typeInfo.getPropertyTypeInfos()) {</span>
-<span class="pc bpc" id="L578" title="1 of 2 branches missed.">      assert property != null;</span>
-<span class="fc" id="L579">      additionalChildClasses.addAll(property.build(builder));</span>
-<span class="fc" id="L580">    }</span>
+<span class="fc bfc" id="L578" title="All 2 branches covered.">    for (IPropertyTypeInfo property : typeInfo.getPropertyTypeInfos()) {</span>
+<span class="pc bpc" id="L579" title="1 of 2 branches missed.">      assert property != null;</span>
+<span class="fc" id="L580">      additionalChildClasses.addAll(property.build(builder));</span>
+<span class="fc" id="L581">    }</span>
 
     // generate a toString method that will help with debugging
-<span class="fc" id="L583">    MethodSpec.Builder toString = MethodSpec.methodBuilder(&quot;toString&quot;).addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L584">        .returns(String.class).addAnnotation(Override.class);</span>
-<span class="fc" id="L585">    toString.addStatement(&quot;return new $T(this, $T.MULTI_LINE_STYLE).toString()&quot;, ReflectionToStringBuilder.class,</span>
+<span class="fc" id="L584">    MethodSpec.Builder toString = MethodSpec.methodBuilder(&quot;toString&quot;).addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L585">        .returns(String.class).addAnnotation(Override.class);</span>
+<span class="fc" id="L586">    toString.addStatement(&quot;return new $T(this, $T.MULTI_LINE_STYLE).toString()&quot;, ReflectionToStringBuilder.class,</span>
         ToStringStyle.class);
-<span class="fc" id="L587">    builder.addMethod(toString.build());</span>
-<span class="fc" id="L588">    return CollectionUtil.unmodifiableSet(additionalChildClasses);</span>
+<span class="fc" id="L588">    builder.addMethod(toString.build());</span>
+<span class="fc" id="L589">    return CollectionUtil.unmodifiableSet(additionalChildClasses);</span>
   }
 
   /**
@@ -599,21 +600,21 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
   protected void buildCommonProperties(
       @NonNull IModelDefinitionTypeInfo typeInfo,
       @NonNull AnnotationSpec.Builder builder) {
-<span class="fc" id="L602">    IDefinition definition = typeInfo.getDefinition();</span>
+<span class="fc" id="L603">    IDefinition definition = typeInfo.getDefinition();</span>
 
-<span class="fc" id="L604">    String formalName = definition.getEffectiveFormalName();</span>
-<span class="fc bfc" id="L605" title="All 2 branches covered.">    if (formalName != null) {</span>
-<span class="fc" id="L606">      builder.addMember(&quot;formalName&quot;, &quot;$S&quot;, formalName);</span>
+<span class="fc" id="L605">    String formalName = definition.getEffectiveFormalName();</span>
+<span class="fc bfc" id="L606" title="All 2 branches covered.">    if (formalName != null) {</span>
+<span class="fc" id="L607">      builder.addMember(&quot;formalName&quot;, &quot;$S&quot;, formalName);</span>
     }
 
-<span class="fc" id="L609">    MarkupLine description = definition.getEffectiveDescription();</span>
-<span class="fc bfc" id="L610" title="All 2 branches covered.">    if (description != null) {</span>
-<span class="fc" id="L611">      builder.addMember(&quot;description&quot;, &quot;$S&quot;, description.toMarkdown());</span>
+<span class="fc" id="L610">    MarkupLine description = definition.getEffectiveDescription();</span>
+<span class="fc bfc" id="L611" title="All 2 branches covered.">    if (description != null) {</span>
+<span class="fc" id="L612">      builder.addMember(&quot;description&quot;, &quot;$S&quot;, description.toMarkdown());</span>
     }
 
-<span class="fc" id="L614">    builder.addMember(&quot;name&quot;, &quot;$S&quot;, definition.getName());</span>
-<span class="fc" id="L615">    IModule module = definition.getContainingModule();</span>
-<span class="fc" id="L616">    builder.addMember(&quot;moduleClass&quot;, &quot;$T.class&quot;, getTypeResolver().getClassName(module));</span>
-<span class="fc" id="L617">  }</span>
+<span class="fc" id="L615">    builder.addMember(&quot;name&quot;, &quot;$S&quot;, definition.getName());</span>
+<span class="fc" id="L616">    IModule module = definition.getContainingModule();</span>
+<span class="fc" id="L617">    builder.addMember(&quot;moduleClass&quot;, &quot;$T.class&quot;, getTypeResolver().getClassName(module));</span>
+<span class="fc" id="L618">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

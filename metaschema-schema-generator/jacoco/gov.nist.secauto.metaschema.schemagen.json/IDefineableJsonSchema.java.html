@@ -131,19 +131,22 @@ public interface IDefineableJsonSchema {
 <span class="fc" id="L131">    generateInlineSchema(definitionObj, state);</span>
 <span class="fc" id="L132">  }</span>
 
+  @SuppressWarnings(&quot;PMD.ShortClassName&quot;)
   interface IKey extends Comparable&lt;IKey&gt; {
-<span class="fc" id="L135">    Comparator&lt;IKey&gt; KEY_COMPARATOR = Comparator</span>
-<span class="pc" id="L136">        .&lt;IKey, String&gt;comparing(key -&gt; key.getDefinition().getContainingModule().getShortName())</span>
-<span class="pc" id="L137">        .thenComparing(key -&gt; key.getDefinition().getEffectiveName())</span>
-<span class="fc" id="L138">        .thenComparing(IKey::getJsonKeyFlagName, Comparator.nullsFirst(Comparator.naturalOrder()))</span>
-<span class="fc" id="L139">        .thenComparing(IKey::getDiscriminatorProperty, Comparator.nullsFirst(Comparator.naturalOrder()))</span>
-<span class="fc" id="L140">        .thenComparing(IKey::getDiscriminatorValue, Comparator.nullsFirst(Comparator.naturalOrder()));</span>
+<span class="fc" id="L136">    Comparator&lt;IKey&gt; KEY_COMPARATOR = Comparator</span>
+<span class="pc" id="L137">        .&lt;IKey, String&gt;comparing(key -&gt; key.getDefinition().getContainingModule().getShortName())</span>
+<span class="pc" id="L138">        .thenComparing(key -&gt; key.getDefinition().getEffectiveName())</span>
+<span class="fc" id="L139">        .thenComparing(IKey::getJsonKeyFlagName, Comparator.nullsFirst(Comparator.naturalOrder()))</span>
+<span class="fc" id="L140">        .thenComparing(IKey::getDiscriminatorProperty, Comparator.nullsFirst(Comparator.naturalOrder()))</span>
+<span class="fc" id="L141">        .thenComparing(IKey::getDiscriminatorValue, Comparator.nullsFirst(Comparator.naturalOrder()));</span>
 
+    @SuppressWarnings(&quot;PMD.ShortMethodName&quot;)
     @NonNull
     static IKey of(@NonNull IDefinition definition) {
-<span class="fc" id="L144">      return new SimpleKey(definition);</span>
+<span class="fc" id="L146">      return new SimpleKey(definition);</span>
     }
 
+    @SuppressWarnings(&quot;PMD.ShortMethodName&quot;)
     @NonNull
     static IKey of(
         @NonNull IDefinition definition,
@@ -151,12 +154,12 @@ public interface IDefineableJsonSchema {
         @Nullable String discriminatorProperty,
         @Nullable String discriminatorValue) {
       IKey retval;
-<span class="pc bpc" id="L154" title="1 of 6 branches missed.">      if (jsonKeyFlagName != null || discriminatorProperty != null || discriminatorValue != null) {</span>
-<span class="fc" id="L155">        retval = new ComplexKey(definition, jsonKeyFlagName, discriminatorProperty, discriminatorValue);</span>
+<span class="pc bpc" id="L157" title="1 of 6 branches missed.">      if (jsonKeyFlagName != null || discriminatorProperty != null || discriminatorValue != null) {</span>
+<span class="fc" id="L158">        retval = new ComplexKey(definition, jsonKeyFlagName, discriminatorProperty, discriminatorValue);</span>
       } else {
-<span class="fc" id="L157">        retval = of(definition);</span>
+<span class="fc" id="L160">        retval = of(definition);</span>
       }
-<span class="fc" id="L159">      return retval;</span>
+<span class="fc" id="L162">      return retval;</span>
     }
 
     @NonNull
@@ -173,7 +176,7 @@ public interface IDefineableJsonSchema {
 
     @Override
     default int compareTo(IKey other) {
-<span class="nc" id="L176">      return KEY_COMPARATOR.compare(this, other);</span>
+<span class="nc" id="L179">      return KEY_COMPARATOR.compare(this, other);</span>
     }
   }
 }

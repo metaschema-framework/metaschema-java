@@ -19,26 +19,32 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * one entry in a set of enumerated values.
  */
 public interface IAllowedValuesConstraint extends IConstraint {
+  /**
+   * The default allow other value.
+   */
   boolean ALLOW_OTHER_DEFAULT = false;
+  /**
+   * The default extensible value.
+   */
   @NonNull
-<span class="fc" id="L24">  Extensible EXTENSIBLE_DEFAULT = Extensible.EXTERNAL;</span>
+<span class="fc" id="L30">  Extensible EXTENSIBLE_DEFAULT = Extensible.EXTERNAL;</span>
 
   /**
    * Indicates how an allowed values constraint can be extended, or if it can be.
    */
-<span class="fc" id="L29">  enum Extensible {</span>
+<span class="fc" id="L35">  enum Extensible {</span>
     /**
      * Can be extended by external constraints. The most permissive level.
      */
-<span class="fc" id="L33">    EXTERNAL,</span>
+<span class="fc" id="L39">    EXTERNAL,</span>
     /**
      * Can be extended by constraints in the same model.
      */
-<span class="fc" id="L37">    MODEL,</span>
+<span class="fc" id="L43">    MODEL,</span>
     /**
      * Cannot be extended. The most restrictive level.
      */
-<span class="fc" id="L41">    NONE;</span>
+<span class="fc" id="L47">    NONE;</span>
   }
 
   /**
@@ -58,7 +64,7 @@ public interface IAllowedValuesConstraint extends IConstraint {
    */
   @Nullable
   default IAllowedValue getAllowedValue(String name) {
-<span class="fc" id="L61">    return getAllowedValues().get(name);</span>
+<span class="fc" id="L67">    return getAllowedValues().get(name);</span>
   }
 
   /**
@@ -83,7 +89,7 @@ public interface IAllowedValuesConstraint extends IConstraint {
 
   @Override
   default &lt;T, R&gt; R accept(IConstraintVisitor&lt;T, R&gt; visitor, T state) {
-<span class="nc" id="L86">    return visitor.visitAllowedValues(this, state);</span>
+<span class="nc" id="L92">    return visitor.visitAllowedValues(this, state);</span>
   }
 
   /**
@@ -93,20 +99,24 @@ public interface IAllowedValuesConstraint extends IConstraint {
    */
   @NonNull
   static Builder builder() {
-<span class="fc" id="L96">    return new Builder();</span>
+<span class="fc" id="L102">    return new Builder();</span>
   }
 
+  /**
+   * Provides a builder pattern for constructing a new
+   * {@link IAllowedValuesConstraint}.
+   */
   final class Builder
       extends AbstractConstraintBuilder&lt;Builder, IAllowedValuesConstraint&gt; {
-<span class="fc" id="L101">    @NonNull</span>
+<span class="fc" id="L111">    @NonNull</span>
     private final Map&lt;String, IAllowedValue&gt; allowedValues = new LinkedHashMap&lt;&gt;(); // NOPMD not thread safe
-<span class="fc" id="L103">    private boolean allowedOther = ALLOW_OTHER_DEFAULT;</span>
-<span class="fc" id="L104">    @NonNull</span>
+<span class="fc" id="L113">    private boolean allowedOther = ALLOW_OTHER_DEFAULT;</span>
+<span class="fc" id="L114">    @NonNull</span>
     private Extensible extensible = EXTENSIBLE_DEFAULT;
 
-<span class="fc" id="L107">    private Builder() {</span>
+<span class="fc" id="L117">    private Builder() {</span>
       // disable construction
-<span class="fc" id="L109">    }</span>
+<span class="fc" id="L119">    }</span>
 
     /**
      * Use the provided allowed value to validate associated values.
@@ -117,8 +127,8 @@ public interface IAllowedValuesConstraint extends IConstraint {
      */
     @NonNull
     public Builder allowedValue(@NonNull IAllowedValue allowedValue) {
-<span class="fc" id="L120">      this.allowedValues.put(allowedValue.getValue(), allowedValue);</span>
-<span class="fc" id="L121">      return this;</span>
+<span class="fc" id="L130">      this.allowedValues.put(allowedValue.getValue(), allowedValue);</span>
+<span class="fc" id="L131">      return this;</span>
     }
 
     /**
@@ -130,8 +140,8 @@ public interface IAllowedValuesConstraint extends IConstraint {
      */
     @NonNull
     public Builder allowedValues(@NonNull Map&lt;String, IAllowedValue&gt; allowedValues) {
-<span class="fc" id="L133">      this.allowedValues.putAll(allowedValues);</span>
-<span class="fc" id="L134">      return this;</span>
+<span class="fc" id="L143">      this.allowedValues.putAll(allowedValues);</span>
+<span class="fc" id="L144">      return this;</span>
     }
 
     /**
@@ -144,8 +154,8 @@ public interface IAllowedValuesConstraint extends IConstraint {
      */
     @NonNull
     public Builder allowsOther(boolean bool) {
-<span class="fc" id="L147">      this.allowedOther = bool;</span>
-<span class="fc" id="L148">      return this;</span>
+<span class="fc" id="L157">      this.allowedOther = bool;</span>
+<span class="fc" id="L158">      return this;</span>
     }
 
     /**
@@ -158,43 +168,43 @@ public interface IAllowedValuesConstraint extends IConstraint {
      */
     @NonNull
     public Builder extensible(@NonNull Extensible extensible) {
-<span class="nc" id="L161">      this.extensible = extensible;</span>
-<span class="nc" id="L162">      return this;</span>
+<span class="nc" id="L171">      this.extensible = extensible;</span>
+<span class="nc" id="L172">      return this;</span>
     }
 
     @Override
     protected Builder getThis() {
-<span class="fc" id="L167">      return this;</span>
+<span class="fc" id="L177">      return this;</span>
     }
 
     @NonNull
     private Map&lt;String, IAllowedValue&gt; getAllowedValues() {
-<span class="fc" id="L172">      return allowedValues;</span>
+<span class="fc" id="L182">      return allowedValues;</span>
     }
 
     private boolean isAllowedOther() {
-<span class="fc" id="L176">      return allowedOther;</span>
+<span class="fc" id="L186">      return allowedOther;</span>
     }
 
     @NonNull
     private Extensible getExtensible() {
-<span class="fc" id="L181">      return extensible;</span>
+<span class="fc" id="L191">      return extensible;</span>
     }
 
     @Override
     protected IAllowedValuesConstraint newInstance() {
-<span class="fc" id="L186">      return new DefaultAllowedValuesConstraint(</span>
-<span class="fc" id="L187">          getId(),</span>
-<span class="fc" id="L188">          getFormalName(),</span>
-<span class="fc" id="L189">          getDescription(),</span>
-<span class="fc" id="L190">          ObjectUtils.notNull(getSource()),</span>
-<span class="fc" id="L191">          getLevel(),</span>
-<span class="fc" id="L192">          getTarget(),</span>
-<span class="fc" id="L193">          getProperties(),</span>
-<span class="fc" id="L194">          getAllowedValues(),</span>
-<span class="fc" id="L195">          isAllowedOther(),</span>
-<span class="fc" id="L196">          getExtensible(),</span>
-<span class="fc" id="L197">          getRemarks());</span>
+<span class="fc" id="L196">      return new DefaultAllowedValuesConstraint(</span>
+<span class="fc" id="L197">          getId(),</span>
+<span class="fc" id="L198">          getFormalName(),</span>
+<span class="fc" id="L199">          getDescription(),</span>
+<span class="fc" id="L200">          ObjectUtils.notNull(getSource()),</span>
+<span class="fc" id="L201">          getLevel(),</span>
+<span class="fc" id="L202">          getTarget(),</span>
+<span class="fc" id="L203">          getProperties(),</span>
+<span class="fc" id="L204">          getAllowedValues(),</span>
+<span class="fc" id="L205">          isAllowedOther(),</span>
+<span class="fc" id="L206">          getExtensible(),</span>
+<span class="fc" id="L207">          getRemarks());</span>
     }
   }
 }

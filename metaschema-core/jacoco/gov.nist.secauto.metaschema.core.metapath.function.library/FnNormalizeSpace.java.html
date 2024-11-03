@@ -20,39 +20,40 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements &lt;a href=
- * &quot;https://www.w3.org/TR/xpath-functions-31/#func-normalize-space&quot;&gt;fn:normalize-space&lt;/a&gt;.
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-normalize-space&quot;&gt;fn:normalize-space&lt;/a&gt;
+ * functions.
  */
 public final class FnNormalizeSpace {
   private static final String NAME = &quot;normalize-space&quot;;
   @NonNull
-<span class="fc" id="L29">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
-<span class="fc" id="L30">      .name(NAME)</span>
-<span class="fc" id="L31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L32">      .deterministic()</span>
-<span class="fc" id="L33">      .contextDependent()</span>
-<span class="fc" id="L34">      .focusDependent()</span>
-<span class="fc" id="L35">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L36">      .returnOne()</span>
-<span class="fc" id="L37">      .functionHandler(FnNormalizeSpace::executeNoArg)</span>
-<span class="fc" id="L38">      .build();</span>
+<span class="fc" id="L30">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
+<span class="fc" id="L31">      .name(NAME)</span>
+<span class="fc" id="L32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L33">      .deterministic()</span>
+<span class="fc" id="L34">      .contextDependent()</span>
+<span class="fc" id="L35">      .focusDependent()</span>
+<span class="fc" id="L36">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L37">      .returnOne()</span>
+<span class="fc" id="L38">      .functionHandler(FnNormalizeSpace::executeNoArg)</span>
+<span class="fc" id="L39">      .build();</span>
 
   @NonNull
-<span class="fc" id="L41">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="fc" id="L42">      .name(NAME)</span>
-<span class="fc" id="L43">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L44">      .deterministic()</span>
-<span class="fc" id="L45">      .contextIndependent()</span>
-<span class="fc" id="L46">      .focusIndependent()</span>
-<span class="fc" id="L47">      .argument(IArgument.builder()</span>
-<span class="fc" id="L48">          .name(&quot;arg&quot;)</span>
-<span class="fc" id="L49">          .type(IStringItem.class)</span>
-<span class="fc" id="L50">          .zeroOrOne()</span>
-<span class="fc" id="L51">          .build())</span>
-<span class="fc" id="L52">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L53">      .returnOne()</span>
-<span class="fc" id="L54">      .functionHandler(FnNormalizeSpace::executeOneArg)</span>
-<span class="fc" id="L55">      .build();</span>
+<span class="fc" id="L42">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="fc" id="L43">      .name(NAME)</span>
+<span class="fc" id="L44">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L45">      .deterministic()</span>
+<span class="fc" id="L46">      .contextIndependent()</span>
+<span class="fc" id="L47">      .focusIndependent()</span>
+<span class="fc" id="L48">      .argument(IArgument.builder()</span>
+<span class="fc" id="L49">          .name(&quot;arg&quot;)</span>
+<span class="fc" id="L50">          .type(IStringItem.class)</span>
+<span class="fc" id="L51">          .zeroOrOne()</span>
+<span class="fc" id="L52">          .build())</span>
+<span class="fc" id="L53">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L54">      .returnOne()</span>
+<span class="fc" id="L55">      .functionHandler(FnNormalizeSpace::executeOneArg)</span>
+<span class="fc" id="L56">      .build();</span>
 
   private FnNormalizeSpace() {
     // disable construction
@@ -65,9 +66,9 @@ public final class FnNormalizeSpace {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     // the Focus should always be non-null, since the function if focus-dependent
-<span class="nc bnc" id="L68" title="All 2 branches missed.">    assert focus != null;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">    assert focus != null;</span>
 
-<span class="nc" id="L70">    return ISequence.of(FnString.fnStringItem(focus).normalizeSpace());</span>
+<span class="nc" id="L71">    return ISequence.of(FnString.fnStringItem(focus).normalizeSpace());</span>
   }
 
   @SuppressWarnings(&quot;unused&quot;)
@@ -78,9 +79,9 @@ public final class FnNormalizeSpace {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-<span class="fc" id="L81">    IStringItem value = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0)).getFirstItem(true));</span>
+<span class="fc" id="L82">    IStringItem value = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0)).getFirstItem(true));</span>
 
-<span class="pc bpc" id="L83" title="1 of 2 branches missed.">    return value == null ? ISequence.empty() : ISequence.of(value.normalizeSpace());</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">    return value == null ? ISequence.empty() : ISequence.of(value.normalizeSpace());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

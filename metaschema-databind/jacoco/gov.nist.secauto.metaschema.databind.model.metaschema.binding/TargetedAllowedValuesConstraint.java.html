@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TargetedAllowedValuesConstraint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.model.metaschema.binding</a> &gt; <span class="el_source">TargetedAllowedValuesConstraint.java</span></div><h1>TargetedAllowedValuesConstraint.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.LinkedList;
+import java.util.List;
+
+@SuppressWarnings({
+    &quot;PMD.DataClass&quot;,
+    &quot;PMD.FieldNamingConventions&quot;
+})
+@MetaschemaAssembly(
+    formalName = &quot;Allowed Values Constraint&quot;,
+    name = &quot;targeted-allowed-values-constraint&quot;,
+    moduleClass = MetaschemaModelModule.class)
+public class TargetedAllowedValuesConstraint implements IBoundObject, ITargetedConstraintBase {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundFlag(
+      formalName = &quot;Constraint Identifier&quot;,
+      name = &quot;id&quot;,
+      typeAdapter = TokenAdapter.class)
+  private String _id;
+
+  @BoundFlag(
+      formalName = &quot;Constraint Severity Level&quot;,
+      name = &quot;level&quot;,
+      defaultValue = &quot;ERROR&quot;,
+      typeAdapter = TokenAdapter.class,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+          @AllowedValue(value = &quot;CRITICAL&quot;,
+              description = &quot;A violation of the constraint represents a serious fault in the content that will prevent typical use of the content.&quot;),
+          @AllowedValue(value = &quot;ERROR&quot;,
+              description = &quot;A violation of the constraint represents a fault in the content. This may include issues around compatibility, integrity, consistency, etc.&quot;),
+          @AllowedValue(value = &quot;WARNING&quot;,
+              description = &quot;A violation of the constraint represents a potential issue with the content.&quot;),
+          @AllowedValue(value = &quot;INFORMATIONAL&quot;,
+              description = &quot;A violation of the constraint represents a point of interest.&quot;),
+          @AllowedValue(value = &quot;DEBUG&quot;,
+              description = &quot;A violation of the constraint represents a fault in the content that may warrant review by a developer when performing model or tool development.&quot;) })))
+  private String _level;
+
+  @BoundFlag(
+      formalName = &quot;Allow Non-Enumerated Values?&quot;,
+      name = &quot;allow-other&quot;,
+      defaultValue = &quot;no&quot;,
+      typeAdapter = TokenAdapter.class,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+          values = { @AllowedValue(value = &quot;no&quot;, description = &quot;Other value are not allowed.&quot;),
+              @AllowedValue(value = &quot;yes&quot;, description = &quot;Other values are allowed.&quot;) })))
+  private String _allowOther;
+
+  /**
+   * &quot;Determines if the given enumerated values may be extended by other allowed
+   * value constraints.&quot;
+   */
+  @BoundFlag(
+      formalName = &quot;Allow Extension?&quot;,
+      description = &quot;Determines if the given enumerated values may be extended by other allowed value constraints.&quot;,
+      name = &quot;extensible&quot;,
+      defaultValue = &quot;external&quot;,
+      typeAdapter = TokenAdapter.class,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+          values = {
+              @AllowedValue(value = &quot;model&quot;, description = &quot;Can be extended by constraints within the same module.&quot;),
+              @AllowedValue(value = &quot;external&quot;, description = &quot;Can be extended by external constraints.&quot;),
+              @AllowedValue(value = &quot;none&quot;, description = &quot;Cannot be extended.&quot;) })))
+  private String _extensible;
+
+  @BoundFlag(
+      formalName = &quot;Constraint Target Metapath Expression&quot;,
+      name = &quot;target&quot;,
+      required = true,
+      typeAdapter = StringAdapter.class)
+  private String _target;
+
+  @BoundField(
+      formalName = &quot;Formal Name&quot;,
+      description = &quot;A formal name for the data construct, to be presented in documentation.&quot;,
+      useName = &quot;formal-name&quot;)
+  private String _formalName;
+
+  @BoundField(
+      formalName = &quot;Description&quot;,
+      description = &quot;A short description of the data construct's purpose, describing the constructs semantics.&quot;,
+      useName = &quot;description&quot;,
+      typeAdapter = MarkupLineAdapter.class)
+  private MarkupLine _description;
+
+  @BoundAssembly(
+      formalName = &quot;Property&quot;,
+      useName = &quot;prop&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;props&quot;, inJson = JsonGroupAsBehavior.LIST))
+  private List&lt;Property&gt; _props;
+
+  @BoundField(
+      formalName = &quot;Allowed Value Enumeration&quot;,
+      useName = &quot;enum&quot;,
+      minOccurs = 1,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;enums&quot;, inJson = JsonGroupAsBehavior.LIST))
+  private List&lt;ConstraintValueEnum&gt; _enums;
+
+  @BoundField(
+      formalName = &quot;Remarks&quot;,
+      description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+      useName = &quot;remarks&quot;)
+  private Remarks _remarks;
+
+  public TargetedAllowedValuesConstraint() {
+<span class="nc" id="L137">    this(null);</span>
+<span class="nc" id="L138">  }</span>
+
+<span class="fc" id="L140">  public TargetedAllowedValuesConstraint(IMetaschemaData data) {</span>
+<span class="fc" id="L141">    this.__metaschemaData = data;</span>
+<span class="fc" id="L142">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L146">    return __metaschemaData;</span>
+  }
+
+  @Override
+  public String getId() {
+<span class="fc" id="L151">    return _id;</span>
+  }
+
+  public void setId(String value) {
+<span class="nc" id="L155">    _id = value;</span>
+<span class="nc" id="L156">  }</span>
+
+  @Override
+  public String getLevel() {
+<span class="fc" id="L160">    return _level;</span>
+  }
+
+  public void setLevel(String value) {
+<span class="nc" id="L164">    _level = value;</span>
+<span class="nc" id="L165">  }</span>
+
+  public String getAllowOther() {
+<span class="fc" id="L168">    return _allowOther;</span>
+  }
+
+  public void setAllowOther(String value) {
+<span class="nc" id="L172">    _allowOther = value;</span>
+<span class="nc" id="L173">  }</span>
+
+  public String getExtensible() {
+<span class="fc" id="L176">    return _extensible;</span>
+  }
+
+  public void setExtensible(String value) {
+<span class="nc" id="L180">    _extensible = value;</span>
+<span class="nc" id="L181">  }</span>
+
+  @Override
+  public String getTarget() {
+<span class="fc" id="L185">    return _target;</span>
+  }
+
+  public void setTarget(String value) {
+<span class="nc" id="L189">    _target = value;</span>
+<span class="nc" id="L190">  }</span>
+
+  @Override
+  public String getFormalName() {
+<span class="fc" id="L194">    return _formalName;</span>
+  }
+
+  public void setFormalName(String value) {
+<span class="nc" id="L198">    _formalName = value;</span>
+<span class="nc" id="L199">  }</span>
+
+  @Override
+  public MarkupLine getDescription() {
+<span class="fc" id="L203">    return _description;</span>
+  }
+
+  public void setDescription(MarkupLine value) {
+<span class="nc" id="L207">    _description = value;</span>
+<span class="nc" id="L208">  }</span>
+
+  @Override
+  public List&lt;Property&gt; getProps() {
+<span class="fc" id="L212">    return _props;</span>
+  }
+
+  public void setProps(List&lt;Property&gt; value) {
+<span class="nc" id="L216">    _props = value;</span>
+<span class="nc" id="L217">  }</span>
+
+  /**
+   * Add a new {@link Property} item to the underlying collection.
+   *
+   * @param item
+   *          the item to add
+   * @return {@code true}
+   */
+  public boolean addProp(Property item) {
+<span class="nc" id="L227">    Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">    if (_props == null) {</span>
+<span class="nc" id="L229">      _props = new LinkedList&lt;&gt;();</span>
+    }
+<span class="nc" id="L231">    return _props.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link Property} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeProp(Property item) {
+<span class="nc" id="L243">    Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L244" title="All 4 branches missed.">    return _props != null &amp;&amp; _props.remove(value);</span>
+  }
+
+  public List&lt;ConstraintValueEnum&gt; getEnums() {
+<span class="fc" id="L248">    return _enums;</span>
+  }
+
+  public void setEnums(List&lt;ConstraintValueEnum&gt; value) {
+<span class="nc" id="L252">    _enums = value;</span>
+<span class="nc" id="L253">  }</span>
+
+  /**
+   * Add a new {@link ConstraintValueEnum} item to the underlying collection.
+   *
+   * @param item
+   *          the item to add
+   * @return {@code true}
+   */
+  public boolean addEnum(ConstraintValueEnum item) {
+<span class="nc" id="L263">    ConstraintValueEnum value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">    if (_enums == null) {</span>
+<span class="nc" id="L265">      _enums = new LinkedList&lt;&gt;();</span>
+    }
+<span class="nc" id="L267">    return _enums.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link ConstraintValueEnum} item from the
+   * underlying collection.
+   *
+   * @param item
+   *          the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeEnum(ConstraintValueEnum item) {
+<span class="nc" id="L279">    ConstraintValueEnum value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L280" title="All 4 branches missed.">    return _enums != null &amp;&amp; _enums.remove(value);</span>
+  }
+
+  @Override
+  public Remarks getRemarks() {
+<span class="fc" id="L285">    return _remarks;</span>
+  }
+
+  public void setRemarks(Remarks value) {
+<span class="nc" id="L289">    _remarks = value;</span>
+<span class="nc" id="L290">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L294">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

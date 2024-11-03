@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JDom2XmlSchemaLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema XML and JSON Schema Generator</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.schemagen.xml.impl</a> &gt; <span class="el_source">JDom2XmlSchemaLoader.java</span></div><h1>JDom2XmlSchemaLoader.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.schemagen.xml.impl;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filters;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.xpath.XPathExpression;
+import org.jdom2.xpath.XPathFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+public class JDom2XmlSchemaLoader {
+  @NonNull
+  public static final String NS_XML_SCHEMA = &quot;http://www.w3.org/2001/XMLSchema&quot;;
+
+  @NonNull
+  private final Document document;
+
+  @SuppressWarnings(&quot;null&quot;)
+  @SuppressFBWarnings(value = &quot;CT_CONSTRUCTOR_THROW&quot;, justification = &quot;Use of final fields&quot;)
+  public JDom2XmlSchemaLoader(@NonNull Path path) throws JDOMException, IOException {
+<span class="nc" id="L38">    this(new SAXBuilder().build(path.toFile()));</span>
+<span class="nc" id="L39">  }</span>
+
+  @SuppressWarnings(&quot;null&quot;)
+  @SuppressFBWarnings(value = &quot;CT_CONSTRUCTOR_THROW&quot;, justification = &quot;Use of final fields&quot;)
+  public JDom2XmlSchemaLoader(@NonNull InputStream is) throws JDOMException, IOException {
+<span class="fc" id="L44">    this(new SAXBuilder().build(is));</span>
+<span class="fc" id="L45">  }</span>
+
+  @SuppressFBWarnings(&quot;EI_EXPOSE_REP2&quot;)
+<span class="fc" id="L48">  public JDom2XmlSchemaLoader(@NonNull Document document) {</span>
+<span class="fc" id="L49">    this.document = document;</span>
+<span class="fc" id="L50">  }</span>
+
+  protected Document getNode() {
+<span class="fc" id="L53">    return document;</span>
+  }
+
+  @SuppressWarnings(&quot;null&quot;)
+  @NonNull
+  public List&lt;Element&gt; getContent(
+      @NonNull String path,
+      @NonNull Map&lt;String, String&gt; prefixToNamespaceMap) {
+
+<span class="fc" id="L62">    Collection&lt;Namespace&gt; namespaces = prefixToNamespaceMap.entrySet().stream()</span>
+<span class="fc" id="L63">        .map(entry -&gt; Namespace.getNamespace(entry.getKey(), entry.getValue()))</span>
+<span class="fc" id="L64">        .collect(Collectors.toList());</span>
+<span class="fc" id="L65">    XPathExpression&lt;Element&gt; xpath = XPathFactory.instance().compile(path, Filters.element(), null, namespaces);</span>
+<span class="fc" id="L66">    return xpath.evaluate(getNode());</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

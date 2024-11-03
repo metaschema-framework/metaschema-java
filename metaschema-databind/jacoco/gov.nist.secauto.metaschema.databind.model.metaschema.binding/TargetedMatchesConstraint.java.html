@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TargetedMatchesConstraint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.model.metaschema.binding</a> &gt; <span class="el_source">TargetedMatchesConstraint.java</span></div><h1>TargetedMatchesConstraint.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
+import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
+import gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.LinkedList;
+import java.util.List;
+
+@SuppressWarnings({
+    &quot;PMD.DataClass&quot;,
+    &quot;PMD.FieldNamingConventions&quot;
+})
+@MetaschemaAssembly(
+    formalName = &quot;Value Matches Constraint&quot;,
+    name = &quot;targeted-matches-constraint&quot;,
+    moduleClass = MetaschemaModelModule.class)
+public class TargetedMatchesConstraint
+    implements IBoundObject, ITargetedConstraintBase, IConfigurableMessageConstraintBase {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundFlag(
+      formalName = &quot;Constraint Identifier&quot;,
+      name = &quot;id&quot;,
+      typeAdapter = TokenAdapter.class)
+  private String _id;
+
+  @BoundFlag(
+      formalName = &quot;Constraint Severity Level&quot;,
+      name = &quot;level&quot;,
+      defaultValue = &quot;ERROR&quot;,
+      typeAdapter = TokenAdapter.class,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+          @AllowedValue(value = &quot;CRITICAL&quot;,
+              description = &quot;A violation of the constraint represents a serious fault in the content that will prevent typical use of the content.&quot;),
+          @AllowedValue(value = &quot;ERROR&quot;,
+              description = &quot;A violation of the constraint represents a fault in the content. This may include issues around compatibility, integrity, consistency, etc.&quot;),
+          @AllowedValue(value = &quot;WARNING&quot;,
+              description = &quot;A violation of the constraint represents a potential issue with the content.&quot;),
+          @AllowedValue(value = &quot;INFORMATIONAL&quot;,
+              description = &quot;A violation of the constraint represents a point of interest.&quot;),
+          @AllowedValue(value = &quot;DEBUG&quot;,
+              description = &quot;A violation of the constraint represents a fault in the content that may warrant review by a developer when performing model or tool development.&quot;) })))
+  private String _level;
+
+  @BoundFlag(
+      formalName = &quot;Matches Regular Expression&quot;,
+      name = &quot;regex&quot;,
+      typeAdapter = StringAdapter.class)
+  private String _regex;
+
+  @BoundFlag(
+      formalName = &quot;Matches Data Type&quot;,
+      name = &quot;datatype&quot;,
+      typeAdapter = TokenAdapter.class,
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+          allowOthers = true,
+          values = { @AllowedValue(value = &quot;base64&quot;,
+              description = &quot;The [base64](https://pages.nist.gov/metaschema/specification/datatypes/#base64) data type.&quot;),
+              @AllowedValue(value = &quot;boolean&quot;,
+                  description = &quot;The [boolean](https://pages.nist.gov/metaschema/specification/datatypes/#boolean) data type.&quot;),
+              @AllowedValue(value = &quot;date&quot;,
+                  description = &quot;The [date](https://pages.nist.gov/metaschema/specification/datatypes/#date) data type.&quot;),
+              @AllowedValue(value = &quot;date-time&quot;,
+                  description = &quot;The [date-time](https://pages.nist.gov/metaschema/specification/datatypes/#date-time) data type.&quot;),
+              @AllowedValue(value = &quot;date-time-with-timezone&quot;,
+                  description = &quot;The [date-time-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-time-with-timezone) data type.&quot;),
+              @AllowedValue(value = &quot;date-with-timezone&quot;,
+                  description = &quot;The [date-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-with-timezone) data type.&quot;),
+              @AllowedValue(value = &quot;day-time-duration&quot;,
+                  description = &quot;The [day-time-duration](https://pages.nist.gov/metaschema/specification/datatypes/#day-time-duration) data type.&quot;),
+              @AllowedValue(value = &quot;decimal&quot;,
+                  description = &quot;The [decimal](https://pages.nist.gov/metaschema/specification/datatypes/#decimal) data type.&quot;),
+              @AllowedValue(value = &quot;email-address&quot;,
+                  description = &quot;The [email-address](https://pages.nist.gov/metaschema/specification/datatypes/#email-address) data type.&quot;),
+              @AllowedValue(value = &quot;hostname&quot;,
+                  description = &quot;The [hostname](https://pages.nist.gov/metaschema/specification/datatypes/#hostname) data type.&quot;),
+              @AllowedValue(value = &quot;integer&quot;,
+                  description = &quot;The [integer](https://pages.nist.gov/metaschema/specification/datatypes/#integer) data type.&quot;),
+              @AllowedValue(value = &quot;ip-v4-address&quot;,
+                  description = &quot;The [ip-v4-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address) data type.&quot;),
+              @AllowedValue(value = &quot;ip-v6-address&quot;,
+                  description = &quot;The [ip-v6-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address) data type.&quot;),
+              @AllowedValue(value = &quot;non-negative-integer&quot;,
+                  description = &quot;The [non-negative-integer](https://pages.nist.gov/metaschema/specification/datatypes/#non-negative-integer) data type.&quot;),
+              @AllowedValue(value = &quot;positive-integer&quot;,
+                  description = &quot;The [positive-integer](https://pages.nist.gov/metaschema/specification/datatypes/#positive-integer) data type.&quot;),
+              @AllowedValue(value = &quot;string&quot;,
+                  description = &quot;The [string](https://pages.nist.gov/metaschema/specification/datatypes/#string) data type.&quot;),
+              @AllowedValue(value = &quot;token&quot;,
+                  description = &quot;The [token](https://pages.nist.gov/metaschema/specification/datatypes/#token) data type.&quot;),
+              @AllowedValue(value = &quot;uri&quot;,
+                  description = &quot;The [uri](https://pages.nist.gov/metaschema/specification/datatypes/#uri) data type.&quot;),
+              @AllowedValue(value = &quot;uri-reference&quot;,
+                  description = &quot;The [uri-reference](https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference) data type.&quot;),
+              @AllowedValue(value = &quot;uuid&quot;,
+                  description = &quot;The [uuid](https://pages.nist.gov/metaschema/specification/datatypes/#uuid) data type.&quot;),
+              @AllowedValue(value = &quot;base64Binary&quot;,
+                  description = &quot;An old name which is deprecated for use in favor of the 'base64' data type.&quot;),
+              @AllowedValue(value = &quot;dateTime&quot;,
+                  description = &quot;An old name which is deprecated for use in favor of the 'date-time' data type.&quot;),
+              @AllowedValue(value = &quot;dateTime-with-timezone&quot;,
+                  description = &quot;An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type.&quot;),
+              @AllowedValue(value = &quot;email&quot;,
+                  description = &quot;An old name which is deprecated for use in favor of the 'email-address' data type.&quot;),
+              @AllowedValue(value = &quot;nonNegativeInteger&quot;,
+                  description = &quot;An old name which is deprecated for use in favor of the 'non-negative-integer' data type.&quot;),
+              @AllowedValue(value = &quot;positiveInteger&quot;,
+                  description = &quot;An old name which is deprecated for use in favor of the 'positive-integer' data type.&quot;) })))
+  private String _datatype;
+
+  @BoundFlag(
+      formalName = &quot;Constraint Target Metapath Expression&quot;,
+      name = &quot;target&quot;,
+      required = true,
+      typeAdapter = StringAdapter.class)
+  private String _target;
+
+  @BoundField(
+      formalName = &quot;Formal Name&quot;,
+      description = &quot;A formal name for the data construct, to be presented in documentation.&quot;,
+      useName = &quot;formal-name&quot;)
+  private String _formalName;
+
+  @BoundField(
+      formalName = &quot;Description&quot;,
+      description = &quot;A short description of the data construct's purpose, describing the constructs semantics.&quot;,
+      useName = &quot;description&quot;,
+      typeAdapter = MarkupLineAdapter.class)
+  private MarkupLine _description;
+
+  @BoundAssembly(
+      formalName = &quot;Property&quot;,
+      useName = &quot;prop&quot;,
+      maxOccurs = -1,
+      groupAs = @GroupAs(name = &quot;props&quot;, inJson = JsonGroupAsBehavior.LIST))
+  private List&lt;Property&gt; _props;
+
+  @BoundField(
+      formalName = &quot;Constraint Condition Violation Message&quot;,
+      useName = &quot;message&quot;)
+  private String _message;
+
+  @BoundField(
+      formalName = &quot;Remarks&quot;,
+      description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+      useName = &quot;remarks&quot;)
+  private Remarks _remarks;
+
+  public TargetedMatchesConstraint() {
+<span class="nc" id="L175">    this(null);</span>
+<span class="nc" id="L176">  }</span>
+
+<span class="fc" id="L178">  public TargetedMatchesConstraint(IMetaschemaData data) {</span>
+<span class="fc" id="L179">    this.__metaschemaData = data;</span>
+<span class="fc" id="L180">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L184">    return __metaschemaData;</span>
+  }
+
+  @Override
+  public String getId() {
+<span class="fc" id="L189">    return _id;</span>
+  }
+
+  public void setId(String value) {
+<span class="nc" id="L193">    _id = value;</span>
+<span class="nc" id="L194">  }</span>
+
+  @Override
+  public String getLevel() {
+<span class="fc" id="L198">    return _level;</span>
+  }
+
+  public void setLevel(String value) {
+<span class="nc" id="L202">    _level = value;</span>
+<span class="nc" id="L203">  }</span>
+
+  public String getRegex() {
+<span class="fc" id="L206">    return _regex;</span>
+  }
+
+  public void setRegex(String value) {
+<span class="nc" id="L210">    _regex = value;</span>
+<span class="nc" id="L211">  }</span>
+
+  public String getDatatype() {
+<span class="fc" id="L214">    return _datatype;</span>
+  }
+
+  public void setDatatype(String value) {
+<span class="nc" id="L218">    _datatype = value;</span>
+<span class="nc" id="L219">  }</span>
+
+  @Override
+  public String getTarget() {
+<span class="fc" id="L223">    return _target;</span>
+  }
+
+  public void setTarget(String value) {
+<span class="nc" id="L227">    _target = value;</span>
+<span class="nc" id="L228">  }</span>
+
+  @Override
+  public String getFormalName() {
+<span class="fc" id="L232">    return _formalName;</span>
+  }
+
+  public void setFormalName(String value) {
+<span class="nc" id="L236">    _formalName = value;</span>
+<span class="nc" id="L237">  }</span>
+
+  @Override
+  public MarkupLine getDescription() {
+<span class="fc" id="L241">    return _description;</span>
+  }
+
+  public void setDescription(MarkupLine value) {
+<span class="nc" id="L245">    _description = value;</span>
+<span class="nc" id="L246">  }</span>
+
+  @Override
+  public List&lt;Property&gt; getProps() {
+<span class="fc" id="L250">    return _props;</span>
+  }
+
+  public void setProps(List&lt;Property&gt; value) {
+<span class="nc" id="L254">    _props = value;</span>
+<span class="nc" id="L255">  }</span>
+
+  /**
+   * Add a new {@link Property} item to the underlying collection.
+   *
+   * @param item
+   *          the item to add
+   * @return {@code true}
+   */
+  public boolean addProp(Property item) {
+<span class="nc" id="L265">    Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">    if (_props == null) {</span>
+<span class="nc" id="L267">      _props = new LinkedList&lt;&gt;();</span>
+    }
+<span class="nc" id="L269">    return _props.add(value);</span>
+  }
+
+  /**
+   * Remove the first matching {@link Property} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
+   * @return {@code true} if the item was removed or {@code false} otherwise
+   */
+  public boolean removeProp(Property item) {
+<span class="nc" id="L281">    Property value = ObjectUtils.requireNonNull(item, &quot;item cannot be null&quot;);</span>
+<span class="nc bnc" id="L282" title="All 4 branches missed.">    return _props != null &amp;&amp; _props.remove(value);</span>
+  }
+
+  @Override
+  public String getMessage() {
+<span class="fc" id="L287">    return _message;</span>
+  }
+
+  public void setMessage(String value) {
+<span class="nc" id="L291">    _message = value;</span>
+<span class="nc" id="L292">  }</span>
+
+  @Override
+  public Remarks getRemarks() {
+<span class="fc" id="L296">    return _remarks;</span>
+  }
+
+  public void setRemarks(Remarks value) {
+<span class="nc" id="L300">    _remarks = value;</span>
+<span class="nc" id="L301">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L305">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

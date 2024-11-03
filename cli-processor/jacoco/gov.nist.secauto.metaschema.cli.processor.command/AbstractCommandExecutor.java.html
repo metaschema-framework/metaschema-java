@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.cli.processor.command;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.cli.CommandLine;
@@ -21,27 +20,27 @@ public abstract class AbstractCommandExecutor implements ICommandExecutor {
 
   public AbstractCommandExecutor(
       @NonNull CallingContext callingContext,
-<span class="nc" id="L24">      @NonNull CommandLine commandLine) {</span>
-<span class="nc" id="L25">    this.callingContext = callingContext;</span>
-<span class="nc" id="L26">    this.commandLine = commandLine;</span>
-<span class="nc" id="L27">  }</span>
+<span class="nc" id="L23">      @NonNull CommandLine commandLine) {</span>
+<span class="nc" id="L24">    this.callingContext = callingContext;</span>
+<span class="nc" id="L25">    this.commandLine = commandLine;</span>
+<span class="nc" id="L26">  }</span>
 
   @NonNull
   protected CallingContext getCallingContext() {
-<span class="nc" id="L31">    return callingContext;</span>
+<span class="nc" id="L30">    return callingContext;</span>
   }
 
   @NonNull
   protected CommandLine getCommandLine() {
-<span class="nc" id="L36">    return commandLine;</span>
+<span class="nc" id="L35">    return commandLine;</span>
   }
 
   @Override
-  public abstract ExitStatus execute();
+  public abstract void execute() throws CommandExecutionException;
 
   @NonNull
   protected ICommand getCommand() {
-<span class="nc" id="L44">    return ObjectUtils.requireNonNull(getCallingContext().getTargetCommand());</span>
+<span class="nc" id="L43">    return ObjectUtils.requireNonNull(getCallingContext().getTargetCommand());</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

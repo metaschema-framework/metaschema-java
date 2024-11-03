@@ -142,33 +142,40 @@
 <span class="source-line-no">129</span><span id="line-129">  int maxOccurs() default IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS;</span>
 <span class="source-line-no">130</span><span id="line-130"></span>
 <span class="source-line-no">131</span><span id="line-131">  /**</span>
-<span class="source-line-no">132</span><span id="line-132">   * Get any remarks for this field.</span>
+<span class="source-line-no">132</span><span id="line-132">   * An optional set of associated properties.</span>
 <span class="source-line-no">133</span><span id="line-133">   *</span>
-<span class="source-line-no">134</span><span id="line-134">   * @return a markdown string or {@code "##none"} if no remarks are provided</span>
+<span class="source-line-no">134</span><span id="line-134">   * @return the properties or an empty array with no properties</span>
 <span class="source-line-no">135</span><span id="line-135">   */</span>
-<span class="source-line-no">136</span><span id="line-136">  @NonNull</span>
-<span class="source-line-no">137</span><span id="line-137">  String remarks() default ModelUtil.NO_STRING_VALUE;</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">  /**</span>
-<span class="source-line-no">140</span><span id="line-140">   * Used to provide grouping information.</span>
-<span class="source-line-no">141</span><span id="line-141">   * &lt;p&gt;</span>
-<span class="source-line-no">142</span><span id="line-142">   * This annotation is required when the value of {@link #maxOccurs()} is greater</span>
-<span class="source-line-no">143</span><span id="line-143">   * than 1.</span>
-<span class="source-line-no">144</span><span id="line-144">   *</span>
-<span class="source-line-no">145</span><span id="line-145">   * @return the configured {@link GroupAs} or the default value with a</span>
-<span class="source-line-no">146</span><span id="line-146">   *         {@code null} {@link GroupAs#name()}</span>
-<span class="source-line-no">147</span><span id="line-147">   */</span>
-<span class="source-line-no">148</span><span id="line-148">  @NonNull</span>
-<span class="source-line-no">149</span><span id="line-149">  GroupAs groupAs() default @GroupAs(name = ModelUtil.NULL_VALUE);</span>
-<span class="source-line-no">150</span><span id="line-150"></span>
-<span class="source-line-no">151</span><span id="line-151">  /**</span>
-<span class="source-line-no">152</span><span id="line-152">   * Get the value constraints defined for this Metaschema field inline</span>
-<span class="source-line-no">153</span><span id="line-153">   * definition.</span>
-<span class="source-line-no">154</span><span id="line-154">   *</span>
-<span class="source-line-no">155</span><span id="line-155">   * @return the value constraints</span>
-<span class="source-line-no">156</span><span id="line-156">   */</span>
-<span class="source-line-no">157</span><span id="line-157">  ValueConstraints valueConstraints() default @ValueConstraints;</span>
-<span class="source-line-no">158</span><span id="line-158">}</span>
+<span class="source-line-no">136</span><span id="line-136">  Property[] properties() default {};</span>
+<span class="source-line-no">137</span><span id="line-137"></span>
+<span class="source-line-no">138</span><span id="line-138">  /**</span>
+<span class="source-line-no">139</span><span id="line-139">   * Get any remarks for this field.</span>
+<span class="source-line-no">140</span><span id="line-140">   *</span>
+<span class="source-line-no">141</span><span id="line-141">   * @return a markdown string or {@code "##none"} if no remarks are provided</span>
+<span class="source-line-no">142</span><span id="line-142">   */</span>
+<span class="source-line-no">143</span><span id="line-143">  @NonNull</span>
+<span class="source-line-no">144</span><span id="line-144">  String remarks() default ModelUtil.NO_STRING_VALUE;</span>
+<span class="source-line-no">145</span><span id="line-145"></span>
+<span class="source-line-no">146</span><span id="line-146">  /**</span>
+<span class="source-line-no">147</span><span id="line-147">   * Used to provide grouping information.</span>
+<span class="source-line-no">148</span><span id="line-148">   * &lt;p&gt;</span>
+<span class="source-line-no">149</span><span id="line-149">   * This annotation is required when the value of {@link #maxOccurs()} is greater</span>
+<span class="source-line-no">150</span><span id="line-150">   * than 1.</span>
+<span class="source-line-no">151</span><span id="line-151">   *</span>
+<span class="source-line-no">152</span><span id="line-152">   * @return the configured {@link GroupAs} or the default value with a</span>
+<span class="source-line-no">153</span><span id="line-153">   *         {@code null} {@link GroupAs#name()}</span>
+<span class="source-line-no">154</span><span id="line-154">   */</span>
+<span class="source-line-no">155</span><span id="line-155">  @NonNull</span>
+<span class="source-line-no">156</span><span id="line-156">  GroupAs groupAs() default @GroupAs(name = ModelUtil.NULL_VALUE);</span>
+<span class="source-line-no">157</span><span id="line-157"></span>
+<span class="source-line-no">158</span><span id="line-158">  /**</span>
+<span class="source-line-no">159</span><span id="line-159">   * Get the value constraints defined for this Metaschema field inline</span>
+<span class="source-line-no">160</span><span id="line-160">   * definition.</span>
+<span class="source-line-no">161</span><span id="line-161">   *</span>
+<span class="source-line-no">162</span><span id="line-162">   * @return the value constraints</span>
+<span class="source-line-no">163</span><span id="line-163">   */</span>
+<span class="source-line-no">164</span><span id="line-164">  ValueConstraints valueConstraints() default @ValueConstraints;</span>
+<span class="source-line-no">165</span><span id="line-165">}</span>
 
 
 

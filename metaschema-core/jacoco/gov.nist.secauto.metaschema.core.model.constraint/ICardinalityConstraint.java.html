@@ -16,7 +16,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents a rule requiring a Metaschema assembly data instance to have
  * elements with a minimum and/or maximum occurrence.
  */
-public interface ICardinalityConstraint extends IConstraint {
+public interface ICardinalityConstraint extends IConfigurableMessageConstraint {
   /**
    * Retrieve the required minimum occurrence of the target instance. If
    * specified, this value must be less than or equal to the value of
@@ -54,8 +54,12 @@ public interface ICardinalityConstraint extends IConstraint {
 <span class="nc" id="L54">    return new Builder();</span>
   }
 
+  /**
+   * Provides a builder pattern for constructing a new
+   * {@link ICardinalityConstraint}.
+   */
   final class Builder
-      extends AbstractConstraintBuilder&lt;Builder, ICardinalityConstraint&gt; {
+      extends AbstractConfigurableMessageConstraintBuilder&lt;Builder, ICardinalityConstraint&gt; {
     private Integer minOccurs;
     private Integer maxOccurs;
 
@@ -71,8 +75,8 @@ public interface ICardinalityConstraint extends IConstraint {
      * @return this builder
      */
     public Builder minOccurs(int value) {
-<span class="nc" id="L74">      this.minOccurs = value;</span>
-<span class="nc" id="L75">      return this;</span>
+<span class="nc" id="L78">      this.minOccurs = value;</span>
+<span class="nc" id="L79">      return this;</span>
     }
 
     /**
@@ -83,45 +87,46 @@ public interface ICardinalityConstraint extends IConstraint {
      * @return this builder
      */
     public Builder maxOccurs(int value) {
-<span class="nc" id="L86">      this.maxOccurs = value;</span>
-<span class="nc" id="L87">      return this;</span>
+<span class="nc" id="L90">      this.maxOccurs = value;</span>
+<span class="nc" id="L91">      return this;</span>
     }
 
     @Override
     protected Builder getThis() {
-<span class="nc" id="L92">      return this;</span>
+<span class="nc" id="L96">      return this;</span>
     }
 
     @Override
     protected void validate() {
-<span class="nc" id="L97">      super.validate();</span>
+<span class="nc" id="L101">      super.validate();</span>
 
-<span class="nc bnc" id="L99" title="All 4 branches missed.">      if (getMinOccurs() == null &amp;&amp; getMaxOccurs() == null) {</span>
-<span class="nc" id="L100">        throw new IllegalStateException(&quot;At least one of minOccurs or maxOccurs must be provided.&quot;);</span>
+<span class="nc bnc" id="L103" title="All 4 branches missed.">      if (getMinOccurs() == null &amp;&amp; getMaxOccurs() == null) {</span>
+<span class="nc" id="L104">        throw new IllegalStateException(&quot;At least one of minOccurs or maxOccurs must be provided.&quot;);</span>
       }
-<span class="nc" id="L102">    }</span>
+<span class="nc" id="L106">    }</span>
 
     private Integer getMinOccurs() {
-<span class="nc" id="L105">      return minOccurs;</span>
+<span class="nc" id="L109">      return minOccurs;</span>
     }
 
     private Integer getMaxOccurs() {
-<span class="nc" id="L109">      return maxOccurs;</span>
+<span class="nc" id="L113">      return maxOccurs;</span>
     }
 
     @Override
     protected ICardinalityConstraint newInstance() {
-<span class="nc" id="L114">      return new DefaultCardinalityConstraint(</span>
-<span class="nc" id="L115">          getId(),</span>
-<span class="nc" id="L116">          getFormalName(),</span>
-<span class="nc" id="L117">          getDescription(),</span>
-<span class="nc" id="L118">          ObjectUtils.notNull(getSource()),</span>
-<span class="nc" id="L119">          getLevel(),</span>
-<span class="nc" id="L120">          getTarget(),</span>
-<span class="nc" id="L121">          getProperties(),</span>
-<span class="nc" id="L122">          getMinOccurs(),</span>
-<span class="nc" id="L123">          getMaxOccurs(),</span>
-<span class="nc" id="L124">          getRemarks());</span>
+<span class="nc" id="L118">      return new DefaultCardinalityConstraint(</span>
+<span class="nc" id="L119">          getId(),</span>
+<span class="nc" id="L120">          getFormalName(),</span>
+<span class="nc" id="L121">          getDescription(),</span>
+<span class="nc" id="L122">          ObjectUtils.notNull(getSource()),</span>
+<span class="nc" id="L123">          getLevel(),</span>
+<span class="nc" id="L124">          getTarget(),</span>
+<span class="nc" id="L125">          getProperties(),</span>
+<span class="nc" id="L126">          getMinOccurs(),</span>
+<span class="nc" id="L127">          getMaxOccurs(),</span>
+<span class="nc" id="L128">          getMessage(),</span>
+<span class="nc" id="L129">          getRemarks());</span>
     }
   }
 }

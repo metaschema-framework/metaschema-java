@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 import com.ctc.wstx.api.WstxOutputProperties;
 import com.ctc.wstx.stax.WstxOutputFactory;
 
+import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.AbstractSerializer;
@@ -24,10 +25,11 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
-<span class="fc" id="L28">public class DefaultXmlSerializer&lt;CLASS extends IBoundObject&gt;</span>
+<span class="fc" id="L30">public class DefaultXmlSerializer&lt;CLASS extends IBoundObject&gt;</span>
     extends AbstractSerializer&lt;CLASS&gt; {
-  private XMLOutputFactory2 xmlOutputFactory;
+  private Lazy&lt;XMLOutputFactory2&gt; factory;
 
   /**
    * Construct a new XML serializer based on the top-level assembly indicated by
@@ -38,8 +40,37 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          serialize
    */
   public DefaultXmlSerializer(@NonNull IBoundDefinitionModelAssembly definition) {
-<span class="fc" id="L41">    super(definition);</span>
-<span class="fc" id="L42">  }</span>
+<span class="fc" id="L43">    super(definition);</span>
+<span class="fc" id="L44">    resetFactory();</span>
+<span class="fc" id="L45">  }</span>
+
+  protected final void resetFactory() {
+<span class="fc" id="L48">    this.factory = Lazy.lazy(this::newFactoryInstance);</span>
+<span class="fc" id="L49">  }</span>
+
+  @Override
+  protected void configurationChanged(IMutableConfiguration&lt;SerializationFeature&lt;?&gt;&gt; config) {
+<span class="nc" id="L53">    super.configurationChanged(config);</span>
+<span class="nc" id="L54">    resetFactory();</span>
+<span class="nc" id="L55">  }</span>
+
+  /**
+   * Get a JSON factory instance.
+   * &lt;p&gt;
+   * This method can be used by sub-classes to create a customized factory
+   * instance.
+   *
+   * @return the factory
+   */
+  @NonNull
+  protected XMLOutputFactory2 newFactoryInstance() {
+<span class="fc" id="L67">    XMLOutputFactory2 retval = (XMLOutputFactory2) XMLOutputFactory.newInstance();</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">    assert retval instanceof WstxOutputFactory;</span>
+<span class="fc" id="L69">    retval.configureForSpeed();</span>
+<span class="fc" id="L70">    retval.setProperty(WstxOutputProperties.P_USE_DOUBLE_QUOTES_IN_XML_DECL, true);</span>
+<span class="fc" id="L71">    retval.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);</span>
+<span class="fc" id="L72">    return retval;</span>
+  }
 
   /**
    * Get the configured XML output factory used to create {@link XMLStreamWriter2}
@@ -49,31 +80,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    */
   @NonNull
   protected final XMLOutputFactory2 getXMLOutputFactory() {
-<span class="fc" id="L52">    synchronized (this) {</span>
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">      if (xmlOutputFactory == null) {</span>
-<span class="fc" id="L54">        xmlOutputFactory = (XMLOutputFactory2) XMLOutputFactory.newInstance();</span>
-<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        assert xmlOutputFactory instanceof WstxOutputFactory;</span>
-<span class="fc" id="L56">        xmlOutputFactory.configureForSpeed();</span>
-<span class="fc" id="L57">        xmlOutputFactory.setProperty(WstxOutputProperties.P_USE_DOUBLE_QUOTES_IN_XML_DECL, true);</span>
-<span class="fc" id="L58">        xmlOutputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);</span>
-      }
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">      assert xmlOutputFactory != null;</span>
-<span class="fc" id="L61">      return xmlOutputFactory;</span>
-    }
+<span class="fc" id="L83">    return ObjectUtils.notNull(factory.get());</span>
   }
-
-  /**
-   * Override the default {@link XMLOutputFactory2} instance with a custom
-   * factory.
-   *
-   * @param xmlOutputFactory
-   *          the new factory
-   */
-  protected void setXMLOutputFactory(@NonNull XMLOutputFactory2 xmlOutputFactory) {
-<span class="nc" id="L73">    synchronized (this) {</span>
-<span class="nc" id="L74">      this.xmlOutputFactory = xmlOutputFactory;</span>
-<span class="nc" id="L75">    }</span>
-<span class="nc" id="L76">  }</span>
 
   /**
    * Create a new stream writer using the provided writer.
@@ -87,48 +95,48 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   @NonNull
   protected final XMLStreamWriter2 newXMLStreamWriter(@NonNull Writer writer) throws IOException {
     try {
-<span class="fc" id="L90">      return ObjectUtils.notNull((XMLStreamWriter2) getXMLOutputFactory().createXMLStreamWriter(writer));</span>
-<span class="nc" id="L91">    } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L92">      throw new IOException(ex);</span>
+<span class="fc" id="L98">      return ObjectUtils.notNull((XMLStreamWriter2) getXMLOutputFactory().createXMLStreamWriter(writer));</span>
+<span class="nc" id="L99">    } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L100">      throw new IOException(ex);</span>
     }
   }
 
   @Override
   public void serialize(IBoundObject data, Writer writer) throws IOException {
-<span class="fc" id="L98">    XMLStreamWriter2 streamWriter = newXMLStreamWriter(writer);</span>
-<span class="fc" id="L99">    IOException caughtException = null;</span>
-<span class="fc" id="L100">    IBoundDefinitionModelAssembly definition = getDefinition();</span>
+<span class="fc" id="L106">    XMLStreamWriter2 streamWriter = newXMLStreamWriter(writer);</span>
+<span class="fc" id="L107">    IOException caughtException = null;</span>
+<span class="fc" id="L108">    IBoundDefinitionModelAssembly definition = getDefinition();</span>
 
-<span class="fc" id="L102">    MetaschemaXmlWriter xmlGenerator = new MetaschemaXmlWriter(streamWriter);</span>
+<span class="fc" id="L110">    MetaschemaXmlWriter xmlGenerator = new MetaschemaXmlWriter(streamWriter);</span>
 
-<span class="fc" id="L104">    boolean serializeRoot = get(SerializationFeature.SERIALIZE_ROOT);</span>
+<span class="fc" id="L112">    boolean serializeRoot = get(SerializationFeature.SERIALIZE_ROOT);</span>
     try {
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">      if (serializeRoot) {</span>
-<span class="fc" id="L107">        streamWriter.writeStartDocument(&quot;UTF-8&quot;, &quot;1.0&quot;);</span>
-<span class="fc" id="L108">        xmlGenerator.writeRoot(definition, data);</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">      if (serializeRoot) {</span>
+<span class="fc" id="L115">        streamWriter.writeStartDocument(&quot;UTF-8&quot;, &quot;1.0&quot;);</span>
+<span class="fc" id="L116">        xmlGenerator.writeRoot(definition, data);</span>
       } else {
-<span class="nc" id="L110">        xmlGenerator.write(definition, data);</span>
+<span class="nc" id="L118">        xmlGenerator.write(definition, data);</span>
       }
 
-<span class="fc" id="L113">      streamWriter.flush();</span>
+<span class="fc" id="L121">      streamWriter.flush();</span>
 
-<span class="pc bpc" id="L115" title="1 of 2 branches missed.">      if (serializeRoot) {</span>
-<span class="fc" id="L116">        streamWriter.writeEndDocument();</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">      if (serializeRoot) {</span>
+<span class="fc" id="L124">        streamWriter.writeEndDocument();</span>
       }
-<span class="nc" id="L118">    } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L119">      caughtException = new IOException(ex);</span>
-<span class="nc" id="L120">      throw caughtException;</span>
+<span class="nc" id="L126">    } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L127">      caughtException = new IOException(ex);</span>
+<span class="nc" id="L128">      throw caughtException;</span>
     } finally { // NOPMD - exception handling is needed
       try {
-<span class="fc" id="L123">        streamWriter.close();</span>
-<span class="nc" id="L124">      } catch (XMLStreamException ex) {</span>
-<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (caughtException == null) {</span>
-<span class="nc" id="L126">          throw new IOException(ex);</span>
+<span class="fc" id="L131">        streamWriter.close();</span>
+<span class="nc" id="L132">      } catch (XMLStreamException ex) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (caughtException == null) {</span>
+<span class="nc" id="L134">          throw new IOException(ex);</span>
         }
-<span class="nc" id="L128">        caughtException.addSuppressed(ex);</span>
-<span class="nc" id="L129">        throw caughtException; // NOPMD - intentional</span>
-<span class="fc" id="L130">      }</span>
+<span class="nc" id="L136">        caughtException.addSuppressed(ex);</span>
+<span class="nc" id="L137">        throw caughtException; // NOPMD - intentional</span>
+<span class="fc" id="L138">      }</span>
     }
-<span class="fc" id="L132">  }</span>
+<span class="fc" id="L140">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

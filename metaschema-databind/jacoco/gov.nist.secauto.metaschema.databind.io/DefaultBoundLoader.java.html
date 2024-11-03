@@ -9,9 +9,8 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.model.AbstractResourceResolver;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.resource.AbstractResourceResolver;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.ModelDetector.Result;
@@ -30,7 +29,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A default implementation of an {@link IBoundLoader}.
  */
-<span class="fc" id="L33">public class DefaultBoundLoader</span>
+<span class="fc" id="L32">public class DefaultBoundLoader</span>
     extends AbstractResourceResolver
     implements IBoundLoader {
   public static final int LOOK_AHEAD_BYTES = 32_768;
@@ -51,122 +50,138 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   private final IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration;
 
   /**
-   * Construct a new OSCAL loader instance, using the provided
-   * {@link IBindingContext}.
+   * Construct a new loader instance, using the provided {@link IBindingContext}.
    *
    * @param bindingContext
    *          the Module binding context to use to load Java types
    */
-<span class="fc" id="L60">  public DefaultBoundLoader(@NonNull IBindingContext bindingContext) {</span>
-<span class="fc" id="L61">    this.bindingContext = bindingContext;</span>
-<span class="fc" id="L62">    this.configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="fc" id="L63">  }</span>
+<span class="fc" id="L58">  public DefaultBoundLoader(@NonNull IBindingContext bindingContext) {</span>
+<span class="fc" id="L59">    this.bindingContext = bindingContext;</span>
+<span class="fc" id="L60">    this.configuration = new DefaultConfiguration&lt;&gt;();</span>
+<span class="fc" id="L61">  }</span>
 
   @NonNull
   private IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; getConfiguration() {
-<span class="fc" id="L67">    return configuration;</span>
+<span class="fc" id="L65">    return configuration;</span>
   }
 
   @Override
   public boolean isFeatureEnabled(DeserializationFeature&lt;?&gt; feature) {
-<span class="nc" id="L72">    return getConfiguration().isFeatureEnabled(feature);</span>
+<span class="nc" id="L70">    return getConfiguration().isFeatureEnabled(feature);</span>
   }
 
   @Override
   public Map&lt;DeserializationFeature&lt;?&gt;, Object&gt; getFeatureValues() {
-<span class="nc" id="L77">    return getConfiguration().getFeatureValues();</span>
+<span class="nc" id="L75">    return getConfiguration().getFeatureValues();</span>
   }
 
   @Override
   public IBoundLoader applyConfiguration(@NonNull IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; other) {
-<span class="nc" id="L82">    getConfiguration().applyConfiguration(other);</span>
-<span class="nc" id="L83">    resetDetector();</span>
-<span class="nc" id="L84">    return this;</span>
+<span class="nc" id="L80">    getConfiguration().applyConfiguration(other);</span>
+<span class="nc" id="L81">    resetDetector();</span>
+<span class="nc" id="L82">    return this;</span>
   }
 
   @SuppressWarnings(&quot;PMD.NullAssignment&quot;)
   private void resetDetector() {
     // reset the detector
-<span class="fc" id="L90">    formatDetector = null;</span>
-<span class="fc" id="L91">  }</span>
+<span class="fc" id="L88">    formatDetector = null;</span>
+<span class="fc" id="L89">  }</span>
 
   @Override
   public IBoundLoader set(DeserializationFeature&lt;?&gt; feature, Object value) {
-<span class="fc" id="L95">    getConfiguration().set(feature, value);</span>
-<span class="fc" id="L96">    resetDetector();</span>
-<span class="fc" id="L97">    return this;</span>
+<span class="fc" id="L93">    getConfiguration().set(feature, value);</span>
+<span class="fc" id="L94">    resetDetector();</span>
+<span class="fc" id="L95">    return this;</span>
   }
 
   @Override
   public IBindingContext getBindingContext() {
-<span class="fc" id="L102">    return bindingContext;</span>
+<span class="fc" id="L100">    return bindingContext;</span>
   }
 
   @Override
   public Format detectFormat(@NonNull URI uri) throws IOException {
-<span class="nc" id="L107">    URI resourceUri = resolve(uri);</span>
-<span class="nc" id="L108">    URL resource = resourceUri.toURL();</span>
+<span class="nc" id="L105">    URI resourceUri = resolve(uri);</span>
+<span class="nc" id="L106">    URL resource = resourceUri.toURL();</span>
 
-<span class="nc" id="L110">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
-<span class="nc" id="L111">      return detectFormat(is).getFormat();</span>
+<span class="nc" id="L108">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
+<span class="nc" id="L109">      return detectFormat(is).getFormat();</span>
     }
   }
 
   @Override
   public FormatDetector.Result detectFormat(@NonNull InputStream is) throws IOException {
-<span class="nc" id="L117">    return getFormatDetector().detect(is);</span>
+<span class="nc" id="L115">    return getFormatDetector().detect(is);</span>
   }
 
   @NonNull
   private FormatDetector getFormatDetector() {
-<span class="fc bfc" id="L122" title="All 2 branches covered.">    if (formatDetector == null) {</span>
-<span class="fc" id="L123">      formatDetector = new FormatDetector(getConfiguration());</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">    if (formatDetector == null) {</span>
+<span class="fc" id="L121">      formatDetector = new FormatDetector(getConfiguration());</span>
     }
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">    assert formatDetector != null;</span>
-<span class="fc" id="L126">    return formatDetector;</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">    assert formatDetector != null;</span>
+<span class="fc" id="L124">    return formatDetector;</span>
   }
 
   @NonNull
   private ModelDetector getModelDetector() {
-<span class="fc bfc" id="L131" title="All 2 branches covered.">    if (modelDetector == null) {</span>
-<span class="fc" id="L132">      modelDetector = new ModelDetector(</span>
-<span class="fc" id="L133">          getBindingContext(),</span>
-<span class="fc" id="L134">          getConfiguration());</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">    if (modelDetector == null) {</span>
+<span class="fc" id="L130">      modelDetector = new ModelDetector(</span>
+<span class="fc" id="L131">          getBindingContext(),</span>
+<span class="fc" id="L132">          getConfiguration());</span>
     }
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">    assert modelDetector != null;</span>
-<span class="fc" id="L137">    return modelDetector;</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">    assert modelDetector != null;</span>
+<span class="fc" id="L135">    return modelDetector;</span>
   }
 
   @Override
   @Owning
   public Result detectModel(@NotOwning InputStream is, Format format) throws IOException {
-<span class="fc" id="L143">    return getModelDetector().detect(is, format);</span>
+<span class="fc" id="L141">    return getModelDetector().detect(is, format);</span>
   }
 
   @Override
   public &lt;CLASS extends IBoundObject&gt; CLASS load(@NonNull URI uri) throws IOException {
-<span class="fc" id="L148">    URI resourceUri = resolve(uri);</span>
-<span class="fc" id="L149">    URL resource = resourceUri.toURL();</span>
+<span class="fc" id="L146">    URI resourceUri = resolve(uri);</span>
+<span class="fc" id="L147">    URL resource = resourceUri.toURL();</span>
 
-<span class="fc" id="L151">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
-<span class="fc" id="L152">      return load(is, uri);</span>
+<span class="fc" id="L149">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
+<span class="fc" id="L150">      return load(is, uri);</span>
+    }
+  }
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  @Override
+  @NonNull
+  public &lt;CLASS extends IBoundObject&gt; CLASS load(
+      @NotOwning @NonNull InputStream is,
+      @NonNull URI documentUri)
+      throws IOException {
+<span class="fc" id="L161">    FormatDetector.Result formatMatch = getFormatDetector().detect(is);</span>
+<span class="fc" id="L162">    Format format = formatMatch.getFormat();</span>
+
+<span class="fc" id="L164">    try (InputStream formatStream = formatMatch.getDataStream()) {</span>
+<span class="fc" id="L165">      try (ModelDetector.Result modelMatch = detectModel(formatStream, format)) {</span>
+
+<span class="fc" id="L167">        IDeserializer&lt;?&gt; deserializer = getDeserializer(</span>
+<span class="fc" id="L168">            modelMatch.getBoundClass(),</span>
+            format,
+<span class="fc" id="L170">            getConfiguration());</span>
+<span class="fc" id="L171">        try (InputStream modelStream = modelMatch.getDataStream()) {</span>
+<span class="fc" id="L172">          return (CLASS) deserializer.deserialize(modelStream, documentUri);</span>
+        }
+      }
     }
   }
 
   @Override
-  @NonNull
-  public &lt;CLASS extends IBoundObject&gt; CLASS load(@NonNull InputStream is, @NonNull URI documentUri) throws IOException {
-    // TODO: avoid node item
-<span class="fc" id="L160">    return INodeItem.toValue(loadAsNodeItem(is, documentUri));</span>
-  }
-
-  @Override
   public &lt;CLASS extends IBoundObject&gt; CLASS load(Class&lt;CLASS&gt; clazz, URI uri) throws IOException {
-<span class="fc" id="L165">    URI resourceUri = resolve(uri);</span>
-<span class="fc" id="L166">    URL resource = resourceUri.toURL();</span>
+<span class="fc" id="L180">    URI resourceUri = resolve(uri);</span>
+<span class="fc" id="L181">    URL resource = resourceUri.toURL();</span>
 
-<span class="fc" id="L168">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
-<span class="fc" id="L169">      return load(clazz, is, resourceUri);</span>
+<span class="fc" id="L183">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
+<span class="fc" id="L184">      return load(clazz, is, resourceUri);</span>
     }
   }
 
@@ -175,12 +190,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       throws IOException {
     // we cannot close this stream, since it will cause the underlying stream to be
     // closed
-<span class="fc" id="L178">    FormatDetector.Result match = getFormatDetector().detect(is);</span>
-<span class="fc" id="L179">    Format format = match.getFormat();</span>
+<span class="fc" id="L193">    FormatDetector.Result match = getFormatDetector().detect(is);</span>
+<span class="fc" id="L194">    Format format = match.getFormat();</span>
 
-<span class="fc" id="L181">    try (InputStream remainingStream = match.getDataStream()) {</span>
+<span class="fc" id="L196">    try (InputStream remainingStream = match.getDataStream()) {</span>
       // is autoclosing ok?
-<span class="fc" id="L183">      return load(clazz, format, remainingStream, documentUri);</span>
+<span class="fc" id="L198">      return load(clazz, format, remainingStream, documentUri);</span>
     }
   }
 
@@ -192,51 +207,51 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       @NonNull InputStream is,
       @NonNull URI documentUri) throws IOException {
 
-<span class="fc" id="L195">    IDeserializer&lt;CLASS&gt; deserializer = getDeserializer(clazz, format, getConfiguration());</span>
-<span class="fc" id="L196">    return deserializer.deserialize(is, documentUri);</span>
+<span class="fc" id="L210">    IDeserializer&lt;CLASS&gt; deserializer = getDeserializer(clazz, format, getConfiguration());</span>
+<span class="fc" id="L211">    return deserializer.deserialize(is, documentUri);</span>
   }
 
   @Override
   public IDocumentNodeItem loadAsNodeItem(URI uri) throws IOException {
-<span class="fc" id="L201">    URI resourceUri = resolve(uri);</span>
-<span class="fc" id="L202">    URL resource = resourceUri.toURL();</span>
+<span class="fc" id="L216">    URI resourceUri = resolve(uri);</span>
+<span class="fc" id="L217">    URL resource = resourceUri.toURL();</span>
 
-<span class="fc" id="L204">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
-<span class="fc" id="L205">      return loadAsNodeItem(is, resourceUri);</span>
+<span class="fc" id="L219">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
+<span class="fc" id="L220">      return loadAsNodeItem(is, resourceUri);</span>
     }
   }
 
   @NonNull
   private IDocumentNodeItem loadAsNodeItem(@NonNull InputStream is, @NonNull URI documentUri) throws IOException {
-<span class="fc" id="L211">    FormatDetector.Result formatMatch = getFormatDetector().detect(is);</span>
-<span class="fc" id="L212">    Format format = formatMatch.getFormat();</span>
+<span class="fc" id="L226">    FormatDetector.Result formatMatch = getFormatDetector().detect(is);</span>
+<span class="fc" id="L227">    Format format = formatMatch.getFormat();</span>
 
-<span class="fc" id="L214">    try (InputStream formatStream = formatMatch.getDataStream()) {</span>
-<span class="fc" id="L215">      return loadAsNodeItem(format, formatStream, documentUri);</span>
+<span class="fc" id="L229">    try (InputStream formatStream = formatMatch.getDataStream()) {</span>
+<span class="fc" id="L230">      return loadAsNodeItem(format, formatStream, documentUri);</span>
     }
   }
 
   @Override
   public IDocumentNodeItem loadAsNodeItem(Format format, URI uri) throws IOException {
-<span class="nc" id="L221">    URI resourceUri = resolve(uri);</span>
-<span class="nc" id="L222">    URL resource = resourceUri.toURL();</span>
+<span class="nc" id="L236">    URI resourceUri = resolve(uri);</span>
+<span class="nc" id="L237">    URL resource = resourceUri.toURL();</span>
 
-<span class="nc" id="L224">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
-<span class="nc" id="L225">      return loadAsNodeItem(format, is, resourceUri);</span>
+<span class="nc" id="L239">    try (InputStream is = ObjectUtils.notNull(resource.openStream())) {</span>
+<span class="nc" id="L240">      return loadAsNodeItem(format, is, resourceUri);</span>
     }
   }
 
   @Override
   public IDocumentNodeItem loadAsNodeItem(Format format, InputStream is, URI documentUri)
       throws IOException {
-<span class="fc" id="L232">    try (ModelDetector.Result modelMatch = detectModel(is, format)) {</span>
+<span class="fc" id="L247">    try (ModelDetector.Result modelMatch = detectModel(is, format)) {</span>
 
-<span class="fc" id="L234">      IDeserializer&lt;?&gt; deserializer = getDeserializer(</span>
-<span class="fc" id="L235">          modelMatch.getBoundClass(),</span>
+<span class="fc" id="L249">      IDeserializer&lt;?&gt; deserializer = getDeserializer(</span>
+<span class="fc" id="L250">          modelMatch.getBoundClass(),</span>
           format,
-<span class="fc" id="L237">          getConfiguration());</span>
-<span class="fc" id="L238">      try (InputStream modelStream = modelMatch.getDataStream()) {</span>
-<span class="fc" id="L239">        return (IDocumentNodeItem) deserializer.deserializeToNodeItem(modelStream, documentUri);</span>
+<span class="fc" id="L252">          getConfiguration());</span>
+<span class="fc" id="L253">      try (InputStream modelStream = modelMatch.getDataStream()) {</span>
+<span class="fc" id="L254">        return (IDocumentNodeItem) deserializer.deserializeToNodeItem(modelStream, documentUri);</span>
       }
     }
   }
@@ -246,9 +261,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
       @NonNull Class&lt;CLASS&gt; clazz,
       @NonNull Format format,
       @NonNull IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; config) {
-<span class="fc" id="L249">    IDeserializer&lt;CLASS&gt; retval = getBindingContext().newDeserializer(format, clazz);</span>
-<span class="fc" id="L250">    retval.applyConfiguration(config);</span>
-<span class="fc" id="L251">    return retval;</span>
+<span class="fc" id="L264">    IDeserializer&lt;CLASS&gt; retval = getBindingContext().newDeserializer(format, clazz);</span>
+<span class="fc" id="L265">    retval.applyConfiguration(config);</span>
+<span class="fc" id="L266">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

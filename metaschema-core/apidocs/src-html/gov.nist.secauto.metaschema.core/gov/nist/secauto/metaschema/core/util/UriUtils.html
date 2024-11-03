@@ -48,7 +48,7 @@
 <span class="source-line-no">035</span><span id="line-35">   *          the base URI to use for URI normalization</span>
 <span class="source-line-no">036</span><span id="line-36">   * @return a new URI</span>
 <span class="source-line-no">037</span><span id="line-37">   * @throws URISyntaxException</span>
-<span class="source-line-no">038</span><span id="line-38">   *           an error if the location string is not convertible to URI</span>
+<span class="source-line-no">038</span><span id="line-38">   *           if the location string is not convertible to URI</span>
 <span class="source-line-no">039</span><span id="line-39">   */</span>
 <span class="source-line-no">040</span><span id="line-40">  @SuppressWarnings("PMD.PreserveStackTrace")</span>
 <span class="source-line-no">041</span><span id="line-41">  @NonNull</span>
@@ -104,63 +104,62 @@
 <span class="source-line-no">091</span><span id="line-91"></span>
 <span class="source-line-no">092</span><span id="line-92">  private static boolean hasSameSchemeAndAuthority(URI base, URI other) {</span>
 <span class="source-line-no">093</span><span id="line-93">    String baseScheme = base.getScheme();</span>
-<span class="source-line-no">094</span><span id="line-94">    boolean retval = (baseScheme == null &amp;&amp; other.getScheme() == null)</span>
-<span class="source-line-no">095</span><span id="line-95">        || (baseScheme != null &amp;&amp; baseScheme.equals(other.getScheme()));</span>
+<span class="source-line-no">094</span><span id="line-94">    boolean retval = baseScheme == null &amp;&amp; other.getScheme() == null</span>
+<span class="source-line-no">095</span><span id="line-95">        || baseScheme != null &amp;&amp; baseScheme.equals(other.getScheme());</span>
 <span class="source-line-no">096</span><span id="line-96">    String baseAuthority = base.getAuthority();</span>
-<span class="source-line-no">097</span><span id="line-97">    retval = retval &amp;&amp; ((baseAuthority == null &amp;&amp; other.getAuthority() == null)</span>
-<span class="source-line-no">098</span><span id="line-98">        || (baseAuthority != null &amp;&amp; baseAuthority.equals(other.getAuthority())));</span>
-<span class="source-line-no">099</span><span id="line-99">    return retval;</span>
-<span class="source-line-no">100</span><span id="line-100">  }</span>
-<span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">  /**</span>
-<span class="source-line-no">103</span><span id="line-103">   * Get the path of the provided target relative to the path of the provided</span>
-<span class="source-line-no">104</span><span id="line-104">   * base.</span>
-<span class="source-line-no">105</span><span id="line-105">   *</span>
-<span class="source-line-no">106</span><span id="line-106">   * @param base</span>
-<span class="source-line-no">107</span><span id="line-107">   *          the base path to resolve against</span>
-<span class="source-line-no">108</span><span id="line-108">   * @param target</span>
-<span class="source-line-no">109</span><span id="line-109">   *          the URI to relativize against the base</span>
-<span class="source-line-no">110</span><span id="line-110">   * @return the relativized URI</span>
-<span class="source-line-no">111</span><span id="line-111">   */</span>
-<span class="source-line-no">112</span><span id="line-112">  @SuppressWarnings("PMD.CyclomaticComplexity")</span>
-<span class="source-line-no">113</span><span id="line-113">  public static String prependRelativePath(String base, String target) {</span>
-<span class="source-line-no">114</span><span id="line-114">    // based on code from</span>
-<span class="source-line-no">115</span><span id="line-115">    // http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java</span>
-<span class="source-line-no">116</span><span id="line-116"></span>
-<span class="source-line-no">117</span><span id="line-117">    // Split paths into segments</span>
-<span class="source-line-no">118</span><span id="line-118">    String[] baseSegments = URI_SEPERATOR_PATTERN.split(base);</span>
-<span class="source-line-no">119</span><span id="line-119">    String[] targetSegments = URI_SEPERATOR_PATTERN.split(target, -1);</span>
-<span class="source-line-no">120</span><span id="line-120"></span>
-<span class="source-line-no">121</span><span id="line-121">    // Discard trailing segment of base path, since this resource doesn't matter</span>
-<span class="source-line-no">122</span><span id="line-122">    if (baseSegments.length &gt; 0 &amp;&amp; !base.endsWith(URI_SEPERATOR)) {</span>
-<span class="source-line-no">123</span><span id="line-123">      baseSegments = Arrays.copyOf(baseSegments, baseSegments.length - 1);</span>
-<span class="source-line-no">124</span><span id="line-124">    }</span>
-<span class="source-line-no">125</span><span id="line-125"></span>
-<span class="source-line-no">126</span><span id="line-126">    // Remove common prefix segments</span>
-<span class="source-line-no">127</span><span id="line-127">    int segmentIndex = 0;</span>
-<span class="source-line-no">128</span><span id="line-128">    while (segmentIndex &lt; baseSegments.length &amp;&amp; segmentIndex &lt; targetSegments.length</span>
-<span class="source-line-no">129</span><span id="line-129">        &amp;&amp; baseSegments[segmentIndex].equals(targetSegments[segmentIndex])) {</span>
-<span class="source-line-no">130</span><span id="line-130">      segmentIndex++;</span>
-<span class="source-line-no">131</span><span id="line-131">    }</span>
-<span class="source-line-no">132</span><span id="line-132"></span>
-<span class="source-line-no">133</span><span id="line-133">    // Construct the relative path</span>
-<span class="source-line-no">134</span><span id="line-134">    StringBuilder retval = new StringBuilder();</span>
-<span class="source-line-no">135</span><span id="line-135">    for (int j = 0; j &lt; (baseSegments.length - segmentIndex); j++) {</span>
-<span class="source-line-no">136</span><span id="line-136">      retval.append("..");</span>
-<span class="source-line-no">137</span><span id="line-137">      if (retval.length() != 0) {</span>
-<span class="source-line-no">138</span><span id="line-138">        retval.append(URI_SEPERATOR);</span>
-<span class="source-line-no">139</span><span id="line-139">      }</span>
-<span class="source-line-no">140</span><span id="line-140">    }</span>
-<span class="source-line-no">141</span><span id="line-141"></span>
-<span class="source-line-no">142</span><span id="line-142">    for (int j = segmentIndex; j &lt; targetSegments.length; j++) {</span>
-<span class="source-line-no">143</span><span id="line-143">      retval.append(targetSegments[j]);</span>
-<span class="source-line-no">144</span><span id="line-144">      if (retval.length() != 0 &amp;&amp; j &lt; targetSegments.length - 1) {</span>
-<span class="source-line-no">145</span><span id="line-145">        retval.append(URI_SEPERATOR);</span>
-<span class="source-line-no">146</span><span id="line-146">      }</span>
-<span class="source-line-no">147</span><span id="line-147">    }</span>
-<span class="source-line-no">148</span><span id="line-148">    return retval.toString();</span>
-<span class="source-line-no">149</span><span id="line-149">  }</span>
-<span class="source-line-no">150</span><span id="line-150">}</span>
+<span class="source-line-no">097</span><span id="line-97">    return retval &amp;&amp; (baseAuthority == null &amp;&amp; other.getAuthority() == null</span>
+<span class="source-line-no">098</span><span id="line-98">        || baseAuthority != null &amp;&amp; baseAuthority.equals(other.getAuthority()));</span>
+<span class="source-line-no">099</span><span id="line-99">  }</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">  /**</span>
+<span class="source-line-no">102</span><span id="line-102">   * Get the path of the provided target relative to the path of the provided</span>
+<span class="source-line-no">103</span><span id="line-103">   * base.</span>
+<span class="source-line-no">104</span><span id="line-104">   *</span>
+<span class="source-line-no">105</span><span id="line-105">   * @param base</span>
+<span class="source-line-no">106</span><span id="line-106">   *          the base path to resolve against</span>
+<span class="source-line-no">107</span><span id="line-107">   * @param target</span>
+<span class="source-line-no">108</span><span id="line-108">   *          the URI to relativize against the base</span>
+<span class="source-line-no">109</span><span id="line-109">   * @return the relativized URI</span>
+<span class="source-line-no">110</span><span id="line-110">   */</span>
+<span class="source-line-no">111</span><span id="line-111">  @SuppressWarnings("PMD.CyclomaticComplexity")</span>
+<span class="source-line-no">112</span><span id="line-112">  public static String prependRelativePath(String base, String target) {</span>
+<span class="source-line-no">113</span><span id="line-113">    // based on code from</span>
+<span class="source-line-no">114</span><span id="line-114">    // http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java</span>
+<span class="source-line-no">115</span><span id="line-115"></span>
+<span class="source-line-no">116</span><span id="line-116">    // Split paths into segments</span>
+<span class="source-line-no">117</span><span id="line-117">    String[] baseSegments = URI_SEPERATOR_PATTERN.split(base);</span>
+<span class="source-line-no">118</span><span id="line-118">    String[] targetSegments = URI_SEPERATOR_PATTERN.split(target, -1);</span>
+<span class="source-line-no">119</span><span id="line-119"></span>
+<span class="source-line-no">120</span><span id="line-120">    // Discard trailing segment of base path, since this resource doesn't matter</span>
+<span class="source-line-no">121</span><span id="line-121">    if (baseSegments.length &gt; 0 &amp;&amp; !base.endsWith(URI_SEPERATOR)) {</span>
+<span class="source-line-no">122</span><span id="line-122">      baseSegments = Arrays.copyOf(baseSegments, baseSegments.length - 1);</span>
+<span class="source-line-no">123</span><span id="line-123">    }</span>
+<span class="source-line-no">124</span><span id="line-124"></span>
+<span class="source-line-no">125</span><span id="line-125">    // Remove common prefix segments</span>
+<span class="source-line-no">126</span><span id="line-126">    int segmentIndex = 0;</span>
+<span class="source-line-no">127</span><span id="line-127">    while (segmentIndex &lt; baseSegments.length &amp;&amp; segmentIndex &lt; targetSegments.length</span>
+<span class="source-line-no">128</span><span id="line-128">        &amp;&amp; baseSegments[segmentIndex].equals(targetSegments[segmentIndex])) {</span>
+<span class="source-line-no">129</span><span id="line-129">      segmentIndex++;</span>
+<span class="source-line-no">130</span><span id="line-130">    }</span>
+<span class="source-line-no">131</span><span id="line-131"></span>
+<span class="source-line-no">132</span><span id="line-132">    // Construct the relative path</span>
+<span class="source-line-no">133</span><span id="line-133">    StringBuilder retval = new StringBuilder();</span>
+<span class="source-line-no">134</span><span id="line-134">    for (int j = 0; j &lt; baseSegments.length - segmentIndex; j++) {</span>
+<span class="source-line-no">135</span><span id="line-135">      retval.append("..");</span>
+<span class="source-line-no">136</span><span id="line-136">      if (retval.length() != 0) {</span>
+<span class="source-line-no">137</span><span id="line-137">        retval.append(URI_SEPERATOR);</span>
+<span class="source-line-no">138</span><span id="line-138">      }</span>
+<span class="source-line-no">139</span><span id="line-139">    }</span>
+<span class="source-line-no">140</span><span id="line-140"></span>
+<span class="source-line-no">141</span><span id="line-141">    for (int j = segmentIndex; j &lt; targetSegments.length; j++) {</span>
+<span class="source-line-no">142</span><span id="line-142">      retval.append(targetSegments[j]);</span>
+<span class="source-line-no">143</span><span id="line-143">      if (retval.length() != 0 &amp;&amp; j &lt; targetSegments.length - 1) {</span>
+<span class="source-line-no">144</span><span id="line-144">        retval.append(URI_SEPERATOR);</span>
+<span class="source-line-no">145</span><span id="line-145">      }</span>
+<span class="source-line-no">146</span><span id="line-146">    }</span>
+<span class="source-line-no">147</span><span id="line-147">    return retval.toString();</span>
+<span class="source-line-no">148</span><span id="line-148">  }</span>
+<span class="source-line-no">149</span><span id="line-149">}</span>
 
 
 

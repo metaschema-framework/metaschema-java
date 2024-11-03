@@ -21,331 +21,313 @@
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.cli.processor.CLIProcessor;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;</span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.cli.processor.ExitCode;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.cli.processor.ExitStatus;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.cli.processor.OptionUtils;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.cli.processor.command.AbstractCommandExecutor;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.cli.util.LoggingValidationHandler;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;</span>
-<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
-<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.model.IConstraintLoader;</span>
-<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.core.model.MetaschemaException;</span>
-<span class="source-line-no">024</span><span id="line-24">import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;</span>
-<span class="source-line-no">025</span><span id="line-25">import gov.nist.secauto.metaschema.core.model.constraint.ValidationFeature;</span>
-<span class="source-line-no">026</span><span id="line-26">import gov.nist.secauto.metaschema.core.model.validation.AggregateValidationResult;</span>
-<span class="source-line-no">027</span><span id="line-27">import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;</span>
-<span class="source-line-no">028</span><span id="line-28">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">029</span><span id="line-29">import gov.nist.secauto.metaschema.core.util.CustomCollectors;</span>
-<span class="source-line-no">030</span><span id="line-30">import gov.nist.secauto.metaschema.core.util.IVersionInfo;</span>
-<span class="source-line-no">031</span><span id="line-31">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">032</span><span id="line-32">import gov.nist.secauto.metaschema.core.util.UriUtils;</span>
-<span class="source-line-no">033</span><span id="line-33">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
-<span class="source-line-no">034</span><span id="line-34">import gov.nist.secauto.metaschema.databind.IBindingContext.ISchemaValidationProvider;</span>
-<span class="source-line-no">035</span><span id="line-35">import gov.nist.secauto.metaschema.databind.io.Format;</span>
-<span class="source-line-no">036</span><span id="line-36">import gov.nist.secauto.metaschema.databind.io.IBoundLoader;</span>
-<span class="source-line-no">037</span><span id="line-37">import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;</span>
-<span class="source-line-no">038</span><span id="line-38">import gov.nist.secauto.metaschema.modules.sarif.SarifValidationHandler;</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">import org.apache.commons.cli.CommandLine;</span>
-<span class="source-line-no">041</span><span id="line-41">import org.apache.commons.cli.Option;</span>
-<span class="source-line-no">042</span><span id="line-42">import org.apache.logging.log4j.LogManager;</span>
-<span class="source-line-no">043</span><span id="line-43">import org.apache.logging.log4j.Logger;</span>
-<span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">import java.io.FileNotFoundException;</span>
-<span class="source-line-no">046</span><span id="line-46">import java.io.IOException;</span>
-<span class="source-line-no">047</span><span id="line-47">import java.net.URI;</span>
-<span class="source-line-no">048</span><span id="line-48">import java.net.URISyntaxException;</span>
-<span class="source-line-no">049</span><span id="line-49">import java.net.UnknownHostException;</span>
-<span class="source-line-no">050</span><span id="line-50">import java.nio.file.Path;</span>
-<span class="source-line-no">051</span><span id="line-51">import java.nio.file.Paths;</span>
-<span class="source-line-no">052</span><span id="line-52">import java.util.Arrays;</span>
-<span class="source-line-no">053</span><span id="line-53">import java.util.Collection;</span>
-<span class="source-line-no">054</span><span id="line-54">import java.util.LinkedHashSet;</span>
-<span class="source-line-no">055</span><span id="line-55">import java.util.List;</span>
-<span class="source-line-no">056</span><span id="line-56">import java.util.Locale;</span>
-<span class="source-line-no">057</span><span id="line-57">import java.util.Set;</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">public abstract class AbstractValidateContentCommand</span>
-<span class="source-line-no">062</span><span id="line-62">    extends AbstractTerminalCommand {</span>
-<span class="source-line-no">063</span><span id="line-63">  private static final Logger LOGGER = LogManager.getLogger(AbstractValidateContentCommand.class);</span>
-<span class="source-line-no">064</span><span id="line-64">  @NonNull</span>
-<span class="source-line-no">065</span><span id="line-65">  private static final String COMMAND = "validate";</span>
-<span class="source-line-no">066</span><span id="line-66">  @NonNull</span>
-<span class="source-line-no">067</span><span id="line-67">  private static final List&lt;ExtraArgument&gt; EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(</span>
-<span class="source-line-no">068</span><span id="line-68">      new DefaultExtraArgument("file-or-URI-to-validate", true)));</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.cli.processor.command.AbstractCommandExecutor;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.cli.util.LoggingValidationHandler;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.model.IModule;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;</span>
+<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.model.constraint.ValidationFeature;</span>
+<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.core.model.validation.AggregateValidationResult;</span>
+<span class="source-line-no">024</span><span id="line-24">import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;</span>
+<span class="source-line-no">025</span><span id="line-25">import gov.nist.secauto.metaschema.core.util.IVersionInfo;</span>
+<span class="source-line-no">026</span><span id="line-26">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">027</span><span id="line-27">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
+<span class="source-line-no">028</span><span id="line-28">import gov.nist.secauto.metaschema.databind.IBindingContext.ISchemaValidationProvider;</span>
+<span class="source-line-no">029</span><span id="line-29">import gov.nist.secauto.metaschema.databind.io.Format;</span>
+<span class="source-line-no">030</span><span id="line-30">import gov.nist.secauto.metaschema.databind.io.IBoundLoader;</span>
+<span class="source-line-no">031</span><span id="line-31">import gov.nist.secauto.metaschema.modules.sarif.SarifValidationHandler;</span>
+<span class="source-line-no">032</span><span id="line-32"></span>
+<span class="source-line-no">033</span><span id="line-33">import org.apache.commons.cli.CommandLine;</span>
+<span class="source-line-no">034</span><span id="line-34">import org.apache.commons.cli.Option;</span>
+<span class="source-line-no">035</span><span id="line-35">import org.apache.logging.log4j.LogManager;</span>
+<span class="source-line-no">036</span><span id="line-36">import org.apache.logging.log4j.Logger;</span>
+<span class="source-line-no">037</span><span id="line-37"></span>
+<span class="source-line-no">038</span><span id="line-38">import java.io.FileNotFoundException;</span>
+<span class="source-line-no">039</span><span id="line-39">import java.io.IOException;</span>
+<span class="source-line-no">040</span><span id="line-40">import java.net.URI;</span>
+<span class="source-line-no">041</span><span id="line-41">import java.net.UnknownHostException;</span>
+<span class="source-line-no">042</span><span id="line-42">import java.nio.file.Path;</span>
+<span class="source-line-no">043</span><span id="line-43">import java.nio.file.Paths;</span>
+<span class="source-line-no">044</span><span id="line-44">import java.util.Collection;</span>
+<span class="source-line-no">045</span><span id="line-45">import java.util.List;</span>
+<span class="source-line-no">046</span><span id="line-46">import java.util.Set;</span>
+<span class="source-line-no">047</span><span id="line-47"></span>
+<span class="source-line-no">048</span><span id="line-48">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">049</span><span id="line-49">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">050</span><span id="line-50"></span>
+<span class="source-line-no">051</span><span id="line-51">/**</span>
+<span class="source-line-no">052</span><span id="line-52"> * Used by implementing classes to provide a content validation command.</span>
+<span class="source-line-no">053</span><span id="line-53"> */</span>
+<span class="source-line-no">054</span><span id="line-54">public abstract class AbstractValidateContentCommand</span>
+<span class="source-line-no">055</span><span id="line-55">    extends AbstractTerminalCommand {</span>
+<span class="source-line-no">056</span><span id="line-56">  private static final Logger LOGGER = LogManager.getLogger(AbstractValidateContentCommand.class);</span>
+<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
+<span class="source-line-no">058</span><span id="line-58">  private static final String COMMAND = "validate";</span>
+<span class="source-line-no">059</span><span id="line-59">  @NonNull</span>
+<span class="source-line-no">060</span><span id="line-60">  private static final List&lt;ExtraArgument&gt; EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(</span>
+<span class="source-line-no">061</span><span id="line-61">      new DefaultExtraArgument("file-or-URI-to-validate", true)));</span>
+<span class="source-line-no">062</span><span id="line-62"></span>
+<span class="source-line-no">063</span><span id="line-63">  @NonNull</span>
+<span class="source-line-no">064</span><span id="line-64">  private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">065</span><span id="line-65">      Option.builder("c")</span>
+<span class="source-line-no">066</span><span id="line-66">          .hasArgs()</span>
+<span class="source-line-no">067</span><span id="line-67">          .argName("URL")</span>
+<span class="source-line-no">068</span><span id="line-68">          .desc("additional constraint definitions")</span>
+<span class="source-line-no">069</span><span id="line-69">          .build());</span>
 <span class="source-line-no">070</span><span id="line-70">  @NonNull</span>
-<span class="source-line-no">071</span><span id="line-71">  private static final Option AS_OPTION = ObjectUtils.notNull(</span>
-<span class="source-line-no">072</span><span id="line-72">      Option.builder()</span>
-<span class="source-line-no">073</span><span id="line-73">          .longOpt("as")</span>
-<span class="source-line-no">074</span><span id="line-74">          .hasArg()</span>
-<span class="source-line-no">075</span><span id="line-75">          .argName("FORMAT")</span>
-<span class="source-line-no">076</span><span id="line-76">          .desc("source format: xml, json, or yaml")</span>
-<span class="source-line-no">077</span><span id="line-77">          .numberOfArgs(1)</span>
-<span class="source-line-no">078</span><span id="line-78">          .build());</span>
-<span class="source-line-no">079</span><span id="line-79">  @NonNull</span>
-<span class="source-line-no">080</span><span id="line-80">  private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(</span>
-<span class="source-line-no">081</span><span id="line-81">      Option.builder("c")</span>
-<span class="source-line-no">082</span><span id="line-82">          .hasArgs()</span>
-<span class="source-line-no">083</span><span id="line-83">          .argName("URL")</span>
-<span class="source-line-no">084</span><span id="line-84">          .desc("additional constraint definitions")</span>
-<span class="source-line-no">085</span><span id="line-85">          .build());</span>
-<span class="source-line-no">086</span><span id="line-86">  @NonNull</span>
-<span class="source-line-no">087</span><span id="line-87">  private static final Option SARIF_OUTPUT_FILE_OPTION = ObjectUtils.notNull(</span>
-<span class="source-line-no">088</span><span id="line-88">      Option.builder("o")</span>
-<span class="source-line-no">089</span><span id="line-89">          .hasArg()</span>
-<span class="source-line-no">090</span><span id="line-90">          .argName("FILE")</span>
-<span class="source-line-no">091</span><span id="line-91">          .desc("write SARIF results to the provided FILE")</span>
-<span class="source-line-no">092</span><span id="line-92">          .numberOfArgs(1)</span>
-<span class="source-line-no">093</span><span id="line-93">          .build());</span>
-<span class="source-line-no">094</span><span id="line-94">  @NonNull</span>
-<span class="source-line-no">095</span><span id="line-95">  private static final Option SARIF_INCLUDE_PASS_OPTION = ObjectUtils.notNull(</span>
-<span class="source-line-no">096</span><span id="line-96">      Option.builder()</span>
-<span class="source-line-no">097</span><span id="line-97">          .longOpt("sarif-include-pass")</span>
-<span class="source-line-no">098</span><span id="line-98">          .desc("include pass results in SARIF")</span>
-<span class="source-line-no">099</span><span id="line-99">          .build());</span>
-<span class="source-line-no">100</span><span id="line-100">  @NonNull</span>
-<span class="source-line-no">101</span><span id="line-101">  private static final Option NO_SCHEMA_VALIDATION_OPTION = ObjectUtils.notNull(</span>
-<span class="source-line-no">102</span><span id="line-102">      Option.builder()</span>
-<span class="source-line-no">103</span><span id="line-103">          .longOpt("disable-schema-validation")</span>
-<span class="source-line-no">104</span><span id="line-104">          .desc("do not perform schema validation")</span>
-<span class="source-line-no">105</span><span id="line-105">          .build());</span>
-<span class="source-line-no">106</span><span id="line-106">  @NonNull</span>
-<span class="source-line-no">107</span><span id="line-107">  private static final Option NO_CONSTRAINT_VALIDATION_OPTION = ObjectUtils.notNull(</span>
-<span class="source-line-no">108</span><span id="line-108">      Option.builder()</span>
-<span class="source-line-no">109</span><span id="line-109">          .longOpt("disable-constraint-validation")</span>
-<span class="source-line-no">110</span><span id="line-110">          .desc("do not perform constraint validation")</span>
-<span class="source-line-no">111</span><span id="line-111">          .build());</span>
-<span class="source-line-no">112</span><span id="line-112"></span>
-<span class="source-line-no">113</span><span id="line-113">  @Override</span>
-<span class="source-line-no">114</span><span id="line-114">  public String getName() {</span>
-<span class="source-line-no">115</span><span id="line-115">    return COMMAND;</span>
-<span class="source-line-no">116</span><span id="line-116">  }</span>
-<span class="source-line-no">117</span><span id="line-117"></span>
-<span class="source-line-no">118</span><span id="line-118">  @SuppressWarnings("null")</span>
-<span class="source-line-no">119</span><span id="line-119">  @Override</span>
-<span class="source-line-no">120</span><span id="line-120">  public Collection&lt;? extends Option&gt; gatherOptions() {</span>
-<span class="source-line-no">121</span><span id="line-121">    return List.of(</span>
-<span class="source-line-no">122</span><span id="line-122">        AS_OPTION,</span>
-<span class="source-line-no">123</span><span id="line-123">        CONSTRAINTS_OPTION,</span>
-<span class="source-line-no">124</span><span id="line-124">        SARIF_OUTPUT_FILE_OPTION,</span>
-<span class="source-line-no">125</span><span id="line-125">        SARIF_INCLUDE_PASS_OPTION,</span>
-<span class="source-line-no">126</span><span id="line-126">        NO_SCHEMA_VALIDATION_OPTION,</span>
-<span class="source-line-no">127</span><span id="line-127">        NO_CONSTRAINT_VALIDATION_OPTION);</span>
-<span class="source-line-no">128</span><span id="line-128">  }</span>
-<span class="source-line-no">129</span><span id="line-129"></span>
-<span class="source-line-no">130</span><span id="line-130">  @Override</span>
-<span class="source-line-no">131</span><span id="line-131">  public List&lt;ExtraArgument&gt; getExtraArguments() {</span>
-<span class="source-line-no">132</span><span id="line-132">    return EXTRA_ARGUMENTS;</span>
-<span class="source-line-no">133</span><span id="line-133">  }</span>
-<span class="source-line-no">134</span><span id="line-134"></span>
-<span class="source-line-no">135</span><span id="line-135">  @SuppressWarnings("PMD.PreserveStackTrace") // intended</span>
-<span class="source-line-no">136</span><span id="line-136">  @Override</span>
-<span class="source-line-no">137</span><span id="line-137">  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {</span>
-<span class="source-line-no">138</span><span id="line-138">    List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
-<span class="source-line-no">139</span><span id="line-139">    if (extraArgs.size() != 1) {</span>
-<span class="source-line-no">140</span><span id="line-140">      throw new InvalidArgumentException("The source to validate must be provided.");</span>
-<span class="source-line-no">141</span><span id="line-141">    }</span>
-<span class="source-line-no">142</span><span id="line-142"></span>
-<span class="source-line-no">143</span><span id="line-143">    if (cmdLine.hasOption(AS_OPTION)) {</span>
-<span class="source-line-no">144</span><span id="line-144">      try {</span>
-<span class="source-line-no">145</span><span id="line-145">        String toFormatText = cmdLine.getOptionValue(AS_OPTION);</span>
-<span class="source-line-no">146</span><span id="line-146">        Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
-<span class="source-line-no">147</span><span id="line-147">      } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">148</span><span id="line-148">        InvalidArgumentException newEx = new InvalidArgumentException(</span>
-<span class="source-line-no">149</span><span id="line-149">            String.format("Invalid '%s' argument. The format must be one of: %s.",</span>
-<span class="source-line-no">150</span><span id="line-150">                OptionUtils.toArgument(AS_OPTION),</span>
-<span class="source-line-no">151</span><span id="line-151">                Arrays.asList(Format.values()).stream()</span>
-<span class="source-line-no">152</span><span id="line-152">                    .map(format -&gt; format.name())</span>
-<span class="source-line-no">153</span><span id="line-153">                    .collect(CustomCollectors.joiningWithOxfordComma("and"))));</span>
-<span class="source-line-no">154</span><span id="line-154">        newEx.addSuppressed(ex);</span>
-<span class="source-line-no">155</span><span id="line-155">        throw newEx;</span>
-<span class="source-line-no">156</span><span id="line-156">      }</span>
-<span class="source-line-no">157</span><span id="line-157">    }</span>
-<span class="source-line-no">158</span><span id="line-158">  }</span>
-<span class="source-line-no">159</span><span id="line-159"></span>
-<span class="source-line-no">160</span><span id="line-160">  protected abstract class AbstractValidationCommandExecutor</span>
-<span class="source-line-no">161</span><span id="line-161">      extends AbstractCommandExecutor</span>
-<span class="source-line-no">162</span><span id="line-162">      implements ISchemaValidationProvider {</span>
-<span class="source-line-no">163</span><span id="line-163"></span>
-<span class="source-line-no">164</span><span id="line-164">    /**</span>
-<span class="source-line-no">165</span><span id="line-165">     * Construct a new command executor.</span>
-<span class="source-line-no">166</span><span id="line-166">     *</span>
-<span class="source-line-no">167</span><span id="line-167">     * @param callingContext</span>
-<span class="source-line-no">168</span><span id="line-168">     *          the context of the command execution</span>
-<span class="source-line-no">169</span><span id="line-169">     * @param commandLine</span>
-<span class="source-line-no">170</span><span id="line-170">     *          the parsed command line details</span>
-<span class="source-line-no">171</span><span id="line-171">     */</span>
-<span class="source-line-no">172</span><span id="line-172">    public AbstractValidationCommandExecutor(</span>
-<span class="source-line-no">173</span><span id="line-173">        @NonNull CallingContext callingContext,</span>
-<span class="source-line-no">174</span><span id="line-174">        @NonNull CommandLine commandLine) {</span>
-<span class="source-line-no">175</span><span id="line-175">      super(callingContext, commandLine);</span>
-<span class="source-line-no">176</span><span id="line-176">    }</span>
-<span class="source-line-no">177</span><span id="line-177"></span>
-<span class="source-line-no">178</span><span id="line-178">    /**</span>
-<span class="source-line-no">179</span><span id="line-179">     * Get the binding context to use for data processing.</span>
-<span class="source-line-no">180</span><span id="line-180">     *</span>
-<span class="source-line-no">181</span><span id="line-181">     * @param constraintSets</span>
-<span class="source-line-no">182</span><span id="line-182">     *          the constraints to configure in the resulting binding context</span>
-<span class="source-line-no">183</span><span id="line-183">     * @return the context</span>
-<span class="source-line-no">184</span><span id="line-184">     * @throws MetaschemaException</span>
-<span class="source-line-no">185</span><span id="line-185">     *           if a Metaschema error occurred</span>
-<span class="source-line-no">186</span><span id="line-186">     * @throws IOException</span>
-<span class="source-line-no">187</span><span id="line-187">     *           if an error occurred while reading data</span>
+<span class="source-line-no">071</span><span id="line-71">  private static final Option SARIF_OUTPUT_FILE_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">072</span><span id="line-72">      Option.builder("o")</span>
+<span class="source-line-no">073</span><span id="line-73">          .hasArg()</span>
+<span class="source-line-no">074</span><span id="line-74">          .argName("FILE")</span>
+<span class="source-line-no">075</span><span id="line-75">          .desc("write SARIF results to the provided FILE")</span>
+<span class="source-line-no">076</span><span id="line-76">          .numberOfArgs(1)</span>
+<span class="source-line-no">077</span><span id="line-77">          .build());</span>
+<span class="source-line-no">078</span><span id="line-78">  @NonNull</span>
+<span class="source-line-no">079</span><span id="line-79">  private static final Option SARIF_INCLUDE_PASS_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">080</span><span id="line-80">      Option.builder()</span>
+<span class="source-line-no">081</span><span id="line-81">          .longOpt("sarif-include-pass")</span>
+<span class="source-line-no">082</span><span id="line-82">          .desc("include pass results in SARIF")</span>
+<span class="source-line-no">083</span><span id="line-83">          .build());</span>
+<span class="source-line-no">084</span><span id="line-84">  @NonNull</span>
+<span class="source-line-no">085</span><span id="line-85">  private static final Option NO_SCHEMA_VALIDATION_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">086</span><span id="line-86">      Option.builder()</span>
+<span class="source-line-no">087</span><span id="line-87">          .longOpt("disable-schema-validation")</span>
+<span class="source-line-no">088</span><span id="line-88">          .desc("do not perform schema validation")</span>
+<span class="source-line-no">089</span><span id="line-89">          .build());</span>
+<span class="source-line-no">090</span><span id="line-90">  @NonNull</span>
+<span class="source-line-no">091</span><span id="line-91">  private static final Option NO_CONSTRAINT_VALIDATION_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">092</span><span id="line-92">      Option.builder()</span>
+<span class="source-line-no">093</span><span id="line-93">          .longOpt("disable-constraint-validation")</span>
+<span class="source-line-no">094</span><span id="line-94">          .desc("do not perform constraint validation")</span>
+<span class="source-line-no">095</span><span id="line-95">          .build());</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">  @Override</span>
+<span class="source-line-no">098</span><span id="line-98">  public String getName() {</span>
+<span class="source-line-no">099</span><span id="line-99">    return COMMAND;</span>
+<span class="source-line-no">100</span><span id="line-100">  }</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">  @SuppressWarnings("null")</span>
+<span class="source-line-no">103</span><span id="line-103">  @Override</span>
+<span class="source-line-no">104</span><span id="line-104">  public Collection&lt;? extends Option&gt; gatherOptions() {</span>
+<span class="source-line-no">105</span><span id="line-105">    return List.of(</span>
+<span class="source-line-no">106</span><span id="line-106">        MetaschemaCommands.AS_FORMAT_OPTION,</span>
+<span class="source-line-no">107</span><span id="line-107">        CONSTRAINTS_OPTION,</span>
+<span class="source-line-no">108</span><span id="line-108">        SARIF_OUTPUT_FILE_OPTION,</span>
+<span class="source-line-no">109</span><span id="line-109">        SARIF_INCLUDE_PASS_OPTION,</span>
+<span class="source-line-no">110</span><span id="line-110">        NO_SCHEMA_VALIDATION_OPTION,</span>
+<span class="source-line-no">111</span><span id="line-111">        NO_CONSTRAINT_VALIDATION_OPTION);</span>
+<span class="source-line-no">112</span><span id="line-112">  }</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">  @Override</span>
+<span class="source-line-no">115</span><span id="line-115">  public List&lt;ExtraArgument&gt; getExtraArguments() {</span>
+<span class="source-line-no">116</span><span id="line-116">    return EXTRA_ARGUMENTS;</span>
+<span class="source-line-no">117</span><span id="line-117">  }</span>
+<span class="source-line-no">118</span><span id="line-118"></span>
+<span class="source-line-no">119</span><span id="line-119">  /**</span>
+<span class="source-line-no">120</span><span id="line-120">   * Drives the validation execution.</span>
+<span class="source-line-no">121</span><span id="line-121">   */</span>
+<span class="source-line-no">122</span><span id="line-122">  protected abstract class AbstractValidationCommandExecutor</span>
+<span class="source-line-no">123</span><span id="line-123">      extends AbstractCommandExecutor {</span>
+<span class="source-line-no">124</span><span id="line-124"></span>
+<span class="source-line-no">125</span><span id="line-125">    /**</span>
+<span class="source-line-no">126</span><span id="line-126">     * Construct a new command executor.</span>
+<span class="source-line-no">127</span><span id="line-127">     *</span>
+<span class="source-line-no">128</span><span id="line-128">     * @param callingContext</span>
+<span class="source-line-no">129</span><span id="line-129">     *          the context of the command execution</span>
+<span class="source-line-no">130</span><span id="line-130">     * @param commandLine</span>
+<span class="source-line-no">131</span><span id="line-131">     *          the parsed command line details</span>
+<span class="source-line-no">132</span><span id="line-132">     */</span>
+<span class="source-line-no">133</span><span id="line-133">    public AbstractValidationCommandExecutor(</span>
+<span class="source-line-no">134</span><span id="line-134">        @NonNull CallingContext callingContext,</span>
+<span class="source-line-no">135</span><span id="line-135">        @NonNull CommandLine commandLine) {</span>
+<span class="source-line-no">136</span><span id="line-136">      super(callingContext, commandLine);</span>
+<span class="source-line-no">137</span><span id="line-137">    }</span>
+<span class="source-line-no">138</span><span id="line-138"></span>
+<span class="source-line-no">139</span><span id="line-139">    /**</span>
+<span class="source-line-no">140</span><span id="line-140">     * Get the binding context to use for data processing.</span>
+<span class="source-line-no">141</span><span id="line-141">     *</span>
+<span class="source-line-no">142</span><span id="line-142">     * @param constraintSets</span>
+<span class="source-line-no">143</span><span id="line-143">     *          the constraints to configure in the resulting binding context</span>
+<span class="source-line-no">144</span><span id="line-144">     * @return the context</span>
+<span class="source-line-no">145</span><span id="line-145">     * @throws CommandExecutionException</span>
+<span class="source-line-no">146</span><span id="line-146">     *           if a error occurred while getting the binding context</span>
+<span class="source-line-no">147</span><span id="line-147">     */</span>
+<span class="source-line-no">148</span><span id="line-148">    @NonNull</span>
+<span class="source-line-no">149</span><span id="line-149">    protected abstract IBindingContext getBindingContext(@NonNull Set&lt;IConstraintSet&gt; constraintSets)</span>
+<span class="source-line-no">150</span><span id="line-150">        throws CommandExecutionException;</span>
+<span class="source-line-no">151</span><span id="line-151"></span>
+<span class="source-line-no">152</span><span id="line-152">    /**</span>
+<span class="source-line-no">153</span><span id="line-153">     * Get the module to use for validation.</span>
+<span class="source-line-no">154</span><span id="line-154">     * &lt;p&gt;</span>
+<span class="source-line-no">155</span><span id="line-155">     * This module is used to generate schemas and as a source of built-in</span>
+<span class="source-line-no">156</span><span id="line-156">     * constraints.</span>
+<span class="source-line-no">157</span><span id="line-157">     *</span>
+<span class="source-line-no">158</span><span id="line-158">     * @param commandLine</span>
+<span class="source-line-no">159</span><span id="line-159">     *          the provided command line argument information</span>
+<span class="source-line-no">160</span><span id="line-160">     * @param bindingContext</span>
+<span class="source-line-no">161</span><span id="line-161">     *          the context used to access Metaschema module information based on</span>
+<span class="source-line-no">162</span><span id="line-162">     *          Java class bindings</span>
+<span class="source-line-no">163</span><span id="line-163">     * @return the loaded Metaschema module</span>
+<span class="source-line-no">164</span><span id="line-164">     * @throws CommandExecutionException</span>
+<span class="source-line-no">165</span><span id="line-165">     *           if an error occurred while loading the module</span>
+<span class="source-line-no">166</span><span id="line-166">     */</span>
+<span class="source-line-no">167</span><span id="line-167">    @NonNull</span>
+<span class="source-line-no">168</span><span id="line-168">    protected abstract IModule getModule(</span>
+<span class="source-line-no">169</span><span id="line-169">        @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">170</span><span id="line-170">        @NonNull IBindingContext bindingContext)</span>
+<span class="source-line-no">171</span><span id="line-171">        throws CommandExecutionException;</span>
+<span class="source-line-no">172</span><span id="line-172"></span>
+<span class="source-line-no">173</span><span id="line-173">    /**</span>
+<span class="source-line-no">174</span><span id="line-174">     * Get the schema validation implementation requested based on the provided</span>
+<span class="source-line-no">175</span><span id="line-175">     * command line arguments.</span>
+<span class="source-line-no">176</span><span id="line-176">     * &lt;p&gt;</span>
+<span class="source-line-no">177</span><span id="line-177">     * It is typical for this call to result in the dynamic generation of a schema</span>
+<span class="source-line-no">178</span><span id="line-178">     * to use for validation.</span>
+<span class="source-line-no">179</span><span id="line-179">     *</span>
+<span class="source-line-no">180</span><span id="line-180">     * @param module</span>
+<span class="source-line-no">181</span><span id="line-181">     *          the Metaschema module to generate the schema from</span>
+<span class="source-line-no">182</span><span id="line-182">     * @param commandLine</span>
+<span class="source-line-no">183</span><span id="line-183">     *          the provided command line argument information</span>
+<span class="source-line-no">184</span><span id="line-184">     * @param bindingContext</span>
+<span class="source-line-no">185</span><span id="line-185">     *          the context used to access Metaschema module information based on</span>
+<span class="source-line-no">186</span><span id="line-186">     *          Java class bindings</span>
+<span class="source-line-no">187</span><span id="line-187">     * @return the provider</span>
 <span class="source-line-no">188</span><span id="line-188">     */</span>
 <span class="source-line-no">189</span><span id="line-189">    @NonNull</span>
-<span class="source-line-no">190</span><span id="line-190">    protected abstract IBindingContext getBindingContext(@NonNull Set&lt;IConstraintSet&gt; constraintSets)</span>
-<span class="source-line-no">191</span><span id="line-191">        throws MetaschemaException, IOException;</span>
-<span class="source-line-no">192</span><span id="line-192"></span>
-<span class="source-line-no">193</span><span id="line-193">    @SuppressWarnings("PMD.OnlyOneReturn") // readability</span>
-<span class="source-line-no">194</span><span id="line-194">    @Override</span>
-<span class="source-line-no">195</span><span id="line-195">    public ExitStatus execute() {</span>
-<span class="source-line-no">196</span><span id="line-196">      URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());</span>
-<span class="source-line-no">197</span><span id="line-197">      CommandLine cmdLine = getCommandLine();</span>
-<span class="source-line-no">198</span><span id="line-198"></span>
-<span class="source-line-no">199</span><span id="line-199">      Set&lt;IConstraintSet&gt; constraintSets;</span>
-<span class="source-line-no">200</span><span id="line-200">      if (cmdLine.hasOption(CONSTRAINTS_OPTION)) {</span>
-<span class="source-line-no">201</span><span id="line-201">        IConstraintLoader constraintLoader = new BindingConstraintLoader(IBindingContext.instance());</span>
-<span class="source-line-no">202</span><span id="line-202">        constraintSets = new LinkedHashSet&lt;&gt;();</span>
-<span class="source-line-no">203</span><span id="line-203">        String[] args = cmdLine.getOptionValues(CONSTRAINTS_OPTION);</span>
-<span class="source-line-no">204</span><span id="line-204">        for (String arg : args) {</span>
-<span class="source-line-no">205</span><span id="line-205">          assert arg != null;</span>
-<span class="source-line-no">206</span><span id="line-206">          try {</span>
-<span class="source-line-no">207</span><span id="line-207">            URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, cwd));</span>
-<span class="source-line-no">208</span><span id="line-208">            constraintSets.addAll(constraintLoader.load(constraintUri));</span>
-<span class="source-line-no">209</span><span id="line-209">          } catch (IOException | MetaschemaException | MetapathException | URISyntaxException ex) {</span>
-<span class="source-line-no">210</span><span id="line-210">            return ExitCode.IO_ERROR.exitMessage("Unable to load constraint set '" + arg + "'.").withThrowable(ex);</span>
-<span class="source-line-no">211</span><span id="line-211">          }</span>
-<span class="source-line-no">212</span><span id="line-212">        }</span>
-<span class="source-line-no">213</span><span id="line-213">      } else {</span>
-<span class="source-line-no">214</span><span id="line-214">        constraintSets = CollectionUtil.emptySet();</span>
-<span class="source-line-no">215</span><span id="line-215">      }</span>
-<span class="source-line-no">216</span><span id="line-216"></span>
-<span class="source-line-no">217</span><span id="line-217">      IBindingContext bindingContext;</span>
-<span class="source-line-no">218</span><span id="line-218">      try {</span>
-<span class="source-line-no">219</span><span id="line-219">        bindingContext = getBindingContext(constraintSets);</span>
-<span class="source-line-no">220</span><span id="line-220">      } catch (IOException | MetaschemaException ex) {</span>
-<span class="source-line-no">221</span><span id="line-221">        return ExitCode.PROCESSING_ERROR</span>
-<span class="source-line-no">222</span><span id="line-222">            .exitMessage("Unable to get binding context. " + ex.getMessage())</span>
-<span class="source-line-no">223</span><span id="line-223">            .withThrowable(ex);</span>
-<span class="source-line-no">224</span><span id="line-224">      }</span>
+<span class="source-line-no">190</span><span id="line-190">    protected abstract ISchemaValidationProvider getSchemaValidationProvider(</span>
+<span class="source-line-no">191</span><span id="line-191">        @NonNull IModule module,</span>
+<span class="source-line-no">192</span><span id="line-192">        @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">193</span><span id="line-193">        @NonNull IBindingContext bindingContext);</span>
+<span class="source-line-no">194</span><span id="line-194"></span>
+<span class="source-line-no">195</span><span id="line-195">    /**</span>
+<span class="source-line-no">196</span><span id="line-196">     * Execute the validation operation.</span>
+<span class="source-line-no">197</span><span id="line-197">     */</span>
+<span class="source-line-no">198</span><span id="line-198">    @SuppressWarnings("PMD.OnlyOneReturn") // readability</span>
+<span class="source-line-no">199</span><span id="line-199">    @Override</span>
+<span class="source-line-no">200</span><span id="line-200">    public void execute() throws CommandExecutionException {</span>
+<span class="source-line-no">201</span><span id="line-201">      CommandLine cmdLine = getCommandLine();</span>
+<span class="source-line-no">202</span><span id="line-202">      URI currentWorkingDirectory = ObjectUtils.notNull(getCurrentWorkingDirectory().toUri());</span>
+<span class="source-line-no">203</span><span id="line-203"></span>
+<span class="source-line-no">204</span><span id="line-204">      Set&lt;IConstraintSet&gt; constraintSets = MetaschemaCommands.loadConstraintSets(</span>
+<span class="source-line-no">205</span><span id="line-205">          cmdLine,</span>
+<span class="source-line-no">206</span><span id="line-206">          CONSTRAINTS_OPTION,</span>
+<span class="source-line-no">207</span><span id="line-207">          currentWorkingDirectory);</span>
+<span class="source-line-no">208</span><span id="line-208"></span>
+<span class="source-line-no">209</span><span id="line-209">      List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
+<span class="source-line-no">210</span><span id="line-210"></span>
+<span class="source-line-no">211</span><span id="line-211">      URI source = MetaschemaCommands.handleSource(</span>
+<span class="source-line-no">212</span><span id="line-212">          ObjectUtils.requireNonNull(extraArgs.get(0)),</span>
+<span class="source-line-no">213</span><span id="line-213">          currentWorkingDirectory);</span>
+<span class="source-line-no">214</span><span id="line-214"></span>
+<span class="source-line-no">215</span><span id="line-215">      IBindingContext bindingContext = getBindingContext(constraintSets);</span>
+<span class="source-line-no">216</span><span id="line-216">      IBoundLoader loader = bindingContext.newBoundLoader();</span>
+<span class="source-line-no">217</span><span id="line-217">      Format asFormat = MetaschemaCommands.determineSourceFormat(</span>
+<span class="source-line-no">218</span><span id="line-218">          cmdLine,</span>
+<span class="source-line-no">219</span><span id="line-219">          MetaschemaCommands.AS_FORMAT_OPTION,</span>
+<span class="source-line-no">220</span><span id="line-220">          loader,</span>
+<span class="source-line-no">221</span><span id="line-221">          source);</span>
+<span class="source-line-no">222</span><span id="line-222"></span>
+<span class="source-line-no">223</span><span id="line-223">      IValidationResult validationResult = validate(source, asFormat, cmdLine, bindingContext);</span>
+<span class="source-line-no">224</span><span id="line-224">      handleOutput(source, validationResult, cmdLine, bindingContext);</span>
 <span class="source-line-no">225</span><span id="line-225"></span>
-<span class="source-line-no">226</span><span id="line-226">      IBoundLoader loader = bindingContext.newBoundLoader();</span>
-<span class="source-line-no">227</span><span id="line-227"></span>
-<span class="source-line-no">228</span><span id="line-228">      List&lt;String&gt; extraArgs = cmdLine.getArgList();</span>
-<span class="source-line-no">229</span><span id="line-229"></span>
-<span class="source-line-no">230</span><span id="line-230">      String sourceName = ObjectUtils.requireNonNull(extraArgs.get(0));</span>
-<span class="source-line-no">231</span><span id="line-231">      URI source;</span>
-<span class="source-line-no">232</span><span id="line-232"></span>
-<span class="source-line-no">233</span><span id="line-233">      try {</span>
-<span class="source-line-no">234</span><span id="line-234">        source = UriUtils.toUri(sourceName, cwd);</span>
-<span class="source-line-no">235</span><span id="line-235">      } catch (URISyntaxException ex) {</span>
-<span class="source-line-no">236</span><span id="line-236">        return ExitCode.IO_ERROR.exitMessage("Cannot load source '%s' as it is not a valid file or URI.")</span>
-<span class="source-line-no">237</span><span id="line-237">            .withThrowable(ex);</span>
-<span class="source-line-no">238</span><span id="line-238">      }</span>
-<span class="source-line-no">239</span><span id="line-239"></span>
-<span class="source-line-no">240</span><span id="line-240">      Format asFormat;</span>
-<span class="source-line-no">241</span><span id="line-241">      if (cmdLine.hasOption(AS_OPTION)) {</span>
-<span class="source-line-no">242</span><span id="line-242">        try {</span>
-<span class="source-line-no">243</span><span id="line-243">          String toFormatText = cmdLine.getOptionValue(AS_OPTION);</span>
-<span class="source-line-no">244</span><span id="line-244">          asFormat = Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
-<span class="source-line-no">245</span><span id="line-245">        } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">246</span><span id="line-246">          return ExitCode.IO_ERROR</span>
-<span class="source-line-no">247</span><span id="line-247">              .exitMessage("Invalid '--as' argument. The format must be one of: "</span>
-<span class="source-line-no">248</span><span id="line-248">                  + Arrays.stream(Format.values())</span>
-<span class="source-line-no">249</span><span id="line-249">                      .map(format -&gt; format.name())</span>
-<span class="source-line-no">250</span><span id="line-250">                      .collect(CustomCollectors.joiningWithOxfordComma("or")))</span>
-<span class="source-line-no">251</span><span id="line-251">              .withThrowable(ex);</span>
-<span class="source-line-no">252</span><span id="line-252">        }</span>
-<span class="source-line-no">253</span><span id="line-253">      } else {</span>
-<span class="source-line-no">254</span><span id="line-254">        // attempt to determine the format</span>
-<span class="source-line-no">255</span><span id="line-255">        try {</span>
-<span class="source-line-no">256</span><span id="line-256">          asFormat = loader.detectFormat(source);</span>
-<span class="source-line-no">257</span><span id="line-257">        } catch (FileNotFoundException ex) {</span>
-<span class="source-line-no">258</span><span id="line-258">          // this case was already checked for</span>
-<span class="source-line-no">259</span><span id="line-259">          return ExitCode.IO_ERROR.exitMessage("The provided source file '" + source + "' does not exist.");</span>
-<span class="source-line-no">260</span><span id="line-260">        } catch (IOException ex) {</span>
-<span class="source-line-no">261</span><span id="line-261">          return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
-<span class="source-line-no">262</span><span id="line-262">        } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">263</span><span id="line-263">          return ExitCode.IO_ERROR.exitMessage(</span>
-<span class="source-line-no">264</span><span id="line-264">              "Source file has unrecognizable format. Use '--as' to specify the format. The format must be one of: "</span>
-<span class="source-line-no">265</span><span id="line-265">                  + Arrays.stream(Format.values())</span>
-<span class="source-line-no">266</span><span id="line-266">                      .map(format -&gt; format.name())</span>
-<span class="source-line-no">267</span><span id="line-267">                      .collect(CustomCollectors.joiningWithOxfordComma("or")));</span>
-<span class="source-line-no">268</span><span id="line-268">        }</span>
-<span class="source-line-no">269</span><span id="line-269">      }</span>
-<span class="source-line-no">270</span><span id="line-270"></span>
-<span class="source-line-no">271</span><span id="line-271">      if (LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">272</span><span id="line-272">        LOGGER.info("Validating '{}' as {}.", source, asFormat.name());</span>
-<span class="source-line-no">273</span><span id="line-273">      }</span>
-<span class="source-line-no">274</span><span id="line-274"></span>
-<span class="source-line-no">275</span><span id="line-275">      IMutableConfiguration&lt;ValidationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="source-line-no">276</span><span id="line-276">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; cmdLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {</span>
-<span class="source-line-no">277</span><span id="line-277">        configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);</span>
-<span class="source-line-no">278</span><span id="line-278">      }</span>
-<span class="source-line-no">279</span><span id="line-279"></span>
-<span class="source-line-no">280</span><span id="line-280">      IValidationResult validationResult = null;</span>
-<span class="source-line-no">281</span><span id="line-281">      try {</span>
-<span class="source-line-no">282</span><span id="line-282">        if (!cmdLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {</span>
-<span class="source-line-no">283</span><span id="line-283">          // perform schema validation</span>
-<span class="source-line-no">284</span><span id="line-284">          validationResult = this.validateWithSchema(source, asFormat);</span>
-<span class="source-line-no">285</span><span id="line-285">        }</span>
-<span class="source-line-no">286</span><span id="line-286"></span>
-<span class="source-line-no">287</span><span id="line-287">        if (!cmdLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {</span>
-<span class="source-line-no">288</span><span id="line-288">          // perform constraint validation</span>
-<span class="source-line-no">289</span><span id="line-289">          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);</span>
-<span class="source-line-no">290</span><span id="line-290">          validationResult = validationResult == null</span>
-<span class="source-line-no">291</span><span id="line-291">              ? constraintValidationResult</span>
-<span class="source-line-no">292</span><span id="line-292">              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);</span>
-<span class="source-line-no">293</span><span id="line-293">        }</span>
-<span class="source-line-no">294</span><span id="line-294">      } catch (FileNotFoundException ex) {</span>
-<span class="source-line-no">295</span><span id="line-295">        return ExitCode.IO_ERROR.exitMessage(String.format("Resource not found at '%s'", source)).withThrowable(ex);</span>
-<span class="source-line-no">296</span><span id="line-296">      } catch (UnknownHostException ex) {</span>
-<span class="source-line-no">297</span><span id="line-297">        return ExitCode.IO_ERROR.exitMessage(String.format("Unknown host for '%s'.", source)).withThrowable(ex);</span>
-<span class="source-line-no">298</span><span id="line-298">      } catch (IOException ex) {</span>
-<span class="source-line-no">299</span><span id="line-299">        return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
-<span class="source-line-no">300</span><span id="line-300">      } catch (MetapathException ex) {</span>
-<span class="source-line-no">301</span><span id="line-301">        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);</span>
-<span class="source-line-no">302</span><span id="line-302">      }</span>
-<span class="source-line-no">303</span><span id="line-303"></span>
-<span class="source-line-no">304</span><span id="line-304">      if (cmdLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">305</span><span id="line-305">        Path sarifFile = ObjectUtils.notNull(Paths.get(cmdLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));</span>
-<span class="source-line-no">306</span><span id="line-306"></span>
-<span class="source-line-no">307</span><span id="line-307">        IVersionInfo version</span>
-<span class="source-line-no">308</span><span id="line-308">            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);</span>
-<span class="source-line-no">309</span><span id="line-309"></span>
-<span class="source-line-no">310</span><span id="line-310">        try {</span>
-<span class="source-line-no">311</span><span id="line-311">          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);</span>
-<span class="source-line-no">312</span><span id="line-312">          if (validationResult != null) {</span>
-<span class="source-line-no">313</span><span id="line-313">            sarifHandler.addFindings(validationResult.getFindings());</span>
-<span class="source-line-no">314</span><span id="line-314">          }</span>
-<span class="source-line-no">315</span><span id="line-315">          sarifHandler.write(sarifFile);</span>
-<span class="source-line-no">316</span><span id="line-316">        } catch (IOException ex) {</span>
-<span class="source-line-no">317</span><span id="line-317">          return ExitCode.IO_ERROR.exit().withThrowable(ex);</span>
-<span class="source-line-no">318</span><span id="line-318">        }</span>
-<span class="source-line-no">319</span><span id="line-319">      } else if (validationResult != null &amp;&amp; !validationResult.getFindings().isEmpty()) {</span>
-<span class="source-line-no">320</span><span id="line-320">        LOGGER.info("Validation identified the following issues:", source);</span>
-<span class="source-line-no">321</span><span id="line-321">        LoggingValidationHandler.instance().handleValidationResults(validationResult);</span>
-<span class="source-line-no">322</span><span id="line-322">      }</span>
-<span class="source-line-no">323</span><span id="line-323"></span>
-<span class="source-line-no">324</span><span id="line-324">      if (validationResult == null || validationResult.isPassing()) {</span>
-<span class="source-line-no">325</span><span id="line-325">        if (LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">326</span><span id="line-326">          LOGGER.info("The file '{}' is valid.", source);</span>
-<span class="source-line-no">327</span><span id="line-327">        }</span>
-<span class="source-line-no">328</span><span id="line-328">      } else if (LOGGER.isErrorEnabled()) {</span>
-<span class="source-line-no">329</span><span id="line-329">        LOGGER.error("The file '{}' is invalid.", source);</span>
-<span class="source-line-no">330</span><span id="line-330">      }</span>
-<span class="source-line-no">331</span><span id="line-331"></span>
-<span class="source-line-no">332</span><span id="line-332">      return (validationResult == null || validationResult.isPassing() ? ExitCode.OK : ExitCode.FAIL).exit();</span>
-<span class="source-line-no">333</span><span id="line-333">    }</span>
-<span class="source-line-no">334</span><span id="line-334">  }</span>
-<span class="source-line-no">335</span><span id="line-335">}</span>
+<span class="source-line-no">226</span><span id="line-226">      if (validationResult == null || validationResult.isPassing()) {</span>
+<span class="source-line-no">227</span><span id="line-227">        if (LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">228</span><span id="line-228">          LOGGER.info("The file '{}' is valid.", source);</span>
+<span class="source-line-no">229</span><span id="line-229">        }</span>
+<span class="source-line-no">230</span><span id="line-230">      } else if (LOGGER.isErrorEnabled()) {</span>
+<span class="source-line-no">231</span><span id="line-231">        LOGGER.error("The file '{}' is invalid.", source);</span>
+<span class="source-line-no">232</span><span id="line-232">      }</span>
+<span class="source-line-no">233</span><span id="line-233"></span>
+<span class="source-line-no">234</span><span id="line-234">      if (validationResult != null &amp;&amp; !validationResult.isPassing()) {</span>
+<span class="source-line-no">235</span><span id="line-235">        throw new CommandExecutionException(ExitCode.FAIL);</span>
+<span class="source-line-no">236</span><span id="line-236">      }</span>
+<span class="source-line-no">237</span><span id="line-237">    }</span>
+<span class="source-line-no">238</span><span id="line-238"></span>
+<span class="source-line-no">239</span><span id="line-239">    @SuppressWarnings("PMD.CyclomaticComplexity")</span>
+<span class="source-line-no">240</span><span id="line-240">    @Nullable</span>
+<span class="source-line-no">241</span><span id="line-241">    private IValidationResult validate(</span>
+<span class="source-line-no">242</span><span id="line-242">        @NonNull URI source,</span>
+<span class="source-line-no">243</span><span id="line-243">        @NonNull Format asFormat,</span>
+<span class="source-line-no">244</span><span id="line-244">        @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">245</span><span id="line-245">        @NonNull IBindingContext bindingContext) throws CommandExecutionException {</span>
+<span class="source-line-no">246</span><span id="line-246"></span>
+<span class="source-line-no">247</span><span id="line-247">      if (LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">248</span><span id="line-248">        LOGGER.info("Validating '{}' as {}.", source, asFormat.name());</span>
+<span class="source-line-no">249</span><span id="line-249">      }</span>
+<span class="source-line-no">250</span><span id="line-250"></span>
+<span class="source-line-no">251</span><span id="line-251">      IValidationResult validationResult = null;</span>
+<span class="source-line-no">252</span><span id="line-252">      try {</span>
+<span class="source-line-no">253</span><span id="line-253">        IModule module = bindingContext.registerModule(getModule(commandLine, bindingContext));</span>
+<span class="source-line-no">254</span><span id="line-254">        if (!commandLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {</span>
+<span class="source-line-no">255</span><span id="line-255">          // perform schema validation</span>
+<span class="source-line-no">256</span><span id="line-256">          validationResult = getSchemaValidationProvider(module, commandLine, bindingContext)</span>
+<span class="source-line-no">257</span><span id="line-257">              .validateWithSchema(source, asFormat, bindingContext);</span>
+<span class="source-line-no">258</span><span id="line-258">        }</span>
+<span class="source-line-no">259</span><span id="line-259"></span>
+<span class="source-line-no">260</span><span id="line-260">        if (!commandLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {</span>
+<span class="source-line-no">261</span><span id="line-261">          IMutableConfiguration&lt;ValidationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
+<span class="source-line-no">262</span><span id="line-262">          if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; commandLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {</span>
+<span class="source-line-no">263</span><span id="line-263">            configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);</span>
+<span class="source-line-no">264</span><span id="line-264">          }</span>
+<span class="source-line-no">265</span><span id="line-265"></span>
+<span class="source-line-no">266</span><span id="line-266">          // perform constraint validation</span>
+<span class="source-line-no">267</span><span id="line-267">          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);</span>
+<span class="source-line-no">268</span><span id="line-268">          validationResult = validationResult == null</span>
+<span class="source-line-no">269</span><span id="line-269">              ? constraintValidationResult</span>
+<span class="source-line-no">270</span><span id="line-270">              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);</span>
+<span class="source-line-no">271</span><span id="line-271">        }</span>
+<span class="source-line-no">272</span><span id="line-272">      } catch (FileNotFoundException ex) {</span>
+<span class="source-line-no">273</span><span id="line-273">        throw new CommandExecutionException(</span>
+<span class="source-line-no">274</span><span id="line-274">            ExitCode.IO_ERROR,</span>
+<span class="source-line-no">275</span><span id="line-275">            String.format("Resource not found at '%s'", source),</span>
+<span class="source-line-no">276</span><span id="line-276">            ex);</span>
+<span class="source-line-no">277</span><span id="line-277">      } catch (UnknownHostException ex) {</span>
+<span class="source-line-no">278</span><span id="line-278">        throw new CommandExecutionException(</span>
+<span class="source-line-no">279</span><span id="line-279">            ExitCode.IO_ERROR,</span>
+<span class="source-line-no">280</span><span id="line-280">            String.format("Unknown host for '%s'.", source),</span>
+<span class="source-line-no">281</span><span id="line-281">            ex);</span>
+<span class="source-line-no">282</span><span id="line-282">      } catch (IOException ex) {</span>
+<span class="source-line-no">283</span><span id="line-283">        throw new CommandExecutionException(ExitCode.IO_ERROR, ex.getLocalizedMessage(), ex);</span>
+<span class="source-line-no">284</span><span id="line-284">      } catch (MetapathException ex) {</span>
+<span class="source-line-no">285</span><span id="line-285">        throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex.getLocalizedMessage(), ex);</span>
+<span class="source-line-no">286</span><span id="line-286">      }</span>
+<span class="source-line-no">287</span><span id="line-287">      return validationResult;</span>
+<span class="source-line-no">288</span><span id="line-288">    }</span>
+<span class="source-line-no">289</span><span id="line-289"></span>
+<span class="source-line-no">290</span><span id="line-290">    private void handleOutput(</span>
+<span class="source-line-no">291</span><span id="line-291">        @NonNull URI source,</span>
+<span class="source-line-no">292</span><span id="line-292">        @Nullable IValidationResult validationResult,</span>
+<span class="source-line-no">293</span><span id="line-293">        @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">294</span><span id="line-294">        @NonNull IBindingContext bindingContext) throws CommandExecutionException {</span>
+<span class="source-line-no">295</span><span id="line-295">      if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">296</span><span id="line-296">        Path sarifFile = ObjectUtils.notNull(Paths.get(commandLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));</span>
+<span class="source-line-no">297</span><span id="line-297"></span>
+<span class="source-line-no">298</span><span id="line-298">        IVersionInfo version</span>
+<span class="source-line-no">299</span><span id="line-299">            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);</span>
+<span class="source-line-no">300</span><span id="line-300"></span>
+<span class="source-line-no">301</span><span id="line-301">        try {</span>
+<span class="source-line-no">302</span><span id="line-302">          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);</span>
+<span class="source-line-no">303</span><span id="line-303">          if (validationResult != null) {</span>
+<span class="source-line-no">304</span><span id="line-304">            sarifHandler.addFindings(validationResult.getFindings());</span>
+<span class="source-line-no">305</span><span id="line-305">          }</span>
+<span class="source-line-no">306</span><span id="line-306">          sarifHandler.write(sarifFile, bindingContext);</span>
+<span class="source-line-no">307</span><span id="line-307">        } catch (IOException ex) {</span>
+<span class="source-line-no">308</span><span id="line-308">          throw new CommandExecutionException(ExitCode.IO_ERROR, ex.getLocalizedMessage(), ex);</span>
+<span class="source-line-no">309</span><span id="line-309">        }</span>
+<span class="source-line-no">310</span><span id="line-310">      } else if (validationResult != null &amp;&amp; !validationResult.getFindings().isEmpty()) {</span>
+<span class="source-line-no">311</span><span id="line-311">        LOGGER.info("Validation identified the following issues:");</span>
+<span class="source-line-no">312</span><span id="line-312">        LoggingValidationHandler.instance().handleResults(validationResult);</span>
+<span class="source-line-no">313</span><span id="line-313">      }</span>
+<span class="source-line-no">314</span><span id="line-314"></span>
+<span class="source-line-no">315</span><span id="line-315">    }</span>
+<span class="source-line-no">316</span><span id="line-316">  }</span>
+<span class="source-line-no">317</span><span id="line-317">}</span>
 
 
 

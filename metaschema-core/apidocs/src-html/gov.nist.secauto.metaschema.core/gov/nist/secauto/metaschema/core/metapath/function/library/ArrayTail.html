@@ -33,55 +33,60 @@
 <span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">021</span><span id="line-21">import edu.umd.cs.findbugs.annotations.Nullable;</span>
 <span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">public final class ArrayTail {</span>
-<span class="source-line-no">024</span><span id="line-24">  private static final String NAME = "tail";</span>
-<span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
-<span class="source-line-no">026</span><span id="line-26">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">027</span><span id="line-27">      .name(NAME)</span>
-<span class="source-line-no">028</span><span id="line-28">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
-<span class="source-line-no">029</span><span id="line-29">      .deterministic()</span>
-<span class="source-line-no">030</span><span id="line-30">      .contextIndependent()</span>
-<span class="source-line-no">031</span><span id="line-31">      .focusIndependent()</span>
-<span class="source-line-no">032</span><span id="line-32">      .argument(IArgument.builder()</span>
-<span class="source-line-no">033</span><span id="line-33">          .name("array")</span>
-<span class="source-line-no">034</span><span id="line-34">          .type(IArrayItem.class)</span>
-<span class="source-line-no">035</span><span id="line-35">          .one()</span>
-<span class="source-line-no">036</span><span id="line-36">          .build())</span>
-<span class="source-line-no">037</span><span id="line-37">      .returnType(IItem.class)</span>
-<span class="source-line-no">038</span><span id="line-38">      .returnZeroOrOne()</span>
-<span class="source-line-no">039</span><span id="line-39">      .functionHandler(ArrayTail::execute)</span>
-<span class="source-line-no">040</span><span id="line-40">      .build();</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
-<span class="source-line-no">042</span><span id="line-42">  private ArrayTail() {</span>
-<span class="source-line-no">043</span><span id="line-43">    // disable construction</span>
-<span class="source-line-no">044</span><span id="line-44">  }</span>
-<span class="source-line-no">045</span><span id="line-45"></span>
-<span class="source-line-no">046</span><span id="line-46">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">047</span><span id="line-47">  @NonNull</span>
-<span class="source-line-no">048</span><span id="line-48">  private static &lt;T extends IItem&gt; ISequence&lt;IArrayItem&lt;T&gt;&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">049</span><span id="line-49">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">050</span><span id="line-50">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">051</span><span id="line-51">      IItem focus) {</span>
-<span class="source-line-no">052</span><span id="line-52">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">    return ISequence.of(tail(array));</span>
-<span class="source-line-no">055</span><span id="line-55">  }</span>
-<span class="source-line-no">056</span><span id="line-56"></span>
-<span class="source-line-no">057</span><span id="line-57">  /**</span>
-<span class="source-line-no">058</span><span id="line-58">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">059</span><span id="line-59">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-tail"&gt;array:tail&lt;/a&gt;.</span>
-<span class="source-line-no">060</span><span id="line-60">   *</span>
-<span class="source-line-no">061</span><span id="line-61">   * @param &lt;T&gt;</span>
-<span class="source-line-no">062</span><span id="line-62">   *          the type of items in the given Metapath array</span>
-<span class="source-line-no">063</span><span id="line-63">   * @param array</span>
-<span class="source-line-no">064</span><span id="line-64">   *          the array to get the tail items from</span>
-<span class="source-line-no">065</span><span id="line-65">   * @return the tail items</span>
-<span class="source-line-no">066</span><span id="line-66">   */</span>
-<span class="source-line-no">067</span><span id="line-67">  @Nullable</span>
-<span class="source-line-no">068</span><span id="line-68">  public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; tail(@NonNull IArrayItem&lt;T&gt; array) {</span>
-<span class="source-line-no">069</span><span id="line-69">    return ArraySubarray.subarray(array, 2);</span>
-<span class="source-line-no">070</span><span id="line-70">  }</span>
-<span class="source-line-no">071</span><span id="line-71">}</span>
+<span class="source-line-no">023</span><span id="line-23">/**</span>
+<span class="source-line-no">024</span><span id="line-24"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">025</span><span id="line-25"> * "https://www.w3.org/TR/xpath-functions-31/#func-array-tail"&gt;array:tail&lt;/a&gt;</span>
+<span class="source-line-no">026</span><span id="line-26"> * function.</span>
+<span class="source-line-no">027</span><span id="line-27"> */</span>
+<span class="source-line-no">028</span><span id="line-28">public final class ArrayTail {</span>
+<span class="source-line-no">029</span><span id="line-29">  private static final String NAME = "tail";</span>
+<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
+<span class="source-line-no">031</span><span id="line-31">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">032</span><span id="line-32">      .name(NAME)</span>
+<span class="source-line-no">033</span><span id="line-33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY)</span>
+<span class="source-line-no">034</span><span id="line-34">      .deterministic()</span>
+<span class="source-line-no">035</span><span id="line-35">      .contextIndependent()</span>
+<span class="source-line-no">036</span><span id="line-36">      .focusIndependent()</span>
+<span class="source-line-no">037</span><span id="line-37">      .argument(IArgument.builder()</span>
+<span class="source-line-no">038</span><span id="line-38">          .name("array")</span>
+<span class="source-line-no">039</span><span id="line-39">          .type(IArrayItem.class)</span>
+<span class="source-line-no">040</span><span id="line-40">          .one()</span>
+<span class="source-line-no">041</span><span id="line-41">          .build())</span>
+<span class="source-line-no">042</span><span id="line-42">      .returnType(IItem.class)</span>
+<span class="source-line-no">043</span><span id="line-43">      .returnZeroOrOne()</span>
+<span class="source-line-no">044</span><span id="line-44">      .functionHandler(ArrayTail::execute)</span>
+<span class="source-line-no">045</span><span id="line-45">      .build();</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">  private ArrayTail() {</span>
+<span class="source-line-no">048</span><span id="line-48">    // disable construction</span>
+<span class="source-line-no">049</span><span id="line-49">  }</span>
+<span class="source-line-no">050</span><span id="line-50"></span>
+<span class="source-line-no">051</span><span id="line-51">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">052</span><span id="line-52">  @NonNull</span>
+<span class="source-line-no">053</span><span id="line-53">  private static &lt;T extends IItem&gt; ISequence&lt;IArrayItem&lt;T&gt;&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">054</span><span id="line-54">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">055</span><span id="line-55">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">056</span><span id="line-56">      IItem focus) {</span>
+<span class="source-line-no">057</span><span id="line-57">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">    return ISequence.of(tail(array));</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  /**</span>
+<span class="source-line-no">063</span><span id="line-63">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">064</span><span id="line-64">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-tail"&gt;array:tail&lt;/a&gt;.</span>
+<span class="source-line-no">065</span><span id="line-65">   *</span>
+<span class="source-line-no">066</span><span id="line-66">   * @param &lt;T&gt;</span>
+<span class="source-line-no">067</span><span id="line-67">   *          the type of items in the given Metapath array</span>
+<span class="source-line-no">068</span><span id="line-68">   * @param array</span>
+<span class="source-line-no">069</span><span id="line-69">   *          the array to get the tail items from</span>
+<span class="source-line-no">070</span><span id="line-70">   * @return the tail items</span>
+<span class="source-line-no">071</span><span id="line-71">   */</span>
+<span class="source-line-no">072</span><span id="line-72">  @Nullable</span>
+<span class="source-line-no">073</span><span id="line-73">  public static &lt;T extends IItem&gt; IArrayItem&lt;T&gt; tail(@NonNull IArrayItem&lt;T&gt; array) {</span>
+<span class="source-line-no">074</span><span id="line-74">    return ArraySubarray.subarray(array, 2);</span>
+<span class="source-line-no">075</span><span id="line-75">  }</span>
+<span class="source-line-no">076</span><span id="line-76">}</span>
 
 
 

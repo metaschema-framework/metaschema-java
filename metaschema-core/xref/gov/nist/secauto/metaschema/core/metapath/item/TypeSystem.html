@@ -58,8 +58,8 @@
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  @SuppressWarnings(<span class="jxr_string">"removal"</span>)
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a name="TypeSystem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/TypeSystem.html#TypeSystem">TypeSystem</a> {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  @SuppressWarnings({ <span class="jxr_string">"removal"</span>, <span class="jxr_string">"deprecation"</span> })
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> TypeSystem {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Map&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> IItem&gt;, QName&gt; ITEM_CLASS_TO_QNAME_MAP;
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">static</strong> {
@@ -145,7 +145,7 @@
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>     <strong class="jxr_keyword">return</strong> prefix == <strong class="jxr_keyword">null</strong> ? qname.toString() : prefix + <span class="jxr_string">":"</span> + qname.getLocalPart();
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>   }
 <a class="jxr_linenumber" name="L139" href="#L139">139</a> 
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>   <strong class="jxr_keyword">private</strong> <a name="TypeSystem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/TypeSystem.html#TypeSystem">TypeSystem</a>() {
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>   <strong class="jxr_keyword">private</strong> TypeSystem() {
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     <em class="jxr_comment">// disable construction</em>
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>   }
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> }

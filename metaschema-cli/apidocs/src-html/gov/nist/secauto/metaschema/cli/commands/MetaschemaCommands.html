@@ -19,97 +19,619 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.cli.commands;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.cli.commands.metapath.MetapathCommand;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.cli.processor.command.ICommand;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.IModule;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.model.MetaschemaException;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.util.UriUtils;</span>
-<span class="source-line-no">018</span><span id="line-18"></span>
-<span class="source-line-no">019</span><span id="line-19">import org.apache.commons.cli.CommandLine;</span>
-<span class="source-line-no">020</span><span id="line-20">import org.apache.commons.cli.Option;</span>
-<span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">import java.io.IOException;</span>
-<span class="source-line-no">023</span><span id="line-23">import java.net.URI;</span>
-<span class="source-line-no">024</span><span id="line-24">import java.net.URISyntaxException;</span>
-<span class="source-line-no">025</span><span id="line-25">import java.util.Collection;</span>
-<span class="source-line-no">026</span><span id="line-26">import java.util.List;</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">public final class MetaschemaCommands {</span>
-<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
-<span class="source-line-no">032</span><span id="line-32">  public static final List&lt;ICommand&gt; COMMANDS = ObjectUtils.notNull(List.of(</span>
-<span class="source-line-no">033</span><span id="line-33">      new ValidateModuleCommand(),</span>
-<span class="source-line-no">034</span><span id="line-34">      new GenerateSchemaCommand(),</span>
-<span class="source-line-no">035</span><span id="line-35">      new GenerateDiagramCommand(),</span>
-<span class="source-line-no">036</span><span id="line-36">      new ValidateContentUsingModuleCommand(),</span>
-<span class="source-line-no">037</span><span id="line-37">      new MetapathCommand()));</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
-<span class="source-line-no">040</span><span id="line-40">  public static final Option METASCHEMA_OPTION = ObjectUtils.notNull(</span>
-<span class="source-line-no">041</span><span id="line-41">      Option.builder("m")</span>
-<span class="source-line-no">042</span><span id="line-42">          .hasArg()</span>
-<span class="source-line-no">043</span><span id="line-43">          .argName("FILE_OR_URL")</span>
-<span class="source-line-no">044</span><span id="line-44">          .required()</span>
-<span class="source-line-no">045</span><span id="line-45">          .desc("metaschema resource")</span>
-<span class="source-line-no">046</span><span id="line-46">          .build());</span>
-<span class="source-line-no">047</span><span id="line-47">  @NonNull</span>
-<span class="source-line-no">048</span><span id="line-48">  public static final Option OVERWRITE_OPTION = ObjectUtils.notNull(</span>
-<span class="source-line-no">049</span><span id="line-49">      Option.builder()</span>
-<span class="source-line-no">050</span><span id="line-50">          .longOpt("overwrite")</span>
-<span class="source-line-no">051</span><span id="line-51">          .desc("overwrite the destination if it exists")</span>
-<span class="source-line-no">052</span><span id="line-52">          .build());</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">  @NonNull</span>
-<span class="source-line-no">055</span><span id="line-55">  public static IModule handleModule(</span>
-<span class="source-line-no">056</span><span id="line-56">      @NonNull CommandLine commandLine,</span>
-<span class="source-line-no">057</span><span id="line-57">      @NonNull URI cwd,</span>
-<span class="source-line-no">058</span><span id="line-58">      @NonNull Collection&lt;IConstraintSet&gt; constraintSets) throws URISyntaxException, IOException, MetaschemaException {</span>
-<span class="source-line-no">059</span><span id="line-59">    String moduleName</span>
-<span class="source-line-no">060</span><span id="line-60">        = ObjectUtils.requireNonNull(commandLine.getOptionValue(MetaschemaCommands.METASCHEMA_OPTION));</span>
-<span class="source-line-no">061</span><span id="line-61">    URI moduleUri = UriUtils.toUri(moduleName, cwd);</span>
-<span class="source-line-no">062</span><span id="line-62">    return handleModule(moduleUri, constraintSets);</span>
-<span class="source-line-no">063</span><span id="line-63">  }</span>
-<span class="source-line-no">064</span><span id="line-64"></span>
-<span class="source-line-no">065</span><span id="line-65">  @NonNull</span>
-<span class="source-line-no">066</span><span id="line-66">  public static IModule handleModule(</span>
-<span class="source-line-no">067</span><span id="line-67">      @NonNull URI moduleResource,</span>
-<span class="source-line-no">068</span><span id="line-68">      @NonNull Collection&lt;IConstraintSet&gt; constraintSets) throws IOException, MetaschemaException {</span>
-<span class="source-line-no">069</span><span id="line-69">    ExternalConstraintsModulePostProcessor postProcessor</span>
-<span class="source-line-no">070</span><span id="line-70">        = new ExternalConstraintsModulePostProcessor(constraintSets);</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">    ModuleLoader loader = new ModuleLoader(CollectionUtil.singletonList(postProcessor));</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">    // BindingModuleLoader loader</span>
-<span class="source-line-no">075</span><span id="line-75">    // = new BindingModuleLoader(new DefaultBindingContext(),</span>
-<span class="source-line-no">076</span><span id="line-76">    // CollectionUtil.singletonList(postProcessor));</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">    loader.allowEntityResolution();</span>
-<span class="source-line-no">079</span><span id="line-79">    return loader.load(moduleResource);</span>
-<span class="source-line-no">080</span><span id="line-80">  }</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">  @NonNull</span>
-<span class="source-line-no">083</span><span id="line-83">  public static URI handleResource(</span>
-<span class="source-line-no">084</span><span id="line-84">      @NonNull String location,</span>
-<span class="source-line-no">085</span><span id="line-85">      @NonNull URI cwd) throws IOException {</span>
-<span class="source-line-no">086</span><span id="line-86">    try {</span>
-<span class="source-line-no">087</span><span id="line-87">      return UriUtils.toUri(location, cwd);</span>
-<span class="source-line-no">088</span><span id="line-88">    } catch (URISyntaxException ex) {</span>
-<span class="source-line-no">089</span><span id="line-89">      IOException newEx = new IOException( // NOPMD - intentional</span>
-<span class="source-line-no">090</span><span id="line-90">          String.format("Cannot load module as '%s' is not a valid file or URL.", location));</span>
-<span class="source-line-no">091</span><span id="line-91">      newEx.addSuppressed(ex);</span>
-<span class="source-line-no">092</span><span id="line-92">      throw newEx;</span>
-<span class="source-line-no">093</span><span id="line-93">    }</span>
-<span class="source-line-no">094</span><span id="line-94">  }</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">  private MetaschemaCommands() {</span>
-<span class="source-line-no">097</span><span id="line-97">    // disable construction</span>
-<span class="source-line-no">098</span><span id="line-98">  }</span>
-<span class="source-line-no">099</span><span id="line-99">}</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.cli.processor.ExitCode;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.cli.processor.OptionUtils;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.cli.processor.command.ICommand;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.model.IConstraintLoader;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.model.IModule;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.model.MetaschemaException;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.util.CustomCollectors;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.util.DeleteOnShutdown;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.util.UriUtils;</span>
+<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
+<span class="source-line-no">024</span><span id="line-24">import gov.nist.secauto.metaschema.databind.io.Format;</span>
+<span class="source-line-no">025</span><span id="line-25">import gov.nist.secauto.metaschema.databind.io.IBoundLoader;</span>
+<span class="source-line-no">026</span><span id="line-26">import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;</span>
+<span class="source-line-no">027</span><span id="line-27">import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;</span>
+<span class="source-line-no">028</span><span id="line-28"></span>
+<span class="source-line-no">029</span><span id="line-29">import org.apache.commons.cli.CommandLine;</span>
+<span class="source-line-no">030</span><span id="line-30">import org.apache.commons.cli.Option;</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">import java.io.FileNotFoundException;</span>
+<span class="source-line-no">033</span><span id="line-33">import java.io.IOException;</span>
+<span class="source-line-no">034</span><span id="line-34">import java.net.URI;</span>
+<span class="source-line-no">035</span><span id="line-35">import java.net.URISyntaxException;</span>
+<span class="source-line-no">036</span><span id="line-36">import java.nio.file.Files;</span>
+<span class="source-line-no">037</span><span id="line-37">import java.nio.file.Path;</span>
+<span class="source-line-no">038</span><span id="line-38">import java.nio.file.Paths;</span>
+<span class="source-line-no">039</span><span id="line-39">import java.util.Arrays;</span>
+<span class="source-line-no">040</span><span id="line-40">import java.util.LinkedHashSet;</span>
+<span class="source-line-no">041</span><span id="line-41">import java.util.List;</span>
+<span class="source-line-no">042</span><span id="line-42">import java.util.Locale;</span>
+<span class="source-line-no">043</span><span id="line-43">import java.util.Set;</span>
+<span class="source-line-no">044</span><span id="line-44"></span>
+<span class="source-line-no">045</span><span id="line-45">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">/**</span>
+<span class="source-line-no">048</span><span id="line-48"> * This class provides a variety of utility methods for processing</span>
+<span class="source-line-no">049</span><span id="line-49"> * Metaschema-related commands.</span>
+<span class="source-line-no">050</span><span id="line-50"> * &lt;p&gt;</span>
+<span class="source-line-no">051</span><span id="line-51"> * These methods handle the errors produced using the</span>
+<span class="source-line-no">052</span><span id="line-52"> * {@link CommandExecutionException}, which will return an exceptional result to</span>
+<span class="source-line-no">053</span><span id="line-53"> * the command line interface (CLI) processor. This approach keeps the command</span>
+<span class="source-line-no">054</span><span id="line-54"> * implementations fairly clean and simple.</span>
+<span class="source-line-no">055</span><span id="line-55"> */</span>
+<span class="source-line-no">056</span><span id="line-56">@SuppressWarnings("PMD.GodClass")</span>
+<span class="source-line-no">057</span><span id="line-57">public final class MetaschemaCommands {</span>
+<span class="source-line-no">058</span><span id="line-58">  /**</span>
+<span class="source-line-no">059</span><span id="line-59">   * A list of the Metaschema-related command pathways, for reuse in this and</span>
+<span class="source-line-no">060</span><span id="line-60">   * other CLI applications.</span>
+<span class="source-line-no">061</span><span id="line-61">   */</span>
+<span class="source-line-no">062</span><span id="line-62">  @NonNull</span>
+<span class="source-line-no">063</span><span id="line-63">  public static final List&lt;ICommand&gt; COMMANDS = ObjectUtils.notNull(List.of(</span>
+<span class="source-line-no">064</span><span id="line-64">      new ValidateModuleCommand(),</span>
+<span class="source-line-no">065</span><span id="line-65">      new GenerateSchemaCommand(),</span>
+<span class="source-line-no">066</span><span id="line-66">      new GenerateDiagramCommand(),</span>
+<span class="source-line-no">067</span><span id="line-67">      new ValidateContentUsingModuleCommand(),</span>
+<span class="source-line-no">068</span><span id="line-68">      new ConvertContentUsingModuleCommand(),</span>
+<span class="source-line-no">069</span><span id="line-69">      new MetapathCommand()));</span>
+<span class="source-line-no">070</span><span id="line-70"></span>
+<span class="source-line-no">071</span><span id="line-71">  /**</span>
+<span class="source-line-no">072</span><span id="line-72">   * Used by commands to declare a required Metaschema module for processing.</span>
+<span class="source-line-no">073</span><span id="line-73">   *</span>
+<span class="source-line-no">074</span><span id="line-74">   * @since 2.0.0</span>
+<span class="source-line-no">075</span><span id="line-75">   */</span>
+<span class="source-line-no">076</span><span id="line-76">  @NonNull</span>
+<span class="source-line-no">077</span><span id="line-77">  public static final Option METASCHEMA_REQUIRED_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">078</span><span id="line-78">      Option.builder("m")</span>
+<span class="source-line-no">079</span><span id="line-79">          .hasArg()</span>
+<span class="source-line-no">080</span><span id="line-80">          .argName("FILE_OR_URL")</span>
+<span class="source-line-no">081</span><span id="line-81">          .required()</span>
+<span class="source-line-no">082</span><span id="line-82">          .desc("metaschema resource")</span>
+<span class="source-line-no">083</span><span id="line-83">          .numberOfArgs(1)</span>
+<span class="source-line-no">084</span><span id="line-84">          .build());</span>
+<span class="source-line-no">085</span><span id="line-85">  /**</span>
+<span class="source-line-no">086</span><span id="line-86">   * Used by commands to declare an optional Metaschema module for processing.</span>
+<span class="source-line-no">087</span><span id="line-87">   *</span>
+<span class="source-line-no">088</span><span id="line-88">   * @since 2.0.0</span>
+<span class="source-line-no">089</span><span id="line-89">   */</span>
+<span class="source-line-no">090</span><span id="line-90">  @NonNull</span>
+<span class="source-line-no">091</span><span id="line-91">  public static final Option METASCHEMA_OPTIONAL_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">092</span><span id="line-92">      Option.builder("m")</span>
+<span class="source-line-no">093</span><span id="line-93">          .hasArg()</span>
+<span class="source-line-no">094</span><span id="line-94">          .argName("FILE_OR_URL")</span>
+<span class="source-line-no">095</span><span id="line-95">          .desc("metaschema resource")</span>
+<span class="source-line-no">096</span><span id="line-96">          .numberOfArgs(1)</span>
+<span class="source-line-no">097</span><span id="line-97">          .build());</span>
+<span class="source-line-no">098</span><span id="line-98">  /**</span>
+<span class="source-line-no">099</span><span id="line-99">   * Used by commands to protect existing files from being overwritten, unless</span>
+<span class="source-line-no">100</span><span id="line-100">   * this option is provided.</span>
+<span class="source-line-no">101</span><span id="line-101">   */</span>
+<span class="source-line-no">102</span><span id="line-102">  @NonNull</span>
+<span class="source-line-no">103</span><span id="line-103">  public static final Option OVERWRITE_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">104</span><span id="line-104">      Option.builder()</span>
+<span class="source-line-no">105</span><span id="line-105">          .longOpt("overwrite")</span>
+<span class="source-line-no">106</span><span id="line-106">          .desc("overwrite the destination if it exists")</span>
+<span class="source-line-no">107</span><span id="line-107">          .build());</span>
+<span class="source-line-no">108</span><span id="line-108">  /**</span>
+<span class="source-line-no">109</span><span id="line-109">   * Used by commands to identify the target format for a content conversion</span>
+<span class="source-line-no">110</span><span id="line-110">   * operation.</span>
+<span class="source-line-no">111</span><span id="line-111">   *</span>
+<span class="source-line-no">112</span><span id="line-112">   * @since 2.0.0</span>
+<span class="source-line-no">113</span><span id="line-113">   */</span>
+<span class="source-line-no">114</span><span id="line-114">  @NonNull</span>
+<span class="source-line-no">115</span><span id="line-115">  public static final Option TO_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">116</span><span id="line-116">      Option.builder()</span>
+<span class="source-line-no">117</span><span id="line-117">          .longOpt("to")</span>
+<span class="source-line-no">118</span><span id="line-118">          .required()</span>
+<span class="source-line-no">119</span><span id="line-119">          .hasArg().argName("FORMAT")</span>
+<span class="source-line-no">120</span><span id="line-120">          .desc("convert to format: " + Arrays.stream(Format.values())</span>
+<span class="source-line-no">121</span><span id="line-121">              .map(Enum::name)</span>
+<span class="source-line-no">122</span><span id="line-122">              .collect(CustomCollectors.joiningWithOxfordComma("or")))</span>
+<span class="source-line-no">123</span><span id="line-123">          .numberOfArgs(1)</span>
+<span class="source-line-no">124</span><span id="line-124">          .build());</span>
+<span class="source-line-no">125</span><span id="line-125">  /**</span>
+<span class="source-line-no">126</span><span id="line-126">   * Used by commands to identify the source format for a content-related</span>
+<span class="source-line-no">127</span><span id="line-127">   * operation.</span>
+<span class="source-line-no">128</span><span id="line-128">   *</span>
+<span class="source-line-no">129</span><span id="line-129">   * @since 2.0.0</span>
+<span class="source-line-no">130</span><span id="line-130">   */</span>
+<span class="source-line-no">131</span><span id="line-131">  @NonNull</span>
+<span class="source-line-no">132</span><span id="line-132">  public static final Option AS_FORMAT_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">133</span><span id="line-133">      Option.builder()</span>
+<span class="source-line-no">134</span><span id="line-134">          .longOpt("as")</span>
+<span class="source-line-no">135</span><span id="line-135">          .hasArg()</span>
+<span class="source-line-no">136</span><span id="line-136">          .argName("FORMAT")</span>
+<span class="source-line-no">137</span><span id="line-137">          .desc("source format: " + Arrays.stream(Format.values())</span>
+<span class="source-line-no">138</span><span id="line-138">              .map(Enum::name)</span>
+<span class="source-line-no">139</span><span id="line-139">              .collect(CustomCollectors.joiningWithOxfordComma("or")))</span>
+<span class="source-line-no">140</span><span id="line-140">          .numberOfArgs(1)</span>
+<span class="source-line-no">141</span><span id="line-141">          .build());</span>
+<span class="source-line-no">142</span><span id="line-142">  /**</span>
+<span class="source-line-no">143</span><span id="line-143">   * Used by commands that produce schemas to identify the schema format to</span>
+<span class="source-line-no">144</span><span id="line-144">   * produce.</span>
+<span class="source-line-no">145</span><span id="line-145">   *</span>
+<span class="source-line-no">146</span><span id="line-146">   * @since 2.0.0</span>
+<span class="source-line-no">147</span><span id="line-147">   */</span>
+<span class="source-line-no">148</span><span id="line-148">  @NonNull</span>
+<span class="source-line-no">149</span><span id="line-149">  public static final Option AS_SCHEMA_FORMAT_OPTION = ObjectUtils.notNull(</span>
+<span class="source-line-no">150</span><span id="line-150">      Option.builder()</span>
+<span class="source-line-no">151</span><span id="line-151">          .longOpt("as")</span>
+<span class="source-line-no">152</span><span id="line-152">          .required()</span>
+<span class="source-line-no">153</span><span id="line-153">          .hasArg()</span>
+<span class="source-line-no">154</span><span id="line-154">          .argName("FORMAT")</span>
+<span class="source-line-no">155</span><span id="line-155">          .desc("schema format: " + Arrays.stream(SchemaFormat.values())</span>
+<span class="source-line-no">156</span><span id="line-156">              .map(Enum::name)</span>
+<span class="source-line-no">157</span><span id="line-157">              .collect(CustomCollectors.joiningWithOxfordComma("or")))</span>
+<span class="source-line-no">158</span><span id="line-158">          .numberOfArgs(1)</span>
+<span class="source-line-no">159</span><span id="line-159">          .build());</span>
+<span class="source-line-no">160</span><span id="line-160"></span>
+<span class="source-line-no">161</span><span id="line-161">  /**</span>
+<span class="source-line-no">162</span><span id="line-162">   * Get the provided source path or URI string as an absolute {@link URI} for the</span>
+<span class="source-line-no">163</span><span id="line-163">   * resource.</span>
+<span class="source-line-no">164</span><span id="line-164">   *</span>
+<span class="source-line-no">165</span><span id="line-165">   * @param pathOrUri</span>
+<span class="source-line-no">166</span><span id="line-166">   *          the resource</span>
+<span class="source-line-no">167</span><span id="line-167">   * @param currentWorkingDirectory</span>
+<span class="source-line-no">168</span><span id="line-168">   *          the current working directory the URI will be resolved against to</span>
+<span class="source-line-no">169</span><span id="line-169">   *          ensure it is absolute</span>
+<span class="source-line-no">170</span><span id="line-170">   * @return the absolute URI for the resource</span>
+<span class="source-line-no">171</span><span id="line-171">   * @throws CommandExecutionException</span>
+<span class="source-line-no">172</span><span id="line-172">   *           if the resulting URI is not a well-formed URI</span>
+<span class="source-line-no">173</span><span id="line-173">   * @since 2.0.0</span>
+<span class="source-line-no">174</span><span id="line-174">   */</span>
+<span class="source-line-no">175</span><span id="line-175">  @NonNull</span>
+<span class="source-line-no">176</span><span id="line-176">  public static URI handleSource(</span>
+<span class="source-line-no">177</span><span id="line-177">      @NonNull String pathOrUri,</span>
+<span class="source-line-no">178</span><span id="line-178">      @NonNull URI currentWorkingDirectory) throws CommandExecutionException {</span>
+<span class="source-line-no">179</span><span id="line-179">    try {</span>
+<span class="source-line-no">180</span><span id="line-180">      return getResourceUri(pathOrUri, currentWorkingDirectory);</span>
+<span class="source-line-no">181</span><span id="line-181">    } catch (URISyntaxException ex) {</span>
+<span class="source-line-no">182</span><span id="line-182">      throw new CommandExecutionException(</span>
+<span class="source-line-no">183</span><span id="line-183">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">184</span><span id="line-184">          String.format(</span>
+<span class="source-line-no">185</span><span id="line-185">              "Cannot load source '%s' as it is not a valid file or URI.",</span>
+<span class="source-line-no">186</span><span id="line-186">              pathOrUri),</span>
+<span class="source-line-no">187</span><span id="line-187">          ex);</span>
+<span class="source-line-no">188</span><span id="line-188">    }</span>
+<span class="source-line-no">189</span><span id="line-189">  }</span>
+<span class="source-line-no">190</span><span id="line-190"></span>
+<span class="source-line-no">191</span><span id="line-191">  /**</span>
+<span class="source-line-no">192</span><span id="line-192">   * Get the provided destination path as an absolute {@link Path} for the</span>
+<span class="source-line-no">193</span><span id="line-193">   * resource.</span>
+<span class="source-line-no">194</span><span id="line-194">   * &lt;p&gt;</span>
+<span class="source-line-no">195</span><span id="line-195">   * This method checks if the path exists and if so, if the overwrite option is</span>
+<span class="source-line-no">196</span><span id="line-196">   * set. The method also ensures that the parent directory is created, if it</span>
+<span class="source-line-no">197</span><span id="line-197">   * doesn't already exist.</span>
+<span class="source-line-no">198</span><span id="line-198">   *</span>
+<span class="source-line-no">199</span><span id="line-199">   * @param path</span>
+<span class="source-line-no">200</span><span id="line-200">   *          the resource</span>
+<span class="source-line-no">201</span><span id="line-201">   * @param commandLine</span>
+<span class="source-line-no">202</span><span id="line-202">   *          the provided command line argument information</span>
+<span class="source-line-no">203</span><span id="line-203">   * @return the absolute URI for the resource</span>
+<span class="source-line-no">204</span><span id="line-204">   * @throws CommandExecutionException</span>
+<span class="source-line-no">205</span><span id="line-205">   *           if the path exists and cannot be overwritten or is not writable</span>
+<span class="source-line-no">206</span><span id="line-206">   * @since 2.0.0</span>
+<span class="source-line-no">207</span><span id="line-207">   */</span>
+<span class="source-line-no">208</span><span id="line-208">  public static Path handleDestination(</span>
+<span class="source-line-no">209</span><span id="line-209">      @NonNull String path,</span>
+<span class="source-line-no">210</span><span id="line-210">      @NonNull CommandLine commandLine) throws CommandExecutionException {</span>
+<span class="source-line-no">211</span><span id="line-211">    Path retval = Paths.get(path).toAbsolutePath();</span>
+<span class="source-line-no">212</span><span id="line-212"></span>
+<span class="source-line-no">213</span><span id="line-213">    if (Files.exists(retval)) {</span>
+<span class="source-line-no">214</span><span id="line-214">      if (!commandLine.hasOption(OVERWRITE_OPTION)) {</span>
+<span class="source-line-no">215</span><span id="line-215">        throw new CommandExecutionException(</span>
+<span class="source-line-no">216</span><span id="line-216">            ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">217</span><span id="line-217">            String.format("The provided destination '%s' already exists and the '%s' option was not provided.",</span>
+<span class="source-line-no">218</span><span id="line-218">                retval,</span>
+<span class="source-line-no">219</span><span id="line-219">                OptionUtils.toArgument(OVERWRITE_OPTION)));</span>
+<span class="source-line-no">220</span><span id="line-220">      }</span>
+<span class="source-line-no">221</span><span id="line-221">      if (!Files.isWritable(retval)) {</span>
+<span class="source-line-no">222</span><span id="line-222">        throw new CommandExecutionException(</span>
+<span class="source-line-no">223</span><span id="line-223">            ExitCode.IO_ERROR,</span>
+<span class="source-line-no">224</span><span id="line-224">            String.format(</span>
+<span class="source-line-no">225</span><span id="line-225">                "The provided destination '%s' is not writable.", retval));</span>
+<span class="source-line-no">226</span><span id="line-226">      }</span>
+<span class="source-line-no">227</span><span id="line-227">    } else {</span>
+<span class="source-line-no">228</span><span id="line-228">      Path parent = retval.getParent();</span>
+<span class="source-line-no">229</span><span id="line-229">      if (parent != null) {</span>
+<span class="source-line-no">230</span><span id="line-230">        try {</span>
+<span class="source-line-no">231</span><span id="line-231">          Files.createDirectories(parent);</span>
+<span class="source-line-no">232</span><span id="line-232">        } catch (IOException ex) {</span>
+<span class="source-line-no">233</span><span id="line-233">          throw new CommandExecutionException(</span>
+<span class="source-line-no">234</span><span id="line-234">              ExitCode.INVALID_TARGET,</span>
+<span class="source-line-no">235</span><span id="line-235">              ex);</span>
+<span class="source-line-no">236</span><span id="line-236">        }</span>
+<span class="source-line-no">237</span><span id="line-237">      }</span>
+<span class="source-line-no">238</span><span id="line-238">    }</span>
+<span class="source-line-no">239</span><span id="line-239">    return retval;</span>
+<span class="source-line-no">240</span><span id="line-240">  }</span>
+<span class="source-line-no">241</span><span id="line-241"></span>
+<span class="source-line-no">242</span><span id="line-242">  /**</span>
+<span class="source-line-no">243</span><span id="line-243">   * Parse the command line options to get the selected format.</span>
+<span class="source-line-no">244</span><span id="line-244">   *</span>
+<span class="source-line-no">245</span><span id="line-245">   * @param commandLine</span>
+<span class="source-line-no">246</span><span id="line-246">   *          the provided command line argument information</span>
+<span class="source-line-no">247</span><span id="line-247">   * @param option</span>
+<span class="source-line-no">248</span><span id="line-248">   *          the option specifying the format, which must be present on the</span>
+<span class="source-line-no">249</span><span id="line-249">   *          command line</span>
+<span class="source-line-no">250</span><span id="line-250">   * @return the format</span>
+<span class="source-line-no">251</span><span id="line-251">   * @throws CommandExecutionException</span>
+<span class="source-line-no">252</span><span id="line-252">   *           if the format option was not provided or was an invalid choice</span>
+<span class="source-line-no">253</span><span id="line-253">   * @since 2.0.0</span>
+<span class="source-line-no">254</span><span id="line-254">   */</span>
+<span class="source-line-no">255</span><span id="line-255">  @SuppressWarnings("PMD.PreserveStackTrace")</span>
+<span class="source-line-no">256</span><span id="line-256">  @NonNull</span>
+<span class="source-line-no">257</span><span id="line-257">  public static Format getFormat(</span>
+<span class="source-line-no">258</span><span id="line-258">      @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">259</span><span id="line-259">      @NonNull Option option) throws CommandExecutionException {</span>
+<span class="source-line-no">260</span><span id="line-260">    // use the option</span>
+<span class="source-line-no">261</span><span id="line-261">    String toFormatText = commandLine.getOptionValue(option);</span>
+<span class="source-line-no">262</span><span id="line-262">    if (toFormatText == null) {</span>
+<span class="source-line-no">263</span><span id="line-263">      throw new CommandExecutionException(</span>
+<span class="source-line-no">264</span><span id="line-264">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">265</span><span id="line-265">          String.format("The '%s' argument was not provided.",</span>
+<span class="source-line-no">266</span><span id="line-266">              option.hasLongOpt()</span>
+<span class="source-line-no">267</span><span id="line-267">                  ? "--" + option.getLongOpt()</span>
+<span class="source-line-no">268</span><span id="line-268">                  : "-" + option.getOpt()));</span>
+<span class="source-line-no">269</span><span id="line-269">    }</span>
+<span class="source-line-no">270</span><span id="line-270">    try {</span>
+<span class="source-line-no">271</span><span id="line-271">      return Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
+<span class="source-line-no">272</span><span id="line-272">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">273</span><span id="line-273">      throw new CommandExecutionException(</span>
+<span class="source-line-no">274</span><span id="line-274">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">275</span><span id="line-275">          String.format("Invalid '%s' argument. The format must be one of: %s.",</span>
+<span class="source-line-no">276</span><span id="line-276">              option.hasLongOpt()</span>
+<span class="source-line-no">277</span><span id="line-277">                  ? "--" + option.getLongOpt()</span>
+<span class="source-line-no">278</span><span id="line-278">                  : "-" + option.getOpt(),</span>
+<span class="source-line-no">279</span><span id="line-279">              Arrays.stream(Format.values())</span>
+<span class="source-line-no">280</span><span id="line-280">                  .map(Enum::name)</span>
+<span class="source-line-no">281</span><span id="line-281">                  .collect(CustomCollectors.joiningWithOxfordComma("or"))));</span>
+<span class="source-line-no">282</span><span id="line-282">    }</span>
+<span class="source-line-no">283</span><span id="line-283">  }</span>
+<span class="source-line-no">284</span><span id="line-284"></span>
+<span class="source-line-no">285</span><span id="line-285">  /**</span>
+<span class="source-line-no">286</span><span id="line-286">   * Parse the command line options to get the selected schema format.</span>
+<span class="source-line-no">287</span><span id="line-287">   *</span>
+<span class="source-line-no">288</span><span id="line-288">   * @param commandLine</span>
+<span class="source-line-no">289</span><span id="line-289">   *          the provided command line argument information</span>
+<span class="source-line-no">290</span><span id="line-290">   * @param option</span>
+<span class="source-line-no">291</span><span id="line-291">   *          the option specifying the format, which must be present on the</span>
+<span class="source-line-no">292</span><span id="line-292">   *          command line</span>
+<span class="source-line-no">293</span><span id="line-293">   * @return the format</span>
+<span class="source-line-no">294</span><span id="line-294">   * @throws CommandExecutionException</span>
+<span class="source-line-no">295</span><span id="line-295">   *           if the format option was not provided or was an invalid choice</span>
+<span class="source-line-no">296</span><span id="line-296">   * @since 2.0.0</span>
+<span class="source-line-no">297</span><span id="line-297">   */</span>
+<span class="source-line-no">298</span><span id="line-298">  @SuppressWarnings("PMD.PreserveStackTrace")</span>
+<span class="source-line-no">299</span><span id="line-299">  @NonNull</span>
+<span class="source-line-no">300</span><span id="line-300">  public static SchemaFormat getSchemaFormat(</span>
+<span class="source-line-no">301</span><span id="line-301">      @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">302</span><span id="line-302">      @NonNull Option option) throws CommandExecutionException {</span>
+<span class="source-line-no">303</span><span id="line-303">    // use the option</span>
+<span class="source-line-no">304</span><span id="line-304">    String toFormatText = commandLine.getOptionValue(option);</span>
+<span class="source-line-no">305</span><span id="line-305">    if (toFormatText == null) {</span>
+<span class="source-line-no">306</span><span id="line-306">      throw new CommandExecutionException(</span>
+<span class="source-line-no">307</span><span id="line-307">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">308</span><span id="line-308">          String.format("Option '%s' not provided.",</span>
+<span class="source-line-no">309</span><span id="line-309">              option.hasLongOpt()</span>
+<span class="source-line-no">310</span><span id="line-310">                  ? "--" + option.getLongOpt()</span>
+<span class="source-line-no">311</span><span id="line-311">                  : "-" + option.getOpt()));</span>
+<span class="source-line-no">312</span><span id="line-312">    }</span>
+<span class="source-line-no">313</span><span id="line-313">    try {</span>
+<span class="source-line-no">314</span><span id="line-314">      return SchemaFormat.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
+<span class="source-line-no">315</span><span id="line-315">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">316</span><span id="line-316">      throw new CommandExecutionException(</span>
+<span class="source-line-no">317</span><span id="line-317">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">318</span><span id="line-318">          String.format("Invalid '%s' argument. The schema format must be one of: %s.",</span>
+<span class="source-line-no">319</span><span id="line-319">              option.hasLongOpt()</span>
+<span class="source-line-no">320</span><span id="line-320">                  ? "--" + option.getLongOpt()</span>
+<span class="source-line-no">321</span><span id="line-321">                  : "-" + option.getOpt(),</span>
+<span class="source-line-no">322</span><span id="line-322">              Arrays.stream(SchemaFormat.values())</span>
+<span class="source-line-no">323</span><span id="line-323">                  .map(Enum::name)</span>
+<span class="source-line-no">324</span><span id="line-324">                  .collect(CustomCollectors.joiningWithOxfordComma("or"))),</span>
+<span class="source-line-no">325</span><span id="line-325">          ex);</span>
+<span class="source-line-no">326</span><span id="line-326">    }</span>
+<span class="source-line-no">327</span><span id="line-327">  }</span>
+<span class="source-line-no">328</span><span id="line-328"></span>
+<span class="source-line-no">329</span><span id="line-329">  /**</span>
+<span class="source-line-no">330</span><span id="line-330">   * Detect the source format for content identified using the provided option.</span>
+<span class="source-line-no">331</span><span id="line-331">   * &lt;p&gt;</span>
+<span class="source-line-no">332</span><span id="line-332">   * This method will first check if the source format is explicitly declared on</span>
+<span class="source-line-no">333</span><span id="line-333">   * the command line. If so, this format will be returned.</span>
+<span class="source-line-no">334</span><span id="line-334">   * &lt;p&gt;</span>
+<span class="source-line-no">335</span><span id="line-335">   * If not, then the content will be analyzed to determine the format.</span>
+<span class="source-line-no">336</span><span id="line-336">   *</span>
+<span class="source-line-no">337</span><span id="line-337">   * @param commandLine</span>
+<span class="source-line-no">338</span><span id="line-338">   *          the provided command line argument information</span>
+<span class="source-line-no">339</span><span id="line-339">   * @param option</span>
+<span class="source-line-no">340</span><span id="line-340">   *          the option specifying the format, which must be present on the</span>
+<span class="source-line-no">341</span><span id="line-341">   *          command line</span>
+<span class="source-line-no">342</span><span id="line-342">   * @param loader</span>
+<span class="source-line-no">343</span><span id="line-343">   *          the content loader to use to load the content instance</span>
+<span class="source-line-no">344</span><span id="line-344">   * @param resource</span>
+<span class="source-line-no">345</span><span id="line-345">   *          the resource to load</span>
+<span class="source-line-no">346</span><span id="line-346">   * @return the identified content format</span>
+<span class="source-line-no">347</span><span id="line-347">   * @throws CommandExecutionException</span>
+<span class="source-line-no">348</span><span id="line-348">   *           if an error occurred while determining the source format</span>
+<span class="source-line-no">349</span><span id="line-349">   * @since 2.0.0</span>
+<span class="source-line-no">350</span><span id="line-350">   */</span>
+<span class="source-line-no">351</span><span id="line-351">  @SuppressWarnings({ "PMD.PreserveStackTrace", "PMD.OnlyOneReturn" })</span>
+<span class="source-line-no">352</span><span id="line-352">  @NonNull</span>
+<span class="source-line-no">353</span><span id="line-353">  public static Format determineSourceFormat(</span>
+<span class="source-line-no">354</span><span id="line-354">      @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">355</span><span id="line-355">      @NonNull Option option,</span>
+<span class="source-line-no">356</span><span id="line-356">      @NonNull IBoundLoader loader,</span>
+<span class="source-line-no">357</span><span id="line-357">      @NonNull URI resource) throws CommandExecutionException {</span>
+<span class="source-line-no">358</span><span id="line-358">    if (commandLine.hasOption(option)) {</span>
+<span class="source-line-no">359</span><span id="line-359">      // use the option</span>
+<span class="source-line-no">360</span><span id="line-360">      return getFormat(commandLine, option);</span>
+<span class="source-line-no">361</span><span id="line-361">    }</span>
+<span class="source-line-no">362</span><span id="line-362"></span>
+<span class="source-line-no">363</span><span id="line-363">    // attempt to determine the format</span>
+<span class="source-line-no">364</span><span id="line-364">    try {</span>
+<span class="source-line-no">365</span><span id="line-365">      return loader.detectFormat(resource);</span>
+<span class="source-line-no">366</span><span id="line-366">    } catch (FileNotFoundException ex) {</span>
+<span class="source-line-no">367</span><span id="line-367">      // this case was already checked for</span>
+<span class="source-line-no">368</span><span id="line-368">      throw new CommandExecutionException(</span>
+<span class="source-line-no">369</span><span id="line-369">          ExitCode.IO_ERROR,</span>
+<span class="source-line-no">370</span><span id="line-370">          String.format("The provided source '%s' does not exist.", resource),</span>
+<span class="source-line-no">371</span><span id="line-371">          ex);</span>
+<span class="source-line-no">372</span><span id="line-372">    } catch (IOException ex) {</span>
+<span class="source-line-no">373</span><span id="line-373">      throw new CommandExecutionException(</span>
+<span class="source-line-no">374</span><span id="line-374">          ExitCode.IO_ERROR,</span>
+<span class="source-line-no">375</span><span id="line-375">          String.format("Unable to determine source format. Use '%s' to specify the format. %s",</span>
+<span class="source-line-no">376</span><span id="line-376">              option.hasLongOpt()</span>
+<span class="source-line-no">377</span><span id="line-377">                  ? "--" + option.getLongOpt()</span>
+<span class="source-line-no">378</span><span id="line-378">                  : "-" + option.getOpt(),</span>
+<span class="source-line-no">379</span><span id="line-379">              ex.getLocalizedMessage()),</span>
+<span class="source-line-no">380</span><span id="line-380">          ex);</span>
+<span class="source-line-no">381</span><span id="line-381">    }</span>
+<span class="source-line-no">382</span><span id="line-382">  }</span>
+<span class="source-line-no">383</span><span id="line-383"></span>
+<span class="source-line-no">384</span><span id="line-384">  /**</span>
+<span class="source-line-no">385</span><span id="line-385">   * Load a Metaschema module based on the provided command line option.</span>
+<span class="source-line-no">386</span><span id="line-386">   *</span>
+<span class="source-line-no">387</span><span id="line-387">   * @param commandLine</span>
+<span class="source-line-no">388</span><span id="line-388">   *          the provided command line argument information</span>
+<span class="source-line-no">389</span><span id="line-389">   * @param option</span>
+<span class="source-line-no">390</span><span id="line-390">   *          the option specifying the module to load, which must be present on</span>
+<span class="source-line-no">391</span><span id="line-391">   *          the command line</span>
+<span class="source-line-no">392</span><span id="line-392">   * @param currentWorkingDirectory</span>
+<span class="source-line-no">393</span><span id="line-393">   *          the URI of the current working directory</span>
+<span class="source-line-no">394</span><span id="line-394">   * @param bindingContext</span>
+<span class="source-line-no">395</span><span id="line-395">   *          the context used to access Metaschema module information based on</span>
+<span class="source-line-no">396</span><span id="line-396">   *          Java class bindings</span>
+<span class="source-line-no">397</span><span id="line-397">   * @return the loaded module</span>
+<span class="source-line-no">398</span><span id="line-398">   * @throws CommandExecutionException</span>
+<span class="source-line-no">399</span><span id="line-399">   *           if an error occurred while loading the module</span>
+<span class="source-line-no">400</span><span id="line-400">   * @since 2.0.0</span>
+<span class="source-line-no">401</span><span id="line-401">   */</span>
+<span class="source-line-no">402</span><span id="line-402">  @NonNull</span>
+<span class="source-line-no">403</span><span id="line-403">  public static IModule loadModule(</span>
+<span class="source-line-no">404</span><span id="line-404">      @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">405</span><span id="line-405">      @NonNull Option option,</span>
+<span class="source-line-no">406</span><span id="line-406">      @NonNull URI currentWorkingDirectory,</span>
+<span class="source-line-no">407</span><span id="line-407">      @NonNull IBindingContext bindingContext) throws CommandExecutionException {</span>
+<span class="source-line-no">408</span><span id="line-408">    String moduleName = commandLine.getOptionValue(option);</span>
+<span class="source-line-no">409</span><span id="line-409">    if (moduleName == null) {</span>
+<span class="source-line-no">410</span><span id="line-410">      throw new CommandExecutionException(</span>
+<span class="source-line-no">411</span><span id="line-411">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">412</span><span id="line-412">          String.format("Unable to determine the module to load. Use '%s' to specify the module.",</span>
+<span class="source-line-no">413</span><span id="line-413">              option.hasLongOpt()</span>
+<span class="source-line-no">414</span><span id="line-414">                  ? "--" + option.getLongOpt()</span>
+<span class="source-line-no">415</span><span id="line-415">                  : "-" + option.getOpt()));</span>
+<span class="source-line-no">416</span><span id="line-416">    }</span>
+<span class="source-line-no">417</span><span id="line-417"></span>
+<span class="source-line-no">418</span><span id="line-418">    URI moduleUri;</span>
+<span class="source-line-no">419</span><span id="line-419">    try {</span>
+<span class="source-line-no">420</span><span id="line-420">      moduleUri = UriUtils.toUri(moduleName, currentWorkingDirectory);</span>
+<span class="source-line-no">421</span><span id="line-421">    } catch (URISyntaxException ex) {</span>
+<span class="source-line-no">422</span><span id="line-422">      throw new CommandExecutionException(</span>
+<span class="source-line-no">423</span><span id="line-423">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">424</span><span id="line-424">          String.format("Cannot load module as '%s' is not a valid file or URL. %s",</span>
+<span class="source-line-no">425</span><span id="line-425">              ex.getInput(),</span>
+<span class="source-line-no">426</span><span id="line-426">              ex.getLocalizedMessage()),</span>
+<span class="source-line-no">427</span><span id="line-427">          ex);</span>
+<span class="source-line-no">428</span><span id="line-428">    }</span>
+<span class="source-line-no">429</span><span id="line-429">    return loadModule(moduleUri, bindingContext);</span>
+<span class="source-line-no">430</span><span id="line-430">  }</span>
+<span class="source-line-no">431</span><span id="line-431"></span>
+<span class="source-line-no">432</span><span id="line-432">  /**</span>
+<span class="source-line-no">433</span><span id="line-433">   * Load a Metaschema module from the provided relative resource path.</span>
+<span class="source-line-no">434</span><span id="line-434">   * &lt;p&gt;</span>
+<span class="source-line-no">435</span><span id="line-435">   * This method will resolve the provided resource against the current working</span>
+<span class="source-line-no">436</span><span id="line-436">   * directory to create an absolute URI.</span>
+<span class="source-line-no">437</span><span id="line-437">   *</span>
+<span class="source-line-no">438</span><span id="line-438">   * @param moduleResource</span>
+<span class="source-line-no">439</span><span id="line-439">   *          the relative path to the module resource to load</span>
+<span class="source-line-no">440</span><span id="line-440">   * @param currentWorkingDirectory</span>
+<span class="source-line-no">441</span><span id="line-441">   *          the URI of the current working directory</span>
+<span class="source-line-no">442</span><span id="line-442">   * @param bindingContext</span>
+<span class="source-line-no">443</span><span id="line-443">   *          the context used to access Metaschema module information based on</span>
+<span class="source-line-no">444</span><span id="line-444">   *          Java class bindings</span>
+<span class="source-line-no">445</span><span id="line-445">   * @return the loaded module</span>
+<span class="source-line-no">446</span><span id="line-446">   * @throws CommandExecutionException</span>
+<span class="source-line-no">447</span><span id="line-447">   *           if an error occurred while loading the module</span>
+<span class="source-line-no">448</span><span id="line-448">   * @since 2.0.0</span>
+<span class="source-line-no">449</span><span id="line-449">   */</span>
+<span class="source-line-no">450</span><span id="line-450">  @NonNull</span>
+<span class="source-line-no">451</span><span id="line-451">  public static IModule loadModule(</span>
+<span class="source-line-no">452</span><span id="line-452">      @NonNull String moduleResource,</span>
+<span class="source-line-no">453</span><span id="line-453">      @NonNull URI currentWorkingDirectory,</span>
+<span class="source-line-no">454</span><span id="line-454">      @NonNull IBindingContext bindingContext) throws CommandExecutionException {</span>
+<span class="source-line-no">455</span><span id="line-455">    try {</span>
+<span class="source-line-no">456</span><span id="line-456">      URI moduleUri = getResourceUri(</span>
+<span class="source-line-no">457</span><span id="line-457">          moduleResource,</span>
+<span class="source-line-no">458</span><span id="line-458">          currentWorkingDirectory);</span>
+<span class="source-line-no">459</span><span id="line-459">      return loadModule(moduleUri, bindingContext);</span>
+<span class="source-line-no">460</span><span id="line-460">    } catch (URISyntaxException ex) {</span>
+<span class="source-line-no">461</span><span id="line-461">      throw new CommandExecutionException(</span>
+<span class="source-line-no">462</span><span id="line-462">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">463</span><span id="line-463">          String.format("Cannot load module as '%s' is not a valid file or URL. %s",</span>
+<span class="source-line-no">464</span><span id="line-464">              ex.getInput(),</span>
+<span class="source-line-no">465</span><span id="line-465">              ex.getLocalizedMessage()),</span>
+<span class="source-line-no">466</span><span id="line-466">          ex);</span>
+<span class="source-line-no">467</span><span id="line-467">    }</span>
+<span class="source-line-no">468</span><span id="line-468">  }</span>
+<span class="source-line-no">469</span><span id="line-469"></span>
+<span class="source-line-no">470</span><span id="line-470">  /**</span>
+<span class="source-line-no">471</span><span id="line-471">   * Load a Metaschema module from the provided resource path.</span>
+<span class="source-line-no">472</span><span id="line-472">   *</span>
+<span class="source-line-no">473</span><span id="line-473">   * @param moduleResource</span>
+<span class="source-line-no">474</span><span id="line-474">   *          the absolute path to the module resource to load</span>
+<span class="source-line-no">475</span><span id="line-475">   * @param bindingContext</span>
+<span class="source-line-no">476</span><span id="line-476">   *          the context used to access Metaschema module information based on</span>
+<span class="source-line-no">477</span><span id="line-477">   *          Java class bindings</span>
+<span class="source-line-no">478</span><span id="line-478">   * @return the loaded module</span>
+<span class="source-line-no">479</span><span id="line-479">   * @throws CommandExecutionException</span>
+<span class="source-line-no">480</span><span id="line-480">   *           if an error occurred while loading the module</span>
+<span class="source-line-no">481</span><span id="line-481">   * @since 2.0.0</span>
+<span class="source-line-no">482</span><span id="line-482">   */</span>
+<span class="source-line-no">483</span><span id="line-483">  @NonNull</span>
+<span class="source-line-no">484</span><span id="line-484">  public static IModule loadModule(</span>
+<span class="source-line-no">485</span><span id="line-485">      @NonNull URI moduleResource,</span>
+<span class="source-line-no">486</span><span id="line-486">      @NonNull IBindingContext bindingContext) throws CommandExecutionException {</span>
+<span class="source-line-no">487</span><span id="line-487">    // TODO: ensure the resource URI is absolute</span>
+<span class="source-line-no">488</span><span id="line-488">    try {</span>
+<span class="source-line-no">489</span><span id="line-489">      IBindingModuleLoader loader = bindingContext.newModuleLoader();</span>
+<span class="source-line-no">490</span><span id="line-490">      loader.allowEntityResolution();</span>
+<span class="source-line-no">491</span><span id="line-491">      return loader.load(moduleResource);</span>
+<span class="source-line-no">492</span><span id="line-492">    } catch (IOException | MetaschemaException ex) {</span>
+<span class="source-line-no">493</span><span id="line-493">      throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);</span>
+<span class="source-line-no">494</span><span id="line-494">    }</span>
+<span class="source-line-no">495</span><span id="line-495">  }</span>
+<span class="source-line-no">496</span><span id="line-496"></span>
+<span class="source-line-no">497</span><span id="line-497">  /**</span>
+<span class="source-line-no">498</span><span id="line-498">   * For a given resource location, resolve the location into an absolute URI.</span>
+<span class="source-line-no">499</span><span id="line-499">   *</span>
+<span class="source-line-no">500</span><span id="line-500">   * @param location</span>
+<span class="source-line-no">501</span><span id="line-501">   *          the resource location</span>
+<span class="source-line-no">502</span><span id="line-502">   * @param currentWorkingDirectory</span>
+<span class="source-line-no">503</span><span id="line-503">   *          the URI of the current working directory</span>
+<span class="source-line-no">504</span><span id="line-504">   * @return the resolved URI</span>
+<span class="source-line-no">505</span><span id="line-505">   * @throws URISyntaxException</span>
+<span class="source-line-no">506</span><span id="line-506">   *           if the location is not a valid URI</span>
+<span class="source-line-no">507</span><span id="line-507">   */</span>
+<span class="source-line-no">508</span><span id="line-508">  @NonNull</span>
+<span class="source-line-no">509</span><span id="line-509">  public static URI getResourceUri(</span>
+<span class="source-line-no">510</span><span id="line-510">      @NonNull String location,</span>
+<span class="source-line-no">511</span><span id="line-511">      @NonNull URI currentWorkingDirectory) throws URISyntaxException {</span>
+<span class="source-line-no">512</span><span id="line-512">    return UriUtils.toUri(location, currentWorkingDirectory);</span>
+<span class="source-line-no">513</span><span id="line-513">  }</span>
+<span class="source-line-no">514</span><span id="line-514"></span>
+<span class="source-line-no">515</span><span id="line-515">  /**</span>
+<span class="source-line-no">516</span><span id="line-516">   * Load a set of external Metaschema module constraints based on the provided</span>
+<span class="source-line-no">517</span><span id="line-517">   * command line option.</span>
+<span class="source-line-no">518</span><span id="line-518">   *</span>
+<span class="source-line-no">519</span><span id="line-519">   * @param commandLine</span>
+<span class="source-line-no">520</span><span id="line-520">   *          the provided command line argument information</span>
+<span class="source-line-no">521</span><span id="line-521">   * @param option</span>
+<span class="source-line-no">522</span><span id="line-522">   *          the option specifying the constraints to load, which must be present</span>
+<span class="source-line-no">523</span><span id="line-523">   *          on the command line</span>
+<span class="source-line-no">524</span><span id="line-524">   * @param currentWorkingDirectory</span>
+<span class="source-line-no">525</span><span id="line-525">   *          the URI of the current working directory</span>
+<span class="source-line-no">526</span><span id="line-526">   * @return the set of loaded constraints</span>
+<span class="source-line-no">527</span><span id="line-527">   * @throws CommandExecutionException</span>
+<span class="source-line-no">528</span><span id="line-528">   *           if an error occurred while loading the module</span>
+<span class="source-line-no">529</span><span id="line-529">   * @since 2.0.0</span>
+<span class="source-line-no">530</span><span id="line-530">   */</span>
+<span class="source-line-no">531</span><span id="line-531">  @NonNull</span>
+<span class="source-line-no">532</span><span id="line-532">  public static Set&lt;IConstraintSet&gt; loadConstraintSets(</span>
+<span class="source-line-no">533</span><span id="line-533">      @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">534</span><span id="line-534">      @NonNull Option option,</span>
+<span class="source-line-no">535</span><span id="line-535">      @NonNull URI currentWorkingDirectory) throws CommandExecutionException {</span>
+<span class="source-line-no">536</span><span id="line-536">    Set&lt;IConstraintSet&gt; constraintSets;</span>
+<span class="source-line-no">537</span><span id="line-537">    if (commandLine.hasOption(option)) {</span>
+<span class="source-line-no">538</span><span id="line-538">      IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();</span>
+<span class="source-line-no">539</span><span id="line-539">      constraintSets = new LinkedHashSet&lt;&gt;();</span>
+<span class="source-line-no">540</span><span id="line-540">      String[] args = commandLine.getOptionValues(option);</span>
+<span class="source-line-no">541</span><span id="line-541">      for (String arg : args) {</span>
+<span class="source-line-no">542</span><span id="line-542">        assert arg != null;</span>
+<span class="source-line-no">543</span><span id="line-543">        try {</span>
+<span class="source-line-no">544</span><span id="line-544">          URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, currentWorkingDirectory));</span>
+<span class="source-line-no">545</span><span id="line-545">          constraintSets.addAll(constraintLoader.load(constraintUri));</span>
+<span class="source-line-no">546</span><span id="line-546">        } catch (URISyntaxException | IOException | MetaschemaException | MetapathException ex) {</span>
+<span class="source-line-no">547</span><span id="line-547">          throw new CommandExecutionException(</span>
+<span class="source-line-no">548</span><span id="line-548">              ExitCode.IO_ERROR,</span>
+<span class="source-line-no">549</span><span id="line-549">              String.format("Unable to process constraint set '%s'. %s",</span>
+<span class="source-line-no">550</span><span id="line-550">                  arg,</span>
+<span class="source-line-no">551</span><span id="line-551">                  ex.getLocalizedMessage()),</span>
+<span class="source-line-no">552</span><span id="line-552">              ex);</span>
+<span class="source-line-no">553</span><span id="line-553">        }</span>
+<span class="source-line-no">554</span><span id="line-554">      }</span>
+<span class="source-line-no">555</span><span id="line-555">    } else {</span>
+<span class="source-line-no">556</span><span id="line-556">      constraintSets = CollectionUtil.emptySet();</span>
+<span class="source-line-no">557</span><span id="line-557">    }</span>
+<span class="source-line-no">558</span><span id="line-558">    return constraintSets;</span>
+<span class="source-line-no">559</span><span id="line-559">  }</span>
+<span class="source-line-no">560</span><span id="line-560"></span>
+<span class="source-line-no">561</span><span id="line-561">  /**</span>
+<span class="source-line-no">562</span><span id="line-562">   * Create a temporary directory for ephemeral files that will be deleted on</span>
+<span class="source-line-no">563</span><span id="line-563">   * shutdown.</span>
+<span class="source-line-no">564</span><span id="line-564">   *</span>
+<span class="source-line-no">565</span><span id="line-565">   * @return the temp directory path</span>
+<span class="source-line-no">566</span><span id="line-566">   * @throws IOException</span>
+<span class="source-line-no">567</span><span id="line-567">   *           if an error occurred while creating the temporary directory</span>
+<span class="source-line-no">568</span><span id="line-568">   */</span>
+<span class="source-line-no">569</span><span id="line-569">  @NonNull</span>
+<span class="source-line-no">570</span><span id="line-570">  public static Path newTempDir() throws IOException {</span>
+<span class="source-line-no">571</span><span id="line-571">    Path retval = Files.createTempDirectory("metaschema-cli-");</span>
+<span class="source-line-no">572</span><span id="line-572">    DeleteOnShutdown.register(retval);</span>
+<span class="source-line-no">573</span><span id="line-573">    return ObjectUtils.notNull(retval);</span>
+<span class="source-line-no">574</span><span id="line-574">  }</span>
+<span class="source-line-no">575</span><span id="line-575"></span>
+<span class="source-line-no">576</span><span id="line-576">  /**</span>
+<span class="source-line-no">577</span><span id="line-577">   * Create a new {@link IBindingContext} that is configured for dynamic</span>
+<span class="source-line-no">578</span><span id="line-578">   * compilation.</span>
+<span class="source-line-no">579</span><span id="line-579">   *</span>
+<span class="source-line-no">580</span><span id="line-580">   * @return the binding context</span>
+<span class="source-line-no">581</span><span id="line-581">   * @throws CommandExecutionException</span>
+<span class="source-line-no">582</span><span id="line-582">   *           if an error occurred while creating the binding context</span>
+<span class="source-line-no">583</span><span id="line-583">   * @since 2.0.0</span>
+<span class="source-line-no">584</span><span id="line-584">   */</span>
+<span class="source-line-no">585</span><span id="line-585">  @NonNull</span>
+<span class="source-line-no">586</span><span id="line-586">  public static IBindingContext newBindingContextWithDynamicCompilation() throws CommandExecutionException {</span>
+<span class="source-line-no">587</span><span id="line-587">    return newBindingContextWithDynamicCompilation(CollectionUtil.emptySet());</span>
+<span class="source-line-no">588</span><span id="line-588">  }</span>
+<span class="source-line-no">589</span><span id="line-589"></span>
+<span class="source-line-no">590</span><span id="line-590">  /**</span>
+<span class="source-line-no">591</span><span id="line-591">   * Create a new {@link IBindingContext} that is configured for dynamic</span>
+<span class="source-line-no">592</span><span id="line-592">   * compilation and to use the provided constraints.</span>
+<span class="source-line-no">593</span><span id="line-593">   *</span>
+<span class="source-line-no">594</span><span id="line-594">   * @param constraintSets</span>
+<span class="source-line-no">595</span><span id="line-595">   *          the Metaschema module constraints to dynamicly bind to loaded</span>
+<span class="source-line-no">596</span><span id="line-596">   *          modules</span>
+<span class="source-line-no">597</span><span id="line-597">   * @return the binding context</span>
+<span class="source-line-no">598</span><span id="line-598">   * @throws CommandExecutionException</span>
+<span class="source-line-no">599</span><span id="line-599">   *           if an error occurred while creating the binding context</span>
+<span class="source-line-no">600</span><span id="line-600">   * @since 2.0.0</span>
+<span class="source-line-no">601</span><span id="line-601">   */</span>
+<span class="source-line-no">602</span><span id="line-602">  @NonNull</span>
+<span class="source-line-no">603</span><span id="line-603">  public static IBindingContext newBindingContextWithDynamicCompilation(@NonNull Set&lt;IConstraintSet&gt; constraintSets)</span>
+<span class="source-line-no">604</span><span id="line-604">      throws CommandExecutionException {</span>
+<span class="source-line-no">605</span><span id="line-605">    try {</span>
+<span class="source-line-no">606</span><span id="line-606">      Path tempDir = newTempDir();</span>
+<span class="source-line-no">607</span><span id="line-607">      return IBindingContext.builder()</span>
+<span class="source-line-no">608</span><span id="line-608">          .compilePath(tempDir)</span>
+<span class="source-line-no">609</span><span id="line-609">          .constraintSet(constraintSets)</span>
+<span class="source-line-no">610</span><span id="line-610">          .build();</span>
+<span class="source-line-no">611</span><span id="line-611">    } catch (IOException ex) {</span>
+<span class="source-line-no">612</span><span id="line-612">      throw new CommandExecutionException(ExitCode.RUNTIME_ERROR,</span>
+<span class="source-line-no">613</span><span id="line-613">          String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()),</span>
+<span class="source-line-no">614</span><span id="line-614">          ex);</span>
+<span class="source-line-no">615</span><span id="line-615">    }</span>
+<span class="source-line-no">616</span><span id="line-616">  }</span>
+<span class="source-line-no">617</span><span id="line-617"></span>
+<span class="source-line-no">618</span><span id="line-618">  private MetaschemaCommands() {</span>
+<span class="source-line-no">619</span><span id="line-619">    // disable construction</span>
+<span class="source-line-no">620</span><span id="line-620">  }</span>
+<span class="source-line-no">621</span><span id="line-621">}</span>
 
 
 

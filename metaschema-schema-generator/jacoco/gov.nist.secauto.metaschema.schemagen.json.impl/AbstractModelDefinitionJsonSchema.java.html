@@ -60,7 +60,7 @@ public abstract class AbstractModelDefinitionJsonSchema&lt;D extends IModelDefin
                 jsonKeyFlagName,
 <span class="nc" id="L61">                definition.getName()));</span>
       }
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">      flagStream = flagStream.filter(instance -&gt; instance != jsonKeyFlag);</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">      flagStream = flagStream.filter(instance -&gt; !jsonKeyFlag.equals(instance));</span>
     }
 
 <span class="fc" id="L66">    this.flagProperties = ObjectUtils.notNull(flagStream</span>
@@ -169,19 +169,20 @@ public abstract class AbstractModelDefinitionJsonSchema&lt;D extends IModelDefin
 <span class="fc" id="L169">      return Objects.hash(definition, jsonKeyFlagName, discriminatorProperty, discriminatorValue);</span>
     }
 
+    @SuppressWarnings(&quot;PMD.OnlyOneReturn&quot;)
     @Override
     public boolean equals(Object obj) {
-<span class="pc bpc" id="L174" title="1 of 2 branches missed.">      if (this == obj) {</span>
-<span class="nc" id="L175">        return true;</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">      if (this == obj) {</span>
+<span class="nc" id="L176">        return true;</span>
       }
-<span class="pc bpc" id="L177" title="1 of 2 branches missed.">      if (!(obj instanceof IKey)) {</span>
-<span class="nc" id="L178">        return false;</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">      if (!(obj instanceof IKey)) {</span>
+<span class="nc" id="L179">        return false;</span>
       }
-<span class="fc" id="L180">      IKey other = (IKey) obj;</span>
-<span class="pc bpc" id="L181" title="1 of 2 branches missed.">      return Objects.equals(definition, other.getDefinition())</span>
-<span class="pc bpc" id="L182" title="1 of 2 branches missed.">          &amp;&amp; Objects.equals(jsonKeyFlagName, other.getJsonKeyFlagName())</span>
-<span class="pc bpc" id="L183" title="1 of 2 branches missed.">          &amp;&amp; Objects.equals(discriminatorProperty, other.getDiscriminatorProperty())</span>
-<span class="pc bpc" id="L184" title="1 of 2 branches missed.">          &amp;&amp; Objects.equals(discriminatorValue, other.getDiscriminatorValue());</span>
+<span class="fc" id="L181">      IKey other = (IKey) obj;</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">      return Objects.equals(definition, other.getDefinition())</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">          &amp;&amp; Objects.equals(jsonKeyFlagName, other.getJsonKeyFlagName())</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">          &amp;&amp; Objects.equals(discriminatorProperty, other.getDiscriminatorProperty())</span>
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">          &amp;&amp; Objects.equals(discriminatorValue, other.getDiscriminatorValue());</span>
     }
   }
 }

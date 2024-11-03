@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaschemaModelModule.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.model.metaschema.binding</a> &gt; <span class="el_source">MetaschemaModelModule.java</span></div><h1>MetaschemaModelModule.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
+
+import gov.nist.secauto.metaschema.core.MetaschemaConstants;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.model.AbstractBoundModule;
+import gov.nist.secauto.metaschema.databind.model.IBoundModule;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
+
+import java.net.URI;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+@MetaschemaModule(
+    fields = {
+        UseName.class,
+        Remarks.class,
+        ConstraintValueEnum.class
+    },
+    assemblies = {
+        METASCHEMA.class,
+        MetapathNamespace.class,
+        InlineDefineAssembly.class,
+        InlineDefineField.class,
+        InlineDefineFlag.class,
+        Any.class,
+        AssemblyReference.class,
+        FieldReference.class,
+        FlagReference.class,
+        AssemblyModel.class,
+        JsonValueKeyFlag.class,
+        GroupingAs.class,
+        Example.class,
+        Property.class,
+        JsonKey.class,
+        AssemblyConstraints.class,
+        FieldConstraints.class,
+        FlagConstraints.class,
+        ConstraintLetExpression.class,
+        FlagAllowedValues.class,
+        FlagExpect.class,
+        FlagIndexHasKey.class,
+        FlagMatches.class,
+        TargetedAllowedValuesConstraint.class,
+        TargetedMatchesConstraint.class,
+        TargetedExpectConstraint.class,
+        TargetedIndexHasKeyConstraint.class,
+        KeyConstraintField.class,
+        TargetedIsUniqueConstraint.class,
+        TargetedIndexConstraint.class,
+        TargetedHasCardinalityConstraint.class,
+        MetaschemaModuleConstraints.class,
+        MetaschemaMetaConstraints.class,
+        MetaschemaMetapath.class,
+        MetapathContext.class
+    })
+public final class MetaschemaModelModule
+    extends AbstractBoundModule {
+  @NonNull
+<span class="fc" id="L69">  private static final MarkupLine NAME = MarkupLine.fromMarkdown(&quot;Metaschema Model&quot;);</span>
+
+  @NonNull
+  private static final String SHORT_NAME = &quot;metaschema-model&quot;;
+
+  @NonNull
+  private static final String VERSION = &quot;1.0.0-M2&quot;;
+
+  @NonNull
+<span class="fc" id="L78">  private static final URI XML_NAMESPACE = MetaschemaConstants.METASCHEMA_NAMESPACE_URI;</span>
+
+  @NonNull
+<span class="fc" id="L81">  private static final URI JSON_BASE_URI = MetaschemaConstants.METASCHEMA_NAMESPACE_URI;</span>
+
+  @NonNull
+  private static final Map&lt;String, String&gt; NAMESPACE_BINDINGS;
+
+  static {
+<span class="fc" id="L87">    @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;String, String&gt; bindings = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L89">    NAMESPACE_BINDINGS = bindings;</span>
+<span class="fc" id="L90">  }</span>
+
+  public MetaschemaModelModule(
+      @NonNull List&lt;? extends IBoundModule&gt; importedModules,
+      @NonNull IBindingContext bindingContext) {
+<span class="fc" id="L95">    super(importedModules, bindingContext);</span>
+<span class="fc" id="L96">  }</span>
+
+  @Override
+  public MarkupLine getName() {
+<span class="nc" id="L100">    return NAME;</span>
+  }
+
+  @Override
+  public String getShortName() {
+<span class="nc" id="L105">    return SHORT_NAME;</span>
+  }
+
+  @Override
+  public String getVersion() {
+<span class="nc" id="L110">    return VERSION;</span>
+  }
+
+  @Override
+  public URI getXmlNamespace() {
+<span class="fc" id="L115">    return XML_NAMESPACE;</span>
+  }
+
+  @Override
+  public URI getJsonBaseUri() {
+<span class="nc" id="L120">    return JSON_BASE_URI;</span>
+  }
+
+  @Override
+  public MarkupMultiline getRemarks() {
+<span class="nc" id="L125">    return null;</span>
+  }
+
+  @Override
+  public Map&lt;String, String&gt; getNamespaceBindings() {
+<span class="fc" id="L130">    return NAMESPACE_BINDINGS;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

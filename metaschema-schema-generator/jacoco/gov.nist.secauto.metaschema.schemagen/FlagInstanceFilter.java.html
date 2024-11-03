@@ -61,7 +61,7 @@ public final class FlagInstanceFilter {
   @NonNull
   private static Predicate&lt;IFlagInstance&gt;
       filterFlag(@NonNull IFlagInstance flagToFilter) {
-<span class="fc bfc" id="L64" title="All 2 branches covered.">    return flag -&gt; flag != flagToFilter;</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">    return flag -&gt; !flagToFilter.equals(flag);</span>
   }
 
   @NonNull

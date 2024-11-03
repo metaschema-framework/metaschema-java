@@ -33,25 +33,10 @@ class PackageProductionImpl implements IPackageProduction {
 <span class="fc" id="L33">        metadata.getModuleProductions(),</span>
         targetDirectory);
 <span class="fc" id="L35">  }</span>
-  //
-  // public static String formatMarkdown(@NonNull IFlexmarkMarkupString&lt;?&gt; markup)
-  // {
-  // // TODO: seemingly unused method. Remove?
-  // Formatter.Builder builder =
-  // Formatter.builder(FlexmarkConfiguration.FLEXMARK_CONFIG);
-  // builder.set(ObjectUtils.notNull(Formatter.FORMAT_FLAGS),
-  // LineAppendable.F_WHITESPACE_REMOVAL);
-  // // builder.set(Formatter.ESCAPE_SPECIAL_CHARS, false);
-  // Formatter formatter = builder.build();
-  // String markdown = markup.toMarkdown(formatter).trim();
-  // markdown = markdown.replace(&quot;\\&amp;&quot;, &quot;&amp;&quot;);
-  // markdown = markdown.replace(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;);
-  // return markdown;
-  // }
 
   @Override
   public URI getXmlNamespace() {
-<span class="nc" id="L54">    return xmlNamespace;</span>
+<span class="nc" id="L39">    return xmlNamespace;</span>
   }
 
   /**
@@ -61,7 +46,7 @@ class PackageProductionImpl implements IPackageProduction {
    */
   @Override
   public IGeneratedClass getGeneratedClass() {
-<span class="fc" id="L64">    return packageInfoClass;</span>
+<span class="fc" id="L49">    return packageInfoClass;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

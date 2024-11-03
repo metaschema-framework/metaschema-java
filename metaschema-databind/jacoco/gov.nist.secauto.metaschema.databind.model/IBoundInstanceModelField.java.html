@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.model;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.impl.DefinitionField;
 import gov.nist.secauto.metaschema.databind.model.impl.InstanceModelFieldComplex;
@@ -37,38 +38,38 @@ public interface IBoundInstanceModelField&lt;ITEM&gt; extends IBoundInstanceMode
   static IBoundInstanceModelField&lt;?&gt; newInstance(
       @NonNull Field field,
       @NonNull IBoundDefinitionModelAssembly containingDefinition) {
-<span class="fc" id="L40">    Class&lt;?&gt; itemType = IBoundInstanceModel.getItemType(field);</span>
+<span class="fc" id="L41">    Class&lt;?&gt; itemType = IBoundInstanceModel.getItemType(field);</span>
 
     IBoundInstanceModelField&lt;?&gt; retval;
-<span class="fc bfc" id="L43" title="All 2 branches covered.">    if (IBoundObject.class.isAssignableFrom(itemType)) {</span>
-<span class="fc" id="L44">      IBindingContext bindingContext = containingDefinition.getBindingContext();</span>
-<span class="fc" id="L45">      IBoundDefinitionModel&lt;?&gt; definition</span>
-<span class="fc" id="L46">          = bindingContext.getBoundDefinitionForClass(itemType.asSubclass(IBoundObject.class));</span>
-<span class="pc bpc" id="L47" title="1 of 2 branches missed.">      if (definition == null) {</span>
-<span class="nc" id="L48">        throw new IllegalStateException(String.format(</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">    if (IBoundObject.class.isAssignableFrom(itemType)) {</span>
+<span class="fc" id="L45">      IBindingContext bindingContext = containingDefinition.getBindingContext();</span>
+<span class="fc" id="L46">      IBoundDefinitionModel&lt;?&gt; definition = bindingContext.getBoundDefinitionForClass(</span>
+<span class="fc" id="L47">          ObjectUtils.notNull(itemType.asSubclass(IBoundObject.class)));</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">      if (definition == null) {</span>
+<span class="nc" id="L49">        throw new IllegalStateException(String.format(</span>
             &quot;The field '%s' on class '%s' is not bound to a Metaschema field&quot;,
-<span class="nc" id="L50">            field.toString(),</span>
-<span class="nc" id="L51">            field.getDeclaringClass().getName()));</span>
+<span class="nc" id="L51">            field.toString(),</span>
+<span class="nc" id="L52">            field.getDeclaringClass().getName()));</span>
       }
-<span class="fc" id="L53">      retval = InstanceModelFieldComplex.newInstance(field, (DefinitionField) definition, containingDefinition);</span>
-<span class="fc" id="L54">    } else {</span>
+<span class="fc" id="L54">      retval = InstanceModelFieldComplex.newInstance(field, (DefinitionField) definition, containingDefinition);</span>
+<span class="fc" id="L55">    } else {</span>
 
-<span class="fc" id="L56">      retval = InstanceModelFieldScalar.newInstance(field, containingDefinition);</span>
+<span class="fc" id="L57">      retval = InstanceModelFieldScalar.newInstance(field, containingDefinition);</span>
     }
-<span class="fc" id="L58">    return retval;</span>
+<span class="fc" id="L59">    return retval;</span>
   }
 
   @Override
   default boolean canHandleXmlQName(QName qname) {
     boolean retval;
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">    if (isEffectiveValueWrappedInXml()) {</span>
-<span class="fc" id="L65">      retval = qname.equals(getXmlQName());</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">    if (isEffectiveValueWrappedInXml()) {</span>
+<span class="fc" id="L66">      retval = qname.equals(getXmlQName());</span>
     } else {
-<span class="nc" id="L67">      IDataTypeAdapter&lt;?&gt; adapter = getDefinition().getJavaTypeAdapter();</span>
+<span class="nc" id="L68">      IDataTypeAdapter&lt;?&gt; adapter = getDefinition().getJavaTypeAdapter();</span>
       // we are to parse the data type
-<span class="nc" id="L69">      retval = adapter.canHandleQName(qname);</span>
+<span class="nc" id="L70">      retval = adapter.canHandleQName(qname);</span>
     }
-<span class="fc" id="L71">    return retval;</span>
+<span class="fc" id="L72">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -89,60 +89,61 @@ public interface IBoundDefinitionModelFieldComplex
 <span class="fc" id="L89">    return getFieldValue().getJavaTypeAdapter();</span>
   }
 
+  @SuppressWarnings(&quot;PMD.NullAssignment&quot;)
   @Override
   @NonNull
   default Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties(@Nullable Predicate&lt;IBoundInstanceFlag&gt; flagFilter) {
-<span class="fc" id="L95">    Predicate&lt;IBoundInstanceFlag&gt; actualFlagFilter = flagFilter;</span>
+<span class="fc" id="L96">    Predicate&lt;IBoundInstanceFlag&gt; actualFlagFilter = flagFilter;</span>
 
-<span class="fc" id="L97">    IBoundFieldValue fieldValue = getFieldValue();</span>
-<span class="fc" id="L98">    IBoundInstanceFlag jsonValueKey = getDefinition().getJsonValueKeyFlagInstance();</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">    if (jsonValueKey != null) {</span>
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">      Predicate&lt;IBoundInstanceFlag&gt; jsonValueKeyFilter = flag -&gt; !flag.equals(jsonValueKey);</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">      actualFlagFilter = actualFlagFilter == null ? jsonValueKeyFilter : actualFlagFilter.and(jsonValueKeyFilter);</span>
+<span class="fc" id="L98">    IBoundFieldValue fieldValue = getFieldValue();</span>
+<span class="fc" id="L99">    IBoundInstanceFlag jsonValueKey = getDefinition().getJsonValueKeyFlagInstance();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (jsonValueKey != null) {</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">      Predicate&lt;IBoundInstanceFlag&gt; jsonValueKeyFilter = flag -&gt; !flag.equals(jsonValueKey);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">      actualFlagFilter = actualFlagFilter == null ? jsonValueKeyFilter : actualFlagFilter.and(jsonValueKeyFilter);</span>
       // ensure the field value is omitted too!
-<span class="fc" id="L103">      fieldValue = null;</span>
+<span class="fc" id="L104">      fieldValue = null;</span>
     }
 
-<span class="fc" id="L106">    Stream&lt;? extends IBoundInstanceFlag&gt; flagStream = getFlagInstances().stream();</span>
-<span class="fc bfc" id="L107" title="All 2 branches covered.">    if (actualFlagFilter != null) {</span>
-<span class="fc" id="L108">      flagStream = flagStream.filter(actualFlagFilter);</span>
+<span class="fc" id="L107">    Stream&lt;? extends IBoundInstanceFlag&gt; flagStream = getFlagInstances().stream();</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (actualFlagFilter != null) {</span>
+<span class="fc" id="L109">      flagStream = flagStream.filter(actualFlagFilter);</span>
     }
 
-<span class="fc bfc" id="L111" title="All 2 branches covered.">    if (fieldValue != null) {</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">    if (fieldValue != null) {</span>
       // determine if we use the field value or not
-<span class="fc" id="L113">      Collection&lt;? extends IBoundInstanceFlag&gt; flagInstances = flagStream</span>
-<span class="fc" id="L114">          .collect(Collectors.toList());</span>
+<span class="fc" id="L114">      Collection&lt;? extends IBoundInstanceFlag&gt; flagInstances = flagStream</span>
+<span class="fc" id="L115">          .collect(Collectors.toList());</span>
 
-<span class="fc bfc" id="L116" title="All 2 branches covered.">      if (flagInstances.isEmpty()) {</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">      if (flagInstances.isEmpty()) {</span>
         // no relevant flags, so this field should expect a scalar value
-<span class="fc" id="L118">        fieldValue = null;</span>
+<span class="fc" id="L119">        fieldValue = null;</span>
       }
-<span class="fc" id="L120">      flagStream = flagInstances.stream();</span>
+<span class="fc" id="L121">      flagStream = flagInstances.stream();</span>
     }
 
-<span class="fc bfc" id="L123" title="All 2 branches covered.">    Stream&lt;? extends IBoundProperty&lt;?&gt;&gt; resultStream = fieldValue == null</span>
-<span class="fc" id="L124">        ? flagStream</span>
-<span class="fc" id="L125">        : Stream.concat(flagStream, Stream.of(getFieldValue()));</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">    Stream&lt;? extends IBoundProperty&lt;?&gt;&gt; resultStream = fieldValue == null</span>
+<span class="fc" id="L125">        ? flagStream</span>
+<span class="fc" id="L126">        : Stream.concat(flagStream, Stream.of(getFieldValue()));</span>
 
-<span class="fc" id="L127">    return ObjectUtils.notNull(resultStream</span>
-<span class="fc" id="L128">        .collect(Collectors.toUnmodifiableMap(IBoundProperty::getJsonName, Function.identity())));</span>
+<span class="fc" id="L128">    return ObjectUtils.notNull(resultStream</span>
+<span class="fc" id="L129">        .collect(Collectors.toUnmodifiableMap(IBoundProperty::getJsonName, Function.identity())));</span>
   }
 
   @Override
   @NonNull
   default IBoundObject readItem(IBoundObject parent, IItemReadHandler handler) throws IOException {
-<span class="nc" id="L134">    return handler.readItemField(parent, this);</span>
+<span class="fc" id="L135">    return handler.readItemField(parent, this);</span>
   }
 
   @Override
   default void writeItem(IBoundObject item, IItemWriteHandler handler) throws IOException {
-<span class="nc" id="L139">    handler.writeItemField(item, this);</span>
-<span class="nc" id="L140">  }</span>
+<span class="nc" id="L140">    handler.writeItemField(item, this);</span>
+<span class="nc" id="L141">  }</span>
 
   @Override
   default boolean canHandleXmlQName(QName qname) {
     // not handled, since not root
-<span class="nc" id="L145">    return false;</span>
+<span class="nc" id="L146">    return false;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

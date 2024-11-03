@@ -102,62 +102,63 @@
 <span class="source-line-no">089</span><span id="line-89">    return getFieldValue().getJavaTypeAdapter();</span>
 <span class="source-line-no">090</span><span id="line-90">  }</span>
 <span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">  @Override</span>
-<span class="source-line-no">093</span><span id="line-93">  @NonNull</span>
-<span class="source-line-no">094</span><span id="line-94">  default Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties(@Nullable Predicate&lt;IBoundInstanceFlag&gt; flagFilter) {</span>
-<span class="source-line-no">095</span><span id="line-95">    Predicate&lt;IBoundInstanceFlag&gt; actualFlagFilter = flagFilter;</span>
-<span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">    IBoundFieldValue fieldValue = getFieldValue();</span>
-<span class="source-line-no">098</span><span id="line-98">    IBoundInstanceFlag jsonValueKey = getDefinition().getJsonValueKeyFlagInstance();</span>
-<span class="source-line-no">099</span><span id="line-99">    if (jsonValueKey != null) {</span>
-<span class="source-line-no">100</span><span id="line-100">      Predicate&lt;IBoundInstanceFlag&gt; jsonValueKeyFilter = flag -&gt; !flag.equals(jsonValueKey);</span>
-<span class="source-line-no">101</span><span id="line-101">      actualFlagFilter = actualFlagFilter == null ? jsonValueKeyFilter : actualFlagFilter.and(jsonValueKeyFilter);</span>
-<span class="source-line-no">102</span><span id="line-102">      // ensure the field value is omitted too!</span>
-<span class="source-line-no">103</span><span id="line-103">      fieldValue = null;</span>
-<span class="source-line-no">104</span><span id="line-104">    }</span>
-<span class="source-line-no">105</span><span id="line-105"></span>
-<span class="source-line-no">106</span><span id="line-106">    Stream&lt;? extends IBoundInstanceFlag&gt; flagStream = getFlagInstances().stream();</span>
-<span class="source-line-no">107</span><span id="line-107">    if (actualFlagFilter != null) {</span>
-<span class="source-line-no">108</span><span id="line-108">      flagStream = flagStream.filter(actualFlagFilter);</span>
-<span class="source-line-no">109</span><span id="line-109">    }</span>
-<span class="source-line-no">110</span><span id="line-110"></span>
-<span class="source-line-no">111</span><span id="line-111">    if (fieldValue != null) {</span>
-<span class="source-line-no">112</span><span id="line-112">      // determine if we use the field value or not</span>
-<span class="source-line-no">113</span><span id="line-113">      Collection&lt;? extends IBoundInstanceFlag&gt; flagInstances = flagStream</span>
-<span class="source-line-no">114</span><span id="line-114">          .collect(Collectors.toList());</span>
-<span class="source-line-no">115</span><span id="line-115"></span>
-<span class="source-line-no">116</span><span id="line-116">      if (flagInstances.isEmpty()) {</span>
-<span class="source-line-no">117</span><span id="line-117">        // no relevant flags, so this field should expect a scalar value</span>
-<span class="source-line-no">118</span><span id="line-118">        fieldValue = null;</span>
-<span class="source-line-no">119</span><span id="line-119">      }</span>
-<span class="source-line-no">120</span><span id="line-120">      flagStream = flagInstances.stream();</span>
-<span class="source-line-no">121</span><span id="line-121">    }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">    Stream&lt;? extends IBoundProperty&lt;?&gt;&gt; resultStream = fieldValue == null</span>
-<span class="source-line-no">124</span><span id="line-124">        ? flagStream</span>
-<span class="source-line-no">125</span><span id="line-125">        : Stream.concat(flagStream, Stream.of(getFieldValue()));</span>
-<span class="source-line-no">126</span><span id="line-126"></span>
-<span class="source-line-no">127</span><span id="line-127">    return ObjectUtils.notNull(resultStream</span>
-<span class="source-line-no">128</span><span id="line-128">        .collect(Collectors.toUnmodifiableMap(IBoundProperty::getJsonName, Function.identity())));</span>
-<span class="source-line-no">129</span><span id="line-129">  }</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">  @Override</span>
-<span class="source-line-no">132</span><span id="line-132">  @NonNull</span>
-<span class="source-line-no">133</span><span id="line-133">  default IBoundObject readItem(IBoundObject parent, IItemReadHandler handler) throws IOException {</span>
-<span class="source-line-no">134</span><span id="line-134">    return handler.readItemField(parent, this);</span>
-<span class="source-line-no">135</span><span id="line-135">  }</span>
-<span class="source-line-no">136</span><span id="line-136"></span>
-<span class="source-line-no">137</span><span id="line-137">  @Override</span>
-<span class="source-line-no">138</span><span id="line-138">  default void writeItem(IBoundObject item, IItemWriteHandler handler) throws IOException {</span>
-<span class="source-line-no">139</span><span id="line-139">    handler.writeItemField(item, this);</span>
-<span class="source-line-no">140</span><span id="line-140">  }</span>
-<span class="source-line-no">141</span><span id="line-141"></span>
-<span class="source-line-no">142</span><span id="line-142">  @Override</span>
-<span class="source-line-no">143</span><span id="line-143">  default boolean canHandleXmlQName(QName qname) {</span>
-<span class="source-line-no">144</span><span id="line-144">    // not handled, since not root</span>
-<span class="source-line-no">145</span><span id="line-145">    return false;</span>
-<span class="source-line-no">146</span><span id="line-146">  }</span>
-<span class="source-line-no">147</span><span id="line-147">}</span>
+<span class="source-line-no">092</span><span id="line-92">  @SuppressWarnings("PMD.NullAssignment")</span>
+<span class="source-line-no">093</span><span id="line-93">  @Override</span>
+<span class="source-line-no">094</span><span id="line-94">  @NonNull</span>
+<span class="source-line-no">095</span><span id="line-95">  default Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties(@Nullable Predicate&lt;IBoundInstanceFlag&gt; flagFilter) {</span>
+<span class="source-line-no">096</span><span id="line-96">    Predicate&lt;IBoundInstanceFlag&gt; actualFlagFilter = flagFilter;</span>
+<span class="source-line-no">097</span><span id="line-97"></span>
+<span class="source-line-no">098</span><span id="line-98">    IBoundFieldValue fieldValue = getFieldValue();</span>
+<span class="source-line-no">099</span><span id="line-99">    IBoundInstanceFlag jsonValueKey = getDefinition().getJsonValueKeyFlagInstance();</span>
+<span class="source-line-no">100</span><span id="line-100">    if (jsonValueKey != null) {</span>
+<span class="source-line-no">101</span><span id="line-101">      Predicate&lt;IBoundInstanceFlag&gt; jsonValueKeyFilter = flag -&gt; !flag.equals(jsonValueKey);</span>
+<span class="source-line-no">102</span><span id="line-102">      actualFlagFilter = actualFlagFilter == null ? jsonValueKeyFilter : actualFlagFilter.and(jsonValueKeyFilter);</span>
+<span class="source-line-no">103</span><span id="line-103">      // ensure the field value is omitted too!</span>
+<span class="source-line-no">104</span><span id="line-104">      fieldValue = null;</span>
+<span class="source-line-no">105</span><span id="line-105">    }</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">    Stream&lt;? extends IBoundInstanceFlag&gt; flagStream = getFlagInstances().stream();</span>
+<span class="source-line-no">108</span><span id="line-108">    if (actualFlagFilter != null) {</span>
+<span class="source-line-no">109</span><span id="line-109">      flagStream = flagStream.filter(actualFlagFilter);</span>
+<span class="source-line-no">110</span><span id="line-110">    }</span>
+<span class="source-line-no">111</span><span id="line-111"></span>
+<span class="source-line-no">112</span><span id="line-112">    if (fieldValue != null) {</span>
+<span class="source-line-no">113</span><span id="line-113">      // determine if we use the field value or not</span>
+<span class="source-line-no">114</span><span id="line-114">      Collection&lt;? extends IBoundInstanceFlag&gt; flagInstances = flagStream</span>
+<span class="source-line-no">115</span><span id="line-115">          .collect(Collectors.toList());</span>
+<span class="source-line-no">116</span><span id="line-116"></span>
+<span class="source-line-no">117</span><span id="line-117">      if (flagInstances.isEmpty()) {</span>
+<span class="source-line-no">118</span><span id="line-118">        // no relevant flags, so this field should expect a scalar value</span>
+<span class="source-line-no">119</span><span id="line-119">        fieldValue = null;</span>
+<span class="source-line-no">120</span><span id="line-120">      }</span>
+<span class="source-line-no">121</span><span id="line-121">      flagStream = flagInstances.stream();</span>
+<span class="source-line-no">122</span><span id="line-122">    }</span>
+<span class="source-line-no">123</span><span id="line-123"></span>
+<span class="source-line-no">124</span><span id="line-124">    Stream&lt;? extends IBoundProperty&lt;?&gt;&gt; resultStream = fieldValue == null</span>
+<span class="source-line-no">125</span><span id="line-125">        ? flagStream</span>
+<span class="source-line-no">126</span><span id="line-126">        : Stream.concat(flagStream, Stream.of(getFieldValue()));</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">    return ObjectUtils.notNull(resultStream</span>
+<span class="source-line-no">129</span><span id="line-129">        .collect(Collectors.toUnmodifiableMap(IBoundProperty::getJsonName, Function.identity())));</span>
+<span class="source-line-no">130</span><span id="line-130">  }</span>
+<span class="source-line-no">131</span><span id="line-131"></span>
+<span class="source-line-no">132</span><span id="line-132">  @Override</span>
+<span class="source-line-no">133</span><span id="line-133">  @NonNull</span>
+<span class="source-line-no">134</span><span id="line-134">  default IBoundObject readItem(IBoundObject parent, IItemReadHandler handler) throws IOException {</span>
+<span class="source-line-no">135</span><span id="line-135">    return handler.readItemField(parent, this);</span>
+<span class="source-line-no">136</span><span id="line-136">  }</span>
+<span class="source-line-no">137</span><span id="line-137"></span>
+<span class="source-line-no">138</span><span id="line-138">  @Override</span>
+<span class="source-line-no">139</span><span id="line-139">  default void writeItem(IBoundObject item, IItemWriteHandler handler) throws IOException {</span>
+<span class="source-line-no">140</span><span id="line-140">    handler.writeItemField(item, this);</span>
+<span class="source-line-no">141</span><span id="line-141">  }</span>
+<span class="source-line-no">142</span><span id="line-142"></span>
+<span class="source-line-no">143</span><span id="line-143">  @Override</span>
+<span class="source-line-no">144</span><span id="line-144">  default boolean canHandleXmlQName(QName qname) {</span>
+<span class="source-line-no">145</span><span id="line-145">    // not handled, since not root</span>
+<span class="source-line-no">146</span><span id="line-146">    return false;</span>
+<span class="source-line-no">147</span><span id="line-147">  }</span>
+<span class="source-line-no">148</span><span id="line-148">}</span>
 
 
 

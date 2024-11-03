@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IBindingModuleLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.model.metaschema</a> &gt; <span class="el_source">IBindingModuleLoader.java</span></div><h1>IBindingModuleLoader.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.model.metaschema;
+
+import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
+import gov.nist.secauto.metaschema.core.model.IModuleLoader;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.IBindingContext.IModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
+import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
+import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Supports loading a Metaschema module from a specified resource.
+ * &lt;p&gt;
+ * Metaschema modules loaded this way are automatically registered with the
+ * {@link IBindingContext}.
+ * &lt;p&gt;
+ * Use of this Metaschema module loader requires that the associated binding
+ * context is initialized using a {@link IModuleLoaderStrategy} that supports
+ * dynamic bound module loading. This can be accomplished using the
+ * {@link SimpleModuleLoaderStrategy} initialized using the
+ * {@link DefaultModuleBindingGenerator}.
+ *
+ */
+public interface IBindingModuleLoader
+    extends IModuleLoader&lt;IBindingMetaschemaModule&gt;, IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; {
+  /**
+   * Get the associated binding context.
+   *
+   * @return the binding context
+   */
+  @NonNull
+  IBindingContext getBindingContext();
+
+  /**
+   * Enable entity resolution within a loaded Metaschema module resource.
+   */
+  default void allowEntityResolution() {
+<span class="nc" id="L45">    enableFeature(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION);</span>
+<span class="nc" id="L46">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

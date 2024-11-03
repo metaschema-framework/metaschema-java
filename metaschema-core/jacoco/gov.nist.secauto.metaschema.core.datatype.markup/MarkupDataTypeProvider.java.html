@@ -5,10 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.datatype.markup;
 
-import com.google.auto.service.AutoService;
-
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeProvider;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -16,20 +13,19 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Provides for runtime discovery of built-in implementations of the markup
  * Metaschema data types.
  */
-@AutoService(IDataTypeProvider.class)
 public final class MarkupDataTypeProvider
     extends AbstractDataTypeProvider {
   @NonNull
-<span class="fc" id="L23">  public static final MarkupLineAdapter MARKUP_LINE = new MarkupLineAdapter();</span>
+<span class="fc" id="L19">  public static final MarkupLineAdapter MARKUP_LINE = new MarkupLineAdapter();</span>
   @NonNull
-<span class="fc" id="L25">  public static final MarkupMultilineAdapter MARKUP_MULTILINE = new MarkupMultilineAdapter();</span>
+<span class="fc" id="L21">  public static final MarkupMultilineAdapter MARKUP_MULTILINE = new MarkupMultilineAdapter();</span>
 
   /**
    * Create the data type provider.
    */
-<span class="fc" id="L30">  public MarkupDataTypeProvider() {</span>
-<span class="fc" id="L31">    registerDatatype(MARKUP_LINE);</span>
-<span class="fc" id="L32">    registerDatatype(MARKUP_MULTILINE);</span>
-<span class="fc" id="L33">  }</span>
+<span class="fc" id="L26">  public MarkupDataTypeProvider() {</span>
+<span class="fc" id="L27">    registerDatatype(MARKUP_LINE);</span>
+<span class="fc" id="L28">    registerDatatype(MARKUP_MULTILINE);</span>
+<span class="fc" id="L29">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

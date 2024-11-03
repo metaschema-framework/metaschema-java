@@ -38,107 +38,112 @@
 <span class="source-line-no">025</span><span id="line-25"></span>
 <span class="source-line-no">026</span><span id="line-26">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">public final class FnBoolean {</span>
-<span class="source-line-no">029</span><span id="line-29">  private static final String NAME = "boolean";</span>
-<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
-<span class="source-line-no">031</span><span id="line-31">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">032</span><span id="line-32">      .name(NAME)</span>
-<span class="source-line-no">033</span><span id="line-33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">034</span><span id="line-34">      .deterministic()</span>
-<span class="source-line-no">035</span><span id="line-35">      .contextIndependent()</span>
-<span class="source-line-no">036</span><span id="line-36">      .focusIndependent()</span>
-<span class="source-line-no">037</span><span id="line-37">      .argument(IArgument.builder()</span>
-<span class="source-line-no">038</span><span id="line-38">          .name("arg")</span>
-<span class="source-line-no">039</span><span id="line-39">          .type(IItem.class)</span>
-<span class="source-line-no">040</span><span id="line-40">          .zeroOrMore()</span>
-<span class="source-line-no">041</span><span id="line-41">          .build())</span>
-<span class="source-line-no">042</span><span id="line-42">      .returnType(IBooleanItem.class)</span>
-<span class="source-line-no">043</span><span id="line-43">      .returnOne()</span>
-<span class="source-line-no">044</span><span id="line-44">      .functionHandler(FnBoolean::execute)</span>
-<span class="source-line-no">045</span><span id="line-45">      .build();</span>
-<span class="source-line-no">046</span><span id="line-46"></span>
-<span class="source-line-no">047</span><span id="line-47">  private FnBoolean() {</span>
-<span class="source-line-no">048</span><span id="line-48">    // disable construction</span>
-<span class="source-line-no">049</span><span id="line-49">  }</span>
-<span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">052</span><span id="line-52">  @NonNull</span>
-<span class="source-line-no">053</span><span id="line-53">  private static ISequence&lt;IBooleanItem&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">054</span><span id="line-54">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">055</span><span id="line-55">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">056</span><span id="line-56">      IItem focus) {</span>
-<span class="source-line-no">057</span><span id="line-57"></span>
-<span class="source-line-no">058</span><span id="line-58">    ISequence&lt;?&gt; items = ObjectUtils.requireNonNull(arguments.get(0));</span>
-<span class="source-line-no">059</span><span id="line-59"></span>
-<span class="source-line-no">060</span><span id="line-60">    IBooleanItem result = fnBoolean(items);</span>
-<span class="source-line-no">061</span><span id="line-61">    return ISequence.of(result);</span>
-<span class="source-line-no">062</span><span id="line-62">  }</span>
-<span class="source-line-no">063</span><span id="line-63"></span>
-<span class="source-line-no">064</span><span id="line-64">  /**</span>
-<span class="source-line-no">065</span><span id="line-65">   * Get the effective boolean value of the provided sequence.</span>
-<span class="source-line-no">066</span><span id="line-66">   * &lt;p&gt;</span>
-<span class="source-line-no">067</span><span id="line-67">   * Based on the XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">068</span><span id="line-68">   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean"&gt;fn:boolean&lt;/a&gt;</span>
-<span class="source-line-no">069</span><span id="line-69">   * function.</span>
-<span class="source-line-no">070</span><span id="line-70">   *</span>
-<span class="source-line-no">071</span><span id="line-71">   * @param sequence</span>
-<span class="source-line-no">072</span><span id="line-72">   *          the sequence to evaluate</span>
-<span class="source-line-no">073</span><span id="line-73">   * @return the effective boolean value of the sequence</span>
-<span class="source-line-no">074</span><span id="line-74">   */</span>
-<span class="source-line-no">075</span><span id="line-75">  @NonNull</span>
-<span class="source-line-no">076</span><span id="line-76">  public static IBooleanItem fnBoolean(@NonNull ISequence&lt;?&gt; sequence) {</span>
-<span class="source-line-no">077</span><span id="line-77">    return IBooleanItem.valueOf(fnBooleanAsPrimitive(sequence));</span>
-<span class="source-line-no">078</span><span id="line-78">  }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">  /**</span>
-<span class="source-line-no">081</span><span id="line-81">   * A helper method that gets the effective boolean value of the provided</span>
-<span class="source-line-no">082</span><span id="line-82">   * sequence based on &lt;a href="https://www.w3.org/TR/xpath-31/#id-ebv"&gt;XPath</span>
-<span class="source-line-no">083</span><span id="line-83">   * 3.1&lt;/a&gt;.</span>
-<span class="source-line-no">084</span><span id="line-84">   *</span>
-<span class="source-line-no">085</span><span id="line-85">   * @param sequence</span>
-<span class="source-line-no">086</span><span id="line-86">   *          the sequence to evaluate</span>
-<span class="source-line-no">087</span><span id="line-87">   * @return the effective boolean value</span>
-<span class="source-line-no">088</span><span id="line-88">   */</span>
-<span class="source-line-no">089</span><span id="line-89">  public static boolean fnBooleanAsPrimitive(@NonNull ISequence&lt;?&gt; sequence) {</span>
-<span class="source-line-no">090</span><span id="line-90">    boolean retval = false;</span>
-<span class="source-line-no">091</span><span id="line-91">    IItem first = sequence.getFirstItem(false);</span>
-<span class="source-line-no">092</span><span id="line-92">    if (first != null) {</span>
-<span class="source-line-no">093</span><span id="line-93">      if (first instanceof INodeItem) {</span>
-<span class="source-line-no">094</span><span id="line-94">        retval = true;</span>
-<span class="source-line-no">095</span><span id="line-95">      } else if (sequence.size() == 1) {</span>
-<span class="source-line-no">096</span><span id="line-96">        retval = fnBooleanAsPrimitive(first);</span>
-<span class="source-line-no">097</span><span id="line-97">      }</span>
-<span class="source-line-no">098</span><span id="line-98">    }</span>
-<span class="source-line-no">099</span><span id="line-99">    return retval;</span>
-<span class="source-line-no">100</span><span id="line-100">  }</span>
-<span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">  /**</span>
-<span class="source-line-no">103</span><span id="line-103">   * A helper method that gets the effective boolean value of the provided item</span>
-<span class="source-line-no">104</span><span id="line-104">   * based on &lt;a href="https://www.w3.org/TR/xpath-31/#id-ebv"&gt;XPath 3.1&lt;/a&gt;.</span>
-<span class="source-line-no">105</span><span id="line-105">   *</span>
-<span class="source-line-no">106</span><span id="line-106">   * @param item</span>
-<span class="source-line-no">107</span><span id="line-107">   *          the item to evaluate</span>
-<span class="source-line-no">108</span><span id="line-108">   * @return the effective boolean value</span>
-<span class="source-line-no">109</span><span id="line-109">   */</span>
-<span class="source-line-no">110</span><span id="line-110">  public static boolean fnBooleanAsPrimitive(@NonNull IItem item) {</span>
-<span class="source-line-no">111</span><span id="line-111">    boolean retval;</span>
-<span class="source-line-no">112</span><span id="line-112">    if (item instanceof IBooleanItem) {</span>
-<span class="source-line-no">113</span><span id="line-113">      retval = ((IBooleanItem) item).toBoolean();</span>
-<span class="source-line-no">114</span><span id="line-114">    } else if (item instanceof INumericItem) {</span>
-<span class="source-line-no">115</span><span id="line-115">      retval = ((INumericItem) item).toEffectiveBoolean();</span>
-<span class="source-line-no">116</span><span id="line-116">    } else if (item instanceof IStringItem</span>
-<span class="source-line-no">117</span><span id="line-117">        || item instanceof IAnyUriItem</span>
-<span class="source-line-no">118</span><span id="line-118">        || item instanceof IUntypedAtomicItem) {</span>
-<span class="source-line-no">119</span><span id="line-119">      String string = ((IAnyAtomicItem) item).asString();</span>
-<span class="source-line-no">120</span><span id="line-120">      retval = !string.isBlank();</span>
-<span class="source-line-no">121</span><span id="line-121">    } else {</span>
-<span class="source-line-no">122</span><span id="line-122">      throw new InvalidArgumentFunctionException(</span>
-<span class="source-line-no">123</span><span id="line-123">          InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,</span>
-<span class="source-line-no">124</span><span id="line-124">          String.format("Invalid argument type '%s'", item.getClass().getName()));</span>
-<span class="source-line-no">125</span><span id="line-125">    }</span>
-<span class="source-line-no">126</span><span id="line-126">    return retval;</span>
-<span class="source-line-no">127</span><span id="line-127">  }</span>
-<span class="source-line-no">128</span><span id="line-128">}</span>
+<span class="source-line-no">028</span><span id="line-28">/**</span>
+<span class="source-line-no">029</span><span id="line-29"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">030</span><span id="line-30"> * "https://www.w3.org/TR/xpath-functions-31/#func-boolean"&gt;fn:boolean&lt;/a&gt;</span>
+<span class="source-line-no">031</span><span id="line-31"> * function.</span>
+<span class="source-line-no">032</span><span id="line-32"> */</span>
+<span class="source-line-no">033</span><span id="line-33">public final class FnBoolean {</span>
+<span class="source-line-no">034</span><span id="line-34">  private static final String NAME = "boolean";</span>
+<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
+<span class="source-line-no">036</span><span id="line-36">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">037</span><span id="line-37">      .name(NAME)</span>
+<span class="source-line-no">038</span><span id="line-38">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">039</span><span id="line-39">      .deterministic()</span>
+<span class="source-line-no">040</span><span id="line-40">      .contextIndependent()</span>
+<span class="source-line-no">041</span><span id="line-41">      .focusIndependent()</span>
+<span class="source-line-no">042</span><span id="line-42">      .argument(IArgument.builder()</span>
+<span class="source-line-no">043</span><span id="line-43">          .name("arg")</span>
+<span class="source-line-no">044</span><span id="line-44">          .type(IItem.class)</span>
+<span class="source-line-no">045</span><span id="line-45">          .zeroOrMore()</span>
+<span class="source-line-no">046</span><span id="line-46">          .build())</span>
+<span class="source-line-no">047</span><span id="line-47">      .returnType(IBooleanItem.class)</span>
+<span class="source-line-no">048</span><span id="line-48">      .returnOne()</span>
+<span class="source-line-no">049</span><span id="line-49">      .functionHandler(FnBoolean::execute)</span>
+<span class="source-line-no">050</span><span id="line-50">      .build();</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  private FnBoolean() {</span>
+<span class="source-line-no">053</span><span id="line-53">    // disable construction</span>
+<span class="source-line-no">054</span><span id="line-54">  }</span>
+<span class="source-line-no">055</span><span id="line-55"></span>
+<span class="source-line-no">056</span><span id="line-56">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
+<span class="source-line-no">058</span><span id="line-58">  private static ISequence&lt;IBooleanItem&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">059</span><span id="line-59">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">060</span><span id="line-60">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">061</span><span id="line-61">      IItem focus) {</span>
+<span class="source-line-no">062</span><span id="line-62"></span>
+<span class="source-line-no">063</span><span id="line-63">    ISequence&lt;?&gt; items = ObjectUtils.requireNonNull(arguments.get(0));</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">    IBooleanItem result = fnBoolean(items);</span>
+<span class="source-line-no">066</span><span id="line-66">    return ISequence.of(result);</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  /**</span>
+<span class="source-line-no">070</span><span id="line-70">   * Get the effective boolean value of the provided sequence.</span>
+<span class="source-line-no">071</span><span id="line-71">   * &lt;p&gt;</span>
+<span class="source-line-no">072</span><span id="line-72">   * Based on the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">073</span><span id="line-73">   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean"&gt;fn:boolean&lt;/a&gt;</span>
+<span class="source-line-no">074</span><span id="line-74">   * function.</span>
+<span class="source-line-no">075</span><span id="line-75">   *</span>
+<span class="source-line-no">076</span><span id="line-76">   * @param sequence</span>
+<span class="source-line-no">077</span><span id="line-77">   *          the sequence to evaluate</span>
+<span class="source-line-no">078</span><span id="line-78">   * @return the effective boolean value of the sequence</span>
+<span class="source-line-no">079</span><span id="line-79">   */</span>
+<span class="source-line-no">080</span><span id="line-80">  @NonNull</span>
+<span class="source-line-no">081</span><span id="line-81">  public static IBooleanItem fnBoolean(@NonNull ISequence&lt;?&gt; sequence) {</span>
+<span class="source-line-no">082</span><span id="line-82">    return IBooleanItem.valueOf(fnBooleanAsPrimitive(sequence));</span>
+<span class="source-line-no">083</span><span id="line-83">  }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">  /**</span>
+<span class="source-line-no">086</span><span id="line-86">   * A helper method that gets the effective boolean value of the provided</span>
+<span class="source-line-no">087</span><span id="line-87">   * sequence based on &lt;a href="https://www.w3.org/TR/xpath-31/#id-ebv"&gt;XPath</span>
+<span class="source-line-no">088</span><span id="line-88">   * 3.1&lt;/a&gt;.</span>
+<span class="source-line-no">089</span><span id="line-89">   *</span>
+<span class="source-line-no">090</span><span id="line-90">   * @param sequence</span>
+<span class="source-line-no">091</span><span id="line-91">   *          the sequence to evaluate</span>
+<span class="source-line-no">092</span><span id="line-92">   * @return the effective boolean value</span>
+<span class="source-line-no">093</span><span id="line-93">   */</span>
+<span class="source-line-no">094</span><span id="line-94">  public static boolean fnBooleanAsPrimitive(@NonNull ISequence&lt;?&gt; sequence) {</span>
+<span class="source-line-no">095</span><span id="line-95">    boolean retval = false;</span>
+<span class="source-line-no">096</span><span id="line-96">    IItem first = sequence.getFirstItem(false);</span>
+<span class="source-line-no">097</span><span id="line-97">    if (first != null) {</span>
+<span class="source-line-no">098</span><span id="line-98">      if (first instanceof INodeItem) {</span>
+<span class="source-line-no">099</span><span id="line-99">        retval = true;</span>
+<span class="source-line-no">100</span><span id="line-100">      } else if (sequence.size() == 1) {</span>
+<span class="source-line-no">101</span><span id="line-101">        retval = fnBooleanAsPrimitive(first);</span>
+<span class="source-line-no">102</span><span id="line-102">      }</span>
+<span class="source-line-no">103</span><span id="line-103">    }</span>
+<span class="source-line-no">104</span><span id="line-104">    return retval;</span>
+<span class="source-line-no">105</span><span id="line-105">  }</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">  /**</span>
+<span class="source-line-no">108</span><span id="line-108">   * A helper method that gets the effective boolean value of the provided item</span>
+<span class="source-line-no">109</span><span id="line-109">   * based on &lt;a href="https://www.w3.org/TR/xpath-31/#id-ebv"&gt;XPath 3.1&lt;/a&gt;.</span>
+<span class="source-line-no">110</span><span id="line-110">   *</span>
+<span class="source-line-no">111</span><span id="line-111">   * @param item</span>
+<span class="source-line-no">112</span><span id="line-112">   *          the item to evaluate</span>
+<span class="source-line-no">113</span><span id="line-113">   * @return the effective boolean value</span>
+<span class="source-line-no">114</span><span id="line-114">   */</span>
+<span class="source-line-no">115</span><span id="line-115">  public static boolean fnBooleanAsPrimitive(@NonNull IItem item) {</span>
+<span class="source-line-no">116</span><span id="line-116">    boolean retval;</span>
+<span class="source-line-no">117</span><span id="line-117">    if (item instanceof IBooleanItem) {</span>
+<span class="source-line-no">118</span><span id="line-118">      retval = ((IBooleanItem) item).toBoolean();</span>
+<span class="source-line-no">119</span><span id="line-119">    } else if (item instanceof INumericItem) {</span>
+<span class="source-line-no">120</span><span id="line-120">      retval = ((INumericItem) item).toEffectiveBoolean();</span>
+<span class="source-line-no">121</span><span id="line-121">    } else if (item instanceof IStringItem</span>
+<span class="source-line-no">122</span><span id="line-122">        || item instanceof IAnyUriItem</span>
+<span class="source-line-no">123</span><span id="line-123">        || item instanceof IUntypedAtomicItem) {</span>
+<span class="source-line-no">124</span><span id="line-124">      String string = ((IAnyAtomicItem) item).asString();</span>
+<span class="source-line-no">125</span><span id="line-125">      retval = !string.isBlank();</span>
+<span class="source-line-no">126</span><span id="line-126">    } else {</span>
+<span class="source-line-no">127</span><span id="line-127">      throw new InvalidArgumentFunctionException(</span>
+<span class="source-line-no">128</span><span id="line-128">          InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,</span>
+<span class="source-line-no">129</span><span id="line-129">          String.format("Invalid argument type '%s'", item.getClass().getName()));</span>
+<span class="source-line-no">130</span><span id="line-130">    }</span>
+<span class="source-line-no">131</span><span id="line-131">    return retval;</span>
+<span class="source-line-no">132</span><span id="line-132">  }</span>
+<span class="source-line-no">133</span><span id="line-133">}</span>
 
 
 

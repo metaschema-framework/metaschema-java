@@ -23,64 +23,64 @@
 <span class="source-line-no">010</span><span id="line-10"></span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import org.codehaus.stax2.XMLEventReader2;</span>
-<span class="source-line-no">016</span><span id="line-16">import org.codehaus.stax2.XMLStreamWriter2;</span>
-<span class="source-line-no">017</span><span id="line-17">import org.codehaus.stax2.evt.XMLEventFactory2;</span>
-<span class="source-line-no">018</span><span id="line-18"></span>
-<span class="source-line-no">019</span><span id="line-19">import java.io.IOException;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.model.util.JsonUtil;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">import org.codehaus.stax2.XMLEventReader2;</span>
+<span class="source-line-no">018</span><span id="line-18">import org.codehaus.stax2.XMLStreamWriter2;</span>
+<span class="source-line-no">019</span><span id="line-19">import org.codehaus.stax2.evt.XMLEventFactory2;</span>
 <span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">022</span><span id="line-22">import javax.xml.stream.XMLEventWriter;</span>
-<span class="source-line-no">023</span><span id="line-23">import javax.xml.stream.XMLStreamException;</span>
-<span class="source-line-no">024</span><span id="line-24">import javax.xml.stream.events.Characters;</span>
-<span class="source-line-no">025</span><span id="line-25">import javax.xml.stream.events.StartElement;</span>
-<span class="source-line-no">026</span><span id="line-26">import javax.xml.stream.events.XMLEvent;</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.io.IOException;</span>
+<span class="source-line-no">022</span><span id="line-22"></span>
+<span class="source-line-no">023</span><span id="line-23">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">024</span><span id="line-24">import javax.xml.stream.XMLEventWriter;</span>
+<span class="source-line-no">025</span><span id="line-25">import javax.xml.stream.XMLStreamException;</span>
+<span class="source-line-no">026</span><span id="line-26">import javax.xml.stream.events.Characters;</span>
+<span class="source-line-no">027</span><span id="line-27">import javax.xml.stream.events.StartElement;</span>
+<span class="source-line-no">028</span><span id="line-28">import javax.xml.stream.events.XMLEvent;</span>
 <span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">/**</span>
-<span class="source-line-no">031</span><span id="line-31"> * Provides a basic Java type adapter implementation. This implementation should</span>
-<span class="source-line-no">032</span><span id="line-32"> * be the parent class of all Java type adapter implementations.</span>
-<span class="source-line-no">033</span><span id="line-33"> *</span>
-<span class="source-line-no">034</span><span id="line-34"> * @param &lt;TYPE&gt;</span>
-<span class="source-line-no">035</span><span id="line-35"> *          the raw Java type this adapter supports</span>
-<span class="source-line-no">036</span><span id="line-36"> * @param &lt;ITEM_TYPE&gt;</span>
-<span class="source-line-no">037</span><span id="line-37"> *          the metapath item type corresponding to the raw Java type supported</span>
-<span class="source-line-no">038</span><span id="line-38"> *          by the adapter</span>
-<span class="source-line-no">039</span><span id="line-39"> */</span>
-<span class="source-line-no">040</span><span id="line-40">public abstract class AbstractDataTypeAdapter&lt;TYPE, ITEM_TYPE extends IAnyAtomicItem&gt;</span>
-<span class="source-line-no">041</span><span id="line-41">    implements IDataTypeAdapter&lt;TYPE&gt; {</span>
-<span class="source-line-no">042</span><span id="line-42">  public static final String DEFAULT_JSON_FIELD_NAME = "STRVALUE";</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  @NonNull</span>
-<span class="source-line-no">045</span><span id="line-45">  private final Class&lt;TYPE&gt; clazz;</span>
-<span class="source-line-no">046</span><span id="line-46"></span>
-<span class="source-line-no">047</span><span id="line-47">  /**</span>
-<span class="source-line-no">048</span><span id="line-48">   * Construct a new Java type adapter for a provided class.</span>
-<span class="source-line-no">049</span><span id="line-49">   *</span>
-<span class="source-line-no">050</span><span id="line-50">   * @param clazz</span>
-<span class="source-line-no">051</span><span id="line-51">   *          the Java type this adapter supports</span>
-<span class="source-line-no">052</span><span id="line-52">   */</span>
-<span class="source-line-no">053</span><span id="line-53">  protected AbstractDataTypeAdapter(@NonNull Class&lt;TYPE&gt; clazz) {</span>
-<span class="source-line-no">054</span><span id="line-54">    this.clazz = clazz;</span>
-<span class="source-line-no">055</span><span id="line-55">  }</span>
-<span class="source-line-no">056</span><span id="line-56"></span>
-<span class="source-line-no">057</span><span id="line-57">  @Override</span>
-<span class="source-line-no">058</span><span id="line-58">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">059</span><span id="line-59">  public TYPE toValue(Object value) {</span>
-<span class="source-line-no">060</span><span id="line-60">    return (TYPE) value;</span>
-<span class="source-line-no">061</span><span id="line-61">  }</span>
-<span class="source-line-no">062</span><span id="line-62"></span>
-<span class="source-line-no">063</span><span id="line-63">  @Override</span>
-<span class="source-line-no">064</span><span id="line-64">  public Class&lt;TYPE&gt; getJavaClass() {</span>
-<span class="source-line-no">065</span><span id="line-65">    return clazz;</span>
+<span class="source-line-no">030</span><span id="line-30">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">/**</span>
+<span class="source-line-no">033</span><span id="line-33"> * Provides a basic Java type adapter implementation. This implementation should</span>
+<span class="source-line-no">034</span><span id="line-34"> * be the parent class of all Java type adapter implementations.</span>
+<span class="source-line-no">035</span><span id="line-35"> *</span>
+<span class="source-line-no">036</span><span id="line-36"> * @param &lt;TYPE&gt;</span>
+<span class="source-line-no">037</span><span id="line-37"> *          the raw Java type this adapter supports</span>
+<span class="source-line-no">038</span><span id="line-38"> * @param &lt;ITEM_TYPE&gt;</span>
+<span class="source-line-no">039</span><span id="line-39"> *          the metapath item type corresponding to the raw Java type supported</span>
+<span class="source-line-no">040</span><span id="line-40"> *          by the adapter</span>
+<span class="source-line-no">041</span><span id="line-41"> */</span>
+<span class="source-line-no">042</span><span id="line-42">public abstract class AbstractDataTypeAdapter&lt;TYPE, ITEM_TYPE extends IAnyAtomicItem&gt;</span>
+<span class="source-line-no">043</span><span id="line-43">    implements IDataTypeAdapter&lt;TYPE&gt; {</span>
+<span class="source-line-no">044</span><span id="line-44">  /**</span>
+<span class="source-line-no">045</span><span id="line-45">   * The default JSON property name for a Metaschema field value.</span>
+<span class="source-line-no">046</span><span id="line-46">   */</span>
+<span class="source-line-no">047</span><span id="line-47">  public static final String DEFAULT_JSON_FIELD_VALUE_NAME = "STRVALUE";</span>
+<span class="source-line-no">048</span><span id="line-48"></span>
+<span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
+<span class="source-line-no">050</span><span id="line-50">  private final Class&lt;TYPE&gt; clazz;</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  /**</span>
+<span class="source-line-no">053</span><span id="line-53">   * Construct a new Java type adapter for a provided class.</span>
+<span class="source-line-no">054</span><span id="line-54">   *</span>
+<span class="source-line-no">055</span><span id="line-55">   * @param clazz</span>
+<span class="source-line-no">056</span><span id="line-56">   *          the Java type this adapter supports</span>
+<span class="source-line-no">057</span><span id="line-57">   */</span>
+<span class="source-line-no">058</span><span id="line-58">  protected AbstractDataTypeAdapter(@NonNull Class&lt;TYPE&gt; clazz) {</span>
+<span class="source-line-no">059</span><span id="line-59">    this.clazz = clazz;</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  @Override</span>
+<span class="source-line-no">063</span><span id="line-63">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">064</span><span id="line-64">  public TYPE toValue(Object value) {</span>
+<span class="source-line-no">065</span><span id="line-65">    return (TYPE) value;</span>
 <span class="source-line-no">066</span><span id="line-66">  }</span>
 <span class="source-line-no">067</span><span id="line-67"></span>
 <span class="source-line-no">068</span><span id="line-68">  @Override</span>
-<span class="source-line-no">069</span><span id="line-69">  public boolean isParsingStartElement() {</span>
-<span class="source-line-no">070</span><span id="line-70">    return false;</span>
+<span class="source-line-no">069</span><span id="line-69">  public Class&lt;TYPE&gt; getJavaClass() {</span>
+<span class="source-line-no">070</span><span id="line-70">    return clazz;</span>
 <span class="source-line-no">071</span><span id="line-71">  }</span>
 <span class="source-line-no">072</span><span id="line-72"></span>
 <span class="source-line-no">073</span><span id="line-73">  @Override</span>
@@ -90,7 +90,7 @@
 <span class="source-line-no">077</span><span id="line-77"></span>
 <span class="source-line-no">078</span><span id="line-78">  @Override</span>
 <span class="source-line-no">079</span><span id="line-79">  public String getDefaultJsonValueKey() {</span>
-<span class="source-line-no">080</span><span id="line-80">    return DEFAULT_JSON_FIELD_NAME;</span>
+<span class="source-line-no">080</span><span id="line-80">    return DEFAULT_JSON_FIELD_VALUE_NAME;</span>
 <span class="source-line-no">081</span><span id="line-81">  }</span>
 <span class="source-line-no">082</span><span id="line-82"></span>
 <span class="source-line-no">083</span><span id="line-83">  @Override</span>
@@ -106,125 +106,138 @@
 <span class="source-line-no">093</span><span id="line-93">  @Override</span>
 <span class="source-line-no">094</span><span id="line-94">  public TYPE parse(XMLEventReader2 eventReader) throws IOException {</span>
 <span class="source-line-no">095</span><span id="line-95">    StringBuilder builder = new StringBuilder();</span>
-<span class="source-line-no">096</span><span id="line-96">    try {</span>
-<span class="source-line-no">097</span><span id="line-97">      XMLEvent nextEvent;</span>
+<span class="source-line-no">096</span><span id="line-96">    XMLEvent nextEvent;</span>
+<span class="source-line-no">097</span><span id="line-97">    try {</span>
 <span class="source-line-no">098</span><span id="line-98">      while (!(nextEvent = eventReader.peek()).isEndElement()) {</span>
-<span class="source-line-no">099</span><span id="line-99">        if (nextEvent.isCharacters()) {</span>
-<span class="source-line-no">100</span><span id="line-100">          Characters characters = nextEvent.asCharacters();</span>
-<span class="source-line-no">101</span><span id="line-101">          builder.append(characters.getData());</span>
-<span class="source-line-no">102</span><span id="line-102">          // advance past current event</span>
-<span class="source-line-no">103</span><span id="line-103">          eventReader.nextEvent();</span>
-<span class="source-line-no">104</span><span id="line-104">        } else {</span>
-<span class="source-line-no">105</span><span id="line-105">          throw new IOException(String.format("Invalid content '%s' at %s", XmlEventUtil.toString(nextEvent),</span>
-<span class="source-line-no">106</span><span id="line-106">              XmlEventUtil.toString(nextEvent.getLocation())));</span>
-<span class="source-line-no">107</span><span id="line-107">        }</span>
-<span class="source-line-no">108</span><span id="line-108">      }</span>
-<span class="source-line-no">109</span><span id="line-109"></span>
-<span class="source-line-no">110</span><span id="line-110">      // trim leading and trailing whitespace</span>
-<span class="source-line-no">111</span><span id="line-111">      @SuppressWarnings("null")</span>
-<span class="source-line-no">112</span><span id="line-112">      @NonNull String value = builder.toString().trim();</span>
-<span class="source-line-no">113</span><span id="line-113">      return parse(value);</span>
-<span class="source-line-no">114</span><span id="line-114">    } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">115</span><span id="line-115">      throw new IOException(ex);</span>
-<span class="source-line-no">116</span><span id="line-116">    }</span>
-<span class="source-line-no">117</span><span id="line-117">  }</span>
-<span class="source-line-no">118</span><span id="line-118"></span>
-<span class="source-line-no">119</span><span id="line-119">  /**</span>
-<span class="source-line-no">120</span><span id="line-120">   * This default implementation will parse the value as a string and delegate to</span>
-<span class="source-line-no">121</span><span id="line-121">   * the string-based parsing method.</span>
-<span class="source-line-no">122</span><span id="line-122">   */</span>
-<span class="source-line-no">123</span><span id="line-123">  @Override</span>
-<span class="source-line-no">124</span><span id="line-124">  public TYPE parse(JsonParser parser) throws IOException {</span>
-<span class="source-line-no">125</span><span id="line-125">    String value = parser.getValueAsString();</span>
-<span class="source-line-no">126</span><span id="line-126">    if (value == null) {</span>
-<span class="source-line-no">127</span><span id="line-127">      throw new IOException("Unable to parse field value as text");</span>
-<span class="source-line-no">128</span><span id="line-128">    }</span>
-<span class="source-line-no">129</span><span id="line-129">    // skip over value</span>
-<span class="source-line-no">130</span><span id="line-130">    parser.nextToken();</span>
-<span class="source-line-no">131</span><span id="line-131">    return parse(value);</span>
-<span class="source-line-no">132</span><span id="line-132">  }</span>
-<span class="source-line-no">133</span><span id="line-133"></span>
-<span class="source-line-no">134</span><span id="line-134">  @SuppressWarnings("null")</span>
-<span class="source-line-no">135</span><span id="line-135">  @Override</span>
-<span class="source-line-no">136</span><span id="line-136">  public String asString(Object value) {</span>
-<span class="source-line-no">137</span><span id="line-137">    return value.toString();</span>
-<span class="source-line-no">138</span><span id="line-138">  }</span>
-<span class="source-line-no">139</span><span id="line-139"></span>
-<span class="source-line-no">140</span><span id="line-140">  @Override</span>
-<span class="source-line-no">141</span><span id="line-141">  public void writeXmlValue(</span>
-<span class="source-line-no">142</span><span id="line-142">      Object value,</span>
-<span class="source-line-no">143</span><span id="line-143">      StartElement parent,</span>
-<span class="source-line-no">144</span><span id="line-144">      XMLEventFactory2 eventFactory,</span>
-<span class="source-line-no">145</span><span id="line-145">      XMLEventWriter eventWriter)</span>
-<span class="source-line-no">146</span><span id="line-146">      throws IOException, XMLStreamException {</span>
-<span class="source-line-no">147</span><span id="line-147">    try {</span>
-<span class="source-line-no">148</span><span id="line-148">      String content = asString(value);</span>
-<span class="source-line-no">149</span><span id="line-149">      Characters characters = eventFactory.createCharacters(content);</span>
-<span class="source-line-no">150</span><span id="line-150">      eventWriter.add(characters);</span>
-<span class="source-line-no">151</span><span id="line-151">    } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">152</span><span id="line-152">      throw new IOException(ex);</span>
-<span class="source-line-no">153</span><span id="line-153">    }</span>
+<span class="source-line-no">099</span><span id="line-99">        if (!nextEvent.isCharacters()) {</span>
+<span class="source-line-no">100</span><span id="line-100">          throw new IOException(String.format("Invalid content '%s' at %s", XmlEventUtil.toString(nextEvent),</span>
+<span class="source-line-no">101</span><span id="line-101">              XmlEventUtil.toString(nextEvent.getLocation())));</span>
+<span class="source-line-no">102</span><span id="line-102">        }</span>
+<span class="source-line-no">103</span><span id="line-103">        Characters characters = nextEvent.asCharacters();</span>
+<span class="source-line-no">104</span><span id="line-104">        builder.append(characters.getData());</span>
+<span class="source-line-no">105</span><span id="line-105">        // advance past current event</span>
+<span class="source-line-no">106</span><span id="line-106">        eventReader.nextEvent();</span>
+<span class="source-line-no">107</span><span id="line-107">      }</span>
+<span class="source-line-no">108</span><span id="line-108"></span>
+<span class="source-line-no">109</span><span id="line-109">      // trim leading and trailing whitespace</span>
+<span class="source-line-no">110</span><span id="line-110">      String value = ObjectUtils.notNull(builder.toString().trim());</span>
+<span class="source-line-no">111</span><span id="line-111">      try {</span>
+<span class="source-line-no">112</span><span id="line-112">        return parse(value);</span>
+<span class="source-line-no">113</span><span id="line-113">      } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">114</span><span id="line-114">        throw new IOException(</span>
+<span class="source-line-no">115</span><span id="line-115">            String.format("Malformed data '%s'%s. %s",</span>
+<span class="source-line-no">116</span><span id="line-116">                value,</span>
+<span class="source-line-no">117</span><span id="line-117">                XmlEventUtil.generateLocationMessage(nextEvent),</span>
+<span class="source-line-no">118</span><span id="line-118">                ex.getLocalizedMessage()),</span>
+<span class="source-line-no">119</span><span id="line-119">            ex);</span>
+<span class="source-line-no">120</span><span id="line-120">      }</span>
+<span class="source-line-no">121</span><span id="line-121">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">122</span><span id="line-122">      throw new IOException(ex);</span>
+<span class="source-line-no">123</span><span id="line-123">    }</span>
+<span class="source-line-no">124</span><span id="line-124">  }</span>
+<span class="source-line-no">125</span><span id="line-125"></span>
+<span class="source-line-no">126</span><span id="line-126">  /**</span>
+<span class="source-line-no">127</span><span id="line-127">   * This default implementation will parse the value as a string and delegate to</span>
+<span class="source-line-no">128</span><span id="line-128">   * the string-based parsing method.</span>
+<span class="source-line-no">129</span><span id="line-129">   */</span>
+<span class="source-line-no">130</span><span id="line-130">  @Override</span>
+<span class="source-line-no">131</span><span id="line-131">  public TYPE parse(JsonParser parser) throws IOException {</span>
+<span class="source-line-no">132</span><span id="line-132">    String value = parser.getValueAsString();</span>
+<span class="source-line-no">133</span><span id="line-133">    if (value == null) {</span>
+<span class="source-line-no">134</span><span id="line-134">      throw new IOException("Unable to null value as text");</span>
+<span class="source-line-no">135</span><span id="line-135">    }</span>
+<span class="source-line-no">136</span><span id="line-136">    // skip over value</span>
+<span class="source-line-no">137</span><span id="line-137">    parser.nextToken();</span>
+<span class="source-line-no">138</span><span id="line-138">    try {</span>
+<span class="source-line-no">139</span><span id="line-139">      return parse(value);</span>
+<span class="source-line-no">140</span><span id="line-140">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">141</span><span id="line-141">      throw new IOException(</span>
+<span class="source-line-no">142</span><span id="line-142">          String.format("Malformed data '%s'%s. %s",</span>
+<span class="source-line-no">143</span><span id="line-143">              value,</span>
+<span class="source-line-no">144</span><span id="line-144">              JsonUtil.generateLocationMessage(parser),</span>
+<span class="source-line-no">145</span><span id="line-145">              ex.getLocalizedMessage()),</span>
+<span class="source-line-no">146</span><span id="line-146">          ex);</span>
+<span class="source-line-no">147</span><span id="line-147">    }</span>
+<span class="source-line-no">148</span><span id="line-148">  }</span>
+<span class="source-line-no">149</span><span id="line-149"></span>
+<span class="source-line-no">150</span><span id="line-150">  @SuppressWarnings("null")</span>
+<span class="source-line-no">151</span><span id="line-151">  @Override</span>
+<span class="source-line-no">152</span><span id="line-152">  public String asString(Object value) {</span>
+<span class="source-line-no">153</span><span id="line-153">    return value.toString();</span>
 <span class="source-line-no">154</span><span id="line-154">  }</span>
 <span class="source-line-no">155</span><span id="line-155"></span>
 <span class="source-line-no">156</span><span id="line-156">  @Override</span>
-<span class="source-line-no">157</span><span id="line-157">  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 writer) throws XMLStreamException {</span>
-<span class="source-line-no">158</span><span id="line-158">    String content = asString(value);</span>
-<span class="source-line-no">159</span><span id="line-159">    writer.writeCharacters(content);</span>
-<span class="source-line-no">160</span><span id="line-160">  }</span>
-<span class="source-line-no">161</span><span id="line-161"></span>
-<span class="source-line-no">162</span><span id="line-162">  @Override</span>
-<span class="source-line-no">163</span><span id="line-163">  public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {</span>
-<span class="source-line-no">164</span><span id="line-164">    generator.writeString(asString(value));</span>
-<span class="source-line-no">165</span><span id="line-165">  }</span>
-<span class="source-line-no">166</span><span id="line-166"></span>
-<span class="source-line-no">167</span><span id="line-167">  @Override</span>
-<span class="source-line-no">168</span><span id="line-168">  public abstract Class&lt;ITEM_TYPE&gt; getItemClass();</span>
-<span class="source-line-no">169</span><span id="line-169"></span>
-<span class="source-line-no">170</span><span id="line-170">  @Override</span>
-<span class="source-line-no">171</span><span id="line-171">  public abstract ITEM_TYPE newItem(Object value);</span>
-<span class="source-line-no">172</span><span id="line-172"></span>
-<span class="source-line-no">173</span><span id="line-173">  @Override</span>
-<span class="source-line-no">174</span><span id="line-174">  public ITEM_TYPE cast(IAnyAtomicItem item) {</span>
-<span class="source-line-no">175</span><span id="line-175">    ITEM_TYPE retval;</span>
-<span class="source-line-no">176</span><span id="line-176">    if (item == null) {</span>
-<span class="source-line-no">177</span><span id="line-177">      throw new InvalidValueForCastFunctionException("item is null");</span>
-<span class="source-line-no">178</span><span id="line-178">    } else if (getItemClass().isAssignableFrom(item.getClass())) {</span>
-<span class="source-line-no">179</span><span id="line-179">      @SuppressWarnings("unchecked") ITEM_TYPE typedItem = (ITEM_TYPE) item;</span>
-<span class="source-line-no">180</span><span id="line-180">      retval = typedItem;</span>
-<span class="source-line-no">181</span><span id="line-181">    } else {</span>
-<span class="source-line-no">182</span><span id="line-182">      retval = castInternal(item);</span>
-<span class="source-line-no">183</span><span id="line-183">    }</span>
-<span class="source-line-no">184</span><span id="line-184">    return retval;</span>
-<span class="source-line-no">185</span><span id="line-185">  }</span>
-<span class="source-line-no">186</span><span id="line-186"></span>
-<span class="source-line-no">187</span><span id="line-187">  /**</span>
-<span class="source-line-no">188</span><span id="line-188">   * Attempt to cast the provided item to this adapter's item type.</span>
-<span class="source-line-no">189</span><span id="line-189">   * &lt;p&gt;</span>
-<span class="source-line-no">190</span><span id="line-190">   * The default implementation of this will attempt to parse the provided item as</span>
-<span class="source-line-no">191</span><span id="line-191">   * a string using the {@link #parse(String)} method. If this behavior is</span>
-<span class="source-line-no">192</span><span id="line-192">   * undesirable, then a subclass should override this method.</span>
-<span class="source-line-no">193</span><span id="line-193">   *</span>
-<span class="source-line-no">194</span><span id="line-194">   * @param item</span>
-<span class="source-line-no">195</span><span id="line-195">   *          the item to cast</span>
-<span class="source-line-no">196</span><span id="line-196">   * @return the item casted to this adapter's item type</span>
-<span class="source-line-no">197</span><span id="line-197">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">198</span><span id="line-198">   *           if the casting of the item is not possible because the item</span>
-<span class="source-line-no">199</span><span id="line-199">   *           represents an invalid value for this adapter's item type</span>
-<span class="source-line-no">200</span><span id="line-200">   */</span>
-<span class="source-line-no">201</span><span id="line-201">  @NonNull</span>
-<span class="source-line-no">202</span><span id="line-202">  protected ITEM_TYPE castInternal(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">203</span><span id="line-203">    // try string based casting as a fallback</span>
-<span class="source-line-no">204</span><span id="line-204">    String itemString = item.asString();</span>
-<span class="source-line-no">205</span><span id="line-205">    try {</span>
-<span class="source-line-no">206</span><span id="line-206">      TYPE value = parse(itemString);</span>
-<span class="source-line-no">207</span><span id="line-207">      return newItem(value);</span>
-<span class="source-line-no">208</span><span id="line-208">    } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">209</span><span id="line-209">      throw new InvalidValueForCastFunctionException(</span>
-<span class="source-line-no">210</span><span id="line-210">          String.format("The value '%s' is not compatible with the type '%s'", itemString, getItemClass().getName()),</span>
-<span class="source-line-no">211</span><span id="line-211">          ex);</span>
-<span class="source-line-no">212</span><span id="line-212">    }</span>
-<span class="source-line-no">213</span><span id="line-213">  }</span>
-<span class="source-line-no">214</span><span id="line-214">}</span>
+<span class="source-line-no">157</span><span id="line-157">  public void writeXmlValue(</span>
+<span class="source-line-no">158</span><span id="line-158">      Object value,</span>
+<span class="source-line-no">159</span><span id="line-159">      StartElement parent,</span>
+<span class="source-line-no">160</span><span id="line-160">      XMLEventFactory2 eventFactory,</span>
+<span class="source-line-no">161</span><span id="line-161">      XMLEventWriter eventWriter)</span>
+<span class="source-line-no">162</span><span id="line-162">      throws IOException, XMLStreamException {</span>
+<span class="source-line-no">163</span><span id="line-163">    try {</span>
+<span class="source-line-no">164</span><span id="line-164">      String content = asString(value);</span>
+<span class="source-line-no">165</span><span id="line-165">      Characters characters = eventFactory.createCharacters(content);</span>
+<span class="source-line-no">166</span><span id="line-166">      eventWriter.add(characters);</span>
+<span class="source-line-no">167</span><span id="line-167">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">168</span><span id="line-168">      throw new IOException(ex);</span>
+<span class="source-line-no">169</span><span id="line-169">    }</span>
+<span class="source-line-no">170</span><span id="line-170">  }</span>
+<span class="source-line-no">171</span><span id="line-171"></span>
+<span class="source-line-no">172</span><span id="line-172">  @Override</span>
+<span class="source-line-no">173</span><span id="line-173">  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 writer) throws XMLStreamException {</span>
+<span class="source-line-no">174</span><span id="line-174">    String content = asString(value);</span>
+<span class="source-line-no">175</span><span id="line-175">    writer.writeCharacters(content);</span>
+<span class="source-line-no">176</span><span id="line-176">  }</span>
+<span class="source-line-no">177</span><span id="line-177"></span>
+<span class="source-line-no">178</span><span id="line-178">  @Override</span>
+<span class="source-line-no">179</span><span id="line-179">  public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {</span>
+<span class="source-line-no">180</span><span id="line-180">    generator.writeString(asString(value));</span>
+<span class="source-line-no">181</span><span id="line-181">  }</span>
+<span class="source-line-no">182</span><span id="line-182"></span>
+<span class="source-line-no">183</span><span id="line-183">  @Override</span>
+<span class="source-line-no">184</span><span id="line-184">  public abstract Class&lt;ITEM_TYPE&gt; getItemClass();</span>
+<span class="source-line-no">185</span><span id="line-185"></span>
+<span class="source-line-no">186</span><span id="line-186">  @Override</span>
+<span class="source-line-no">187</span><span id="line-187">  public abstract ITEM_TYPE newItem(Object value);</span>
+<span class="source-line-no">188</span><span id="line-188"></span>
+<span class="source-line-no">189</span><span id="line-189">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">190</span><span id="line-190">  @Override</span>
+<span class="source-line-no">191</span><span id="line-191">  public ITEM_TYPE cast(IAnyAtomicItem item) {</span>
+<span class="source-line-no">192</span><span id="line-192">    if (item == null) {</span>
+<span class="source-line-no">193</span><span id="line-193">      throw new InvalidValueForCastFunctionException("item is null");</span>
+<span class="source-line-no">194</span><span id="line-194">    }</span>
+<span class="source-line-no">195</span><span id="line-195">    return getItemClass().isAssignableFrom(item.getClass())</span>
+<span class="source-line-no">196</span><span id="line-196">        ? (ITEM_TYPE) item</span>
+<span class="source-line-no">197</span><span id="line-197">        : castInternal(item);</span>
+<span class="source-line-no">198</span><span id="line-198">  }</span>
+<span class="source-line-no">199</span><span id="line-199"></span>
+<span class="source-line-no">200</span><span id="line-200">  /**</span>
+<span class="source-line-no">201</span><span id="line-201">   * Attempt to cast the provided item to this adapter's item type.</span>
+<span class="source-line-no">202</span><span id="line-202">   * &lt;p&gt;</span>
+<span class="source-line-no">203</span><span id="line-203">   * The default implementation of this will attempt to parse the provided item as</span>
+<span class="source-line-no">204</span><span id="line-204">   * a string using the {@link #parse(String)} method. If this behavior is</span>
+<span class="source-line-no">205</span><span id="line-205">   * undesirable, then a subclass should override this method.</span>
+<span class="source-line-no">206</span><span id="line-206">   *</span>
+<span class="source-line-no">207</span><span id="line-207">   * @param item</span>
+<span class="source-line-no">208</span><span id="line-208">   *          the item to cast</span>
+<span class="source-line-no">209</span><span id="line-209">   * @return the item casted to this adapter's item type</span>
+<span class="source-line-no">210</span><span id="line-210">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">211</span><span id="line-211">   *           if the casting of the item is not possible because the item</span>
+<span class="source-line-no">212</span><span id="line-212">   *           represents an invalid value for this adapter's item type</span>
+<span class="source-line-no">213</span><span id="line-213">   */</span>
+<span class="source-line-no">214</span><span id="line-214">  @NonNull</span>
+<span class="source-line-no">215</span><span id="line-215">  protected ITEM_TYPE castInternal(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">216</span><span id="line-216">    // try string based casting as a fallback</span>
+<span class="source-line-no">217</span><span id="line-217">    String itemString = item.asString();</span>
+<span class="source-line-no">218</span><span id="line-218">    try {</span>
+<span class="source-line-no">219</span><span id="line-219">      TYPE value = parse(itemString);</span>
+<span class="source-line-no">220</span><span id="line-220">      return newItem(value);</span>
+<span class="source-line-no">221</span><span id="line-221">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">222</span><span id="line-222">      throw new InvalidValueForCastFunctionException(</span>
+<span class="source-line-no">223</span><span id="line-223">          String.format("The value '%s' is not compatible with the type '%s'", itemString, getItemClass().getName()),</span>
+<span class="source-line-no">224</span><span id="line-224">          ex);</span>
+<span class="source-line-no">225</span><span id="line-225">    }</span>
+<span class="source-line-no">226</span><span id="line-226">  }</span>
+<span class="source-line-no">227</span><span id="line-227">}</span>
 
 
 

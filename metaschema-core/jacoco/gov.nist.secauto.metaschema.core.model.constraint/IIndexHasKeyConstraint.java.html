@@ -41,38 +41,43 @@ public interface IIndexHasKeyConstraint extends IKeyConstraint {
 <span class="nc" id="L41">    return new Builder(useIndex);</span>
   }
 
+  /**
+   * Provides a builder pattern for constructing a new
+   * {@link IIndexHasKeyConstraint}.
+   */
   final class Builder
       extends AbstractKeyConstraintBuilder&lt;Builder, IIndexHasKeyConstraint&gt; {
     @NonNull
     private final String indexName;
 
-<span class="nc" id="L49">    private Builder(@NonNull String useIndex) {</span>
-<span class="nc" id="L50">      this.indexName = useIndex;</span>
-<span class="nc" id="L51">    }</span>
+<span class="nc" id="L53">    private Builder(@NonNull String useIndex) {</span>
+<span class="nc" id="L54">      this.indexName = useIndex;</span>
+<span class="nc" id="L55">    }</span>
 
     @Override
     protected Builder getThis() {
-<span class="nc" id="L55">      return this;</span>
+<span class="nc" id="L59">      return this;</span>
     }
 
     @NonNull
     private String getIndexName() {
-<span class="nc" id="L60">      return indexName;</span>
+<span class="nc" id="L64">      return indexName;</span>
     }
 
     @Override
     protected IIndexHasKeyConstraint newInstance() {
-<span class="nc" id="L65">      return new DefaultIndexHasKeyConstraint(</span>
-<span class="nc" id="L66">          getId(),</span>
-<span class="nc" id="L67">          getFormalName(),</span>
-<span class="nc" id="L68">          getDescription(),</span>
-<span class="nc" id="L69">          ObjectUtils.notNull(getSource()),</span>
-<span class="nc" id="L70">          getLevel(),</span>
-<span class="nc" id="L71">          getTarget(),</span>
-<span class="nc" id="L72">          getProperties(),</span>
-<span class="nc" id="L73">          getIndexName(),</span>
-<span class="nc" id="L74">          getKeyFields(),</span>
-<span class="nc" id="L75">          getRemarks());</span>
+<span class="nc" id="L69">      return new DefaultIndexHasKeyConstraint(</span>
+<span class="nc" id="L70">          getId(),</span>
+<span class="nc" id="L71">          getFormalName(),</span>
+<span class="nc" id="L72">          getDescription(),</span>
+<span class="nc" id="L73">          ObjectUtils.notNull(getSource()),</span>
+<span class="nc" id="L74">          getLevel(),</span>
+<span class="nc" id="L75">          getTarget(),</span>
+<span class="nc" id="L76">          getProperties(),</span>
+<span class="nc" id="L77">          getIndexName(),</span>
+<span class="nc" id="L78">          getKeyFields(),</span>
+<span class="nc" id="L79">          getMessage(),</span>
+<span class="nc" id="L80">          getRemarks());</span>
     }
   }
 }

@@ -24,14 +24,14 @@ import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
+import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyConstraints;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyModel;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
 
 import java.util.Map;
 import java.util.Set;
@@ -90,7 +90,7 @@ public class InstanceModelGroupedAssemblyInline
 <span class="fc" id="L90">    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; AssemblyModelContainerSupport.of(</span>
 <span class="fc" id="L91">        binding.getModel(),</span>
 <span class="fc" id="L92">        ObjectUtils.requireNonNull(bindingInstance.getDefinition()</span>
-<span class="fc" id="L93">            .getAssemblyInstanceByName(MODEL_QNAME)),</span>
+<span class="fc" id="L93">            .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME)),</span>
         this,
         nodeItemFactory)));
 <span class="fc" id="L96">    this.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
@@ -100,7 +100,7 @@ public class InstanceModelGroupedAssemblyInline
 <span class="nc" id="L100">        ConstraintBindingSupport.parse(</span>
             retval,
             constraints,
-<span class="nc" id="L103">            ISource.modelSource(parent.getOwningDefinition().getContainingModule()));</span>
+<span class="nc" id="L103">            parent.getOwningDefinition().getContainingModule().getSource());</span>
       }
 <span class="fc" id="L105">      return retval;</span>
     }));
@@ -111,7 +111,7 @@ public class InstanceModelGroupedAssemblyInline
 <span class="fc" id="L111">  }</span>
 
   @NonNull
-  protected AssemblyModel.ChoiceGroup.DefineAssembly getBinding() {
+  private AssemblyModel.ChoiceGroup.DefineAssembly getBinding() {
 <span class="fc" id="L115">    return binding;</span>
   }
 
@@ -148,7 +148,7 @@ public class InstanceModelGroupedAssemblyInline
 
   @Override
   public IAssemblyNodeItem getSourceNodeItem() {
-<span class="nc" id="L151">    return boundNodeItem.get();</span>
+<span class="nc" id="L151">    return ObjectUtils.notNull(boundNodeItem.get());</span>
   }
 
   // ---------------------------------------

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Example.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.model.metaschema.binding</a> &gt; <span class="el_source">Example.java</span></div><h1>Example.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
+
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.net.URI;
+
+@SuppressWarnings({
+    &quot;PMD.DataClass&quot;,
+    &quot;PMD.FieldNamingConventions&quot;
+})
+@MetaschemaAssembly(
+    formalName = &quot;Example&quot;,
+    name = &quot;example&quot;,
+    moduleClass = MetaschemaModelModule.class)
+public class Example implements IBoundObject {
+  private final IMetaschemaData __metaschemaData;
+
+  @BoundFlag(
+      formalName = &quot;Example Reference&quot;,
+      name = &quot;ref&quot;,
+      typeAdapter = UriReferenceAdapter.class)
+  private URI _ref;
+
+  @BoundFlag(
+      name = &quot;path&quot;,
+      typeAdapter = StringAdapter.class)
+  private String _path;
+
+  @BoundField(
+      formalName = &quot;Example Description&quot;,
+      useName = &quot;description&quot;,
+      typeAdapter = MarkupLineAdapter.class)
+  private MarkupLine _description;
+
+  @BoundField(
+      formalName = &quot;Remarks&quot;,
+      description = &quot;Any explanatory or helpful information to be provided about the remarks parent.&quot;,
+      useName = &quot;remarks&quot;)
+  private Remarks _remarks;
+
+  public Example() {
+<span class="nc" id="L58">    this(null);</span>
+<span class="nc" id="L59">  }</span>
+
+<span class="fc" id="L61">  public Example(IMetaschemaData data) {</span>
+<span class="fc" id="L62">    this.__metaschemaData = data;</span>
+<span class="fc" id="L63">  }</span>
+
+  @Override
+  public IMetaschemaData getMetaschemaData() {
+<span class="nc" id="L67">    return __metaschemaData;</span>
+  }
+
+  public URI getRef() {
+<span class="nc" id="L71">    return _ref;</span>
+  }
+
+  public void setRef(URI value) {
+<span class="nc" id="L75">    _ref = value;</span>
+<span class="nc" id="L76">  }</span>
+
+  public String getPath() {
+<span class="nc" id="L79">    return _path;</span>
+  }
+
+  public void setPath(String value) {
+<span class="nc" id="L83">    _path = value;</span>
+<span class="nc" id="L84">  }</span>
+
+  public MarkupLine getDescription() {
+<span class="nc" id="L87">    return _description;</span>
+  }
+
+  public void setDescription(MarkupLine value) {
+<span class="nc" id="L91">    _description = value;</span>
+<span class="nc" id="L92">  }</span>
+
+  public Remarks getRemarks() {
+<span class="nc" id="L95">    return _remarks;</span>
+  }
+
+  public void setRemarks(Remarks value) {
+<span class="nc" id="L99">    _remarks = value;</span>
+<span class="nc" id="L100">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L104">    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

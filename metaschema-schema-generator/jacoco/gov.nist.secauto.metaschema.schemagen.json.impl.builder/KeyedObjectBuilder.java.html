@@ -54,11 +54,11 @@ import java.util.List;
 
 <span class="pc bpc" id="L55" title="1 of 2 branches missed.">    if (!types.isEmpty()) {</span>
 <span class="fc" id="L56">      ObjectNode patternProperties = ObjectUtils.notNull(object.putObject(&quot;patternProperties&quot;));</span>
-<span class="fc" id="L57">      ObjectNode wildcard = patternProperties.putObject(&quot;^.*$&quot;);</span>
+<span class="fc" id="L57">      ObjectNode wildcard = ObjectUtils.notNull(patternProperties.putObject(&quot;^.*$&quot;));</span>
 <span class="pc bpc" id="L58" title="1 of 2 branches missed.">      if (types.size() == 1) {</span>
 <span class="fc" id="L59">        types.iterator().next().build(wildcard, state);</span>
       } else {
-<span class="nc" id="L61">        ArrayNode oneOf = wildcard.putArray(&quot;anyOf&quot;);</span>
+<span class="nc" id="L61">        ArrayNode oneOf = ObjectUtils.notNull(wildcard.putArray(&quot;anyOf&quot;));</span>
 <span class="nc bnc" id="L62" title="All 2 branches missed.">        for (IType type : types) {</span>
 <span class="nc" id="L63">          type.build(oneOf, state);</span>
 <span class="nc" id="L64">        }</span>

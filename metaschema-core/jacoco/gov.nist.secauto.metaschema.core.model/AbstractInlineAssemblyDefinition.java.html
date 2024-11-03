@@ -74,14 +74,19 @@ public abstract class AbstractInlineAssemblyDefinition&lt;
   }
 
   @Override
+  public boolean isInline() {
+<span class="fc" id="L78">    return true;</span>
+  }
+
+  @Override
   @NonNull
   public final INSTANCE getInlineInstance() {
-<span class="fc" id="L79">    return ObjectUtils.asType(this);</span>
+<span class="fc" id="L84">    return ObjectUtils.asType(this);</span>
   }
 
   @Override
   public final FLAG getJsonKey() {
-<span class="nc" id="L84">    return IFeatureContainerFlag.super.getJsonKey();</span>
+<span class="nc" id="L89">    return IFeatureContainerFlag.super.getJsonKey();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

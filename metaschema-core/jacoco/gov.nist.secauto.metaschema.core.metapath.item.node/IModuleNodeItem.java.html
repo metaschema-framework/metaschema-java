@@ -4,14 +4,8 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.ModuleScopeEnum;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -19,8 +13,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Supports querying of global definitions and associated instances in a
  * Metaschema module by effective name.
  * &lt;p&gt;
- * All definitions in the {@link ModuleScopeEnum#INHERITED} scope. This allows
- * the exported structure of the Metaschema module to be queried.
+ * All definitions in the
+ * {@link gov.nist.secauto.metaschema.core.model.IDefinition.ModuleScope#PUBLIC}
+ * are visible. This allows the exported structure of the Metaschema module to
+ * be queried.
  */
 public interface IModuleNodeItem extends IDocumentBasedNodeItem, IFeatureNoDataValuedItem {
 
@@ -34,52 +30,32 @@ public interface IModuleNodeItem extends IDocumentBasedNodeItem, IFeatureNoDataV
 
   @Override
   default URI getDocumentUri() {
-<span class="nc" id="L37">    return getModule().getLocation();</span>
+<span class="nc" id="L33">    return getModule().getLocation();</span>
   }
 
   @Override
   default NodeItemType getNodeItemType() {
-<span class="nc" id="L42">    return NodeItemType.METASCHEMA;</span>
+<span class="nc" id="L38">    return NodeItemType.METASCHEMA;</span>
   }
 
   @Override
   default IModuleNodeItem getNodeItem() {
-<span class="nc" id="L47">    return this;</span>
-  }
-
-  /**
-   * Get the root items having the provided {@code name}.
-   *
-   * @param name
-   *          the root item's name to retrieve
-   * @return a list of matching root items
-   */
-  // TODO: delete
-  default List&lt;? extends IRootAssemblyNodeItem&gt; getRootNodeItemByName(@NonNull QName name) {
-<span class="nc" id="L59">    List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; result = getModelItemsByName(name);</span>
-<span class="nc" id="L60">    return result.stream().flatMap(item -&gt; {</span>
-<span class="nc" id="L61">      IRootAssemblyNodeItem retval = null;</span>
-<span class="nc bnc" id="L62" title="All 2 branches missed.">      if (item instanceof IRootAssemblyNodeItem) {</span>
-<span class="nc" id="L63">        retval = (IRootAssemblyNodeItem) item;</span>
-      }
-
-<span class="nc bnc" id="L66" title="All 2 branches missed.">      return retval == null ? null : Stream.of(retval);</span>
-<span class="nc" id="L67">    }).collect(Collectors.toUnmodifiableList());</span>
+<span class="nc" id="L43">    return this;</span>
   }
 
   @Override
   default String format(@NonNull IPathFormatter formatter) {
-<span class="fc" id="L72">    return formatter.formatMetaschema(this);</span>
+<span class="fc" id="L48">    return formatter.formatMetaschema(this);</span>
   }
 
   @Override
   default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull INodeItemVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {
-<span class="nc" id="L77">    return visitor.visitMetaschema(this, context);</span>
+<span class="nc" id="L53">    return visitor.visitMetaschema(this, context);</span>
   }
 
   @Override
   default StaticContext getStaticContext() {
-<span class="nc" id="L82">    return getModule().getModuleStaticContext();</span>
+<span class="nc" id="L58">    return getModule().getModuleStaticContext();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

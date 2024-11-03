@@ -26,121 +26,128 @@
 <span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">import java.io.IOException;</span>
-<span class="source-line-no">023</span><span id="line-23">import java.net.HttpURLConnection;</span>
-<span class="source-line-no">024</span><span id="line-24">import java.net.URLConnection;</span>
-<span class="source-line-no">025</span><span id="line-25">import java.util.List;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">public final class FnDocumentAvailable {</span>
-<span class="source-line-no">030</span><span id="line-30">  private static final String NAME = "doc-available";</span>
-<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
-<span class="source-line-no">032</span><span id="line-32">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">033</span><span id="line-33">      .name(NAME)</span>
-<span class="source-line-no">034</span><span id="line-34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">035</span><span id="line-35">      .deterministic()</span>
-<span class="source-line-no">036</span><span id="line-36">      .contextDependent()</span>
-<span class="source-line-no">037</span><span id="line-37">      .focusIndependent()</span>
-<span class="source-line-no">038</span><span id="line-38">      .argument(IArgument.builder()</span>
-<span class="source-line-no">039</span><span id="line-39">          .name("arg1")</span>
-<span class="source-line-no">040</span><span id="line-40">          .type(IStringItem.class)</span>
-<span class="source-line-no">041</span><span id="line-41">          .zeroOrOne()</span>
-<span class="source-line-no">042</span><span id="line-42">          .build())</span>
-<span class="source-line-no">043</span><span id="line-43">      .returnType(IBooleanItem.class)</span>
-<span class="source-line-no">044</span><span id="line-44">      .returnOne()</span>
-<span class="source-line-no">045</span><span id="line-45">      .functionHandler(FnDocumentAvailable::execute)</span>
-<span class="source-line-no">046</span><span id="line-46">      .build();</span>
-<span class="source-line-no">047</span><span id="line-47"></span>
-<span class="source-line-no">048</span><span id="line-48">  private FnDocumentAvailable() {</span>
-<span class="source-line-no">049</span><span id="line-49">    // disable construction</span>
-<span class="source-line-no">050</span><span id="line-50">  }</span>
-<span class="source-line-no">051</span><span id="line-51"></span>
-<span class="source-line-no">052</span><span id="line-52">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">053</span><span id="line-53">  @NonNull</span>
-<span class="source-line-no">054</span><span id="line-54">  private static ISequence&lt;IBooleanItem&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">055</span><span id="line-55">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments, @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">056</span><span id="line-56">      IItem focus) {</span>
-<span class="source-line-no">057</span><span id="line-57">    ISequence&lt;? extends IStringItem&gt; arg = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">    IStringItem item = arg.getFirstItem(true);</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">    return item == null ? ISequence.empty() : ISequence.of(fnDocAvailable(item, dynamicContext));</span>
-<span class="source-line-no">062</span><span id="line-62">  }</span>
-<span class="source-line-no">063</span><span id="line-63"></span>
-<span class="source-line-no">064</span><span id="line-64">  /**</span>
-<span class="source-line-no">065</span><span id="line-65">   * Test if the document associated with the URI is retrievable.</span>
-<span class="source-line-no">066</span><span id="line-66">   * &lt;p&gt;</span>
-<span class="source-line-no">067</span><span id="line-67">   * Based on the XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">068</span><span id="line-68">   * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available"&gt;fn:doc&lt;/a&gt;</span>
-<span class="source-line-no">069</span><span id="line-69">   * function.</span>
-<span class="source-line-no">070</span><span id="line-70">   *</span>
-<span class="source-line-no">071</span><span id="line-71">   * @param documentUri</span>
-<span class="source-line-no">072</span><span id="line-72">   *          the resource to load the data from</span>
-<span class="source-line-no">073</span><span id="line-73">   * @param context</span>
-<span class="source-line-no">074</span><span id="line-74">   *          the Metapath dynamic context</span>
-<span class="source-line-no">075</span><span id="line-75">   * @return if the document is retrievable</span>
-<span class="source-line-no">076</span><span id="line-76">   */</span>
-<span class="source-line-no">077</span><span id="line-77">  public static IBooleanItem fnDocAvailable(@NonNull IStringItem documentUri, @NonNull DynamicContext context) {</span>
-<span class="source-line-no">078</span><span id="line-78">    IAnyUriItem uri;</span>
-<span class="source-line-no">079</span><span id="line-79">    try {</span>
-<span class="source-line-no">080</span><span id="line-80">      uri = IAnyUriItem.cast(documentUri);</span>
-<span class="source-line-no">081</span><span id="line-81">    } catch (MetapathException ex) {</span>
-<span class="source-line-no">082</span><span id="line-82">      throw new DocumentFunctionException(DocumentFunctionException.INVALID_ARGUMENT,</span>
-<span class="source-line-no">083</span><span id="line-83">          String.format("Invalid URI argument '%s' to fn:doc or fn:doc-available.", documentUri.asString()), ex);</span>
-<span class="source-line-no">084</span><span id="line-84">    }</span>
-<span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">    return fnDocAvailable(uri, context);</span>
-<span class="source-line-no">087</span><span id="line-87">  }</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">  /**</span>
-<span class="source-line-no">090</span><span id="line-90">   * Test if the document associated with the URI is retrievable.</span>
-<span class="source-line-no">091</span><span id="line-91">   * &lt;p&gt;</span>
-<span class="source-line-no">092</span><span id="line-92">   * Based on the XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">093</span><span id="line-93">   * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available"&gt;fn:doc&lt;/a&gt;</span>
-<span class="source-line-no">094</span><span id="line-94">   * function.</span>
-<span class="source-line-no">095</span><span id="line-95">   *</span>
-<span class="source-line-no">096</span><span id="line-96">   * @param documentUri</span>
-<span class="source-line-no">097</span><span id="line-97">   *          the resource to load the data from</span>
-<span class="source-line-no">098</span><span id="line-98">   * @param context</span>
-<span class="source-line-no">099</span><span id="line-99">   *          the Metapath dynamic context</span>
-<span class="source-line-no">100</span><span id="line-100">   * @return if the document is retrievable</span>
-<span class="source-line-no">101</span><span id="line-101">   */</span>
-<span class="source-line-no">102</span><span id="line-102">  public static IBooleanItem fnDocAvailable(@NonNull IAnyUriItem documentUri, @NonNull DynamicContext context) {</span>
-<span class="source-line-no">103</span><span id="line-103">    // resolve if possible</span>
-<span class="source-line-no">104</span><span id="line-104">    IAnyUriItem uri = FnResolveUri.fnResolveUri(documentUri, null, context);</span>
-<span class="source-line-no">105</span><span id="line-105">    if (!uri.isAbsolute() &amp;&amp; !uri.isOpaque()) {</span>
-<span class="source-line-no">106</span><span id="line-106">      throw new DocumentFunctionException(DocumentFunctionException.ERROR_RETRIEVING_RESOURCE, String</span>
-<span class="source-line-no">107</span><span id="line-107">          .format("No base-uri is available in the static context to resolve the URI '%s'.", documentUri.toString()));</span>
-<span class="source-line-no">108</span><span id="line-108">    }</span>
-<span class="source-line-no">109</span><span id="line-109"></span>
-<span class="source-line-no">110</span><span id="line-110">    boolean retval;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.function.UriFunctionException;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">022</span><span id="line-22"></span>
+<span class="source-line-no">023</span><span id="line-23">import java.io.IOException;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.net.HttpURLConnection;</span>
+<span class="source-line-no">025</span><span id="line-25">import java.net.URLConnection;</span>
+<span class="source-line-no">026</span><span id="line-26">import java.util.List;</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">029</span><span id="line-29"></span>
+<span class="source-line-no">030</span><span id="line-30">/**</span>
+<span class="source-line-no">031</span><span id="line-31"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">032</span><span id="line-32"> * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available"&gt;fn:doc-available&lt;/a&gt;</span>
+<span class="source-line-no">033</span><span id="line-33"> * function.</span>
+<span class="source-line-no">034</span><span id="line-34"> */</span>
+<span class="source-line-no">035</span><span id="line-35">public final class FnDocumentAvailable {</span>
+<span class="source-line-no">036</span><span id="line-36">  private static final String NAME = "doc-available";</span>
+<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
+<span class="source-line-no">038</span><span id="line-38">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">039</span><span id="line-39">      .name(NAME)</span>
+<span class="source-line-no">040</span><span id="line-40">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">041</span><span id="line-41">      .deterministic()</span>
+<span class="source-line-no">042</span><span id="line-42">      .contextDependent()</span>
+<span class="source-line-no">043</span><span id="line-43">      .focusIndependent()</span>
+<span class="source-line-no">044</span><span id="line-44">      .argument(IArgument.builder()</span>
+<span class="source-line-no">045</span><span id="line-45">          .name("arg1")</span>
+<span class="source-line-no">046</span><span id="line-46">          .type(IStringItem.class)</span>
+<span class="source-line-no">047</span><span id="line-47">          .zeroOrOne()</span>
+<span class="source-line-no">048</span><span id="line-48">          .build())</span>
+<span class="source-line-no">049</span><span id="line-49">      .returnType(IBooleanItem.class)</span>
+<span class="source-line-no">050</span><span id="line-50">      .returnOne()</span>
+<span class="source-line-no">051</span><span id="line-51">      .functionHandler(FnDocumentAvailable::execute)</span>
+<span class="source-line-no">052</span><span id="line-52">      .build();</span>
+<span class="source-line-no">053</span><span id="line-53"></span>
+<span class="source-line-no">054</span><span id="line-54">  private FnDocumentAvailable() {</span>
+<span class="source-line-no">055</span><span id="line-55">    // disable construction</span>
+<span class="source-line-no">056</span><span id="line-56">  }</span>
+<span class="source-line-no">057</span><span id="line-57"></span>
+<span class="source-line-no">058</span><span id="line-58">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">059</span><span id="line-59">  @NonNull</span>
+<span class="source-line-no">060</span><span id="line-60">  private static ISequence&lt;IBooleanItem&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">061</span><span id="line-61">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments, @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">062</span><span id="line-62">      IItem focus) {</span>
+<span class="source-line-no">063</span><span id="line-63">    ISequence&lt;? extends IStringItem&gt; arg = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">    IStringItem item = arg.getFirstItem(true);</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">    return item == null ? ISequence.empty() : ISequence.of(fnDocAvailable(item, dynamicContext));</span>
+<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  /**</span>
+<span class="source-line-no">071</span><span id="line-71">   * Test if the document associated with the URI is retrievable.</span>
+<span class="source-line-no">072</span><span id="line-72">   * &lt;p&gt;</span>
+<span class="source-line-no">073</span><span id="line-73">   * Based on the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">074</span><span id="line-74">   * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available"&gt;fn:doc-available&lt;/a&gt;</span>
+<span class="source-line-no">075</span><span id="line-75">   * function.</span>
+<span class="source-line-no">076</span><span id="line-76">   *</span>
+<span class="source-line-no">077</span><span id="line-77">   * @param documentUri</span>
+<span class="source-line-no">078</span><span id="line-78">   *          the resource to load the data from</span>
+<span class="source-line-no">079</span><span id="line-79">   * @param context</span>
+<span class="source-line-no">080</span><span id="line-80">   *          the Metapath dynamic context</span>
+<span class="source-line-no">081</span><span id="line-81">   * @return if the document is retrievable</span>
+<span class="source-line-no">082</span><span id="line-82">   */</span>
+<span class="source-line-no">083</span><span id="line-83">  public static IBooleanItem fnDocAvailable(@NonNull IStringItem documentUri, @NonNull DynamicContext context) {</span>
+<span class="source-line-no">084</span><span id="line-84">    IAnyUriItem uri;</span>
+<span class="source-line-no">085</span><span id="line-85">    try {</span>
+<span class="source-line-no">086</span><span id="line-86">      uri = IAnyUriItem.cast(documentUri);</span>
+<span class="source-line-no">087</span><span id="line-87">    } catch (MetapathException ex) {</span>
+<span class="source-line-no">088</span><span id="line-88">      throw new DocumentFunctionException(DocumentFunctionException.INVALID_ARGUMENT,</span>
+<span class="source-line-no">089</span><span id="line-89">          String.format("Invalid URI argument '%s' to fn:doc or fn:doc-available.", documentUri.asString()), ex);</span>
+<span class="source-line-no">090</span><span id="line-90">    }</span>
+<span class="source-line-no">091</span><span id="line-91"></span>
+<span class="source-line-no">092</span><span id="line-92">    return fnDocAvailable(uri, context);</span>
+<span class="source-line-no">093</span><span id="line-93">  }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">  /**</span>
+<span class="source-line-no">096</span><span id="line-96">   * Test if the document associated with the URI is retrievable.</span>
+<span class="source-line-no">097</span><span id="line-97">   * &lt;p&gt;</span>
+<span class="source-line-no">098</span><span id="line-98">   * Based on the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">099</span><span id="line-99">   * "https://www.w3.org/TR/xpath-functions-31/#func-doc-available"&gt;fn:doc-available&lt;/a&gt;</span>
+<span class="source-line-no">100</span><span id="line-100">   * function.</span>
+<span class="source-line-no">101</span><span id="line-101">   *</span>
+<span class="source-line-no">102</span><span id="line-102">   * @param documentUri</span>
+<span class="source-line-no">103</span><span id="line-103">   *          the resource to load the data from</span>
+<span class="source-line-no">104</span><span id="line-104">   * @param context</span>
+<span class="source-line-no">105</span><span id="line-105">   *          the Metapath dynamic context</span>
+<span class="source-line-no">106</span><span id="line-106">   * @return if the document is retrievable</span>
+<span class="source-line-no">107</span><span id="line-107">   */</span>
+<span class="source-line-no">108</span><span id="line-108">  public static IBooleanItem fnDocAvailable(@NonNull IAnyUriItem documentUri, @NonNull DynamicContext context) {</span>
+<span class="source-line-no">109</span><span id="line-109">    boolean retval;</span>
+<span class="source-line-no">110</span><span id="line-110">    IAnyUriItem uri;</span>
 <span class="source-line-no">111</span><span id="line-111">    try {</span>
-<span class="source-line-no">112</span><span id="line-112">      URLConnection connection = uri.asUri().toURL().openConnection();</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">      if (connection instanceof HttpURLConnection) {</span>
-<span class="source-line-no">115</span><span id="line-115">        HttpURLConnection httpConnection = (HttpURLConnection) connection;</span>
-<span class="source-line-no">116</span><span id="line-116">        httpConnection.setRequestMethod("HEAD");</span>
-<span class="source-line-no">117</span><span id="line-117">        httpConnection.connect();</span>
-<span class="source-line-no">118</span><span id="line-118">        retval = HttpURLConnection.HTTP_OK == httpConnection.getResponseCode();</span>
-<span class="source-line-no">119</span><span id="line-119">        httpConnection.disconnect();</span>
-<span class="source-line-no">120</span><span id="line-120">      } else {</span>
-<span class="source-line-no">121</span><span id="line-121">        connection.connect();</span>
-<span class="source-line-no">122</span><span id="line-122">        retval = true;</span>
-<span class="source-line-no">123</span><span id="line-123">      }</span>
-<span class="source-line-no">124</span><span id="line-124">      return IBooleanItem.valueOf(retval);</span>
-<span class="source-line-no">125</span><span id="line-125">    } catch (IOException ex) {</span>
-<span class="source-line-no">126</span><span id="line-126">      throw new DocumentFunctionException(DocumentFunctionException.ERROR_RETRIEVING_RESOURCE, String</span>
-<span class="source-line-no">127</span><span id="line-127">          .format("Unable to retrieve the resource identified by the URI '%s'.", documentUri.toString()), ex);</span>
-<span class="source-line-no">128</span><span id="line-128">    }</span>
-<span class="source-line-no">129</span><span id="line-129">  }</span>
-<span class="source-line-no">130</span><span id="line-130">}</span>
+<span class="source-line-no">112</span><span id="line-112">      uri = documentUri.isAbsolute() || documentUri.isOpaque()</span>
+<span class="source-line-no">113</span><span id="line-113">          ? documentUri</span>
+<span class="source-line-no">114</span><span id="line-114">          // if not absolute or opaque, then resolve it to make it absolute</span>
+<span class="source-line-no">115</span><span id="line-115">          : FnResolveUri.fnResolveUri(documentUri, null, context);</span>
+<span class="source-line-no">116</span><span id="line-116">      try {</span>
+<span class="source-line-no">117</span><span id="line-117">        URLConnection connection = uri.asUri().toURL().openConnection();</span>
+<span class="source-line-no">118</span><span id="line-118"></span>
+<span class="source-line-no">119</span><span id="line-119">        if (connection instanceof HttpURLConnection) {</span>
+<span class="source-line-no">120</span><span id="line-120">          HttpURLConnection httpConnection = (HttpURLConnection) connection;</span>
+<span class="source-line-no">121</span><span id="line-121">          httpConnection.setRequestMethod("HEAD");</span>
+<span class="source-line-no">122</span><span id="line-122">          httpConnection.connect();</span>
+<span class="source-line-no">123</span><span id="line-123">          retval = HttpURLConnection.HTTP_OK == httpConnection.getResponseCode();</span>
+<span class="source-line-no">124</span><span id="line-124">          httpConnection.disconnect();</span>
+<span class="source-line-no">125</span><span id="line-125">        } else {</span>
+<span class="source-line-no">126</span><span id="line-126">          connection.connect();</span>
+<span class="source-line-no">127</span><span id="line-127">          retval = true;</span>
+<span class="source-line-no">128</span><span id="line-128">        }</span>
+<span class="source-line-no">129</span><span id="line-129">      } catch (IOException ex) {</span>
+<span class="source-line-no">130</span><span id="line-130">        retval = false;</span>
+<span class="source-line-no">131</span><span id="line-131">      }</span>
+<span class="source-line-no">132</span><span id="line-132">    } catch (UriFunctionException ex) {</span>
+<span class="source-line-no">133</span><span id="line-133">      retval = false;</span>
+<span class="source-line-no">134</span><span id="line-134">    }</span>
+<span class="source-line-no">135</span><span id="line-135">    return IBooleanItem.valueOf(retval);</span>
+<span class="source-line-no">136</span><span id="line-136">  }</span>
+<span class="source-line-no">137</span><span id="line-137">}</span>
 
 
 

@@ -18,139 +18,116 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import java.io.IOException;</span>
-<span class="source-line-no">012</span><span id="line-12">import java.net.URI;</span>
-<span class="source-line-no">013</span><span id="line-13">import java.util.ArrayList;</span>
-<span class="source-line-no">014</span><span id="line-14">import java.util.Collection;</span>
-<span class="source-line-no">015</span><span id="line-15">import java.util.Collections;</span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.Deque;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.util.LinkedHashMap;</span>
-<span class="source-line-no">018</span><span id="line-18">import java.util.List;</span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.Map;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">/**</span>
-<span class="source-line-no">024</span><span id="line-24"> * Provides methods to load a Metaschema expressed in XML.</span>
-<span class="source-line-no">025</span><span id="line-25"> * &lt;p&gt;</span>
-<span class="source-line-no">026</span><span id="line-26"> * Loaded Metaschema instances are cached to avoid the need to load them for</span>
-<span class="source-line-no">027</span><span id="line-27"> * every use. Any Metaschema imported is also loaded and cached automatically.</span>
-<span class="source-line-no">028</span><span id="line-28"> *</span>
-<span class="source-line-no">029</span><span id="line-29"> * @param &lt;T&gt;</span>
-<span class="source-line-no">030</span><span id="line-30"> *          the Java type of the module binding</span>
-<span class="source-line-no">031</span><span id="line-31"> * @param &lt;M&gt;</span>
-<span class="source-line-no">032</span><span id="line-32"> *          the Java type of the Metaschema module loaded by this loader</span>
-<span class="source-line-no">033</span><span id="line-33"> */</span>
-<span class="source-line-no">034</span><span id="line-34">public abstract class AbstractModuleLoader&lt;T, M extends IModuleExtended&lt;M, ?, ?, ?, ?&gt;&gt;</span>
-<span class="source-line-no">035</span><span id="line-35">    extends AbstractLoader&lt;M&gt;</span>
-<span class="source-line-no">036</span><span id="line-36">    implements IModuleLoader&lt;M&gt; {</span>
-<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
-<span class="source-line-no">038</span><span id="line-38">  private final List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors;</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">  /**</span>
-<span class="source-line-no">041</span><span id="line-41">   * Construct a new Metaschema module loader, which use the provided module post</span>
-<span class="source-line-no">042</span><span id="line-42">   * processors when loading a module.</span>
-<span class="source-line-no">043</span><span id="line-43">   *</span>
-<span class="source-line-no">044</span><span id="line-44">   * @param modulePostProcessors</span>
-<span class="source-line-no">045</span><span id="line-45">   *          post processors to perform additional module customization when</span>
-<span class="source-line-no">046</span><span id="line-46">   *          loading</span>
-<span class="source-line-no">047</span><span id="line-47">   */</span>
-<span class="source-line-no">048</span><span id="line-48">  protected AbstractModuleLoader(@NonNull List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors) {</span>
-<span class="source-line-no">049</span><span id="line-49">    this.modulePostProcessors = CollectionUtil.unmodifiableList(new ArrayList&lt;&gt;(modulePostProcessors));</span>
-<span class="source-line-no">050</span><span id="line-50">  }</span>
-<span class="source-line-no">051</span><span id="line-51"></span>
-<span class="source-line-no">052</span><span id="line-52">  /**</span>
-<span class="source-line-no">053</span><span id="line-53">   * Get the set of module post processors associated with this loader.</span>
-<span class="source-line-no">054</span><span id="line-54">   *</span>
-<span class="source-line-no">055</span><span id="line-55">   * @return the set of constraints</span>
-<span class="source-line-no">056</span><span id="line-56">   */</span>
-<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
-<span class="source-line-no">058</span><span id="line-58">  protected List&lt;IModuleLoader.IModulePostProcessor&gt; getModulePostProcessors() {</span>
-<span class="source-line-no">059</span><span id="line-59">    return modulePostProcessors;</span>
-<span class="source-line-no">060</span><span id="line-60">  }</span>
-<span class="source-line-no">061</span><span id="line-61"></span>
-<span class="source-line-no">062</span><span id="line-62">  /**</span>
-<span class="source-line-no">063</span><span id="line-63">   * Parse the {@code resource} based on the provided {@code xmlObject}.</span>
-<span class="source-line-no">064</span><span id="line-64">   *</span>
-<span class="source-line-no">065</span><span id="line-65">   * @param resource</span>
-<span class="source-line-no">066</span><span id="line-66">   *          the URI of the resource being parsed</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">009</span><span id="line-9"></span>
+<span class="source-line-no">010</span><span id="line-10">import java.io.IOException;</span>
+<span class="source-line-no">011</span><span id="line-11">import java.net.URI;</span>
+<span class="source-line-no">012</span><span id="line-12">import java.util.ArrayList;</span>
+<span class="source-line-no">013</span><span id="line-13">import java.util.Collection;</span>
+<span class="source-line-no">014</span><span id="line-14">import java.util.Collections;</span>
+<span class="source-line-no">015</span><span id="line-15">import java.util.Deque;</span>
+<span class="source-line-no">016</span><span id="line-16">import java.util.LinkedHashMap;</span>
+<span class="source-line-no">017</span><span id="line-17">import java.util.List;</span>
+<span class="source-line-no">018</span><span id="line-18">import java.util.Map;</span>
+<span class="source-line-no">019</span><span id="line-19"></span>
+<span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">/**</span>
+<span class="source-line-no">023</span><span id="line-23"> * Provides methods to load a Metaschema expressed in XML.</span>
+<span class="source-line-no">024</span><span id="line-24"> * &lt;p&gt;</span>
+<span class="source-line-no">025</span><span id="line-25"> * Loaded Metaschema instances are cached to avoid the need to load them for</span>
+<span class="source-line-no">026</span><span id="line-26"> * every use. Any Metaschema imported is also loaded and cached automatically.</span>
+<span class="source-line-no">027</span><span id="line-27"> *</span>
+<span class="source-line-no">028</span><span id="line-28"> * @param &lt;T&gt;</span>
+<span class="source-line-no">029</span><span id="line-29"> *          the Java type of the module binding</span>
+<span class="source-line-no">030</span><span id="line-30"> * @param &lt;M&gt;</span>
+<span class="source-line-no">031</span><span id="line-31"> *          the Java type of the Metaschema module loaded by this loader</span>
+<span class="source-line-no">032</span><span id="line-32"> */</span>
+<span class="source-line-no">033</span><span id="line-33">public abstract class AbstractModuleLoader&lt;T, M extends IModuleExtended&lt;M, ?, ?, ?, ?&gt;&gt;</span>
+<span class="source-line-no">034</span><span id="line-34">    extends AbstractLoader&lt;M&gt;</span>
+<span class="source-line-no">035</span><span id="line-35">    implements IModuleLoader&lt;M&gt; {</span>
+<span class="source-line-no">036</span><span id="line-36">  /**</span>
+<span class="source-line-no">037</span><span id="line-37">   * Construct a new Metaschema module loader, which use the provided module post</span>
+<span class="source-line-no">038</span><span id="line-38">   * processors when loading a module.</span>
+<span class="source-line-no">039</span><span id="line-39">   */</span>
+<span class="source-line-no">040</span><span id="line-40">  protected AbstractModuleLoader() {</span>
+<span class="source-line-no">041</span><span id="line-41">    // only allow construction by extending classes</span>
+<span class="source-line-no">042</span><span id="line-42">  }</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  /**</span>
+<span class="source-line-no">045</span><span id="line-45">   * Parse the {@code resource} based on the provided {@code xmlObject}.</span>
+<span class="source-line-no">046</span><span id="line-46">   *</span>
+<span class="source-line-no">047</span><span id="line-47">   * @param resource</span>
+<span class="source-line-no">048</span><span id="line-48">   *          the URI of the resource being parsed</span>
+<span class="source-line-no">049</span><span id="line-49">   * @param binding</span>
+<span class="source-line-no">050</span><span id="line-50">   *          the XML beans object to parse</span>
+<span class="source-line-no">051</span><span id="line-51">   * @param importedModules</span>
+<span class="source-line-no">052</span><span id="line-52">   *          previously parsed Metaschema modules imported by the provided</span>
+<span class="source-line-no">053</span><span id="line-53">   *          {@code resource}</span>
+<span class="source-line-no">054</span><span id="line-54">   * @return the parsed resource as a Metaschema module</span>
+<span class="source-line-no">055</span><span id="line-55">   * @throws MetaschemaException</span>
+<span class="source-line-no">056</span><span id="line-56">   *           if an error occurred while parsing the XML beans object</span>
+<span class="source-line-no">057</span><span id="line-57">   */</span>
+<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
+<span class="source-line-no">059</span><span id="line-59">  protected abstract M newModule(</span>
+<span class="source-line-no">060</span><span id="line-60">      @NonNull URI resource,</span>
+<span class="source-line-no">061</span><span id="line-61">      @NonNull T binding,</span>
+<span class="source-line-no">062</span><span id="line-62">      @NonNull List&lt;? extends M&gt; importedModules) throws MetaschemaException;</span>
+<span class="source-line-no">063</span><span id="line-63"></span>
+<span class="source-line-no">064</span><span id="line-64">  /**</span>
+<span class="source-line-no">065</span><span id="line-65">   * Get the list of Metaschema module URIs associated with the provided binding.</span>
+<span class="source-line-no">066</span><span id="line-66">   *</span>
 <span class="source-line-no">067</span><span id="line-67">   * @param binding</span>
-<span class="source-line-no">068</span><span id="line-68">   *          the XML beans object to parse</span>
-<span class="source-line-no">069</span><span id="line-69">   * @param importedModules</span>
-<span class="source-line-no">070</span><span id="line-70">   *          previously parsed Metaschema modules imported by the provided</span>
-<span class="source-line-no">071</span><span id="line-71">   *          {@code resource}</span>
-<span class="source-line-no">072</span><span id="line-72">   * @return the parsed resource as a Metaschema module</span>
-<span class="source-line-no">073</span><span id="line-73">   * @throws MetaschemaException</span>
-<span class="source-line-no">074</span><span id="line-74">   *           if an error occurred while parsing the XML beans object</span>
-<span class="source-line-no">075</span><span id="line-75">   */</span>
-<span class="source-line-no">076</span><span id="line-76">  @NonNull</span>
-<span class="source-line-no">077</span><span id="line-77">  protected abstract M newModule(</span>
-<span class="source-line-no">078</span><span id="line-78">      @NonNull URI resource,</span>
-<span class="source-line-no">079</span><span id="line-79">      @NonNull T binding,</span>
-<span class="source-line-no">080</span><span id="line-80">      @NonNull List&lt;? extends M&gt; importedModules) throws MetaschemaException;</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">  /**</span>
-<span class="source-line-no">083</span><span id="line-83">   * Get the list of Metaschema module URIs associated with the provided binding.</span>
-<span class="source-line-no">084</span><span id="line-84">   *</span>
-<span class="source-line-no">085</span><span id="line-85">   * @param binding</span>
-<span class="source-line-no">086</span><span id="line-86">   *          the Metaschema module binding declaring the imports</span>
-<span class="source-line-no">087</span><span id="line-87">   * @return the list of Metaschema module URIs</span>
-<span class="source-line-no">088</span><span id="line-88">   */</span>
-<span class="source-line-no">089</span><span id="line-89">  @NonNull</span>
-<span class="source-line-no">090</span><span id="line-90">  protected abstract List&lt;URI&gt; getImports(@NonNull T binding);</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">  @Override</span>
-<span class="source-line-no">093</span><span id="line-93">  protected M parseResource(@NonNull URI resource, @NonNull Deque&lt;URI&gt; visitedResources)</span>
-<span class="source-line-no">094</span><span id="line-94">      throws IOException {</span>
-<span class="source-line-no">095</span><span id="line-95">    // parse this Metaschema module</span>
-<span class="source-line-no">096</span><span id="line-96">    T binding = parseModule(resource);</span>
-<span class="source-line-no">097</span><span id="line-97"></span>
-<span class="source-line-no">098</span><span id="line-98">    // now check if this Metaschema imports other metaschema</span>
-<span class="source-line-no">099</span><span id="line-99">    List&lt;URI&gt; imports = getImports(binding);</span>
-<span class="source-line-no">100</span><span id="line-100">    @NonNull Map&lt;URI, M&gt; importedModules;</span>
-<span class="source-line-no">101</span><span id="line-101">    if (imports.isEmpty()) {</span>
-<span class="source-line-no">102</span><span id="line-102">      importedModules = ObjectUtils.notNull(Collections.emptyMap());</span>
-<span class="source-line-no">103</span><span id="line-103">    } else {</span>
-<span class="source-line-no">104</span><span id="line-104">      try {</span>
-<span class="source-line-no">105</span><span id="line-105">        importedModules = new LinkedHashMap&lt;&gt;();</span>
-<span class="source-line-no">106</span><span id="line-106">        for (URI importedResource : imports) {</span>
-<span class="source-line-no">107</span><span id="line-107">          URI resolvedResource = ObjectUtils.notNull(resource.resolve(importedResource));</span>
-<span class="source-line-no">108</span><span id="line-108">          importedModules.put(resolvedResource, loadInternal(resolvedResource, visitedResources));</span>
-<span class="source-line-no">109</span><span id="line-109">        }</span>
-<span class="source-line-no">110</span><span id="line-110">      } catch (MetaschemaException ex) {</span>
-<span class="source-line-no">111</span><span id="line-111">        throw new IOException(ex);</span>
-<span class="source-line-no">112</span><span id="line-112">      }</span>
-<span class="source-line-no">113</span><span id="line-113">    }</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">    // now create this metaschema</span>
-<span class="source-line-no">116</span><span id="line-116">    Collection&lt;M&gt; values = importedModules.values();</span>
-<span class="source-line-no">117</span><span id="line-117">    try {</span>
-<span class="source-line-no">118</span><span id="line-118">      M module = newModule(resource, binding, new ArrayList&lt;&gt;(values));</span>
-<span class="source-line-no">119</span><span id="line-119"></span>
-<span class="source-line-no">120</span><span id="line-120">      for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {</span>
-<span class="source-line-no">121</span><span id="line-121">        postProcessor.processModule(module);</span>
-<span class="source-line-no">122</span><span id="line-122">      }</span>
-<span class="source-line-no">123</span><span id="line-123">      return module;</span>
-<span class="source-line-no">124</span><span id="line-124">    } catch (MetaschemaException ex) {</span>
-<span class="source-line-no">125</span><span id="line-125">      throw new IOException(ex);</span>
-<span class="source-line-no">126</span><span id="line-126">    }</span>
-<span class="source-line-no">127</span><span id="line-127">  }</span>
-<span class="source-line-no">128</span><span id="line-128"></span>
-<span class="source-line-no">129</span><span id="line-129">  /**</span>
-<span class="source-line-no">130</span><span id="line-130">   * Parse the provided XML resource as a Metaschema module.</span>
-<span class="source-line-no">131</span><span id="line-131">   *</span>
-<span class="source-line-no">132</span><span id="line-132">   * @param resource</span>
-<span class="source-line-no">133</span><span id="line-133">   *          the resource to parse</span>
-<span class="source-line-no">134</span><span id="line-134">   * @return the XMLBeans representation of the Metaschema module</span>
-<span class="source-line-no">135</span><span id="line-135">   * @throws IOException</span>
-<span class="source-line-no">136</span><span id="line-136">   *           if a parsing error occurred</span>
-<span class="source-line-no">137</span><span id="line-137">   */</span>
-<span class="source-line-no">138</span><span id="line-138">  @NonNull</span>
-<span class="source-line-no">139</span><span id="line-139">  protected abstract T parseModule(@NonNull URI resource) throws IOException;</span>
-<span class="source-line-no">140</span><span id="line-140">}</span>
+<span class="source-line-no">068</span><span id="line-68">   *          the Metaschema module binding declaring the imports</span>
+<span class="source-line-no">069</span><span id="line-69">   * @return the list of Metaschema module URIs</span>
+<span class="source-line-no">070</span><span id="line-70">   */</span>
+<span class="source-line-no">071</span><span id="line-71">  @NonNull</span>
+<span class="source-line-no">072</span><span id="line-72">  protected abstract List&lt;URI&gt; getImports(@NonNull T binding);</span>
+<span class="source-line-no">073</span><span id="line-73"></span>
+<span class="source-line-no">074</span><span id="line-74">  @Override</span>
+<span class="source-line-no">075</span><span id="line-75">  protected M parseResource(@NonNull URI resource, @NonNull Deque&lt;URI&gt; visitedResources)</span>
+<span class="source-line-no">076</span><span id="line-76">      throws IOException {</span>
+<span class="source-line-no">077</span><span id="line-77">    // parse this Metaschema module</span>
+<span class="source-line-no">078</span><span id="line-78">    T binding = parseModule(resource);</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">    // now check if this Metaschema imports other metaschema</span>
+<span class="source-line-no">081</span><span id="line-81">    List&lt;URI&gt; imports = getImports(binding);</span>
+<span class="source-line-no">082</span><span id="line-82">    @NonNull Map&lt;URI, M&gt; importedModules;</span>
+<span class="source-line-no">083</span><span id="line-83">    if (imports.isEmpty()) {</span>
+<span class="source-line-no">084</span><span id="line-84">      importedModules = ObjectUtils.notNull(Collections.emptyMap());</span>
+<span class="source-line-no">085</span><span id="line-85">    } else {</span>
+<span class="source-line-no">086</span><span id="line-86">      try {</span>
+<span class="source-line-no">087</span><span id="line-87">        importedModules = new LinkedHashMap&lt;&gt;();</span>
+<span class="source-line-no">088</span><span id="line-88">        for (URI importedResource : imports) {</span>
+<span class="source-line-no">089</span><span id="line-89">          URI resolvedResource = ObjectUtils.notNull(resource.resolve(importedResource));</span>
+<span class="source-line-no">090</span><span id="line-90">          importedModules.put(resolvedResource, loadInternal(resolvedResource, visitedResources));</span>
+<span class="source-line-no">091</span><span id="line-91">        }</span>
+<span class="source-line-no">092</span><span id="line-92">      } catch (MetaschemaException ex) {</span>
+<span class="source-line-no">093</span><span id="line-93">        throw new IOException(ex);</span>
+<span class="source-line-no">094</span><span id="line-94">      }</span>
+<span class="source-line-no">095</span><span id="line-95">    }</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">    // now create this metaschema</span>
+<span class="source-line-no">098</span><span id="line-98">    Collection&lt;M&gt; values = importedModules.values();</span>
+<span class="source-line-no">099</span><span id="line-99">    try {</span>
+<span class="source-line-no">100</span><span id="line-100">      return newModule(resource, binding, new ArrayList&lt;&gt;(values));</span>
+<span class="source-line-no">101</span><span id="line-101">    } catch (MetaschemaException ex) {</span>
+<span class="source-line-no">102</span><span id="line-102">      throw new IOException(ex);</span>
+<span class="source-line-no">103</span><span id="line-103">    }</span>
+<span class="source-line-no">104</span><span id="line-104">  }</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">  /**</span>
+<span class="source-line-no">107</span><span id="line-107">   * Parse the provided XML resource as a Metaschema module.</span>
+<span class="source-line-no">108</span><span id="line-108">   *</span>
+<span class="source-line-no">109</span><span id="line-109">   * @param resource</span>
+<span class="source-line-no">110</span><span id="line-110">   *          the resource to parse</span>
+<span class="source-line-no">111</span><span id="line-111">   * @return the XMLBeans representation of the Metaschema module</span>
+<span class="source-line-no">112</span><span id="line-112">   * @throws IOException</span>
+<span class="source-line-no">113</span><span id="line-113">   *           if a parsing error occurred</span>
+<span class="source-line-no">114</span><span id="line-114">   */</span>
+<span class="source-line-no">115</span><span id="line-115">  @NonNull</span>
+<span class="source-line-no">116</span><span id="line-116">  protected abstract T parseModule(@NonNull URI resource) throws IOException;</span>
+<span class="source-line-no">117</span><span id="line-117">}</span>
 
 
 

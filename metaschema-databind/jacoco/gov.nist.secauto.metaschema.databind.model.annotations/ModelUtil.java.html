@@ -9,10 +9,11 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
 import gov.nist.secauto.metaschema.databind.model.impl.DefaultGroupAs;
@@ -20,6 +21,11 @@ import gov.nist.secauto.metaschema.databind.model.impl.DefaultGroupAs;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -59,14 +65,14 @@ public final class ModelUtil {
   public static &lt;A extends Annotation&gt; A getAnnotation(
       @NonNull Class&lt;?&gt; clazz,
       Class&lt;A&gt; annotationClass) {
-<span class="fc" id="L62">    A annotation = clazz.getAnnotation(annotationClass);</span>
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">    if (annotation == null) {</span>
-<span class="nc" id="L64">      throw new IllegalArgumentException(</span>
-<span class="nc" id="L65">          String.format(&quot;Class '%s' is missing the '%s' annotation.&quot;,</span>
-<span class="nc" id="L66">              clazz.getName(),</span>
-<span class="nc" id="L67">              annotationClass.getName()));</span>
+<span class="fc" id="L68">    A annotation = clazz.getAnnotation(annotationClass);</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">    if (annotation == null) {</span>
+<span class="nc" id="L70">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L71">          String.format(&quot;Class '%s' is missing the '%s' annotation.&quot;,</span>
+<span class="nc" id="L72">              clazz.getName(),</span>
+<span class="nc" id="L73">              annotationClass.getName()));</span>
     }
-<span class="fc" id="L69">    return annotation;</span>
+<span class="fc" id="L75">    return annotation;</span>
   }
 
   /**
@@ -86,14 +92,14 @@ public final class ModelUtil {
   public static &lt;A extends Annotation&gt; A getAnnotation(
       @NonNull Field javaField,
       Class&lt;A&gt; annotationClass) {
-<span class="fc" id="L89">    A annotation = javaField.getAnnotation(annotationClass);</span>
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">    if (annotation == null) {</span>
-<span class="nc" id="L91">      throw new IllegalArgumentException(</span>
-<span class="nc" id="L92">          String.format(&quot;Field '%s' is missing the '%s' annotation.&quot;,</span>
-<span class="nc" id="L93">              javaField.toGenericString(),</span>
-<span class="nc" id="L94">              annotationClass.getName()));</span>
+<span class="fc" id="L95">    A annotation = javaField.getAnnotation(annotationClass);</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">    if (annotation == null) {</span>
+<span class="nc" id="L97">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L98">          String.format(&quot;Field '%s' is missing the '%s' annotation.&quot;,</span>
+<span class="nc" id="L99">              javaField.toGenericString(),</span>
+<span class="nc" id="L100">              annotationClass.getName()));</span>
     }
-<span class="fc" id="L96">    return annotation;</span>
+<span class="fc" id="L102">    return annotation;</span>
   }
 
   /**
@@ -110,14 +116,14 @@ public final class ModelUtil {
   @Nullable
   public static String resolveNoneOrDefault(@Nullable String value, @Nullable String defaultValue) {
     String retval;
-<span class="pc bpc" id="L113" title="2 of 4 branches missed.">    if (value == null || DEFAULT_STRING_VALUE.equals(value)) {</span>
-<span class="nc" id="L114">      retval = defaultValue;</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">    } else if (NO_STRING_VALUE.equals(value)) {</span>
-<span class="fc" id="L116">      retval = null; // NOPMD - intentional</span>
+<span class="pc bpc" id="L119" title="2 of 4 branches missed.">    if (value == null || DEFAULT_STRING_VALUE.equals(value)) {</span>
+<span class="nc" id="L120">      retval = defaultValue;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">    } else if (NO_STRING_VALUE.equals(value)) {</span>
+<span class="fc" id="L122">      retval = null; // NOPMD - intentional</span>
     } else {
-<span class="fc" id="L118">      retval = value;</span>
+<span class="fc" id="L124">      retval = value;</span>
     }
-<span class="fc" id="L120">    return retval;</span>
+<span class="fc" id="L126">    return retval;</span>
   }
 
   /**
@@ -130,7 +136,7 @@ public final class ModelUtil {
    */
   @Nullable
   public static String resolveNoneOrValue(@NonNull String value) {
-<span class="fc bfc" id="L133" title="All 2 branches covered.">    return NO_STRING_VALUE.equals(value) ? null : value;</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">    return NO_STRING_VALUE.equals(value) ? null : value;</span>
   }
 
   /**
@@ -143,7 +149,7 @@ public final class ModelUtil {
    */
   @Nullable
   public static MarkupLine resolveToMarkupLine(@NonNull String value) {
-<span class="fc bfc" id="L146" title="All 2 branches covered.">    return resolveNoneOrValue(value) == null ? null : MarkupLine.fromMarkdown(value);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">    return resolveNoneOrValue(value) == null ? null : MarkupLine.fromMarkdown(value);</span>
   }
 
   /**
@@ -156,7 +162,7 @@ public final class ModelUtil {
    */
   @Nullable
   public static MarkupMultiline resolveToMarkupMultiline(@NonNull String value) {
-<span class="fc bfc" id="L159" title="All 2 branches covered.">    return resolveNoneOrValue(value) == null ? null : MarkupMultiline.fromMarkdown(value);</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">    return resolveNoneOrValue(value) == null ? null : MarkupMultiline.fromMarkdown(value);</span>
   }
 
   /**
@@ -171,18 +177,23 @@ public final class ModelUtil {
    * @param bindingContext
    *          the Metaschema binding context used to lookup the data type adapter
    * @return the data type adapter
+   * @throws IllegalArgumentException
+   *           if the provided adapter is not registered with the binding context
    */
   @NonNull
   public static IDataTypeAdapter&lt;?&gt; getDataTypeAdapter(
       @NonNull Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; adapterClass,
       @NonNull IBindingContext bindingContext) {
     IDataTypeAdapter&lt;?&gt; retval;
-<span class="fc bfc" id="L180" title="All 2 branches covered.">    if (NullJavaTypeAdapter.class.equals(adapterClass)) {</span>
-<span class="fc" id="L181">      retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">    if (NullJavaTypeAdapter.class.equals(adapterClass)) {</span>
+<span class="fc" id="L189">      retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
     } else {
-<span class="fc" id="L183">      retval = ObjectUtils.requireNonNull(bindingContext.getJavaTypeAdapterInstance(adapterClass));</span>
+<span class="fc" id="L191">      retval = bindingContext.getJavaTypeAdapterInstance(adapterClass);</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">      if (retval == null) {</span>
+<span class="nc" id="L193">        throw new IllegalArgumentException(&quot;Unable to get type adapter instance for class: &quot; + adapterClass.getName());</span>
+      }
     }
-<span class="fc" id="L185">    return retval;</span>
+<span class="fc" id="L196">    return retval;</span>
   }
 
   /**
@@ -202,11 +213,11 @@ public final class ModelUtil {
    */
   @Nullable
   public static Object resolveDefaultValue(@NonNull String defaultValue, IDataTypeAdapter&lt;?&gt; adapter) {
-<span class="fc" id="L205">    Object retval = null;</span>
-<span class="fc bfc" id="L206" title="All 2 branches covered.">    if (!NULL_VALUE.equals(defaultValue)) {</span>
-<span class="fc" id="L207">      retval = adapter.parse(defaultValue);</span>
+<span class="fc" id="L216">    Object retval = null;</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">    if (!NULL_VALUE.equals(defaultValue)) {</span>
+<span class="fc" id="L218">      retval = adapter.parse(defaultValue);</span>
     }
-<span class="fc" id="L209">    return retval;</span>
+<span class="fc" id="L220">    return retval;</span>
   }
 
   /**
@@ -220,7 +231,7 @@ public final class ModelUtil {
    * @return the integer value or {@code null} if the provided value was -2^31
    */
   public static Integer resolveDefaultInteger(int value) {
-<span class="nc bnc" id="L223" title="All 2 branches missed.">    return value == Integer.MIN_VALUE ? null : value;</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">    return value == Integer.MIN_VALUE ? null : value;</span>
   }
 
   /**
@@ -239,32 +250,46 @@ public final class ModelUtil {
   public static IGroupAs resolveDefaultGroupAs(
       @NonNull GroupAs groupAs,
       @NonNull IModule module) {
-<span class="fc bfc" id="L242" title="All 2 branches covered.">    return NULL_VALUE.equals(groupAs.name())</span>
-<span class="fc" id="L243">        ? IGroupAs.SINGLETON_GROUP_AS</span>
-<span class="fc" id="L244">        : new DefaultGroupAs(groupAs, module);</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">    return NULL_VALUE.equals(groupAs.name())</span>
+<span class="fc" id="L254">        ? IGroupAs.SINGLETON_GROUP_AS</span>
+<span class="fc" id="L255">        : new DefaultGroupAs(groupAs, module);</span>
   }
 
   public static String toLocation(@NonNull IBoundObject obj) {
-<span class="nc" id="L248">    IMetaschemaData data = obj.getMetaschemaData();</span>
+<span class="nc" id="L259">    IMetaschemaData data = obj.getMetaschemaData();</span>
 
-<span class="nc" id="L250">    String retval = &quot;&quot;;</span>
-<span class="nc bnc" id="L251" title="All 2 branches missed.">    if (data != null) {</span>
-<span class="nc" id="L252">      int line = data.getLine();</span>
-<span class="nc bnc" id="L253" title="All 2 branches missed.">      if (line &gt; -1) {</span>
-<span class="nc" id="L254">        retval = line + &quot;:&quot; + data.getColumn();</span>
+<span class="nc" id="L261">    String retval = &quot;&quot;;</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">    if (data != null) {</span>
+<span class="nc" id="L263">      int line = data.getLine();</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">      if (line &gt; -1) {</span>
+<span class="nc" id="L265">        retval = line + &quot;:&quot; + data.getColumn();</span>
       }
     }
-<span class="nc" id="L257">    return retval;</span>
+<span class="nc" id="L268">    return retval;</span>
   }
 
   public static String toLocation(@NonNull IBoundObject obj, @Nullable URI uri) {
-<span class="nc bnc" id="L261" title="All 2 branches missed.">    String retval = uri == null ? &quot;&quot; : uri.toASCIIString();</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">    String retval = uri == null ? &quot;&quot; : uri.toASCIIString();</span>
 
-<span class="nc" id="L263">    String location = toLocation(obj);</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">    if (!location.isEmpty()) {</span>
-<span class="nc bnc" id="L265" title="All 2 branches missed.">      retval = retval.isEmpty() ? location : retval + &quot;@&quot; + location;</span>
+<span class="nc" id="L274">    String location = toLocation(obj);</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">    if (!location.isEmpty()) {</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">      retval = retval.isEmpty() ? location : retval + &quot;@&quot; + location;</span>
     }
-<span class="nc" id="L267">    return retval;</span>
+<span class="nc" id="L278">    return retval;</span>
+  }
+
+  public static Map.Entry&lt;IAttributable.Key, Set&lt;String&gt;&gt; toPropertyEntry(@NonNull Property property) {
+<span class="nc" id="L282">    String name = property.name();</span>
+<span class="nc" id="L283">    String namespace = property.namespace();</span>
+    @SuppressWarnings(&quot;PMD.AvoidInstantiatingObjectsInLoops&quot;) // ok
+<span class="nc" id="L285">    IAttributable.Key key = IAttributable.key(namespace, name);</span>
+
+<span class="nc" id="L287">    String[] values = property.values();</span>
+<span class="nc" id="L288">    List&lt;String&gt; valueList = Arrays.asList(values);</span>
+    @SuppressWarnings(&quot;PMD.AvoidInstantiatingObjectsInLoops&quot;) // ok
+<span class="nc" id="L290">    Set&lt;String&gt; valueSet = new LinkedHashSet&lt;&gt;(valueList);</span>
+
+<span class="nc" id="L292">    return Map.entry(key, CollectionUtil.unmodifiableSet(valueSet));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -8,9 +8,9 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +19,12 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a key reference constraint.
+ * &lt;p&gt;
+ * Uses a set of key fields to build a key to match against an index. A Match is
+ * successful if the resulting key matches an entry in the index.
+ */
 public final class DefaultIndexHasKeyConstraint
     extends AbstractKeyConstraint
     implements IIndexHasKeyConstraint {
@@ -26,8 +32,7 @@ public final class DefaultIndexHasKeyConstraint
   private final String indexName;
 
   /**
-   * Create a key reference constraint, which uses a set of key fields to build a
-   * key to match against an index.
+   * Construct a key reference constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -48,6 +53,8 @@ public final class DefaultIndexHasKeyConstraint
    *          a reference to the indexName of the index
    * @param keyFields
    *          a list of key fields associated with the constraint
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -62,17 +69,18 @@ public final class DefaultIndexHasKeyConstraint
       @NonNull Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; properties,
       @NonNull String indexName,
       @NonNull List&lt;IKeyField&gt; keyFields,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-<span class="nc" id="L66">    super(id, formalName, description, source, level, target, properties, keyFields, remarks);</span>
-<span class="nc bnc" id="L67" title="All 2 branches missed.">    if (indexName.isBlank()) {</span>
-<span class="nc" id="L68">      throw new IllegalArgumentException(&quot;The index indexName must be a non-blank string&quot;);</span>
+<span class="nc" id="L74">    super(id, formalName, description, source, level, target, properties, keyFields, message, remarks);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">    if (indexName.isBlank()) {</span>
+<span class="nc" id="L76">      throw new IllegalArgumentException(&quot;The index indexName must be a non-blank string&quot;);</span>
     }
-<span class="nc" id="L70">    this.indexName = indexName;</span>
-<span class="nc" id="L71">  }</span>
+<span class="nc" id="L78">    this.indexName = indexName;</span>
+<span class="nc" id="L79">  }</span>
 
   @Override
   public String getIndexName() {
-<span class="nc" id="L75">    return indexName;</span>
+<span class="nc" id="L83">    return indexName;</span>
   }
 
 }

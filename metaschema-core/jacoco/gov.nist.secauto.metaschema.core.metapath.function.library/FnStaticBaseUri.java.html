@@ -20,24 +20,29 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-static-base-uri&quot;&gt;fn:static-base-uri&lt;/a&gt;
+ * function.
+ */
 public final class FnStaticBaseUri {
   private static final String NAME = &quot;static-base-uri&quot;;
   @NonNull
-<span class="fc" id="L26">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L27">      .name(NAME)</span>
-<span class="fc" id="L28">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L29">      .deterministic()</span>
-<span class="fc" id="L30">      .contextDependent()</span>
-<span class="fc" id="L31">      .focusIndependent()</span>
-<span class="fc" id="L32">      .argument(IArgument.builder()</span>
-<span class="fc" id="L33">          .name(&quot;arg1&quot;)</span>
-<span class="fc" id="L34">          .type(IStringItem.class)</span>
-<span class="fc" id="L35">          .zeroOrOne()</span>
-<span class="fc" id="L36">          .build())</span>
-<span class="fc" id="L37">      .returnType(IAnyUriItem.class)</span>
-<span class="fc" id="L38">      .returnOne()</span>
-<span class="fc" id="L39">      .functionHandler(FnStaticBaseUri::execute)</span>
-<span class="fc" id="L40">      .build();</span>
+<span class="fc" id="L31">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L32">      .name(NAME)</span>
+<span class="fc" id="L33">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L34">      .deterministic()</span>
+<span class="fc" id="L35">      .contextDependent()</span>
+<span class="fc" id="L36">      .focusIndependent()</span>
+<span class="fc" id="L37">      .argument(IArgument.builder()</span>
+<span class="fc" id="L38">          .name(&quot;arg1&quot;)</span>
+<span class="fc" id="L39">          .type(IStringItem.class)</span>
+<span class="fc" id="L40">          .zeroOrOne()</span>
+<span class="fc" id="L41">          .build())</span>
+<span class="fc" id="L42">      .returnType(IAnyUriItem.class)</span>
+<span class="fc" id="L43">      .returnOne()</span>
+<span class="fc" id="L44">      .functionHandler(FnStaticBaseUri::execute)</span>
+<span class="fc" id="L45">      .build();</span>
 
   @SuppressWarnings(&quot;unused&quot;)
   @NonNull
@@ -46,8 +51,8 @@ public final class FnStaticBaseUri {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-<span class="nc" id="L49">    IAnyUriItem uri = fnStaticBaseUri(dynamicContext);</span>
-<span class="nc" id="L50">    return ISequence.of(uri);</span>
+<span class="nc" id="L54">    IAnyUriItem uri = fnStaticBaseUri(dynamicContext);</span>
+<span class="nc" id="L55">    return ISequence.of(uri);</span>
   }
 
   private FnStaticBaseUri() {
@@ -63,9 +68,9 @@ public final class FnStaticBaseUri {
    */
   @Nullable
   public static IAnyUriItem fnStaticBaseUri(@NonNull DynamicContext context) {
-<span class="nc" id="L66">    URI staticBaseUri = context.getStaticContext().getBaseUri();</span>
+<span class="nc" id="L71">    URI staticBaseUri = context.getStaticContext().getBaseUri();</span>
 
-<span class="nc bnc" id="L68" title="All 2 branches missed.">    return staticBaseUri == null ? null : IAnyUriItem.valueOf(staticBaseUri);</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">    return staticBaseUri == null ? null : IAnyUriItem.valueOf(staticBaseUri);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

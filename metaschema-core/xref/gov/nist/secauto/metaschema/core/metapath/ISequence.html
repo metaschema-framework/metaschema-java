@@ -103,7 +103,7 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">   *           {@code true}</em>
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> IItem&gt; T getFirstItem(@NonNull ISequence&lt;T&gt; items, <strong class="jxr_keyword">boolean</strong> requireSingleton) {
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <strong class="jxr_keyword">return</strong> getFirstItem(items.stream(), requireSingleton);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <strong class="jxr_keyword">return</strong> getFirstItem(items.safeStream(), requireSingleton);
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>    }
 <a class="jxr_linenumber" name="L100" href="#L100">100</a> 
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>   <em class="jxr_javadoccomment">/**</em>

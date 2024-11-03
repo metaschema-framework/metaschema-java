@@ -6,18 +6,18 @@
 package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
-import gov.nist.secauto.metaschema.core.model.util.XmlUtil;
+import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
+import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.IBindingContext.ISchemaValidationProvider;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
@@ -25,132 +25,129 @@ import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-<span class="fc" id="L47">public class ValidateContentUsingModuleCommand</span>
+/**
+ * This command implementation supports validation of a content instance based
+ * on a provided Metaschema module.
+ */
+<span class="fc" id="L49">class ValidateContentUsingModuleCommand</span>
     extends AbstractValidateContentCommand {
   @NonNull
   private static final String COMMAND = &quot;validate-content&quot;;
 
   @Override
   public String getName() {
-<span class="fc" id="L54">    return COMMAND;</span>
+<span class="fc" id="L56">    return COMMAND;</span>
   }
 
   @Override
   public String getDescription() {
-<span class="fc" id="L59">    return &quot;Verify that the provided resource is well-formed and valid to the provided Module-based model.&quot;;</span>
+<span class="fc" id="L61">    return &quot;Verify that the provided resource is well-formed and valid to the provided Module-based model.&quot;;</span>
   }
 
   @Override
   public Collection&lt;? extends Option&gt; gatherOptions() {
-<span class="fc" id="L64">    Collection&lt;? extends Option&gt; orig = super.gatherOptions();</span>
+<span class="fc" id="L66">    Collection&lt;? extends Option&gt; orig = super.gatherOptions();</span>
 
-<span class="fc" id="L66">    List&lt;Option&gt; retval = new ArrayList&lt;&gt;(orig.size() + 1);</span>
-<span class="fc" id="L67">    retval.addAll(orig);</span>
-<span class="fc" id="L68">    retval.add(MetaschemaCommands.METASCHEMA_OPTION);</span>
+<span class="fc" id="L68">    List&lt;Option&gt; retval = new ArrayList&lt;&gt;(orig.size() + 1);</span>
+<span class="fc" id="L69">    retval.addAll(orig);</span>
+<span class="fc" id="L70">    retval.add(MetaschemaCommands.METASCHEMA_REQUIRED_OPTION);</span>
 
-<span class="fc" id="L70">    return CollectionUtil.unmodifiableCollection(retval);</span>
+<span class="fc" id="L72">    return CollectionUtil.unmodifiableCollection(retval);</span>
   }
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-<span class="fc" id="L75">    return new OscalCommandExecutor(callingContext, commandLine);</span>
+<span class="fc" id="L77">    return new CommandExecutor(callingContext, commandLine);</span>
   }
 
-<span class="fc" id="L78">  private final class OscalCommandExecutor</span>
+  private final class CommandExecutor
       extends AbstractValidationCommandExecutor {
 
-    private Path tempDir;
-    private IModule module;
-
-    private OscalCommandExecutor(
+    private CommandExecutor(
         @NonNull CallingContext callingContext,
-<span class="fc" id="L86">        @NonNull CommandLine commandLine) {</span>
-<span class="fc" id="L87">      super(callingContext, commandLine);</span>
-<span class="fc" id="L88">    }</span>
-
-    @NonNull
-    private Path getTempDir() throws IOException {
-<span class="fc bfc" id="L92" title="All 2 branches covered.">      if (tempDir == null) {</span>
-<span class="fc" id="L93">        tempDir = Files.createTempDirectory(&quot;validation-&quot;);</span>
-<span class="fc" id="L94">        tempDir.toFile().deleteOnExit();</span>
-      }
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">      assert tempDir != null;</span>
-<span class="fc" id="L97">      return tempDir;</span>
-    }
-
-    @NonNull
-    private IModule getModule(@NonNull Set&lt;IConstraintSet&gt; constraintSets)
-        throws MetaschemaException, IOException {
-<span class="fc" id="L103">      URI cwd = ObjectUtils.notNull(Paths.get(&quot;&quot;).toAbsolutePath().toUri());</span>
-
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">      if (module == null) {</span>
-        try {
-<span class="fc" id="L107">          module = MetaschemaCommands.handleModule(getCommandLine(), cwd, constraintSets);</span>
-<span class="nc" id="L108">        } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L109">          throw new IOException(String.format(&quot;Cannot load module as '%s' is not a valid file or URL.&quot;, ex.getInput()),</span>
-              ex);
-<span class="fc" id="L111">        }</span>
-      }
-
-<span class="pc bpc" id="L114" title="1 of 2 branches missed.">      assert module != null;</span>
-<span class="fc" id="L115">      return module;</span>
-    }
-
-    @NonNull
-    private IModule getModule() {
-      // should be initialized already
-<span class="fc" id="L121">      return ObjectUtils.requireNonNull(module);</span>
-    }
+<span class="fc" id="L85">        @NonNull CommandLine commandLine) {</span>
+<span class="fc" id="L86">      super(callingContext, commandLine);</span>
+<span class="fc" id="L87">    }</span>
 
     @Override
     protected IBindingContext getBindingContext(@NonNull Set&lt;IConstraintSet&gt; constraintSets)
-        throws MetaschemaException, IOException {
-
-<span class="fc" id="L128">      IBindingContext retval = new DefaultBindingContext();</span>
-<span class="fc" id="L129">      retval.registerModule(getModule(constraintSets), getTempDir());</span>
-<span class="fc" id="L130">      return retval;</span>
+        throws CommandExecutionException {
+<span class="fc" id="L92">      return MetaschemaCommands.newBindingContextWithDynamicCompilation(constraintSets);</span>
     }
 
     @Override
-    public List&lt;Source&gt; getXmlSchemas(@NonNull URL targetResource) throws IOException {
-<span class="fc" id="L135">      Path schemaFile = Files.createTempFile(getTempDir(), &quot;schema-&quot;, &quot;.xml&quot;);</span>
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">      assert schemaFile != null;</span>
-<span class="fc" id="L137">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="fc" id="L138">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.XML, configuration);</span>
-<span class="fc" id="L139">      return ObjectUtils.requireNonNull(List.of(</span>
-<span class="fc" id="L140">          XmlUtil.getStreamSource(ObjectUtils.notNull(schemaFile.toUri().toURL()))));</span>
+    protected IModule getModule(
+        CommandLine commandLine,
+        IBindingContext bindingContext) throws CommandExecutionException {
+<span class="fc" id="L99">      return MetaschemaCommands.loadModule(</span>
+          commandLine,
+          MetaschemaCommands.METASCHEMA_REQUIRED_OPTION,
+<span class="fc" id="L102">          ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),</span>
+          bindingContext);
     }
 
     @Override
-    public JSONObject getJsonSchema(@NonNull JSONObject json) throws IOException {
-<span class="fc" id="L145">      Path schemaFile = Files.createTempFile(getTempDir(), &quot;schema-&quot;, &quot;.json&quot;);</span>
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">      assert schemaFile != null;</span>
-<span class="fc" id="L147">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="fc" id="L148">      ISchemaGenerator.generateSchema(getModule(), schemaFile, SchemaFormat.JSON, configuration);</span>
-<span class="fc" id="L149">      try (BufferedReader reader = ObjectUtils.notNull(Files.newBufferedReader(schemaFile, StandardCharsets.UTF_8))) {</span>
-<span class="fc" id="L150">        return JsonUtil.toJsonObject(reader);</span>
+    protected ISchemaValidationProvider getSchemaValidationProvider(
+        IModule module,
+        CommandLine commandLine,
+        IBindingContext bindingContext) {
+<span class="fc" id="L111">      return new ModuleValidationProvider(module);</span>
+    }
+
+  }
+
+  private static final class ModuleValidationProvider implements ISchemaValidationProvider {
+    @NonNull
+    private final IModule module;
+
+<span class="fc" id="L120">    public ModuleValidationProvider(@NonNull IModule module) {</span>
+<span class="fc" id="L121">      this.module = module;</span>
+<span class="fc" id="L122">    }</span>
+
+    @Override
+    public XmlSchemaContentValidator getXmlSchemas(
+        @NonNull URL targetResource,
+        @NonNull IBindingContext bindingContext) throws IOException, SAXException {
+<span class="fc" id="L128">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
+
+<span class="fc" id="L130">      try (StringWriter writer = new StringWriter()) {</span>
+<span class="fc" id="L131">        ISchemaGenerator.generateSchema(module, writer, SchemaFormat.XML, configuration);</span>
+<span class="fc" id="L132">        try (Reader reader = new StringReader(writer.toString())) {</span>
+<span class="fc" id="L133">          return new XmlSchemaContentValidator(</span>
+<span class="fc" id="L134">              ObjectUtils.notNull(List.of(new StreamSource(reader))));</span>
+        }
+      }
+    }
+
+    @Override
+    public JsonSchemaContentValidator getJsonSchema(
+        @NonNull JSONObject json,
+        @NonNull IBindingContext bindingContext) throws IOException {
+<span class="fc" id="L143">      IMutableConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration = new DefaultConfiguration&lt;&gt;();</span>
+
+<span class="fc" id="L145">      try (StringWriter writer = new StringWriter()) {</span>
+<span class="fc" id="L146">        ISchemaGenerator.generateSchema(module, writer, SchemaFormat.JSON, configuration);</span>
+<span class="fc" id="L147">        return new JsonSchemaContentValidator(</span>
+<span class="fc" id="L148">            new JSONObject(new JSONTokener(writer.toString())));</span>
       }
     }
   }
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

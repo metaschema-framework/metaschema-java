@@ -8,7 +8,9 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractFieldInstance;
+import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
@@ -19,20 +21,26 @@ import gov.nist.secauto.metaschema.databind.model.IBoundProperty;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundGroupedField;
 import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Represents an field model instance that is a member of a choice group
+ * instance.
+ */
 public class InstanceModelGroupedFieldComplex
     extends AbstractFieldInstance&lt;
         IBoundInstanceModelChoiceGroup,
         IBoundDefinitionModelFieldComplex,
         IBoundInstanceModelGroupedField,
         IBoundDefinitionModelAssembly&gt;
-
-    // extends AbstractBoundInstanceModelGroupedNamed&lt;BoundGroupedField&gt;
     implements IBoundInstanceModelGroupedField {
   @NonNull
   private final BoundGroupedField annotation;
@@ -40,32 +48,51 @@ public class InstanceModelGroupedFieldComplex
   private final DefinitionField definition;
   @NonNull
   private final Lazy&lt;Map&lt;String, IBoundProperty&lt;?&gt;&gt;&gt; jsonProperties;
+  @NonNull
+  private final Lazy&lt;Map&lt;IAttributable.Key, Set&lt;String&gt;&gt;&gt; properties;
 
+  /**
+   * Construct a new field model instance instance that is a member of a choice
+   * group instance.
+   *
+   * @param annotation
+   *          the Java annotation the instance is bound to
+   * @param definition
+   *          the assembly definition this instance is bound to
+   * @param container
+   *          the choice group instance containing the instance
+   */
   public InstanceModelGroupedFieldComplex(
       @NonNull BoundGroupedField annotation,
       @NonNull DefinitionField definition,
       @NonNull IBoundInstanceModelChoiceGroup container) {
-<span class="nc" id="L48">    super(container);</span>
-<span class="nc" id="L49">    this.annotation = annotation;</span>
-<span class="nc" id="L50">    this.definition = definition;</span>
-<span class="nc" id="L51">    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="nc" id="L52">      Predicate&lt;IBoundInstanceFlag&gt; flagFilter = null;</span>
-<span class="nc" id="L53">      IBoundInstanceFlag jsonKey = getEffectiveJsonKey();</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">      if (jsonKey != null) {</span>
-<span class="nc bnc" id="L55" title="All 2 branches missed.">        flagFilter = flag -&gt; !jsonKey.equals(flag);</span>
+<span class="nc" id="L69">    super(container);</span>
+<span class="nc" id="L70">    this.annotation = annotation;</span>
+<span class="nc" id="L71">    this.definition = definition;</span>
+<span class="nc" id="L72">    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="nc" id="L73">      Predicate&lt;IBoundInstanceFlag&gt; flagFilter = null;</span>
+<span class="nc" id="L74">      IBoundInstanceFlag jsonKey = getEffectiveJsonKey();</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">      if (jsonKey != null) {</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        flagFilter = flag -&gt; !jsonKey.equals(flag);</span>
       }
 
-<span class="nc" id="L58">      IBoundInstanceFlag jsonValueKey = getDefinition().getJsonValueKeyFlagInstance();</span>
-<span class="nc bnc" id="L59" title="All 2 branches missed.">      if (jsonValueKey != null) {</span>
-<span class="nc bnc" id="L60" title="All 2 branches missed.">        Predicate&lt;IBoundInstanceFlag&gt; jsonValueKeyFilter = flag -&gt; !flag.equals(jsonValueKey);</span>
-<span class="nc bnc" id="L61" title="All 2 branches missed.">        flagFilter = flagFilter == null ? jsonValueKeyFilter : flagFilter.and(jsonValueKeyFilter);</span>
+<span class="nc" id="L79">      IBoundInstanceFlag jsonValueKey = getDefinition().getJsonValueKeyFlagInstance();</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">      if (jsonValueKey != null) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        Predicate&lt;IBoundInstanceFlag&gt; jsonValueKeyFilter = flag -&gt; !flag.equals(jsonValueKey);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        flagFilter = flagFilter == null ? jsonValueKeyFilter : flagFilter.and(jsonValueKeyFilter);</span>
       }
-<span class="nc" id="L63">      return getDefinition().getJsonProperties(flagFilter);</span>
+<span class="nc" id="L84">      return getDefinition().getJsonProperties(flagFilter);</span>
     }));
-<span class="nc" id="L65">  }</span>
+<span class="nc" id="L86">    this.properties = ObjectUtils.notNull(</span>
+<span class="nc" id="L87">        Lazy.lazy(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="nc" id="L88">            Arrays.stream(annotation.properties())</span>
+<span class="nc" id="L89">                .map(ModelUtil::toPropertyEntry)</span>
+<span class="nc" id="L90">                .collect(</span>
+<span class="nc" id="L91">                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -&gt; v2, LinkedHashMap::new))))));</span>
+<span class="nc" id="L92">  }</span>
 
   private BoundGroupedField getAnnotation() {
-<span class="nc" id="L68">    return annotation;</span>
+<span class="nc" id="L95">    return annotation;</span>
   }
 
   // ------------------------------------------
@@ -74,47 +101,52 @@ public class InstanceModelGroupedFieldComplex
 
   @Override
   public Class&lt;? extends IBoundObject&gt; getBoundClass() {
-<span class="nc" id="L77">    return getAnnotation().binding();</span>
+<span class="nc" id="L104">    return getAnnotation().binding();</span>
   }
 
   @Override
   public Map&lt;String, IBoundProperty&lt;?&gt;&gt; getJsonProperties() {
-<span class="nc" id="L82">    return ObjectUtils.notNull(jsonProperties.get());</span>
+<span class="nc" id="L109">    return ObjectUtils.notNull(jsonProperties.get());</span>
   }
 
   @Override
   public DefinitionField getDefinition() {
-<span class="nc" id="L87">    return definition;</span>
+<span class="nc" id="L114">    return definition;</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="nc" id="L92">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
+<span class="nc" id="L119">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
   }
 
   @Override
   public MarkupLine getDescription() {
-<span class="nc" id="L97">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
+<span class="nc" id="L124">    return ModelUtil.resolveToMarkupLine(getAnnotation().description());</span>
+  }
+
+  @Override
+  public Map&lt;Key, Set&lt;String&gt;&gt; getProperties() {
+<span class="nc" id="L129">    return ObjectUtils.notNull(properties.get());</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc" id="L102">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().remarks());</span>
+<span class="nc" id="L134">    return ModelUtil.resolveToMarkupMultiline(getAnnotation().remarks());</span>
   }
 
   @Override
   public String getDiscriminatorValue() {
-<span class="nc" id="L107">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
+<span class="nc" id="L139">    return ModelUtil.resolveNoneOrValue(getAnnotation().formalName());</span>
   }
 
   @Override
   public String getUseName() {
-<span class="nc" id="L112">    return ModelUtil.resolveNoneOrValue(getAnnotation().useName());</span>
+<span class="nc" id="L144">    return ModelUtil.resolveNoneOrValue(getAnnotation().useName());</span>
   }
 
   @Override
   public Integer getUseIndex() {
-<span class="nc" id="L117">    return ModelUtil.resolveDefaultInteger(getAnnotation().useIndex());</span>
+<span class="nc" id="L149">    return ModelUtil.resolveDefaultInteger(getAnnotation().useIndex());</span>
   }
 
   // ----------------------------------------

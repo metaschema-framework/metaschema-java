@@ -37,7 +37,7 @@ public class DefaultYamlDeserializer&lt;CLASS extends IBoundObject&gt;
    * @return the factory
    */
   @Override
-  protected YAMLFactory newJsonFactoryInstance() {
+  protected YAMLFactory newFactoryInstance() {
 <span class="nc" id="L41">    return YamlFactoryFactory.newParserFactoryInstance(getConfiguration());</span>
   }
 

@@ -16,34 +16,40 @@
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IMetaschemaModule;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="IBindingMetaschemaModule" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IBindingMetaschemaModule.html#IBindingMetaschemaModule">IBindingMetaschemaModule</a> <strong class="jxr_keyword">extends</strong> IMetaschemaModule&lt;IBindingMetaschemaModule&gt; {
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">   * Get the underlying module data as a bound object.</em>
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">   * @return the bound class</em>
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>    @NonNull
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>    METASCHEMA getBinding();
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">   * Get the underling bound objects as a {@link IDocumentNodeItem}.</em>
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment">   * @return the document node item</em>
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>    IDocumentNodeItem getSourceNodeItem();
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">   * Get a node item that can be used to query the module's model.</em>
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">   * @return the module node item</em>
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    IModuleNodeItem getModuleNodeItem();
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  }
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> * A Metaschema module represented as binding to Java classes and fields.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="IBindingMetaschemaModule" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IBindingMetaschemaModule.html#IBindingMetaschemaModule">IBindingMetaschemaModule</a>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>      <strong class="jxr_keyword">extends</strong> IMetaschemaModule&lt;IBindingMetaschemaModule&gt; {
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">   * Get the underlying module data as a bound object.</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment">   * @return the bound class</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>    @NonNull
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    METASCHEMA getBinding();
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment">   * Get the underling bound objects as a {@link IDocumentNodeItem}.</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment">   * @return the document node item</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    @NonNull
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    IDocumentNodeItem getSourceNodeItem();
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">   * Get a node item that can be used to query the module's model.</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">   * @return the module node item</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    @NonNull
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    IModuleNodeItem getModuleNodeItem();
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

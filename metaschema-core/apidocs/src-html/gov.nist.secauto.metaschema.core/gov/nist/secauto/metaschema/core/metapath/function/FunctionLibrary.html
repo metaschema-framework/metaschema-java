@@ -23,146 +23,152 @@
 <span class="source-line-no">010</span><span id="line-10">import java.util.HashMap;</span>
 <span class="source-line-no">011</span><span id="line-11">import java.util.Map;</span>
 <span class="source-line-no">012</span><span id="line-12">import java.util.concurrent.locks.Lock;</span>
-<span class="source-line-no">013</span><span id="line-13">import java.util.concurrent.locks.ReentrantLock;</span>
-<span class="source-line-no">014</span><span id="line-14">import java.util.stream.Stream;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">019</span><span id="line-19">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">public class FunctionLibrary implements IFunctionLibrary {</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
-<span class="source-line-no">024</span><span id="line-24">  private final Map&lt;QName, NamedFunctionSet&gt; libraryByQName = new HashMap&lt;&gt;(); // NOPMD - intentional</span>
-<span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
-<span class="source-line-no">026</span><span id="line-26">  private final Map&lt;String, NamedFunctionSet&gt; libraryByName = new HashMap&lt;&gt;(); // NOPMD - intentional</span>
-<span class="source-line-no">027</span><span id="line-27">  @NonNull</span>
-<span class="source-line-no">028</span><span id="line-28">  private final Lock instanceLock = new ReentrantLock();</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">  /**</span>
-<span class="source-line-no">031</span><span id="line-31">   * Register the provided function signature.</span>
-<span class="source-line-no">032</span><span id="line-32">   *</span>
-<span class="source-line-no">033</span><span id="line-33">   * @param function</span>
-<span class="source-line-no">034</span><span id="line-34">   *          the function signature to register</span>
-<span class="source-line-no">035</span><span id="line-35">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">036</span><span id="line-36">   *           if the provided function has the same arity as a previously</span>
-<span class="source-line-no">037</span><span id="line-37">   *           registered function with the same name</span>
-<span class="source-line-no">038</span><span id="line-38">   */</span>
-<span class="source-line-no">039</span><span id="line-39">  public final void registerFunction(@NonNull IFunction function) {</span>
-<span class="source-line-no">040</span><span id="line-40">    registerFunctionByQName(function);</span>
-<span class="source-line-no">041</span><span id="line-41">    registerFunctionByName(function);</span>
-<span class="source-line-no">042</span><span id="line-42">  }</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  private void registerFunctionByQName(@NonNull IFunction function) {</span>
-<span class="source-line-no">045</span><span id="line-45">    QName qname = function.getQName();</span>
-<span class="source-line-no">046</span><span id="line-46">    IFunction duplicate;</span>
-<span class="source-line-no">047</span><span id="line-47">    try {</span>
-<span class="source-line-no">048</span><span id="line-48">      instanceLock.lock();</span>
-<span class="source-line-no">049</span><span id="line-49">      NamedFunctionSet functions = libraryByQName.get(qname);</span>
-<span class="source-line-no">050</span><span id="line-50">      if (functions == null) {</span>
-<span class="source-line-no">051</span><span id="line-51">        functions = new NamedFunctionSet();</span>
-<span class="source-line-no">052</span><span id="line-52">        libraryByQName.put(qname, functions);</span>
-<span class="source-line-no">053</span><span id="line-53">      }</span>
-<span class="source-line-no">054</span><span id="line-54">      duplicate = functions.addFunction(function);</span>
-<span class="source-line-no">055</span><span id="line-55">    } finally {</span>
-<span class="source-line-no">056</span><span id="line-56">      instanceLock.unlock();</span>
-<span class="source-line-no">057</span><span id="line-57">    }</span>
-<span class="source-line-no">058</span><span id="line-58">    if (duplicate != null) {</span>
-<span class="source-line-no">059</span><span id="line-59">      throw new IllegalArgumentException(String.format("Duplicate functions with same arity: %s shadows %s",</span>
-<span class="source-line-no">060</span><span id="line-60">          duplicate.toSignature(), function.toSignature()));</span>
-<span class="source-line-no">061</span><span id="line-61">    }</span>
-<span class="source-line-no">062</span><span id="line-62">  }</span>
-<span class="source-line-no">063</span><span id="line-63"></span>
-<span class="source-line-no">064</span><span id="line-64">  private void registerFunctionByName(@NonNull IFunction function) {</span>
-<span class="source-line-no">065</span><span id="line-65">    String name = function.getName();</span>
-<span class="source-line-no">066</span><span id="line-66">    try {</span>
-<span class="source-line-no">067</span><span id="line-67">      instanceLock.lock();</span>
-<span class="source-line-no">068</span><span id="line-68">      NamedFunctionSet functions = libraryByName.get(name);</span>
-<span class="source-line-no">069</span><span id="line-69">      if (functions == null) {</span>
-<span class="source-line-no">070</span><span id="line-70">        functions = new NamedFunctionSet();</span>
-<span class="source-line-no">071</span><span id="line-71">        libraryByName.put(name, functions);</span>
-<span class="source-line-no">072</span><span id="line-72">      }</span>
-<span class="source-line-no">073</span><span id="line-73">      // replace duplicates</span>
-<span class="source-line-no">074</span><span id="line-74">      functions.addFunction(function);</span>
-<span class="source-line-no">075</span><span id="line-75">    } finally {</span>
-<span class="source-line-no">076</span><span id="line-76">      instanceLock.unlock();</span>
-<span class="source-line-no">077</span><span id="line-77">    }</span>
-<span class="source-line-no">078</span><span id="line-78">  }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">  @Override</span>
-<span class="source-line-no">081</span><span id="line-81">  public Stream&lt;IFunction&gt; stream() {</span>
-<span class="source-line-no">082</span><span id="line-82">    try {</span>
-<span class="source-line-no">083</span><span id="line-83">      instanceLock.lock();</span>
-<span class="source-line-no">084</span><span id="line-84">      return ObjectUtils.notNull(libraryByQName.values().stream().flatMap(NamedFunctionSet::getFunctionsAsStream));</span>
-<span class="source-line-no">085</span><span id="line-85">    } finally {</span>
-<span class="source-line-no">086</span><span id="line-86">      instanceLock.unlock();</span>
-<span class="source-line-no">087</span><span id="line-87">    }</span>
-<span class="source-line-no">088</span><span id="line-88">  }</span>
-<span class="source-line-no">089</span><span id="line-89"></span>
-<span class="source-line-no">090</span><span id="line-90">  @Override</span>
-<span class="source-line-no">091</span><span id="line-91">  public IFunction getFunction(@NonNull String name, int arity) {</span>
-<span class="source-line-no">092</span><span id="line-92">    IFunction retval = null;</span>
-<span class="source-line-no">093</span><span id="line-93">    try {</span>
-<span class="source-line-no">094</span><span id="line-94">      instanceLock.lock();</span>
-<span class="source-line-no">095</span><span id="line-95">      NamedFunctionSet functions = libraryByName.get(name);</span>
-<span class="source-line-no">096</span><span id="line-96">      if (functions != null) {</span>
-<span class="source-line-no">097</span><span id="line-97">        retval = functions.getFunctionWithArity(arity);</span>
-<span class="source-line-no">098</span><span id="line-98">      }</span>
-<span class="source-line-no">099</span><span id="line-99">    } finally {</span>
-<span class="source-line-no">100</span><span id="line-100">      instanceLock.unlock();</span>
-<span class="source-line-no">101</span><span id="line-101">    }</span>
-<span class="source-line-no">102</span><span id="line-102">    return retval;</span>
-<span class="source-line-no">103</span><span id="line-103">  }</span>
-<span class="source-line-no">104</span><span id="line-104"></span>
-<span class="source-line-no">105</span><span id="line-105">  @Override</span>
-<span class="source-line-no">106</span><span id="line-106">  public IFunction getFunction(@NonNull QName name, int arity) {</span>
-<span class="source-line-no">107</span><span id="line-107">    IFunction retval = null;</span>
-<span class="source-line-no">108</span><span id="line-108">    try {</span>
-<span class="source-line-no">109</span><span id="line-109">      instanceLock.lock();</span>
-<span class="source-line-no">110</span><span id="line-110">      NamedFunctionSet functions = libraryByQName.get(name);</span>
-<span class="source-line-no">111</span><span id="line-111">      if (functions != null) {</span>
-<span class="source-line-no">112</span><span id="line-112">        retval = functions.getFunctionWithArity(arity);</span>
-<span class="source-line-no">113</span><span id="line-113">      }</span>
-<span class="source-line-no">114</span><span id="line-114">    } finally {</span>
-<span class="source-line-no">115</span><span id="line-115">      instanceLock.unlock();</span>
-<span class="source-line-no">116</span><span id="line-116">    }</span>
-<span class="source-line-no">117</span><span id="line-117">    return retval;</span>
-<span class="source-line-no">118</span><span id="line-118">  }</span>
-<span class="source-line-no">119</span><span id="line-119"></span>
-<span class="source-line-no">120</span><span id="line-120">  private static class NamedFunctionSet {</span>
-<span class="source-line-no">121</span><span id="line-121">    private final Map&lt;Integer, IFunction&gt; arityToFunctionMap;</span>
-<span class="source-line-no">122</span><span id="line-122">    private IFunction unboundedArity;</span>
-<span class="source-line-no">123</span><span id="line-123"></span>
-<span class="source-line-no">124</span><span id="line-124">    public NamedFunctionSet() {</span>
-<span class="source-line-no">125</span><span id="line-125">      this.arityToFunctionMap = new HashMap&lt;&gt;();</span>
-<span class="source-line-no">126</span><span id="line-126">    }</span>
-<span class="source-line-no">127</span><span id="line-127"></span>
-<span class="source-line-no">128</span><span id="line-128">    @SuppressWarnings("null")</span>
-<span class="source-line-no">129</span><span id="line-129">    @NonNull</span>
-<span class="source-line-no">130</span><span id="line-130">    public Stream&lt;IFunction&gt; getFunctionsAsStream() {</span>
-<span class="source-line-no">131</span><span id="line-131">      return arityToFunctionMap.values().stream();</span>
+<span class="source-line-no">013</span><span id="line-13">import java.util.concurrent.locks.ReadWriteLock;</span>
+<span class="source-line-no">014</span><span id="line-14">import java.util.concurrent.locks.ReentrantReadWriteLock;</span>
+<span class="source-line-no">015</span><span id="line-15">import java.util.stream.Stream;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">public class FunctionLibrary implements IFunctionLibrary {</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
+<span class="source-line-no">025</span><span id="line-25">  private final Map&lt;QName, NamedFunctionSet&gt; libraryByQName = new HashMap&lt;&gt;(); // NOPMD - intentional</span>
+<span class="source-line-no">026</span><span id="line-26">  @NonNull</span>
+<span class="source-line-no">027</span><span id="line-27">  private final Map&lt;String, NamedFunctionSet&gt; libraryByName = new HashMap&lt;&gt;(); // NOPMD - intentional</span>
+<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
+<span class="source-line-no">029</span><span id="line-29">  private final ReadWriteLock instanceLock = new ReentrantReadWriteLock();</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">  /**</span>
+<span class="source-line-no">032</span><span id="line-32">   * Register the provided function signature.</span>
+<span class="source-line-no">033</span><span id="line-33">   *</span>
+<span class="source-line-no">034</span><span id="line-34">   * @param function</span>
+<span class="source-line-no">035</span><span id="line-35">   *          the function signature to register</span>
+<span class="source-line-no">036</span><span id="line-36">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">037</span><span id="line-37">   *           if the provided function has the same arity as a previously</span>
+<span class="source-line-no">038</span><span id="line-38">   *           registered function with the same name</span>
+<span class="source-line-no">039</span><span id="line-39">   */</span>
+<span class="source-line-no">040</span><span id="line-40">  public final void registerFunction(@NonNull IFunction function) {</span>
+<span class="source-line-no">041</span><span id="line-41">    registerFunctionByQName(function);</span>
+<span class="source-line-no">042</span><span id="line-42">    registerFunctionByName(function);</span>
+<span class="source-line-no">043</span><span id="line-43">  }</span>
+<span class="source-line-no">044</span><span id="line-44"></span>
+<span class="source-line-no">045</span><span id="line-45">  private void registerFunctionByQName(@NonNull IFunction function) {</span>
+<span class="source-line-no">046</span><span id="line-46">    QName qname = function.getQName();</span>
+<span class="source-line-no">047</span><span id="line-47">    IFunction duplicate;</span>
+<span class="source-line-no">048</span><span id="line-48">    Lock writeLock = instanceLock.writeLock();</span>
+<span class="source-line-no">049</span><span id="line-49">    writeLock.lock();</span>
+<span class="source-line-no">050</span><span id="line-50">    try {</span>
+<span class="source-line-no">051</span><span id="line-51">      NamedFunctionSet functions = libraryByQName.get(qname);</span>
+<span class="source-line-no">052</span><span id="line-52">      if (functions == null) {</span>
+<span class="source-line-no">053</span><span id="line-53">        functions = new NamedFunctionSet();</span>
+<span class="source-line-no">054</span><span id="line-54">        libraryByQName.put(qname, functions);</span>
+<span class="source-line-no">055</span><span id="line-55">      }</span>
+<span class="source-line-no">056</span><span id="line-56">      duplicate = functions.addFunction(function);</span>
+<span class="source-line-no">057</span><span id="line-57">    } finally {</span>
+<span class="source-line-no">058</span><span id="line-58">      writeLock.unlock();</span>
+<span class="source-line-no">059</span><span id="line-59">    }</span>
+<span class="source-line-no">060</span><span id="line-60">    if (duplicate != null) {</span>
+<span class="source-line-no">061</span><span id="line-61">      throw new IllegalArgumentException(String.format("Duplicate functions with same arity: %s shadows %s",</span>
+<span class="source-line-no">062</span><span id="line-62">          duplicate.toSignature(), function.toSignature()));</span>
+<span class="source-line-no">063</span><span id="line-63">    }</span>
+<span class="source-line-no">064</span><span id="line-64">  }</span>
+<span class="source-line-no">065</span><span id="line-65"></span>
+<span class="source-line-no">066</span><span id="line-66">  private void registerFunctionByName(@NonNull IFunction function) {</span>
+<span class="source-line-no">067</span><span id="line-67">    String name = function.getName();</span>
+<span class="source-line-no">068</span><span id="line-68">    Lock writeLock = instanceLock.writeLock();</span>
+<span class="source-line-no">069</span><span id="line-69">    writeLock.lock();</span>
+<span class="source-line-no">070</span><span id="line-70">    try {</span>
+<span class="source-line-no">071</span><span id="line-71">      NamedFunctionSet functions = libraryByName.get(name);</span>
+<span class="source-line-no">072</span><span id="line-72">      if (functions == null) {</span>
+<span class="source-line-no">073</span><span id="line-73">        functions = new NamedFunctionSet();</span>
+<span class="source-line-no">074</span><span id="line-74">        libraryByName.put(name, functions);</span>
+<span class="source-line-no">075</span><span id="line-75">      }</span>
+<span class="source-line-no">076</span><span id="line-76">      // replace duplicates</span>
+<span class="source-line-no">077</span><span id="line-77">      functions.addFunction(function);</span>
+<span class="source-line-no">078</span><span id="line-78">    } finally {</span>
+<span class="source-line-no">079</span><span id="line-79">      writeLock.unlock();</span>
+<span class="source-line-no">080</span><span id="line-80">    }</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">  @Override</span>
+<span class="source-line-no">084</span><span id="line-84">  public Stream&lt;IFunction&gt; stream() {</span>
+<span class="source-line-no">085</span><span id="line-85">    Lock readLock = instanceLock.readLock();</span>
+<span class="source-line-no">086</span><span id="line-86">    readLock.lock();</span>
+<span class="source-line-no">087</span><span id="line-87">    try {</span>
+<span class="source-line-no">088</span><span id="line-88">      return ObjectUtils.notNull(libraryByQName.values().stream().flatMap(NamedFunctionSet::getFunctionsAsStream));</span>
+<span class="source-line-no">089</span><span id="line-89">    } finally {</span>
+<span class="source-line-no">090</span><span id="line-90">      readLock.unlock();</span>
+<span class="source-line-no">091</span><span id="line-91">    }</span>
+<span class="source-line-no">092</span><span id="line-92">  }</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">  @Override</span>
+<span class="source-line-no">095</span><span id="line-95">  public IFunction getFunction(@NonNull String name, int arity) {</span>
+<span class="source-line-no">096</span><span id="line-96">    IFunction retval = null;</span>
+<span class="source-line-no">097</span><span id="line-97">    Lock readLock = instanceLock.readLock();</span>
+<span class="source-line-no">098</span><span id="line-98">    readLock.lock();</span>
+<span class="source-line-no">099</span><span id="line-99">    try {</span>
+<span class="source-line-no">100</span><span id="line-100">      NamedFunctionSet functions = libraryByName.get(name);</span>
+<span class="source-line-no">101</span><span id="line-101">      if (functions != null) {</span>
+<span class="source-line-no">102</span><span id="line-102">        retval = functions.getFunctionWithArity(arity);</span>
+<span class="source-line-no">103</span><span id="line-103">      }</span>
+<span class="source-line-no">104</span><span id="line-104">    } finally {</span>
+<span class="source-line-no">105</span><span id="line-105">      readLock.unlock();</span>
+<span class="source-line-no">106</span><span id="line-106">    }</span>
+<span class="source-line-no">107</span><span id="line-107">    return retval;</span>
+<span class="source-line-no">108</span><span id="line-108">  }</span>
+<span class="source-line-no">109</span><span id="line-109"></span>
+<span class="source-line-no">110</span><span id="line-110">  @Override</span>
+<span class="source-line-no">111</span><span id="line-111">  public IFunction getFunction(@NonNull QName name, int arity) {</span>
+<span class="source-line-no">112</span><span id="line-112">    IFunction retval = null;</span>
+<span class="source-line-no">113</span><span id="line-113">    Lock readLock = instanceLock.readLock();</span>
+<span class="source-line-no">114</span><span id="line-114">    readLock.lock();</span>
+<span class="source-line-no">115</span><span id="line-115">    try {</span>
+<span class="source-line-no">116</span><span id="line-116">      NamedFunctionSet functions = libraryByQName.get(name);</span>
+<span class="source-line-no">117</span><span id="line-117">      if (functions != null) {</span>
+<span class="source-line-no">118</span><span id="line-118">        retval = functions.getFunctionWithArity(arity);</span>
+<span class="source-line-no">119</span><span id="line-119">      }</span>
+<span class="source-line-no">120</span><span id="line-120">    } finally {</span>
+<span class="source-line-no">121</span><span id="line-121">      readLock.unlock();</span>
+<span class="source-line-no">122</span><span id="line-122">    }</span>
+<span class="source-line-no">123</span><span id="line-123">    return retval;</span>
+<span class="source-line-no">124</span><span id="line-124">  }</span>
+<span class="source-line-no">125</span><span id="line-125"></span>
+<span class="source-line-no">126</span><span id="line-126">  private static class NamedFunctionSet {</span>
+<span class="source-line-no">127</span><span id="line-127">    private final Map&lt;Integer, IFunction&gt; arityToFunctionMap;</span>
+<span class="source-line-no">128</span><span id="line-128">    private IFunction unboundedArity;</span>
+<span class="source-line-no">129</span><span id="line-129"></span>
+<span class="source-line-no">130</span><span id="line-130">    public NamedFunctionSet() {</span>
+<span class="source-line-no">131</span><span id="line-131">      this.arityToFunctionMap = new HashMap&lt;&gt;();</span>
 <span class="source-line-no">132</span><span id="line-132">    }</span>
 <span class="source-line-no">133</span><span id="line-133"></span>
-<span class="source-line-no">134</span><span id="line-134">    @Nullable</span>
-<span class="source-line-no">135</span><span id="line-135">    public IFunction getFunctionWithArity(int arity) {</span>
-<span class="source-line-no">136</span><span id="line-136">      IFunction retval = arityToFunctionMap.get(arity);</span>
-<span class="source-line-no">137</span><span id="line-137">      if (retval == null &amp;&amp; unboundedArity != null &amp;&amp; unboundedArity.arity() &lt; arity) {</span>
-<span class="source-line-no">138</span><span id="line-138">        retval = unboundedArity;</span>
-<span class="source-line-no">139</span><span id="line-139">      }</span>
-<span class="source-line-no">140</span><span id="line-140">      return retval;</span>
-<span class="source-line-no">141</span><span id="line-141">    }</span>
-<span class="source-line-no">142</span><span id="line-142"></span>
-<span class="source-line-no">143</span><span id="line-143">    @Nullable</span>
-<span class="source-line-no">144</span><span id="line-144">    public IFunction addFunction(@NonNull IFunction function) {</span>
-<span class="source-line-no">145</span><span id="line-145">      IFunction old = arityToFunctionMap.put(function.arity(), function);</span>
-<span class="source-line-no">146</span><span id="line-146">      if (function.isArityUnbounded()) {</span>
-<span class="source-line-no">147</span><span id="line-147">        unboundedArity = function;</span>
-<span class="source-line-no">148</span><span id="line-148">      }</span>
-<span class="source-line-no">149</span><span id="line-149">      return old;</span>
-<span class="source-line-no">150</span><span id="line-150">    }</span>
-<span class="source-line-no">151</span><span id="line-151">  }</span>
-<span class="source-line-no">152</span><span id="line-152">}</span>
+<span class="source-line-no">134</span><span id="line-134">    @SuppressWarnings("null")</span>
+<span class="source-line-no">135</span><span id="line-135">    @NonNull</span>
+<span class="source-line-no">136</span><span id="line-136">    public Stream&lt;IFunction&gt; getFunctionsAsStream() {</span>
+<span class="source-line-no">137</span><span id="line-137">      return arityToFunctionMap.values().stream();</span>
+<span class="source-line-no">138</span><span id="line-138">    }</span>
+<span class="source-line-no">139</span><span id="line-139"></span>
+<span class="source-line-no">140</span><span id="line-140">    @Nullable</span>
+<span class="source-line-no">141</span><span id="line-141">    public IFunction getFunctionWithArity(int arity) {</span>
+<span class="source-line-no">142</span><span id="line-142">      IFunction retval = arityToFunctionMap.get(arity);</span>
+<span class="source-line-no">143</span><span id="line-143">      if (retval == null &amp;&amp; unboundedArity != null &amp;&amp; unboundedArity.arity() &lt; arity) {</span>
+<span class="source-line-no">144</span><span id="line-144">        retval = unboundedArity;</span>
+<span class="source-line-no">145</span><span id="line-145">      }</span>
+<span class="source-line-no">146</span><span id="line-146">      return retval;</span>
+<span class="source-line-no">147</span><span id="line-147">    }</span>
+<span class="source-line-no">148</span><span id="line-148"></span>
+<span class="source-line-no">149</span><span id="line-149">    @Nullable</span>
+<span class="source-line-no">150</span><span id="line-150">    public IFunction addFunction(@NonNull IFunction function) {</span>
+<span class="source-line-no">151</span><span id="line-151">      IFunction old = arityToFunctionMap.put(function.arity(), function);</span>
+<span class="source-line-no">152</span><span id="line-152">      if (function.isArityUnbounded()) {</span>
+<span class="source-line-no">153</span><span id="line-153">        unboundedArity = function;</span>
+<span class="source-line-no">154</span><span id="line-154">      }</span>
+<span class="source-line-no">155</span><span id="line-155">      return old;</span>
+<span class="source-line-no">156</span><span id="line-156">    }</span>
+<span class="source-line-no">157</span><span id="line-157">  }</span>
+<span class="source-line-no">158</span><span id="line-158">}</span>
 
 
 

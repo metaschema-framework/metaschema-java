@@ -107,19 +107,23 @@
 <span class="source-line-no">094</span><span id="line-94">    return ISequence.of(result);</span>
 <span class="source-line-no">095</span><span id="line-95">  }</span>
 <span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">  @FunctionalInterface</span>
-<span class="source-line-no">098</span><span id="line-98">  public interface INumericExecutor {</span>
-<span class="source-line-no">099</span><span id="line-99">    /**</span>
-<span class="source-line-no">100</span><span id="line-100">     * Perform the execution using the provided {@code item}.</span>
-<span class="source-line-no">101</span><span id="line-101">     *</span>
-<span class="source-line-no">102</span><span id="line-102">     * @param item</span>
-<span class="source-line-no">103</span><span id="line-103">     *          the item to operate on</span>
-<span class="source-line-no">104</span><span id="line-104">     * @return the numeric result from the execution</span>
-<span class="source-line-no">105</span><span id="line-105">     */</span>
-<span class="source-line-no">106</span><span id="line-106">    @NonNull</span>
-<span class="source-line-no">107</span><span id="line-107">    INumericItem execute(@NonNull INumericItem item);</span>
-<span class="source-line-no">108</span><span id="line-108">  }</span>
-<span class="source-line-no">109</span><span id="line-109">}</span>
+<span class="source-line-no">097</span><span id="line-97">  /**</span>
+<span class="source-line-no">098</span><span id="line-98">   * Implementations of this interface are used to execute a numeric opertaion on</span>
+<span class="source-line-no">099</span><span id="line-99">   * the provided item.</span>
+<span class="source-line-no">100</span><span id="line-100">   */</span>
+<span class="source-line-no">101</span><span id="line-101">  @FunctionalInterface</span>
+<span class="source-line-no">102</span><span id="line-102">  public interface INumericExecutor {</span>
+<span class="source-line-no">103</span><span id="line-103">    /**</span>
+<span class="source-line-no">104</span><span id="line-104">     * Perform the execution using the provided {@code item}.</span>
+<span class="source-line-no">105</span><span id="line-105">     *</span>
+<span class="source-line-no">106</span><span id="line-106">     * @param item</span>
+<span class="source-line-no">107</span><span id="line-107">     *          the item to operate on</span>
+<span class="source-line-no">108</span><span id="line-108">     * @return the numeric result from the execution</span>
+<span class="source-line-no">109</span><span id="line-109">     */</span>
+<span class="source-line-no">110</span><span id="line-110">    @NonNull</span>
+<span class="source-line-no">111</span><span id="line-111">    INumericItem execute(@NonNull INumericItem item);</span>
+<span class="source-line-no">112</span><span id="line-112">  }</span>
+<span class="source-line-no">113</span><span id="line-113">}</span>
 
 
 

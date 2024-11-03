@@ -7,6 +7,10 @@ package gov.nist.secauto.metaschema.cli.commands.metapath;
 
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractParentCommand;
 
+/**
+ * This sub-command implementation contains all command that relate to Metapath
+ * execution.
+ */
 public class MetapathCommand
     extends AbstractParentCommand {
   private static final String COMMAND = &quot;metapath&quot;;
@@ -15,19 +19,19 @@ public class MetapathCommand
    * Constructor for a new Metapath command.
    */
   public MetapathCommand() {
-<span class="fc" id="L18">    super(true);</span>
-<span class="fc" id="L19">    addCommandHandler(new ListFunctionsSubcommand());</span>
-<span class="fc" id="L20">    addCommandHandler(new EvaluateMetapathCommand());</span>
-<span class="fc" id="L21">  }</span>
+<span class="fc" id="L22">    super(true);</span>
+<span class="fc" id="L23">    addCommandHandler(new ListFunctionsSubcommand());</span>
+<span class="fc" id="L24">    addCommandHandler(new EvaluateMetapathCommand());</span>
+<span class="fc" id="L25">  }</span>
 
   @Override
   public String getName() {
-<span class="fc" id="L25">    return COMMAND;</span>
+<span class="fc" id="L29">    return COMMAND;</span>
   }
 
   @Override
   public String getDescription() {
-<span class="fc" id="L30">    return &quot;Perform a Metapath operation.&quot;;</span>
+<span class="fc" id="L34">    return &quot;Perform a Metapath operation.&quot;;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

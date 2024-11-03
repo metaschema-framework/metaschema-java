@@ -35,61 +35,68 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)
 class DefaultTypeResolver implements ITypeResolver {
-<span class="fc" id="L43">  private static final Logger LOGGER = LogManager.getLogger(DefaultTypeResolver.class);</span>
+<span class="fc" id="L46">  private static final Logger LOGGER = LogManager.getLogger(DefaultTypeResolver.class);</span>
 
-<span class="fc" id="L45">  private final Map&lt;String, Set&lt;String&gt;&gt; packageToClassNamesMap = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L46">  private final Map&lt;IModelDefinition, ClassName&gt; definitionToTypeMap = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L47">  private final Map&lt;IModule, ClassName&gt; moduleToTypeMap = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L48">  private final Map&lt;IAssemblyDefinition, IAssemblyDefinitionTypeInfo&gt; assemblyDefinitionToTypeInfoMap</span>
+<span class="fc" id="L48">  private final Map&lt;String, Set&lt;String&gt;&gt; packageToClassNamesMap = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L49">  private final Lock classNameLock = new ReentrantLock();</span>
+
+<span class="fc" id="L51">  private final Map&lt;IModelDefinition, ClassName&gt; definitionToTypeMap = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L52">  private final Map&lt;IModule, ClassName&gt; moduleToTypeMap = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L53">  private final Map&lt;IAssemblyDefinition, IAssemblyDefinitionTypeInfo&gt; assemblyDefinitionToTypeInfoMap</span>
       = new ConcurrentHashMap&lt;&gt;();
-<span class="fc" id="L50">  private final Map&lt;IFieldDefinition, IFieldDefinitionTypeInfo&gt; fieldDefinitionToTypeInfoMap</span>
+<span class="fc" id="L55">  private final Map&lt;IFieldDefinition, IFieldDefinitionTypeInfo&gt; fieldDefinitionToTypeInfoMap</span>
       = new ConcurrentHashMap&lt;&gt;();
-<span class="fc" id="L52">  private final Map&lt;IDefinitionTypeInfo, Set&lt;String&gt;&gt; typeInfoToPropertyNameMap = new ConcurrentHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L58">  private final Lock propertyNameLock = new ReentrantLock();</span>
+<span class="fc" id="L59">  private final Map&lt;IDefinitionTypeInfo, Set&lt;String&gt;&gt; typeInfoToPropertyNameMap = new ConcurrentHashMap&lt;&gt;();</span>
 
   @NonNull
   private final IBindingConfiguration bindingConfiguration;
 
-<span class="fc" id="L57">  public DefaultTypeResolver(@NonNull IBindingConfiguration bindingConfiguration) {</span>
-<span class="fc" id="L58">    this.bindingConfiguration = bindingConfiguration;</span>
-<span class="fc" id="L59">  }</span>
+<span class="fc" id="L64">  public DefaultTypeResolver(@NonNull IBindingConfiguration bindingConfiguration) {</span>
+<span class="fc" id="L65">    this.bindingConfiguration = bindingConfiguration;</span>
+<span class="fc" id="L66">  }</span>
 
   protected IBindingConfiguration getBindingConfiguration() {
-<span class="fc" id="L62">    return bindingConfiguration;</span>
+<span class="fc" id="L69">    return bindingConfiguration;</span>
   }
 
   @Override
   public IAssemblyDefinitionTypeInfo getTypeInfo(@NonNull IAssemblyDefinition definition) {
-<span class="fc" id="L67">    return ObjectUtils.notNull(assemblyDefinitionToTypeInfoMap.computeIfAbsent(</span>
+<span class="fc" id="L74">    return ObjectUtils.notNull(assemblyDefinitionToTypeInfoMap.computeIfAbsent(</span>
         definition,
-<span class="fc" id="L69">        def -&gt; IAssemblyDefinitionTypeInfo.newTypeInfo(ObjectUtils.notNull(def),</span>
+<span class="fc" id="L76">        def -&gt; IAssemblyDefinitionTypeInfo.newTypeInfo(ObjectUtils.notNull(def),</span>
             this)));
   }
 
   @Override
   public IFieldDefinitionTypeInfo getTypeInfo(@NonNull IFieldDefinition definition) {
-<span class="fc" id="L75">    return ObjectUtils.notNull(fieldDefinitionToTypeInfoMap.computeIfAbsent(</span>
+<span class="fc" id="L82">    return ObjectUtils.notNull(fieldDefinitionToTypeInfoMap.computeIfAbsent(</span>
         definition,
-<span class="fc" id="L77">        def -&gt; IFieldDefinitionTypeInfo.newTypeInfo(ObjectUtils.notNull(def),</span>
+<span class="fc" id="L84">        def -&gt; IFieldDefinitionTypeInfo.newTypeInfo(ObjectUtils.notNull(def),</span>
             this)));
   }
 
   @Override
   public IModelDefinitionTypeInfo getTypeInfo(@NonNull IModelDefinition definition) {
     IModelDefinitionTypeInfo retval;
-<span class="fc bfc" id="L84" title="All 2 branches covered.">    if (definition instanceof IAssemblyDefinition) {</span>
-<span class="fc" id="L85">      retval = getTypeInfo((IAssemblyDefinition) definition);</span>
-<span class="pc bpc" id="L86" title="1 of 2 branches missed.">    } else if (definition instanceof IFieldDefinition) {</span>
-<span class="fc" id="L87">      retval = getTypeInfo((IFieldDefinition) definition);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">    if (definition instanceof IAssemblyDefinition) {</span>
+<span class="fc" id="L92">      retval = getTypeInfo((IAssemblyDefinition) definition);</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">    } else if (definition instanceof IFieldDefinition) {</span>
+<span class="fc" id="L94">      retval = getTypeInfo((IFieldDefinition) definition);</span>
     } else {
-<span class="nc" id="L89">      throw new IllegalStateException(String.format(&quot;Unknown type '%s'&quot;,</span>
-<span class="nc" id="L90">          definition.getClass().getName()));</span>
+<span class="nc" id="L96">      throw new IllegalStateException(String.format(&quot;Unknown type '%s'&quot;,</span>
+<span class="nc" id="L97">          definition.getClass().getName()));</span>
     }
-<span class="fc" id="L92">    return retval;</span>
+<span class="fc" id="L99">    return retval;</span>
   }
 
   @Override
@@ -97,29 +104,29 @@ class DefaultTypeResolver implements ITypeResolver {
       @NonNull INamedModelInstanceGrouped modelInstance,
       @NonNull IChoiceGroupTypeInfo choiceGroupTypeInfo) {
     IGroupedNamedModelInstanceTypeInfo retval;
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">    if (modelInstance instanceof IAssemblyInstanceGrouped) {</span>
-<span class="fc" id="L101">      retval = getTypeInfo((IAssemblyInstanceGrouped) modelInstance, choiceGroupTypeInfo);</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">    } else if (modelInstance instanceof IFieldInstanceGrouped) {</span>
-<span class="nc" id="L103">      retval = getTypeInfo((IFieldInstanceGrouped) modelInstance, choiceGroupTypeInfo);</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">    if (modelInstance instanceof IAssemblyInstanceGrouped) {</span>
+<span class="fc" id="L108">      retval = getTypeInfo((IAssemblyInstanceGrouped) modelInstance, choiceGroupTypeInfo);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">    } else if (modelInstance instanceof IFieldInstanceGrouped) {</span>
+<span class="nc" id="L110">      retval = getTypeInfo((IFieldInstanceGrouped) modelInstance, choiceGroupTypeInfo);</span>
     } else {
-<span class="nc" id="L105">      throw new IllegalStateException(String.format(&quot;Unknown type '%s'&quot;,</span>
-<span class="nc" id="L106">          modelInstance.getClass().getName()));</span>
+<span class="nc" id="L112">      throw new IllegalStateException(String.format(&quot;Unknown type '%s'&quot;,</span>
+<span class="nc" id="L113">          modelInstance.getClass().getName()));</span>
     }
-<span class="fc" id="L108">    return retval;</span>
+<span class="fc" id="L115">    return retval;</span>
   }
 
   @NonNull
   private static IGroupedAssemblyInstanceTypeInfo getTypeInfo(
       @NonNull IAssemblyInstanceGrouped modelInstance,
       @NonNull IChoiceGroupTypeInfo choiceGroupTypeInfo) {
-<span class="fc" id="L115">    return new GroupedAssemblyInstanceTypeInfo(modelInstance, choiceGroupTypeInfo);</span>
+<span class="fc" id="L122">    return new GroupedAssemblyInstanceTypeInfo(modelInstance, choiceGroupTypeInfo);</span>
   }
 
   @NonNull
   private static IGroupedFieldInstanceTypeInfo getTypeInfo(
       @NonNull IFieldInstanceGrouped modelInstance,
       @NonNull IChoiceGroupTypeInfo choiceGroupTypeInfo) {
-<span class="nc" id="L122">    return new GroupedFieldInstanceTypeInfo(modelInstance, choiceGroupTypeInfo);</span>
+<span class="nc" id="L129">    return new GroupedFieldInstanceTypeInfo(modelInstance, choiceGroupTypeInfo);</span>
   }
 
   @NonNull
@@ -128,17 +135,17 @@ class DefaultTypeResolver implements ITypeResolver {
       @NonNull String packageName,
       @NonNull String suggestedClassName) {
     ClassName retval;
-<span class="fc bfc" id="L131" title="All 2 branches covered.">    if (definition.isInline()) {</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">    if (definition.isInline()) {</span>
       // this is a local definition, which means a child class needs to be generated
-<span class="fc" id="L133">      INamedInstance inlineInstance = definition.getInlineInstance();</span>
-<span class="fc" id="L134">      IModelDefinition parentDefinition = inlineInstance.getContainingDefinition();</span>
-<span class="fc" id="L135">      ClassName parentClassName = getClassName(parentDefinition);</span>
-<span class="fc" id="L136">      retval = getSubclassName(parentClassName, suggestedClassName, definition);</span>
-<span class="fc" id="L137">    } else {</span>
-<span class="fc" id="L138">      String className = generateClassName(packageName, suggestedClassName, definition);</span>
-<span class="fc" id="L139">      retval = ObjectUtils.notNull(ClassName.get(packageName, className));</span>
+<span class="fc" id="L140">      INamedInstance inlineInstance = definition.getInlineInstance();</span>
+<span class="fc" id="L141">      IModelDefinition parentDefinition = inlineInstance.getContainingDefinition();</span>
+<span class="fc" id="L142">      ClassName parentClassName = getClassName(parentDefinition);</span>
+<span class="fc" id="L143">      retval = getSubclassName(parentClassName, suggestedClassName, definition);</span>
+<span class="fc" id="L144">    } else {</span>
+<span class="fc" id="L145">      String className = generateClassName(packageName, suggestedClassName, definition);</span>
+<span class="fc" id="L146">      retval = ObjectUtils.notNull(ClassName.get(packageName, className));</span>
     }
-<span class="fc" id="L141">    return retval;</span>
+<span class="fc" id="L148">    return retval;</span>
   }
 
   @Override
@@ -146,143 +153,166 @@ class DefaultTypeResolver implements ITypeResolver {
       @NonNull ClassName parentClass,
       @NonNull String suggestedClassName,
       @NonNull IModelDefinition definition) {
-<span class="fc" id="L149">    String name = generateClassName(</span>
-<span class="fc" id="L150">        ObjectUtils.notNull(parentClass.canonicalName()),</span>
-<span class="fc" id="L151">        ClassUtils.toClassName(suggestedClassName),</span>
+<span class="fc" id="L156">    String name = generateClassName(</span>
+<span class="fc" id="L157">        ObjectUtils.notNull(parentClass.canonicalName()),</span>
+<span class="fc" id="L158">        ClassUtils.toClassName(suggestedClassName),</span>
         definition);
-<span class="fc" id="L153">    return ObjectUtils.notNull(parentClass.nestedClass(name));</span>
+<span class="fc" id="L160">    return ObjectUtils.notNull(parentClass.nestedClass(name));</span>
   }
 
   @Override
   @NonNull
   public ClassName getClassName(@NonNull IModelDefinition definition) {
-<span class="fc" id="L159">    return ObjectUtils.notNull(definitionToTypeMap.computeIfAbsent(</span>
+<span class="fc" id="L166">    return ObjectUtils.notNull(definitionToTypeMap.computeIfAbsent(</span>
         definition,
         def -&gt; {
-<span class="fc" id="L162">          String packageName = getBindingConfiguration().getPackageNameForModule(def.getContainingModule());</span>
-<span class="fc" id="L163">          String suggestedClassName = getBindingConfiguration().getClassName(definition);</span>
-<span class="fc" id="L164">          return getFlagContainerClassName(def, packageName, suggestedClassName);</span>
+<span class="fc" id="L169">          String packageName = getBindingConfiguration().getPackageNameForModule(def.getContainingModule());</span>
+<span class="fc" id="L170">          String suggestedClassName = getBindingConfiguration().getClassName(definition);</span>
+<span class="fc" id="L171">          return getFlagContainerClassName(def, packageName, suggestedClassName);</span>
         }));
   }
 
   @Override
   public ClassName getClassName(@NonNull INamedModelInstanceTypeInfo typeInfo) {
-<span class="fc" id="L170">    return getClassName(typeInfo.getInstance().getDefinition());</span>
+<span class="fc" id="L177">    return getClassName(typeInfo.getInstance().getDefinition());</span>
   }
 
   @Override
   public ClassName getClassName(IChoiceGroupInstance instance) {
     // TODO: Support some form of binding override for a common interface type
-<span class="fc" id="L176">    return ObjectUtils.notNull(ClassName.get(Object.class));</span>
+<span class="fc" id="L183">    return ObjectUtils.notNull(ClassName.get(Object.class));</span>
   }
 
   @Override
   public ClassName getClassName(IModule module) {
-<span class="fc" id="L181">    return ObjectUtils.notNull(moduleToTypeMap.computeIfAbsent(</span>
+<span class="fc" id="L188">    return ObjectUtils.notNull(moduleToTypeMap.computeIfAbsent(</span>
         module,
         mod -&gt; {
-<span class="pc bpc" id="L184" title="1 of 2 branches missed.">          assert mod != null;</span>
-<span class="fc" id="L185">          String packageName = getBindingConfiguration().getPackageNameForModule(mod);</span>
-<span class="fc" id="L186">          String className = getBindingConfiguration().getClassName(mod);</span>
-<span class="fc" id="L187">          String classNameBase = className;</span>
-<span class="fc" id="L188">          int index = 1;</span>
-<span class="pc bpc" id="L189" title="1 of 2 branches missed.">          while (isClassNameClash(packageName, className)) {</span>
-<span class="nc" id="L190">            className = classNameBase + Integer.toString(index);</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">          assert mod != null;</span>
+<span class="fc" id="L192">          String packageName = getBindingConfiguration().getPackageNameForModule(mod);</span>
+<span class="fc" id="L193">          String className = getBindingConfiguration().getClassName(mod);</span>
+<span class="fc" id="L194">          String classNameBase = className;</span>
+<span class="fc" id="L195">          int index = 1;</span>
+<span class="fc" id="L196">          classNameLock.lock();</span>
+          try {
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">            while (isClassNameClash(packageName, className)) {</span>
+<span class="nc" id="L199">              className = classNameBase + Integer.toString(index);</span>
+            }
+<span class="fc" id="L201">            addClassName(packageName, className);</span>
+          } finally {
+<span class="fc" id="L203">            classNameLock.unlock();</span>
           }
-<span class="fc" id="L192">          addClassName(packageName, className);</span>
-<span class="fc" id="L193">          return ClassName.get(packageName, className);</span>
+<span class="fc" id="L205">          return ClassName.get(packageName, className);</span>
         }));
   }
 
   @NonNull
   protected Set&lt;String&gt; getClassNamesFor(@NonNull String packageOrTypeName) {
-<span class="fc" id="L199">    return ObjectUtils.notNull(packageToClassNamesMap.computeIfAbsent(</span>
-        packageOrTypeName,
-<span class="fc" id="L201">        pkg -&gt; Collections.synchronizedSet(new LinkedHashSet&lt;&gt;())));</span>
+<span class="fc" id="L211">    classNameLock.lock();</span>
+    try {
+<span class="fc" id="L213">      return ObjectUtils.notNull(packageToClassNamesMap.computeIfAbsent(</span>
+          packageOrTypeName,
+<span class="fc" id="L215">          pkg -&gt; Collections.synchronizedSet(new LinkedHashSet&lt;&gt;())));</span>
+    } finally {
+<span class="fc" id="L217">      classNameLock.unlock();</span>
+    }
   }
 
   protected boolean isClassNameClash(@NonNull String packageOrTypeName, @NonNull String className) {
-<span class="fc" id="L205">    return getClassNamesFor(packageOrTypeName).contains(className);</span>
+<span class="fc" id="L222">    classNameLock.lock();</span>
+    try {
+<span class="fc" id="L224">      return getClassNamesFor(packageOrTypeName).contains(className);</span>
+    } finally {
+<span class="fc" id="L226">      classNameLock.unlock();</span>
+    }
   }
 
   protected boolean addClassName(@NonNull String packageOrTypeName, @NonNull String className) {
-<span class="fc" id="L209">    return getClassNamesFor(packageOrTypeName).add(className);</span>
+<span class="fc" id="L231">    classNameLock.lock();</span>
+    try {
+<span class="fc" id="L233">      return getClassNamesFor(packageOrTypeName).add(className);</span>
+    } finally {
+<span class="fc" id="L235">      classNameLock.unlock();</span>
+    }
   }
 
   private String generateClassName(
       @NonNull String packageOrTypeName,
       @NonNull String suggestedClassName,
       @NonNull IModelDefinition definition) {
-<span class="fc" id="L216">    @NonNull String retval = suggestedClassName;</span>
-<span class="fc" id="L217">    Set&lt;String&gt; classNames = getClassNamesFor(packageOrTypeName);</span>
-<span class="fc" id="L218">    synchronized (classNames) {</span>
-<span class="fc" id="L219">      boolean clash = false;</span>
-<span class="fc bfc" id="L220" title="All 2 branches covered.">      if (classNames.contains(suggestedClassName)) {</span>
-<span class="fc" id="L221">        clash = true;</span>
+<span class="fc" id="L243">    @NonNull String retval = suggestedClassName;</span>
+<span class="fc" id="L244">    boolean clash = false;</span>
+<span class="fc" id="L245">    classNameLock.lock();</span>
+    try {
+<span class="fc" id="L247">      Set&lt;String&gt; classNames = getClassNamesFor(packageOrTypeName);</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">      if (classNames.contains(suggestedClassName)) {</span>
+<span class="fc" id="L249">        clash = true;</span>
         // first try to append the metaschema's short name
-<span class="fc" id="L223">        String metaschemaShortName = definition.getContainingModule().getShortName();</span>
-<span class="fc" id="L224">        retval = ClassUtils.toClassName(suggestedClassName + StringUtils.capitalize(metaschemaShortName));</span>
+<span class="fc" id="L251">        String metaschemaShortName = definition.getContainingModule().getShortName();</span>
+<span class="fc" id="L252">        retval = ClassUtils.toClassName(suggestedClassName + StringUtils.capitalize(metaschemaShortName));</span>
       }
 
-<span class="fc" id="L227">      String classNameBase = retval;</span>
-<span class="fc" id="L228">      int index = 1;</span>
-<span class="pc bpc" id="L229" title="1 of 2 branches missed.">      while (classNames.contains(retval)) {</span>
-<span class="nc" id="L230">        retval = classNameBase + Integer.toString(index++);</span>
+<span class="fc" id="L255">      String classNameBase = retval;</span>
+<span class="fc" id="L256">      int index = 1;</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">      while (classNames.contains(retval)) {</span>
+<span class="nc" id="L258">        retval = classNameBase + Integer.toString(index++);</span>
       }
-<span class="fc" id="L232">      classNames.add(retval);</span>
+<span class="fc" id="L260">      classNames.add(retval);</span>
+    } finally {
+<span class="fc" id="L262">      classNameLock.unlock();</span>
+    }
 
-<span class="pc bpc" id="L234" title="1 of 4 branches missed.">      if (clash &amp;&amp; LOGGER.isWarnEnabled()) {</span>
-<span class="fc" id="L235">        LOGGER.warn(String.format(</span>
-            &quot;Class name '%s', based on '%s' in '%s', clashes with another bound class. Using '%s' instead.&quot;,
-            suggestedClassName,
-<span class="fc" id="L238">            definition.getName(),</span>
-<span class="fc" id="L239">            definition.getContainingModule().getLocation(),</span>
-            retval));
-      }
-<span class="fc" id="L242">    }</span>
-<span class="fc" id="L243">    return retval;</span>
+<span class="pc bpc" id="L265" title="1 of 4 branches missed.">    if (clash &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="fc" id="L266">      LOGGER.warn(String.format(</span>
+          &quot;Class name '%s', based on '%s' in '%s', clashes with another bound class. Using '%s' instead.&quot;,
+          suggestedClassName,
+<span class="fc" id="L269">          definition.getName(),</span>
+<span class="fc" id="L270">          definition.getContainingModule().getLocation(),</span>
+          retval));
+    }
+<span class="fc" id="L273">    return retval;</span>
   }
 
   @Override
   public ClassName getBaseClassName(IModelDefinition definition) {
-<span class="fc" id="L248">    String className = bindingConfiguration.getQualifiedBaseClassName(definition);</span>
-<span class="fc" id="L249">    ClassName retval = null;</span>
-<span class="pc bpc" id="L250" title="1 of 2 branches missed.">    if (className != null) {</span>
-<span class="nc" id="L251">      retval = ClassName.bestGuess(className);</span>
+<span class="fc" id="L278">    String className = bindingConfiguration.getQualifiedBaseClassName(definition);</span>
+<span class="fc" id="L279">    ClassName retval = null;</span>
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">    if (className != null) {</span>
+<span class="nc" id="L281">      retval = ClassName.bestGuess(className);</span>
     }
-<span class="fc" id="L253">    return retval;</span>
+<span class="fc" id="L283">    return retval;</span>
   }
 
   @Override
   public List&lt;ClassName&gt; getSuperinterfaces(IModelDefinition definition) {
-<span class="fc" id="L258">    List&lt;String&gt; classNames = bindingConfiguration.getQualifiedSuperinterfaceClassNames(definition);</span>
-<span class="fc" id="L259">    return ObjectUtils.notNull(classNames.stream()</span>
-<span class="fc" id="L260">        .map(ClassName::bestGuess)</span>
-<span class="fc" id="L261">        .collect(Collectors.toUnmodifiableList()));</span>
+<span class="fc" id="L288">    List&lt;String&gt; classNames = bindingConfiguration.getQualifiedSuperinterfaceClassNames(definition);</span>
+<span class="fc" id="L289">    return ObjectUtils.notNull(classNames.stream()</span>
+<span class="fc" id="L290">        .map(ClassName::bestGuess)</span>
+<span class="fc" id="L291">        .collect(Collectors.toUnmodifiableList()));</span>
   }
 
   @Override
   public String getPackageName(@NonNull IModule module) {
-<span class="fc" id="L266">    return bindingConfiguration.getPackageNameForModule(module);</span>
+<span class="fc" id="L296">    return bindingConfiguration.getPackageNameForModule(module);</span>
   }
 
   @Override
   @NonNull
   public String getPropertyName(IDefinitionTypeInfo parent, String name) {
-<span class="fc" id="L272">    synchronized (typeInfoToPropertyNameMap) {</span>
-<span class="fc" id="L273">      Set&lt;String&gt; propertyNames = typeInfoToPropertyNameMap.get(parent);</span>
-<span class="pc bpc" id="L274" title="1 of 2 branches missed.">      if (propertyNames == null) {</span>
-<span class="fc" id="L275">        propertyNames = new HashSet&lt;&gt;();</span>
-      }
+<span class="fc" id="L302">    propertyNameLock.lock();</span>
+    try {
+<span class="fc" id="L304">      Set&lt;String&gt; propertyNames = typeInfoToPropertyNameMap.computeIfAbsent(parent, key -&gt; new HashSet&lt;&gt;());</span>
 
-<span class="fc" id="L278">      String retval = name;</span>
-<span class="fc" id="L279">      int index = 0;</span>
-<span class="pc bpc" id="L280" title="1 of 2 branches missed.">      while (propertyNames.contains(retval)) {</span>
+<span class="fc" id="L306">      String retval = name;</span>
+<span class="fc" id="L307">      int index = 0;</span>
+<span class="pc bpc" id="L308" title="1 of 2 branches missed.">      while (propertyNames.contains(retval)) {</span>
         // append an integer value to make the name unique
-<span class="nc" id="L282">        retval = ClassUtils.toPropertyName(name + Integer.toString(++index));</span>
+<span class="nc" id="L310">        retval = ClassUtils.toPropertyName(name + Integer.toString(++index));</span>
       }
-<span class="fc" id="L284">      propertyNames.add(retval);</span>
-<span class="fc" id="L285">      return retval;</span>
+<span class="fc" id="L312">      propertyNames.add(retval);</span>
+<span class="fc" id="L313">      return retval;</span>
+    } finally {
+<span class="fc" id="L315">      propertyNameLock.unlock();</span>
     }
   }
 

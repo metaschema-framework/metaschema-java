@@ -37,114 +37,118 @@
 <span class="source-line-no">024</span><span id="line-24">import edu.umd.cs.findbugs.annotations.Nullable;</span>
 <span class="source-line-no">025</span><span id="line-25"></span>
 <span class="source-line-no">026</span><span id="line-26">/**</span>
-<span class="source-line-no">027</span><span id="line-27"> * Since a node doesn't have a base URI in Metaschema, this is an alias for the</span>
-<span class="source-line-no">028</span><span id="line-28"> * document-uri function.</span>
-<span class="source-line-no">029</span><span id="line-29"> */</span>
-<span class="source-line-no">030</span><span id="line-30">public final class FnPath {</span>
-<span class="source-line-no">031</span><span id="line-31">  private static final String NAME = "path";</span>
-<span class="source-line-no">032</span><span id="line-32">  @NonNull</span>
-<span class="source-line-no">033</span><span id="line-33">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
-<span class="source-line-no">034</span><span id="line-34">      .name(NAME)</span>
-<span class="source-line-no">035</span><span id="line-35">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">036</span><span id="line-36">      .deterministic()</span>
-<span class="source-line-no">037</span><span id="line-37">      .contextDependent()</span>
-<span class="source-line-no">038</span><span id="line-38">      .focusDependent()</span>
-<span class="source-line-no">039</span><span id="line-39">      .returnType(IStringItem.class)</span>
-<span class="source-line-no">040</span><span id="line-40">      .returnZeroOrOne()</span>
-<span class="source-line-no">041</span><span id="line-41">      .functionHandler(FnPath::executeNoArg)</span>
-<span class="source-line-no">042</span><span id="line-42">      .build();</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  @NonNull</span>
-<span class="source-line-no">045</span><span id="line-45">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="source-line-no">046</span><span id="line-46">      .name(NAME)</span>
-<span class="source-line-no">047</span><span id="line-47">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">048</span><span id="line-48">      .deterministic()</span>
-<span class="source-line-no">049</span><span id="line-49">      .contextIndependent()</span>
-<span class="source-line-no">050</span><span id="line-50">      .focusIndependent()</span>
-<span class="source-line-no">051</span><span id="line-51">      .argument(IArgument.builder()</span>
-<span class="source-line-no">052</span><span id="line-52">          .name("arg1")</span>
-<span class="source-line-no">053</span><span id="line-53">          .type(INodeItem.class)</span>
-<span class="source-line-no">054</span><span id="line-54">          .zeroOrOne()</span>
-<span class="source-line-no">055</span><span id="line-55">          .build())</span>
-<span class="source-line-no">056</span><span id="line-56">      .returnType(IStringItem.class)</span>
-<span class="source-line-no">057</span><span id="line-57">      .returnZeroOrOne()</span>
-<span class="source-line-no">058</span><span id="line-58">      .functionHandler(FnPath::executeOneArg)</span>
-<span class="source-line-no">059</span><span id="line-59">      .build();</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  private FnPath() {</span>
-<span class="source-line-no">062</span><span id="line-62">    // disable construction</span>
-<span class="source-line-no">063</span><span id="line-63">  }</span>
+<span class="source-line-no">027</span><span id="line-27"> * Implements the XPath 3.1</span>
+<span class="source-line-no">028</span><span id="line-28"> * &lt;a href= "https://www.w3.org/TR/xpath-functions-31/#func-path"&gt;fn:path&lt;/a&gt;</span>
+<span class="source-line-no">029</span><span id="line-29"> * functions.</span>
+<span class="source-line-no">030</span><span id="line-30"> * &lt;p&gt;</span>
+<span class="source-line-no">031</span><span id="line-31"> * This implementation differs from the XPath specification by returning a</span>
+<span class="source-line-no">032</span><span id="line-32"> * Metapath expression instead of an XPath expression.</span>
+<span class="source-line-no">033</span><span id="line-33"> */</span>
+<span class="source-line-no">034</span><span id="line-34">public final class FnPath {</span>
+<span class="source-line-no">035</span><span id="line-35">  private static final String NAME = "path";</span>
+<span class="source-line-no">036</span><span id="line-36">  @NonNull</span>
+<span class="source-line-no">037</span><span id="line-37">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
+<span class="source-line-no">038</span><span id="line-38">      .name(NAME)</span>
+<span class="source-line-no">039</span><span id="line-39">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">040</span><span id="line-40">      .deterministic()</span>
+<span class="source-line-no">041</span><span id="line-41">      .contextDependent()</span>
+<span class="source-line-no">042</span><span id="line-42">      .focusDependent()</span>
+<span class="source-line-no">043</span><span id="line-43">      .returnType(IStringItem.class)</span>
+<span class="source-line-no">044</span><span id="line-44">      .returnZeroOrOne()</span>
+<span class="source-line-no">045</span><span id="line-45">      .functionHandler(FnPath::executeNoArg)</span>
+<span class="source-line-no">046</span><span id="line-46">      .build();</span>
+<span class="source-line-no">047</span><span id="line-47"></span>
+<span class="source-line-no">048</span><span id="line-48">  @NonNull</span>
+<span class="source-line-no">049</span><span id="line-49">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="source-line-no">050</span><span id="line-50">      .name(NAME)</span>
+<span class="source-line-no">051</span><span id="line-51">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">052</span><span id="line-52">      .deterministic()</span>
+<span class="source-line-no">053</span><span id="line-53">      .contextIndependent()</span>
+<span class="source-line-no">054</span><span id="line-54">      .focusIndependent()</span>
+<span class="source-line-no">055</span><span id="line-55">      .argument(IArgument.builder()</span>
+<span class="source-line-no">056</span><span id="line-56">          .name("arg1")</span>
+<span class="source-line-no">057</span><span id="line-57">          .type(INodeItem.class)</span>
+<span class="source-line-no">058</span><span id="line-58">          .zeroOrOne()</span>
+<span class="source-line-no">059</span><span id="line-59">          .build())</span>
+<span class="source-line-no">060</span><span id="line-60">      .returnType(IStringItem.class)</span>
+<span class="source-line-no">061</span><span id="line-61">      .returnZeroOrOne()</span>
+<span class="source-line-no">062</span><span id="line-62">      .functionHandler(FnPath::executeOneArg)</span>
+<span class="source-line-no">063</span><span id="line-63">      .build();</span>
 <span class="source-line-no">064</span><span id="line-64"></span>
-<span class="source-line-no">065</span><span id="line-65">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">066</span><span id="line-66">  @NonNull</span>
-<span class="source-line-no">067</span><span id="line-67">  private static ISequence&lt;IStringItem&gt; executeNoArg(@NonNull IFunction function,</span>
-<span class="source-line-no">068</span><span id="line-68">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">069</span><span id="line-69">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">070</span><span id="line-70">      IItem focus) {</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">    ISequence&lt;IStringItem&gt; retval;</span>
-<span class="source-line-no">075</span><span id="line-75">    if (item == null) {</span>
-<span class="source-line-no">076</span><span id="line-76">      retval = ISequence.empty();</span>
-<span class="source-line-no">077</span><span id="line-77">    } else {</span>
-<span class="source-line-no">078</span><span id="line-78">      retval = ISequence.of(IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER)));</span>
-<span class="source-line-no">079</span><span id="line-79">    }</span>
-<span class="source-line-no">080</span><span id="line-80">    return retval;</span>
-<span class="source-line-no">081</span><span id="line-81">  }</span>
-<span class="source-line-no">082</span><span id="line-82"></span>
-<span class="source-line-no">083</span><span id="line-83">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">084</span><span id="line-84">  @NonNull</span>
-<span class="source-line-no">085</span><span id="line-85">  private static ISequence&lt;IStringItem&gt; executeOneArg(@NonNull IFunction function,</span>
-<span class="source-line-no">086</span><span id="line-86">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">087</span><span id="line-87">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">088</span><span id="line-88">      IItem focus) {</span>
-<span class="source-line-no">089</span><span id="line-89"></span>
-<span class="source-line-no">090</span><span id="line-90">    return fnPath(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">091</span><span id="line-91">  }</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">  /**</span>
-<span class="source-line-no">094</span><span id="line-94">   * An implementation of XPath 3.1</span>
-<span class="source-line-no">095</span><span id="line-95">   * &lt;a href="https://www.w3.org/TR/xpath-functions-31/#func-path"&gt;fn:path&lt;/a&gt;.</span>
-<span class="source-line-no">096</span><span id="line-96">   *</span>
-<span class="source-line-no">097</span><span id="line-97">   * @param sequence</span>
-<span class="source-line-no">098</span><span id="line-98">   *          a Metapath sequence containing an item to get the Metapath for</span>
-<span class="source-line-no">099</span><span id="line-99">   * @return a sequence containing the generated Metapath</span>
-<span class="source-line-no">100</span><span id="line-100">   */</span>
-<span class="source-line-no">101</span><span id="line-101">  @NonNull</span>
-<span class="source-line-no">102</span><span id="line-102">  public static ISequence&lt;IStringItem&gt; fnPath(@NonNull ISequence&lt;?&gt; sequence) {</span>
-<span class="source-line-no">103</span><span id="line-103">    IItem item = sequence.getFirstItem(true);</span>
-<span class="source-line-no">104</span><span id="line-104"></span>
-<span class="source-line-no">105</span><span id="line-105">    ISequence&lt;IStringItem&gt; retval;</span>
-<span class="source-line-no">106</span><span id="line-106">    if (item == null) {</span>
-<span class="source-line-no">107</span><span id="line-107">      retval = ISequence.empty();</span>
-<span class="source-line-no">108</span><span id="line-108">    } else {</span>
-<span class="source-line-no">109</span><span id="line-109">      try {</span>
-<span class="source-line-no">110</span><span id="line-110">        retval = ISequence.of(fnPath((INodeItem) item));</span>
-<span class="source-line-no">111</span><span id="line-111">      } catch (ClassCastException ex) {</span>
-<span class="source-line-no">112</span><span id="line-112">        throw new InvalidTypeMetapathException(</span>
-<span class="source-line-no">113</span><span id="line-113">            item,</span>
-<span class="source-line-no">114</span><span id="line-114">            String.format("Expected a '%s', but received a '%s'",</span>
-<span class="source-line-no">115</span><span id="line-115">                INodeItem.class.getName(),</span>
-<span class="source-line-no">116</span><span id="line-116">                item.getClass().getName()),</span>
-<span class="source-line-no">117</span><span id="line-117">            ex);</span>
-<span class="source-line-no">118</span><span id="line-118">      }</span>
-<span class="source-line-no">119</span><span id="line-119">    }</span>
-<span class="source-line-no">120</span><span id="line-120">    return retval;</span>
-<span class="source-line-no">121</span><span id="line-121">  }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">  /**</span>
-<span class="source-line-no">124</span><span id="line-124">   * Generates a Metapath for the provided item.</span>
-<span class="source-line-no">125</span><span id="line-125">   *</span>
-<span class="source-line-no">126</span><span id="line-126">   * @param item</span>
-<span class="source-line-no">127</span><span id="line-127">   *          the item to get the Metapath for</span>
-<span class="source-line-no">128</span><span id="line-128">   * @return the generated Metapath</span>
-<span class="source-line-no">129</span><span id="line-129">   */</span>
-<span class="source-line-no">130</span><span id="line-130">  @Nullable</span>
-<span class="source-line-no">131</span><span id="line-131">  public static IStringItem fnPath(@Nullable INodeItem item) {</span>
-<span class="source-line-no">132</span><span id="line-132">    return item == null ? null : IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER));</span>
-<span class="source-line-no">133</span><span id="line-133">  }</span>
-<span class="source-line-no">134</span><span id="line-134">}</span>
+<span class="source-line-no">065</span><span id="line-65">  private FnPath() {</span>
+<span class="source-line-no">066</span><span id="line-66">    // disable construction</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">070</span><span id="line-70">  @NonNull</span>
+<span class="source-line-no">071</span><span id="line-71">  private static ISequence&lt;IStringItem&gt; executeNoArg(@NonNull IFunction function,</span>
+<span class="source-line-no">072</span><span id="line-72">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">073</span><span id="line-73">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">074</span><span id="line-74">      IItem focus) {</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);</span>
+<span class="source-line-no">077</span><span id="line-77"></span>
+<span class="source-line-no">078</span><span id="line-78">    ISequence&lt;IStringItem&gt; retval;</span>
+<span class="source-line-no">079</span><span id="line-79">    if (item == null) {</span>
+<span class="source-line-no">080</span><span id="line-80">      retval = ISequence.empty();</span>
+<span class="source-line-no">081</span><span id="line-81">    } else {</span>
+<span class="source-line-no">082</span><span id="line-82">      retval = ISequence.of(IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER)));</span>
+<span class="source-line-no">083</span><span id="line-83">    }</span>
+<span class="source-line-no">084</span><span id="line-84">    return retval;</span>
+<span class="source-line-no">085</span><span id="line-85">  }</span>
+<span class="source-line-no">086</span><span id="line-86"></span>
+<span class="source-line-no">087</span><span id="line-87">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">088</span><span id="line-88">  @NonNull</span>
+<span class="source-line-no">089</span><span id="line-89">  private static ISequence&lt;IStringItem&gt; executeOneArg(@NonNull IFunction function,</span>
+<span class="source-line-no">090</span><span id="line-90">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">091</span><span id="line-91">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">092</span><span id="line-92">      IItem focus) {</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">    return fnPath(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">095</span><span id="line-95">  }</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">  /**</span>
+<span class="source-line-no">098</span><span id="line-98">   * An implementation of XPath 3.1</span>
+<span class="source-line-no">099</span><span id="line-99">   * &lt;a href="https://www.w3.org/TR/xpath-functions-31/#func-path"&gt;fn:path&lt;/a&gt;.</span>
+<span class="source-line-no">100</span><span id="line-100">   *</span>
+<span class="source-line-no">101</span><span id="line-101">   * @param sequence</span>
+<span class="source-line-no">102</span><span id="line-102">   *          a Metapath sequence containing an item to get the Metapath for</span>
+<span class="source-line-no">103</span><span id="line-103">   * @return a sequence containing the generated Metapath</span>
+<span class="source-line-no">104</span><span id="line-104">   */</span>
+<span class="source-line-no">105</span><span id="line-105">  @NonNull</span>
+<span class="source-line-no">106</span><span id="line-106">  public static ISequence&lt;IStringItem&gt; fnPath(@NonNull ISequence&lt;?&gt; sequence) {</span>
+<span class="source-line-no">107</span><span id="line-107">    IItem item = sequence.getFirstItem(true);</span>
+<span class="source-line-no">108</span><span id="line-108"></span>
+<span class="source-line-no">109</span><span id="line-109">    ISequence&lt;IStringItem&gt; retval;</span>
+<span class="source-line-no">110</span><span id="line-110">    if (item == null) {</span>
+<span class="source-line-no">111</span><span id="line-111">      retval = ISequence.empty();</span>
+<span class="source-line-no">112</span><span id="line-112">    } else {</span>
+<span class="source-line-no">113</span><span id="line-113">      try {</span>
+<span class="source-line-no">114</span><span id="line-114">        retval = ISequence.of(fnPath((INodeItem) item));</span>
+<span class="source-line-no">115</span><span id="line-115">      } catch (ClassCastException ex) {</span>
+<span class="source-line-no">116</span><span id="line-116">        throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">117</span><span id="line-117">            item,</span>
+<span class="source-line-no">118</span><span id="line-118">            String.format("Expected a '%s', but received a '%s'",</span>
+<span class="source-line-no">119</span><span id="line-119">                INodeItem.class.getName(),</span>
+<span class="source-line-no">120</span><span id="line-120">                item.getClass().getName()),</span>
+<span class="source-line-no">121</span><span id="line-121">            ex);</span>
+<span class="source-line-no">122</span><span id="line-122">      }</span>
+<span class="source-line-no">123</span><span id="line-123">    }</span>
+<span class="source-line-no">124</span><span id="line-124">    return retval;</span>
+<span class="source-line-no">125</span><span id="line-125">  }</span>
+<span class="source-line-no">126</span><span id="line-126"></span>
+<span class="source-line-no">127</span><span id="line-127">  /**</span>
+<span class="source-line-no">128</span><span id="line-128">   * Generates a Metapath for the provided item.</span>
+<span class="source-line-no">129</span><span id="line-129">   *</span>
+<span class="source-line-no">130</span><span id="line-130">   * @param item</span>
+<span class="source-line-no">131</span><span id="line-131">   *          the item to get the Metapath for</span>
+<span class="source-line-no">132</span><span id="line-132">   * @return the generated Metapath</span>
+<span class="source-line-no">133</span><span id="line-133">   */</span>
+<span class="source-line-no">134</span><span id="line-134">  @Nullable</span>
+<span class="source-line-no">135</span><span id="line-135">  public static IStringItem fnPath(@Nullable INodeItem item) {</span>
+<span class="source-line-no">136</span><span id="line-136">    return item == null ? null : IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER));</span>
+<span class="source-line-no">137</span><span id="line-137">  }</span>
+<span class="source-line-no">138</span><span id="line-138">}</span>
 
 
 

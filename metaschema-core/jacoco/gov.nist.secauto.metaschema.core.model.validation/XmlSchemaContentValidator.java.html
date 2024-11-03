@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import org.eclipse.jdt.annotation.Owning;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -39,17 +40,17 @@ public class XmlSchemaContentValidator
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   private static Schema toSchema(@NonNull List&lt;? extends Source&gt; schemaSources) throws SAXException {
-<span class="nc" id="L42">    SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);</span>
+<span class="nc" id="L43">    SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);</span>
     // schemafactory.setResourceResolver(new ClasspathResourceResolver());
     Schema retval;
-<span class="nc bnc" id="L45" title="All 2 branches missed.">    if (schemaSources.isEmpty()) {</span>
-<span class="nc" id="L46">      retval = schemafactory.newSchema();</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">    if (schemaSources.isEmpty()) {</span>
+<span class="nc" id="L47">      retval = schemafactory.newSchema();</span>
     } else {
-<span class="nc" id="L48">      retval = schemafactory.newSchema(schemaSources.toArray(new Source[0]));</span>
+<span class="nc" id="L49">      retval = schemafactory.newSchema(schemaSources.toArray(new Source[0]));</span>
     }
 
     // TODO verify source input streams are closed
-<span class="nc" id="L52">    return retval;</span>
+<span class="nc" id="L53">    return retval;</span>
   }
 
   /**
@@ -60,9 +61,9 @@ public class XmlSchemaContentValidator
    * @throws SAXException
    *           if an error occurred while parsing the provided XML schemas
    */
-  public XmlSchemaContentValidator(@NonNull List&lt;? extends Source&gt; schemaSources) throws SAXException {
-<span class="nc" id="L64">    this(toSchema(ObjectUtils.requireNonNull(schemaSources, &quot;schemaSources&quot;)));</span>
-<span class="nc" id="L65">  }</span>
+  public XmlSchemaContentValidator(@Owning @NonNull List&lt;? extends Source&gt; schemaSources) throws SAXException {
+<span class="nc" id="L65">    this(toSchema(ObjectUtils.requireNonNull(schemaSources, &quot;schemaSources&quot;)));</span>
+<span class="nc" id="L66">  }</span>
 
   /**
    * Construct a new XML schema validator using the provided pre-parsed XML
@@ -71,41 +72,41 @@ public class XmlSchemaContentValidator
    * @param schema
    *          the pre-parsed XML schema(s) to use for validation
    */
-<span class="nc" id="L74">  protected XmlSchemaContentValidator(@NonNull Schema schema) {</span>
-<span class="nc" id="L75">    this.schema = ObjectUtils.requireNonNull(schema, &quot;schema&quot;);</span>
-<span class="nc" id="L76">  }</span>
+<span class="nc" id="L75">  protected XmlSchemaContentValidator(@NonNull Schema schema) {</span>
+<span class="nc" id="L76">    this.schema = ObjectUtils.requireNonNull(schema, &quot;schema&quot;);</span>
+<span class="nc" id="L77">  }</span>
 
   private Schema getSchema() {
-<span class="nc" id="L79">    return schema;</span>
+<span class="nc" id="L80">    return schema;</span>
   }
 
   @Override
   public IValidationResult validate(InputStream is, URI documentUri) throws IOException {
-<span class="nc" id="L84">    Source xmlSource = new StreamSource(is, documentUri.toASCIIString());</span>
+<span class="nc" id="L85">    Source xmlSource = new StreamSource(is, documentUri.toASCIIString());</span>
 
-<span class="nc" id="L86">    Validator validator = getSchema().newValidator();</span>
-<span class="nc" id="L87">    XmlValidationErrorHandler errorHandler = new XmlValidationErrorHandler(documentUri);</span>
-<span class="nc" id="L88">    validator.setErrorHandler(errorHandler);</span>
+<span class="nc" id="L87">    Validator validator = getSchema().newValidator();</span>
+<span class="nc" id="L88">    XmlValidationErrorHandler errorHandler = new XmlValidationErrorHandler(documentUri);</span>
+<span class="nc" id="L89">    validator.setErrorHandler(errorHandler);</span>
     try {
-<span class="nc" id="L90">      validator.validate(xmlSource);</span>
-<span class="nc" id="L91">    } catch (SAXParseException ex) {</span>
-<span class="nc bnc" id="L92" title="All 4 branches missed.">      String location = ex.getLineNumber() &gt; -1 &amp;&amp; ex.getColumnNumber() &gt; -1</span>
-<span class="nc" id="L93">          ? String.format(&quot;at %d:%d&quot;, ex.getLineNumber(), ex.getColumnNumber())</span>
-<span class="nc" id="L94">          : &quot;&quot;;</span>
-<span class="nc" id="L95">      throw new IOException(</span>
-<span class="nc" id="L96">          String.format(&quot;Unexpected failure during validation of '%s'%s. %s&quot;,</span>
+<span class="nc" id="L91">      validator.validate(xmlSource);</span>
+<span class="nc" id="L92">    } catch (SAXParseException ex) {</span>
+<span class="nc bnc" id="L93" title="All 4 branches missed.">      String location = ex.getLineNumber() &gt; -1 &amp;&amp; ex.getColumnNumber() &gt; -1</span>
+<span class="nc" id="L94">          ? String.format(&quot;at %d:%d&quot;, ex.getLineNumber(), ex.getColumnNumber())</span>
+<span class="nc" id="L95">          : &quot;&quot;;</span>
+<span class="nc" id="L96">      throw new IOException(</span>
+<span class="nc" id="L97">          String.format(&quot;Unexpected failure during validation of '%s'%s. %s&quot;,</span>
               documentUri,
               location,
-<span class="nc" id="L99">              ex.getLocalizedMessage()),</span>
+<span class="nc" id="L100">              ex.getLocalizedMessage()),</span>
           ex);
-<span class="nc" id="L101">    } catch (SAXException ex) {</span>
-<span class="nc" id="L102">      throw new IOException(</span>
-<span class="nc" id="L103">          String.format(&quot;Unexpected failure during validation of '%s'. %s&quot;,</span>
+<span class="nc" id="L102">    } catch (SAXException ex) {</span>
+<span class="nc" id="L103">      throw new IOException(</span>
+<span class="nc" id="L104">          String.format(&quot;Unexpected failure during validation of '%s'. %s&quot;,</span>
               documentUri,
-<span class="nc" id="L105">              ex.getLocalizedMessage()),</span>
+<span class="nc" id="L106">              ex.getLocalizedMessage()),</span>
           ex);
-<span class="nc" id="L107">    }</span>
-<span class="nc" id="L108">    return errorHandler;</span>
+<span class="nc" id="L108">    }</span>
+<span class="nc" id="L109">    return errorHandler;</span>
   }
 
   /**
@@ -135,59 +136,58 @@ public class XmlSchemaContentValidator
     public XmlValidationFinding(
         @NonNull Level severity,
         @NonNull SAXParseException exception,
-<span class="nc" id="L138">        @NonNull URI resourceUri) {</span>
-<span class="nc" id="L139">      this.severity = ObjectUtils.requireNonNull(severity, &quot;severity&quot;);</span>
-<span class="nc" id="L140">      this.exception = ObjectUtils.requireNonNull(exception, &quot;exception&quot;);</span>
-<span class="nc" id="L141">      this.documentUri = ObjectUtils.requireNonNull(resourceUri, &quot;documentUri&quot;);</span>
-<span class="nc" id="L142">    }</span>
+<span class="nc" id="L139">        @NonNull URI resourceUri) {</span>
+<span class="nc" id="L140">      this.severity = ObjectUtils.requireNonNull(severity, &quot;severity&quot;);</span>
+<span class="nc" id="L141">      this.exception = ObjectUtils.requireNonNull(exception, &quot;exception&quot;);</span>
+<span class="nc" id="L142">      this.documentUri = ObjectUtils.requireNonNull(resourceUri, &quot;documentUri&quot;);</span>
+<span class="nc" id="L143">    }</span>
 
     @Override
     public String getIdentifier() {
       // always null
-<span class="nc" id="L147">      return null;</span>
+<span class="nc" id="L148">      return null;</span>
     }
 
     @Override
     public Kind getKind() {
-<span class="nc bnc" id="L152" title="All 2 branches missed.">      return Level.WARNING.equals(getSeverity()) ? Kind.PASS : Kind.FAIL;</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">      return Level.WARNING.equals(getSeverity()) ? Kind.PASS : Kind.FAIL;</span>
     }
 
     @Override
     public Level getSeverity() {
-<span class="nc" id="L157">      return severity;</span>
+<span class="nc" id="L158">      return severity;</span>
     }
 
     @Override
     public URI getDocumentUri() {
-<span class="nc" id="L162">      String systemId = getCause().getSystemId();</span>
-<span class="nc bnc" id="L163" title="All 2 branches missed.">      return systemId == null ? documentUri : URI.create(systemId);</span>
+<span class="nc" id="L163">      String systemId = getCause().getSystemId();</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">      return systemId == null ? documentUri : URI.create(systemId);</span>
     }
 
     @Override
     public int getLine() {
-<span class="nc" id="L168">      return getCause().getLineNumber();</span>
+<span class="nc" id="L169">      return getCause().getLineNumber();</span>
     }
 
     @Override
     public int getColumn() {
-<span class="nc" id="L173">      return getCause().getColumnNumber();</span>
+<span class="nc" id="L174">      return getCause().getColumnNumber();</span>
     }
 
     @Override
     public long getCharOffset() {
       // not known
-<span class="nc" id="L179">      return -1;</span>
+<span class="nc" id="L180">      return -1;</span>
     }
 
     @Override
     public long getByteOffset() {
       // not known
-<span class="nc" id="L185">      return -1;</span>
+<span class="nc" id="L186">      return -1;</span>
     }
 
     @Override
     public IResourceLocation getLocation() {
-      // TODO Auto-generated method stub
 <span class="nc" id="L191">      return this;</span>
     }
 

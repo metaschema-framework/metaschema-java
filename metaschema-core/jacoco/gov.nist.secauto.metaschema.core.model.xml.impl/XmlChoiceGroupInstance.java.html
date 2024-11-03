@@ -11,10 +11,10 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedAssemblyReferenceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedChoiceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedFieldReferenceType;
@@ -136,69 +136,65 @@ class XmlChoiceGroupInstance
 <span class="fc" id="L136">  private static final XmlObjectParser&lt;Pair&lt;IChoiceGroupInstance, XmlModelContainer&gt;&gt; XML_MODEL_PARSER</span>
 <span class="fc" id="L137">      = new XmlObjectParser&lt;&gt;(ObjectUtils.notNull(</span>
 <span class="fc" id="L138">          Map.ofEntries(</span>
-<span class="fc" id="L139">              Map.entry(new QName(IModule.XML_NAMESPACE, &quot;assembly&quot;),</span>
-                  XmlChoiceGroupInstance::handleAssembly),
-<span class="fc" id="L141">              Map.entry(new QName(IModule.XML_NAMESPACE, &quot;define-assembly&quot;),</span>
-                  XmlChoiceGroupInstance::handleDefineAssembly),
-<span class="fc" id="L143">              Map.entry(new QName(IModule.XML_NAMESPACE, &quot;field&quot;),</span>
-                  XmlChoiceGroupInstance::handleField),
-<span class="fc" id="L145">              Map.entry(new QName(IModule.XML_NAMESPACE, &quot;define-field&quot;),</span>
-<span class="fc" id="L146">                  XmlChoiceGroupInstance::handleDefineField)))) {</span>
+<span class="fc" id="L139">              Map.entry(XmlModuleConstants.ASSEMBLY_QNAME, XmlChoiceGroupInstance::handleAssembly),</span>
+<span class="fc" id="L140">              Map.entry(XmlModuleConstants.DEFINE_ASSEMBLY_QNAME, XmlChoiceGroupInstance::handleDefineAssembly),</span>
+<span class="fc" id="L141">              Map.entry(XmlModuleConstants.FIELD_QNAME, XmlChoiceGroupInstance::handleField),</span>
+<span class="fc" id="L142">              Map.entry(XmlModuleConstants.DEFINE_FIELD_QNAME, XmlChoiceGroupInstance::handleDefineField)))) {</span>
 
         @Override
         protected Handler&lt;Pair&lt;IChoiceGroupInstance, XmlModelContainer&gt;&gt;
             identifyHandler(XmlCursor cursor, XmlObject obj) {
           Handler&lt;Pair&lt;IChoiceGroupInstance, XmlModelContainer&gt;&gt; retval;
-<span class="pc bpc" id="L152" title="1 of 2 branches missed.">          if (obj instanceof GroupedFieldReferenceType) {</span>
-<span class="nc" id="L153">            retval = XmlChoiceGroupInstance::handleField;</span>
-<span class="pc bpc" id="L154" title="1 of 2 branches missed.">          } else if (obj instanceof GroupedInlineFieldDefinitionType) {</span>
-<span class="nc" id="L155">            retval = XmlChoiceGroupInstance::handleDefineField;</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">          } else if (obj instanceof GroupedAssemblyReferenceType) {</span>
-<span class="fc" id="L157">            retval = XmlChoiceGroupInstance::handleAssembly;</span>
-<span class="pc bpc" id="L158" title="1 of 2 branches missed.">          } else if (obj instanceof GroupedInlineAssemblyDefinitionType) {</span>
-<span class="fc" id="L159">            retval = XmlChoiceGroupInstance::handleDefineAssembly;</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">          if (obj instanceof GroupedFieldReferenceType) {</span>
+<span class="nc" id="L149">            retval = XmlChoiceGroupInstance::handleField;</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">          } else if (obj instanceof GroupedInlineFieldDefinitionType) {</span>
+<span class="nc" id="L151">            retval = XmlChoiceGroupInstance::handleDefineField;</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">          } else if (obj instanceof GroupedAssemblyReferenceType) {</span>
+<span class="fc" id="L153">            retval = XmlChoiceGroupInstance::handleAssembly;</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">          } else if (obj instanceof GroupedInlineAssemblyDefinitionType) {</span>
+<span class="fc" id="L155">            retval = XmlChoiceGroupInstance::handleDefineAssembly;</span>
           } else {
-<span class="nc" id="L161">            retval = super.identifyHandler(cursor, obj);</span>
+<span class="nc" id="L157">            retval = super.identifyHandler(cursor, obj);</span>
           }
-<span class="fc" id="L163">          return retval;</span>
+<span class="fc" id="L159">          return retval;</span>
         }
       };
 
   private static void handleField( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IChoiceGroupInstance, XmlModelContainer&gt; state) {
-<span class="nc" id="L170">    IFieldInstanceGrouped instance = new XmlGroupedFieldInstance(</span>
+<span class="nc" id="L166">    IFieldInstanceGrouped instance = new XmlGroupedFieldInstance(</span>
         (GroupedFieldReferenceType) obj,
-<span class="nc" id="L172">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L173">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="nc" id="L174">  }</span>
+<span class="nc" id="L168">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="nc" id="L169">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="nc" id="L170">  }</span>
 
   private static void handleDefineField( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IChoiceGroupInstance, XmlModelContainer&gt; state) {
-<span class="nc" id="L179">    IFieldInstanceGrouped instance = new XmlGroupedInlineFieldDefinition(</span>
+<span class="nc" id="L175">    IFieldInstanceGrouped instance = new XmlGroupedInlineFieldDefinition(</span>
         (GroupedInlineFieldDefinitionType) obj,
-<span class="nc" id="L181">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="nc" id="L182">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="nc" id="L183">  }</span>
+<span class="nc" id="L177">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="nc" id="L178">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="nc" id="L179">  }</span>
 
   private static void handleAssembly( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IChoiceGroupInstance, XmlModelContainer&gt; state) {
-<span class="fc" id="L188">    IAssemblyInstanceGrouped instance = new XmlGroupedAssemblyInstance(</span>
+<span class="fc" id="L184">    IAssemblyInstanceGrouped instance = new XmlGroupedAssemblyInstance(</span>
         (GroupedAssemblyReferenceType) obj,
-<span class="fc" id="L190">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="fc" id="L191">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="fc" id="L192">  }</span>
+<span class="fc" id="L186">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L187">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="fc" id="L188">  }</span>
 
   private static void handleDefineAssembly( // NOPMD false positive
       @NonNull XmlObject obj,
       Pair&lt;IChoiceGroupInstance, XmlModelContainer&gt; state) {
-<span class="fc" id="L197">    IAssemblyInstanceGrouped instance = new XmlGroupedInlineAssemblyDefinition(</span>
+<span class="fc" id="L193">    IAssemblyInstanceGrouped instance = new XmlGroupedInlineAssemblyDefinition(</span>
         (GroupedInlineAssemblyDefinitionType) obj,
-<span class="fc" id="L199">        ObjectUtils.notNull(state.getLeft()));</span>
-<span class="fc" id="L200">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
-<span class="fc" id="L201">  }</span>
+<span class="fc" id="L195">        ObjectUtils.notNull(state.getLeft()));</span>
+<span class="fc" id="L196">    ObjectUtils.notNull(state.getRight()).append(instance);</span>
+<span class="fc" id="L197">  }</span>
 
   private static class XmlModelContainer
       extends DefaultGroupedModelContainerSupport&lt;
@@ -216,21 +212,21 @@ class XmlChoiceGroupInstance
      */
     public XmlModelContainer(
         @NonNull GroupedChoiceType xmlObject,
-<span class="fc" id="L219">        @NonNull IChoiceGroupInstance parent) {</span>
-<span class="fc" id="L220">      XML_MODEL_PARSER.parse(xmlObject, Pair.of(parent, this));</span>
-<span class="fc" id="L221">    }</span>
+<span class="fc" id="L215">        @NonNull IChoiceGroupInstance parent) {</span>
+<span class="fc" id="L216">      XML_MODEL_PARSER.parse(xmlObject, Pair.of(parent, this));</span>
+<span class="fc" id="L217">    }</span>
 
     public void append(@NonNull IFieldInstanceGrouped instance) {
-<span class="nc" id="L224">      QName key = instance.getXmlQName();</span>
-<span class="nc" id="L225">      getFieldInstanceMap().put(key, instance);</span>
-<span class="nc" id="L226">      getNamedModelInstanceMap().put(key, instance);</span>
-<span class="nc" id="L227">    }</span>
+<span class="nc" id="L220">      QName key = instance.getXmlQName();</span>
+<span class="nc" id="L221">      getFieldInstanceMap().put(key, instance);</span>
+<span class="nc" id="L222">      getNamedModelInstanceMap().put(key, instance);</span>
+<span class="nc" id="L223">    }</span>
 
     public void append(@NonNull IAssemblyInstanceGrouped instance) {
-<span class="fc" id="L230">      QName key = instance.getXmlQName();</span>
-<span class="fc" id="L231">      getAssemblyInstanceMap().put(key, instance);</span>
-<span class="fc" id="L232">      getNamedModelInstanceMap().put(key, instance);</span>
-<span class="fc" id="L233">    }</span>
+<span class="fc" id="L226">      QName key = instance.getXmlQName();</span>
+<span class="fc" id="L227">      getAssemblyInstanceMap().put(key, instance);</span>
+<span class="fc" id="L228">      getNamedModelInstanceMap().put(key, instance);</span>
+<span class="fc" id="L229">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -6,90 +6,612 @@
 package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.commands.metapath.MetapathCommand;
+import gov.nist.secauto.metaschema.cli.processor.ExitCode;
+import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;
-import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.CustomCollectors;
+import gov.nist.secauto.metaschema.core.util.DeleteOnShutdown;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.io.Format;
+import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * This class provides a variety of utility methods for processing
+ * Metaschema-related commands.
+ * &lt;p&gt;
+ * These methods handle the errors produced using the
+ * {@link CommandExecutionException}, which will return an exceptional result to
+ * the command line interface (CLI) processor. This approach keeps the command
+ * implementations fairly clean and simple.
+ */
+@SuppressWarnings(&quot;PMD.GodClass&quot;)
 public final class MetaschemaCommands {
+  /**
+   * A list of the Metaschema-related command pathways, for reuse in this and
+   * other CLI applications.
+   */
   @NonNull
-<span class="fc" id="L32">  public static final List&lt;ICommand&gt; COMMANDS = ObjectUtils.notNull(List.of(</span>
+<span class="fc" id="L63">  public static final List&lt;ICommand&gt; COMMANDS = ObjectUtils.notNull(List.of(</span>
       new ValidateModuleCommand(),
       new GenerateSchemaCommand(),
       new GenerateDiagramCommand(),
       new ValidateContentUsingModuleCommand(),
+      new ConvertContentUsingModuleCommand(),
       new MetapathCommand()));
 
+  /**
+   * Used by commands to declare a required Metaschema module for processing.
+   *
+   * @since 2.0.0
+   */
   @NonNull
-<span class="fc" id="L40">  public static final Option METASCHEMA_OPTION = ObjectUtils.notNull(</span>
-<span class="fc" id="L41">      Option.builder(&quot;m&quot;)</span>
-<span class="fc" id="L42">          .hasArg()</span>
-<span class="fc" id="L43">          .argName(&quot;FILE_OR_URL&quot;)</span>
-<span class="fc" id="L44">          .required()</span>
-<span class="fc" id="L45">          .desc(&quot;metaschema resource&quot;)</span>
-<span class="fc" id="L46">          .build());</span>
+<span class="fc" id="L77">  public static final Option METASCHEMA_REQUIRED_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L78">      Option.builder(&quot;m&quot;)</span>
+<span class="fc" id="L79">          .hasArg()</span>
+<span class="fc" id="L80">          .argName(&quot;FILE_OR_URL&quot;)</span>
+<span class="fc" id="L81">          .required()</span>
+<span class="fc" id="L82">          .desc(&quot;metaschema resource&quot;)</span>
+<span class="fc" id="L83">          .numberOfArgs(1)</span>
+<span class="fc" id="L84">          .build());</span>
+  /**
+   * Used by commands to declare an optional Metaschema module for processing.
+   *
+   * @since 2.0.0
+   */
   @NonNull
-<span class="fc" id="L48">  public static final Option OVERWRITE_OPTION = ObjectUtils.notNull(</span>
-<span class="fc" id="L49">      Option.builder()</span>
-<span class="fc" id="L50">          .longOpt(&quot;overwrite&quot;)</span>
-<span class="fc" id="L51">          .desc(&quot;overwrite the destination if it exists&quot;)</span>
-<span class="fc" id="L52">          .build());</span>
-
+<span class="fc" id="L91">  public static final Option METASCHEMA_OPTIONAL_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L92">      Option.builder(&quot;m&quot;)</span>
+<span class="fc" id="L93">          .hasArg()</span>
+<span class="fc" id="L94">          .argName(&quot;FILE_OR_URL&quot;)</span>
+<span class="fc" id="L95">          .desc(&quot;metaschema resource&quot;)</span>
+<span class="fc" id="L96">          .numberOfArgs(1)</span>
+<span class="fc" id="L97">          .build());</span>
+  /**
+   * Used by commands to protect existing files from being overwritten, unless
+   * this option is provided.
+   */
   @NonNull
-  public static IModule handleModule(
-      @NonNull CommandLine commandLine,
-      @NonNull URI cwd,
-      @NonNull Collection&lt;IConstraintSet&gt; constraintSets) throws URISyntaxException, IOException, MetaschemaException {
-<span class="fc" id="L59">    String moduleName</span>
-<span class="fc" id="L60">        = ObjectUtils.requireNonNull(commandLine.getOptionValue(MetaschemaCommands.METASCHEMA_OPTION));</span>
-<span class="fc" id="L61">    URI moduleUri = UriUtils.toUri(moduleName, cwd);</span>
-<span class="fc" id="L62">    return handleModule(moduleUri, constraintSets);</span>
-  }
-
+<span class="fc" id="L103">  public static final Option OVERWRITE_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L104">      Option.builder()</span>
+<span class="fc" id="L105">          .longOpt(&quot;overwrite&quot;)</span>
+<span class="fc" id="L106">          .desc(&quot;overwrite the destination if it exists&quot;)</span>
+<span class="fc" id="L107">          .build());</span>
+  /**
+   * Used by commands to identify the target format for a content conversion
+   * operation.
+   *
+   * @since 2.0.0
+   */
   @NonNull
-  public static IModule handleModule(
-      @NonNull URI moduleResource,
-      @NonNull Collection&lt;IConstraintSet&gt; constraintSets) throws IOException, MetaschemaException {
-<span class="fc" id="L69">    ExternalConstraintsModulePostProcessor postProcessor</span>
-        = new ExternalConstraintsModulePostProcessor(constraintSets);
-
-<span class="fc" id="L72">    ModuleLoader loader = new ModuleLoader(CollectionUtil.singletonList(postProcessor));</span>
-
-    // BindingModuleLoader loader
-    // = new BindingModuleLoader(new DefaultBindingContext(),
-    // CollectionUtil.singletonList(postProcessor));
-
-<span class="fc" id="L78">    loader.allowEntityResolution();</span>
-<span class="fc" id="L79">    return loader.load(moduleResource);</span>
-  }
-
+<span class="fc" id="L115">  public static final Option TO_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L116">      Option.builder()</span>
+<span class="fc" id="L117">          .longOpt(&quot;to&quot;)</span>
+<span class="fc" id="L118">          .required()</span>
+<span class="fc" id="L119">          .hasArg().argName(&quot;FORMAT&quot;)</span>
+<span class="fc" id="L120">          .desc(&quot;convert to format: &quot; + Arrays.stream(Format.values())</span>
+<span class="fc" id="L121">              .map(Enum::name)</span>
+<span class="fc" id="L122">              .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;)))</span>
+<span class="fc" id="L123">          .numberOfArgs(1)</span>
+<span class="fc" id="L124">          .build());</span>
+  /**
+   * Used by commands to identify the source format for a content-related
+   * operation.
+   *
+   * @since 2.0.0
+   */
   @NonNull
-  public static URI handleResource(
-      @NonNull String location,
-      @NonNull URI cwd) throws IOException {
+<span class="fc" id="L132">  public static final Option AS_FORMAT_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L133">      Option.builder()</span>
+<span class="fc" id="L134">          .longOpt(&quot;as&quot;)</span>
+<span class="fc" id="L135">          .hasArg()</span>
+<span class="fc" id="L136">          .argName(&quot;FORMAT&quot;)</span>
+<span class="fc" id="L137">          .desc(&quot;source format: &quot; + Arrays.stream(Format.values())</span>
+<span class="fc" id="L138">              .map(Enum::name)</span>
+<span class="fc" id="L139">              .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;)))</span>
+<span class="fc" id="L140">          .numberOfArgs(1)</span>
+<span class="fc" id="L141">          .build());</span>
+  /**
+   * Used by commands that produce schemas to identify the schema format to
+   * produce.
+   *
+   * @since 2.0.0
+   */
+  @NonNull
+<span class="fc" id="L149">  public static final Option AS_SCHEMA_FORMAT_OPTION = ObjectUtils.notNull(</span>
+<span class="fc" id="L150">      Option.builder()</span>
+<span class="fc" id="L151">          .longOpt(&quot;as&quot;)</span>
+<span class="fc" id="L152">          .required()</span>
+<span class="fc" id="L153">          .hasArg()</span>
+<span class="fc" id="L154">          .argName(&quot;FORMAT&quot;)</span>
+<span class="fc" id="L155">          .desc(&quot;schema format: &quot; + Arrays.stream(SchemaFormat.values())</span>
+<span class="fc" id="L156">              .map(Enum::name)</span>
+<span class="fc" id="L157">              .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;)))</span>
+<span class="fc" id="L158">          .numberOfArgs(1)</span>
+<span class="fc" id="L159">          .build());</span>
+
+  /**
+   * Get the provided source path or URI string as an absolute {@link URI} for the
+   * resource.
+   *
+   * @param pathOrUri
+   *          the resource
+   * @param currentWorkingDirectory
+   *          the current working directory the URI will be resolved against to
+   *          ensure it is absolute
+   * @return the absolute URI for the resource
+   * @throws CommandExecutionException
+   *           if the resulting URI is not a well-formed URI
+   * @since 2.0.0
+   */
+  @NonNull
+  public static URI handleSource(
+      @NonNull String pathOrUri,
+      @NonNull URI currentWorkingDirectory) throws CommandExecutionException {
     try {
-<span class="fc" id="L87">      return UriUtils.toUri(location, cwd);</span>
-<span class="nc" id="L88">    } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L89">      IOException newEx = new IOException( // NOPMD - intentional</span>
-<span class="nc" id="L90">          String.format(&quot;Cannot load module as '%s' is not a valid file or URL.&quot;, location));</span>
-<span class="nc" id="L91">      newEx.addSuppressed(ex);</span>
-<span class="nc" id="L92">      throw newEx;</span>
+<span class="fc" id="L180">      return getResourceUri(pathOrUri, currentWorkingDirectory);</span>
+<span class="nc" id="L181">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L182">      throw new CommandExecutionException(</span>
+          ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L184">          String.format(</span>
+              &quot;Cannot load source '%s' as it is not a valid file or URI.&quot;,
+              pathOrUri),
+          ex);
+    }
+  }
+
+  /**
+   * Get the provided destination path as an absolute {@link Path} for the
+   * resource.
+   * &lt;p&gt;
+   * This method checks if the path exists and if so, if the overwrite option is
+   * set. The method also ensures that the parent directory is created, if it
+   * doesn't already exist.
+   *
+   * @param path
+   *          the resource
+   * @param commandLine
+   *          the provided command line argument information
+   * @return the absolute URI for the resource
+   * @throws CommandExecutionException
+   *           if the path exists and cannot be overwritten or is not writable
+   * @since 2.0.0
+   */
+  public static Path handleDestination(
+      @NonNull String path,
+      @NonNull CommandLine commandLine) throws CommandExecutionException {
+<span class="fc" id="L211">    Path retval = Paths.get(path).toAbsolutePath();</span>
+
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">    if (Files.exists(retval)) {</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">      if (!commandLine.hasOption(OVERWRITE_OPTION)) {</span>
+<span class="nc" id="L215">        throw new CommandExecutionException(</span>
+            ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L217">            String.format(&quot;The provided destination '%s' already exists and the '%s' option was not provided.&quot;,</span>
+                retval,
+<span class="nc" id="L219">                OptionUtils.toArgument(OVERWRITE_OPTION)));</span>
+      }
+<span class="nc bnc" id="L221" title="All 2 branches missed.">      if (!Files.isWritable(retval)) {</span>
+<span class="nc" id="L222">        throw new CommandExecutionException(</span>
+            ExitCode.IO_ERROR,
+<span class="nc" id="L224">            String.format(</span>
+                &quot;The provided destination '%s' is not writable.&quot;, retval));
+      }
+    } else {
+<span class="fc" id="L228">      Path parent = retval.getParent();</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">      if (parent != null) {</span>
+        try {
+<span class="fc" id="L231">          Files.createDirectories(parent);</span>
+<span class="nc" id="L232">        } catch (IOException ex) {</span>
+<span class="nc" id="L233">          throw new CommandExecutionException(</span>
+              ExitCode.INVALID_TARGET,
+              ex);
+<span class="fc" id="L236">        }</span>
+      }
+    }
+<span class="fc" id="L239">    return retval;</span>
+  }
+
+  /**
+   * Parse the command line options to get the selected format.
+   *
+   * @param commandLine
+   *          the provided command line argument information
+   * @param option
+   *          the option specifying the format, which must be present on the
+   *          command line
+   * @return the format
+   * @throws CommandExecutionException
+   *           if the format option was not provided or was an invalid choice
+   * @since 2.0.0
+   */
+  @SuppressWarnings(&quot;PMD.PreserveStackTrace&quot;)
+  @NonNull
+  public static Format getFormat(
+      @NonNull CommandLine commandLine,
+      @NonNull Option option) throws CommandExecutionException {
+    // use the option
+<span class="fc" id="L261">    String toFormatText = commandLine.getOptionValue(option);</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">    if (toFormatText == null) {</span>
+<span class="nc" id="L263">      throw new CommandExecutionException(</span>
+          ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L265">          String.format(&quot;The '%s' argument was not provided.&quot;,</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">              option.hasLongOpt()</span>
+<span class="nc" id="L267">                  ? &quot;--&quot; + option.getLongOpt()</span>
+<span class="nc" id="L268">                  : &quot;-&quot; + option.getOpt()));</span>
+    }
+    try {
+<span class="fc" id="L271">      return Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
+<span class="nc" id="L272">    } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L273">      throw new CommandExecutionException(</span>
+          ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L275">          String.format(&quot;Invalid '%s' argument. The format must be one of: %s.&quot;,</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">              option.hasLongOpt()</span>
+<span class="nc" id="L277">                  ? &quot;--&quot; + option.getLongOpt()</span>
+<span class="nc" id="L278">                  : &quot;-&quot; + option.getOpt(),</span>
+<span class="nc" id="L279">              Arrays.stream(Format.values())</span>
+<span class="nc" id="L280">                  .map(Enum::name)</span>
+<span class="nc" id="L281">                  .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;))));</span>
+    }
+  }
+
+  /**
+   * Parse the command line options to get the selected schema format.
+   *
+   * @param commandLine
+   *          the provided command line argument information
+   * @param option
+   *          the option specifying the format, which must be present on the
+   *          command line
+   * @return the format
+   * @throws CommandExecutionException
+   *           if the format option was not provided or was an invalid choice
+   * @since 2.0.0
+   */
+  @SuppressWarnings(&quot;PMD.PreserveStackTrace&quot;)
+  @NonNull
+  public static SchemaFormat getSchemaFormat(
+      @NonNull CommandLine commandLine,
+      @NonNull Option option) throws CommandExecutionException {
+    // use the option
+<span class="fc" id="L304">    String toFormatText = commandLine.getOptionValue(option);</span>
+<span class="pc bpc" id="L305" title="1 of 2 branches missed.">    if (toFormatText == null) {</span>
+<span class="nc" id="L306">      throw new CommandExecutionException(</span>
+          ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L308">          String.format(&quot;Option '%s' not provided.&quot;,</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">              option.hasLongOpt()</span>
+<span class="nc" id="L310">                  ? &quot;--&quot; + option.getLongOpt()</span>
+<span class="nc" id="L311">                  : &quot;-&quot; + option.getOpt()));</span>
+    }
+    try {
+<span class="fc" id="L314">      return SchemaFormat.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
+<span class="nc" id="L315">    } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L316">      throw new CommandExecutionException(</span>
+          ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L318">          String.format(&quot;Invalid '%s' argument. The schema format must be one of: %s.&quot;,</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">              option.hasLongOpt()</span>
+<span class="nc" id="L320">                  ? &quot;--&quot; + option.getLongOpt()</span>
+<span class="nc" id="L321">                  : &quot;-&quot; + option.getOpt(),</span>
+<span class="nc" id="L322">              Arrays.stream(SchemaFormat.values())</span>
+<span class="nc" id="L323">                  .map(Enum::name)</span>
+<span class="nc" id="L324">                  .collect(CustomCollectors.joiningWithOxfordComma(&quot;or&quot;))),</span>
+          ex);
+    }
+  }
+
+  /**
+   * Detect the source format for content identified using the provided option.
+   * &lt;p&gt;
+   * This method will first check if the source format is explicitly declared on
+   * the command line. If so, this format will be returned.
+   * &lt;p&gt;
+   * If not, then the content will be analyzed to determine the format.
+   *
+   * @param commandLine
+   *          the provided command line argument information
+   * @param option
+   *          the option specifying the format, which must be present on the
+   *          command line
+   * @param loader
+   *          the content loader to use to load the content instance
+   * @param resource
+   *          the resource to load
+   * @return the identified content format
+   * @throws CommandExecutionException
+   *           if an error occurred while determining the source format
+   * @since 2.0.0
+   */
+  @SuppressWarnings({ &quot;PMD.PreserveStackTrace&quot;, &quot;PMD.OnlyOneReturn&quot; })
+  @NonNull
+  public static Format determineSourceFormat(
+      @NonNull CommandLine commandLine,
+      @NonNull Option option,
+      @NonNull IBoundLoader loader,
+      @NonNull URI resource) throws CommandExecutionException {
+<span class="fc bfc" id="L358" title="All 2 branches covered.">    if (commandLine.hasOption(option)) {</span>
+      // use the option
+<span class="fc" id="L360">      return getFormat(commandLine, option);</span>
+    }
+
+    // attempt to determine the format
+    try {
+<span class="fc" id="L365">      return loader.detectFormat(resource);</span>
+<span class="nc" id="L366">    } catch (FileNotFoundException ex) {</span>
+      // this case was already checked for
+<span class="nc" id="L368">      throw new CommandExecutionException(</span>
+          ExitCode.IO_ERROR,
+<span class="nc" id="L370">          String.format(&quot;The provided source '%s' does not exist.&quot;, resource),</span>
+          ex);
+<span class="nc" id="L372">    } catch (IOException ex) {</span>
+<span class="nc" id="L373">      throw new CommandExecutionException(</span>
+          ExitCode.IO_ERROR,
+<span class="nc" id="L375">          String.format(&quot;Unable to determine source format. Use '%s' to specify the format. %s&quot;,</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">              option.hasLongOpt()</span>
+<span class="nc" id="L377">                  ? &quot;--&quot; + option.getLongOpt()</span>
+<span class="nc" id="L378">                  : &quot;-&quot; + option.getOpt(),</span>
+<span class="nc" id="L379">              ex.getLocalizedMessage()),</span>
+          ex);
+    }
+  }
+
+  /**
+   * Load a Metaschema module based on the provided command line option.
+   *
+   * @param commandLine
+   *          the provided command line argument information
+   * @param option
+   *          the option specifying the module to load, which must be present on
+   *          the command line
+   * @param currentWorkingDirectory
+   *          the URI of the current working directory
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @return the loaded module
+   * @throws CommandExecutionException
+   *           if an error occurred while loading the module
+   * @since 2.0.0
+   */
+  @NonNull
+  public static IModule loadModule(
+      @NonNull CommandLine commandLine,
+      @NonNull Option option,
+      @NonNull URI currentWorkingDirectory,
+      @NonNull IBindingContext bindingContext) throws CommandExecutionException {
+<span class="fc" id="L408">    String moduleName = commandLine.getOptionValue(option);</span>
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">    if (moduleName == null) {</span>
+<span class="nc" id="L410">      throw new CommandExecutionException(</span>
+          ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L412">          String.format(&quot;Unable to determine the module to load. Use '%s' to specify the module.&quot;,</span>
+<span class="nc bnc" id="L413" title="All 2 branches missed.">              option.hasLongOpt()</span>
+<span class="nc" id="L414">                  ? &quot;--&quot; + option.getLongOpt()</span>
+<span class="nc" id="L415">                  : &quot;-&quot; + option.getOpt()));</span>
+    }
+
+    URI moduleUri;
+    try {
+<span class="fc" id="L420">      moduleUri = UriUtils.toUri(moduleName, currentWorkingDirectory);</span>
+<span class="nc" id="L421">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L422">      throw new CommandExecutionException(</span>
+          ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L424">          String.format(&quot;Cannot load module as '%s' is not a valid file or URL. %s&quot;,</span>
+<span class="nc" id="L425">              ex.getInput(),</span>
+<span class="nc" id="L426">              ex.getLocalizedMessage()),</span>
+          ex);
+<span class="fc" id="L428">    }</span>
+<span class="fc" id="L429">    return loadModule(moduleUri, bindingContext);</span>
+  }
+
+  /**
+   * Load a Metaschema module from the provided relative resource path.
+   * &lt;p&gt;
+   * This method will resolve the provided resource against the current working
+   * directory to create an absolute URI.
+   *
+   * @param moduleResource
+   *          the relative path to the module resource to load
+   * @param currentWorkingDirectory
+   *          the URI of the current working directory
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @return the loaded module
+   * @throws CommandExecutionException
+   *           if an error occurred while loading the module
+   * @since 2.0.0
+   */
+  @NonNull
+  public static IModule loadModule(
+      @NonNull String moduleResource,
+      @NonNull URI currentWorkingDirectory,
+      @NonNull IBindingContext bindingContext) throws CommandExecutionException {
+    try {
+<span class="fc" id="L456">      URI moduleUri = getResourceUri(</span>
+          moduleResource,
+          currentWorkingDirectory);
+<span class="fc" id="L459">      return loadModule(moduleUri, bindingContext);</span>
+<span class="nc" id="L460">    } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L461">      throw new CommandExecutionException(</span>
+          ExitCode.INVALID_ARGUMENTS,
+<span class="nc" id="L463">          String.format(&quot;Cannot load module as '%s' is not a valid file or URL. %s&quot;,</span>
+<span class="nc" id="L464">              ex.getInput(),</span>
+<span class="nc" id="L465">              ex.getLocalizedMessage()),</span>
+          ex);
+    }
+  }
+
+  /**
+   * Load a Metaschema module from the provided resource path.
+   *
+   * @param moduleResource
+   *          the absolute path to the module resource to load
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @return the loaded module
+   * @throws CommandExecutionException
+   *           if an error occurred while loading the module
+   * @since 2.0.0
+   */
+  @NonNull
+  public static IModule loadModule(
+      @NonNull URI moduleResource,
+      @NonNull IBindingContext bindingContext) throws CommandExecutionException {
+    // TODO: ensure the resource URI is absolute
+    try {
+<span class="fc" id="L489">      IBindingModuleLoader loader = bindingContext.newModuleLoader();</span>
+<span class="fc" id="L490">      loader.allowEntityResolution();</span>
+<span class="fc" id="L491">      return loader.load(moduleResource);</span>
+<span class="nc" id="L492">    } catch (IOException | MetaschemaException ex) {</span>
+<span class="nc" id="L493">      throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);</span>
+    }
+  }
+
+  /**
+   * For a given resource location, resolve the location into an absolute URI.
+   *
+   * @param location
+   *          the resource location
+   * @param currentWorkingDirectory
+   *          the URI of the current working directory
+   * @return the resolved URI
+   * @throws URISyntaxException
+   *           if the location is not a valid URI
+   */
+  @NonNull
+  public static URI getResourceUri(
+      @NonNull String location,
+      @NonNull URI currentWorkingDirectory) throws URISyntaxException {
+<span class="fc" id="L512">    return UriUtils.toUri(location, currentWorkingDirectory);</span>
+  }
+
+  /**
+   * Load a set of external Metaschema module constraints based on the provided
+   * command line option.
+   *
+   * @param commandLine
+   *          the provided command line argument information
+   * @param option
+   *          the option specifying the constraints to load, which must be present
+   *          on the command line
+   * @param currentWorkingDirectory
+   *          the URI of the current working directory
+   * @return the set of loaded constraints
+   * @throws CommandExecutionException
+   *           if an error occurred while loading the module
+   * @since 2.0.0
+   */
+  @NonNull
+  public static Set&lt;IConstraintSet&gt; loadConstraintSets(
+      @NonNull CommandLine commandLine,
+      @NonNull Option option,
+      @NonNull URI currentWorkingDirectory) throws CommandExecutionException {
+    Set&lt;IConstraintSet&gt; constraintSets;
+<span class="pc bpc" id="L537" title="1 of 2 branches missed.">    if (commandLine.hasOption(option)) {</span>
+<span class="nc" id="L538">      IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();</span>
+<span class="nc" id="L539">      constraintSets = new LinkedHashSet&lt;&gt;();</span>
+<span class="nc" id="L540">      String[] args = commandLine.getOptionValues(option);</span>
+<span class="nc bnc" id="L541" title="All 2 branches missed.">      for (String arg : args) {</span>
+<span class="nc bnc" id="L542" title="All 2 branches missed.">        assert arg != null;</span>
+        try {
+<span class="nc" id="L544">          URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, currentWorkingDirectory));</span>
+<span class="nc" id="L545">          constraintSets.addAll(constraintLoader.load(constraintUri));</span>
+<span class="nc" id="L546">        } catch (URISyntaxException | IOException | MetaschemaException | MetapathException ex) {</span>
+<span class="nc" id="L547">          throw new CommandExecutionException(</span>
+              ExitCode.IO_ERROR,
+<span class="nc" id="L549">              String.format(&quot;Unable to process constraint set '%s'. %s&quot;,</span>
+                  arg,
+<span class="nc" id="L551">                  ex.getLocalizedMessage()),</span>
+              ex);
+<span class="nc" id="L553">        }</span>
+      }
+<span class="nc" id="L555">    } else {</span>
+<span class="fc" id="L556">      constraintSets = CollectionUtil.emptySet();</span>
+    }
+<span class="fc" id="L558">    return constraintSets;</span>
+  }
+
+  /**
+   * Create a temporary directory for ephemeral files that will be deleted on
+   * shutdown.
+   *
+   * @return the temp directory path
+   * @throws IOException
+   *           if an error occurred while creating the temporary directory
+   */
+  @NonNull
+  public static Path newTempDir() throws IOException {
+<span class="fc" id="L571">    Path retval = Files.createTempDirectory(&quot;metaschema-cli-&quot;);</span>
+<span class="fc" id="L572">    DeleteOnShutdown.register(retval);</span>
+<span class="fc" id="L573">    return ObjectUtils.notNull(retval);</span>
+  }
+
+  /**
+   * Create a new {@link IBindingContext} that is configured for dynamic
+   * compilation.
+   *
+   * @return the binding context
+   * @throws CommandExecutionException
+   *           if an error occurred while creating the binding context
+   * @since 2.0.0
+   */
+  @NonNull
+  public static IBindingContext newBindingContextWithDynamicCompilation() throws CommandExecutionException {
+<span class="fc" id="L587">    return newBindingContextWithDynamicCompilation(CollectionUtil.emptySet());</span>
+  }
+
+  /**
+   * Create a new {@link IBindingContext} that is configured for dynamic
+   * compilation and to use the provided constraints.
+   *
+   * @param constraintSets
+   *          the Metaschema module constraints to dynamicly bind to loaded
+   *          modules
+   * @return the binding context
+   * @throws CommandExecutionException
+   *           if an error occurred while creating the binding context
+   * @since 2.0.0
+   */
+  @NonNull
+  public static IBindingContext newBindingContextWithDynamicCompilation(@NonNull Set&lt;IConstraintSet&gt; constraintSets)
+      throws CommandExecutionException {
+    try {
+<span class="fc" id="L606">      Path tempDir = newTempDir();</span>
+<span class="fc" id="L607">      return IBindingContext.builder()</span>
+<span class="fc" id="L608">          .compilePath(tempDir)</span>
+<span class="fc" id="L609">          .constraintSet(constraintSets)</span>
+<span class="fc" id="L610">          .build();</span>
+<span class="nc" id="L611">    } catch (IOException ex) {</span>
+<span class="nc" id="L612">      throw new CommandExecutionException(ExitCode.RUNTIME_ERROR,</span>
+<span class="nc" id="L613">          String.format(&quot;Unable to initialize the binding context. %s&quot;, ex.getLocalizedMessage()),</span>
+          ex);
     }
   }
 

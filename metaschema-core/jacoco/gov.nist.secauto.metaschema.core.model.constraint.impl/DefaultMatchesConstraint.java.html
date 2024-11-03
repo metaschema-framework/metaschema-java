@@ -9,8 +9,8 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,15 +19,19 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a matches constraint.
+ * &lt;p&gt;
+ * Enforces a value pattern and/or data type.
+ */
 public final class DefaultMatchesConstraint
-    extends AbstractConstraint
+    extends AbstractConfigurableMessageConstraint
     implements IMatchesConstraint {
   private final Pattern pattern;
   private final IDataTypeAdapter&lt;?&gt; dataType;
 
   /**
-   * Create a new matches constraint, which enforces a value pattern and/or data
-   * type.
+   * Construct a new matches constraint.
    *
    * @param id
    *          the optional identifier for the constraint
@@ -50,6 +54,8 @@ public final class DefaultMatchesConstraint
    * @param dataType
    *          the value data type to match or {@code null} if there is no match
    *          data type
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -64,23 +70,24 @@ public final class DefaultMatchesConstraint
       @NonNull Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; properties,
       @Nullable Pattern pattern,
       @Nullable IDataTypeAdapter&lt;?&gt; dataType,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-<span class="fc" id="L68">    super(id, formalName, description, source, level, target, properties, remarks);</span>
-<span class="pc bpc" id="L69" title="2 of 4 branches missed.">    if (pattern == null &amp;&amp; dataType == null) {</span>
-<span class="nc" id="L70">      throw new IllegalArgumentException(&quot;a pattern or data type must be provided&quot;);</span>
+<span class="fc" id="L75">    super(id, formalName, description, source, level, target, properties, message, remarks);</span>
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">    if (pattern == null &amp;&amp; dataType == null) {</span>
+<span class="nc" id="L77">      throw new IllegalArgumentException(&quot;a pattern or data type must be provided&quot;);</span>
     }
-<span class="fc" id="L72">    this.pattern = pattern;</span>
-<span class="fc" id="L73">    this.dataType = dataType;</span>
-<span class="fc" id="L74">  }</span>
+<span class="fc" id="L79">    this.pattern = pattern;</span>
+<span class="fc" id="L80">    this.dataType = dataType;</span>
+<span class="fc" id="L81">  }</span>
 
   @Override
   public Pattern getPattern() {
-<span class="nc" id="L78">    return pattern;</span>
+<span class="nc" id="L85">    return pattern;</span>
   }
 
   @Override
   public IDataTypeAdapter&lt;?&gt; getDataType() {
-<span class="fc" id="L83">    return dataType;</span>
+<span class="fc" id="L90">    return dataType;</span>
   }
 
 }

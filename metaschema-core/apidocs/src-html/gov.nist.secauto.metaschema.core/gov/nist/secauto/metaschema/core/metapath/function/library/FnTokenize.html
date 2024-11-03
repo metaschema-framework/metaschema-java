@@ -41,211 +41,218 @@
 <span class="source-line-no">028</span><span id="line-28">import edu.umd.cs.findbugs.annotations.Nullable;</span>
 <span class="source-line-no">029</span><span id="line-29"></span>
 <span class="source-line-no">030</span><span id="line-30">/**</span>
-<span class="source-line-no">031</span><span id="line-31"> * Implements &lt;a href=</span>
-<span class="source-line-no">032</span><span id="line-32"> * "https://www.w3.org/TR/xpath-functions-31/#func-tokenize"&gt;fn:tokenize&lt;/a&gt;.</span>
-<span class="source-line-no">033</span><span id="line-33"> */</span>
-<span class="source-line-no">034</span><span id="line-34">public final class FnTokenize {</span>
-<span class="source-line-no">035</span><span id="line-35">  private static final String NAME = "tokenize";</span>
-<span class="source-line-no">036</span><span id="line-36">  @NonNull</span>
-<span class="source-line-no">037</span><span id="line-37">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="source-line-no">038</span><span id="line-38">      .name(NAME)</span>
-<span class="source-line-no">039</span><span id="line-39">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">040</span><span id="line-40">      .deterministic()</span>
-<span class="source-line-no">041</span><span id="line-41">      .contextIndependent()</span>
-<span class="source-line-no">042</span><span id="line-42">      .focusIndependent()</span>
-<span class="source-line-no">043</span><span id="line-43">      .argument(IArgument.builder()</span>
-<span class="source-line-no">044</span><span id="line-44">          .name("input")</span>
-<span class="source-line-no">045</span><span id="line-45">          .type(IStringItem.class)</span>
-<span class="source-line-no">046</span><span id="line-46">          .zeroOrOne()</span>
-<span class="source-line-no">047</span><span id="line-47">          .build())</span>
-<span class="source-line-no">048</span><span id="line-48">      .returnType(IStringItem.class)</span>
-<span class="source-line-no">049</span><span id="line-49">      .returnZeroOrMore()</span>
-<span class="source-line-no">050</span><span id="line-50">      .functionHandler(FnTokenize::executeOneArg)</span>
-<span class="source-line-no">051</span><span id="line-51">      .build();</span>
-<span class="source-line-no">052</span><span id="line-52">  @NonNull</span>
-<span class="source-line-no">053</span><span id="line-53">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
-<span class="source-line-no">054</span><span id="line-54">      .name(NAME)</span>
-<span class="source-line-no">055</span><span id="line-55">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">056</span><span id="line-56">      .deterministic()</span>
-<span class="source-line-no">057</span><span id="line-57">      .contextIndependent()</span>
-<span class="source-line-no">058</span><span id="line-58">      .focusIndependent()</span>
-<span class="source-line-no">059</span><span id="line-59">      .argument(IArgument.builder()</span>
-<span class="source-line-no">060</span><span id="line-60">          .name("input")</span>
-<span class="source-line-no">061</span><span id="line-61">          .type(IStringItem.class)</span>
-<span class="source-line-no">062</span><span id="line-62">          .zeroOrOne()</span>
-<span class="source-line-no">063</span><span id="line-63">          .build())</span>
-<span class="source-line-no">064</span><span id="line-64">      .argument(IArgument.builder()</span>
-<span class="source-line-no">065</span><span id="line-65">          .name("pattern")</span>
-<span class="source-line-no">066</span><span id="line-66">          .type(IStringItem.class)</span>
-<span class="source-line-no">067</span><span id="line-67">          .one()</span>
-<span class="source-line-no">068</span><span id="line-68">          .build())</span>
-<span class="source-line-no">069</span><span id="line-69">      .returnType(IStringItem.class)</span>
-<span class="source-line-no">070</span><span id="line-70">      .returnZeroOrMore()</span>
-<span class="source-line-no">071</span><span id="line-71">      .functionHandler(FnTokenize::executeTwoArg)</span>
-<span class="source-line-no">072</span><span id="line-72">      .build();</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">  @NonNull</span>
-<span class="source-line-no">075</span><span id="line-75">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
-<span class="source-line-no">076</span><span id="line-76">      .name(NAME)</span>
-<span class="source-line-no">077</span><span id="line-77">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">078</span><span id="line-78">      .deterministic()</span>
-<span class="source-line-no">079</span><span id="line-79">      .contextIndependent()</span>
-<span class="source-line-no">080</span><span id="line-80">      .focusIndependent()</span>
-<span class="source-line-no">081</span><span id="line-81">      .argument(IArgument.builder()</span>
-<span class="source-line-no">082</span><span id="line-82">          .name("input")</span>
-<span class="source-line-no">083</span><span id="line-83">          .type(IStringItem.class)</span>
-<span class="source-line-no">084</span><span id="line-84">          .zeroOrOne()</span>
-<span class="source-line-no">085</span><span id="line-85">          .build())</span>
-<span class="source-line-no">086</span><span id="line-86">      .argument(IArgument.builder()</span>
-<span class="source-line-no">087</span><span id="line-87">          .name("pattern")</span>
-<span class="source-line-no">088</span><span id="line-88">          .type(IStringItem.class)</span>
-<span class="source-line-no">089</span><span id="line-89">          .one()</span>
-<span class="source-line-no">090</span><span id="line-90">          .build())</span>
-<span class="source-line-no">091</span><span id="line-91">      .argument(IArgument.builder()</span>
-<span class="source-line-no">092</span><span id="line-92">          .name("flags")</span>
-<span class="source-line-no">093</span><span id="line-93">          .type(IStringItem.class)</span>
-<span class="source-line-no">094</span><span id="line-94">          .one()</span>
-<span class="source-line-no">095</span><span id="line-95">          .build())</span>
-<span class="source-line-no">096</span><span id="line-96">      .returnType(IStringItem.class)</span>
-<span class="source-line-no">097</span><span id="line-97">      .returnZeroOrMore()</span>
-<span class="source-line-no">098</span><span id="line-98">      .functionHandler(FnTokenize::executeThreeArg)</span>
-<span class="source-line-no">099</span><span id="line-99">      .build();</span>
-<span class="source-line-no">100</span><span id="line-100"></span>
-<span class="source-line-no">101</span><span id="line-101">  @NonNull</span>
-<span class="source-line-no">102</span><span id="line-102">  private static ISequence&lt;IStringItem&gt; executeOneArg(</span>
-<span class="source-line-no">103</span><span id="line-103">      @SuppressWarnings("unused") @NonNull IFunction function,</span>
-<span class="source-line-no">104</span><span id="line-104">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">105</span><span id="line-105">      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">106</span><span id="line-106">      @SuppressWarnings("unused") IItem focus) {</span>
-<span class="source-line-no">107</span><span id="line-107">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">    return input == null</span>
-<span class="source-line-no">110</span><span id="line-110">        ? ISequence.empty()</span>
-<span class="source-line-no">111</span><span id="line-111">        : ISequence.of(ObjectUtils.notNull(</span>
-<span class="source-line-no">112</span><span id="line-112">            fnTokenize(input.normalizeSpace().asString(), " ", "").stream()</span>
-<span class="source-line-no">113</span><span id="line-113">                .map(IStringItem::valueOf)));</span>
-<span class="source-line-no">114</span><span id="line-114">  }</span>
-<span class="source-line-no">115</span><span id="line-115"></span>
-<span class="source-line-no">116</span><span id="line-116">  @NonNull</span>
-<span class="source-line-no">117</span><span id="line-117">  private static ISequence&lt;IStringItem&gt; executeTwoArg(</span>
-<span class="source-line-no">118</span><span id="line-118">      @SuppressWarnings("unused") @NonNull IFunction function,</span>
-<span class="source-line-no">119</span><span id="line-119">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">120</span><span id="line-120">      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">121</span><span id="line-121">      @SuppressWarnings("unused") IItem focus) {</span>
-<span class="source-line-no">122</span><span id="line-122">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="source-line-no">123</span><span id="line-123">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">124</span><span id="line-124"></span>
-<span class="source-line-no">125</span><span id="line-125">    return execute(input, pattern, IStringItem.valueOf(""));</span>
-<span class="source-line-no">126</span><span id="line-126">  }</span>
-<span class="source-line-no">127</span><span id="line-127"></span>
-<span class="source-line-no">128</span><span id="line-128">  @NonNull</span>
-<span class="source-line-no">129</span><span id="line-129">  private static ISequence&lt;IStringItem&gt; executeThreeArg(</span>
-<span class="source-line-no">130</span><span id="line-130">      @SuppressWarnings("unused") @NonNull IFunction function,</span>
-<span class="source-line-no">131</span><span id="line-131">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">132</span><span id="line-132">      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">133</span><span id="line-133">      @SuppressWarnings("unused") IItem focus) {</span>
-<span class="source-line-no">134</span><span id="line-134"></span>
-<span class="source-line-no">135</span><span id="line-135">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="source-line-no">136</span><span id="line-136">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">137</span><span id="line-137">    IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">    return execute(input, pattern, flags);</span>
-<span class="source-line-no">140</span><span id="line-140">  }</span>
+<span class="source-line-no">031</span><span id="line-31"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">032</span><span id="line-32"> * "https://www.w3.org/TR/xpath-functions-31/#func-tokenize"&gt;fn:tokenize&lt;/a&gt;</span>
+<span class="source-line-no">033</span><span id="line-33"> * function.</span>
+<span class="source-line-no">034</span><span id="line-34"> */</span>
+<span class="source-line-no">035</span><span id="line-35">public final class FnTokenize {</span>
+<span class="source-line-no">036</span><span id="line-36">  // CPD-OFF</span>
+<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
+<span class="source-line-no">038</span><span id="line-38">  private static final String NAME = "tokenize";</span>
+<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
+<span class="source-line-no">040</span><span id="line-40">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="source-line-no">041</span><span id="line-41">      .name(NAME)</span>
+<span class="source-line-no">042</span><span id="line-42">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">043</span><span id="line-43">      .deterministic()</span>
+<span class="source-line-no">044</span><span id="line-44">      .contextIndependent()</span>
+<span class="source-line-no">045</span><span id="line-45">      .focusIndependent()</span>
+<span class="source-line-no">046</span><span id="line-46">      .argument(IArgument.builder()</span>
+<span class="source-line-no">047</span><span id="line-47">          .name("input")</span>
+<span class="source-line-no">048</span><span id="line-48">          .type(IStringItem.class)</span>
+<span class="source-line-no">049</span><span id="line-49">          .zeroOrOne()</span>
+<span class="source-line-no">050</span><span id="line-50">          .build())</span>
+<span class="source-line-no">051</span><span id="line-51">      .returnType(IStringItem.class)</span>
+<span class="source-line-no">052</span><span id="line-52">      .returnZeroOrMore()</span>
+<span class="source-line-no">053</span><span id="line-53">      .functionHandler(FnTokenize::executeOneArg)</span>
+<span class="source-line-no">054</span><span id="line-54">      .build();</span>
+<span class="source-line-no">055</span><span id="line-55">  @NonNull</span>
+<span class="source-line-no">056</span><span id="line-56">  static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()</span>
+<span class="source-line-no">057</span><span id="line-57">      .name(NAME)</span>
+<span class="source-line-no">058</span><span id="line-58">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">059</span><span id="line-59">      .deterministic()</span>
+<span class="source-line-no">060</span><span id="line-60">      .contextIndependent()</span>
+<span class="source-line-no">061</span><span id="line-61">      .focusIndependent()</span>
+<span class="source-line-no">062</span><span id="line-62">      .argument(IArgument.builder()</span>
+<span class="source-line-no">063</span><span id="line-63">          .name("input")</span>
+<span class="source-line-no">064</span><span id="line-64">          .type(IStringItem.class)</span>
+<span class="source-line-no">065</span><span id="line-65">          .zeroOrOne()</span>
+<span class="source-line-no">066</span><span id="line-66">          .build())</span>
+<span class="source-line-no">067</span><span id="line-67">      .argument(IArgument.builder()</span>
+<span class="source-line-no">068</span><span id="line-68">          .name("pattern")</span>
+<span class="source-line-no">069</span><span id="line-69">          .type(IStringItem.class)</span>
+<span class="source-line-no">070</span><span id="line-70">          .one()</span>
+<span class="source-line-no">071</span><span id="line-71">          .build())</span>
+<span class="source-line-no">072</span><span id="line-72">      .returnType(IStringItem.class)</span>
+<span class="source-line-no">073</span><span id="line-73">      .returnZeroOrMore()</span>
+<span class="source-line-no">074</span><span id="line-74">      .functionHandler(FnTokenize::executeTwoArg)</span>
+<span class="source-line-no">075</span><span id="line-75">      .build();</span>
+<span class="source-line-no">076</span><span id="line-76"></span>
+<span class="source-line-no">077</span><span id="line-77">  @NonNull</span>
+<span class="source-line-no">078</span><span id="line-78">  static final IFunction SIGNATURE_THREE_ARG = IFunction.builder()</span>
+<span class="source-line-no">079</span><span id="line-79">      .name(NAME)</span>
+<span class="source-line-no">080</span><span id="line-80">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">081</span><span id="line-81">      .deterministic()</span>
+<span class="source-line-no">082</span><span id="line-82">      .contextIndependent()</span>
+<span class="source-line-no">083</span><span id="line-83">      .focusIndependent()</span>
+<span class="source-line-no">084</span><span id="line-84">      .argument(IArgument.builder()</span>
+<span class="source-line-no">085</span><span id="line-85">          .name("input")</span>
+<span class="source-line-no">086</span><span id="line-86">          .type(IStringItem.class)</span>
+<span class="source-line-no">087</span><span id="line-87">          .zeroOrOne()</span>
+<span class="source-line-no">088</span><span id="line-88">          .build())</span>
+<span class="source-line-no">089</span><span id="line-89">      .argument(IArgument.builder()</span>
+<span class="source-line-no">090</span><span id="line-90">          .name("pattern")</span>
+<span class="source-line-no">091</span><span id="line-91">          .type(IStringItem.class)</span>
+<span class="source-line-no">092</span><span id="line-92">          .one()</span>
+<span class="source-line-no">093</span><span id="line-93">          .build())</span>
+<span class="source-line-no">094</span><span id="line-94">      .argument(IArgument.builder()</span>
+<span class="source-line-no">095</span><span id="line-95">          .name("flags")</span>
+<span class="source-line-no">096</span><span id="line-96">          .type(IStringItem.class)</span>
+<span class="source-line-no">097</span><span id="line-97">          .one()</span>
+<span class="source-line-no">098</span><span id="line-98">          .build())</span>
+<span class="source-line-no">099</span><span id="line-99">      .returnType(IStringItem.class)</span>
+<span class="source-line-no">100</span><span id="line-100">      .returnZeroOrMore()</span>
+<span class="source-line-no">101</span><span id="line-101">      .functionHandler(FnTokenize::executeThreeArg)</span>
+<span class="source-line-no">102</span><span id="line-102">      .build();</span>
+<span class="source-line-no">103</span><span id="line-103">  // CPD-ON</span>
+<span class="source-line-no">104</span><span id="line-104"></span>
+<span class="source-line-no">105</span><span id="line-105">  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })</span>
+<span class="source-line-no">106</span><span id="line-106">  @NonNull</span>
+<span class="source-line-no">107</span><span id="line-107">  private static ISequence&lt;IStringItem&gt; executeOneArg(</span>
+<span class="source-line-no">108</span><span id="line-108">      @NonNull IFunction function,</span>
+<span class="source-line-no">109</span><span id="line-109">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">110</span><span id="line-110">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">111</span><span id="line-111">      IItem focus) {</span>
+<span class="source-line-no">112</span><span id="line-112">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">    return input == null</span>
+<span class="source-line-no">115</span><span id="line-115">        ? ISequence.empty()</span>
+<span class="source-line-no">116</span><span id="line-116">        : ISequence.of(ObjectUtils.notNull(</span>
+<span class="source-line-no">117</span><span id="line-117">            fnTokenize(input.normalizeSpace().asString(), " ", "").stream()</span>
+<span class="source-line-no">118</span><span id="line-118">                .map(IStringItem::valueOf)));</span>
+<span class="source-line-no">119</span><span id="line-119">  }</span>
+<span class="source-line-no">120</span><span id="line-120"></span>
+<span class="source-line-no">121</span><span id="line-121">  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })</span>
+<span class="source-line-no">122</span><span id="line-122">  @NonNull</span>
+<span class="source-line-no">123</span><span id="line-123">  private static ISequence&lt;IStringItem&gt; executeTwoArg(</span>
+<span class="source-line-no">124</span><span id="line-124">      @NonNull IFunction function,</span>
+<span class="source-line-no">125</span><span id="line-125">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">126</span><span id="line-126">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">127</span><span id="line-127">      IItem focus) {</span>
+<span class="source-line-no">128</span><span id="line-128">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="source-line-no">129</span><span id="line-129">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="source-line-no">130</span><span id="line-130"></span>
+<span class="source-line-no">131</span><span id="line-131">    return execute(input, pattern, IStringItem.valueOf(""));</span>
+<span class="source-line-no">132</span><span id="line-132">  }</span>
+<span class="source-line-no">133</span><span id="line-133"></span>
+<span class="source-line-no">134</span><span id="line-134">  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })</span>
+<span class="source-line-no">135</span><span id="line-135">  @NonNull</span>
+<span class="source-line-no">136</span><span id="line-136">  private static ISequence&lt;IStringItem&gt; executeThreeArg(</span>
+<span class="source-line-no">137</span><span id="line-137">      @NonNull IFunction function,</span>
+<span class="source-line-no">138</span><span id="line-138">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">139</span><span id="line-139">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">140</span><span id="line-140">      IItem focus) {</span>
 <span class="source-line-no">141</span><span id="line-141"></span>
-<span class="source-line-no">142</span><span id="line-142">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
-<span class="source-line-no">143</span><span id="line-143">  @NonNull</span>
-<span class="source-line-no">144</span><span id="line-144">  private static ISequence&lt;IStringItem&gt; execute(</span>
-<span class="source-line-no">145</span><span id="line-145">      @Nullable IStringItem input,</span>
-<span class="source-line-no">146</span><span id="line-146">      @NonNull IStringItem pattern,</span>
-<span class="source-line-no">147</span><span id="line-147">      @NonNull IStringItem flags) {</span>
-<span class="source-line-no">148</span><span id="line-148">    return input == null</span>
-<span class="source-line-no">149</span><span id="line-149">        ? ISequence.empty()</span>
-<span class="source-line-no">150</span><span id="line-150">        : fnTokenize(input, pattern, flags);</span>
-<span class="source-line-no">151</span><span id="line-151">  }</span>
-<span class="source-line-no">152</span><span id="line-152"></span>
-<span class="source-line-no">153</span><span id="line-153">  /**</span>
-<span class="source-line-no">154</span><span id="line-154">   * Implements &lt;a href=</span>
-<span class="source-line-no">155</span><span id="line-155">   * "https://www.w3.org/TR/xpath-functions-31/#func-tokenize"&gt;fn:tokenize&lt;/a&gt;.</span>
-<span class="source-line-no">156</span><span id="line-156">   *</span>
-<span class="source-line-no">157</span><span id="line-157">   * @param input</span>
-<span class="source-line-no">158</span><span id="line-158">   *          the string to tokenize</span>
-<span class="source-line-no">159</span><span id="line-159">   * @param pattern</span>
-<span class="source-line-no">160</span><span id="line-160">   *          the regular expression to use for identifying token boundaries</span>
-<span class="source-line-no">161</span><span id="line-161">   * @param flags</span>
-<span class="source-line-no">162</span><span id="line-162">   *          matching options</span>
-<span class="source-line-no">163</span><span id="line-163">   * @return the sequence of tokens</span>
-<span class="source-line-no">164</span><span id="line-164">   */</span>
-<span class="source-line-no">165</span><span id="line-165">  @NonNull</span>
-<span class="source-line-no">166</span><span id="line-166">  public static ISequence&lt;IStringItem&gt; fnTokenize(</span>
-<span class="source-line-no">167</span><span id="line-167">      @NonNull IStringItem input,</span>
-<span class="source-line-no">168</span><span id="line-168">      @NonNull IStringItem pattern,</span>
-<span class="source-line-no">169</span><span id="line-169">      @NonNull IStringItem flags) {</span>
-<span class="source-line-no">170</span><span id="line-170">    return ISequence.of(ObjectUtils.notNull(</span>
-<span class="source-line-no">171</span><span id="line-171">        fnTokenize(input.asString(), pattern.asString(), flags.asString()).stream()</span>
-<span class="source-line-no">172</span><span id="line-172">            .map(IStringItem::valueOf)));</span>
-<span class="source-line-no">173</span><span id="line-173">  }</span>
-<span class="source-line-no">174</span><span id="line-174"></span>
-<span class="source-line-no">175</span><span id="line-175">  /**</span>
-<span class="source-line-no">176</span><span id="line-176">   * Implements &lt;a href=</span>
-<span class="source-line-no">177</span><span id="line-177">   * "https://www.w3.org/TR/xpath-functions-31/#func-tokenize"&gt;fn:tokenize&lt;/a&gt;.</span>
-<span class="source-line-no">178</span><span id="line-178">   *</span>
-<span class="source-line-no">179</span><span id="line-179">   * @param input</span>
-<span class="source-line-no">180</span><span id="line-180">   *          the string to match against</span>
-<span class="source-line-no">181</span><span id="line-181">   * @param pattern</span>
-<span class="source-line-no">182</span><span id="line-182">   *          the regular expression to use for matching</span>
-<span class="source-line-no">183</span><span id="line-183">   * @param flags</span>
-<span class="source-line-no">184</span><span id="line-184">   *          matching options</span>
-<span class="source-line-no">185</span><span id="line-185">   * @return the stream of tokens</span>
-<span class="source-line-no">186</span><span id="line-186">   */</span>
-<span class="source-line-no">187</span><span id="line-187">  @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.CyclomaticComplexity" })</span>
-<span class="source-line-no">188</span><span id="line-188">  @NonNull</span>
-<span class="source-line-no">189</span><span id="line-189">  public static List&lt;String&gt; fnTokenize(@NonNull String input, @NonNull String pattern, @NonNull String flags) {</span>
-<span class="source-line-no">190</span><span id="line-190">    if (input.isEmpty()) {</span>
-<span class="source-line-no">191</span><span id="line-191">      return CollectionUtil.emptyList();</span>
-<span class="source-line-no">192</span><span id="line-192">    }</span>
-<span class="source-line-no">193</span><span id="line-193"></span>
-<span class="source-line-no">194</span><span id="line-194">    try {</span>
-<span class="source-line-no">195</span><span id="line-195">      Matcher matcher = Pattern.compile(pattern, RegexUtil.parseFlags(flags)).matcher(input);</span>
-<span class="source-line-no">196</span><span id="line-196"></span>
-<span class="source-line-no">197</span><span id="line-197">      int lastPosition = 0;</span>
-<span class="source-line-no">198</span><span id="line-198">      int length = input.length();</span>
-<span class="source-line-no">199</span><span id="line-199"></span>
-<span class="source-line-no">200</span><span id="line-200">      List&lt;String&gt; result = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">201</span><span id="line-201">      while (matcher.find()) {</span>
-<span class="source-line-no">202</span><span id="line-202">        String group = matcher.group();</span>
-<span class="source-line-no">203</span><span id="line-203">        if (group.isEmpty()) {</span>
-<span class="source-line-no">204</span><span id="line-204">          throw new RegularExpressionMetapathException(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING,</span>
-<span class="source-line-no">205</span><span id="line-205">              String.format("Pattern '%s' will match a zero-length string.", pattern));</span>
-<span class="source-line-no">206</span><span id="line-206">        }</span>
-<span class="source-line-no">207</span><span id="line-207"></span>
-<span class="source-line-no">208</span><span id="line-208">        int start = matcher.start();</span>
-<span class="source-line-no">209</span><span id="line-209">        if (start == 0) {</span>
-<span class="source-line-no">210</span><span id="line-210">          result.add("");</span>
-<span class="source-line-no">211</span><span id="line-211">        } else {</span>
-<span class="source-line-no">212</span><span id="line-212">          result.add(input.substring(lastPosition, start));</span>
+<span class="source-line-no">142</span><span id="line-142">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="source-line-no">143</span><span id="line-143">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="source-line-no">144</span><span id="line-144">    IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));</span>
+<span class="source-line-no">145</span><span id="line-145"></span>
+<span class="source-line-no">146</span><span id="line-146">    return execute(input, pattern, flags);</span>
+<span class="source-line-no">147</span><span id="line-147">  }</span>
+<span class="source-line-no">148</span><span id="line-148"></span>
+<span class="source-line-no">149</span><span id="line-149">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
+<span class="source-line-no">150</span><span id="line-150">  @NonNull</span>
+<span class="source-line-no">151</span><span id="line-151">  private static ISequence&lt;IStringItem&gt; execute(</span>
+<span class="source-line-no">152</span><span id="line-152">      @Nullable IStringItem input,</span>
+<span class="source-line-no">153</span><span id="line-153">      @NonNull IStringItem pattern,</span>
+<span class="source-line-no">154</span><span id="line-154">      @NonNull IStringItem flags) {</span>
+<span class="source-line-no">155</span><span id="line-155">    return input == null</span>
+<span class="source-line-no">156</span><span id="line-156">        ? ISequence.empty()</span>
+<span class="source-line-no">157</span><span id="line-157">        : fnTokenize(input, pattern, flags);</span>
+<span class="source-line-no">158</span><span id="line-158">  }</span>
+<span class="source-line-no">159</span><span id="line-159"></span>
+<span class="source-line-no">160</span><span id="line-160">  /**</span>
+<span class="source-line-no">161</span><span id="line-161">   * Implements &lt;a href=</span>
+<span class="source-line-no">162</span><span id="line-162">   * "https://www.w3.org/TR/xpath-functions-31/#func-tokenize"&gt;fn:tokenize&lt;/a&gt;.</span>
+<span class="source-line-no">163</span><span id="line-163">   *</span>
+<span class="source-line-no">164</span><span id="line-164">   * @param input</span>
+<span class="source-line-no">165</span><span id="line-165">   *          the string to tokenize</span>
+<span class="source-line-no">166</span><span id="line-166">   * @param pattern</span>
+<span class="source-line-no">167</span><span id="line-167">   *          the regular expression to use for identifying token boundaries</span>
+<span class="source-line-no">168</span><span id="line-168">   * @param flags</span>
+<span class="source-line-no">169</span><span id="line-169">   *          matching options</span>
+<span class="source-line-no">170</span><span id="line-170">   * @return the sequence of tokens</span>
+<span class="source-line-no">171</span><span id="line-171">   */</span>
+<span class="source-line-no">172</span><span id="line-172">  @NonNull</span>
+<span class="source-line-no">173</span><span id="line-173">  public static ISequence&lt;IStringItem&gt; fnTokenize(</span>
+<span class="source-line-no">174</span><span id="line-174">      @NonNull IStringItem input,</span>
+<span class="source-line-no">175</span><span id="line-175">      @NonNull IStringItem pattern,</span>
+<span class="source-line-no">176</span><span id="line-176">      @NonNull IStringItem flags) {</span>
+<span class="source-line-no">177</span><span id="line-177">    return ISequence.of(ObjectUtils.notNull(</span>
+<span class="source-line-no">178</span><span id="line-178">        fnTokenize(input.asString(), pattern.asString(), flags.asString()).stream()</span>
+<span class="source-line-no">179</span><span id="line-179">            .map(IStringItem::valueOf)));</span>
+<span class="source-line-no">180</span><span id="line-180">  }</span>
+<span class="source-line-no">181</span><span id="line-181"></span>
+<span class="source-line-no">182</span><span id="line-182">  /**</span>
+<span class="source-line-no">183</span><span id="line-183">   * Implements &lt;a href=</span>
+<span class="source-line-no">184</span><span id="line-184">   * "https://www.w3.org/TR/xpath-functions-31/#func-tokenize"&gt;fn:tokenize&lt;/a&gt;.</span>
+<span class="source-line-no">185</span><span id="line-185">   *</span>
+<span class="source-line-no">186</span><span id="line-186">   * @param input</span>
+<span class="source-line-no">187</span><span id="line-187">   *          the string to match against</span>
+<span class="source-line-no">188</span><span id="line-188">   * @param pattern</span>
+<span class="source-line-no">189</span><span id="line-189">   *          the regular expression to use for matching</span>
+<span class="source-line-no">190</span><span id="line-190">   * @param flags</span>
+<span class="source-line-no">191</span><span id="line-191">   *          matching options</span>
+<span class="source-line-no">192</span><span id="line-192">   * @return the stream of tokens</span>
+<span class="source-line-no">193</span><span id="line-193">   */</span>
+<span class="source-line-no">194</span><span id="line-194">  @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.CyclomaticComplexity" })</span>
+<span class="source-line-no">195</span><span id="line-195">  @NonNull</span>
+<span class="source-line-no">196</span><span id="line-196">  public static List&lt;String&gt; fnTokenize(@NonNull String input, @NonNull String pattern, @NonNull String flags) {</span>
+<span class="source-line-no">197</span><span id="line-197">    if (input.isEmpty()) {</span>
+<span class="source-line-no">198</span><span id="line-198">      return CollectionUtil.emptyList();</span>
+<span class="source-line-no">199</span><span id="line-199">    }</span>
+<span class="source-line-no">200</span><span id="line-200"></span>
+<span class="source-line-no">201</span><span id="line-201">    try {</span>
+<span class="source-line-no">202</span><span id="line-202">      Matcher matcher = Pattern.compile(pattern, RegexUtil.parseFlags(flags)).matcher(input);</span>
+<span class="source-line-no">203</span><span id="line-203"></span>
+<span class="source-line-no">204</span><span id="line-204">      int lastPosition = 0;</span>
+<span class="source-line-no">205</span><span id="line-205">      int length = input.length();</span>
+<span class="source-line-no">206</span><span id="line-206"></span>
+<span class="source-line-no">207</span><span id="line-207">      List&lt;String&gt; result = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">208</span><span id="line-208">      while (matcher.find()) {</span>
+<span class="source-line-no">209</span><span id="line-209">        String group = matcher.group();</span>
+<span class="source-line-no">210</span><span id="line-210">        if (group.isEmpty()) {</span>
+<span class="source-line-no">211</span><span id="line-211">          throw new RegularExpressionMetapathException(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING,</span>
+<span class="source-line-no">212</span><span id="line-212">              String.format("Pattern '%s' will match a zero-length string.", pattern));</span>
 <span class="source-line-no">213</span><span id="line-213">        }</span>
 <span class="source-line-no">214</span><span id="line-214"></span>
-<span class="source-line-no">215</span><span id="line-215">        lastPosition = matcher.end();</span>
-<span class="source-line-no">216</span><span id="line-216">      }</span>
-<span class="source-line-no">217</span><span id="line-217"></span>
-<span class="source-line-no">218</span><span id="line-218">      if (lastPosition == length) {</span>
-<span class="source-line-no">219</span><span id="line-219">        result.add("");</span>
-<span class="source-line-no">220</span><span id="line-220">      } else {</span>
-<span class="source-line-no">221</span><span id="line-221">        result.add(input.substring(lastPosition, length));</span>
-<span class="source-line-no">222</span><span id="line-222">      }</span>
-<span class="source-line-no">223</span><span id="line-223"></span>
-<span class="source-line-no">224</span><span id="line-224">      return result;</span>
-<span class="source-line-no">225</span><span id="line-225">    } catch (PatternSyntaxException ex) {</span>
-<span class="source-line-no">226</span><span id="line-226">      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_EXPRESSION, ex);</span>
-<span class="source-line-no">227</span><span id="line-227">    } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">228</span><span id="line-228">      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_FLAG, ex);</span>
-<span class="source-line-no">229</span><span id="line-229">    }</span>
-<span class="source-line-no">230</span><span id="line-230">  }</span>
-<span class="source-line-no">231</span><span id="line-231"></span>
-<span class="source-line-no">232</span><span id="line-232">  private FnTokenize() {</span>
-<span class="source-line-no">233</span><span id="line-233">    // disable construction</span>
-<span class="source-line-no">234</span><span id="line-234">  }</span>
-<span class="source-line-no">235</span><span id="line-235">}</span>
+<span class="source-line-no">215</span><span id="line-215">        int start = matcher.start();</span>
+<span class="source-line-no">216</span><span id="line-216">        if (start == 0) {</span>
+<span class="source-line-no">217</span><span id="line-217">          result.add("");</span>
+<span class="source-line-no">218</span><span id="line-218">        } else {</span>
+<span class="source-line-no">219</span><span id="line-219">          result.add(input.substring(lastPosition, start));</span>
+<span class="source-line-no">220</span><span id="line-220">        }</span>
+<span class="source-line-no">221</span><span id="line-221"></span>
+<span class="source-line-no">222</span><span id="line-222">        lastPosition = matcher.end();</span>
+<span class="source-line-no">223</span><span id="line-223">      }</span>
+<span class="source-line-no">224</span><span id="line-224"></span>
+<span class="source-line-no">225</span><span id="line-225">      if (lastPosition == length) {</span>
+<span class="source-line-no">226</span><span id="line-226">        result.add("");</span>
+<span class="source-line-no">227</span><span id="line-227">      } else {</span>
+<span class="source-line-no">228</span><span id="line-228">        result.add(input.substring(lastPosition, length));</span>
+<span class="source-line-no">229</span><span id="line-229">      }</span>
+<span class="source-line-no">230</span><span id="line-230"></span>
+<span class="source-line-no">231</span><span id="line-231">      return result;</span>
+<span class="source-line-no">232</span><span id="line-232">    } catch (PatternSyntaxException ex) {</span>
+<span class="source-line-no">233</span><span id="line-233">      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_EXPRESSION, ex);</span>
+<span class="source-line-no">234</span><span id="line-234">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">235</span><span id="line-235">      throw new RegularExpressionMetapathException(RegularExpressionMetapathException.INVALID_FLAG, ex);</span>
+<span class="source-line-no">236</span><span id="line-236">    }</span>
+<span class="source-line-no">237</span><span id="line-237">  }</span>
+<span class="source-line-no">238</span><span id="line-238"></span>
+<span class="source-line-no">239</span><span id="line-239">  private FnTokenize() {</span>
+<span class="source-line-no">240</span><span id="line-240">    // disable construction</span>
+<span class="source-line-no">241</span><span id="line-241">  }</span>
+<span class="source-line-no">242</span><span id="line-242">}</span>
 
 
 

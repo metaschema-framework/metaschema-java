@@ -78,7 +78,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
 
   @NonNull
   protected List&lt;IGroupableModelInstanceJsonProperty&lt;?&gt;&gt; getGroupableModelInstances() {
-<span class="fc" id="L81">    return groupableModelInstances.get();</span>
+<span class="fc" id="L81">    return ObjectUtils.notNull(groupableModelInstances.get());</span>
   }
 
   @Override

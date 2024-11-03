@@ -197,58 +197,62 @@
 <span class="source-line-no">184</span><span id="line-184">      if (!"$schema".equals(name)) {</span>
 <span class="source-line-no">185</span><span id="line-185">        IBindingContext bindingContext = getBindingContext();</span>
 <span class="source-line-no">186</span><span id="line-186">        retval = bindingContext.getBoundClassForRootJsonName(name);</span>
-<span class="source-line-no">187</span><span id="line-187">        break outer;</span>
-<span class="source-line-no">188</span><span id="line-188">      }</span>
-<span class="source-line-no">189</span><span id="line-189">      // do nothing</span>
-<span class="source-line-no">190</span><span id="line-190">      parser.nextToken();</span>
-<span class="source-line-no">191</span><span id="line-191">      // JsonUtil.skipNextValue(parser);</span>
-<span class="source-line-no">192</span><span id="line-192">    }</span>
-<span class="source-line-no">193</span><span id="line-193">    return retval;</span>
-<span class="source-line-no">194</span><span id="line-194">  }</span>
-<span class="source-line-no">195</span><span id="line-195"></span>
-<span class="source-line-no">196</span><span id="line-196">  public static final class Result implements Closeable {</span>
-<span class="source-line-no">197</span><span id="line-197">    @NonNull</span>
-<span class="source-line-no">198</span><span id="line-198">    private final Class&lt;? extends IBoundObject&gt; boundClass;</span>
-<span class="source-line-no">199</span><span id="line-199">    @Owning</span>
-<span class="source-line-no">200</span><span id="line-200">    private InputStream dataStream;</span>
-<span class="source-line-no">201</span><span id="line-201"></span>
-<span class="source-line-no">202</span><span id="line-202">    private Result(</span>
-<span class="source-line-no">203</span><span id="line-203">        @NonNull Class&lt;? extends IBoundObject&gt; clazz,</span>
-<span class="source-line-no">204</span><span id="line-204">        @NonNull InputStream is,</span>
-<span class="source-line-no">205</span><span id="line-205">        @NonNull byte[] buf) {</span>
-<span class="source-line-no">206</span><span id="line-206">      this.boundClass = clazz;</span>
-<span class="source-line-no">207</span><span id="line-207">      this.dataStream = new MergedStream(null, is, buf, 0, buf.length);</span>
-<span class="source-line-no">208</span><span id="line-208">    }</span>
-<span class="source-line-no">209</span><span id="line-209"></span>
-<span class="source-line-no">210</span><span id="line-210">    /**</span>
-<span class="source-line-no">211</span><span id="line-211">     * Get the Java class representing the detected bound object.</span>
-<span class="source-line-no">212</span><span id="line-212">     *</span>
-<span class="source-line-no">213</span><span id="line-213">     * @return the Java class</span>
-<span class="source-line-no">214</span><span id="line-214">     */</span>
-<span class="source-line-no">215</span><span id="line-215">    @NonNull</span>
-<span class="source-line-no">216</span><span id="line-216">    public Class&lt;? extends IBoundObject&gt; getBoundClass() {</span>
-<span class="source-line-no">217</span><span id="line-217">      return boundClass;</span>
-<span class="source-line-no">218</span><span id="line-218">    }</span>
-<span class="source-line-no">219</span><span id="line-219"></span>
-<span class="source-line-no">220</span><span id="line-220">    /**</span>
-<span class="source-line-no">221</span><span id="line-221">     * Get an {@link InputStream} that can be used to read the analyzed data from</span>
-<span class="source-line-no">222</span><span id="line-222">     * the start.</span>
-<span class="source-line-no">223</span><span id="line-223">     *</span>
-<span class="source-line-no">224</span><span id="line-224">     * @return the stream</span>
-<span class="source-line-no">225</span><span id="line-225">     */</span>
-<span class="source-line-no">226</span><span id="line-226">    @NonNull</span>
-<span class="source-line-no">227</span><span id="line-227">    @Owning</span>
-<span class="source-line-no">228</span><span id="line-228">    public InputStream getDataStream() {</span>
-<span class="source-line-no">229</span><span id="line-229">      return ObjectUtils.requireNonNull(dataStream, "data stream already closed");</span>
-<span class="source-line-no">230</span><span id="line-230">    }</span>
-<span class="source-line-no">231</span><span id="line-231"></span>
-<span class="source-line-no">232</span><span id="line-232">    @Override</span>
-<span class="source-line-no">233</span><span id="line-233">    public void close() throws IOException {</span>
-<span class="source-line-no">234</span><span id="line-234">      this.dataStream.close();</span>
-<span class="source-line-no">235</span><span id="line-235">      this.dataStream = null;</span>
-<span class="source-line-no">236</span><span id="line-236">    }</span>
-<span class="source-line-no">237</span><span id="line-237">  }</span>
-<span class="source-line-no">238</span><span id="line-238">}</span>
+<span class="source-line-no">187</span><span id="line-187">        if (retval == null) {</span>
+<span class="source-line-no">188</span><span id="line-188">          throw new IOException("Unrecognized JSON field name: " + name);</span>
+<span class="source-line-no">189</span><span id="line-189">        }</span>
+<span class="source-line-no">190</span><span id="line-190">        break outer;</span>
+<span class="source-line-no">191</span><span id="line-191">      }</span>
+<span class="source-line-no">192</span><span id="line-192">      // do nothing</span>
+<span class="source-line-no">193</span><span id="line-193">      parser.nextToken();</span>
+<span class="source-line-no">194</span><span id="line-194">      // JsonUtil.skipNextValue(parser);</span>
+<span class="source-line-no">195</span><span id="line-195">    }</span>
+<span class="source-line-no">196</span><span id="line-196">    return retval;</span>
+<span class="source-line-no">197</span><span id="line-197">  }</span>
+<span class="source-line-no">198</span><span id="line-198"></span>
+<span class="source-line-no">199</span><span id="line-199">  public static final class Result implements Closeable {</span>
+<span class="source-line-no">200</span><span id="line-200">    @NonNull</span>
+<span class="source-line-no">201</span><span id="line-201">    private final Class&lt;? extends IBoundObject&gt; boundClass;</span>
+<span class="source-line-no">202</span><span id="line-202">    @Owning</span>
+<span class="source-line-no">203</span><span id="line-203">    private InputStream dataStream;</span>
+<span class="source-line-no">204</span><span id="line-204"></span>
+<span class="source-line-no">205</span><span id="line-205">    private Result(</span>
+<span class="source-line-no">206</span><span id="line-206">        @NonNull Class&lt;? extends IBoundObject&gt; clazz,</span>
+<span class="source-line-no">207</span><span id="line-207">        @NonNull InputStream is,</span>
+<span class="source-line-no">208</span><span id="line-208">        @NonNull byte[] buf) {</span>
+<span class="source-line-no">209</span><span id="line-209">      this.boundClass = clazz;</span>
+<span class="source-line-no">210</span><span id="line-210">      this.dataStream = new MergedStream(null, is, buf, 0, buf.length);</span>
+<span class="source-line-no">211</span><span id="line-211">    }</span>
+<span class="source-line-no">212</span><span id="line-212"></span>
+<span class="source-line-no">213</span><span id="line-213">    /**</span>
+<span class="source-line-no">214</span><span id="line-214">     * Get the Java class representing the detected bound object.</span>
+<span class="source-line-no">215</span><span id="line-215">     *</span>
+<span class="source-line-no">216</span><span id="line-216">     * @return the Java class</span>
+<span class="source-line-no">217</span><span id="line-217">     */</span>
+<span class="source-line-no">218</span><span id="line-218">    @NonNull</span>
+<span class="source-line-no">219</span><span id="line-219">    public Class&lt;? extends IBoundObject&gt; getBoundClass() {</span>
+<span class="source-line-no">220</span><span id="line-220">      return boundClass;</span>
+<span class="source-line-no">221</span><span id="line-221">    }</span>
+<span class="source-line-no">222</span><span id="line-222"></span>
+<span class="source-line-no">223</span><span id="line-223">    /**</span>
+<span class="source-line-no">224</span><span id="line-224">     * Get an {@link InputStream} that can be used to read the analyzed data from</span>
+<span class="source-line-no">225</span><span id="line-225">     * the start.</span>
+<span class="source-line-no">226</span><span id="line-226">     *</span>
+<span class="source-line-no">227</span><span id="line-227">     * @return the stream</span>
+<span class="source-line-no">228</span><span id="line-228">     */</span>
+<span class="source-line-no">229</span><span id="line-229">    @NonNull</span>
+<span class="source-line-no">230</span><span id="line-230">    @Owning</span>
+<span class="source-line-no">231</span><span id="line-231">    public InputStream getDataStream() {</span>
+<span class="source-line-no">232</span><span id="line-232">      return ObjectUtils.requireNonNull(dataStream, "data stream already closed");</span>
+<span class="source-line-no">233</span><span id="line-233">    }</span>
+<span class="source-line-no">234</span><span id="line-234"></span>
+<span class="source-line-no">235</span><span id="line-235">    @SuppressWarnings("PMD.NullAssignment")</span>
+<span class="source-line-no">236</span><span id="line-236">    @Override</span>
+<span class="source-line-no">237</span><span id="line-237">    public void close() throws IOException {</span>
+<span class="source-line-no">238</span><span id="line-238">      this.dataStream.close();</span>
+<span class="source-line-no">239</span><span id="line-239">      this.dataStream = null;</span>
+<span class="source-line-no">240</span><span id="line-240">    }</span>
+<span class="source-line-no">241</span><span id="line-241">  }</span>
+<span class="source-line-no">242</span><span id="line-242">}</span>
 
 
 

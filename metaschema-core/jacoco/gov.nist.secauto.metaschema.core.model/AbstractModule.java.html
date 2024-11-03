@@ -130,11 +130,11 @@ public abstract class AbstractModule&lt;
 
   @SuppressWarnings({ &quot;unused&quot;, &quot;PMD.UnusedPrivateMethod&quot; }) // used by lambda
   private static &lt;DEF extends IDefinition&gt; DEF handleShadowedDefinitions(
-      @SuppressWarnings(&quot;unused&quot;) @NonNull QName key,
+      @NonNull QName key,
       @NonNull DEF oldDef,
       @NonNull DEF newDef) {
-<span class="pc bpc" id="L136" title="1 of 4 branches missed.">    if (!oldDef.equals(newDef) &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="fc" id="L137">      LOGGER.info(&quot;The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'&quot;,</span>
+<span class="pc bpc" id="L136" title="1 of 4 branches missed.">    if (!oldDef.equals(newDef) &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="fc" id="L137">      LOGGER.warn(&quot;The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'&quot;,</span>
 <span class="fc" id="L138">          newDef.getModelType().name().toLowerCase(Locale.ROOT),</span>
 <span class="fc" id="L139">          newDef.getName(),</span>
 <span class="fc" id="L140">          newDef.getContainingModule().getShortName(),</span>

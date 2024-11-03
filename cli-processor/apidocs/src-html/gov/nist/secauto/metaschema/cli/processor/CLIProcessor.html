@@ -20,598 +20,651 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import static org.fusesource.jansi.Ansi.ansi;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.cli.processor.command.CommandService;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.cli.processor.command.ICommand;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.util.IVersionInfo;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">import org.apache.commons.cli.CommandLine;</span>
-<span class="source-line-no">018</span><span id="line-18">import org.apache.commons.cli.CommandLineParser;</span>
-<span class="source-line-no">019</span><span id="line-19">import org.apache.commons.cli.DefaultParser;</span>
-<span class="source-line-no">020</span><span id="line-20">import org.apache.commons.cli.HelpFormatter;</span>
-<span class="source-line-no">021</span><span id="line-21">import org.apache.commons.cli.Option;</span>
-<span class="source-line-no">022</span><span id="line-22">import org.apache.commons.cli.Options;</span>
-<span class="source-line-no">023</span><span id="line-23">import org.apache.commons.cli.ParseException;</span>
-<span class="source-line-no">024</span><span id="line-24">import org.apache.logging.log4j.Level;</span>
-<span class="source-line-no">025</span><span id="line-25">import org.apache.logging.log4j.LogManager;</span>
-<span class="source-line-no">026</span><span id="line-26">import org.apache.logging.log4j.Logger;</span>
-<span class="source-line-no">027</span><span id="line-27">import org.apache.logging.log4j.core.LoggerContext;</span>
-<span class="source-line-no">028</span><span id="line-28">import org.apache.logging.log4j.core.config.Configuration;</span>
-<span class="source-line-no">029</span><span id="line-29">import org.apache.logging.log4j.core.config.LoggerConfig;</span>
-<span class="source-line-no">030</span><span id="line-30">import org.fusesource.jansi.AnsiConsole;</span>
-<span class="source-line-no">031</span><span id="line-31">import org.fusesource.jansi.AnsiPrintStream;</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">import java.io.PrintStream;</span>
-<span class="source-line-no">034</span><span id="line-34">import java.io.PrintWriter;</span>
-<span class="source-line-no">035</span><span id="line-35">import java.nio.charset.StandardCharsets;</span>
-<span class="source-line-no">036</span><span id="line-36">import java.util.Arrays;</span>
-<span class="source-line-no">037</span><span id="line-37">import java.util.Collection;</span>
-<span class="source-line-no">038</span><span id="line-38">import java.util.Collections;</span>
-<span class="source-line-no">039</span><span id="line-39">import java.util.Deque;</span>
-<span class="source-line-no">040</span><span id="line-40">import java.util.LinkedList;</span>
-<span class="source-line-no">041</span><span id="line-41">import java.util.List;</span>
-<span class="source-line-no">042</span><span id="line-42">import java.util.Map;</span>
-<span class="source-line-no">043</span><span id="line-43">import java.util.function.Function;</span>
-<span class="source-line-no">044</span><span id="line-44">import java.util.stream.Collectors;</span>
-<span class="source-line-no">045</span><span id="line-45"></span>
-<span class="source-line-no">046</span><span id="line-46">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">047</span><span id="line-47">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">048</span><span id="line-48">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</span>
-<span class="source-line-no">049</span><span id="line-49"></span>
-<span class="source-line-no">050</span><span id="line-50">public class CLIProcessor {</span>
-<span class="source-line-no">051</span><span id="line-51">  private static final Logger LOGGER = LogManager.getLogger(CLIProcessor.class);</span>
-<span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">  @SuppressWarnings("null")</span>
-<span class="source-line-no">054</span><span id="line-54">  @NonNull</span>
-<span class="source-line-no">055</span><span id="line-55">  public static final Option HELP_OPTION = Option.builder("h")</span>
-<span class="source-line-no">056</span><span id="line-56">      .longOpt("help")</span>
-<span class="source-line-no">057</span><span id="line-57">      .desc("display this help message")</span>
-<span class="source-line-no">058</span><span id="line-58">      .build();</span>
-<span class="source-line-no">059</span><span id="line-59">  @SuppressWarnings("null")</span>
-<span class="source-line-no">060</span><span id="line-60">  @NonNull</span>
-<span class="source-line-no">061</span><span id="line-61">  public static final Option NO_COLOR_OPTION = Option.builder()</span>
-<span class="source-line-no">062</span><span id="line-62">      .longOpt("no-color")</span>
-<span class="source-line-no">063</span><span id="line-63">      .desc("do not colorize output")</span>
-<span class="source-line-no">064</span><span id="line-64">      .build();</span>
-<span class="source-line-no">065</span><span id="line-65">  @SuppressWarnings("null")</span>
-<span class="source-line-no">066</span><span id="line-66">  @NonNull</span>
-<span class="source-line-no">067</span><span id="line-67">  public static final Option QUIET_OPTION = Option.builder("q")</span>
-<span class="source-line-no">068</span><span id="line-68">      .longOpt("quiet")</span>
-<span class="source-line-no">069</span><span id="line-69">      .desc("minimize output to include only errors")</span>
-<span class="source-line-no">070</span><span id="line-70">      .build();</span>
-<span class="source-line-no">071</span><span id="line-71">  @SuppressWarnings("null")</span>
-<span class="source-line-no">072</span><span id="line-72">  @NonNull</span>
-<span class="source-line-no">073</span><span id="line-73">  public static final Option SHOW_STACK_TRACE_OPTION = Option.builder()</span>
-<span class="source-line-no">074</span><span id="line-74">      .longOpt("show-stack-trace")</span>
-<span class="source-line-no">075</span><span id="line-75">      .desc("display the stack trace associated with an error")</span>
-<span class="source-line-no">076</span><span id="line-76">      .build();</span>
-<span class="source-line-no">077</span><span id="line-77">  @SuppressWarnings("null")</span>
-<span class="source-line-no">078</span><span id="line-78">  @NonNull</span>
-<span class="source-line-no">079</span><span id="line-79">  public static final Option VERSION_OPTION = Option.builder()</span>
-<span class="source-line-no">080</span><span id="line-80">      .longOpt("version")</span>
-<span class="source-line-no">081</span><span id="line-81">      .desc("display the application version")</span>
-<span class="source-line-no">082</span><span id="line-82">      .build();</span>
-<span class="source-line-no">083</span><span id="line-83">  @SuppressWarnings("null")</span>
-<span class="source-line-no">084</span><span id="line-84">  @NonNull</span>
-<span class="source-line-no">085</span><span id="line-85">  public static final List&lt;Option&gt; OPTIONS = List.of(</span>
-<span class="source-line-no">086</span><span id="line-86">      HELP_OPTION,</span>
-<span class="source-line-no">087</span><span id="line-87">      NO_COLOR_OPTION,</span>
-<span class="source-line-no">088</span><span id="line-88">      QUIET_OPTION,</span>
-<span class="source-line-no">089</span><span id="line-89">      SHOW_STACK_TRACE_OPTION,</span>
-<span class="source-line-no">090</span><span id="line-90">      VERSION_OPTION);</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">  public static final String COMMAND_VERSION = "http://csrc.nist.gov/ns/metaschema-java/cli/command-version";</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.cli.processor.command.CommandService;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.cli.processor.command.ICommand;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.util.AutoCloser;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.util.IVersionInfo;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">019</span><span id="line-19"></span>
+<span class="source-line-no">020</span><span id="line-20">import org.apache.commons.cli.CommandLine;</span>
+<span class="source-line-no">021</span><span id="line-21">import org.apache.commons.cli.CommandLineParser;</span>
+<span class="source-line-no">022</span><span id="line-22">import org.apache.commons.cli.DefaultParser;</span>
+<span class="source-line-no">023</span><span id="line-23">import org.apache.commons.cli.HelpFormatter;</span>
+<span class="source-line-no">024</span><span id="line-24">import org.apache.commons.cli.Option;</span>
+<span class="source-line-no">025</span><span id="line-25">import org.apache.commons.cli.Options;</span>
+<span class="source-line-no">026</span><span id="line-26">import org.apache.commons.cli.ParseException;</span>
+<span class="source-line-no">027</span><span id="line-27">import org.apache.logging.log4j.Level;</span>
+<span class="source-line-no">028</span><span id="line-28">import org.apache.logging.log4j.LogManager;</span>
+<span class="source-line-no">029</span><span id="line-29">import org.apache.logging.log4j.Logger;</span>
+<span class="source-line-no">030</span><span id="line-30">import org.apache.logging.log4j.core.LoggerContext;</span>
+<span class="source-line-no">031</span><span id="line-31">import org.apache.logging.log4j.core.config.Configuration;</span>
+<span class="source-line-no">032</span><span id="line-32">import org.apache.logging.log4j.core.config.LoggerConfig;</span>
+<span class="source-line-no">033</span><span id="line-33">import org.fusesource.jansi.AnsiConsole;</span>
+<span class="source-line-no">034</span><span id="line-34">import org.fusesource.jansi.AnsiPrintStream;</span>
+<span class="source-line-no">035</span><span id="line-35"></span>
+<span class="source-line-no">036</span><span id="line-36">import java.io.PrintStream;</span>
+<span class="source-line-no">037</span><span id="line-37">import java.io.PrintWriter;</span>
+<span class="source-line-no">038</span><span id="line-38">import java.nio.charset.StandardCharsets;</span>
+<span class="source-line-no">039</span><span id="line-39">import java.util.Arrays;</span>
+<span class="source-line-no">040</span><span id="line-40">import java.util.Collection;</span>
+<span class="source-line-no">041</span><span id="line-41">import java.util.LinkedList;</span>
+<span class="source-line-no">042</span><span id="line-42">import java.util.List;</span>
+<span class="source-line-no">043</span><span id="line-43">import java.util.Map;</span>
+<span class="source-line-no">044</span><span id="line-44">import java.util.concurrent.atomic.AtomicBoolean;</span>
+<span class="source-line-no">045</span><span id="line-45">import java.util.function.Function;</span>
+<span class="source-line-no">046</span><span id="line-46">import java.util.stream.Collectors;</span>
+<span class="source-line-no">047</span><span id="line-47"></span>
+<span class="source-line-no">048</span><span id="line-48">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">049</span><span id="line-49">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">050</span><span id="line-50">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">public class CLIProcessor {</span>
+<span class="source-line-no">053</span><span id="line-53">  private static final Logger LOGGER = LogManager.getLogger(CLIProcessor.class);</span>
+<span class="source-line-no">054</span><span id="line-54"></span>
+<span class="source-line-no">055</span><span id="line-55">  @SuppressWarnings("null")</span>
+<span class="source-line-no">056</span><span id="line-56">  @NonNull</span>
+<span class="source-line-no">057</span><span id="line-57">  public static final Option HELP_OPTION = Option.builder("h")</span>
+<span class="source-line-no">058</span><span id="line-58">      .longOpt("help")</span>
+<span class="source-line-no">059</span><span id="line-59">      .desc("display this help message")</span>
+<span class="source-line-no">060</span><span id="line-60">      .build();</span>
+<span class="source-line-no">061</span><span id="line-61">  @SuppressWarnings("null")</span>
+<span class="source-line-no">062</span><span id="line-62">  @NonNull</span>
+<span class="source-line-no">063</span><span id="line-63">  public static final Option NO_COLOR_OPTION = Option.builder()</span>
+<span class="source-line-no">064</span><span id="line-64">      .longOpt("no-color")</span>
+<span class="source-line-no">065</span><span id="line-65">      .desc("do not colorize output")</span>
+<span class="source-line-no">066</span><span id="line-66">      .build();</span>
+<span class="source-line-no">067</span><span id="line-67">  @SuppressWarnings("null")</span>
+<span class="source-line-no">068</span><span id="line-68">  @NonNull</span>
+<span class="source-line-no">069</span><span id="line-69">  public static final Option QUIET_OPTION = Option.builder("q")</span>
+<span class="source-line-no">070</span><span id="line-70">      .longOpt("quiet")</span>
+<span class="source-line-no">071</span><span id="line-71">      .desc("minimize output to include only errors")</span>
+<span class="source-line-no">072</span><span id="line-72">      .build();</span>
+<span class="source-line-no">073</span><span id="line-73">  @SuppressWarnings("null")</span>
+<span class="source-line-no">074</span><span id="line-74">  @NonNull</span>
+<span class="source-line-no">075</span><span id="line-75">  public static final Option SHOW_STACK_TRACE_OPTION = Option.builder()</span>
+<span class="source-line-no">076</span><span id="line-76">      .longOpt("show-stack-trace")</span>
+<span class="source-line-no">077</span><span id="line-77">      .desc("display the stack trace associated with an error")</span>
+<span class="source-line-no">078</span><span id="line-78">      .build();</span>
+<span class="source-line-no">079</span><span id="line-79">  @SuppressWarnings("null")</span>
+<span class="source-line-no">080</span><span id="line-80">  @NonNull</span>
+<span class="source-line-no">081</span><span id="line-81">  public static final Option VERSION_OPTION = Option.builder()</span>
+<span class="source-line-no">082</span><span id="line-82">      .longOpt("version")</span>
+<span class="source-line-no">083</span><span id="line-83">      .desc("display the application version")</span>
+<span class="source-line-no">084</span><span id="line-84">      .build();</span>
+<span class="source-line-no">085</span><span id="line-85">  @SuppressWarnings("null")</span>
+<span class="source-line-no">086</span><span id="line-86">  @NonNull</span>
+<span class="source-line-no">087</span><span id="line-87">  public static final List&lt;Option&gt; OPTIONS = List.of(</span>
+<span class="source-line-no">088</span><span id="line-88">      HELP_OPTION,</span>
+<span class="source-line-no">089</span><span id="line-89">      NO_COLOR_OPTION,</span>
+<span class="source-line-no">090</span><span id="line-90">      QUIET_OPTION,</span>
+<span class="source-line-no">091</span><span id="line-91">      SHOW_STACK_TRACE_OPTION,</span>
+<span class="source-line-no">092</span><span id="line-92">      VERSION_OPTION);</span>
 <span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">  @NonNull</span>
-<span class="source-line-no">095</span><span id="line-95">  private final List&lt;ICommand&gt; commands = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">094</span><span id="line-94">  public static final String COMMAND_VERSION = "http://csrc.nist.gov/ns/metaschema-java/cli/command-version";</span>
+<span class="source-line-no">095</span><span id="line-95"></span>
 <span class="source-line-no">096</span><span id="line-96">  @NonNull</span>
-<span class="source-line-no">097</span><span id="line-97">  private final String exec;</span>
+<span class="source-line-no">097</span><span id="line-97">  private final List&lt;ICommand&gt; commands = new LinkedList&lt;&gt;();</span>
 <span class="source-line-no">098</span><span id="line-98">  @NonNull</span>
-<span class="source-line-no">099</span><span id="line-99">  private final Map&lt;String, IVersionInfo&gt; versionInfos;</span>
-<span class="source-line-no">100</span><span id="line-100"></span>
-<span class="source-line-no">101</span><span id="line-101">  public static void main(String... args) {</span>
-<span class="source-line-no">102</span><span id="line-102">    System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");</span>
-<span class="source-line-no">103</span><span id="line-103">    CLIProcessor processor = new CLIProcessor("metaschema-cli");</span>
-<span class="source-line-no">104</span><span id="line-104"></span>
-<span class="source-line-no">105</span><span id="line-105">    CommandService.getInstance().getCommands().stream().forEach(command -&gt; {</span>
-<span class="source-line-no">106</span><span id="line-106">      assert command != null;</span>
-<span class="source-line-no">107</span><span id="line-107">      processor.addCommandHandler(command);</span>
-<span class="source-line-no">108</span><span id="line-108">    });</span>
-<span class="source-line-no">109</span><span id="line-109">    System.exit(processor.process(args).getExitCode().getStatusCode());</span>
-<span class="source-line-no">110</span><span id="line-110">  }</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  @SuppressWarnings("null")</span>
-<span class="source-line-no">113</span><span id="line-113">  public CLIProcessor(@NonNull String exec) {</span>
-<span class="source-line-no">114</span><span id="line-114">    this(exec, Map.of());</span>
-<span class="source-line-no">115</span><span id="line-115">  }</span>
-<span class="source-line-no">116</span><span id="line-116"></span>
-<span class="source-line-no">117</span><span id="line-117">  public CLIProcessor(@NonNull String exec, @NonNull Map&lt;String, IVersionInfo&gt; versionInfos) {</span>
-<span class="source-line-no">118</span><span id="line-118">    this.exec = exec;</span>
-<span class="source-line-no">119</span><span id="line-119">    this.versionInfos = versionInfos;</span>
-<span class="source-line-no">120</span><span id="line-120">    AnsiConsole.systemInstall();</span>
-<span class="source-line-no">121</span><span id="line-121">  }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">  /**</span>
-<span class="source-line-no">124</span><span id="line-124">   * Gets the command used to execute for use in help text.</span>
-<span class="source-line-no">125</span><span id="line-125">   *</span>
-<span class="source-line-no">126</span><span id="line-126">   * @return the command name</span>
-<span class="source-line-no">127</span><span id="line-127">   */</span>
-<span class="source-line-no">128</span><span id="line-128">  @NonNull</span>
-<span class="source-line-no">129</span><span id="line-129">  public String getExec() {</span>
-<span class="source-line-no">130</span><span id="line-130">    return exec;</span>
-<span class="source-line-no">131</span><span id="line-131">  }</span>
-<span class="source-line-no">132</span><span id="line-132"></span>
-<span class="source-line-no">133</span><span id="line-133">  /**</span>
-<span class="source-line-no">134</span><span id="line-134">   * Retrieve the version information for this application.</span>
-<span class="source-line-no">135</span><span id="line-135">   *</span>
-<span class="source-line-no">136</span><span id="line-136">   * @return the versionInfo</span>
-<span class="source-line-no">137</span><span id="line-137">   */</span>
-<span class="source-line-no">138</span><span id="line-138">  @NonNull</span>
-<span class="source-line-no">139</span><span id="line-139">  public Map&lt;String, IVersionInfo&gt; getVersionInfos() {</span>
-<span class="source-line-no">140</span><span id="line-140">    return versionInfos;</span>
-<span class="source-line-no">141</span><span id="line-141">  }</span>
-<span class="source-line-no">142</span><span id="line-142"></span>
-<span class="source-line-no">143</span><span id="line-143">  public void addCommandHandler(@NonNull ICommand handler) {</span>
-<span class="source-line-no">144</span><span id="line-144">    commands.add(handler);</span>
-<span class="source-line-no">145</span><span id="line-145">  }</span>
-<span class="source-line-no">146</span><span id="line-146"></span>
-<span class="source-line-no">147</span><span id="line-147">  /**</span>
-<span class="source-line-no">148</span><span id="line-148">   * Process a set of CLIProcessor arguments.</span>
-<span class="source-line-no">149</span><span id="line-149">   * &lt;p&gt;</span>
-<span class="source-line-no">150</span><span id="line-150">   * process().getExitCode().getStatusCode()</span>
-<span class="source-line-no">151</span><span id="line-151">   *</span>
-<span class="source-line-no">152</span><span id="line-152">   * @param args</span>
-<span class="source-line-no">153</span><span id="line-153">   *          the arguments to process</span>
-<span class="source-line-no">154</span><span id="line-154">   * @return the exit status</span>
-<span class="source-line-no">155</span><span id="line-155">   */</span>
-<span class="source-line-no">156</span><span id="line-156">  @NonNull</span>
-<span class="source-line-no">157</span><span id="line-157">  public ExitStatus process(String... args) {</span>
-<span class="source-line-no">158</span><span id="line-158">    return parseCommand(args);</span>
-<span class="source-line-no">159</span><span id="line-159">  }</span>
-<span class="source-line-no">160</span><span id="line-160"></span>
-<span class="source-line-no">161</span><span id="line-161">  @NonNull</span>
-<span class="source-line-no">162</span><span id="line-162">  private ExitStatus parseCommand(String... args) {</span>
-<span class="source-line-no">163</span><span id="line-163">    List&lt;String&gt; commandArgs = Arrays.asList(args);</span>
-<span class="source-line-no">164</span><span id="line-164">    assert commandArgs != null;</span>
-<span class="source-line-no">165</span><span id="line-165">    CallingContext callingContext = new CallingContext(commandArgs);</span>
-<span class="source-line-no">166</span><span id="line-166"></span>
-<span class="source-line-no">167</span><span id="line-167">    ExitStatus status;</span>
-<span class="source-line-no">168</span><span id="line-168">    // the first two arguments should be the &lt;command&gt; and &lt;operation&gt;, where &lt;type&gt;</span>
-<span class="source-line-no">169</span><span id="line-169">    // is the object type</span>
-<span class="source-line-no">170</span><span id="line-170">    // the &lt;operation&gt; is performed against.</span>
-<span class="source-line-no">171</span><span id="line-171">    if (commandArgs.isEmpty()) {</span>
-<span class="source-line-no">172</span><span id="line-172">      status = ExitCode.INVALID_COMMAND.exit();</span>
-<span class="source-line-no">173</span><span id="line-173">      callingContext.showHelp();</span>
-<span class="source-line-no">174</span><span id="line-174">    } else {</span>
-<span class="source-line-no">175</span><span id="line-175">      status = callingContext.processCommand();</span>
-<span class="source-line-no">176</span><span id="line-176">    }</span>
-<span class="source-line-no">177</span><span id="line-177">    return status;</span>
-<span class="source-line-no">178</span><span id="line-178">  }</span>
-<span class="source-line-no">179</span><span id="line-179"></span>
-<span class="source-line-no">180</span><span id="line-180">  protected final List&lt;ICommand&gt; getTopLevelCommands() {</span>
-<span class="source-line-no">181</span><span id="line-181">    List&lt;ICommand&gt; retval = Collections.unmodifiableList(commands);</span>
-<span class="source-line-no">182</span><span id="line-182">    assert retval != null;</span>
-<span class="source-line-no">183</span><span id="line-183">    return retval;</span>
-<span class="source-line-no">184</span><span id="line-184">  }</span>
-<span class="source-line-no">185</span><span id="line-185"></span>
-<span class="source-line-no">186</span><span id="line-186">  private static void handleNoColor() {</span>
-<span class="source-line-no">187</span><span id="line-187">    System.setProperty(AnsiConsole.JANSI_MODE, AnsiConsole.JANSI_MODE_STRIP);</span>
-<span class="source-line-no">188</span><span id="line-188">    AnsiConsole.systemUninstall();</span>
-<span class="source-line-no">189</span><span id="line-189">  }</span>
-<span class="source-line-no">190</span><span id="line-190"></span>
-<span class="source-line-no">191</span><span id="line-191">  public static void handleQuiet() {</span>
-<span class="source-line-no">192</span><span id="line-192">    LoggerContext ctx = (LoggerContext) LogManager.getContext(false); // NOPMD not closable here</span>
-<span class="source-line-no">193</span><span id="line-193">    Configuration config = ctx.getConfiguration();</span>
-<span class="source-line-no">194</span><span id="line-194">    LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);</span>
-<span class="source-line-no">195</span><span id="line-195">    Level oldLevel = loggerConfig.getLevel();</span>
-<span class="source-line-no">196</span><span id="line-196">    if (oldLevel.isLessSpecificThan(Level.ERROR)) {</span>
-<span class="source-line-no">197</span><span id="line-197">      loggerConfig.setLevel(Level.ERROR);</span>
-<span class="source-line-no">198</span><span id="line-198">      ctx.updateLoggers();</span>
-<span class="source-line-no">199</span><span id="line-199">    }</span>
-<span class="source-line-no">200</span><span id="line-200">  }</span>
-<span class="source-line-no">201</span><span id="line-201"></span>
-<span class="source-line-no">202</span><span id="line-202">  protected void showVersion() {</span>
-<span class="source-line-no">203</span><span id="line-203">    @SuppressWarnings("resource") PrintStream out = AnsiConsole.out(); // NOPMD - not owner</span>
-<span class="source-line-no">204</span><span id="line-204">    getVersionInfos().values().stream().forEach(info -&gt; {</span>
-<span class="source-line-no">205</span><span id="line-205">      out.println(ansi()</span>
-<span class="source-line-no">206</span><span id="line-206">          .bold().a(info.getName()).boldOff()</span>
-<span class="source-line-no">207</span><span id="line-207">          .a(" ")</span>
-<span class="source-line-no">208</span><span id="line-208">          .bold().a(info.getVersion()).boldOff()</span>
-<span class="source-line-no">209</span><span id="line-209">          .a(" built at ")</span>
-<span class="source-line-no">210</span><span id="line-210">          .bold().a(info.getBuildTimestamp()).boldOff()</span>
-<span class="source-line-no">211</span><span id="line-211">          .a(" from branch ")</span>
-<span class="source-line-no">212</span><span id="line-212">          .bold().a(info.getGitBranch()).boldOff()</span>
-<span class="source-line-no">213</span><span id="line-213">          .a(" (")</span>
-<span class="source-line-no">214</span><span id="line-214">          .bold().a(info.getGitCommit()).boldOff()</span>
-<span class="source-line-no">215</span><span id="line-215">          .a(") at ")</span>
-<span class="source-line-no">216</span><span id="line-216">          .bold().a(info.getGitOriginUrl()).boldOff()</span>
-<span class="source-line-no">217</span><span id="line-217">          .reset());</span>
-<span class="source-line-no">218</span><span id="line-218">    });</span>
-<span class="source-line-no">219</span><span id="line-219">    out.flush();</span>
-<span class="source-line-no">220</span><span id="line-220">  }</span>
-<span class="source-line-no">221</span><span id="line-221"></span>
-<span class="source-line-no">222</span><span id="line-222">  // @SuppressWarnings("null")</span>
-<span class="source-line-no">223</span><span id="line-223">  // @NonNull</span>
-<span class="source-line-no">224</span><span id="line-224">  // public String[] getArgArray() {</span>
-<span class="source-line-no">225</span><span id="line-225">  // return Stream.concat(options.stream(), extraArgs.stream()).toArray(size -&gt;</span>
-<span class="source-line-no">226</span><span id="line-226">  // new String[size]);</span>
-<span class="source-line-no">227</span><span id="line-227">  // }</span>
-<span class="source-line-no">228</span><span id="line-228"></span>
-<span class="source-line-no">229</span><span id="line-229">  public class CallingContext {</span>
-<span class="source-line-no">230</span><span id="line-230">    @NonNull</span>
-<span class="source-line-no">231</span><span id="line-231">    private final List&lt;Option&gt; options;</span>
-<span class="source-line-no">232</span><span id="line-232">    @NonNull</span>
-<span class="source-line-no">233</span><span id="line-233">    private final Deque&lt;ICommand&gt; calledCommands;</span>
-<span class="source-line-no">234</span><span id="line-234">    @NonNull</span>
-<span class="source-line-no">235</span><span id="line-235">    private final List&lt;String&gt; extraArgs;</span>
+<span class="source-line-no">099</span><span id="line-99">  private final String exec;</span>
+<span class="source-line-no">100</span><span id="line-100">  @NonNull</span>
+<span class="source-line-no">101</span><span id="line-101">  private final Map&lt;String, IVersionInfo&gt; versionInfos;</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">  public static void main(String... args) {</span>
+<span class="source-line-no">104</span><span id="line-104">    System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");</span>
+<span class="source-line-no">105</span><span id="line-105">    CLIProcessor processor = new CLIProcessor("metaschema-cli");</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">    CommandService.getInstance().getCommands().stream().forEach(command -&gt; {</span>
+<span class="source-line-no">108</span><span id="line-108">      assert command != null;</span>
+<span class="source-line-no">109</span><span id="line-109">      processor.addCommandHandler(command);</span>
+<span class="source-line-no">110</span><span id="line-110">    });</span>
+<span class="source-line-no">111</span><span id="line-111">    System.exit(processor.process(args).getExitCode().getStatusCode());</span>
+<span class="source-line-no">112</span><span id="line-112">  }</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">  @SuppressWarnings("null")</span>
+<span class="source-line-no">115</span><span id="line-115">  public CLIProcessor(@NonNull String exec) {</span>
+<span class="source-line-no">116</span><span id="line-116">    this(exec, Map.of());</span>
+<span class="source-line-no">117</span><span id="line-117">  }</span>
+<span class="source-line-no">118</span><span id="line-118"></span>
+<span class="source-line-no">119</span><span id="line-119">  public CLIProcessor(@NonNull String exec, @NonNull Map&lt;String, IVersionInfo&gt; versionInfos) {</span>
+<span class="source-line-no">120</span><span id="line-120">    this.exec = exec;</span>
+<span class="source-line-no">121</span><span id="line-121">    this.versionInfos = versionInfos;</span>
+<span class="source-line-no">122</span><span id="line-122">    AnsiConsole.systemInstall();</span>
+<span class="source-line-no">123</span><span id="line-123">  }</span>
+<span class="source-line-no">124</span><span id="line-124"></span>
+<span class="source-line-no">125</span><span id="line-125">  /**</span>
+<span class="source-line-no">126</span><span id="line-126">   * Gets the command used to execute for use in help text.</span>
+<span class="source-line-no">127</span><span id="line-127">   *</span>
+<span class="source-line-no">128</span><span id="line-128">   * @return the command name</span>
+<span class="source-line-no">129</span><span id="line-129">   */</span>
+<span class="source-line-no">130</span><span id="line-130">  @NonNull</span>
+<span class="source-line-no">131</span><span id="line-131">  public String getExec() {</span>
+<span class="source-line-no">132</span><span id="line-132">    return exec;</span>
+<span class="source-line-no">133</span><span id="line-133">  }</span>
+<span class="source-line-no">134</span><span id="line-134"></span>
+<span class="source-line-no">135</span><span id="line-135">  /**</span>
+<span class="source-line-no">136</span><span id="line-136">   * Retrieve the version information for this application.</span>
+<span class="source-line-no">137</span><span id="line-137">   *</span>
+<span class="source-line-no">138</span><span id="line-138">   * @return the versionInfo</span>
+<span class="source-line-no">139</span><span id="line-139">   */</span>
+<span class="source-line-no">140</span><span id="line-140">  @NonNull</span>
+<span class="source-line-no">141</span><span id="line-141">  public Map&lt;String, IVersionInfo&gt; getVersionInfos() {</span>
+<span class="source-line-no">142</span><span id="line-142">    return versionInfos;</span>
+<span class="source-line-no">143</span><span id="line-143">  }</span>
+<span class="source-line-no">144</span><span id="line-144"></span>
+<span class="source-line-no">145</span><span id="line-145">  public void addCommandHandler(@NonNull ICommand handler) {</span>
+<span class="source-line-no">146</span><span id="line-146">    commands.add(handler);</span>
+<span class="source-line-no">147</span><span id="line-147">  }</span>
+<span class="source-line-no">148</span><span id="line-148"></span>
+<span class="source-line-no">149</span><span id="line-149">  /**</span>
+<span class="source-line-no">150</span><span id="line-150">   * Process a set of CLIProcessor arguments.</span>
+<span class="source-line-no">151</span><span id="line-151">   * &lt;p&gt;</span>
+<span class="source-line-no">152</span><span id="line-152">   * process().getExitCode().getStatusCode()</span>
+<span class="source-line-no">153</span><span id="line-153">   *</span>
+<span class="source-line-no">154</span><span id="line-154">   * @param args</span>
+<span class="source-line-no">155</span><span id="line-155">   *          the arguments to process</span>
+<span class="source-line-no">156</span><span id="line-156">   * @return the exit status</span>
+<span class="source-line-no">157</span><span id="line-157">   */</span>
+<span class="source-line-no">158</span><span id="line-158">  @NonNull</span>
+<span class="source-line-no">159</span><span id="line-159">  public ExitStatus process(String... args) {</span>
+<span class="source-line-no">160</span><span id="line-160">    return parseCommand(args);</span>
+<span class="source-line-no">161</span><span id="line-161">  }</span>
+<span class="source-line-no">162</span><span id="line-162"></span>
+<span class="source-line-no">163</span><span id="line-163">  @NonNull</span>
+<span class="source-line-no">164</span><span id="line-164">  private ExitStatus parseCommand(String... args) {</span>
+<span class="source-line-no">165</span><span id="line-165">    List&lt;String&gt; commandArgs = Arrays.asList(args);</span>
+<span class="source-line-no">166</span><span id="line-166">    assert commandArgs != null;</span>
+<span class="source-line-no">167</span><span id="line-167">    CallingContext callingContext = new CallingContext(commandArgs);</span>
+<span class="source-line-no">168</span><span id="line-168"></span>
+<span class="source-line-no">169</span><span id="line-169">    if (LOGGER.isDebugEnabled()) {</span>
+<span class="source-line-no">170</span><span id="line-170">      String commandChain = callingContext.getCalledCommands().stream()</span>
+<span class="source-line-no">171</span><span id="line-171">          .map(ICommand::getName)</span>
+<span class="source-line-no">172</span><span id="line-172">          .collect(Collectors.joining(" -&gt; "));</span>
+<span class="source-line-no">173</span><span id="line-173">      LOGGER.debug("Processing command chain: {}", commandChain);</span>
+<span class="source-line-no">174</span><span id="line-174">    }</span>
+<span class="source-line-no">175</span><span id="line-175"></span>
+<span class="source-line-no">176</span><span id="line-176">    ExitStatus status;</span>
+<span class="source-line-no">177</span><span id="line-177">    // the first two arguments should be the &lt;command&gt; and &lt;operation&gt;, where &lt;type&gt;</span>
+<span class="source-line-no">178</span><span id="line-178">    // is the object type</span>
+<span class="source-line-no">179</span><span id="line-179">    // the &lt;operation&gt; is performed against.</span>
+<span class="source-line-no">180</span><span id="line-180">    if (commandArgs.isEmpty()) {</span>
+<span class="source-line-no">181</span><span id="line-181">      status = ExitCode.INVALID_COMMAND.exit();</span>
+<span class="source-line-no">182</span><span id="line-182">      callingContext.showHelp();</span>
+<span class="source-line-no">183</span><span id="line-183">    } else {</span>
+<span class="source-line-no">184</span><span id="line-184">      status = callingContext.processCommand();</span>
+<span class="source-line-no">185</span><span id="line-185">    }</span>
+<span class="source-line-no">186</span><span id="line-186">    return status;</span>
+<span class="source-line-no">187</span><span id="line-187">  }</span>
+<span class="source-line-no">188</span><span id="line-188"></span>
+<span class="source-line-no">189</span><span id="line-189">  @NonNull</span>
+<span class="source-line-no">190</span><span id="line-190">  protected final List&lt;ICommand&gt; getTopLevelCommands() {</span>
+<span class="source-line-no">191</span><span id="line-191">    return CollectionUtil.unmodifiableList(commands);</span>
+<span class="source-line-no">192</span><span id="line-192">  }</span>
+<span class="source-line-no">193</span><span id="line-193"></span>
+<span class="source-line-no">194</span><span id="line-194">  @NonNull</span>
+<span class="source-line-no">195</span><span id="line-195">  protected final Map&lt;String, ICommand&gt; getTopLevelCommandsByName() {</span>
+<span class="source-line-no">196</span><span id="line-196">    return ObjectUtils.notNull(getTopLevelCommands()</span>
+<span class="source-line-no">197</span><span id="line-197">        .stream()</span>
+<span class="source-line-no">198</span><span id="line-198">        .collect(Collectors.toUnmodifiableMap(ICommand::getName, Function.identity())));</span>
+<span class="source-line-no">199</span><span id="line-199">  }</span>
+<span class="source-line-no">200</span><span id="line-200"></span>
+<span class="source-line-no">201</span><span id="line-201">  private static void handleNoColor() {</span>
+<span class="source-line-no">202</span><span id="line-202">    System.setProperty(AnsiConsole.JANSI_MODE, AnsiConsole.JANSI_MODE_STRIP);</span>
+<span class="source-line-no">203</span><span id="line-203">    AnsiConsole.systemUninstall();</span>
+<span class="source-line-no">204</span><span id="line-204">  }</span>
+<span class="source-line-no">205</span><span id="line-205"></span>
+<span class="source-line-no">206</span><span id="line-206">  public static void handleQuiet() {</span>
+<span class="source-line-no">207</span><span id="line-207">    LoggerContext ctx = (LoggerContext) LogManager.getContext(false); // NOPMD not closable here</span>
+<span class="source-line-no">208</span><span id="line-208">    Configuration config = ctx.getConfiguration();</span>
+<span class="source-line-no">209</span><span id="line-209">    LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);</span>
+<span class="source-line-no">210</span><span id="line-210">    Level oldLevel = loggerConfig.getLevel();</span>
+<span class="source-line-no">211</span><span id="line-211">    if (oldLevel.isLessSpecificThan(Level.ERROR)) {</span>
+<span class="source-line-no">212</span><span id="line-212">      loggerConfig.setLevel(Level.ERROR);</span>
+<span class="source-line-no">213</span><span id="line-213">      ctx.updateLoggers();</span>
+<span class="source-line-no">214</span><span id="line-214">    }</span>
+<span class="source-line-no">215</span><span id="line-215">  }</span>
+<span class="source-line-no">216</span><span id="line-216"></span>
+<span class="source-line-no">217</span><span id="line-217">  protected void showVersion() {</span>
+<span class="source-line-no">218</span><span id="line-218">    @SuppressWarnings("resource") PrintStream out = AnsiConsole.out(); // NOPMD - not owner</span>
+<span class="source-line-no">219</span><span id="line-219">    getVersionInfos().values().stream().forEach(info -&gt; {</span>
+<span class="source-line-no">220</span><span id="line-220">      out.println(ansi()</span>
+<span class="source-line-no">221</span><span id="line-221">          .bold().a(info.getName()).boldOff()</span>
+<span class="source-line-no">222</span><span id="line-222">          .a(" ")</span>
+<span class="source-line-no">223</span><span id="line-223">          .bold().a(info.getVersion()).boldOff()</span>
+<span class="source-line-no">224</span><span id="line-224">          .a(" built at ")</span>
+<span class="source-line-no">225</span><span id="line-225">          .bold().a(info.getBuildTimestamp()).boldOff()</span>
+<span class="source-line-no">226</span><span id="line-226">          .a(" from branch ")</span>
+<span class="source-line-no">227</span><span id="line-227">          .bold().a(info.getGitBranch()).boldOff()</span>
+<span class="source-line-no">228</span><span id="line-228">          .a(" (")</span>
+<span class="source-line-no">229</span><span id="line-229">          .bold().a(info.getGitCommit()).boldOff()</span>
+<span class="source-line-no">230</span><span id="line-230">          .a(") at ")</span>
+<span class="source-line-no">231</span><span id="line-231">          .bold().a(info.getGitOriginUrl()).boldOff()</span>
+<span class="source-line-no">232</span><span id="line-232">          .reset());</span>
+<span class="source-line-no">233</span><span id="line-233">    });</span>
+<span class="source-line-no">234</span><span id="line-234">    out.flush();</span>
+<span class="source-line-no">235</span><span id="line-235">  }</span>
 <span class="source-line-no">236</span><span id="line-236"></span>
-<span class="source-line-no">237</span><span id="line-237">    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")</span>
-<span class="source-line-no">238</span><span id="line-238">    public CallingContext(@NonNull List&lt;String&gt; args) {</span>
-<span class="source-line-no">239</span><span id="line-239">      Map&lt;String, ICommand&gt; topLevelCommandMap = getTopLevelCommands().stream()</span>
-<span class="source-line-no">240</span><span id="line-240">          .collect(Collectors.toUnmodifiableMap(ICommand::getName, Function.identity()));</span>
-<span class="source-line-no">241</span><span id="line-241"></span>
-<span class="source-line-no">242</span><span id="line-242">      List&lt;Option&gt; options = new LinkedList&lt;&gt;(OPTIONS);</span>
-<span class="source-line-no">243</span><span id="line-243">      Deque&lt;ICommand&gt; calledCommands = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">244</span><span id="line-244">      List&lt;String&gt; extraArgs = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">245</span><span id="line-245"></span>
-<span class="source-line-no">246</span><span id="line-246">      boolean endArgs = false;</span>
-<span class="source-line-no">247</span><span id="line-247">      for (String arg : args) {</span>
-<span class="source-line-no">248</span><span id="line-248">        if (endArgs || arg.startsWith("-")) {</span>
-<span class="source-line-no">249</span><span id="line-249">          extraArgs.add(arg);</span>
-<span class="source-line-no">250</span><span id="line-250">        } else if ("--".equals(arg)) {</span>
-<span class="source-line-no">251</span><span id="line-251">          endArgs = true;</span>
-<span class="source-line-no">252</span><span id="line-252">        } else {</span>
-<span class="source-line-no">253</span><span id="line-253">          ICommand command;</span>
-<span class="source-line-no">254</span><span id="line-254">          if (calledCommands.isEmpty()) {</span>
-<span class="source-line-no">255</span><span id="line-255">            command = topLevelCommandMap.get(arg);</span>
-<span class="source-line-no">256</span><span id="line-256">          } else {</span>
-<span class="source-line-no">257</span><span id="line-257">            command = calledCommands.getLast();</span>
-<span class="source-line-no">258</span><span id="line-258">            command = command.getSubCommandByName(arg);</span>
-<span class="source-line-no">259</span><span id="line-259">          }</span>
-<span class="source-line-no">260</span><span id="line-260"></span>
-<span class="source-line-no">261</span><span id="line-261">          if (command == null) {</span>
-<span class="source-line-no">262</span><span id="line-262">            extraArgs.add(arg);</span>
-<span class="source-line-no">263</span><span id="line-263">            endArgs = true;</span>
-<span class="source-line-no">264</span><span id="line-264">          } else {</span>
-<span class="source-line-no">265</span><span id="line-265">            calledCommands.add(command);</span>
-<span class="source-line-no">266</span><span id="line-266">          }</span>
-<span class="source-line-no">267</span><span id="line-267">        }</span>
-<span class="source-line-no">268</span><span id="line-268">      }</span>
-<span class="source-line-no">269</span><span id="line-269"></span>
-<span class="source-line-no">270</span><span id="line-270">      if (LOGGER.isDebugEnabled()) {</span>
-<span class="source-line-no">271</span><span id="line-271">        String commandChain = calledCommands.stream()</span>
-<span class="source-line-no">272</span><span id="line-272">            .map(ICommand::getName)</span>
-<span class="source-line-no">273</span><span id="line-273">            .collect(Collectors.joining(" -&gt; "));</span>
-<span class="source-line-no">274</span><span id="line-274">        LOGGER.debug("Processing command chain: {}", commandChain);</span>
-<span class="source-line-no">275</span><span id="line-275">      }</span>
-<span class="source-line-no">276</span><span id="line-276"></span>
-<span class="source-line-no">277</span><span id="line-277">      for (ICommand cmd : calledCommands) {</span>
-<span class="source-line-no">278</span><span id="line-278">        options.addAll(cmd.gatherOptions());</span>
-<span class="source-line-no">279</span><span id="line-279">      }</span>
+<span class="source-line-no">237</span><span id="line-237">  // @SuppressWarnings("null")</span>
+<span class="source-line-no">238</span><span id="line-238">  // @NonNull</span>
+<span class="source-line-no">239</span><span id="line-239">  // public String[] getArgArray() {</span>
+<span class="source-line-no">240</span><span id="line-240">  // return Stream.concat(options.stream(), extraArgs.stream()).toArray(size -&gt;</span>
+<span class="source-line-no">241</span><span id="line-241">  // new String[size]);</span>
+<span class="source-line-no">242</span><span id="line-242">  // }</span>
+<span class="source-line-no">243</span><span id="line-243"></span>
+<span class="source-line-no">244</span><span id="line-244">  public class CallingContext {</span>
+<span class="source-line-no">245</span><span id="line-245">    @NonNull</span>
+<span class="source-line-no">246</span><span id="line-246">    private final List&lt;Option&gt; options;</span>
+<span class="source-line-no">247</span><span id="line-247">    @NonNull</span>
+<span class="source-line-no">248</span><span id="line-248">    private final List&lt;ICommand&gt; calledCommands;</span>
+<span class="source-line-no">249</span><span id="line-249">    @Nullable</span>
+<span class="source-line-no">250</span><span id="line-250">    private final ICommand targetCommand;</span>
+<span class="source-line-no">251</span><span id="line-251">    @NonNull</span>
+<span class="source-line-no">252</span><span id="line-252">    private final List&lt;String&gt; extraArgs;</span>
+<span class="source-line-no">253</span><span id="line-253"></span>
+<span class="source-line-no">254</span><span id="line-254">    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")</span>
+<span class="source-line-no">255</span><span id="line-255">    public CallingContext(@NonNull List&lt;String&gt; args) {</span>
+<span class="source-line-no">256</span><span id="line-256">      @SuppressWarnings("PMD.LooseCoupling") LinkedList&lt;ICommand&gt; calledCommands = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">257</span><span id="line-257">      List&lt;Option&gt; options = new LinkedList&lt;&gt;(OPTIONS);</span>
+<span class="source-line-no">258</span><span id="line-258">      List&lt;String&gt; extraArgs = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">259</span><span id="line-259"></span>
+<span class="source-line-no">260</span><span id="line-260">      AtomicBoolean endArgs = new AtomicBoolean();</span>
+<span class="source-line-no">261</span><span id="line-261">      args.forEach(arg -&gt; {</span>
+<span class="source-line-no">262</span><span id="line-262">        if (endArgs.get() || arg.startsWith("-")) {</span>
+<span class="source-line-no">263</span><span id="line-263">          extraArgs.add(arg);</span>
+<span class="source-line-no">264</span><span id="line-264">        } else if ("--".equals(arg)) {</span>
+<span class="source-line-no">265</span><span id="line-265">          endArgs.set(true);</span>
+<span class="source-line-no">266</span><span id="line-266">        } else {</span>
+<span class="source-line-no">267</span><span id="line-267">          ICommand command = calledCommands.isEmpty()</span>
+<span class="source-line-no">268</span><span id="line-268">              ? getTopLevelCommandsByName().get(arg)</span>
+<span class="source-line-no">269</span><span id="line-269">              : calledCommands.getLast().getSubCommandByName(arg);</span>
+<span class="source-line-no">270</span><span id="line-270"></span>
+<span class="source-line-no">271</span><span id="line-271">          if (command == null) {</span>
+<span class="source-line-no">272</span><span id="line-272">            extraArgs.add(arg);</span>
+<span class="source-line-no">273</span><span id="line-273">            endArgs.set(true);</span>
+<span class="source-line-no">274</span><span id="line-274">          } else {</span>
+<span class="source-line-no">275</span><span id="line-275">            calledCommands.add(command);</span>
+<span class="source-line-no">276</span><span id="line-276">            options.addAll(command.gatherOptions());</span>
+<span class="source-line-no">277</span><span id="line-277">          }</span>
+<span class="source-line-no">278</span><span id="line-278">        }</span>
+<span class="source-line-no">279</span><span id="line-279">      });</span>
 <span class="source-line-no">280</span><span id="line-280"></span>
-<span class="source-line-no">281</span><span id="line-281">      options = Collections.unmodifiableList(options);</span>
-<span class="source-line-no">282</span><span id="line-282">      extraArgs = Collections.unmodifiableList(extraArgs);</span>
-<span class="source-line-no">283</span><span id="line-283"></span>
-<span class="source-line-no">284</span><span id="line-284">      assert options != null;</span>
-<span class="source-line-no">285</span><span id="line-285">      assert extraArgs != null;</span>
+<span class="source-line-no">281</span><span id="line-281">      this.calledCommands = CollectionUtil.unmodifiableList(calledCommands);</span>
+<span class="source-line-no">282</span><span id="line-282">      this.targetCommand = calledCommands.peekLast();</span>
+<span class="source-line-no">283</span><span id="line-283">      this.options = CollectionUtil.unmodifiableList(options);</span>
+<span class="source-line-no">284</span><span id="line-284">      this.extraArgs = CollectionUtil.unmodifiableList(extraArgs);</span>
+<span class="source-line-no">285</span><span id="line-285">    }</span>
 <span class="source-line-no">286</span><span id="line-286"></span>
-<span class="source-line-no">287</span><span id="line-287">      this.options = options;</span>
-<span class="source-line-no">288</span><span id="line-288">      this.calledCommands = calledCommands;</span>
-<span class="source-line-no">289</span><span id="line-289">      this.extraArgs = extraArgs;</span>
+<span class="source-line-no">287</span><span id="line-287">    @NonNull</span>
+<span class="source-line-no">288</span><span id="line-288">    public CLIProcessor getCLIProcessor() {</span>
+<span class="source-line-no">289</span><span id="line-289">      return CLIProcessor.this;</span>
 <span class="source-line-no">290</span><span id="line-290">    }</span>
 <span class="source-line-no">291</span><span id="line-291"></span>
-<span class="source-line-no">292</span><span id="line-292">    @NonNull</span>
-<span class="source-line-no">293</span><span id="line-293">    public CLIProcessor getCLIProcessor() {</span>
-<span class="source-line-no">294</span><span id="line-294">      return CLIProcessor.this;</span>
+<span class="source-line-no">292</span><span id="line-292">    @Nullable</span>
+<span class="source-line-no">293</span><span id="line-293">    public ICommand getTargetCommand() {</span>
+<span class="source-line-no">294</span><span id="line-294">      return targetCommand;</span>
 <span class="source-line-no">295</span><span id="line-295">    }</span>
 <span class="source-line-no">296</span><span id="line-296"></span>
-<span class="source-line-no">297</span><span id="line-297">    @Nullable</span>
-<span class="source-line-no">298</span><span id="line-298">    public ICommand getTargetCommand() {</span>
-<span class="source-line-no">299</span><span id="line-299">      return calledCommands.peekLast();</span>
+<span class="source-line-no">297</span><span id="line-297">    @NonNull</span>
+<span class="source-line-no">298</span><span id="line-298">    protected List&lt;Option&gt; getOptionsList() {</span>
+<span class="source-line-no">299</span><span id="line-299">      return options;</span>
 <span class="source-line-no">300</span><span id="line-300">    }</span>
 <span class="source-line-no">301</span><span id="line-301"></span>
 <span class="source-line-no">302</span><span id="line-302">    @NonNull</span>
-<span class="source-line-no">303</span><span id="line-303">    protected List&lt;Option&gt; getOptionsList() {</span>
-<span class="source-line-no">304</span><span id="line-304">      return options;</span>
+<span class="source-line-no">303</span><span id="line-303">    private List&lt;ICommand&gt; getCalledCommands() {</span>
+<span class="source-line-no">304</span><span id="line-304">      return calledCommands;</span>
 <span class="source-line-no">305</span><span id="line-305">    }</span>
 <span class="source-line-no">306</span><span id="line-306"></span>
 <span class="source-line-no">307</span><span id="line-307">    @NonNull</span>
-<span class="source-line-no">308</span><span id="line-308">    private Deque&lt;ICommand&gt; getCalledCommands() {</span>
-<span class="source-line-no">309</span><span id="line-309">      return calledCommands;</span>
+<span class="source-line-no">308</span><span id="line-308">    protected List&lt;String&gt; getExtraArgs() {</span>
+<span class="source-line-no">309</span><span id="line-309">      return extraArgs;</span>
 <span class="source-line-no">310</span><span id="line-310">    }</span>
 <span class="source-line-no">311</span><span id="line-311"></span>
-<span class="source-line-no">312</span><span id="line-312">    @NonNull</span>
-<span class="source-line-no">313</span><span id="line-313">    protected List&lt;String&gt; getExtraArgs() {</span>
-<span class="source-line-no">314</span><span id="line-314">      return extraArgs;</span>
-<span class="source-line-no">315</span><span id="line-315">    }</span>
-<span class="source-line-no">316</span><span id="line-316"></span>
-<span class="source-line-no">317</span><span id="line-317">    protected Options toOptions() {</span>
-<span class="source-line-no">318</span><span id="line-318">      Options retval = new Options();</span>
-<span class="source-line-no">319</span><span id="line-319">      for (Option option : getOptionsList()) {</span>
-<span class="source-line-no">320</span><span id="line-320">        retval.addOption(option);</span>
-<span class="source-line-no">321</span><span id="line-321">      }</span>
-<span class="source-line-no">322</span><span id="line-322">      return retval;</span>
-<span class="source-line-no">323</span><span id="line-323">    }</span>
+<span class="source-line-no">312</span><span id="line-312">    protected Options toOptions() {</span>
+<span class="source-line-no">313</span><span id="line-313">      Options retval = new Options();</span>
+<span class="source-line-no">314</span><span id="line-314">      for (Option option : getOptionsList()) {</span>
+<span class="source-line-no">315</span><span id="line-315">        retval.addOption(option);</span>
+<span class="source-line-no">316</span><span id="line-316">      }</span>
+<span class="source-line-no">317</span><span id="line-317">      return retval;</span>
+<span class="source-line-no">318</span><span id="line-318">    }</span>
+<span class="source-line-no">319</span><span id="line-319"></span>
+<span class="source-line-no">320</span><span id="line-320">    @SuppressWarnings("PMD.OnlyOneReturn") // readability</span>
+<span class="source-line-no">321</span><span id="line-321">    @NonNull</span>
+<span class="source-line-no">322</span><span id="line-322">    public ExitStatus processCommand() {</span>
+<span class="source-line-no">323</span><span id="line-323">      CommandLineParser parser = new DefaultParser();</span>
 <span class="source-line-no">324</span><span id="line-324"></span>
-<span class="source-line-no">325</span><span id="line-325">    @SuppressWarnings("PMD.OnlyOneReturn") // readability</span>
-<span class="source-line-no">326</span><span id="line-326">    @NonNull</span>
-<span class="source-line-no">327</span><span id="line-327">    public ExitStatus processCommand() {</span>
-<span class="source-line-no">328</span><span id="line-328">      CommandLineParser parser = new DefaultParser();</span>
-<span class="source-line-no">329</span><span id="line-329">      CommandLine cmdLine;</span>
-<span class="source-line-no">330</span><span id="line-330"></span>
-<span class="source-line-no">331</span><span id="line-331">      // this uses a two phase approach where:</span>
-<span class="source-line-no">332</span><span id="line-332">      // phase 1: checks if help or version are used</span>
-<span class="source-line-no">333</span><span id="line-333">      // phase 2: executes the command</span>
-<span class="source-line-no">334</span><span id="line-334"></span>
-<span class="source-line-no">335</span><span id="line-335">      // phase 1</span>
-<span class="source-line-no">336</span><span id="line-336">      ExitStatus retval = null;</span>
-<span class="source-line-no">337</span><span id="line-337">      {</span>
-<span class="source-line-no">338</span><span id="line-338">        try {</span>
-<span class="source-line-no">339</span><span id="line-339">          Options phase1Options = new Options();</span>
-<span class="source-line-no">340</span><span id="line-340">          phase1Options.addOption(HELP_OPTION);</span>
-<span class="source-line-no">341</span><span id="line-341">          phase1Options.addOption(VERSION_OPTION);</span>
-<span class="source-line-no">342</span><span id="line-342"></span>
-<span class="source-line-no">343</span><span id="line-343">          cmdLine = parser.parse(phase1Options, getExtraArgs().toArray(new String[0]), true);</span>
-<span class="source-line-no">344</span><span id="line-344">        } catch (ParseException ex) {</span>
-<span class="source-line-no">345</span><span id="line-345">          String msg = ex.getMessage();</span>
-<span class="source-line-no">346</span><span id="line-346">          assert msg != null;</span>
-<span class="source-line-no">347</span><span id="line-347">          return handleInvalidCommand(msg);</span>
-<span class="source-line-no">348</span><span id="line-348">        }</span>
-<span class="source-line-no">349</span><span id="line-349"></span>
-<span class="source-line-no">350</span><span id="line-350">        if (cmdLine.hasOption(VERSION_OPTION)) {</span>
-<span class="source-line-no">351</span><span id="line-351">          showVersion();</span>
-<span class="source-line-no">352</span><span id="line-352">          retval = ExitCode.OK.exit();</span>
-<span class="source-line-no">353</span><span id="line-353">        } else if (cmdLine.hasOption(HELP_OPTION)) {</span>
-<span class="source-line-no">354</span><span id="line-354">          showHelp();</span>
-<span class="source-line-no">355</span><span id="line-355">          retval = ExitCode.OK.exit();</span>
-<span class="source-line-no">356</span><span id="line-356">        }</span>
-<span class="source-line-no">357</span><span id="line-357">      }</span>
-<span class="source-line-no">358</span><span id="line-358"></span>
-<span class="source-line-no">359</span><span id="line-359">      if (retval == null) {</span>
-<span class="source-line-no">360</span><span id="line-360">        // phase 2</span>
-<span class="source-line-no">361</span><span id="line-361">        try {</span>
-<span class="source-line-no">362</span><span id="line-362">          cmdLine = parser.parse(toOptions(), getExtraArgs().toArray(new String[0]));</span>
-<span class="source-line-no">363</span><span id="line-363">        } catch (ParseException ex) {</span>
-<span class="source-line-no">364</span><span id="line-364">          String msg = ex.getMessage();</span>
-<span class="source-line-no">365</span><span id="line-365">          assert msg != null;</span>
-<span class="source-line-no">366</span><span id="line-366">          return handleInvalidCommand(msg);</span>
-<span class="source-line-no">367</span><span id="line-367">        }</span>
-<span class="source-line-no">368</span><span id="line-368"></span>
-<span class="source-line-no">369</span><span id="line-369">        if (cmdLine.hasOption(NO_COLOR_OPTION)) {</span>
-<span class="source-line-no">370</span><span id="line-370">          handleNoColor();</span>
-<span class="source-line-no">371</span><span id="line-371">        }</span>
-<span class="source-line-no">372</span><span id="line-372"></span>
-<span class="source-line-no">373</span><span id="line-373">        if (cmdLine.hasOption(QUIET_OPTION)) {</span>
-<span class="source-line-no">374</span><span id="line-374">          handleQuiet();</span>
-<span class="source-line-no">375</span><span id="line-375">        }</span>
-<span class="source-line-no">376</span><span id="line-376">        retval = invokeCommand(cmdLine);</span>
-<span class="source-line-no">377</span><span id="line-377">      }</span>
-<span class="source-line-no">378</span><span id="line-378"></span>
-<span class="source-line-no">379</span><span id="line-379">      retval.generateMessage(cmdLine.hasOption(SHOW_STACK_TRACE_OPTION));</span>
-<span class="source-line-no">380</span><span id="line-380">      return retval;</span>
-<span class="source-line-no">381</span><span id="line-381">    }</span>
-<span class="source-line-no">382</span><span id="line-382"></span>
-<span class="source-line-no">383</span><span id="line-383">    @SuppressWarnings({</span>
-<span class="source-line-no">384</span><span id="line-384">        "PMD.OnlyOneReturn", // readability</span>
-<span class="source-line-no">385</span><span id="line-385">        "PMD.AvoidCatchingGenericException" // needed here</span>
-<span class="source-line-no">386</span><span id="line-386">    })</span>
-<span class="source-line-no">387</span><span id="line-387">    protected ExitStatus invokeCommand(@NonNull CommandLine cmdLine) {</span>
-<span class="source-line-no">388</span><span id="line-388">      ExitStatus retval;</span>
-<span class="source-line-no">389</span><span id="line-389">      try {</span>
-<span class="source-line-no">390</span><span id="line-390">        for (ICommand cmd : getCalledCommands()) {</span>
-<span class="source-line-no">391</span><span id="line-391">          try {</span>
-<span class="source-line-no">392</span><span id="line-392">            cmd.validateOptions(this, cmdLine);</span>
-<span class="source-line-no">393</span><span id="line-393">          } catch (InvalidArgumentException ex) {</span>
-<span class="source-line-no">394</span><span id="line-394">            String msg = ex.getMessage();</span>
-<span class="source-line-no">395</span><span id="line-395">            assert msg != null;</span>
-<span class="source-line-no">396</span><span id="line-396">            return handleInvalidCommand(msg);</span>
-<span class="source-line-no">397</span><span id="line-397">          }</span>
-<span class="source-line-no">398</span><span id="line-398">        }</span>
-<span class="source-line-no">399</span><span id="line-399"></span>
-<span class="source-line-no">400</span><span id="line-400">        ICommand targetCommand = getTargetCommand();</span>
-<span class="source-line-no">401</span><span id="line-401">        if (targetCommand == null) {</span>
-<span class="source-line-no">402</span><span id="line-402">          retval = ExitCode.INVALID_COMMAND.exit();</span>
-<span class="source-line-no">403</span><span id="line-403">        } else {</span>
-<span class="source-line-no">404</span><span id="line-404">          ICommandExecutor executor = targetCommand.newExecutor(this, cmdLine);</span>
-<span class="source-line-no">405</span><span id="line-405">          retval = executor.execute();</span>
-<span class="source-line-no">406</span><span id="line-406">        }</span>
+<span class="source-line-no">325</span><span id="line-325">      // this uses a three phase approach where:</span>
+<span class="source-line-no">326</span><span id="line-326">      // phase 1: checks if help or version are used</span>
+<span class="source-line-no">327</span><span id="line-327">      // phase 2: parse and validate arguments</span>
+<span class="source-line-no">328</span><span id="line-328">      // phase 3: executes the command</span>
+<span class="source-line-no">329</span><span id="line-329"></span>
+<span class="source-line-no">330</span><span id="line-330">      // phase 1</span>
+<span class="source-line-no">331</span><span id="line-331">      CommandLine cmdLine;</span>
+<span class="source-line-no">332</span><span id="line-332">      try {</span>
+<span class="source-line-no">333</span><span id="line-333">        Options phase1Options = new Options();</span>
+<span class="source-line-no">334</span><span id="line-334">        phase1Options.addOption(HELP_OPTION);</span>
+<span class="source-line-no">335</span><span id="line-335">        phase1Options.addOption(VERSION_OPTION);</span>
+<span class="source-line-no">336</span><span id="line-336"></span>
+<span class="source-line-no">337</span><span id="line-337">        cmdLine = ObjectUtils.notNull(parser.parse(phase1Options, getExtraArgs().toArray(new String[0]), true));</span>
+<span class="source-line-no">338</span><span id="line-338">      } catch (ParseException ex) {</span>
+<span class="source-line-no">339</span><span id="line-339">        String msg = ex.getMessage();</span>
+<span class="source-line-no">340</span><span id="line-340">        assert msg != null;</span>
+<span class="source-line-no">341</span><span id="line-341">        return handleInvalidCommand(msg);</span>
+<span class="source-line-no">342</span><span id="line-342">      }</span>
+<span class="source-line-no">343</span><span id="line-343"></span>
+<span class="source-line-no">344</span><span id="line-344">      if (cmdLine.hasOption(VERSION_OPTION)) {</span>
+<span class="source-line-no">345</span><span id="line-345">        showVersion();</span>
+<span class="source-line-no">346</span><span id="line-346">        return ExitCode.OK.exit();</span>
+<span class="source-line-no">347</span><span id="line-347">      }</span>
+<span class="source-line-no">348</span><span id="line-348">      if (cmdLine.hasOption(HELP_OPTION)) {</span>
+<span class="source-line-no">349</span><span id="line-349">        showHelp();</span>
+<span class="source-line-no">350</span><span id="line-350">        return ExitCode.OK.exit();</span>
+<span class="source-line-no">351</span><span id="line-351">      }</span>
+<span class="source-line-no">352</span><span id="line-352"></span>
+<span class="source-line-no">353</span><span id="line-353">      // phase 2</span>
+<span class="source-line-no">354</span><span id="line-354">      try {</span>
+<span class="source-line-no">355</span><span id="line-355">        cmdLine = ObjectUtils.notNull(parser.parse(toOptions(), getExtraArgs().toArray(new String[0])));</span>
+<span class="source-line-no">356</span><span id="line-356">      } catch (ParseException ex) {</span>
+<span class="source-line-no">357</span><span id="line-357">        String msg = ex.getMessage();</span>
+<span class="source-line-no">358</span><span id="line-358">        assert msg != null;</span>
+<span class="source-line-no">359</span><span id="line-359">        return handleInvalidCommand(msg);</span>
+<span class="source-line-no">360</span><span id="line-360">      }</span>
+<span class="source-line-no">361</span><span id="line-361"></span>
+<span class="source-line-no">362</span><span id="line-362">      ICommand targetCommand = getTargetCommand();</span>
+<span class="source-line-no">363</span><span id="line-363">      if (targetCommand != null) {</span>
+<span class="source-line-no">364</span><span id="line-364">        if (targetCommand.isSubCommandRequired()) {</span>
+<span class="source-line-no">365</span><span id="line-365">          return handleError(</span>
+<span class="source-line-no">366</span><span id="line-366">              ExitCode.INVALID_ARGUMENTS</span>
+<span class="source-line-no">367</span><span id="line-367">                  .exitMessage("Please choose a valid sub-command."),</span>
+<span class="source-line-no">368</span><span id="line-368">              cmdLine,</span>
+<span class="source-line-no">369</span><span id="line-369">              true);</span>
+<span class="source-line-no">370</span><span id="line-370">        }</span>
+<span class="source-line-no">371</span><span id="line-371"></span>
+<span class="source-line-no">372</span><span id="line-372">        List&lt;ExtraArgument&gt; extraArguments = targetCommand.getExtraArguments();</span>
+<span class="source-line-no">373</span><span id="line-373">        int maxArguments = extraArguments.size();</span>
+<span class="source-line-no">374</span><span id="line-374"></span>
+<span class="source-line-no">375</span><span id="line-375">        List&lt;String&gt; actualArgs = cmdLine.getArgList();</span>
+<span class="source-line-no">376</span><span id="line-376">        int actualArgsSize = actualArgs.size();</span>
+<span class="source-line-no">377</span><span id="line-377">        if (actualArgs.size() &gt; maxArguments) {</span>
+<span class="source-line-no">378</span><span id="line-378">          return handleError(</span>
+<span class="source-line-no">379</span><span id="line-379">              ExitCode.INVALID_ARGUMENTS</span>
+<span class="source-line-no">380</span><span id="line-380">                  .exitMessage("The provided extra arguments exceed the number of allowed arguments."),</span>
+<span class="source-line-no">381</span><span id="line-381">              cmdLine,</span>
+<span class="source-line-no">382</span><span id="line-382">              true);</span>
+<span class="source-line-no">383</span><span id="line-383">        }</span>
+<span class="source-line-no">384</span><span id="line-384"></span>
+<span class="source-line-no">385</span><span id="line-385">        List&lt;ExtraArgument&gt; requiredExtraArguments = targetCommand.getExtraArguments().stream()</span>
+<span class="source-line-no">386</span><span id="line-386">            .filter(ExtraArgument::isRequired)</span>
+<span class="source-line-no">387</span><span id="line-387">            .collect(Collectors.toUnmodifiableList());</span>
+<span class="source-line-no">388</span><span id="line-388"></span>
+<span class="source-line-no">389</span><span id="line-389">        if (actualArgsSize &lt; requiredExtraArguments.size()) {</span>
+<span class="source-line-no">390</span><span id="line-390">          return handleError(</span>
+<span class="source-line-no">391</span><span id="line-391">              ExitCode.INVALID_ARGUMENTS</span>
+<span class="source-line-no">392</span><span id="line-392">                  .exitMessage("Please provide the required extra arguments."),</span>
+<span class="source-line-no">393</span><span id="line-393">              cmdLine,</span>
+<span class="source-line-no">394</span><span id="line-394">              true);</span>
+<span class="source-line-no">395</span><span id="line-395">        }</span>
+<span class="source-line-no">396</span><span id="line-396">      }</span>
+<span class="source-line-no">397</span><span id="line-397"></span>
+<span class="source-line-no">398</span><span id="line-398">      for (ICommand cmd : getCalledCommands()) {</span>
+<span class="source-line-no">399</span><span id="line-399">        try {</span>
+<span class="source-line-no">400</span><span id="line-400">          cmd.validateOptions(this, cmdLine);</span>
+<span class="source-line-no">401</span><span id="line-401">        } catch (InvalidArgumentException ex) {</span>
+<span class="source-line-no">402</span><span id="line-402">          String msg = ex.getMessage();</span>
+<span class="source-line-no">403</span><span id="line-403">          assert msg != null;</span>
+<span class="source-line-no">404</span><span id="line-404">          return handleInvalidCommand(msg);</span>
+<span class="source-line-no">405</span><span id="line-405">        }</span>
+<span class="source-line-no">406</span><span id="line-406">      }</span>
 <span class="source-line-no">407</span><span id="line-407"></span>
-<span class="source-line-no">408</span><span id="line-408">        if (ExitCode.INVALID_COMMAND.equals(retval.getExitCode())) {</span>
-<span class="source-line-no">409</span><span id="line-409">          showHelp();</span>
-<span class="source-line-no">410</span><span id="line-410">        }</span>
-<span class="source-line-no">411</span><span id="line-411">      } catch (RuntimeException ex) {</span>
-<span class="source-line-no">412</span><span id="line-412">        retval = ExitCode.RUNTIME_ERROR</span>
-<span class="source-line-no">413</span><span id="line-413">            .exitMessage(String.format("An uncaught runtime error occurred. %s", ex.getLocalizedMessage()))</span>
-<span class="source-line-no">414</span><span id="line-414">            .withThrowable(ex);</span>
+<span class="source-line-no">408</span><span id="line-408">      // phase 3</span>
+<span class="source-line-no">409</span><span id="line-409">      if (cmdLine.hasOption(NO_COLOR_OPTION)) {</span>
+<span class="source-line-no">410</span><span id="line-410">        handleNoColor();</span>
+<span class="source-line-no">411</span><span id="line-411">      }</span>
+<span class="source-line-no">412</span><span id="line-412"></span>
+<span class="source-line-no">413</span><span id="line-413">      if (cmdLine.hasOption(QUIET_OPTION)) {</span>
+<span class="source-line-no">414</span><span id="line-414">        handleQuiet();</span>
 <span class="source-line-no">415</span><span id="line-415">      }</span>
-<span class="source-line-no">416</span><span id="line-416">      return retval;</span>
-<span class="source-line-no">417</span><span id="line-417">    }</span>
-<span class="source-line-no">418</span><span id="line-418"></span>
-<span class="source-line-no">419</span><span id="line-419">    @NonNull</span>
-<span class="source-line-no">420</span><span id="line-420">    public ExitStatus handleInvalidCommand(</span>
-<span class="source-line-no">421</span><span id="line-421">        @NonNull String message) {</span>
-<span class="source-line-no">422</span><span id="line-422">      showHelp();</span>
-<span class="source-line-no">423</span><span id="line-423"></span>
-<span class="source-line-no">424</span><span id="line-424">      ExitStatus retval = ExitCode.INVALID_COMMAND.exitMessage(message);</span>
-<span class="source-line-no">425</span><span id="line-425">      retval.generateMessage(false);</span>
-<span class="source-line-no">426</span><span id="line-426">      return retval;</span>
-<span class="source-line-no">427</span><span id="line-427">    }</span>
-<span class="source-line-no">428</span><span id="line-428"></span>
-<span class="source-line-no">429</span><span id="line-429">    /**</span>
-<span class="source-line-no">430</span><span id="line-430">     * Callback for providing a help header.</span>
-<span class="source-line-no">431</span><span id="line-431">     *</span>
-<span class="source-line-no">432</span><span id="line-432">     * @return the header or {@code null}</span>
-<span class="source-line-no">433</span><span id="line-433">     */</span>
-<span class="source-line-no">434</span><span id="line-434">    @Nullable</span>
-<span class="source-line-no">435</span><span id="line-435">    protected String buildHelpHeader() {</span>
-<span class="source-line-no">436</span><span id="line-436">      // TODO: build a suitable header</span>
-<span class="source-line-no">437</span><span id="line-437">      return null;</span>
-<span class="source-line-no">438</span><span id="line-438">    }</span>
-<span class="source-line-no">439</span><span id="line-439"></span>
-<span class="source-line-no">440</span><span id="line-440">    /**</span>
-<span class="source-line-no">441</span><span id="line-441">     * Callback for providing a help footer.</span>
-<span class="source-line-no">442</span><span id="line-442">     *</span>
-<span class="source-line-no">443</span><span id="line-443">     * @param exec</span>
-<span class="source-line-no">444</span><span id="line-444">     *          the executable name</span>
-<span class="source-line-no">445</span><span id="line-445">     *</span>
-<span class="source-line-no">446</span><span id="line-446">     * @return the footer or {@code null}</span>
-<span class="source-line-no">447</span><span id="line-447">     */</span>
-<span class="source-line-no">448</span><span id="line-448">    @NonNull</span>
-<span class="source-line-no">449</span><span id="line-449">    private String buildHelpFooter() {</span>
-<span class="source-line-no">450</span><span id="line-450"></span>
-<span class="source-line-no">451</span><span id="line-451">      ICommand targetCommand = getTargetCommand();</span>
-<span class="source-line-no">452</span><span id="line-452">      Collection&lt;ICommand&gt; subCommands;</span>
-<span class="source-line-no">453</span><span id="line-453">      if (targetCommand == null) {</span>
-<span class="source-line-no">454</span><span id="line-454">        subCommands = getTopLevelCommands();</span>
-<span class="source-line-no">455</span><span id="line-455">      } else {</span>
-<span class="source-line-no">456</span><span id="line-456">        subCommands = targetCommand.getSubCommands();</span>
-<span class="source-line-no">457</span><span id="line-457">      }</span>
-<span class="source-line-no">458</span><span id="line-458"></span>
-<span class="source-line-no">459</span><span id="line-459">      String retval;</span>
-<span class="source-line-no">460</span><span id="line-460">      if (subCommands.isEmpty()) {</span>
-<span class="source-line-no">461</span><span id="line-461">        retval = "";</span>
-<span class="source-line-no">462</span><span id="line-462">      } else {</span>
-<span class="source-line-no">463</span><span id="line-463">        StringBuilder builder = new StringBuilder(64);</span>
-<span class="source-line-no">464</span><span id="line-464">        builder</span>
-<span class="source-line-no">465</span><span id="line-465">            .append(System.lineSeparator())</span>
-<span class="source-line-no">466</span><span id="line-466">            .append("The following are available commands:")</span>
-<span class="source-line-no">467</span><span id="line-467">            .append(System.lineSeparator());</span>
-<span class="source-line-no">468</span><span id="line-468"></span>
-<span class="source-line-no">469</span><span id="line-469">        int length = subCommands.stream()</span>
-<span class="source-line-no">470</span><span id="line-470">            .mapToInt(command -&gt; command.getName().length())</span>
-<span class="source-line-no">471</span><span id="line-471">            .max().orElse(0);</span>
-<span class="source-line-no">472</span><span id="line-472"></span>
-<span class="source-line-no">473</span><span id="line-473">        for (ICommand command : subCommands) {</span>
-<span class="source-line-no">474</span><span id="line-474">          builder.append(</span>
-<span class="source-line-no">475</span><span id="line-475">              ansi()</span>
-<span class="source-line-no">476</span><span id="line-476">                  .render(String.format("   @|bold %-" + length + "s|@ %s%n",</span>
-<span class="source-line-no">477</span><span id="line-477">                      command.getName(),</span>
-<span class="source-line-no">478</span><span id="line-478">                      command.getDescription())));</span>
-<span class="source-line-no">479</span><span id="line-479">        }</span>
-<span class="source-line-no">480</span><span id="line-480">        builder</span>
-<span class="source-line-no">481</span><span id="line-481">            .append(System.lineSeparator())</span>
-<span class="source-line-no">482</span><span id="line-482">            .append('\'')</span>
-<span class="source-line-no">483</span><span id="line-483">            .append(getExec())</span>
-<span class="source-line-no">484</span><span id="line-484">            .append(" &lt;command&gt; --help' will show help on that specific command.")</span>
-<span class="source-line-no">485</span><span id="line-485">            .append(System.lineSeparator());</span>
-<span class="source-line-no">486</span><span id="line-486">        retval = builder.toString();</span>
-<span class="source-line-no">487</span><span id="line-487">        assert retval != null;</span>
-<span class="source-line-no">488</span><span id="line-488">      }</span>
-<span class="source-line-no">489</span><span id="line-489">      return retval;</span>
-<span class="source-line-no">490</span><span id="line-490">    }</span>
-<span class="source-line-no">491</span><span id="line-491"></span>
-<span class="source-line-no">492</span><span id="line-492">    /**</span>
-<span class="source-line-no">493</span><span id="line-493">     * Get the CLI syntax.</span>
-<span class="source-line-no">494</span><span id="line-494">     *</span>
-<span class="source-line-no">495</span><span id="line-495">     * @return the CLI syntax to display in help output</span>
-<span class="source-line-no">496</span><span id="line-496">     */</span>
-<span class="source-line-no">497</span><span id="line-497">    protected String buildHelpCliSyntax() {</span>
-<span class="source-line-no">498</span><span id="line-498"></span>
-<span class="source-line-no">499</span><span id="line-499">      StringBuilder builder = new StringBuilder(64);</span>
-<span class="source-line-no">500</span><span id="line-500">      builder.append(getExec());</span>
+<span class="source-line-no">416</span><span id="line-416">      ExitStatus retval = invokeCommand(cmdLine);</span>
+<span class="source-line-no">417</span><span id="line-417">      if (ExitCode.OK.equals(retval.getExitCode())) {</span>
+<span class="source-line-no">418</span><span id="line-418">        handleError(retval, cmdLine, false);</span>
+<span class="source-line-no">419</span><span id="line-419">      }</span>
+<span class="source-line-no">420</span><span id="line-420">      return retval;</span>
+<span class="source-line-no">421</span><span id="line-421">    }</span>
+<span class="source-line-no">422</span><span id="line-422"></span>
+<span class="source-line-no">423</span><span id="line-423">    @SuppressWarnings({</span>
+<span class="source-line-no">424</span><span id="line-424">        "PMD.OnlyOneReturn", // readability</span>
+<span class="source-line-no">425</span><span id="line-425">        "PMD.AvoidCatchingGenericException" // needed here</span>
+<span class="source-line-no">426</span><span id="line-426">    })</span>
+<span class="source-line-no">427</span><span id="line-427">    protected ExitStatus invokeCommand(@NonNull CommandLine cmdLine) {</span>
+<span class="source-line-no">428</span><span id="line-428">      ExitStatus retval;</span>
+<span class="source-line-no">429</span><span id="line-429">      try {</span>
+<span class="source-line-no">430</span><span id="line-430">        ICommand targetCommand = getTargetCommand();</span>
+<span class="source-line-no">431</span><span id="line-431">        if (targetCommand == null) {</span>
+<span class="source-line-no">432</span><span id="line-432">          retval = ExitCode.INVALID_COMMAND.exit();</span>
+<span class="source-line-no">433</span><span id="line-433">        } else {</span>
+<span class="source-line-no">434</span><span id="line-434">          ICommandExecutor executor = targetCommand.newExecutor(this, cmdLine);</span>
+<span class="source-line-no">435</span><span id="line-435">          try {</span>
+<span class="source-line-no">436</span><span id="line-436">            executor.execute();</span>
+<span class="source-line-no">437</span><span id="line-437">            retval = ExitCode.OK.exit();</span>
+<span class="source-line-no">438</span><span id="line-438">          } catch (CommandExecutionException ex) {</span>
+<span class="source-line-no">439</span><span id="line-439">            retval = ex.toExitStatus();</span>
+<span class="source-line-no">440</span><span id="line-440">          } catch (RuntimeException ex) {</span>
+<span class="source-line-no">441</span><span id="line-441">            retval = ExitCode.RUNTIME_ERROR</span>
+<span class="source-line-no">442</span><span id="line-442">                .exitMessage("Unexpected error occured: " + ex.getLocalizedMessage())</span>
+<span class="source-line-no">443</span><span id="line-443">                .withThrowable(ex);</span>
+<span class="source-line-no">444</span><span id="line-444">          }</span>
+<span class="source-line-no">445</span><span id="line-445">        }</span>
+<span class="source-line-no">446</span><span id="line-446"></span>
+<span class="source-line-no">447</span><span id="line-447">        if (ExitCode.INVALID_COMMAND.equals(retval.getExitCode())) {</span>
+<span class="source-line-no">448</span><span id="line-448">          showHelp();</span>
+<span class="source-line-no">449</span><span id="line-449">        }</span>
+<span class="source-line-no">450</span><span id="line-450">      } catch (RuntimeException ex) {</span>
+<span class="source-line-no">451</span><span id="line-451">        retval = ExitCode.RUNTIME_ERROR</span>
+<span class="source-line-no">452</span><span id="line-452">            .exitMessage(String.format("An uncaught runtime error occurred. %s", ex.getLocalizedMessage()))</span>
+<span class="source-line-no">453</span><span id="line-453">            .withThrowable(ex);</span>
+<span class="source-line-no">454</span><span id="line-454">      }</span>
+<span class="source-line-no">455</span><span id="line-455">      return retval;</span>
+<span class="source-line-no">456</span><span id="line-456">    }</span>
+<span class="source-line-no">457</span><span id="line-457"></span>
+<span class="source-line-no">458</span><span id="line-458">    @NonNull</span>
+<span class="source-line-no">459</span><span id="line-459">    public ExitStatus handleError(</span>
+<span class="source-line-no">460</span><span id="line-460">        @NonNull ExitStatus exitStatus,</span>
+<span class="source-line-no">461</span><span id="line-461">        @NonNull CommandLine cmdLine,</span>
+<span class="source-line-no">462</span><span id="line-462">        boolean showHelp) {</span>
+<span class="source-line-no">463</span><span id="line-463">      exitStatus.generateMessage(cmdLine.hasOption(SHOW_STACK_TRACE_OPTION));</span>
+<span class="source-line-no">464</span><span id="line-464">      if (showHelp) {</span>
+<span class="source-line-no">465</span><span id="line-465">        showHelp();</span>
+<span class="source-line-no">466</span><span id="line-466">      }</span>
+<span class="source-line-no">467</span><span id="line-467">      return exitStatus;</span>
+<span class="source-line-no">468</span><span id="line-468">    }</span>
+<span class="source-line-no">469</span><span id="line-469"></span>
+<span class="source-line-no">470</span><span id="line-470">    @NonNull</span>
+<span class="source-line-no">471</span><span id="line-471">    public ExitStatus handleInvalidCommand(</span>
+<span class="source-line-no">472</span><span id="line-472">        @NonNull String message) {</span>
+<span class="source-line-no">473</span><span id="line-473">      showHelp();</span>
+<span class="source-line-no">474</span><span id="line-474"></span>
+<span class="source-line-no">475</span><span id="line-475">      ExitStatus retval = ExitCode.INVALID_COMMAND.exitMessage(message);</span>
+<span class="source-line-no">476</span><span id="line-476">      retval.generateMessage(false);</span>
+<span class="source-line-no">477</span><span id="line-477">      return retval;</span>
+<span class="source-line-no">478</span><span id="line-478">    }</span>
+<span class="source-line-no">479</span><span id="line-479"></span>
+<span class="source-line-no">480</span><span id="line-480">    /**</span>
+<span class="source-line-no">481</span><span id="line-481">     * Callback for providing a help header.</span>
+<span class="source-line-no">482</span><span id="line-482">     *</span>
+<span class="source-line-no">483</span><span id="line-483">     * @return the header or {@code null}</span>
+<span class="source-line-no">484</span><span id="line-484">     */</span>
+<span class="source-line-no">485</span><span id="line-485">    @Nullable</span>
+<span class="source-line-no">486</span><span id="line-486">    protected String buildHelpHeader() {</span>
+<span class="source-line-no">487</span><span id="line-487">      // TODO: build a suitable header</span>
+<span class="source-line-no">488</span><span id="line-488">      return null;</span>
+<span class="source-line-no">489</span><span id="line-489">    }</span>
+<span class="source-line-no">490</span><span id="line-490"></span>
+<span class="source-line-no">491</span><span id="line-491">    /**</span>
+<span class="source-line-no">492</span><span id="line-492">     * Callback for providing a help footer.</span>
+<span class="source-line-no">493</span><span id="line-493">     *</span>
+<span class="source-line-no">494</span><span id="line-494">     * @param exec</span>
+<span class="source-line-no">495</span><span id="line-495">     *          the executable name</span>
+<span class="source-line-no">496</span><span id="line-496">     *</span>
+<span class="source-line-no">497</span><span id="line-497">     * @return the footer or {@code null}</span>
+<span class="source-line-no">498</span><span id="line-498">     */</span>
+<span class="source-line-no">499</span><span id="line-499">    @NonNull</span>
+<span class="source-line-no">500</span><span id="line-500">    private String buildHelpFooter() {</span>
 <span class="source-line-no">501</span><span id="line-501"></span>
-<span class="source-line-no">502</span><span id="line-502">      Deque&lt;ICommand&gt; calledCommands = getCalledCommands();</span>
-<span class="source-line-no">503</span><span id="line-503">      if (!calledCommands.isEmpty()) {</span>
-<span class="source-line-no">504</span><span id="line-504">        builder.append(calledCommands.stream()</span>
-<span class="source-line-no">505</span><span id="line-505">            .map(ICommand::getName)</span>
-<span class="source-line-no">506</span><span id="line-506">            .collect(Collectors.joining(" ", " ", "")));</span>
-<span class="source-line-no">507</span><span id="line-507">      }</span>
-<span class="source-line-no">508</span><span id="line-508"></span>
-<span class="source-line-no">509</span><span id="line-509">      // output calling commands</span>
-<span class="source-line-no">510</span><span id="line-510">      ICommand targetCommand = getTargetCommand();</span>
-<span class="source-line-no">511</span><span id="line-511">      if (targetCommand == null) {</span>
-<span class="source-line-no">512</span><span id="line-512">        builder.append(" &lt;command&gt;");</span>
+<span class="source-line-no">502</span><span id="line-502">      ICommand targetCommand = getTargetCommand();</span>
+<span class="source-line-no">503</span><span id="line-503">      Collection&lt;ICommand&gt; subCommands;</span>
+<span class="source-line-no">504</span><span id="line-504">      if (targetCommand == null) {</span>
+<span class="source-line-no">505</span><span id="line-505">        subCommands = getTopLevelCommands();</span>
+<span class="source-line-no">506</span><span id="line-506">      } else {</span>
+<span class="source-line-no">507</span><span id="line-507">        subCommands = targetCommand.getSubCommands();</span>
+<span class="source-line-no">508</span><span id="line-508">      }</span>
+<span class="source-line-no">509</span><span id="line-509"></span>
+<span class="source-line-no">510</span><span id="line-510">      String retval;</span>
+<span class="source-line-no">511</span><span id="line-511">      if (subCommands.isEmpty()) {</span>
+<span class="source-line-no">512</span><span id="line-512">        retval = "";</span>
 <span class="source-line-no">513</span><span id="line-513">      } else {</span>
-<span class="source-line-no">514</span><span id="line-514">        Collection&lt;ICommand&gt; subCommands = targetCommand.getSubCommands();</span>
-<span class="source-line-no">515</span><span id="line-515"></span>
-<span class="source-line-no">516</span><span id="line-516">        if (!subCommands.isEmpty()) {</span>
-<span class="source-line-no">517</span><span id="line-517">          builder.append(' ');</span>
-<span class="source-line-no">518</span><span id="line-518">          if (!targetCommand.isSubCommandRequired()) {</span>
-<span class="source-line-no">519</span><span id="line-519">            builder.append('[');</span>
-<span class="source-line-no">520</span><span id="line-520">          }</span>
-<span class="source-line-no">521</span><span id="line-521"></span>
-<span class="source-line-no">522</span><span id="line-522">          builder.append("&lt;command&gt;");</span>
+<span class="source-line-no">514</span><span id="line-514">        StringBuilder builder = new StringBuilder(128);</span>
+<span class="source-line-no">515</span><span id="line-515">        builder</span>
+<span class="source-line-no">516</span><span id="line-516">            .append(System.lineSeparator())</span>
+<span class="source-line-no">517</span><span id="line-517">            .append("The following are available commands:")</span>
+<span class="source-line-no">518</span><span id="line-518">            .append(System.lineSeparator());</span>
+<span class="source-line-no">519</span><span id="line-519"></span>
+<span class="source-line-no">520</span><span id="line-520">        int length = subCommands.stream()</span>
+<span class="source-line-no">521</span><span id="line-521">            .mapToInt(command -&gt; command.getName().length())</span>
+<span class="source-line-no">522</span><span id="line-522">            .max().orElse(0);</span>
 <span class="source-line-no">523</span><span id="line-523"></span>
-<span class="source-line-no">524</span><span id="line-524">          if (!targetCommand.isSubCommandRequired()) {</span>
-<span class="source-line-no">525</span><span id="line-525">            builder.append(']');</span>
-<span class="source-line-no">526</span><span id="line-526">          }</span>
-<span class="source-line-no">527</span><span id="line-527">        }</span>
-<span class="source-line-no">528</span><span id="line-528">      }</span>
-<span class="source-line-no">529</span><span id="line-529"></span>
-<span class="source-line-no">530</span><span id="line-530">      // output required options</span>
-<span class="source-line-no">531</span><span id="line-531">      getOptionsList().stream()</span>
-<span class="source-line-no">532</span><span id="line-532">          .filter(Option::isRequired)</span>
-<span class="source-line-no">533</span><span id="line-533">          .forEach(option -&gt; {</span>
-<span class="source-line-no">534</span><span id="line-534">            builder</span>
-<span class="source-line-no">535</span><span id="line-535">                .append(' ')</span>
-<span class="source-line-no">536</span><span id="line-536">                .append(OptionUtils.toArgument(ObjectUtils.notNull(option)));</span>
-<span class="source-line-no">537</span><span id="line-537">            if (option.hasArg()) {</span>
-<span class="source-line-no">538</span><span id="line-538">              builder</span>
-<span class="source-line-no">539</span><span id="line-539">                  .append('=')</span>
-<span class="source-line-no">540</span><span id="line-540">                  .append(option.getArgName());</span>
-<span class="source-line-no">541</span><span id="line-541">            }</span>
-<span class="source-line-no">542</span><span id="line-542">          });</span>
-<span class="source-line-no">543</span><span id="line-543"></span>
-<span class="source-line-no">544</span><span id="line-544">      // output non-required option placeholder</span>
-<span class="source-line-no">545</span><span id="line-545">      builder.append(" [&lt;options&gt;]");</span>
-<span class="source-line-no">546</span><span id="line-546"></span>
-<span class="source-line-no">547</span><span id="line-547">      // output extra arguments</span>
-<span class="source-line-no">548</span><span id="line-548">      if (targetCommand != null) {</span>
-<span class="source-line-no">549</span><span id="line-549">        // handle extra arguments</span>
-<span class="source-line-no">550</span><span id="line-550">        for (ExtraArgument argument : targetCommand.getExtraArguments()) {</span>
-<span class="source-line-no">551</span><span id="line-551">          builder.append(' ');</span>
-<span class="source-line-no">552</span><span id="line-552">          if (!argument.isRequired()) {</span>
-<span class="source-line-no">553</span><span id="line-553">            builder.append('[');</span>
-<span class="source-line-no">554</span><span id="line-554">          }</span>
-<span class="source-line-no">555</span><span id="line-555"></span>
-<span class="source-line-no">556</span><span id="line-556">          builder.append('&lt;');</span>
-<span class="source-line-no">557</span><span id="line-557">          builder.append(argument.getName());</span>
-<span class="source-line-no">558</span><span id="line-558">          builder.append('&gt;');</span>
+<span class="source-line-no">524</span><span id="line-524">        for (ICommand command : subCommands) {</span>
+<span class="source-line-no">525</span><span id="line-525">          builder.append(</span>
+<span class="source-line-no">526</span><span id="line-526">              ansi()</span>
+<span class="source-line-no">527</span><span id="line-527">                  .render(String.format("   @|bold %-" + length + "s|@ %s%n",</span>
+<span class="source-line-no">528</span><span id="line-528">                      command.getName(),</span>
+<span class="source-line-no">529</span><span id="line-529">                      command.getDescription())));</span>
+<span class="source-line-no">530</span><span id="line-530">        }</span>
+<span class="source-line-no">531</span><span id="line-531">        builder</span>
+<span class="source-line-no">532</span><span id="line-532">            .append(System.lineSeparator())</span>
+<span class="source-line-no">533</span><span id="line-533">            .append('\'')</span>
+<span class="source-line-no">534</span><span id="line-534">            .append(getExec())</span>
+<span class="source-line-no">535</span><span id="line-535">            .append(" &lt;command&gt; --help' will show help on that specific command.")</span>
+<span class="source-line-no">536</span><span id="line-536">            .append(System.lineSeparator());</span>
+<span class="source-line-no">537</span><span id="line-537">        retval = builder.toString();</span>
+<span class="source-line-no">538</span><span id="line-538">        assert retval != null;</span>
+<span class="source-line-no">539</span><span id="line-539">      }</span>
+<span class="source-line-no">540</span><span id="line-540">      return retval;</span>
+<span class="source-line-no">541</span><span id="line-541">    }</span>
+<span class="source-line-no">542</span><span id="line-542"></span>
+<span class="source-line-no">543</span><span id="line-543">    /**</span>
+<span class="source-line-no">544</span><span id="line-544">     * Get the CLI syntax.</span>
+<span class="source-line-no">545</span><span id="line-545">     *</span>
+<span class="source-line-no">546</span><span id="line-546">     * @return the CLI syntax to display in help output</span>
+<span class="source-line-no">547</span><span id="line-547">     */</span>
+<span class="source-line-no">548</span><span id="line-548">    protected String buildHelpCliSyntax() {</span>
+<span class="source-line-no">549</span><span id="line-549"></span>
+<span class="source-line-no">550</span><span id="line-550">      StringBuilder builder = new StringBuilder(64);</span>
+<span class="source-line-no">551</span><span id="line-551">      builder.append(getExec());</span>
+<span class="source-line-no">552</span><span id="line-552"></span>
+<span class="source-line-no">553</span><span id="line-553">      List&lt;ICommand&gt; calledCommands = getCalledCommands();</span>
+<span class="source-line-no">554</span><span id="line-554">      if (!calledCommands.isEmpty()) {</span>
+<span class="source-line-no">555</span><span id="line-555">        builder.append(calledCommands.stream()</span>
+<span class="source-line-no">556</span><span id="line-556">            .map(ICommand::getName)</span>
+<span class="source-line-no">557</span><span id="line-557">            .collect(Collectors.joining(" ", " ", "")));</span>
+<span class="source-line-no">558</span><span id="line-558">      }</span>
 <span class="source-line-no">559</span><span id="line-559"></span>
-<span class="source-line-no">560</span><span id="line-560">          if (argument.getNumber() &gt; 1) {</span>
-<span class="source-line-no">561</span><span id="line-561">            builder.append("...");</span>
-<span class="source-line-no">562</span><span id="line-562">          }</span>
-<span class="source-line-no">563</span><span id="line-563"></span>
-<span class="source-line-no">564</span><span id="line-564">          if (!argument.isRequired()) {</span>
-<span class="source-line-no">565</span><span id="line-565">            builder.append(']');</span>
-<span class="source-line-no">566</span><span id="line-566">          }</span>
-<span class="source-line-no">567</span><span id="line-567">        }</span>
-<span class="source-line-no">568</span><span id="line-568">      }</span>
-<span class="source-line-no">569</span><span id="line-569"></span>
-<span class="source-line-no">570</span><span id="line-570">      String retval = builder.toString();</span>
-<span class="source-line-no">571</span><span id="line-571">      assert retval != null;</span>
-<span class="source-line-no">572</span><span id="line-572">      return retval;</span>
-<span class="source-line-no">573</span><span id="line-573">    }</span>
+<span class="source-line-no">560</span><span id="line-560">      // output calling commands</span>
+<span class="source-line-no">561</span><span id="line-561">      ICommand targetCommand = getTargetCommand();</span>
+<span class="source-line-no">562</span><span id="line-562">      if (targetCommand == null) {</span>
+<span class="source-line-no">563</span><span id="line-563">        builder.append(" &lt;command&gt;");</span>
+<span class="source-line-no">564</span><span id="line-564">      } else {</span>
+<span class="source-line-no">565</span><span id="line-565">        Collection&lt;ICommand&gt; subCommands = targetCommand.getSubCommands();</span>
+<span class="source-line-no">566</span><span id="line-566"></span>
+<span class="source-line-no">567</span><span id="line-567">        if (!subCommands.isEmpty()) {</span>
+<span class="source-line-no">568</span><span id="line-568">          builder.append(' ');</span>
+<span class="source-line-no">569</span><span id="line-569">          if (!targetCommand.isSubCommandRequired()) {</span>
+<span class="source-line-no">570</span><span id="line-570">            builder.append('[');</span>
+<span class="source-line-no">571</span><span id="line-571">          }</span>
+<span class="source-line-no">572</span><span id="line-572"></span>
+<span class="source-line-no">573</span><span id="line-573">          builder.append("&lt;command&gt;");</span>
 <span class="source-line-no">574</span><span id="line-574"></span>
-<span class="source-line-no">575</span><span id="line-575">    public void showHelp() {</span>
-<span class="source-line-no">576</span><span id="line-576"></span>
-<span class="source-line-no">577</span><span id="line-577">      HelpFormatter formatter = new HelpFormatter();</span>
-<span class="source-line-no">578</span><span id="line-578">      formatter.setLongOptSeparator("=");</span>
-<span class="source-line-no">579</span><span id="line-579"></span>
-<span class="source-line-no">580</span><span id="line-580">      AnsiPrintStream out = AnsiConsole.out();</span>
-<span class="source-line-no">581</span><span id="line-581">      int terminalWidth = Math.max(out.getTerminalWidth(), 40);</span>
-<span class="source-line-no">582</span><span id="line-582"></span>
-<span class="source-line-no">583</span><span id="line-583">      @SuppressWarnings("resource") PrintWriter writer = new PrintWriter( // NOPMD not owned</span>
-<span class="source-line-no">584</span><span id="line-584">          out,</span>
-<span class="source-line-no">585</span><span id="line-585">          true,</span>
-<span class="source-line-no">586</span><span id="line-586">          StandardCharsets.UTF_8);</span>
-<span class="source-line-no">587</span><span id="line-587">      formatter.printHelp(</span>
-<span class="source-line-no">588</span><span id="line-588">          writer,</span>
-<span class="source-line-no">589</span><span id="line-589">          terminalWidth,</span>
-<span class="source-line-no">590</span><span id="line-590">          buildHelpCliSyntax(),</span>
-<span class="source-line-no">591</span><span id="line-591">          buildHelpHeader(),</span>
-<span class="source-line-no">592</span><span id="line-592">          toOptions(),</span>
-<span class="source-line-no">593</span><span id="line-593">          HelpFormatter.DEFAULT_LEFT_PAD,</span>
-<span class="source-line-no">594</span><span id="line-594">          HelpFormatter.DEFAULT_DESC_PAD,</span>
-<span class="source-line-no">595</span><span id="line-595">          buildHelpFooter(),</span>
-<span class="source-line-no">596</span><span id="line-596">          false);</span>
-<span class="source-line-no">597</span><span id="line-597">      writer.flush();</span>
-<span class="source-line-no">598</span><span id="line-598">    }</span>
-<span class="source-line-no">599</span><span id="line-599">  }</span>
-<span class="source-line-no">600</span><span id="line-600"></span>
-<span class="source-line-no">601</span><span id="line-601">}</span>
+<span class="source-line-no">575</span><span id="line-575">          if (!targetCommand.isSubCommandRequired()) {</span>
+<span class="source-line-no">576</span><span id="line-576">            builder.append(']');</span>
+<span class="source-line-no">577</span><span id="line-577">          }</span>
+<span class="source-line-no">578</span><span id="line-578">        }</span>
+<span class="source-line-no">579</span><span id="line-579">      }</span>
+<span class="source-line-no">580</span><span id="line-580"></span>
+<span class="source-line-no">581</span><span id="line-581">      // output required options</span>
+<span class="source-line-no">582</span><span id="line-582">      getOptionsList().stream()</span>
+<span class="source-line-no">583</span><span id="line-583">          .filter(Option::isRequired)</span>
+<span class="source-line-no">584</span><span id="line-584">          .forEach(option -&gt; {</span>
+<span class="source-line-no">585</span><span id="line-585">            builder</span>
+<span class="source-line-no">586</span><span id="line-586">                .append(' ')</span>
+<span class="source-line-no">587</span><span id="line-587">                .append(OptionUtils.toArgument(ObjectUtils.notNull(option)));</span>
+<span class="source-line-no">588</span><span id="line-588">            if (option.hasArg()) {</span>
+<span class="source-line-no">589</span><span id="line-589">              builder</span>
+<span class="source-line-no">590</span><span id="line-590">                  .append('=')</span>
+<span class="source-line-no">591</span><span id="line-591">                  .append(option.getArgName());</span>
+<span class="source-line-no">592</span><span id="line-592">            }</span>
+<span class="source-line-no">593</span><span id="line-593">          });</span>
+<span class="source-line-no">594</span><span id="line-594"></span>
+<span class="source-line-no">595</span><span id="line-595">      // output non-required option placeholder</span>
+<span class="source-line-no">596</span><span id="line-596">      builder.append(" [&lt;options&gt;]");</span>
+<span class="source-line-no">597</span><span id="line-597"></span>
+<span class="source-line-no">598</span><span id="line-598">      // output extra arguments</span>
+<span class="source-line-no">599</span><span id="line-599">      if (targetCommand != null) {</span>
+<span class="source-line-no">600</span><span id="line-600">        // handle extra arguments</span>
+<span class="source-line-no">601</span><span id="line-601">        for (ExtraArgument argument : targetCommand.getExtraArguments()) {</span>
+<span class="source-line-no">602</span><span id="line-602">          builder.append(' ');</span>
+<span class="source-line-no">603</span><span id="line-603">          if (!argument.isRequired()) {</span>
+<span class="source-line-no">604</span><span id="line-604">            builder.append('[');</span>
+<span class="source-line-no">605</span><span id="line-605">          }</span>
+<span class="source-line-no">606</span><span id="line-606"></span>
+<span class="source-line-no">607</span><span id="line-607">          builder.append('&lt;')</span>
+<span class="source-line-no">608</span><span id="line-608">              .append(argument.getName())</span>
+<span class="source-line-no">609</span><span id="line-609">              .append('&gt;');</span>
+<span class="source-line-no">610</span><span id="line-610"></span>
+<span class="source-line-no">611</span><span id="line-611">          if (argument.getNumber() &gt; 1) {</span>
+<span class="source-line-no">612</span><span id="line-612">            builder.append("...");</span>
+<span class="source-line-no">613</span><span id="line-613">          }</span>
+<span class="source-line-no">614</span><span id="line-614"></span>
+<span class="source-line-no">615</span><span id="line-615">          if (!argument.isRequired()) {</span>
+<span class="source-line-no">616</span><span id="line-616">            builder.append(']');</span>
+<span class="source-line-no">617</span><span id="line-617">          }</span>
+<span class="source-line-no">618</span><span id="line-618">        }</span>
+<span class="source-line-no">619</span><span id="line-619">      }</span>
+<span class="source-line-no">620</span><span id="line-620"></span>
+<span class="source-line-no">621</span><span id="line-621">      String retval = builder.toString();</span>
+<span class="source-line-no">622</span><span id="line-622">      assert retval != null;</span>
+<span class="source-line-no">623</span><span id="line-623">      return retval;</span>
+<span class="source-line-no">624</span><span id="line-624">    }</span>
+<span class="source-line-no">625</span><span id="line-625"></span>
+<span class="source-line-no">626</span><span id="line-626">    /**</span>
+<span class="source-line-no">627</span><span id="line-627">     * Output the help text to the console.</span>
+<span class="source-line-no">628</span><span id="line-628">     */</span>
+<span class="source-line-no">629</span><span id="line-629">    public void showHelp() {</span>
+<span class="source-line-no">630</span><span id="line-630"></span>
+<span class="source-line-no">631</span><span id="line-631">      HelpFormatter formatter = new HelpFormatter();</span>
+<span class="source-line-no">632</span><span id="line-632">      formatter.setLongOptSeparator("=");</span>
+<span class="source-line-no">633</span><span id="line-633"></span>
+<span class="source-line-no">634</span><span id="line-634">      @SuppressWarnings("resource") AnsiPrintStream out = AnsiConsole.out();</span>
+<span class="source-line-no">635</span><span id="line-635"></span>
+<span class="source-line-no">636</span><span id="line-636">      try (PrintWriter writer = new PrintWriter( // NOPMD not owned</span>
+<span class="source-line-no">637</span><span id="line-637">          AutoCloser.preventClose(out),</span>
+<span class="source-line-no">638</span><span id="line-638">          true,</span>
+<span class="source-line-no">639</span><span id="line-639">          StandardCharsets.UTF_8)) {</span>
+<span class="source-line-no">640</span><span id="line-640">        formatter.printHelp(</span>
+<span class="source-line-no">641</span><span id="line-641">            writer,</span>
+<span class="source-line-no">642</span><span id="line-642">            Math.max(out.getTerminalWidth(), 50),</span>
+<span class="source-line-no">643</span><span id="line-643">            buildHelpCliSyntax(),</span>
+<span class="source-line-no">644</span><span id="line-644">            buildHelpHeader(),</span>
+<span class="source-line-no">645</span><span id="line-645">            toOptions(),</span>
+<span class="source-line-no">646</span><span id="line-646">            HelpFormatter.DEFAULT_LEFT_PAD,</span>
+<span class="source-line-no">647</span><span id="line-647">            HelpFormatter.DEFAULT_DESC_PAD,</span>
+<span class="source-line-no">648</span><span id="line-648">            buildHelpFooter(),</span>
+<span class="source-line-no">649</span><span id="line-649">            false);</span>
+<span class="source-line-no">650</span><span id="line-650">        writer.flush();</span>
+<span class="source-line-no">651</span><span id="line-651">      }</span>
+<span class="source-line-no">652</span><span id="line-652">    }</span>
+<span class="source-line-no">653</span><span id="line-653">  }</span>
+<span class="source-line-no">654</span><span id="line-654">}</span>
 
 
 

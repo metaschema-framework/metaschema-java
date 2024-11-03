@@ -24,34 +24,39 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1
+ * &lt;a href= &quot;https://www.w3.org/TR/xpath-functions-31/#func-map-put&quot;&gt;map:put&lt;/a&gt;
+ * function.
+ */
 public final class MapPut {
   private static final String NAME = &quot;put&quot;;
   @NonNull
-<span class="fc" id="L30">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L31">      .name(NAME)</span>
-<span class="fc" id="L32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="fc" id="L33">      .deterministic()</span>
-<span class="fc" id="L34">      .contextIndependent()</span>
-<span class="fc" id="L35">      .focusIndependent()</span>
-<span class="fc" id="L36">      .argument(IArgument.builder()</span>
-<span class="fc" id="L37">          .name(&quot;map&quot;)</span>
-<span class="fc" id="L38">          .type(IMapItem.class)</span>
-<span class="fc" id="L39">          .one()</span>
-<span class="fc" id="L40">          .build())</span>
+<span class="fc" id="L35">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L36">      .name(NAME)</span>
+<span class="fc" id="L37">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="fc" id="L38">      .deterministic()</span>
+<span class="fc" id="L39">      .contextIndependent()</span>
+<span class="fc" id="L40">      .focusIndependent()</span>
 <span class="fc" id="L41">      .argument(IArgument.builder()</span>
-<span class="fc" id="L42">          .name(&quot;key&quot;)</span>
-<span class="fc" id="L43">          .type(IAnyAtomicItem.class)</span>
+<span class="fc" id="L42">          .name(&quot;map&quot;)</span>
+<span class="fc" id="L43">          .type(IMapItem.class)</span>
 <span class="fc" id="L44">          .one()</span>
 <span class="fc" id="L45">          .build())</span>
 <span class="fc" id="L46">      .argument(IArgument.builder()</span>
-<span class="fc" id="L47">          .name(&quot;value&quot;)</span>
-<span class="fc" id="L48">          .type(IItem.class)</span>
-<span class="fc" id="L49">          .zeroOrMore()</span>
+<span class="fc" id="L47">          .name(&quot;key&quot;)</span>
+<span class="fc" id="L48">          .type(IAnyAtomicItem.class)</span>
+<span class="fc" id="L49">          .one()</span>
 <span class="fc" id="L50">          .build())</span>
-<span class="fc" id="L51">      .returnType(IMapItem.class)</span>
-<span class="fc" id="L52">      .returnOne()</span>
-<span class="fc" id="L53">      .functionHandler(MapPut::execute)</span>
-<span class="fc" id="L54">      .build();</span>
+<span class="fc" id="L51">      .argument(IArgument.builder()</span>
+<span class="fc" id="L52">          .name(&quot;value&quot;)</span>
+<span class="fc" id="L53">          .type(IItem.class)</span>
+<span class="fc" id="L54">          .zeroOrMore()</span>
+<span class="fc" id="L55">          .build())</span>
+<span class="fc" id="L56">      .returnType(IMapItem.class)</span>
+<span class="fc" id="L57">      .returnOne()</span>
+<span class="fc" id="L58">      .functionHandler(MapPut::execute)</span>
+<span class="fc" id="L59">      .build();</span>
 
   private MapPut() {
     // disable construction
@@ -63,11 +68,11 @@ public final class MapPut {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L66">    IMapItem&lt;V&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L67">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L68">    @SuppressWarnings(&quot;unchecked&quot;) V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
+<span class="fc" id="L71">    IMapItem&lt;V&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L72">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="fc" id="L73">    @SuppressWarnings(&quot;unchecked&quot;) V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
 
-<span class="fc" id="L70">    return put(map, key, value).asSequence();</span>
+<span class="fc" id="L75">    return put(map, key, value).asSequence();</span>
   }
 
   /**
@@ -89,10 +94,10 @@ public final class MapPut {
       @NonNull IMapItem&lt;V&gt; map,
       @NonNull IAnyAtomicItem key,
       @NonNull V value) {
-<span class="fc" id="L92">    @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;IMapKey, V&gt; copy = new HashMap&lt;&gt;(map);</span>
-<span class="fc" id="L93">    copy.put(key.asMapKey(), value);</span>
+<span class="fc" id="L97">    @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;IMapKey, V&gt; copy = new HashMap&lt;&gt;(map);</span>
+<span class="fc" id="L98">    copy.put(key.asMapKey(), value);</span>
 
-<span class="fc" id="L95">    return IMapItem.ofCollection(copy);</span>
+<span class="fc" id="L100">    return IMapItem.ofCollection(copy);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

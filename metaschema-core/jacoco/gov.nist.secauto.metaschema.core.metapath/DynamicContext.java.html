@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
@@ -23,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
 
@@ -34,7 +37,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * The implementation of a Metapath
  * &lt;a href=&quot;https://www.w3.org/TR/xpath-31/#eval_context&quot;&gt;dynamic context&lt;/a&gt;.
  */
-<span class="fc" id="L37">public class DynamicContext { // NOPMD - intentional data class</span>
+<span class="fc" id="L40">public class DynamicContext { // NOPMD - intentional data class</span>
   @NonNull
   private final Map&lt;QName, ISequence&lt;?&gt;&gt; letVariableMap;
   @NonNull
@@ -44,8 +47,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    * Construct a new dynamic context with a default static context.
    */
   public DynamicContext() {
-<span class="fc" id="L47">    this(StaticContext.instance());</span>
-<span class="fc" id="L48">  }</span>
+<span class="fc" id="L50">    this(StaticContext.instance());</span>
+<span class="fc" id="L51">  }</span>
 
   /**
    * Construct a new Metapath dynamic context using the provided static context.
@@ -53,15 +56,15 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    * @param staticContext
    *          the Metapath static context
    */
-<span class="fc" id="L56">  public DynamicContext(@NonNull StaticContext staticContext) {</span>
-<span class="fc" id="L57">    this.letVariableMap = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L58">    this.sharedState = new SharedState(staticContext);</span>
-<span class="fc" id="L59">  }</span>
+<span class="fc" id="L59">  public DynamicContext(@NonNull StaticContext staticContext) {</span>
+<span class="fc" id="L60">    this.letVariableMap = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L61">    this.sharedState = new SharedState(staticContext);</span>
+<span class="fc" id="L62">  }</span>
 
-<span class="fc" id="L61">  private DynamicContext(@NonNull DynamicContext context) {</span>
-<span class="fc" id="L62">    this.letVariableMap = new ConcurrentHashMap&lt;&gt;(context.letVariableMap);</span>
-<span class="fc" id="L63">    this.sharedState = context.sharedState;</span>
-<span class="fc" id="L64">  }</span>
+<span class="fc" id="L64">  private DynamicContext(@NonNull DynamicContext context) {</span>
+<span class="fc" id="L65">    this.letVariableMap = new ConcurrentHashMap&lt;&gt;(context.letVariableMap);</span>
+<span class="fc" id="L66">    this.sharedState = context.sharedState;</span>
+<span class="fc" id="L67">  }</span>
 
   private static class SharedState {
     @NonNull
@@ -79,18 +82,21 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     @NonNull
     private final IMutableConfiguration&lt;MetapathEvaluationFeature&lt;?&gt;&gt; configuration;
 
-<span class="fc" id="L82">    public SharedState(@NonNull StaticContext staticContext) {</span>
-<span class="fc" id="L83">      this.staticContext = staticContext;</span>
+<span class="fc" id="L85">    public SharedState(@NonNull StaticContext staticContext) {</span>
+<span class="fc" id="L86">      this.staticContext = staticContext;</span>
 
-<span class="fc" id="L85">      Clock clock = Clock.systemDefaultZone();</span>
+<span class="fc" id="L88">      Clock clock = Clock.systemDefaultZone();</span>
 
-<span class="fc" id="L87">      this.implicitTimeZone = ObjectUtils.notNull(clock.getZone());</span>
-<span class="fc" id="L88">      this.currentDateTime = ObjectUtils.notNull(ZonedDateTime.now(clock));</span>
-<span class="fc" id="L89">      this.availableDocuments = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L90">      this.functionResultCache = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L91">      this.configuration = new DefaultConfiguration&lt;&gt;();</span>
-<span class="fc" id="L92">      this.configuration.enableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);</span>
-<span class="fc" id="L93">    }</span>
+<span class="fc" id="L90">      this.implicitTimeZone = ObjectUtils.notNull(clock.getZone());</span>
+<span class="fc" id="L91">      this.currentDateTime = ObjectUtils.notNull(ZonedDateTime.now(clock));</span>
+<span class="fc" id="L92">      this.availableDocuments = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L93">      this.functionResultCache = ObjectUtils.notNull(Caffeine.newBuilder()</span>
+<span class="fc" id="L94">          .maximumSize(5000)</span>
+<span class="fc" id="L95">          .expireAfterAccess(10, TimeUnit.MINUTES)</span>
+<span class="fc" id="L96">          .&lt;CallingContext, ISequence&lt;?&gt;&gt;build().asMap());</span>
+<span class="fc" id="L97">      this.configuration = new DefaultConfiguration&lt;&gt;();</span>
+<span class="fc" id="L98">      this.configuration.enableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);</span>
+<span class="fc" id="L99">    }</span>
   }
 
   /**
@@ -105,7 +111,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public DynamicContext subContext() {
-<span class="fc" id="L108">    return new DynamicContext(this);</span>
+<span class="fc" id="L114">    return new DynamicContext(this);</span>
   }
 
   /**
@@ -115,7 +121,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public StaticContext getStaticContext() {
-<span class="fc" id="L118">    return sharedState.staticContext;</span>
+<span class="fc" id="L124">    return sharedState.staticContext;</span>
   }
 
   /**
@@ -125,7 +131,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public ZoneId getImplicitTimeZone() {
-<span class="nc" id="L128">    return sharedState.implicitTimeZone;</span>
+<span class="nc" id="L134">    return sharedState.implicitTimeZone;</span>
   }
 
   /**
@@ -135,7 +141,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public ZonedDateTime getCurrentDateTime() {
-<span class="nc" id="L138">    return sharedState.currentDateTime;</span>
+<span class="nc" id="L144">    return sharedState.currentDateTime;</span>
   }
 
   /**
@@ -147,7 +153,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   public Map&lt;URI, IDocumentNodeItem&gt; getAvailableDocuments() {
-<span class="nc" id="L150">    return Collections.unmodifiableMap(sharedState.availableDocuments);</span>
+<span class="nc" id="L156">    return Collections.unmodifiableMap(sharedState.availableDocuments);</span>
   }
 
   /**
@@ -161,12 +167,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public IDocumentLoader getDocumentLoader() {
-<span class="nc" id="L164">    IDocumentLoader retval = sharedState.documentLoader;</span>
-<span class="nc bnc" id="L165" title="All 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L166">      throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT,</span>
+<span class="nc" id="L170">    IDocumentLoader retval = sharedState.documentLoader;</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L172">      throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT,</span>
           &quot;No document loader configured for the dynamic context.&quot;);
     }
-<span class="nc" id="L169">    return retval;</span>
+<span class="nc" id="L175">    return retval;</span>
   }
 
   /**
@@ -176,8 +182,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    *          the document loader to assign
    */
   public void setDocumentLoader(@NonNull IDocumentLoader documentLoader) {
-<span class="nc" id="L179">    this.sharedState.documentLoader = new CachingLoader(documentLoader);</span>
-<span class="nc" id="L180">  }</span>
+<span class="nc" id="L185">    this.sharedState.documentLoader = new CachingLoader(documentLoader);</span>
+<span class="nc" id="L186">  }</span>
 
   /**
    * Get the cached function call result for evaluating a function that has the
@@ -190,7 +196,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @Nullable
   public ISequence&lt;?&gt; getCachedResult(@NonNull CallingContext callingContext) {
-<span class="fc" id="L193">    return sharedState.functionResultCache.get(callingContext);</span>
+<span class="fc" id="L199">    return sharedState.functionResultCache.get(callingContext);</span>
   }
 
   /**
@@ -204,9 +210,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    *          the function call result
    */
   public void cacheResult(@NonNull CallingContext callingContext, @NonNull ISequence&lt;?&gt; result) {
-<span class="fc" id="L207">    ISequence&lt;?&gt; old = sharedState.functionResultCache.put(callingContext, result);</span>
-<span class="pc bpc" id="L208" title="1 of 2 branches missed.">    assert old == null;</span>
-<span class="fc" id="L209">  }</span>
+<span class="fc" id="L213">    ISequence&lt;?&gt; old = sharedState.functionResultCache.put(callingContext, result);</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">    assert old == null;</span>
+<span class="fc" id="L215">  }</span>
 
   /**
    * Used to disable the evaluation of predicate expressions during Metapath
@@ -220,8 +226,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public DynamicContext disablePredicateEvaluation() {
-<span class="fc" id="L223">    this.sharedState.configuration.disableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);</span>
-<span class="fc" id="L224">    return this;</span>
+<span class="fc" id="L229">    this.sharedState.configuration.disableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);</span>
+<span class="fc" id="L230">    return this;</span>
   }
 
   /**
@@ -234,8 +240,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public DynamicContext enablePredicateEvaluation() {
-<span class="nc" id="L237">    this.sharedState.configuration.enableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);</span>
-<span class="nc" id="L238">    return this;</span>
+<span class="nc" id="L243">    this.sharedState.configuration.enableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);</span>
+<span class="nc" id="L244">    return this;</span>
   }
 
   /**
@@ -245,7 +251,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public IConfiguration&lt;MetapathEvaluationFeature&lt;?&gt;&gt; getConfiguration() {
-<span class="fc" id="L248">    return sharedState.configuration;</span>
+<span class="fc" id="L254">    return sharedState.configuration;</span>
   }
 
   /**
@@ -261,14 +267,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public ISequence&lt;?&gt; getVariableValue(@NonNull QName name) {
-<span class="fc" id="L264">    ISequence&lt;?&gt; retval = letVariableMap.get(name);</span>
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">    if (retval == null) {</span>
-<span class="nc bnc" id="L266" title="All 2 branches missed.">      if (!letVariableMap.containsKey(name)) {</span>
-<span class="nc" id="L267">        throw new MetapathException(String.format(&quot;Variable '%s' not defined in context.&quot;, name));</span>
+<span class="fc" id="L270">    ISequence&lt;?&gt; retval = letVariableMap.get(name);</span>
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">    if (retval == null) {</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">      if (!letVariableMap.containsKey(name)) {</span>
+<span class="nc" id="L273">        throw new MetapathException(String.format(&quot;Variable '%s' not defined in context.&quot;, name));</span>
       }
-<span class="nc" id="L269">      throw new MetapathException(String.format(&quot;Variable '%s' has null contents.&quot;, name));</span>
+<span class="nc" id="L275">      throw new MetapathException(String.format(&quot;Variable '%s' has null contents.&quot;, name));</span>
     }
-<span class="fc" id="L271">    return retval;</span>
+<span class="fc" id="L277">    return retval;</span>
   }
 
   /**
@@ -282,45 +288,45 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   public DynamicContext bindVariableValue(@NonNull QName name, @NonNull ISequence&lt;?&gt; boundValue) {
-<span class="fc" id="L285">    letVariableMap.put(name, boundValue);</span>
-<span class="fc" id="L286">    return this;</span>
+<span class="fc" id="L291">    letVariableMap.put(name, boundValue);</span>
+<span class="fc" id="L292">    return this;</span>
   }
 
   private class CachingLoader implements IDocumentLoader {
     @NonNull
     private final IDocumentLoader proxy;
 
-<span class="nc" id="L293">    public CachingLoader(@NonNull IDocumentLoader proxy) {</span>
-<span class="nc" id="L294">      this.proxy = proxy;</span>
-<span class="nc" id="L295">    }</span>
+<span class="nc" id="L299">    public CachingLoader(@NonNull IDocumentLoader proxy) {</span>
+<span class="nc" id="L300">      this.proxy = proxy;</span>
+<span class="nc" id="L301">    }</span>
 
     @Override
     public IUriResolver getUriResolver() {
-<span class="nc" id="L299">      return new ContextUriResolver();</span>
+<span class="nc" id="L305">      return new ContextUriResolver();</span>
     }
 
     @Override
     public void setUriResolver(@NonNull IUriResolver resolver) {
       // we delegate to the document loader proxy, so the resolver should be set there
-<span class="nc" id="L305">      throw new UnsupportedOperationException(&quot;Set the resolver on the proxy&quot;);</span>
+<span class="nc" id="L311">      throw new UnsupportedOperationException(&quot;Set the resolver on the proxy&quot;);</span>
     }
 
     @NonNull
     protected IDocumentLoader getProxiedDocumentLoader() {
-<span class="nc" id="L310">      return proxy;</span>
+<span class="nc" id="L316">      return proxy;</span>
     }
 
     @Override
     public IDocumentNodeItem loadAsNodeItem(URI uri) throws IOException {
-<span class="nc" id="L315">      IDocumentNodeItem retval = sharedState.availableDocuments.get(uri);</span>
-<span class="nc bnc" id="L316" title="All 2 branches missed.">      if (retval == null) {</span>
-<span class="nc" id="L317">        retval = getProxiedDocumentLoader().loadAsNodeItem(uri);</span>
-<span class="nc" id="L318">        sharedState.availableDocuments.put(uri, retval);</span>
+<span class="nc" id="L321">      IDocumentNodeItem retval = sharedState.availableDocuments.get(uri);</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">      if (retval == null) {</span>
+<span class="nc" id="L323">        retval = getProxiedDocumentLoader().loadAsNodeItem(uri);</span>
+<span class="nc" id="L324">        sharedState.availableDocuments.put(uri, retval);</span>
       }
-<span class="nc" id="L320">      return retval;</span>
+<span class="nc" id="L326">      return retval;</span>
     }
 
-<span class="nc" id="L323">    public class ContextUriResolver implements IUriResolver {</span>
+<span class="nc" id="L329">    public class ContextUriResolver implements IUriResolver {</span>
 
       /**
        * {@inheritDoc}
@@ -330,17 +336,17 @@ import edu.umd.cs.findbugs.annotations.Nullable;
        */
       @Override
       public URI resolve(URI uri) {
-<span class="nc" id="L333">        URI baseUri = getStaticContext().getBaseUri();</span>
+<span class="nc" id="L339">        URI baseUri = getStaticContext().getBaseUri();</span>
 
         URI resolvedUri;
-<span class="nc bnc" id="L336" title="All 2 branches missed.">        if (baseUri == null) {</span>
-<span class="nc" id="L337">          resolvedUri = uri;</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">        if (baseUri == null) {</span>
+<span class="nc" id="L343">          resolvedUri = uri;</span>
         } else {
-<span class="nc" id="L339">          resolvedUri = ObjectUtils.notNull(baseUri.resolve(uri));</span>
+<span class="nc" id="L345">          resolvedUri = ObjectUtils.notNull(baseUri.resolve(uri));</span>
         }
 
-<span class="nc" id="L342">        IUriResolver resolver = getProxiedDocumentLoader().getUriResolver();</span>
-<span class="nc bnc" id="L343" title="All 2 branches missed.">        return resolver == null ? resolvedUri : resolver.resolve(resolvedUri);</span>
+<span class="nc" id="L348">        IUriResolver resolver = getProxiedDocumentLoader().getUriResolver();</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">        return resolver == null ? resolvedUri : resolver.resolve(resolvedUri);</span>
       }
     }
   }

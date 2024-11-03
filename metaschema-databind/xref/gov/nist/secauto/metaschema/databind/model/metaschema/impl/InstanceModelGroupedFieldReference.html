@@ -23,10 +23,10 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyModel;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>    }
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    @NonNull
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">protected</strong> AssemblyModel.ChoiceGroup.Field getBinding() {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">private</strong> AssemblyModel.ChoiceGroup.Field getBinding() {
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">return</strong> binding;
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    @Override
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">public</strong> IAssemblyNodeItem getSourceNodeItem() {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">return</strong> boundNodeItem.get();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(boundNodeItem.get());
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>    @Override

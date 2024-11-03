@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IGeneratedModuleClass.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Metaschema Java Data Binding and Code Generation</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.metaschema.databind.codegen</a> &gt; <span class="el_source">IGeneratedModuleClass.java</span></div><h1>IGeneratedModuleClass.java</h1><pre class="source lang-java linenums">/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.codegen;
+
+import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.model.IBoundModule;
+
+import java.util.Collection;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Provides information about a generated Java class that represents a Module
+ * module.
+ */
+public interface IGeneratedModuleClass extends IGeneratedClass {
+
+  /**
+   * Get the associated Module module data.
+   *
+   * @return the module data
+   */
+  @NonNull
+  IModule getModule();
+
+  /**
+   * Get the Java package name associated with the Module module.
+   *
+   * @return the package name
+   */
+  @NonNull
+  String getPackageName();
+
+  /**
+   * Get the collection of generated classes representing definitions associated
+   * with the Module module.
+   *
+   * @return the collection of definition classes
+   */
+  @NonNull
+  Collection&lt;IGeneratedDefinitionClass&gt; getGeneratedDefinitionClasses();
+
+  /**
+   * Dynamicly load this class.
+   *
+   * @param classLoader
+   *          the class loader to use to load this class
+   * @return the module class
+   * @throws ClassNotFoundException
+   *           if this classwas not found
+   * @since 2.0.0
+   */
+  @SuppressWarnings(&quot;unchecked&quot;)
+  @NonNull
+  default Class&lt;? extends IBoundModule&gt; load(@NonNull ClassLoader classLoader) throws ClassNotFoundException {
+<span class="fc" id="L60">    return ObjectUtils.notNull((Class&lt;? extends IBoundModule&gt;) classLoader.loadClass(getClassName().reflectionName()));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

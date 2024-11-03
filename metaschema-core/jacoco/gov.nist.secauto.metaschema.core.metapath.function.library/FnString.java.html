@@ -23,39 +23,40 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements &lt;a href=
- * &quot;https://www.w3.org/TR/xpath-functions-31/#func-string&quot;&gt;fn:string&lt;/a&gt;.
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-string&quot;&gt;fn:string&lt;/a&gt;
+ * function.
  */
 public final class FnString {
   private static final String NAME = &quot;string&quot;;
   @NonNull
-<span class="fc" id="L32">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
-<span class="fc" id="L33">      .name(NAME)</span>
-<span class="fc" id="L34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L35">      .deterministic()</span>
-<span class="fc" id="L36">      .contextDependent()</span>
-<span class="fc" id="L37">      .focusDependent()</span>
-<span class="fc" id="L38">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L39">      .returnOne()</span>
-<span class="fc" id="L40">      .functionHandler(FnString::executeNoArg)</span>
-<span class="fc" id="L41">      .build();</span>
+<span class="fc" id="L33">  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()</span>
+<span class="fc" id="L34">      .name(NAME)</span>
+<span class="fc" id="L35">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L36">      .deterministic()</span>
+<span class="fc" id="L37">      .contextDependent()</span>
+<span class="fc" id="L38">      .focusDependent()</span>
+<span class="fc" id="L39">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L40">      .returnOne()</span>
+<span class="fc" id="L41">      .functionHandler(FnString::executeNoArg)</span>
+<span class="fc" id="L42">      .build();</span>
 
   @NonNull
-<span class="fc" id="L44">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
-<span class="fc" id="L45">      .name(NAME)</span>
-<span class="fc" id="L46">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L47">      .deterministic()</span>
-<span class="fc" id="L48">      .contextIndependent()</span>
-<span class="fc" id="L49">      .focusIndependent()</span>
-<span class="fc" id="L50">      .argument(IArgument.builder()</span>
-<span class="fc" id="L51">          .name(&quot;arg1&quot;)</span>
-<span class="fc" id="L52">          .type(IItem.class)</span>
-<span class="fc" id="L53">          .zeroOrOne()</span>
-<span class="fc" id="L54">          .build())</span>
-<span class="fc" id="L55">      .returnType(IStringItem.class)</span>
-<span class="fc" id="L56">      .returnOne()</span>
-<span class="fc" id="L57">      .functionHandler(FnString::executeOneArg)</span>
-<span class="fc" id="L58">      .build();</span>
+<span class="fc" id="L45">  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()</span>
+<span class="fc" id="L46">      .name(NAME)</span>
+<span class="fc" id="L47">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L48">      .deterministic()</span>
+<span class="fc" id="L49">      .contextIndependent()</span>
+<span class="fc" id="L50">      .focusIndependent()</span>
+<span class="fc" id="L51">      .argument(IArgument.builder()</span>
+<span class="fc" id="L52">          .name(&quot;arg1&quot;)</span>
+<span class="fc" id="L53">          .type(IItem.class)</span>
+<span class="fc" id="L54">          .zeroOrOne()</span>
+<span class="fc" id="L55">          .build())</span>
+<span class="fc" id="L56">      .returnType(IStringItem.class)</span>
+<span class="fc" id="L57">      .returnOne()</span>
+<span class="fc" id="L58">      .functionHandler(FnString::executeOneArg)</span>
+<span class="fc" id="L59">      .build();</span>
 
   private FnString() {
     // disable construction
@@ -68,9 +69,9 @@ public final class FnString {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     // the Focus should always be non-null, since the function if focus-dependent
-<span class="nc bnc" id="L71" title="All 2 branches missed.">    assert focus != null;</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">    assert focus != null;</span>
 
-<span class="nc" id="L73">    return ISequence.of(fnStringItem(focus));</span>
+<span class="nc" id="L74">    return ISequence.of(fnStringItem(focus));</span>
   }
 
   @SuppressWarnings(&quot;unused&quot;)
@@ -81,11 +82,11 @@ public final class FnString {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-<span class="fc" id="L84">    ISequence&lt;?&gt; sequence = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L85">    ISequence&lt;?&gt; sequence = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
 
-<span class="fc" id="L86">    IItem first = sequence.getFirstItem(true);</span>
+<span class="fc" id="L87">    IItem first = sequence.getFirstItem(true);</span>
 
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">    return first == null ? ISequence.empty() : ISequence.of(fnStringItem(first));</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">    return first == null ? ISequence.empty() : ISequence.of(fnStringItem(first));</span>
   }
 
   /**
@@ -99,14 +100,14 @@ public final class FnString {
   @NonNull
   public static IStringItem fnStringItem(@NonNull IItem item) {
     IStringItem retval;
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">    if (item instanceof INodeItem) {</span>
-<span class="nc" id="L103">      retval = IStringItem.valueOf(((INodeItem) item).stringValue());</span>
-<span class="fc bfc" id="L104" title="All 2 branches covered.">    } else if (item instanceof IAnyAtomicItem) {</span>
-<span class="fc" id="L105">      retval = ((IAnyAtomicItem) item).asStringItem();</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">    if (item instanceof INodeItem) {</span>
+<span class="nc" id="L104">      retval = IStringItem.valueOf(((INodeItem) item).stringValue());</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">    } else if (item instanceof IAnyAtomicItem) {</span>
+<span class="fc" id="L106">      retval = ((IAnyAtomicItem) item).asStringItem();</span>
     } else {
-<span class="fc" id="L107">      throw new InvalidTypeFunctionException(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION, item);</span>
+<span class="fc" id="L108">      throw new InvalidTypeFunctionException(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION, item);</span>
     }
-<span class="fc" id="L109">    return retval;</span>
+<span class="fc" id="L110">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

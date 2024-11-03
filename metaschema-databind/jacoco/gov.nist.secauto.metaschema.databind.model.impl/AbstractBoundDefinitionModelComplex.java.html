@@ -31,7 +31,7 @@ public abstract class AbstractBoundDefinitionModelComplex&lt;A extends Annotatio
   @NonNull
   private final IBindingContext bindingContext;
   @NonNull
-  private final Lazy&lt;IBoundModule&gt; module;
+  private final IBoundModule module;
   @NonNull
   private final Lazy&lt;QName&gt; qname;
   @NonNull
@@ -44,12 +44,12 @@ public abstract class AbstractBoundDefinitionModelComplex&lt;A extends Annotatio
   protected AbstractBoundDefinitionModelComplex(
       @NonNull Class&lt;? extends IBoundObject&gt; clazz,
       @NonNull A annotation,
-      @NonNull Class&lt;? extends IBoundModule&gt; moduleClass,
+      @NonNull IBoundModule module,
 <span class="fc" id="L48">      @NonNull IBindingContext bindingContext) {</span>
 <span class="fc" id="L49">    this.clazz = clazz;</span>
 <span class="fc" id="L50">    this.annotation = annotation;</span>
 <span class="fc" id="L51">    this.bindingContext = bindingContext;</span>
-<span class="fc" id="L52">    this.module = ObjectUtils.notNull(Lazy.lazy(() -&gt; bindingContext.registerModule(moduleClass)));</span>
+<span class="fc" id="L52">    this.module = module;</span>
 <span class="fc" id="L53">    this.qname = ObjectUtils.notNull(Lazy.lazy(() -&gt; getContainingModule().toModelQName(getEffectiveName())));</span>
 <span class="fc" id="L54">    this.definitionQName = ObjectUtils.notNull(Lazy.lazy(() -&gt; getContainingModule().toModelQName(getName())));</span>
 <span class="fc" id="L55">    this.beforeDeserializeMethod = ClassIntrospector.getMatchingMethod(</span>
@@ -67,47 +67,43 @@ public abstract class AbstractBoundDefinitionModelComplex&lt;A extends Annotatio
 <span class="fc" id="L67">    return clazz;</span>
   }
 
+  @NonNull
   public A getAnnotation() {
-<span class="fc" id="L71">    return annotation;</span>
+<span class="fc" id="L72">    return annotation;</span>
   }
 
   @Override
   @NonNull
   public IBoundModule getContainingModule() {
-<span class="fc" id="L77">    return ObjectUtils.notNull(module.get());</span>
+<span class="fc" id="L78">    return module;</span>
   }
 
   @Override
   @NonNull
   public IBindingContext getBindingContext() {
-<span class="fc" id="L83">    return bindingContext;</span>
+<span class="fc" id="L84">    return bindingContext;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public final QName getXmlQName() {
-<span class="fc" id="L89">    return qname.get();</span>
+<span class="fc" id="L90">    return qname.get();</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public final QName getDefinitionQName() {
-<span class="fc" id="L95">    return definitionQName.get();</span>
-  }
-
-  @Override
-  public boolean isInline() {
-<span class="nc bnc" id="L100" title="All 2 branches missed.">    return getBoundClass().getEnclosingClass() != null;</span>
+<span class="fc" id="L96">    return definitionQName.get();</span>
   }
 
   @Override
   public Method getBeforeDeserializeMethod() {
-<span class="fc" id="L105">    return beforeDeserializeMethod;</span>
+<span class="fc" id="L101">    return beforeDeserializeMethod;</span>
   }
 
   @Override
   public Method getAfterDeserializeMethod() {
-<span class="fc" id="L110">    return afterDeserializeMethod;</span>
+<span class="fc" id="L106">    return afterDeserializeMethod;</span>
   }
 
   // @Override
@@ -118,22 +114,22 @@ public abstract class AbstractBoundDefinitionModelComplex&lt;A extends Annotatio
 
   @Override
   public IBoundObject deepCopyItem(IBoundObject item, IBoundObject parentInstance) throws BindingException {
-<span class="nc" id="L121">    IBoundObject instance = newInstance(item::getMetaschemaData);</span>
+<span class="nc" id="L117">    IBoundObject instance = newInstance(item::getMetaschemaData);</span>
 
-<span class="nc" id="L123">    callBeforeDeserialize(instance, parentInstance);</span>
+<span class="nc" id="L119">    callBeforeDeserialize(instance, parentInstance);</span>
 
-<span class="nc" id="L125">    deepCopyItemInternal(item, instance);</span>
+<span class="nc" id="L121">    deepCopyItemInternal(item, instance);</span>
 
-<span class="nc" id="L127">    callAfterDeserialize(instance, parentInstance);</span>
+<span class="nc" id="L123">    callAfterDeserialize(instance, parentInstance);</span>
 
-<span class="nc" id="L129">    return instance;</span>
+<span class="nc" id="L125">    return instance;</span>
   }
 
   protected void deepCopyItemInternal(@NonNull IBoundObject fromObject, @NonNull IBoundObject toObject)
       throws BindingException {
-<span class="nc bnc" id="L134" title="All 2 branches missed.">    for (IBoundInstanceFlag instance : getFlagInstances()) {</span>
-<span class="nc" id="L135">      instance.deepCopy(fromObject, toObject);</span>
-<span class="nc" id="L136">    }</span>
-<span class="nc" id="L137">  }</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">    for (IBoundInstanceFlag instance : getFlagInstances()) {</span>
+<span class="nc" id="L131">      instance.deepCopy(fromObject, toObject);</span>
+<span class="nc" id="L132">    }</span>
+<span class="nc" id="L133">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

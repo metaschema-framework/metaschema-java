@@ -20,10 +20,11 @@ import java.io.IOException;
 import java.io.Writer;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
-<span class="nc" id="L24">public class DefaultJsonSerializer&lt;CLASS extends IBoundObject&gt;</span>
+public class DefaultJsonSerializer&lt;CLASS extends IBoundObject&gt;
     extends AbstractSerializer&lt;CLASS&gt; {
-  private JsonFactory jsonFactory;
+  private Lazy&lt;JsonFactory&gt; factory;
 
   /**
    * Construct a new Module binding-based deserializer that reads JSON-based
@@ -34,8 +35,19 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *          deserializer parses data into
    */
   public DefaultJsonSerializer(@NonNull IBoundDefinitionModelAssembly definition) {
-<span class="nc" id="L37">    super(definition);</span>
-<span class="nc" id="L38">  }</span>
+<span class="nc" id="L38">    super(definition);</span>
+<span class="nc" id="L39">    resetFactory();</span>
+<span class="nc" id="L40">  }</span>
+
+  protected final void resetFactory() {
+<span class="nc" id="L43">    this.factory = Lazy.lazy(this::newFactoryInstance);</span>
+<span class="nc" id="L44">  }</span>
+
+  @Override
+  protected void configurationChanged(IMutableConfiguration&lt;SerializationFeature&lt;?&gt;&gt; config) {
+<span class="nc" id="L48">    super.configurationChanged(config);</span>
+<span class="nc" id="L49">    resetFactory();</span>
+<span class="nc" id="L50">  }</span>
 
   /**
    * Constructs a new JSON factory.
@@ -46,57 +58,43 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    * @return the factory
    */
   @NonNull
-  protected JsonFactory getJsonFactoryInstance() {
-<span class="nc" id="L50">    return JsonFactoryFactory.instance();</span>
+  protected JsonFactory newFactoryInstance() {
+<span class="nc" id="L62">    return JsonFactoryFactory.instance();</span>
   }
-
-  @SuppressWarnings(&quot;PMD.NullAssignment&quot;)
-  @Override
-  protected void configurationChanged(IMutableConfiguration&lt;SerializationFeature&lt;?&gt;&gt; config) {
-<span class="nc" id="L56">    synchronized (this) {</span>
-<span class="nc" id="L57">      jsonFactory = null;</span>
-<span class="nc" id="L58">    }</span>
-<span class="nc" id="L59">  }</span>
 
   @NonNull
   private JsonFactory getJsonFactory() {
-<span class="nc" id="L63">    synchronized (this) {</span>
-<span class="nc bnc" id="L64" title="All 2 branches missed.">      if (jsonFactory == null) {</span>
-<span class="nc" id="L65">        jsonFactory = getJsonFactoryInstance();</span>
-      }
-<span class="nc bnc" id="L67" title="All 2 branches missed.">      assert jsonFactory != null;</span>
-<span class="nc" id="L68">      return jsonFactory;</span>
-    }
+<span class="nc" id="L67">    return ObjectUtils.notNull(factory.get());</span>
   }
 
   @SuppressWarnings(&quot;resource&quot;)
   @NonNull
   private JsonGenerator newJsonGenerator(@NonNull Writer writer) throws IOException {
-<span class="nc" id="L75">    JsonFactory factory = getJsonFactory();</span>
-<span class="nc" id="L76">    return ObjectUtils.notNull(factory.createGenerator(writer)</span>
-<span class="nc" id="L77">        .setPrettyPrinter(new DefaultPrettyPrinter()));</span>
+<span class="nc" id="L73">    JsonFactory factory = getJsonFactory();</span>
+<span class="nc" id="L74">    return ObjectUtils.notNull(factory.createGenerator(writer)</span>
+<span class="nc" id="L75">        .setPrettyPrinter(new DefaultPrettyPrinter()));</span>
   }
 
   @Override
   public void serialize(IBoundObject data, Writer writer) throws IOException {
-<span class="nc" id="L82">    try (JsonGenerator generator = newJsonGenerator(writer)) {</span>
-<span class="nc" id="L83">      IBoundDefinitionModelAssembly definition = getDefinition();</span>
+<span class="nc" id="L80">    try (JsonGenerator generator = newJsonGenerator(writer)) {</span>
+<span class="nc" id="L81">      IBoundDefinitionModelAssembly definition = getDefinition();</span>
 
-<span class="nc" id="L85">      boolean serializeRoot = get(SerializationFeature.SERIALIZE_ROOT);</span>
-<span class="nc bnc" id="L86" title="All 2 branches missed.">      if (serializeRoot) {</span>
+<span class="nc" id="L83">      boolean serializeRoot = get(SerializationFeature.SERIALIZE_ROOT);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">      if (serializeRoot) {</span>
         // first write the initial START_OBJECT
-<span class="nc" id="L88">        generator.writeStartObject();</span>
+<span class="nc" id="L86">        generator.writeStartObject();</span>
 
-<span class="nc" id="L90">        generator.writeFieldName(definition.getRootJsonName());</span>
+<span class="nc" id="L88">        generator.writeFieldName(definition.getRootJsonName());</span>
       }
 
-<span class="nc" id="L93">      MetaschemaJsonWriter jsonWriter = new MetaschemaJsonWriter(generator);</span>
-<span class="nc" id="L94">      jsonWriter.write(definition, data);</span>
+<span class="nc" id="L91">      MetaschemaJsonWriter jsonWriter = new MetaschemaJsonWriter(generator);</span>
+<span class="nc" id="L92">      jsonWriter.write(definition, data);</span>
 
-<span class="nc bnc" id="L96" title="All 2 branches missed.">      if (serializeRoot) {</span>
-<span class="nc" id="L97">        generator.writeEndObject();</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">      if (serializeRoot) {</span>
+<span class="nc" id="L95">        generator.writeEndObject();</span>
       }
     }
-<span class="nc" id="L100">  }</span>
+<span class="nc" id="L98">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

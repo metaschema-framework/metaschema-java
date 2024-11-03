@@ -26,29 +26,34 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implements the XPath 3.1 &lt;a href=
+ * &quot;https://www.w3.org/TR/xpath-functions-31/#func-map-remove&quot;&gt;map:remove&lt;/a&gt;
+ * function.
+ */
 public final class MapRemove {
   private static final String NAME = &quot;remove&quot;;
   @NonNull
-<span class="fc" id="L32">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L33">      .name(NAME)</span>
-<span class="fc" id="L34">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
-<span class="fc" id="L35">      .deterministic()</span>
-<span class="fc" id="L36">      .contextIndependent()</span>
-<span class="fc" id="L37">      .focusIndependent()</span>
-<span class="fc" id="L38">      .argument(IArgument.builder()</span>
-<span class="fc" id="L39">          .name(&quot;map&quot;)</span>
-<span class="fc" id="L40">          .type(IMapItem.class)</span>
-<span class="fc" id="L41">          .one()</span>
-<span class="fc" id="L42">          .build())</span>
+<span class="fc" id="L37">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L38">      .name(NAME)</span>
+<span class="fc" id="L39">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS_MAP)</span>
+<span class="fc" id="L40">      .deterministic()</span>
+<span class="fc" id="L41">      .contextIndependent()</span>
+<span class="fc" id="L42">      .focusIndependent()</span>
 <span class="fc" id="L43">      .argument(IArgument.builder()</span>
-<span class="fc" id="L44">          .name(&quot;keys&quot;)</span>
-<span class="fc" id="L45">          .type(IAnyAtomicItem.class)</span>
-<span class="fc" id="L46">          .zeroOrMore()</span>
+<span class="fc" id="L44">          .name(&quot;map&quot;)</span>
+<span class="fc" id="L45">          .type(IMapItem.class)</span>
+<span class="fc" id="L46">          .one()</span>
 <span class="fc" id="L47">          .build())</span>
-<span class="fc" id="L48">      .returnType(IMapItem.class)</span>
-<span class="fc" id="L49">      .returnOne()</span>
-<span class="fc" id="L50">      .functionHandler(MapRemove::execute)</span>
-<span class="fc" id="L51">      .build();</span>
+<span class="fc" id="L48">      .argument(IArgument.builder()</span>
+<span class="fc" id="L49">          .name(&quot;keys&quot;)</span>
+<span class="fc" id="L50">          .type(IAnyAtomicItem.class)</span>
+<span class="fc" id="L51">          .zeroOrMore()</span>
+<span class="fc" id="L52">          .build())</span>
+<span class="fc" id="L53">      .returnType(IMapItem.class)</span>
+<span class="fc" id="L54">      .returnOne()</span>
+<span class="fc" id="L55">      .functionHandler(MapRemove::execute)</span>
+<span class="fc" id="L56">      .build();</span>
 
   private MapRemove() {
     // disable construction
@@ -60,10 +65,10 @@ public final class MapRemove {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L63">    IMapItem&lt;V&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L64">    ISequence&lt;? extends IAnyAtomicItem&gt; keys = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
+<span class="fc" id="L68">    IMapItem&lt;V&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
+<span class="fc" id="L69">    ISequence&lt;? extends IAnyAtomicItem&gt; keys = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));</span>
 
-<span class="fc" id="L66">    return ISequence.of(removeItems(map, keys));</span>
+<span class="fc" id="L71">    return ISequence.of(removeItems(map, keys));</span>
   }
 
   /**
@@ -82,15 +87,15 @@ public final class MapRemove {
   public static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; removeItems(
       @NonNull IMapItem&lt;V&gt; map,
       @NonNull Collection&lt;? extends IAnyAtomicItem&gt; keys) {
-<span class="fc" id="L85">    Set&lt;IMapKey&gt; keySet = keys.stream()</span>
-<span class="fc" id="L86">        .map(IAnyAtomicItem::asMapKey)</span>
-<span class="fc" id="L87">        .collect(Collectors.toSet());</span>
+<span class="fc" id="L90">    Set&lt;IMapKey&gt; keySet = keys.stream()</span>
+<span class="fc" id="L91">        .map(IAnyAtomicItem::asMapKey)</span>
+<span class="fc" id="L92">        .collect(Collectors.toSet());</span>
 
-<span class="fc" id="L89">    Map&lt;IMapKey, V&gt; remaining = ObjectUtils.notNull(map.entrySet().stream()</span>
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        .filter(entry -&gt; !keySet.contains(entry.getKey()))</span>
-<span class="fc" id="L91">        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));</span>
+<span class="fc" id="L94">    Map&lt;IMapKey, V&gt; remaining = ObjectUtils.notNull(map.entrySet().stream()</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        .filter(entry -&gt; !keySet.contains(entry.getKey()))</span>
+<span class="fc" id="L96">        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));</span>
 
-<span class="fc" id="L93">    return IMapItem.ofCollection(remaining);</span>
+<span class="fc" id="L98">    return IMapItem.ofCollection(remaining);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.function.library.FnConcat;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -26,36 +27,29 @@ public class StringConcat
    *          the expressions to evaluate
    */
   public StringConcat(@NonNull List&lt;IExpression&gt; expressions) {
-<span class="fc" id="L29">    super(expressions);</span>
-<span class="fc" id="L30">  }</span>
+<span class="fc" id="L30">    super(expressions);</span>
+<span class="fc" id="L31">  }</span>
 
   @Override
   public Class&lt;IStringItem&gt; getBaseResultType() {
-<span class="nc" id="L34">    return IStringItem.class;</span>
+<span class="nc" id="L35">    return IStringItem.class;</span>
   }
 
   @Override
   public Class&lt;IStringItem&gt; getStaticResultType() {
-<span class="nc" id="L39">    return getBaseResultType();</span>
+<span class="nc" id="L40">    return getBaseResultType();</span>
   }
 
   @Override
   public &lt;RESULT, CONTEXT&gt; RESULT accept(IExpressionVisitor&lt;RESULT, CONTEXT&gt; visitor, CONTEXT context) {
-<span class="nc" id="L44">    return visitor.visitStringConcat(this, context);</span>
+<span class="nc" id="L45">    return visitor.visitStringConcat(this, context);</span>
   }
 
   @Override
   public ISequence&lt;?&gt; accept(DynamicContext dynamicContext, ISequence&lt;?&gt; focus) {
-    // TODO: replace with concat function when implemented
-<span class="fc" id="L50">    StringBuilder builder = new StringBuilder();</span>
-<span class="fc bfc" id="L51" title="All 2 branches covered.">    for (IExpression child : getChildren()) {</span>
-<span class="fc" id="L52">      ISequence&lt;?&gt; result = child.accept(dynamicContext, focus);</span>
-<span class="fc" id="L53">      FnData.fnData(result).stream()</span>
-<span class="fc" id="L54">          .forEachOrdered(item -&gt; {</span>
-<span class="fc" id="L55">            builder.append(item.asString());</span>
-<span class="fc" id="L56">          });</span>
-<span class="fc" id="L57">    }</span>
-<span class="fc" id="L58">    return ISequence.of(IStringItem.valueOf(ObjectUtils.notNull(builder.toString())));</span>
+<span class="fc" id="L50">    return ISequence.of(FnConcat.concat(ObjectUtils.notNull(getChildren().stream()</span>
+<span class="fc" id="L51">        .map(child -&gt; child.accept(dynamicContext, focus))</span>
+<span class="fc" id="L52">        .flatMap(result -&gt; FnData.fnData(ObjectUtils.notNull(result)).stream()))));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

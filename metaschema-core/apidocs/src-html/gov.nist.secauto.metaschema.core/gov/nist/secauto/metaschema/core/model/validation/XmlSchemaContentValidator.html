@@ -22,185 +22,185 @@
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;</span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
 <span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import org.xml.sax.ErrorHandler;</span>
-<span class="source-line-no">013</span><span id="line-13">import org.xml.sax.SAXException;</span>
-<span class="source-line-no">014</span><span id="line-14">import org.xml.sax.SAXParseException;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import java.io.IOException;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.io.InputStream;</span>
-<span class="source-line-no">018</span><span id="line-18">import java.net.URI;</span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.Collections;</span>
-<span class="source-line-no">020</span><span id="line-20">import java.util.LinkedList;</span>
-<span class="source-line-no">021</span><span id="line-21">import java.util.List;</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">import javax.xml.XMLConstants;</span>
-<span class="source-line-no">024</span><span id="line-24">import javax.xml.transform.Source;</span>
-<span class="source-line-no">025</span><span id="line-25">import javax.xml.transform.stream.StreamSource;</span>
-<span class="source-line-no">026</span><span id="line-26">import javax.xml.validation.Schema;</span>
-<span class="source-line-no">027</span><span id="line-27">import javax.xml.validation.SchemaFactory;</span>
-<span class="source-line-no">028</span><span id="line-28">import javax.xml.validation.Validator;</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">031</span><span id="line-31"></span>
-<span class="source-line-no">032</span><span id="line-32">/**</span>
-<span class="source-line-no">033</span><span id="line-33"> * Supports validating an XML resource using an XML schema.</span>
-<span class="source-line-no">034</span><span id="line-34"> */</span>
-<span class="source-line-no">035</span><span id="line-35">public class XmlSchemaContentValidator</span>
-<span class="source-line-no">036</span><span id="line-36">    extends AbstractContentValidator {</span>
-<span class="source-line-no">037</span><span id="line-37">  private final Schema schema;</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  @SuppressWarnings("null")</span>
-<span class="source-line-no">040</span><span id="line-40">  @NonNull</span>
-<span class="source-line-no">041</span><span id="line-41">  private static Schema toSchema(@NonNull List&lt;? extends Source&gt; schemaSources) throws SAXException {</span>
-<span class="source-line-no">042</span><span id="line-42">    SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);</span>
-<span class="source-line-no">043</span><span id="line-43">    // schemafactory.setResourceResolver(new ClasspathResourceResolver());</span>
-<span class="source-line-no">044</span><span id="line-44">    Schema retval;</span>
-<span class="source-line-no">045</span><span id="line-45">    if (schemaSources.isEmpty()) {</span>
-<span class="source-line-no">046</span><span id="line-46">      retval = schemafactory.newSchema();</span>
-<span class="source-line-no">047</span><span id="line-47">    } else {</span>
-<span class="source-line-no">048</span><span id="line-48">      retval = schemafactory.newSchema(schemaSources.toArray(new Source[0]));</span>
-<span class="source-line-no">049</span><span id="line-49">    }</span>
-<span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">    // TODO verify source input streams are closed</span>
-<span class="source-line-no">052</span><span id="line-52">    return retval;</span>
-<span class="source-line-no">053</span><span id="line-53">  }</span>
-<span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">  /**</span>
-<span class="source-line-no">056</span><span id="line-56">   * Construct a new XML schema validator using the provided XML schema sources.</span>
-<span class="source-line-no">057</span><span id="line-57">   *</span>
-<span class="source-line-no">058</span><span id="line-58">   * @param schemaSources</span>
-<span class="source-line-no">059</span><span id="line-59">   *          the XML schemas to use for validation</span>
-<span class="source-line-no">060</span><span id="line-60">   * @throws SAXException</span>
-<span class="source-line-no">061</span><span id="line-61">   *           if an error occurred while parsing the provided XML schemas</span>
-<span class="source-line-no">062</span><span id="line-62">   */</span>
-<span class="source-line-no">063</span><span id="line-63">  public XmlSchemaContentValidator(@NonNull List&lt;? extends Source&gt; schemaSources) throws SAXException {</span>
-<span class="source-line-no">064</span><span id="line-64">    this(toSchema(ObjectUtils.requireNonNull(schemaSources, "schemaSources")));</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  /**</span>
-<span class="source-line-no">068</span><span id="line-68">   * Construct a new XML schema validator using the provided pre-parsed XML</span>
-<span class="source-line-no">069</span><span id="line-69">   * schema(s).</span>
-<span class="source-line-no">070</span><span id="line-70">   *</span>
-<span class="source-line-no">071</span><span id="line-71">   * @param schema</span>
-<span class="source-line-no">072</span><span id="line-72">   *          the pre-parsed XML schema(s) to use for validation</span>
-<span class="source-line-no">073</span><span id="line-73">   */</span>
-<span class="source-line-no">074</span><span id="line-74">  protected XmlSchemaContentValidator(@NonNull Schema schema) {</span>
-<span class="source-line-no">075</span><span id="line-75">    this.schema = ObjectUtils.requireNonNull(schema, "schema");</span>
-<span class="source-line-no">076</span><span id="line-76">  }</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">  private Schema getSchema() {</span>
-<span class="source-line-no">079</span><span id="line-79">    return schema;</span>
-<span class="source-line-no">080</span><span id="line-80">  }</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">  @Override</span>
-<span class="source-line-no">083</span><span id="line-83">  public IValidationResult validate(InputStream is, URI documentUri) throws IOException {</span>
-<span class="source-line-no">084</span><span id="line-84">    Source xmlSource = new StreamSource(is, documentUri.toASCIIString());</span>
-<span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">    Validator validator = getSchema().newValidator();</span>
-<span class="source-line-no">087</span><span id="line-87">    XmlValidationErrorHandler errorHandler = new XmlValidationErrorHandler(documentUri);</span>
-<span class="source-line-no">088</span><span id="line-88">    validator.setErrorHandler(errorHandler);</span>
-<span class="source-line-no">089</span><span id="line-89">    try {</span>
-<span class="source-line-no">090</span><span id="line-90">      validator.validate(xmlSource);</span>
-<span class="source-line-no">091</span><span id="line-91">    } catch (SAXParseException ex) {</span>
-<span class="source-line-no">092</span><span id="line-92">      String location = ex.getLineNumber() &gt; -1 &amp;&amp; ex.getColumnNumber() &gt; -1</span>
-<span class="source-line-no">093</span><span id="line-93">          ? String.format("at %d:%d", ex.getLineNumber(), ex.getColumnNumber())</span>
-<span class="source-line-no">094</span><span id="line-94">          : "";</span>
-<span class="source-line-no">095</span><span id="line-95">      throw new IOException(</span>
-<span class="source-line-no">096</span><span id="line-96">          String.format("Unexpected failure during validation of '%s'%s. %s",</span>
-<span class="source-line-no">097</span><span id="line-97">              documentUri,</span>
-<span class="source-line-no">098</span><span id="line-98">              location,</span>
-<span class="source-line-no">099</span><span id="line-99">              ex.getLocalizedMessage()),</span>
-<span class="source-line-no">100</span><span id="line-100">          ex);</span>
-<span class="source-line-no">101</span><span id="line-101">    } catch (SAXException ex) {</span>
-<span class="source-line-no">102</span><span id="line-102">      throw new IOException(</span>
-<span class="source-line-no">103</span><span id="line-103">          String.format("Unexpected failure during validation of '%s'. %s",</span>
-<span class="source-line-no">104</span><span id="line-104">              documentUri,</span>
-<span class="source-line-no">105</span><span id="line-105">              ex.getLocalizedMessage()),</span>
-<span class="source-line-no">106</span><span id="line-106">          ex);</span>
-<span class="source-line-no">107</span><span id="line-107">    }</span>
-<span class="source-line-no">108</span><span id="line-108">    return errorHandler;</span>
-<span class="source-line-no">109</span><span id="line-109">  }</span>
-<span class="source-line-no">110</span><span id="line-110"></span>
-<span class="source-line-no">111</span><span id="line-111">  /**</span>
-<span class="source-line-no">112</span><span id="line-112">   * Records an identified individual validation result found during XML schema</span>
-<span class="source-line-no">113</span><span id="line-113">   * validation.</span>
-<span class="source-line-no">114</span><span id="line-114">   */</span>
-<span class="source-line-no">115</span><span id="line-115">  public static class XmlValidationFinding implements IValidationFinding, IResourceLocation {</span>
-<span class="source-line-no">116</span><span id="line-116">    @NonNull</span>
-<span class="source-line-no">117</span><span id="line-117">    private final URI documentUri;</span>
-<span class="source-line-no">118</span><span id="line-118">    @NonNull</span>
-<span class="source-line-no">119</span><span id="line-119">    private final SAXParseException exception;</span>
-<span class="source-line-no">120</span><span id="line-120">    @NonNull</span>
-<span class="source-line-no">121</span><span id="line-121">    private final Level severity;</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">    /**</span>
-<span class="source-line-no">124</span><span id="line-124">     * Construct a new XML schema validation finding, which represents an issue</span>
-<span class="source-line-no">125</span><span id="line-125">     * identified during XML schema validation.</span>
-<span class="source-line-no">126</span><span id="line-126">     *</span>
-<span class="source-line-no">127</span><span id="line-127">     * @param severity</span>
-<span class="source-line-no">128</span><span id="line-128">     *          the finding significance</span>
-<span class="source-line-no">129</span><span id="line-129">     * @param exception</span>
-<span class="source-line-no">130</span><span id="line-130">     *          the XML schema validation exception generated during schema</span>
-<span class="source-line-no">131</span><span id="line-131">     *          validation representing the issue</span>
-<span class="source-line-no">132</span><span id="line-132">     * @param resourceUri</span>
-<span class="source-line-no">133</span><span id="line-133">     *          the resource the issue was found in</span>
-<span class="source-line-no">134</span><span id="line-134">     */</span>
-<span class="source-line-no">135</span><span id="line-135">    public XmlValidationFinding(</span>
-<span class="source-line-no">136</span><span id="line-136">        @NonNull Level severity,</span>
-<span class="source-line-no">137</span><span id="line-137">        @NonNull SAXParseException exception,</span>
-<span class="source-line-no">138</span><span id="line-138">        @NonNull URI resourceUri) {</span>
-<span class="source-line-no">139</span><span id="line-139">      this.severity = ObjectUtils.requireNonNull(severity, "severity");</span>
-<span class="source-line-no">140</span><span id="line-140">      this.exception = ObjectUtils.requireNonNull(exception, "exception");</span>
-<span class="source-line-no">141</span><span id="line-141">      this.documentUri = ObjectUtils.requireNonNull(resourceUri, "documentUri");</span>
-<span class="source-line-no">142</span><span id="line-142">    }</span>
-<span class="source-line-no">143</span><span id="line-143"></span>
-<span class="source-line-no">144</span><span id="line-144">    @Override</span>
-<span class="source-line-no">145</span><span id="line-145">    public String getIdentifier() {</span>
-<span class="source-line-no">146</span><span id="line-146">      // always null</span>
-<span class="source-line-no">147</span><span id="line-147">      return null;</span>
-<span class="source-line-no">148</span><span id="line-148">    }</span>
-<span class="source-line-no">149</span><span id="line-149"></span>
-<span class="source-line-no">150</span><span id="line-150">    @Override</span>
-<span class="source-line-no">151</span><span id="line-151">    public Kind getKind() {</span>
-<span class="source-line-no">152</span><span id="line-152">      return Level.WARNING.equals(getSeverity()) ? Kind.PASS : Kind.FAIL;</span>
-<span class="source-line-no">153</span><span id="line-153">    }</span>
-<span class="source-line-no">154</span><span id="line-154"></span>
-<span class="source-line-no">155</span><span id="line-155">    @Override</span>
-<span class="source-line-no">156</span><span id="line-156">    public Level getSeverity() {</span>
-<span class="source-line-no">157</span><span id="line-157">      return severity;</span>
-<span class="source-line-no">158</span><span id="line-158">    }</span>
-<span class="source-line-no">159</span><span id="line-159"></span>
-<span class="source-line-no">160</span><span id="line-160">    @Override</span>
-<span class="source-line-no">161</span><span id="line-161">    public URI getDocumentUri() {</span>
-<span class="source-line-no">162</span><span id="line-162">      String systemId = getCause().getSystemId();</span>
-<span class="source-line-no">163</span><span id="line-163">      return systemId == null ? documentUri : URI.create(systemId);</span>
-<span class="source-line-no">164</span><span id="line-164">    }</span>
-<span class="source-line-no">165</span><span id="line-165"></span>
-<span class="source-line-no">166</span><span id="line-166">    @Override</span>
-<span class="source-line-no">167</span><span id="line-167">    public int getLine() {</span>
-<span class="source-line-no">168</span><span id="line-168">      return getCause().getLineNumber();</span>
-<span class="source-line-no">169</span><span id="line-169">    }</span>
-<span class="source-line-no">170</span><span id="line-170"></span>
-<span class="source-line-no">171</span><span id="line-171">    @Override</span>
-<span class="source-line-no">172</span><span id="line-172">    public int getColumn() {</span>
-<span class="source-line-no">173</span><span id="line-173">      return getCause().getColumnNumber();</span>
-<span class="source-line-no">174</span><span id="line-174">    }</span>
-<span class="source-line-no">175</span><span id="line-175"></span>
-<span class="source-line-no">176</span><span id="line-176">    @Override</span>
-<span class="source-line-no">177</span><span id="line-177">    public long getCharOffset() {</span>
-<span class="source-line-no">178</span><span id="line-178">      // not known</span>
-<span class="source-line-no">179</span><span id="line-179">      return -1;</span>
-<span class="source-line-no">180</span><span id="line-180">    }</span>
-<span class="source-line-no">181</span><span id="line-181"></span>
-<span class="source-line-no">182</span><span id="line-182">    @Override</span>
-<span class="source-line-no">183</span><span id="line-183">    public long getByteOffset() {</span>
-<span class="source-line-no">184</span><span id="line-184">      // not known</span>
-<span class="source-line-no">185</span><span id="line-185">      return -1;</span>
-<span class="source-line-no">186</span><span id="line-186">    }</span>
-<span class="source-line-no">187</span><span id="line-187"></span>
-<span class="source-line-no">188</span><span id="line-188">    @Override</span>
-<span class="source-line-no">189</span><span id="line-189">    public IResourceLocation getLocation() {</span>
-<span class="source-line-no">190</span><span id="line-190">      // TODO Auto-generated method stub</span>
+<span class="source-line-no">012</span><span id="line-12">import org.eclipse.jdt.annotation.Owning;</span>
+<span class="source-line-no">013</span><span id="line-13">import org.xml.sax.ErrorHandler;</span>
+<span class="source-line-no">014</span><span id="line-14">import org.xml.sax.SAXException;</span>
+<span class="source-line-no">015</span><span id="line-15">import org.xml.sax.SAXParseException;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">import java.io.IOException;</span>
+<span class="source-line-no">018</span><span id="line-18">import java.io.InputStream;</span>
+<span class="source-line-no">019</span><span id="line-19">import java.net.URI;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.util.Collections;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.LinkedList;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.List;</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">import javax.xml.XMLConstants;</span>
+<span class="source-line-no">025</span><span id="line-25">import javax.xml.transform.Source;</span>
+<span class="source-line-no">026</span><span id="line-26">import javax.xml.transform.stream.StreamSource;</span>
+<span class="source-line-no">027</span><span id="line-27">import javax.xml.validation.Schema;</span>
+<span class="source-line-no">028</span><span id="line-28">import javax.xml.validation.SchemaFactory;</span>
+<span class="source-line-no">029</span><span id="line-29">import javax.xml.validation.Validator;</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">032</span><span id="line-32"></span>
+<span class="source-line-no">033</span><span id="line-33">/**</span>
+<span class="source-line-no">034</span><span id="line-34"> * Supports validating an XML resource using an XML schema.</span>
+<span class="source-line-no">035</span><span id="line-35"> */</span>
+<span class="source-line-no">036</span><span id="line-36">public class XmlSchemaContentValidator</span>
+<span class="source-line-no">037</span><span id="line-37">    extends AbstractContentValidator {</span>
+<span class="source-line-no">038</span><span id="line-38">  private final Schema schema;</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  @SuppressWarnings("null")</span>
+<span class="source-line-no">041</span><span id="line-41">  @NonNull</span>
+<span class="source-line-no">042</span><span id="line-42">  private static Schema toSchema(@NonNull List&lt;? extends Source&gt; schemaSources) throws SAXException {</span>
+<span class="source-line-no">043</span><span id="line-43">    SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);</span>
+<span class="source-line-no">044</span><span id="line-44">    // schemafactory.setResourceResolver(new ClasspathResourceResolver());</span>
+<span class="source-line-no">045</span><span id="line-45">    Schema retval;</span>
+<span class="source-line-no">046</span><span id="line-46">    if (schemaSources.isEmpty()) {</span>
+<span class="source-line-no">047</span><span id="line-47">      retval = schemafactory.newSchema();</span>
+<span class="source-line-no">048</span><span id="line-48">    } else {</span>
+<span class="source-line-no">049</span><span id="line-49">      retval = schemafactory.newSchema(schemaSources.toArray(new Source[0]));</span>
+<span class="source-line-no">050</span><span id="line-50">    }</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">    // TODO verify source input streams are closed</span>
+<span class="source-line-no">053</span><span id="line-53">    return retval;</span>
+<span class="source-line-no">054</span><span id="line-54">  }</span>
+<span class="source-line-no">055</span><span id="line-55"></span>
+<span class="source-line-no">056</span><span id="line-56">  /**</span>
+<span class="source-line-no">057</span><span id="line-57">   * Construct a new XML schema validator using the provided XML schema sources.</span>
+<span class="source-line-no">058</span><span id="line-58">   *</span>
+<span class="source-line-no">059</span><span id="line-59">   * @param schemaSources</span>
+<span class="source-line-no">060</span><span id="line-60">   *          the XML schemas to use for validation</span>
+<span class="source-line-no">061</span><span id="line-61">   * @throws SAXException</span>
+<span class="source-line-no">062</span><span id="line-62">   *           if an error occurred while parsing the provided XML schemas</span>
+<span class="source-line-no">063</span><span id="line-63">   */</span>
+<span class="source-line-no">064</span><span id="line-64">  public XmlSchemaContentValidator(@Owning @NonNull List&lt;? extends Source&gt; schemaSources) throws SAXException {</span>
+<span class="source-line-no">065</span><span id="line-65">    this(toSchema(ObjectUtils.requireNonNull(schemaSources, "schemaSources")));</span>
+<span class="source-line-no">066</span><span id="line-66">  }</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  /**</span>
+<span class="source-line-no">069</span><span id="line-69">   * Construct a new XML schema validator using the provided pre-parsed XML</span>
+<span class="source-line-no">070</span><span id="line-70">   * schema(s).</span>
+<span class="source-line-no">071</span><span id="line-71">   *</span>
+<span class="source-line-no">072</span><span id="line-72">   * @param schema</span>
+<span class="source-line-no">073</span><span id="line-73">   *          the pre-parsed XML schema(s) to use for validation</span>
+<span class="source-line-no">074</span><span id="line-74">   */</span>
+<span class="source-line-no">075</span><span id="line-75">  protected XmlSchemaContentValidator(@NonNull Schema schema) {</span>
+<span class="source-line-no">076</span><span id="line-76">    this.schema = ObjectUtils.requireNonNull(schema, "schema");</span>
+<span class="source-line-no">077</span><span id="line-77">  }</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">  private Schema getSchema() {</span>
+<span class="source-line-no">080</span><span id="line-80">    return schema;</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">  @Override</span>
+<span class="source-line-no">084</span><span id="line-84">  public IValidationResult validate(InputStream is, URI documentUri) throws IOException {</span>
+<span class="source-line-no">085</span><span id="line-85">    Source xmlSource = new StreamSource(is, documentUri.toASCIIString());</span>
+<span class="source-line-no">086</span><span id="line-86"></span>
+<span class="source-line-no">087</span><span id="line-87">    Validator validator = getSchema().newValidator();</span>
+<span class="source-line-no">088</span><span id="line-88">    XmlValidationErrorHandler errorHandler = new XmlValidationErrorHandler(documentUri);</span>
+<span class="source-line-no">089</span><span id="line-89">    validator.setErrorHandler(errorHandler);</span>
+<span class="source-line-no">090</span><span id="line-90">    try {</span>
+<span class="source-line-no">091</span><span id="line-91">      validator.validate(xmlSource);</span>
+<span class="source-line-no">092</span><span id="line-92">    } catch (SAXParseException ex) {</span>
+<span class="source-line-no">093</span><span id="line-93">      String location = ex.getLineNumber() &gt; -1 &amp;&amp; ex.getColumnNumber() &gt; -1</span>
+<span class="source-line-no">094</span><span id="line-94">          ? String.format("at %d:%d", ex.getLineNumber(), ex.getColumnNumber())</span>
+<span class="source-line-no">095</span><span id="line-95">          : "";</span>
+<span class="source-line-no">096</span><span id="line-96">      throw new IOException(</span>
+<span class="source-line-no">097</span><span id="line-97">          String.format("Unexpected failure during validation of '%s'%s. %s",</span>
+<span class="source-line-no">098</span><span id="line-98">              documentUri,</span>
+<span class="source-line-no">099</span><span id="line-99">              location,</span>
+<span class="source-line-no">100</span><span id="line-100">              ex.getLocalizedMessage()),</span>
+<span class="source-line-no">101</span><span id="line-101">          ex);</span>
+<span class="source-line-no">102</span><span id="line-102">    } catch (SAXException ex) {</span>
+<span class="source-line-no">103</span><span id="line-103">      throw new IOException(</span>
+<span class="source-line-no">104</span><span id="line-104">          String.format("Unexpected failure during validation of '%s'. %s",</span>
+<span class="source-line-no">105</span><span id="line-105">              documentUri,</span>
+<span class="source-line-no">106</span><span id="line-106">              ex.getLocalizedMessage()),</span>
+<span class="source-line-no">107</span><span id="line-107">          ex);</span>
+<span class="source-line-no">108</span><span id="line-108">    }</span>
+<span class="source-line-no">109</span><span id="line-109">    return errorHandler;</span>
+<span class="source-line-no">110</span><span id="line-110">  }</span>
+<span class="source-line-no">111</span><span id="line-111"></span>
+<span class="source-line-no">112</span><span id="line-112">  /**</span>
+<span class="source-line-no">113</span><span id="line-113">   * Records an identified individual validation result found during XML schema</span>
+<span class="source-line-no">114</span><span id="line-114">   * validation.</span>
+<span class="source-line-no">115</span><span id="line-115">   */</span>
+<span class="source-line-no">116</span><span id="line-116">  public static class XmlValidationFinding implements IValidationFinding, IResourceLocation {</span>
+<span class="source-line-no">117</span><span id="line-117">    @NonNull</span>
+<span class="source-line-no">118</span><span id="line-118">    private final URI documentUri;</span>
+<span class="source-line-no">119</span><span id="line-119">    @NonNull</span>
+<span class="source-line-no">120</span><span id="line-120">    private final SAXParseException exception;</span>
+<span class="source-line-no">121</span><span id="line-121">    @NonNull</span>
+<span class="source-line-no">122</span><span id="line-122">    private final Level severity;</span>
+<span class="source-line-no">123</span><span id="line-123"></span>
+<span class="source-line-no">124</span><span id="line-124">    /**</span>
+<span class="source-line-no">125</span><span id="line-125">     * Construct a new XML schema validation finding, which represents an issue</span>
+<span class="source-line-no">126</span><span id="line-126">     * identified during XML schema validation.</span>
+<span class="source-line-no">127</span><span id="line-127">     *</span>
+<span class="source-line-no">128</span><span id="line-128">     * @param severity</span>
+<span class="source-line-no">129</span><span id="line-129">     *          the finding significance</span>
+<span class="source-line-no">130</span><span id="line-130">     * @param exception</span>
+<span class="source-line-no">131</span><span id="line-131">     *          the XML schema validation exception generated during schema</span>
+<span class="source-line-no">132</span><span id="line-132">     *          validation representing the issue</span>
+<span class="source-line-no">133</span><span id="line-133">     * @param resourceUri</span>
+<span class="source-line-no">134</span><span id="line-134">     *          the resource the issue was found in</span>
+<span class="source-line-no">135</span><span id="line-135">     */</span>
+<span class="source-line-no">136</span><span id="line-136">    public XmlValidationFinding(</span>
+<span class="source-line-no">137</span><span id="line-137">        @NonNull Level severity,</span>
+<span class="source-line-no">138</span><span id="line-138">        @NonNull SAXParseException exception,</span>
+<span class="source-line-no">139</span><span id="line-139">        @NonNull URI resourceUri) {</span>
+<span class="source-line-no">140</span><span id="line-140">      this.severity = ObjectUtils.requireNonNull(severity, "severity");</span>
+<span class="source-line-no">141</span><span id="line-141">      this.exception = ObjectUtils.requireNonNull(exception, "exception");</span>
+<span class="source-line-no">142</span><span id="line-142">      this.documentUri = ObjectUtils.requireNonNull(resourceUri, "documentUri");</span>
+<span class="source-line-no">143</span><span id="line-143">    }</span>
+<span class="source-line-no">144</span><span id="line-144"></span>
+<span class="source-line-no">145</span><span id="line-145">    @Override</span>
+<span class="source-line-no">146</span><span id="line-146">    public String getIdentifier() {</span>
+<span class="source-line-no">147</span><span id="line-147">      // always null</span>
+<span class="source-line-no">148</span><span id="line-148">      return null;</span>
+<span class="source-line-no">149</span><span id="line-149">    }</span>
+<span class="source-line-no">150</span><span id="line-150"></span>
+<span class="source-line-no">151</span><span id="line-151">    @Override</span>
+<span class="source-line-no">152</span><span id="line-152">    public Kind getKind() {</span>
+<span class="source-line-no">153</span><span id="line-153">      return Level.WARNING.equals(getSeverity()) ? Kind.PASS : Kind.FAIL;</span>
+<span class="source-line-no">154</span><span id="line-154">    }</span>
+<span class="source-line-no">155</span><span id="line-155"></span>
+<span class="source-line-no">156</span><span id="line-156">    @Override</span>
+<span class="source-line-no">157</span><span id="line-157">    public Level getSeverity() {</span>
+<span class="source-line-no">158</span><span id="line-158">      return severity;</span>
+<span class="source-line-no">159</span><span id="line-159">    }</span>
+<span class="source-line-no">160</span><span id="line-160"></span>
+<span class="source-line-no">161</span><span id="line-161">    @Override</span>
+<span class="source-line-no">162</span><span id="line-162">    public URI getDocumentUri() {</span>
+<span class="source-line-no">163</span><span id="line-163">      String systemId = getCause().getSystemId();</span>
+<span class="source-line-no">164</span><span id="line-164">      return systemId == null ? documentUri : URI.create(systemId);</span>
+<span class="source-line-no">165</span><span id="line-165">    }</span>
+<span class="source-line-no">166</span><span id="line-166"></span>
+<span class="source-line-no">167</span><span id="line-167">    @Override</span>
+<span class="source-line-no">168</span><span id="line-168">    public int getLine() {</span>
+<span class="source-line-no">169</span><span id="line-169">      return getCause().getLineNumber();</span>
+<span class="source-line-no">170</span><span id="line-170">    }</span>
+<span class="source-line-no">171</span><span id="line-171"></span>
+<span class="source-line-no">172</span><span id="line-172">    @Override</span>
+<span class="source-line-no">173</span><span id="line-173">    public int getColumn() {</span>
+<span class="source-line-no">174</span><span id="line-174">      return getCause().getColumnNumber();</span>
+<span class="source-line-no">175</span><span id="line-175">    }</span>
+<span class="source-line-no">176</span><span id="line-176"></span>
+<span class="source-line-no">177</span><span id="line-177">    @Override</span>
+<span class="source-line-no">178</span><span id="line-178">    public long getCharOffset() {</span>
+<span class="source-line-no">179</span><span id="line-179">      // not known</span>
+<span class="source-line-no">180</span><span id="line-180">      return -1;</span>
+<span class="source-line-no">181</span><span id="line-181">    }</span>
+<span class="source-line-no">182</span><span id="line-182"></span>
+<span class="source-line-no">183</span><span id="line-183">    @Override</span>
+<span class="source-line-no">184</span><span id="line-184">    public long getByteOffset() {</span>
+<span class="source-line-no">185</span><span id="line-185">      // not known</span>
+<span class="source-line-no">186</span><span id="line-186">      return -1;</span>
+<span class="source-line-no">187</span><span id="line-187">    }</span>
+<span class="source-line-no">188</span><span id="line-188"></span>
+<span class="source-line-no">189</span><span id="line-189">    @Override</span>
+<span class="source-line-no">190</span><span id="line-190">    public IResourceLocation getLocation() {</span>
 <span class="source-line-no">191</span><span id="line-191">      return this;</span>
 <span class="source-line-no">192</span><span id="line-192">    }</span>
 <span class="source-line-no">193</span><span id="line-193"></span>

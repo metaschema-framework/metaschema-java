@@ -55,7 +55,7 @@
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>    @MethodSource(<span class="jxr_string">"provideValues"</span>)
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> testExpression(@NonNull IItem expected, @NonNull String metapath) {
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      IItem result = MetapathExpression.compile(metapath)
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.NODE, newDynamicContext());
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.ITEM, newDynamicContext());
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      assertEquals(expected, result);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    }
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  }

@@ -165,17 +165,18 @@
 <span class="source-line-no">152</span><span id="line-152">   *</span>
 <span class="source-line-no">153</span><span id="line-153">   * @param handler</span>
 <span class="source-line-no">154</span><span id="line-154">   *          the item parsing handler</span>
-<span class="source-line-no">155</span><span id="line-155">   * @return the item collection object</span>
-<span class="source-line-no">156</span><span id="line-156">   * @throws IOException</span>
-<span class="source-line-no">157</span><span id="line-157">   *           if there was an error when reading the data</span>
-<span class="source-line-no">158</span><span id="line-158">   */</span>
-<span class="source-line-no">159</span><span id="line-159">  @NonNull</span>
-<span class="source-line-no">160</span><span id="line-160">  Object readItems(@NonNull IModelInstanceReadHandler&lt;ITEM&gt; handler) throws IOException;</span>
-<span class="source-line-no">161</span><span id="line-161"></span>
-<span class="source-line-no">162</span><span id="line-162">  void writeItems(</span>
-<span class="source-line-no">163</span><span id="line-163">      @NonNull IModelInstanceWriteHandler&lt;ITEM&gt; handler,</span>
-<span class="source-line-no">164</span><span id="line-164">      @NonNull Object value) throws IOException;</span>
-<span class="source-line-no">165</span><span id="line-165">}</span>
+<span class="source-line-no">155</span><span id="line-155">   * @return the item collection object or {@code null} if the instance is not</span>
+<span class="source-line-no">156</span><span id="line-156">   *         defined</span>
+<span class="source-line-no">157</span><span id="line-157">   * @throws IOException</span>
+<span class="source-line-no">158</span><span id="line-158">   *           if there was an error when reading the data</span>
+<span class="source-line-no">159</span><span id="line-159">   */</span>
+<span class="source-line-no">160</span><span id="line-160">  @Nullable</span>
+<span class="source-line-no">161</span><span id="line-161">  Object readItems(@NonNull IModelInstanceReadHandler&lt;ITEM&gt; handler) throws IOException;</span>
+<span class="source-line-no">162</span><span id="line-162"></span>
+<span class="source-line-no">163</span><span id="line-163">  void writeItems(</span>
+<span class="source-line-no">164</span><span id="line-164">      @NonNull IModelInstanceWriteHandler&lt;ITEM&gt; handler,</span>
+<span class="source-line-no">165</span><span id="line-165">      @NonNull Object value) throws IOException;</span>
+<span class="source-line-no">166</span><span id="line-166">}</span>
 
 
 

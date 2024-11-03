@@ -21,122 +21,140 @@
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.configuration.IConfiguration;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;</span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.AbstractModuleLoader;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.model.IModuleLoader;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.model.MetaschemaException;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.databind.io.IBoundLoader;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.databind.model.binding.metaschema.METASCHEMA.Import;</span>
-<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.databind.model.metaschema.impl.BindingModule;</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">import java.io.IOException;</span>
-<span class="source-line-no">024</span><span id="line-24">import java.net.URI;</span>
-<span class="source-line-no">025</span><span id="line-25">import java.util.List;</span>
-<span class="source-line-no">026</span><span id="line-26">import java.util.Map;</span>
-<span class="source-line-no">027</span><span id="line-27">import java.util.stream.Collectors;</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.model.MetaschemaException;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.databind.IBindingContext.IModuleLoaderStrategy;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.databind.io.IBoundLoader;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA.Import;</span>
+<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;</span>
+<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.databind.model.metaschema.impl.BindingModule;</span>
+<span class="source-line-no">024</span><span id="line-24"></span>
+<span class="source-line-no">025</span><span id="line-25">import java.io.IOException;</span>
+<span class="source-line-no">026</span><span id="line-26">import java.net.URI;</span>
+<span class="source-line-no">027</span><span id="line-27">import java.util.List;</span>
+<span class="source-line-no">028</span><span id="line-28">import java.util.Map;</span>
+<span class="source-line-no">029</span><span id="line-29">import java.util.stream.Collectors;</span>
 <span class="source-line-no">030</span><span id="line-30"></span>
-<span class="source-line-no">031</span><span id="line-31">public class BindingModuleLoader</span>
-<span class="source-line-no">032</span><span id="line-32">    extends AbstractModuleLoader&lt;METASCHEMA, IBindingMetaschemaModule&gt;</span>
-<span class="source-line-no">033</span><span id="line-33">    implements IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; {</span>
-<span class="source-line-no">034</span><span id="line-34"></span>
-<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
-<span class="source-line-no">036</span><span id="line-36">  private final IBindingContext bindingContext;</span>
-<span class="source-line-no">037</span><span id="line-37">  private IBoundLoader loader;</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  /**</span>
-<span class="source-line-no">040</span><span id="line-40">   * Construct a new Metaschema loader.</span>
-<span class="source-line-no">041</span><span id="line-41">   *</span>
-<span class="source-line-no">042</span><span id="line-42">   * @param bindingContext</span>
-<span class="source-line-no">043</span><span id="line-43">   *          the Metaschema binding context used to load bound resources</span>
-<span class="source-line-no">044</span><span id="line-44">   */</span>
-<span class="source-line-no">045</span><span id="line-45">  public BindingModuleLoader(@NonNull IBindingContext bindingContext) {</span>
-<span class="source-line-no">046</span><span id="line-46">    this(bindingContext, CollectionUtil.emptyList());</span>
-<span class="source-line-no">047</span><span id="line-47">  }</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">  /**</span>
-<span class="source-line-no">050</span><span id="line-50">   * Construct a new Metaschema loader, which use the provided module post</span>
-<span class="source-line-no">051</span><span id="line-51">   * processors when loading a module.</span>
-<span class="source-line-no">052</span><span id="line-52">   *</span>
-<span class="source-line-no">053</span><span id="line-53">   * @param bindingContext</span>
-<span class="source-line-no">054</span><span id="line-54">   *          the Metaschema binding context used to load bound resources</span>
-<span class="source-line-no">055</span><span id="line-55">   * @param modulePostProcessors</span>
-<span class="source-line-no">056</span><span id="line-56">   *          post processors to perform additional module customization when</span>
-<span class="source-line-no">057</span><span id="line-57">   *          loading</span>
-<span class="source-line-no">058</span><span id="line-58">   */</span>
-<span class="source-line-no">059</span><span id="line-59">  public BindingModuleLoader(</span>
-<span class="source-line-no">060</span><span id="line-60">      @NonNull IBindingContext bindingContext,</span>
-<span class="source-line-no">061</span><span id="line-61">      @NonNull List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors) {</span>
-<span class="source-line-no">062</span><span id="line-62">    super(modulePostProcessors);</span>
-<span class="source-line-no">063</span><span id="line-63">    this.bindingContext = bindingContext;</span>
-<span class="source-line-no">064</span><span id="line-64">  }</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">  @Override</span>
-<span class="source-line-no">067</span><span id="line-67">  protected IBindingMetaschemaModule newModule(</span>
-<span class="source-line-no">068</span><span id="line-68">      URI resource,</span>
-<span class="source-line-no">069</span><span id="line-69">      METASCHEMA binding,</span>
-<span class="source-line-no">070</span><span id="line-70">      List&lt;? extends IBindingMetaschemaModule&gt; importedModules)</span>
-<span class="source-line-no">071</span><span id="line-71">      throws MetaschemaException {</span>
-<span class="source-line-no">072</span><span id="line-72">    return new BindingModule(</span>
-<span class="source-line-no">073</span><span id="line-73">        resource,</span>
-<span class="source-line-no">074</span><span id="line-74">        ObjectUtils.notNull(</span>
-<span class="source-line-no">075</span><span id="line-75">            (IBoundDefinitionModelAssembly) getLoader().getBindingContext()</span>
-<span class="source-line-no">076</span><span id="line-76">                .getBoundDefinitionForClass(METASCHEMA.class)),</span>
-<span class="source-line-no">077</span><span id="line-77">        binding,</span>
-<span class="source-line-no">078</span><span id="line-78">        importedModules);</span>
-<span class="source-line-no">079</span><span id="line-79">  }</span>
-<span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">  @Override</span>
-<span class="source-line-no">082</span><span id="line-82">  protected List&lt;URI&gt; getImports(METASCHEMA binding) {</span>
-<span class="source-line-no">083</span><span id="line-83">    return ObjectUtils.notNull(binding.getImports().stream()</span>
-<span class="source-line-no">084</span><span id="line-84">        .map(Import::getHref)</span>
-<span class="source-line-no">085</span><span id="line-85">        .collect(Collectors.toUnmodifiableList()));</span>
-<span class="source-line-no">086</span><span id="line-86">  }</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">  @Override</span>
-<span class="source-line-no">089</span><span id="line-89">  protected METASCHEMA parseModule(URI resource) throws IOException {</span>
-<span class="source-line-no">090</span><span id="line-90">    return getLoader().load(METASCHEMA.class, resource);</span>
-<span class="source-line-no">091</span><span id="line-91">  }</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">  protected IBoundLoader getLoader() {</span>
-<span class="source-line-no">094</span><span id="line-94">    synchronized (this) {</span>
-<span class="source-line-no">095</span><span id="line-95">      if (this.loader == null) {</span>
-<span class="source-line-no">096</span><span id="line-96">        this.loader = bindingContext.newBoundLoader();</span>
-<span class="source-line-no">097</span><span id="line-97">      }</span>
-<span class="source-line-no">098</span><span id="line-98">      return this.loader;</span>
-<span class="source-line-no">099</span><span id="line-99">    }</span>
+<span class="source-line-no">031</span><span id="line-31">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">032</span><span id="line-32">import nl.talsmasoftware.lazy4j.Lazy;</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34">/**</span>
+<span class="source-line-no">035</span><span id="line-35"> * A module loader implementation that parses Metaschema modules from a</span>
+<span class="source-line-no">036</span><span id="line-36"> * specified resource using the built-in model {@link MetaschemaModelModule}</span>
+<span class="source-line-no">037</span><span id="line-37"> * binding.</span>
+<span class="source-line-no">038</span><span id="line-38"> * &lt;p&gt;</span>
+<span class="source-line-no">039</span><span id="line-39"> * Metaschema modules loaded this way are automatically registered with the</span>
+<span class="source-line-no">040</span><span id="line-40"> * {@link IBindingContext}.</span>
+<span class="source-line-no">041</span><span id="line-41"> * &lt;p&gt;</span>
+<span class="source-line-no">042</span><span id="line-42"> * Use of this Metaschema module loader requires that the associated binding</span>
+<span class="source-line-no">043</span><span id="line-43"> * context is initialized using a {@link IModuleLoaderStrategy} that supports</span>
+<span class="source-line-no">044</span><span id="line-44"> * dynamic bound module loading. This can be accomplished using the</span>
+<span class="source-line-no">045</span><span id="line-45"> * {@link SimpleModuleLoaderStrategy} initialized using the</span>
+<span class="source-line-no">046</span><span id="line-46"> * {@link DefaultModuleBindingGenerator}.</span>
+<span class="source-line-no">047</span><span id="line-47"> */</span>
+<span class="source-line-no">048</span><span id="line-48">public class BindingModuleLoader</span>
+<span class="source-line-no">049</span><span id="line-49">    extends AbstractModuleLoader&lt;METASCHEMA, IBindingMetaschemaModule&gt;</span>
+<span class="source-line-no">050</span><span id="line-50">    implements IBindingModuleLoader {</span>
+<span class="source-line-no">051</span><span id="line-51">  private final Lazy&lt;IBoundLoader&gt; loader;</span>
+<span class="source-line-no">052</span><span id="line-52">  private final ModuleLoadingPostProcessor postProcessor;</span>
+<span class="source-line-no">053</span><span id="line-53"></span>
+<span class="source-line-no">054</span><span id="line-54">  /**</span>
+<span class="source-line-no">055</span><span id="line-55">   * Construct a new Metaschema loader.</span>
+<span class="source-line-no">056</span><span id="line-56">   *</span>
+<span class="source-line-no">057</span><span id="line-57">   * @param bindingContext</span>
+<span class="source-line-no">058</span><span id="line-58">   *          the Metaschema binding context used to load bound resources</span>
+<span class="source-line-no">059</span><span id="line-59">   * @param postProcessor</span>
+<span class="source-line-no">060</span><span id="line-60">   *          the post processor to use when after loading a module</span>
+<span class="source-line-no">061</span><span id="line-61">   */</span>
+<span class="source-line-no">062</span><span id="line-62">  public BindingModuleLoader(</span>
+<span class="source-line-no">063</span><span id="line-63">      @NonNull IBindingContext bindingContext,</span>
+<span class="source-line-no">064</span><span id="line-64">      @NonNull ModuleLoadingPostProcessor postProcessor) {</span>
+<span class="source-line-no">065</span><span id="line-65">    this.loader = Lazy.lazy(bindingContext::newBoundLoader);</span>
+<span class="source-line-no">066</span><span id="line-66">    this.postProcessor = postProcessor;</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  @Override</span>
+<span class="source-line-no">070</span><span id="line-70">  @NonNull</span>
+<span class="source-line-no">071</span><span id="line-71">  public IBindingContext getBindingContext() {</span>
+<span class="source-line-no">072</span><span id="line-72">    return getLoader().getBindingContext();</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  @Override</span>
+<span class="source-line-no">076</span><span id="line-76">  protected IBindingMetaschemaModule newModule(</span>
+<span class="source-line-no">077</span><span id="line-77">      URI resource,</span>
+<span class="source-line-no">078</span><span id="line-78">      METASCHEMA binding,</span>
+<span class="source-line-no">079</span><span id="line-79">      List&lt;? extends IBindingMetaschemaModule&gt; importedModules)</span>
+<span class="source-line-no">080</span><span id="line-80">      throws MetaschemaException {</span>
+<span class="source-line-no">081</span><span id="line-81">    IBindingContext bindingContext = getLoader().getBindingContext();</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">    IBindingMetaschemaModule module = new BindingModule(</span>
+<span class="source-line-no">084</span><span id="line-84">        resource,</span>
+<span class="source-line-no">085</span><span id="line-85">        ObjectUtils.notNull(</span>
+<span class="source-line-no">086</span><span id="line-86">            (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(METASCHEMA.class)),</span>
+<span class="source-line-no">087</span><span id="line-87">        binding,</span>
+<span class="source-line-no">088</span><span id="line-88">        importedModules);</span>
+<span class="source-line-no">089</span><span id="line-89"></span>
+<span class="source-line-no">090</span><span id="line-90">    // post-process the module</span>
+<span class="source-line-no">091</span><span id="line-91">    postProcessor.postProcessModule(module, bindingContext);</span>
+<span class="source-line-no">092</span><span id="line-92">    return module;</span>
+<span class="source-line-no">093</span><span id="line-93">  }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">  @Override</span>
+<span class="source-line-no">096</span><span id="line-96">  protected List&lt;URI&gt; getImports(METASCHEMA binding) {</span>
+<span class="source-line-no">097</span><span id="line-97">    return ObjectUtils.notNull(binding.getImports().stream()</span>
+<span class="source-line-no">098</span><span id="line-98">        .map(Import::getHref)</span>
+<span class="source-line-no">099</span><span id="line-99">        .collect(Collectors.toUnmodifiableList()));</span>
 <span class="source-line-no">100</span><span id="line-100">  }</span>
 <span class="source-line-no">101</span><span id="line-101"></span>
 <span class="source-line-no">102</span><span id="line-102">  @Override</span>
-<span class="source-line-no">103</span><span id="line-103">  public boolean isFeatureEnabled(DeserializationFeature&lt;?&gt; feature) {</span>
-<span class="source-line-no">104</span><span id="line-104">    return getLoader().isFeatureEnabled(feature);</span>
+<span class="source-line-no">103</span><span id="line-103">  protected METASCHEMA parseModule(URI resource) throws IOException {</span>
+<span class="source-line-no">104</span><span id="line-104">    return getLoader().load(METASCHEMA.class, resource);</span>
 <span class="source-line-no">105</span><span id="line-105">  }</span>
 <span class="source-line-no">106</span><span id="line-106"></span>
-<span class="source-line-no">107</span><span id="line-107">  @Override</span>
-<span class="source-line-no">108</span><span id="line-108">  public Map&lt;DeserializationFeature&lt;?&gt;, Object&gt; getFeatureValues() {</span>
-<span class="source-line-no">109</span><span id="line-109">    return getLoader().getFeatureValues();</span>
-<span class="source-line-no">110</span><span id="line-110">  }</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  @Override</span>
-<span class="source-line-no">113</span><span id="line-113">  public IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt;</span>
-<span class="source-line-no">114</span><span id="line-114">      applyConfiguration(IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; other) {</span>
-<span class="source-line-no">115</span><span id="line-115">    return getLoader().applyConfiguration(other);</span>
-<span class="source-line-no">116</span><span id="line-116">  }</span>
-<span class="source-line-no">117</span><span id="line-117"></span>
-<span class="source-line-no">118</span><span id="line-118">  @Override</span>
-<span class="source-line-no">119</span><span id="line-119">  public IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; set(DeserializationFeature&lt;?&gt; feature, Object value) {</span>
-<span class="source-line-no">120</span><span id="line-120">    return getLoader().set(feature, value);</span>
-<span class="source-line-no">121</span><span id="line-121">  }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">  public void allowEntityResolution() {</span>
-<span class="source-line-no">124</span><span id="line-124">    enableFeature(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION);</span>
-<span class="source-line-no">125</span><span id="line-125">  }</span>
-<span class="source-line-no">126</span><span id="line-126">}</span>
+<span class="source-line-no">107</span><span id="line-107">  /**</span>
+<span class="source-line-no">108</span><span id="line-108">   * Get the underlying bound loader.</span>
+<span class="source-line-no">109</span><span id="line-109">   *</span>
+<span class="source-line-no">110</span><span id="line-110">   * @return the loader</span>
+<span class="source-line-no">111</span><span id="line-111">   */</span>
+<span class="source-line-no">112</span><span id="line-112">  protected IBoundLoader getLoader() {</span>
+<span class="source-line-no">113</span><span id="line-113">    return ObjectUtils.notNull(loader.get());</span>
+<span class="source-line-no">114</span><span id="line-114">  }</span>
+<span class="source-line-no">115</span><span id="line-115"></span>
+<span class="source-line-no">116</span><span id="line-116">  @Override</span>
+<span class="source-line-no">117</span><span id="line-117">  public boolean isFeatureEnabled(DeserializationFeature&lt;?&gt; feature) {</span>
+<span class="source-line-no">118</span><span id="line-118">    return getLoader().isFeatureEnabled(feature);</span>
+<span class="source-line-no">119</span><span id="line-119">  }</span>
+<span class="source-line-no">120</span><span id="line-120"></span>
+<span class="source-line-no">121</span><span id="line-121">  @Override</span>
+<span class="source-line-no">122</span><span id="line-122">  public Map&lt;DeserializationFeature&lt;?&gt;, Object&gt; getFeatureValues() {</span>
+<span class="source-line-no">123</span><span id="line-123">    return getLoader().getFeatureValues();</span>
+<span class="source-line-no">124</span><span id="line-124">  }</span>
+<span class="source-line-no">125</span><span id="line-125"></span>
+<span class="source-line-no">126</span><span id="line-126">  @Override</span>
+<span class="source-line-no">127</span><span id="line-127">  public IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt;</span>
+<span class="source-line-no">128</span><span id="line-128">      applyConfiguration(IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; other) {</span>
+<span class="source-line-no">129</span><span id="line-129">    return getLoader().applyConfiguration(other);</span>
+<span class="source-line-no">130</span><span id="line-130">  }</span>
+<span class="source-line-no">131</span><span id="line-131"></span>
+<span class="source-line-no">132</span><span id="line-132">  @Override</span>
+<span class="source-line-no">133</span><span id="line-133">  public IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; set(DeserializationFeature&lt;?&gt; feature, Object value) {</span>
+<span class="source-line-no">134</span><span id="line-134">    return getLoader().set(feature, value);</span>
+<span class="source-line-no">135</span><span id="line-135">  }</span>
+<span class="source-line-no">136</span><span id="line-136"></span>
+<span class="source-line-no">137</span><span id="line-137">  /**</span>
+<span class="source-line-no">138</span><span id="line-138">   * Allow inline XML entities to be automatically replaced.</span>
+<span class="source-line-no">139</span><span id="line-139">   */</span>
+<span class="source-line-no">140</span><span id="line-140">  @Override</span>
+<span class="source-line-no">141</span><span id="line-141">  public void allowEntityResolution() {</span>
+<span class="source-line-no">142</span><span id="line-142">    enableFeature(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION);</span>
+<span class="source-line-no">143</span><span id="line-143">  }</span>
+<span class="source-line-no">144</span><span id="line-144">}</span>
 
 
 

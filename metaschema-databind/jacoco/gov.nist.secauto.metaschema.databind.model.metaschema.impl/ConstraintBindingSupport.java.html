@@ -7,6 +7,9 @@ package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.constraint.AbstractConfigurableMessageConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractKeyConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
@@ -19,30 +22,29 @@ import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.ConstraintLetExpression;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.ConstraintValueEnum;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagAllowedValues;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagExpect;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagIndexHasKey;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.FlagMatches;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.KeyConstraintField;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.Property;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.Remarks;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedAllowedValuesConstraint;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedExpectConstraint;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedHasCardinalityConstraint;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedIndexConstraint;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedIndexHasKeyConstraint;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedIsUniqueConstraint;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.TargetedMatchesConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IModelConstraintsBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IValueConstraintsBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintValueEnum;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagAllowedValues;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagExpect;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagIndexHasKey;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagMatches;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.KeyConstraintField;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.Property;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedAllowedValuesConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedExpectConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedHasCardinalityConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIndexConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIndexHasKeyConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIsUniqueConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedMatchesConstraint;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -53,165 +55,213 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-<span class="fc" id="L56">public final class ConstraintBindingSupport {</span>
+/**
+ * Supports parsing constraints declared within a bound object.
+ */
+<span class="fc" id="L61">@SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)</span>
+public final class ConstraintBindingSupport {
   private ConstraintBindingSupport() {
     // disable construction
   }
 
+  /**
+   * Parse a constraint set.
+   *
+   * @param constraintSet
+   *          the parsed constraint set
+   * @param constraints
+   *          the constraint definitions to parse
+   * @param source
+   *          the source of the constraints
+   */
   public static void parse(
       @NonNull IValueConstrained constraintSet,
       @NonNull IValueConstraintsBase constraints,
       @NonNull ISource source) {
-<span class="fc" id="L65">    parseLet(constraintSet, constraints, source);</span>
+<span class="fc" id="L81">    parseLet(constraintSet, constraints, source);</span>
 
     // parse rules
-<span class="fc bfc" id="L68" title="All 2 branches covered.">    for (IConstraintBase ruleObj : constraints.getRules()) {</span>
-<span class="fc bfc" id="L69" title="All 2 branches covered.">      if (ruleObj instanceof FlagAllowedValues) {</span>
-<span class="fc" id="L70">        IAllowedValuesConstraint constraint = newAllowedValues((FlagAllowedValues) ruleObj, source);</span>
-<span class="fc" id="L71">        constraintSet.addConstraint(constraint);</span>
-<span class="pc bpc" id="L72" title="1 of 2 branches missed.">      } else if (ruleObj instanceof FlagExpect) {</span>
-<span class="nc" id="L73">        IExpectConstraint constraint = newExpect((FlagExpect) ruleObj, source);</span>
-<span class="nc" id="L74">        constraintSet.addConstraint(constraint);</span>
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">      } else if (ruleObj instanceof FlagIndexHasKey) {</span>
-<span class="nc" id="L76">        IIndexHasKeyConstraint constraint = newIndexHasKey((FlagIndexHasKey) ruleObj, source);</span>
-<span class="nc" id="L77">        constraintSet.addConstraint(constraint);</span>
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">      } else if (ruleObj instanceof FlagMatches) {</span>
-<span class="fc" id="L79">        IMatchesConstraint constraint = newMatches((FlagMatches) ruleObj, source);</span>
-<span class="fc" id="L80">        constraintSet.addConstraint(constraint);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">    for (IConstraintBase ruleObj : constraints.getRules()) {</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">      if (ruleObj instanceof FlagAllowedValues) {</span>
+<span class="fc" id="L86">        IAllowedValuesConstraint constraint = newAllowedValues((FlagAllowedValues) ruleObj, source);</span>
+<span class="fc" id="L87">        constraintSet.addConstraint(constraint);</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">      } else if (ruleObj instanceof FlagExpect) {</span>
+<span class="nc" id="L89">        IExpectConstraint constraint = newExpect((FlagExpect) ruleObj, source);</span>
+<span class="nc" id="L90">        constraintSet.addConstraint(constraint);</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">      } else if (ruleObj instanceof FlagIndexHasKey) {</span>
+<span class="nc" id="L92">        IIndexHasKeyConstraint constraint = newIndexHasKey((FlagIndexHasKey) ruleObj, source);</span>
+<span class="nc" id="L93">        constraintSet.addConstraint(constraint);</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">      } else if (ruleObj instanceof FlagMatches) {</span>
+<span class="fc" id="L95">        IMatchesConstraint constraint = newMatches((FlagMatches) ruleObj, source);</span>
+<span class="fc" id="L96">        constraintSet.addConstraint(constraint);</span>
       }
-<span class="fc" id="L82">    }</span>
-<span class="fc" id="L83">  }</span>
+<span class="fc" id="L98">    }</span>
+<span class="fc" id="L99">  }</span>
 
+  /**
+   * Parse a constraint set.
+   *
+   * @param constraintSet
+   *          the parsed constraint set
+   * @param constraints
+   *          the constraint definitions to parse
+   * @param source
+   *          the source of the constraints
+   */
   public static void parse(
       @NonNull IValueConstrained constraintSet,
       @NonNull IValueTargetedConstraintsBase constraints,
       @NonNull ISource source) {
-<span class="fc" id="L89">    parseLet(constraintSet, constraints, source);</span>
+<span class="fc" id="L115">    parseLet(constraintSet, constraints, source);</span>
 
     // parse rules
-<span class="fc bfc" id="L92" title="All 2 branches covered.">    for (IConstraintBase ruleObj : constraints.getRules()) {</span>
-<span class="fc bfc" id="L93" title="All 2 branches covered.">      if (ruleObj instanceof TargetedAllowedValuesConstraint) {</span>
-<span class="fc" id="L94">        IAllowedValuesConstraint constraint = newAllowedValues((TargetedAllowedValuesConstraint) ruleObj, source);</span>
-<span class="fc" id="L95">        constraintSet.addConstraint(constraint);</span>
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">      } else if (ruleObj instanceof TargetedExpectConstraint) {</span>
-<span class="nc" id="L97">        IExpectConstraint constraint = newExpect((TargetedExpectConstraint) ruleObj, source);</span>
-<span class="nc" id="L98">        constraintSet.addConstraint(constraint);</span>
-<span class="pc bfc" id="L99" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedIndexHasKeyConstraint) {</span>
-<span class="fc" id="L100">        IIndexHasKeyConstraint constraint = newIndexHasKey((TargetedIndexHasKeyConstraint) ruleObj, source);</span>
-<span class="fc" id="L101">        constraintSet.addConstraint(constraint);</span>
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">      } else if (ruleObj instanceof TargetedMatchesConstraint) {</span>
-<span class="fc" id="L103">        IMatchesConstraint constraint = newMatches((TargetedMatchesConstraint) ruleObj, source);</span>
-<span class="fc" id="L104">        constraintSet.addConstraint(constraint);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    for (IConstraintBase ruleObj : constraints.getRules()) {</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">      if (ruleObj instanceof TargetedAllowedValuesConstraint) {</span>
+<span class="fc" id="L120">        IAllowedValuesConstraint constraint = newAllowedValues((TargetedAllowedValuesConstraint) ruleObj, source);</span>
+<span class="fc" id="L121">        constraintSet.addConstraint(constraint);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">      } else if (ruleObj instanceof TargetedExpectConstraint) {</span>
+<span class="nc" id="L123">        IExpectConstraint constraint = newExpect((TargetedExpectConstraint) ruleObj, source);</span>
+<span class="nc" id="L124">        constraintSet.addConstraint(constraint);</span>
+<span class="pc bfc" id="L125" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedIndexHasKeyConstraint) {</span>
+<span class="fc" id="L126">        IIndexHasKeyConstraint constraint = newIndexHasKey((TargetedIndexHasKeyConstraint) ruleObj, source);</span>
+<span class="fc" id="L127">        constraintSet.addConstraint(constraint);</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">      } else if (ruleObj instanceof TargetedMatchesConstraint) {</span>
+<span class="fc" id="L129">        IMatchesConstraint constraint = newMatches((TargetedMatchesConstraint) ruleObj, source);</span>
+<span class="fc" id="L130">        constraintSet.addConstraint(constraint);</span>
       }
-<span class="fc" id="L106">    }</span>
-<span class="fc" id="L107">  }</span>
+<span class="fc" id="L132">    }</span>
+<span class="fc" id="L133">  }</span>
 
+  /**
+   * Parse a constraint set.
+   *
+   * @param constraintSet
+   *          the parsed constraint set
+   * @param constraints
+   *          the constraint definitions to parse
+   * @param source
+   *          the source of the constraints
+   */
   public static void parse(
       @NonNull IModelConstrained constraintSet,
       @NonNull IModelConstraintsBase constraints,
       @NonNull ISource source) {
-<span class="fc" id="L113">    parseLet(constraintSet, constraints, source);</span>
+<span class="fc" id="L149">    parseLet(constraintSet, constraints, source);</span>
 
     // parse rules
-<span class="fc bfc" id="L116" title="All 2 branches covered.">    for (IConstraintBase ruleObj : constraints.getRules()) {</span>
-<span class="fc bfc" id="L117" title="All 2 branches covered.">      if (ruleObj instanceof TargetedAllowedValuesConstraint) {</span>
-<span class="fc" id="L118">        IAllowedValuesConstraint constraint = newAllowedValues((TargetedAllowedValuesConstraint) ruleObj, source);</span>
-<span class="fc" id="L119">        constraintSet.addConstraint(constraint);</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedExpectConstraint) {</span>
-<span class="fc" id="L121">        IExpectConstraint constraint = newExpect((TargetedExpectConstraint) ruleObj, source);</span>
-<span class="fc" id="L122">        constraintSet.addConstraint(constraint);</span>
-<span class="fc bfc" id="L123" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedIndexHasKeyConstraint) {</span>
-<span class="fc" id="L124">        IIndexHasKeyConstraint constraint = newIndexHasKey((TargetedIndexHasKeyConstraint) ruleObj, source);</span>
-<span class="fc" id="L125">        constraintSet.addConstraint(constraint);</span>
-<span class="fc bfc" id="L126" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedMatchesConstraint) {</span>
-<span class="fc" id="L127">        IMatchesConstraint constraint = newMatches((TargetedMatchesConstraint) ruleObj, source);</span>
-<span class="fc" id="L128">        constraintSet.addConstraint(constraint);</span>
-<span class="fc bfc" id="L129" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedIndexConstraint) {</span>
-<span class="fc" id="L130">        IIndexConstraint constraint = newIndex((TargetedIndexConstraint) ruleObj, source);</span>
-<span class="fc" id="L131">        constraintSet.addConstraint(constraint);</span>
-<span class="fc bfc" id="L132" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedHasCardinalityConstraint) {</span>
-<span class="fc" id="L133">        ICardinalityConstraint constraint = newHasCardinality((TargetedHasCardinalityConstraint) ruleObj, source);</span>
-<span class="fc" id="L134">        constraintSet.addConstraint(constraint);</span>
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">      } else if (ruleObj instanceof TargetedIsUniqueConstraint) {</span>
-<span class="fc" id="L136">        IUniqueConstraint constraint = newUnique((TargetedIsUniqueConstraint) ruleObj, source);</span>
-<span class="fc" id="L137">        constraintSet.addConstraint(constraint);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">    for (IConstraintBase ruleObj : constraints.getRules()) {</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">      if (ruleObj instanceof TargetedAllowedValuesConstraint) {</span>
+<span class="fc" id="L154">        IAllowedValuesConstraint constraint = newAllowedValues((TargetedAllowedValuesConstraint) ruleObj, source);</span>
+<span class="fc" id="L155">        constraintSet.addConstraint(constraint);</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedExpectConstraint) {</span>
+<span class="fc" id="L157">        IExpectConstraint constraint = newExpect((TargetedExpectConstraint) ruleObj, source);</span>
+<span class="fc" id="L158">        constraintSet.addConstraint(constraint);</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedIndexHasKeyConstraint) {</span>
+<span class="fc" id="L160">        IIndexHasKeyConstraint constraint = newIndexHasKey((TargetedIndexHasKeyConstraint) ruleObj, source);</span>
+<span class="fc" id="L161">        constraintSet.addConstraint(constraint);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedMatchesConstraint) {</span>
+<span class="fc" id="L163">        IMatchesConstraint constraint = newMatches((TargetedMatchesConstraint) ruleObj, source);</span>
+<span class="fc" id="L164">        constraintSet.addConstraint(constraint);</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedIndexConstraint) {</span>
+<span class="fc" id="L166">        IIndexConstraint constraint = newIndex((TargetedIndexConstraint) ruleObj, source);</span>
+<span class="fc" id="L167">        constraintSet.addConstraint(constraint);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">      } else if (ruleObj instanceof TargetedHasCardinalityConstraint) {</span>
+<span class="fc" id="L169">        ICardinalityConstraint constraint = newHasCardinality((TargetedHasCardinalityConstraint) ruleObj, source);</span>
+<span class="fc" id="L170">        constraintSet.addConstraint(constraint);</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">      } else if (ruleObj instanceof TargetedIsUniqueConstraint) {</span>
+<span class="fc" id="L172">        IUniqueConstraint constraint = newUnique((TargetedIsUniqueConstraint) ruleObj, source);</span>
+<span class="fc" id="L173">        constraintSet.addConstraint(constraint);</span>
       }
-<span class="fc" id="L139">    }</span>
-<span class="fc" id="L140">  }</span>
+<span class="fc" id="L175">    }</span>
+<span class="fc" id="L176">  }</span>
 
+  /**
+   * Parse the let clause in a constraint set.
+   *
+   * @param constraintSet
+   *          the parsed constraint set
+   * @param constraints
+   *          the constraint definitions to parse
+   * @param source
+   *          the source of the constraint
+   */
   public static void parseLet(
       @NonNull IValueConstrained constraintSet,
       @NonNull IValueConstraintsBase constraints,
       @NonNull ISource source) {
     // parse let expressions
-<span class="fc bfc" id="L147" title="All 2 branches covered.">    for (ConstraintLetExpression letObj : constraints.getLets()) {</span>
-<span class="fc" id="L148">      ILet let = ILet.of(</span>
-<span class="fc" id="L149">          ObjectUtils.requireNonNull(new QName(letObj.getVar())),</span>
-<span class="fc" id="L150">          ObjectUtils.requireNonNull(letObj.getExpression()), source);</span>
-<span class="fc" id="L151">      constraintSet.addLetExpression(let);</span>
-<span class="fc" id="L152">    }</span>
-<span class="fc" id="L153">  }</span>
+<span class="fc" id="L193">    constraints.getLets().stream()</span>
+<span class="fc" id="L194">        .map(letObj -&gt; {</span>
+<span class="fc" id="L195">          MarkupMultiline remarks = null;</span>
+<span class="fc" id="L196">          Remarks remarkObj = letObj.getRemarks();</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">          if (remarkObj != null) {</span>
+<span class="nc" id="L198">            remarks = remarkObj.getRemark();</span>
+          }
+
+<span class="fc" id="L201">          return ILet.of(</span>
+<span class="fc" id="L202">              ObjectUtils.requireNonNull(new QName(letObj.getVar())),</span>
+<span class="fc" id="L203">              ObjectUtils.requireNonNull(letObj.getExpression()),</span>
+              source,
+              remarks);
+        })
+<span class="fc" id="L207">        .forEachOrdered(constraintSet::addLetExpression);</span>
+<span class="fc" id="L208">  }</span>
 
   @NonNull
   private static IAllowedValuesConstraint newAllowedValues(
       @NonNull FlagAllowedValues obj,
       @NonNull ISource source) {
-<span class="fc" id="L159">    IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder()</span>
-<span class="fc" id="L160">        .allowsOther(ModelSupport.yesOrNo(obj.getAllowOther()))</span>
-<span class="fc" id="L161">        .extensible(extensible(obj.getExtensible()));</span>
-<span class="fc" id="L162">    applyCommonValues(obj, null, source, builder);</span>
+<span class="fc" id="L214">    IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder()</span>
+<span class="fc" id="L215">        .allowsOther(ModelSupport.yesOrNo(obj.getAllowOther()))</span>
+<span class="fc" id="L216">        .extensible(extensible(obj.getExtensible()));</span>
+<span class="fc" id="L217">    applyCommonValues(obj, null, source, builder);</span>
 
-<span class="fc bfc" id="L164" title="All 2 branches covered.">    for (ConstraintValueEnum value : ObjectUtils.requireNonNull(obj.getEnums())) {</span>
-<span class="fc" id="L165">      builder.allowedValue(ObjectUtils.requireNonNull(value));</span>
-<span class="fc" id="L166">    }</span>
-<span class="fc" id="L167">    return builder.build();</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">    for (ConstraintValueEnum value : ObjectUtils.requireNonNull(obj.getEnums())) {</span>
+<span class="fc" id="L220">      builder.allowedValue(ObjectUtils.requireNonNull(value));</span>
+<span class="fc" id="L221">    }</span>
+<span class="fc" id="L222">    return builder.build();</span>
   }
 
   @NonNull
   private static IAllowedValuesConstraint newAllowedValues(
       @NonNull TargetedAllowedValuesConstraint obj,
       @NonNull ISource source) {
-<span class="fc" id="L174">    IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder()</span>
-<span class="fc" id="L175">        .allowsOther(ModelSupport.yesOrNo(obj.getAllowOther()))</span>
-<span class="fc" id="L176">        .extensible(extensible(ObjectUtils.requireNonNull(obj.getExtensible())));</span>
-<span class="fc" id="L177">    applyCommonValues(obj, obj.getTarget(), source, builder);</span>
+<span class="fc" id="L229">    IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder()</span>
+<span class="fc" id="L230">        .allowsOther(ModelSupport.yesOrNo(obj.getAllowOther()))</span>
+<span class="fc" id="L231">        .extensible(extensible(ObjectUtils.requireNonNull(obj.getExtensible())));</span>
+<span class="fc" id="L232">    applyCommonValues(obj, obj.getTarget(), source, builder);</span>
 
-<span class="fc bfc" id="L179" title="All 2 branches covered.">    for (ConstraintValueEnum value : ObjectUtils.requireNonNull(obj.getEnums())) {</span>
-<span class="fc" id="L180">      builder.allowedValue(ObjectUtils.requireNonNull(value));</span>
-<span class="fc" id="L181">    }</span>
-<span class="fc" id="L182">    return builder.build();</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">    for (ConstraintValueEnum value : ObjectUtils.requireNonNull(obj.getEnums())) {</span>
+<span class="fc" id="L235">      builder.allowedValue(ObjectUtils.requireNonNull(value));</span>
+<span class="fc" id="L236">    }</span>
+<span class="fc" id="L237">    return builder.build();</span>
   }
 
   @NonNull
   private static IExpectConstraint newExpect(
       @NonNull FlagExpect obj,
       @NonNull ISource source) {
-<span class="nc" id="L189">    IExpectConstraint.Builder builder = IExpectConstraint.builder()</span>
-<span class="nc" id="L190">        .test(target(ObjectUtils.requireNonNull(obj.getTest())));</span>
-<span class="nc" id="L191">    applyCommonValues(obj, null, source, builder);</span>
+<span class="nc" id="L244">    IExpectConstraint.Builder builder = IExpectConstraint.builder()</span>
+<span class="nc" id="L245">        .test(target(ObjectUtils.requireNonNull(obj.getTest())));</span>
+<span class="nc" id="L246">    applyConfigurableCommonValues(obj, null, source, builder);</span>
 
-<span class="nc" id="L193">    String message = obj.getMessage();</span>
-<span class="nc bnc" id="L194" title="All 2 branches missed.">    if (message != null) {</span>
-<span class="nc" id="L195">      builder.message(message);</span>
+<span class="nc" id="L248">    String message = obj.getMessage();</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">    if (message != null) {</span>
+<span class="nc" id="L250">      builder.message(message);</span>
     }
 
-<span class="nc" id="L198">    return builder.build();</span>
+<span class="nc" id="L253">    return builder.build();</span>
   }
 
   @NonNull
   private static IExpectConstraint newExpect(
       @NonNull TargetedExpectConstraint obj,
       @NonNull ISource source) {
-<span class="fc" id="L205">    IExpectConstraint.Builder builder = IExpectConstraint.builder()</span>
-<span class="fc" id="L206">        .test(target(ObjectUtils.requireNonNull(obj.getTest())));</span>
-<span class="fc" id="L207">    applyCommonValues(obj, obj.getTarget(), source, builder);</span>
+<span class="fc" id="L260">    IExpectConstraint.Builder builder = IExpectConstraint.builder()</span>
+<span class="fc" id="L261">        .test(target(ObjectUtils.requireNonNull(obj.getTest())));</span>
+<span class="fc" id="L262">    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);</span>
 
-<span class="fc" id="L209">    String message = obj.getMessage();</span>
-<span class="fc bfc" id="L210" title="All 2 branches covered.">    if (message != null) {</span>
-<span class="fc" id="L211">      builder.message(message);</span>
-    }
-
-<span class="fc" id="L214">    return builder.build();</span>
+<span class="fc" id="L264">    return builder.build();</span>
   }
 
   @NonNull
@@ -219,121 +269,136 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull List&lt;KeyConstraintField&gt; keys,
       @NonNull T builder,
       @NonNull ISource source) {
-<span class="fc bfc" id="L222" title="All 2 branches covered.">    for (KeyConstraintField value : keys) {</span>
-<span class="pc bpc" id="L223" title="1 of 2 branches missed.">      assert value != null;</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">    for (KeyConstraintField value : keys) {</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">      assert value != null;</span>
 
-<span class="fc" id="L225">      IKeyField keyField = IKeyField.of(</span>
-<span class="fc" id="L226">          target(ObjectUtils.requireNonNull(value.getTarget())),</span>
-<span class="fc" id="L227">          pattern(value.getPattern()),</span>
-<span class="fc" id="L228">          ModelSupport.remarks(value.getRemarks()),</span>
+<span class="fc" id="L275">      IKeyField keyField = IKeyField.of(</span>
+<span class="fc" id="L276">          target(ObjectUtils.requireNonNull(value.getTarget())),</span>
+<span class="fc" id="L277">          pattern(value.getPattern()),</span>
+<span class="fc" id="L278">          ModelSupport.remarks(value.getRemarks()),</span>
           source);
-<span class="fc" id="L230">      builder.keyField(keyField);</span>
-<span class="fc" id="L231">    }</span>
-<span class="fc" id="L232">    return builder;</span>
+<span class="fc" id="L280">      builder.keyField(keyField);</span>
+<span class="fc" id="L281">    }</span>
+<span class="fc" id="L282">    return builder;</span>
   }
 
   @NonNull
   private static IIndexHasKeyConstraint newIndexHasKey(
       @NonNull FlagIndexHasKey obj,
       @NonNull ISource source) {
-<span class="nc" id="L239">    IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));</span>
-<span class="nc" id="L240">    applyCommonValues(obj, null, source, builder);</span>
-<span class="nc" id="L241">    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);</span>
-<span class="nc" id="L242">    return builder.build();</span>
+<span class="nc" id="L289">    IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));</span>
+<span class="nc" id="L290">    applyConfigurableCommonValues(obj, null, source, builder);</span>
+<span class="nc" id="L291">    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);</span>
+<span class="nc" id="L292">    return builder.build();</span>
   }
 
   @NonNull
   private static IIndexHasKeyConstraint newIndexHasKey(
       @NonNull TargetedIndexHasKeyConstraint obj,
       @NonNull ISource source) {
-<span class="fc" id="L249">    IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));</span>
-<span class="fc" id="L250">    applyCommonValues(obj, obj.getTarget(), source, builder);</span>
-<span class="fc" id="L251">    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);</span>
-<span class="fc" id="L252">    return builder.build();</span>
+<span class="fc" id="L299">    IIndexHasKeyConstraint.Builder builder = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));</span>
+<span class="fc" id="L300">    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);</span>
+<span class="fc" id="L301">    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);</span>
+<span class="fc" id="L302">    return builder.build();</span>
   }
 
   @NonNull
   private static IMatchesConstraint newMatches(
       @NonNull FlagMatches obj,
       @NonNull ISource source) {
-<span class="fc" id="L259">    IMatchesConstraint.Builder builder = IMatchesConstraint.builder();</span>
-<span class="fc" id="L260">    applyCommonValues(obj, null, source, builder);</span>
+<span class="fc" id="L309">    IMatchesConstraint.Builder builder = IMatchesConstraint.builder();</span>
+<span class="fc" id="L310">    applyConfigurableCommonValues(obj, null, source, builder);</span>
 
-<span class="fc" id="L262">    Pattern regex = pattern(obj.getRegex());</span>
-<span class="pc bpc" id="L263" title="1 of 2 branches missed.">    if (regex != null) {</span>
-<span class="fc" id="L264">      builder.regex(regex);</span>
+<span class="fc" id="L312">    Pattern regex = pattern(obj.getRegex());</span>
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">    if (regex != null) {</span>
+<span class="fc" id="L314">      builder.regex(regex);</span>
     }
 
-<span class="fc" id="L267">    String dataType = obj.getDatatype();</span>
-<span class="pc bpc" id="L268" title="1 of 2 branches missed.">    if (dataType != null) {</span>
-<span class="nc" id="L269">      IDataTypeAdapter&lt;?&gt; javaTypeAdapter = ModelSupport.dataType(obj.getDatatype());</span>
-<span class="nc" id="L270">      builder.datatype(javaTypeAdapter);</span>
+<span class="fc" id="L317">    String dataType = obj.getDatatype();</span>
+<span class="pc bpc" id="L318" title="1 of 2 branches missed.">    if (dataType != null) {</span>
+<span class="nc" id="L319">      IDataTypeAdapter&lt;?&gt; javaTypeAdapter = ModelSupport.dataType(obj.getDatatype());</span>
+<span class="nc" id="L320">      builder.datatype(javaTypeAdapter);</span>
     }
 
-<span class="fc" id="L273">    return builder.build();</span>
+<span class="fc" id="L323">    return builder.build();</span>
   }
 
   @NonNull
   private static IMatchesConstraint newMatches(
       @NonNull TargetedMatchesConstraint obj,
       @NonNull ISource source) {
-<span class="fc" id="L280">    IMatchesConstraint.Builder builder = IMatchesConstraint.builder();</span>
-<span class="fc" id="L281">    applyCommonValues(obj, obj.getTarget(), source, builder);</span>
+<span class="fc" id="L330">    IMatchesConstraint.Builder builder = IMatchesConstraint.builder();</span>
+<span class="fc" id="L331">    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);</span>
 
-<span class="fc" id="L283">    Pattern regex = pattern(obj.getRegex());</span>
-<span class="fc bfc" id="L284" title="All 2 branches covered.">    if (regex != null) {</span>
-<span class="fc" id="L285">      builder.regex(regex);</span>
+<span class="fc" id="L333">    Pattern regex = pattern(obj.getRegex());</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">    if (regex != null) {</span>
+<span class="fc" id="L335">      builder.regex(regex);</span>
     }
 
-<span class="fc" id="L288">    String dataType = obj.getDatatype();</span>
-<span class="fc bfc" id="L289" title="All 2 branches covered.">    if (dataType != null) {</span>
-<span class="fc" id="L290">      IDataTypeAdapter&lt;?&gt; javaTypeAdapter = ModelSupport.dataType(obj.getDatatype());</span>
-<span class="fc" id="L291">      builder.datatype(javaTypeAdapter);</span>
+<span class="fc" id="L338">    String dataType = obj.getDatatype();</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">    if (dataType != null) {</span>
+<span class="fc" id="L340">      IDataTypeAdapter&lt;?&gt; javaTypeAdapter = ModelSupport.dataType(obj.getDatatype());</span>
+<span class="fc" id="L341">      builder.datatype(javaTypeAdapter);</span>
     }
 
-<span class="fc" id="L294">    return builder.build();</span>
+<span class="fc" id="L344">    return builder.build();</span>
   }
 
   @NonNull
   private static IIndexConstraint newIndex(
       @NonNull TargetedIndexConstraint obj,
       @NonNull ISource source) {
-<span class="fc" id="L301">    IIndexConstraint.Builder builder = IIndexConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));</span>
-<span class="fc" id="L302">    applyCommonValues(obj, obj.getTarget(), source, builder);</span>
-<span class="fc" id="L303">    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);</span>
+<span class="fc" id="L351">    IIndexConstraint.Builder builder = IIndexConstraint.builder(ObjectUtils.requireNonNull(obj.getName()));</span>
+<span class="fc" id="L352">    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);</span>
+<span class="fc" id="L353">    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);</span>
 
-<span class="fc" id="L305">    return builder.build();</span>
+<span class="fc" id="L355">    return builder.build();</span>
   }
 
   @NonNull
   private static ICardinalityConstraint newHasCardinality(
       @NonNull TargetedHasCardinalityConstraint obj,
       @NonNull ISource source) {
-<span class="fc" id="L312">    ICardinalityConstraint.Builder builder = ICardinalityConstraint.builder();</span>
-<span class="fc" id="L313">    applyCommonValues(obj, obj.getTarget(), source, builder);</span>
+<span class="fc" id="L362">    ICardinalityConstraint.Builder builder = ICardinalityConstraint.builder();</span>
+<span class="fc" id="L363">    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);</span>
 
-<span class="fc" id="L315">    BigInteger minOccurs = obj.getMinOccurs();</span>
-<span class="fc bfc" id="L316" title="All 2 branches covered.">    if (minOccurs != null) {</span>
-<span class="fc" id="L317">      builder.minOccurs(minOccurs.intValueExact());</span>
+<span class="fc" id="L365">    BigInteger minOccurs = obj.getMinOccurs();</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">    if (minOccurs != null) {</span>
+<span class="fc" id="L367">      builder.minOccurs(minOccurs.intValueExact());</span>
     }
-<span class="fc" id="L319">    String maxOccurs = obj.getMaxOccurs();</span>
-<span class="fc bfc" id="L320" title="All 2 branches covered.">    if (maxOccurs != null) {</span>
-<span class="fc" id="L321">      int occurance = ModelSupport.maxOccurs(maxOccurs);</span>
-<span class="fc" id="L322">      builder.maxOccurs(occurance);</span>
+<span class="fc" id="L369">    String maxOccurs = obj.getMaxOccurs();</span>
+<span class="fc bfc" id="L370" title="All 2 branches covered.">    if (maxOccurs != null) {</span>
+<span class="fc" id="L371">      int occurance = ModelSupport.maxOccurs(maxOccurs);</span>
+<span class="fc" id="L372">      builder.maxOccurs(occurance);</span>
     }
 
-<span class="fc" id="L325">    return builder.build();</span>
+<span class="fc" id="L375">    return builder.build();</span>
   }
 
   @NonNull
   private static IUniqueConstraint newUnique(
       @NonNull TargetedIsUniqueConstraint obj,
       @NonNull ISource source) {
-<span class="fc" id="L332">    IUniqueConstraint.Builder builder = IUniqueConstraint.builder();</span>
-<span class="fc" id="L333">    applyCommonValues(obj, obj.getTarget(), source, builder);</span>
-<span class="fc" id="L334">    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);</span>
+<span class="fc" id="L382">    IUniqueConstraint.Builder builder = IUniqueConstraint.builder();</span>
+<span class="fc" id="L383">    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);</span>
+<span class="fc" id="L384">    handleKeyConstraints(ObjectUtils.requireNonNull(obj.getKeyFields()), builder, source);</span>
 
-<span class="fc" id="L336">    return builder.build();</span>
+<span class="fc" id="L386">    return builder.build();</span>
+  }
+
+  @NonNull
+  private static &lt;T extends AbstractConfigurableMessageConstraintBuilder&lt;T, ?&gt;&gt; T applyConfigurableCommonValues(
+      @NonNull IConfigurableMessageConstraintBase constraint,
+      @Nullable String target,
+      @NonNull ISource source,
+      @NonNull T builder) {
+<span class="fc" id="L395">    applyCommonValues(constraint, target, source, builder);</span>
+
+<span class="fc" id="L397">    String message = constraint.getMessage();</span>
+<span class="fc bfc" id="L398" title="All 2 branches covered.">    if (message != null) {</span>
+<span class="fc" id="L399">      builder.message(message);</span>
+    }
+<span class="fc" id="L401">    return builder;</span>
   }
 
   @NonNull
@@ -343,94 +408,94 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull ISource source,
       @NonNull T builder) {
 
-<span class="fc" id="L346">    String id = constraint.getId();</span>
+<span class="fc" id="L411">    String id = constraint.getId();</span>
 
-<span class="fc bfc" id="L348" title="All 2 branches covered.">    if (id != null) {</span>
-<span class="fc" id="L349">      builder.identifier(id);</span>
+<span class="fc bfc" id="L413" title="All 2 branches covered.">    if (id != null) {</span>
+<span class="fc" id="L414">      builder.identifier(id);</span>
     }
 
-<span class="fc" id="L352">    String formalName = constraint.getFormalName();</span>
-<span class="fc bfc" id="L353" title="All 2 branches covered.">    if (formalName != null) {</span>
-<span class="fc" id="L354">      builder.formalName(formalName);</span>
+<span class="fc" id="L417">    String formalName = constraint.getFormalName();</span>
+<span class="fc bfc" id="L418" title="All 2 branches covered.">    if (formalName != null) {</span>
+<span class="fc" id="L419">      builder.formalName(formalName);</span>
     }
 
-<span class="fc" id="L357">    MarkupLine description = constraint.getDescription();</span>
-<span class="fc bfc" id="L358" title="All 2 branches covered.">    if (description != null) {</span>
-<span class="fc" id="L359">      builder.description(description);</span>
+<span class="fc" id="L422">    MarkupLine description = constraint.getDescription();</span>
+<span class="fc bfc" id="L423" title="All 2 branches covered.">    if (description != null) {</span>
+<span class="fc" id="L424">      builder.description(description);</span>
     }
 
-<span class="fc" id="L362">    List&lt;Property&gt; props = ObjectUtils.requireNonNull(constraint.getProps());</span>
-<span class="fc" id="L363">    builder.properties(ModelSupport.parseProperties(props));</span>
+<span class="fc" id="L427">    List&lt;Property&gt; props = ObjectUtils.requireNonNull(constraint.getProps());</span>
+<span class="fc" id="L428">    builder.properties(ModelSupport.parseProperties(props));</span>
 
-<span class="fc" id="L365">    Remarks remarks = constraint.getRemarks();</span>
-<span class="fc bfc" id="L366" title="All 2 branches covered.">    if (remarks != null) {</span>
-<span class="fc" id="L367">      builder.remarks(ObjectUtils.notNull(remarks.getRemark()));</span>
+<span class="fc" id="L430">    Remarks remarks = constraint.getRemarks();</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">    if (remarks != null) {</span>
+<span class="fc" id="L432">      builder.remarks(ObjectUtils.notNull(remarks.getRemark()));</span>
     }
 
-<span class="fc" id="L370">    builder.target(target(target));</span>
-<span class="fc" id="L371">    builder.level(level(constraint.getLevel()));</span>
-<span class="fc" id="L372">    builder.source(source);</span>
-<span class="fc" id="L373">    return builder;</span>
+<span class="fc" id="L435">    builder.target(target(target));</span>
+<span class="fc" id="L436">    builder.level(level(constraint.getLevel()));</span>
+<span class="fc" id="L437">    builder.source(source);</span>
+<span class="fc" id="L438">    return builder;</span>
   }
 
   @NonNull
   private static String target(@Nullable String target) {
-<span class="fc bfc" id="L378" title="All 2 branches covered.">    return target == null</span>
-<span class="fc" id="L379">        ? IConstraint.DEFAULT_TARGET_METAPATH</span>
-<span class="fc" id="L380">        : target;</span>
+<span class="fc bfc" id="L443" title="All 2 branches covered.">    return target == null</span>
+<span class="fc" id="L444">        ? IConstraint.DEFAULT_TARGET_METAPATH</span>
+<span class="fc" id="L445">        : target;</span>
   }
 
   @NonNull
   private static IConstraint.Level level(@Nullable String level) {
-<span class="fc" id="L385">    IConstraint.Level retval = IConstraint.DEFAULT_LEVEL;</span>
-<span class="pc bpc" id="L386" title="1 of 2 branches missed.">    if (level != null) {</span>
-<span class="pc bpc" id="L387" title="4 of 6 branches missed.">      switch (level) {</span>
+<span class="fc" id="L450">    IConstraint.Level retval = IConstraint.DEFAULT_LEVEL;</span>
+<span class="pc bpc" id="L451" title="1 of 2 branches missed.">    if (level != null) {</span>
+<span class="pc bpc" id="L452" title="4 of 6 branches missed.">      switch (level) {</span>
       case &quot;CRITICAL&quot;:
-<span class="nc" id="L389">        retval = IConstraint.Level.CRITICAL;</span>
-<span class="nc" id="L390">        break;</span>
+<span class="nc" id="L454">        retval = IConstraint.Level.CRITICAL;</span>
+<span class="nc" id="L455">        break;</span>
       case &quot;ERROR&quot;:
-<span class="fc" id="L392">        retval = IConstraint.Level.ERROR;</span>
-<span class="fc" id="L393">        break;</span>
+<span class="fc" id="L457">        retval = IConstraint.Level.ERROR;</span>
+<span class="fc" id="L458">        break;</span>
       case &quot;WARNING&quot;:
-<span class="fc" id="L395">        retval = IConstraint.Level.WARNING;</span>
-<span class="fc" id="L396">        break;</span>
+<span class="fc" id="L460">        retval = IConstraint.Level.WARNING;</span>
+<span class="fc" id="L461">        break;</span>
       case &quot;INFORMATIONAL&quot;:
-<span class="nc" id="L398">        retval = IConstraint.Level.INFORMATIONAL;</span>
-<span class="nc" id="L399">        break;</span>
+<span class="nc" id="L463">        retval = IConstraint.Level.INFORMATIONAL;</span>
+<span class="nc" id="L464">        break;</span>
       case &quot;DEBUG&quot;:
-<span class="nc" id="L401">        retval = IConstraint.Level.DEBUG;</span>
-<span class="nc" id="L402">        break;</span>
+<span class="nc" id="L466">        retval = IConstraint.Level.DEBUG;</span>
+<span class="nc" id="L467">        break;</span>
       default:
-<span class="nc" id="L404">        throw new UnsupportedOperationException(level);</span>
+<span class="nc" id="L469">        throw new UnsupportedOperationException(level);</span>
       }
     }
-<span class="fc" id="L407">    return retval;</span>
+<span class="fc" id="L472">    return retval;</span>
   }
 
   @NonNull
   private static IAllowedValuesConstraint.Extensible extensible(@Nullable String extensible) {
-<span class="fc" id="L412">    IAllowedValuesConstraint.Extensible retval = IAllowedValuesConstraint.EXTENSIBLE_DEFAULT;</span>
-<span class="pc bpc" id="L413" title="1 of 2 branches missed.">    if (extensible != null) {</span>
-<span class="pc bpc" id="L414" title="2 of 4 branches missed.">      switch (extensible) {</span>
+<span class="fc" id="L477">    IAllowedValuesConstraint.Extensible retval = IAllowedValuesConstraint.EXTENSIBLE_DEFAULT;</span>
+<span class="pc bpc" id="L478" title="1 of 2 branches missed.">    if (extensible != null) {</span>
+<span class="pc bpc" id="L479" title="2 of 4 branches missed.">      switch (extensible) {</span>
       case &quot;model&quot;:
-<span class="nc" id="L416">        retval = IAllowedValuesConstraint.Extensible.MODEL;</span>
-<span class="nc" id="L417">        break;</span>
+<span class="nc" id="L481">        retval = IAllowedValuesConstraint.Extensible.MODEL;</span>
+<span class="nc" id="L482">        break;</span>
       case &quot;external&quot;:
-<span class="fc" id="L419">        retval = IAllowedValuesConstraint.Extensible.EXTERNAL;</span>
-<span class="fc" id="L420">        break;</span>
+<span class="fc" id="L484">        retval = IAllowedValuesConstraint.Extensible.EXTERNAL;</span>
+<span class="fc" id="L485">        break;</span>
       case &quot;none&quot;:
-<span class="fc" id="L422">        retval = IAllowedValuesConstraint.Extensible.NONE;</span>
-<span class="fc" id="L423">        break;</span>
+<span class="fc" id="L487">        retval = IAllowedValuesConstraint.Extensible.NONE;</span>
+<span class="fc" id="L488">        break;</span>
       default:
-<span class="nc" id="L425">        throw new UnsupportedOperationException(extensible);</span>
+<span class="nc" id="L490">        throw new UnsupportedOperationException(extensible);</span>
       }
     }
-<span class="fc" id="L428">    return retval;</span>
+<span class="fc" id="L493">    return retval;</span>
   }
 
   @Nullable
   private static Pattern pattern(@Nullable String pattern) {
-<span class="fc bfc" id="L433" title="All 2 branches covered.">    return pattern == null ? null : Pattern.compile(pattern);</span>
+<span class="fc bfc" id="L498" title="All 2 branches covered.">    return pattern == null ? null : Pattern.compile(pattern);</span>
   }
 
 }

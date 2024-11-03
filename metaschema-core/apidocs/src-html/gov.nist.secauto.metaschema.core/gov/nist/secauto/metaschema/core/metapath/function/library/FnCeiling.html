@@ -33,9 +33,9 @@
 <span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">021</span><span id="line-21"></span>
 <span class="source-line-no">022</span><span id="line-22">/**</span>
-<span class="source-line-no">023</span><span id="line-23"> * Based on the XPath 3.1</span>
+<span class="source-line-no">023</span><span id="line-23"> * Implements the XPath 3.1</span>
 <span class="source-line-no">024</span><span id="line-24"> * &lt;a href= "https://www.w3.org/TR/xpath-functions-31/#func-round"&gt;fn:round&lt;/a&gt;</span>
-<span class="source-line-no">025</span><span id="line-25"> * functions.</span>
+<span class="source-line-no">025</span><span id="line-25"> * function.</span>
 <span class="source-line-no">026</span><span id="line-26"> */</span>
 <span class="source-line-no">027</span><span id="line-27">public final class FnCeiling {</span>
 <span class="source-line-no">028</span><span id="line-28">  private static final String NAME = "ceiling";</span>
@@ -61,24 +61,26 @@
 <span class="source-line-no">048</span><span id="line-48">    // disable construction</span>
 <span class="source-line-no">049</span><span id="line-49">  }</span>
 <span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">052</span><span id="line-52">  @NonNull</span>
-<span class="source-line-no">053</span><span id="line-53">  private static ISequence&lt;INumericItem&gt; execute(</span>
-<span class="source-line-no">054</span><span id="line-54">      @NonNull IFunction function,</span>
-<span class="source-line-no">055</span><span id="line-55">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">056</span><span id="line-56">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">057</span><span id="line-57">      IItem focus) {</span>
-<span class="source-line-no">058</span><span id="line-58">    ISequence&lt;? extends INumericItem&gt; sequence = FunctionUtils.asType(</span>
-<span class="source-line-no">059</span><span id="line-59">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">    INumericItem item = sequence.getFirstItem(true);</span>
-<span class="source-line-no">062</span><span id="line-62">    if (item == null) {</span>
-<span class="source-line-no">063</span><span id="line-63">      return ISequence.empty(); // NOPMD - readability</span>
-<span class="source-line-no">064</span><span id="line-64">    }</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">    return ISequence.of(item.castAsType(item.ceiling()));</span>
-<span class="source-line-no">067</span><span id="line-67">  }</span>
-<span class="source-line-no">068</span><span id="line-68">}</span>
+<span class="source-line-no">051</span><span id="line-51">  // CPD-OFF</span>
+<span class="source-line-no">052</span><span id="line-52">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">053</span><span id="line-53">  @NonNull</span>
+<span class="source-line-no">054</span><span id="line-54">  private static ISequence&lt;INumericItem&gt; execute(</span>
+<span class="source-line-no">055</span><span id="line-55">      @NonNull IFunction function,</span>
+<span class="source-line-no">056</span><span id="line-56">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">057</span><span id="line-57">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">058</span><span id="line-58">      IItem focus) {</span>
+<span class="source-line-no">059</span><span id="line-59">    ISequence&lt;? extends INumericItem&gt; sequence = FunctionUtils.asType(</span>
+<span class="source-line-no">060</span><span id="line-60">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">    INumericItem item = sequence.getFirstItem(true);</span>
+<span class="source-line-no">063</span><span id="line-63">    if (item == null) {</span>
+<span class="source-line-no">064</span><span id="line-64">      return ISequence.empty(); // NOPMD - readability</span>
+<span class="source-line-no">065</span><span id="line-65">    }</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">    return ISequence.of(item.castAsType(item.ceiling()));</span>
+<span class="source-line-no">068</span><span id="line-68">    // CPD-ON</span>
+<span class="source-line-no">069</span><span id="line-69">  }</span>
+<span class="source-line-no">070</span><span id="line-70">}</span>
 
 
 

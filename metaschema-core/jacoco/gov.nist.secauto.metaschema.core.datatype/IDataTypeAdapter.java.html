@@ -30,6 +30,12 @@ import javax.xml.stream.events.XMLEvent;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a data type implementation.
+ *
+ * @param &lt;TYPE&gt;
+ *          the Java type of the underlying data value
+ */
 public interface IDataTypeAdapter&lt;TYPE&gt; {
 
   /**
@@ -51,7 +57,7 @@ public interface IDataTypeAdapter&lt;TYPE&gt; {
    */
   @NonNull
   default QName getPreferredName() {
-<span class="fc" id="L54">    return ObjectUtils.notNull(getNames().iterator().next());</span>
+<span class="fc" id="L60">    return ObjectUtils.notNull(getNames().iterator().next());</span>
   }
 
   /**
@@ -113,7 +119,7 @@ public interface IDataTypeAdapter&lt;TYPE&gt; {
    *         {@code false} otherwise
    */
   default boolean isAtomic() {
-<span class="nc" id="L116">    return true;</span>
+<span class="nc" id="L122">    return true;</span>
   }
 
   /**
@@ -131,8 +137,8 @@ public interface IDataTypeAdapter&lt;TYPE&gt; {
    *          the item's value
    * @return a new item
    */
-  // TODO: markup types are not atomic values. Figure out a better base type
-  // (i.e., IValuedItem)
+  // TODO: markup types are not atomic values.
+  // Figure out a better base type (i.e., IValuedItem)
   @NonNull
   IAnyAtomicItem newItem(@NonNull Object value);
 
@@ -147,16 +153,6 @@ public interface IDataTypeAdapter&lt;TYPE&gt; {
    */
   @NonNull
   IAnyAtomicItem cast(IAnyAtomicItem item);
-
-  /**
-   * Indicates if the adapter will parse the {@link XMLEvent#START_ELEMENT} before
-   * parsing the value data.
-   *
-   * @return {@code true} if the adapter requires the start element for parsing,
-   *         or {@code false} otherwise
-   */
-  // TODO; implement or remove this
-  boolean isParsingStartElement();
 
   /**
    * Determines if adapter can parse the next element. The next element's
@@ -192,11 +188,10 @@ public interface IDataTypeAdapter&lt;TYPE&gt; {
    * {@link XMLEvent#END_ELEMENT} that corresponds to an
    * {@link XMLEvent#START_ELEMENT} parsed by this adapter.
    * &lt;p&gt;
-   * If {@link #isParsingStartElement()} returns {@code true}, then the first
-   * event to parse will be the {@link XMLEvent#START_ELEMENT} for the element
-   * that contains the value data, then the value data. If this is the case, this
-   * method must also parse the corresponding {@link XMLEvent#END_ELEMENT}.
-   * Otherwise, the first event to parse will be the value data.
+   * If this method parses the {@link XMLEvent#START_ELEMENT} for the element that
+   * contains the value data, then this method must also parse the corresponding
+   * {@link XMLEvent#END_ELEMENT}. Otherwise, the first event to parse will be the
+   * value data.
    * &lt;p&gt;
    * The value data is expected to be parsed completely, leaving the event stream
    * on a peeked event corresponding to content that is not handled by this
@@ -234,12 +229,14 @@ public interface IDataTypeAdapter&lt;TYPE&gt; {
    * @return a supplier that will provide new instances of the parsed data
    * @throws IOException
    *           if an error occurs while parsing
+   * @throws IllegalArgumentException
+   *           if the provided value is invalid based on the data type
    * @see #parse(String)
    */
   @NonNull
   default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull String value) throws IOException {
-<span class="nc" id="L241">    TYPE retval = parse(value);</span>
-<span class="nc" id="L242">    return () -&gt; copy(retval);</span>
+<span class="nc" id="L238">    TYPE retval = parse(value);</span>
+<span class="nc" id="L239">    return () -&gt; copy(retval);</span>
   }
 
   /**
@@ -259,8 +256,8 @@ public interface IDataTypeAdapter&lt;TYPE&gt; {
    */
   @NonNull
   default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull XMLEventReader2 eventReader) throws IOException {
-<span class="nc" id="L262">    TYPE retval = parse(eventReader);</span>
-<span class="nc" id="L263">    return () -&gt; copy(retval);</span>
+<span class="nc" id="L259">    TYPE retval = parse(eventReader);</span>
+<span class="nc" id="L260">    return () -&gt; copy(retval);</span>
   }
 
   /**
@@ -279,8 +276,8 @@ public interface IDataTypeAdapter&lt;TYPE&gt; {
    */
   @NonNull
   default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull JsonParser parser) throws IOException {
-<span class="nc" id="L282">    TYPE retval = parse(parser);</span>
-<span class="nc" id="L283">    return () -&gt; copy(retval);</span>
+<span class="nc" id="L279">    TYPE retval = parse(parser);</span>
+<span class="nc" id="L280">    return () -&gt; copy(retval);</span>
   }
 
   /**

@@ -43,11 +43,12 @@ public final class JavaGenerator {
    * @throws IOException
    *           if an error occurred while generating the class
    */
+  @NonNull
   public static IProduction generate(
       @NonNull IModule module,
       @NonNull Path targetDir,
       @NonNull IBindingConfiguration bindingConfiguration) throws IOException {
-<span class="fc" id="L50">    return generate(CollectionUtil.singletonList(module), targetDir, bindingConfiguration);</span>
+<span class="fc" id="L51">    return generate(CollectionUtil.singletonList(module), targetDir, bindingConfiguration);</span>
   }
 
   /**
@@ -69,14 +70,14 @@ public final class JavaGenerator {
       @NonNull Collection&lt;? extends IModule&gt; modules,
       @NonNull Path targetDirectory,
       @NonNull IBindingConfiguration bindingConfiguration) throws IOException {
-<span class="fc" id="L72">    Objects.requireNonNull(modules, &quot;metaschemas&quot;);</span>
-<span class="fc" id="L73">    Objects.requireNonNull(targetDirectory, &quot;generationTargetDirectory&quot;);</span>
-<span class="fc" id="L74">    Objects.requireNonNull(bindingConfiguration, &quot;bindingConfiguration&quot;);</span>
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">    if (LOGGER.isInfoEnabled()) {</span>
-<span class="fc" id="L76">      LOGGER.info(&quot;Generating Java classes in: {}&quot;, targetDirectory);</span>
+<span class="fc" id="L73">    Objects.requireNonNull(modules, &quot;metaschemas&quot;);</span>
+<span class="fc" id="L74">    Objects.requireNonNull(targetDirectory, &quot;generationTargetDirectory&quot;);</span>
+<span class="fc" id="L75">    Objects.requireNonNull(bindingConfiguration, &quot;bindingConfiguration&quot;);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">    if (LOGGER.isInfoEnabled()) {</span>
+<span class="fc" id="L77">      LOGGER.info(&quot;Generating Java classes in: {}&quot;, targetDirectory);</span>
     }
 
-<span class="fc" id="L79">    return IProduction.of(modules, bindingConfiguration, targetDirectory);</span>
+<span class="fc" id="L80">    return IProduction.of(modules, bindingConfiguration, targetDirectory);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

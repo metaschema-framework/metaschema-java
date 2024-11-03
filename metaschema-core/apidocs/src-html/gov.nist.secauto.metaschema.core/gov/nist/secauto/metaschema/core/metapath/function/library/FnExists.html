@@ -33,54 +33,55 @@
 <span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">021</span><span id="line-21"></span>
 <span class="source-line-no">022</span><span id="line-22">/**</span>
-<span class="source-line-no">023</span><span id="line-23"> * Implements &lt;a href=</span>
-<span class="source-line-no">024</span><span id="line-24"> * "https://www.w3.org/TR/xpath-functions-31/#func-exists"&gt;fn:exists&lt;/a&gt;.</span>
-<span class="source-line-no">025</span><span id="line-25"> */</span>
-<span class="source-line-no">026</span><span id="line-26">public final class FnExists {</span>
-<span class="source-line-no">027</span><span id="line-27">  private static final String NAME = "exists";</span>
-<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
-<span class="source-line-no">029</span><span id="line-29">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="source-line-no">030</span><span id="line-30">      .name(NAME)</span>
-<span class="source-line-no">031</span><span id="line-31">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="source-line-no">032</span><span id="line-32">      .deterministic()</span>
-<span class="source-line-no">033</span><span id="line-33">      .contextIndependent()</span>
-<span class="source-line-no">034</span><span id="line-34">      .focusIndependent()</span>
-<span class="source-line-no">035</span><span id="line-35">      .argument(IArgument.builder()</span>
-<span class="source-line-no">036</span><span id="line-36">          .name("arg")</span>
-<span class="source-line-no">037</span><span id="line-37">          .type(IItem.class)</span>
-<span class="source-line-no">038</span><span id="line-38">          .zeroOrMore()</span>
-<span class="source-line-no">039</span><span id="line-39">          .build())</span>
-<span class="source-line-no">040</span><span id="line-40">      .returnType(IBooleanItem.class)</span>
-<span class="source-line-no">041</span><span id="line-41">      .returnOne()</span>
-<span class="source-line-no">042</span><span id="line-42">      .functionHandler(FnExists::execute)</span>
-<span class="source-line-no">043</span><span id="line-43">      .build();</span>
-<span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">  private FnExists() {</span>
-<span class="source-line-no">046</span><span id="line-46">    // disable construction</span>
-<span class="source-line-no">047</span><span id="line-47">  }</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">  @SuppressWarnings("unused")</span>
-<span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
-<span class="source-line-no">051</span><span id="line-51">  private static ISequence&lt;IBooleanItem&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">052</span><span id="line-52">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">053</span><span id="line-53">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">054</span><span id="line-54">      IItem focus) {</span>
-<span class="source-line-no">055</span><span id="line-55">    ISequence&lt;?&gt; items = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">056</span><span id="line-56">    return ISequence.of(fnExists(items));</span>
-<span class="source-line-no">057</span><span id="line-57">  }</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">  /**</span>
-<span class="source-line-no">060</span><span id="line-60">   * Identify if there is at least one item in the {@code sequence}.</span>
-<span class="source-line-no">061</span><span id="line-61">   *</span>
-<span class="source-line-no">062</span><span id="line-62">   * @param sequence</span>
-<span class="source-line-no">063</span><span id="line-63">   *          the sequence to check</span>
-<span class="source-line-no">064</span><span id="line-64">   * @return {@code true} if the sequence contains at least one item, or</span>
-<span class="source-line-no">065</span><span id="line-65">   *         {@code false} otherwise</span>
-<span class="source-line-no">066</span><span id="line-66">   */</span>
-<span class="source-line-no">067</span><span id="line-67">  public static IBooleanItem fnExists(ISequence&lt;?&gt; sequence) {</span>
-<span class="source-line-no">068</span><span id="line-68">    return IBooleanItem.valueOf(!sequence.isEmpty());</span>
-<span class="source-line-no">069</span><span id="line-69">  }</span>
-<span class="source-line-no">070</span><span id="line-70">}</span>
+<span class="source-line-no">023</span><span id="line-23"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">024</span><span id="line-24"> * "https://www.w3.org/TR/xpath-functions-31/#func-exists"&gt;fn:exists&lt;/a&gt;</span>
+<span class="source-line-no">025</span><span id="line-25"> * function.</span>
+<span class="source-line-no">026</span><span id="line-26"> */</span>
+<span class="source-line-no">027</span><span id="line-27">public final class FnExists {</span>
+<span class="source-line-no">028</span><span id="line-28">  private static final String NAME = "exists";</span>
+<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
+<span class="source-line-no">030</span><span id="line-30">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="source-line-no">031</span><span id="line-31">      .name(NAME)</span>
+<span class="source-line-no">032</span><span id="line-32">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="source-line-no">033</span><span id="line-33">      .deterministic()</span>
+<span class="source-line-no">034</span><span id="line-34">      .contextIndependent()</span>
+<span class="source-line-no">035</span><span id="line-35">      .focusIndependent()</span>
+<span class="source-line-no">036</span><span id="line-36">      .argument(IArgument.builder()</span>
+<span class="source-line-no">037</span><span id="line-37">          .name("arg")</span>
+<span class="source-line-no">038</span><span id="line-38">          .type(IItem.class)</span>
+<span class="source-line-no">039</span><span id="line-39">          .zeroOrMore()</span>
+<span class="source-line-no">040</span><span id="line-40">          .build())</span>
+<span class="source-line-no">041</span><span id="line-41">      .returnType(IBooleanItem.class)</span>
+<span class="source-line-no">042</span><span id="line-42">      .returnOne()</span>
+<span class="source-line-no">043</span><span id="line-43">      .functionHandler(FnExists::execute)</span>
+<span class="source-line-no">044</span><span id="line-44">      .build();</span>
+<span class="source-line-no">045</span><span id="line-45"></span>
+<span class="source-line-no">046</span><span id="line-46">  private FnExists() {</span>
+<span class="source-line-no">047</span><span id="line-47">    // disable construction</span>
+<span class="source-line-no">048</span><span id="line-48">  }</span>
+<span class="source-line-no">049</span><span id="line-49"></span>
+<span class="source-line-no">050</span><span id="line-50">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">051</span><span id="line-51">  @NonNull</span>
+<span class="source-line-no">052</span><span id="line-52">  private static ISequence&lt;IBooleanItem&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">053</span><span id="line-53">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">054</span><span id="line-54">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">055</span><span id="line-55">      IItem focus) {</span>
+<span class="source-line-no">056</span><span id="line-56">    ISequence&lt;?&gt; items = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">057</span><span id="line-57">    return ISequence.of(fnExists(items));</span>
+<span class="source-line-no">058</span><span id="line-58">  }</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  /**</span>
+<span class="source-line-no">061</span><span id="line-61">   * Identify if there is at least one item in the {@code sequence}.</span>
+<span class="source-line-no">062</span><span id="line-62">   *</span>
+<span class="source-line-no">063</span><span id="line-63">   * @param sequence</span>
+<span class="source-line-no">064</span><span id="line-64">   *          the sequence to check</span>
+<span class="source-line-no">065</span><span id="line-65">   * @return {@code true} if the sequence contains at least one item, or</span>
+<span class="source-line-no">066</span><span id="line-66">   *         {@code false} otherwise</span>
+<span class="source-line-no">067</span><span id="line-67">   */</span>
+<span class="source-line-no">068</span><span id="line-68">  public static IBooleanItem fnExists(ISequence&lt;?&gt; sequence) {</span>
+<span class="source-line-no">069</span><span id="line-69">    return IBooleanItem.valueOf(!sequence.isEmpty());</span>
+<span class="source-line-no">070</span><span id="line-70">  }</span>
+<span class="source-line-no">071</span><span id="line-71">}</span>
 
 
 

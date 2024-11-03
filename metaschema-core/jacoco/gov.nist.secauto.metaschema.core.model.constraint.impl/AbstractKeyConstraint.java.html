@@ -8,9 +8,9 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 abstract class AbstractKeyConstraint
-    extends AbstractConstraint
+    extends AbstractConfigurableMessageConstraint
     implements IKeyConstraint {
   @NonNull
   private final List&lt;IKeyField&gt; keyFields;
@@ -47,6 +47,8 @@ abstract class AbstractKeyConstraint
    *          a collection of associated properties
    * @param keyFields
    *          a list of key fields associated with the constraint
+   * @param message
+   *          an optional message to emit when the constraint is violated
    * @param remarks
    *          optional remarks describing the intent of the constraint
    */
@@ -60,17 +62,18 @@ abstract class AbstractKeyConstraint
       @NonNull String target,
       @NonNull Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; properties,
       @NonNull List&lt;IKeyField&gt; keyFields,
+      @Nullable String message,
       @Nullable MarkupMultiline remarks) {
-<span class="nc" id="L64">    super(id, formalName, description, source, level, target, properties, remarks);</span>
-<span class="nc bnc" id="L65" title="All 2 branches missed.">    if (keyFields.isEmpty()) {</span>
-<span class="nc" id="L66">      throw new IllegalArgumentException(&quot;an empty list of key fields is not allowed&quot;);</span>
+<span class="nc" id="L67">    super(id, formalName, description, source, level, target, properties, message, remarks);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">    if (keyFields.isEmpty()) {</span>
+<span class="nc" id="L69">      throw new IllegalArgumentException(&quot;an empty list of key fields is not allowed&quot;);</span>
     }
-<span class="nc" id="L68">    this.keyFields = keyFields;</span>
-<span class="nc" id="L69">  }</span>
+<span class="nc" id="L71">    this.keyFields = keyFields;</span>
+<span class="nc" id="L72">  }</span>
 
   @Override
   public List&lt;IKeyField&gt; getKeyFields() {
-<span class="nc" id="L73">    return keyFields;</span>
+<span class="nc" id="L76">    return keyFields;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

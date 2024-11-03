@@ -5,6 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.util;
 
+import org.eclipse.jdt.annotation.Owning;
+
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -17,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *          the exception type that may be thrown if an error occurs when
  *          closing the resource
  */
-public class AutoCloser&lt;T, E extends Exception&gt; implements AutoCloseable {
+public final class AutoCloser&lt;T, E extends Exception&gt; implements AutoCloseable {
   @NonNull
   private final T resource;
   @NonNull
@@ -37,11 +43,12 @@ public class AutoCloser&lt;T, E extends Exception&gt; implements AutoCloseable {
    *          the lambda to use as a callback on close
    * @return the resource wrapped in an {@link AutoCloseable}
    */
+  @Owning
   @NonNull
   public static &lt;T, E extends Exception&gt; AutoCloser&lt;T, E&gt; autoClose(
       @NonNull T resource,
       @NonNull Closer&lt;T, E&gt; lambda) {
-<span class="nc" id="L44">    return new AutoCloser&lt;&gt;(resource, lambda);</span>
+<span class="nc" id="L51">    return new AutoCloser&lt;&gt;(resource, lambda);</span>
   }
 
   /**
@@ -53,10 +60,10 @@ public class AutoCloser&lt;T, E extends Exception&gt; implements AutoCloseable {
    * @param lambda
    *          the lambda to use as a callback on close
    */
-<span class="nc" id="L56">  public AutoCloser(@NonNull T resource, @NonNull Closer&lt;T, E&gt; lambda) {</span>
-<span class="nc" id="L57">    this.resource = resource;</span>
-<span class="nc" id="L58">    this.closeLambda = lambda;</span>
-<span class="nc" id="L59">  }</span>
+<span class="nc" id="L63">  private AutoCloser(@NonNull T resource, @NonNull Closer&lt;T, E&gt; lambda) {</span>
+<span class="nc" id="L64">    this.resource = resource;</span>
+<span class="nc" id="L65">    this.closeLambda = lambda;</span>
+<span class="nc" id="L66">  }</span>
 
   /**
    * Get the wrapped resource.
@@ -65,14 +72,14 @@ public class AutoCloser&lt;T, E extends Exception&gt; implements AutoCloseable {
    */
   @NonNull
   public T getResource() {
-<span class="nc" id="L68">    return resource;</span>
+<span class="nc" id="L75">    return resource;</span>
   }
 
   @Override
   @SuppressFBWarnings(&quot;THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION&quot;)
   public void close() throws E {
-<span class="nc" id="L74">    closeLambda.close(getResource());</span>
-<span class="nc" id="L75">  }</span>
+<span class="nc" id="L81">    closeLambda.close(getResource());</span>
+<span class="nc" id="L82">  }</span>
 
   @FunctionalInterface
   public interface Closer&lt;T, E extends Exception&gt; {
@@ -86,6 +93,36 @@ public class AutoCloser&lt;T, E extends Exception&gt; implements AutoCloseable {
      */
     @SuppressFBWarnings(&quot;THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION&quot;)
     void close(@NonNull T object) throws E;
+  }
+
+  /**
+   * Wraps the provided output stream to prevent the wrapped stream from being
+   * closed.
+   * &lt;p&gt;
+   * This is useful for protecting standard streams. i.e. {@link System#out},
+   * {@link System#err}.
+   *
+   * @param out
+   *          the stream to wrap
+   * @return the new wrapped stream
+   */
+  @Owning
+  @NonNull
+  public static OutputStream preventClose(OutputStream out) {
+<span class="nc" id="L112">    return new ClosePreventingOutputStream(out);</span>
+  }
+
+  private static class ClosePreventingOutputStream
+      extends FilterOutputStream {
+
+    public ClosePreventingOutputStream(OutputStream out) {
+<span class="nc" id="L119">      super(out);</span>
+<span class="nc" id="L120">    }</span>
+
+    @Override
+    public void close() throws IOException {
+      // do nothing
+<span class="nc" id="L125">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

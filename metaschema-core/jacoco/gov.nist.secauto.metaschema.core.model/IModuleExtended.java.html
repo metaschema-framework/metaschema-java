@@ -68,10 +68,9 @@ public interface IModuleExtended&lt;
    * @return a predicate implementing the filter
    */
   static &lt;DEF extends IDefinition&gt; Predicate&lt;DEF&gt; allNonLocalDefinitions() {
-<span class="fc" id="L71">    return definition -&gt; {</span>
-<span class="fc bfc" id="L72" title="All 2 branches covered.">      return ModuleScopeEnum.INHERITED.equals(definition.getModuleScope())</span>
-<span class="pc bpc" id="L73" title="1 of 4 branches missed.">          || ModelType.ASSEMBLY.equals(definition.getModelType()) &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
-    };
+<span class="fc bfc" id="L71" title="All 2 branches covered.">    return definition -&gt; IDefinition.ModuleScope.PUBLIC.equals(definition.getModuleScope())</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        || ModelType.ASSEMBLY.equals(definition.getModelType())</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">            &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
   }
 
   /**
@@ -82,9 +81,8 @@ public interface IModuleExtended&lt;
    * @return a predicate implementing the filter
    */
   static &lt;DEF extends IDefinition&gt; Predicate&lt;DEF&gt; allRootAssemblyDefinitions() {
-<span class="fc" id="L85">    return definition -&gt; {</span>
-<span class="pc bpc" id="L86" title="1 of 4 branches missed.">      return ModelType.ASSEMBLY.equals(definition.getModelType()) &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
-    };
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">    return definition -&gt; ModelType.ASSEMBLY.equals(definition.getModelType())</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
   }
 
   @Override
@@ -123,63 +121,63 @@ public interface IModuleExtended&lt;
   @SuppressWarnings(&quot;unchecked&quot;)
   @NonNull
   default List&lt;D&gt; getAssemblyAndFieldDefinitions() {
-<span class="nc" id="L126">    return ObjectUtils.notNull(</span>
-<span class="nc" id="L127">        Stream.concat(</span>
-<span class="nc" id="L128">            (Stream&lt;D&gt;) getAssemblyDefinitions().stream(),</span>
-<span class="nc" id="L129">            (Stream&lt;D&gt;) getFieldDefinitions().stream())</span>
-<span class="nc" id="L130">            .collect(Collectors.toList()));</span>
+<span class="nc" id="L124">    return ObjectUtils.notNull(</span>
+<span class="nc" id="L125">        Stream.concat(</span>
+<span class="nc" id="L126">            (Stream&lt;D&gt;) getAssemblyDefinitions().stream(),</span>
+<span class="nc" id="L127">            (Stream&lt;D&gt;) getFieldDefinitions().stream())</span>
+<span class="nc" id="L128">            .collect(Collectors.toList()));</span>
   }
 
   @Override
   @Nullable
   default A getScopedAssemblyDefinitionByName(@NonNull QName name) {
     // first try local/global top-level definitions from current metaschema module
-<span class="fc" id="L137">    A retval = getAssemblyDefinitionByName(name);</span>
-<span class="fc bfc" id="L138" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L135">    A retval = getAssemblyDefinitionByName(name);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">    if (retval == null) {</span>
       // try global definitions from imported Metaschema modules
-<span class="fc" id="L140">      retval = getExportedAssemblyDefinitionByName(name);</span>
+<span class="fc" id="L138">      retval = getExportedAssemblyDefinitionByName(name);</span>
     }
-<span class="fc" id="L142">    return retval;</span>
+<span class="fc" id="L140">    return retval;</span>
   }
 
   @Override
   @Nullable
   default FI getScopedFieldDefinitionByName(@NonNull QName name) {
     // first try local/global top-level definitions from current metaschema module
-<span class="fc" id="L149">    FI retval = getFieldDefinitionByName(name);</span>
-<span class="fc bfc" id="L150" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L147">    FI retval = getFieldDefinitionByName(name);</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">    if (retval == null) {</span>
       // try global definitions from imported metaschema modules
-<span class="fc" id="L152">      retval = getExportedFieldDefinitionByName(name);</span>
+<span class="fc" id="L150">      retval = getExportedFieldDefinitionByName(name);</span>
     }
-<span class="fc" id="L154">    return retval;</span>
+<span class="fc" id="L152">    return retval;</span>
   }
 
   @Override
   @Nullable
   default FL getScopedFlagDefinitionByName(@NonNull QName name) {
     // first try local/global top-level definitions from current metaschema module
-<span class="fc" id="L161">    FL retval = getFlagDefinitionByName(name);</span>
-<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L159">    FL retval = getFlagDefinitionByName(name);</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">    if (retval == null) {</span>
       // try global definitions from imported metaschema modules
-<span class="fc" id="L164">      retval = getExportedFlagDefinitionByName(name);</span>
+<span class="fc" id="L162">      retval = getExportedFlagDefinitionByName(name);</span>
     }
-<span class="fc" id="L166">    return retval;</span>
+<span class="fc" id="L164">    return retval;</span>
   }
 
   @Override
   @NonNull
   default Collection&lt;? extends A&gt; getExportedRootAssemblyDefinitions() {
-<span class="fc" id="L172">    return ObjectUtils.notNull(getExportedAssemblyDefinitions().stream()</span>
-<span class="fc" id="L173">        .filter(allRootAssemblyDefinitions())</span>
-<span class="fc" id="L174">        .collect(Collectors.toList()));</span>
+<span class="fc" id="L170">    return ObjectUtils.notNull(getExportedAssemblyDefinitions().stream()</span>
+<span class="fc" id="L171">        .filter(allRootAssemblyDefinitions())</span>
+<span class="fc" id="L172">        .collect(Collectors.toList()));</span>
   }
 
   @Override
   @NonNull
   default Collection&lt;? extends A&gt; getRootAssemblyDefinitions() {
-<span class="nc" id="L180">    return ObjectUtils.notNull(getAssemblyDefinitions().stream()</span>
-<span class="nc" id="L181">        .filter(allRootAssemblyDefinitions())</span>
-<span class="nc" id="L182">        .collect(Collectors.toList()));</span>
+<span class="nc" id="L178">    return ObjectUtils.notNull(getAssemblyDefinitions().stream()</span>
+<span class="nc" id="L179">        .filter(allRootAssemblyDefinitions())</span>
+<span class="nc" id="L180">        .collect(Collectors.toList()));</span>
   }
 
   @Override

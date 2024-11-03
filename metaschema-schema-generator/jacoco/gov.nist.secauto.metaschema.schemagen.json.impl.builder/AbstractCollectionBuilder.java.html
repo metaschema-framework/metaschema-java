@@ -17,6 +17,7 @@ import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
 import gov.nist.secauto.metaschema.schemagen.json.IDefineableJsonSchema.IKey;
 import gov.nist.secauto.metaschema.schemagen.json.IDefinitionJsonSchema;
@@ -29,60 +30,60 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-<span class="fc" id="L32">public abstract class AbstractCollectionBuilder&lt;T extends AbstractCollectionBuilder&lt;T&gt;&gt;</span>
+<span class="fc" id="L33">public abstract class AbstractCollectionBuilder&lt;T extends AbstractCollectionBuilder&lt;T&gt;&gt;</span>
     extends AbstractBuilder&lt;T&gt;
     implements IModelInstanceBuilder&lt;T&gt; {
-<span class="fc" id="L35">  private int minOccurrence = IGroupable.DEFAULT_GROUP_AS_MIN_OCCURS;</span>
-<span class="fc" id="L36">  private int maxOccurrence = IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS;</span>
+<span class="fc" id="L36">  private int minOccurrence = IGroupable.DEFAULT_GROUP_AS_MIN_OCCURS;</span>
+<span class="fc" id="L37">  private int maxOccurrence = IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS;</span>
 
-<span class="fc" id="L38">  @NonNull</span>
+<span class="fc" id="L39">  @NonNull</span>
   private final List&lt;IModelInstanceBuilder.IType&gt; types = new LinkedList&lt;&gt;();
 
   @Override
   public T addItemType(INamedModelInstanceAbsolute itemType) {
-<span class="fc" id="L43">    types.add(new AbsoluteType(itemType));</span>
-<span class="fc" id="L44">    return thisBuilder();</span>
+<span class="fc" id="L44">    types.add(new AbsoluteType(itemType));</span>
+<span class="fc" id="L45">    return thisBuilder();</span>
   }
 
   @Override
   public T addItemType(INamedModelInstanceGrouped itemType) {
-<span class="fc" id="L49">    types.add(new GroupedType(itemType));</span>
-<span class="fc" id="L50">    return thisBuilder();</span>
+<span class="fc" id="L50">    types.add(new GroupedType(itemType));</span>
+<span class="fc" id="L51">    return thisBuilder();</span>
   }
 
   @Override
   public List&lt;IType&gt; getTypes() {
-<span class="fc" id="L55">    return CollectionUtil.unmodifiableList(types);</span>
+<span class="fc" id="L56">    return CollectionUtil.unmodifiableList(types);</span>
   }
 
   @Override
   public T minItems(int min) {
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">    if (min &lt; 0) {</span>
-<span class="nc" id="L61">      throw new IllegalArgumentException(</span>
-<span class="nc" id="L62">          String.format(&quot;The minimum value '%d' cannot be negative.&quot;, min));</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">    if (min &lt; 0) {</span>
+<span class="nc" id="L62">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L63">          String.format(&quot;The minimum value '%d' cannot be negative.&quot;, min));</span>
     }
-<span class="fc" id="L64">    minOccurrence = min;</span>
-<span class="fc" id="L65">    return thisBuilder();</span>
+<span class="fc" id="L65">    minOccurrence = min;</span>
+<span class="fc" id="L66">    return thisBuilder();</span>
   }
 
   @Override
   public T maxItems(int max) {
-<span class="pc bpc" id="L70" title="2 of 4 branches missed.">    if (max &lt; -1 || max == 0) {</span>
-<span class="nc" id="L71">      throw new IllegalArgumentException(</span>
-<span class="nc" id="L72">          String.format(&quot;The maximum value '%d' must be -1 or a positive value.&quot;, max));</span>
+<span class="pc bpc" id="L71" title="2 of 4 branches missed.">    if (max &lt; -1 || max == 0) {</span>
+<span class="nc" id="L72">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L73">          String.format(&quot;The maximum value '%d' must be -1 or a positive value.&quot;, max));</span>
     }
-<span class="fc" id="L74">    maxOccurrence = max;</span>
-<span class="fc" id="L75">    return thisBuilder();</span>
+<span class="fc" id="L75">    maxOccurrence = max;</span>
+<span class="fc" id="L76">    return thisBuilder();</span>
   }
 
   @Override
   public int getMinOccurrence() {
-<span class="fc" id="L80">    return minOccurrence;</span>
+<span class="fc" id="L81">    return minOccurrence;</span>
   }
 
   @Override
   public int getMaxOccurrence() {
-<span class="fc" id="L85">    return maxOccurrence;</span>
+<span class="fc" id="L86">    return maxOccurrence;</span>
   }
 
   /**
@@ -96,18 +97,19 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
   protected void buildInternal(
       @NonNull ObjectNode object,
       @NonNull IJsonGenerationState state) {
-<span class="fc bfc" id="L99" title="All 2 branches covered.">    if (types.size() == 1) {</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (types.size() == 1) {</span>
       // build the item type reference
-<span class="fc" id="L101">      types.iterator().next().build(object, state);</span>
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">    } else if (types.size() &gt; 1) {</span>
+<span class="fc" id="L102">      types.iterator().next().build(object, state);</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">    } else if (types.size() &gt; 1) {</span>
       // build an anyOf of the item type references
-<span class="fc" id="L104">      ArrayNode anyOf = object.putArray(&quot;anyOf&quot;);</span>
-<span class="fc bfc" id="L105" title="All 2 branches covered.">      for (IType type : types) {</span>
-<span class="fc" id="L106">        type.build(anyOf, state);</span>
-<span class="fc" id="L107">      }</span>
+<span class="fc" id="L105">      ArrayNode anyOf = object.putArray(&quot;anyOf&quot;);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">      for (IType type : types) {</span>
+<span class="fc" id="L107">        type.build(anyOf, state);</span>
+<span class="fc" id="L108">      }</span>
     }
-<span class="fc" id="L109">  }</span>
+<span class="fc" id="L110">  }</span>
 
+  @SuppressWarnings(&quot;PMD.ShortClassName&quot;)
   private abstract static class Type&lt;T extends INamedModelInstance&gt; implements IModelInstanceBuilder.IType {
     @NonNull
     private final T namedModelInstance;
@@ -121,112 +123,112 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     private final IKey key;
 
     @SuppressFBWarnings(value = &quot;CT_CONSTRUCTOR_THROW&quot;, justification = &quot;Use of final fields&quot;)
-<span class="fc" id="L124">    protected Type(@NonNull T instance) {</span>
-<span class="fc" id="L125">      this.namedModelInstance = instance;</span>
+<span class="fc" id="L126">    protected Type(@NonNull T instance) {</span>
+<span class="fc" id="L127">      this.namedModelInstance = instance;</span>
 
-<span class="fc" id="L127">      this.jsonKeyFlag = instance.getEffectiveJsonKey();</span>
+<span class="fc" id="L129">      this.jsonKeyFlag = instance.getEffectiveJsonKey();</span>
 
-<span class="fc bfc" id="L129" title="All 2 branches covered.">      if (instance instanceof INamedModelInstanceGrouped) {</span>
-<span class="fc" id="L130">        INamedModelInstanceGrouped grouped = (INamedModelInstanceGrouped) instance;</span>
-<span class="fc" id="L131">        this.discriminatorProperty = grouped.getParentContainer().getJsonDiscriminatorProperty();</span>
-<span class="fc" id="L132">        this.discriminatorValue = grouped.getEffectiveDisciminatorValue();</span>
-<span class="fc" id="L133">      } else {</span>
-<span class="fc" id="L134">        this.discriminatorProperty = null;</span>
-<span class="fc" id="L135">        this.discriminatorValue = null;</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">      if (instance instanceof INamedModelInstanceGrouped) {</span>
+<span class="fc" id="L132">        INamedModelInstanceGrouped grouped = (INamedModelInstanceGrouped) instance;</span>
+<span class="fc" id="L133">        this.discriminatorProperty = grouped.getParentContainer().getJsonDiscriminatorProperty();</span>
+<span class="fc" id="L134">        this.discriminatorValue = grouped.getEffectiveDisciminatorValue();</span>
+<span class="fc" id="L135">      } else {</span>
+<span class="fc" id="L136">        this.discriminatorProperty = null;</span>
+<span class="fc" id="L137">        this.discriminatorValue = null;</span>
       }
-<span class="fc" id="L137">      this.key</span>
-<span class="fc" id="L138">          = IKey.of(</span>
-<span class="fc" id="L139">              instance.getDefinition(),</span>
-<span class="fc bfc" id="L140" title="All 2 branches covered.">              jsonKeyFlag == null ? null : jsonKeyFlag.getName(),</span>
+<span class="fc" id="L139">      this.key</span>
+<span class="fc" id="L140">          = IKey.of(</span>
+<span class="fc" id="L141">              instance.getDefinition(),</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">              jsonKeyFlag == null ? null : jsonKeyFlag.getName(),</span>
               this.discriminatorProperty,
               this.discriminatorValue);
-<span class="fc" id="L143">    }</span>
+<span class="fc" id="L145">    }</span>
 
     @NonNull
     protected T getNamedModelInstance() {
-<span class="fc" id="L147">      return namedModelInstance;</span>
+<span class="fc" id="L149">      return namedModelInstance;</span>
     }
 
     @Nullable
     protected IFlagInstance getJsonKeyFlag() {
-<span class="nc" id="L152">      return jsonKeyFlag;</span>
+<span class="nc" id="L154">      return jsonKeyFlag;</span>
     }
 
     @Nullable
     protected String getJsonKeyFlagName() {
-<span class="nc bnc" id="L157" title="All 2 branches missed.">      return jsonKeyFlag == null ? null : jsonKeyFlag.getEffectiveName();</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">      return jsonKeyFlag == null ? null : jsonKeyFlag.getEffectiveName();</span>
     }
 
     @Nullable
     protected String getDiscriminatorProperty() {
-<span class="nc" id="L162">      return discriminatorProperty;</span>
+<span class="nc" id="L164">      return discriminatorProperty;</span>
     }
 
     @Nullable
     protected String getDiscriminatorValue() {
-<span class="nc" id="L167">      return discriminatorValue;</span>
+<span class="nc" id="L169">      return discriminatorValue;</span>
     }
 
     @Override
     public IDefinitionJsonSchema&lt;IFlagDefinition&gt; getJsonKeyFlagSchema(@NonNull IJsonGenerationState state) {
-<span class="nc" id="L172">      IFlagInstance jsonKey = getJsonKeyFlag();</span>
-<span class="nc bnc" id="L173" title="All 2 branches missed.">      return jsonKey == null ? null : state.getSchema(IKey.of(jsonKey.getDefinition()));</span>
+<span class="nc" id="L174">      IFlagInstance jsonKey = getJsonKeyFlag();</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">      return jsonKey == null ? null : state.getSchema(IKey.of(jsonKey.getDefinition()));</span>
     }
 
     @Override
     public IDataTypeJsonSchema getJsonKeyDataTypeSchema(IJsonGenerationState state) {
-<span class="nc" id="L178">      IFlagInstance jsonKey = getJsonKeyFlag();</span>
-<span class="nc bnc" id="L179" title="All 2 branches missed.">      return jsonKey == null ? null : state.getDataTypeSchemaForDefinition(jsonKey.getDefinition());</span>
+<span class="nc" id="L180">      IFlagInstance jsonKey = getJsonKeyFlag();</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">      return jsonKey == null ? null : state.getDataTypeSchemaForDefinition(jsonKey.getDefinition());</span>
     }
 
     @Override
     public IDefinitionJsonSchema&lt;IModelDefinition&gt; getJsonSchema(IJsonGenerationState state) {
-<span class="fc" id="L184">      return state.getSchema(key);</span>
+<span class="fc" id="L186">      return state.getSchema(key);</span>
     }
 
     @Override
     public void build(
         @NonNull ArrayNode anyOf,
         @NonNull IJsonGenerationState state) {
-<span class="fc" id="L191">      build(anyOf.addObject(), state);</span>
-<span class="fc" id="L192">    }</span>
+<span class="fc" id="L193">      build(ObjectUtils.notNull(anyOf.addObject()), state);</span>
+<span class="fc" id="L194">    }</span>
 
     @Override
     public void build(
         @NonNull ObjectNode object,
         @NonNull IJsonGenerationState state) {
 
-<span class="fc" id="L199">      IModelDefinition definition = getNamedModelInstance().getDefinition();</span>
+<span class="fc" id="L201">      IModelDefinition definition = getNamedModelInstance().getDefinition();</span>
 
-<span class="fc" id="L201">      int flagCount = definition.getFlagInstances().size();</span>
-<span class="fc bfc" id="L202" title="All 2 branches covered.">      if (jsonKeyFlag != null) {</span>
-<span class="fc" id="L203">        --flagCount;</span>
+<span class="fc" id="L203">      int flagCount = definition.getFlagInstances().size();</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">      if (jsonKeyFlag != null) {</span>
+<span class="fc" id="L205">        --flagCount;</span>
       }
 
-<span class="fc bfc" id="L206" title="All 2 branches covered.">      if (flagCount &gt; 0) {</span>
-<span class="fc" id="L207">        IDefinitionJsonSchema&lt;IModelDefinition&gt; schema = getJsonSchema(state);</span>
-<span class="fc" id="L208">        schema.generateSchemaOrRef(object, state);</span>
-<span class="fc bfc" id="L209" title="All 2 branches covered.">      } else if (definition instanceof IFieldDefinition) {</span>
-<span class="fc" id="L210">        IDataTypeJsonSchema schema = state.getSchema(((IFieldDefinition) definition).getJavaTypeAdapter());</span>
-<span class="fc" id="L211">        schema.generateSchemaOrRef(object, state);</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">      if (flagCount &gt; 0) {</span>
+<span class="fc" id="L209">        IDefinitionJsonSchema&lt;IModelDefinition&gt; schema = getJsonSchema(state);</span>
+<span class="fc" id="L210">        schema.generateSchemaOrRef(object, state);</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">      } else if (definition instanceof IFieldDefinition) {</span>
+<span class="fc" id="L212">        IDataTypeJsonSchema schema = state.getSchema(((IFieldDefinition) definition).getJavaTypeAdapter());</span>
+<span class="fc" id="L213">        schema.generateSchemaOrRef(object, state);</span>
       }
-<span class="fc" id="L213">    }</span>
+<span class="fc" id="L215">    }</span>
   }
 
   private static final class AbsoluteType
       extends Type&lt;INamedModelInstanceAbsolute&gt; {
 
     private AbsoluteType(@NonNull INamedModelInstanceAbsolute namedModelInstance) {
-<span class="fc" id="L220">      super(namedModelInstance);</span>
-<span class="fc" id="L221">    }</span>
+<span class="fc" id="L222">      super(namedModelInstance);</span>
+<span class="fc" id="L223">    }</span>
   }
 
   private static final class GroupedType
       extends Type&lt;INamedModelInstanceGrouped&gt; {
 
     private GroupedType(@NonNull INamedModelInstanceGrouped namedModelInstance) {
-<span class="fc" id="L228">      super(namedModelInstance);</span>
-<span class="fc" id="L229">    }</span>
+<span class="fc" id="L230">      super(namedModelInstance);</span>
+<span class="fc" id="L231">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

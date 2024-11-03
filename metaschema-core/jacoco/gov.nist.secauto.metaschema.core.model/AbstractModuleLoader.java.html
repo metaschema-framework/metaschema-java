@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
@@ -34,30 +33,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractModuleLoader&lt;T, M extends IModuleExtended&lt;M, ?, ?, ?, ?&gt;&gt;
     extends AbstractLoader&lt;M&gt;
     implements IModuleLoader&lt;M&gt; {
-  @NonNull
-  private final List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors;
-
   /**
    * Construct a new Metaschema module loader, which use the provided module post
    * processors when loading a module.
-   *
-   * @param modulePostProcessors
-   *          post processors to perform additional module customization when
-   *          loading
    */
-<span class="fc" id="L48">  protected AbstractModuleLoader(@NonNull List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors) {</span>
-<span class="fc" id="L49">    this.modulePostProcessors = CollectionUtil.unmodifiableList(new ArrayList&lt;&gt;(modulePostProcessors));</span>
-<span class="fc" id="L50">  }</span>
-
-  /**
-   * Get the set of module post processors associated with this loader.
-   *
-   * @return the set of constraints
-   */
-  @NonNull
-  protected List&lt;IModuleLoader.IModulePostProcessor&gt; getModulePostProcessors() {
-<span class="fc" id="L59">    return modulePostProcessors;</span>
-  }
+<span class="fc" id="L40">  protected AbstractModuleLoader() {</span>
+    // only allow construction by extending classes
+<span class="fc" id="L42">  }</span>
 
   /**
    * Parse the {@code resource} based on the provided {@code xmlObject}.
@@ -93,36 +75,31 @@ public abstract class AbstractModuleLoader&lt;T, M extends IModuleExtended&lt;M,
   protected M parseResource(@NonNull URI resource, @NonNull Deque&lt;URI&gt; visitedResources)
       throws IOException {
     // parse this Metaschema module
-<span class="fc" id="L96">    T binding = parseModule(resource);</span>
+<span class="fc" id="L78">    T binding = parseModule(resource);</span>
 
     // now check if this Metaschema imports other metaschema
-<span class="fc" id="L99">    List&lt;URI&gt; imports = getImports(binding);</span>
+<span class="fc" id="L81">    List&lt;URI&gt; imports = getImports(binding);</span>
     @NonNull Map&lt;URI, M&gt; importedModules;
-<span class="fc bfc" id="L101" title="All 2 branches covered.">    if (imports.isEmpty()) {</span>
-<span class="fc" id="L102">      importedModules = ObjectUtils.notNull(Collections.emptyMap());</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">    if (imports.isEmpty()) {</span>
+<span class="fc" id="L84">      importedModules = ObjectUtils.notNull(Collections.emptyMap());</span>
     } else {
       try {
-<span class="fc" id="L105">        importedModules = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">        for (URI importedResource : imports) {</span>
-<span class="fc" id="L107">          URI resolvedResource = ObjectUtils.notNull(resource.resolve(importedResource));</span>
-<span class="fc" id="L108">          importedModules.put(resolvedResource, loadInternal(resolvedResource, visitedResources));</span>
-<span class="fc" id="L109">        }</span>
-<span class="nc" id="L110">      } catch (MetaschemaException ex) {</span>
-<span class="nc" id="L111">        throw new IOException(ex);</span>
-<span class="fc" id="L112">      }</span>
+<span class="fc" id="L87">        importedModules = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        for (URI importedResource : imports) {</span>
+<span class="fc" id="L89">          URI resolvedResource = ObjectUtils.notNull(resource.resolve(importedResource));</span>
+<span class="fc" id="L90">          importedModules.put(resolvedResource, loadInternal(resolvedResource, visitedResources));</span>
+<span class="fc" id="L91">        }</span>
+<span class="nc" id="L92">      } catch (MetaschemaException ex) {</span>
+<span class="nc" id="L93">        throw new IOException(ex);</span>
+<span class="fc" id="L94">      }</span>
     }
 
     // now create this metaschema
-<span class="fc" id="L116">    Collection&lt;M&gt; values = importedModules.values();</span>
+<span class="fc" id="L98">    Collection&lt;M&gt; values = importedModules.values();</span>
     try {
-<span class="fc" id="L118">      M module = newModule(resource, binding, new ArrayList&lt;&gt;(values));</span>
-
-<span class="fc bfc" id="L120" title="All 2 branches covered.">      for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {</span>
-<span class="fc" id="L121">        postProcessor.processModule(module);</span>
-<span class="fc" id="L122">      }</span>
-<span class="fc" id="L123">      return module;</span>
-<span class="nc" id="L124">    } catch (MetaschemaException ex) {</span>
-<span class="nc" id="L125">      throw new IOException(ex);</span>
+<span class="fc" id="L100">      return newModule(resource, binding, new ArrayList&lt;&gt;(values));</span>
+<span class="nc" id="L101">    } catch (MetaschemaException ex) {</span>
+<span class="nc" id="L102">      throw new IOException(ex);</span>
     }
   }
 

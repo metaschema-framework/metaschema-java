@@ -29,7 +29,7 @@
 <span class="source-line-no">016</span><span id="line-16"> * Represents a rule requiring a Metaschema assembly data instance to have</span>
 <span class="source-line-no">017</span><span id="line-17"> * elements with a minimum and/or maximum occurrence.</span>
 <span class="source-line-no">018</span><span id="line-18"> */</span>
-<span class="source-line-no">019</span><span id="line-19">public interface ICardinalityConstraint extends IConstraint {</span>
+<span class="source-line-no">019</span><span id="line-19">public interface ICardinalityConstraint extends IConfigurableMessageConstraint {</span>
 <span class="source-line-no">020</span><span id="line-20">  /**</span>
 <span class="source-line-no">021</span><span id="line-21">   * Retrieve the required minimum occurrence of the target instance. If</span>
 <span class="source-line-no">022</span><span id="line-22">   * specified, this value must be less than or equal to the value of</span>
@@ -67,77 +67,82 @@
 <span class="source-line-no">054</span><span id="line-54">    return new Builder();</span>
 <span class="source-line-no">055</span><span id="line-55">  }</span>
 <span class="source-line-no">056</span><span id="line-56"></span>
-<span class="source-line-no">057</span><span id="line-57">  final class Builder</span>
-<span class="source-line-no">058</span><span id="line-58">      extends AbstractConstraintBuilder&lt;Builder, ICardinalityConstraint&gt; {</span>
-<span class="source-line-no">059</span><span id="line-59">    private Integer minOccurs;</span>
-<span class="source-line-no">060</span><span id="line-60">    private Integer maxOccurs;</span>
-<span class="source-line-no">061</span><span id="line-61"></span>
-<span class="source-line-no">062</span><span id="line-62">    private Builder() {</span>
-<span class="source-line-no">063</span><span id="line-63">      // disable construction</span>
-<span class="source-line-no">064</span><span id="line-64">    }</span>
+<span class="source-line-no">057</span><span id="line-57">  /**</span>
+<span class="source-line-no">058</span><span id="line-58">   * Provides a builder pattern for constructing a new</span>
+<span class="source-line-no">059</span><span id="line-59">   * {@link ICardinalityConstraint}.</span>
+<span class="source-line-no">060</span><span id="line-60">   */</span>
+<span class="source-line-no">061</span><span id="line-61">  final class Builder</span>
+<span class="source-line-no">062</span><span id="line-62">      extends AbstractConfigurableMessageConstraintBuilder&lt;Builder, ICardinalityConstraint&gt; {</span>
+<span class="source-line-no">063</span><span id="line-63">    private Integer minOccurs;</span>
+<span class="source-line-no">064</span><span id="line-64">    private Integer maxOccurs;</span>
 <span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">    /**</span>
-<span class="source-line-no">067</span><span id="line-67">     * Use the provided minimum occurrence to validate associated targets.</span>
-<span class="source-line-no">068</span><span id="line-68">     *</span>
-<span class="source-line-no">069</span><span id="line-69">     * @param value</span>
-<span class="source-line-no">070</span><span id="line-70">     *          the expected occurrence</span>
-<span class="source-line-no">071</span><span id="line-71">     * @return this builder</span>
-<span class="source-line-no">072</span><span id="line-72">     */</span>
-<span class="source-line-no">073</span><span id="line-73">    public Builder minOccurs(int value) {</span>
-<span class="source-line-no">074</span><span id="line-74">      this.minOccurs = value;</span>
-<span class="source-line-no">075</span><span id="line-75">      return this;</span>
-<span class="source-line-no">076</span><span id="line-76">    }</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">    /**</span>
-<span class="source-line-no">079</span><span id="line-79">     * Use the provided maximum occurrence to validate associated targets.</span>
-<span class="source-line-no">080</span><span id="line-80">     *</span>
-<span class="source-line-no">081</span><span id="line-81">     * @param value</span>
-<span class="source-line-no">082</span><span id="line-82">     *          the expected occurrence</span>
-<span class="source-line-no">083</span><span id="line-83">     * @return this builder</span>
-<span class="source-line-no">084</span><span id="line-84">     */</span>
-<span class="source-line-no">085</span><span id="line-85">    public Builder maxOccurs(int value) {</span>
-<span class="source-line-no">086</span><span id="line-86">      this.maxOccurs = value;</span>
-<span class="source-line-no">087</span><span id="line-87">      return this;</span>
-<span class="source-line-no">088</span><span id="line-88">    }</span>
-<span class="source-line-no">089</span><span id="line-89"></span>
-<span class="source-line-no">090</span><span id="line-90">    @Override</span>
-<span class="source-line-no">091</span><span id="line-91">    protected Builder getThis() {</span>
-<span class="source-line-no">092</span><span id="line-92">      return this;</span>
-<span class="source-line-no">093</span><span id="line-93">    }</span>
-<span class="source-line-no">094</span><span id="line-94"></span>
-<span class="source-line-no">095</span><span id="line-95">    @Override</span>
-<span class="source-line-no">096</span><span id="line-96">    protected void validate() {</span>
-<span class="source-line-no">097</span><span id="line-97">      super.validate();</span>
+<span class="source-line-no">066</span><span id="line-66">    private Builder() {</span>
+<span class="source-line-no">067</span><span id="line-67">      // disable construction</span>
+<span class="source-line-no">068</span><span id="line-68">    }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">    /**</span>
+<span class="source-line-no">071</span><span id="line-71">     * Use the provided minimum occurrence to validate associated targets.</span>
+<span class="source-line-no">072</span><span id="line-72">     *</span>
+<span class="source-line-no">073</span><span id="line-73">     * @param value</span>
+<span class="source-line-no">074</span><span id="line-74">     *          the expected occurrence</span>
+<span class="source-line-no">075</span><span id="line-75">     * @return this builder</span>
+<span class="source-line-no">076</span><span id="line-76">     */</span>
+<span class="source-line-no">077</span><span id="line-77">    public Builder minOccurs(int value) {</span>
+<span class="source-line-no">078</span><span id="line-78">      this.minOccurs = value;</span>
+<span class="source-line-no">079</span><span id="line-79">      return this;</span>
+<span class="source-line-no">080</span><span id="line-80">    }</span>
+<span class="source-line-no">081</span><span id="line-81"></span>
+<span class="source-line-no">082</span><span id="line-82">    /**</span>
+<span class="source-line-no">083</span><span id="line-83">     * Use the provided maximum occurrence to validate associated targets.</span>
+<span class="source-line-no">084</span><span id="line-84">     *</span>
+<span class="source-line-no">085</span><span id="line-85">     * @param value</span>
+<span class="source-line-no">086</span><span id="line-86">     *          the expected occurrence</span>
+<span class="source-line-no">087</span><span id="line-87">     * @return this builder</span>
+<span class="source-line-no">088</span><span id="line-88">     */</span>
+<span class="source-line-no">089</span><span id="line-89">    public Builder maxOccurs(int value) {</span>
+<span class="source-line-no">090</span><span id="line-90">      this.maxOccurs = value;</span>
+<span class="source-line-no">091</span><span id="line-91">      return this;</span>
+<span class="source-line-no">092</span><span id="line-92">    }</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">    @Override</span>
+<span class="source-line-no">095</span><span id="line-95">    protected Builder getThis() {</span>
+<span class="source-line-no">096</span><span id="line-96">      return this;</span>
+<span class="source-line-no">097</span><span id="line-97">    }</span>
 <span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">      if (getMinOccurs() == null &amp;&amp; getMaxOccurs() == null) {</span>
-<span class="source-line-no">100</span><span id="line-100">        throw new IllegalStateException("At least one of minOccurs or maxOccurs must be provided.");</span>
-<span class="source-line-no">101</span><span id="line-101">      }</span>
-<span class="source-line-no">102</span><span id="line-102">    }</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">    private Integer getMinOccurs() {</span>
-<span class="source-line-no">105</span><span id="line-105">      return minOccurs;</span>
+<span class="source-line-no">099</span><span id="line-99">    @Override</span>
+<span class="source-line-no">100</span><span id="line-100">    protected void validate() {</span>
+<span class="source-line-no">101</span><span id="line-101">      super.validate();</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">      if (getMinOccurs() == null &amp;&amp; getMaxOccurs() == null) {</span>
+<span class="source-line-no">104</span><span id="line-104">        throw new IllegalStateException("At least one of minOccurs or maxOccurs must be provided.");</span>
+<span class="source-line-no">105</span><span id="line-105">      }</span>
 <span class="source-line-no">106</span><span id="line-106">    }</span>
 <span class="source-line-no">107</span><span id="line-107"></span>
-<span class="source-line-no">108</span><span id="line-108">    private Integer getMaxOccurs() {</span>
-<span class="source-line-no">109</span><span id="line-109">      return maxOccurs;</span>
+<span class="source-line-no">108</span><span id="line-108">    private Integer getMinOccurs() {</span>
+<span class="source-line-no">109</span><span id="line-109">      return minOccurs;</span>
 <span class="source-line-no">110</span><span id="line-110">    }</span>
 <span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">    @Override</span>
-<span class="source-line-no">113</span><span id="line-113">    protected ICardinalityConstraint newInstance() {</span>
-<span class="source-line-no">114</span><span id="line-114">      return new DefaultCardinalityConstraint(</span>
-<span class="source-line-no">115</span><span id="line-115">          getId(),</span>
-<span class="source-line-no">116</span><span id="line-116">          getFormalName(),</span>
-<span class="source-line-no">117</span><span id="line-117">          getDescription(),</span>
-<span class="source-line-no">118</span><span id="line-118">          ObjectUtils.notNull(getSource()),</span>
-<span class="source-line-no">119</span><span id="line-119">          getLevel(),</span>
-<span class="source-line-no">120</span><span id="line-120">          getTarget(),</span>
-<span class="source-line-no">121</span><span id="line-121">          getProperties(),</span>
-<span class="source-line-no">122</span><span id="line-122">          getMinOccurs(),</span>
-<span class="source-line-no">123</span><span id="line-123">          getMaxOccurs(),</span>
-<span class="source-line-no">124</span><span id="line-124">          getRemarks());</span>
-<span class="source-line-no">125</span><span id="line-125">    }</span>
-<span class="source-line-no">126</span><span id="line-126">  }</span>
-<span class="source-line-no">127</span><span id="line-127">}</span>
+<span class="source-line-no">112</span><span id="line-112">    private Integer getMaxOccurs() {</span>
+<span class="source-line-no">113</span><span id="line-113">      return maxOccurs;</span>
+<span class="source-line-no">114</span><span id="line-114">    }</span>
+<span class="source-line-no">115</span><span id="line-115"></span>
+<span class="source-line-no">116</span><span id="line-116">    @Override</span>
+<span class="source-line-no">117</span><span id="line-117">    protected ICardinalityConstraint newInstance() {</span>
+<span class="source-line-no">118</span><span id="line-118">      return new DefaultCardinalityConstraint(</span>
+<span class="source-line-no">119</span><span id="line-119">          getId(),</span>
+<span class="source-line-no">120</span><span id="line-120">          getFormalName(),</span>
+<span class="source-line-no">121</span><span id="line-121">          getDescription(),</span>
+<span class="source-line-no">122</span><span id="line-122">          ObjectUtils.notNull(getSource()),</span>
+<span class="source-line-no">123</span><span id="line-123">          getLevel(),</span>
+<span class="source-line-no">124</span><span id="line-124">          getTarget(),</span>
+<span class="source-line-no">125</span><span id="line-125">          getProperties(),</span>
+<span class="source-line-no">126</span><span id="line-126">          getMinOccurs(),</span>
+<span class="source-line-no">127</span><span id="line-127">          getMaxOccurs(),</span>
+<span class="source-line-no">128</span><span id="line-128">          getMessage(),</span>
+<span class="source-line-no">129</span><span id="line-129">          getRemarks());</span>
+<span class="source-line-no">130</span><span id="line-130">    }</span>
+<span class="source-line-no">131</span><span id="line-131">  }</span>
+<span class="source-line-no">132</span><span id="line-132">}</span>
 
 
 

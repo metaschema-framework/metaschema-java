@@ -18,7 +18,7 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
-import gov.nist.secauto.metaschema.databind.model.binding.metaschema.AssemblyModel;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -31,7 +31,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-class ChoiceGroupModelContainerSupport
+<span class="fc" id="L34">class ChoiceGroupModelContainerSupport</span>
     implements IContainerModelSupport&lt;
         INamedModelInstanceGrouped,
         INamedModelInstanceGrouped,
@@ -99,72 +99,74 @@ class ChoiceGroupModelContainerSupport
 <span class="fc" id="L99">    IBoundInstanceModelChoiceGroup instance = ObjectUtils.requireNonNull(</span>
 <span class="fc" id="L100">        bindingInstance.getDefinition().getChoiceGroupInstanceByName(&quot;choices&quot;));</span>
 <span class="fc bfc" id="L101" title="All 2 branches covered.">    for (Object obj : ObjectUtils.notNull(binding.getChoices())) {</span>
-<span class="fc" id="L102">      IBoundInstanceModelGroupedAssembly objInstance</span>
-<span class="fc" id="L103">          = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">      assert obj != null;</span>
 
-<span class="fc bfc" id="L105" title="All 2 branches covered.">      if (obj instanceof AssemblyModel.ChoiceGroup.Assembly) {</span>
-<span class="fc" id="L106">        IAssemblyInstanceGrouped assembly = newInstance(</span>
+<span class="fc" id="L104">      IBoundInstanceModelGroupedAssembly objInstance</span>
+<span class="fc" id="L105">          = (IBoundInstanceModelGroupedAssembly) instance.getItemInstance(obj);</span>
+
+<span class="fc bfc" id="L107" title="All 2 branches covered.">      if (obj instanceof AssemblyModel.ChoiceGroup.Assembly) {</span>
+<span class="fc" id="L108">        IAssemblyInstanceGrouped assembly = newInstance(</span>
             (AssemblyModel.ChoiceGroup.Assembly) obj,
             objInstance,
             assemblyReferencePosition++,
             parent);
-<span class="fc" id="L111">        addInstance(assembly, namedModelInstances, assemblyInstances);</span>
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">      } else if (obj instanceof AssemblyModel.ChoiceGroup.DefineAssembly) {</span>
-<span class="fc" id="L113">        IAssemblyInstanceGrouped assembly = new InstanceModelGroupedAssemblyInline(</span>
+<span class="fc" id="L113">        addInstance(assembly, namedModelInstances, assemblyInstances);</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">      } else if (obj instanceof AssemblyModel.ChoiceGroup.DefineAssembly) {</span>
+<span class="fc" id="L115">        IAssemblyInstanceGrouped assembly = new InstanceModelGroupedAssemblyInline(</span>
             (AssemblyModel.ChoiceGroup.DefineAssembly) obj,
             objInstance,
             assemblyInlineDefinitionPosition++,
             parent,
             nodeItemFactory);
-<span class="fc" id="L119">        addInstance(assembly, namedModelInstances, assemblyInstances);</span>
-<span class="pc bnc" id="L120" title="All 2 branches missed.">      } else if (obj instanceof AssemblyModel.ChoiceGroup.Field) {</span>
-<span class="nc" id="L121">        IFieldInstanceGrouped field = newInstance(</span>
+<span class="fc" id="L121">        addInstance(assembly, namedModelInstances, assemblyInstances);</span>
+<span class="pc bnc" id="L122" title="All 2 branches missed.">      } else if (obj instanceof AssemblyModel.ChoiceGroup.Field) {</span>
+<span class="nc" id="L123">        IFieldInstanceGrouped field = newInstance(</span>
             (AssemblyModel.ChoiceGroup.Field) obj,
             objInstance,
             fieldReferencePosition++,
             parent);
-<span class="nc" id="L126">        addInstance(field, namedModelInstances, fieldInstances);</span>
-<span class="nc bnc" id="L127" title="All 2 branches missed.">      } else if (obj instanceof AssemblyModel.ChoiceGroup.DefineField) {</span>
-<span class="nc" id="L128">        IFieldInstanceGrouped field = new InstanceModelGroupedFieldInline(</span>
+<span class="nc" id="L128">        addInstance(field, namedModelInstances, fieldInstances);</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">      } else if (obj instanceof AssemblyModel.ChoiceGroup.DefineField) {</span>
+<span class="nc" id="L130">        IFieldInstanceGrouped field = new InstanceModelGroupedFieldInline(</span>
             (AssemblyModel.ChoiceGroup.DefineField) obj,
             objInstance,
             fieldInlineDefinitionPosition++,
             parent);
-<span class="nc" id="L133">        addInstance(field, namedModelInstances, fieldInstances);</span>
-<span class="nc" id="L134">      } else {</span>
-<span class="nc" id="L135">        throw new UnsupportedOperationException(</span>
-<span class="nc" id="L136">            String.format(&quot;Unknown choice group model instance class: %s&quot;, obj.getClass()));</span>
+<span class="nc" id="L135">        addInstance(field, namedModelInstances, fieldInstances);</span>
+<span class="nc" id="L136">      } else {</span>
+<span class="nc" id="L137">        throw new UnsupportedOperationException(</span>
+<span class="nc" id="L138">            String.format(&quot;Unknown choice group model instance class: %s&quot;, obj.getClass()));</span>
       }
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L140">    }</span>
 
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">    this.namedModelInstances = namedModelInstances.isEmpty()</span>
-<span class="nc" id="L141">        ? CollectionUtil.emptyMap()</span>
-<span class="fc" id="L142">        : CollectionUtil.unmodifiableMap(namedModelInstances);</span>
-<span class="pc bpc" id="L143" title="1 of 2 branches missed.">    this.fieldInstances = fieldInstances.isEmpty()</span>
-<span class="fc" id="L144">        ? CollectionUtil.emptyMap()</span>
-<span class="pc" id="L145">        : CollectionUtil.unmodifiableMap(fieldInstances);</span>
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">    this.assemblyInstances = assemblyInstances.isEmpty()</span>
-<span class="nc" id="L147">        ? CollectionUtil.emptyMap()</span>
-<span class="fc" id="L148">        : CollectionUtil.unmodifiableMap(assemblyInstances);</span>
-<span class="fc" id="L149">  }</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">    this.namedModelInstances = namedModelInstances.isEmpty()</span>
+<span class="nc" id="L143">        ? CollectionUtil.emptyMap()</span>
+<span class="fc" id="L144">        : CollectionUtil.unmodifiableMap(namedModelInstances);</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">    this.fieldInstances = fieldInstances.isEmpty()</span>
+<span class="fc" id="L146">        ? CollectionUtil.emptyMap()</span>
+<span class="pc" id="L147">        : CollectionUtil.unmodifiableMap(fieldInstances);</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">    this.assemblyInstances = assemblyInstances.isEmpty()</span>
+<span class="nc" id="L149">        ? CollectionUtil.emptyMap()</span>
+<span class="fc" id="L150">        : CollectionUtil.unmodifiableMap(assemblyInstances);</span>
+<span class="fc" id="L151">  }</span>
 
   protected static void addInstance(
       @NonNull IAssemblyInstanceGrouped assembly,
       @NonNull Map&lt;QName, INamedModelInstanceGrouped&gt; namedModelInstances,
       @NonNull Map&lt;QName, IAssemblyInstanceGrouped&gt; assemblyInstances) {
-<span class="fc" id="L155">    QName effectiveName = assembly.getXmlQName();</span>
-<span class="fc" id="L156">    namedModelInstances.put(effectiveName, assembly);</span>
-<span class="fc" id="L157">    assemblyInstances.put(effectiveName, assembly);</span>
-<span class="fc" id="L158">  }</span>
+<span class="fc" id="L157">    QName effectiveName = assembly.getXmlQName();</span>
+<span class="fc" id="L158">    namedModelInstances.put(effectiveName, assembly);</span>
+<span class="fc" id="L159">    assemblyInstances.put(effectiveName, assembly);</span>
+<span class="fc" id="L160">  }</span>
 
   protected static void addInstance(
       @NonNull IFieldInstanceGrouped field,
       @NonNull Map&lt;QName, INamedModelInstanceGrouped&gt; namedModelInstances,
       @NonNull Map&lt;QName, IFieldInstanceGrouped&gt; fieldInstances) {
-<span class="nc" id="L164">    QName effectiveName = field.getXmlQName();</span>
-<span class="nc" id="L165">    namedModelInstances.put(effectiveName, field);</span>
-<span class="nc" id="L166">    fieldInstances.put(effectiveName, field);</span>
-<span class="nc" id="L167">  }</span>
+<span class="nc" id="L166">    QName effectiveName = field.getXmlQName();</span>
+<span class="nc" id="L167">    namedModelInstances.put(effectiveName, field);</span>
+<span class="nc" id="L168">    fieldInstances.put(effectiveName, field);</span>
+<span class="nc" id="L169">  }</span>
 
   @NonNull
   protected static IAssemblyInstanceGrouped newInstance(
@@ -172,20 +174,20 @@ class ChoiceGroupModelContainerSupport
       @NonNull IBoundInstanceModelGroupedAssembly objInstance,
       int position,
       @NonNull IChoiceGroupInstance parent) {
-<span class="fc" id="L175">    IAssemblyDefinition owningDefinition = parent.getOwningDefinition();</span>
-<span class="fc" id="L176">    IModule module = owningDefinition.getContainingModule();</span>
+<span class="fc" id="L177">    IAssemblyDefinition owningDefinition = parent.getOwningDefinition();</span>
+<span class="fc" id="L178">    IModule module = owningDefinition.getContainingModule();</span>
 
-<span class="fc" id="L178">    QName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));</span>
-<span class="fc" id="L179">    IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(name);</span>
+<span class="fc" id="L180">    QName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));</span>
+<span class="fc" id="L181">    IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(name);</span>
 
-<span class="pc bpc" id="L181" title="1 of 2 branches missed.">    if (definition == null) {</span>
-<span class="nc" id="L182">      throw new IllegalStateException(</span>
-<span class="nc" id="L183">          String.format(&quot;Unable to resolve assembly reference '%s' in definition '%s' in module '%s'&quot;,</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">    if (definition == null) {</span>
+<span class="nc" id="L184">      throw new IllegalStateException(</span>
+<span class="nc" id="L185">          String.format(&quot;Unable to resolve assembly reference '%s' in definition '%s' in module '%s'&quot;,</span>
               name,
-<span class="nc" id="L185">              owningDefinition.getName(),</span>
-<span class="nc" id="L186">              module.getShortName()));</span>
+<span class="nc" id="L187">              owningDefinition.getName(),</span>
+<span class="nc" id="L188">              module.getShortName()));</span>
     }
-<span class="fc" id="L188">    return new InstanceModelGroupedAssemblyReference(obj, objInstance, position, definition, parent);</span>
+<span class="fc" id="L190">    return new InstanceModelGroupedAssemblyReference(obj, objInstance, position, definition, parent);</span>
   }
 
   @NonNull
@@ -194,40 +196,40 @@ class ChoiceGroupModelContainerSupport
       @NonNull IBoundInstanceModelGroupedAssembly objInstance,
       int position,
       @NonNull IChoiceGroupInstance parent) {
-<span class="nc" id="L197">    IAssemblyDefinition owningDefinition = parent.getOwningDefinition();</span>
-<span class="nc" id="L198">    IModule module = owningDefinition.getContainingModule();</span>
+<span class="nc" id="L199">    IAssemblyDefinition owningDefinition = parent.getOwningDefinition();</span>
+<span class="nc" id="L200">    IModule module = owningDefinition.getContainingModule();</span>
 
-<span class="nc" id="L200">    QName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));</span>
-<span class="nc" id="L201">    IFieldDefinition definition = module.getScopedFieldDefinitionByName(name);</span>
-<span class="nc bnc" id="L202" title="All 2 branches missed.">    if (definition == null) {</span>
-<span class="nc" id="L203">      throw new IllegalStateException(</span>
-<span class="nc" id="L204">          String.format(&quot;Unable to resolve field reference '%s' in definition '%s' in module '%s'&quot;,</span>
+<span class="nc" id="L202">    QName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));</span>
+<span class="nc" id="L203">    IFieldDefinition definition = module.getScopedFieldDefinitionByName(name);</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">    if (definition == null) {</span>
+<span class="nc" id="L205">      throw new IllegalStateException(</span>
+<span class="nc" id="L206">          String.format(&quot;Unable to resolve field reference '%s' in definition '%s' in module '%s'&quot;,</span>
               name,
-<span class="nc" id="L206">              owningDefinition.getName(),</span>
-<span class="nc" id="L207">              module.getShortName()));</span>
+<span class="nc" id="L208">              owningDefinition.getName(),</span>
+<span class="nc" id="L209">              module.getShortName()));</span>
     }
-<span class="nc" id="L209">    return new InstanceModelGroupedFieldReference(obj, objInstance, position, definition, parent);</span>
+<span class="nc" id="L211">    return new InstanceModelGroupedFieldReference(obj, objInstance, position, definition, parent);</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public Collection&lt;INamedModelInstanceGrouped&gt; getModelInstances() {
-<span class="nc" id="L215">    return namedModelInstances.values();</span>
+<span class="nc" id="L217">    return namedModelInstances.values();</span>
   }
 
   @Override
   public Map&lt;QName, INamedModelInstanceGrouped&gt; getNamedModelInstanceMap() {
-<span class="fc" id="L220">    return namedModelInstances;</span>
+<span class="fc" id="L222">    return namedModelInstances;</span>
   }
 
   @Override
   public Map&lt;QName, IFieldInstanceGrouped&gt; getFieldInstanceMap() {
-<span class="nc" id="L225">    return fieldInstances;</span>
+<span class="nc" id="L227">    return fieldInstances;</span>
   }
 
   @Override
   public Map&lt;QName, IAssemblyInstanceGrouped&gt; getAssemblyInstanceMap() {
-<span class="nc" id="L230">    return assemblyInstances;</span>
+<span class="nc" id="L232">    return assemblyInstances;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -24,7 +24,6 @@ import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ISource;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.InlineAssemblyDefinitionType;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -84,25 +83,27 @@ class XmlInlineAssemblyDefinition
   public XmlInlineAssemblyDefinition(
       @NonNull InlineAssemblyDefinitionType xmlObject,
       @NonNull IContainerModel parent) {
-<span class="fc" id="L87">    super(parent);</span>
-<span class="fc" id="L88">    this.xmlObject = xmlObject;</span>
-<span class="fc" id="L89">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(xmlObject, this)));</span>
-<span class="fc" id="L90">    this.modelContainer</span>
-<span class="fc" id="L91">        = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlAssemblyModelContainer.of(xmlObject.getModel(), this)));</span>
-<span class="fc" id="L92">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
-<span class="nc" id="L93">      IModelConstrained retval = new AssemblyConstraintSet();</span>
-<span class="nc bnc" id="L94" title="All 2 branches missed.">      if (getXmlObject().isSetConstraint()) {</span>
-<span class="nc" id="L95">        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()),</span>
-<span class="nc" id="L96">            ISource.modelSource(getContainingModule()));</span>
+<span class="fc" id="L86">    super(parent);</span>
+<span class="fc" id="L87">    this.xmlObject = xmlObject;</span>
+<span class="fc" id="L88">    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlFlagContainerSupport.newInstance(xmlObject, this)));</span>
+<span class="fc" id="L89">    this.modelContainer</span>
+<span class="fc" id="L90">        = ObjectUtils.notNull(Lazy.lazy(() -&gt; XmlAssemblyModelContainerSupport.of(xmlObject.getModel(), this)));</span>
+<span class="fc" id="L91">    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="nc" id="L92">      IModelConstrained retval = new AssemblyConstraintSet();</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">      if (getXmlObject().isSetConstraint()) {</span>
+<span class="nc" id="L94">        ConstraintXmlSupport.parse(</span>
+            retval,
+<span class="nc" id="L96">            ObjectUtils.notNull(getXmlObject().getConstraint()),</span>
+<span class="nc" id="L97">            getContainingModule().getSource());</span>
       }
-<span class="nc" id="L98">      return retval;</span>
+<span class="nc" id="L99">      return retval;</span>
     }));
-<span class="fc" id="L100">  }</span>
+<span class="fc" id="L101">  }</span>
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public IContainerFlagSupport&lt;IFlagInstance&gt; getFlagContainer() {
-<span class="fc" id="L105">    return flagContainer.get();</span>
+<span class="fc" id="L106">    return flagContainer.get();</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
@@ -114,13 +115,13 @@ class XmlInlineAssemblyDefinition
       IAssemblyInstanceAbsolute,
       IChoiceInstance,
       IChoiceGroupInstance&gt; getModelContainer() {
-<span class="fc" id="L117">    return modelContainer.get();</span>
+<span class="fc" id="L118">    return modelContainer.get();</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public IModelConstrained getConstraintSupport() {
-<span class="nc" id="L123">    return constraints.get();</span>
+<span class="nc" id="L124">    return constraints.get();</span>
   }
 
   /**
@@ -129,67 +130,67 @@ class XmlInlineAssemblyDefinition
    * @return the XML model
    */
   protected InlineAssemblyDefinitionType getXmlObject() {
-<span class="fc" id="L132">    return xmlObject;</span>
+<span class="fc" id="L133">    return xmlObject;</span>
   }
 
   @Override
   public String getFormalName() {
-<span class="nc bnc" id="L137" title="All 2 branches missed.">    return getXmlObject().isSetFormalName() ? getXmlObject().getFormalName() : null;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">    return getXmlObject().isSetFormalName() ? getXmlObject().getFormalName() : null;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupLine getDescription() {
-<span class="nc bnc" id="L143" title="All 2 branches missed.">    return getXmlObject().isSetDescription()</span>
-<span class="nc" id="L144">        ? MarkupStringConverter.toMarkupString(getXmlObject().getDescription())</span>
-<span class="nc" id="L145">        : null;</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">    return getXmlObject().isSetDescription()</span>
+<span class="nc" id="L145">        ? MarkupStringConverter.toMarkupString(getXmlObject().getDescription())</span>
+<span class="nc" id="L146">        : null;</span>
   }
 
   @Override
   public Map&lt;IAttributable.Key, Set&lt;String&gt;&gt; getProperties() {
-<span class="nc" id="L150">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlObject().getPropList()));</span>
+<span class="nc" id="L151">    return ModelFactory.toProperties(CollectionUtil.listOrEmpty(getXmlObject().getPropList()));</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String getName() {
-<span class="fc" id="L156">    return getXmlObject().getName();</span>
+<span class="fc" id="L157">    return getXmlObject().getName();</span>
   }
 
   @Override
   public Integer getIndex() {
-<span class="nc bnc" id="L161" title="All 2 branches missed.">    return getXmlObject().isSetIndex() ? getXmlObject().getIndex().intValue() : null;</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">    return getXmlObject().isSetIndex() ? getXmlObject().getIndex().intValue() : null;</span>
   }
 
   @Override
   public String getGroupAsName() {
-<span class="nc bnc" id="L166" title="All 2 branches missed.">    return getXmlObject().isSetGroupAs() ? getXmlObject().getGroupAs().getName() : null;</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">    return getXmlObject().isSetGroupAs() ? getXmlObject().getGroupAs().getName() : null;</span>
   }
 
   @Override
   public int getMinOccurs() {
-<span class="fc" id="L171">    return XmlModelParser.getMinOccurs(getXmlObject().getMinOccurs());</span>
+<span class="fc" id="L172">    return XmlModelParser.getMinOccurs(getXmlObject().getMinOccurs());</span>
   }
 
   @Override
   public int getMaxOccurs() {
-<span class="fc" id="L176">    return XmlModelParser.getMaxOccurs(getXmlObject().getMaxOccurs());</span>
+<span class="fc" id="L177">    return XmlModelParser.getMaxOccurs(getXmlObject().getMaxOccurs());</span>
   }
 
   @Override
   public JsonGroupAsBehavior getJsonGroupAsBehavior() {
-<span class="nc" id="L181">    return XmlModelParser.getJsonGroupAsBehavior(getXmlObject().getGroupAs());</span>
+<span class="nc" id="L182">    return XmlModelParser.getJsonGroupAsBehavior(getXmlObject().getGroupAs());</span>
   }
 
   @Override
   public XmlGroupAsBehavior getXmlGroupAsBehavior() {
-<span class="nc" id="L186">    return XmlModelParser.getXmlGroupAsBehavior(getXmlObject().getGroupAs());</span>
+<span class="nc" id="L187">    return XmlModelParser.getXmlGroupAsBehavior(getXmlObject().getGroupAs());</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc bnc" id="L192" title="All 2 branches missed.">    return getXmlObject().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlObject().getRemarks()) : null;</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">    return getXmlObject().isSetRemarks() ? MarkupStringConverter.toMarkupString(getXmlObject().getRemarks()) : null;</span>
   }
 
   // -------------------------------------

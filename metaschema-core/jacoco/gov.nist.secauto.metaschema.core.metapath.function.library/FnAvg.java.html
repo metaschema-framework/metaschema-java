@@ -34,29 +34,30 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * An implementation of XPath 3.1
- * &lt;a href=&quot;https://www.w3.org/TR/xpath-functions-31/#func-avg&quot;&gt;fn:avg&lt;/a&gt;.
+ * Implements the XPath 3.1
+ * &lt;a href= &quot;https://www.w3.org/TR/xpath-functions-31/#func-avg&quot;&gt;fn:avg&lt;/a&gt;
+ * function.
  */
 @SuppressWarnings(&quot;PMD.CouplingBetweenObjects&quot;)
 public final class FnAvg {
   private static final String NAME = &quot;avg&quot;;
 
   @NonNull
-<span class="fc" id="L45">  static final IFunction SIGNATURE = IFunction.builder()</span>
-<span class="fc" id="L46">      .name(NAME)</span>
-<span class="fc" id="L47">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
-<span class="fc" id="L48">      .deterministic()</span>
-<span class="fc" id="L49">      .contextIndependent()</span>
-<span class="fc" id="L50">      .focusIndependent()</span>
-<span class="fc" id="L51">      .argument(IArgument.builder()</span>
-<span class="fc" id="L52">          .name(&quot;arg&quot;)</span>
-<span class="fc" id="L53">          .type(IAnyAtomicItem.class)</span>
-<span class="fc" id="L54">          .zeroOrMore()</span>
-<span class="fc" id="L55">          .build())</span>
-<span class="fc" id="L56">      .returnType(IAnyAtomicItem.class)</span>
-<span class="fc" id="L57">      .returnZeroOrOne()</span>
-<span class="fc" id="L58">      .functionHandler(FnAvg::execute)</span>
-<span class="fc" id="L59">      .build();</span>
+<span class="fc" id="L46">  static final IFunction SIGNATURE = IFunction.builder()</span>
+<span class="fc" id="L47">      .name(NAME)</span>
+<span class="fc" id="L48">      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)</span>
+<span class="fc" id="L49">      .deterministic()</span>
+<span class="fc" id="L50">      .contextIndependent()</span>
+<span class="fc" id="L51">      .focusIndependent()</span>
+<span class="fc" id="L52">      .argument(IArgument.builder()</span>
+<span class="fc" id="L53">          .name(&quot;arg&quot;)</span>
+<span class="fc" id="L54">          .type(IAnyAtomicItem.class)</span>
+<span class="fc" id="L55">          .zeroOrMore()</span>
+<span class="fc" id="L56">          .build())</span>
+<span class="fc" id="L57">      .returnType(IAnyAtomicItem.class)</span>
+<span class="fc" id="L58">      .returnZeroOrOne()</span>
+<span class="fc" id="L59">      .functionHandler(FnAvg::execute)</span>
+<span class="fc" id="L60">      .build();</span>
 
   private FnAvg() {
     // disable construction
@@ -69,12 +70,12 @@ public final class FnAvg {
       @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-<span class="fc" id="L72">    ISequence&lt;? extends IAnyAtomicItem&gt; sequence = FunctionUtils.asType(</span>
-<span class="fc" id="L73">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="fc" id="L73">    ISequence&lt;? extends IAnyAtomicItem&gt; sequence = FunctionUtils.asType(</span>
+<span class="fc" id="L74">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
 
-<span class="fc" id="L75">    List&lt;? extends IAnyAtomicItem&gt; items = sequence.getValue();</span>
+<span class="fc" id="L76">    List&lt;? extends IAnyAtomicItem&gt; items = sequence.getValue();</span>
 
-<span class="fc" id="L77">    return ISequence.of(average(items));</span>
+<span class="fc" id="L78">    return ISequence.of(average(items));</span>
   }
 
   /**
@@ -88,67 +89,67 @@ public final class FnAvg {
   @SuppressWarnings(&quot;PMD.CyclomaticComplexity&quot;)
   @Nullable
   public static IAnyAtomicItem average(@NonNull Collection&lt;? extends IAnyAtomicItem&gt; items) {
-<span class="fc bfc" id="L91" title="All 2 branches covered.">    if (items.isEmpty()) {</span>
-<span class="fc" id="L92">      return null; // NOPMD - readability</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">    if (items.isEmpty()) {</span>
+<span class="fc" id="L93">      return null; // NOPMD - readability</span>
     }
 
     // tell cpd to start ignoring code - CPD-OFF
 
-<span class="fc" id="L97">    Map&lt;Class&lt;? extends IAnyAtomicItem&gt;, Integer&gt; typeCounts = FunctionUtils.countTypes(</span>
+<span class="fc" id="L98">    Map&lt;Class&lt;? extends IAnyAtomicItem&gt;, Integer&gt; typeCounts = FunctionUtils.countTypes(</span>
         OperationFunctions.AGGREGATE_MATH_TYPES,
-<span class="fc" id="L99">        ObjectUtils.notNull(items));</span>
+<span class="fc" id="L100">        ObjectUtils.notNull(items));</span>
 
-<span class="fc" id="L101">    int count = items.size();</span>
-<span class="fc" id="L102">    int dayTimeCount = typeCounts.getOrDefault(IDayTimeDurationItem.class, 0);</span>
-<span class="fc" id="L103">    int yearMonthCount = typeCounts.getOrDefault(IYearMonthDurationItem.class, 0);</span>
-<span class="fc" id="L104">    int numericCount = typeCounts.getOrDefault(INumericItem.class, 0);</span>
+<span class="fc" id="L102">    int count = items.size();</span>
+<span class="fc" id="L103">    int dayTimeCount = typeCounts.getOrDefault(IDayTimeDurationItem.class, 0);</span>
+<span class="fc" id="L104">    int yearMonthCount = typeCounts.getOrDefault(IYearMonthDurationItem.class, 0);</span>
+<span class="fc" id="L105">    int numericCount = typeCounts.getOrDefault(INumericItem.class, 0);</span>
 
     IAnyAtomicItem retval;
-<span class="fc bfc" id="L107" title="All 2 branches covered.">    if (dayTimeCount &gt; 0) {</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">      if (dayTimeCount != count) {</span>
-<span class="fc" id="L109">        throw new InvalidArgumentFunctionException(</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (dayTimeCount &gt; 0) {</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">      if (dayTimeCount != count) {</span>
+<span class="fc" id="L110">        throw new InvalidArgumentFunctionException(</span>
             InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
-<span class="fc" id="L111">            String.format(&quot;Values must all be of type '%s'.&quot;, IDayTimeDurationItem.class.getName()));</span>
+<span class="fc" id="L112">            String.format(&quot;Values must all be of type '%s'.&quot;, IDayTimeDurationItem.class.getName()));</span>
       }
 
-<span class="fc" id="L114">      List&lt;IDayTimeDurationItem&gt; values = items.stream()</span>
-<span class="fc" id="L115">          .map(item -&gt; (IDayTimeDurationItem) item)</span>
-<span class="fc" id="L116">          .collect(Collectors.toList());</span>
-<span class="fc" id="L117">      retval = averageDayTimeDurations(ObjectUtils.notNull(values));</span>
-<span class="fc bfc" id="L118" title="All 2 branches covered.">    } else if (yearMonthCount &gt; 0) {</span>
-<span class="fc bfc" id="L119" title="All 2 branches covered.">      if (yearMonthCount != count) {</span>
-<span class="fc" id="L120">        throw new InvalidArgumentFunctionException(</span>
+<span class="fc" id="L115">      List&lt;IDayTimeDurationItem&gt; values = items.stream()</span>
+<span class="fc" id="L116">          .map(item -&gt; (IDayTimeDurationItem) item)</span>
+<span class="fc" id="L117">          .collect(Collectors.toList());</span>
+<span class="fc" id="L118">      retval = averageDayTimeDurations(ObjectUtils.notNull(values));</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">    } else if (yearMonthCount &gt; 0) {</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">      if (yearMonthCount != count) {</span>
+<span class="fc" id="L121">        throw new InvalidArgumentFunctionException(</span>
             InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
-<span class="fc" id="L122">            String.format(&quot;Values must all be of type '%s'.&quot;, IYearMonthDurationItem.class.getName()));</span>
+<span class="fc" id="L123">            String.format(&quot;Values must all be of type '%s'.&quot;, IYearMonthDurationItem.class.getName()));</span>
       }
 
-<span class="fc" id="L125">      List&lt;IYearMonthDurationItem&gt; values = items.stream()</span>
-<span class="fc" id="L126">          .map(item -&gt; (IYearMonthDurationItem) item)</span>
-<span class="fc" id="L127">          .collect(Collectors.toList());</span>
-<span class="fc" id="L128">      retval = averageYearMonthDurations(ObjectUtils.notNull(values));</span>
-<span class="pc bpc" id="L129" title="1 of 2 branches missed.">    } else if (numericCount &gt; 0) {</span>
-<span class="fc bfc" id="L130" title="All 2 branches covered.">      if (numericCount != count) {</span>
-<span class="fc" id="L131">        throw new InvalidArgumentFunctionException(</span>
+<span class="fc" id="L126">      List&lt;IYearMonthDurationItem&gt; values = items.stream()</span>
+<span class="fc" id="L127">          .map(item -&gt; (IYearMonthDurationItem) item)</span>
+<span class="fc" id="L128">          .collect(Collectors.toList());</span>
+<span class="fc" id="L129">      retval = averageYearMonthDurations(ObjectUtils.notNull(values));</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">    } else if (numericCount &gt; 0) {</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">      if (numericCount != count) {</span>
+<span class="fc" id="L132">        throw new InvalidArgumentFunctionException(</span>
             InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
-<span class="fc" id="L133">            String.format(&quot;Values must all be of type '%s'.&quot;, INumericItem.class.getName()));</span>
+<span class="fc" id="L134">            String.format(&quot;Values must all be of type '%s'.&quot;, INumericItem.class.getName()));</span>
       }
 
-<span class="fc" id="L136">      List&lt;INumericItem&gt; values = items.stream()</span>
-<span class="fc" id="L137">          .map(item -&gt; IDecimalItem.cast(ObjectUtils.notNull(item)))</span>
-<span class="fc" id="L138">          .collect(Collectors.toList());</span>
-<span class="fc" id="L139">      retval = averageNumeric(ObjectUtils.notNull(values));</span>
-<span class="fc" id="L140">    } else {</span>
-<span class="nc" id="L141">      throw new InvalidArgumentFunctionException(</span>
+<span class="fc" id="L137">      List&lt;INumericItem&gt; values = items.stream()</span>
+<span class="fc" id="L138">          .map(item -&gt; IDecimalItem.cast(ObjectUtils.notNull(item)))</span>
+<span class="fc" id="L139">          .collect(Collectors.toList());</span>
+<span class="fc" id="L140">      retval = averageNumeric(ObjectUtils.notNull(values));</span>
+<span class="fc" id="L141">    } else {</span>
+<span class="nc" id="L142">      throw new InvalidArgumentFunctionException(</span>
           InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
-<span class="nc" id="L143">          String.format(&quot;Values must all be of type '%s'.&quot;,</span>
-<span class="nc" id="L144">              OperationFunctions.AGGREGATE_MATH_TYPES.stream()</span>
-<span class="nc" id="L145">                  .map(Class::getName)</span>
-<span class="nc" id="L146">                  .collect(CustomCollectors.joiningWithOxfordComma(&quot;,&quot;))));</span>
+<span class="nc" id="L144">          String.format(&quot;Values must all be of type '%s'.&quot;,</span>
+<span class="nc" id="L145">              OperationFunctions.AGGREGATE_MATH_TYPES.stream()</span>
+<span class="nc" id="L146">                  .map(Class::getName)</span>
+<span class="nc" id="L147">                  .collect(CustomCollectors.joiningWithOxfordComma(&quot;,&quot;))));</span>
     }
 
     // resume CPD analysis - CPD-ON
 
-<span class="fc" id="L151">    return retval;</span>
+<span class="fc" id="L152">    return retval;</span>
   }
 
   @SuppressWarnings(&quot;PMD.UnnecessaryCast&quot;)
@@ -157,11 +158,11 @@ public final class FnAvg {
       @NonNull Collection&lt;? extends T&gt; items,
       @NonNull BinaryOperator&lt;T&gt; adder,
       @NonNull BiFunction&lt;T, IIntegerItem, R&gt; divider) {
-<span class="fc" id="L160">    T sum = items.stream()</span>
-<span class="fc" id="L161">        .map(item -&gt; (T) item)</span>
-<span class="fc" id="L162">        .reduce(adder)</span>
-<span class="fc" id="L163">        .get();</span>
-<span class="fc" id="L164">    return ObjectUtils.notNull(divider.apply(sum, IIntegerItem.valueOf(items.size())));</span>
+<span class="fc" id="L161">    T sum = items.stream()</span>
+<span class="fc" id="L162">        .map(item -&gt; (T) item)</span>
+<span class="fc" id="L163">        .reduce(adder)</span>
+<span class="fc" id="L164">        .get();</span>
+<span class="fc" id="L165">    return ObjectUtils.notNull(divider.apply(sum, IIntegerItem.valueOf(items.size())));</span>
   }
 
   /**
@@ -174,7 +175,7 @@ public final class FnAvg {
   @NonNull
   public static IDayTimeDurationItem
       averageDayTimeDurations(@NonNull Collection&lt;? extends IDayTimeDurationItem&gt; items) {
-<span class="fc" id="L177">    return average(</span>
+<span class="fc" id="L178">    return average(</span>
         items,
         (BinaryOperator&lt;IDayTimeDurationItem&gt;) OperationFunctions::opAddDayTimeDurations,
         (BiFunction&lt;IDayTimeDurationItem, IIntegerItem,
@@ -191,7 +192,7 @@ public final class FnAvg {
   @NonNull
   public static IYearMonthDurationItem
       averageYearMonthDurations(@NonNull Collection&lt;? extends IYearMonthDurationItem&gt; items) {
-<span class="fc" id="L194">    return average(</span>
+<span class="fc" id="L195">    return average(</span>
         items,
         (BinaryOperator&lt;IYearMonthDurationItem&gt;) OperationFunctions::opAddYearMonthDurations,
         (BiFunction&lt;IYearMonthDurationItem, IIntegerItem,
@@ -207,7 +208,7 @@ public final class FnAvg {
    */
   @NonNull
   public static IDecimalItem averageNumeric(@NonNull Collection&lt;? extends INumericItem&gt; items) {
-<span class="fc" id="L210">    return average(</span>
+<span class="fc" id="L211">    return average(</span>
         items,
         (BinaryOperator&lt;INumericItem&gt;) OperationFunctions::opNumericAdd,
         (BiFunction&lt;INumericItem, IIntegerItem, IDecimalItem&gt;) OperationFunctions::opNumericDivide);

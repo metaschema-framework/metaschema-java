@@ -8,10 +8,12 @@ package gov.nist.secauto.metaschema.core.datatype;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -22,19 +24,21 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * The {@link MetaschemaDataTypeProvider} class provides an example of how to
  * use this class to provide new data types.
  */
-<span class="fc" id="L25">public abstract class AbstractDataTypeProvider implements IDataTypeProvider {</span>
-<span class="fc" id="L26">  @NonNull</span>
-  private final List&lt;IDataTypeAdapter&lt;?&gt;&gt; library = new LinkedList&lt;&gt;();
+<span class="fc" id="L27">public abstract class AbstractDataTypeProvider implements IDataTypeProvider {</span>
 <span class="fc" id="L28">  @NonNull</span>
-  protected final Lock instanceLock = new ReentrantLock();
+  private final List&lt;IDataTypeAdapter&lt;?&gt;&gt; library = new LinkedList&lt;&gt;();
+<span class="fc" id="L30">  @NonNull</span>
+  private final ReadWriteLock libraryLock = new ReentrantReadWriteLock();
 
   @Override
   public List&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; getJavaTypeAdapters() {
+<span class="fc" id="L35">    Lock readLock = libraryLock.readLock();</span>
+<span class="fc" id="L36">    readLock.lock();</span>
     try {
-<span class="fc" id="L34">      instanceLock.lock();</span>
-<span class="fc" id="L35">      return CollectionUtil.unmodifiableList(library);</span>
+      // make a defensive copy to protect callers from potential modifications
+<span class="fc" id="L39">      return CollectionUtil.unmodifiableList(new ArrayList&lt;&gt;(library));</span>
     } finally {
-<span class="fc" id="L37">      instanceLock.unlock();</span>
+<span class="fc" id="L41">      readLock.unlock();</span>
     }
   }
 
@@ -47,15 +51,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    *           if another type adapter has no name
    */
   protected void registerDatatype(@NonNull IDataTypeAdapter&lt;?&gt; adapter) {
-<span class="pc bpc" id="L50" title="1 of 2 branches missed.">    if (adapter.getNames().isEmpty()) {</span>
-<span class="nc" id="L51">      throw new IllegalArgumentException(&quot;The adapter has no name: &quot; + adapter.getClass().getName());</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">    if (adapter.getNames().isEmpty()) {</span>
+<span class="nc" id="L55">      throw new IllegalArgumentException(&quot;The adapter has no name: &quot; + adapter.getClass().getName());</span>
     }
+<span class="fc" id="L57">    Lock writeLock = libraryLock.writeLock();</span>
+<span class="fc" id="L58">    writeLock.lock();</span>
     try {
-<span class="fc" id="L54">      instanceLock.lock();</span>
-<span class="fc" id="L55">      library.add(adapter);</span>
+<span class="fc" id="L60">      library.add(adapter);</span>
     } finally {
-<span class="fc" id="L57">      instanceLock.unlock();</span>
+<span class="fc" id="L62">      writeLock.unlock();</span>
     }
-<span class="fc" id="L59">  }</span>
+<span class="fc" id="L64">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

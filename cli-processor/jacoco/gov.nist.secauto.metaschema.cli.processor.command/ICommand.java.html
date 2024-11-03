@@ -31,7 +31,7 @@ public interface ICommand {
 
   default int requiredExtraArgumentsCount() {
 <span class="nc" id="L33">    return (int) getExtraArguments().stream()</span>
-<span class="nc" id="L34">        .filter(arg -&gt; arg.isRequired())</span>
+<span class="nc" id="L34">        .filter(ExtraArgument::isRequired)</span>
 <span class="nc" id="L35">        .count();</span>
   }
 
