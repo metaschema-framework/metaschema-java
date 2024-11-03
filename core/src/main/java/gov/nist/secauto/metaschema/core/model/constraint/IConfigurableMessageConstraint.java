@@ -28,7 +28,7 @@ public interface IConfigurableMessageConstraint extends IConstraint {
   String getMessage();
 
   /**
-   * Generate a violation message using the provide item and dynamic context for
+   * Generate a violation message using the provided item and dynamic context for
    * inline Metapath value insertion.
    *
    * @param item

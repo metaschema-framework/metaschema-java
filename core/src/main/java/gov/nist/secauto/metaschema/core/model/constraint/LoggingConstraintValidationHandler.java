@@ -113,7 +113,7 @@ public class LoggingConstraintValidationHandler
               node,
               targets,
               dynamicContext),
-          null);
+          null); // Null because there is no exeception, a Throwable cause.
     }
   }
 
