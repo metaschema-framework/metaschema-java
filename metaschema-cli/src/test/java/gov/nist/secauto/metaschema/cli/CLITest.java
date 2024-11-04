@@ -39,7 +39,6 @@ public class CLITest {
 
   void evaluateResult(@NonNull ExitStatus status, @NonNull ExitCode expectedCode,
       @NonNull Class<? extends Throwable> thrownClass) {
-    status.generateMessage(true);
     Throwable thrown = status.getThrowable();
     assertAll(
         () -> assertEquals(expectedCode, status.getExitCode(), "exit code mismatch"),

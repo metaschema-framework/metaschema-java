@@ -413,17 +413,14 @@ public class CLIProcessor {
       if (cmdLine.hasOption(QUIET_OPTION)) {
         handleQuiet();
       }
-      ExitStatus retval = invokeCommand(cmdLine);
-      if (ExitCode.OK.equals(retval.getExitCode())) {
-        handleError(retval, cmdLine, false);
-      }
-      return retval;
+      return invokeCommand(cmdLine);
     }
 
     @SuppressWarnings({
         "PMD.OnlyOneReturn", // readability
         "PMD.AvoidCatchingGenericException" // needed here
     })
+    @NonNull
     protected ExitStatus invokeCommand(@NonNull CommandLine cmdLine) {
       ExitStatus retval;
       try {
@@ -443,14 +440,18 @@ public class CLIProcessor {
                 .withThrowable(ex);
           }
         }
-
-        if (ExitCode.INVALID_COMMAND.equals(retval.getExitCode())) {
-          showHelp();
-        }
       } catch (RuntimeException ex) {
         retval = ExitCode.RUNTIME_ERROR
             .exitMessage(String.format("An uncaught runtime error occurred. %s", ex.getLocalizedMessage()))
             .withThrowable(ex);
+      }
+
+      if (!ExitCode.OK.equals(retval.getExitCode())) {
+        retval.generateMessage(cmdLine.hasOption(SHOW_STACK_TRACE_OPTION));
+
+        if (ExitCode.INVALID_COMMAND.equals(retval.getExitCode())) {
+          showHelp();
+        }
       }
       return retval;
     }

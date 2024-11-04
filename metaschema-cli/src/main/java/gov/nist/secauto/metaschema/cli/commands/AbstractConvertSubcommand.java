@@ -145,8 +145,10 @@ public abstract class AbstractConvertSubcommand
             handleConversion(source, toFormat, writer, loader);
           }
         }
-      } catch (IOException | IllegalArgumentException ex) {
+      } catch (IllegalArgumentException ex) {
         throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
+      } catch (IOException ex) {
+        throw new CommandExecutionException(ExitCode.IO_ERROR, ex);
       }
       if (destination != null && LOGGER.isInfoEnabled()) {
         LOGGER.info("Generated {} file: {}", toFormat.toString(), destination);
