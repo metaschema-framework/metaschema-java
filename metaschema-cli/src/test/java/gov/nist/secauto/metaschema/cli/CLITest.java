@@ -226,18 +226,18 @@ public class CLITest {
     }
   }
 
-    @Test
-    void testValidateConstraints() {
-      try (LogCaptor captor = LogCaptor.forRoot()) {
-        String[] cliArgs = { "validate",
-            "src/test/resources/content/constraint-example.xml",
-            "-c",
-            "src/test/resources/content/constraint-constraints.xml",
-            "--disable-schema-validation",            
-        };
-        CLI.runCli(cliArgs);
-        assertThat(captor.getErrorLogs().toString())
-            .contains("This constraint SHOULD be violated if test passes.");
-      }
+  @Test
+  void testValidateConstraints() {
+    try (LogCaptor captor = LogCaptor.forRoot()) {
+      String[] cliArgs = { "validate",
+          "src/test/resources/content/constraint-example.xml",
+          "-c",
+          "src/test/resources/content/constraint-constraints.xml",
+          "--disable-schema-validation",
+      };
+      CLI.runCli(cliArgs);
+      assertThat(captor.getErrorLogs().toString())
+          .contains("This constraint SHOULD be violated if test passes.");
+    }
   }
 }

@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.databind.IBindingContext.IBindingMatcher;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,16 +79,18 @@ public class PostProcessingModuleLoaderStrategy
     return boundModule;
   }
 
-  private void processModule(@NonNull IModule module) {
+  /**
+   * Perform post-processing on the provided module.
+   *
+   * @param module
+   *          the module to post process
+   */
+  protected void processModule(@NonNull IModule module) {
     postProcessedModulesLock.lock();
     try {
       if (!postProcessedModules.contains(module)) {
-        // do not post-process the built-in Metaschema module, since it has already been
-        // pre-processed
-        if (!(module instanceof MetaschemaModelModule)) {
-          for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {
-            postProcessor.processModule(module);
-          }
+        for (IModuleLoader.IModulePostProcessor postProcessor : getModulePostProcessors()) {
+          postProcessor.processModule(module);
         }
         postProcessedModules.add(module);
       }
