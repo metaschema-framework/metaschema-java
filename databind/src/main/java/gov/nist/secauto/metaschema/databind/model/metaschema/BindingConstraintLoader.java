@@ -33,13 +33,11 @@ import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathContext;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetapath;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.impl.ConstraintBindingSupport;
 
@@ -75,11 +73,8 @@ public class BindingConstraintLoader
   private final IBoundLoader loader;
 
   public BindingConstraintLoader(@NonNull IBindingContext bindingContext) {
-    // ensure the bindings are registered
-    bindingContext.registerModule(MetaschemaModelModule.class);
-
     this.loader = bindingContext.newBoundLoader();
-    this.loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
+    // this.loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
   }
 
   @Override

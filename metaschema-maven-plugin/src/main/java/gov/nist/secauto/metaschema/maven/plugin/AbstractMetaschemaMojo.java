@@ -36,6 +36,7 @@ import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -60,6 +61,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -289,7 +291,8 @@ public abstract class AbstractMetaschemaMojo
     // generate Java sources based on provided metaschema sources
     return new DefaultBindingContext(
         new PostProcessingModuleLoaderStrategy(
-            CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)),
+            // ensure that the external constraints do not apply to the built in module
+            CollectionUtil.singletonList(new LimitedExternalConstraintsModulePostProcessor(constraints)),
             new SimpleModuleLoaderStrategy(
                 // this is used instead of the default generator to ensure that plugin classpath
                 // entries are used for compilation
@@ -659,6 +662,25 @@ public abstract class AbstractMetaschemaMojo
         throw new IllegalStateException(ex);
       }
     }
+  }
 
+  private static class LimitedExternalConstraintsModulePostProcessor
+      extends ExternalConstraintsModulePostProcessor {
+
+    public LimitedExternalConstraintsModulePostProcessor(
+        @NonNull Collection<IConstraintSet> additionalConstraintSets) {
+      super(additionalConstraintSets);
+    }
+
+    /**
+     * This method ensures that constraints are not applied to the built-in
+     * Metaschema module module twice, when this module is selected as the source
+     * for generation.
+     */
+    public void processModule(IModule module) {
+      if (!(module instanceof MetaschemaModelModule)) {
+        super.processModule(module);
+      }
+    }
   }
 }

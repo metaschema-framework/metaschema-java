@@ -117,8 +117,7 @@ public class DefaultBindingContext implements IBindingContext {
   public final IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz) {
     IModuleLoaderStrategy strategy = getModuleLoaderStrategy();
     IBoundModule module = strategy.loadModule(clazz, this);
-    strategy.registerModule(module, this);
-    return module;
+    return strategy.registerModule(module, this);
   }
 
   /**

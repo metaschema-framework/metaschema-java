@@ -5,7 +5,7 @@
  	<context>
         <metapath target="/metaschema-meta-constraints"/>
         <constraints>
-            <expect id="prop-help-url-required" target="//expect" test="count(prop[@namespace = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0' and @name = 'help-url']) eq 1" level="ERROR">
+            <expect id="prop-help-url-required" target=".//expect" test="count(prop[@namespace = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0' and @name = 'help-url']) eq 1" level="ERROR">
                 <message>This constraint SHOULD be violated if test passes.</message>
             </expect>
         </constraints>
