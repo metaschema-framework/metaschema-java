@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaschema-meta-constraints xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 https://raw.githubusercontent.com/metaschema-framework/metaschema/0441e6d4c9bce5b6c40b4647148019e4f47bed08/schema/xml/metaschema-meta-constraints.xsd">
+ 	<context>
+        <metapath target="/metaschema-meta-constraints"/>
+        <constraints>
+            <expect id="prop-help-url-required" target="//expect" test="count(prop[@namespace = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0' and @name = 'help-url']) eq 1" level="ERROR">
+                <message>This constraint SHOULD be violated if test passes.</message>
+            </expect>
+        </constraints>
+    </context>
+ </metaschema-meta-constraints>

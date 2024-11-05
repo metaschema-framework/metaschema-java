@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaschema-meta-constraints xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 https://raw.githubusercontent.com/metaschema-framework/metaschema/0441e6d4c9bce5b6c40b4647148019e4f47bed08/schema/xml/metaschema-meta-constraints.xsd">
+    <context>
+        <metapath target="/metaschema-meta-constraints"/>
+        <constraints>
+            <expect id="should-be-violated" target="." test="count(.//expect) > 0" level="ERROR">
+                <formal-name>Constraints Have a Help URL Property</formal-name>
+                <remarks>
+                	<p>If constraint-constraints.xml validates properly, this document violates a mandatory required for a help-url prop so there should be exactly one error.</p>
+                </remarks>
+            </expect>
+         </constraints>
+    </context>
+ </metaschema-meta-constraints>
