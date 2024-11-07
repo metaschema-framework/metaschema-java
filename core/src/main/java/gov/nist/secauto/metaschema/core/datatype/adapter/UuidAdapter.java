@@ -45,7 +45,13 @@ public class UuidAdapter
   @SuppressWarnings("null")
   @Override
   public UUID parse(String value) {
-    return UUID.fromString(value);
+    try {
+      return UUID.fromString(value);
+    } catch (IllegalArgumentException ex) {
+      throw new IllegalArgumentException(
+          String.format("Value '%s' is not a valid UUID.", value),
+          ex);
+    }
   }
 
   @Override

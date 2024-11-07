@@ -94,7 +94,11 @@ public class BooleanAdapter
     } else if (item instanceof IStringItem) {
       retval = castToBoolean((IStringItem) item);
     } else {
-      retval = castToBoolean(item.asStringItem());
+      try {
+        retval = castToBoolean(item.asStringItem());
+      } catch (IllegalStateException ex) {
+        throw new InvalidValueForCastFunctionException(ex.getLocalizedMessage(), ex);
+      }
     }
     return retval;
   }

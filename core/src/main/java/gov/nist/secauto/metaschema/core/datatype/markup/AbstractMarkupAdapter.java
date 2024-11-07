@@ -54,24 +54,32 @@ public abstract class AbstractMarkupAdapter<TYPE extends IMarkupString<TYPE>>
       StartElement parent,
       XMLEventFactory2 eventFactory,
       XMLEventWriter eventWriter)
-      throws XMLStreamException {
+      throws IOException {
 
     IMarkupString<?> markupString = (IMarkupString<?>) value;
 
-    markupString.writeXHtml(
-        ObjectUtils.notNull(parent.getName().getNamespaceURI()),
-        eventFactory,
-        eventWriter);
+    try {
+      markupString.writeXHtml(
+          ObjectUtils.notNull(parent.getName().getNamespaceURI()),
+          eventFactory,
+          eventWriter);
+    } catch (XMLStreamException ex) {
+      throw new IOException(ex);
+    }
   }
 
   @Override
   public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 streamWriter)
-      throws XMLStreamException {
+      throws IOException {
     IMarkupString<?> markupString = (IMarkupString<?>) value;
 
-    markupString.writeXHtml(
-        ObjectUtils.notNull(parentName.getNamespaceURI()),
-        streamWriter);
+    try {
+      markupString.writeXHtml(
+          ObjectUtils.notNull(parentName.getNamespaceURI()),
+          streamWriter);
+    } catch (XMLStreamException ex) {
+      throw new IOException(ex);
+    }
   }
 
   @Override

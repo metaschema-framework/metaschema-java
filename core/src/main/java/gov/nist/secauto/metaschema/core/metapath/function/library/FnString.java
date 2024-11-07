@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
@@ -103,7 +104,11 @@ public final class FnString {
     if (item instanceof INodeItem) {
       retval = IStringItem.valueOf(((INodeItem) item).stringValue());
     } else if (item instanceof IAnyAtomicItem) {
-      retval = ((IAnyAtomicItem) item).asStringItem();
+      try {
+        retval = ((IAnyAtomicItem) item).asStringItem();
+      } catch (IllegalStateException ex) {
+        throw new InvalidTypeMetapathException(item, ex.getMessage(), ex);
+      }
     } else {
       throw new InvalidTypeFunctionException(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION, item);
     }

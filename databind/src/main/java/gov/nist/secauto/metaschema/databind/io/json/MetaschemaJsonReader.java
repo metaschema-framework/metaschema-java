@@ -781,7 +781,17 @@ public class MetaschemaJsonReader
           throw new IOException(String.format("Null value for json-key for definition '%s'",
               jsonKey.getContainingDefinition().toCoordinates()));
         }
-        String key = jsonKey.getJavaTypeAdapter().asString(keyValue);
+        String key;
+        try {
+          key = jsonKey.getJavaTypeAdapter().asString(keyValue);
+        } catch (IllegalArgumentException ex) {
+          throw new IOException(
+              String.format("Malformed data '%s'%s. %s",
+                  keyValue,
+                  JsonUtil.generateLocationMessage(parser),
+                  ex.getLocalizedMessage()),
+              ex);
+        }
         items.put(key, item);
 
         // the next item will be a FIELD_NAME, or we will encounter an END_OBJECT if all

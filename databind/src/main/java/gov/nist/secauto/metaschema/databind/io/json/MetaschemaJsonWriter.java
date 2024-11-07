@@ -124,8 +124,16 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
           throw new IOException(String.format("Null value for json-value-key for definition '%s'",
               jsonValueKey.getContainingDefinition().toCoordinates()));
         }
-        // this is the JSON value key case
-        valueKeyName = jsonValueKey.getJavaTypeAdapter().asString(keyValue);
+        try {
+          // this is the JSON value key case
+          valueKeyName = jsonValueKey.getJavaTypeAdapter().asString(keyValue);
+        } catch (IllegalArgumentException ex) {
+          throw new IOException(
+              String.format("Invalid value '%s' for json-value-key for definition '%s'",
+                  keyValue,
+                  jsonValueKey.getContainingDefinition().toCoordinates()),
+              ex);
+        }
       } else {
         valueKeyName = fieldValue.getParentFieldDefinition().getEffectiveJsonValueKeyName();
       }
@@ -270,12 +278,22 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
     if (jsonKey != null) {
       Object keyValue = jsonKey.getValue(parent);
       if (keyValue == null) {
-        throw new IOException(String.format("Null value for json-key for definition '%s'",
-            jsonKey.getContainingDefinition().toCoordinates()));
+        throw new IOException(
+            String.format("Null value for json-key for definition '%s'",
+                jsonKey.getContainingDefinition().toCoordinates()));
       }
 
       // the field will be the JSON key value
-      String key = jsonKey.getJavaTypeAdapter().asString(keyValue);
+      String key;
+      try {
+        key = jsonKey.getJavaTypeAdapter().asString(keyValue);
+      } catch (IllegalArgumentException ex) {
+        throw new IOException(
+            String.format("Illegal value '%s' for json-key for definition '%s'",
+                keyValue,
+                jsonKey.getContainingDefinition().toCoordinates()),
+            ex);
+      }
       generator.writeFieldName(key);
 
       // next the value will be a start object
@@ -307,7 +325,16 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
       }
 
       // the field will be the JSON key value
-      String key = jsonKey.getJavaTypeAdapter().asString(keyValue);
+      String key;
+      try {
+        key = jsonKey.getJavaTypeAdapter().asString(keyValue);
+      } catch (IllegalArgumentException ex) {
+        throw new IOException(
+            String.format("Invalid value '%s' for json--key for definition '%s'",
+                keyValue,
+                jsonKey.getContainingDefinition().toCoordinates()),
+            ex);
+      }
       generator.writeFieldName(key);
 
       // next the value will be a start object

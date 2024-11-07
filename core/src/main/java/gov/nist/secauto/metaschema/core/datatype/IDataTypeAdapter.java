@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
@@ -95,7 +94,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @param value
    *          the data to formatted as a string
    * @return a string
-   * @throws UnsupportedOperationException
+   * @throws IllegalArgumentException
    *           if the data type cannot be represented as a string
    */
   @NonNull
@@ -127,6 +126,7 @@ public interface IDataTypeAdapter<TYPE> {
    *
    * @return the java associated item type
    */
+  // TODO: move to IAnyAtomicItem
   @NonNull
   Class<? extends IAnyAtomicItem> getItemClass();
 
@@ -139,6 +139,7 @@ public interface IDataTypeAdapter<TYPE> {
    */
   // TODO: markup types are not atomic values.
   // Figure out a better base type (i.e., IValuedItem)
+  // TODO: move to IAnyAtomicItem
   @NonNull
   IAnyAtomicItem newItem(@NonNull Object value);
 
@@ -151,6 +152,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @throws InvalidValueForCastFunctionException
    *           if the provided item type cannot be cast to this item type
    */
+  // TODO: move to IAnyAtomicItem
   @NonNull
   IAnyAtomicItem cast(IAnyAtomicItem item);
 
@@ -203,6 +205,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @throws IOException
    *           if a parsing error occurs
    */
+  // TODO: migrate code to XML parser implementation.
   @NonNull
   TYPE parse(@NonNull XMLEventReader2 eventReader) throws IOException;
 
@@ -215,6 +218,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @throws IOException
    *           if a parsing error occurs
    */
+  // TODO: migrate code to JSON parser implementation.
   @NonNull
   TYPE parse(@NonNull JsonParser parser) throws IOException;
 
@@ -254,6 +258,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @see #parse(String)
    * @see #parse(XMLEventReader2)
    */
+  // TODO: migrate code to XML parser implementation.
   @NonNull
   default Supplier<TYPE> parseAndSupply(@NonNull XMLEventReader2 eventReader) throws IOException {
     TYPE retval = parse(eventReader);
@@ -274,6 +279,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @see #parse(String)
    * @see #parse(JsonParser)
    */
+  // TODO: migrate code to JSON parser implementation.
   @NonNull
   default Supplier<TYPE> parseAndSupply(@NonNull JsonParser parser) throws IOException {
     TYPE retval = parse(parser);
@@ -296,14 +302,13 @@ public interface IDataTypeAdapter<TYPE> {
    *          the XML event factory used to generate XML writing events
    * @param eventWriter
    *          the XML writer used to output XML as events
-   * @throws XMLStreamException
-   *           if an unexpected error occurred while processing the XML output
    * @throws IOException
    *           if an unexpected error occurred while writing to the output stream
    */
+  // TODO: migrate code to XML writer implementation.
   void writeXmlValue(@NonNull Object instance, @NonNull StartElement parent, @NonNull XMLEventFactory2 eventFactory,
       @NonNull XMLEventWriter eventWriter)
-      throws IOException, XMLStreamException;
+      throws IOException;
 
   /**
    * Writes the provided Java class instance data as XML. The parent element
@@ -319,11 +324,12 @@ public interface IDataTypeAdapter<TYPE> {
    *          the qualified name of the XML data's parent element
    * @param writer
    *          the XML writer used to output the XML data
-   * @throws XMLStreamException
+   * @throws IOException
    *           if an unexpected error occurred while processing the XML output
    */
+  // TODO: migrate code to XML writer implementation.
   void writeXmlValue(@NonNull Object instance, @NonNull QName parentName, @NonNull XMLStreamWriter2 writer)
-      throws XMLStreamException;
+      throws IOException;
 
   /**
    * Writes the provided Java class instance as a JSON/YAML field value.
@@ -335,6 +341,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @throws IOException
    *           if an unexpected error occurred while writing the JSON/YAML output
    */
+  // TODO: migrate code to JSON writer implementation.
   void writeJsonValue(@NonNull Object instance, @NonNull JsonGenerator writer) throws IOException;
 
   /**
@@ -343,6 +350,7 @@ public interface IDataTypeAdapter<TYPE> {
    *
    * @return the default field name to use
    */
+  // TODO: migrate code to JSON implementations.
   @NonNull
   String getDefaultJsonValueKey();
 
@@ -352,6 +360,7 @@ public interface IDataTypeAdapter<TYPE> {
    *
    * @return {@code true} if allowed, or {@code false} otherwise.
    */
+  // TODO: migrate code to XML implementations.
   boolean isUnrappedValueAllowedInXml();
 
   /**
@@ -360,5 +369,6 @@ public interface IDataTypeAdapter<TYPE> {
    * @return {@code true} if the datatype uses mixed text and element content in
    *         XML, or {@code false} otherwise
    */
+  // TODO: migrate code to XML implementations.
   boolean isXmlMixed();
 }

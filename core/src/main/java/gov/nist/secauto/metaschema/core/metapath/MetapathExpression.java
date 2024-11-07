@@ -111,7 +111,8 @@ public class MetapathExpression {
    */
   @NonNull
   public static MetapathExpression compile(@NonNull String path, @NonNull StaticContext context) {
-    @NonNull MetapathExpression retval;
+    @NonNull
+    MetapathExpression retval;
     if (".".equals(path)) {
       retval = CONTEXT_NODE;
     } else {
@@ -412,7 +413,10 @@ public class MetapathExpression {
       return (ISequence<T>) getASTNode().accept(dynamicContext, ISequence.of(focus));
     } catch (MetapathException ex) { // NOPMD - intentional
       throw new MetapathException(
-          String.format("An error occurred while evaluating the expression '%s'.", getPath()), ex);
+          String.format("An error occurred while evaluating the expression '%s'. %s",
+              getPath(),
+              ex.getLocalizedMessage()),
+          ex);
     }
   }
 }

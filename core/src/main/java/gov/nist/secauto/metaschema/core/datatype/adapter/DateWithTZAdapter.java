@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.time.DateTimeException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -68,7 +69,15 @@ public class DateWithTZAdapter
   @SuppressWarnings("null")
   @Override
   public String asString(Object value) {
-    return DateFormats.DATE_WITH_TZ.format((ZonedDateTime) value);
+    try {
+      return DateFormats.DATE_WITH_TZ.format((ZonedDateTime) value);
+    } catch (DateTimeException ex) {
+      throw new IllegalArgumentException(
+          String.format("The provided value '%s' cannot be formatted as a date value. %s",
+              value.toString(),
+              ex.getMessage()),
+          ex);
+    }
   }
 
   @SuppressWarnings("null")

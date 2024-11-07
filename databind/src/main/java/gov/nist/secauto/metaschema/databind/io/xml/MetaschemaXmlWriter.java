@@ -268,7 +268,12 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemFlag(Object item, IBoundInstanceFlag instance) throws IOException {
-      String itemString = instance.getJavaTypeAdapter().asString(item);
+      String itemString;
+      try {
+        itemString = instance.getJavaTypeAdapter().asString(item);
+      } catch (IllegalArgumentException ex) {
+        throw new IOException(ex);
+      }
       QName name = instance.getXmlQName();
       try {
         if (name.getNamespaceURI().isEmpty()) {
@@ -331,11 +336,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
     public void writeItemFieldValue(Object parentItem, IBoundFieldValue fieldValue) throws IOException {
       Object item = fieldValue.getValue(parentItem);
       if (item != null) {
-        try {
-          fieldValue.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);
-        } catch (XMLStreamException ex) {
-          throw new IOException(ex);
-        }
+        fieldValue.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);
       }
     }
 

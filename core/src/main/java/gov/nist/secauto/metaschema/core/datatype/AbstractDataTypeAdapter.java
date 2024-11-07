@@ -97,7 +97,8 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
     try {
       while (!(nextEvent = eventReader.peek()).isEndElement()) {
         if (!nextEvent.isCharacters()) {
-          throw new IOException(String.format("Invalid content '%s' at %s", XmlEventUtil.toString(nextEvent),
+          throw new IOException(String.format("Invalid content '%s' at %s",
+              XmlEventUtil.toString(nextEvent),
               XmlEventUtil.toString(nextEvent.getLocation())));
         }
         Characters characters = nextEvent.asCharacters();
@@ -131,7 +132,9 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   public TYPE parse(JsonParser parser) throws IOException {
     String value = parser.getValueAsString();
     if (value == null) {
-      throw new IOException("Unable to null value as text");
+      throw new IOException(
+          String.format("Unable to get null value as text%s",
+              JsonUtil.generateLocationMessage(parser)));
     }
     // skip over value
     parser.nextToken();
@@ -159,25 +162,34 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
       StartElement parent,
       XMLEventFactory2 eventFactory,
       XMLEventWriter eventWriter)
-      throws IOException, XMLStreamException {
+      throws IOException {
     try {
       String content = asString(value);
       Characters characters = eventFactory.createCharacters(content);
       eventWriter.add(characters);
-    } catch (XMLStreamException ex) {
+    } catch (IllegalArgumentException | XMLStreamException ex) {
       throw new IOException(ex);
     }
   }
 
   @Override
-  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 writer) throws XMLStreamException {
-    String content = asString(value);
-    writer.writeCharacters(content);
+  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 writer) throws IOException {
+    String content;
+    try {
+      content = asString(value);
+      writer.writeCharacters(content);
+    } catch (IllegalArgumentException | XMLStreamException ex) {
+      throw new IOException(ex);
+    }
   }
 
   @Override
   public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {
-    generator.writeString(asString(value));
+    try {
+      generator.writeString(asString(value));
+    } catch (IllegalArgumentException ex) {
+      throw new IOException(ex);
+    }
   }
 
   @Override
@@ -214,13 +226,16 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   @NonNull
   protected ITEM_TYPE castInternal(@NonNull IAnyAtomicItem item) {
     // try string based casting as a fallback
-    String itemString = item.asString();
+    String itemString = null;
     try {
+      itemString = item.asString();
       TYPE value = parse(itemString);
       return newItem(value);
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException | IllegalStateException ex) {
       throw new InvalidValueForCastFunctionException(
-          String.format("The value '%s' is not compatible with the type '%s'", itemString, getItemClass().getName()),
+          String.format("The value '%s' is not compatible with the type '%s'",
+              item.getValue(),
+              getItemClass().getName()),
           ex);
     }
   }

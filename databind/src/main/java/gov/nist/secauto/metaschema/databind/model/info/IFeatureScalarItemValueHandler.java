@@ -11,7 +11,6 @@ import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.IValuedMutable;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IFeatureScalarItemValueHandler
     extends IItemValueHandler<Object>, IValuedMutable {
@@ -33,12 +32,6 @@ public interface IFeatureScalarItemValueHandler
   default void setValue(@NonNull Object parent, @NonNull String text) {
     Object item = getValueFromString(text);
     setValue(parent, item);
-  }
-
-  @Nullable
-  default String toStringFromItem(@NonNull Object parent) {
-    Object item = getValue(parent);
-    return item == null ? null : getJavaTypeAdapter().asString(item);
   }
 
   /**

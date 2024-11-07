@@ -120,6 +120,9 @@ public final class FnData {
    * @param item
    *          the item to atomize
    * @return the atomized result
+   * @throws InvalidTypeFunctionException
+   *           if the item cannot be cast to an atomic value, most likely because
+   *           it doesn't have a typed value
    */
   @NonNull
   public static IAnyAtomicItem fnDataItem(@NonNull IItem item) {

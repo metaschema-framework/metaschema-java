@@ -34,7 +34,11 @@ public interface IStringItem extends IAnyAtomicItem {
    */
   @NonNull
   static IStringItem cast(@NonNull IAnyAtomicItem item) {
-    return item.asStringItem();
+    try {
+      return item.asStringItem();
+    } catch (IllegalStateException ex) {
+      throw new InvalidValueForCastFunctionException(ex.getLocalizedMessage(), ex);
+    }
   }
 
   @Override
