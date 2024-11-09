@@ -330,7 +330,7 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
         key = jsonKey.getJavaTypeAdapter().asString(keyValue);
       } catch (IllegalArgumentException ex) {
         throw new IOException(
-            String.format("Invalid value '%s' for json--key for definition '%s'",
+            String.format("Invalid value '%s' for json-key for definition '%s'",
                 keyValue,
                 jsonKey.getContainingDefinition().toCoordinates()),
             ex);
