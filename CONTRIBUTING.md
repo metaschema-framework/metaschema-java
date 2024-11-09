@@ -69,6 +69,26 @@ Each project card will be in one of the following states:
 
 Note: One or more pull requests must be submitted addressing all user story goals before the issue will be moved to the "under review" status. If any goals or acceptance criteria have not been met, then the user story will be commented on to provide feedback, and the issue will be returned to the "In progress" state.
 
+## Code Review
+
+Contributors are encouraged to [review PRs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews).
+
+The following are some guidelines to consider when performing code reviews.
+
+- Tone
+   - Do ask open-ended questions and avoid making opinionated statements.
+   - Do keep feedback positive. Consider the effort the author spent writing the PR. Celebrate good work.
+   - Do differentiate between nits and suggestions vs blocking feedback. Limit nits.
+   - Do consider how your feedback could be addressed by follow-on work. Consider opening new issues for less significant concerns.
+- Unit Testing
+   - Do consider the coverage of test cases. Do the unit tests cover major code paths and error conditions?
+- Approving or Requesting changes
+   - Do not approve or request changes to a PR if you have open questions. Seek question resolution before taking a position.
+   - Do not request changes for a nit or suggestion.
+   - Do not strive for perfect. Does the PR improve the code health overall?
+- Resolving Conversations
+   - Do mark your feedback as resolved when it has been addressed.
+
 ## Communications mechanisms
 
 You can contact the maintainers of this project at [maintainers@metaschema.dev](mailto:maintainers@metaschema.dev) if you are interested in contributing to the development of this project or exchanging ideas.
