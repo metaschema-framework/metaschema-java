@@ -35,28 +35,29 @@ public class IntegerAdapter
   }
 
   @Override
-  public @NonNull Class&lt;IIntegerItem&gt; getItemClass() {
-<span class="fc" id="L39">    return IIntegerItem.class;</span>
+  @NonNull
+  public Class&lt;IIntegerItem&gt; getItemClass() {
+<span class="fc" id="L40">    return IIntegerItem.class;</span>
   }
 
   @Override
   public IIntegerItem newItem(Object value) {
-<span class="fc" id="L44">    BigInteger item = toValue(value);</span>
-<span class="fc" id="L45">    return IIntegerItem.valueOf(item);</span>
+<span class="fc" id="L45">    BigInteger item = toValue(value);</span>
+<span class="fc" id="L46">    return IIntegerItem.valueOf(item);</span>
   }
 
   @Override
   protected IIntegerItem castInternal(@NonNull IAnyAtomicItem item) {
     IIntegerItem retval;
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">    if (item instanceof INumericItem) {</span>
-<span class="fc" id="L52">      retval = newItem(((INumericItem) item).asInteger());</span>
-<span class="nc bnc" id="L53" title="All 2 branches missed.">    } else if (item instanceof IBooleanItem) {</span>
-<span class="nc" id="L54">      boolean value = ((IBooleanItem) item).toBoolean();</span>
-<span class="nc bnc" id="L55" title="All 2 branches missed.">      retval = newItem(ObjectUtils.notNull(value ? BigInteger.ONE : BigInteger.ZERO));</span>
-<span class="nc" id="L56">    } else {</span>
-<span class="nc" id="L57">      retval = super.castInternal(item);</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">    if (item instanceof INumericItem) {</span>
+<span class="fc" id="L53">      retval = newItem(((INumericItem) item).asInteger());</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">    } else if (item instanceof IBooleanItem) {</span>
+<span class="nc" id="L55">      boolean value = ((IBooleanItem) item).toBoolean();</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">      retval = newItem(ObjectUtils.notNull(value ? BigInteger.ONE : BigInteger.ZERO));</span>
+<span class="nc" id="L57">    } else {</span>
+<span class="nc" id="L58">      retval = super.castInternal(item);</span>
     }
-<span class="fc" id="L59">    return retval;</span>
+<span class="fc" id="L60">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

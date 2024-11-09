@@ -76,64 +76,65 @@
 <span class="source-line-no">063</span><span id="line-63">    }</span>
 <span class="source-line-no">064</span><span id="line-64"></span>
 <span class="source-line-no">065</span><span id="line-65">    @Override</span>
-<span class="source-line-no">066</span><span id="line-66">    public @Nullable Set&lt;NodeRenderingHandler&lt;?&gt;&gt; getNodeRenderingHandlers() {</span>
-<span class="source-line-no">067</span><span id="line-67">      return Collections.singleton(</span>
-<span class="source-line-no">068</span><span id="line-68">          new NodeRenderingHandler&lt;&gt;(Code.class, this::render));</span>
-<span class="source-line-no">069</span><span id="line-69">    }</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">    @SuppressFBWarnings(value = "RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT", justification = "false positive")</span>
-<span class="source-line-no">072</span><span id="line-72">    private void render( // NOPMD actually used in lambda</span>
-<span class="source-line-no">073</span><span id="line-73">        @NonNull Code node,</span>
-<span class="source-line-no">074</span><span id="line-74">        @NonNull NodeRendererContext context,</span>
-<span class="source-line-no">075</span><span id="line-75">        @NonNull HtmlWriter html) {</span>
-<span class="source-line-no">076</span><span id="line-76">      HtmlRendererOptions htmlOptions = context.getHtmlOptions();</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">      boolean customTag = htmlOptions.codeStyleHtmlOpen != null || htmlOptions.codeStyleHtmlClose != null;</span>
-<span class="source-line-no">079</span><span id="line-79">      if (customTag) {</span>
-<span class="source-line-no">080</span><span id="line-80">        html.raw(ObjectUtils.notNull(htmlOptions.codeStyleHtmlOpen));</span>
-<span class="source-line-no">081</span><span id="line-81">      } else {</span>
-<span class="source-line-no">082</span><span id="line-82">        if (context.getHtmlOptions().sourcePositionParagraphLines) {</span>
-<span class="source-line-no">083</span><span id="line-83">          html.withAttr().tag("code");</span>
-<span class="source-line-no">084</span><span id="line-84">        } else {</span>
-<span class="source-line-no">085</span><span id="line-85">          html.srcPos(node.getText()).withAttr().tag("code");</span>
-<span class="source-line-no">086</span><span id="line-86">        }</span>
-<span class="source-line-no">087</span><span id="line-87">      }</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">      if (codeSoftLineBreaks &amp;&amp; !htmlOptions.isSoftBreakAllSpaces) {</span>
-<span class="source-line-no">090</span><span id="line-90">        for (Node child : node.getChildren()) {</span>
-<span class="source-line-no">091</span><span id="line-91">          if (child instanceof Text) {</span>
-<span class="source-line-no">092</span><span id="line-92">            html.text(Escaping.collapseWhitespace(child.getChars(), false));</span>
-<span class="source-line-no">093</span><span id="line-93">          } else {</span>
-<span class="source-line-no">094</span><span id="line-94">            context.render(child);</span>
-<span class="source-line-no">095</span><span id="line-95">          }</span>
-<span class="source-line-no">096</span><span id="line-96">        }</span>
-<span class="source-line-no">097</span><span id="line-97">      } else {</span>
-<span class="source-line-no">098</span><span id="line-98">        String text = EOL_PATTERN.matcher(node.getText()).replaceAll(" ");</span>
-<span class="source-line-no">099</span><span id="line-99">        if (!text.isBlank() &amp;&amp; SequenceUtils.startsWithWhitespace(text) &amp;&amp; SequenceUtils.endsWithWhitespace(text)) {</span>
-<span class="source-line-no">100</span><span id="line-100">          html.text(SequenceUtils.subSequence(text, Range.of(1, text.length() - 1)));</span>
-<span class="source-line-no">101</span><span id="line-101">        } else {</span>
-<span class="source-line-no">102</span><span id="line-102">          html.raw(Escaping.escapeHtml(text, false));</span>
-<span class="source-line-no">103</span><span id="line-103">        }</span>
-<span class="source-line-no">104</span><span id="line-104">        // html.text(Escaping.collapseWhitespace(node.getText(), true));</span>
-<span class="source-line-no">105</span><span id="line-105">      }</span>
-<span class="source-line-no">106</span><span id="line-106"></span>
-<span class="source-line-no">107</span><span id="line-107">      if (customTag) {</span>
-<span class="source-line-no">108</span><span id="line-108">        html.raw(ObjectUtils.notNull(htmlOptions.codeStyleHtmlClose));</span>
-<span class="source-line-no">109</span><span id="line-109">      } else {</span>
-<span class="source-line-no">110</span><span id="line-110">        html.tag("/code");</span>
-<span class="source-line-no">111</span><span id="line-111">      }</span>
-<span class="source-line-no">112</span><span id="line-112">    }</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">    public static class Factory implements NodeRendererFactory {</span>
-<span class="source-line-no">115</span><span id="line-115"></span>
-<span class="source-line-no">116</span><span id="line-116">      @Override</span>
-<span class="source-line-no">117</span><span id="line-117">      public NodeRenderer apply(DataHolder options) {</span>
-<span class="source-line-no">118</span><span id="line-118">        return new CodeNodeHtmlRenderer(options);</span>
-<span class="source-line-no">119</span><span id="line-119">      }</span>
-<span class="source-line-no">120</span><span id="line-120"></span>
-<span class="source-line-no">121</span><span id="line-121">    }</span>
-<span class="source-line-no">122</span><span id="line-122">  }</span>
-<span class="source-line-no">123</span><span id="line-123">}</span>
+<span class="source-line-no">066</span><span id="line-66">    @Nullable</span>
+<span class="source-line-no">067</span><span id="line-67">    public Set&lt;NodeRenderingHandler&lt;?&gt;&gt; getNodeRenderingHandlers() {</span>
+<span class="source-line-no">068</span><span id="line-68">      return Collections.singleton(</span>
+<span class="source-line-no">069</span><span id="line-69">          new NodeRenderingHandler&lt;&gt;(Code.class, this::render));</span>
+<span class="source-line-no">070</span><span id="line-70">    }</span>
+<span class="source-line-no">071</span><span id="line-71"></span>
+<span class="source-line-no">072</span><span id="line-72">    @SuppressFBWarnings(value = "RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT", justification = "false positive")</span>
+<span class="source-line-no">073</span><span id="line-73">    private void render( // NOPMD actually used in lambda</span>
+<span class="source-line-no">074</span><span id="line-74">        @NonNull Code node,</span>
+<span class="source-line-no">075</span><span id="line-75">        @NonNull NodeRendererContext context,</span>
+<span class="source-line-no">076</span><span id="line-76">        @NonNull HtmlWriter html) {</span>
+<span class="source-line-no">077</span><span id="line-77">      HtmlRendererOptions htmlOptions = context.getHtmlOptions();</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">      boolean customTag = htmlOptions.codeStyleHtmlOpen != null || htmlOptions.codeStyleHtmlClose != null;</span>
+<span class="source-line-no">080</span><span id="line-80">      if (customTag) {</span>
+<span class="source-line-no">081</span><span id="line-81">        html.raw(ObjectUtils.notNull(htmlOptions.codeStyleHtmlOpen));</span>
+<span class="source-line-no">082</span><span id="line-82">      } else {</span>
+<span class="source-line-no">083</span><span id="line-83">        if (context.getHtmlOptions().sourcePositionParagraphLines) {</span>
+<span class="source-line-no">084</span><span id="line-84">          html.withAttr().tag("code");</span>
+<span class="source-line-no">085</span><span id="line-85">        } else {</span>
+<span class="source-line-no">086</span><span id="line-86">          html.srcPos(node.getText()).withAttr().tag("code");</span>
+<span class="source-line-no">087</span><span id="line-87">        }</span>
+<span class="source-line-no">088</span><span id="line-88">      }</span>
+<span class="source-line-no">089</span><span id="line-89"></span>
+<span class="source-line-no">090</span><span id="line-90">      if (codeSoftLineBreaks &amp;&amp; !htmlOptions.isSoftBreakAllSpaces) {</span>
+<span class="source-line-no">091</span><span id="line-91">        for (Node child : node.getChildren()) {</span>
+<span class="source-line-no">092</span><span id="line-92">          if (child instanceof Text) {</span>
+<span class="source-line-no">093</span><span id="line-93">            html.text(Escaping.collapseWhitespace(child.getChars(), false));</span>
+<span class="source-line-no">094</span><span id="line-94">          } else {</span>
+<span class="source-line-no">095</span><span id="line-95">            context.render(child);</span>
+<span class="source-line-no">096</span><span id="line-96">          }</span>
+<span class="source-line-no">097</span><span id="line-97">        }</span>
+<span class="source-line-no">098</span><span id="line-98">      } else {</span>
+<span class="source-line-no">099</span><span id="line-99">        String text = EOL_PATTERN.matcher(node.getText()).replaceAll(" ");</span>
+<span class="source-line-no">100</span><span id="line-100">        if (!text.isBlank() &amp;&amp; SequenceUtils.startsWithWhitespace(text) &amp;&amp; SequenceUtils.endsWithWhitespace(text)) {</span>
+<span class="source-line-no">101</span><span id="line-101">          html.text(SequenceUtils.subSequence(text, Range.of(1, text.length() - 1)));</span>
+<span class="source-line-no">102</span><span id="line-102">        } else {</span>
+<span class="source-line-no">103</span><span id="line-103">          html.raw(Escaping.escapeHtml(text, false));</span>
+<span class="source-line-no">104</span><span id="line-104">        }</span>
+<span class="source-line-no">105</span><span id="line-105">        // html.text(Escaping.collapseWhitespace(node.getText(), true));</span>
+<span class="source-line-no">106</span><span id="line-106">      }</span>
+<span class="source-line-no">107</span><span id="line-107"></span>
+<span class="source-line-no">108</span><span id="line-108">      if (customTag) {</span>
+<span class="source-line-no">109</span><span id="line-109">        html.raw(ObjectUtils.notNull(htmlOptions.codeStyleHtmlClose));</span>
+<span class="source-line-no">110</span><span id="line-110">      } else {</span>
+<span class="source-line-no">111</span><span id="line-111">        html.tag("/code");</span>
+<span class="source-line-no">112</span><span id="line-112">      }</span>
+<span class="source-line-no">113</span><span id="line-113">    }</span>
+<span class="source-line-no">114</span><span id="line-114"></span>
+<span class="source-line-no">115</span><span id="line-115">    public static class Factory implements NodeRendererFactory {</span>
+<span class="source-line-no">116</span><span id="line-116"></span>
+<span class="source-line-no">117</span><span id="line-117">      @Override</span>
+<span class="source-line-no">118</span><span id="line-118">      public NodeRenderer apply(DataHolder options) {</span>
+<span class="source-line-no">119</span><span id="line-119">        return new CodeNodeHtmlRenderer(options);</span>
+<span class="source-line-no">120</span><span id="line-120">      }</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">    }</span>
+<span class="source-line-no">123</span><span id="line-123">  }</span>
+<span class="source-line-no">124</span><span id="line-124">}</span>
 
 
 

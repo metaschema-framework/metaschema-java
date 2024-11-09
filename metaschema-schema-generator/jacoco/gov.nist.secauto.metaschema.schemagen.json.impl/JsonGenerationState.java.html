@@ -173,86 +173,87 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   }
 
   public ObjectNode generateDefinitions() {
-<span class="fc" id="L176">    @NonNull Map&lt;IKey, IDefinitionJsonSchema&lt;?&gt;&gt; gatheredDefinitions = new HashMap&lt;&gt;();</span>
+    @NonNull
+<span class="fc" id="L177">    Map&lt;IKey, IDefinitionJsonSchema&lt;?&gt;&gt; gatheredDefinitions = new HashMap&lt;&gt;();</span>
 
-<span class="fc" id="L178">    getMetaschemaIndex().getDefinitions().stream()</span>
-<span class="fc" id="L179">        .filter(DefinitionEntry::isRoot)</span>
-<span class="fc" id="L180">        .map(DefinitionEntry::getDefinition)</span>
-<span class="fc" id="L181">        .forEachOrdered(def -&gt; {</span>
-<span class="fc" id="L182">          IDefinitionJsonSchema&lt;?&gt; definitionSchema = getSchema(IKey.of(def));</span>
-<span class="pc bpc" id="L183" title="1 of 2 branches missed.">          assert definitionSchema != null;</span>
-<span class="fc" id="L184">          definitionSchema.gatherDefinitions(gatheredDefinitions, this);</span>
-<span class="fc" id="L185">        });</span>
+<span class="fc" id="L179">    getMetaschemaIndex().getDefinitions().stream()</span>
+<span class="fc" id="L180">        .filter(DefinitionEntry::isRoot)</span>
+<span class="fc" id="L181">        .map(DefinitionEntry::getDefinition)</span>
+<span class="fc" id="L182">        .forEachOrdered(def -&gt; {</span>
+<span class="fc" id="L183">          IDefinitionJsonSchema&lt;?&gt; definitionSchema = getSchema(IKey.of(def));</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">          assert definitionSchema != null;</span>
+<span class="fc" id="L185">          definitionSchema.gatherDefinitions(gatheredDefinitions, this);</span>
+<span class="fc" id="L186">        });</span>
 
-<span class="fc" id="L187">    ObjectNode definitionsObject = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());</span>
+<span class="fc" id="L188">    ObjectNode definitionsObject = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());</span>
 
-<span class="fc" id="L189">    gatheredDefinitions.values().stream()</span>
-<span class="fc bfc" id="L190" title="All 2 branches covered.">        .filter(schema -&gt; !isInline(schema.getDefinition()))</span>
-<span class="fc" id="L191">        .sorted(Comparator.comparing(schema -&gt; schema.getDefinitionName(this)))</span>
-<span class="fc" id="L192">        .forEachOrdered(schema -&gt; {</span>
-<span class="fc" id="L193">          schema.generateDefinition(this, definitionsObject);</span>
-<span class="fc" id="L194">        });</span>
+<span class="fc" id="L190">    gatheredDefinitions.values().stream()</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        .filter(schema -&gt; !isInline(schema.getDefinition()))</span>
+<span class="fc" id="L192">        .sorted(Comparator.comparing(schema -&gt; schema.getDefinitionName(this)))</span>
+<span class="fc" id="L193">        .forEachOrdered(schema -&gt; {</span>
+<span class="fc" id="L194">          schema.generateDefinition(this, definitionsObject);</span>
+<span class="fc" id="L195">        });</span>
 
-<span class="fc" id="L196">    getDatatypeManager().generateDatatypes(definitionsObject);</span>
+<span class="fc" id="L197">    getDatatypeManager().generateDatatypes(definitionsObject);</span>
 
-<span class="fc" id="L198">    return definitionsObject;</span>
+<span class="fc" id="L199">    return definitionsObject;</span>
   }
 
   @Override
   public JsonNodeFactory getJsonNodeFactory() {
-<span class="fc" id="L203">    return jsonNodeFactory;</span>
+<span class="fc" id="L204">    return jsonNodeFactory;</span>
   }
 
   @Override
   @NonNull
   public IDataTypeJsonSchema getDataTypeSchemaForDefinition(@NonNull IValuedDefinition definition) {
-<span class="fc" id="L209">    IDataTypeJsonSchema retval = definitionValueToDataTypeSchemaMap.get(definition);</span>
-<span class="fc bfc" id="L210" title="All 2 branches covered.">    if (retval == null) {</span>
-<span class="fc" id="L211">      AllowedValueCollection allowedValuesCollection = getContextIndependentEnumeratedValues(definition);</span>
-<span class="fc" id="L212">      List&lt;IAllowedValue&gt; allowedValues = allowedValuesCollection.getValues();</span>
+<span class="fc" id="L210">    IDataTypeJsonSchema retval = definitionValueToDataTypeSchemaMap.get(definition);</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">    if (retval == null) {</span>
+<span class="fc" id="L212">      AllowedValueCollection allowedValuesCollection = getContextIndependentEnumeratedValues(definition);</span>
+<span class="fc" id="L213">      List&lt;IAllowedValue&gt; allowedValues = allowedValuesCollection.getValues();</span>
 
-<span class="fc" id="L214">      IDataTypeAdapter&lt;?&gt; dataTypeAdapter = definition.getJavaTypeAdapter();</span>
+<span class="fc" id="L215">      IDataTypeAdapter&lt;?&gt; dataTypeAdapter = definition.getJavaTypeAdapter();</span>
 
       // register data type use
-<span class="fc" id="L217">      retval = getSchema(dataTypeAdapter);</span>
-<span class="fc bfc" id="L218" title="All 2 branches covered.">      if (!allowedValues.isEmpty()) {</span>
+<span class="fc" id="L218">      retval = getSchema(dataTypeAdapter);</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">      if (!allowedValues.isEmpty()) {</span>
         // create restriction
-<span class="fc" id="L220">        retval = new DataTypeRestrictionDefinitionJsonSchema(definition, allowedValuesCollection);</span>
+<span class="fc" id="L221">        retval = new DataTypeRestrictionDefinitionJsonSchema(definition, allowedValuesCollection);</span>
       }
-<span class="fc" id="L222">      definitionValueToDataTypeSchemaMap.put(definition, retval);</span>
+<span class="fc" id="L223">      definitionValueToDataTypeSchemaMap.put(definition, retval);</span>
     }
-<span class="fc" id="L224">    return retval;</span>
+<span class="fc" id="L225">    return retval;</span>
   }
 
   @SuppressWarnings(&quot;resource&quot;)
   public void writeStartObject() throws IOException {
-<span class="fc" id="L229">    getWriter().writeStartObject();</span>
-<span class="fc" id="L230">  }</span>
+<span class="fc" id="L230">    getWriter().writeStartObject();</span>
+<span class="fc" id="L231">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   public void writeEndObject() throws IOException {
-<span class="fc" id="L234">    getWriter().writeEndObject();</span>
-<span class="fc" id="L235">  }</span>
+<span class="fc" id="L235">    getWriter().writeEndObject();</span>
+<span class="fc" id="L236">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   public void writeField(String fieldName, String value) throws IOException {
-<span class="fc" id="L239">    getWriter().writeStringField(fieldName, value);</span>
+<span class="fc" id="L240">    getWriter().writeStringField(fieldName, value);</span>
 
-<span class="fc" id="L241">  }</span>
+<span class="fc" id="L242">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   public void writeField(String fieldName, ObjectNode obj) throws IOException {
-<span class="fc" id="L245">    JsonGenerator writer = getWriter(); // NOPMD not closable here</span>
+<span class="fc" id="L246">    JsonGenerator writer = getWriter(); // NOPMD not closable here</span>
 
-<span class="fc" id="L247">    writer.writeFieldName(fieldName);</span>
-<span class="fc" id="L248">    writer.writeTree(obj);</span>
-<span class="fc" id="L249">  }</span>
+<span class="fc" id="L248">    writer.writeFieldName(fieldName);</span>
+<span class="fc" id="L249">    writer.writeTree(obj);</span>
+<span class="fc" id="L250">  }</span>
 
   @SuppressWarnings(&quot;resource&quot;)
   @Override
   public void flushWriter() throws IOException {
-<span class="fc" id="L254">    getWriter().flush();</span>
-<span class="fc" id="L255">  }</span>
+<span class="fc" id="L255">    getWriter().flush();</span>
+<span class="fc" id="L256">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

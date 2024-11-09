@@ -72,9 +72,10 @@ public final class ArrayInsertBefore {
 <span class="fc" id="L72">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
 <span class="fc" id="L73">        arguments.get(0).getFirstItem(true)));</span>
 <span class="fc" id="L74">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L75">    @SuppressWarnings(&quot;unchecked&quot;) T member = (T) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L76">    T member = (T) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
 
-<span class="fc" id="L77">    return ISequence.of(insertBefore(array, position, member));</span>
+<span class="fc" id="L78">    return ISequence.of(insertBefore(array, position, member));</span>
   }
 
   /**
@@ -98,7 +99,7 @@ public final class ArrayInsertBefore {
       @NonNull IArrayItem&lt;T&gt; array,
       @NonNull IIntegerItem positionItem,
       @NonNull T member) {
-<span class="fc" id="L101">    return insertBefore(array, positionItem.asInteger().intValueExact(), member);</span>
+<span class="fc" id="L102">    return insertBefore(array, positionItem.asInteger().intValueExact(), member);</span>
   }
 
   /**
@@ -122,10 +123,10 @@ public final class ArrayInsertBefore {
       @NonNull IArrayItem&lt;T&gt; array,
       int position,
       @NonNull T member) {
-<span class="fc" id="L125">    return ArrayJoin.join(ObjectUtils.notNull(List.of(</span>
-<span class="fc" id="L126">        ArraySubarray.subarray(array, 1, position - 1),</span>
-<span class="fc" id="L127">        IArrayItem.of(member),</span>
-<span class="fc" id="L128">        ArraySubarray.subarray(array, position))));</span>
+<span class="fc" id="L126">    return ArrayJoin.join(ObjectUtils.notNull(List.of(</span>
+<span class="fc" id="L127">        ArraySubarray.subarray(array, 1, position - 1),</span>
+<span class="fc" id="L128">        IArrayItem.of(member),</span>
+<span class="fc" id="L129">        ArraySubarray.subarray(array, position))));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

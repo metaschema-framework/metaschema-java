@@ -153,37 +153,39 @@
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>             handleConversion(source, toFormat, writer, loader);
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>           }
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         }
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>       } <strong class="jxr_keyword">catch</strong> (IOException | IllegalArgumentException ex) {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>       } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException ex) {
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>       }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>       <strong class="jxr_keyword">if</strong> (destination != <strong class="jxr_keyword">null</strong> &amp;&amp; LOGGER.isInfoEnabled()) {
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>         LOGGER.info(<span class="jxr_string">"Generated {} file: {}"</span>, toFormat.toString(), destination);
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>       }
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>     }
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * Called to perform a content conversion.</em>
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     * @param source</em>
-<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     *          the resource to convert</em>
-<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">     * @param toFormat</em>
-<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">     *          the format to convert to</em>
-<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">     * @param writer</em>
-<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     *          the writer to use to write converted content</em>
-<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">     * @param loader</em>
-<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">     *          the Metaschema loader to use to load the content to convert</em>
-<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">     * @throws FileNotFoundException</em>
-<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">     *           if the requested resource was not found</em>
-<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">     * @throws IOException</em>
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">     *           if there was an error reading or writing content</em>
-<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">void</strong> handleConversion(
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>         @NonNull URI source,
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>         @NonNull Format toFormat,
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>         @NonNull Writer writer,
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>         @NonNull IBoundLoader loader) <strong class="jxr_keyword">throws</strong> FileNotFoundException, IOException;
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>   }
-<a class="jxr_linenumber" name="L178" href="#L178">178</a> }
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>       } <strong class="jxr_keyword">catch</strong> (IOException ex) {
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> CommandExecutionException(ExitCode.IO_ERROR, ex);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>       }
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>       <strong class="jxr_keyword">if</strong> (destination != <strong class="jxr_keyword">null</strong> &amp;&amp; LOGGER.isInfoEnabled()) {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>         LOGGER.info(<span class="jxr_string">"Generated {} file: {}"</span>, toFormat.toString(), destination);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>       }
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     }
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> 
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     * Called to perform a content conversion.</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">     * @param source</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">     *          the resource to convert</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">     * @param toFormat</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     *          the format to convert to</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">     * @param writer</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">     *          the writer to use to write converted content</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">     * @param loader</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">     *          the Metaschema loader to use to load the content to convert</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">     * @throws FileNotFoundException</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">     *           if the requested resource was not found</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * @throws IOException</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     *           if there was an error reading or writing content</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">void</strong> handleConversion(
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>         @NonNull URI source,
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>         @NonNull Format toFormat,
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>         @NonNull Writer writer,
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>         @NonNull IBoundLoader loader) <strong class="jxr_keyword">throws</strong> FileNotFoundException, IOException;
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>   }
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

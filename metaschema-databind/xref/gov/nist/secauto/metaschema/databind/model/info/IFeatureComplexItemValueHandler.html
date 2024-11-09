@@ -89,31 +89,33 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>        CLASS retval;
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        <strong class="jxr_keyword">if</strong> (supplier != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          @SuppressWarnings(<span class="jxr_string">"unchecked"</span>) Constructor&lt;CLASS&gt; constructor
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>              = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor(IMetaschemaData.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>          retval = constructor.newInstance(supplier.get());
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>        } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          @SuppressWarnings(<span class="jxr_string">"unchecked"</span>) Constructor&lt;CLASS&gt; constructor
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>              = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor();
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>          retval = constructor.newInstance();
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>        }
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>        <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(retval);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      } <strong class="jxr_keyword">catch</strong> (NoSuchMethodException ex) {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        String msg = String.format(<span class="jxr_string">"Class '%s' does not have a required no-arg constructor."</span>, clazz.getName());
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(msg, ex);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      } <strong class="jxr_keyword">catch</strong> (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(ex);
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      }
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>    }
-<a class="jxr_linenumber" name="L100" href="#L100">100</a> 
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>   <strong class="jxr_keyword">void</strong> callBeforeDeserialize(
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>       @NonNull IBoundObject targetObject,
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>       @Nullable IBoundObject parentObject) <strong class="jxr_keyword">throws</strong> BindingException;
-<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">void</strong> callAfterDeserialize(
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>       @NonNull IBoundObject targetObject,
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>       @Nullable IBoundObject parentObject) <strong class="jxr_keyword">throws</strong> BindingException;
-<a class="jxr_linenumber" name="L108" href="#L108">108</a> }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          Constructor&lt;CLASS&gt; constructor
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>              = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor(IMetaschemaData.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>          retval = constructor.newInstance(supplier.get());
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>        } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          Constructor&lt;CLASS&gt; constructor
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>              = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor();
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          retval = constructor.newInstance();
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>        }
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>        <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(retval);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      } <strong class="jxr_keyword">catch</strong> (NoSuchMethodException ex) {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        String msg = String.format(<span class="jxr_string">"Class '%s' does not have a required no-arg constructor."</span>, clazz.getName());
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(msg, ex);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      } <strong class="jxr_keyword">catch</strong> (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(ex);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     }
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>   }
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>   <strong class="jxr_keyword">void</strong> callBeforeDeserialize(
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>       @NonNull IBoundObject targetObject,
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>       @Nullable IBoundObject parentObject) <strong class="jxr_keyword">throws</strong> BindingException;
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>   <strong class="jxr_keyword">void</strong> callAfterDeserialize(
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>       @NonNull IBoundObject targetObject,
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>       @Nullable IBoundObject parentObject) <strong class="jxr_keyword">throws</strong> BindingException;
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

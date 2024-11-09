@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.time.DateTimeException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -23,57 +24,65 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class DateTimeWithTZAdapter
     extends AbstractDataTypeAdapter&lt;ZonedDateTime, IDateTimeItem&gt; {
   @NonNull
-<span class="fc" id="L26">  private static final List&lt;QName&gt; NAMES = ObjectUtils.notNull(</span>
-<span class="fc" id="L27">      List.of(</span>
-<span class="fc" id="L28">          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), &quot;date-time-with-timezone&quot;),</span>
+<span class="fc" id="L27">  private static final List&lt;QName&gt; NAMES = ObjectUtils.notNull(</span>
+<span class="fc" id="L28">      List.of(</span>
+<span class="fc" id="L29">          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), &quot;date-time-with-timezone&quot;),</span>
           // for backwards compatibility with original type name
-<span class="fc" id="L30">          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), &quot;dateTime-with-timezone&quot;)));</span>
+<span class="fc" id="L31">          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), &quot;dateTime-with-timezone&quot;)));</span>
 
   DateTimeWithTZAdapter() {
-<span class="fc" id="L33">    super(ZonedDateTime.class);</span>
-<span class="fc" id="L34">  }</span>
+<span class="fc" id="L34">    super(ZonedDateTime.class);</span>
+<span class="fc" id="L35">  }</span>
 
   @Override
   public List&lt;QName&gt; getNames() {
-<span class="fc" id="L38">    return NAMES;</span>
+<span class="fc" id="L39">    return NAMES;</span>
   }
 
   @Override
   public JsonFormatTypes getJsonRawType() {
-<span class="nc" id="L43">    return JsonFormatTypes.STRING;</span>
+<span class="nc" id="L44">    return JsonFormatTypes.STRING;</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public ZonedDateTime parse(String value) {
     try {
-<span class="fc" id="L50">      return ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(value));</span>
-<span class="nc" id="L51">    } catch (DateTimeParseException ex) {</span>
-<span class="nc" id="L52">      throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);</span>
+<span class="fc" id="L51">      return ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(value));</span>
+<span class="nc" id="L52">    } catch (DateTimeParseException ex) {</span>
+<span class="nc" id="L53">      throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);</span>
     }
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String asString(Object value) {
-<span class="nc" id="L59">    return DateFormats.DATE_TIME_WITH_TZ.format((ZonedDateTime) value);</span>
+    try {
+<span class="nc" id="L61">      return DateFormats.DATE_TIME_WITH_TZ.format((ZonedDateTime) value);</span>
+<span class="nc" id="L62">    } catch (DateTimeException ex) {</span>
+<span class="nc" id="L63">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L64">          String.format(&quot;The provided value '%s' cannot be formatted as a date/time value. %s&quot;,</span>
+<span class="nc" id="L65">              value.toString(),</span>
+<span class="nc" id="L66">              ex.getMessage()),</span>
+          ex);
+    }
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public ZonedDateTime copy(Object obj) {
-<span class="nc" id="L65">    return ZonedDateTime.from((ZonedDateTime) obj);</span>
+<span class="nc" id="L74">    return ZonedDateTime.from((ZonedDateTime) obj);</span>
   }
 
   @Override
   public Class&lt;IDateTimeItem&gt; getItemClass() {
-<span class="nc" id="L70">    return IDateTimeItem.class;</span>
+<span class="nc" id="L79">    return IDateTimeItem.class;</span>
   }
 
   @Override
   public IDateTimeItem newItem(Object value) {
-<span class="nc" id="L75">    ZonedDateTime item = toValue(value);</span>
-<span class="nc" id="L76">    return IDateTimeItem.valueOf(item);</span>
+<span class="nc" id="L84">    ZonedDateTime item = toValue(value);</span>
+<span class="nc" id="L85">    return IDateTimeItem.valueOf(item);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

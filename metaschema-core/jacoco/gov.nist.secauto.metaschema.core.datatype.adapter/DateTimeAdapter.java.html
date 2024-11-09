@@ -74,40 +74,42 @@ public class DateTimeAdapter
     String retval;
 <span class="nc bnc" id="L75" title="All 2 branches missed.">    if (value.hasTimeZone()) {</span>
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L77">      @NonNull String formatted = DateFormats.DATE_TIME_WITH_TZ.format(value.getValue());</span>
-<span class="nc" id="L78">      retval = formatted;</span>
-<span class="nc" id="L79">    } else {</span>
+      @NonNull
+<span class="nc" id="L78">      String formatted = DateFormats.DATE_TIME_WITH_TZ.format(value.getValue());</span>
+<span class="nc" id="L79">      retval = formatted;</span>
+<span class="nc" id="L80">    } else {</span>
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L81">      @NonNull String formatted = DateFormats.DATE_TIME_WITHOUT_TZ.format(value.getValue());</span>
-<span class="nc" id="L82">      retval = formatted;</span>
+      @NonNull
+<span class="nc" id="L83">      String formatted = DateFormats.DATE_TIME_WITHOUT_TZ.format(value.getValue());</span>
+<span class="nc" id="L84">      retval = formatted;</span>
     }
-<span class="nc" id="L84">    return retval;</span>
+<span class="nc" id="L86">    return retval;</span>
   }
 
   @Override
   public Class&lt;IDateTimeItem&gt; getItemClass() {
-<span class="nc" id="L89">    return IDateTimeItem.class;</span>
+<span class="nc" id="L91">    return IDateTimeItem.class;</span>
   }
 
   @Override
   public IDateTimeItem newItem(Object value) {
-<span class="nc" id="L94">    DateTime item = toValue(value);</span>
-<span class="nc" id="L95">    return IDateTimeItem.valueOf(item);</span>
+<span class="nc" id="L96">    DateTime item = toValue(value);</span>
+<span class="nc" id="L97">    return IDateTimeItem.valueOf(item);</span>
   }
 
   @Override
   protected IDateTimeItem castInternal(@NonNull IAnyAtomicItem item) {
     // TODO: bring up to spec
     IDateTimeItem retval;
-<span class="nc bnc" id="L102" title="All 2 branches missed.">    if (item instanceof IDateItem) {</span>
-<span class="nc" id="L103">      retval = IDateTimeItem.valueOf(((IDateItem) item).asZonedDateTime());</span>
-<span class="nc bnc" id="L104" title="All 4 branches missed.">    } else if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {</span>
-<span class="nc" id="L105">      retval = super.castInternal(item);</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">    if (item instanceof IDateItem) {</span>
+<span class="nc" id="L105">      retval = IDateTimeItem.valueOf(((IDateItem) item).asZonedDateTime());</span>
+<span class="nc bnc" id="L106" title="All 4 branches missed.">    } else if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {</span>
+<span class="nc" id="L107">      retval = super.castInternal(item);</span>
     } else {
-<span class="nc" id="L107">      throw new InvalidValueForCastFunctionException(</span>
-<span class="nc" id="L108">          String.format(&quot;unsupported item type '%s'&quot;, item.getClass().getName()));</span>
+<span class="nc" id="L109">      throw new InvalidValueForCastFunctionException(</span>
+<span class="nc" id="L110">          String.format(&quot;unsupported item type '%s'&quot;, item.getClass().getName()));</span>
     }
-<span class="nc" id="L110">    return retval;</span>
+<span class="nc" id="L112">    return retval;</span>
   }
 
 }

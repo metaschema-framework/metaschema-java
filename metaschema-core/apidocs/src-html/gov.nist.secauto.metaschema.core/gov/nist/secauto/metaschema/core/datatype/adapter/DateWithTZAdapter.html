@@ -25,82 +25,91 @@
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;</span>
 <span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
 <span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import java.time.ZonedDateTime;</span>
-<span class="source-line-no">016</span><span id="line-16">import java.time.format.DateTimeParseException;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.util.List;</span>
-<span class="source-line-no">018</span><span id="line-18">import java.util.regex.Matcher;</span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.regex.Pattern;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">public class DateWithTZAdapter</span>
-<span class="source-line-no">026</span><span id="line-26">    extends AbstractDataTypeAdapter&lt;ZonedDateTime, IDateItem&gt; {</span>
-<span class="source-line-no">027</span><span id="line-27">  @NonNull</span>
-<span class="source-line-no">028</span><span id="line-28">  private static final List&lt;QName&gt; NAMES = ObjectUtils.notNull(</span>
-<span class="source-line-no">029</span><span id="line-29">      List.of(</span>
-<span class="source-line-no">030</span><span id="line-30">          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "date-with-timezone")));</span>
-<span class="source-line-no">031</span><span id="line-31">  private static final Pattern DATE_TIMEZONE = Pattern.compile("^("</span>
-<span class="source-line-no">032</span><span id="line-32">      + "^(?:(?:2000|2400|2800|(?:19|2[0-9](?:0[48]|[2468][048]|[13579][26])))-02-29)"</span>
-<span class="source-line-no">033</span><span id="line-33">      + "|(?:(?:(?:19|2[0-9])[0-9]{2})-02-(?:0[1-9]|1[0-9]|2[0-8]))"</span>
-<span class="source-line-no">034</span><span id="line-34">      + "|(?:(?:(?:19|2[0-9])[0-9]{2})-(?:0[13578]|10|12)-(?:0[1-9]|[12][0-9]|3[01]))"</span>
-<span class="source-line-no">035</span><span id="line-35">      + "|(?:(?:(?:19|2[0-9])[0-9]{2})-(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30))"</span>
-<span class="source-line-no">036</span><span id="line-36">      + ")"</span>
-<span class="source-line-no">037</span><span id="line-37">      + "(Z|[+-][0-9]{2}:[0-9]{2})$");</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  DateWithTZAdapter() {</span>
-<span class="source-line-no">040</span><span id="line-40">    super(ZonedDateTime.class);</span>
-<span class="source-line-no">041</span><span id="line-41">  }</span>
-<span class="source-line-no">042</span><span id="line-42"></span>
-<span class="source-line-no">043</span><span id="line-43">  @Override</span>
-<span class="source-line-no">044</span><span id="line-44">  public List&lt;QName&gt; getNames() {</span>
-<span class="source-line-no">045</span><span id="line-45">    return NAMES;</span>
-<span class="source-line-no">046</span><span id="line-46">  }</span>
-<span class="source-line-no">047</span><span id="line-47"></span>
-<span class="source-line-no">048</span><span id="line-48">  @Override</span>
-<span class="source-line-no">049</span><span id="line-49">  public JsonFormatTypes getJsonRawType() {</span>
-<span class="source-line-no">050</span><span id="line-50">    return JsonFormatTypes.STRING;</span>
-<span class="source-line-no">051</span><span id="line-51">  }</span>
-<span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">  @SuppressWarnings("null")</span>
-<span class="source-line-no">054</span><span id="line-54">  @Override</span>
-<span class="source-line-no">055</span><span id="line-55">  public ZonedDateTime parse(String value) {</span>
-<span class="source-line-no">056</span><span id="line-56">    Matcher matcher = DATE_TIMEZONE.matcher(value);</span>
-<span class="source-line-no">057</span><span id="line-57">    if (!matcher.matches()) {</span>
-<span class="source-line-no">058</span><span id="line-58">      throw new IllegalArgumentException("Invalid date: " + value);</span>
-<span class="source-line-no">059</span><span id="line-59">    }</span>
-<span class="source-line-no">060</span><span id="line-60">    String parseValue = String.format("%sT00:00:00%s", matcher.group(1), matcher.group(2));</span>
-<span class="source-line-no">061</span><span id="line-61">    try {</span>
-<span class="source-line-no">062</span><span id="line-62">      return ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(parseValue));</span>
-<span class="source-line-no">063</span><span id="line-63">    } catch (DateTimeParseException ex) {</span>
-<span class="source-line-no">064</span><span id="line-64">      throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);</span>
-<span class="source-line-no">065</span><span id="line-65">    }</span>
-<span class="source-line-no">066</span><span id="line-66">  }</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">  @SuppressWarnings("null")</span>
-<span class="source-line-no">069</span><span id="line-69">  @Override</span>
-<span class="source-line-no">070</span><span id="line-70">  public String asString(Object value) {</span>
-<span class="source-line-no">071</span><span id="line-71">    return DateFormats.DATE_WITH_TZ.format((ZonedDateTime) value);</span>
-<span class="source-line-no">072</span><span id="line-72">  }</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">  @SuppressWarnings("null")</span>
-<span class="source-line-no">075</span><span id="line-75">  @Override</span>
-<span class="source-line-no">076</span><span id="line-76">  public ZonedDateTime copy(Object obj) {</span>
-<span class="source-line-no">077</span><span id="line-77">    return ZonedDateTime.from((ZonedDateTime) obj);</span>
-<span class="source-line-no">078</span><span id="line-78">  }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">  @Override</span>
-<span class="source-line-no">081</span><span id="line-81">  public Class&lt;IDateItem&gt; getItemClass() {</span>
-<span class="source-line-no">082</span><span id="line-82">    return IDateItem.class;</span>
-<span class="source-line-no">083</span><span id="line-83">  }</span>
-<span class="source-line-no">084</span><span id="line-84"></span>
-<span class="source-line-no">085</span><span id="line-85">  @Override</span>
-<span class="source-line-no">086</span><span id="line-86">  public IDateItem newItem(Object value) {</span>
-<span class="source-line-no">087</span><span id="line-87">    ZonedDateTime item = toValue(value);</span>
-<span class="source-line-no">088</span><span id="line-88">    return IDateItem.valueOf(item);</span>
-<span class="source-line-no">089</span><span id="line-89">  }</span>
-<span class="source-line-no">090</span><span id="line-90">}</span>
+<span class="source-line-no">015</span><span id="line-15">import java.time.DateTimeException;</span>
+<span class="source-line-no">016</span><span id="line-16">import java.time.ZonedDateTime;</span>
+<span class="source-line-no">017</span><span id="line-17">import java.time.format.DateTimeParseException;</span>
+<span class="source-line-no">018</span><span id="line-18">import java.util.List;</span>
+<span class="source-line-no">019</span><span id="line-19">import java.util.regex.Matcher;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.util.regex.Pattern;</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">public class DateWithTZAdapter</span>
+<span class="source-line-no">027</span><span id="line-27">    extends AbstractDataTypeAdapter&lt;ZonedDateTime, IDateItem&gt; {</span>
+<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
+<span class="source-line-no">029</span><span id="line-29">  private static final List&lt;QName&gt; NAMES = ObjectUtils.notNull(</span>
+<span class="source-line-no">030</span><span id="line-30">      List.of(</span>
+<span class="source-line-no">031</span><span id="line-31">          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "date-with-timezone")));</span>
+<span class="source-line-no">032</span><span id="line-32">  private static final Pattern DATE_TIMEZONE = Pattern.compile("^("</span>
+<span class="source-line-no">033</span><span id="line-33">      + "^(?:(?:2000|2400|2800|(?:19|2[0-9](?:0[48]|[2468][048]|[13579][26])))-02-29)"</span>
+<span class="source-line-no">034</span><span id="line-34">      + "|(?:(?:(?:19|2[0-9])[0-9]{2})-02-(?:0[1-9]|1[0-9]|2[0-8]))"</span>
+<span class="source-line-no">035</span><span id="line-35">      + "|(?:(?:(?:19|2[0-9])[0-9]{2})-(?:0[13578]|10|12)-(?:0[1-9]|[12][0-9]|3[01]))"</span>
+<span class="source-line-no">036</span><span id="line-36">      + "|(?:(?:(?:19|2[0-9])[0-9]{2})-(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30))"</span>
+<span class="source-line-no">037</span><span id="line-37">      + ")"</span>
+<span class="source-line-no">038</span><span id="line-38">      + "(Z|[+-][0-9]{2}:[0-9]{2})$");</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  DateWithTZAdapter() {</span>
+<span class="source-line-no">041</span><span id="line-41">    super(ZonedDateTime.class);</span>
+<span class="source-line-no">042</span><span id="line-42">  }</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  @Override</span>
+<span class="source-line-no">045</span><span id="line-45">  public List&lt;QName&gt; getNames() {</span>
+<span class="source-line-no">046</span><span id="line-46">    return NAMES;</span>
+<span class="source-line-no">047</span><span id="line-47">  }</span>
+<span class="source-line-no">048</span><span id="line-48"></span>
+<span class="source-line-no">049</span><span id="line-49">  @Override</span>
+<span class="source-line-no">050</span><span id="line-50">  public JsonFormatTypes getJsonRawType() {</span>
+<span class="source-line-no">051</span><span id="line-51">    return JsonFormatTypes.STRING;</span>
+<span class="source-line-no">052</span><span id="line-52">  }</span>
+<span class="source-line-no">053</span><span id="line-53"></span>
+<span class="source-line-no">054</span><span id="line-54">  @SuppressWarnings("null")</span>
+<span class="source-line-no">055</span><span id="line-55">  @Override</span>
+<span class="source-line-no">056</span><span id="line-56">  public ZonedDateTime parse(String value) {</span>
+<span class="source-line-no">057</span><span id="line-57">    Matcher matcher = DATE_TIMEZONE.matcher(value);</span>
+<span class="source-line-no">058</span><span id="line-58">    if (!matcher.matches()) {</span>
+<span class="source-line-no">059</span><span id="line-59">      throw new IllegalArgumentException("Invalid date: " + value);</span>
+<span class="source-line-no">060</span><span id="line-60">    }</span>
+<span class="source-line-no">061</span><span id="line-61">    String parseValue = String.format("%sT00:00:00%s", matcher.group(1), matcher.group(2));</span>
+<span class="source-line-no">062</span><span id="line-62">    try {</span>
+<span class="source-line-no">063</span><span id="line-63">      return ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(parseValue));</span>
+<span class="source-line-no">064</span><span id="line-64">    } catch (DateTimeParseException ex) {</span>
+<span class="source-line-no">065</span><span id="line-65">      throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);</span>
+<span class="source-line-no">066</span><span id="line-66">    }</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  @SuppressWarnings("null")</span>
+<span class="source-line-no">070</span><span id="line-70">  @Override</span>
+<span class="source-line-no">071</span><span id="line-71">  public String asString(Object value) {</span>
+<span class="source-line-no">072</span><span id="line-72">    try {</span>
+<span class="source-line-no">073</span><span id="line-73">      return DateFormats.DATE_WITH_TZ.format((ZonedDateTime) value);</span>
+<span class="source-line-no">074</span><span id="line-74">    } catch (DateTimeException ex) {</span>
+<span class="source-line-no">075</span><span id="line-75">      throw new IllegalArgumentException(</span>
+<span class="source-line-no">076</span><span id="line-76">          String.format("The provided value '%s' cannot be formatted as a date value. %s",</span>
+<span class="source-line-no">077</span><span id="line-77">              value.toString(),</span>
+<span class="source-line-no">078</span><span id="line-78">              ex.getMessage()),</span>
+<span class="source-line-no">079</span><span id="line-79">          ex);</span>
+<span class="source-line-no">080</span><span id="line-80">    }</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">  @SuppressWarnings("null")</span>
+<span class="source-line-no">084</span><span id="line-84">  @Override</span>
+<span class="source-line-no">085</span><span id="line-85">  public ZonedDateTime copy(Object obj) {</span>
+<span class="source-line-no">086</span><span id="line-86">    return ZonedDateTime.from((ZonedDateTime) obj);</span>
+<span class="source-line-no">087</span><span id="line-87">  }</span>
+<span class="source-line-no">088</span><span id="line-88"></span>
+<span class="source-line-no">089</span><span id="line-89">  @Override</span>
+<span class="source-line-no">090</span><span id="line-90">  public Class&lt;IDateItem&gt; getItemClass() {</span>
+<span class="source-line-no">091</span><span id="line-91">    return IDateItem.class;</span>
+<span class="source-line-no">092</span><span id="line-92">  }</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">  @Override</span>
+<span class="source-line-no">095</span><span id="line-95">  public IDateItem newItem(Object value) {</span>
+<span class="source-line-no">096</span><span id="line-96">    ZonedDateTime item = toValue(value);</span>
+<span class="source-line-no">097</span><span id="line-97">    return IDateItem.valueOf(item);</span>
+<span class="source-line-no">098</span><span id="line-98">  }</span>
+<span class="source-line-no">099</span><span id="line-99">}</span>
 
 
 

@@ -179,19 +179,20 @@ import nl.talsmasoftware.lazy4j.Lazy;
           // iterate over the old array of choices and append new choice
 <span class="fc bfc" id="L180" title="All 2 branches covered.">          for (PropertyCollection oldInstanceProperties : retval) {</span>
             @SuppressWarnings(&quot;null&quot;)
-<span class="fc" id="L182">            @NonNull PropertyCollection newInstanceProperties = oldInstanceProperties.copy();</span>
+            @NonNull
+<span class="fc" id="L183">            PropertyCollection newInstanceProperties = oldInstanceProperties.copy();</span>
 
             // add the choice
-<span class="fc" id="L185">            choiceInstances.get(optionInstance)</span>
-<span class="fc" id="L186">                .generateProperty(newInstanceProperties, state);</span>
+<span class="fc" id="L186">            choiceInstances.get(optionInstance)</span>
+<span class="fc" id="L187">                .generateProperty(newInstanceProperties, state);</span>
 
-<span class="fc" id="L188">            newRetval.add(newInstanceProperties);</span>
-<span class="fc" id="L189">          }</span>
+<span class="fc" id="L189">            newRetval.add(newInstanceProperties);</span>
+<span class="fc" id="L190">          }</span>
         }
-<span class="fc" id="L191">      }</span>
-<span class="fc" id="L192">      retval = newRetval;</span>
-<span class="fc" id="L193">    }</span>
-<span class="fc" id="L194">    return retval;</span>
+<span class="fc" id="L192">      }</span>
+<span class="fc" id="L193">      retval = newRetval;</span>
+<span class="fc" id="L194">    }</span>
+<span class="fc" id="L195">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

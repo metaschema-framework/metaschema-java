@@ -158,37 +158,39 @@
 <span class="source-line-no">145</span><span id="line-145">            handleConversion(source, toFormat, writer, loader);</span>
 <span class="source-line-no">146</span><span id="line-146">          }</span>
 <span class="source-line-no">147</span><span id="line-147">        }</span>
-<span class="source-line-no">148</span><span id="line-148">      } catch (IOException | IllegalArgumentException ex) {</span>
+<span class="source-line-no">148</span><span id="line-148">      } catch (IllegalArgumentException ex) {</span>
 <span class="source-line-no">149</span><span id="line-149">        throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);</span>
-<span class="source-line-no">150</span><span id="line-150">      }</span>
-<span class="source-line-no">151</span><span id="line-151">      if (destination != null &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">152</span><span id="line-152">        LOGGER.info("Generated {} file: {}", toFormat.toString(), destination);</span>
-<span class="source-line-no">153</span><span id="line-153">      }</span>
-<span class="source-line-no">154</span><span id="line-154">    }</span>
-<span class="source-line-no">155</span><span id="line-155"></span>
-<span class="source-line-no">156</span><span id="line-156">    /**</span>
-<span class="source-line-no">157</span><span id="line-157">     * Called to perform a content conversion.</span>
-<span class="source-line-no">158</span><span id="line-158">     *</span>
-<span class="source-line-no">159</span><span id="line-159">     * @param source</span>
-<span class="source-line-no">160</span><span id="line-160">     *          the resource to convert</span>
-<span class="source-line-no">161</span><span id="line-161">     * @param toFormat</span>
-<span class="source-line-no">162</span><span id="line-162">     *          the format to convert to</span>
-<span class="source-line-no">163</span><span id="line-163">     * @param writer</span>
-<span class="source-line-no">164</span><span id="line-164">     *          the writer to use to write converted content</span>
-<span class="source-line-no">165</span><span id="line-165">     * @param loader</span>
-<span class="source-line-no">166</span><span id="line-166">     *          the Metaschema loader to use to load the content to convert</span>
-<span class="source-line-no">167</span><span id="line-167">     * @throws FileNotFoundException</span>
-<span class="source-line-no">168</span><span id="line-168">     *           if the requested resource was not found</span>
-<span class="source-line-no">169</span><span id="line-169">     * @throws IOException</span>
-<span class="source-line-no">170</span><span id="line-170">     *           if there was an error reading or writing content</span>
-<span class="source-line-no">171</span><span id="line-171">     */</span>
-<span class="source-line-no">172</span><span id="line-172">    protected abstract void handleConversion(</span>
-<span class="source-line-no">173</span><span id="line-173">        @NonNull URI source,</span>
-<span class="source-line-no">174</span><span id="line-174">        @NonNull Format toFormat,</span>
-<span class="source-line-no">175</span><span id="line-175">        @NonNull Writer writer,</span>
-<span class="source-line-no">176</span><span id="line-176">        @NonNull IBoundLoader loader) throws FileNotFoundException, IOException;</span>
-<span class="source-line-no">177</span><span id="line-177">  }</span>
-<span class="source-line-no">178</span><span id="line-178">}</span>
+<span class="source-line-no">150</span><span id="line-150">      } catch (IOException ex) {</span>
+<span class="source-line-no">151</span><span id="line-151">        throw new CommandExecutionException(ExitCode.IO_ERROR, ex);</span>
+<span class="source-line-no">152</span><span id="line-152">      }</span>
+<span class="source-line-no">153</span><span id="line-153">      if (destination != null &amp;&amp; LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">154</span><span id="line-154">        LOGGER.info("Generated {} file: {}", toFormat.toString(), destination);</span>
+<span class="source-line-no">155</span><span id="line-155">      }</span>
+<span class="source-line-no">156</span><span id="line-156">    }</span>
+<span class="source-line-no">157</span><span id="line-157"></span>
+<span class="source-line-no">158</span><span id="line-158">    /**</span>
+<span class="source-line-no">159</span><span id="line-159">     * Called to perform a content conversion.</span>
+<span class="source-line-no">160</span><span id="line-160">     *</span>
+<span class="source-line-no">161</span><span id="line-161">     * @param source</span>
+<span class="source-line-no">162</span><span id="line-162">     *          the resource to convert</span>
+<span class="source-line-no">163</span><span id="line-163">     * @param toFormat</span>
+<span class="source-line-no">164</span><span id="line-164">     *          the format to convert to</span>
+<span class="source-line-no">165</span><span id="line-165">     * @param writer</span>
+<span class="source-line-no">166</span><span id="line-166">     *          the writer to use to write converted content</span>
+<span class="source-line-no">167</span><span id="line-167">     * @param loader</span>
+<span class="source-line-no">168</span><span id="line-168">     *          the Metaschema loader to use to load the content to convert</span>
+<span class="source-line-no">169</span><span id="line-169">     * @throws FileNotFoundException</span>
+<span class="source-line-no">170</span><span id="line-170">     *           if the requested resource was not found</span>
+<span class="source-line-no">171</span><span id="line-171">     * @throws IOException</span>
+<span class="source-line-no">172</span><span id="line-172">     *           if there was an error reading or writing content</span>
+<span class="source-line-no">173</span><span id="line-173">     */</span>
+<span class="source-line-no">174</span><span id="line-174">    protected abstract void handleConversion(</span>
+<span class="source-line-no">175</span><span id="line-175">        @NonNull URI source,</span>
+<span class="source-line-no">176</span><span id="line-176">        @NonNull Format toFormat,</span>
+<span class="source-line-no">177</span><span id="line-177">        @NonNull Writer writer,</span>
+<span class="source-line-no">178</span><span id="line-178">        @NonNull IBoundLoader loader) throws FileNotFoundException, IOException;</span>
+<span class="source-line-no">179</span><span id="line-179">  }</span>
+<span class="source-line-no">180</span><span id="line-180">}</span>
 
 
 

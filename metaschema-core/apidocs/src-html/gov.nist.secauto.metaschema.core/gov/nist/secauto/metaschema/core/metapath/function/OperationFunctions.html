@@ -254,860 +254,881 @@
 <span class="source-line-no">241</span><span id="line-241">      @NonNull ZonedDateTime dateTime,</span>
 <span class="source-line-no">242</span><span id="line-242">      @NonNull TemporalAmount duration) {</span>
 <span class="source-line-no">243</span><span id="line-243">    @SuppressWarnings("null")</span>
-<span class="source-line-no">244</span><span id="line-244">    @NonNull ZonedDateTime result = dateTime.minus(duration);</span>
-<span class="source-line-no">245</span><span id="line-245">    return IDateItem.valueOf(result);</span>
-<span class="source-line-no">246</span><span id="line-246">  }</span>
-<span class="source-line-no">247</span><span id="line-247"></span>
-<span class="source-line-no">248</span><span id="line-248">  /**</span>
-<span class="source-line-no">249</span><span id="line-249">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">250</span><span id="line-250">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-yearMonthDurations"&gt;op:subtract-yearMonthDurations&lt;/a&gt;.</span>
-<span class="source-line-no">251</span><span id="line-251">   *</span>
-<span class="source-line-no">252</span><span id="line-252">   * @param arg1</span>
-<span class="source-line-no">253</span><span id="line-253">   *          the first duration</span>
-<span class="source-line-no">254</span><span id="line-254">   * @param arg2</span>
-<span class="source-line-no">255</span><span id="line-255">   *          the second duration</span>
-<span class="source-line-no">256</span><span id="line-256">   * @return the result of subtracting the second duration from the first</span>
-<span class="source-line-no">257</span><span id="line-257">   */</span>
-<span class="source-line-no">258</span><span id="line-258">  @NonNull</span>
-<span class="source-line-no">259</span><span id="line-259">  public static IYearMonthDurationItem opSubtractYearMonthDurations(</span>
-<span class="source-line-no">260</span><span id="line-260">      @NonNull IYearMonthDurationItem arg1,</span>
-<span class="source-line-no">261</span><span id="line-261">      @NonNull IYearMonthDurationItem arg2) {</span>
-<span class="source-line-no">262</span><span id="line-262">    Period duration1 = arg1.asPeriod();</span>
-<span class="source-line-no">263</span><span id="line-263">    Period duration2 = arg2.asPeriod();</span>
-<span class="source-line-no">264</span><span id="line-264"></span>
-<span class="source-line-no">265</span><span id="line-265">    @SuppressWarnings("null")</span>
-<span class="source-line-no">266</span><span id="line-266">    @NonNull Period duration = duration1.minus(duration2);</span>
-<span class="source-line-no">267</span><span id="line-267">    return IYearMonthDurationItem.valueOf(duration);</span>
-<span class="source-line-no">268</span><span id="line-268">  }</span>
-<span class="source-line-no">269</span><span id="line-269"></span>
-<span class="source-line-no">270</span><span id="line-270">  /**</span>
-<span class="source-line-no">271</span><span id="line-271">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">272</span><span id="line-272">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dayTimeDurations"&gt;op:subtract-dayTimeDurations&lt;/a&gt;.</span>
-<span class="source-line-no">273</span><span id="line-273">   *</span>
-<span class="source-line-no">274</span><span id="line-274">   * @param arg1</span>
-<span class="source-line-no">275</span><span id="line-275">   *          the first duration</span>
-<span class="source-line-no">276</span><span id="line-276">   * @param arg2</span>
-<span class="source-line-no">277</span><span id="line-277">   *          the second duration</span>
-<span class="source-line-no">278</span><span id="line-278">   * @return the result of subtracting the second duration from the first</span>
-<span class="source-line-no">279</span><span id="line-279">   */</span>
-<span class="source-line-no">280</span><span id="line-280">  @NonNull</span>
-<span class="source-line-no">281</span><span id="line-281">  public static IDayTimeDurationItem opSubtractDayTimeDurations(</span>
-<span class="source-line-no">282</span><span id="line-282">      @NonNull IDayTimeDurationItem arg1,</span>
-<span class="source-line-no">283</span><span id="line-283">      @NonNull IDayTimeDurationItem arg2) {</span>
-<span class="source-line-no">284</span><span id="line-284">    Duration duration1 = arg1.asDuration();</span>
-<span class="source-line-no">285</span><span id="line-285">    Duration duration2 = arg2.asDuration();</span>
-<span class="source-line-no">286</span><span id="line-286"></span>
-<span class="source-line-no">287</span><span id="line-287">    @SuppressWarnings("null")</span>
-<span class="source-line-no">288</span><span id="line-288">    @NonNull Duration duration = duration1.minus(duration2);</span>
-<span class="source-line-no">289</span><span id="line-289">    return IDayTimeDurationItem.valueOf(duration);</span>
-<span class="source-line-no">290</span><span id="line-290">  }</span>
-<span class="source-line-no">291</span><span id="line-291"></span>
-<span class="source-line-no">292</span><span id="line-292">  /**</span>
-<span class="source-line-no">293</span><span id="line-293">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">294</span><span id="line-294">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes"&gt;op:subtract-dateTimes&lt;/a&gt;.</span>
-<span class="source-line-no">295</span><span id="line-295">   *</span>
-<span class="source-line-no">296</span><span id="line-296">   * @param time1</span>
-<span class="source-line-no">297</span><span id="line-297">   *          the first point in time</span>
-<span class="source-line-no">298</span><span id="line-298">   * @param time2</span>
-<span class="source-line-no">299</span><span id="line-299">   *          the second point in time</span>
-<span class="source-line-no">300</span><span id="line-300">   * @return the duration the occurred between the two points in time</span>
-<span class="source-line-no">301</span><span id="line-301">   */</span>
-<span class="source-line-no">302</span><span id="line-302">  @NonNull</span>
-<span class="source-line-no">303</span><span id="line-303">  public static IDayTimeDurationItem opSubtractDateTimes(@NonNull IDateTimeItem time1, @NonNull IDateTimeItem time2) {</span>
-<span class="source-line-no">304</span><span id="line-304">    return between(time1.asZonedDateTime(), time2.asZonedDateTime());</span>
-<span class="source-line-no">305</span><span id="line-305">  }</span>
-<span class="source-line-no">306</span><span id="line-306"></span>
-<span class="source-line-no">307</span><span id="line-307">  /**</span>
-<span class="source-line-no">308</span><span id="line-308">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">309</span><span id="line-309">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes"&gt;op:subtract-dateTimes&lt;/a&gt;.</span>
-<span class="source-line-no">310</span><span id="line-310">   *</span>
-<span class="source-line-no">311</span><span id="line-311">   * @param time1</span>
-<span class="source-line-no">312</span><span id="line-312">   *          the first point in time</span>
-<span class="source-line-no">313</span><span id="line-313">   * @param time2</span>
-<span class="source-line-no">314</span><span id="line-314">   *          the second point in time</span>
-<span class="source-line-no">315</span><span id="line-315">   * @return the duration the occurred between the two points in time</span>
-<span class="source-line-no">316</span><span id="line-316">   */</span>
-<span class="source-line-no">317</span><span id="line-317">  @NonNull</span>
-<span class="source-line-no">318</span><span id="line-318">  private static IDayTimeDurationItem between(@NonNull ZonedDateTime time1, @NonNull ZonedDateTime time2) {</span>
-<span class="source-line-no">319</span><span id="line-319">    @SuppressWarnings("null")</span>
-<span class="source-line-no">320</span><span id="line-320">    @NonNull Duration between = Duration.between(time1, time2);</span>
-<span class="source-line-no">321</span><span id="line-321">    return IDayTimeDurationItem.valueOf(between);</span>
-<span class="source-line-no">322</span><span id="line-322">  }</span>
-<span class="source-line-no">323</span><span id="line-323"></span>
-<span class="source-line-no">324</span><span id="line-324">  /**</span>
-<span class="source-line-no">325</span><span id="line-325">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">326</span><span id="line-326">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-yearMonthDuration-from-dateTime"&gt;op:subtract-yearMonthDuration-from-dateTime&lt;/a&gt;.</span>
-<span class="source-line-no">327</span><span id="line-327">   *</span>
-<span class="source-line-no">328</span><span id="line-328">   * @param moment</span>
-<span class="source-line-no">329</span><span id="line-329">   *          a point in time</span>
-<span class="source-line-no">330</span><span id="line-330">   * @param duration</span>
-<span class="source-line-no">331</span><span id="line-331">   *          the duration to subtract</span>
-<span class="source-line-no">332</span><span id="line-332">   * @return the result of subtracting the duration from a point in time</span>
-<span class="source-line-no">333</span><span id="line-333">   */</span>
-<span class="source-line-no">334</span><span id="line-334">  @NonNull</span>
-<span class="source-line-no">335</span><span id="line-335">  public static IDateTimeItem opSubtractYearMonthDurationFromDateTime(</span>
-<span class="source-line-no">336</span><span id="line-336">      @NonNull IDateTimeItem moment,</span>
-<span class="source-line-no">337</span><span id="line-337">      @NonNull IYearMonthDurationItem duration) {</span>
-<span class="source-line-no">338</span><span id="line-338">    @SuppressWarnings("null")</span>
-<span class="source-line-no">339</span><span id="line-339">    @NonNull ZonedDateTime dateTime = moment.asZonedDateTime().minus(duration.asPeriod());</span>
-<span class="source-line-no">340</span><span id="line-340">    return IDateTimeItem.valueOf(dateTime);</span>
-<span class="source-line-no">341</span><span id="line-341">  }</span>
-<span class="source-line-no">342</span><span id="line-342"></span>
-<span class="source-line-no">343</span><span id="line-343">  /**</span>
-<span class="source-line-no">344</span><span id="line-344">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">345</span><span id="line-345">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dayTimeDuration-from-dateTime"&gt;op:subtract-dayTimeDuration-from-dateTime&lt;/a&gt;.</span>
-<span class="source-line-no">346</span><span id="line-346">   *</span>
-<span class="source-line-no">347</span><span id="line-347">   * @param moment</span>
-<span class="source-line-no">348</span><span id="line-348">   *          a point in time</span>
-<span class="source-line-no">349</span><span id="line-349">   * @param duration</span>
-<span class="source-line-no">350</span><span id="line-350">   *          the duration to subtract</span>
-<span class="source-line-no">351</span><span id="line-351">   * @return the result of subtracting the duration from a point in time</span>
-<span class="source-line-no">352</span><span id="line-352">   */</span>
-<span class="source-line-no">353</span><span id="line-353">  @NonNull</span>
-<span class="source-line-no">354</span><span id="line-354">  public static IDateTimeItem opSubtractDayTimeDurationFromDateTime(</span>
-<span class="source-line-no">355</span><span id="line-355">      @NonNull IDateTimeItem moment,</span>
-<span class="source-line-no">356</span><span id="line-356">      @NonNull IDayTimeDurationItem duration) {</span>
-<span class="source-line-no">357</span><span id="line-357"></span>
-<span class="source-line-no">358</span><span id="line-358">    @SuppressWarnings("null")</span>
-<span class="source-line-no">359</span><span id="line-359">    @NonNull ZonedDateTime dateTime = moment.asZonedDateTime().plus(duration.asDuration());</span>
-<span class="source-line-no">360</span><span id="line-360">    return IDateTimeItem.valueOf(dateTime);</span>
-<span class="source-line-no">361</span><span id="line-361">  }</span>
+<span class="source-line-no">244</span><span id="line-244">    @NonNull</span>
+<span class="source-line-no">245</span><span id="line-245">    ZonedDateTime result = dateTime.minus(duration);</span>
+<span class="source-line-no">246</span><span id="line-246">    return IDateItem.valueOf(result);</span>
+<span class="source-line-no">247</span><span id="line-247">  }</span>
+<span class="source-line-no">248</span><span id="line-248"></span>
+<span class="source-line-no">249</span><span id="line-249">  /**</span>
+<span class="source-line-no">250</span><span id="line-250">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">251</span><span id="line-251">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-yearMonthDurations"&gt;op:subtract-yearMonthDurations&lt;/a&gt;.</span>
+<span class="source-line-no">252</span><span id="line-252">   *</span>
+<span class="source-line-no">253</span><span id="line-253">   * @param arg1</span>
+<span class="source-line-no">254</span><span id="line-254">   *          the first duration</span>
+<span class="source-line-no">255</span><span id="line-255">   * @param arg2</span>
+<span class="source-line-no">256</span><span id="line-256">   *          the second duration</span>
+<span class="source-line-no">257</span><span id="line-257">   * @return the result of subtracting the second duration from the first</span>
+<span class="source-line-no">258</span><span id="line-258">   */</span>
+<span class="source-line-no">259</span><span id="line-259">  @NonNull</span>
+<span class="source-line-no">260</span><span id="line-260">  public static IYearMonthDurationItem opSubtractYearMonthDurations(</span>
+<span class="source-line-no">261</span><span id="line-261">      @NonNull IYearMonthDurationItem arg1,</span>
+<span class="source-line-no">262</span><span id="line-262">      @NonNull IYearMonthDurationItem arg2) {</span>
+<span class="source-line-no">263</span><span id="line-263">    Period duration1 = arg1.asPeriod();</span>
+<span class="source-line-no">264</span><span id="line-264">    Period duration2 = arg2.asPeriod();</span>
+<span class="source-line-no">265</span><span id="line-265"></span>
+<span class="source-line-no">266</span><span id="line-266">    @SuppressWarnings("null")</span>
+<span class="source-line-no">267</span><span id="line-267">    @NonNull</span>
+<span class="source-line-no">268</span><span id="line-268">    Period duration = duration1.minus(duration2);</span>
+<span class="source-line-no">269</span><span id="line-269">    return IYearMonthDurationItem.valueOf(duration);</span>
+<span class="source-line-no">270</span><span id="line-270">  }</span>
+<span class="source-line-no">271</span><span id="line-271"></span>
+<span class="source-line-no">272</span><span id="line-272">  /**</span>
+<span class="source-line-no">273</span><span id="line-273">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">274</span><span id="line-274">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dayTimeDurations"&gt;op:subtract-dayTimeDurations&lt;/a&gt;.</span>
+<span class="source-line-no">275</span><span id="line-275">   *</span>
+<span class="source-line-no">276</span><span id="line-276">   * @param arg1</span>
+<span class="source-line-no">277</span><span id="line-277">   *          the first duration</span>
+<span class="source-line-no">278</span><span id="line-278">   * @param arg2</span>
+<span class="source-line-no">279</span><span id="line-279">   *          the second duration</span>
+<span class="source-line-no">280</span><span id="line-280">   * @return the result of subtracting the second duration from the first</span>
+<span class="source-line-no">281</span><span id="line-281">   */</span>
+<span class="source-line-no">282</span><span id="line-282">  @NonNull</span>
+<span class="source-line-no">283</span><span id="line-283">  public static IDayTimeDurationItem opSubtractDayTimeDurations(</span>
+<span class="source-line-no">284</span><span id="line-284">      @NonNull IDayTimeDurationItem arg1,</span>
+<span class="source-line-no">285</span><span id="line-285">      @NonNull IDayTimeDurationItem arg2) {</span>
+<span class="source-line-no">286</span><span id="line-286">    Duration duration1 = arg1.asDuration();</span>
+<span class="source-line-no">287</span><span id="line-287">    Duration duration2 = arg2.asDuration();</span>
+<span class="source-line-no">288</span><span id="line-288"></span>
+<span class="source-line-no">289</span><span id="line-289">    @SuppressWarnings("null")</span>
+<span class="source-line-no">290</span><span id="line-290">    @NonNull</span>
+<span class="source-line-no">291</span><span id="line-291">    Duration duration = duration1.minus(duration2);</span>
+<span class="source-line-no">292</span><span id="line-292">    return IDayTimeDurationItem.valueOf(duration);</span>
+<span class="source-line-no">293</span><span id="line-293">  }</span>
+<span class="source-line-no">294</span><span id="line-294"></span>
+<span class="source-line-no">295</span><span id="line-295">  /**</span>
+<span class="source-line-no">296</span><span id="line-296">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">297</span><span id="line-297">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes"&gt;op:subtract-dateTimes&lt;/a&gt;.</span>
+<span class="source-line-no">298</span><span id="line-298">   *</span>
+<span class="source-line-no">299</span><span id="line-299">   * @param time1</span>
+<span class="source-line-no">300</span><span id="line-300">   *          the first point in time</span>
+<span class="source-line-no">301</span><span id="line-301">   * @param time2</span>
+<span class="source-line-no">302</span><span id="line-302">   *          the second point in time</span>
+<span class="source-line-no">303</span><span id="line-303">   * @return the duration the occurred between the two points in time</span>
+<span class="source-line-no">304</span><span id="line-304">   */</span>
+<span class="source-line-no">305</span><span id="line-305">  @NonNull</span>
+<span class="source-line-no">306</span><span id="line-306">  public static IDayTimeDurationItem opSubtractDateTimes(@NonNull IDateTimeItem time1, @NonNull IDateTimeItem time2) {</span>
+<span class="source-line-no">307</span><span id="line-307">    return between(time1.asZonedDateTime(), time2.asZonedDateTime());</span>
+<span class="source-line-no">308</span><span id="line-308">  }</span>
+<span class="source-line-no">309</span><span id="line-309"></span>
+<span class="source-line-no">310</span><span id="line-310">  /**</span>
+<span class="source-line-no">311</span><span id="line-311">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">312</span><span id="line-312">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes"&gt;op:subtract-dateTimes&lt;/a&gt;.</span>
+<span class="source-line-no">313</span><span id="line-313">   *</span>
+<span class="source-line-no">314</span><span id="line-314">   * @param time1</span>
+<span class="source-line-no">315</span><span id="line-315">   *          the first point in time</span>
+<span class="source-line-no">316</span><span id="line-316">   * @param time2</span>
+<span class="source-line-no">317</span><span id="line-317">   *          the second point in time</span>
+<span class="source-line-no">318</span><span id="line-318">   * @return the duration the occurred between the two points in time</span>
+<span class="source-line-no">319</span><span id="line-319">   */</span>
+<span class="source-line-no">320</span><span id="line-320">  @NonNull</span>
+<span class="source-line-no">321</span><span id="line-321">  private static IDayTimeDurationItem between(@NonNull ZonedDateTime time1, @NonNull ZonedDateTime time2) {</span>
+<span class="source-line-no">322</span><span id="line-322">    @SuppressWarnings("null")</span>
+<span class="source-line-no">323</span><span id="line-323">    @NonNull</span>
+<span class="source-line-no">324</span><span id="line-324">    Duration between = Duration.between(time1, time2);</span>
+<span class="source-line-no">325</span><span id="line-325">    return IDayTimeDurationItem.valueOf(between);</span>
+<span class="source-line-no">326</span><span id="line-326">  }</span>
+<span class="source-line-no">327</span><span id="line-327"></span>
+<span class="source-line-no">328</span><span id="line-328">  /**</span>
+<span class="source-line-no">329</span><span id="line-329">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">330</span><span id="line-330">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-yearMonthDuration-from-dateTime"&gt;op:subtract-yearMonthDuration-from-dateTime&lt;/a&gt;.</span>
+<span class="source-line-no">331</span><span id="line-331">   *</span>
+<span class="source-line-no">332</span><span id="line-332">   * @param moment</span>
+<span class="source-line-no">333</span><span id="line-333">   *          a point in time</span>
+<span class="source-line-no">334</span><span id="line-334">   * @param duration</span>
+<span class="source-line-no">335</span><span id="line-335">   *          the duration to subtract</span>
+<span class="source-line-no">336</span><span id="line-336">   * @return the result of subtracting the duration from a point in time</span>
+<span class="source-line-no">337</span><span id="line-337">   */</span>
+<span class="source-line-no">338</span><span id="line-338">  @NonNull</span>
+<span class="source-line-no">339</span><span id="line-339">  public static IDateTimeItem opSubtractYearMonthDurationFromDateTime(</span>
+<span class="source-line-no">340</span><span id="line-340">      @NonNull IDateTimeItem moment,</span>
+<span class="source-line-no">341</span><span id="line-341">      @NonNull IYearMonthDurationItem duration) {</span>
+<span class="source-line-no">342</span><span id="line-342">    @SuppressWarnings("null")</span>
+<span class="source-line-no">343</span><span id="line-343">    @NonNull</span>
+<span class="source-line-no">344</span><span id="line-344">    ZonedDateTime dateTime = moment.asZonedDateTime().minus(duration.asPeriod());</span>
+<span class="source-line-no">345</span><span id="line-345">    return IDateTimeItem.valueOf(dateTime);</span>
+<span class="source-line-no">346</span><span id="line-346">  }</span>
+<span class="source-line-no">347</span><span id="line-347"></span>
+<span class="source-line-no">348</span><span id="line-348">  /**</span>
+<span class="source-line-no">349</span><span id="line-349">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">350</span><span id="line-350">   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dayTimeDuration-from-dateTime"&gt;op:subtract-dayTimeDuration-from-dateTime&lt;/a&gt;.</span>
+<span class="source-line-no">351</span><span id="line-351">   *</span>
+<span class="source-line-no">352</span><span id="line-352">   * @param moment</span>
+<span class="source-line-no">353</span><span id="line-353">   *          a point in time</span>
+<span class="source-line-no">354</span><span id="line-354">   * @param duration</span>
+<span class="source-line-no">355</span><span id="line-355">   *          the duration to subtract</span>
+<span class="source-line-no">356</span><span id="line-356">   * @return the result of subtracting the duration from a point in time</span>
+<span class="source-line-no">357</span><span id="line-357">   */</span>
+<span class="source-line-no">358</span><span id="line-358">  @NonNull</span>
+<span class="source-line-no">359</span><span id="line-359">  public static IDateTimeItem opSubtractDayTimeDurationFromDateTime(</span>
+<span class="source-line-no">360</span><span id="line-360">      @NonNull IDateTimeItem moment,</span>
+<span class="source-line-no">361</span><span id="line-361">      @NonNull IDayTimeDurationItem duration) {</span>
 <span class="source-line-no">362</span><span id="line-362"></span>
-<span class="source-line-no">363</span><span id="line-363">  /**</span>
-<span class="source-line-no">364</span><span id="line-364">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">365</span><span id="line-365">   * "https://www.w3.org/TR/xpath-functions-31/#func-multiply-yearMonthDuration"&gt;op:multiply-yearMonthDuration&lt;/a&gt;.</span>
-<span class="source-line-no">366</span><span id="line-366">   *</span>
-<span class="source-line-no">367</span><span id="line-367">   * @param arg1</span>
-<span class="source-line-no">368</span><span id="line-368">   *          the duration value</span>
-<span class="source-line-no">369</span><span id="line-369">   * @param arg2</span>
-<span class="source-line-no">370</span><span id="line-370">   *          the number to multiply by</span>
-<span class="source-line-no">371</span><span id="line-371">   * @return the result of multiplying a {@link IYearMonthDurationItem} by a</span>
-<span class="source-line-no">372</span><span id="line-372">   *         number</span>
-<span class="source-line-no">373</span><span id="line-373">   */</span>
-<span class="source-line-no">374</span><span id="line-374">  @NonNull</span>
-<span class="source-line-no">375</span><span id="line-375">  public static IYearMonthDurationItem opMultiplyYearMonthDuration(</span>
-<span class="source-line-no">376</span><span id="line-376">      @NonNull IYearMonthDurationItem arg1,</span>
-<span class="source-line-no">377</span><span id="line-377">      @NonNull INumericItem arg2) {</span>
-<span class="source-line-no">378</span><span id="line-378">    int arg2Int;</span>
-<span class="source-line-no">379</span><span id="line-379">    try {</span>
-<span class="source-line-no">380</span><span id="line-380">      arg2Int = FunctionUtils.asInteger(arg2.round());</span>
-<span class="source-line-no">381</span><span id="line-381">    } catch (ArithmeticException ex) {</span>
-<span class="source-line-no">382</span><span id="line-382">      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);</span>
-<span class="source-line-no">383</span><span id="line-383">    }</span>
-<span class="source-line-no">384</span><span id="line-384"></span>
-<span class="source-line-no">385</span><span id="line-385">    @SuppressWarnings("null")</span>
-<span class="source-line-no">386</span><span id="line-386">    @NonNull Period period = arg1.asPeriod().multipliedBy(arg2Int);</span>
-<span class="source-line-no">387</span><span id="line-387">    return IYearMonthDurationItem.valueOf(period);</span>
-<span class="source-line-no">388</span><span id="line-388">  }</span>
-<span class="source-line-no">389</span><span id="line-389"></span>
-<span class="source-line-no">390</span><span id="line-390">  /**</span>
-<span class="source-line-no">391</span><span id="line-391">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">392</span><span id="line-392">   * "https://www.w3.org/TR/xpath-functions-31/#func-multiply-dayTimeDuration"&gt;op:multiply-dayTimeDuration&lt;/a&gt;.</span>
-<span class="source-line-no">393</span><span id="line-393">   *</span>
-<span class="source-line-no">394</span><span id="line-394">   * @param arg1</span>
-<span class="source-line-no">395</span><span id="line-395">   *          the duration value</span>
-<span class="source-line-no">396</span><span id="line-396">   * @param arg2</span>
-<span class="source-line-no">397</span><span id="line-397">   *          the number to multiply by</span>
-<span class="source-line-no">398</span><span id="line-398">   * @return the result of multiplying a {@link IDayTimeDurationItem} by a number</span>
-<span class="source-line-no">399</span><span id="line-399">   */</span>
-<span class="source-line-no">400</span><span id="line-400">  @NonNull</span>
-<span class="source-line-no">401</span><span id="line-401">  public static IDayTimeDurationItem opMultiplyDayTimeDuration(</span>
-<span class="source-line-no">402</span><span id="line-402">      @NonNull IDayTimeDurationItem arg1,</span>
-<span class="source-line-no">403</span><span id="line-403">      @NonNull INumericItem arg2) {</span>
-<span class="source-line-no">404</span><span id="line-404">    long arg2Long;</span>
-<span class="source-line-no">405</span><span id="line-405">    try {</span>
-<span class="source-line-no">406</span><span id="line-406">      arg2Long = FunctionUtils.asLong(arg2.round());</span>
-<span class="source-line-no">407</span><span id="line-407">    } catch (ArithmeticException ex) {</span>
-<span class="source-line-no">408</span><span id="line-408">      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);</span>
-<span class="source-line-no">409</span><span id="line-409">    }</span>
-<span class="source-line-no">410</span><span id="line-410"></span>
-<span class="source-line-no">411</span><span id="line-411">    @SuppressWarnings("null")</span>
-<span class="source-line-no">412</span><span id="line-412">    @NonNull Duration duration = arg1.asDuration().multipliedBy(arg2Long);</span>
-<span class="source-line-no">413</span><span id="line-413">    return IDayTimeDurationItem.valueOf(duration);</span>
-<span class="source-line-no">414</span><span id="line-414">  }</span>
-<span class="source-line-no">415</span><span id="line-415"></span>
-<span class="source-line-no">416</span><span id="line-416">  /**</span>
-<span class="source-line-no">417</span><span id="line-417">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">418</span><span id="line-418">   * "https://www.w3.org/TR/xpath-functions-31/#func-divide-yearMonthDuration"&gt;op:divide-yearMonthDuration&lt;/a&gt;.</span>
-<span class="source-line-no">419</span><span id="line-419">   *</span>
-<span class="source-line-no">420</span><span id="line-420">   * @param arg1</span>
-<span class="source-line-no">421</span><span id="line-421">   *          the duration value</span>
-<span class="source-line-no">422</span><span id="line-422">   * @param arg2</span>
-<span class="source-line-no">423</span><span id="line-423">   *          the number to divide by</span>
-<span class="source-line-no">424</span><span id="line-424">   * @return the result of dividing a {@link IYearMonthDurationItem} by a number</span>
-<span class="source-line-no">425</span><span id="line-425">   */</span>
-<span class="source-line-no">426</span><span id="line-426">  @NonNull</span>
-<span class="source-line-no">427</span><span id="line-427">  public static IYearMonthDurationItem opDivideYearMonthDuration(</span>
-<span class="source-line-no">428</span><span id="line-428">      @NonNull IYearMonthDurationItem arg1,</span>
-<span class="source-line-no">429</span><span id="line-429">      @NonNull INumericItem arg2) {</span>
-<span class="source-line-no">430</span><span id="line-430">    IIntegerItem totalMonths = IIntegerItem.valueOf(arg1.asPeriod().toTotalMonths());</span>
-<span class="source-line-no">431</span><span id="line-431">    IIntegerItem result = opNumericIntegerDivide(totalMonths, arg2);</span>
-<span class="source-line-no">432</span><span id="line-432">    int months;</span>
-<span class="source-line-no">433</span><span id="line-433">    try {</span>
-<span class="source-line-no">434</span><span id="line-434">      months = FunctionUtils.asInteger(result.asInteger());</span>
-<span class="source-line-no">435</span><span id="line-435">    } catch (ArithmeticException ex) {</span>
-<span class="source-line-no">436</span><span id="line-436">      throw new DateTimeFunctionException(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,</span>
-<span class="source-line-no">437</span><span id="line-437">          "Overflow/underflow in duration operation.", ex);</span>
-<span class="source-line-no">438</span><span id="line-438">    }</span>
-<span class="source-line-no">439</span><span id="line-439">    int years = months / 12;</span>
-<span class="source-line-no">440</span><span id="line-440">    months = months % 12;</span>
-<span class="source-line-no">441</span><span id="line-441">    return IYearMonthDurationItem.valueOf(years, months);</span>
-<span class="source-line-no">442</span><span id="line-442">  }</span>
-<span class="source-line-no">443</span><span id="line-443"></span>
-<span class="source-line-no">444</span><span id="line-444">  /**</span>
-<span class="source-line-no">445</span><span id="line-445">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">446</span><span id="line-446">   * "https://www.w3.org/TR/xpath-functions-31/#func-divide-dayTimeDuration"&gt;op:divide-dayTimeDuration&lt;/a&gt;.</span>
-<span class="source-line-no">447</span><span id="line-447">   *</span>
-<span class="source-line-no">448</span><span id="line-448">   * @param arg1</span>
-<span class="source-line-no">449</span><span id="line-449">   *          the duration value</span>
-<span class="source-line-no">450</span><span id="line-450">   * @param arg2</span>
-<span class="source-line-no">451</span><span id="line-451">   *          the number to divide by</span>
-<span class="source-line-no">452</span><span id="line-452">   * @return the result of dividing a {@link IDayTimeDurationItem} by a number</span>
-<span class="source-line-no">453</span><span id="line-453">   */</span>
-<span class="source-line-no">454</span><span id="line-454">  @NonNull</span>
-<span class="source-line-no">455</span><span id="line-455">  public static IDayTimeDurationItem opDivideDayTimeDuration(</span>
-<span class="source-line-no">456</span><span id="line-456">      @NonNull IDayTimeDurationItem arg1,</span>
-<span class="source-line-no">457</span><span id="line-457">      @NonNull INumericItem arg2) {</span>
-<span class="source-line-no">458</span><span id="line-458">    try {</span>
-<span class="source-line-no">459</span><span id="line-459">      @SuppressWarnings("null")</span>
-<span class="source-line-no">460</span><span id="line-460">      @NonNull Duration duration = arg1.asDuration().dividedBy(FunctionUtils.asLong(arg2.round()));</span>
-<span class="source-line-no">461</span><span id="line-461">      return IDayTimeDurationItem.valueOf(duration);</span>
-<span class="source-line-no">462</span><span id="line-462">    } catch (ArithmeticException ex) {</span>
-<span class="source-line-no">463</span><span id="line-463">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO, "Division by zero", ex);</span>
-<span class="source-line-no">464</span><span id="line-464">    }</span>
-<span class="source-line-no">465</span><span id="line-465">  }</span>
-<span class="source-line-no">466</span><span id="line-466"></span>
-<span class="source-line-no">467</span><span id="line-467">  /**</span>
-<span class="source-line-no">468</span><span id="line-468">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">469</span><span id="line-469">   * "https://www.w3.org/TR/xpath-functions-31/#func-divide-dayTimeDuration-by-dayTimeDuration"&gt;op:divide-dayTimeDuration-by-dayTimeDuration&lt;/a&gt;.</span>
-<span class="source-line-no">470</span><span id="line-470">   *</span>
-<span class="source-line-no">471</span><span id="line-471">   * @param arg1</span>
-<span class="source-line-no">472</span><span id="line-472">   *          the first duration value</span>
-<span class="source-line-no">473</span><span id="line-473">   * @param arg2</span>
-<span class="source-line-no">474</span><span id="line-474">   *          the second duration value</span>
-<span class="source-line-no">475</span><span id="line-475">   * @return the ratio of two {@link IDayTimeDurationItem} values, as a decimal</span>
-<span class="source-line-no">476</span><span id="line-476">   *         number</span>
-<span class="source-line-no">477</span><span id="line-477">   */</span>
-<span class="source-line-no">478</span><span id="line-478">  @NonNull</span>
-<span class="source-line-no">479</span><span id="line-479">  public static IDecimalItem opDivideDayTimeDurationByDayTimeDuration(</span>
-<span class="source-line-no">480</span><span id="line-480">      @NonNull IDayTimeDurationItem arg1,</span>
-<span class="source-line-no">481</span><span id="line-481">      @NonNull IDayTimeDurationItem arg2) {</span>
-<span class="source-line-no">482</span><span id="line-482">    return IDecimalItem.cast(</span>
-<span class="source-line-no">483</span><span id="line-483">        opNumericDivide(</span>
-<span class="source-line-no">484</span><span id="line-484">            IDecimalItem.valueOf(arg1.asSeconds()),</span>
-<span class="source-line-no">485</span><span id="line-485">            IDecimalItem.valueOf(arg2.asSeconds())));</span>
-<span class="source-line-no">486</span><span id="line-486">  }</span>
-<span class="source-line-no">487</span><span id="line-487"></span>
-<span class="source-line-no">488</span><span id="line-488">  /**</span>
-<span class="source-line-no">489</span><span id="line-489">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">490</span><span id="line-490">   * "https://www.w3.org/TR/xpath-functions-31/#func-date-equal"&gt;op:date-equal&lt;/a&gt;.</span>
-<span class="source-line-no">491</span><span id="line-491">   *</span>
-<span class="source-line-no">492</span><span id="line-492">   * @param arg1</span>
-<span class="source-line-no">493</span><span id="line-493">   *          the first value</span>
-<span class="source-line-no">494</span><span id="line-494">   * @param arg2</span>
-<span class="source-line-no">495</span><span id="line-495">   *          the second value</span>
-<span class="source-line-no">496</span><span id="line-496">   * @return {@code true} if the first argument is the same instant in time as the</span>
-<span class="source-line-no">497</span><span id="line-497">   *         second, or {@code false} otherwise</span>
-<span class="source-line-no">498</span><span id="line-498">   */</span>
-<span class="source-line-no">499</span><span id="line-499">  @NonNull</span>
-<span class="source-line-no">500</span><span id="line-500">  public static IBooleanItem opDateEqual(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {</span>
-<span class="source-line-no">501</span><span id="line-501">    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));</span>
-<span class="source-line-no">502</span><span id="line-502">  }</span>
-<span class="source-line-no">503</span><span id="line-503"></span>
-<span class="source-line-no">504</span><span id="line-504">  /**</span>
-<span class="source-line-no">505</span><span id="line-505">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">506</span><span id="line-506">   * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-equal"&gt;op:dateTime-equal&lt;/a&gt;.</span>
-<span class="source-line-no">507</span><span id="line-507">   *</span>
-<span class="source-line-no">508</span><span id="line-508">   * @param arg1</span>
-<span class="source-line-no">509</span><span id="line-509">   *          the first value</span>
-<span class="source-line-no">510</span><span id="line-510">   * @param arg2</span>
-<span class="source-line-no">511</span><span id="line-511">   *          the second value</span>
-<span class="source-line-no">512</span><span id="line-512">   * @return {@code true} if the first argument is the same instant in time as the</span>
-<span class="source-line-no">513</span><span id="line-513">   *         second, or {@code false} otherwise</span>
-<span class="source-line-no">514</span><span id="line-514">   */</span>
-<span class="source-line-no">515</span><span id="line-515">  @NonNull</span>
-<span class="source-line-no">516</span><span id="line-516">  public static IBooleanItem opDateTimeEqual(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {</span>
-<span class="source-line-no">517</span><span id="line-517">    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));</span>
-<span class="source-line-no">518</span><span id="line-518">  }</span>
-<span class="source-line-no">519</span><span id="line-519"></span>
-<span class="source-line-no">520</span><span id="line-520">  /**</span>
-<span class="source-line-no">521</span><span id="line-521">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">522</span><span id="line-522">   * "https://www.w3.org/TR/xpath-functions-31/#func-duration-equal"&gt;op:duration-equal&lt;/a&gt;.</span>
-<span class="source-line-no">523</span><span id="line-523">   *</span>
-<span class="source-line-no">524</span><span id="line-524">   * @param arg1</span>
-<span class="source-line-no">525</span><span id="line-525">   *          the first value</span>
-<span class="source-line-no">526</span><span id="line-526">   * @param arg2</span>
-<span class="source-line-no">527</span><span id="line-527">   *          the second value</span>
-<span class="source-line-no">528</span><span id="line-528">   * @return {@code true} if the first argument is the same duration as the</span>
-<span class="source-line-no">529</span><span id="line-529">   *         second, or {@code false} otherwise</span>
-<span class="source-line-no">530</span><span id="line-530">   */</span>
-<span class="source-line-no">531</span><span id="line-531">  @NonNull</span>
-<span class="source-line-no">532</span><span id="line-532">  public static IBooleanItem opDurationEqual(@NonNull IDurationItem arg1, @NonNull IDurationItem arg2) {</span>
-<span class="source-line-no">533</span><span id="line-533">    return IBooleanItem.valueOf(arg1.compareTo(arg2) == 0);</span>
-<span class="source-line-no">534</span><span id="line-534">  }</span>
-<span class="source-line-no">535</span><span id="line-535"></span>
-<span class="source-line-no">536</span><span id="line-536">  /**</span>
-<span class="source-line-no">537</span><span id="line-537">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">538</span><span id="line-538">   * "https://www.w3.org/TR/xpath-functions-31/#func-base64Binary-equal"&gt;op:base64Binary-equal&lt;/a&gt;.</span>
-<span class="source-line-no">539</span><span id="line-539">   *</span>
-<span class="source-line-no">540</span><span id="line-540">   * @param arg1</span>
-<span class="source-line-no">541</span><span id="line-541">   *          the first value</span>
-<span class="source-line-no">542</span><span id="line-542">   * @param arg2</span>
-<span class="source-line-no">543</span><span id="line-543">   *          the second value</span>
-<span class="source-line-no">544</span><span id="line-544">   * @return {@code true} if the first argument is equal to the second, or</span>
-<span class="source-line-no">545</span><span id="line-545">   *         {@code false} otherwise</span>
-<span class="source-line-no">546</span><span id="line-546">   */</span>
-<span class="source-line-no">547</span><span id="line-547">  @NonNull</span>
-<span class="source-line-no">548</span><span id="line-548">  public static IBooleanItem opBase64BinaryEqual(@NonNull IBase64BinaryItem arg1, @NonNull IBase64BinaryItem arg2) {</span>
-<span class="source-line-no">549</span><span id="line-549">    return IBooleanItem.valueOf(arg1.asByteBuffer().equals(arg2.asByteBuffer()));</span>
-<span class="source-line-no">550</span><span id="line-550">  }</span>
-<span class="source-line-no">551</span><span id="line-551"></span>
-<span class="source-line-no">552</span><span id="line-552">  /**</span>
-<span class="source-line-no">553</span><span id="line-553">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">554</span><span id="line-554">   * "https://www.w3.org/TR/xpath-functions-31/#func-date-greater-than"&gt;op:date-greater-than&lt;/a&gt;.</span>
-<span class="source-line-no">555</span><span id="line-555">   *</span>
-<span class="source-line-no">556</span><span id="line-556">   * @param arg1</span>
-<span class="source-line-no">557</span><span id="line-557">   *          the first value</span>
-<span class="source-line-no">558</span><span id="line-558">   * @param arg2</span>
-<span class="source-line-no">559</span><span id="line-559">   *          the second value</span>
-<span class="source-line-no">560</span><span id="line-560">   * @return {@code true} if the first argument is a later instant in time than</span>
-<span class="source-line-no">561</span><span id="line-561">   *         the second, or {@code false} otherwise</span>
-<span class="source-line-no">562</span><span id="line-562">   */</span>
-<span class="source-line-no">563</span><span id="line-563">  @NonNull</span>
-<span class="source-line-no">564</span><span id="line-564">  public static IBooleanItem opDateGreaterThan(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {</span>
-<span class="source-line-no">565</span><span id="line-565">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &gt; 0);</span>
-<span class="source-line-no">566</span><span id="line-566">  }</span>
-<span class="source-line-no">567</span><span id="line-567"></span>
-<span class="source-line-no">568</span><span id="line-568">  /**</span>
-<span class="source-line-no">569</span><span id="line-569">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">570</span><span id="line-570">   * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-greater-than"&gt;op:dateTime-greater-than&lt;/a&gt;.</span>
-<span class="source-line-no">571</span><span id="line-571">   *</span>
-<span class="source-line-no">572</span><span id="line-572">   * @param arg1</span>
-<span class="source-line-no">573</span><span id="line-573">   *          the first value</span>
-<span class="source-line-no">574</span><span id="line-574">   * @param arg2</span>
-<span class="source-line-no">575</span><span id="line-575">   *          the second value</span>
-<span class="source-line-no">576</span><span id="line-576">   * @return {@code true} if the first argument is a later instant in time than</span>
-<span class="source-line-no">577</span><span id="line-577">   *         the second, or {@code false} otherwise</span>
-<span class="source-line-no">578</span><span id="line-578">   */</span>
-<span class="source-line-no">579</span><span id="line-579">  @NonNull</span>
-<span class="source-line-no">580</span><span id="line-580">  public static IBooleanItem opDateTimeGreaterThan(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {</span>
-<span class="source-line-no">581</span><span id="line-581">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &gt; 0);</span>
-<span class="source-line-no">582</span><span id="line-582">  }</span>
-<span class="source-line-no">583</span><span id="line-583"></span>
-<span class="source-line-no">584</span><span id="line-584">  /**</span>
-<span class="source-line-no">585</span><span id="line-585">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">586</span><span id="line-586">   * "https://www.w3.org/TR/xpath-functions-31/#func-yearMonthDuration-greater-than"&gt;op:yearMonthDuration-greater-than&lt;/a&gt;.</span>
-<span class="source-line-no">587</span><span id="line-587">   *</span>
-<span class="source-line-no">588</span><span id="line-588">   * @param arg1</span>
-<span class="source-line-no">589</span><span id="line-589">   *          the first value</span>
-<span class="source-line-no">590</span><span id="line-590">   * @param arg2</span>
-<span class="source-line-no">591</span><span id="line-591">   *          the second value</span>
-<span class="source-line-no">592</span><span id="line-592">   * @return {@code true} if the first argument is a longer duration than the</span>
-<span class="source-line-no">593</span><span id="line-593">   *         second, or {@code false} otherwise</span>
-<span class="source-line-no">594</span><span id="line-594">   */</span>
-<span class="source-line-no">595</span><span id="line-595">  @NonNull</span>
-<span class="source-line-no">596</span><span id="line-596">  public static IBooleanItem opYearMonthDurationGreaterThan(</span>
-<span class="source-line-no">597</span><span id="line-597">      @NonNull IYearMonthDurationItem arg1,</span>
-<span class="source-line-no">598</span><span id="line-598">      @NonNull IYearMonthDurationItem arg2) {</span>
-<span class="source-line-no">599</span><span id="line-599">    Period p1 = arg1.asPeriod();</span>
-<span class="source-line-no">600</span><span id="line-600">    Period p2 = arg2.asPeriod();</span>
-<span class="source-line-no">601</span><span id="line-601"></span>
-<span class="source-line-no">602</span><span id="line-602">    // this is only an approximation</span>
-<span class="source-line-no">603</span><span id="line-603">    return IBooleanItem.valueOf(p1.toTotalMonths() &gt; p2.toTotalMonths());</span>
-<span class="source-line-no">604</span><span id="line-604">  }</span>
-<span class="source-line-no">605</span><span id="line-605"></span>
-<span class="source-line-no">606</span><span id="line-606">  /**</span>
-<span class="source-line-no">607</span><span id="line-607">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">608</span><span id="line-608">   * "https://www.w3.org/TR/xpath-functions-31/#func-dayTimeDuration-greater-than"&gt;op:dayTimeDuration-greater-than&lt;/a&gt;.</span>
-<span class="source-line-no">609</span><span id="line-609">   *</span>
-<span class="source-line-no">610</span><span id="line-610">   * @param arg1</span>
-<span class="source-line-no">611</span><span id="line-611">   *          the first value</span>
-<span class="source-line-no">612</span><span id="line-612">   * @param arg2</span>
-<span class="source-line-no">613</span><span id="line-613">   *          the second value</span>
-<span class="source-line-no">614</span><span id="line-614">   * @return {@code true} if the first argument is a longer duration than the</span>
-<span class="source-line-no">615</span><span id="line-615">   *         second, or {@code false} otherwise</span>
-<span class="source-line-no">616</span><span id="line-616">   */</span>
-<span class="source-line-no">617</span><span id="line-617">  @NonNull</span>
-<span class="source-line-no">618</span><span id="line-618">  public static IBooleanItem opDayTimeDurationGreaterThan(</span>
-<span class="source-line-no">619</span><span id="line-619">      @NonNull IDayTimeDurationItem arg1,</span>
-<span class="source-line-no">620</span><span id="line-620">      @NonNull IDayTimeDurationItem arg2) {</span>
-<span class="source-line-no">621</span><span id="line-621">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &gt; 0);</span>
-<span class="source-line-no">622</span><span id="line-622">  }</span>
-<span class="source-line-no">623</span><span id="line-623"></span>
-<span class="source-line-no">624</span><span id="line-624">  /**</span>
-<span class="source-line-no">625</span><span id="line-625">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">626</span><span id="line-626">   * "https://www.w3.org/TR/xpath-functions-31/#func-base64Binary-greater-than"&gt;op:base64Binary-greater-than&lt;/a&gt;.</span>
-<span class="source-line-no">627</span><span id="line-627">   *</span>
-<span class="source-line-no">628</span><span id="line-628">   * @param arg1</span>
-<span class="source-line-no">629</span><span id="line-629">   *          the first value</span>
-<span class="source-line-no">630</span><span id="line-630">   * @param arg2</span>
-<span class="source-line-no">631</span><span id="line-631">   *          the second value</span>
-<span class="source-line-no">632</span><span id="line-632">   * @return {@code true} if the first argument is greater than the second, or</span>
-<span class="source-line-no">633</span><span id="line-633">   *         {@code false} otherwise</span>
-<span class="source-line-no">634</span><span id="line-634">   */</span>
-<span class="source-line-no">635</span><span id="line-635">  @NonNull</span>
-<span class="source-line-no">636</span><span id="line-636">  public static IBooleanItem opBase64BinaryGreaterThan(</span>
-<span class="source-line-no">637</span><span id="line-637">      @NonNull IBase64BinaryItem arg1,</span>
-<span class="source-line-no">638</span><span id="line-638">      @NonNull IBase64BinaryItem arg2) {</span>
-<span class="source-line-no">639</span><span id="line-639">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &gt; 0);</span>
-<span class="source-line-no">640</span><span id="line-640">  }</span>
-<span class="source-line-no">641</span><span id="line-641"></span>
-<span class="source-line-no">642</span><span id="line-642">  /**</span>
-<span class="source-line-no">643</span><span id="line-643">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">644</span><span id="line-644">   * "https://www.w3.org/TR/xpath-functions-31/#func-date-less-than"&gt;op:date-less-than&lt;/a&gt;.</span>
-<span class="source-line-no">645</span><span id="line-645">   *</span>
-<span class="source-line-no">646</span><span id="line-646">   * @param arg1</span>
-<span class="source-line-no">647</span><span id="line-647">   *          the first value</span>
-<span class="source-line-no">648</span><span id="line-648">   * @param arg2</span>
-<span class="source-line-no">649</span><span id="line-649">   *          the second value</span>
-<span class="source-line-no">650</span><span id="line-650">   * @return {@code true} if the first argument is an earlier instant in time than</span>
-<span class="source-line-no">651</span><span id="line-651">   *         the second, or {@code false} otherwise</span>
-<span class="source-line-no">652</span><span id="line-652">   */</span>
-<span class="source-line-no">653</span><span id="line-653">  @NonNull</span>
-<span class="source-line-no">654</span><span id="line-654">  public static IBooleanItem opDateLessThan(</span>
-<span class="source-line-no">655</span><span id="line-655">      @NonNull IDateItem arg1,</span>
-<span class="source-line-no">656</span><span id="line-656">      @NonNull IDateItem arg2) {</span>
-<span class="source-line-no">657</span><span id="line-657">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &lt; 0);</span>
-<span class="source-line-no">658</span><span id="line-658">  }</span>
-<span class="source-line-no">659</span><span id="line-659"></span>
-<span class="source-line-no">660</span><span id="line-660">  /**</span>
-<span class="source-line-no">661</span><span id="line-661">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">662</span><span id="line-662">   * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-less-than"&gt;op:dateTime-less-than&lt;/a&gt;.</span>
-<span class="source-line-no">663</span><span id="line-663">   *</span>
-<span class="source-line-no">664</span><span id="line-664">   * @param arg1</span>
-<span class="source-line-no">665</span><span id="line-665">   *          the first value</span>
-<span class="source-line-no">666</span><span id="line-666">   * @param arg2</span>
-<span class="source-line-no">667</span><span id="line-667">   *          the second value</span>
-<span class="source-line-no">668</span><span id="line-668">   * @return {@code true} if the first argument is an earlier instant in time than</span>
-<span class="source-line-no">669</span><span id="line-669">   *         the second, or {@code false} otherwise</span>
-<span class="source-line-no">670</span><span id="line-670">   */</span>
-<span class="source-line-no">671</span><span id="line-671">  @NonNull</span>
-<span class="source-line-no">672</span><span id="line-672">  public static IBooleanItem opDateTimeLessThan(</span>
-<span class="source-line-no">673</span><span id="line-673">      @NonNull IDateTimeItem arg1,</span>
-<span class="source-line-no">674</span><span id="line-674">      @NonNull IDateTimeItem arg2) {</span>
-<span class="source-line-no">675</span><span id="line-675">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &lt; 0);</span>
-<span class="source-line-no">676</span><span id="line-676">  }</span>
-<span class="source-line-no">677</span><span id="line-677"></span>
-<span class="source-line-no">678</span><span id="line-678">  /**</span>
-<span class="source-line-no">679</span><span id="line-679">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">680</span><span id="line-680">   * "https://www.w3.org/TR/xpath-functions-31/#func-yearMonthDuration-less-than"&gt;op:yearMonthDuration-less-than&lt;/a&gt;.</span>
-<span class="source-line-no">681</span><span id="line-681">   *</span>
-<span class="source-line-no">682</span><span id="line-682">   * @param arg1</span>
-<span class="source-line-no">683</span><span id="line-683">   *          the first value</span>
-<span class="source-line-no">684</span><span id="line-684">   * @param arg2</span>
-<span class="source-line-no">685</span><span id="line-685">   *          the second value</span>
-<span class="source-line-no">686</span><span id="line-686">   * @return {@code true} if the first argument is a shorter duration than the</span>
-<span class="source-line-no">687</span><span id="line-687">   *         second, or {@code false} otherwise</span>
-<span class="source-line-no">688</span><span id="line-688">   */</span>
-<span class="source-line-no">689</span><span id="line-689">  @NonNull</span>
-<span class="source-line-no">690</span><span id="line-690">  public static IBooleanItem opYearMonthDurationLessThan(@NonNull IYearMonthDurationItem arg1,</span>
-<span class="source-line-no">691</span><span id="line-691">      @NonNull IYearMonthDurationItem arg2) {</span>
-<span class="source-line-no">692</span><span id="line-692">    Period p1 = arg1.asPeriod();</span>
-<span class="source-line-no">693</span><span id="line-693">    Period p2 = arg2.asPeriod();</span>
-<span class="source-line-no">694</span><span id="line-694"></span>
-<span class="source-line-no">695</span><span id="line-695">    // this is only an approximation</span>
-<span class="source-line-no">696</span><span id="line-696">    return IBooleanItem.valueOf(p1.toTotalMonths() &lt; p2.toTotalMonths());</span>
-<span class="source-line-no">697</span><span id="line-697">  }</span>
-<span class="source-line-no">698</span><span id="line-698"></span>
-<span class="source-line-no">699</span><span id="line-699">  /**</span>
-<span class="source-line-no">700</span><span id="line-700">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">701</span><span id="line-701">   * "https://www.w3.org/TR/xpath-functions-31/#func-dayTimeDuration-less-than"&gt;op:dayTimeDuration-less-than&lt;/a&gt;.</span>
-<span class="source-line-no">702</span><span id="line-702">   *</span>
-<span class="source-line-no">703</span><span id="line-703">   * @param arg1</span>
-<span class="source-line-no">704</span><span id="line-704">   *          the first value</span>
-<span class="source-line-no">705</span><span id="line-705">   * @param arg2</span>
-<span class="source-line-no">706</span><span id="line-706">   *          the second value</span>
-<span class="source-line-no">707</span><span id="line-707">   * @return {@code true} if the first argument is a shorter duration than the</span>
-<span class="source-line-no">708</span><span id="line-708">   *         second, or {@code false} otherwise</span>
-<span class="source-line-no">709</span><span id="line-709">   */</span>
-<span class="source-line-no">710</span><span id="line-710">  @NonNull</span>
-<span class="source-line-no">711</span><span id="line-711">  public static IBooleanItem opDayTimeDurationLessThan(</span>
-<span class="source-line-no">712</span><span id="line-712">      @NonNull IDayTimeDurationItem arg1,</span>
-<span class="source-line-no">713</span><span id="line-713">      @NonNull IDayTimeDurationItem arg2) {</span>
-<span class="source-line-no">714</span><span id="line-714">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &lt; 0);</span>
-<span class="source-line-no">715</span><span id="line-715">  }</span>
-<span class="source-line-no">716</span><span id="line-716"></span>
-<span class="source-line-no">717</span><span id="line-717">  /**</span>
-<span class="source-line-no">718</span><span id="line-718">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">719</span><span id="line-719">   * "https://www.w3.org/TR/xpath-functions-31/#func-base64Binary-less-than"&gt;op:base64Binary-less-than&lt;/a&gt;.</span>
-<span class="source-line-no">720</span><span id="line-720">   *</span>
-<span class="source-line-no">721</span><span id="line-721">   * @param arg1</span>
-<span class="source-line-no">722</span><span id="line-722">   *          the first value</span>
-<span class="source-line-no">723</span><span id="line-723">   * @param arg2</span>
-<span class="source-line-no">724</span><span id="line-724">   *          the second value</span>
-<span class="source-line-no">725</span><span id="line-725">   * @return {@code true} if the first argument is less than the second, or</span>
-<span class="source-line-no">726</span><span id="line-726">   *         {@code false} otherwise</span>
-<span class="source-line-no">727</span><span id="line-727">   */</span>
-<span class="source-line-no">728</span><span id="line-728">  @NonNull</span>
-<span class="source-line-no">729</span><span id="line-729">  public static IBooleanItem opBase64BinaryLessThan(</span>
-<span class="source-line-no">730</span><span id="line-730">      @NonNull IBase64BinaryItem arg1,</span>
-<span class="source-line-no">731</span><span id="line-731">      @NonNull IBase64BinaryItem arg2) {</span>
-<span class="source-line-no">732</span><span id="line-732">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &lt; 0);</span>
-<span class="source-line-no">733</span><span id="line-733">  }</span>
-<span class="source-line-no">734</span><span id="line-734"></span>
-<span class="source-line-no">735</span><span id="line-735">  /**</span>
-<span class="source-line-no">736</span><span id="line-736">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">737</span><span id="line-737">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-add"&gt;op:numeric-add&lt;/a&gt;.</span>
-<span class="source-line-no">738</span><span id="line-738">   *</span>
-<span class="source-line-no">739</span><span id="line-739">   * @param left</span>
-<span class="source-line-no">740</span><span id="line-740">   *          the first number</span>
-<span class="source-line-no">741</span><span id="line-741">   * @param right</span>
-<span class="source-line-no">742</span><span id="line-742">   *          the second number</span>
-<span class="source-line-no">743</span><span id="line-743">   * @return the result of adding the second number to the first number</span>
-<span class="source-line-no">744</span><span id="line-744">   */</span>
-<span class="source-line-no">745</span><span id="line-745">  @NonNull</span>
-<span class="source-line-no">746</span><span id="line-746">  public static INumericItem opNumericAdd(@NonNull INumericItem left, @NonNull INumericItem right) {</span>
-<span class="source-line-no">747</span><span id="line-747">    INumericItem retval;</span>
-<span class="source-line-no">748</span><span id="line-748">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
-<span class="source-line-no">749</span><span id="line-749">      // create an integer result</span>
-<span class="source-line-no">750</span><span id="line-750">      BigInteger integerLeft = left.asInteger();</span>
-<span class="source-line-no">751</span><span id="line-751">      BigInteger integerRight = right.asInteger();</span>
-<span class="source-line-no">752</span><span id="line-752"></span>
-<span class="source-line-no">753</span><span id="line-753">      @SuppressWarnings("null")</span>
-<span class="source-line-no">754</span><span id="line-754">      @NonNull BigInteger result = integerLeft.add(integerRight);</span>
-<span class="source-line-no">755</span><span id="line-755">      retval = IIntegerItem.valueOf(result);</span>
-<span class="source-line-no">756</span><span id="line-756">    } else {</span>
-<span class="source-line-no">757</span><span id="line-757">      // create a decimal result</span>
-<span class="source-line-no">758</span><span id="line-758">      BigDecimal decimalLeft = left.asDecimal();</span>
-<span class="source-line-no">759</span><span id="line-759">      BigDecimal decimalRight = right.asDecimal();</span>
-<span class="source-line-no">760</span><span id="line-760"></span>
-<span class="source-line-no">761</span><span id="line-761">      @SuppressWarnings("null")</span>
-<span class="source-line-no">762</span><span id="line-762">      @NonNull BigDecimal result = decimalLeft.add(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
-<span class="source-line-no">763</span><span id="line-763">      retval = IDecimalItem.valueOf(result);</span>
-<span class="source-line-no">764</span><span id="line-764">    }</span>
-<span class="source-line-no">765</span><span id="line-765">    return retval;</span>
-<span class="source-line-no">766</span><span id="line-766">  }</span>
-<span class="source-line-no">767</span><span id="line-767"></span>
-<span class="source-line-no">768</span><span id="line-768">  /**</span>
-<span class="source-line-no">769</span><span id="line-769">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">770</span><span id="line-770">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-subtract"&gt;op:numeric-subtract&lt;/a&gt;.</span>
-<span class="source-line-no">771</span><span id="line-771">   *</span>
-<span class="source-line-no">772</span><span id="line-772">   * @param left</span>
-<span class="source-line-no">773</span><span id="line-773">   *          the first number</span>
-<span class="source-line-no">774</span><span id="line-774">   * @param right</span>
-<span class="source-line-no">775</span><span id="line-775">   *          the second number</span>
-<span class="source-line-no">776</span><span id="line-776">   * @return the result of subtracting the second number from the first number</span>
-<span class="source-line-no">777</span><span id="line-777">   */</span>
-<span class="source-line-no">778</span><span id="line-778">  @NonNull</span>
-<span class="source-line-no">779</span><span id="line-779">  public static INumericItem opNumericSubtract(@NonNull INumericItem left, @NonNull INumericItem right) {</span>
-<span class="source-line-no">780</span><span id="line-780">    INumericItem retval;</span>
-<span class="source-line-no">781</span><span id="line-781">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
-<span class="source-line-no">782</span><span id="line-782">      // create an integer result</span>
-<span class="source-line-no">783</span><span id="line-783">      BigInteger integerLeft = left.asInteger();</span>
-<span class="source-line-no">784</span><span id="line-784">      BigInteger integerRight = right.asInteger();</span>
-<span class="source-line-no">785</span><span id="line-785"></span>
-<span class="source-line-no">786</span><span id="line-786">      @SuppressWarnings("null")</span>
-<span class="source-line-no">787</span><span id="line-787">      @NonNull BigInteger result = integerLeft.subtract(integerRight);</span>
-<span class="source-line-no">788</span><span id="line-788">      retval = IIntegerItem.valueOf(result);</span>
-<span class="source-line-no">789</span><span id="line-789">    } else {</span>
-<span class="source-line-no">790</span><span id="line-790">      // create a decimal result</span>
-<span class="source-line-no">791</span><span id="line-791">      BigDecimal decimalLeft = left.asDecimal();</span>
-<span class="source-line-no">792</span><span id="line-792">      BigDecimal decimalRight = right.asDecimal();</span>
-<span class="source-line-no">793</span><span id="line-793"></span>
-<span class="source-line-no">794</span><span id="line-794">      @SuppressWarnings("null")</span>
-<span class="source-line-no">795</span><span id="line-795">      @NonNull BigDecimal result = decimalLeft.subtract(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
-<span class="source-line-no">796</span><span id="line-796">      retval = IDecimalItem.valueOf(result);</span>
-<span class="source-line-no">797</span><span id="line-797">    }</span>
-<span class="source-line-no">798</span><span id="line-798">    return retval;</span>
-<span class="source-line-no">799</span><span id="line-799">  }</span>
-<span class="source-line-no">800</span><span id="line-800"></span>
-<span class="source-line-no">801</span><span id="line-801">  /**</span>
-<span class="source-line-no">802</span><span id="line-802">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">803</span><span id="line-803">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-multiply"&gt;op:numeric-multiply&lt;/a&gt;.</span>
-<span class="source-line-no">804</span><span id="line-804">   *</span>
-<span class="source-line-no">805</span><span id="line-805">   * @param left</span>
-<span class="source-line-no">806</span><span id="line-806">   *          the first number</span>
-<span class="source-line-no">807</span><span id="line-807">   * @param right</span>
-<span class="source-line-no">808</span><span id="line-808">   *          the second number</span>
-<span class="source-line-no">809</span><span id="line-809">   * @return the result of multiplying the first number by the second number</span>
-<span class="source-line-no">810</span><span id="line-810">   */</span>
-<span class="source-line-no">811</span><span id="line-811">  @NonNull</span>
-<span class="source-line-no">812</span><span id="line-812">  public static INumericItem opNumericMultiply(@NonNull INumericItem left, @NonNull INumericItem right) {</span>
-<span class="source-line-no">813</span><span id="line-813">    INumericItem retval;</span>
-<span class="source-line-no">814</span><span id="line-814">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
-<span class="source-line-no">815</span><span id="line-815">      // create an integer result</span>
-<span class="source-line-no">816</span><span id="line-816">      @SuppressWarnings("null")</span>
-<span class="source-line-no">817</span><span id="line-817">      @NonNull BigInteger result = left.asInteger().multiply(right.asInteger());</span>
-<span class="source-line-no">818</span><span id="line-818">      retval = IIntegerItem.valueOf(result);</span>
-<span class="source-line-no">819</span><span id="line-819">    } else {</span>
-<span class="source-line-no">820</span><span id="line-820">      // create a decimal result</span>
-<span class="source-line-no">821</span><span id="line-821">      BigDecimal decimalLeft = left.asDecimal();</span>
-<span class="source-line-no">822</span><span id="line-822">      BigDecimal decimalRight = right.asDecimal();</span>
-<span class="source-line-no">823</span><span id="line-823"></span>
-<span class="source-line-no">824</span><span id="line-824">      @SuppressWarnings("null")</span>
-<span class="source-line-no">825</span><span id="line-825">      @NonNull BigDecimal result = decimalLeft.multiply(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
-<span class="source-line-no">826</span><span id="line-826">      retval = IDecimalItem.valueOf(result);</span>
-<span class="source-line-no">827</span><span id="line-827">    }</span>
-<span class="source-line-no">828</span><span id="line-828">    return retval;</span>
-<span class="source-line-no">829</span><span id="line-829">  }</span>
-<span class="source-line-no">830</span><span id="line-830"></span>
-<span class="source-line-no">831</span><span id="line-831">  /**</span>
-<span class="source-line-no">832</span><span id="line-832">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">833</span><span id="line-833">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-divide"&gt;op:numeric-divide&lt;/a&gt;.</span>
-<span class="source-line-no">834</span><span id="line-834">   *</span>
-<span class="source-line-no">835</span><span id="line-835">   * @param dividend</span>
-<span class="source-line-no">836</span><span id="line-836">   *          the number to be divided</span>
-<span class="source-line-no">837</span><span id="line-837">   * @param divisor</span>
-<span class="source-line-no">838</span><span id="line-838">   *          the number to divide by</span>
-<span class="source-line-no">839</span><span id="line-839">   * @return the quotient</span>
-<span class="source-line-no">840</span><span id="line-840">   */</span>
-<span class="source-line-no">841</span><span id="line-841">  @NonNull</span>
-<span class="source-line-no">842</span><span id="line-842">  public static IDecimalItem opNumericDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {</span>
-<span class="source-line-no">843</span><span id="line-843">    // create a decimal result</span>
-<span class="source-line-no">844</span><span id="line-844">    BigDecimal decimalDivisor = divisor.asDecimal();</span>
+<span class="source-line-no">363</span><span id="line-363">    @SuppressWarnings("null")</span>
+<span class="source-line-no">364</span><span id="line-364">    @NonNull</span>
+<span class="source-line-no">365</span><span id="line-365">    ZonedDateTime dateTime = moment.asZonedDateTime().plus(duration.asDuration());</span>
+<span class="source-line-no">366</span><span id="line-366">    return IDateTimeItem.valueOf(dateTime);</span>
+<span class="source-line-no">367</span><span id="line-367">  }</span>
+<span class="source-line-no">368</span><span id="line-368"></span>
+<span class="source-line-no">369</span><span id="line-369">  /**</span>
+<span class="source-line-no">370</span><span id="line-370">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">371</span><span id="line-371">   * "https://www.w3.org/TR/xpath-functions-31/#func-multiply-yearMonthDuration"&gt;op:multiply-yearMonthDuration&lt;/a&gt;.</span>
+<span class="source-line-no">372</span><span id="line-372">   *</span>
+<span class="source-line-no">373</span><span id="line-373">   * @param arg1</span>
+<span class="source-line-no">374</span><span id="line-374">   *          the duration value</span>
+<span class="source-line-no">375</span><span id="line-375">   * @param arg2</span>
+<span class="source-line-no">376</span><span id="line-376">   *          the number to multiply by</span>
+<span class="source-line-no">377</span><span id="line-377">   * @return the result of multiplying a {@link IYearMonthDurationItem} by a</span>
+<span class="source-line-no">378</span><span id="line-378">   *         number</span>
+<span class="source-line-no">379</span><span id="line-379">   */</span>
+<span class="source-line-no">380</span><span id="line-380">  @NonNull</span>
+<span class="source-line-no">381</span><span id="line-381">  public static IYearMonthDurationItem opMultiplyYearMonthDuration(</span>
+<span class="source-line-no">382</span><span id="line-382">      @NonNull IYearMonthDurationItem arg1,</span>
+<span class="source-line-no">383</span><span id="line-383">      @NonNull INumericItem arg2) {</span>
+<span class="source-line-no">384</span><span id="line-384">    int arg2Int;</span>
+<span class="source-line-no">385</span><span id="line-385">    try {</span>
+<span class="source-line-no">386</span><span id="line-386">      arg2Int = FunctionUtils.asInteger(arg2.round());</span>
+<span class="source-line-no">387</span><span id="line-387">    } catch (ArithmeticException ex) {</span>
+<span class="source-line-no">388</span><span id="line-388">      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);</span>
+<span class="source-line-no">389</span><span id="line-389">    }</span>
+<span class="source-line-no">390</span><span id="line-390"></span>
+<span class="source-line-no">391</span><span id="line-391">    @SuppressWarnings("null")</span>
+<span class="source-line-no">392</span><span id="line-392">    @NonNull</span>
+<span class="source-line-no">393</span><span id="line-393">    Period period = arg1.asPeriod().multipliedBy(arg2Int);</span>
+<span class="source-line-no">394</span><span id="line-394">    return IYearMonthDurationItem.valueOf(period);</span>
+<span class="source-line-no">395</span><span id="line-395">  }</span>
+<span class="source-line-no">396</span><span id="line-396"></span>
+<span class="source-line-no">397</span><span id="line-397">  /**</span>
+<span class="source-line-no">398</span><span id="line-398">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">399</span><span id="line-399">   * "https://www.w3.org/TR/xpath-functions-31/#func-multiply-dayTimeDuration"&gt;op:multiply-dayTimeDuration&lt;/a&gt;.</span>
+<span class="source-line-no">400</span><span id="line-400">   *</span>
+<span class="source-line-no">401</span><span id="line-401">   * @param arg1</span>
+<span class="source-line-no">402</span><span id="line-402">   *          the duration value</span>
+<span class="source-line-no">403</span><span id="line-403">   * @param arg2</span>
+<span class="source-line-no">404</span><span id="line-404">   *          the number to multiply by</span>
+<span class="source-line-no">405</span><span id="line-405">   * @return the result of multiplying a {@link IDayTimeDurationItem} by a number</span>
+<span class="source-line-no">406</span><span id="line-406">   */</span>
+<span class="source-line-no">407</span><span id="line-407">  @NonNull</span>
+<span class="source-line-no">408</span><span id="line-408">  public static IDayTimeDurationItem opMultiplyDayTimeDuration(</span>
+<span class="source-line-no">409</span><span id="line-409">      @NonNull IDayTimeDurationItem arg1,</span>
+<span class="source-line-no">410</span><span id="line-410">      @NonNull INumericItem arg2) {</span>
+<span class="source-line-no">411</span><span id="line-411">    long arg2Long;</span>
+<span class="source-line-no">412</span><span id="line-412">    try {</span>
+<span class="source-line-no">413</span><span id="line-413">      arg2Long = FunctionUtils.asLong(arg2.round());</span>
+<span class="source-line-no">414</span><span id="line-414">    } catch (ArithmeticException ex) {</span>
+<span class="source-line-no">415</span><span id="line-415">      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);</span>
+<span class="source-line-no">416</span><span id="line-416">    }</span>
+<span class="source-line-no">417</span><span id="line-417"></span>
+<span class="source-line-no">418</span><span id="line-418">    @SuppressWarnings("null")</span>
+<span class="source-line-no">419</span><span id="line-419">    @NonNull</span>
+<span class="source-line-no">420</span><span id="line-420">    Duration duration = arg1.asDuration().multipliedBy(arg2Long);</span>
+<span class="source-line-no">421</span><span id="line-421">    return IDayTimeDurationItem.valueOf(duration);</span>
+<span class="source-line-no">422</span><span id="line-422">  }</span>
+<span class="source-line-no">423</span><span id="line-423"></span>
+<span class="source-line-no">424</span><span id="line-424">  /**</span>
+<span class="source-line-no">425</span><span id="line-425">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">426</span><span id="line-426">   * "https://www.w3.org/TR/xpath-functions-31/#func-divide-yearMonthDuration"&gt;op:divide-yearMonthDuration&lt;/a&gt;.</span>
+<span class="source-line-no">427</span><span id="line-427">   *</span>
+<span class="source-line-no">428</span><span id="line-428">   * @param arg1</span>
+<span class="source-line-no">429</span><span id="line-429">   *          the duration value</span>
+<span class="source-line-no">430</span><span id="line-430">   * @param arg2</span>
+<span class="source-line-no">431</span><span id="line-431">   *          the number to divide by</span>
+<span class="source-line-no">432</span><span id="line-432">   * @return the result of dividing a {@link IYearMonthDurationItem} by a number</span>
+<span class="source-line-no">433</span><span id="line-433">   */</span>
+<span class="source-line-no">434</span><span id="line-434">  @NonNull</span>
+<span class="source-line-no">435</span><span id="line-435">  public static IYearMonthDurationItem opDivideYearMonthDuration(</span>
+<span class="source-line-no">436</span><span id="line-436">      @NonNull IYearMonthDurationItem arg1,</span>
+<span class="source-line-no">437</span><span id="line-437">      @NonNull INumericItem arg2) {</span>
+<span class="source-line-no">438</span><span id="line-438">    IIntegerItem totalMonths = IIntegerItem.valueOf(arg1.asPeriod().toTotalMonths());</span>
+<span class="source-line-no">439</span><span id="line-439">    IIntegerItem result = opNumericIntegerDivide(totalMonths, arg2);</span>
+<span class="source-line-no">440</span><span id="line-440">    int months;</span>
+<span class="source-line-no">441</span><span id="line-441">    try {</span>
+<span class="source-line-no">442</span><span id="line-442">      months = FunctionUtils.asInteger(result.asInteger());</span>
+<span class="source-line-no">443</span><span id="line-443">    } catch (ArithmeticException ex) {</span>
+<span class="source-line-no">444</span><span id="line-444">      throw new DateTimeFunctionException(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,</span>
+<span class="source-line-no">445</span><span id="line-445">          "Overflow/underflow in duration operation.", ex);</span>
+<span class="source-line-no">446</span><span id="line-446">    }</span>
+<span class="source-line-no">447</span><span id="line-447">    int years = months / 12;</span>
+<span class="source-line-no">448</span><span id="line-448">    months = months % 12;</span>
+<span class="source-line-no">449</span><span id="line-449">    return IYearMonthDurationItem.valueOf(years, months);</span>
+<span class="source-line-no">450</span><span id="line-450">  }</span>
+<span class="source-line-no">451</span><span id="line-451"></span>
+<span class="source-line-no">452</span><span id="line-452">  /**</span>
+<span class="source-line-no">453</span><span id="line-453">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">454</span><span id="line-454">   * "https://www.w3.org/TR/xpath-functions-31/#func-divide-dayTimeDuration"&gt;op:divide-dayTimeDuration&lt;/a&gt;.</span>
+<span class="source-line-no">455</span><span id="line-455">   *</span>
+<span class="source-line-no">456</span><span id="line-456">   * @param arg1</span>
+<span class="source-line-no">457</span><span id="line-457">   *          the duration value</span>
+<span class="source-line-no">458</span><span id="line-458">   * @param arg2</span>
+<span class="source-line-no">459</span><span id="line-459">   *          the number to divide by</span>
+<span class="source-line-no">460</span><span id="line-460">   * @return the result of dividing a {@link IDayTimeDurationItem} by a number</span>
+<span class="source-line-no">461</span><span id="line-461">   */</span>
+<span class="source-line-no">462</span><span id="line-462">  @NonNull</span>
+<span class="source-line-no">463</span><span id="line-463">  public static IDayTimeDurationItem opDivideDayTimeDuration(</span>
+<span class="source-line-no">464</span><span id="line-464">      @NonNull IDayTimeDurationItem arg1,</span>
+<span class="source-line-no">465</span><span id="line-465">      @NonNull INumericItem arg2) {</span>
+<span class="source-line-no">466</span><span id="line-466">    try {</span>
+<span class="source-line-no">467</span><span id="line-467">      @SuppressWarnings("null")</span>
+<span class="source-line-no">468</span><span id="line-468">      @NonNull</span>
+<span class="source-line-no">469</span><span id="line-469">      Duration duration = arg1.asDuration().dividedBy(FunctionUtils.asLong(arg2.round()));</span>
+<span class="source-line-no">470</span><span id="line-470">      return IDayTimeDurationItem.valueOf(duration);</span>
+<span class="source-line-no">471</span><span id="line-471">    } catch (ArithmeticException ex) {</span>
+<span class="source-line-no">472</span><span id="line-472">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO, "Division by zero", ex);</span>
+<span class="source-line-no">473</span><span id="line-473">    }</span>
+<span class="source-line-no">474</span><span id="line-474">  }</span>
+<span class="source-line-no">475</span><span id="line-475"></span>
+<span class="source-line-no">476</span><span id="line-476">  /**</span>
+<span class="source-line-no">477</span><span id="line-477">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">478</span><span id="line-478">   * "https://www.w3.org/TR/xpath-functions-31/#func-divide-dayTimeDuration-by-dayTimeDuration"&gt;op:divide-dayTimeDuration-by-dayTimeDuration&lt;/a&gt;.</span>
+<span class="source-line-no">479</span><span id="line-479">   *</span>
+<span class="source-line-no">480</span><span id="line-480">   * @param arg1</span>
+<span class="source-line-no">481</span><span id="line-481">   *          the first duration value</span>
+<span class="source-line-no">482</span><span id="line-482">   * @param arg2</span>
+<span class="source-line-no">483</span><span id="line-483">   *          the second duration value</span>
+<span class="source-line-no">484</span><span id="line-484">   * @return the ratio of two {@link IDayTimeDurationItem} values, as a decimal</span>
+<span class="source-line-no">485</span><span id="line-485">   *         number</span>
+<span class="source-line-no">486</span><span id="line-486">   */</span>
+<span class="source-line-no">487</span><span id="line-487">  @NonNull</span>
+<span class="source-line-no">488</span><span id="line-488">  public static IDecimalItem opDivideDayTimeDurationByDayTimeDuration(</span>
+<span class="source-line-no">489</span><span id="line-489">      @NonNull IDayTimeDurationItem arg1,</span>
+<span class="source-line-no">490</span><span id="line-490">      @NonNull IDayTimeDurationItem arg2) {</span>
+<span class="source-line-no">491</span><span id="line-491">    return IDecimalItem.cast(</span>
+<span class="source-line-no">492</span><span id="line-492">        opNumericDivide(</span>
+<span class="source-line-no">493</span><span id="line-493">            IDecimalItem.valueOf(arg1.asSeconds()),</span>
+<span class="source-line-no">494</span><span id="line-494">            IDecimalItem.valueOf(arg2.asSeconds())));</span>
+<span class="source-line-no">495</span><span id="line-495">  }</span>
+<span class="source-line-no">496</span><span id="line-496"></span>
+<span class="source-line-no">497</span><span id="line-497">  /**</span>
+<span class="source-line-no">498</span><span id="line-498">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">499</span><span id="line-499">   * "https://www.w3.org/TR/xpath-functions-31/#func-date-equal"&gt;op:date-equal&lt;/a&gt;.</span>
+<span class="source-line-no">500</span><span id="line-500">   *</span>
+<span class="source-line-no">501</span><span id="line-501">   * @param arg1</span>
+<span class="source-line-no">502</span><span id="line-502">   *          the first value</span>
+<span class="source-line-no">503</span><span id="line-503">   * @param arg2</span>
+<span class="source-line-no">504</span><span id="line-504">   *          the second value</span>
+<span class="source-line-no">505</span><span id="line-505">   * @return {@code true} if the first argument is the same instant in time as the</span>
+<span class="source-line-no">506</span><span id="line-506">   *         second, or {@code false} otherwise</span>
+<span class="source-line-no">507</span><span id="line-507">   */</span>
+<span class="source-line-no">508</span><span id="line-508">  @NonNull</span>
+<span class="source-line-no">509</span><span id="line-509">  public static IBooleanItem opDateEqual(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {</span>
+<span class="source-line-no">510</span><span id="line-510">    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));</span>
+<span class="source-line-no">511</span><span id="line-511">  }</span>
+<span class="source-line-no">512</span><span id="line-512"></span>
+<span class="source-line-no">513</span><span id="line-513">  /**</span>
+<span class="source-line-no">514</span><span id="line-514">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">515</span><span id="line-515">   * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-equal"&gt;op:dateTime-equal&lt;/a&gt;.</span>
+<span class="source-line-no">516</span><span id="line-516">   *</span>
+<span class="source-line-no">517</span><span id="line-517">   * @param arg1</span>
+<span class="source-line-no">518</span><span id="line-518">   *          the first value</span>
+<span class="source-line-no">519</span><span id="line-519">   * @param arg2</span>
+<span class="source-line-no">520</span><span id="line-520">   *          the second value</span>
+<span class="source-line-no">521</span><span id="line-521">   * @return {@code true} if the first argument is the same instant in time as the</span>
+<span class="source-line-no">522</span><span id="line-522">   *         second, or {@code false} otherwise</span>
+<span class="source-line-no">523</span><span id="line-523">   */</span>
+<span class="source-line-no">524</span><span id="line-524">  @NonNull</span>
+<span class="source-line-no">525</span><span id="line-525">  public static IBooleanItem opDateTimeEqual(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {</span>
+<span class="source-line-no">526</span><span id="line-526">    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));</span>
+<span class="source-line-no">527</span><span id="line-527">  }</span>
+<span class="source-line-no">528</span><span id="line-528"></span>
+<span class="source-line-no">529</span><span id="line-529">  /**</span>
+<span class="source-line-no">530</span><span id="line-530">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">531</span><span id="line-531">   * "https://www.w3.org/TR/xpath-functions-31/#func-duration-equal"&gt;op:duration-equal&lt;/a&gt;.</span>
+<span class="source-line-no">532</span><span id="line-532">   *</span>
+<span class="source-line-no">533</span><span id="line-533">   * @param arg1</span>
+<span class="source-line-no">534</span><span id="line-534">   *          the first value</span>
+<span class="source-line-no">535</span><span id="line-535">   * @param arg2</span>
+<span class="source-line-no">536</span><span id="line-536">   *          the second value</span>
+<span class="source-line-no">537</span><span id="line-537">   * @return {@code true} if the first argument is the same duration as the</span>
+<span class="source-line-no">538</span><span id="line-538">   *         second, or {@code false} otherwise</span>
+<span class="source-line-no">539</span><span id="line-539">   */</span>
+<span class="source-line-no">540</span><span id="line-540">  @NonNull</span>
+<span class="source-line-no">541</span><span id="line-541">  public static IBooleanItem opDurationEqual(@NonNull IDurationItem arg1, @NonNull IDurationItem arg2) {</span>
+<span class="source-line-no">542</span><span id="line-542">    return IBooleanItem.valueOf(arg1.compareTo(arg2) == 0);</span>
+<span class="source-line-no">543</span><span id="line-543">  }</span>
+<span class="source-line-no">544</span><span id="line-544"></span>
+<span class="source-line-no">545</span><span id="line-545">  /**</span>
+<span class="source-line-no">546</span><span id="line-546">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">547</span><span id="line-547">   * "https://www.w3.org/TR/xpath-functions-31/#func-base64Binary-equal"&gt;op:base64Binary-equal&lt;/a&gt;.</span>
+<span class="source-line-no">548</span><span id="line-548">   *</span>
+<span class="source-line-no">549</span><span id="line-549">   * @param arg1</span>
+<span class="source-line-no">550</span><span id="line-550">   *          the first value</span>
+<span class="source-line-no">551</span><span id="line-551">   * @param arg2</span>
+<span class="source-line-no">552</span><span id="line-552">   *          the second value</span>
+<span class="source-line-no">553</span><span id="line-553">   * @return {@code true} if the first argument is equal to the second, or</span>
+<span class="source-line-no">554</span><span id="line-554">   *         {@code false} otherwise</span>
+<span class="source-line-no">555</span><span id="line-555">   */</span>
+<span class="source-line-no">556</span><span id="line-556">  @NonNull</span>
+<span class="source-line-no">557</span><span id="line-557">  public static IBooleanItem opBase64BinaryEqual(@NonNull IBase64BinaryItem arg1, @NonNull IBase64BinaryItem arg2) {</span>
+<span class="source-line-no">558</span><span id="line-558">    return IBooleanItem.valueOf(arg1.asByteBuffer().equals(arg2.asByteBuffer()));</span>
+<span class="source-line-no">559</span><span id="line-559">  }</span>
+<span class="source-line-no">560</span><span id="line-560"></span>
+<span class="source-line-no">561</span><span id="line-561">  /**</span>
+<span class="source-line-no">562</span><span id="line-562">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">563</span><span id="line-563">   * "https://www.w3.org/TR/xpath-functions-31/#func-date-greater-than"&gt;op:date-greater-than&lt;/a&gt;.</span>
+<span class="source-line-no">564</span><span id="line-564">   *</span>
+<span class="source-line-no">565</span><span id="line-565">   * @param arg1</span>
+<span class="source-line-no">566</span><span id="line-566">   *          the first value</span>
+<span class="source-line-no">567</span><span id="line-567">   * @param arg2</span>
+<span class="source-line-no">568</span><span id="line-568">   *          the second value</span>
+<span class="source-line-no">569</span><span id="line-569">   * @return {@code true} if the first argument is a later instant in time than</span>
+<span class="source-line-no">570</span><span id="line-570">   *         the second, or {@code false} otherwise</span>
+<span class="source-line-no">571</span><span id="line-571">   */</span>
+<span class="source-line-no">572</span><span id="line-572">  @NonNull</span>
+<span class="source-line-no">573</span><span id="line-573">  public static IBooleanItem opDateGreaterThan(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {</span>
+<span class="source-line-no">574</span><span id="line-574">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &gt; 0);</span>
+<span class="source-line-no">575</span><span id="line-575">  }</span>
+<span class="source-line-no">576</span><span id="line-576"></span>
+<span class="source-line-no">577</span><span id="line-577">  /**</span>
+<span class="source-line-no">578</span><span id="line-578">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">579</span><span id="line-579">   * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-greater-than"&gt;op:dateTime-greater-than&lt;/a&gt;.</span>
+<span class="source-line-no">580</span><span id="line-580">   *</span>
+<span class="source-line-no">581</span><span id="line-581">   * @param arg1</span>
+<span class="source-line-no">582</span><span id="line-582">   *          the first value</span>
+<span class="source-line-no">583</span><span id="line-583">   * @param arg2</span>
+<span class="source-line-no">584</span><span id="line-584">   *          the second value</span>
+<span class="source-line-no">585</span><span id="line-585">   * @return {@code true} if the first argument is a later instant in time than</span>
+<span class="source-line-no">586</span><span id="line-586">   *         the second, or {@code false} otherwise</span>
+<span class="source-line-no">587</span><span id="line-587">   */</span>
+<span class="source-line-no">588</span><span id="line-588">  @NonNull</span>
+<span class="source-line-no">589</span><span id="line-589">  public static IBooleanItem opDateTimeGreaterThan(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {</span>
+<span class="source-line-no">590</span><span id="line-590">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &gt; 0);</span>
+<span class="source-line-no">591</span><span id="line-591">  }</span>
+<span class="source-line-no">592</span><span id="line-592"></span>
+<span class="source-line-no">593</span><span id="line-593">  /**</span>
+<span class="source-line-no">594</span><span id="line-594">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">595</span><span id="line-595">   * "https://www.w3.org/TR/xpath-functions-31/#func-yearMonthDuration-greater-than"&gt;op:yearMonthDuration-greater-than&lt;/a&gt;.</span>
+<span class="source-line-no">596</span><span id="line-596">   *</span>
+<span class="source-line-no">597</span><span id="line-597">   * @param arg1</span>
+<span class="source-line-no">598</span><span id="line-598">   *          the first value</span>
+<span class="source-line-no">599</span><span id="line-599">   * @param arg2</span>
+<span class="source-line-no">600</span><span id="line-600">   *          the second value</span>
+<span class="source-line-no">601</span><span id="line-601">   * @return {@code true} if the first argument is a longer duration than the</span>
+<span class="source-line-no">602</span><span id="line-602">   *         second, or {@code false} otherwise</span>
+<span class="source-line-no">603</span><span id="line-603">   */</span>
+<span class="source-line-no">604</span><span id="line-604">  @NonNull</span>
+<span class="source-line-no">605</span><span id="line-605">  public static IBooleanItem opYearMonthDurationGreaterThan(</span>
+<span class="source-line-no">606</span><span id="line-606">      @NonNull IYearMonthDurationItem arg1,</span>
+<span class="source-line-no">607</span><span id="line-607">      @NonNull IYearMonthDurationItem arg2) {</span>
+<span class="source-line-no">608</span><span id="line-608">    Period p1 = arg1.asPeriod();</span>
+<span class="source-line-no">609</span><span id="line-609">    Period p2 = arg2.asPeriod();</span>
+<span class="source-line-no">610</span><span id="line-610"></span>
+<span class="source-line-no">611</span><span id="line-611">    // this is only an approximation</span>
+<span class="source-line-no">612</span><span id="line-612">    return IBooleanItem.valueOf(p1.toTotalMonths() &gt; p2.toTotalMonths());</span>
+<span class="source-line-no">613</span><span id="line-613">  }</span>
+<span class="source-line-no">614</span><span id="line-614"></span>
+<span class="source-line-no">615</span><span id="line-615">  /**</span>
+<span class="source-line-no">616</span><span id="line-616">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">617</span><span id="line-617">   * "https://www.w3.org/TR/xpath-functions-31/#func-dayTimeDuration-greater-than"&gt;op:dayTimeDuration-greater-than&lt;/a&gt;.</span>
+<span class="source-line-no">618</span><span id="line-618">   *</span>
+<span class="source-line-no">619</span><span id="line-619">   * @param arg1</span>
+<span class="source-line-no">620</span><span id="line-620">   *          the first value</span>
+<span class="source-line-no">621</span><span id="line-621">   * @param arg2</span>
+<span class="source-line-no">622</span><span id="line-622">   *          the second value</span>
+<span class="source-line-no">623</span><span id="line-623">   * @return {@code true} if the first argument is a longer duration than the</span>
+<span class="source-line-no">624</span><span id="line-624">   *         second, or {@code false} otherwise</span>
+<span class="source-line-no">625</span><span id="line-625">   */</span>
+<span class="source-line-no">626</span><span id="line-626">  @NonNull</span>
+<span class="source-line-no">627</span><span id="line-627">  public static IBooleanItem opDayTimeDurationGreaterThan(</span>
+<span class="source-line-no">628</span><span id="line-628">      @NonNull IDayTimeDurationItem arg1,</span>
+<span class="source-line-no">629</span><span id="line-629">      @NonNull IDayTimeDurationItem arg2) {</span>
+<span class="source-line-no">630</span><span id="line-630">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &gt; 0);</span>
+<span class="source-line-no">631</span><span id="line-631">  }</span>
+<span class="source-line-no">632</span><span id="line-632"></span>
+<span class="source-line-no">633</span><span id="line-633">  /**</span>
+<span class="source-line-no">634</span><span id="line-634">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">635</span><span id="line-635">   * "https://www.w3.org/TR/xpath-functions-31/#func-base64Binary-greater-than"&gt;op:base64Binary-greater-than&lt;/a&gt;.</span>
+<span class="source-line-no">636</span><span id="line-636">   *</span>
+<span class="source-line-no">637</span><span id="line-637">   * @param arg1</span>
+<span class="source-line-no">638</span><span id="line-638">   *          the first value</span>
+<span class="source-line-no">639</span><span id="line-639">   * @param arg2</span>
+<span class="source-line-no">640</span><span id="line-640">   *          the second value</span>
+<span class="source-line-no">641</span><span id="line-641">   * @return {@code true} if the first argument is greater than the second, or</span>
+<span class="source-line-no">642</span><span id="line-642">   *         {@code false} otherwise</span>
+<span class="source-line-no">643</span><span id="line-643">   */</span>
+<span class="source-line-no">644</span><span id="line-644">  @NonNull</span>
+<span class="source-line-no">645</span><span id="line-645">  public static IBooleanItem opBase64BinaryGreaterThan(</span>
+<span class="source-line-no">646</span><span id="line-646">      @NonNull IBase64BinaryItem arg1,</span>
+<span class="source-line-no">647</span><span id="line-647">      @NonNull IBase64BinaryItem arg2) {</span>
+<span class="source-line-no">648</span><span id="line-648">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &gt; 0);</span>
+<span class="source-line-no">649</span><span id="line-649">  }</span>
+<span class="source-line-no">650</span><span id="line-650"></span>
+<span class="source-line-no">651</span><span id="line-651">  /**</span>
+<span class="source-line-no">652</span><span id="line-652">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">653</span><span id="line-653">   * "https://www.w3.org/TR/xpath-functions-31/#func-date-less-than"&gt;op:date-less-than&lt;/a&gt;.</span>
+<span class="source-line-no">654</span><span id="line-654">   *</span>
+<span class="source-line-no">655</span><span id="line-655">   * @param arg1</span>
+<span class="source-line-no">656</span><span id="line-656">   *          the first value</span>
+<span class="source-line-no">657</span><span id="line-657">   * @param arg2</span>
+<span class="source-line-no">658</span><span id="line-658">   *          the second value</span>
+<span class="source-line-no">659</span><span id="line-659">   * @return {@code true} if the first argument is an earlier instant in time than</span>
+<span class="source-line-no">660</span><span id="line-660">   *         the second, or {@code false} otherwise</span>
+<span class="source-line-no">661</span><span id="line-661">   */</span>
+<span class="source-line-no">662</span><span id="line-662">  @NonNull</span>
+<span class="source-line-no">663</span><span id="line-663">  public static IBooleanItem opDateLessThan(</span>
+<span class="source-line-no">664</span><span id="line-664">      @NonNull IDateItem arg1,</span>
+<span class="source-line-no">665</span><span id="line-665">      @NonNull IDateItem arg2) {</span>
+<span class="source-line-no">666</span><span id="line-666">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &lt; 0);</span>
+<span class="source-line-no">667</span><span id="line-667">  }</span>
+<span class="source-line-no">668</span><span id="line-668"></span>
+<span class="source-line-no">669</span><span id="line-669">  /**</span>
+<span class="source-line-no">670</span><span id="line-670">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">671</span><span id="line-671">   * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-less-than"&gt;op:dateTime-less-than&lt;/a&gt;.</span>
+<span class="source-line-no">672</span><span id="line-672">   *</span>
+<span class="source-line-no">673</span><span id="line-673">   * @param arg1</span>
+<span class="source-line-no">674</span><span id="line-674">   *          the first value</span>
+<span class="source-line-no">675</span><span id="line-675">   * @param arg2</span>
+<span class="source-line-no">676</span><span id="line-676">   *          the second value</span>
+<span class="source-line-no">677</span><span id="line-677">   * @return {@code true} if the first argument is an earlier instant in time than</span>
+<span class="source-line-no">678</span><span id="line-678">   *         the second, or {@code false} otherwise</span>
+<span class="source-line-no">679</span><span id="line-679">   */</span>
+<span class="source-line-no">680</span><span id="line-680">  @NonNull</span>
+<span class="source-line-no">681</span><span id="line-681">  public static IBooleanItem opDateTimeLessThan(</span>
+<span class="source-line-no">682</span><span id="line-682">      @NonNull IDateTimeItem arg1,</span>
+<span class="source-line-no">683</span><span id="line-683">      @NonNull IDateTimeItem arg2) {</span>
+<span class="source-line-no">684</span><span id="line-684">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &lt; 0);</span>
+<span class="source-line-no">685</span><span id="line-685">  }</span>
+<span class="source-line-no">686</span><span id="line-686"></span>
+<span class="source-line-no">687</span><span id="line-687">  /**</span>
+<span class="source-line-no">688</span><span id="line-688">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">689</span><span id="line-689">   * "https://www.w3.org/TR/xpath-functions-31/#func-yearMonthDuration-less-than"&gt;op:yearMonthDuration-less-than&lt;/a&gt;.</span>
+<span class="source-line-no">690</span><span id="line-690">   *</span>
+<span class="source-line-no">691</span><span id="line-691">   * @param arg1</span>
+<span class="source-line-no">692</span><span id="line-692">   *          the first value</span>
+<span class="source-line-no">693</span><span id="line-693">   * @param arg2</span>
+<span class="source-line-no">694</span><span id="line-694">   *          the second value</span>
+<span class="source-line-no">695</span><span id="line-695">   * @return {@code true} if the first argument is a shorter duration than the</span>
+<span class="source-line-no">696</span><span id="line-696">   *         second, or {@code false} otherwise</span>
+<span class="source-line-no">697</span><span id="line-697">   */</span>
+<span class="source-line-no">698</span><span id="line-698">  @NonNull</span>
+<span class="source-line-no">699</span><span id="line-699">  public static IBooleanItem opYearMonthDurationLessThan(@NonNull IYearMonthDurationItem arg1,</span>
+<span class="source-line-no">700</span><span id="line-700">      @NonNull IYearMonthDurationItem arg2) {</span>
+<span class="source-line-no">701</span><span id="line-701">    Period p1 = arg1.asPeriod();</span>
+<span class="source-line-no">702</span><span id="line-702">    Period p2 = arg2.asPeriod();</span>
+<span class="source-line-no">703</span><span id="line-703"></span>
+<span class="source-line-no">704</span><span id="line-704">    // this is only an approximation</span>
+<span class="source-line-no">705</span><span id="line-705">    return IBooleanItem.valueOf(p1.toTotalMonths() &lt; p2.toTotalMonths());</span>
+<span class="source-line-no">706</span><span id="line-706">  }</span>
+<span class="source-line-no">707</span><span id="line-707"></span>
+<span class="source-line-no">708</span><span id="line-708">  /**</span>
+<span class="source-line-no">709</span><span id="line-709">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">710</span><span id="line-710">   * "https://www.w3.org/TR/xpath-functions-31/#func-dayTimeDuration-less-than"&gt;op:dayTimeDuration-less-than&lt;/a&gt;.</span>
+<span class="source-line-no">711</span><span id="line-711">   *</span>
+<span class="source-line-no">712</span><span id="line-712">   * @param arg1</span>
+<span class="source-line-no">713</span><span id="line-713">   *          the first value</span>
+<span class="source-line-no">714</span><span id="line-714">   * @param arg2</span>
+<span class="source-line-no">715</span><span id="line-715">   *          the second value</span>
+<span class="source-line-no">716</span><span id="line-716">   * @return {@code true} if the first argument is a shorter duration than the</span>
+<span class="source-line-no">717</span><span id="line-717">   *         second, or {@code false} otherwise</span>
+<span class="source-line-no">718</span><span id="line-718">   */</span>
+<span class="source-line-no">719</span><span id="line-719">  @NonNull</span>
+<span class="source-line-no">720</span><span id="line-720">  public static IBooleanItem opDayTimeDurationLessThan(</span>
+<span class="source-line-no">721</span><span id="line-721">      @NonNull IDayTimeDurationItem arg1,</span>
+<span class="source-line-no">722</span><span id="line-722">      @NonNull IDayTimeDurationItem arg2) {</span>
+<span class="source-line-no">723</span><span id="line-723">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &lt; 0);</span>
+<span class="source-line-no">724</span><span id="line-724">  }</span>
+<span class="source-line-no">725</span><span id="line-725"></span>
+<span class="source-line-no">726</span><span id="line-726">  /**</span>
+<span class="source-line-no">727</span><span id="line-727">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">728</span><span id="line-728">   * "https://www.w3.org/TR/xpath-functions-31/#func-base64Binary-less-than"&gt;op:base64Binary-less-than&lt;/a&gt;.</span>
+<span class="source-line-no">729</span><span id="line-729">   *</span>
+<span class="source-line-no">730</span><span id="line-730">   * @param arg1</span>
+<span class="source-line-no">731</span><span id="line-731">   *          the first value</span>
+<span class="source-line-no">732</span><span id="line-732">   * @param arg2</span>
+<span class="source-line-no">733</span><span id="line-733">   *          the second value</span>
+<span class="source-line-no">734</span><span id="line-734">   * @return {@code true} if the first argument is less than the second, or</span>
+<span class="source-line-no">735</span><span id="line-735">   *         {@code false} otherwise</span>
+<span class="source-line-no">736</span><span id="line-736">   */</span>
+<span class="source-line-no">737</span><span id="line-737">  @NonNull</span>
+<span class="source-line-no">738</span><span id="line-738">  public static IBooleanItem opBase64BinaryLessThan(</span>
+<span class="source-line-no">739</span><span id="line-739">      @NonNull IBase64BinaryItem arg1,</span>
+<span class="source-line-no">740</span><span id="line-740">      @NonNull IBase64BinaryItem arg2) {</span>
+<span class="source-line-no">741</span><span id="line-741">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &lt; 0);</span>
+<span class="source-line-no">742</span><span id="line-742">  }</span>
+<span class="source-line-no">743</span><span id="line-743"></span>
+<span class="source-line-no">744</span><span id="line-744">  /**</span>
+<span class="source-line-no">745</span><span id="line-745">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">746</span><span id="line-746">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-add"&gt;op:numeric-add&lt;/a&gt;.</span>
+<span class="source-line-no">747</span><span id="line-747">   *</span>
+<span class="source-line-no">748</span><span id="line-748">   * @param left</span>
+<span class="source-line-no">749</span><span id="line-749">   *          the first number</span>
+<span class="source-line-no">750</span><span id="line-750">   * @param right</span>
+<span class="source-line-no">751</span><span id="line-751">   *          the second number</span>
+<span class="source-line-no">752</span><span id="line-752">   * @return the result of adding the second number to the first number</span>
+<span class="source-line-no">753</span><span id="line-753">   */</span>
+<span class="source-line-no">754</span><span id="line-754">  @NonNull</span>
+<span class="source-line-no">755</span><span id="line-755">  public static INumericItem opNumericAdd(@NonNull INumericItem left, @NonNull INumericItem right) {</span>
+<span class="source-line-no">756</span><span id="line-756">    INumericItem retval;</span>
+<span class="source-line-no">757</span><span id="line-757">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
+<span class="source-line-no">758</span><span id="line-758">      // create an integer result</span>
+<span class="source-line-no">759</span><span id="line-759">      BigInteger integerLeft = left.asInteger();</span>
+<span class="source-line-no">760</span><span id="line-760">      BigInteger integerRight = right.asInteger();</span>
+<span class="source-line-no">761</span><span id="line-761"></span>
+<span class="source-line-no">762</span><span id="line-762">      @SuppressWarnings("null")</span>
+<span class="source-line-no">763</span><span id="line-763">      @NonNull</span>
+<span class="source-line-no">764</span><span id="line-764">      BigInteger result = integerLeft.add(integerRight);</span>
+<span class="source-line-no">765</span><span id="line-765">      retval = IIntegerItem.valueOf(result);</span>
+<span class="source-line-no">766</span><span id="line-766">    } else {</span>
+<span class="source-line-no">767</span><span id="line-767">      // create a decimal result</span>
+<span class="source-line-no">768</span><span id="line-768">      BigDecimal decimalLeft = left.asDecimal();</span>
+<span class="source-line-no">769</span><span id="line-769">      BigDecimal decimalRight = right.asDecimal();</span>
+<span class="source-line-no">770</span><span id="line-770"></span>
+<span class="source-line-no">771</span><span id="line-771">      @SuppressWarnings("null")</span>
+<span class="source-line-no">772</span><span id="line-772">      @NonNull</span>
+<span class="source-line-no">773</span><span id="line-773">      BigDecimal result = decimalLeft.add(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
+<span class="source-line-no">774</span><span id="line-774">      retval = IDecimalItem.valueOf(result);</span>
+<span class="source-line-no">775</span><span id="line-775">    }</span>
+<span class="source-line-no">776</span><span id="line-776">    return retval;</span>
+<span class="source-line-no">777</span><span id="line-777">  }</span>
+<span class="source-line-no">778</span><span id="line-778"></span>
+<span class="source-line-no">779</span><span id="line-779">  /**</span>
+<span class="source-line-no">780</span><span id="line-780">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">781</span><span id="line-781">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-subtract"&gt;op:numeric-subtract&lt;/a&gt;.</span>
+<span class="source-line-no">782</span><span id="line-782">   *</span>
+<span class="source-line-no">783</span><span id="line-783">   * @param left</span>
+<span class="source-line-no">784</span><span id="line-784">   *          the first number</span>
+<span class="source-line-no">785</span><span id="line-785">   * @param right</span>
+<span class="source-line-no">786</span><span id="line-786">   *          the second number</span>
+<span class="source-line-no">787</span><span id="line-787">   * @return the result of subtracting the second number from the first number</span>
+<span class="source-line-no">788</span><span id="line-788">   */</span>
+<span class="source-line-no">789</span><span id="line-789">  @NonNull</span>
+<span class="source-line-no">790</span><span id="line-790">  public static INumericItem opNumericSubtract(@NonNull INumericItem left, @NonNull INumericItem right) {</span>
+<span class="source-line-no">791</span><span id="line-791">    INumericItem retval;</span>
+<span class="source-line-no">792</span><span id="line-792">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
+<span class="source-line-no">793</span><span id="line-793">      // create an integer result</span>
+<span class="source-line-no">794</span><span id="line-794">      BigInteger integerLeft = left.asInteger();</span>
+<span class="source-line-no">795</span><span id="line-795">      BigInteger integerRight = right.asInteger();</span>
+<span class="source-line-no">796</span><span id="line-796"></span>
+<span class="source-line-no">797</span><span id="line-797">      @SuppressWarnings("null")</span>
+<span class="source-line-no">798</span><span id="line-798">      @NonNull</span>
+<span class="source-line-no">799</span><span id="line-799">      BigInteger result = integerLeft.subtract(integerRight);</span>
+<span class="source-line-no">800</span><span id="line-800">      retval = IIntegerItem.valueOf(result);</span>
+<span class="source-line-no">801</span><span id="line-801">    } else {</span>
+<span class="source-line-no">802</span><span id="line-802">      // create a decimal result</span>
+<span class="source-line-no">803</span><span id="line-803">      BigDecimal decimalLeft = left.asDecimal();</span>
+<span class="source-line-no">804</span><span id="line-804">      BigDecimal decimalRight = right.asDecimal();</span>
+<span class="source-line-no">805</span><span id="line-805"></span>
+<span class="source-line-no">806</span><span id="line-806">      @SuppressWarnings("null")</span>
+<span class="source-line-no">807</span><span id="line-807">      @NonNull</span>
+<span class="source-line-no">808</span><span id="line-808">      BigDecimal result = decimalLeft.subtract(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
+<span class="source-line-no">809</span><span id="line-809">      retval = IDecimalItem.valueOf(result);</span>
+<span class="source-line-no">810</span><span id="line-810">    }</span>
+<span class="source-line-no">811</span><span id="line-811">    return retval;</span>
+<span class="source-line-no">812</span><span id="line-812">  }</span>
+<span class="source-line-no">813</span><span id="line-813"></span>
+<span class="source-line-no">814</span><span id="line-814">  /**</span>
+<span class="source-line-no">815</span><span id="line-815">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">816</span><span id="line-816">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-multiply"&gt;op:numeric-multiply&lt;/a&gt;.</span>
+<span class="source-line-no">817</span><span id="line-817">   *</span>
+<span class="source-line-no">818</span><span id="line-818">   * @param left</span>
+<span class="source-line-no">819</span><span id="line-819">   *          the first number</span>
+<span class="source-line-no">820</span><span id="line-820">   * @param right</span>
+<span class="source-line-no">821</span><span id="line-821">   *          the second number</span>
+<span class="source-line-no">822</span><span id="line-822">   * @return the result of multiplying the first number by the second number</span>
+<span class="source-line-no">823</span><span id="line-823">   */</span>
+<span class="source-line-no">824</span><span id="line-824">  @NonNull</span>
+<span class="source-line-no">825</span><span id="line-825">  public static INumericItem opNumericMultiply(@NonNull INumericItem left, @NonNull INumericItem right) {</span>
+<span class="source-line-no">826</span><span id="line-826">    INumericItem retval;</span>
+<span class="source-line-no">827</span><span id="line-827">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
+<span class="source-line-no">828</span><span id="line-828">      // create an integer result</span>
+<span class="source-line-no">829</span><span id="line-829">      @SuppressWarnings("null")</span>
+<span class="source-line-no">830</span><span id="line-830">      @NonNull</span>
+<span class="source-line-no">831</span><span id="line-831">      BigInteger result = left.asInteger().multiply(right.asInteger());</span>
+<span class="source-line-no">832</span><span id="line-832">      retval = IIntegerItem.valueOf(result);</span>
+<span class="source-line-no">833</span><span id="line-833">    } else {</span>
+<span class="source-line-no">834</span><span id="line-834">      // create a decimal result</span>
+<span class="source-line-no">835</span><span id="line-835">      BigDecimal decimalLeft = left.asDecimal();</span>
+<span class="source-line-no">836</span><span id="line-836">      BigDecimal decimalRight = right.asDecimal();</span>
+<span class="source-line-no">837</span><span id="line-837"></span>
+<span class="source-line-no">838</span><span id="line-838">      @SuppressWarnings("null")</span>
+<span class="source-line-no">839</span><span id="line-839">      @NonNull</span>
+<span class="source-line-no">840</span><span id="line-840">      BigDecimal result = decimalLeft.multiply(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
+<span class="source-line-no">841</span><span id="line-841">      retval = IDecimalItem.valueOf(result);</span>
+<span class="source-line-no">842</span><span id="line-842">    }</span>
+<span class="source-line-no">843</span><span id="line-843">    return retval;</span>
+<span class="source-line-no">844</span><span id="line-844">  }</span>
 <span class="source-line-no">845</span><span id="line-845"></span>
-<span class="source-line-no">846</span><span id="line-846">    if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
-<span class="source-line-no">847</span><span id="line-847">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
-<span class="source-line-no">848</span><span id="line-848">          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);</span>
-<span class="source-line-no">849</span><span id="line-849">    }</span>
-<span class="source-line-no">850</span><span id="line-850"></span>
-<span class="source-line-no">851</span><span id="line-851">    BigDecimal decimalDividend = dividend.asDecimal();</span>
-<span class="source-line-no">852</span><span id="line-852"></span>
-<span class="source-line-no">853</span><span id="line-853">    @SuppressWarnings("null")</span>
-<span class="source-line-no">854</span><span id="line-854">    @NonNull BigDecimal result = decimalDividend.divide(decimalDivisor, FunctionUtils.MATH_CONTEXT);</span>
-<span class="source-line-no">855</span><span id="line-855">    return IDecimalItem.valueOf(result);</span>
-<span class="source-line-no">856</span><span id="line-856">  }</span>
-<span class="source-line-no">857</span><span id="line-857"></span>
-<span class="source-line-no">858</span><span id="line-858">  /**</span>
-<span class="source-line-no">859</span><span id="line-859">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">860</span><span id="line-860">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-integer-divide"&gt;op:numeric-integer-divide&lt;/a&gt;.</span>
-<span class="source-line-no">861</span><span id="line-861">   *</span>
-<span class="source-line-no">862</span><span id="line-862">   * @param dividend</span>
-<span class="source-line-no">863</span><span id="line-863">   *          the number to be divided</span>
-<span class="source-line-no">864</span><span id="line-864">   * @param divisor</span>
-<span class="source-line-no">865</span><span id="line-865">   *          the number to divide by</span>
-<span class="source-line-no">866</span><span id="line-866">   * @return the quotient</span>
-<span class="source-line-no">867</span><span id="line-867">   */</span>
-<span class="source-line-no">868</span><span id="line-868">  @NonNull</span>
-<span class="source-line-no">869</span><span id="line-869">  public static IIntegerItem opNumericIntegerDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {</span>
-<span class="source-line-no">870</span><span id="line-870">    IIntegerItem retval;</span>
-<span class="source-line-no">871</span><span id="line-871">    if (dividend instanceof IIntegerItem || divisor instanceof IIntegerItem) {</span>
-<span class="source-line-no">872</span><span id="line-872">      // create an integer result</span>
-<span class="source-line-no">873</span><span id="line-873">      BigInteger integerDivisor = divisor.asInteger();</span>
-<span class="source-line-no">874</span><span id="line-874"></span>
-<span class="source-line-no">875</span><span id="line-875">      if (BigInteger.ZERO.equals(integerDivisor)) {</span>
-<span class="source-line-no">876</span><span id="line-876">        throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
-<span class="source-line-no">877</span><span id="line-877">            ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);</span>
-<span class="source-line-no">878</span><span id="line-878">      }</span>
-<span class="source-line-no">879</span><span id="line-879"></span>
-<span class="source-line-no">880</span><span id="line-880">      @SuppressWarnings("null")</span>
-<span class="source-line-no">881</span><span id="line-881">      @NonNull BigInteger result = dividend.asInteger().divide(integerDivisor);</span>
-<span class="source-line-no">882</span><span id="line-882">      retval = IIntegerItem.valueOf(result);</span>
-<span class="source-line-no">883</span><span id="line-883">    } else {</span>
-<span class="source-line-no">884</span><span id="line-884">      // create a decimal result</span>
-<span class="source-line-no">885</span><span id="line-885">      BigDecimal decimalDivisor = divisor.asDecimal();</span>
-<span class="source-line-no">886</span><span id="line-886"></span>
-<span class="source-line-no">887</span><span id="line-887">      if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
-<span class="source-line-no">888</span><span id="line-888">        throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
-<span class="source-line-no">889</span><span id="line-889">            ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);</span>
-<span class="source-line-no">890</span><span id="line-890">      }</span>
-<span class="source-line-no">891</span><span id="line-891"></span>
-<span class="source-line-no">892</span><span id="line-892">      BigDecimal decimalDividend = dividend.asDecimal();</span>
-<span class="source-line-no">893</span><span id="line-893"></span>
-<span class="source-line-no">894</span><span id="line-894">      @SuppressWarnings("null")</span>
-<span class="source-line-no">895</span><span id="line-895">      @NonNull BigInteger result</span>
-<span class="source-line-no">896</span><span id="line-896">          = decimalDividend.divideToIntegralValue(decimalDivisor, FunctionUtils.MATH_CONTEXT).toBigInteger();</span>
-<span class="source-line-no">897</span><span id="line-897">      retval = IIntegerItem.valueOf(result);</span>
-<span class="source-line-no">898</span><span id="line-898">    }</span>
-<span class="source-line-no">899</span><span id="line-899">    return retval;</span>
-<span class="source-line-no">900</span><span id="line-900">  }</span>
-<span class="source-line-no">901</span><span id="line-901"></span>
-<span class="source-line-no">902</span><span id="line-902">  /**</span>
-<span class="source-line-no">903</span><span id="line-903">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">904</span><span id="line-904">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-mod"&gt;op:numeric-mod&lt;/a&gt;.</span>
-<span class="source-line-no">905</span><span id="line-905">   *</span>
-<span class="source-line-no">906</span><span id="line-906">   * @param dividend</span>
-<span class="source-line-no">907</span><span id="line-907">   *          the number to be divided</span>
-<span class="source-line-no">908</span><span id="line-908">   * @param divisor</span>
-<span class="source-line-no">909</span><span id="line-909">   *          the number to divide by</span>
-<span class="source-line-no">910</span><span id="line-910">   * @return the remainder</span>
-<span class="source-line-no">911</span><span id="line-911">   */</span>
-<span class="source-line-no">912</span><span id="line-912">  @NonNull</span>
-<span class="source-line-no">913</span><span id="line-913">  public static INumericItem opNumericMod(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {</span>
-<span class="source-line-no">914</span><span id="line-914">    BigDecimal decimalDivisor = divisor.asDecimal();</span>
-<span class="source-line-no">915</span><span id="line-915"></span>
-<span class="source-line-no">916</span><span id="line-916">    if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
-<span class="source-line-no">917</span><span id="line-917">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
-<span class="source-line-no">918</span><span id="line-918">          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);</span>
-<span class="source-line-no">919</span><span id="line-919">    }</span>
-<span class="source-line-no">920</span><span id="line-920"></span>
-<span class="source-line-no">921</span><span id="line-921">    BigDecimal decimalDividend = dividend.asDecimal();</span>
-<span class="source-line-no">922</span><span id="line-922"></span>
-<span class="source-line-no">923</span><span id="line-923">    INumericItem retval;</span>
-<span class="source-line-no">924</span><span id="line-924">    if (BigDecimal.ZERO.equals(decimalDividend)) {</span>
-<span class="source-line-no">925</span><span id="line-925">      retval = dividend;</span>
-<span class="source-line-no">926</span><span id="line-926">    } else {</span>
-<span class="source-line-no">927</span><span id="line-927">      @SuppressWarnings("null")</span>
-<span class="source-line-no">928</span><span id="line-928">      @NonNull BigDecimal result = decimalDividend.remainder(decimalDivisor, FunctionUtils.MATH_CONTEXT);</span>
-<span class="source-line-no">929</span><span id="line-929">      retval = IDecimalItem.valueOf(result);</span>
-<span class="source-line-no">930</span><span id="line-930">    }</span>
-<span class="source-line-no">931</span><span id="line-931">    return retval;</span>
-<span class="source-line-no">932</span><span id="line-932">  }</span>
+<span class="source-line-no">846</span><span id="line-846">  /**</span>
+<span class="source-line-no">847</span><span id="line-847">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">848</span><span id="line-848">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-divide"&gt;op:numeric-divide&lt;/a&gt;.</span>
+<span class="source-line-no">849</span><span id="line-849">   *</span>
+<span class="source-line-no">850</span><span id="line-850">   * @param dividend</span>
+<span class="source-line-no">851</span><span id="line-851">   *          the number to be divided</span>
+<span class="source-line-no">852</span><span id="line-852">   * @param divisor</span>
+<span class="source-line-no">853</span><span id="line-853">   *          the number to divide by</span>
+<span class="source-line-no">854</span><span id="line-854">   * @return the quotient</span>
+<span class="source-line-no">855</span><span id="line-855">   */</span>
+<span class="source-line-no">856</span><span id="line-856">  @NonNull</span>
+<span class="source-line-no">857</span><span id="line-857">  public static IDecimalItem opNumericDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {</span>
+<span class="source-line-no">858</span><span id="line-858">    // create a decimal result</span>
+<span class="source-line-no">859</span><span id="line-859">    BigDecimal decimalDivisor = divisor.asDecimal();</span>
+<span class="source-line-no">860</span><span id="line-860"></span>
+<span class="source-line-no">861</span><span id="line-861">    if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
+<span class="source-line-no">862</span><span id="line-862">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
+<span class="source-line-no">863</span><span id="line-863">          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);</span>
+<span class="source-line-no">864</span><span id="line-864">    }</span>
+<span class="source-line-no">865</span><span id="line-865"></span>
+<span class="source-line-no">866</span><span id="line-866">    BigDecimal decimalDividend = dividend.asDecimal();</span>
+<span class="source-line-no">867</span><span id="line-867"></span>
+<span class="source-line-no">868</span><span id="line-868">    @SuppressWarnings("null")</span>
+<span class="source-line-no">869</span><span id="line-869">    @NonNull</span>
+<span class="source-line-no">870</span><span id="line-870">    BigDecimal result = decimalDividend.divide(decimalDivisor, FunctionUtils.MATH_CONTEXT);</span>
+<span class="source-line-no">871</span><span id="line-871">    return IDecimalItem.valueOf(result);</span>
+<span class="source-line-no">872</span><span id="line-872">  }</span>
+<span class="source-line-no">873</span><span id="line-873"></span>
+<span class="source-line-no">874</span><span id="line-874">  /**</span>
+<span class="source-line-no">875</span><span id="line-875">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">876</span><span id="line-876">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-integer-divide"&gt;op:numeric-integer-divide&lt;/a&gt;.</span>
+<span class="source-line-no">877</span><span id="line-877">   *</span>
+<span class="source-line-no">878</span><span id="line-878">   * @param dividend</span>
+<span class="source-line-no">879</span><span id="line-879">   *          the number to be divided</span>
+<span class="source-line-no">880</span><span id="line-880">   * @param divisor</span>
+<span class="source-line-no">881</span><span id="line-881">   *          the number to divide by</span>
+<span class="source-line-no">882</span><span id="line-882">   * @return the quotient</span>
+<span class="source-line-no">883</span><span id="line-883">   */</span>
+<span class="source-line-no">884</span><span id="line-884">  @NonNull</span>
+<span class="source-line-no">885</span><span id="line-885">  public static IIntegerItem opNumericIntegerDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {</span>
+<span class="source-line-no">886</span><span id="line-886">    IIntegerItem retval;</span>
+<span class="source-line-no">887</span><span id="line-887">    if (dividend instanceof IIntegerItem || divisor instanceof IIntegerItem) {</span>
+<span class="source-line-no">888</span><span id="line-888">      // create an integer result</span>
+<span class="source-line-no">889</span><span id="line-889">      BigInteger integerDivisor = divisor.asInteger();</span>
+<span class="source-line-no">890</span><span id="line-890"></span>
+<span class="source-line-no">891</span><span id="line-891">      if (BigInteger.ZERO.equals(integerDivisor)) {</span>
+<span class="source-line-no">892</span><span id="line-892">        throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
+<span class="source-line-no">893</span><span id="line-893">            ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);</span>
+<span class="source-line-no">894</span><span id="line-894">      }</span>
+<span class="source-line-no">895</span><span id="line-895"></span>
+<span class="source-line-no">896</span><span id="line-896">      @SuppressWarnings("null")</span>
+<span class="source-line-no">897</span><span id="line-897">      @NonNull</span>
+<span class="source-line-no">898</span><span id="line-898">      BigInteger result = dividend.asInteger().divide(integerDivisor);</span>
+<span class="source-line-no">899</span><span id="line-899">      retval = IIntegerItem.valueOf(result);</span>
+<span class="source-line-no">900</span><span id="line-900">    } else {</span>
+<span class="source-line-no">901</span><span id="line-901">      // create a decimal result</span>
+<span class="source-line-no">902</span><span id="line-902">      BigDecimal decimalDivisor = divisor.asDecimal();</span>
+<span class="source-line-no">903</span><span id="line-903"></span>
+<span class="source-line-no">904</span><span id="line-904">      if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
+<span class="source-line-no">905</span><span id="line-905">        throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
+<span class="source-line-no">906</span><span id="line-906">            ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);</span>
+<span class="source-line-no">907</span><span id="line-907">      }</span>
+<span class="source-line-no">908</span><span id="line-908"></span>
+<span class="source-line-no">909</span><span id="line-909">      BigDecimal decimalDividend = dividend.asDecimal();</span>
+<span class="source-line-no">910</span><span id="line-910"></span>
+<span class="source-line-no">911</span><span id="line-911">      @SuppressWarnings("null")</span>
+<span class="source-line-no">912</span><span id="line-912">      @NonNull</span>
+<span class="source-line-no">913</span><span id="line-913">      BigInteger result</span>
+<span class="source-line-no">914</span><span id="line-914">          = decimalDividend.divideToIntegralValue(decimalDivisor, FunctionUtils.MATH_CONTEXT).toBigInteger();</span>
+<span class="source-line-no">915</span><span id="line-915">      retval = IIntegerItem.valueOf(result);</span>
+<span class="source-line-no">916</span><span id="line-916">    }</span>
+<span class="source-line-no">917</span><span id="line-917">    return retval;</span>
+<span class="source-line-no">918</span><span id="line-918">  }</span>
+<span class="source-line-no">919</span><span id="line-919"></span>
+<span class="source-line-no">920</span><span id="line-920">  /**</span>
+<span class="source-line-no">921</span><span id="line-921">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">922</span><span id="line-922">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-mod"&gt;op:numeric-mod&lt;/a&gt;.</span>
+<span class="source-line-no">923</span><span id="line-923">   *</span>
+<span class="source-line-no">924</span><span id="line-924">   * @param dividend</span>
+<span class="source-line-no">925</span><span id="line-925">   *          the number to be divided</span>
+<span class="source-line-no">926</span><span id="line-926">   * @param divisor</span>
+<span class="source-line-no">927</span><span id="line-927">   *          the number to divide by</span>
+<span class="source-line-no">928</span><span id="line-928">   * @return the remainder</span>
+<span class="source-line-no">929</span><span id="line-929">   */</span>
+<span class="source-line-no">930</span><span id="line-930">  @NonNull</span>
+<span class="source-line-no">931</span><span id="line-931">  public static INumericItem opNumericMod(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {</span>
+<span class="source-line-no">932</span><span id="line-932">    BigDecimal decimalDivisor = divisor.asDecimal();</span>
 <span class="source-line-no">933</span><span id="line-933"></span>
-<span class="source-line-no">934</span><span id="line-934">  /**</span>
-<span class="source-line-no">935</span><span id="line-935">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">936</span><span id="line-936">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-unary-minus"&gt;op:numeric-unary-minus&lt;/a&gt;.</span>
-<span class="source-line-no">937</span><span id="line-937">   *</span>
-<span class="source-line-no">938</span><span id="line-938">   * @param item</span>
-<span class="source-line-no">939</span><span id="line-939">   *          the number whose sign is to be reversed</span>
-<span class="source-line-no">940</span><span id="line-940">   * @return the number with a reversed sign</span>
-<span class="source-line-no">941</span><span id="line-941">   */</span>
-<span class="source-line-no">942</span><span id="line-942">  @NonNull</span>
-<span class="source-line-no">943</span><span id="line-943">  public static INumericItem opNumericUnaryMinus(@NonNull INumericItem item) {</span>
-<span class="source-line-no">944</span><span id="line-944">    INumericItem retval;</span>
-<span class="source-line-no">945</span><span id="line-945">    if (item instanceof IIntegerItem) {</span>
-<span class="source-line-no">946</span><span id="line-946">      // create a decimal result</span>
-<span class="source-line-no">947</span><span id="line-947">      BigInteger integer = item.asInteger();</span>
-<span class="source-line-no">948</span><span id="line-948"></span>
-<span class="source-line-no">949</span><span id="line-949">      @SuppressWarnings("null")</span>
-<span class="source-line-no">950</span><span id="line-950">      @NonNull BigInteger result = integer.negate();</span>
-<span class="source-line-no">951</span><span id="line-951">      retval = IIntegerItem.valueOf(result);</span>
-<span class="source-line-no">952</span><span id="line-952">    } else if (item instanceof IDecimalItem) {</span>
-<span class="source-line-no">953</span><span id="line-953">      // create a decimal result</span>
-<span class="source-line-no">954</span><span id="line-954">      BigDecimal decimal = item.asDecimal();</span>
-<span class="source-line-no">955</span><span id="line-955"></span>
-<span class="source-line-no">956</span><span id="line-956">      @SuppressWarnings("null")</span>
-<span class="source-line-no">957</span><span id="line-957">      @NonNull BigDecimal result = decimal.negate(FunctionUtils.MATH_CONTEXT);</span>
-<span class="source-line-no">958</span><span id="line-958">      retval = IDecimalItem.valueOf(result);</span>
-<span class="source-line-no">959</span><span id="line-959">    } else {</span>
-<span class="source-line-no">960</span><span id="line-960">      throw new InvalidTypeMetapathException(item);</span>
-<span class="source-line-no">961</span><span id="line-961">    }</span>
-<span class="source-line-no">962</span><span id="line-962">    return retval;</span>
-<span class="source-line-no">963</span><span id="line-963">  }</span>
-<span class="source-line-no">964</span><span id="line-964"></span>
-<span class="source-line-no">965</span><span id="line-965">  /**</span>
-<span class="source-line-no">966</span><span id="line-966">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">967</span><span id="line-967">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-equal"&gt;op:numeric-equal&lt;/a&gt;.</span>
-<span class="source-line-no">968</span><span id="line-968">   *</span>
-<span class="source-line-no">969</span><span id="line-969">   * @param arg1</span>
-<span class="source-line-no">970</span><span id="line-970">   *          the first number to check for equality</span>
-<span class="source-line-no">971</span><span id="line-971">   * @param arg2</span>
-<span class="source-line-no">972</span><span id="line-972">   *          the second number to check for equality</span>
-<span class="source-line-no">973</span><span id="line-973">   * @return {@code true} if the numbers are numerically equal or {@code false}</span>
-<span class="source-line-no">974</span><span id="line-974">   *         otherwise</span>
-<span class="source-line-no">975</span><span id="line-975">   */</span>
-<span class="source-line-no">976</span><span id="line-976">  @NonNull</span>
-<span class="source-line-no">977</span><span id="line-977">  public static IBooleanItem opNumericEqual(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {</span>
-<span class="source-line-no">978</span><span id="line-978">    IBooleanItem retval;</span>
-<span class="source-line-no">979</span><span id="line-979">    if (arg1 == null || arg2 == null) {</span>
-<span class="source-line-no">980</span><span id="line-980">      retval = IBooleanItem.FALSE;</span>
-<span class="source-line-no">981</span><span id="line-981">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
-<span class="source-line-no">982</span><span id="line-982">      retval = IBooleanItem.valueOf(arg1.asInteger().equals(arg2.asInteger()));</span>
-<span class="source-line-no">983</span><span id="line-983">    } else {</span>
-<span class="source-line-no">984</span><span id="line-984">      retval = IBooleanItem.valueOf(arg1.asDecimal().equals(arg2.asDecimal()));</span>
-<span class="source-line-no">985</span><span id="line-985">    }</span>
-<span class="source-line-no">986</span><span id="line-986">    return retval;</span>
-<span class="source-line-no">987</span><span id="line-987">  }</span>
-<span class="source-line-no">988</span><span id="line-988"></span>
-<span class="source-line-no">989</span><span id="line-989">  /**</span>
-<span class="source-line-no">990</span><span id="line-990">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">991</span><span id="line-991">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-greater-than"&gt;op:numeric-greater-than&lt;/a&gt;.</span>
-<span class="source-line-no">992</span><span id="line-992">   *</span>
-<span class="source-line-no">993</span><span id="line-993">   * @param arg1</span>
-<span class="source-line-no">994</span><span id="line-994">   *          the first number to check</span>
-<span class="source-line-no">995</span><span id="line-995">   * @param arg2</span>
-<span class="source-line-no">996</span><span id="line-996">   *          the second number to check</span>
-<span class="source-line-no">997</span><span id="line-997">   * @return {@code true} if the first number is greater than or equal to the</span>
-<span class="source-line-no">998</span><span id="line-998">   *         second, or {@code false} otherwise</span>
-<span class="source-line-no">999</span><span id="line-999">   */</span>
-<span class="source-line-no">1000</span><span id="line-1000">  @NonNull</span>
-<span class="source-line-no">1001</span><span id="line-1001">  public static IBooleanItem opNumericGreaterThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {</span>
-<span class="source-line-no">1002</span><span id="line-1002">    IBooleanItem retval;</span>
-<span class="source-line-no">1003</span><span id="line-1003">    if (arg1 == null || arg2 == null) {</span>
-<span class="source-line-no">1004</span><span id="line-1004">      retval = IBooleanItem.FALSE;</span>
-<span class="source-line-no">1005</span><span id="line-1005">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
-<span class="source-line-no">1006</span><span id="line-1006">      int result = arg1.asInteger().compareTo(arg2.asInteger());</span>
-<span class="source-line-no">1007</span><span id="line-1007">      retval = IBooleanItem.valueOf(result &gt; 0);</span>
-<span class="source-line-no">1008</span><span id="line-1008">    } else {</span>
-<span class="source-line-no">1009</span><span id="line-1009">      int result = arg1.asDecimal().compareTo(arg2.asDecimal());</span>
-<span class="source-line-no">1010</span><span id="line-1010">      retval = IBooleanItem.valueOf(result &gt; 0);</span>
-<span class="source-line-no">1011</span><span id="line-1011">    }</span>
-<span class="source-line-no">1012</span><span id="line-1012">    return retval;</span>
-<span class="source-line-no">1013</span><span id="line-1013">  }</span>
-<span class="source-line-no">1014</span><span id="line-1014"></span>
-<span class="source-line-no">1015</span><span id="line-1015">  /**</span>
-<span class="source-line-no">1016</span><span id="line-1016">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">1017</span><span id="line-1017">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-less-than"&gt;op:numeric-less-than&lt;/a&gt;.</span>
-<span class="source-line-no">1018</span><span id="line-1018">   *</span>
-<span class="source-line-no">1019</span><span id="line-1019">   * @param arg1</span>
-<span class="source-line-no">1020</span><span id="line-1020">   *          the first number to check</span>
-<span class="source-line-no">1021</span><span id="line-1021">   * @param arg2</span>
-<span class="source-line-no">1022</span><span id="line-1022">   *          the second number to check</span>
-<span class="source-line-no">1023</span><span id="line-1023">   * @return {@code true} if the first number is less than or equal to the second,</span>
-<span class="source-line-no">1024</span><span id="line-1024">   *         or {@code false} otherwise</span>
-<span class="source-line-no">1025</span><span id="line-1025">   */</span>
-<span class="source-line-no">1026</span><span id="line-1026">  @NonNull</span>
-<span class="source-line-no">1027</span><span id="line-1027">  public static IBooleanItem opNumericLessThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {</span>
-<span class="source-line-no">1028</span><span id="line-1028">    IBooleanItem retval;</span>
-<span class="source-line-no">1029</span><span id="line-1029">    if (arg1 == null || arg2 == null) {</span>
-<span class="source-line-no">1030</span><span id="line-1030">      retval = IBooleanItem.FALSE;</span>
-<span class="source-line-no">1031</span><span id="line-1031">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
-<span class="source-line-no">1032</span><span id="line-1032">      int result = arg1.asInteger().compareTo(arg2.asInteger());</span>
-<span class="source-line-no">1033</span><span id="line-1033">      retval = IBooleanItem.valueOf(result &lt; 0);</span>
-<span class="source-line-no">1034</span><span id="line-1034">    } else {</span>
-<span class="source-line-no">1035</span><span id="line-1035">      int result = arg1.asDecimal().compareTo(arg2.asDecimal());</span>
-<span class="source-line-no">1036</span><span id="line-1036">      retval = IBooleanItem.valueOf(result &lt; 0);</span>
-<span class="source-line-no">1037</span><span id="line-1037">    }</span>
-<span class="source-line-no">1038</span><span id="line-1038">    return retval;</span>
-<span class="source-line-no">1039</span><span id="line-1039">  }</span>
-<span class="source-line-no">1040</span><span id="line-1040"></span>
-<span class="source-line-no">1041</span><span id="line-1041">  /**</span>
-<span class="source-line-no">1042</span><span id="line-1042">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">1043</span><span id="line-1043">   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean-equal"&gt;op:boolean-equal&lt;/a&gt;.</span>
-<span class="source-line-no">1044</span><span id="line-1044">   *</span>
-<span class="source-line-no">1045</span><span id="line-1045">   * @param arg1</span>
-<span class="source-line-no">1046</span><span id="line-1046">   *          the first boolean to check</span>
-<span class="source-line-no">1047</span><span id="line-1047">   * @param arg2</span>
-<span class="source-line-no">1048</span><span id="line-1048">   *          the second boolean to check</span>
-<span class="source-line-no">1049</span><span id="line-1049">   * @return {@code true} if the first boolean is equal to the second, or</span>
-<span class="source-line-no">1050</span><span id="line-1050">   *         {@code false} otherwise</span>
-<span class="source-line-no">1051</span><span id="line-1051">   */</span>
-<span class="source-line-no">1052</span><span id="line-1052">  @NonNull</span>
-<span class="source-line-no">1053</span><span id="line-1053">  public static IBooleanItem opBooleanEqual(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {</span>
-<span class="source-line-no">1054</span><span id="line-1054">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
-<span class="source-line-no">1055</span><span id="line-1055">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
-<span class="source-line-no">1056</span><span id="line-1056"></span>
-<span class="source-line-no">1057</span><span id="line-1057">    return IBooleanItem.valueOf(left == right);</span>
-<span class="source-line-no">1058</span><span id="line-1058">  }</span>
-<span class="source-line-no">1059</span><span id="line-1059"></span>
-<span class="source-line-no">1060</span><span id="line-1060">  /**</span>
-<span class="source-line-no">1061</span><span id="line-1061">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">1062</span><span id="line-1062">   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean-greater-than"&gt;op:boolean-greater-than&lt;/a&gt;.</span>
-<span class="source-line-no">1063</span><span id="line-1063">   *</span>
-<span class="source-line-no">1064</span><span id="line-1064">   * @param arg1</span>
-<span class="source-line-no">1065</span><span id="line-1065">   *          the first boolean to check</span>
-<span class="source-line-no">1066</span><span id="line-1066">   * @param arg2</span>
-<span class="source-line-no">1067</span><span id="line-1067">   *          the second boolean to check</span>
-<span class="source-line-no">1068</span><span id="line-1068">   * @return {@code true} if the first argument is {@link IBooleanItem#TRUE} and</span>
-<span class="source-line-no">1069</span><span id="line-1069">   *         the second is {@link IBooleanItem#FALSE}, or {@code false} otherwise</span>
-<span class="source-line-no">1070</span><span id="line-1070">   */</span>
-<span class="source-line-no">1071</span><span id="line-1071">  @NonNull</span>
-<span class="source-line-no">1072</span><span id="line-1072">  public static IBooleanItem opBooleanGreaterThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {</span>
-<span class="source-line-no">1073</span><span id="line-1073">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
-<span class="source-line-no">1074</span><span id="line-1074">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
-<span class="source-line-no">1075</span><span id="line-1075"></span>
-<span class="source-line-no">1076</span><span id="line-1076">    return IBooleanItem.valueOf(left &amp;&amp; !right);</span>
-<span class="source-line-no">1077</span><span id="line-1077">  }</span>
-<span class="source-line-no">1078</span><span id="line-1078"></span>
-<span class="source-line-no">1079</span><span id="line-1079">  /**</span>
-<span class="source-line-no">1080</span><span id="line-1080">   * Based on XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">1081</span><span id="line-1081">   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean-less-than"&gt;op:boolean-less-than&lt;/a&gt;.</span>
-<span class="source-line-no">1082</span><span id="line-1082">   *</span>
-<span class="source-line-no">1083</span><span id="line-1083">   * @param arg1</span>
-<span class="source-line-no">1084</span><span id="line-1084">   *          the first boolean to check</span>
-<span class="source-line-no">1085</span><span id="line-1085">   * @param arg2</span>
-<span class="source-line-no">1086</span><span id="line-1086">   *          the second boolean to check</span>
-<span class="source-line-no">1087</span><span id="line-1087">   * @return {@code true} if the first argument is {@link IBooleanItem#FALSE} and</span>
-<span class="source-line-no">1088</span><span id="line-1088">   *         the second is {@link IBooleanItem#TRUE}, or {@code false} otherwise</span>
-<span class="source-line-no">1089</span><span id="line-1089">   */</span>
-<span class="source-line-no">1090</span><span id="line-1090">  @NonNull</span>
-<span class="source-line-no">1091</span><span id="line-1091">  public static IBooleanItem opBooleanLessThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {</span>
-<span class="source-line-no">1092</span><span id="line-1092">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
-<span class="source-line-no">1093</span><span id="line-1093">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
-<span class="source-line-no">1094</span><span id="line-1094"></span>
-<span class="source-line-no">1095</span><span id="line-1095">    return IBooleanItem.valueOf(!left &amp;&amp; right);</span>
-<span class="source-line-no">1096</span><span id="line-1096">  }</span>
-<span class="source-line-no">1097</span><span id="line-1097">}</span>
+<span class="source-line-no">934</span><span id="line-934">    if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
+<span class="source-line-no">935</span><span id="line-935">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
+<span class="source-line-no">936</span><span id="line-936">          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);</span>
+<span class="source-line-no">937</span><span id="line-937">    }</span>
+<span class="source-line-no">938</span><span id="line-938"></span>
+<span class="source-line-no">939</span><span id="line-939">    BigDecimal decimalDividend = dividend.asDecimal();</span>
+<span class="source-line-no">940</span><span id="line-940"></span>
+<span class="source-line-no">941</span><span id="line-941">    INumericItem retval;</span>
+<span class="source-line-no">942</span><span id="line-942">    if (BigDecimal.ZERO.equals(decimalDividend)) {</span>
+<span class="source-line-no">943</span><span id="line-943">      retval = dividend;</span>
+<span class="source-line-no">944</span><span id="line-944">    } else {</span>
+<span class="source-line-no">945</span><span id="line-945">      @SuppressWarnings("null")</span>
+<span class="source-line-no">946</span><span id="line-946">      @NonNull</span>
+<span class="source-line-no">947</span><span id="line-947">      BigDecimal result = decimalDividend.remainder(decimalDivisor, FunctionUtils.MATH_CONTEXT);</span>
+<span class="source-line-no">948</span><span id="line-948">      retval = IDecimalItem.valueOf(result);</span>
+<span class="source-line-no">949</span><span id="line-949">    }</span>
+<span class="source-line-no">950</span><span id="line-950">    return retval;</span>
+<span class="source-line-no">951</span><span id="line-951">  }</span>
+<span class="source-line-no">952</span><span id="line-952"></span>
+<span class="source-line-no">953</span><span id="line-953">  /**</span>
+<span class="source-line-no">954</span><span id="line-954">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">955</span><span id="line-955">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-unary-minus"&gt;op:numeric-unary-minus&lt;/a&gt;.</span>
+<span class="source-line-no">956</span><span id="line-956">   *</span>
+<span class="source-line-no">957</span><span id="line-957">   * @param item</span>
+<span class="source-line-no">958</span><span id="line-958">   *          the number whose sign is to be reversed</span>
+<span class="source-line-no">959</span><span id="line-959">   * @return the number with a reversed sign</span>
+<span class="source-line-no">960</span><span id="line-960">   */</span>
+<span class="source-line-no">961</span><span id="line-961">  @NonNull</span>
+<span class="source-line-no">962</span><span id="line-962">  public static INumericItem opNumericUnaryMinus(@NonNull INumericItem item) {</span>
+<span class="source-line-no">963</span><span id="line-963">    INumericItem retval;</span>
+<span class="source-line-no">964</span><span id="line-964">    if (item instanceof IIntegerItem) {</span>
+<span class="source-line-no">965</span><span id="line-965">      // create a decimal result</span>
+<span class="source-line-no">966</span><span id="line-966">      BigInteger integer = item.asInteger();</span>
+<span class="source-line-no">967</span><span id="line-967"></span>
+<span class="source-line-no">968</span><span id="line-968">      @SuppressWarnings("null")</span>
+<span class="source-line-no">969</span><span id="line-969">      @NonNull</span>
+<span class="source-line-no">970</span><span id="line-970">      BigInteger result = integer.negate();</span>
+<span class="source-line-no">971</span><span id="line-971">      retval = IIntegerItem.valueOf(result);</span>
+<span class="source-line-no">972</span><span id="line-972">    } else if (item instanceof IDecimalItem) {</span>
+<span class="source-line-no">973</span><span id="line-973">      // create a decimal result</span>
+<span class="source-line-no">974</span><span id="line-974">      BigDecimal decimal = item.asDecimal();</span>
+<span class="source-line-no">975</span><span id="line-975"></span>
+<span class="source-line-no">976</span><span id="line-976">      @SuppressWarnings("null")</span>
+<span class="source-line-no">977</span><span id="line-977">      @NonNull</span>
+<span class="source-line-no">978</span><span id="line-978">      BigDecimal result = decimal.negate(FunctionUtils.MATH_CONTEXT);</span>
+<span class="source-line-no">979</span><span id="line-979">      retval = IDecimalItem.valueOf(result);</span>
+<span class="source-line-no">980</span><span id="line-980">    } else {</span>
+<span class="source-line-no">981</span><span id="line-981">      throw new InvalidTypeMetapathException(item);</span>
+<span class="source-line-no">982</span><span id="line-982">    }</span>
+<span class="source-line-no">983</span><span id="line-983">    return retval;</span>
+<span class="source-line-no">984</span><span id="line-984">  }</span>
+<span class="source-line-no">985</span><span id="line-985"></span>
+<span class="source-line-no">986</span><span id="line-986">  /**</span>
+<span class="source-line-no">987</span><span id="line-987">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">988</span><span id="line-988">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-equal"&gt;op:numeric-equal&lt;/a&gt;.</span>
+<span class="source-line-no">989</span><span id="line-989">   *</span>
+<span class="source-line-no">990</span><span id="line-990">   * @param arg1</span>
+<span class="source-line-no">991</span><span id="line-991">   *          the first number to check for equality</span>
+<span class="source-line-no">992</span><span id="line-992">   * @param arg2</span>
+<span class="source-line-no">993</span><span id="line-993">   *          the second number to check for equality</span>
+<span class="source-line-no">994</span><span id="line-994">   * @return {@code true} if the numbers are numerically equal or {@code false}</span>
+<span class="source-line-no">995</span><span id="line-995">   *         otherwise</span>
+<span class="source-line-no">996</span><span id="line-996">   */</span>
+<span class="source-line-no">997</span><span id="line-997">  @NonNull</span>
+<span class="source-line-no">998</span><span id="line-998">  public static IBooleanItem opNumericEqual(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {</span>
+<span class="source-line-no">999</span><span id="line-999">    IBooleanItem retval;</span>
+<span class="source-line-no">1000</span><span id="line-1000">    if (arg1 == null || arg2 == null) {</span>
+<span class="source-line-no">1001</span><span id="line-1001">      retval = IBooleanItem.FALSE;</span>
+<span class="source-line-no">1002</span><span id="line-1002">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
+<span class="source-line-no">1003</span><span id="line-1003">      retval = IBooleanItem.valueOf(arg1.asInteger().equals(arg2.asInteger()));</span>
+<span class="source-line-no">1004</span><span id="line-1004">    } else {</span>
+<span class="source-line-no">1005</span><span id="line-1005">      retval = IBooleanItem.valueOf(arg1.asDecimal().equals(arg2.asDecimal()));</span>
+<span class="source-line-no">1006</span><span id="line-1006">    }</span>
+<span class="source-line-no">1007</span><span id="line-1007">    return retval;</span>
+<span class="source-line-no">1008</span><span id="line-1008">  }</span>
+<span class="source-line-no">1009</span><span id="line-1009"></span>
+<span class="source-line-no">1010</span><span id="line-1010">  /**</span>
+<span class="source-line-no">1011</span><span id="line-1011">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">1012</span><span id="line-1012">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-greater-than"&gt;op:numeric-greater-than&lt;/a&gt;.</span>
+<span class="source-line-no">1013</span><span id="line-1013">   *</span>
+<span class="source-line-no">1014</span><span id="line-1014">   * @param arg1</span>
+<span class="source-line-no">1015</span><span id="line-1015">   *          the first number to check</span>
+<span class="source-line-no">1016</span><span id="line-1016">   * @param arg2</span>
+<span class="source-line-no">1017</span><span id="line-1017">   *          the second number to check</span>
+<span class="source-line-no">1018</span><span id="line-1018">   * @return {@code true} if the first number is greater than or equal to the</span>
+<span class="source-line-no">1019</span><span id="line-1019">   *         second, or {@code false} otherwise</span>
+<span class="source-line-no">1020</span><span id="line-1020">   */</span>
+<span class="source-line-no">1021</span><span id="line-1021">  @NonNull</span>
+<span class="source-line-no">1022</span><span id="line-1022">  public static IBooleanItem opNumericGreaterThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {</span>
+<span class="source-line-no">1023</span><span id="line-1023">    IBooleanItem retval;</span>
+<span class="source-line-no">1024</span><span id="line-1024">    if (arg1 == null || arg2 == null) {</span>
+<span class="source-line-no">1025</span><span id="line-1025">      retval = IBooleanItem.FALSE;</span>
+<span class="source-line-no">1026</span><span id="line-1026">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
+<span class="source-line-no">1027</span><span id="line-1027">      int result = arg1.asInteger().compareTo(arg2.asInteger());</span>
+<span class="source-line-no">1028</span><span id="line-1028">      retval = IBooleanItem.valueOf(result &gt; 0);</span>
+<span class="source-line-no">1029</span><span id="line-1029">    } else {</span>
+<span class="source-line-no">1030</span><span id="line-1030">      int result = arg1.asDecimal().compareTo(arg2.asDecimal());</span>
+<span class="source-line-no">1031</span><span id="line-1031">      retval = IBooleanItem.valueOf(result &gt; 0);</span>
+<span class="source-line-no">1032</span><span id="line-1032">    }</span>
+<span class="source-line-no">1033</span><span id="line-1033">    return retval;</span>
+<span class="source-line-no">1034</span><span id="line-1034">  }</span>
+<span class="source-line-no">1035</span><span id="line-1035"></span>
+<span class="source-line-no">1036</span><span id="line-1036">  /**</span>
+<span class="source-line-no">1037</span><span id="line-1037">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">1038</span><span id="line-1038">   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-less-than"&gt;op:numeric-less-than&lt;/a&gt;.</span>
+<span class="source-line-no">1039</span><span id="line-1039">   *</span>
+<span class="source-line-no">1040</span><span id="line-1040">   * @param arg1</span>
+<span class="source-line-no">1041</span><span id="line-1041">   *          the first number to check</span>
+<span class="source-line-no">1042</span><span id="line-1042">   * @param arg2</span>
+<span class="source-line-no">1043</span><span id="line-1043">   *          the second number to check</span>
+<span class="source-line-no">1044</span><span id="line-1044">   * @return {@code true} if the first number is less than or equal to the second,</span>
+<span class="source-line-no">1045</span><span id="line-1045">   *         or {@code false} otherwise</span>
+<span class="source-line-no">1046</span><span id="line-1046">   */</span>
+<span class="source-line-no">1047</span><span id="line-1047">  @NonNull</span>
+<span class="source-line-no">1048</span><span id="line-1048">  public static IBooleanItem opNumericLessThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {</span>
+<span class="source-line-no">1049</span><span id="line-1049">    IBooleanItem retval;</span>
+<span class="source-line-no">1050</span><span id="line-1050">    if (arg1 == null || arg2 == null) {</span>
+<span class="source-line-no">1051</span><span id="line-1051">      retval = IBooleanItem.FALSE;</span>
+<span class="source-line-no">1052</span><span id="line-1052">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
+<span class="source-line-no">1053</span><span id="line-1053">      int result = arg1.asInteger().compareTo(arg2.asInteger());</span>
+<span class="source-line-no">1054</span><span id="line-1054">      retval = IBooleanItem.valueOf(result &lt; 0);</span>
+<span class="source-line-no">1055</span><span id="line-1055">    } else {</span>
+<span class="source-line-no">1056</span><span id="line-1056">      int result = arg1.asDecimal().compareTo(arg2.asDecimal());</span>
+<span class="source-line-no">1057</span><span id="line-1057">      retval = IBooleanItem.valueOf(result &lt; 0);</span>
+<span class="source-line-no">1058</span><span id="line-1058">    }</span>
+<span class="source-line-no">1059</span><span id="line-1059">    return retval;</span>
+<span class="source-line-no">1060</span><span id="line-1060">  }</span>
+<span class="source-line-no">1061</span><span id="line-1061"></span>
+<span class="source-line-no">1062</span><span id="line-1062">  /**</span>
+<span class="source-line-no">1063</span><span id="line-1063">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">1064</span><span id="line-1064">   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean-equal"&gt;op:boolean-equal&lt;/a&gt;.</span>
+<span class="source-line-no">1065</span><span id="line-1065">   *</span>
+<span class="source-line-no">1066</span><span id="line-1066">   * @param arg1</span>
+<span class="source-line-no">1067</span><span id="line-1067">   *          the first boolean to check</span>
+<span class="source-line-no">1068</span><span id="line-1068">   * @param arg2</span>
+<span class="source-line-no">1069</span><span id="line-1069">   *          the second boolean to check</span>
+<span class="source-line-no">1070</span><span id="line-1070">   * @return {@code true} if the first boolean is equal to the second, or</span>
+<span class="source-line-no">1071</span><span id="line-1071">   *         {@code false} otherwise</span>
+<span class="source-line-no">1072</span><span id="line-1072">   */</span>
+<span class="source-line-no">1073</span><span id="line-1073">  @NonNull</span>
+<span class="source-line-no">1074</span><span id="line-1074">  public static IBooleanItem opBooleanEqual(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {</span>
+<span class="source-line-no">1075</span><span id="line-1075">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
+<span class="source-line-no">1076</span><span id="line-1076">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
+<span class="source-line-no">1077</span><span id="line-1077"></span>
+<span class="source-line-no">1078</span><span id="line-1078">    return IBooleanItem.valueOf(left == right);</span>
+<span class="source-line-no">1079</span><span id="line-1079">  }</span>
+<span class="source-line-no">1080</span><span id="line-1080"></span>
+<span class="source-line-no">1081</span><span id="line-1081">  /**</span>
+<span class="source-line-no">1082</span><span id="line-1082">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">1083</span><span id="line-1083">   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean-greater-than"&gt;op:boolean-greater-than&lt;/a&gt;.</span>
+<span class="source-line-no">1084</span><span id="line-1084">   *</span>
+<span class="source-line-no">1085</span><span id="line-1085">   * @param arg1</span>
+<span class="source-line-no">1086</span><span id="line-1086">   *          the first boolean to check</span>
+<span class="source-line-no">1087</span><span id="line-1087">   * @param arg2</span>
+<span class="source-line-no">1088</span><span id="line-1088">   *          the second boolean to check</span>
+<span class="source-line-no">1089</span><span id="line-1089">   * @return {@code true} if the first argument is {@link IBooleanItem#TRUE} and</span>
+<span class="source-line-no">1090</span><span id="line-1090">   *         the second is {@link IBooleanItem#FALSE}, or {@code false} otherwise</span>
+<span class="source-line-no">1091</span><span id="line-1091">   */</span>
+<span class="source-line-no">1092</span><span id="line-1092">  @NonNull</span>
+<span class="source-line-no">1093</span><span id="line-1093">  public static IBooleanItem opBooleanGreaterThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {</span>
+<span class="source-line-no">1094</span><span id="line-1094">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
+<span class="source-line-no">1095</span><span id="line-1095">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
+<span class="source-line-no">1096</span><span id="line-1096"></span>
+<span class="source-line-no">1097</span><span id="line-1097">    return IBooleanItem.valueOf(left &amp;&amp; !right);</span>
+<span class="source-line-no">1098</span><span id="line-1098">  }</span>
+<span class="source-line-no">1099</span><span id="line-1099"></span>
+<span class="source-line-no">1100</span><span id="line-1100">  /**</span>
+<span class="source-line-no">1101</span><span id="line-1101">   * Based on XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">1102</span><span id="line-1102">   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean-less-than"&gt;op:boolean-less-than&lt;/a&gt;.</span>
+<span class="source-line-no">1103</span><span id="line-1103">   *</span>
+<span class="source-line-no">1104</span><span id="line-1104">   * @param arg1</span>
+<span class="source-line-no">1105</span><span id="line-1105">   *          the first boolean to check</span>
+<span class="source-line-no">1106</span><span id="line-1106">   * @param arg2</span>
+<span class="source-line-no">1107</span><span id="line-1107">   *          the second boolean to check</span>
+<span class="source-line-no">1108</span><span id="line-1108">   * @return {@code true} if the first argument is {@link IBooleanItem#FALSE} and</span>
+<span class="source-line-no">1109</span><span id="line-1109">   *         the second is {@link IBooleanItem#TRUE}, or {@code false} otherwise</span>
+<span class="source-line-no">1110</span><span id="line-1110">   */</span>
+<span class="source-line-no">1111</span><span id="line-1111">  @NonNull</span>
+<span class="source-line-no">1112</span><span id="line-1112">  public static IBooleanItem opBooleanLessThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {</span>
+<span class="source-line-no">1113</span><span id="line-1113">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
+<span class="source-line-no">1114</span><span id="line-1114">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
+<span class="source-line-no">1115</span><span id="line-1115"></span>
+<span class="source-line-no">1116</span><span id="line-1116">    return IBooleanItem.valueOf(!left &amp;&amp; right);</span>
+<span class="source-line-no">1117</span><span id="line-1117">  }</span>
+<span class="source-line-no">1118</span><span id="line-1118">}</span>
 
 
 

@@ -68,7 +68,7 @@ public class FlagReference implements IBoundObject {
       name = &quot;required&quot;,
       defaultValue = &quot;no&quot;,
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = &quot;yes&quot;, description = &quot;&quot;), @AllowedValue(value = &quot;no&quot;, description = &quot;&quot;)}))
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = &quot;yes&quot;, description = &quot;The flag is required.&quot;), @AllowedValue(value = &quot;no&quot;, description = &quot;The flag is optional.&quot;)}))
   )
   private String _required;
 

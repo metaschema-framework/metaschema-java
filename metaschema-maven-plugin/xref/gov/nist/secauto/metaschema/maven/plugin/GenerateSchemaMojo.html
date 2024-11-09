@@ -222,91 +222,92 @@
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>       @NonNull IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; schemaGenerationConfig,
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>       @NonNull Path schemaPath,
 <a class="jxr_linenumber" name="L216" href="#L216">216</a>       @NonNull ISchemaGenerator generator) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">try</strong> (@SuppressWarnings(<span class="jxr_string">"resource"</span>) Writer writer = ObjectUtils.notNull(Files.newBufferedWriter(
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>         schemaPath,
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>         StandardCharsets.UTF_8,
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>         StandardOpenOption.CREATE,
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>         StandardOpenOption.WRITE,
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>         StandardOpenOption.TRUNCATE_EXISTING))) {
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>       generator.generateFromModule(module, writer, schemaGenerationConfig);
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>     }
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>   }
-<a class="jxr_linenumber" name="L226" href="#L226">226</a> 
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>   @Override
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> execute() <strong class="jxr_keyword">throws</strong> MojoExecutionException {
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>     File staleFile = getStaleFile();
-<a class="jxr_linenumber" name="L230" href="#L230">230</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>       staleFile = ObjectUtils.notNull(staleFile.getCanonicalFile());
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>     } <strong class="jxr_keyword">catch</strong> (IOException ex) {
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>       <strong class="jxr_keyword">if</strong> (getLog().isWarnEnabled()) {
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>         getLog().warn(<span class="jxr_string">"Unable to resolve canonical path to stale file. Treating it as not existing."</span>, ex);
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>       }
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>     }
-<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>     <strong class="jxr_keyword">boolean</strong> generate;
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>     <strong class="jxr_keyword">if</strong> (shouldExecutionBeSkipped()) {
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>       <strong class="jxr_keyword">if</strong> (getLog().isDebugEnabled()) {
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>         getLog().debug(String.format(<span class="jxr_string">"Schema generation is configured to be skipped. Skipping."</span>));
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>       }
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>       generate = false;
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (staleFile.exists()) {
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>       generate = isGenerationRequired();
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>       <strong class="jxr_keyword">if</strong> (getLog().isInfoEnabled()) {
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>         getLog().info(String.format(<span class="jxr_string">"Stale file '%s' doesn't exist! Generating source files."</span>, staleFile.getPath()));
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>       }
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>       generate = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>     }
-<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>     <strong class="jxr_keyword">if</strong> (generate) {
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>       performGeneration();
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>       createStaleFile(staleFile);
-<a class="jxr_linenumber" name="L256" href="#L256">256</a> 
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>       <em class="jxr_comment">// for m2e</em>
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>       getBuildContext().refresh(getOutputDirectory());
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>     }
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>     <em class="jxr_comment">// // add generated sources to Maven</em>
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <em class="jxr_comment">// try {</em>
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>     <em class="jxr_comment">// getMavenProject()..addCompileSourceRoot(getOutputDirectory().getCanonicalFile().getPath());</em>
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>     <em class="jxr_comment">// } catch (IOException ex) {</em>
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>     <em class="jxr_comment">// throw new MojoExecutionException("Unable to add output directory to maven</em>
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>     <em class="jxr_comment">// sources.", ex);</em>
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>     <em class="jxr_comment">// }</em>
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>   }
-<a class="jxr_linenumber" name="L268" href="#L268">268</a> 
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>   @SuppressWarnings(<span class="jxr_string">"PMD.AvoidCatchingGenericException"</span>)
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> performGeneration() <strong class="jxr_keyword">throws</strong> MojoExecutionException {
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>     File outputDir = getOutputDirectory();
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>     <strong class="jxr_keyword">if</strong> (getLog().isDebugEnabled()) {
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>       getLog().debug(String.format(<span class="jxr_string">"Using outputDirectory: %s"</span>, outputDir.getPath()));
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>     }
-<a class="jxr_linenumber" name="L275" href="#L275">275</a> 
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>     <strong class="jxr_keyword">if</strong> (!outputDir.exists() &amp;&amp; !outputDir.mkdirs()) {
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(<span class="jxr_string">"Unable to create output directory: "</span> + outputDir);
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>     }
-<a class="jxr_linenumber" name="L279" href="#L279">279</a> 
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>     IBindingContext bindingContext;
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>       bindingContext = newBindingContext();
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>     } <strong class="jxr_keyword">catch</strong> (MetaschemaException | IOException ex) {
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(<span class="jxr_string">"Failed to create the binding context"</span>, ex);
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>     }
-<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>     IBindingModuleLoader loader = bindingContext.newModuleLoader();
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>     loader.allowEntityResolution();
-<a class="jxr_linenumber" name="L289" href="#L289">289</a> 
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>     <em class="jxr_comment">// generate schemas based on provided metaschema sources</em>
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     Set&lt;IModule&gt; modules;
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>       modules = getModulesToGenerateFor(bindingContext);
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>     } <strong class="jxr_keyword">catch</strong> (Exception ex) {
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(<span class="jxr_string">"Loading of metaschema modules failed"</span>, ex);
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>     }
-<a class="jxr_linenumber" name="L297" href="#L297">297</a> 
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     generate(modules);
-<a class="jxr_linenumber" name="L299" href="#L299">299</a> 
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>   }
-<a class="jxr_linenumber" name="L301" href="#L301">301</a> }
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">try</strong> (@SuppressWarnings(<span class="jxr_string">"resource"</span>)
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>     Writer writer = ObjectUtils.notNull(Files.newBufferedWriter(
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>         schemaPath,
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>         StandardCharsets.UTF_8,
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         StandardOpenOption.CREATE,
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>         StandardOpenOption.WRITE,
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>         StandardOpenOption.TRUNCATE_EXISTING))) {
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>       generator.generateFromModule(module, writer, schemaGenerationConfig);
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>     }
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>   }
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> 
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>   @Override
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> execute() <strong class="jxr_keyword">throws</strong> MojoExecutionException {
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     File staleFile = getStaleFile();
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>       staleFile = ObjectUtils.notNull(staleFile.getCanonicalFile());
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     } <strong class="jxr_keyword">catch</strong> (IOException ex) {
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>       <strong class="jxr_keyword">if</strong> (getLog().isWarnEnabled()) {
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>         getLog().warn(<span class="jxr_string">"Unable to resolve canonical path to stale file. Treating it as not existing."</span>, ex);
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>       }
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>     }
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> 
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     <strong class="jxr_keyword">boolean</strong> generate;
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>     <strong class="jxr_keyword">if</strong> (shouldExecutionBeSkipped()) {
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>       <strong class="jxr_keyword">if</strong> (getLog().isDebugEnabled()) {
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         getLog().debug(String.format(<span class="jxr_string">"Schema generation is configured to be skipped. Skipping."</span>));
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>       }
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>       generate = false;
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (staleFile.exists()) {
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>       generate = isGenerationRequired();
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>       <strong class="jxr_keyword">if</strong> (getLog().isInfoEnabled()) {
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         getLog().info(String.format(<span class="jxr_string">"Stale file '%s' doesn't exist! Generating source files."</span>, staleFile.getPath()));
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>       }
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>       generate = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     }
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     <strong class="jxr_keyword">if</strong> (generate) {
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>       performGeneration();
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>       createStaleFile(staleFile);
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> 
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>       <em class="jxr_comment">// for m2e</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>       getBuildContext().refresh(getOutputDirectory());
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     }
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <em class="jxr_comment">// // add generated sources to Maven</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     <em class="jxr_comment">// try {</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     <em class="jxr_comment">// getMavenProject()..addCompileSourceRoot(getOutputDirectory().getCanonicalFile().getPath());</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>     <em class="jxr_comment">// } catch (IOException ex) {</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     <em class="jxr_comment">// throw new MojoExecutionException("Unable to add output directory to maven</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     <em class="jxr_comment">// sources.", ex);</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>     <em class="jxr_comment">// }</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>   }
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> 
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>   @SuppressWarnings(<span class="jxr_string">"PMD.AvoidCatchingGenericException"</span>)
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> performGeneration() <strong class="jxr_keyword">throws</strong> MojoExecutionException {
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>     File outputDir = getOutputDirectory();
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     <strong class="jxr_keyword">if</strong> (getLog().isDebugEnabled()) {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>       getLog().debug(String.format(<span class="jxr_string">"Using outputDirectory: %s"</span>, outputDir.getPath()));
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     }
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> 
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     <strong class="jxr_keyword">if</strong> (!outputDir.exists() &amp;&amp; !outputDir.mkdirs()) {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(<span class="jxr_string">"Unable to create output directory: "</span> + outputDir);
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     }
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> 
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>     IBindingContext bindingContext;
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>       bindingContext = newBindingContext();
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>     } <strong class="jxr_keyword">catch</strong> (MetaschemaException | IOException ex) {
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(<span class="jxr_string">"Failed to create the binding context"</span>, ex);
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>     }
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> 
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     IBindingModuleLoader loader = bindingContext.newModuleLoader();
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     loader.allowEntityResolution();
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> 
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <em class="jxr_comment">// generate schemas based on provided metaschema sources</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     Set&lt;IModule&gt; modules;
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>       modules = getModulesToGenerateFor(bindingContext);
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     } <strong class="jxr_keyword">catch</strong> (Exception ex) {
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(<span class="jxr_string">"Loading of metaschema modules failed"</span>, ex);
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     }
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> 
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>     generate(modules);
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> 
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>   }
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

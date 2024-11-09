@@ -25,54 +25,55 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="fc" id="L25">public class MetapathFormatter implements IPathFormatter {</span>
 
   @Override
-  public @NonNull String formatMetaschema(IModuleNodeItem metaschema) {
+  public @NonNull
+  String formatMetaschema(IModuleNodeItem metaschema) {
     // this will result in a slash being generated using the join in the format
     // method
-<span class="fc" id="L31">    return &quot;&quot;;</span>
+<span class="fc" id="L32">    return &quot;&quot;;</span>
   }
 
   @Override
   public String formatDocument(IDocumentNodeItem document) {
     // this will result in a slash being generated using the join in the format
     // method
-<span class="nc" id="L38">    return &quot;&quot;;</span>
+<span class="nc" id="L39">    return &quot;&quot;;</span>
   }
 
   @Override
   public String formatRootAssembly(IRootAssemblyNodeItem root) {
-<span class="nc" id="L43">    return ObjectUtils.notNull(root.getQName().getLocalPart());</span>
+<span class="nc" id="L44">    return ObjectUtils.notNull(root.getQName().getLocalPart());</span>
   }
 
   @Override
   public String formatAssembly(IAssemblyNodeItem assembly) {
     // TODO: does it make sense to use this for an intermediate that has no parent?
-<span class="fc" id="L49">    return formatModelPathSegment(assembly);</span>
+<span class="fc" id="L50">    return formatModelPathSegment(assembly);</span>
   }
 
   @Override
   public String formatAssembly(IAssemblyInstanceGroupedNodeItem assembly) {
     // TODO: does it make sense to use this for an intermediate that has no parent?
-<span class="nc" id="L55">    return formatModelPathSegment(assembly);</span>
+<span class="nc" id="L56">    return formatModelPathSegment(assembly);</span>
   }
 
   @Override
   public String formatField(IFieldNodeItem field) {
-<span class="nc" id="L60">    return formatModelPathSegment(field);</span>
+<span class="nc" id="L61">    return formatModelPathSegment(field);</span>
   }
 
   @Override
   public String formatFlag(IFlagNodeItem flag) {
-<span class="fc" id="L65">    return &quot;@&quot; + flag.getQName();</span>
+<span class="fc" id="L66">    return &quot;@&quot; + flag.getQName();</span>
   }
 
   @SuppressWarnings(&quot;null&quot;)
   @NonNull
   private static String formatModelPathSegment(@NonNull IModelNodeItem&lt;?, ?&gt; item) {
-<span class="fc" id="L71">    StringBuilder builder = new StringBuilder(item.getQName().getLocalPart())</span>
-<span class="fc" id="L72">        .append('[')</span>
-<span class="fc" id="L73">        .append(item.getPosition())</span>
-<span class="fc" id="L74">        .append(']');</span>
-<span class="fc" id="L75">    return builder.toString();</span>
+<span class="fc" id="L72">    StringBuilder builder = new StringBuilder(item.getQName().getLocalPart())</span>
+<span class="fc" id="L73">        .append('[')</span>
+<span class="fc" id="L74">        .append(item.getPosition())</span>
+<span class="fc" id="L75">        .append(']');</span>
+<span class="fc" id="L76">    return builder.toString();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -26,18 +26,18 @@ public class XmlProseCompositDatatypeProvider
 <span class="fc" id="L26">  }</span>
 
   @Override
-  public @NonNull Set&lt;String&gt; generateDatatypes(Set&lt;String&gt; requiredTypes,
+  @NonNull
+  public Set&lt;String&gt; generateDatatypes(Set&lt;String&gt; requiredTypes,
       @NonNull XMLStreamWriter2 writer) throws XMLStreamException {
-<span class="fc" id="L31">    Set&lt;String&gt; result = super.generateDatatypes(requiredTypes, writer);</span>
+<span class="fc" id="L32">    Set&lt;String&gt; result = super.generateDatatypes(requiredTypes, writer);</span>
 
-<span class="fc bfc" id="L33" title="All 2 branches covered.">    if (!result.isEmpty()) {</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">    if (!result.isEmpty()) {</span>
       // apply core markup types
-<span class="fc" id="L35">      Collection&lt;IDatatypeContent&gt; datatypes = proseBaseProvider.getDatatypes().values();</span>
-<span class="fc" id="L36">      Set&lt;String&gt; proseBaseTypes = datatypes.stream().map(IDatatypeContent::getTypeName).collect(Collectors.toSet());</span>
-<span class="fc" id="L37">      proseBaseProvider.generateDatatypes(proseBaseTypes, writer);</span>
+<span class="fc" id="L36">      Collection&lt;IDatatypeContent&gt; datatypes = proseBaseProvider.getDatatypes().values();</span>
+<span class="fc" id="L37">      Set&lt;String&gt; proseBaseTypes = datatypes.stream().map(IDatatypeContent::getTypeName).collect(Collectors.toSet());</span>
+<span class="fc" id="L38">      proseBaseProvider.generateDatatypes(proseBaseTypes, writer);</span>
     }
-<span class="fc" id="L39">    return result;</span>
+<span class="fc" id="L40">    return result;</span>
   }
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

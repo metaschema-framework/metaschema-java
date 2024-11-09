@@ -182,15 +182,16 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull IAssemblyNodeItem parent,
       int position,
       @NonNull Object value) {
-    @NonNull IModelNodeItem&lt;?, ?&gt; item;
-<span class="pc bpc" id="L186" title="1 of 2 branches missed.">    if (instance instanceof IAssemblyInstance) {</span>
-<span class="nc" id="L187">      item = newAssemblyNodeItem((IAssemblyInstance) instance, parent, position, value);</span>
-<span class="pc bpc" id="L188" title="1 of 2 branches missed.">    } else if (instance instanceof IFieldInstance) {</span>
-<span class="fc" id="L189">      item = newFieldNodeItem((IFieldInstance) instance, parent, position, value);</span>
+    @NonNull
+    IModelNodeItem&lt;?, ?&gt; item;
+<span class="pc bpc" id="L187" title="1 of 2 branches missed.">    if (instance instanceof IAssemblyInstance) {</span>
+<span class="nc" id="L188">      item = newAssemblyNodeItem((IAssemblyInstance) instance, parent, position, value);</span>
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">    } else if (instance instanceof IFieldInstance) {</span>
+<span class="fc" id="L190">      item = newFieldNodeItem((IFieldInstance) instance, parent, position, value);</span>
     } else {
-<span class="nc" id="L191">      throw new UnsupportedOperationException(&quot;unsupported instance type: &quot; + instance.getClass().getName());</span>
+<span class="nc" id="L192">      throw new UnsupportedOperationException(&quot;unsupported instance type: &quot; + instance.getClass().getName());</span>
     }
-<span class="fc" id="L193">    return item;</span>
+<span class="fc" id="L194">    return item;</span>
   }
 
   /**
@@ -208,15 +209,16 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   protected IModelNodeItem&lt;?, ?&gt; newModelItem(
       @NonNull INamedModelInstance instance,
       @NonNull IAssemblyNodeItem parent) {
-    @NonNull IModelNodeItem&lt;?, ?&gt; item;
-<span class="fc bfc" id="L212" title="All 2 branches covered.">    if (instance instanceof IAssemblyInstance) {</span>
-<span class="fc" id="L213">      item = newAssemblyNodeItem((IAssemblyInstance) instance, parent);</span>
-<span class="pc bpc" id="L214" title="1 of 2 branches missed.">    } else if (instance instanceof IFieldInstance) {</span>
-<span class="fc" id="L215">      item = newFieldNodeItem((IFieldInstance) instance, parent);</span>
+    @NonNull
+    IModelNodeItem&lt;?, ?&gt; item;
+<span class="fc bfc" id="L214" title="All 2 branches covered.">    if (instance instanceof IAssemblyInstance) {</span>
+<span class="fc" id="L215">      item = newAssemblyNodeItem((IAssemblyInstance) instance, parent);</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">    } else if (instance instanceof IFieldInstance) {</span>
+<span class="fc" id="L217">      item = newFieldNodeItem((IFieldInstance) instance, parent);</span>
     } else {
-<span class="nc" id="L217">      throw new UnsupportedOperationException(&quot;unsupported instance type: &quot; + instance.getClass().getName());</span>
+<span class="nc" id="L219">      throw new UnsupportedOperationException(&quot;unsupported instance type: &quot; + instance.getClass().getName());</span>
     }
-<span class="fc" id="L219">    return item;</span>
+<span class="fc" id="L221">    return item;</span>
   }
 
   /**
@@ -228,21 +230,21 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   protected Stream&lt;? extends INamedModelInstance&gt; getNamedModelInstances(@NonNull IContainerModelAbsolute container) {
-<span class="fc" id="L231">    return ObjectUtils.notNull(container.getModelInstances().stream()</span>
-<span class="fc" id="L232">        .flatMap(instance -&gt; {</span>
+<span class="fc" id="L233">    return ObjectUtils.notNull(container.getModelInstances().stream()</span>
+<span class="fc" id="L234">        .flatMap(instance -&gt; {</span>
           Stream&lt;? extends INamedModelInstance&gt; retval;
-<span class="fc bfc" id="L234" title="All 4 branches covered.">          if (instance instanceof IAssemblyInstanceAbsolute || instance instanceof IFieldInstanceAbsolute) {</span>
-<span class="fc" id="L235">            retval = Stream.of((INamedModelInstanceAbsolute) instance);</span>
-<span class="fc bfc" id="L236" title="All 2 branches covered.">          } else if (instance instanceof IChoiceInstance) {</span>
+<span class="fc bfc" id="L236" title="All 4 branches covered.">          if (instance instanceof IAssemblyInstanceAbsolute || instance instanceof IFieldInstanceAbsolute) {</span>
+<span class="fc" id="L237">            retval = Stream.of((INamedModelInstanceAbsolute) instance);</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">          } else if (instance instanceof IChoiceInstance) {</span>
             // descend into the choice
-<span class="fc" id="L238">            retval = getNamedModelInstances((IChoiceInstance) instance);</span>
-<span class="pc bpc" id="L239" title="1 of 2 branches missed.">          } else if (instance instanceof IChoiceGroupInstance) {</span>
-<span class="fc" id="L240">            IChoiceGroupInstance choiceGroupInstance = (IChoiceGroupInstance) instance;</span>
-<span class="fc" id="L241">            retval = choiceGroupInstance.getNamedModelInstances().stream();</span>
-<span class="fc" id="L242">          } else {</span>
-<span class="nc" id="L243">            throw new UnsupportedOperationException(&quot;unsupported instance type: &quot; + instance.getClass().getName());</span>
+<span class="fc" id="L240">            retval = getNamedModelInstances((IChoiceInstance) instance);</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">          } else if (instance instanceof IChoiceGroupInstance) {</span>
+<span class="fc" id="L242">            IChoiceGroupInstance choiceGroupInstance = (IChoiceGroupInstance) instance;</span>
+<span class="fc" id="L243">            retval = choiceGroupInstance.getNamedModelInstances().stream();</span>
+<span class="fc" id="L244">          } else {</span>
+<span class="nc" id="L245">            throw new UnsupportedOperationException(&quot;unsupported instance type: &quot; + instance.getClass().getName());</span>
           }
-<span class="fc" id="L245">          return retval;</span>
+<span class="fc" id="L247">          return retval;</span>
         }));
   }
 
@@ -255,20 +257,20 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   protected Stream&lt;? extends IModelInstance&gt; getValuedModelInstances(@NonNull IContainerModelAbsolute container) {
-<span class="fc" id="L258">    return ObjectUtils.notNull(container.getModelInstances().stream()</span>
-<span class="fc" id="L259">        .flatMap(instance -&gt; {</span>
+<span class="fc" id="L260">    return ObjectUtils.notNull(container.getModelInstances().stream()</span>
+<span class="fc" id="L261">        .flatMap(instance -&gt; {</span>
           Stream&lt;? extends IModelInstance&gt; retval;
-<span class="pc bpc" id="L261" title="2 of 4 branches missed.">          if (instance instanceof IAssemblyInstanceAbsolute || instance instanceof IFieldInstanceAbsolute) {</span>
-<span class="fc" id="L262">            retval = Stream.of((INamedModelInstanceAbsolute) instance);</span>
-<span class="nc bnc" id="L263" title="All 2 branches missed.">          } else if (instance instanceof IChoiceInstance) {</span>
+<span class="pc bpc" id="L263" title="2 of 4 branches missed.">          if (instance instanceof IAssemblyInstanceAbsolute || instance instanceof IFieldInstanceAbsolute) {</span>
+<span class="fc" id="L264">            retval = Stream.of((INamedModelInstanceAbsolute) instance);</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">          } else if (instance instanceof IChoiceInstance) {</span>
             // descend into the choice
-<span class="nc" id="L265">            retval = getNamedModelInstances((IChoiceInstance) instance);</span>
-<span class="nc bnc" id="L266" title="All 2 branches missed.">          } else if (instance instanceof IChoiceGroupInstance) {</span>
-<span class="nc" id="L267">            retval = Stream.of((IChoiceGroupInstance) instance);</span>
+<span class="nc" id="L267">            retval = getNamedModelInstances((IChoiceInstance) instance);</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">          } else if (instance instanceof IChoiceGroupInstance) {</span>
+<span class="nc" id="L269">            retval = Stream.of((IChoiceGroupInstance) instance);</span>
           } else {
-<span class="nc" id="L269">            throw new UnsupportedOperationException(&quot;unsupported instance type: &quot; + instance.getClass().getName());</span>
+<span class="nc" id="L271">            throw new UnsupportedOperationException(&quot;unsupported instance type: &quot; + instance.getClass().getName());</span>
           }
-<span class="fc" id="L271">          return retval;</span>
+<span class="fc" id="L273">          return retval;</span>
         }));
   }
 }

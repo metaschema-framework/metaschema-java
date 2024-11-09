@@ -111,46 +111,47 @@ import edu.umd.cs.findbugs.annotations.NonNull;
           })
 <span class="fc" id="L112">          .collect(Collectors.toUnmodifiableList());</span>
 
-<span class="fc" id="L114">      @SuppressWarnings(&quot;resource&quot;) JsonGenerator writer = state.getWriter(); // NOPMD not owned</span>
+      @SuppressWarnings(&quot;resource&quot;)
+<span class="fc" id="L115">      JsonGenerator writer = state.getWriter(); // NOPMD not owned</span>
 
-<span class="fc bfc" id="L116" title="All 2 branches covered.">      if (rootEntries.size() == 1) {</span>
-<span class="fc" id="L117">        rootEntries.iterator().next().write(writer);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">      if (rootEntries.size() == 1) {</span>
+<span class="fc" id="L118">        rootEntries.iterator().next().write(writer);</span>
       } else {
-<span class="fc" id="L119">        writer.writeFieldName(&quot;oneOf&quot;);</span>
-<span class="fc" id="L120">        writer.writeStartArray();</span>
+<span class="fc" id="L120">        writer.writeFieldName(&quot;oneOf&quot;);</span>
+<span class="fc" id="L121">        writer.writeStartArray();</span>
 
-<span class="fc bfc" id="L122" title="All 2 branches covered.">        for (RootPropertyEntry root : rootEntries) {</span>
-<span class="pc bpc" id="L123" title="1 of 2 branches missed.">          assert root != null;</span>
-<span class="fc" id="L124">          writer.writeStartObject();</span>
-<span class="fc" id="L125">          root.write(writer);</span>
-<span class="fc" id="L126">          writer.writeEndObject();</span>
-<span class="fc" id="L127">        }</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        for (RootPropertyEntry root : rootEntries) {</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">          assert root != null;</span>
+<span class="fc" id="L125">          writer.writeStartObject();</span>
+<span class="fc" id="L126">          root.write(writer);</span>
+<span class="fc" id="L127">          writer.writeEndObject();</span>
+<span class="fc" id="L128">        }</span>
 
-<span class="fc" id="L129">        writer.writeEndArray();</span>
+<span class="fc" id="L130">        writer.writeEndArray();</span>
       }
 
-<span class="fc" id="L132">      state.writeEndObject();</span>
-<span class="nc" id="L133">    } catch (IOException ex) {</span>
-<span class="nc" id="L134">      throw new SchemaGenerationException(ex);</span>
-<span class="fc" id="L135">    }</span>
-<span class="fc" id="L136">  }</span>
+<span class="fc" id="L133">      state.writeEndObject();</span>
+<span class="nc" id="L134">    } catch (IOException ex) {</span>
+<span class="nc" id="L135">      throw new SchemaGenerationException(ex);</span>
+<span class="fc" id="L136">    }</span>
+<span class="fc" id="L137">  }</span>
 
   @NonNull
   private static Map&lt;String, ObjectNode&gt; generateRootProperties(
       @NonNull IAssemblyDefinition definition,
       @NonNull JsonGenerationState state) {
-<span class="fc" id="L142">    Map&lt;String, ObjectNode&gt; properties = new LinkedHashMap&lt;&gt;(); // NOPMD no concurrent access</span>
+<span class="fc" id="L143">    Map&lt;String, ObjectNode&gt; properties = new LinkedHashMap&lt;&gt;(); // NOPMD no concurrent access</span>
 
-<span class="fc" id="L144">    properties.put(&quot;$schema&quot;, JsonNodeFactory.instance.objectNode()</span>
-<span class="fc" id="L145">        .put(&quot;type&quot;, &quot;string&quot;)</span>
-<span class="fc" id="L146">        .put(&quot;format&quot;, &quot;uri-reference&quot;));</span>
+<span class="fc" id="L145">    properties.put(&quot;$schema&quot;, JsonNodeFactory.instance.objectNode()</span>
+<span class="fc" id="L146">        .put(&quot;type&quot;, &quot;string&quot;)</span>
+<span class="fc" id="L147">        .put(&quot;format&quot;, &quot;uri-reference&quot;));</span>
 
-<span class="fc" id="L148">    ObjectNode rootObj = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());</span>
-<span class="fc" id="L149">    IDefinitionJsonSchema&lt;IAssemblyDefinition&gt; schema = state.getSchema(IKey.of(definition));</span>
-<span class="fc" id="L150">    schema.generateSchemaOrRef(rootObj, state);</span>
+<span class="fc" id="L149">    ObjectNode rootObj = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());</span>
+<span class="fc" id="L150">    IDefinitionJsonSchema&lt;IAssemblyDefinition&gt; schema = state.getSchema(IKey.of(definition));</span>
+<span class="fc" id="L151">    schema.generateSchemaOrRef(rootObj, state);</span>
 
-<span class="fc" id="L152">    properties.put(definition.getRootJsonName(), rootObj);</span>
-<span class="fc" id="L153">    return properties;</span>
+<span class="fc" id="L153">    properties.put(definition.getRootJsonName(), rootObj);</span>
+<span class="fc" id="L154">    return properties;</span>
   }
 
   private static class RootPropertyEntry {
@@ -161,39 +162,39 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
     public RootPropertyEntry(
         @NonNull IAssemblyDefinition definition,
-<span class="fc" id="L164">        @NonNull JsonGenerationState state) {</span>
-<span class="fc" id="L165">      this.definition = definition;</span>
-<span class="fc" id="L166">      this.properties = generateRootProperties(definition, state);</span>
-<span class="fc" id="L167">    }</span>
+<span class="fc" id="L165">        @NonNull JsonGenerationState state) {</span>
+<span class="fc" id="L166">      this.definition = definition;</span>
+<span class="fc" id="L167">      this.properties = generateRootProperties(definition, state);</span>
+<span class="fc" id="L168">    }</span>
 
     @NonNull
     protected IAssemblyDefinition getDefinition() {
-<span class="fc" id="L171">      return definition;</span>
+<span class="fc" id="L172">      return definition;</span>
     }
 
     @NonNull
     protected Map&lt;String, ObjectNode&gt; getProperties() {
-<span class="fc" id="L176">      return properties;</span>
+<span class="fc" id="L177">      return properties;</span>
     }
 
     public void write(JsonGenerator writer) throws IOException {
-<span class="fc" id="L180">      writer.writeFieldName(&quot;properties&quot;);</span>
-<span class="fc" id="L181">      writer.writeStartObject();</span>
+<span class="fc" id="L181">      writer.writeFieldName(&quot;properties&quot;);</span>
+<span class="fc" id="L182">      writer.writeStartObject();</span>
 
-<span class="fc bfc" id="L183" title="All 2 branches covered.">      for (Map.Entry&lt;String, ObjectNode&gt; entry : getProperties().entrySet()) {</span>
-<span class="fc" id="L184">        writer.writeFieldName(entry.getKey());</span>
-<span class="fc" id="L185">        writer.writeTree(entry.getValue());</span>
-<span class="fc" id="L186">      }</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">      for (Map.Entry&lt;String, ObjectNode&gt; entry : getProperties().entrySet()) {</span>
+<span class="fc" id="L185">        writer.writeFieldName(entry.getKey());</span>
+<span class="fc" id="L186">        writer.writeTree(entry.getValue());</span>
+<span class="fc" id="L187">      }</span>
 
-<span class="fc" id="L188">      writer.writeEndObject();</span>
+<span class="fc" id="L189">      writer.writeEndObject();</span>
 
-<span class="fc" id="L190">      writer.writeFieldName(&quot;required&quot;);</span>
-<span class="fc" id="L191">      writer.writeStartArray();</span>
-<span class="fc" id="L192">      writer.writeString(getDefinition().getRootJsonName());</span>
-<span class="fc" id="L193">      writer.writeEndArray();</span>
+<span class="fc" id="L191">      writer.writeFieldName(&quot;required&quot;);</span>
+<span class="fc" id="L192">      writer.writeStartArray();</span>
+<span class="fc" id="L193">      writer.writeString(getDefinition().getRootJsonName());</span>
+<span class="fc" id="L194">      writer.writeEndArray();</span>
 
-<span class="fc" id="L195">      writer.writeBooleanField(&quot;additionalProperties&quot;, false);</span>
-<span class="fc" id="L196">    }</span>
+<span class="fc" id="L196">      writer.writeBooleanField(&quot;additionalProperties&quot;, false);</span>
+<span class="fc" id="L197">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

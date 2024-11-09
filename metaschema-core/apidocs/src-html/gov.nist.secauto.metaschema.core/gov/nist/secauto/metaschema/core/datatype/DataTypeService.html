@@ -103,66 +103,67 @@
 <span class="source-line-no">090</span><span id="line-90">            },</span>
 <span class="source-line-no">091</span><span id="line-91">            ConcurrentHashMap::new));</span>
 <span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">    @SuppressWarnings({ "unchecked", "null" }) Map&lt;Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;,</span>
-<span class="source-line-no">094</span><span id="line-94">        IDataTypeAdapter&lt;?&gt;&gt; typeByClass = dataTypes.stream()</span>
-<span class="source-line-no">095</span><span id="line-95">            .collect(CustomCollectors.toMap(</span>
-<span class="source-line-no">096</span><span id="line-96">                dataType -&gt; (Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;) dataType.getClass(),</span>
-<span class="source-line-no">097</span><span id="line-97">                Function.identity(),</span>
-<span class="source-line-no">098</span><span id="line-98">                (key, v1, v2) -&gt; {</span>
-<span class="source-line-no">099</span><span id="line-99">                  if (LOGGER.isWarnEnabled()) {</span>
-<span class="source-line-no">100</span><span id="line-100">                    LOGGER.warn("Duplicate data type class '{}'. Using the first.",</span>
-<span class="source-line-no">101</span><span id="line-101">                        key.getClass().getName());</span>
-<span class="source-line-no">102</span><span id="line-102">                  }</span>
-<span class="source-line-no">103</span><span id="line-103">                  return v1;</span>
-<span class="source-line-no">104</span><span id="line-104">                },</span>
-<span class="source-line-no">105</span><span id="line-105">                ConcurrentHashMap::new));</span>
-<span class="source-line-no">106</span><span id="line-106">    this.typeByName = typeByName;</span>
-<span class="source-line-no">107</span><span id="line-107">    this.typeByQName = typeByQName;</span>
-<span class="source-line-no">108</span><span id="line-108">    this.typeByClass = typeByClass;</span>
-<span class="source-line-no">109</span><span id="line-109">  }</span>
-<span class="source-line-no">110</span><span id="line-110"></span>
-<span class="source-line-no">111</span><span id="line-111">  /**</span>
-<span class="source-line-no">112</span><span id="line-112">   * Lookup a specific {@link IDataTypeAdapter} instance by its name.</span>
-<span class="source-line-no">113</span><span id="line-113">   *</span>
-<span class="source-line-no">114</span><span id="line-114">   * @param qname</span>
-<span class="source-line-no">115</span><span id="line-115">   *          the qualified name of data type adapter to get the instance for</span>
-<span class="source-line-no">116</span><span id="line-116">   * @return the instance or {@code null} if the instance is unknown to the type</span>
-<span class="source-line-no">117</span><span id="line-117">   *         system</span>
-<span class="source-line-no">118</span><span id="line-118">   */</span>
-<span class="source-line-no">119</span><span id="line-119">  @Nullable</span>
-<span class="source-line-no">120</span><span id="line-120">  public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapterByQName(@NonNull QName qname) {</span>
-<span class="source-line-no">121</span><span id="line-121">    return typeByQName.get(qname);</span>
-<span class="source-line-no">122</span><span id="line-122">  }</span>
-<span class="source-line-no">123</span><span id="line-123"></span>
-<span class="source-line-no">124</span><span id="line-124">  /**</span>
-<span class="source-line-no">125</span><span id="line-125">   * Lookup a specific {@link IDataTypeAdapter} instance by its name.</span>
-<span class="source-line-no">126</span><span id="line-126">   *</span>
-<span class="source-line-no">127</span><span id="line-127">   * @param name</span>
-<span class="source-line-no">128</span><span id="line-128">   *          the name of data type adapter to get the instance for</span>
-<span class="source-line-no">129</span><span id="line-129">   * @return the instance or {@code null} if the instance is unknown to the type</span>
-<span class="source-line-no">130</span><span id="line-130">   *         system</span>
-<span class="source-line-no">131</span><span id="line-131">   */</span>
-<span class="source-line-no">132</span><span id="line-132">  @Nullable</span>
-<span class="source-line-no">133</span><span id="line-133">  public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapterByName(@NonNull String name) {</span>
-<span class="source-line-no">134</span><span id="line-134">    return typeByName.get(name);</span>
-<span class="source-line-no">135</span><span id="line-135">  }</span>
-<span class="source-line-no">136</span><span id="line-136"></span>
-<span class="source-line-no">137</span><span id="line-137">  /**</span>
-<span class="source-line-no">138</span><span id="line-138">   * Lookup a specific {@link IDataTypeAdapter} instance by its class.</span>
-<span class="source-line-no">139</span><span id="line-139">   *</span>
-<span class="source-line-no">140</span><span id="line-140">   * @param clazz</span>
-<span class="source-line-no">141</span><span id="line-141">   *          the adapter class to get the instance for</span>
-<span class="source-line-no">142</span><span id="line-142">   * @param &lt;TYPE&gt;</span>
-<span class="source-line-no">143</span><span id="line-143">   *          the type of the requested adapter</span>
-<span class="source-line-no">144</span><span id="line-144">   * @return the instance or {@code null} if the instance is unknown to the type</span>
-<span class="source-line-no">145</span><span id="line-145">   *         system</span>
-<span class="source-line-no">146</span><span id="line-146">   */</span>
-<span class="source-line-no">147</span><span id="line-147">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">148</span><span id="line-148">  @Nullable</span>
-<span class="source-line-no">149</span><span id="line-149">  public &lt;TYPE extends IDataTypeAdapter&lt;?&gt;&gt; TYPE getJavaTypeAdapterByClass(@NonNull Class&lt;TYPE&gt; clazz) {</span>
-<span class="source-line-no">150</span><span id="line-150">    return (TYPE) typeByClass.get(clazz);</span>
-<span class="source-line-no">151</span><span id="line-151">  }</span>
-<span class="source-line-no">152</span><span id="line-152">}</span>
+<span class="source-line-no">093</span><span id="line-93">    @SuppressWarnings({ "unchecked", "null" })</span>
+<span class="source-line-no">094</span><span id="line-94">    Map&lt;Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;,</span>
+<span class="source-line-no">095</span><span id="line-95">        IDataTypeAdapter&lt;?&gt;&gt; typeByClass = dataTypes.stream()</span>
+<span class="source-line-no">096</span><span id="line-96">            .collect(CustomCollectors.toMap(</span>
+<span class="source-line-no">097</span><span id="line-97">                dataType -&gt; (Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;) dataType.getClass(),</span>
+<span class="source-line-no">098</span><span id="line-98">                Function.identity(),</span>
+<span class="source-line-no">099</span><span id="line-99">                (key, v1, v2) -&gt; {</span>
+<span class="source-line-no">100</span><span id="line-100">                  if (LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">101</span><span id="line-101">                    LOGGER.warn("Duplicate data type class '{}'. Using the first.",</span>
+<span class="source-line-no">102</span><span id="line-102">                        key.getClass().getName());</span>
+<span class="source-line-no">103</span><span id="line-103">                  }</span>
+<span class="source-line-no">104</span><span id="line-104">                  return v1;</span>
+<span class="source-line-no">105</span><span id="line-105">                },</span>
+<span class="source-line-no">106</span><span id="line-106">                ConcurrentHashMap::new));</span>
+<span class="source-line-no">107</span><span id="line-107">    this.typeByName = typeByName;</span>
+<span class="source-line-no">108</span><span id="line-108">    this.typeByQName = typeByQName;</span>
+<span class="source-line-no">109</span><span id="line-109">    this.typeByClass = typeByClass;</span>
+<span class="source-line-no">110</span><span id="line-110">  }</span>
+<span class="source-line-no">111</span><span id="line-111"></span>
+<span class="source-line-no">112</span><span id="line-112">  /**</span>
+<span class="source-line-no">113</span><span id="line-113">   * Lookup a specific {@link IDataTypeAdapter} instance by its name.</span>
+<span class="source-line-no">114</span><span id="line-114">   *</span>
+<span class="source-line-no">115</span><span id="line-115">   * @param qname</span>
+<span class="source-line-no">116</span><span id="line-116">   *          the qualified name of data type adapter to get the instance for</span>
+<span class="source-line-no">117</span><span id="line-117">   * @return the instance or {@code null} if the instance is unknown to the type</span>
+<span class="source-line-no">118</span><span id="line-118">   *         system</span>
+<span class="source-line-no">119</span><span id="line-119">   */</span>
+<span class="source-line-no">120</span><span id="line-120">  @Nullable</span>
+<span class="source-line-no">121</span><span id="line-121">  public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapterByQName(@NonNull QName qname) {</span>
+<span class="source-line-no">122</span><span id="line-122">    return typeByQName.get(qname);</span>
+<span class="source-line-no">123</span><span id="line-123">  }</span>
+<span class="source-line-no">124</span><span id="line-124"></span>
+<span class="source-line-no">125</span><span id="line-125">  /**</span>
+<span class="source-line-no">126</span><span id="line-126">   * Lookup a specific {@link IDataTypeAdapter} instance by its name.</span>
+<span class="source-line-no">127</span><span id="line-127">   *</span>
+<span class="source-line-no">128</span><span id="line-128">   * @param name</span>
+<span class="source-line-no">129</span><span id="line-129">   *          the name of data type adapter to get the instance for</span>
+<span class="source-line-no">130</span><span id="line-130">   * @return the instance or {@code null} if the instance is unknown to the type</span>
+<span class="source-line-no">131</span><span id="line-131">   *         system</span>
+<span class="source-line-no">132</span><span id="line-132">   */</span>
+<span class="source-line-no">133</span><span id="line-133">  @Nullable</span>
+<span class="source-line-no">134</span><span id="line-134">  public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapterByName(@NonNull String name) {</span>
+<span class="source-line-no">135</span><span id="line-135">    return typeByName.get(name);</span>
+<span class="source-line-no">136</span><span id="line-136">  }</span>
+<span class="source-line-no">137</span><span id="line-137"></span>
+<span class="source-line-no">138</span><span id="line-138">  /**</span>
+<span class="source-line-no">139</span><span id="line-139">   * Lookup a specific {@link IDataTypeAdapter} instance by its class.</span>
+<span class="source-line-no">140</span><span id="line-140">   *</span>
+<span class="source-line-no">141</span><span id="line-141">   * @param clazz</span>
+<span class="source-line-no">142</span><span id="line-142">   *          the adapter class to get the instance for</span>
+<span class="source-line-no">143</span><span id="line-143">   * @param &lt;TYPE&gt;</span>
+<span class="source-line-no">144</span><span id="line-144">   *          the type of the requested adapter</span>
+<span class="source-line-no">145</span><span id="line-145">   * @return the instance or {@code null} if the instance is unknown to the type</span>
+<span class="source-line-no">146</span><span id="line-146">   *         system</span>
+<span class="source-line-no">147</span><span id="line-147">   */</span>
+<span class="source-line-no">148</span><span id="line-148">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">149</span><span id="line-149">  @Nullable</span>
+<span class="source-line-no">150</span><span id="line-150">  public &lt;TYPE extends IDataTypeAdapter&lt;?&gt;&gt; TYPE getJavaTypeAdapterByClass(@NonNull Class&lt;TYPE&gt; clazz) {</span>
+<span class="source-line-no">151</span><span id="line-151">    return (TYPE) typeByClass.get(clazz);</span>
+<span class="source-line-no">152</span><span id="line-152">  }</span>
+<span class="source-line-no">153</span><span id="line-153">}</span>
 
 
 

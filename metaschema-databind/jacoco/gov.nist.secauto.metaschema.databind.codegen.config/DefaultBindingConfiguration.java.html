@@ -106,17 +106,18 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   }
 
   @Override
-  public @NonNull String getClassName(@NonNull IModule module) {
+  public @NonNull
+  String getClassName(@NonNull IModule module) {
     // TODO: make this configurable
-<span class="fc" id="L111">    return ClassUtils.toClassName(module.getShortName() + &quot;Module&quot;);</span>
+<span class="fc" id="L112">    return ClassUtils.toClassName(module.getShortName() + &quot;Module&quot;);</span>
   }
 
   @Override
   public List&lt;String&gt; getQualifiedSuperinterfaceClassNames(IModelDefinition definition) {
-<span class="fc" id="L116">    IDefinitionBindingConfiguration config = getBindingConfigurationForDefinition(definition);</span>
-<span class="fc bfc" id="L117" title="All 2 branches covered.">    return config == null</span>
-<span class="fc" id="L118">        ? CollectionUtil.emptyList()</span>
-<span class="fc" id="L119">        : config.getInterfacesToImplement();</span>
+<span class="fc" id="L117">    IDefinitionBindingConfiguration config = getBindingConfigurationForDefinition(definition);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    return config == null</span>
+<span class="fc" id="L119">        ? CollectionUtil.emptyList()</span>
+<span class="fc" id="L120">        : config.getInterfacesToImplement();</span>
   }
 
   /**
@@ -132,19 +133,19 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    *           namespace to package binding
    */
   public void addModelBindingConfig(String namespace, String packageName) {
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">    if (namespaceToPackageNameMap.containsKey(namespace)) {</span>
-<span class="nc" id="L136">      String oldPackageName = namespaceToPackageNameMap.get(namespace);</span>
-<span class="nc bnc" id="L137" title="All 2 branches missed.">      if (!oldPackageName.equals(packageName)) {</span>
-<span class="nc" id="L138">        throw new IllegalStateException(</span>
-<span class="nc" id="L139">            String.format(&quot;Attempt to redefine existing package name '%s' to '%s' for namespace '%s'&quot;,</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">    if (namespaceToPackageNameMap.containsKey(namespace)) {</span>
+<span class="nc" id="L137">      String oldPackageName = namespaceToPackageNameMap.get(namespace);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">      if (!oldPackageName.equals(packageName)) {</span>
+<span class="nc" id="L139">        throw new IllegalStateException(</span>
+<span class="nc" id="L140">            String.format(&quot;Attempt to redefine existing package name '%s' to '%s' for namespace '%s'&quot;,</span>
                 oldPackageName,
                 packageName,
                 namespace));
       } // else the same package name, so do nothing
-<span class="nc" id="L144">    } else {</span>
-<span class="fc" id="L145">      namespaceToPackageNameMap.put(namespace, packageName);</span>
+<span class="nc" id="L145">    } else {</span>
+<span class="fc" id="L146">      namespaceToPackageNameMap.put(namespace, packageName);</span>
     }
-<span class="fc" id="L147">  }</span>
+<span class="fc" id="L148">  }</span>
 
   /**
    * Based on the current binding configuration, generate a Java package name for
@@ -159,11 +160,11 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @NonNull
   protected String getPackageNameForNamespace(@NonNull String namespace) {
-<span class="fc" id="L162">    String packageName = namespaceToPackageNameMap.get(namespace);</span>
-<span class="fc bfc" id="L163" title="All 2 branches covered.">    if (packageName == null) {</span>
-<span class="fc" id="L164">      packageName = ClassUtils.toPackageName(namespace);</span>
+<span class="fc" id="L163">    String packageName = namespaceToPackageNameMap.get(namespace);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">    if (packageName == null) {</span>
+<span class="fc" id="L165">      packageName = ClassUtils.toPackageName(namespace);</span>
     }
-<span class="fc" id="L166">    return packageName;</span>
+<span class="fc" id="L167">    return packageName;</span>
   }
 
   /**
@@ -175,8 +176,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    *         configuration
    */
   protected MetaschemaBindingConfiguration getMetaschemaBindingConfiguration(@NonNull IModule module) {
-<span class="nc" id="L178">    String moduleUri = ObjectUtils.notNull(module.getLocation().toString());</span>
-<span class="nc" id="L179">    return getMetaschemaBindingConfiguration(moduleUri);</span>
+<span class="nc" id="L179">    String moduleUri = ObjectUtils.notNull(module.getLocation().toString());</span>
+<span class="nc" id="L180">    return getMetaschemaBindingConfiguration(moduleUri);</span>
 
   }
 
@@ -191,7 +192,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    */
   @Nullable
   protected MetaschemaBindingConfiguration getMetaschemaBindingConfiguration(@NonNull String moduleUri) {
-<span class="fc" id="L194">    return moduleUrlToMetaschemaBindingConfigurationMap.get(moduleUri);</span>
+<span class="fc" id="L195">    return moduleUrlToMetaschemaBindingConfigurationMap.get(moduleUri);</span>
   }
 
   /**
@@ -208,9 +209,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   public MetaschemaBindingConfiguration addMetaschemaBindingConfiguration(
       @NonNull String moduleUri,
       @NonNull MetaschemaBindingConfiguration config) {
-<span class="fc" id="L211">    Objects.requireNonNull(moduleUri, &quot;moduleUri&quot;);</span>
-<span class="fc" id="L212">    Objects.requireNonNull(config, &quot;config&quot;);</span>
-<span class="fc" id="L213">    return moduleUrlToMetaschemaBindingConfigurationMap.put(moduleUri, config);</span>
+<span class="fc" id="L212">    Objects.requireNonNull(moduleUri, &quot;moduleUri&quot;);</span>
+<span class="fc" id="L213">    Objects.requireNonNull(config, &quot;config&quot;);</span>
+<span class="fc" id="L214">    return moduleUrlToMetaschemaBindingConfigurationMap.put(moduleUri, config);</span>
   }
 
   /**
@@ -222,9 +223,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    *           if an error occurred while reading the {@code file}
    */
   public void load(Path file) throws IOException {
-<span class="fc" id="L225">    URL resource = file.toAbsolutePath().normalize().toUri().toURL();</span>
-<span class="fc" id="L226">    load(resource);</span>
-<span class="fc" id="L227">  }</span>
+<span class="fc" id="L226">    URL resource = file.toAbsolutePath().normalize().toUri().toURL();</span>
+<span class="fc" id="L227">    load(resource);</span>
+<span class="fc" id="L228">  }</span>
 
   /**
    * Load the binding configuration from the provided {@code file}.
@@ -235,8 +236,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
    *           if an error occurred while reading the {@code file}
    */
   public void load(File file) throws IOException {
-<span class="fc" id="L238">    load(file.toPath());</span>
-<span class="fc" id="L239">  }</span>
+<span class="fc" id="L239">    load(file.toPath());</span>
+<span class="fc" id="L240">  }</span>
 
   /**
    * Load the binding configuration from the provided {@code resource}.
@@ -249,94 +250,94 @@ import edu.umd.cs.findbugs.annotations.Nullable;
   public void load(URL resource) throws IOException {
     MetaschemaBindingsDocument xml;
     try {
-<span class="fc" id="L252">      xml = MetaschemaBindingsDocument.Factory.parse(resource);</span>
-<span class="nc" id="L253">    } catch (XmlException ex) {</span>
-<span class="nc" id="L254">      throw new IOException(ex);</span>
-<span class="fc" id="L255">    }</span>
+<span class="fc" id="L253">      xml = MetaschemaBindingsDocument.Factory.parse(resource);</span>
+<span class="nc" id="L254">    } catch (XmlException ex) {</span>
+<span class="nc" id="L255">      throw new IOException(ex);</span>
+<span class="fc" id="L256">    }</span>
 
-<span class="fc" id="L257">    MetaschemaBindingsType bindings = xml.getMetaschemaBindings();</span>
+<span class="fc" id="L258">    MetaschemaBindingsType bindings = xml.getMetaschemaBindings();</span>
 
-<span class="fc bfc" id="L259" title="All 2 branches covered.">    for (ModelBindingType model : bindings.getModelBindingList()) {</span>
-<span class="fc" id="L260">      processModelBindingConfig(model);</span>
-<span class="fc" id="L261">    }</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">    for (ModelBindingType model : bindings.getModelBindingList()) {</span>
+<span class="fc" id="L261">      processModelBindingConfig(model);</span>
+<span class="fc" id="L262">    }</span>
 
-<span class="fc bfc" id="L263" title="All 2 branches covered.">    for (MetaschemaBindingType metaschema : bindings.getMetaschemaBindingList()) {</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">    for (MetaschemaBindingType metaschema : bindings.getMetaschemaBindingList()) {</span>
       try {
-<span class="fc" id="L265">        processMetaschemaBindingConfig(resource, metaschema);</span>
-<span class="nc" id="L266">      } catch (MalformedURLException | URISyntaxException ex) {</span>
-<span class="nc" id="L267">        throw new IOException(ex);</span>
-<span class="fc" id="L268">      }</span>
-<span class="fc" id="L269">    }</span>
-<span class="fc" id="L270">  }</span>
+<span class="fc" id="L266">        processMetaschemaBindingConfig(resource, metaschema);</span>
+<span class="nc" id="L267">      } catch (MalformedURLException | URISyntaxException ex) {</span>
+<span class="nc" id="L268">        throw new IOException(ex);</span>
+<span class="fc" id="L269">      }</span>
+<span class="fc" id="L270">    }</span>
+<span class="fc" id="L271">  }</span>
 
   private void processModelBindingConfig(ModelBindingType model) {
-<span class="fc" id="L273">    String namespace = model.getNamespace();</span>
+<span class="fc" id="L274">    String namespace = model.getNamespace();</span>
 
-<span class="pc bpc" id="L275" title="1 of 2 branches missed.">    if (model.isSetJava()) {</span>
-<span class="fc" id="L276">      JavaModelBindingType java = model.getJava();</span>
-<span class="pc bpc" id="L277" title="1 of 2 branches missed.">      if (java.isSetUsePackageName()) {</span>
-<span class="fc" id="L278">        addModelBindingConfig(namespace, java.getUsePackageName());</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">    if (model.isSetJava()) {</span>
+<span class="fc" id="L277">      JavaModelBindingType java = model.getJava();</span>
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">      if (java.isSetUsePackageName()) {</span>
+<span class="fc" id="L279">        addModelBindingConfig(namespace, java.getUsePackageName());</span>
       }
     }
-<span class="fc" id="L281">  }</span>
+<span class="fc" id="L282">  }</span>
 
   private void processMetaschemaBindingConfig(URL configResource, MetaschemaBindingType metaschema)
       throws MalformedURLException, URISyntaxException {
-<span class="fc" id="L285">    String href = metaschema.getHref();</span>
-<span class="fc" id="L286">    URL moduleUrl = new URL(configResource, href);</span>
-<span class="fc" id="L287">    String moduleUri = ObjectUtils.notNull(moduleUrl.toURI().normalize().toString());</span>
+<span class="fc" id="L286">    String href = metaschema.getHref();</span>
+<span class="fc" id="L287">    URL moduleUrl = new URL(configResource, href);</span>
+<span class="fc" id="L288">    String moduleUri = ObjectUtils.notNull(moduleUrl.toURI().normalize().toString());</span>
 
-<span class="fc" id="L289">    MetaschemaBindingConfiguration metaschemaConfig = getMetaschemaBindingConfiguration(moduleUri);</span>
-<span class="pc bpc" id="L290" title="1 of 2 branches missed.">    if (metaschemaConfig == null) {</span>
-<span class="fc" id="L291">      metaschemaConfig = new MetaschemaBindingConfiguration();</span>
-<span class="fc" id="L292">      addMetaschemaBindingConfiguration(moduleUri, metaschemaConfig);</span>
+<span class="fc" id="L290">    MetaschemaBindingConfiguration metaschemaConfig = getMetaschemaBindingConfiguration(moduleUri);</span>
+<span class="pc bpc" id="L291" title="1 of 2 branches missed.">    if (metaschemaConfig == null) {</span>
+<span class="fc" id="L292">      metaschemaConfig = new MetaschemaBindingConfiguration();</span>
+<span class="fc" id="L293">      addMetaschemaBindingConfiguration(moduleUri, metaschemaConfig);</span>
     }
-<span class="fc bfc" id="L294" title="All 2 branches covered.">    for (ObjectDefinitionBindingType assemblyBinding : metaschema.getDefineAssemblyBindingList()) {</span>
-<span class="fc" id="L295">      String name = ObjectUtils.requireNonNull(assemblyBinding.getName());</span>
-<span class="fc" id="L296">      IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(name);</span>
-<span class="fc" id="L297">      config = processDefinitionBindingConfiguration(config, assemblyBinding);</span>
-<span class="fc" id="L298">      metaschemaConfig.addAssemblyDefinitionBindingConfig(name, config);</span>
-<span class="fc" id="L299">    }</span>
+<span class="fc bfc" id="L295" title="All 2 branches covered.">    for (ObjectDefinitionBindingType assemblyBinding : metaschema.getDefineAssemblyBindingList()) {</span>
+<span class="fc" id="L296">      String name = ObjectUtils.requireNonNull(assemblyBinding.getName());</span>
+<span class="fc" id="L297">      IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(name);</span>
+<span class="fc" id="L298">      config = processDefinitionBindingConfiguration(config, assemblyBinding);</span>
+<span class="fc" id="L299">      metaschemaConfig.addAssemblyDefinitionBindingConfig(name, config);</span>
+<span class="fc" id="L300">    }</span>
 
-<span class="fc bfc" id="L301" title="All 2 branches covered.">    for (ObjectDefinitionBindingType fieldBinding : metaschema.getDefineFieldBindingList()) {</span>
-<span class="fc" id="L302">      String name = ObjectUtils.requireNonNull(fieldBinding.getName());</span>
-<span class="fc" id="L303">      IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(name);</span>
-<span class="fc" id="L304">      config = processDefinitionBindingConfiguration(config, fieldBinding);</span>
-<span class="fc" id="L305">      metaschemaConfig.addFieldDefinitionBindingConfig(name, config);</span>
-<span class="fc" id="L306">    }</span>
-<span class="fc" id="L307">  }</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">    for (ObjectDefinitionBindingType fieldBinding : metaschema.getDefineFieldBindingList()) {</span>
+<span class="fc" id="L303">      String name = ObjectUtils.requireNonNull(fieldBinding.getName());</span>
+<span class="fc" id="L304">      IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(name);</span>
+<span class="fc" id="L305">      config = processDefinitionBindingConfiguration(config, fieldBinding);</span>
+<span class="fc" id="L306">      metaschemaConfig.addFieldDefinitionBindingConfig(name, config);</span>
+<span class="fc" id="L307">    }</span>
+<span class="fc" id="L308">  }</span>
 
   @NonNull
   private static IMutableDefinitionBindingConfiguration processDefinitionBindingConfiguration(
       @Nullable IDefinitionBindingConfiguration oldConfig,
       @NonNull ObjectDefinitionBindingType objectDefinitionBinding) {
-<span class="pc bpc" id="L313" title="1 of 2 branches missed.">    IMutableDefinitionBindingConfiguration config = oldConfig == null</span>
-<span class="fc" id="L314">        ? new DefaultDefinitionBindingConfiguration()</span>
-<span class="pc" id="L315">        : new DefaultDefinitionBindingConfiguration(oldConfig);</span>
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">    IMutableDefinitionBindingConfiguration config = oldConfig == null</span>
+<span class="fc" id="L315">        ? new DefaultDefinitionBindingConfiguration()</span>
+<span class="pc" id="L316">        : new DefaultDefinitionBindingConfiguration(oldConfig);</span>
 
-<span class="pc bpc" id="L317" title="1 of 2 branches missed.">    if (objectDefinitionBinding.isSetJava()) {</span>
-<span class="fc" id="L318">      JavaObjectDefinitionBindingType java = objectDefinitionBinding.getJava();</span>
-<span class="pc bpc" id="L319" title="1 of 2 branches missed.">      if (java.isSetUseClassName()) {</span>
-<span class="fc" id="L320">        config.setClassName(ObjectUtils.notNull(java.getUseClassName()));</span>
+<span class="pc bpc" id="L318" title="1 of 2 branches missed.">    if (objectDefinitionBinding.isSetJava()) {</span>
+<span class="fc" id="L319">      JavaObjectDefinitionBindingType java = objectDefinitionBinding.getJava();</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">      if (java.isSetUseClassName()) {</span>
+<span class="fc" id="L321">        config.setClassName(ObjectUtils.notNull(java.getUseClassName()));</span>
       }
 
-<span class="pc bpc" id="L323" title="1 of 2 branches missed.">      if (java.isSetExtendBaseClass()) {</span>
-<span class="nc" id="L324">        config.setQualifiedBaseClassName(ObjectUtils.notNull(java.getExtendBaseClass()));</span>
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">      if (java.isSetExtendBaseClass()) {</span>
+<span class="nc" id="L325">        config.setQualifiedBaseClassName(ObjectUtils.notNull(java.getExtendBaseClass()));</span>
       }
 
-<span class="fc bfc" id="L327" title="All 2 branches covered.">      for (String interfaceName : java.getImplementInterfaceList()) {</span>
-<span class="fc" id="L328">        config.addInterfaceToImplement(ObjectUtils.notNull(interfaceName));</span>
-<span class="fc" id="L329">      }</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">      for (String interfaceName : java.getImplementInterfaceList()) {</span>
+<span class="fc" id="L329">        config.addInterfaceToImplement(ObjectUtils.notNull(interfaceName));</span>
+<span class="fc" id="L330">      }</span>
     }
-<span class="fc" id="L331">    return config;</span>
+<span class="fc" id="L332">    return config;</span>
   }
 
   public static final class MetaschemaBindingConfiguration {
-<span class="fc" id="L335">    private final Map&lt;String, IDefinitionBindingConfiguration&gt; assemblyBindingConfigs = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L336">    private final Map&lt;String, IDefinitionBindingConfiguration&gt; fieldBindingConfigs = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L336">    private final Map&lt;String, IDefinitionBindingConfiguration&gt; assemblyBindingConfigs = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L337">    private final Map&lt;String, IDefinitionBindingConfiguration&gt; fieldBindingConfigs = new ConcurrentHashMap&lt;&gt;();</span>
 
-<span class="fc" id="L338">    private MetaschemaBindingConfiguration() {</span>
-<span class="fc" id="L339">    }</span>
+<span class="fc" id="L339">    private MetaschemaBindingConfiguration() {</span>
+<span class="fc" id="L340">    }</span>
 
     /**
      * Get the binding configuration for the {@link IAssemblyDefinition} with the
@@ -349,7 +350,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
      */
     @Nullable
     public IDefinitionBindingConfiguration getAssemblyDefinitionBindingConfig(@NonNull String name) {
-<span class="fc" id="L352">      return assemblyBindingConfigs.get(name);</span>
+<span class="fc" id="L353">      return assemblyBindingConfigs.get(name);</span>
     }
 
     /**
@@ -363,7 +364,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
      */
     @Nullable
     public IDefinitionBindingConfiguration getFieldDefinitionBindingConfig(@NonNull String name) {
-<span class="fc" id="L366">      return fieldBindingConfigs.get(name);</span>
+<span class="fc" id="L367">      return fieldBindingConfigs.get(name);</span>
     }
 
     /**
@@ -380,7 +381,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     @Nullable
     public IDefinitionBindingConfiguration addAssemblyDefinitionBindingConfig(@NonNull String name,
         @NonNull IDefinitionBindingConfiguration config) {
-<span class="fc" id="L383">      return assemblyBindingConfigs.put(name, config);</span>
+<span class="fc" id="L384">      return assemblyBindingConfigs.put(name, config);</span>
     }
 
     /**
@@ -397,7 +398,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     @Nullable
     public IDefinitionBindingConfiguration addFieldDefinitionBindingConfig(@NonNull String name,
         @NonNull IDefinitionBindingConfiguration config) {
-<span class="fc" id="L400">      return fieldBindingConfigs.put(name, config);</span>
+<span class="fc" id="L401">      return fieldBindingConfigs.put(name, config);</span>
     }
   }
 }

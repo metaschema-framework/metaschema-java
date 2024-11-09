@@ -215,24 +215,25 @@ public class CLIProcessor {
 <span class="nc" id="L215">  }</span>
 
   protected void showVersion() {
-<span class="nc" id="L218">    @SuppressWarnings(&quot;resource&quot;) PrintStream out = AnsiConsole.out(); // NOPMD - not owner</span>
-<span class="nc" id="L219">    getVersionInfos().values().stream().forEach(info -&gt; {</span>
-<span class="nc" id="L220">      out.println(ansi()</span>
-<span class="nc" id="L221">          .bold().a(info.getName()).boldOff()</span>
-<span class="nc" id="L222">          .a(&quot; &quot;)</span>
-<span class="nc" id="L223">          .bold().a(info.getVersion()).boldOff()</span>
-<span class="nc" id="L224">          .a(&quot; built at &quot;)</span>
-<span class="nc" id="L225">          .bold().a(info.getBuildTimestamp()).boldOff()</span>
-<span class="nc" id="L226">          .a(&quot; from branch &quot;)</span>
-<span class="nc" id="L227">          .bold().a(info.getGitBranch()).boldOff()</span>
-<span class="nc" id="L228">          .a(&quot; (&quot;)</span>
-<span class="nc" id="L229">          .bold().a(info.getGitCommit()).boldOff()</span>
-<span class="nc" id="L230">          .a(&quot;) at &quot;)</span>
-<span class="nc" id="L231">          .bold().a(info.getGitOriginUrl()).boldOff()</span>
-<span class="nc" id="L232">          .reset());</span>
-<span class="nc" id="L233">    });</span>
-<span class="nc" id="L234">    out.flush();</span>
-<span class="nc" id="L235">  }</span>
+    @SuppressWarnings(&quot;resource&quot;)
+<span class="nc" id="L219">    PrintStream out = AnsiConsole.out(); // NOPMD - not owner</span>
+<span class="nc" id="L220">    getVersionInfos().values().stream().forEach(info -&gt; {</span>
+<span class="nc" id="L221">      out.println(ansi()</span>
+<span class="nc" id="L222">          .bold().a(info.getName()).boldOff()</span>
+<span class="nc" id="L223">          .a(&quot; &quot;)</span>
+<span class="nc" id="L224">          .bold().a(info.getVersion()).boldOff()</span>
+<span class="nc" id="L225">          .a(&quot; built at &quot;)</span>
+<span class="nc" id="L226">          .bold().a(info.getBuildTimestamp()).boldOff()</span>
+<span class="nc" id="L227">          .a(&quot; from branch &quot;)</span>
+<span class="nc" id="L228">          .bold().a(info.getGitBranch()).boldOff()</span>
+<span class="nc" id="L229">          .a(&quot; (&quot;)</span>
+<span class="nc" id="L230">          .bold().a(info.getGitCommit()).boldOff()</span>
+<span class="nc" id="L231">          .a(&quot;) at &quot;)</span>
+<span class="nc" id="L232">          .bold().a(info.getGitOriginUrl()).boldOff()</span>
+<span class="nc" id="L233">          .reset());</span>
+<span class="nc" id="L234">    });</span>
+<span class="nc" id="L235">    out.flush();</span>
+<span class="nc" id="L236">  }</span>
 
   // @SuppressWarnings(&quot;null&quot;)
   // @NonNull
@@ -241,7 +242,7 @@ public class CLIProcessor {
   // new String[size]);
   // }
 
-<span class="nc" id="L244">  public class CallingContext {</span>
+<span class="nc" id="L245">  public class CallingContext {</span>
     @NonNull
     private final List&lt;Option&gt; options;
     @NonNull
@@ -252,75 +253,76 @@ public class CLIProcessor {
     private final List&lt;String&gt; extraArgs;
 
     @SuppressFBWarnings(value = &quot;CT_CONSTRUCTOR_THROW&quot;, justification = &quot;Use of final fields&quot;)
-<span class="nc" id="L255">    public CallingContext(@NonNull List&lt;String&gt; args) {</span>
-<span class="nc" id="L256">      @SuppressWarnings(&quot;PMD.LooseCoupling&quot;) LinkedList&lt;ICommand&gt; calledCommands = new LinkedList&lt;&gt;();</span>
-<span class="nc" id="L257">      List&lt;Option&gt; options = new LinkedList&lt;&gt;(OPTIONS);</span>
-<span class="nc" id="L258">      List&lt;String&gt; extraArgs = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L256">    public CallingContext(@NonNull List&lt;String&gt; args) {</span>
+      @SuppressWarnings(&quot;PMD.LooseCoupling&quot;)
+<span class="nc" id="L258">      LinkedList&lt;ICommand&gt; calledCommands = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L259">      List&lt;Option&gt; options = new LinkedList&lt;&gt;(OPTIONS);</span>
+<span class="nc" id="L260">      List&lt;String&gt; extraArgs = new LinkedList&lt;&gt;();</span>
 
-<span class="nc" id="L260">      AtomicBoolean endArgs = new AtomicBoolean();</span>
-<span class="nc" id="L261">      args.forEach(arg -&gt; {</span>
-<span class="nc bnc" id="L262" title="All 4 branches missed.">        if (endArgs.get() || arg.startsWith(&quot;-&quot;)) {</span>
-<span class="nc" id="L263">          extraArgs.add(arg);</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">        } else if (&quot;--&quot;.equals(arg)) {</span>
-<span class="nc" id="L265">          endArgs.set(true);</span>
+<span class="nc" id="L262">      AtomicBoolean endArgs = new AtomicBoolean();</span>
+<span class="nc" id="L263">      args.forEach(arg -&gt; {</span>
+<span class="nc bnc" id="L264" title="All 4 branches missed.">        if (endArgs.get() || arg.startsWith(&quot;-&quot;)) {</span>
+<span class="nc" id="L265">          extraArgs.add(arg);</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        } else if (&quot;--&quot;.equals(arg)) {</span>
+<span class="nc" id="L267">          endArgs.set(true);</span>
         } else {
-<span class="nc bnc" id="L267" title="All 2 branches missed.">          ICommand command = calledCommands.isEmpty()</span>
-<span class="nc" id="L268">              ? getTopLevelCommandsByName().get(arg)</span>
-<span class="nc" id="L269">              : calledCommands.getLast().getSubCommandByName(arg);</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">          ICommand command = calledCommands.isEmpty()</span>
+<span class="nc" id="L270">              ? getTopLevelCommandsByName().get(arg)</span>
+<span class="nc" id="L271">              : calledCommands.getLast().getSubCommandByName(arg);</span>
 
-<span class="nc bnc" id="L271" title="All 2 branches missed.">          if (command == null) {</span>
-<span class="nc" id="L272">            extraArgs.add(arg);</span>
-<span class="nc" id="L273">            endArgs.set(true);</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">          if (command == null) {</span>
+<span class="nc" id="L274">            extraArgs.add(arg);</span>
+<span class="nc" id="L275">            endArgs.set(true);</span>
           } else {
-<span class="nc" id="L275">            calledCommands.add(command);</span>
-<span class="nc" id="L276">            options.addAll(command.gatherOptions());</span>
+<span class="nc" id="L277">            calledCommands.add(command);</span>
+<span class="nc" id="L278">            options.addAll(command.gatherOptions());</span>
           }
         }
-<span class="nc" id="L279">      });</span>
+<span class="nc" id="L281">      });</span>
 
-<span class="nc" id="L281">      this.calledCommands = CollectionUtil.unmodifiableList(calledCommands);</span>
-<span class="nc" id="L282">      this.targetCommand = calledCommands.peekLast();</span>
-<span class="nc" id="L283">      this.options = CollectionUtil.unmodifiableList(options);</span>
-<span class="nc" id="L284">      this.extraArgs = CollectionUtil.unmodifiableList(extraArgs);</span>
-<span class="nc" id="L285">    }</span>
+<span class="nc" id="L283">      this.calledCommands = CollectionUtil.unmodifiableList(calledCommands);</span>
+<span class="nc" id="L284">      this.targetCommand = calledCommands.peekLast();</span>
+<span class="nc" id="L285">      this.options = CollectionUtil.unmodifiableList(options);</span>
+<span class="nc" id="L286">      this.extraArgs = CollectionUtil.unmodifiableList(extraArgs);</span>
+<span class="nc" id="L287">    }</span>
 
     @NonNull
     public CLIProcessor getCLIProcessor() {
-<span class="nc" id="L289">      return CLIProcessor.this;</span>
+<span class="nc" id="L291">      return CLIProcessor.this;</span>
     }
 
     @Nullable
     public ICommand getTargetCommand() {
-<span class="nc" id="L294">      return targetCommand;</span>
+<span class="nc" id="L296">      return targetCommand;</span>
     }
 
     @NonNull
     protected List&lt;Option&gt; getOptionsList() {
-<span class="nc" id="L299">      return options;</span>
+<span class="nc" id="L301">      return options;</span>
     }
 
     @NonNull
     private List&lt;ICommand&gt; getCalledCommands() {
-<span class="nc" id="L304">      return calledCommands;</span>
+<span class="nc" id="L306">      return calledCommands;</span>
     }
 
     @NonNull
     protected List&lt;String&gt; getExtraArgs() {
-<span class="nc" id="L309">      return extraArgs;</span>
+<span class="nc" id="L311">      return extraArgs;</span>
     }
 
     protected Options toOptions() {
-<span class="nc" id="L313">      Options retval = new Options();</span>
-<span class="nc bnc" id="L314" title="All 2 branches missed.">      for (Option option : getOptionsList()) {</span>
-<span class="nc" id="L315">        retval.addOption(option);</span>
-<span class="nc" id="L316">      }</span>
-<span class="nc" id="L317">      return retval;</span>
+<span class="nc" id="L315">      Options retval = new Options();</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">      for (Option option : getOptionsList()) {</span>
+<span class="nc" id="L317">        retval.addOption(option);</span>
+<span class="nc" id="L318">      }</span>
+<span class="nc" id="L319">      return retval;</span>
     }
 
     @SuppressWarnings(&quot;PMD.OnlyOneReturn&quot;) // readability
     @NonNull
     public ExitStatus processCommand() {
-<span class="nc" id="L323">      CommandLineParser parser = new DefaultParser();</span>
+<span class="nc" id="L325">      CommandLineParser parser = new DefaultParser();</span>
 
       // this uses a three phase approach where:
       // phase 1: checks if help or version are used
@@ -330,129 +332,130 @@ public class CLIProcessor {
       // phase 1
       CommandLine cmdLine;
       try {
-<span class="nc" id="L333">        Options phase1Options = new Options();</span>
-<span class="nc" id="L334">        phase1Options.addOption(HELP_OPTION);</span>
-<span class="nc" id="L335">        phase1Options.addOption(VERSION_OPTION);</span>
+<span class="nc" id="L335">        Options phase1Options = new Options();</span>
+<span class="nc" id="L336">        phase1Options.addOption(HELP_OPTION);</span>
+<span class="nc" id="L337">        phase1Options.addOption(VERSION_OPTION);</span>
 
-<span class="nc" id="L337">        cmdLine = ObjectUtils.notNull(parser.parse(phase1Options, getExtraArgs().toArray(new String[0]), true));</span>
-<span class="nc" id="L338">      } catch (ParseException ex) {</span>
-<span class="nc" id="L339">        String msg = ex.getMessage();</span>
-<span class="nc bnc" id="L340" title="All 2 branches missed.">        assert msg != null;</span>
-<span class="nc" id="L341">        return handleInvalidCommand(msg);</span>
-<span class="nc" id="L342">      }</span>
+<span class="nc" id="L339">        cmdLine = ObjectUtils.notNull(parser.parse(phase1Options, getExtraArgs().toArray(new String[0]), true));</span>
+<span class="nc" id="L340">      } catch (ParseException ex) {</span>
+<span class="nc" id="L341">        String msg = ex.getMessage();</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">        assert msg != null;</span>
+<span class="nc" id="L343">        return handleInvalidCommand(msg);</span>
+<span class="nc" id="L344">      }</span>
 
-<span class="nc bnc" id="L344" title="All 2 branches missed.">      if (cmdLine.hasOption(VERSION_OPTION)) {</span>
-<span class="nc" id="L345">        showVersion();</span>
-<span class="nc" id="L346">        return ExitCode.OK.exit();</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">      if (cmdLine.hasOption(VERSION_OPTION)) {</span>
+<span class="nc" id="L347">        showVersion();</span>
+<span class="nc" id="L348">        return ExitCode.OK.exit();</span>
       }
-<span class="nc bnc" id="L348" title="All 2 branches missed.">      if (cmdLine.hasOption(HELP_OPTION)) {</span>
-<span class="nc" id="L349">        showHelp();</span>
-<span class="nc" id="L350">        return ExitCode.OK.exit();</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">      if (cmdLine.hasOption(HELP_OPTION)) {</span>
+<span class="nc" id="L351">        showHelp();</span>
+<span class="nc" id="L352">        return ExitCode.OK.exit();</span>
       }
 
       // phase 2
       try {
-<span class="nc" id="L355">        cmdLine = ObjectUtils.notNull(parser.parse(toOptions(), getExtraArgs().toArray(new String[0])));</span>
-<span class="nc" id="L356">      } catch (ParseException ex) {</span>
-<span class="nc" id="L357">        String msg = ex.getMessage();</span>
-<span class="nc bnc" id="L358" title="All 2 branches missed.">        assert msg != null;</span>
-<span class="nc" id="L359">        return handleInvalidCommand(msg);</span>
-<span class="nc" id="L360">      }</span>
+<span class="nc" id="L357">        cmdLine = ObjectUtils.notNull(parser.parse(toOptions(), getExtraArgs().toArray(new String[0])));</span>
+<span class="nc" id="L358">      } catch (ParseException ex) {</span>
+<span class="nc" id="L359">        String msg = ex.getMessage();</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">        assert msg != null;</span>
+<span class="nc" id="L361">        return handleInvalidCommand(msg);</span>
+<span class="nc" id="L362">      }</span>
 
-<span class="nc" id="L362">      ICommand targetCommand = getTargetCommand();</span>
-<span class="nc bnc" id="L363" title="All 2 branches missed.">      if (targetCommand != null) {</span>
-<span class="nc bnc" id="L364" title="All 2 branches missed.">        if (targetCommand.isSubCommandRequired()) {</span>
-<span class="nc" id="L365">          return handleError(</span>
+<span class="nc" id="L364">      ICommand targetCommand = getTargetCommand();</span>
+<span class="nc bnc" id="L365" title="All 2 branches missed.">      if (targetCommand != null) {</span>
+<span class="nc bnc" id="L366" title="All 2 branches missed.">        if (targetCommand.isSubCommandRequired()) {</span>
+<span class="nc" id="L367">          return handleError(</span>
               ExitCode.INVALID_ARGUMENTS
-<span class="nc" id="L367">                  .exitMessage(&quot;Please choose a valid sub-command.&quot;),</span>
+<span class="nc" id="L369">                  .exitMessage(&quot;Please choose a valid sub-command.&quot;),</span>
               cmdLine,
               true);
         }
 
-<span class="nc" id="L372">        List&lt;ExtraArgument&gt; extraArguments = targetCommand.getExtraArguments();</span>
-<span class="nc" id="L373">        int maxArguments = extraArguments.size();</span>
+<span class="nc" id="L374">        List&lt;ExtraArgument&gt; extraArguments = targetCommand.getExtraArguments();</span>
+<span class="nc" id="L375">        int maxArguments = extraArguments.size();</span>
 
-<span class="nc" id="L375">        List&lt;String&gt; actualArgs = cmdLine.getArgList();</span>
-<span class="nc" id="L376">        int actualArgsSize = actualArgs.size();</span>
-<span class="nc bnc" id="L377" title="All 2 branches missed.">        if (actualArgs.size() &gt; maxArguments) {</span>
-<span class="nc" id="L378">          return handleError(</span>
+<span class="nc" id="L377">        List&lt;String&gt; actualArgs = cmdLine.getArgList();</span>
+<span class="nc" id="L378">        int actualArgsSize = actualArgs.size();</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">        if (actualArgs.size() &gt; maxArguments) {</span>
+<span class="nc" id="L380">          return handleError(</span>
               ExitCode.INVALID_ARGUMENTS
-<span class="nc" id="L380">                  .exitMessage(&quot;The provided extra arguments exceed the number of allowed arguments.&quot;),</span>
+<span class="nc" id="L382">                  .exitMessage(&quot;The provided extra arguments exceed the number of allowed arguments.&quot;),</span>
               cmdLine,
               true);
         }
 
-<span class="nc" id="L385">        List&lt;ExtraArgument&gt; requiredExtraArguments = targetCommand.getExtraArguments().stream()</span>
-<span class="nc" id="L386">            .filter(ExtraArgument::isRequired)</span>
-<span class="nc" id="L387">            .collect(Collectors.toUnmodifiableList());</span>
+<span class="nc" id="L387">        List&lt;ExtraArgument&gt; requiredExtraArguments = targetCommand.getExtraArguments().stream()</span>
+<span class="nc" id="L388">            .filter(ExtraArgument::isRequired)</span>
+<span class="nc" id="L389">            .collect(Collectors.toUnmodifiableList());</span>
 
-<span class="nc bnc" id="L389" title="All 2 branches missed.">        if (actualArgsSize &lt; requiredExtraArguments.size()) {</span>
-<span class="nc" id="L390">          return handleError(</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">        if (actualArgsSize &lt; requiredExtraArguments.size()) {</span>
+<span class="nc" id="L392">          return handleError(</span>
               ExitCode.INVALID_ARGUMENTS
-<span class="nc" id="L392">                  .exitMessage(&quot;Please provide the required extra arguments.&quot;),</span>
+<span class="nc" id="L394">                  .exitMessage(&quot;Please provide the required extra arguments.&quot;),</span>
               cmdLine,
               true);
         }
       }
 
-<span class="nc bnc" id="L398" title="All 2 branches missed.">      for (ICommand cmd : getCalledCommands()) {</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">      for (ICommand cmd : getCalledCommands()) {</span>
         try {
-<span class="nc" id="L400">          cmd.validateOptions(this, cmdLine);</span>
-<span class="nc" id="L401">        } catch (InvalidArgumentException ex) {</span>
-<span class="nc" id="L402">          String msg = ex.getMessage();</span>
-<span class="nc bnc" id="L403" title="All 2 branches missed.">          assert msg != null;</span>
-<span class="nc" id="L404">          return handleInvalidCommand(msg);</span>
-<span class="nc" id="L405">        }</span>
-<span class="nc" id="L406">      }</span>
+<span class="nc" id="L402">          cmd.validateOptions(this, cmdLine);</span>
+<span class="nc" id="L403">        } catch (InvalidArgumentException ex) {</span>
+<span class="nc" id="L404">          String msg = ex.getMessage();</span>
+<span class="nc bnc" id="L405" title="All 2 branches missed.">          assert msg != null;</span>
+<span class="nc" id="L406">          return handleInvalidCommand(msg);</span>
+<span class="nc" id="L407">        }</span>
+<span class="nc" id="L408">      }</span>
 
       // phase 3
-<span class="nc bnc" id="L409" title="All 2 branches missed.">      if (cmdLine.hasOption(NO_COLOR_OPTION)) {</span>
-<span class="nc" id="L410">        handleNoColor();</span>
+<span class="nc bnc" id="L411" title="All 2 branches missed.">      if (cmdLine.hasOption(NO_COLOR_OPTION)) {</span>
+<span class="nc" id="L412">        handleNoColor();</span>
       }
 
-<span class="nc bnc" id="L413" title="All 2 branches missed.">      if (cmdLine.hasOption(QUIET_OPTION)) {</span>
-<span class="nc" id="L414">        handleQuiet();</span>
+<span class="nc bnc" id="L415" title="All 2 branches missed.">      if (cmdLine.hasOption(QUIET_OPTION)) {</span>
+<span class="nc" id="L416">        handleQuiet();</span>
       }
-<span class="nc" id="L416">      ExitStatus retval = invokeCommand(cmdLine);</span>
-<span class="nc bnc" id="L417" title="All 2 branches missed.">      if (ExitCode.OK.equals(retval.getExitCode())) {</span>
-<span class="nc" id="L418">        handleError(retval, cmdLine, false);</span>
-      }
-<span class="nc" id="L420">      return retval;</span>
+<span class="nc" id="L418">      return invokeCommand(cmdLine);</span>
     }
 
     @SuppressWarnings({
         &quot;PMD.OnlyOneReturn&quot;, // readability
         &quot;PMD.AvoidCatchingGenericException&quot; // needed here
     })
+    @NonNull
     protected ExitStatus invokeCommand(@NonNull CommandLine cmdLine) {
       ExitStatus retval;
       try {
-<span class="nc" id="L430">        ICommand targetCommand = getTargetCommand();</span>
-<span class="nc bnc" id="L431" title="All 2 branches missed.">        if (targetCommand == null) {</span>
-<span class="nc" id="L432">          retval = ExitCode.INVALID_COMMAND.exit();</span>
+<span class="nc" id="L429">        ICommand targetCommand = getTargetCommand();</span>
+<span class="nc bnc" id="L430" title="All 2 branches missed.">        if (targetCommand == null) {</span>
+<span class="nc" id="L431">          retval = ExitCode.INVALID_COMMAND.exit();</span>
         } else {
-<span class="nc" id="L434">          ICommandExecutor executor = targetCommand.newExecutor(this, cmdLine);</span>
+<span class="nc" id="L433">          ICommandExecutor executor = targetCommand.newExecutor(this, cmdLine);</span>
           try {
-<span class="nc" id="L436">            executor.execute();</span>
-<span class="nc" id="L437">            retval = ExitCode.OK.exit();</span>
-<span class="nc" id="L438">          } catch (CommandExecutionException ex) {</span>
-<span class="nc" id="L439">            retval = ex.toExitStatus();</span>
-<span class="nc" id="L440">          } catch (RuntimeException ex) {</span>
-<span class="nc" id="L441">            retval = ExitCode.RUNTIME_ERROR</span>
-<span class="nc" id="L442">                .exitMessage(&quot;Unexpected error occured: &quot; + ex.getLocalizedMessage())</span>
-<span class="nc" id="L443">                .withThrowable(ex);</span>
-<span class="nc" id="L444">          }</span>
+<span class="nc" id="L435">            executor.execute();</span>
+<span class="nc" id="L436">            retval = ExitCode.OK.exit();</span>
+<span class="nc" id="L437">          } catch (CommandExecutionException ex) {</span>
+<span class="nc" id="L438">            retval = ex.toExitStatus();</span>
+<span class="nc" id="L439">          } catch (RuntimeException ex) {</span>
+<span class="nc" id="L440">            retval = ExitCode.RUNTIME_ERROR</span>
+<span class="nc" id="L441">                .exitMessage(&quot;Unexpected error occured: &quot; + ex.getLocalizedMessage())</span>
+<span class="nc" id="L442">                .withThrowable(ex);</span>
+<span class="nc" id="L443">          }</span>
         }
+<span class="nc" id="L445">      } catch (RuntimeException ex) {</span>
+<span class="nc" id="L446">        retval = ExitCode.RUNTIME_ERROR</span>
+<span class="nc" id="L447">            .exitMessage(String.format(&quot;An uncaught runtime error occurred. %s&quot;, ex.getLocalizedMessage()))</span>
+<span class="nc" id="L448">            .withThrowable(ex);</span>
+<span class="nc" id="L449">      }</span>
 
-<span class="nc bnc" id="L447" title="All 2 branches missed.">        if (ExitCode.INVALID_COMMAND.equals(retval.getExitCode())) {</span>
-<span class="nc" id="L448">          showHelp();</span>
+<span class="nc bnc" id="L451" title="All 2 branches missed.">      if (!ExitCode.OK.equals(retval.getExitCode())) {</span>
+<span class="nc" id="L452">        retval.generateMessage(cmdLine.hasOption(SHOW_STACK_TRACE_OPTION));</span>
+
+<span class="nc bnc" id="L454" title="All 2 branches missed.">        if (ExitCode.INVALID_COMMAND.equals(retval.getExitCode())) {</span>
+<span class="nc" id="L455">          showHelp();</span>
         }
-<span class="nc" id="L450">      } catch (RuntimeException ex) {</span>
-<span class="nc" id="L451">        retval = ExitCode.RUNTIME_ERROR</span>
-<span class="nc" id="L452">            .exitMessage(String.format(&quot;An uncaught runtime error occurred. %s&quot;, ex.getLocalizedMessage()))</span>
-<span class="nc" id="L453">            .withThrowable(ex);</span>
-<span class="nc" id="L454">      }</span>
-<span class="nc" id="L455">      return retval;</span>
+      }
+<span class="nc" id="L458">      return retval;</span>
     }
 
     @NonNull
@@ -460,21 +463,21 @@ public class CLIProcessor {
         @NonNull ExitStatus exitStatus,
         @NonNull CommandLine cmdLine,
         boolean showHelp) {
-<span class="nc" id="L463">      exitStatus.generateMessage(cmdLine.hasOption(SHOW_STACK_TRACE_OPTION));</span>
-<span class="nc bnc" id="L464" title="All 2 branches missed.">      if (showHelp) {</span>
-<span class="nc" id="L465">        showHelp();</span>
+<span class="nc" id="L466">      exitStatus.generateMessage(cmdLine.hasOption(SHOW_STACK_TRACE_OPTION));</span>
+<span class="nc bnc" id="L467" title="All 2 branches missed.">      if (showHelp) {</span>
+<span class="nc" id="L468">        showHelp();</span>
       }
-<span class="nc" id="L467">      return exitStatus;</span>
+<span class="nc" id="L470">      return exitStatus;</span>
     }
 
     @NonNull
     public ExitStatus handleInvalidCommand(
         @NonNull String message) {
-<span class="nc" id="L473">      showHelp();</span>
+<span class="nc" id="L476">      showHelp();</span>
 
-<span class="nc" id="L475">      ExitStatus retval = ExitCode.INVALID_COMMAND.exitMessage(message);</span>
-<span class="nc" id="L476">      retval.generateMessage(false);</span>
-<span class="nc" id="L477">      return retval;</span>
+<span class="nc" id="L478">      ExitStatus retval = ExitCode.INVALID_COMMAND.exitMessage(message);</span>
+<span class="nc" id="L479">      retval.generateMessage(false);</span>
+<span class="nc" id="L480">      return retval;</span>
     }
 
     /**
@@ -485,7 +488,7 @@ public class CLIProcessor {
     @Nullable
     protected String buildHelpHeader() {
       // TODO: build a suitable header
-<span class="nc" id="L488">      return null;</span>
+<span class="nc" id="L491">      return null;</span>
     }
 
     /**
@@ -499,45 +502,45 @@ public class CLIProcessor {
     @NonNull
     private String buildHelpFooter() {
 
-<span class="nc" id="L502">      ICommand targetCommand = getTargetCommand();</span>
+<span class="nc" id="L505">      ICommand targetCommand = getTargetCommand();</span>
       Collection&lt;ICommand&gt; subCommands;
-<span class="nc bnc" id="L504" title="All 2 branches missed.">      if (targetCommand == null) {</span>
-<span class="nc" id="L505">        subCommands = getTopLevelCommands();</span>
+<span class="nc bnc" id="L507" title="All 2 branches missed.">      if (targetCommand == null) {</span>
+<span class="nc" id="L508">        subCommands = getTopLevelCommands();</span>
       } else {
-<span class="nc" id="L507">        subCommands = targetCommand.getSubCommands();</span>
+<span class="nc" id="L510">        subCommands = targetCommand.getSubCommands();</span>
       }
 
       String retval;
-<span class="nc bnc" id="L511" title="All 2 branches missed.">      if (subCommands.isEmpty()) {</span>
-<span class="nc" id="L512">        retval = &quot;&quot;;</span>
+<span class="nc bnc" id="L514" title="All 2 branches missed.">      if (subCommands.isEmpty()) {</span>
+<span class="nc" id="L515">        retval = &quot;&quot;;</span>
       } else {
-<span class="nc" id="L514">        StringBuilder builder = new StringBuilder(128);</span>
-<span class="nc" id="L515">        builder</span>
-<span class="nc" id="L516">            .append(System.lineSeparator())</span>
-<span class="nc" id="L517">            .append(&quot;The following are available commands:&quot;)</span>
-<span class="nc" id="L518">            .append(System.lineSeparator());</span>
+<span class="nc" id="L517">        StringBuilder builder = new StringBuilder(128);</span>
+<span class="nc" id="L518">        builder</span>
+<span class="nc" id="L519">            .append(System.lineSeparator())</span>
+<span class="nc" id="L520">            .append(&quot;The following are available commands:&quot;)</span>
+<span class="nc" id="L521">            .append(System.lineSeparator());</span>
 
-<span class="nc" id="L520">        int length = subCommands.stream()</span>
-<span class="nc" id="L521">            .mapToInt(command -&gt; command.getName().length())</span>
-<span class="nc" id="L522">            .max().orElse(0);</span>
+<span class="nc" id="L523">        int length = subCommands.stream()</span>
+<span class="nc" id="L524">            .mapToInt(command -&gt; command.getName().length())</span>
+<span class="nc" id="L525">            .max().orElse(0);</span>
 
-<span class="nc bnc" id="L524" title="All 2 branches missed.">        for (ICommand command : subCommands) {</span>
-<span class="nc" id="L525">          builder.append(</span>
-<span class="nc" id="L526">              ansi()</span>
-<span class="nc" id="L527">                  .render(String.format(&quot;   @|bold %-&quot; + length + &quot;s|@ %s%n&quot;,</span>
-<span class="nc" id="L528">                      command.getName(),</span>
-<span class="nc" id="L529">                      command.getDescription())));</span>
-<span class="nc" id="L530">        }</span>
-<span class="nc" id="L531">        builder</span>
-<span class="nc" id="L532">            .append(System.lineSeparator())</span>
-<span class="nc" id="L533">            .append('\'')</span>
-<span class="nc" id="L534">            .append(getExec())</span>
-<span class="nc" id="L535">            .append(&quot; &lt;command&gt; --help' will show help on that specific command.&quot;)</span>
-<span class="nc" id="L536">            .append(System.lineSeparator());</span>
-<span class="nc" id="L537">        retval = builder.toString();</span>
-<span class="nc bnc" id="L538" title="All 2 branches missed.">        assert retval != null;</span>
+<span class="nc bnc" id="L527" title="All 2 branches missed.">        for (ICommand command : subCommands) {</span>
+<span class="nc" id="L528">          builder.append(</span>
+<span class="nc" id="L529">              ansi()</span>
+<span class="nc" id="L530">                  .render(String.format(&quot;   @|bold %-&quot; + length + &quot;s|@ %s%n&quot;,</span>
+<span class="nc" id="L531">                      command.getName(),</span>
+<span class="nc" id="L532">                      command.getDescription())));</span>
+<span class="nc" id="L533">        }</span>
+<span class="nc" id="L534">        builder</span>
+<span class="nc" id="L535">            .append(System.lineSeparator())</span>
+<span class="nc" id="L536">            .append('\'')</span>
+<span class="nc" id="L537">            .append(getExec())</span>
+<span class="nc" id="L538">            .append(&quot; &lt;command&gt; --help' will show help on that specific command.&quot;)</span>
+<span class="nc" id="L539">            .append(System.lineSeparator());</span>
+<span class="nc" id="L540">        retval = builder.toString();</span>
+<span class="nc bnc" id="L541" title="All 2 branches missed.">        assert retval != null;</span>
       }
-<span class="nc" id="L540">      return retval;</span>
+<span class="nc" id="L543">      return retval;</span>
     }
 
     /**
@@ -547,80 +550,80 @@ public class CLIProcessor {
      */
     protected String buildHelpCliSyntax() {
 
-<span class="nc" id="L550">      StringBuilder builder = new StringBuilder(64);</span>
-<span class="nc" id="L551">      builder.append(getExec());</span>
+<span class="nc" id="L553">      StringBuilder builder = new StringBuilder(64);</span>
+<span class="nc" id="L554">      builder.append(getExec());</span>
 
-<span class="nc" id="L553">      List&lt;ICommand&gt; calledCommands = getCalledCommands();</span>
-<span class="nc bnc" id="L554" title="All 2 branches missed.">      if (!calledCommands.isEmpty()) {</span>
-<span class="nc" id="L555">        builder.append(calledCommands.stream()</span>
-<span class="nc" id="L556">            .map(ICommand::getName)</span>
-<span class="nc" id="L557">            .collect(Collectors.joining(&quot; &quot;, &quot; &quot;, &quot;&quot;)));</span>
+<span class="nc" id="L556">      List&lt;ICommand&gt; calledCommands = getCalledCommands();</span>
+<span class="nc bnc" id="L557" title="All 2 branches missed.">      if (!calledCommands.isEmpty()) {</span>
+<span class="nc" id="L558">        builder.append(calledCommands.stream()</span>
+<span class="nc" id="L559">            .map(ICommand::getName)</span>
+<span class="nc" id="L560">            .collect(Collectors.joining(&quot; &quot;, &quot; &quot;, &quot;&quot;)));</span>
       }
 
       // output calling commands
-<span class="nc" id="L561">      ICommand targetCommand = getTargetCommand();</span>
-<span class="nc bnc" id="L562" title="All 2 branches missed.">      if (targetCommand == null) {</span>
-<span class="nc" id="L563">        builder.append(&quot; &lt;command&gt;&quot;);</span>
+<span class="nc" id="L564">      ICommand targetCommand = getTargetCommand();</span>
+<span class="nc bnc" id="L565" title="All 2 branches missed.">      if (targetCommand == null) {</span>
+<span class="nc" id="L566">        builder.append(&quot; &lt;command&gt;&quot;);</span>
       } else {
-<span class="nc" id="L565">        Collection&lt;ICommand&gt; subCommands = targetCommand.getSubCommands();</span>
+<span class="nc" id="L568">        Collection&lt;ICommand&gt; subCommands = targetCommand.getSubCommands();</span>
 
-<span class="nc bnc" id="L567" title="All 2 branches missed.">        if (!subCommands.isEmpty()) {</span>
-<span class="nc" id="L568">          builder.append(' ');</span>
-<span class="nc bnc" id="L569" title="All 2 branches missed.">          if (!targetCommand.isSubCommandRequired()) {</span>
-<span class="nc" id="L570">            builder.append('[');</span>
+<span class="nc bnc" id="L570" title="All 2 branches missed.">        if (!subCommands.isEmpty()) {</span>
+<span class="nc" id="L571">          builder.append(' ');</span>
+<span class="nc bnc" id="L572" title="All 2 branches missed.">          if (!targetCommand.isSubCommandRequired()) {</span>
+<span class="nc" id="L573">            builder.append('[');</span>
           }
 
-<span class="nc" id="L573">          builder.append(&quot;&lt;command&gt;&quot;);</span>
+<span class="nc" id="L576">          builder.append(&quot;&lt;command&gt;&quot;);</span>
 
-<span class="nc bnc" id="L575" title="All 2 branches missed.">          if (!targetCommand.isSubCommandRequired()) {</span>
-<span class="nc" id="L576">            builder.append(']');</span>
+<span class="nc bnc" id="L578" title="All 2 branches missed.">          if (!targetCommand.isSubCommandRequired()) {</span>
+<span class="nc" id="L579">            builder.append(']');</span>
           }
         }
       }
 
       // output required options
-<span class="nc" id="L582">      getOptionsList().stream()</span>
-<span class="nc" id="L583">          .filter(Option::isRequired)</span>
-<span class="nc" id="L584">          .forEach(option -&gt; {</span>
-<span class="nc" id="L585">            builder</span>
-<span class="nc" id="L586">                .append(' ')</span>
-<span class="nc" id="L587">                .append(OptionUtils.toArgument(ObjectUtils.notNull(option)));</span>
-<span class="nc bnc" id="L588" title="All 2 branches missed.">            if (option.hasArg()) {</span>
-<span class="nc" id="L589">              builder</span>
-<span class="nc" id="L590">                  .append('=')</span>
-<span class="nc" id="L591">                  .append(option.getArgName());</span>
+<span class="nc" id="L585">      getOptionsList().stream()</span>
+<span class="nc" id="L586">          .filter(Option::isRequired)</span>
+<span class="nc" id="L587">          .forEach(option -&gt; {</span>
+<span class="nc" id="L588">            builder</span>
+<span class="nc" id="L589">                .append(' ')</span>
+<span class="nc" id="L590">                .append(OptionUtils.toArgument(ObjectUtils.notNull(option)));</span>
+<span class="nc bnc" id="L591" title="All 2 branches missed.">            if (option.hasArg()) {</span>
+<span class="nc" id="L592">              builder</span>
+<span class="nc" id="L593">                  .append('=')</span>
+<span class="nc" id="L594">                  .append(option.getArgName());</span>
             }
-<span class="nc" id="L593">          });</span>
+<span class="nc" id="L596">          });</span>
 
       // output non-required option placeholder
-<span class="nc" id="L596">      builder.append(&quot; [&lt;options&gt;]&quot;);</span>
+<span class="nc" id="L599">      builder.append(&quot; [&lt;options&gt;]&quot;);</span>
 
       // output extra arguments
-<span class="nc bnc" id="L599" title="All 2 branches missed.">      if (targetCommand != null) {</span>
+<span class="nc bnc" id="L602" title="All 2 branches missed.">      if (targetCommand != null) {</span>
         // handle extra arguments
-<span class="nc bnc" id="L601" title="All 2 branches missed.">        for (ExtraArgument argument : targetCommand.getExtraArguments()) {</span>
-<span class="nc" id="L602">          builder.append(' ');</span>
-<span class="nc bnc" id="L603" title="All 2 branches missed.">          if (!argument.isRequired()) {</span>
-<span class="nc" id="L604">            builder.append('[');</span>
+<span class="nc bnc" id="L604" title="All 2 branches missed.">        for (ExtraArgument argument : targetCommand.getExtraArguments()) {</span>
+<span class="nc" id="L605">          builder.append(' ');</span>
+<span class="nc bnc" id="L606" title="All 2 branches missed.">          if (!argument.isRequired()) {</span>
+<span class="nc" id="L607">            builder.append('[');</span>
           }
 
-<span class="nc" id="L607">          builder.append('&lt;')</span>
-<span class="nc" id="L608">              .append(argument.getName())</span>
-<span class="nc" id="L609">              .append('&gt;');</span>
+<span class="nc" id="L610">          builder.append('&lt;')</span>
+<span class="nc" id="L611">              .append(argument.getName())</span>
+<span class="nc" id="L612">              .append('&gt;');</span>
 
-<span class="nc bnc" id="L611" title="All 2 branches missed.">          if (argument.getNumber() &gt; 1) {</span>
-<span class="nc" id="L612">            builder.append(&quot;...&quot;);</span>
+<span class="nc bnc" id="L614" title="All 2 branches missed.">          if (argument.getNumber() &gt; 1) {</span>
+<span class="nc" id="L615">            builder.append(&quot;...&quot;);</span>
           }
 
-<span class="nc bnc" id="L615" title="All 2 branches missed.">          if (!argument.isRequired()) {</span>
-<span class="nc" id="L616">            builder.append(']');</span>
+<span class="nc bnc" id="L618" title="All 2 branches missed.">          if (!argument.isRequired()) {</span>
+<span class="nc" id="L619">            builder.append(']');</span>
           }
-<span class="nc" id="L618">        }</span>
+<span class="nc" id="L621">        }</span>
       }
 
-<span class="nc" id="L621">      String retval = builder.toString();</span>
-<span class="nc bnc" id="L622" title="All 2 branches missed.">      assert retval != null;</span>
-<span class="nc" id="L623">      return retval;</span>
+<span class="nc" id="L624">      String retval = builder.toString();</span>
+<span class="nc bnc" id="L625" title="All 2 branches missed.">      assert retval != null;</span>
+<span class="nc" id="L626">      return retval;</span>
     }
 
     /**
@@ -628,28 +631,29 @@ public class CLIProcessor {
      */
     public void showHelp() {
 
-<span class="nc" id="L631">      HelpFormatter formatter = new HelpFormatter();</span>
-<span class="nc" id="L632">      formatter.setLongOptSeparator(&quot;=&quot;);</span>
+<span class="nc" id="L634">      HelpFormatter formatter = new HelpFormatter();</span>
+<span class="nc" id="L635">      formatter.setLongOptSeparator(&quot;=&quot;);</span>
 
-<span class="nc" id="L634">      @SuppressWarnings(&quot;resource&quot;) AnsiPrintStream out = AnsiConsole.out();</span>
+      @SuppressWarnings(&quot;resource&quot;)
+<span class="nc" id="L638">      AnsiPrintStream out = AnsiConsole.out();</span>
 
-<span class="nc" id="L636">      try (PrintWriter writer = new PrintWriter( // NOPMD not owned</span>
-<span class="nc" id="L637">          AutoCloser.preventClose(out),</span>
+<span class="nc" id="L640">      try (PrintWriter writer = new PrintWriter( // NOPMD not owned</span>
+<span class="nc" id="L641">          AutoCloser.preventClose(out),</span>
           true,
           StandardCharsets.UTF_8)) {
-<span class="nc" id="L640">        formatter.printHelp(</span>
+<span class="nc" id="L644">        formatter.printHelp(</span>
             writer,
-<span class="nc" id="L642">            Math.max(out.getTerminalWidth(), 50),</span>
-<span class="nc" id="L643">            buildHelpCliSyntax(),</span>
-<span class="nc" id="L644">            buildHelpHeader(),</span>
-<span class="nc" id="L645">            toOptions(),</span>
+<span class="nc" id="L646">            Math.max(out.getTerminalWidth(), 50),</span>
+<span class="nc" id="L647">            buildHelpCliSyntax(),</span>
+<span class="nc" id="L648">            buildHelpHeader(),</span>
+<span class="nc" id="L649">            toOptions(),</span>
             HelpFormatter.DEFAULT_LEFT_PAD,
             HelpFormatter.DEFAULT_DESC_PAD,
-<span class="nc" id="L648">            buildHelpFooter(),</span>
+<span class="nc" id="L652">            buildHelpFooter(),</span>
             false);
-<span class="nc" id="L650">        writer.flush();</span>
+<span class="nc" id="L654">        writer.flush();</span>
       }
-<span class="nc" id="L652">    }</span>
+<span class="nc" id="L656">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

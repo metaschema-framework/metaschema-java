@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1730654163199">
-    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="2.0.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1731186851909">
+    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="2.0.1"/>
     <files>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/adapter/BooleanAdapterTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/adapter/DateAdapterTest.java" result="NOOP"/>

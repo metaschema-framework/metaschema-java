@@ -31,14 +31,15 @@ public class HostnameAdapter
   }
 
   @Override
-  public @NonNull Class&lt;IHostnameItem&gt; getItemClass() {
-<span class="nc" id="L35">    return IHostnameItem.class;</span>
+  public @NonNull
+  Class&lt;IHostnameItem&gt; getItemClass() {
+<span class="nc" id="L36">    return IHostnameItem.class;</span>
   }
 
   @Override
   public IHostnameItem newItem(Object value) {
-<span class="nc" id="L40">    String item = asString(value);</span>
-<span class="nc" id="L41">    return IHostnameItem.valueOf(item);</span>
+<span class="nc" id="L41">    String item = asString(value);</span>
+<span class="nc" id="L42">    return IHostnameItem.valueOf(item);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

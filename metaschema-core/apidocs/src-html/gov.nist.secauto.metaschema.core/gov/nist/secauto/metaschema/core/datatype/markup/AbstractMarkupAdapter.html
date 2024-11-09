@@ -67,39 +67,47 @@
 <span class="source-line-no">054</span><span id="line-54">      StartElement parent,</span>
 <span class="source-line-no">055</span><span id="line-55">      XMLEventFactory2 eventFactory,</span>
 <span class="source-line-no">056</span><span id="line-56">      XMLEventWriter eventWriter)</span>
-<span class="source-line-no">057</span><span id="line-57">      throws XMLStreamException {</span>
+<span class="source-line-no">057</span><span id="line-57">      throws IOException {</span>
 <span class="source-line-no">058</span><span id="line-58"></span>
 <span class="source-line-no">059</span><span id="line-59">    IMarkupString&lt;?&gt; markupString = (IMarkupString&lt;?&gt;) value;</span>
 <span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">    markupString.writeXHtml(</span>
-<span class="source-line-no">062</span><span id="line-62">        ObjectUtils.notNull(parent.getName().getNamespaceURI()),</span>
-<span class="source-line-no">063</span><span id="line-63">        eventFactory,</span>
-<span class="source-line-no">064</span><span id="line-64">        eventWriter);</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  @Override</span>
-<span class="source-line-no">068</span><span id="line-68">  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 streamWriter)</span>
-<span class="source-line-no">069</span><span id="line-69">      throws XMLStreamException {</span>
-<span class="source-line-no">070</span><span id="line-70">    IMarkupString&lt;?&gt; markupString = (IMarkupString&lt;?&gt;) value;</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">    markupString.writeXHtml(</span>
-<span class="source-line-no">073</span><span id="line-73">        ObjectUtils.notNull(parentName.getNamespaceURI()),</span>
-<span class="source-line-no">074</span><span id="line-74">        streamWriter);</span>
-<span class="source-line-no">075</span><span id="line-75">  }</span>
-<span class="source-line-no">076</span><span id="line-76"></span>
-<span class="source-line-no">077</span><span id="line-77">  @Override</span>
-<span class="source-line-no">078</span><span id="line-78">  public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">    IMarkupString&lt;?&gt; markupString;</span>
-<span class="source-line-no">081</span><span id="line-81">    try {</span>
-<span class="source-line-no">082</span><span id="line-82">      markupString = (IMarkupString&lt;?&gt;) value;</span>
-<span class="source-line-no">083</span><span id="line-83">    } catch (ClassCastException ex) {</span>
-<span class="source-line-no">084</span><span id="line-84">      throw new IOException(ex);</span>
-<span class="source-line-no">085</span><span id="line-85">    }</span>
-<span class="source-line-no">086</span><span id="line-86"></span>
-<span class="source-line-no">087</span><span id="line-87">    generator.writeString(markupString.toMarkdown().trim());</span>
-<span class="source-line-no">088</span><span id="line-88">  }</span>
-<span class="source-line-no">089</span><span id="line-89">}</span>
+<span class="source-line-no">061</span><span id="line-61">    try {</span>
+<span class="source-line-no">062</span><span id="line-62">      markupString.writeXHtml(</span>
+<span class="source-line-no">063</span><span id="line-63">          ObjectUtils.notNull(parent.getName().getNamespaceURI()),</span>
+<span class="source-line-no">064</span><span id="line-64">          eventFactory,</span>
+<span class="source-line-no">065</span><span id="line-65">          eventWriter);</span>
+<span class="source-line-no">066</span><span id="line-66">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">067</span><span id="line-67">      throw new IOException(ex);</span>
+<span class="source-line-no">068</span><span id="line-68">    }</span>
+<span class="source-line-no">069</span><span id="line-69">  }</span>
+<span class="source-line-no">070</span><span id="line-70"></span>
+<span class="source-line-no">071</span><span id="line-71">  @Override</span>
+<span class="source-line-no">072</span><span id="line-72">  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 streamWriter)</span>
+<span class="source-line-no">073</span><span id="line-73">      throws IOException {</span>
+<span class="source-line-no">074</span><span id="line-74">    IMarkupString&lt;?&gt; markupString = (IMarkupString&lt;?&gt;) value;</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">    try {</span>
+<span class="source-line-no">077</span><span id="line-77">      markupString.writeXHtml(</span>
+<span class="source-line-no">078</span><span id="line-78">          ObjectUtils.notNull(parentName.getNamespaceURI()),</span>
+<span class="source-line-no">079</span><span id="line-79">          streamWriter);</span>
+<span class="source-line-no">080</span><span id="line-80">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">081</span><span id="line-81">      throw new IOException(ex);</span>
+<span class="source-line-no">082</span><span id="line-82">    }</span>
+<span class="source-line-no">083</span><span id="line-83">  }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">  @Override</span>
+<span class="source-line-no">086</span><span id="line-86">  public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {</span>
+<span class="source-line-no">087</span><span id="line-87"></span>
+<span class="source-line-no">088</span><span id="line-88">    IMarkupString&lt;?&gt; markupString;</span>
+<span class="source-line-no">089</span><span id="line-89">    try {</span>
+<span class="source-line-no">090</span><span id="line-90">      markupString = (IMarkupString&lt;?&gt;) value;</span>
+<span class="source-line-no">091</span><span id="line-91">    } catch (ClassCastException ex) {</span>
+<span class="source-line-no">092</span><span id="line-92">      throw new IOException(ex);</span>
+<span class="source-line-no">093</span><span id="line-93">    }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">    generator.writeString(markupString.toMarkdown().trim());</span>
+<span class="source-line-no">096</span><span id="line-96">  }</span>
+<span class="source-line-no">097</span><span id="line-97">}</span>
 
 
 

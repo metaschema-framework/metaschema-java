@@ -58,33 +58,36 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull List&lt;Class&lt;?&gt;&gt; expressionClasses) {
     Class&lt;? extends RESULT_TYPE&gt; retval;
 <span class="fc bfc" id="L60" title="All 2 branches covered.">    if (expressionClasses.size() == 1) {</span>
-<span class="fc" id="L61">      @SuppressWarnings(&quot;unchecked&quot;) Class&lt;? extends RESULT_TYPE&gt; result</span>
-<span class="fc" id="L62">          = (Class&lt;? extends RESULT_TYPE&gt;) expressionClasses.iterator().next();</span>
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">      assert result != null;</span>
-<span class="fc" id="L64">      retval = result;</span>
-<span class="fc" id="L65">    } else {</span>
-<span class="fc" id="L66">      @SuppressWarnings(&quot;unchecked&quot;) Class&lt;? extends RESULT_TYPE&gt; first</span>
-<span class="fc" id="L67">          = (Class&lt;? extends RESULT_TYPE&gt;) expressionClasses.iterator().next();</span>
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">      assert first != null;</span>
-<span class="fc bfc" id="L69" title="All 2 branches covered.">      if (baseType.equals(first)) {</span>
+      @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L62">      Class&lt;? extends RESULT_TYPE&gt; result</span>
+<span class="fc" id="L63">          = (Class&lt;? extends RESULT_TYPE&gt;) expressionClasses.iterator().next();</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">      assert result != null;</span>
+<span class="fc" id="L65">      retval = result;</span>
+<span class="fc" id="L66">    } else {</span>
+      @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L68">      Class&lt;? extends RESULT_TYPE&gt; first</span>
+<span class="fc" id="L69">          = (Class&lt;? extends RESULT_TYPE&gt;) expressionClasses.iterator().next();</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">      assert first != null;</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">      if (baseType.equals(first)) {</span>
         // the first type is the same as the base, which is the least common type
-<span class="fc" id="L71">        retval = baseType;</span>
+<span class="fc" id="L73">        retval = baseType;</span>
       } else {
         // search for the least common type
-<span class="fc" id="L74">        Class&lt;?&gt; leastCommon = getCommonBaseClass(</span>
+<span class="fc" id="L76">        Class&lt;?&gt; leastCommon = getCommonBaseClass(</span>
             baseType,
             first,
-<span class="fc" id="L77">            ObjectUtils.notNull(expressionClasses.subList(1, expressionClasses.size())));</span>
-<span class="fc" id="L78">        @SuppressWarnings(&quot;unchecked&quot;) Class&lt;? extends RESULT_TYPE&gt; newBase</span>
+<span class="fc" id="L79">            ObjectUtils.notNull(expressionClasses.subList(1, expressionClasses.size())));</span>
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L81">        Class&lt;? extends RESULT_TYPE&gt; newBase</span>
             = (Class&lt;? extends RESULT_TYPE&gt;) leastCommon;
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (newBase != null) {</span>
-<span class="fc" id="L81">          retval = newBase;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (newBase != null) {</span>
+<span class="fc" id="L84">          retval = newBase;</span>
         } else {
-<span class="nc" id="L83">          retval = baseType;</span>
+<span class="nc" id="L86">          retval = baseType;</span>
         }
       }
     }
-<span class="fc" id="L87">    return retval;</span>
+<span class="fc" id="L90">    return retval;</span>
   }
 
   @Nullable
@@ -92,38 +95,38 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       @NonNull Class&lt;?&gt; baseType,
       @NonNull Class&lt;?&gt; first,
       @NonNull List&lt;Class&lt;?&gt;&gt; expressionClasses) {
-<span class="fc" id="L95">    boolean match = checkDerivedFrom(first, expressionClasses);</span>
+<span class="fc" id="L98">    boolean match = checkDerivedFrom(first, expressionClasses);</span>
 
-<span class="fc" id="L97">    Class&lt;?&gt; retval = null;</span>
-<span class="fc bfc" id="L98" title="All 2 branches covered.">    if (match) {</span>
-<span class="fc" id="L99">      retval = first;</span>
+<span class="fc" id="L100">    Class&lt;?&gt; retval = null;</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">    if (match) {</span>
+<span class="fc" id="L102">      retval = first;</span>
     } else {
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">      for (Class&lt;?&gt; clazz : first.getInterfaces()) {</span>
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        assert clazz != null;</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">      for (Class&lt;?&gt; clazz : first.getInterfaces()) {</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        assert clazz != null;</span>
         // ensure the new interface is a sublass of the baseType
-<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        if (baseType.isAssignableFrom(clazz)) {</span>
-<span class="fc" id="L105">          Class&lt;?&gt; newBase = getCommonBaseClass(baseType, clazz, expressionClasses);</span>
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">          if (newBase != null) {</span>
-<span class="fc" id="L107">            retval = newBase;</span>
-<span class="fc" id="L108">            break;</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (baseType.isAssignableFrom(clazz)) {</span>
+<span class="fc" id="L108">          Class&lt;?&gt; newBase = getCommonBaseClass(baseType, clazz, expressionClasses);</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">          if (newBase != null) {</span>
+<span class="fc" id="L110">            retval = newBase;</span>
+<span class="fc" id="L111">            break;</span>
           }
         }
       }
     }
-<span class="fc" id="L113">    return retval;</span>
+<span class="fc" id="L116">    return retval;</span>
   }
 
   private static boolean checkDerivedFrom(
       @NonNull Class&lt;?&gt; baseType,
       @NonNull List&lt;Class&lt;?&gt;&gt; expressionClasses) {
-<span class="fc" id="L119">    boolean retval = true;</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">    for (Class&lt;?&gt; clazz : expressionClasses) {</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">      if (!baseType.isAssignableFrom(clazz)) {</span>
-<span class="fc" id="L122">        retval = false;</span>
-<span class="fc" id="L123">        break;</span>
+<span class="fc" id="L122">    boolean retval = true;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    for (Class&lt;?&gt; clazz : expressionClasses) {</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">      if (!baseType.isAssignableFrom(clazz)) {</span>
+<span class="fc" id="L125">        retval = false;</span>
+<span class="fc" id="L126">        break;</span>
       }
-<span class="fc" id="L125">    }</span>
-<span class="fc" id="L126">    return retval;</span>
+<span class="fc" id="L128">    }</span>
+<span class="fc" id="L129">    return retval;</span>
   }
 
 }

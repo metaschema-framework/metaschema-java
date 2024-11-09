@@ -26,34 +26,36 @@
 <span class="source-line-no">013</span><span id="line-13">public interface INamedModelInstanceAbsolute extends INamedModelInstance, IModelInstanceAbsolute {</span>
 <span class="source-line-no">014</span><span id="line-14">  @Override</span>
 <span class="source-line-no">015</span><span id="line-15">  default String getJsonName() {</span>
-<span class="source-line-no">016</span><span id="line-16">    @NonNull String retval;</span>
-<span class="source-line-no">017</span><span id="line-17">    if (getMaxOccurs() == -1 || getMaxOccurs() &gt; 1) {</span>
-<span class="source-line-no">018</span><span id="line-18">      @NonNull String groupAsName = ObjectUtils.requireNonNull(getGroupAsName(),</span>
-<span class="source-line-no">019</span><span id="line-19">          ObjectUtils.notNull(String.format("null group-as name in instance '%s' on definition '%s' in '%s'",</span>
-<span class="source-line-no">020</span><span id="line-20">              this.getName(),</span>
-<span class="source-line-no">021</span><span id="line-21">              this.getContainingDefinition().getName(),</span>
-<span class="source-line-no">022</span><span id="line-22">              this.getContainingModule().getLocation())));</span>
-<span class="source-line-no">023</span><span id="line-23">      retval = groupAsName;</span>
-<span class="source-line-no">024</span><span id="line-24">    } else {</span>
-<span class="source-line-no">025</span><span id="line-25">      retval = getEffectiveName();</span>
-<span class="source-line-no">026</span><span id="line-26">    }</span>
-<span class="source-line-no">027</span><span id="line-27">    return retval;</span>
-<span class="source-line-no">028</span><span id="line-28">  }</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">  @Override</span>
-<span class="source-line-no">031</span><span id="line-31">  @Nullable</span>
-<span class="source-line-no">032</span><span id="line-32">  default IFlagInstance getEffectiveJsonKey() {</span>
-<span class="source-line-no">033</span><span id="line-33">    return JsonGroupAsBehavior.KEYED.equals(getJsonGroupAsBehavior())</span>
-<span class="source-line-no">034</span><span id="line-34">        ? getJsonKey()</span>
-<span class="source-line-no">035</span><span id="line-35">        : null;</span>
-<span class="source-line-no">036</span><span id="line-36">  }</span>
-<span class="source-line-no">037</span><span id="line-37"></span>
-<span class="source-line-no">038</span><span id="line-38">  @Override</span>
-<span class="source-line-no">039</span><span id="line-39">  @Nullable</span>
-<span class="source-line-no">040</span><span id="line-40">  default IFlagInstance getJsonKey() {</span>
-<span class="source-line-no">041</span><span id="line-41">    return getDefinition().getJsonKey();</span>
-<span class="source-line-no">042</span><span id="line-42">  }</span>
-<span class="source-line-no">043</span><span id="line-43">}</span>
+<span class="source-line-no">016</span><span id="line-16">    @NonNull</span>
+<span class="source-line-no">017</span><span id="line-17">    String retval;</span>
+<span class="source-line-no">018</span><span id="line-18">    if (getMaxOccurs() == -1 || getMaxOccurs() &gt; 1) {</span>
+<span class="source-line-no">019</span><span id="line-19">      @NonNull</span>
+<span class="source-line-no">020</span><span id="line-20">      String groupAsName = ObjectUtils.requireNonNull(getGroupAsName(),</span>
+<span class="source-line-no">021</span><span id="line-21">          ObjectUtils.notNull(String.format("null group-as name in instance '%s' on definition '%s' in '%s'",</span>
+<span class="source-line-no">022</span><span id="line-22">              this.getName(),</span>
+<span class="source-line-no">023</span><span id="line-23">              this.getContainingDefinition().getName(),</span>
+<span class="source-line-no">024</span><span id="line-24">              this.getContainingModule().getLocation())));</span>
+<span class="source-line-no">025</span><span id="line-25">      retval = groupAsName;</span>
+<span class="source-line-no">026</span><span id="line-26">    } else {</span>
+<span class="source-line-no">027</span><span id="line-27">      retval = getEffectiveName();</span>
+<span class="source-line-no">028</span><span id="line-28">    }</span>
+<span class="source-line-no">029</span><span id="line-29">    return retval;</span>
+<span class="source-line-no">030</span><span id="line-30">  }</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">  @Override</span>
+<span class="source-line-no">033</span><span id="line-33">  @Nullable</span>
+<span class="source-line-no">034</span><span id="line-34">  default IFlagInstance getEffectiveJsonKey() {</span>
+<span class="source-line-no">035</span><span id="line-35">    return JsonGroupAsBehavior.KEYED.equals(getJsonGroupAsBehavior())</span>
+<span class="source-line-no">036</span><span id="line-36">        ? getJsonKey()</span>
+<span class="source-line-no">037</span><span id="line-37">        : null;</span>
+<span class="source-line-no">038</span><span id="line-38">  }</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  @Override</span>
+<span class="source-line-no">041</span><span id="line-41">  @Nullable</span>
+<span class="source-line-no">042</span><span id="line-42">  default IFlagInstance getJsonKey() {</span>
+<span class="source-line-no">043</span><span id="line-43">    return getDefinition().getJsonKey();</span>
+<span class="source-line-no">044</span><span id="line-44">  }</span>
+<span class="source-line-no">045</span><span id="line-45">}</span>
 
 
 

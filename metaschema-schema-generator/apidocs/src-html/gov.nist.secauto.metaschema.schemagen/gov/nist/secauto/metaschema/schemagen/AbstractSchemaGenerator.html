@@ -97,57 +97,58 @@
 <span class="source-line-no">084</span><span id="line-84">      IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration) {</span>
 <span class="source-line-no">085</span><span id="line-85">    try {</span>
 <span class="source-line-no">086</span><span id="line-86">      // avoid automatically closing streams not owned by the generator</span>
-<span class="source-line-no">087</span><span id="line-87">      @SuppressWarnings({ "PMD.CloseResource", "resource" }) T schemaWriter = newWriter(out);</span>
-<span class="source-line-no">088</span><span id="line-88">      S generationState = newGenerationState(metaschema, schemaWriter, configuration);</span>
-<span class="source-line-no">089</span><span id="line-89">      generateSchema(generationState);</span>
-<span class="source-line-no">090</span><span id="line-90">      generationState.flushWriter();</span>
-<span class="source-line-no">091</span><span id="line-91">    } catch (SchemaGenerationException ex) { // NOPMD avoid nesting same exception</span>
-<span class="source-line-no">092</span><span id="line-92">      throw ex;</span>
-<span class="source-line-no">093</span><span id="line-93">    } catch (Exception ex) { // NOPMD need to catch close exception</span>
-<span class="source-line-no">094</span><span id="line-94">      throw new SchemaGenerationException(ex);</span>
-<span class="source-line-no">095</span><span id="line-95">    }</span>
-<span class="source-line-no">096</span><span id="line-96">  }</span>
-<span class="source-line-no">097</span><span id="line-97"></span>
-<span class="source-line-no">098</span><span id="line-98">  /**</span>
-<span class="source-line-no">099</span><span id="line-99">   * Determine the collection of root definitions.</span>
-<span class="source-line-no">100</span><span id="line-100">   *</span>
-<span class="source-line-no">101</span><span id="line-101">   * @param generationState</span>
-<span class="source-line-no">102</span><span id="line-102">   *          the schema generation state used for context and writing</span>
-<span class="source-line-no">103</span><span id="line-103">   * @param handler</span>
-<span class="source-line-no">104</span><span id="line-104">   *          a callback to execute on each identified root definition</span>
-<span class="source-line-no">105</span><span id="line-105">   * @return the list of identified root definitions</span>
-<span class="source-line-no">106</span><span id="line-106">   */</span>
-<span class="source-line-no">107</span><span id="line-107">  protected List&lt;IAssemblyDefinition&gt; analyzeDefinitions(</span>
-<span class="source-line-no">108</span><span id="line-108">      @NonNull S generationState,</span>
-<span class="source-line-no">109</span><span id="line-109">      @Nullable BiConsumer&lt;ModuleIndex.DefinitionEntry, IDefinition&gt; handler) {</span>
-<span class="source-line-no">110</span><span id="line-110">    // TODO: use of handler here is confusing and introduces side effects. Consider</span>
-<span class="source-line-no">111</span><span id="line-111">    // refactoring this in</span>
-<span class="source-line-no">112</span><span id="line-112">    // the caller</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">    List&lt;IAssemblyDefinition&gt; rootAssemblyDefinitions = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">115</span><span id="line-115">    for (ModuleIndex.DefinitionEntry entry : generationState.getMetaschemaIndex().getDefinitions()) {</span>
-<span class="source-line-no">116</span><span id="line-116"></span>
-<span class="source-line-no">117</span><span id="line-117">      IDefinition definition = ObjectUtils.notNull(entry.getDefinition());</span>
-<span class="source-line-no">118</span><span id="line-118">      if (definition instanceof IAssemblyDefinition &amp;&amp; ((IAssemblyDefinition) definition).isRoot()) {</span>
-<span class="source-line-no">119</span><span id="line-119">        // found root definition</span>
-<span class="source-line-no">120</span><span id="line-120">        IAssemblyDefinition assemblyDefinition = (IAssemblyDefinition) definition;</span>
-<span class="source-line-no">121</span><span id="line-121">        rootAssemblyDefinitions.add(assemblyDefinition);</span>
-<span class="source-line-no">122</span><span id="line-122">      }</span>
-<span class="source-line-no">123</span><span id="line-123"></span>
-<span class="source-line-no">124</span><span id="line-124">      boolean referenced = entry.isReferenced();</span>
-<span class="source-line-no">125</span><span id="line-125">      if (!referenced) {</span>
-<span class="source-line-no">126</span><span id="line-126">        // skip unreferenced definitions</span>
-<span class="source-line-no">127</span><span id="line-127">        continue;</span>
-<span class="source-line-no">128</span><span id="line-128">      }</span>
-<span class="source-line-no">129</span><span id="line-129"></span>
-<span class="source-line-no">130</span><span id="line-130">      if (handler != null) {</span>
-<span class="source-line-no">131</span><span id="line-131">        handler.accept(entry, definition);</span>
-<span class="source-line-no">132</span><span id="line-132">      }</span>
-<span class="source-line-no">133</span><span id="line-133">    }</span>
-<span class="source-line-no">134</span><span id="line-134">    return rootAssemblyDefinitions;</span>
-<span class="source-line-no">135</span><span id="line-135">  }</span>
-<span class="source-line-no">136</span><span id="line-136"></span>
-<span class="source-line-no">137</span><span id="line-137">}</span>
+<span class="source-line-no">087</span><span id="line-87">      @SuppressWarnings({ "PMD.CloseResource", "resource" })</span>
+<span class="source-line-no">088</span><span id="line-88">      T schemaWriter = newWriter(out);</span>
+<span class="source-line-no">089</span><span id="line-89">      S generationState = newGenerationState(metaschema, schemaWriter, configuration);</span>
+<span class="source-line-no">090</span><span id="line-90">      generateSchema(generationState);</span>
+<span class="source-line-no">091</span><span id="line-91">      generationState.flushWriter();</span>
+<span class="source-line-no">092</span><span id="line-92">    } catch (SchemaGenerationException ex) { // NOPMD avoid nesting same exception</span>
+<span class="source-line-no">093</span><span id="line-93">      throw ex;</span>
+<span class="source-line-no">094</span><span id="line-94">    } catch (Exception ex) { // NOPMD need to catch close exception</span>
+<span class="source-line-no">095</span><span id="line-95">      throw new SchemaGenerationException(ex);</span>
+<span class="source-line-no">096</span><span id="line-96">    }</span>
+<span class="source-line-no">097</span><span id="line-97">  }</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">  /**</span>
+<span class="source-line-no">100</span><span id="line-100">   * Determine the collection of root definitions.</span>
+<span class="source-line-no">101</span><span id="line-101">   *</span>
+<span class="source-line-no">102</span><span id="line-102">   * @param generationState</span>
+<span class="source-line-no">103</span><span id="line-103">   *          the schema generation state used for context and writing</span>
+<span class="source-line-no">104</span><span id="line-104">   * @param handler</span>
+<span class="source-line-no">105</span><span id="line-105">   *          a callback to execute on each identified root definition</span>
+<span class="source-line-no">106</span><span id="line-106">   * @return the list of identified root definitions</span>
+<span class="source-line-no">107</span><span id="line-107">   */</span>
+<span class="source-line-no">108</span><span id="line-108">  protected List&lt;IAssemblyDefinition&gt; analyzeDefinitions(</span>
+<span class="source-line-no">109</span><span id="line-109">      @NonNull S generationState,</span>
+<span class="source-line-no">110</span><span id="line-110">      @Nullable BiConsumer&lt;ModuleIndex.DefinitionEntry, IDefinition&gt; handler) {</span>
+<span class="source-line-no">111</span><span id="line-111">    // TODO: use of handler here is confusing and introduces side effects. Consider</span>
+<span class="source-line-no">112</span><span id="line-112">    // refactoring this in</span>
+<span class="source-line-no">113</span><span id="line-113">    // the caller</span>
+<span class="source-line-no">114</span><span id="line-114"></span>
+<span class="source-line-no">115</span><span id="line-115">    List&lt;IAssemblyDefinition&gt; rootAssemblyDefinitions = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">116</span><span id="line-116">    for (ModuleIndex.DefinitionEntry entry : generationState.getMetaschemaIndex().getDefinitions()) {</span>
+<span class="source-line-no">117</span><span id="line-117"></span>
+<span class="source-line-no">118</span><span id="line-118">      IDefinition definition = ObjectUtils.notNull(entry.getDefinition());</span>
+<span class="source-line-no">119</span><span id="line-119">      if (definition instanceof IAssemblyDefinition &amp;&amp; ((IAssemblyDefinition) definition).isRoot()) {</span>
+<span class="source-line-no">120</span><span id="line-120">        // found root definition</span>
+<span class="source-line-no">121</span><span id="line-121">        IAssemblyDefinition assemblyDefinition = (IAssemblyDefinition) definition;</span>
+<span class="source-line-no">122</span><span id="line-122">        rootAssemblyDefinitions.add(assemblyDefinition);</span>
+<span class="source-line-no">123</span><span id="line-123">      }</span>
+<span class="source-line-no">124</span><span id="line-124"></span>
+<span class="source-line-no">125</span><span id="line-125">      boolean referenced = entry.isReferenced();</span>
+<span class="source-line-no">126</span><span id="line-126">      if (!referenced) {</span>
+<span class="source-line-no">127</span><span id="line-127">        // skip unreferenced definitions</span>
+<span class="source-line-no">128</span><span id="line-128">        continue;</span>
+<span class="source-line-no">129</span><span id="line-129">      }</span>
+<span class="source-line-no">130</span><span id="line-130"></span>
+<span class="source-line-no">131</span><span id="line-131">      if (handler != null) {</span>
+<span class="source-line-no">132</span><span id="line-132">        handler.accept(entry, definition);</span>
+<span class="source-line-no">133</span><span id="line-133">      }</span>
+<span class="source-line-no">134</span><span id="line-134">    }</span>
+<span class="source-line-no">135</span><span id="line-135">    return rootAssemblyDefinitions;</span>
+<span class="source-line-no">136</span><span id="line-136">  }</span>
+<span class="source-line-no">137</span><span id="line-137"></span>
+<span class="source-line-no">138</span><span id="line-138">}</span>
 
 
 

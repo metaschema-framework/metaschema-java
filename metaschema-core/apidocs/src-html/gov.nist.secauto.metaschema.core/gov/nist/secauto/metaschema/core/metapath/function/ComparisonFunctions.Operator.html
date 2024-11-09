@@ -185,428 +185,429 @@
 <span class="source-line-no">172</span><span id="line-172">      @NonNull IAnyAtomicItem left,</span>
 <span class="source-line-no">173</span><span id="line-173">      @NonNull Operator operator,</span>
 <span class="source-line-no">174</span><span id="line-174">      @NonNull IAnyAtomicItem right) {</span>
-<span class="source-line-no">175</span><span id="line-175">    @NonNull IBooleanItem retval;</span>
-<span class="source-line-no">176</span><span id="line-176">    if (left instanceof IStringItem || right instanceof IStringItem) {</span>
-<span class="source-line-no">177</span><span id="line-177">      retval = stringCompare(IStringItem.cast(left), operator, IStringItem.cast(right));</span>
-<span class="source-line-no">178</span><span id="line-178">    } else if (left instanceof INumericItem &amp;&amp; right instanceof INumericItem) {</span>
-<span class="source-line-no">179</span><span id="line-179">      retval = numericCompare((INumericItem) left, operator, (INumericItem) right);</span>
-<span class="source-line-no">180</span><span id="line-180">    } else if (left instanceof IBooleanItem &amp;&amp; right instanceof IBooleanItem) {</span>
-<span class="source-line-no">181</span><span id="line-181">      retval = booleanCompare((IBooleanItem) left, operator, (IBooleanItem) right);</span>
-<span class="source-line-no">182</span><span id="line-182">    } else if (left instanceof IDateTimeItem &amp;&amp; right instanceof IDateTimeItem) {</span>
-<span class="source-line-no">183</span><span id="line-183">      retval = dateTimeCompare((IDateTimeItem) left, operator, (IDateTimeItem) right);</span>
-<span class="source-line-no">184</span><span id="line-184">    } else if (left instanceof IDateItem &amp;&amp; right instanceof IDateItem) {</span>
-<span class="source-line-no">185</span><span id="line-185">      retval = dateCompare((IDateItem) left, operator, (IDateItem) right);</span>
-<span class="source-line-no">186</span><span id="line-186">    } else if (left instanceof IDurationItem &amp;&amp; right instanceof IDurationItem) {</span>
-<span class="source-line-no">187</span><span id="line-187">      retval = durationCompare((IDurationItem) left, operator, (IDurationItem) right);</span>
-<span class="source-line-no">188</span><span id="line-188">    } else if (left instanceof IBase64BinaryItem &amp;&amp; right instanceof IBase64BinaryItem) {</span>
-<span class="source-line-no">189</span><span id="line-189">      retval = binaryCompare((IBase64BinaryItem) left, operator, (IBase64BinaryItem) right);</span>
-<span class="source-line-no">190</span><span id="line-190">    } else {</span>
-<span class="source-line-no">191</span><span id="line-191">      throw new InvalidTypeMetapathException(</span>
-<span class="source-line-no">192</span><span id="line-192">          null,</span>
-<span class="source-line-no">193</span><span id="line-193">          String.format("invalid types for comparison: %s %s %s", left.getClass().getName(),</span>
-<span class="source-line-no">194</span><span id="line-194">              operator.name().toLowerCase(Locale.ROOT), right.getClass().getName()));</span>
-<span class="source-line-no">195</span><span id="line-195">    }</span>
-<span class="source-line-no">196</span><span id="line-196">    return retval;</span>
-<span class="source-line-no">197</span><span id="line-197">  }</span>
-<span class="source-line-no">198</span><span id="line-198"></span>
-<span class="source-line-no">199</span><span id="line-199">  /**</span>
-<span class="source-line-no">200</span><span id="line-200">   * Perform a string-based comparison of the {@code right} item against the</span>
-<span class="source-line-no">201</span><span id="line-201">   * {@code left} item using the specified {@code operator}.</span>
-<span class="source-line-no">202</span><span id="line-202">   *</span>
-<span class="source-line-no">203</span><span id="line-203">   * @param left</span>
-<span class="source-line-no">204</span><span id="line-204">   *          the value to compare against</span>
-<span class="source-line-no">205</span><span id="line-205">   * @param operator</span>
-<span class="source-line-no">206</span><span id="line-206">   *          the comparison operator</span>
-<span class="source-line-no">207</span><span id="line-207">   * @param right</span>
-<span class="source-line-no">208</span><span id="line-208">   *          the value to compare with</span>
-<span class="source-line-no">209</span><span id="line-209">   * @return the comparison result</span>
-<span class="source-line-no">210</span><span id="line-210">   */</span>
-<span class="source-line-no">211</span><span id="line-211">  @NonNull</span>
-<span class="source-line-no">212</span><span id="line-212">  public static IBooleanItem stringCompare(@NonNull IStringItem left, @NonNull Operator operator,</span>
-<span class="source-line-no">213</span><span id="line-213">      @NonNull IStringItem right) {</span>
-<span class="source-line-no">214</span><span id="line-214">    int result = left.compareTo(right);</span>
-<span class="source-line-no">215</span><span id="line-215">    boolean retval;</span>
-<span class="source-line-no">216</span><span id="line-216">    switch (operator) {</span>
-<span class="source-line-no">217</span><span id="line-217">    case EQ:</span>
-<span class="source-line-no">218</span><span id="line-218">      // retval = OperationFunctions.opNumericEqual(left.compare(right),</span>
-<span class="source-line-no">219</span><span id="line-219">      // IIntegerItem.ZERO);</span>
-<span class="source-line-no">220</span><span id="line-220">      retval = result == 0;</span>
-<span class="source-line-no">221</span><span id="line-221">      break;</span>
-<span class="source-line-no">222</span><span id="line-222">    case GE:</span>
-<span class="source-line-no">223</span><span id="line-223">      // retval = OperationFunctions.opNumericGreaterThan(left.compare(right),</span>
-<span class="source-line-no">224</span><span id="line-224">      // IIntegerItem.NEGATIVE_ONE);</span>
-<span class="source-line-no">225</span><span id="line-225">      retval = result &gt;= 0;</span>
-<span class="source-line-no">226</span><span id="line-226">      break;</span>
-<span class="source-line-no">227</span><span id="line-227">    case GT:</span>
-<span class="source-line-no">228</span><span id="line-228">      // retval = OperationFunctions.opNumericGreaterThan(left.compare(right),</span>
-<span class="source-line-no">229</span><span id="line-229">      // IIntegerItem.ZERO);</span>
-<span class="source-line-no">230</span><span id="line-230">      retval = result &gt; 0;</span>
-<span class="source-line-no">231</span><span id="line-231">      break;</span>
-<span class="source-line-no">232</span><span id="line-232">    case LE:</span>
-<span class="source-line-no">233</span><span id="line-233">      // retval = OperationFunctions.opNumericLessThan(left.compare(right),</span>
-<span class="source-line-no">234</span><span id="line-234">      // IIntegerItem.ONE);</span>
-<span class="source-line-no">235</span><span id="line-235">      retval = result &lt;= 0;</span>
-<span class="source-line-no">236</span><span id="line-236">      break;</span>
-<span class="source-line-no">237</span><span id="line-237">    case LT:</span>
-<span class="source-line-no">238</span><span id="line-238">      // retval = OperationFunctions.opNumericLessThan(left.compare(right),</span>
-<span class="source-line-no">239</span><span id="line-239">      // IIntegerItem.ZERO);</span>
-<span class="source-line-no">240</span><span id="line-240">      retval = result &lt; 0;</span>
-<span class="source-line-no">241</span><span id="line-241">      break;</span>
-<span class="source-line-no">242</span><span id="line-242">    case NE:</span>
-<span class="source-line-no">243</span><span id="line-243">      // retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left.compare(right),</span>
-<span class="source-line-no">244</span><span id="line-244">      // IIntegerItem.ZERO));</span>
-<span class="source-line-no">245</span><span id="line-245">      retval = result != 0;</span>
-<span class="source-line-no">246</span><span id="line-246">      break;</span>
-<span class="source-line-no">247</span><span id="line-247">    default:</span>
-<span class="source-line-no">248</span><span id="line-248">      throw new IllegalArgumentException(</span>
-<span class="source-line-no">249</span><span id="line-249">          String.format("Unsupported operator '%s'", operator.name())); // NOPMD</span>
-<span class="source-line-no">250</span><span id="line-250">    }</span>
-<span class="source-line-no">251</span><span id="line-251">    return IBooleanItem.valueOf(retval);</span>
-<span class="source-line-no">252</span><span id="line-252">  }</span>
-<span class="source-line-no">253</span><span id="line-253"></span>
-<span class="source-line-no">254</span><span id="line-254">  /**</span>
-<span class="source-line-no">255</span><span id="line-255">   * Perform a number-based comparison of the {@code right} item against the</span>
-<span class="source-line-no">256</span><span id="line-256">   * {@code left} item using the specified {@code operator}.</span>
-<span class="source-line-no">257</span><span id="line-257">   *</span>
-<span class="source-line-no">258</span><span id="line-258">   * @param left</span>
-<span class="source-line-no">259</span><span id="line-259">   *          the value to compare against</span>
-<span class="source-line-no">260</span><span id="line-260">   * @param operator</span>
-<span class="source-line-no">261</span><span id="line-261">   *          the comparison operator</span>
-<span class="source-line-no">262</span><span id="line-262">   * @param right</span>
-<span class="source-line-no">263</span><span id="line-263">   *          the value to compare with</span>
-<span class="source-line-no">264</span><span id="line-264">   * @return the comparison result</span>
-<span class="source-line-no">265</span><span id="line-265">   */</span>
-<span class="source-line-no">266</span><span id="line-266">  @NonNull</span>
-<span class="source-line-no">267</span><span id="line-267">  public static IBooleanItem numericCompare(@NonNull INumericItem left, @NonNull Operator operator,</span>
-<span class="source-line-no">268</span><span id="line-268">      @NonNull INumericItem right) {</span>
-<span class="source-line-no">269</span><span id="line-269">    IBooleanItem retval;</span>
-<span class="source-line-no">270</span><span id="line-270">    switch (operator) {</span>
-<span class="source-line-no">271</span><span id="line-271">    case EQ:</span>
-<span class="source-line-no">272</span><span id="line-272">      retval = OperationFunctions.opNumericEqual(left, right);</span>
-<span class="source-line-no">273</span><span id="line-273">      break;</span>
-<span class="source-line-no">274</span><span id="line-274">    case GE: {</span>
-<span class="source-line-no">275</span><span id="line-275">      IBooleanItem gt = OperationFunctions.opNumericGreaterThan(left, right);</span>
-<span class="source-line-no">276</span><span id="line-276">      IBooleanItem eq = OperationFunctions.opNumericEqual(left, right);</span>
-<span class="source-line-no">277</span><span id="line-277">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">278</span><span id="line-278">      break;</span>
-<span class="source-line-no">279</span><span id="line-279">    }</span>
-<span class="source-line-no">280</span><span id="line-280">    case GT:</span>
-<span class="source-line-no">281</span><span id="line-281">      retval = OperationFunctions.opNumericGreaterThan(left, right);</span>
-<span class="source-line-no">282</span><span id="line-282">      break;</span>
-<span class="source-line-no">283</span><span id="line-283">    case LE: {</span>
-<span class="source-line-no">284</span><span id="line-284">      IBooleanItem lt = OperationFunctions.opNumericLessThan(left, right);</span>
-<span class="source-line-no">285</span><span id="line-285">      IBooleanItem eq = OperationFunctions.opNumericEqual(left, right);</span>
-<span class="source-line-no">286</span><span id="line-286">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">287</span><span id="line-287">      break;</span>
-<span class="source-line-no">288</span><span id="line-288">    }</span>
-<span class="source-line-no">289</span><span id="line-289">    case LT:</span>
-<span class="source-line-no">290</span><span id="line-290">      retval = OperationFunctions.opNumericLessThan(left, right);</span>
-<span class="source-line-no">291</span><span id="line-291">      break;</span>
-<span class="source-line-no">292</span><span id="line-292">    case NE:</span>
-<span class="source-line-no">293</span><span id="line-293">      retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left, right));</span>
-<span class="source-line-no">294</span><span id="line-294">      break;</span>
-<span class="source-line-no">295</span><span id="line-295">    default:</span>
-<span class="source-line-no">296</span><span id="line-296">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
-<span class="source-line-no">297</span><span id="line-297">    }</span>
-<span class="source-line-no">298</span><span id="line-298">    return retval;</span>
-<span class="source-line-no">299</span><span id="line-299">  }</span>
-<span class="source-line-no">300</span><span id="line-300"></span>
-<span class="source-line-no">301</span><span id="line-301">  /**</span>
-<span class="source-line-no">302</span><span id="line-302">   * Perform a boolean-based comparison of the {@code right} item against the</span>
-<span class="source-line-no">303</span><span id="line-303">   * {@code left} item using the specified {@code operator}.</span>
-<span class="source-line-no">304</span><span id="line-304">   *</span>
-<span class="source-line-no">305</span><span id="line-305">   * @param left</span>
-<span class="source-line-no">306</span><span id="line-306">   *          the value to compare against</span>
-<span class="source-line-no">307</span><span id="line-307">   * @param operator</span>
-<span class="source-line-no">308</span><span id="line-308">   *          the comparison operator</span>
-<span class="source-line-no">309</span><span id="line-309">   * @param right</span>
-<span class="source-line-no">310</span><span id="line-310">   *          the value to compare with</span>
-<span class="source-line-no">311</span><span id="line-311">   * @return the comparison result</span>
-<span class="source-line-no">312</span><span id="line-312">   */</span>
-<span class="source-line-no">313</span><span id="line-313">  @NonNull</span>
-<span class="source-line-no">314</span><span id="line-314">  public static IBooleanItem booleanCompare(@NonNull IBooleanItem left, @NonNull Operator operator,</span>
-<span class="source-line-no">315</span><span id="line-315">      @NonNull IBooleanItem right) {</span>
-<span class="source-line-no">316</span><span id="line-316">    IBooleanItem retval;</span>
-<span class="source-line-no">317</span><span id="line-317">    switch (operator) {</span>
-<span class="source-line-no">318</span><span id="line-318">    case EQ:</span>
-<span class="source-line-no">319</span><span id="line-319">      retval = OperationFunctions.opBooleanEqual(left, right);</span>
-<span class="source-line-no">320</span><span id="line-320">      break;</span>
-<span class="source-line-no">321</span><span id="line-321">    case GE: {</span>
-<span class="source-line-no">322</span><span id="line-322">      IBooleanItem gt = OperationFunctions.opBooleanGreaterThan(left, right);</span>
-<span class="source-line-no">323</span><span id="line-323">      IBooleanItem eq = OperationFunctions.opBooleanEqual(left, right);</span>
-<span class="source-line-no">324</span><span id="line-324">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">325</span><span id="line-325">      break;</span>
-<span class="source-line-no">326</span><span id="line-326">    }</span>
-<span class="source-line-no">327</span><span id="line-327">    case GT:</span>
-<span class="source-line-no">328</span><span id="line-328">      retval = OperationFunctions.opBooleanGreaterThan(left, right);</span>
-<span class="source-line-no">329</span><span id="line-329">      break;</span>
-<span class="source-line-no">330</span><span id="line-330">    case LE: {</span>
-<span class="source-line-no">331</span><span id="line-331">      IBooleanItem lt = OperationFunctions.opBooleanLessThan(left, right);</span>
-<span class="source-line-no">332</span><span id="line-332">      IBooleanItem eq = OperationFunctions.opBooleanEqual(left, right);</span>
-<span class="source-line-no">333</span><span id="line-333">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">334</span><span id="line-334">      break;</span>
-<span class="source-line-no">335</span><span id="line-335">    }</span>
-<span class="source-line-no">336</span><span id="line-336">    case LT:</span>
-<span class="source-line-no">337</span><span id="line-337">      retval = OperationFunctions.opBooleanLessThan(left, right);</span>
-<span class="source-line-no">338</span><span id="line-338">      break;</span>
-<span class="source-line-no">339</span><span id="line-339">    case NE:</span>
-<span class="source-line-no">340</span><span id="line-340">      retval = FnNot.fnNot(OperationFunctions.opBooleanEqual(left, right));</span>
-<span class="source-line-no">341</span><span id="line-341">      break;</span>
-<span class="source-line-no">342</span><span id="line-342">    default:</span>
-<span class="source-line-no">343</span><span id="line-343">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
-<span class="source-line-no">344</span><span id="line-344">    }</span>
-<span class="source-line-no">345</span><span id="line-345">    return retval;</span>
-<span class="source-line-no">346</span><span id="line-346">  }</span>
-<span class="source-line-no">347</span><span id="line-347"></span>
-<span class="source-line-no">348</span><span id="line-348">  /**</span>
-<span class="source-line-no">349</span><span id="line-349">   * Perform a date and time-based comparison of the {@code right} item against</span>
-<span class="source-line-no">350</span><span id="line-350">   * the {@code left} item using the specified {@code operator}.</span>
-<span class="source-line-no">351</span><span id="line-351">   *</span>
-<span class="source-line-no">352</span><span id="line-352">   * @param left</span>
-<span class="source-line-no">353</span><span id="line-353">   *          the value to compare against</span>
-<span class="source-line-no">354</span><span id="line-354">   * @param operator</span>
-<span class="source-line-no">355</span><span id="line-355">   *          the comparison operator</span>
-<span class="source-line-no">356</span><span id="line-356">   * @param right</span>
-<span class="source-line-no">357</span><span id="line-357">   *          the value to compare with</span>
-<span class="source-line-no">358</span><span id="line-358">   * @return the comparison result</span>
-<span class="source-line-no">359</span><span id="line-359">   */</span>
-<span class="source-line-no">360</span><span id="line-360">  @NonNull</span>
-<span class="source-line-no">361</span><span id="line-361">  public static IBooleanItem dateTimeCompare(@NonNull IDateTimeItem left, @NonNull Operator operator,</span>
-<span class="source-line-no">362</span><span id="line-362">      @NonNull IDateTimeItem right) {</span>
-<span class="source-line-no">363</span><span id="line-363">    IBooleanItem retval;</span>
-<span class="source-line-no">364</span><span id="line-364">    switch (operator) {</span>
-<span class="source-line-no">365</span><span id="line-365">    case EQ:</span>
-<span class="source-line-no">366</span><span id="line-366">      retval = OperationFunctions.opDateTimeEqual(left, right);</span>
-<span class="source-line-no">367</span><span id="line-367">      break;</span>
-<span class="source-line-no">368</span><span id="line-368">    case GE: {</span>
-<span class="source-line-no">369</span><span id="line-369">      IBooleanItem gt = OperationFunctions.opDateTimeGreaterThan(left, right);</span>
-<span class="source-line-no">370</span><span id="line-370">      IBooleanItem eq = OperationFunctions.opDateTimeEqual(left, right);</span>
-<span class="source-line-no">371</span><span id="line-371">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">372</span><span id="line-372">      break;</span>
-<span class="source-line-no">373</span><span id="line-373">    }</span>
-<span class="source-line-no">374</span><span id="line-374">    case GT:</span>
-<span class="source-line-no">375</span><span id="line-375">      retval = OperationFunctions.opDateTimeGreaterThan(left, right);</span>
-<span class="source-line-no">376</span><span id="line-376">      break;</span>
-<span class="source-line-no">377</span><span id="line-377">    case LE: {</span>
-<span class="source-line-no">378</span><span id="line-378">      IBooleanItem lt = OperationFunctions.opDateTimeLessThan(left, right);</span>
-<span class="source-line-no">379</span><span id="line-379">      IBooleanItem eq = OperationFunctions.opDateTimeEqual(left, right);</span>
-<span class="source-line-no">380</span><span id="line-380">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">381</span><span id="line-381">      break;</span>
-<span class="source-line-no">382</span><span id="line-382">    }</span>
-<span class="source-line-no">383</span><span id="line-383">    case LT:</span>
-<span class="source-line-no">384</span><span id="line-384">      retval = OperationFunctions.opDateTimeLessThan(left, right);</span>
-<span class="source-line-no">385</span><span id="line-385">      break;</span>
-<span class="source-line-no">386</span><span id="line-386">    case NE:</span>
-<span class="source-line-no">387</span><span id="line-387">      retval = FnNot.fnNot(OperationFunctions.opDateTimeEqual(left, right));</span>
-<span class="source-line-no">388</span><span id="line-388">      break;</span>
-<span class="source-line-no">389</span><span id="line-389">    default:</span>
-<span class="source-line-no">390</span><span id="line-390">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
-<span class="source-line-no">391</span><span id="line-391">    }</span>
-<span class="source-line-no">392</span><span id="line-392">    return retval;</span>
-<span class="source-line-no">393</span><span id="line-393">  }</span>
-<span class="source-line-no">394</span><span id="line-394"></span>
-<span class="source-line-no">395</span><span id="line-395">  /**</span>
-<span class="source-line-no">396</span><span id="line-396">   * Perform a date-based comparison of the {@code right} item against the</span>
-<span class="source-line-no">397</span><span id="line-397">   * {@code left} item using the specified {@code operator}.</span>
-<span class="source-line-no">398</span><span id="line-398">   *</span>
-<span class="source-line-no">399</span><span id="line-399">   * @param left</span>
-<span class="source-line-no">400</span><span id="line-400">   *          the value to compare against</span>
-<span class="source-line-no">401</span><span id="line-401">   * @param operator</span>
-<span class="source-line-no">402</span><span id="line-402">   *          the comparison operator</span>
-<span class="source-line-no">403</span><span id="line-403">   * @param right</span>
-<span class="source-line-no">404</span><span id="line-404">   *          the value to compare with</span>
-<span class="source-line-no">405</span><span id="line-405">   * @return the comparison result</span>
-<span class="source-line-no">406</span><span id="line-406">   */</span>
-<span class="source-line-no">407</span><span id="line-407">  @NonNull</span>
-<span class="source-line-no">408</span><span id="line-408">  public static IBooleanItem dateCompare(@NonNull IDateItem left, @NonNull Operator operator,</span>
-<span class="source-line-no">409</span><span id="line-409">      @NonNull IDateItem right) {</span>
-<span class="source-line-no">410</span><span id="line-410">    IBooleanItem retval;</span>
-<span class="source-line-no">411</span><span id="line-411">    switch (operator) {</span>
-<span class="source-line-no">412</span><span id="line-412">    case EQ:</span>
-<span class="source-line-no">413</span><span id="line-413">      retval = OperationFunctions.opDateEqual(left, right);</span>
-<span class="source-line-no">414</span><span id="line-414">      break;</span>
-<span class="source-line-no">415</span><span id="line-415">    case GE: {</span>
-<span class="source-line-no">416</span><span id="line-416">      IBooleanItem gt = OperationFunctions.opDateGreaterThan(left, right);</span>
-<span class="source-line-no">417</span><span id="line-417">      IBooleanItem eq = OperationFunctions.opDateEqual(left, right);</span>
-<span class="source-line-no">418</span><span id="line-418">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">419</span><span id="line-419">      break;</span>
-<span class="source-line-no">420</span><span id="line-420">    }</span>
-<span class="source-line-no">421</span><span id="line-421">    case GT:</span>
-<span class="source-line-no">422</span><span id="line-422">      retval = OperationFunctions.opDateGreaterThan(left, right);</span>
-<span class="source-line-no">423</span><span id="line-423">      break;</span>
-<span class="source-line-no">424</span><span id="line-424">    case LE: {</span>
-<span class="source-line-no">425</span><span id="line-425">      IBooleanItem lt = OperationFunctions.opDateLessThan(left, right);</span>
-<span class="source-line-no">426</span><span id="line-426">      IBooleanItem eq = OperationFunctions.opDateEqual(left, right);</span>
-<span class="source-line-no">427</span><span id="line-427">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">428</span><span id="line-428">      break;</span>
-<span class="source-line-no">429</span><span id="line-429">    }</span>
-<span class="source-line-no">430</span><span id="line-430">    case LT:</span>
-<span class="source-line-no">431</span><span id="line-431">      retval = OperationFunctions.opDateLessThan(left, right);</span>
-<span class="source-line-no">432</span><span id="line-432">      break;</span>
-<span class="source-line-no">433</span><span id="line-433">    case NE:</span>
-<span class="source-line-no">434</span><span id="line-434">      retval = FnNot.fnNot(OperationFunctions.opDateEqual(left, right));</span>
-<span class="source-line-no">435</span><span id="line-435">      break;</span>
-<span class="source-line-no">436</span><span id="line-436">    default:</span>
-<span class="source-line-no">437</span><span id="line-437">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
-<span class="source-line-no">438</span><span id="line-438">    }</span>
-<span class="source-line-no">439</span><span id="line-439">    return retval;</span>
-<span class="source-line-no">440</span><span id="line-440">  }</span>
-<span class="source-line-no">441</span><span id="line-441"></span>
-<span class="source-line-no">442</span><span id="line-442">  /**</span>
-<span class="source-line-no">443</span><span id="line-443">   * Perform a duration-based comparison of the {@code right} item against the</span>
-<span class="source-line-no">444</span><span id="line-444">   * {@code left} item using the specified {@code operator}.</span>
-<span class="source-line-no">445</span><span id="line-445">   *</span>
-<span class="source-line-no">446</span><span id="line-446">   * @param left</span>
-<span class="source-line-no">447</span><span id="line-447">   *          the value to compare against</span>
-<span class="source-line-no">448</span><span id="line-448">   * @param operator</span>
-<span class="source-line-no">449</span><span id="line-449">   *          the comparison operator</span>
-<span class="source-line-no">450</span><span id="line-450">   * @param right</span>
-<span class="source-line-no">451</span><span id="line-451">   *          the value to compare with</span>
-<span class="source-line-no">452</span><span id="line-452">   * @return the comparison result</span>
-<span class="source-line-no">453</span><span id="line-453">   */</span>
-<span class="source-line-no">454</span><span id="line-454">  @NonNull</span>
-<span class="source-line-no">455</span><span id="line-455">  public static IBooleanItem durationCompare( // NOPMD - unavoidable</span>
-<span class="source-line-no">456</span><span id="line-456">      @NonNull IDurationItem left,</span>
-<span class="source-line-no">457</span><span id="line-457">      @NonNull Operator operator,</span>
-<span class="source-line-no">458</span><span id="line-458">      @NonNull IDurationItem right) {</span>
-<span class="source-line-no">459</span><span id="line-459">    IBooleanItem retval = null;</span>
-<span class="source-line-no">460</span><span id="line-460">    switch (operator) {</span>
-<span class="source-line-no">461</span><span id="line-461">    case EQ:</span>
-<span class="source-line-no">462</span><span id="line-462">      retval = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="source-line-no">463</span><span id="line-463">      break;</span>
-<span class="source-line-no">464</span><span id="line-464">    case GE:</span>
-<span class="source-line-no">465</span><span id="line-465">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
-<span class="source-line-no">466</span><span id="line-466">        IBooleanItem gt = OperationFunctions.opYearMonthDurationGreaterThan(</span>
-<span class="source-line-no">467</span><span id="line-467">            (IYearMonthDurationItem) left,</span>
-<span class="source-line-no">468</span><span id="line-468">            (IYearMonthDurationItem) right);</span>
-<span class="source-line-no">469</span><span id="line-469">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="source-line-no">470</span><span id="line-470">        retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">471</span><span id="line-471">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
-<span class="source-line-no">472</span><span id="line-472">        IBooleanItem gt = OperationFunctions.opDayTimeDurationGreaterThan(</span>
-<span class="source-line-no">473</span><span id="line-473">            (IDayTimeDurationItem) left,</span>
-<span class="source-line-no">474</span><span id="line-474">            (IDayTimeDurationItem) right);</span>
-<span class="source-line-no">475</span><span id="line-475">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="source-line-no">476</span><span id="line-476">        retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">477</span><span id="line-477">      }</span>
-<span class="source-line-no">478</span><span id="line-478">      break;</span>
-<span class="source-line-no">479</span><span id="line-479">    case GT:</span>
-<span class="source-line-no">480</span><span id="line-480">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
-<span class="source-line-no">481</span><span id="line-481">        retval = OperationFunctions.opYearMonthDurationGreaterThan(</span>
-<span class="source-line-no">482</span><span id="line-482">            (IYearMonthDurationItem) left,</span>
-<span class="source-line-no">483</span><span id="line-483">            (IYearMonthDurationItem) right);</span>
-<span class="source-line-no">484</span><span id="line-484">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
-<span class="source-line-no">485</span><span id="line-485">        retval = OperationFunctions.opDayTimeDurationGreaterThan(</span>
-<span class="source-line-no">486</span><span id="line-486">            (IDayTimeDurationItem) left,</span>
-<span class="source-line-no">487</span><span id="line-487">            (IDayTimeDurationItem) right);</span>
-<span class="source-line-no">488</span><span id="line-488">      }</span>
-<span class="source-line-no">489</span><span id="line-489">      break;</span>
-<span class="source-line-no">490</span><span id="line-490">    case LE:</span>
-<span class="source-line-no">491</span><span id="line-491">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
-<span class="source-line-no">492</span><span id="line-492">        IBooleanItem lt = OperationFunctions.opYearMonthDurationLessThan(</span>
-<span class="source-line-no">493</span><span id="line-493">            (IYearMonthDurationItem) left,</span>
-<span class="source-line-no">494</span><span id="line-494">            (IYearMonthDurationItem) right);</span>
-<span class="source-line-no">495</span><span id="line-495">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="source-line-no">496</span><span id="line-496">        retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">497</span><span id="line-497">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
-<span class="source-line-no">498</span><span id="line-498">        IBooleanItem lt = OperationFunctions.opDayTimeDurationLessThan(</span>
-<span class="source-line-no">499</span><span id="line-499">            (IDayTimeDurationItem) left,</span>
-<span class="source-line-no">500</span><span id="line-500">            (IDayTimeDurationItem) right);</span>
-<span class="source-line-no">501</span><span id="line-501">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="source-line-no">502</span><span id="line-502">        retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">503</span><span id="line-503">      }</span>
-<span class="source-line-no">504</span><span id="line-504">      break;</span>
-<span class="source-line-no">505</span><span id="line-505">    case LT:</span>
-<span class="source-line-no">506</span><span id="line-506">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
-<span class="source-line-no">507</span><span id="line-507">        retval = OperationFunctions.opYearMonthDurationLessThan(</span>
-<span class="source-line-no">508</span><span id="line-508">            (IYearMonthDurationItem) left,</span>
-<span class="source-line-no">509</span><span id="line-509">            (IYearMonthDurationItem) right);</span>
-<span class="source-line-no">510</span><span id="line-510">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
-<span class="source-line-no">511</span><span id="line-511">        retval = OperationFunctions.opDayTimeDurationLessThan(</span>
-<span class="source-line-no">512</span><span id="line-512">            (IDayTimeDurationItem) left,</span>
-<span class="source-line-no">513</span><span id="line-513">            (IDayTimeDurationItem) right);</span>
-<span class="source-line-no">514</span><span id="line-514">      }</span>
-<span class="source-line-no">515</span><span id="line-515">      break;</span>
-<span class="source-line-no">516</span><span id="line-516">    case NE:</span>
-<span class="source-line-no">517</span><span id="line-517">      retval = FnNot.fnNot(OperationFunctions.opDurationEqual(left, right));</span>
-<span class="source-line-no">518</span><span id="line-518">      break;</span>
-<span class="source-line-no">519</span><span id="line-519">    default:</span>
-<span class="source-line-no">520</span><span id="line-520">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
-<span class="source-line-no">521</span><span id="line-521">    }</span>
-<span class="source-line-no">522</span><span id="line-522"></span>
-<span class="source-line-no">523</span><span id="line-523">    if (retval == null) {</span>
-<span class="source-line-no">524</span><span id="line-524">      throw new InvalidTypeMetapathException(</span>
-<span class="source-line-no">525</span><span id="line-525">          null,</span>
-<span class="source-line-no">526</span><span id="line-526">          String.format("The item types '%s' and '%s' are not comparable",</span>
-<span class="source-line-no">527</span><span id="line-527">              left.getClass().getName(),</span>
-<span class="source-line-no">528</span><span id="line-528">              right.getClass().getName()));</span>
-<span class="source-line-no">529</span><span id="line-529">    }</span>
-<span class="source-line-no">530</span><span id="line-530">    return retval;</span>
-<span class="source-line-no">531</span><span id="line-531">  }</span>
-<span class="source-line-no">532</span><span id="line-532"></span>
-<span class="source-line-no">533</span><span id="line-533">  /**</span>
-<span class="source-line-no">534</span><span id="line-534">   * Perform a binary data-based comparison of the {@code right} item against the</span>
-<span class="source-line-no">535</span><span id="line-535">   * {@code left} item using the specified {@code operator}.</span>
-<span class="source-line-no">536</span><span id="line-536">   *</span>
-<span class="source-line-no">537</span><span id="line-537">   * @param left</span>
-<span class="source-line-no">538</span><span id="line-538">   *          the value to compare against</span>
-<span class="source-line-no">539</span><span id="line-539">   * @param operator</span>
-<span class="source-line-no">540</span><span id="line-540">   *          the comparison operator</span>
-<span class="source-line-no">541</span><span id="line-541">   * @param right</span>
-<span class="source-line-no">542</span><span id="line-542">   *          the value to compare with</span>
-<span class="source-line-no">543</span><span id="line-543">   * @return the comparison result</span>
-<span class="source-line-no">544</span><span id="line-544">   */</span>
-<span class="source-line-no">545</span><span id="line-545">  @NonNull</span>
-<span class="source-line-no">546</span><span id="line-546">  public static IBooleanItem binaryCompare(@NonNull IBase64BinaryItem left, @NonNull Operator operator,</span>
-<span class="source-line-no">547</span><span id="line-547">      @NonNull IBase64BinaryItem right) {</span>
-<span class="source-line-no">548</span><span id="line-548">    IBooleanItem retval;</span>
-<span class="source-line-no">549</span><span id="line-549">    switch (operator) {</span>
-<span class="source-line-no">550</span><span id="line-550">    case EQ:</span>
-<span class="source-line-no">551</span><span id="line-551">      retval = OperationFunctions.opBase64BinaryEqual(left, right);</span>
-<span class="source-line-no">552</span><span id="line-552">      break;</span>
-<span class="source-line-no">553</span><span id="line-553">    case GE: {</span>
-<span class="source-line-no">554</span><span id="line-554">      IBooleanItem gt = OperationFunctions.opBase64BinaryGreaterThan(left, right);</span>
-<span class="source-line-no">555</span><span id="line-555">      IBooleanItem eq = OperationFunctions.opBase64BinaryEqual(left, right);</span>
-<span class="source-line-no">556</span><span id="line-556">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">557</span><span id="line-557">      break;</span>
-<span class="source-line-no">558</span><span id="line-558">    }</span>
-<span class="source-line-no">559</span><span id="line-559">    case GT:</span>
-<span class="source-line-no">560</span><span id="line-560">      retval = OperationFunctions.opBase64BinaryGreaterThan(left, right);</span>
-<span class="source-line-no">561</span><span id="line-561">      break;</span>
-<span class="source-line-no">562</span><span id="line-562">    case LE: {</span>
-<span class="source-line-no">563</span><span id="line-563">      IBooleanItem lt = OperationFunctions.opBase64BinaryLessThan(left, right);</span>
-<span class="source-line-no">564</span><span id="line-564">      IBooleanItem eq = OperationFunctions.opBase64BinaryEqual(left, right);</span>
-<span class="source-line-no">565</span><span id="line-565">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="source-line-no">566</span><span id="line-566">      break;</span>
-<span class="source-line-no">567</span><span id="line-567">    }</span>
-<span class="source-line-no">568</span><span id="line-568">    case LT:</span>
-<span class="source-line-no">569</span><span id="line-569">      retval = OperationFunctions.opBase64BinaryLessThan(left, right);</span>
-<span class="source-line-no">570</span><span id="line-570">      break;</span>
-<span class="source-line-no">571</span><span id="line-571">    case NE:</span>
-<span class="source-line-no">572</span><span id="line-572">      retval = FnNot.fnNot(OperationFunctions.opBase64BinaryEqual(left, right));</span>
-<span class="source-line-no">573</span><span id="line-573">      break;</span>
-<span class="source-line-no">574</span><span id="line-574">    default:</span>
-<span class="source-line-no">575</span><span id="line-575">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
-<span class="source-line-no">576</span><span id="line-576">    }</span>
-<span class="source-line-no">577</span><span id="line-577">    return retval;</span>
-<span class="source-line-no">578</span><span id="line-578">  }</span>
-<span class="source-line-no">579</span><span id="line-579"></span>
-<span class="source-line-no">580</span><span id="line-580">  /**</span>
-<span class="source-line-no">581</span><span id="line-581">   * Compare the {@code right} item with the {@code left} item using the specified</span>
-<span class="source-line-no">582</span><span id="line-582">   * {@code operator}.</span>
-<span class="source-line-no">583</span><span id="line-583">   *</span>
-<span class="source-line-no">584</span><span id="line-584">   * @param left</span>
-<span class="source-line-no">585</span><span id="line-585">   *          the value to compare against</span>
-<span class="source-line-no">586</span><span id="line-586">   * @param right</span>
-<span class="source-line-no">587</span><span id="line-587">   *          the value to compare with</span>
-<span class="source-line-no">588</span><span id="line-588">   * @return the comparison result</span>
-<span class="source-line-no">589</span><span id="line-589">   */</span>
-<span class="source-line-no">590</span><span id="line-590">  @NonNull</span>
-<span class="source-line-no">591</span><span id="line-591">  public static IIntegerItem compareTo(</span>
-<span class="source-line-no">592</span><span id="line-592">      @NonNull IAnyAtomicItem left,</span>
-<span class="source-line-no">593</span><span id="line-593">      @NonNull IAnyAtomicItem right) {</span>
-<span class="source-line-no">594</span><span id="line-594">    return IIntegerItem.valueOf(left.compareTo(right));</span>
-<span class="source-line-no">595</span><span id="line-595">  }</span>
-<span class="source-line-no">596</span><span id="line-596">}</span>
+<span class="source-line-no">175</span><span id="line-175">    @NonNull</span>
+<span class="source-line-no">176</span><span id="line-176">    IBooleanItem retval;</span>
+<span class="source-line-no">177</span><span id="line-177">    if (left instanceof IStringItem || right instanceof IStringItem) {</span>
+<span class="source-line-no">178</span><span id="line-178">      retval = stringCompare(IStringItem.cast(left), operator, IStringItem.cast(right));</span>
+<span class="source-line-no">179</span><span id="line-179">    } else if (left instanceof INumericItem &amp;&amp; right instanceof INumericItem) {</span>
+<span class="source-line-no">180</span><span id="line-180">      retval = numericCompare((INumericItem) left, operator, (INumericItem) right);</span>
+<span class="source-line-no">181</span><span id="line-181">    } else if (left instanceof IBooleanItem &amp;&amp; right instanceof IBooleanItem) {</span>
+<span class="source-line-no">182</span><span id="line-182">      retval = booleanCompare((IBooleanItem) left, operator, (IBooleanItem) right);</span>
+<span class="source-line-no">183</span><span id="line-183">    } else if (left instanceof IDateTimeItem &amp;&amp; right instanceof IDateTimeItem) {</span>
+<span class="source-line-no">184</span><span id="line-184">      retval = dateTimeCompare((IDateTimeItem) left, operator, (IDateTimeItem) right);</span>
+<span class="source-line-no">185</span><span id="line-185">    } else if (left instanceof IDateItem &amp;&amp; right instanceof IDateItem) {</span>
+<span class="source-line-no">186</span><span id="line-186">      retval = dateCompare((IDateItem) left, operator, (IDateItem) right);</span>
+<span class="source-line-no">187</span><span id="line-187">    } else if (left instanceof IDurationItem &amp;&amp; right instanceof IDurationItem) {</span>
+<span class="source-line-no">188</span><span id="line-188">      retval = durationCompare((IDurationItem) left, operator, (IDurationItem) right);</span>
+<span class="source-line-no">189</span><span id="line-189">    } else if (left instanceof IBase64BinaryItem &amp;&amp; right instanceof IBase64BinaryItem) {</span>
+<span class="source-line-no">190</span><span id="line-190">      retval = binaryCompare((IBase64BinaryItem) left, operator, (IBase64BinaryItem) right);</span>
+<span class="source-line-no">191</span><span id="line-191">    } else {</span>
+<span class="source-line-no">192</span><span id="line-192">      throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">193</span><span id="line-193">          null,</span>
+<span class="source-line-no">194</span><span id="line-194">          String.format("invalid types for comparison: %s %s %s", left.getClass().getName(),</span>
+<span class="source-line-no">195</span><span id="line-195">              operator.name().toLowerCase(Locale.ROOT), right.getClass().getName()));</span>
+<span class="source-line-no">196</span><span id="line-196">    }</span>
+<span class="source-line-no">197</span><span id="line-197">    return retval;</span>
+<span class="source-line-no">198</span><span id="line-198">  }</span>
+<span class="source-line-no">199</span><span id="line-199"></span>
+<span class="source-line-no">200</span><span id="line-200">  /**</span>
+<span class="source-line-no">201</span><span id="line-201">   * Perform a string-based comparison of the {@code right} item against the</span>
+<span class="source-line-no">202</span><span id="line-202">   * {@code left} item using the specified {@code operator}.</span>
+<span class="source-line-no">203</span><span id="line-203">   *</span>
+<span class="source-line-no">204</span><span id="line-204">   * @param left</span>
+<span class="source-line-no">205</span><span id="line-205">   *          the value to compare against</span>
+<span class="source-line-no">206</span><span id="line-206">   * @param operator</span>
+<span class="source-line-no">207</span><span id="line-207">   *          the comparison operator</span>
+<span class="source-line-no">208</span><span id="line-208">   * @param right</span>
+<span class="source-line-no">209</span><span id="line-209">   *          the value to compare with</span>
+<span class="source-line-no">210</span><span id="line-210">   * @return the comparison result</span>
+<span class="source-line-no">211</span><span id="line-211">   */</span>
+<span class="source-line-no">212</span><span id="line-212">  @NonNull</span>
+<span class="source-line-no">213</span><span id="line-213">  public static IBooleanItem stringCompare(@NonNull IStringItem left, @NonNull Operator operator,</span>
+<span class="source-line-no">214</span><span id="line-214">      @NonNull IStringItem right) {</span>
+<span class="source-line-no">215</span><span id="line-215">    int result = left.compareTo(right);</span>
+<span class="source-line-no">216</span><span id="line-216">    boolean retval;</span>
+<span class="source-line-no">217</span><span id="line-217">    switch (operator) {</span>
+<span class="source-line-no">218</span><span id="line-218">    case EQ:</span>
+<span class="source-line-no">219</span><span id="line-219">      // retval = OperationFunctions.opNumericEqual(left.compare(right),</span>
+<span class="source-line-no">220</span><span id="line-220">      // IIntegerItem.ZERO);</span>
+<span class="source-line-no">221</span><span id="line-221">      retval = result == 0;</span>
+<span class="source-line-no">222</span><span id="line-222">      break;</span>
+<span class="source-line-no">223</span><span id="line-223">    case GE:</span>
+<span class="source-line-no">224</span><span id="line-224">      // retval = OperationFunctions.opNumericGreaterThan(left.compare(right),</span>
+<span class="source-line-no">225</span><span id="line-225">      // IIntegerItem.NEGATIVE_ONE);</span>
+<span class="source-line-no">226</span><span id="line-226">      retval = result &gt;= 0;</span>
+<span class="source-line-no">227</span><span id="line-227">      break;</span>
+<span class="source-line-no">228</span><span id="line-228">    case GT:</span>
+<span class="source-line-no">229</span><span id="line-229">      // retval = OperationFunctions.opNumericGreaterThan(left.compare(right),</span>
+<span class="source-line-no">230</span><span id="line-230">      // IIntegerItem.ZERO);</span>
+<span class="source-line-no">231</span><span id="line-231">      retval = result &gt; 0;</span>
+<span class="source-line-no">232</span><span id="line-232">      break;</span>
+<span class="source-line-no">233</span><span id="line-233">    case LE:</span>
+<span class="source-line-no">234</span><span id="line-234">      // retval = OperationFunctions.opNumericLessThan(left.compare(right),</span>
+<span class="source-line-no">235</span><span id="line-235">      // IIntegerItem.ONE);</span>
+<span class="source-line-no">236</span><span id="line-236">      retval = result &lt;= 0;</span>
+<span class="source-line-no">237</span><span id="line-237">      break;</span>
+<span class="source-line-no">238</span><span id="line-238">    case LT:</span>
+<span class="source-line-no">239</span><span id="line-239">      // retval = OperationFunctions.opNumericLessThan(left.compare(right),</span>
+<span class="source-line-no">240</span><span id="line-240">      // IIntegerItem.ZERO);</span>
+<span class="source-line-no">241</span><span id="line-241">      retval = result &lt; 0;</span>
+<span class="source-line-no">242</span><span id="line-242">      break;</span>
+<span class="source-line-no">243</span><span id="line-243">    case NE:</span>
+<span class="source-line-no">244</span><span id="line-244">      // retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left.compare(right),</span>
+<span class="source-line-no">245</span><span id="line-245">      // IIntegerItem.ZERO));</span>
+<span class="source-line-no">246</span><span id="line-246">      retval = result != 0;</span>
+<span class="source-line-no">247</span><span id="line-247">      break;</span>
+<span class="source-line-no">248</span><span id="line-248">    default:</span>
+<span class="source-line-no">249</span><span id="line-249">      throw new IllegalArgumentException(</span>
+<span class="source-line-no">250</span><span id="line-250">          String.format("Unsupported operator '%s'", operator.name())); // NOPMD</span>
+<span class="source-line-no">251</span><span id="line-251">    }</span>
+<span class="source-line-no">252</span><span id="line-252">    return IBooleanItem.valueOf(retval);</span>
+<span class="source-line-no">253</span><span id="line-253">  }</span>
+<span class="source-line-no">254</span><span id="line-254"></span>
+<span class="source-line-no">255</span><span id="line-255">  /**</span>
+<span class="source-line-no">256</span><span id="line-256">   * Perform a number-based comparison of the {@code right} item against the</span>
+<span class="source-line-no">257</span><span id="line-257">   * {@code left} item using the specified {@code operator}.</span>
+<span class="source-line-no">258</span><span id="line-258">   *</span>
+<span class="source-line-no">259</span><span id="line-259">   * @param left</span>
+<span class="source-line-no">260</span><span id="line-260">   *          the value to compare against</span>
+<span class="source-line-no">261</span><span id="line-261">   * @param operator</span>
+<span class="source-line-no">262</span><span id="line-262">   *          the comparison operator</span>
+<span class="source-line-no">263</span><span id="line-263">   * @param right</span>
+<span class="source-line-no">264</span><span id="line-264">   *          the value to compare with</span>
+<span class="source-line-no">265</span><span id="line-265">   * @return the comparison result</span>
+<span class="source-line-no">266</span><span id="line-266">   */</span>
+<span class="source-line-no">267</span><span id="line-267">  @NonNull</span>
+<span class="source-line-no">268</span><span id="line-268">  public static IBooleanItem numericCompare(@NonNull INumericItem left, @NonNull Operator operator,</span>
+<span class="source-line-no">269</span><span id="line-269">      @NonNull INumericItem right) {</span>
+<span class="source-line-no">270</span><span id="line-270">    IBooleanItem retval;</span>
+<span class="source-line-no">271</span><span id="line-271">    switch (operator) {</span>
+<span class="source-line-no">272</span><span id="line-272">    case EQ:</span>
+<span class="source-line-no">273</span><span id="line-273">      retval = OperationFunctions.opNumericEqual(left, right);</span>
+<span class="source-line-no">274</span><span id="line-274">      break;</span>
+<span class="source-line-no">275</span><span id="line-275">    case GE: {</span>
+<span class="source-line-no">276</span><span id="line-276">      IBooleanItem gt = OperationFunctions.opNumericGreaterThan(left, right);</span>
+<span class="source-line-no">277</span><span id="line-277">      IBooleanItem eq = OperationFunctions.opNumericEqual(left, right);</span>
+<span class="source-line-no">278</span><span id="line-278">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">279</span><span id="line-279">      break;</span>
+<span class="source-line-no">280</span><span id="line-280">    }</span>
+<span class="source-line-no">281</span><span id="line-281">    case GT:</span>
+<span class="source-line-no">282</span><span id="line-282">      retval = OperationFunctions.opNumericGreaterThan(left, right);</span>
+<span class="source-line-no">283</span><span id="line-283">      break;</span>
+<span class="source-line-no">284</span><span id="line-284">    case LE: {</span>
+<span class="source-line-no">285</span><span id="line-285">      IBooleanItem lt = OperationFunctions.opNumericLessThan(left, right);</span>
+<span class="source-line-no">286</span><span id="line-286">      IBooleanItem eq = OperationFunctions.opNumericEqual(left, right);</span>
+<span class="source-line-no">287</span><span id="line-287">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">288</span><span id="line-288">      break;</span>
+<span class="source-line-no">289</span><span id="line-289">    }</span>
+<span class="source-line-no">290</span><span id="line-290">    case LT:</span>
+<span class="source-line-no">291</span><span id="line-291">      retval = OperationFunctions.opNumericLessThan(left, right);</span>
+<span class="source-line-no">292</span><span id="line-292">      break;</span>
+<span class="source-line-no">293</span><span id="line-293">    case NE:</span>
+<span class="source-line-no">294</span><span id="line-294">      retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left, right));</span>
+<span class="source-line-no">295</span><span id="line-295">      break;</span>
+<span class="source-line-no">296</span><span id="line-296">    default:</span>
+<span class="source-line-no">297</span><span id="line-297">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
+<span class="source-line-no">298</span><span id="line-298">    }</span>
+<span class="source-line-no">299</span><span id="line-299">    return retval;</span>
+<span class="source-line-no">300</span><span id="line-300">  }</span>
+<span class="source-line-no">301</span><span id="line-301"></span>
+<span class="source-line-no">302</span><span id="line-302">  /**</span>
+<span class="source-line-no">303</span><span id="line-303">   * Perform a boolean-based comparison of the {@code right} item against the</span>
+<span class="source-line-no">304</span><span id="line-304">   * {@code left} item using the specified {@code operator}.</span>
+<span class="source-line-no">305</span><span id="line-305">   *</span>
+<span class="source-line-no">306</span><span id="line-306">   * @param left</span>
+<span class="source-line-no">307</span><span id="line-307">   *          the value to compare against</span>
+<span class="source-line-no">308</span><span id="line-308">   * @param operator</span>
+<span class="source-line-no">309</span><span id="line-309">   *          the comparison operator</span>
+<span class="source-line-no">310</span><span id="line-310">   * @param right</span>
+<span class="source-line-no">311</span><span id="line-311">   *          the value to compare with</span>
+<span class="source-line-no">312</span><span id="line-312">   * @return the comparison result</span>
+<span class="source-line-no">313</span><span id="line-313">   */</span>
+<span class="source-line-no">314</span><span id="line-314">  @NonNull</span>
+<span class="source-line-no">315</span><span id="line-315">  public static IBooleanItem booleanCompare(@NonNull IBooleanItem left, @NonNull Operator operator,</span>
+<span class="source-line-no">316</span><span id="line-316">      @NonNull IBooleanItem right) {</span>
+<span class="source-line-no">317</span><span id="line-317">    IBooleanItem retval;</span>
+<span class="source-line-no">318</span><span id="line-318">    switch (operator) {</span>
+<span class="source-line-no">319</span><span id="line-319">    case EQ:</span>
+<span class="source-line-no">320</span><span id="line-320">      retval = OperationFunctions.opBooleanEqual(left, right);</span>
+<span class="source-line-no">321</span><span id="line-321">      break;</span>
+<span class="source-line-no">322</span><span id="line-322">    case GE: {</span>
+<span class="source-line-no">323</span><span id="line-323">      IBooleanItem gt = OperationFunctions.opBooleanGreaterThan(left, right);</span>
+<span class="source-line-no">324</span><span id="line-324">      IBooleanItem eq = OperationFunctions.opBooleanEqual(left, right);</span>
+<span class="source-line-no">325</span><span id="line-325">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">326</span><span id="line-326">      break;</span>
+<span class="source-line-no">327</span><span id="line-327">    }</span>
+<span class="source-line-no">328</span><span id="line-328">    case GT:</span>
+<span class="source-line-no">329</span><span id="line-329">      retval = OperationFunctions.opBooleanGreaterThan(left, right);</span>
+<span class="source-line-no">330</span><span id="line-330">      break;</span>
+<span class="source-line-no">331</span><span id="line-331">    case LE: {</span>
+<span class="source-line-no">332</span><span id="line-332">      IBooleanItem lt = OperationFunctions.opBooleanLessThan(left, right);</span>
+<span class="source-line-no">333</span><span id="line-333">      IBooleanItem eq = OperationFunctions.opBooleanEqual(left, right);</span>
+<span class="source-line-no">334</span><span id="line-334">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">335</span><span id="line-335">      break;</span>
+<span class="source-line-no">336</span><span id="line-336">    }</span>
+<span class="source-line-no">337</span><span id="line-337">    case LT:</span>
+<span class="source-line-no">338</span><span id="line-338">      retval = OperationFunctions.opBooleanLessThan(left, right);</span>
+<span class="source-line-no">339</span><span id="line-339">      break;</span>
+<span class="source-line-no">340</span><span id="line-340">    case NE:</span>
+<span class="source-line-no">341</span><span id="line-341">      retval = FnNot.fnNot(OperationFunctions.opBooleanEqual(left, right));</span>
+<span class="source-line-no">342</span><span id="line-342">      break;</span>
+<span class="source-line-no">343</span><span id="line-343">    default:</span>
+<span class="source-line-no">344</span><span id="line-344">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
+<span class="source-line-no">345</span><span id="line-345">    }</span>
+<span class="source-line-no">346</span><span id="line-346">    return retval;</span>
+<span class="source-line-no">347</span><span id="line-347">  }</span>
+<span class="source-line-no">348</span><span id="line-348"></span>
+<span class="source-line-no">349</span><span id="line-349">  /**</span>
+<span class="source-line-no">350</span><span id="line-350">   * Perform a date and time-based comparison of the {@code right} item against</span>
+<span class="source-line-no">351</span><span id="line-351">   * the {@code left} item using the specified {@code operator}.</span>
+<span class="source-line-no">352</span><span id="line-352">   *</span>
+<span class="source-line-no">353</span><span id="line-353">   * @param left</span>
+<span class="source-line-no">354</span><span id="line-354">   *          the value to compare against</span>
+<span class="source-line-no">355</span><span id="line-355">   * @param operator</span>
+<span class="source-line-no">356</span><span id="line-356">   *          the comparison operator</span>
+<span class="source-line-no">357</span><span id="line-357">   * @param right</span>
+<span class="source-line-no">358</span><span id="line-358">   *          the value to compare with</span>
+<span class="source-line-no">359</span><span id="line-359">   * @return the comparison result</span>
+<span class="source-line-no">360</span><span id="line-360">   */</span>
+<span class="source-line-no">361</span><span id="line-361">  @NonNull</span>
+<span class="source-line-no">362</span><span id="line-362">  public static IBooleanItem dateTimeCompare(@NonNull IDateTimeItem left, @NonNull Operator operator,</span>
+<span class="source-line-no">363</span><span id="line-363">      @NonNull IDateTimeItem right) {</span>
+<span class="source-line-no">364</span><span id="line-364">    IBooleanItem retval;</span>
+<span class="source-line-no">365</span><span id="line-365">    switch (operator) {</span>
+<span class="source-line-no">366</span><span id="line-366">    case EQ:</span>
+<span class="source-line-no">367</span><span id="line-367">      retval = OperationFunctions.opDateTimeEqual(left, right);</span>
+<span class="source-line-no">368</span><span id="line-368">      break;</span>
+<span class="source-line-no">369</span><span id="line-369">    case GE: {</span>
+<span class="source-line-no">370</span><span id="line-370">      IBooleanItem gt = OperationFunctions.opDateTimeGreaterThan(left, right);</span>
+<span class="source-line-no">371</span><span id="line-371">      IBooleanItem eq = OperationFunctions.opDateTimeEqual(left, right);</span>
+<span class="source-line-no">372</span><span id="line-372">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">373</span><span id="line-373">      break;</span>
+<span class="source-line-no">374</span><span id="line-374">    }</span>
+<span class="source-line-no">375</span><span id="line-375">    case GT:</span>
+<span class="source-line-no">376</span><span id="line-376">      retval = OperationFunctions.opDateTimeGreaterThan(left, right);</span>
+<span class="source-line-no">377</span><span id="line-377">      break;</span>
+<span class="source-line-no">378</span><span id="line-378">    case LE: {</span>
+<span class="source-line-no">379</span><span id="line-379">      IBooleanItem lt = OperationFunctions.opDateTimeLessThan(left, right);</span>
+<span class="source-line-no">380</span><span id="line-380">      IBooleanItem eq = OperationFunctions.opDateTimeEqual(left, right);</span>
+<span class="source-line-no">381</span><span id="line-381">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">382</span><span id="line-382">      break;</span>
+<span class="source-line-no">383</span><span id="line-383">    }</span>
+<span class="source-line-no">384</span><span id="line-384">    case LT:</span>
+<span class="source-line-no">385</span><span id="line-385">      retval = OperationFunctions.opDateTimeLessThan(left, right);</span>
+<span class="source-line-no">386</span><span id="line-386">      break;</span>
+<span class="source-line-no">387</span><span id="line-387">    case NE:</span>
+<span class="source-line-no">388</span><span id="line-388">      retval = FnNot.fnNot(OperationFunctions.opDateTimeEqual(left, right));</span>
+<span class="source-line-no">389</span><span id="line-389">      break;</span>
+<span class="source-line-no">390</span><span id="line-390">    default:</span>
+<span class="source-line-no">391</span><span id="line-391">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
+<span class="source-line-no">392</span><span id="line-392">    }</span>
+<span class="source-line-no">393</span><span id="line-393">    return retval;</span>
+<span class="source-line-no">394</span><span id="line-394">  }</span>
+<span class="source-line-no">395</span><span id="line-395"></span>
+<span class="source-line-no">396</span><span id="line-396">  /**</span>
+<span class="source-line-no">397</span><span id="line-397">   * Perform a date-based comparison of the {@code right} item against the</span>
+<span class="source-line-no">398</span><span id="line-398">   * {@code left} item using the specified {@code operator}.</span>
+<span class="source-line-no">399</span><span id="line-399">   *</span>
+<span class="source-line-no">400</span><span id="line-400">   * @param left</span>
+<span class="source-line-no">401</span><span id="line-401">   *          the value to compare against</span>
+<span class="source-line-no">402</span><span id="line-402">   * @param operator</span>
+<span class="source-line-no">403</span><span id="line-403">   *          the comparison operator</span>
+<span class="source-line-no">404</span><span id="line-404">   * @param right</span>
+<span class="source-line-no">405</span><span id="line-405">   *          the value to compare with</span>
+<span class="source-line-no">406</span><span id="line-406">   * @return the comparison result</span>
+<span class="source-line-no">407</span><span id="line-407">   */</span>
+<span class="source-line-no">408</span><span id="line-408">  @NonNull</span>
+<span class="source-line-no">409</span><span id="line-409">  public static IBooleanItem dateCompare(@NonNull IDateItem left, @NonNull Operator operator,</span>
+<span class="source-line-no">410</span><span id="line-410">      @NonNull IDateItem right) {</span>
+<span class="source-line-no">411</span><span id="line-411">    IBooleanItem retval;</span>
+<span class="source-line-no">412</span><span id="line-412">    switch (operator) {</span>
+<span class="source-line-no">413</span><span id="line-413">    case EQ:</span>
+<span class="source-line-no">414</span><span id="line-414">      retval = OperationFunctions.opDateEqual(left, right);</span>
+<span class="source-line-no">415</span><span id="line-415">      break;</span>
+<span class="source-line-no">416</span><span id="line-416">    case GE: {</span>
+<span class="source-line-no">417</span><span id="line-417">      IBooleanItem gt = OperationFunctions.opDateGreaterThan(left, right);</span>
+<span class="source-line-no">418</span><span id="line-418">      IBooleanItem eq = OperationFunctions.opDateEqual(left, right);</span>
+<span class="source-line-no">419</span><span id="line-419">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">420</span><span id="line-420">      break;</span>
+<span class="source-line-no">421</span><span id="line-421">    }</span>
+<span class="source-line-no">422</span><span id="line-422">    case GT:</span>
+<span class="source-line-no">423</span><span id="line-423">      retval = OperationFunctions.opDateGreaterThan(left, right);</span>
+<span class="source-line-no">424</span><span id="line-424">      break;</span>
+<span class="source-line-no">425</span><span id="line-425">    case LE: {</span>
+<span class="source-line-no">426</span><span id="line-426">      IBooleanItem lt = OperationFunctions.opDateLessThan(left, right);</span>
+<span class="source-line-no">427</span><span id="line-427">      IBooleanItem eq = OperationFunctions.opDateEqual(left, right);</span>
+<span class="source-line-no">428</span><span id="line-428">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">429</span><span id="line-429">      break;</span>
+<span class="source-line-no">430</span><span id="line-430">    }</span>
+<span class="source-line-no">431</span><span id="line-431">    case LT:</span>
+<span class="source-line-no">432</span><span id="line-432">      retval = OperationFunctions.opDateLessThan(left, right);</span>
+<span class="source-line-no">433</span><span id="line-433">      break;</span>
+<span class="source-line-no">434</span><span id="line-434">    case NE:</span>
+<span class="source-line-no">435</span><span id="line-435">      retval = FnNot.fnNot(OperationFunctions.opDateEqual(left, right));</span>
+<span class="source-line-no">436</span><span id="line-436">      break;</span>
+<span class="source-line-no">437</span><span id="line-437">    default:</span>
+<span class="source-line-no">438</span><span id="line-438">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
+<span class="source-line-no">439</span><span id="line-439">    }</span>
+<span class="source-line-no">440</span><span id="line-440">    return retval;</span>
+<span class="source-line-no">441</span><span id="line-441">  }</span>
+<span class="source-line-no">442</span><span id="line-442"></span>
+<span class="source-line-no">443</span><span id="line-443">  /**</span>
+<span class="source-line-no">444</span><span id="line-444">   * Perform a duration-based comparison of the {@code right} item against the</span>
+<span class="source-line-no">445</span><span id="line-445">   * {@code left} item using the specified {@code operator}.</span>
+<span class="source-line-no">446</span><span id="line-446">   *</span>
+<span class="source-line-no">447</span><span id="line-447">   * @param left</span>
+<span class="source-line-no">448</span><span id="line-448">   *          the value to compare against</span>
+<span class="source-line-no">449</span><span id="line-449">   * @param operator</span>
+<span class="source-line-no">450</span><span id="line-450">   *          the comparison operator</span>
+<span class="source-line-no">451</span><span id="line-451">   * @param right</span>
+<span class="source-line-no">452</span><span id="line-452">   *          the value to compare with</span>
+<span class="source-line-no">453</span><span id="line-453">   * @return the comparison result</span>
+<span class="source-line-no">454</span><span id="line-454">   */</span>
+<span class="source-line-no">455</span><span id="line-455">  @NonNull</span>
+<span class="source-line-no">456</span><span id="line-456">  public static IBooleanItem durationCompare( // NOPMD - unavoidable</span>
+<span class="source-line-no">457</span><span id="line-457">      @NonNull IDurationItem left,</span>
+<span class="source-line-no">458</span><span id="line-458">      @NonNull Operator operator,</span>
+<span class="source-line-no">459</span><span id="line-459">      @NonNull IDurationItem right) {</span>
+<span class="source-line-no">460</span><span id="line-460">    IBooleanItem retval = null;</span>
+<span class="source-line-no">461</span><span id="line-461">    switch (operator) {</span>
+<span class="source-line-no">462</span><span id="line-462">    case EQ:</span>
+<span class="source-line-no">463</span><span id="line-463">      retval = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="source-line-no">464</span><span id="line-464">      break;</span>
+<span class="source-line-no">465</span><span id="line-465">    case GE:</span>
+<span class="source-line-no">466</span><span id="line-466">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
+<span class="source-line-no">467</span><span id="line-467">        IBooleanItem gt = OperationFunctions.opYearMonthDurationGreaterThan(</span>
+<span class="source-line-no">468</span><span id="line-468">            (IYearMonthDurationItem) left,</span>
+<span class="source-line-no">469</span><span id="line-469">            (IYearMonthDurationItem) right);</span>
+<span class="source-line-no">470</span><span id="line-470">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="source-line-no">471</span><span id="line-471">        retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">472</span><span id="line-472">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
+<span class="source-line-no">473</span><span id="line-473">        IBooleanItem gt = OperationFunctions.opDayTimeDurationGreaterThan(</span>
+<span class="source-line-no">474</span><span id="line-474">            (IDayTimeDurationItem) left,</span>
+<span class="source-line-no">475</span><span id="line-475">            (IDayTimeDurationItem) right);</span>
+<span class="source-line-no">476</span><span id="line-476">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="source-line-no">477</span><span id="line-477">        retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">478</span><span id="line-478">      }</span>
+<span class="source-line-no">479</span><span id="line-479">      break;</span>
+<span class="source-line-no">480</span><span id="line-480">    case GT:</span>
+<span class="source-line-no">481</span><span id="line-481">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
+<span class="source-line-no">482</span><span id="line-482">        retval = OperationFunctions.opYearMonthDurationGreaterThan(</span>
+<span class="source-line-no">483</span><span id="line-483">            (IYearMonthDurationItem) left,</span>
+<span class="source-line-no">484</span><span id="line-484">            (IYearMonthDurationItem) right);</span>
+<span class="source-line-no">485</span><span id="line-485">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
+<span class="source-line-no">486</span><span id="line-486">        retval = OperationFunctions.opDayTimeDurationGreaterThan(</span>
+<span class="source-line-no">487</span><span id="line-487">            (IDayTimeDurationItem) left,</span>
+<span class="source-line-no">488</span><span id="line-488">            (IDayTimeDurationItem) right);</span>
+<span class="source-line-no">489</span><span id="line-489">      }</span>
+<span class="source-line-no">490</span><span id="line-490">      break;</span>
+<span class="source-line-no">491</span><span id="line-491">    case LE:</span>
+<span class="source-line-no">492</span><span id="line-492">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
+<span class="source-line-no">493</span><span id="line-493">        IBooleanItem lt = OperationFunctions.opYearMonthDurationLessThan(</span>
+<span class="source-line-no">494</span><span id="line-494">            (IYearMonthDurationItem) left,</span>
+<span class="source-line-no">495</span><span id="line-495">            (IYearMonthDurationItem) right);</span>
+<span class="source-line-no">496</span><span id="line-496">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="source-line-no">497</span><span id="line-497">        retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">498</span><span id="line-498">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
+<span class="source-line-no">499</span><span id="line-499">        IBooleanItem lt = OperationFunctions.opDayTimeDurationLessThan(</span>
+<span class="source-line-no">500</span><span id="line-500">            (IDayTimeDurationItem) left,</span>
+<span class="source-line-no">501</span><span id="line-501">            (IDayTimeDurationItem) right);</span>
+<span class="source-line-no">502</span><span id="line-502">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="source-line-no">503</span><span id="line-503">        retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">504</span><span id="line-504">      }</span>
+<span class="source-line-no">505</span><span id="line-505">      break;</span>
+<span class="source-line-no">506</span><span id="line-506">    case LT:</span>
+<span class="source-line-no">507</span><span id="line-507">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
+<span class="source-line-no">508</span><span id="line-508">        retval = OperationFunctions.opYearMonthDurationLessThan(</span>
+<span class="source-line-no">509</span><span id="line-509">            (IYearMonthDurationItem) left,</span>
+<span class="source-line-no">510</span><span id="line-510">            (IYearMonthDurationItem) right);</span>
+<span class="source-line-no">511</span><span id="line-511">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
+<span class="source-line-no">512</span><span id="line-512">        retval = OperationFunctions.opDayTimeDurationLessThan(</span>
+<span class="source-line-no">513</span><span id="line-513">            (IDayTimeDurationItem) left,</span>
+<span class="source-line-no">514</span><span id="line-514">            (IDayTimeDurationItem) right);</span>
+<span class="source-line-no">515</span><span id="line-515">      }</span>
+<span class="source-line-no">516</span><span id="line-516">      break;</span>
+<span class="source-line-no">517</span><span id="line-517">    case NE:</span>
+<span class="source-line-no">518</span><span id="line-518">      retval = FnNot.fnNot(OperationFunctions.opDurationEqual(left, right));</span>
+<span class="source-line-no">519</span><span id="line-519">      break;</span>
+<span class="source-line-no">520</span><span id="line-520">    default:</span>
+<span class="source-line-no">521</span><span id="line-521">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
+<span class="source-line-no">522</span><span id="line-522">    }</span>
+<span class="source-line-no">523</span><span id="line-523"></span>
+<span class="source-line-no">524</span><span id="line-524">    if (retval == null) {</span>
+<span class="source-line-no">525</span><span id="line-525">      throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">526</span><span id="line-526">          null,</span>
+<span class="source-line-no">527</span><span id="line-527">          String.format("The item types '%s' and '%s' are not comparable",</span>
+<span class="source-line-no">528</span><span id="line-528">              left.getClass().getName(),</span>
+<span class="source-line-no">529</span><span id="line-529">              right.getClass().getName()));</span>
+<span class="source-line-no">530</span><span id="line-530">    }</span>
+<span class="source-line-no">531</span><span id="line-531">    return retval;</span>
+<span class="source-line-no">532</span><span id="line-532">  }</span>
+<span class="source-line-no">533</span><span id="line-533"></span>
+<span class="source-line-no">534</span><span id="line-534">  /**</span>
+<span class="source-line-no">535</span><span id="line-535">   * Perform a binary data-based comparison of the {@code right} item against the</span>
+<span class="source-line-no">536</span><span id="line-536">   * {@code left} item using the specified {@code operator}.</span>
+<span class="source-line-no">537</span><span id="line-537">   *</span>
+<span class="source-line-no">538</span><span id="line-538">   * @param left</span>
+<span class="source-line-no">539</span><span id="line-539">   *          the value to compare against</span>
+<span class="source-line-no">540</span><span id="line-540">   * @param operator</span>
+<span class="source-line-no">541</span><span id="line-541">   *          the comparison operator</span>
+<span class="source-line-no">542</span><span id="line-542">   * @param right</span>
+<span class="source-line-no">543</span><span id="line-543">   *          the value to compare with</span>
+<span class="source-line-no">544</span><span id="line-544">   * @return the comparison result</span>
+<span class="source-line-no">545</span><span id="line-545">   */</span>
+<span class="source-line-no">546</span><span id="line-546">  @NonNull</span>
+<span class="source-line-no">547</span><span id="line-547">  public static IBooleanItem binaryCompare(@NonNull IBase64BinaryItem left, @NonNull Operator operator,</span>
+<span class="source-line-no">548</span><span id="line-548">      @NonNull IBase64BinaryItem right) {</span>
+<span class="source-line-no">549</span><span id="line-549">    IBooleanItem retval;</span>
+<span class="source-line-no">550</span><span id="line-550">    switch (operator) {</span>
+<span class="source-line-no">551</span><span id="line-551">    case EQ:</span>
+<span class="source-line-no">552</span><span id="line-552">      retval = OperationFunctions.opBase64BinaryEqual(left, right);</span>
+<span class="source-line-no">553</span><span id="line-553">      break;</span>
+<span class="source-line-no">554</span><span id="line-554">    case GE: {</span>
+<span class="source-line-no">555</span><span id="line-555">      IBooleanItem gt = OperationFunctions.opBase64BinaryGreaterThan(left, right);</span>
+<span class="source-line-no">556</span><span id="line-556">      IBooleanItem eq = OperationFunctions.opBase64BinaryEqual(left, right);</span>
+<span class="source-line-no">557</span><span id="line-557">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">558</span><span id="line-558">      break;</span>
+<span class="source-line-no">559</span><span id="line-559">    }</span>
+<span class="source-line-no">560</span><span id="line-560">    case GT:</span>
+<span class="source-line-no">561</span><span id="line-561">      retval = OperationFunctions.opBase64BinaryGreaterThan(left, right);</span>
+<span class="source-line-no">562</span><span id="line-562">      break;</span>
+<span class="source-line-no">563</span><span id="line-563">    case LE: {</span>
+<span class="source-line-no">564</span><span id="line-564">      IBooleanItem lt = OperationFunctions.opBase64BinaryLessThan(left, right);</span>
+<span class="source-line-no">565</span><span id="line-565">      IBooleanItem eq = OperationFunctions.opBase64BinaryEqual(left, right);</span>
+<span class="source-line-no">566</span><span id="line-566">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="source-line-no">567</span><span id="line-567">      break;</span>
+<span class="source-line-no">568</span><span id="line-568">    }</span>
+<span class="source-line-no">569</span><span id="line-569">    case LT:</span>
+<span class="source-line-no">570</span><span id="line-570">      retval = OperationFunctions.opBase64BinaryLessThan(left, right);</span>
+<span class="source-line-no">571</span><span id="line-571">      break;</span>
+<span class="source-line-no">572</span><span id="line-572">    case NE:</span>
+<span class="source-line-no">573</span><span id="line-573">      retval = FnNot.fnNot(OperationFunctions.opBase64BinaryEqual(left, right));</span>
+<span class="source-line-no">574</span><span id="line-574">      break;</span>
+<span class="source-line-no">575</span><span id="line-575">    default:</span>
+<span class="source-line-no">576</span><span id="line-576">      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));</span>
+<span class="source-line-no">577</span><span id="line-577">    }</span>
+<span class="source-line-no">578</span><span id="line-578">    return retval;</span>
+<span class="source-line-no">579</span><span id="line-579">  }</span>
+<span class="source-line-no">580</span><span id="line-580"></span>
+<span class="source-line-no">581</span><span id="line-581">  /**</span>
+<span class="source-line-no">582</span><span id="line-582">   * Compare the {@code right} item with the {@code left} item using the specified</span>
+<span class="source-line-no">583</span><span id="line-583">   * {@code operator}.</span>
+<span class="source-line-no">584</span><span id="line-584">   *</span>
+<span class="source-line-no">585</span><span id="line-585">   * @param left</span>
+<span class="source-line-no">586</span><span id="line-586">   *          the value to compare against</span>
+<span class="source-line-no">587</span><span id="line-587">   * @param right</span>
+<span class="source-line-no">588</span><span id="line-588">   *          the value to compare with</span>
+<span class="source-line-no">589</span><span id="line-589">   * @return the comparison result</span>
+<span class="source-line-no">590</span><span id="line-590">   */</span>
+<span class="source-line-no">591</span><span id="line-591">  @NonNull</span>
+<span class="source-line-no">592</span><span id="line-592">  public static IIntegerItem compareTo(</span>
+<span class="source-line-no">593</span><span id="line-593">      @NonNull IAnyAtomicItem left,</span>
+<span class="source-line-no">594</span><span id="line-594">      @NonNull IAnyAtomicItem right) {</span>
+<span class="source-line-no">595</span><span id="line-595">    return IIntegerItem.valueOf(left.compareTo(right));</span>
+<span class="source-line-no">596</span><span id="line-596">  }</span>
+<span class="source-line-no">597</span><span id="line-597">}</span>
 
 
 

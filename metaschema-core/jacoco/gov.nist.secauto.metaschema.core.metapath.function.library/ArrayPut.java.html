@@ -73,9 +73,10 @@ public final class ArrayPut {
 <span class="fc" id="L73">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
 <span class="fc" id="L74">        arguments.get(0).getFirstItem(true)));</span>
 <span class="fc" id="L75">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="fc" id="L76">    @SuppressWarnings(&quot;unchecked&quot;) T member = (T) arguments.get(2).toCollectionValue();</span>
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L77">    T member = (T) arguments.get(2).toCollectionValue();</span>
 
-<span class="fc" id="L78">    return put(array, position, member).asSequence();</span>
+<span class="fc" id="L79">    return put(array, position, member).asSequence();</span>
   }
 
   /**
@@ -99,7 +100,7 @@ public final class ArrayPut {
       @NonNull IArrayItem&lt;T&gt; array,
       @NonNull IIntegerItem positionItem,
       @NonNull T member) {
-<span class="fc" id="L102">    return put(array, positionItem.asInteger().intValueExact(), member);</span>
+<span class="fc" id="L103">    return put(array, positionItem.asInteger().intValueExact(), member);</span>
   }
 
   /**
@@ -123,19 +124,19 @@ public final class ArrayPut {
       @NonNull IArrayItem&lt;T&gt; array,
       int position,
       @NonNull T member) {
-<span class="fc" id="L126">    List&lt;T&gt; copy = new ArrayList&lt;&gt;(array);</span>
+<span class="fc" id="L127">    List&lt;T&gt; copy = new ArrayList&lt;&gt;(array);</span>
     try {
-<span class="fc" id="L128">      copy.set(position - 1, member);</span>
-<span class="nc" id="L129">    } catch (IndexOutOfBoundsException ex) {</span>
-<span class="nc" id="L130">      throw new ArrayException(</span>
+<span class="fc" id="L129">      copy.set(position - 1, member);</span>
+<span class="nc" id="L130">    } catch (IndexOutOfBoundsException ex) {</span>
+<span class="nc" id="L131">      throw new ArrayException(</span>
           ArrayException.INDEX_OUT_OF_BOUNDS,
-<span class="nc" id="L132">          String.format(&quot;The position %d is outside the range of values for the array of size '%d'.&quot;,</span>
-<span class="nc" id="L133">              position,</span>
-<span class="nc" id="L134">              copy.size()),</span>
+<span class="nc" id="L133">          String.format(&quot;The position %d is outside the range of values for the array of size '%d'.&quot;,</span>
+<span class="nc" id="L134">              position,</span>
+<span class="nc" id="L135">              copy.size()),</span>
           ex);
-<span class="fc" id="L136">    }</span>
+<span class="fc" id="L137">    }</span>
 
-<span class="fc" id="L138">    return IArrayItem.ofCollection(copy);</span>
+<span class="fc" id="L139">    return IArrayItem.ofCollection(copy);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

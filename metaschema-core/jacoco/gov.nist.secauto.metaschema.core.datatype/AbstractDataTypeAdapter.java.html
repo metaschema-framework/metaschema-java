@@ -97,29 +97,30 @@ public abstract class AbstractDataTypeAdapter&lt;TYPE, ITEM_TYPE extends IAnyAto
     try {
 <span class="nc bnc" id="L98" title="All 2 branches missed.">      while (!(nextEvent = eventReader.peek()).isEndElement()) {</span>
 <span class="nc bnc" id="L99" title="All 2 branches missed.">        if (!nextEvent.isCharacters()) {</span>
-<span class="nc" id="L100">          throw new IOException(String.format(&quot;Invalid content '%s' at %s&quot;, XmlEventUtil.toString(nextEvent),</span>
-<span class="nc" id="L101">              XmlEventUtil.toString(nextEvent.getLocation())));</span>
+<span class="nc" id="L100">          throw new IOException(String.format(&quot;Invalid content '%s' at %s&quot;,</span>
+<span class="nc" id="L101">              XmlEventUtil.toString(nextEvent),</span>
+<span class="nc" id="L102">              XmlEventUtil.toString(nextEvent.getLocation())));</span>
         }
-<span class="nc" id="L103">        Characters characters = nextEvent.asCharacters();</span>
-<span class="nc" id="L104">        builder.append(characters.getData());</span>
+<span class="nc" id="L104">        Characters characters = nextEvent.asCharacters();</span>
+<span class="nc" id="L105">        builder.append(characters.getData());</span>
         // advance past current event
-<span class="nc" id="L106">        eventReader.nextEvent();</span>
-<span class="nc" id="L107">      }</span>
+<span class="nc" id="L107">        eventReader.nextEvent();</span>
+<span class="nc" id="L108">      }</span>
 
       // trim leading and trailing whitespace
-<span class="nc" id="L110">      String value = ObjectUtils.notNull(builder.toString().trim());</span>
+<span class="nc" id="L111">      String value = ObjectUtils.notNull(builder.toString().trim());</span>
       try {
-<span class="nc" id="L112">        return parse(value);</span>
-<span class="nc" id="L113">      } catch (IllegalArgumentException ex) {</span>
-<span class="nc" id="L114">        throw new IOException(</span>
-<span class="nc" id="L115">            String.format(&quot;Malformed data '%s'%s. %s&quot;,</span>
+<span class="nc" id="L113">        return parse(value);</span>
+<span class="nc" id="L114">      } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L115">        throw new IOException(</span>
+<span class="nc" id="L116">            String.format(&quot;Malformed data '%s'%s. %s&quot;,</span>
                 value,
-<span class="nc" id="L117">                XmlEventUtil.generateLocationMessage(nextEvent),</span>
-<span class="nc" id="L118">                ex.getLocalizedMessage()),</span>
+<span class="nc" id="L118">                XmlEventUtil.generateLocationMessage(nextEvent),</span>
+<span class="nc" id="L119">                ex.getLocalizedMessage()),</span>
             ex);
       }
-<span class="nc" id="L121">    } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L122">      throw new IOException(ex);</span>
+<span class="nc" id="L122">    } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L123">      throw new IOException(ex);</span>
     }
   }
 
@@ -129,20 +130,22 @@ public abstract class AbstractDataTypeAdapter&lt;TYPE, ITEM_TYPE extends IAnyAto
    */
   @Override
   public TYPE parse(JsonParser parser) throws IOException {
-<span class="nc" id="L132">    String value = parser.getValueAsString();</span>
-<span class="nc bnc" id="L133" title="All 2 branches missed.">    if (value == null) {</span>
-<span class="nc" id="L134">      throw new IOException(&quot;Unable to null value as text&quot;);</span>
+<span class="nc" id="L133">    String value = parser.getValueAsString();</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">    if (value == null) {</span>
+<span class="nc" id="L135">      throw new IOException(</span>
+<span class="nc" id="L136">          String.format(&quot;Unable to get null value as text%s&quot;,</span>
+<span class="nc" id="L137">              JsonUtil.generateLocationMessage(parser)));</span>
     }
     // skip over value
-<span class="nc" id="L137">    parser.nextToken();</span>
+<span class="nc" id="L140">    parser.nextToken();</span>
     try {
-<span class="nc" id="L139">      return parse(value);</span>
-<span class="nc" id="L140">    } catch (IllegalArgumentException ex) {</span>
-<span class="nc" id="L141">      throw new IOException(</span>
-<span class="nc" id="L142">          String.format(&quot;Malformed data '%s'%s. %s&quot;,</span>
+<span class="nc" id="L142">      return parse(value);</span>
+<span class="nc" id="L143">    } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L144">      throw new IOException(</span>
+<span class="nc" id="L145">          String.format(&quot;Malformed data '%s'%s. %s&quot;,</span>
               value,
-<span class="nc" id="L144">              JsonUtil.generateLocationMessage(parser),</span>
-<span class="nc" id="L145">              ex.getLocalizedMessage()),</span>
+<span class="nc" id="L147">              JsonUtil.generateLocationMessage(parser),</span>
+<span class="nc" id="L148">              ex.getLocalizedMessage()),</span>
           ex);
     }
   }
@@ -150,7 +153,7 @@ public abstract class AbstractDataTypeAdapter&lt;TYPE, ITEM_TYPE extends IAnyAto
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public String asString(Object value) {
-<span class="fc" id="L153">    return value.toString();</span>
+<span class="fc" id="L156">    return value.toString();</span>
   }
 
   @Override
@@ -159,26 +162,35 @@ public abstract class AbstractDataTypeAdapter&lt;TYPE, ITEM_TYPE extends IAnyAto
       StartElement parent,
       XMLEventFactory2 eventFactory,
       XMLEventWriter eventWriter)
-      throws IOException, XMLStreamException {
+      throws IOException {
     try {
-<span class="nc" id="L164">      String content = asString(value);</span>
-<span class="nc" id="L165">      Characters characters = eventFactory.createCharacters(content);</span>
-<span class="nc" id="L166">      eventWriter.add(characters);</span>
-<span class="nc" id="L167">    } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L168">      throw new IOException(ex);</span>
-<span class="nc" id="L169">    }</span>
-<span class="nc" id="L170">  }</span>
+<span class="nc" id="L167">      String content = asString(value);</span>
+<span class="nc" id="L168">      Characters characters = eventFactory.createCharacters(content);</span>
+<span class="nc" id="L169">      eventWriter.add(characters);</span>
+<span class="nc" id="L170">    } catch (IllegalArgumentException | XMLStreamException ex) {</span>
+<span class="nc" id="L171">      throw new IOException(ex);</span>
+<span class="nc" id="L172">    }</span>
+<span class="nc" id="L173">  }</span>
 
   @Override
-  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 writer) throws XMLStreamException {
-<span class="nc" id="L174">    String content = asString(value);</span>
-<span class="nc" id="L175">    writer.writeCharacters(content);</span>
-<span class="nc" id="L176">  }</span>
+  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 writer) throws IOException {
+    String content;
+    try {
+<span class="nc" id="L179">      content = asString(value);</span>
+<span class="nc" id="L180">      writer.writeCharacters(content);</span>
+<span class="nc" id="L181">    } catch (IllegalArgumentException | XMLStreamException ex) {</span>
+<span class="nc" id="L182">      throw new IOException(ex);</span>
+<span class="nc" id="L183">    }</span>
+<span class="nc" id="L184">  }</span>
 
   @Override
   public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {
-<span class="nc" id="L180">    generator.writeString(asString(value));</span>
-<span class="nc" id="L181">  }</span>
+    try {
+<span class="nc" id="L189">      generator.writeString(asString(value));</span>
+<span class="nc" id="L190">    } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L191">      throw new IOException(ex);</span>
+<span class="nc" id="L192">    }</span>
+<span class="nc" id="L193">  }</span>
 
   @Override
   public abstract Class&lt;ITEM_TYPE&gt; getItemClass();
@@ -189,12 +201,12 @@ public abstract class AbstractDataTypeAdapter&lt;TYPE, ITEM_TYPE extends IAnyAto
   @SuppressWarnings(&quot;unchecked&quot;)
   @Override
   public ITEM_TYPE cast(IAnyAtomicItem item) {
-<span class="pc bpc" id="L192" title="1 of 2 branches missed.">    if (item == null) {</span>
-<span class="nc" id="L193">      throw new InvalidValueForCastFunctionException(&quot;item is null&quot;);</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">    if (item == null) {</span>
+<span class="nc" id="L205">      throw new InvalidValueForCastFunctionException(&quot;item is null&quot;);</span>
     }
-<span class="fc bfc" id="L195" title="All 2 branches covered.">    return getItemClass().isAssignableFrom(item.getClass())</span>
-<span class="fc" id="L196">        ? (ITEM_TYPE) item</span>
-<span class="fc" id="L197">        : castInternal(item);</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">    return getItemClass().isAssignableFrom(item.getClass())</span>
+<span class="fc" id="L208">        ? (ITEM_TYPE) item</span>
+<span class="fc" id="L209">        : castInternal(item);</span>
   }
 
   /**
@@ -214,13 +226,16 @@ public abstract class AbstractDataTypeAdapter&lt;TYPE, ITEM_TYPE extends IAnyAto
   @NonNull
   protected ITEM_TYPE castInternal(@NonNull IAnyAtomicItem item) {
     // try string based casting as a fallback
-<span class="fc" id="L217">    String itemString = item.asString();</span>
+<span class="fc" id="L229">    String itemString = null;</span>
     try {
-<span class="fc" id="L219">      TYPE value = parse(itemString);</span>
-<span class="fc" id="L220">      return newItem(value);</span>
-<span class="fc" id="L221">    } catch (IllegalArgumentException ex) {</span>
-<span class="fc" id="L222">      throw new InvalidValueForCastFunctionException(</span>
-<span class="fc" id="L223">          String.format(&quot;The value '%s' is not compatible with the type '%s'&quot;, itemString, getItemClass().getName()),</span>
+<span class="fc" id="L231">      itemString = item.asString();</span>
+<span class="fc" id="L232">      TYPE value = parse(itemString);</span>
+<span class="fc" id="L233">      return newItem(value);</span>
+<span class="fc" id="L234">    } catch (IllegalArgumentException | IllegalStateException ex) {</span>
+<span class="fc" id="L235">      throw new InvalidValueForCastFunctionException(</span>
+<span class="fc" id="L236">          String.format(&quot;The value '%s' is not compatible with the type '%s'&quot;,</span>
+<span class="fc" id="L237">              item.getValue(),</span>
+<span class="fc" id="L238">              getItemClass().getName()),</span>
           ex);
     }
   }

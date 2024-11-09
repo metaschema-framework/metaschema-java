@@ -156,15 +156,16 @@
 <span class="source-line-no">143</span><span id="line-143"></span>
 <span class="source-line-no">144</span><span id="line-144">    return ISequence.of(ObjectUtils.notNull(initialContext.stream()</span>
 <span class="source-line-no">145</span><span id="line-145">        .flatMap(item -&gt; {</span>
-<span class="source-line-no">146</span><span id="line-146">          @NonNull ISequence&lt;INodeItem&gt; metapathResult = recursionMetapath.evaluate(item, dynamicContext);</span>
-<span class="source-line-no">147</span><span id="line-147">          // ensure this is list backed</span>
-<span class="source-line-no">148</span><span id="line-148">          metapathResult.getValue();</span>
-<span class="source-line-no">149</span><span id="line-149"></span>
-<span class="source-line-no">150</span><span id="line-150">          ISequence&lt;INodeItem&gt; result = recurseDepth(metapathResult, recursionMetapath, dynamicContext);</span>
-<span class="source-line-no">151</span><span id="line-151">          return ObjectUtils.notNull(Stream.concat(Stream.of(item), result.stream()));</span>
-<span class="source-line-no">152</span><span id="line-152">        })));</span>
-<span class="source-line-no">153</span><span id="line-153">  }</span>
-<span class="source-line-no">154</span><span id="line-154">}</span>
+<span class="source-line-no">146</span><span id="line-146">          @NonNull</span>
+<span class="source-line-no">147</span><span id="line-147">          ISequence&lt;INodeItem&gt; metapathResult = recursionMetapath.evaluate(item, dynamicContext);</span>
+<span class="source-line-no">148</span><span id="line-148">          // ensure this is list backed</span>
+<span class="source-line-no">149</span><span id="line-149">          metapathResult.getValue();</span>
+<span class="source-line-no">150</span><span id="line-150"></span>
+<span class="source-line-no">151</span><span id="line-151">          ISequence&lt;INodeItem&gt; result = recurseDepth(metapathResult, recursionMetapath, dynamicContext);</span>
+<span class="source-line-no">152</span><span id="line-152">          return ObjectUtils.notNull(Stream.concat(Stream.of(item), result.stream()));</span>
+<span class="source-line-no">153</span><span id="line-153">        })));</span>
+<span class="source-line-no">154</span><span id="line-154">  }</span>
+<span class="source-line-no">155</span><span id="line-155">}</span>
 
 
 

@@ -70,7 +70,7 @@
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      MetaschemaXmlReader parser = <strong class="jxr_keyword">new</strong> MetaschemaXmlReader(eventReader);
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      IBindingContext bindingContext = getBindingContext();
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      IBindingContext bindingContext = newBindingContext();
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      IBoundDefinitionModelAssembly assembly
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          = ObjectUtils.requireNonNull(
@@ -100,7 +100,7 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>      assert factory instanceof WstxInputFactory;
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>      XMLEventReader2 eventReader = (XMLEventReader2) factory.createXMLEventReader(<strong class="jxr_keyword">new</strong> StringReader(xml));
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      IBindingContext bindingContext = getBindingContext();
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      IBindingContext bindingContext = newBindingContext();
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      IBoundDefinitionModelAssembly assembly
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          = ObjectUtils
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>              .requireNonNull(
@@ -144,7 +144,7 @@
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> 
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>     MetaschemaXmlReader parser = <strong class="jxr_keyword">new</strong> MetaschemaXmlReader(eventReader);
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>     IBindingContext bindingContext = getBindingContext();
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     IBindingContext bindingContext = newBindingContext();
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> 
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     IBoundDefinitionModelAssembly assembly
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>         = ObjectUtils.requireNonNull(

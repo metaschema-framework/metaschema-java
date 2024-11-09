@@ -45,24 +45,30 @@ public class UuidAdapter
   @SuppressWarnings(&quot;null&quot;)
   @Override
   public UUID parse(String value) {
-<span class="nc" id="L48">    return UUID.fromString(value);</span>
+    try {
+<span class="nc" id="L49">      return UUID.fromString(value);</span>
+<span class="nc" id="L50">    } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L51">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L52">          String.format(&quot;Value '%s' is not a valid UUID.&quot;, value),</span>
+          ex);
+    }
   }
 
   @Override
   public UUID copy(Object obj) {
     // a UUID is immutable
-<span class="nc" id="L54">    return (UUID) obj;</span>
+<span class="nc" id="L60">    return (UUID) obj;</span>
   }
 
   @Override
   public Class&lt;IUuidItem&gt; getItemClass() {
-<span class="nc" id="L59">    return IUuidItem.class;</span>
+<span class="nc" id="L65">    return IUuidItem.class;</span>
   }
 
   @Override
   public IUuidItem newItem(Object value) {
-<span class="nc" id="L64">    UUID item = toValue(value);</span>
-<span class="nc" id="L65">    return IUuidItem.valueOf(item);</span>
+<span class="nc" id="L70">    UUID item = toValue(value);</span>
+<span class="nc" id="L71">    return IUuidItem.valueOf(item);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

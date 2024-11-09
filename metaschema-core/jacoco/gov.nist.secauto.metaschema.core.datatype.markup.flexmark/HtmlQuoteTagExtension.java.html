@@ -77,77 +77,78 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 <span class="fc" id="L77">  static class QTagNodeRenderer implements NodeRenderer {</span>
 
     @Override
-    public @Nullable Set&lt;NodeRenderingHandler&lt;?&gt;&gt; getNodeRenderingHandlers() {
-<span class="fc" id="L81">      return Collections.singleton(</span>
+    public @Nullable
+    Set&lt;NodeRenderingHandler&lt;?&gt;&gt; getNodeRenderingHandlers() {
+<span class="fc" id="L82">      return Collections.singleton(</span>
           new NodeRenderingHandler&lt;&gt;(DoubleQuoteNode.class, this::render));
     }
 
     protected void render(@NonNull DoubleQuoteNode node, @NonNull NodeRendererContext context,
         @NonNull HtmlWriter html) {
-<span class="fc" id="L87">      html.withAttr().tag(&quot;q&quot;);</span>
-<span class="fc" id="L88">      context.renderChildren(node);</span>
-<span class="fc" id="L89">      html.tag(&quot;/q&quot;);</span>
-<span class="fc" id="L90">    }</span>
+<span class="fc" id="L88">      html.withAttr().tag(&quot;q&quot;);</span>
+<span class="fc" id="L89">      context.renderChildren(node);</span>
+<span class="fc" id="L90">      html.tag(&quot;/q&quot;);</span>
+<span class="fc" id="L91">    }</span>
 
-<span class="fc" id="L92">    public static class Factory implements NodeRendererFactory {</span>
+<span class="fc" id="L93">    public static class Factory implements NodeRendererFactory {</span>
 
       @Override
       public NodeRenderer apply(DataHolder options) {
-<span class="fc" id="L96">        return new QTagNodeRenderer();</span>
+<span class="fc" id="L97">        return new QTagNodeRenderer();</span>
       }
 
     }
   }
 
-<span class="fc" id="L102">  static class QuoteReplacingPostProcessor</span>
+<span class="fc" id="L103">  static class QuoteReplacingPostProcessor</span>
       extends NodePostProcessor {
 
     @Override
     public void process(NodeTracker state, Node node) {
-<span class="pc bpc" id="L107" title="1 of 2 branches missed.">      if (node instanceof TypographicQuotes) {</span>
-<span class="fc" id="L108">        TypographicQuotes typographicQuotes = (TypographicQuotes) node;</span>
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">        if (typographicQuotes.getOpeningMarker().matchChars(&quot;\&quot;&quot;)) {</span>
-<span class="fc" id="L110">          DoubleQuoteNode quoteNode = new DoubleQuoteNode(typographicQuotes);</span>
-<span class="fc" id="L111">          node.insertAfter(quoteNode);</span>
-<span class="fc" id="L112">          state.nodeAdded(quoteNode);</span>
-<span class="fc" id="L113">          node.unlink();</span>
-<span class="fc" id="L114">          state.nodeRemoved(node);</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">      if (node instanceof TypographicQuotes) {</span>
+<span class="fc" id="L109">        TypographicQuotes typographicQuotes = (TypographicQuotes) node;</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (typographicQuotes.getOpeningMarker().matchChars(&quot;\&quot;&quot;)) {</span>
+<span class="fc" id="L111">          DoubleQuoteNode quoteNode = new DoubleQuoteNode(typographicQuotes);</span>
+<span class="fc" id="L112">          node.insertAfter(quoteNode);</span>
+<span class="fc" id="L113">          state.nodeAdded(quoteNode);</span>
+<span class="fc" id="L114">          node.unlink();</span>
+<span class="fc" id="L115">          state.nodeRemoved(node);</span>
         }
       }
-<span class="fc" id="L117">    }</span>
+<span class="fc" id="L118">    }</span>
 
     public static class Factory
         extends NodePostProcessorFactory {
       public Factory() {
-<span class="fc" id="L122">        super(false);</span>
-<span class="fc" id="L123">        addNodeWithExclusions(TypographicQuotes.class, DoNotDecorate.class);</span>
-<span class="fc" id="L124">      }</span>
+<span class="fc" id="L123">        super(false);</span>
+<span class="fc" id="L124">        addNodeWithExclusions(TypographicQuotes.class, DoNotDecorate.class);</span>
+<span class="fc" id="L125">      }</span>
 
       @NonNull
       @Override
       public NodePostProcessor apply(Document document) {
-<span class="fc" id="L129">        return new QuoteReplacingPostProcessor();</span>
+<span class="fc" id="L130">        return new QuoteReplacingPostProcessor();</span>
       }
     }
   }
 
-<span class="fc" id="L134">  static class QTagHtmlNodeRenderer implements HtmlNodeRenderer {</span>
+<span class="fc" id="L135">  static class QTagHtmlNodeRenderer implements HtmlNodeRenderer {</span>
 
     @Override
     public Set&lt;HtmlNodeRendererHandler&lt;?&gt;&gt; getHtmlNodeRendererHandlers() {
-<span class="fc" id="L138">      return Collections.singleton(new HtmlNodeRendererHandler&lt;&gt;(&quot;q&quot;, Element.class, this::renderMarkdown));</span>
+<span class="fc" id="L139">      return Collections.singleton(new HtmlNodeRendererHandler&lt;&gt;(&quot;q&quot;, Element.class, this::renderMarkdown));</span>
     }
 
     protected void renderMarkdown(Element element, HtmlNodeConverterContext context,
         @SuppressWarnings(&quot;unused&quot;) HtmlMarkdownWriter out) {
-<span class="fc bfc" id="L143" title="All 2 branches covered.">      context.wrapTextNodes(element, &quot;\&quot;&quot;, element.nextElementSibling() != null);</span>
-<span class="fc" id="L144">    }</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">      context.wrapTextNodes(element, &quot;\&quot;&quot;, element.nextElementSibling() != null);</span>
+<span class="fc" id="L145">    }</span>
 
-<span class="fc" id="L146">    public static class Factory implements HtmlNodeRendererFactory {</span>
+<span class="fc" id="L147">    public static class Factory implements HtmlNodeRendererFactory {</span>
 
       @Override
       public HtmlNodeRenderer apply(DataHolder options) {
-<span class="fc" id="L150">        return new QTagHtmlNodeRenderer();</span>
+<span class="fc" id="L151">        return new QTagHtmlNodeRenderer();</span>
       }
     }
 
@@ -164,13 +165,13 @@ import edu.umd.cs.findbugs.annotations.Nullable;
      */
     @SuppressWarnings(&quot;PMD.ConstructorCallsOverridableMethod&quot;)
     public DoubleQuoteNode(TypographicQuotes node) {
-<span class="fc" id="L167">      super(node.getOpeningMarker(), node.getText(), node.getClosingMarker());</span>
-<span class="fc" id="L168">      setTypographicOpening(node.getTypographicOpening());</span>
-<span class="fc" id="L169">      setTypographicClosing(node.getTypographicClosing());</span>
-<span class="fc bfc" id="L170" title="All 2 branches covered.">      for (Node child : node.getChildren()) {</span>
-<span class="fc" id="L171">        appendChild(child);</span>
-<span class="fc" id="L172">      }</span>
-<span class="fc" id="L173">    }</span>
+<span class="fc" id="L168">      super(node.getOpeningMarker(), node.getText(), node.getClosingMarker());</span>
+<span class="fc" id="L169">      setTypographicOpening(node.getTypographicOpening());</span>
+<span class="fc" id="L170">      setTypographicClosing(node.getTypographicClosing());</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">      for (Node child : node.getChildren()) {</span>
+<span class="fc" id="L172">        appendChild(child);</span>
+<span class="fc" id="L173">      }</span>
+<span class="fc" id="L174">    }</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

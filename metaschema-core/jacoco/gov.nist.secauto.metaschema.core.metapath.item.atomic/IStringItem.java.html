@@ -34,17 +34,21 @@ public interface IStringItem extends IAnyAtomicItem {
    */
   @NonNull
   static IStringItem cast(@NonNull IAnyAtomicItem item) {
-<span class="fc" id="L37">    return item.asStringItem();</span>
+    try {
+<span class="fc" id="L38">      return item.asStringItem();</span>
+<span class="nc" id="L39">    } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L40">      throw new InvalidValueForCastFunctionException(ex.getLocalizedMessage(), ex);</span>
+    }
   }
 
   @Override
   default IStringItem asStringItem() {
-<span class="fc" id="L42">    return this;</span>
+<span class="fc" id="L46">    return this;</span>
   }
 
   @Override
   default IStringItem castAsType(IAnyAtomicItem item) {
-<span class="nc" id="L47">    return cast(item);</span>
+<span class="nc" id="L51">    return cast(item);</span>
   }
 
   /**
@@ -57,12 +61,12 @@ public interface IStringItem extends IAnyAtomicItem {
    *         than, equal to, or greater than the {@code item}.
    */
   default int compareTo(@NonNull IStringItem other) {
-<span class="fc" id="L60">    return asString().compareTo(other.asString());</span>
+<span class="fc" id="L64">    return asString().compareTo(other.asString());</span>
   }
 
   @Override
   default int compareTo(IAnyAtomicItem other) {
-<span class="fc" id="L65">    return compareTo(other.asStringItem());</span>
+<span class="fc" id="L69">    return compareTo(other.asStringItem());</span>
   }
 
   /**
@@ -80,7 +84,7 @@ public interface IStringItem extends IAnyAtomicItem {
    * @return the length
    */
   default int length() {
-<span class="fc" id="L83">    return asString().length();</span>
+<span class="fc" id="L87">    return asString().length();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

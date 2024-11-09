@@ -43,41 +43,42 @@ abstract class AbstractNamedModelInstanceTypeInfo&lt;INSTANCE extends INamedMode
 <span class="fc" id="L43">  }</span>
 
   @Override
-  public @NonNull String getBaseName() {
-<span class="fc" id="L47">    INSTANCE modelInstance = getInstance();</span>
+  public @NonNull
+  String getBaseName() {
+<span class="fc" id="L48">    INSTANCE modelInstance = getInstance();</span>
     String retval;
-<span class="pc bpc" id="L49" title="1 of 4 branches missed.">    if (modelInstance.getMaxOccurs() == -1 || modelInstance.getMaxOccurs() &gt; 1) {</span>
-<span class="fc" id="L50">      retval = super.getBaseName();</span>
+<span class="pc bpc" id="L50" title="1 of 4 branches missed.">    if (modelInstance.getMaxOccurs() == -1 || modelInstance.getMaxOccurs() &gt; 1) {</span>
+<span class="fc" id="L51">      retval = super.getBaseName();</span>
     } else {
-<span class="fc" id="L52">      retval = modelInstance.getEffectiveName();</span>
+<span class="fc" id="L53">      retval = modelInstance.getEffectiveName();</span>
     }
-<span class="fc" id="L54">    return retval;</span>
+<span class="fc" id="L55">    return retval;</span>
   }
 
   @Override
   public String getItemBaseName() {
-<span class="fc" id="L59">    return getInstance().getEffectiveName();</span>
+<span class="fc" id="L60">    return getInstance().getEffectiveName();</span>
   }
 
   @Override
   public TypeName getJavaItemType() {
-<span class="fc" id="L64">    return getParentTypeInfo().getTypeResolver().getClassName(this);</span>
+<span class="fc" id="L65">    return getParentTypeInfo().getTypeResolver().getClassName(this);</span>
   }
 
   @Override
   public Set&lt;IModelDefinition&gt; buildField(
       TypeSpec.Builder typeBuilder,
       FieldSpec.Builder fieldBuilder) {
-<span class="fc" id="L71">    Set&lt;IModelDefinition&gt; retval = super.buildField(typeBuilder, fieldBuilder);</span>
+<span class="fc" id="L72">    Set&lt;IModelDefinition&gt; retval = super.buildField(typeBuilder, fieldBuilder);</span>
 
-<span class="fc" id="L73">    IModelDefinition definition = getInstance().getDefinition();</span>
-<span class="fc bfc" id="L74" title="All 6 branches covered.">    if (definition.isInline() &amp;&amp; (definition.hasChildren() || definition instanceof IAssemblyDefinition)) {</span>
-<span class="fc" id="L75">      retval = new LinkedHashSet&lt;&gt;(retval);</span>
+<span class="fc" id="L74">    IModelDefinition definition = getInstance().getDefinition();</span>
+<span class="fc bfc" id="L75" title="All 6 branches covered.">    if (definition.isInline() &amp;&amp; (definition.hasChildren() || definition instanceof IAssemblyDefinition)) {</span>
+<span class="fc" id="L76">      retval = new LinkedHashSet&lt;&gt;(retval);</span>
 
       // this is an inline definition that must be built as a child class
-<span class="fc" id="L78">      retval.add(definition);</span>
+<span class="fc" id="L79">      retval.add(definition);</span>
     }
-<span class="fc bfc" id="L80" title="All 2 branches covered.">    return retval.isEmpty() ? CollectionUtil.emptySet() : CollectionUtil.unmodifiableSet(retval);</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">    return retval.isEmpty() ? CollectionUtil.emptySet() : CollectionUtil.unmodifiableSet(retval);</span>
   }
 
   @Override
@@ -86,130 +87,130 @@ abstract class AbstractNamedModelInstanceTypeInfo&lt;INSTANCE extends INamedMode
       FieldSpec.Builder fieldBuilder,
       AnnotationSpec.Builder annotation) {
 
-<span class="fc" id="L89">    buildBindingAnnotationCommon(annotation);</span>
+<span class="fc" id="L90">    buildBindingAnnotationCommon(annotation);</span>
 
-<span class="fc" id="L91">    INamedModelInstanceAbsolute instance = getInstance();</span>
+<span class="fc" id="L92">    INamedModelInstanceAbsolute instance = getInstance();</span>
 
-<span class="fc" id="L93">    int minOccurs = instance.getMinOccurs();</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (minOccurs != IGroupable.DEFAULT_GROUP_AS_MIN_OCCURS) {</span>
-<span class="fc" id="L95">      annotation.addMember(&quot;minOccurs&quot;, &quot;$L&quot;, minOccurs);</span>
+<span class="fc" id="L94">    int minOccurs = instance.getMinOccurs();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    if (minOccurs != IGroupable.DEFAULT_GROUP_AS_MIN_OCCURS) {</span>
+<span class="fc" id="L96">      annotation.addMember(&quot;minOccurs&quot;, &quot;$L&quot;, minOccurs);</span>
     }
 
-<span class="fc" id="L98">    int maxOccurs = instance.getMaxOccurs();</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">    if (maxOccurs != IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS) {</span>
-<span class="fc" id="L100">      annotation.addMember(&quot;maxOccurs&quot;, &quot;$L&quot;, maxOccurs);</span>
+<span class="fc" id="L99">    int maxOccurs = instance.getMaxOccurs();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (maxOccurs != IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS) {</span>
+<span class="fc" id="L101">      annotation.addMember(&quot;maxOccurs&quot;, &quot;$L&quot;, maxOccurs);</span>
     }
-<span class="pc bpc" id="L102" title="1 of 4 branches missed.">    if (maxOccurs == -1 || maxOccurs &gt; 1) {</span>
+<span class="pc bpc" id="L103" title="1 of 4 branches missed.">    if (maxOccurs == -1 || maxOccurs &gt; 1) {</span>
       // requires a group-as
-<span class="fc" id="L104">      annotation.addMember(&quot;groupAs&quot;, &quot;$L&quot;, generateGroupAsAnnotation().build());</span>
+<span class="fc" id="L105">      annotation.addMember(&quot;groupAs&quot;, &quot;$L&quot;, generateGroupAsAnnotation().build());</span>
     }
 
-<span class="fc" id="L107">    return CollectionUtil.emptySet();</span>
+<span class="fc" id="L108">    return CollectionUtil.emptySet();</span>
   }
 
   @Override
   protected void buildExtraMethods(TypeSpec.Builder builder, FieldSpec valueField) {
-<span class="fc" id="L112">    super.buildExtraMethods(builder, valueField);</span>
+<span class="fc" id="L113">    super.buildExtraMethods(builder, valueField);</span>
 
-<span class="fc" id="L114">    INamedModelInstanceAbsolute instance = getInstance();</span>
-<span class="fc" id="L115">    int maxOccurance = instance.getMaxOccurs();</span>
-<span class="pc bpc" id="L116" title="1 of 4 branches missed.">    if (maxOccurance == -1 || maxOccurance &gt; 1) {</span>
-<span class="fc" id="L117">      TypeName itemType = getJavaItemType();</span>
-<span class="fc" id="L118">      ParameterSpec valueParam = ParameterSpec.builder(itemType, &quot;item&quot;).build();</span>
+<span class="fc" id="L115">    INamedModelInstanceAbsolute instance = getInstance();</span>
+<span class="fc" id="L116">    int maxOccurance = instance.getMaxOccurs();</span>
+<span class="pc bpc" id="L117" title="1 of 4 branches missed.">    if (maxOccurance == -1 || maxOccurance &gt; 1) {</span>
+<span class="fc" id="L118">      TypeName itemType = getJavaItemType();</span>
+<span class="fc" id="L119">      ParameterSpec valueParam = ParameterSpec.builder(itemType, &quot;item&quot;).build();</span>
 
-<span class="fc" id="L120">      String itemPropertyName = ClassUtils.toPropertyName(getItemBaseName());</span>
+<span class="fc" id="L121">      String itemPropertyName = ClassUtils.toPropertyName(getItemBaseName());</span>
 
-<span class="fc bfc" id="L122" title="All 2 branches covered.">      if (JsonGroupAsBehavior.KEYED.equals(instance.getJsonGroupAsBehavior())) {</span>
-<span class="fc" id="L123">        IFlagInstance jsonKey = instance.getDefinition().getJsonKey();</span>
-<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (jsonKey == null) {</span>
-<span class="nc" id="L125">          throw new IllegalStateException(</span>
-<span class="nc" id="L126">              String.format(&quot;JSON key not defined for property: %s&quot;, instance.toCoordinates()));</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">      if (JsonGroupAsBehavior.KEYED.equals(instance.getJsonGroupAsBehavior())) {</span>
+<span class="fc" id="L124">        IFlagInstance jsonKey = instance.getDefinition().getJsonKey();</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if (jsonKey == null) {</span>
+<span class="nc" id="L126">          throw new IllegalStateException(</span>
+<span class="nc" id="L127">              String.format(&quot;JSON key not defined for property: %s&quot;, instance.toCoordinates()));</span>
         }
 
         // get the json key property on the instance's definition
-<span class="fc" id="L130">        ITypeResolver typeResolver = getParentTypeInfo().getTypeResolver();</span>
-<span class="fc" id="L131">        IModelDefinitionTypeInfo instanceTypeInfo = typeResolver.getTypeInfo(instance.getDefinition());</span>
-<span class="fc" id="L132">        IFlagInstanceTypeInfo jsonKeyTypeInfo = instanceTypeInfo.getFlagInstanceTypeInfo(jsonKey);</span>
+<span class="fc" id="L131">        ITypeResolver typeResolver = getParentTypeInfo().getTypeResolver();</span>
+<span class="fc" id="L132">        IModelDefinitionTypeInfo instanceTypeInfo = typeResolver.getTypeInfo(instance.getDefinition());</span>
+<span class="fc" id="L133">        IFlagInstanceTypeInfo jsonKeyTypeInfo = instanceTypeInfo.getFlagInstanceTypeInfo(jsonKey);</span>
 
-<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if (jsonKeyTypeInfo == null) {</span>
-<span class="nc" id="L135">          throw new IllegalStateException(</span>
-<span class="nc" id="L136">              String.format(&quot;Unable to identify JSON key for property: %s&quot;, instance.toCoordinates()));</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (jsonKeyTypeInfo == null) {</span>
+<span class="nc" id="L136">          throw new IllegalStateException(</span>
+<span class="nc" id="L137">              String.format(&quot;Unable to identify JSON key for property: %s&quot;, instance.toCoordinates()));</span>
         }
 
         {
           // create add method
-<span class="fc" id="L141">          MethodSpec.Builder method = MethodSpec.methodBuilder(&quot;add&quot; + itemPropertyName)</span>
-<span class="fc" id="L142">              .addParameter(valueParam)</span>
-<span class="fc" id="L143">              .returns(itemType)</span>
-<span class="fc" id="L144">              .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L145">              .addJavadoc(&quot;Add a new {@link $T} item to the underlying collection.\n&quot;, itemType)</span>
-<span class="fc" id="L146">              .addJavadoc(&quot;@param item the item to add\n&quot;)</span>
-<span class="fc" id="L147">              .addJavadoc(&quot;@return the existing {@link $T} item in the collection or {@code null} if not item exists\n&quot;,</span>
+<span class="fc" id="L142">          MethodSpec.Builder method = MethodSpec.methodBuilder(&quot;add&quot; + itemPropertyName)</span>
+<span class="fc" id="L143">              .addParameter(valueParam)</span>
+<span class="fc" id="L144">              .returns(itemType)</span>
+<span class="fc" id="L145">              .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L146">              .addJavadoc(&quot;Add a new {@link $T} item to the underlying collection.\n&quot;, itemType)</span>
+<span class="fc" id="L147">              .addJavadoc(&quot;@param item the item to add\n&quot;)</span>
+<span class="fc" id="L148">              .addJavadoc(&quot;@return the existing {@link $T} item in the collection or {@code null} if not item exists\n&quot;,</span>
                   itemType)
-<span class="fc" id="L149">              .addStatement(&quot;$1T value = $2T.requireNonNull($3N,\&quot;$3N value cannot be null\&quot;)&quot;,</span>
+<span class="fc" id="L150">              .addStatement(&quot;$1T value = $2T.requireNonNull($3N,\&quot;$3N value cannot be null\&quot;)&quot;,</span>
                   itemType, ObjectUtils.class, valueParam)
-<span class="fc" id="L151">              .addStatement(&quot;$1T key = $2T.requireNonNull($3N.$4N(),\&quot;$3N key cannot be null\&quot;)&quot;,</span>
-<span class="fc" id="L152">                  String.class, ObjectUtils.class, valueParam, &quot;get&quot; + jsonKeyTypeInfo.getPropertyName())</span>
-<span class="fc" id="L153">              .beginControlFlow(&quot;if ($N == null)&quot;, valueField)</span>
-<span class="fc" id="L154">              .addStatement(&quot;$N = new $T&lt;&gt;()&quot;, valueField, LinkedHashMap.class)</span>
-<span class="fc" id="L155">              .endControlFlow()</span>
-<span class="fc" id="L156">              .addStatement(&quot;return $N.put(key, value)&quot;, valueField);</span>
+<span class="fc" id="L152">              .addStatement(&quot;$1T key = $2T.requireNonNull($3N.$4N(),\&quot;$3N key cannot be null\&quot;)&quot;,</span>
+<span class="fc" id="L153">                  String.class, ObjectUtils.class, valueParam, &quot;get&quot; + jsonKeyTypeInfo.getPropertyName())</span>
+<span class="fc" id="L154">              .beginControlFlow(&quot;if ($N == null)&quot;, valueField)</span>
+<span class="fc" id="L155">              .addStatement(&quot;$N = new $T&lt;&gt;()&quot;, valueField, LinkedHashMap.class)</span>
+<span class="fc" id="L156">              .endControlFlow()</span>
+<span class="fc" id="L157">              .addStatement(&quot;return $N.put(key, value)&quot;, valueField);</span>
 
-<span class="fc" id="L158">          builder.addMethod(method.build());</span>
+<span class="fc" id="L159">          builder.addMethod(method.build());</span>
         }
         {
           // create remove method
-<span class="fc" id="L162">          MethodSpec.Builder method = MethodSpec.methodBuilder(&quot;remove&quot; + itemPropertyName)</span>
-<span class="fc" id="L163">              .addParameter(valueParam)</span>
-<span class="fc" id="L164">              .returns(TypeName.BOOLEAN)</span>
-<span class="fc" id="L165">              .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L166">              .addJavadoc(&quot;Remove the {@link $T} item from the underlying collection.\n&quot;, itemType)</span>
-<span class="fc" id="L167">              .addJavadoc(&quot;@param item the item to remove\n&quot;)</span>
-<span class="fc" id="L168">              .addJavadoc(&quot;@return {@code true} if the item was removed or {@code false} otherwise\n&quot;)</span>
-<span class="fc" id="L169">              .addStatement(&quot;$1T value = $2T.requireNonNull($3N,\&quot;$3N value cannot be null\&quot;)&quot;,</span>
+<span class="fc" id="L163">          MethodSpec.Builder method = MethodSpec.methodBuilder(&quot;remove&quot; + itemPropertyName)</span>
+<span class="fc" id="L164">              .addParameter(valueParam)</span>
+<span class="fc" id="L165">              .returns(TypeName.BOOLEAN)</span>
+<span class="fc" id="L166">              .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L167">              .addJavadoc(&quot;Remove the {@link $T} item from the underlying collection.\n&quot;, itemType)</span>
+<span class="fc" id="L168">              .addJavadoc(&quot;@param item the item to remove\n&quot;)</span>
+<span class="fc" id="L169">              .addJavadoc(&quot;@return {@code true} if the item was removed or {@code false} otherwise\n&quot;)</span>
+<span class="fc" id="L170">              .addStatement(&quot;$1T value = $2T.requireNonNull($3N,\&quot;$3N value cannot be null\&quot;)&quot;,</span>
                   itemType, ObjectUtils.class, valueParam)
-<span class="fc" id="L171">              .addStatement(&quot;$1T key = $2T.requireNonNull($3N.$4N(),\&quot;$3N key cannot be null\&quot;)&quot;,</span>
-<span class="fc" id="L172">                  String.class, ObjectUtils.class, valueParam, &quot;get&quot; + jsonKeyTypeInfo.getPropertyName())</span>
-<span class="fc" id="L173">              .addStatement(&quot;return $1N != null &amp;&amp; $1N.remove(key, value)&quot;, valueField);</span>
-<span class="fc" id="L174">          builder.addMethod(method.build());</span>
+<span class="fc" id="L172">              .addStatement(&quot;$1T key = $2T.requireNonNull($3N.$4N(),\&quot;$3N key cannot be null\&quot;)&quot;,</span>
+<span class="fc" id="L173">                  String.class, ObjectUtils.class, valueParam, &quot;get&quot; + jsonKeyTypeInfo.getPropertyName())</span>
+<span class="fc" id="L174">              .addStatement(&quot;return $1N != null &amp;&amp; $1N.remove(key, value)&quot;, valueField);</span>
+<span class="fc" id="L175">          builder.addMethod(method.build());</span>
         }
-<span class="fc" id="L176">      } else {</span>
+<span class="fc" id="L177">      } else {</span>
         {
           // create add method
-<span class="fc" id="L179">          MethodSpec.Builder method = MethodSpec.methodBuilder(&quot;add&quot; + itemPropertyName)</span>
-<span class="fc" id="L180">              .addParameter(valueParam)</span>
-<span class="fc" id="L181">              .returns(TypeName.BOOLEAN)</span>
-<span class="fc" id="L182">              .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L183">              .addJavadoc(&quot;Add a new {@link $T} item to the underlying collection.\n&quot;, itemType)</span>
-<span class="fc" id="L184">              .addJavadoc(&quot;@param item the item to add\n&quot;)</span>
-<span class="fc" id="L185">              .addJavadoc(&quot;@return {@code true}\n&quot;)</span>
-<span class="fc" id="L186">              .addStatement(&quot;$T value = $T.requireNonNull($N,\&quot;$N cannot be null\&quot;)&quot;,</span>
+<span class="fc" id="L180">          MethodSpec.Builder method = MethodSpec.methodBuilder(&quot;add&quot; + itemPropertyName)</span>
+<span class="fc" id="L181">              .addParameter(valueParam)</span>
+<span class="fc" id="L182">              .returns(TypeName.BOOLEAN)</span>
+<span class="fc" id="L183">              .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L184">              .addJavadoc(&quot;Add a new {@link $T} item to the underlying collection.\n&quot;, itemType)</span>
+<span class="fc" id="L185">              .addJavadoc(&quot;@param item the item to add\n&quot;)</span>
+<span class="fc" id="L186">              .addJavadoc(&quot;@return {@code true}\n&quot;)</span>
+<span class="fc" id="L187">              .addStatement(&quot;$T value = $T.requireNonNull($N,\&quot;$N cannot be null\&quot;)&quot;,</span>
                   itemType, ObjectUtils.class, valueParam, valueParam)
-<span class="fc" id="L188">              .beginControlFlow(&quot;if ($N == null)&quot;, valueField)</span>
-<span class="fc" id="L189">              .addStatement(&quot;$N = new $T&lt;&gt;()&quot;, valueField, LinkedList.class)</span>
-<span class="fc" id="L190">              .endControlFlow()</span>
-<span class="fc" id="L191">              .addStatement(&quot;return $N.add(value)&quot;, valueField);</span>
+<span class="fc" id="L189">              .beginControlFlow(&quot;if ($N == null)&quot;, valueField)</span>
+<span class="fc" id="L190">              .addStatement(&quot;$N = new $T&lt;&gt;()&quot;, valueField, LinkedList.class)</span>
+<span class="fc" id="L191">              .endControlFlow()</span>
+<span class="fc" id="L192">              .addStatement(&quot;return $N.add(value)&quot;, valueField);</span>
 
-<span class="fc" id="L193">          builder.addMethod(method.build());</span>
+<span class="fc" id="L194">          builder.addMethod(method.build());</span>
         }
 
         {
           // create remove method
-<span class="fc" id="L198">          MethodSpec.Builder method = MethodSpec.methodBuilder(&quot;remove&quot; + itemPropertyName)</span>
-<span class="fc" id="L199">              .addParameter(valueParam)</span>
-<span class="fc" id="L200">              .returns(TypeName.BOOLEAN)</span>
-<span class="fc" id="L201">              .addModifiers(Modifier.PUBLIC)</span>
-<span class="fc" id="L202">              .addJavadoc(&quot;Remove the first matching {@link $T} item from the underlying collection.\n&quot;, itemType)</span>
-<span class="fc" id="L203">              .addJavadoc(&quot;@param item the item to remove\n&quot;)</span>
-<span class="fc" id="L204">              .addJavadoc(&quot;@return {@code true} if the item was removed or {@code false} otherwise\n&quot;)</span>
-<span class="fc" id="L205">              .addStatement(&quot;$T value = $T.requireNonNull($N,\&quot;$N cannot be null\&quot;)&quot;,</span>
+<span class="fc" id="L199">          MethodSpec.Builder method = MethodSpec.methodBuilder(&quot;remove&quot; + itemPropertyName)</span>
+<span class="fc" id="L200">              .addParameter(valueParam)</span>
+<span class="fc" id="L201">              .returns(TypeName.BOOLEAN)</span>
+<span class="fc" id="L202">              .addModifiers(Modifier.PUBLIC)</span>
+<span class="fc" id="L203">              .addJavadoc(&quot;Remove the first matching {@link $T} item from the underlying collection.\n&quot;, itemType)</span>
+<span class="fc" id="L204">              .addJavadoc(&quot;@param item the item to remove\n&quot;)</span>
+<span class="fc" id="L205">              .addJavadoc(&quot;@return {@code true} if the item was removed or {@code false} otherwise\n&quot;)</span>
+<span class="fc" id="L206">              .addStatement(&quot;$T value = $T.requireNonNull($N,\&quot;$N cannot be null\&quot;)&quot;,</span>
                   itemType, ObjectUtils.class, valueParam, valueParam)
-<span class="fc" id="L207">              .addStatement(&quot;return $1N != null &amp;&amp; $1N.remove(value)&quot;, valueField);</span>
-<span class="fc" id="L208">          builder.addMethod(method.build());</span>
+<span class="fc" id="L208">              .addStatement(&quot;return $1N != null &amp;&amp; $1N.remove(value)&quot;, valueField);</span>
+<span class="fc" id="L209">          builder.addMethod(method.build());</span>
         }
       }
     }
-<span class="fc" id="L212">  }</span>
+<span class="fc" id="L213">  }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -45,18 +45,19 @@ public final class CLI {
   public static ExitStatus runCli(String... args) {
 <span class="fc" id="L46">    System.setProperty(&quot;java.util.logging.manager&quot;, &quot;org.apache.logging.log4j.jul.LogManager&quot;);</span>
 
-<span class="fc" id="L48">    @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;String, IVersionInfo&gt; versions = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L49">    versions.put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());</span>
-<span class="fc" id="L50">    versions.put(MetaschemaConstants.METASCHEMA_NAMESPACE, new MetaschemaVersion());</span>
+    @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;)
+<span class="fc" id="L49">    Map&lt;String, IVersionInfo&gt; versions = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L50">    versions.put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());</span>
+<span class="fc" id="L51">    versions.put(MetaschemaConstants.METASCHEMA_NAMESPACE, new MetaschemaVersion());</span>
 
-<span class="fc" id="L52">    CLIProcessor processor = new CLIProcessor(&quot;metaschema-cli&quot;, versions);</span>
-<span class="fc" id="L53">    MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);</span>
+<span class="fc" id="L53">    CLIProcessor processor = new CLIProcessor(&quot;metaschema-cli&quot;, versions);</span>
+<span class="fc" id="L54">    MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);</span>
 
-<span class="fc" id="L55">    CommandService.getInstance().getCommands().stream().forEach(command -&gt; {</span>
-<span class="nc bnc" id="L56" title="All 2 branches missed.">      assert command != null;</span>
-<span class="nc" id="L57">      processor.addCommandHandler(command);</span>
-<span class="nc" id="L58">    });</span>
-<span class="fc" id="L59">    return processor.process(args);</span>
+<span class="fc" id="L56">    CommandService.getInstance().getCommands().stream().forEach(command -&gt; {</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">      assert command != null;</span>
+<span class="nc" id="L58">      processor.addCommandHandler(command);</span>
+<span class="nc" id="L59">    });</span>
+<span class="fc" id="L60">    return processor.process(args);</span>
   }
 
   private CLI() {

@@ -53,12 +53,13 @@ public class Union
 <span class="fc" id="L53">    focus.getValue();</span>
 
     // now process the union
-<span class="fc" id="L56">    @NonNull Stream&lt;? extends IItem&gt; retval = ObjectUtils.notNull(getChildren().stream()</span>
-<span class="fc" id="L57">        .flatMap(child -&gt; {</span>
-<span class="fc" id="L58">          ISequence&lt;?&gt; result = child.accept(dynamicContext, focus);</span>
-<span class="fc" id="L59">          return result.stream();</span>
-<span class="fc" id="L60">        }).distinct());</span>
-<span class="fc" id="L61">    return ISequence.of(retval);</span>
+    @NonNull
+<span class="fc" id="L57">    Stream&lt;? extends IItem&gt; retval = ObjectUtils.notNull(getChildren().stream()</span>
+<span class="fc" id="L58">        .flatMap(child -&gt; {</span>
+<span class="fc" id="L59">          ISequence&lt;?&gt; result = child.accept(dynamicContext, focus);</span>
+<span class="fc" id="L60">          return result.stream();</span>
+<span class="fc" id="L61">        }).distinct());</span>
+<span class="fc" id="L62">    return ISequence.of(retval);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

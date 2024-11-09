@@ -30,10 +30,10 @@ public interface IDurationItem extends IAnyAtomicItem {
     } else {
       try {
 <span class="nc" id="L32">        retval = IDayTimeDurationItem.valueOf(item.asString());</span>
-<span class="nc" id="L33">      } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L33">      } catch (IllegalStateException ex) {</span>
         try {
 <span class="nc" id="L35">          retval = IYearMonthDurationItem.valueOf(item.asString());</span>
-<span class="nc" id="L36">        } catch (IllegalArgumentException ex2) {</span>
+<span class="nc" id="L36">        } catch (IllegalStateException ex2) {</span>
 <span class="nc" id="L37">          InvalidValueForCastFunctionException newEx = new InvalidValueForCastFunctionException(ex2);</span>
 <span class="nc" id="L38">          newEx.addSuppressed(ex);</span>
 <span class="nc" id="L39">          throw newEx; // NOPMD context as suppressed</span>

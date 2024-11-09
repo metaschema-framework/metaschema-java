@@ -241,8 +241,9 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull ZonedDateTime dateTime,
       @NonNull TemporalAmount duration) {
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L244">    @NonNull ZonedDateTime result = dateTime.minus(duration);</span>
-<span class="nc" id="L245">    return IDateItem.valueOf(result);</span>
+    @NonNull
+<span class="nc" id="L245">    ZonedDateTime result = dateTime.minus(duration);</span>
+<span class="nc" id="L246">    return IDateItem.valueOf(result);</span>
   }
 
   /**
@@ -259,12 +260,13 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IYearMonthDurationItem opSubtractYearMonthDurations(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull IYearMonthDurationItem arg2) {
-<span class="nc" id="L262">    Period duration1 = arg1.asPeriod();</span>
-<span class="nc" id="L263">    Period duration2 = arg2.asPeriod();</span>
+<span class="nc" id="L263">    Period duration1 = arg1.asPeriod();</span>
+<span class="nc" id="L264">    Period duration2 = arg2.asPeriod();</span>
 
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L266">    @NonNull Period duration = duration1.minus(duration2);</span>
-<span class="nc" id="L267">    return IYearMonthDurationItem.valueOf(duration);</span>
+    @NonNull
+<span class="nc" id="L268">    Period duration = duration1.minus(duration2);</span>
+<span class="nc" id="L269">    return IYearMonthDurationItem.valueOf(duration);</span>
   }
 
   /**
@@ -281,12 +283,13 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IDayTimeDurationItem opSubtractDayTimeDurations(
       @NonNull IDayTimeDurationItem arg1,
       @NonNull IDayTimeDurationItem arg2) {
-<span class="nc" id="L284">    Duration duration1 = arg1.asDuration();</span>
-<span class="nc" id="L285">    Duration duration2 = arg2.asDuration();</span>
+<span class="nc" id="L286">    Duration duration1 = arg1.asDuration();</span>
+<span class="nc" id="L287">    Duration duration2 = arg2.asDuration();</span>
 
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L288">    @NonNull Duration duration = duration1.minus(duration2);</span>
-<span class="nc" id="L289">    return IDayTimeDurationItem.valueOf(duration);</span>
+    @NonNull
+<span class="nc" id="L291">    Duration duration = duration1.minus(duration2);</span>
+<span class="nc" id="L292">    return IDayTimeDurationItem.valueOf(duration);</span>
   }
 
   /**
@@ -301,7 +304,7 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IDayTimeDurationItem opSubtractDateTimes(@NonNull IDateTimeItem time1, @NonNull IDateTimeItem time2) {
-<span class="nc" id="L304">    return between(time1.asZonedDateTime(), time2.asZonedDateTime());</span>
+<span class="nc" id="L307">    return between(time1.asZonedDateTime(), time2.asZonedDateTime());</span>
   }
 
   /**
@@ -317,8 +320,9 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   private static IDayTimeDurationItem between(@NonNull ZonedDateTime time1, @NonNull ZonedDateTime time2) {
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L320">    @NonNull Duration between = Duration.between(time1, time2);</span>
-<span class="nc" id="L321">    return IDayTimeDurationItem.valueOf(between);</span>
+    @NonNull
+<span class="nc" id="L324">    Duration between = Duration.between(time1, time2);</span>
+<span class="nc" id="L325">    return IDayTimeDurationItem.valueOf(between);</span>
   }
 
   /**
@@ -336,8 +340,9 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull IDateTimeItem moment,
       @NonNull IYearMonthDurationItem duration) {
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L339">    @NonNull ZonedDateTime dateTime = moment.asZonedDateTime().minus(duration.asPeriod());</span>
-<span class="nc" id="L340">    return IDateTimeItem.valueOf(dateTime);</span>
+    @NonNull
+<span class="nc" id="L344">    ZonedDateTime dateTime = moment.asZonedDateTime().minus(duration.asPeriod());</span>
+<span class="nc" id="L345">    return IDateTimeItem.valueOf(dateTime);</span>
   }
 
   /**
@@ -356,8 +361,9 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull IDayTimeDurationItem duration) {
 
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L359">    @NonNull ZonedDateTime dateTime = moment.asZonedDateTime().plus(duration.asDuration());</span>
-<span class="nc" id="L360">    return IDateTimeItem.valueOf(dateTime);</span>
+    @NonNull
+<span class="nc" id="L365">    ZonedDateTime dateTime = moment.asZonedDateTime().plus(duration.asDuration());</span>
+<span class="nc" id="L366">    return IDateTimeItem.valueOf(dateTime);</span>
   }
 
   /**
@@ -377,14 +383,15 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull INumericItem arg2) {
     int arg2Int;
     try {
-<span class="nc" id="L380">      arg2Int = FunctionUtils.asInteger(arg2.round());</span>
-<span class="nc" id="L381">    } catch (ArithmeticException ex) {</span>
-<span class="nc" id="L382">      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);</span>
-<span class="nc" id="L383">    }</span>
+<span class="nc" id="L386">      arg2Int = FunctionUtils.asInteger(arg2.round());</span>
+<span class="nc" id="L387">    } catch (ArithmeticException ex) {</span>
+<span class="nc" id="L388">      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);</span>
+<span class="nc" id="L389">    }</span>
 
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L386">    @NonNull Period period = arg1.asPeriod().multipliedBy(arg2Int);</span>
-<span class="nc" id="L387">    return IYearMonthDurationItem.valueOf(period);</span>
+    @NonNull
+<span class="nc" id="L393">    Period period = arg1.asPeriod().multipliedBy(arg2Int);</span>
+<span class="nc" id="L394">    return IYearMonthDurationItem.valueOf(period);</span>
   }
 
   /**
@@ -403,14 +410,15 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull INumericItem arg2) {
     long arg2Long;
     try {
-<span class="nc" id="L406">      arg2Long = FunctionUtils.asLong(arg2.round());</span>
-<span class="nc" id="L407">    } catch (ArithmeticException ex) {</span>
-<span class="nc" id="L408">      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);</span>
-<span class="nc" id="L409">    }</span>
+<span class="nc" id="L413">      arg2Long = FunctionUtils.asLong(arg2.round());</span>
+<span class="nc" id="L414">    } catch (ArithmeticException ex) {</span>
+<span class="nc" id="L415">      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);</span>
+<span class="nc" id="L416">    }</span>
 
     @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L412">    @NonNull Duration duration = arg1.asDuration().multipliedBy(arg2Long);</span>
-<span class="nc" id="L413">    return IDayTimeDurationItem.valueOf(duration);</span>
+    @NonNull
+<span class="nc" id="L420">    Duration duration = arg1.asDuration().multipliedBy(arg2Long);</span>
+<span class="nc" id="L421">    return IDayTimeDurationItem.valueOf(duration);</span>
   }
 
   /**
@@ -427,18 +435,18 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IYearMonthDurationItem opDivideYearMonthDuration(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull INumericItem arg2) {
-<span class="fc" id="L430">    IIntegerItem totalMonths = IIntegerItem.valueOf(arg1.asPeriod().toTotalMonths());</span>
-<span class="fc" id="L431">    IIntegerItem result = opNumericIntegerDivide(totalMonths, arg2);</span>
+<span class="fc" id="L438">    IIntegerItem totalMonths = IIntegerItem.valueOf(arg1.asPeriod().toTotalMonths());</span>
+<span class="fc" id="L439">    IIntegerItem result = opNumericIntegerDivide(totalMonths, arg2);</span>
     int months;
     try {
-<span class="fc" id="L434">      months = FunctionUtils.asInteger(result.asInteger());</span>
-<span class="nc" id="L435">    } catch (ArithmeticException ex) {</span>
-<span class="nc" id="L436">      throw new DateTimeFunctionException(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,</span>
+<span class="fc" id="L442">      months = FunctionUtils.asInteger(result.asInteger());</span>
+<span class="nc" id="L443">    } catch (ArithmeticException ex) {</span>
+<span class="nc" id="L444">      throw new DateTimeFunctionException(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,</span>
           &quot;Overflow/underflow in duration operation.&quot;, ex);
-<span class="fc" id="L438">    }</span>
-<span class="fc" id="L439">    int years = months / 12;</span>
-<span class="fc" id="L440">    months = months % 12;</span>
-<span class="fc" id="L441">    return IYearMonthDurationItem.valueOf(years, months);</span>
+<span class="fc" id="L446">    }</span>
+<span class="fc" id="L447">    int years = months / 12;</span>
+<span class="fc" id="L448">    months = months % 12;</span>
+<span class="fc" id="L449">    return IYearMonthDurationItem.valueOf(years, months);</span>
   }
 
   /**
@@ -457,10 +465,11 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull INumericItem arg2) {
     try {
       @SuppressWarnings(&quot;null&quot;)
-<span class="fc" id="L460">      @NonNull Duration duration = arg1.asDuration().dividedBy(FunctionUtils.asLong(arg2.round()));</span>
-<span class="fc" id="L461">      return IDayTimeDurationItem.valueOf(duration);</span>
-<span class="nc" id="L462">    } catch (ArithmeticException ex) {</span>
-<span class="nc" id="L463">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO, &quot;Division by zero&quot;, ex);</span>
+      @NonNull
+<span class="fc" id="L469">      Duration duration = arg1.asDuration().dividedBy(FunctionUtils.asLong(arg2.round()));</span>
+<span class="fc" id="L470">      return IDayTimeDurationItem.valueOf(duration);</span>
+<span class="nc" id="L471">    } catch (ArithmeticException ex) {</span>
+<span class="nc" id="L472">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO, &quot;Division by zero&quot;, ex);</span>
     }
   }
 
@@ -479,10 +488,10 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IDecimalItem opDivideDayTimeDurationByDayTimeDuration(
       @NonNull IDayTimeDurationItem arg1,
       @NonNull IDayTimeDurationItem arg2) {
-<span class="nc" id="L482">    return IDecimalItem.cast(</span>
-<span class="nc" id="L483">        opNumericDivide(</span>
-<span class="nc" id="L484">            IDecimalItem.valueOf(arg1.asSeconds()),</span>
-<span class="nc" id="L485">            IDecimalItem.valueOf(arg2.asSeconds())));</span>
+<span class="nc" id="L491">    return IDecimalItem.cast(</span>
+<span class="nc" id="L492">        opNumericDivide(</span>
+<span class="nc" id="L493">            IDecimalItem.valueOf(arg1.asSeconds()),</span>
+<span class="nc" id="L494">            IDecimalItem.valueOf(arg2.asSeconds())));</span>
   }
 
   /**
@@ -498,7 +507,7 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opDateEqual(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {
-<span class="nc" id="L501">    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));</span>
+<span class="nc" id="L510">    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));</span>
   }
 
   /**
@@ -514,7 +523,7 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opDateTimeEqual(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {
-<span class="nc" id="L517">    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));</span>
+<span class="nc" id="L526">    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));</span>
   }
 
   /**
@@ -530,7 +539,7 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opDurationEqual(@NonNull IDurationItem arg1, @NonNull IDurationItem arg2) {
-<span class="nc bnc" id="L533" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) == 0);</span>
+<span class="nc bnc" id="L542" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) == 0);</span>
   }
 
   /**
@@ -546,7 +555,7 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opBase64BinaryEqual(@NonNull IBase64BinaryItem arg1, @NonNull IBase64BinaryItem arg2) {
-<span class="nc" id="L549">    return IBooleanItem.valueOf(arg1.asByteBuffer().equals(arg2.asByteBuffer()));</span>
+<span class="nc" id="L558">    return IBooleanItem.valueOf(arg1.asByteBuffer().equals(arg2.asByteBuffer()));</span>
   }
 
   /**
@@ -562,7 +571,7 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opDateGreaterThan(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {
-<span class="nc bnc" id="L565" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &gt; 0);</span>
+<span class="nc bnc" id="L574" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &gt; 0);</span>
   }
 
   /**
@@ -578,7 +587,7 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opDateTimeGreaterThan(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {
-<span class="nc bnc" id="L581" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &gt; 0);</span>
+<span class="nc bnc" id="L590" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &gt; 0);</span>
   }
 
   /**
@@ -596,11 +605,11 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IBooleanItem opYearMonthDurationGreaterThan(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull IYearMonthDurationItem arg2) {
-<span class="nc" id="L599">    Period p1 = arg1.asPeriod();</span>
-<span class="nc" id="L600">    Period p2 = arg2.asPeriod();</span>
+<span class="nc" id="L608">    Period p1 = arg1.asPeriod();</span>
+<span class="nc" id="L609">    Period p2 = arg2.asPeriod();</span>
 
     // this is only an approximation
-<span class="nc bnc" id="L603" title="All 2 branches missed.">    return IBooleanItem.valueOf(p1.toTotalMonths() &gt; p2.toTotalMonths());</span>
+<span class="nc bnc" id="L612" title="All 2 branches missed.">    return IBooleanItem.valueOf(p1.toTotalMonths() &gt; p2.toTotalMonths());</span>
   }
 
   /**
@@ -618,7 +627,7 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IBooleanItem opDayTimeDurationGreaterThan(
       @NonNull IDayTimeDurationItem arg1,
       @NonNull IDayTimeDurationItem arg2) {
-<span class="nc bnc" id="L621" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &gt; 0);</span>
+<span class="nc bnc" id="L630" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &gt; 0);</span>
   }
 
   /**
@@ -636,7 +645,7 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IBooleanItem opBase64BinaryGreaterThan(
       @NonNull IBase64BinaryItem arg1,
       @NonNull IBase64BinaryItem arg2) {
-<span class="nc bnc" id="L639" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &gt; 0);</span>
+<span class="nc bnc" id="L648" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &gt; 0);</span>
   }
 
   /**
@@ -654,7 +663,7 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IBooleanItem opDateLessThan(
       @NonNull IDateItem arg1,
       @NonNull IDateItem arg2) {
-<span class="nc bnc" id="L657" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &lt; 0);</span>
+<span class="nc bnc" id="L666" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &lt; 0);</span>
   }
 
   /**
@@ -672,7 +681,7 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IBooleanItem opDateTimeLessThan(
       @NonNull IDateTimeItem arg1,
       @NonNull IDateTimeItem arg2) {
-<span class="nc bnc" id="L675" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &lt; 0);</span>
+<span class="nc bnc" id="L684" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) &lt; 0);</span>
   }
 
   /**
@@ -689,11 +698,11 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static IBooleanItem opYearMonthDurationLessThan(@NonNull IYearMonthDurationItem arg1,
       @NonNull IYearMonthDurationItem arg2) {
-<span class="nc" id="L692">    Period p1 = arg1.asPeriod();</span>
-<span class="nc" id="L693">    Period p2 = arg2.asPeriod();</span>
+<span class="nc" id="L701">    Period p1 = arg1.asPeriod();</span>
+<span class="nc" id="L702">    Period p2 = arg2.asPeriod();</span>
 
     // this is only an approximation
-<span class="nc bnc" id="L696" title="All 2 branches missed.">    return IBooleanItem.valueOf(p1.toTotalMonths() &lt; p2.toTotalMonths());</span>
+<span class="nc bnc" id="L705" title="All 2 branches missed.">    return IBooleanItem.valueOf(p1.toTotalMonths() &lt; p2.toTotalMonths());</span>
   }
 
   /**
@@ -711,7 +720,7 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IBooleanItem opDayTimeDurationLessThan(
       @NonNull IDayTimeDurationItem arg1,
       @NonNull IDayTimeDurationItem arg2) {
-<span class="nc bnc" id="L714" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &lt; 0);</span>
+<span class="nc bnc" id="L723" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &lt; 0);</span>
   }
 
   /**
@@ -729,7 +738,7 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IBooleanItem opBase64BinaryLessThan(
       @NonNull IBase64BinaryItem arg1,
       @NonNull IBase64BinaryItem arg2) {
-<span class="nc bnc" id="L732" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &lt; 0);</span>
+<span class="nc bnc" id="L741" title="All 2 branches missed.">    return IBooleanItem.valueOf(arg1.compareTo(arg2) &lt; 0);</span>
   }
 
   /**
@@ -745,24 +754,26 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static INumericItem opNumericAdd(@NonNull INumericItem left, @NonNull INumericItem right) {
     INumericItem retval;
-<span class="pc bpc" id="L748" title="3 of 4 branches missed.">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
+<span class="pc bpc" id="L757" title="3 of 4 branches missed.">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
       // create an integer result
-<span class="fc" id="L750">      BigInteger integerLeft = left.asInteger();</span>
-<span class="fc" id="L751">      BigInteger integerRight = right.asInteger();</span>
+<span class="fc" id="L759">      BigInteger integerLeft = left.asInteger();</span>
+<span class="fc" id="L760">      BigInteger integerRight = right.asInteger();</span>
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="fc" id="L754">      @NonNull BigInteger result = integerLeft.add(integerRight);</span>
-<span class="fc" id="L755">      retval = IIntegerItem.valueOf(result);</span>
-<span class="fc" id="L756">    } else {</span>
+      @NonNull
+<span class="fc" id="L764">      BigInteger result = integerLeft.add(integerRight);</span>
+<span class="fc" id="L765">      retval = IIntegerItem.valueOf(result);</span>
+<span class="fc" id="L766">    } else {</span>
       // create a decimal result
-<span class="nc" id="L758">      BigDecimal decimalLeft = left.asDecimal();</span>
-<span class="nc" id="L759">      BigDecimal decimalRight = right.asDecimal();</span>
+<span class="nc" id="L768">      BigDecimal decimalLeft = left.asDecimal();</span>
+<span class="nc" id="L769">      BigDecimal decimalRight = right.asDecimal();</span>
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L762">      @NonNull BigDecimal result = decimalLeft.add(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
-<span class="nc" id="L763">      retval = IDecimalItem.valueOf(result);</span>
+      @NonNull
+<span class="nc" id="L773">      BigDecimal result = decimalLeft.add(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
+<span class="nc" id="L774">      retval = IDecimalItem.valueOf(result);</span>
     }
-<span class="fc" id="L765">    return retval;</span>
+<span class="fc" id="L776">    return retval;</span>
   }
 
   /**
@@ -778,24 +789,26 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static INumericItem opNumericSubtract(@NonNull INumericItem left, @NonNull INumericItem right) {
     INumericItem retval;
-<span class="nc bnc" id="L781" title="All 4 branches missed.">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
+<span class="nc bnc" id="L792" title="All 4 branches missed.">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
       // create an integer result
-<span class="nc" id="L783">      BigInteger integerLeft = left.asInteger();</span>
-<span class="nc" id="L784">      BigInteger integerRight = right.asInteger();</span>
+<span class="nc" id="L794">      BigInteger integerLeft = left.asInteger();</span>
+<span class="nc" id="L795">      BigInteger integerRight = right.asInteger();</span>
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L787">      @NonNull BigInteger result = integerLeft.subtract(integerRight);</span>
-<span class="nc" id="L788">      retval = IIntegerItem.valueOf(result);</span>
-<span class="nc" id="L789">    } else {</span>
+      @NonNull
+<span class="nc" id="L799">      BigInteger result = integerLeft.subtract(integerRight);</span>
+<span class="nc" id="L800">      retval = IIntegerItem.valueOf(result);</span>
+<span class="nc" id="L801">    } else {</span>
       // create a decimal result
-<span class="nc" id="L791">      BigDecimal decimalLeft = left.asDecimal();</span>
-<span class="nc" id="L792">      BigDecimal decimalRight = right.asDecimal();</span>
+<span class="nc" id="L803">      BigDecimal decimalLeft = left.asDecimal();</span>
+<span class="nc" id="L804">      BigDecimal decimalRight = right.asDecimal();</span>
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L795">      @NonNull BigDecimal result = decimalLeft.subtract(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
-<span class="nc" id="L796">      retval = IDecimalItem.valueOf(result);</span>
+      @NonNull
+<span class="nc" id="L808">      BigDecimal result = decimalLeft.subtract(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
+<span class="nc" id="L809">      retval = IDecimalItem.valueOf(result);</span>
     }
-<span class="nc" id="L798">    return retval;</span>
+<span class="nc" id="L811">    return retval;</span>
   }
 
   /**
@@ -811,21 +824,23 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static INumericItem opNumericMultiply(@NonNull INumericItem left, @NonNull INumericItem right) {
     INumericItem retval;
-<span class="nc bnc" id="L814" title="All 4 branches missed.">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
+<span class="nc bnc" id="L827" title="All 4 branches missed.">    if (left instanceof IIntegerItem || right instanceof IIntegerItem) {</span>
       // create an integer result
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L817">      @NonNull BigInteger result = left.asInteger().multiply(right.asInteger());</span>
-<span class="nc" id="L818">      retval = IIntegerItem.valueOf(result);</span>
-<span class="nc" id="L819">    } else {</span>
+      @NonNull
+<span class="nc" id="L831">      BigInteger result = left.asInteger().multiply(right.asInteger());</span>
+<span class="nc" id="L832">      retval = IIntegerItem.valueOf(result);</span>
+<span class="nc" id="L833">    } else {</span>
       // create a decimal result
-<span class="nc" id="L821">      BigDecimal decimalLeft = left.asDecimal();</span>
-<span class="nc" id="L822">      BigDecimal decimalRight = right.asDecimal();</span>
+<span class="nc" id="L835">      BigDecimal decimalLeft = left.asDecimal();</span>
+<span class="nc" id="L836">      BigDecimal decimalRight = right.asDecimal();</span>
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L825">      @NonNull BigDecimal result = decimalLeft.multiply(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
-<span class="nc" id="L826">      retval = IDecimalItem.valueOf(result);</span>
+      @NonNull
+<span class="nc" id="L840">      BigDecimal result = decimalLeft.multiply(decimalRight, FunctionUtils.MATH_CONTEXT);</span>
+<span class="nc" id="L841">      retval = IDecimalItem.valueOf(result);</span>
     }
-<span class="nc" id="L828">    return retval;</span>
+<span class="nc" id="L843">    return retval;</span>
   }
 
   /**
@@ -841,18 +856,19 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static IDecimalItem opNumericDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {
     // create a decimal result
-<span class="fc" id="L844">    BigDecimal decimalDivisor = divisor.asDecimal();</span>
+<span class="fc" id="L859">    BigDecimal decimalDivisor = divisor.asDecimal();</span>
 
-<span class="pc bpc" id="L846" title="1 of 2 branches missed.">    if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
-<span class="nc" id="L847">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
+<span class="pc bpc" id="L861" title="1 of 2 branches missed.">    if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
+<span class="nc" id="L862">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
           ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
     }
 
-<span class="fc" id="L851">    BigDecimal decimalDividend = dividend.asDecimal();</span>
+<span class="fc" id="L866">    BigDecimal decimalDividend = dividend.asDecimal();</span>
 
     @SuppressWarnings(&quot;null&quot;)
-<span class="fc" id="L854">    @NonNull BigDecimal result = decimalDividend.divide(decimalDivisor, FunctionUtils.MATH_CONTEXT);</span>
-<span class="fc" id="L855">    return IDecimalItem.valueOf(result);</span>
+    @NonNull
+<span class="fc" id="L870">    BigDecimal result = decimalDividend.divide(decimalDivisor, FunctionUtils.MATH_CONTEXT);</span>
+<span class="fc" id="L871">    return IDecimalItem.valueOf(result);</span>
   }
 
   /**
@@ -868,35 +884,37 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static IIntegerItem opNumericIntegerDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {
     IIntegerItem retval;
-<span class="pc bpc" id="L871" title="1 of 4 branches missed.">    if (dividend instanceof IIntegerItem || divisor instanceof IIntegerItem) {</span>
+<span class="pc bpc" id="L887" title="1 of 4 branches missed.">    if (dividend instanceof IIntegerItem || divisor instanceof IIntegerItem) {</span>
       // create an integer result
-<span class="fc" id="L873">      BigInteger integerDivisor = divisor.asInteger();</span>
+<span class="fc" id="L889">      BigInteger integerDivisor = divisor.asInteger();</span>
 
-<span class="pc bpc" id="L875" title="1 of 2 branches missed.">      if (BigInteger.ZERO.equals(integerDivisor)) {</span>
-<span class="nc" id="L876">        throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
+<span class="pc bpc" id="L891" title="1 of 2 branches missed.">      if (BigInteger.ZERO.equals(integerDivisor)) {</span>
+<span class="nc" id="L892">        throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
             ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
       }
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="fc" id="L881">      @NonNull BigInteger result = dividend.asInteger().divide(integerDivisor);</span>
-<span class="fc" id="L882">      retval = IIntegerItem.valueOf(result);</span>
-<span class="fc" id="L883">    } else {</span>
+      @NonNull
+<span class="fc" id="L898">      BigInteger result = dividend.asInteger().divide(integerDivisor);</span>
+<span class="fc" id="L899">      retval = IIntegerItem.valueOf(result);</span>
+<span class="fc" id="L900">    } else {</span>
       // create a decimal result
-<span class="nc" id="L885">      BigDecimal decimalDivisor = divisor.asDecimal();</span>
+<span class="nc" id="L902">      BigDecimal decimalDivisor = divisor.asDecimal();</span>
 
-<span class="nc bnc" id="L887" title="All 2 branches missed.">      if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
-<span class="nc" id="L888">        throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
+<span class="nc bnc" id="L904" title="All 2 branches missed.">      if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
+<span class="nc" id="L905">        throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
             ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
       }
 
-<span class="nc" id="L892">      BigDecimal decimalDividend = dividend.asDecimal();</span>
+<span class="nc" id="L909">      BigDecimal decimalDividend = dividend.asDecimal();</span>
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L895">      @NonNull BigInteger result</span>
-<span class="nc" id="L896">          = decimalDividend.divideToIntegralValue(decimalDivisor, FunctionUtils.MATH_CONTEXT).toBigInteger();</span>
-<span class="nc" id="L897">      retval = IIntegerItem.valueOf(result);</span>
+      @NonNull
+<span class="nc" id="L913">      BigInteger result</span>
+<span class="nc" id="L914">          = decimalDividend.divideToIntegralValue(decimalDivisor, FunctionUtils.MATH_CONTEXT).toBigInteger();</span>
+<span class="nc" id="L915">      retval = IIntegerItem.valueOf(result);</span>
     }
-<span class="fc" id="L899">    return retval;</span>
+<span class="fc" id="L917">    return retval;</span>
   }
 
   /**
@@ -911,24 +929,25 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static INumericItem opNumericMod(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {
-<span class="fc" id="L914">    BigDecimal decimalDivisor = divisor.asDecimal();</span>
+<span class="fc" id="L932">    BigDecimal decimalDivisor = divisor.asDecimal();</span>
 
-<span class="pc bpc" id="L916" title="1 of 2 branches missed.">    if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
-<span class="nc" id="L917">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
+<span class="pc bpc" id="L934" title="1 of 2 branches missed.">    if (BigDecimal.ZERO.equals(decimalDivisor)) {</span>
+<span class="nc" id="L935">      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,</span>
           ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
     }
 
-<span class="fc" id="L921">    BigDecimal decimalDividend = dividend.asDecimal();</span>
+<span class="fc" id="L939">    BigDecimal decimalDividend = dividend.asDecimal();</span>
 
     INumericItem retval;
-<span class="pc bpc" id="L924" title="1 of 2 branches missed.">    if (BigDecimal.ZERO.equals(decimalDividend)) {</span>
-<span class="nc" id="L925">      retval = dividend;</span>
+<span class="pc bpc" id="L942" title="1 of 2 branches missed.">    if (BigDecimal.ZERO.equals(decimalDividend)) {</span>
+<span class="nc" id="L943">      retval = dividend;</span>
     } else {
       @SuppressWarnings(&quot;null&quot;)
-<span class="fc" id="L928">      @NonNull BigDecimal result = decimalDividend.remainder(decimalDivisor, FunctionUtils.MATH_CONTEXT);</span>
-<span class="fc" id="L929">      retval = IDecimalItem.valueOf(result);</span>
+      @NonNull
+<span class="fc" id="L947">      BigDecimal result = decimalDividend.remainder(decimalDivisor, FunctionUtils.MATH_CONTEXT);</span>
+<span class="fc" id="L948">      retval = IDecimalItem.valueOf(result);</span>
     }
-<span class="fc" id="L931">    return retval;</span>
+<span class="fc" id="L950">    return retval;</span>
   }
 
   /**
@@ -942,24 +961,26 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static INumericItem opNumericUnaryMinus(@NonNull INumericItem item) {
     INumericItem retval;
-<span class="pc bpc" id="L945" title="1 of 2 branches missed.">    if (item instanceof IIntegerItem) {</span>
+<span class="pc bpc" id="L964" title="1 of 2 branches missed.">    if (item instanceof IIntegerItem) {</span>
       // create a decimal result
-<span class="fc" id="L947">      BigInteger integer = item.asInteger();</span>
+<span class="fc" id="L966">      BigInteger integer = item.asInteger();</span>
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="fc" id="L950">      @NonNull BigInteger result = integer.negate();</span>
-<span class="fc" id="L951">      retval = IIntegerItem.valueOf(result);</span>
-<span class="pc bnc" id="L952" title="All 2 branches missed.">    } else if (item instanceof IDecimalItem) {</span>
+      @NonNull
+<span class="fc" id="L970">      BigInteger result = integer.negate();</span>
+<span class="fc" id="L971">      retval = IIntegerItem.valueOf(result);</span>
+<span class="pc bnc" id="L972" title="All 2 branches missed.">    } else if (item instanceof IDecimalItem) {</span>
       // create a decimal result
-<span class="nc" id="L954">      BigDecimal decimal = item.asDecimal();</span>
+<span class="nc" id="L974">      BigDecimal decimal = item.asDecimal();</span>
 
       @SuppressWarnings(&quot;null&quot;)
-<span class="nc" id="L957">      @NonNull BigDecimal result = decimal.negate(FunctionUtils.MATH_CONTEXT);</span>
-<span class="nc" id="L958">      retval = IDecimalItem.valueOf(result);</span>
-<span class="nc" id="L959">    } else {</span>
-<span class="nc" id="L960">      throw new InvalidTypeMetapathException(item);</span>
+      @NonNull
+<span class="nc" id="L978">      BigDecimal result = decimal.negate(FunctionUtils.MATH_CONTEXT);</span>
+<span class="nc" id="L979">      retval = IDecimalItem.valueOf(result);</span>
+<span class="nc" id="L980">    } else {</span>
+<span class="nc" id="L981">      throw new InvalidTypeMetapathException(item);</span>
     }
-<span class="fc" id="L962">    return retval;</span>
+<span class="fc" id="L983">    return retval;</span>
   }
 
   /**
@@ -976,14 +997,14 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static IBooleanItem opNumericEqual(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
     IBooleanItem retval;
-<span class="pc bpc" id="L979" title="2 of 4 branches missed.">    if (arg1 == null || arg2 == null) {</span>
-<span class="nc" id="L980">      retval = IBooleanItem.FALSE;</span>
-<span class="pc bpc" id="L981" title="3 of 4 branches missed.">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
-<span class="fc" id="L982">      retval = IBooleanItem.valueOf(arg1.asInteger().equals(arg2.asInteger()));</span>
+<span class="pc bpc" id="L1000" title="2 of 4 branches missed.">    if (arg1 == null || arg2 == null) {</span>
+<span class="nc" id="L1001">      retval = IBooleanItem.FALSE;</span>
+<span class="pc bpc" id="L1002" title="3 of 4 branches missed.">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
+<span class="fc" id="L1003">      retval = IBooleanItem.valueOf(arg1.asInteger().equals(arg2.asInteger()));</span>
     } else {
-<span class="nc" id="L984">      retval = IBooleanItem.valueOf(arg1.asDecimal().equals(arg2.asDecimal()));</span>
+<span class="nc" id="L1005">      retval = IBooleanItem.valueOf(arg1.asDecimal().equals(arg2.asDecimal()));</span>
     }
-<span class="fc" id="L986">    return retval;</span>
+<span class="fc" id="L1007">    return retval;</span>
   }
 
   /**
@@ -1000,16 +1021,16 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static IBooleanItem opNumericGreaterThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
     IBooleanItem retval;
-<span class="nc bnc" id="L1003" title="All 4 branches missed.">    if (arg1 == null || arg2 == null) {</span>
-<span class="nc" id="L1004">      retval = IBooleanItem.FALSE;</span>
-<span class="nc bnc" id="L1005" title="All 4 branches missed.">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
-<span class="nc" id="L1006">      int result = arg1.asInteger().compareTo(arg2.asInteger());</span>
-<span class="nc bnc" id="L1007" title="All 2 branches missed.">      retval = IBooleanItem.valueOf(result &gt; 0);</span>
-<span class="nc" id="L1008">    } else {</span>
-<span class="nc" id="L1009">      int result = arg1.asDecimal().compareTo(arg2.asDecimal());</span>
-<span class="nc bnc" id="L1010" title="All 2 branches missed.">      retval = IBooleanItem.valueOf(result &gt; 0);</span>
+<span class="nc bnc" id="L1024" title="All 4 branches missed.">    if (arg1 == null || arg2 == null) {</span>
+<span class="nc" id="L1025">      retval = IBooleanItem.FALSE;</span>
+<span class="nc bnc" id="L1026" title="All 4 branches missed.">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
+<span class="nc" id="L1027">      int result = arg1.asInteger().compareTo(arg2.asInteger());</span>
+<span class="nc bnc" id="L1028" title="All 2 branches missed.">      retval = IBooleanItem.valueOf(result &gt; 0);</span>
+<span class="nc" id="L1029">    } else {</span>
+<span class="nc" id="L1030">      int result = arg1.asDecimal().compareTo(arg2.asDecimal());</span>
+<span class="nc bnc" id="L1031" title="All 2 branches missed.">      retval = IBooleanItem.valueOf(result &gt; 0);</span>
     }
-<span class="nc" id="L1012">    return retval;</span>
+<span class="nc" id="L1033">    return retval;</span>
   }
 
   /**
@@ -1026,16 +1047,16 @@ public final class OperationFunctions { // NOPMD - intentional
   @NonNull
   public static IBooleanItem opNumericLessThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
     IBooleanItem retval;
-<span class="nc bnc" id="L1029" title="All 4 branches missed.">    if (arg1 == null || arg2 == null) {</span>
-<span class="nc" id="L1030">      retval = IBooleanItem.FALSE;</span>
-<span class="nc bnc" id="L1031" title="All 4 branches missed.">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
-<span class="nc" id="L1032">      int result = arg1.asInteger().compareTo(arg2.asInteger());</span>
-<span class="nc bnc" id="L1033" title="All 2 branches missed.">      retval = IBooleanItem.valueOf(result &lt; 0);</span>
-<span class="nc" id="L1034">    } else {</span>
-<span class="nc" id="L1035">      int result = arg1.asDecimal().compareTo(arg2.asDecimal());</span>
-<span class="nc bnc" id="L1036" title="All 2 branches missed.">      retval = IBooleanItem.valueOf(result &lt; 0);</span>
+<span class="nc bnc" id="L1050" title="All 4 branches missed.">    if (arg1 == null || arg2 == null) {</span>
+<span class="nc" id="L1051">      retval = IBooleanItem.FALSE;</span>
+<span class="nc bnc" id="L1052" title="All 4 branches missed.">    } else if (arg1 instanceof IIntegerItem || arg2 instanceof IIntegerItem) {</span>
+<span class="nc" id="L1053">      int result = arg1.asInteger().compareTo(arg2.asInteger());</span>
+<span class="nc bnc" id="L1054" title="All 2 branches missed.">      retval = IBooleanItem.valueOf(result &lt; 0);</span>
+<span class="nc" id="L1055">    } else {</span>
+<span class="nc" id="L1056">      int result = arg1.asDecimal().compareTo(arg2.asDecimal());</span>
+<span class="nc bnc" id="L1057" title="All 2 branches missed.">      retval = IBooleanItem.valueOf(result &lt; 0);</span>
     }
-<span class="nc" id="L1038">    return retval;</span>
+<span class="nc" id="L1059">    return retval;</span>
   }
 
   /**
@@ -1051,10 +1072,10 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opBooleanEqual(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
-<span class="pc bpc" id="L1054" title="1 of 4 branches missed.">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
-<span class="pc bpc" id="L1055" title="1 of 4 branches missed.">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
+<span class="pc bpc" id="L1075" title="1 of 4 branches missed.">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
+<span class="pc bpc" id="L1076" title="1 of 4 branches missed.">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
 
-<span class="fc bfc" id="L1057" title="All 2 branches covered.">    return IBooleanItem.valueOf(left == right);</span>
+<span class="fc bfc" id="L1078" title="All 2 branches covered.">    return IBooleanItem.valueOf(left == right);</span>
   }
 
   /**
@@ -1070,10 +1091,10 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opBooleanGreaterThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
-<span class="pc bpc" id="L1073" title="2 of 4 branches missed.">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
-<span class="pc bpc" id="L1074" title="2 of 4 branches missed.">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
+<span class="pc bpc" id="L1094" title="2 of 4 branches missed.">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
+<span class="pc bpc" id="L1095" title="2 of 4 branches missed.">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
 
-<span class="pc bpc" id="L1076" title="2 of 4 branches missed.">    return IBooleanItem.valueOf(left &amp;&amp; !right);</span>
+<span class="pc bpc" id="L1097" title="2 of 4 branches missed.">    return IBooleanItem.valueOf(left &amp;&amp; !right);</span>
   }
 
   /**
@@ -1089,10 +1110,10 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IBooleanItem opBooleanLessThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
-<span class="pc bpc" id="L1092" title="2 of 4 branches missed.">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
-<span class="pc bpc" id="L1093" title="2 of 4 branches missed.">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
+<span class="pc bpc" id="L1113" title="2 of 4 branches missed.">    boolean left = arg1 != null &amp;&amp; arg1.toBoolean();</span>
+<span class="pc bpc" id="L1114" title="2 of 4 branches missed.">    boolean right = arg2 != null &amp;&amp; arg2.toBoolean();</span>
 
-<span class="pc bpc" id="L1095" title="3 of 4 branches missed.">    return IBooleanItem.valueOf(!left &amp;&amp; right);</span>
+<span class="pc bpc" id="L1116" title="3 of 4 branches missed.">    return IBooleanItem.valueOf(!left &amp;&amp; right);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

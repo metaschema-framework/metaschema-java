@@ -94,31 +94,33 @@
 <span class="source-line-no">081</span><span id="line-81">    try {</span>
 <span class="source-line-no">082</span><span id="line-82">      CLASS retval;</span>
 <span class="source-line-no">083</span><span id="line-83">      if (supplier != null) {</span>
-<span class="source-line-no">084</span><span id="line-84">        @SuppressWarnings("unchecked") Constructor&lt;CLASS&gt; constructor</span>
-<span class="source-line-no">085</span><span id="line-85">            = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor(IMetaschemaData.class);</span>
-<span class="source-line-no">086</span><span id="line-86">        retval = constructor.newInstance(supplier.get());</span>
-<span class="source-line-no">087</span><span id="line-87">      } else {</span>
-<span class="source-line-no">088</span><span id="line-88">        @SuppressWarnings("unchecked") Constructor&lt;CLASS&gt; constructor</span>
-<span class="source-line-no">089</span><span id="line-89">            = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor();</span>
-<span class="source-line-no">090</span><span id="line-90">        retval = constructor.newInstance();</span>
-<span class="source-line-no">091</span><span id="line-91">      }</span>
-<span class="source-line-no">092</span><span id="line-92">      return ObjectUtils.notNull(retval);</span>
-<span class="source-line-no">093</span><span id="line-93">    } catch (NoSuchMethodException ex) {</span>
-<span class="source-line-no">094</span><span id="line-94">      String msg = String.format("Class '%s' does not have a required no-arg constructor.", clazz.getName());</span>
-<span class="source-line-no">095</span><span id="line-95">      throw new RuntimeException(msg, ex);</span>
-<span class="source-line-no">096</span><span id="line-96">    } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {</span>
-<span class="source-line-no">097</span><span id="line-97">      throw new RuntimeException(ex);</span>
-<span class="source-line-no">098</span><span id="line-98">    }</span>
-<span class="source-line-no">099</span><span id="line-99">  }</span>
-<span class="source-line-no">100</span><span id="line-100"></span>
-<span class="source-line-no">101</span><span id="line-101">  void callBeforeDeserialize(</span>
-<span class="source-line-no">102</span><span id="line-102">      @NonNull IBoundObject targetObject,</span>
-<span class="source-line-no">103</span><span id="line-103">      @Nullable IBoundObject parentObject) throws BindingException;</span>
-<span class="source-line-no">104</span><span id="line-104"></span>
-<span class="source-line-no">105</span><span id="line-105">  void callAfterDeserialize(</span>
-<span class="source-line-no">106</span><span id="line-106">      @NonNull IBoundObject targetObject,</span>
-<span class="source-line-no">107</span><span id="line-107">      @Nullable IBoundObject parentObject) throws BindingException;</span>
-<span class="source-line-no">108</span><span id="line-108">}</span>
+<span class="source-line-no">084</span><span id="line-84">        @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">085</span><span id="line-85">        Constructor&lt;CLASS&gt; constructor</span>
+<span class="source-line-no">086</span><span id="line-86">            = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor(IMetaschemaData.class);</span>
+<span class="source-line-no">087</span><span id="line-87">        retval = constructor.newInstance(supplier.get());</span>
+<span class="source-line-no">088</span><span id="line-88">      } else {</span>
+<span class="source-line-no">089</span><span id="line-89">        @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">090</span><span id="line-90">        Constructor&lt;CLASS&gt; constructor</span>
+<span class="source-line-no">091</span><span id="line-91">            = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor();</span>
+<span class="source-line-no">092</span><span id="line-92">        retval = constructor.newInstance();</span>
+<span class="source-line-no">093</span><span id="line-93">      }</span>
+<span class="source-line-no">094</span><span id="line-94">      return ObjectUtils.notNull(retval);</span>
+<span class="source-line-no">095</span><span id="line-95">    } catch (NoSuchMethodException ex) {</span>
+<span class="source-line-no">096</span><span id="line-96">      String msg = String.format("Class '%s' does not have a required no-arg constructor.", clazz.getName());</span>
+<span class="source-line-no">097</span><span id="line-97">      throw new RuntimeException(msg, ex);</span>
+<span class="source-line-no">098</span><span id="line-98">    } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {</span>
+<span class="source-line-no">099</span><span id="line-99">      throw new RuntimeException(ex);</span>
+<span class="source-line-no">100</span><span id="line-100">    }</span>
+<span class="source-line-no">101</span><span id="line-101">  }</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">  void callBeforeDeserialize(</span>
+<span class="source-line-no">104</span><span id="line-104">      @NonNull IBoundObject targetObject,</span>
+<span class="source-line-no">105</span><span id="line-105">      @Nullable IBoundObject parentObject) throws BindingException;</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">  void callAfterDeserialize(</span>
+<span class="source-line-no">108</span><span id="line-108">      @NonNull IBoundObject targetObject,</span>
+<span class="source-line-no">109</span><span id="line-109">      @Nullable IBoundObject parentObject) throws BindingException;</span>
+<span class="source-line-no">110</span><span id="line-110">}</span>
 
 
 

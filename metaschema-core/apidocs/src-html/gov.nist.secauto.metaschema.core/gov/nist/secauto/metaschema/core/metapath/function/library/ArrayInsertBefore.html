@@ -85,62 +85,63 @@
 <span class="source-line-no">072</span><span id="line-72">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
 <span class="source-line-no">073</span><span id="line-73">        arguments.get(0).getFirstItem(true)));</span>
 <span class="source-line-no">074</span><span id="line-74">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">075</span><span id="line-75">    @SuppressWarnings("unchecked") T member = (T) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
-<span class="source-line-no">076</span><span id="line-76"></span>
-<span class="source-line-no">077</span><span id="line-77">    return ISequence.of(insertBefore(array, position, member));</span>
-<span class="source-line-no">078</span><span id="line-78">  }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">  /**</span>
-<span class="source-line-no">081</span><span id="line-81">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">082</span><span id="line-82">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-insert-before"&gt;array:insert-before&lt;/a&gt;.</span>
-<span class="source-line-no">083</span><span id="line-83">   *</span>
-<span class="source-line-no">084</span><span id="line-84">   * @param &lt;T&gt;</span>
-<span class="source-line-no">085</span><span id="line-85">   *          the type of items in the given Metapath array</span>
-<span class="source-line-no">086</span><span id="line-86">   * @param array</span>
-<span class="source-line-no">087</span><span id="line-87">   *          the target Metapath array</span>
-<span class="source-line-no">088</span><span id="line-88">   * @param positionItem</span>
-<span class="source-line-no">089</span><span id="line-89">   *          the integer position of the item to insert before</span>
-<span class="source-line-no">090</span><span id="line-90">   * @param member</span>
-<span class="source-line-no">091</span><span id="line-91">   *          the Metapath item to insert into the identified array</span>
-<span class="source-line-no">092</span><span id="line-92">   * @return a new array containing the modification</span>
-<span class="source-line-no">093</span><span id="line-93">   * @throws ArrayException</span>
-<span class="source-line-no">094</span><span id="line-94">   *           if the position is not in the range of 1 to array:size</span>
-<span class="source-line-no">095</span><span id="line-95">   */</span>
-<span class="source-line-no">096</span><span id="line-96">  @NonNull</span>
-<span class="source-line-no">097</span><span id="line-97">  public static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; insertBefore(</span>
-<span class="source-line-no">098</span><span id="line-98">      @NonNull IArrayItem&lt;T&gt; array,</span>
-<span class="source-line-no">099</span><span id="line-99">      @NonNull IIntegerItem positionItem,</span>
-<span class="source-line-no">100</span><span id="line-100">      @NonNull T member) {</span>
-<span class="source-line-no">101</span><span id="line-101">    return insertBefore(array, positionItem.asInteger().intValueExact(), member);</span>
-<span class="source-line-no">102</span><span id="line-102">  }</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  /**</span>
-<span class="source-line-no">105</span><span id="line-105">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">106</span><span id="line-106">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-insert-before"&gt;array:insert-before&lt;/a&gt;.</span>
-<span class="source-line-no">107</span><span id="line-107">   *</span>
-<span class="source-line-no">108</span><span id="line-108">   * @param &lt;T&gt;</span>
-<span class="source-line-no">109</span><span id="line-109">   *          the type of items in the given Metapath array</span>
-<span class="source-line-no">110</span><span id="line-110">   * @param array</span>
-<span class="source-line-no">111</span><span id="line-111">   *          the target Metapath array</span>
-<span class="source-line-no">112</span><span id="line-112">   * @param position</span>
-<span class="source-line-no">113</span><span id="line-113">   *          the integer position of the item to insert before</span>
-<span class="source-line-no">114</span><span id="line-114">   * @param member</span>
-<span class="source-line-no">115</span><span id="line-115">   *          the Metapath item to insert into the identified array</span>
-<span class="source-line-no">116</span><span id="line-116">   * @return a new array containing the modification</span>
-<span class="source-line-no">117</span><span id="line-117">   * @throws ArrayException</span>
-<span class="source-line-no">118</span><span id="line-118">   *           if the position is not in the range of 1 to array:size</span>
-<span class="source-line-no">119</span><span id="line-119">   */</span>
-<span class="source-line-no">120</span><span id="line-120">  @NonNull</span>
-<span class="source-line-no">121</span><span id="line-121">  public static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; insertBefore(</span>
-<span class="source-line-no">122</span><span id="line-122">      @NonNull IArrayItem&lt;T&gt; array,</span>
-<span class="source-line-no">123</span><span id="line-123">      int position,</span>
-<span class="source-line-no">124</span><span id="line-124">      @NonNull T member) {</span>
-<span class="source-line-no">125</span><span id="line-125">    return ArrayJoin.join(ObjectUtils.notNull(List.of(</span>
-<span class="source-line-no">126</span><span id="line-126">        ArraySubarray.subarray(array, 1, position - 1),</span>
-<span class="source-line-no">127</span><span id="line-127">        IArrayItem.of(member),</span>
-<span class="source-line-no">128</span><span id="line-128">        ArraySubarray.subarray(array, position))));</span>
-<span class="source-line-no">129</span><span id="line-129">  }</span>
-<span class="source-line-no">130</span><span id="line-130">}</span>
+<span class="source-line-no">075</span><span id="line-75">    @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">076</span><span id="line-76">    T member = (T) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
+<span class="source-line-no">077</span><span id="line-77"></span>
+<span class="source-line-no">078</span><span id="line-78">    return ISequence.of(insertBefore(array, position, member));</span>
+<span class="source-line-no">079</span><span id="line-79">  }</span>
+<span class="source-line-no">080</span><span id="line-80"></span>
+<span class="source-line-no">081</span><span id="line-81">  /**</span>
+<span class="source-line-no">082</span><span id="line-82">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">083</span><span id="line-83">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-insert-before"&gt;array:insert-before&lt;/a&gt;.</span>
+<span class="source-line-no">084</span><span id="line-84">   *</span>
+<span class="source-line-no">085</span><span id="line-85">   * @param &lt;T&gt;</span>
+<span class="source-line-no">086</span><span id="line-86">   *          the type of items in the given Metapath array</span>
+<span class="source-line-no">087</span><span id="line-87">   * @param array</span>
+<span class="source-line-no">088</span><span id="line-88">   *          the target Metapath array</span>
+<span class="source-line-no">089</span><span id="line-89">   * @param positionItem</span>
+<span class="source-line-no">090</span><span id="line-90">   *          the integer position of the item to insert before</span>
+<span class="source-line-no">091</span><span id="line-91">   * @param member</span>
+<span class="source-line-no">092</span><span id="line-92">   *          the Metapath item to insert into the identified array</span>
+<span class="source-line-no">093</span><span id="line-93">   * @return a new array containing the modification</span>
+<span class="source-line-no">094</span><span id="line-94">   * @throws ArrayException</span>
+<span class="source-line-no">095</span><span id="line-95">   *           if the position is not in the range of 1 to array:size</span>
+<span class="source-line-no">096</span><span id="line-96">   */</span>
+<span class="source-line-no">097</span><span id="line-97">  @NonNull</span>
+<span class="source-line-no">098</span><span id="line-98">  public static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; insertBefore(</span>
+<span class="source-line-no">099</span><span id="line-99">      @NonNull IArrayItem&lt;T&gt; array,</span>
+<span class="source-line-no">100</span><span id="line-100">      @NonNull IIntegerItem positionItem,</span>
+<span class="source-line-no">101</span><span id="line-101">      @NonNull T member) {</span>
+<span class="source-line-no">102</span><span id="line-102">    return insertBefore(array, positionItem.asInteger().intValueExact(), member);</span>
+<span class="source-line-no">103</span><span id="line-103">  }</span>
+<span class="source-line-no">104</span><span id="line-104"></span>
+<span class="source-line-no">105</span><span id="line-105">  /**</span>
+<span class="source-line-no">106</span><span id="line-106">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">107</span><span id="line-107">   * "https://www.w3.org/TR/xpath-functions-31/#func-array-insert-before"&gt;array:insert-before&lt;/a&gt;.</span>
+<span class="source-line-no">108</span><span id="line-108">   *</span>
+<span class="source-line-no">109</span><span id="line-109">   * @param &lt;T&gt;</span>
+<span class="source-line-no">110</span><span id="line-110">   *          the type of items in the given Metapath array</span>
+<span class="source-line-no">111</span><span id="line-111">   * @param array</span>
+<span class="source-line-no">112</span><span id="line-112">   *          the target Metapath array</span>
+<span class="source-line-no">113</span><span id="line-113">   * @param position</span>
+<span class="source-line-no">114</span><span id="line-114">   *          the integer position of the item to insert before</span>
+<span class="source-line-no">115</span><span id="line-115">   * @param member</span>
+<span class="source-line-no">116</span><span id="line-116">   *          the Metapath item to insert into the identified array</span>
+<span class="source-line-no">117</span><span id="line-117">   * @return a new array containing the modification</span>
+<span class="source-line-no">118</span><span id="line-118">   * @throws ArrayException</span>
+<span class="source-line-no">119</span><span id="line-119">   *           if the position is not in the range of 1 to array:size</span>
+<span class="source-line-no">120</span><span id="line-120">   */</span>
+<span class="source-line-no">121</span><span id="line-121">  @NonNull</span>
+<span class="source-line-no">122</span><span id="line-122">  public static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; insertBefore(</span>
+<span class="source-line-no">123</span><span id="line-123">      @NonNull IArrayItem&lt;T&gt; array,</span>
+<span class="source-line-no">124</span><span id="line-124">      int position,</span>
+<span class="source-line-no">125</span><span id="line-125">      @NonNull T member) {</span>
+<span class="source-line-no">126</span><span id="line-126">    return ArrayJoin.join(ObjectUtils.notNull(List.of(</span>
+<span class="source-line-no">127</span><span id="line-127">        ArraySubarray.subarray(array, 1, position - 1),</span>
+<span class="source-line-no">128</span><span id="line-128">        IArrayItem.of(member),</span>
+<span class="source-line-no">129</span><span id="line-129">        ArraySubarray.subarray(array, position))));</span>
+<span class="source-line-no">130</span><span id="line-130">  }</span>
+<span class="source-line-no">131</span><span id="line-131">}</span>
 
 
 

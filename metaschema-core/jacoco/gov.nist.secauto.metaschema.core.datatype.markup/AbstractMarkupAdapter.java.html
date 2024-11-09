@@ -54,37 +54,45 @@ public abstract class AbstractMarkupAdapter&lt;TYPE extends IMarkupString&lt;TYP
       StartElement parent,
       XMLEventFactory2 eventFactory,
       XMLEventWriter eventWriter)
-      throws XMLStreamException {
+      throws IOException {
 
 <span class="nc" id="L59">    IMarkupString&lt;?&gt; markupString = (IMarkupString&lt;?&gt;) value;</span>
 
-<span class="nc" id="L61">    markupString.writeXHtml(</span>
-<span class="nc" id="L62">        ObjectUtils.notNull(parent.getName().getNamespaceURI()),</span>
-        eventFactory,
-        eventWriter);
-<span class="nc" id="L65">  }</span>
+    try {
+<span class="nc" id="L62">      markupString.writeXHtml(</span>
+<span class="nc" id="L63">          ObjectUtils.notNull(parent.getName().getNamespaceURI()),</span>
+          eventFactory,
+          eventWriter);
+<span class="nc" id="L66">    } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L67">      throw new IOException(ex);</span>
+<span class="nc" id="L68">    }</span>
+<span class="nc" id="L69">  }</span>
 
   @Override
   public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 streamWriter)
-      throws XMLStreamException {
-<span class="nc" id="L70">    IMarkupString&lt;?&gt; markupString = (IMarkupString&lt;?&gt;) value;</span>
+      throws IOException {
+<span class="nc" id="L74">    IMarkupString&lt;?&gt; markupString = (IMarkupString&lt;?&gt;) value;</span>
 
-<span class="nc" id="L72">    markupString.writeXHtml(</span>
-<span class="nc" id="L73">        ObjectUtils.notNull(parentName.getNamespaceURI()),</span>
-        streamWriter);
-<span class="nc" id="L75">  }</span>
+    try {
+<span class="nc" id="L77">      markupString.writeXHtml(</span>
+<span class="nc" id="L78">          ObjectUtils.notNull(parentName.getNamespaceURI()),</span>
+          streamWriter);
+<span class="nc" id="L80">    } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L81">      throw new IOException(ex);</span>
+<span class="nc" id="L82">    }</span>
+<span class="nc" id="L83">  }</span>
 
   @Override
   public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {
 
     IMarkupString&lt;?&gt; markupString;
     try {
-<span class="nc" id="L82">      markupString = (IMarkupString&lt;?&gt;) value;</span>
-<span class="nc" id="L83">    } catch (ClassCastException ex) {</span>
-<span class="nc" id="L84">      throw new IOException(ex);</span>
-<span class="nc" id="L85">    }</span>
+<span class="nc" id="L90">      markupString = (IMarkupString&lt;?&gt;) value;</span>
+<span class="nc" id="L91">    } catch (ClassCastException ex) {</span>
+<span class="nc" id="L92">      throw new IOException(ex);</span>
+<span class="nc" id="L93">    }</span>
 
-<span class="nc" id="L87">    generator.writeString(markupString.toMarkdown().trim());</span>
-<span class="nc" id="L88">  }</span>
+<span class="nc" id="L95">    generator.writeString(markupString.toMarkdown().trim());</span>
+<span class="nc" id="L96">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

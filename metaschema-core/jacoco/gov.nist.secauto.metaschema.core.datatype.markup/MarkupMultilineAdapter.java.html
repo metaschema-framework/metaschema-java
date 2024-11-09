@@ -62,31 +62,32 @@ public class MarkupMultilineAdapter
 
   @Override
   public MarkupMultiline parse(JsonParser parser) throws IOException {
-<span class="nc" id="L65">    @SuppressWarnings(&quot;null&quot;) MarkupMultiline retval = parse(parser.getValueAsString());</span>
+    @SuppressWarnings(&quot;null&quot;)
+<span class="nc" id="L66">    MarkupMultiline retval = parse(parser.getValueAsString());</span>
     // skip past value
-<span class="nc" id="L67">    parser.nextToken();</span>
-<span class="nc" id="L68">    return retval;</span>
+<span class="nc" id="L68">    parser.nextToken();</span>
+<span class="nc" id="L69">    return retval;</span>
   }
 
   @Override
   public boolean canHandleQName(QName nextQName) {
-<span class="nc" id="L73">    return true;</span>
+<span class="nc" id="L74">    return true;</span>
   }
 
   @Override
   public String getDefaultJsonValueKey() {
-<span class="nc" id="L78">    return &quot;PROSE&quot;;</span>
+<span class="nc" id="L79">    return &quot;PROSE&quot;;</span>
   }
 
   @Override
   public Class&lt;IMarkupItem&gt; getItemClass() {
-<span class="nc" id="L83">    return IMarkupItem.class;</span>
+<span class="nc" id="L84">    return IMarkupItem.class;</span>
   }
 
   @Override
   public IMarkupItem newItem(Object value) {
-<span class="nc" id="L88">    MarkupMultiline item = toValue(value);</span>
-<span class="nc" id="L89">    return IMarkupItem.valueOf(item);</span>
+<span class="nc" id="L89">    MarkupMultiline item = toValue(value);</span>
+<span class="nc" id="L90">    return IMarkupItem.valueOf(item);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

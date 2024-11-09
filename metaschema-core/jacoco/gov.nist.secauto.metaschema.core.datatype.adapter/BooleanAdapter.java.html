@@ -94,9 +94,13 @@ public class BooleanAdapter
 <span class="pc bpc" id="L94" title="1 of 2 branches missed.">    } else if (item instanceof IStringItem) {</span>
 <span class="fc" id="L95">      retval = castToBoolean((IStringItem) item);</span>
     } else {
-<span class="nc" id="L97">      retval = castToBoolean(item.asStringItem());</span>
+      try {
+<span class="nc" id="L98">        retval = castToBoolean(item.asStringItem());</span>
+<span class="nc" id="L99">      } catch (IllegalStateException ex) {</span>
+<span class="nc" id="L100">        throw new InvalidValueForCastFunctionException(ex.getLocalizedMessage(), ex);</span>
+<span class="nc" id="L101">      }</span>
     }
-<span class="fc" id="L99">    return retval;</span>
+<span class="fc" id="L103">    return retval;</span>
   }
 
   /**
@@ -110,7 +114,7 @@ public class BooleanAdapter
    */
   @NonNull
   protected IBooleanItem castToBoolean(@NonNull INumericItem item) {
-<span class="fc" id="L113">    return IBooleanItem.valueOf(item.toEffectiveBoolean());</span>
+<span class="fc" id="L117">    return IBooleanItem.valueOf(item.toEffectiveBoolean());</span>
   }
 
   /**
@@ -127,12 +131,12 @@ public class BooleanAdapter
   protected IBooleanItem castToBoolean(@NonNull IStringItem item) {
     IBooleanItem retval;
     try {
-<span class="fc" id="L130">      INumericItem numeric = INumericItem.cast(item);</span>
-<span class="fc" id="L131">      retval = castToBoolean(numeric);</span>
-<span class="fc" id="L132">    } catch (InvalidValueForCastFunctionException ex) {</span>
-<span class="fc" id="L133">      retval = super.castInternal(item);</span>
-<span class="fc" id="L134">    }</span>
-<span class="fc" id="L135">    return retval;</span>
+<span class="fc" id="L134">      INumericItem numeric = INumericItem.cast(item);</span>
+<span class="fc" id="L135">      retval = castToBoolean(numeric);</span>
+<span class="fc" id="L136">    } catch (InvalidValueForCastFunctionException ex) {</span>
+<span class="fc" id="L137">      retval = super.castInternal(item);</span>
+<span class="fc" id="L138">    }</span>
+<span class="fc" id="L139">    return retval;</span>
   }
 
 }

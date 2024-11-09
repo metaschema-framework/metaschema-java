@@ -46,8 +46,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 <span class="fc" id="L46">  static class PTagNodeRenderer implements NodeRenderer {</span>
 
     @Override
-    public @Nullable Set&lt;NodeRenderingHandler&lt;?&gt;&gt; getNodeRenderingHandlers() {
-<span class="fc" id="L50">      return Collections.singleton(</span>
+    public @Nullable
+    Set&lt;NodeRenderingHandler&lt;?&gt;&gt; getNodeRenderingHandlers() {
+<span class="fc" id="L51">      return Collections.singleton(</span>
           new NodeRenderingHandler&lt;&gt;(Paragraph.class, this::render));
     }
 
@@ -55,14 +56,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
         @NonNull Paragraph node,
         @NonNull NodeRendererContext context,
         @SuppressWarnings(&quot;unused&quot;) @NonNull HtmlWriter html) {
-<span class="fc" id="L58">      context.renderChildren(node);</span>
-<span class="fc" id="L59">    }</span>
+<span class="fc" id="L59">      context.renderChildren(node);</span>
+<span class="fc" id="L60">    }</span>
 
-<span class="fc" id="L61">    public static class Factory implements NodeRendererFactory {</span>
+<span class="fc" id="L62">    public static class Factory implements NodeRendererFactory {</span>
 
       @Override
       public NodeRenderer apply(DataHolder options) {
-<span class="fc" id="L65">        return new PTagNodeRenderer();</span>
+<span class="fc" id="L66">        return new PTagNodeRenderer();</span>
       }
 
     }

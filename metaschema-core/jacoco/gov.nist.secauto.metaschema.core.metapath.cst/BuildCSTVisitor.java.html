@@ -207,27 +207,28 @@ public class BuildCSTVisitor
     // for SimpleForBinding (&quot;,&quot; SimpleForBinding)*
 <span class="fc" id="L208">    int bindingCount = simpleForClause.getChildCount() / 2;</span>
 
-<span class="fc" id="L210">    @NonNull IExpression retval = ObjectUtils.notNull(ctx.exprsingle().accept(this));</span>
+    @NonNull
+<span class="fc" id="L211">    IExpression retval = ObjectUtils.notNull(ctx.exprsingle().accept(this));</span>
 
     // step through in reverse
-<span class="fc bfc" id="L213" title="All 2 branches covered.">    for (int idx = bindingCount - 1; idx &gt;= 0; idx--) {</span>
-<span class="fc" id="L214">      SimpleforbindingContext simpleForBinding = simpleForClause.simpleforbinding(idx);</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">    for (int idx = bindingCount - 1; idx &gt;= 0; idx--) {</span>
+<span class="fc" id="L215">      SimpleforbindingContext simpleForBinding = simpleForClause.simpleforbinding(idx);</span>
 
-<span class="fc" id="L216">      VarnameContext varName = simpleForBinding.varname();</span>
-<span class="fc" id="L217">      ExprsingleContext exprSingle = simpleForBinding.exprsingle();</span>
+<span class="fc" id="L217">      VarnameContext varName = simpleForBinding.varname();</span>
+<span class="fc" id="L218">      ExprsingleContext exprSingle = simpleForBinding.exprsingle();</span>
 
-<span class="fc" id="L219">      IExpression boundExpression = exprSingle.accept(this);</span>
-<span class="pc bpc" id="L220" title="1 of 2 branches missed.">      assert boundExpression != null;</span>
+<span class="fc" id="L220">      IExpression boundExpression = exprSingle.accept(this);</span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">      assert boundExpression != null;</span>
 
-<span class="fc" id="L222">      QName qname = EQNameUtils.parseName(</span>
-<span class="fc" id="L223">          ObjectUtils.notNull(varName.eqname().getText()),</span>
-<span class="fc" id="L224">          getContext().getVariablePrefixResolver());</span>
+<span class="fc" id="L223">      QName qname = EQNameUtils.parseName(</span>
+<span class="fc" id="L224">          ObjectUtils.notNull(varName.eqname().getText()),</span>
+<span class="fc" id="L225">          getContext().getVariablePrefixResolver());</span>
 
-<span class="fc" id="L226">      Let.VariableDeclaration variable = new Let.VariableDeclaration(qname, boundExpression);</span>
+<span class="fc" id="L227">      Let.VariableDeclaration variable = new Let.VariableDeclaration(qname, boundExpression);</span>
 
-<span class="fc" id="L228">      retval = new For(variable, retval);</span>
+<span class="fc" id="L229">      retval = new For(variable, retval);</span>
     }
-<span class="fc" id="L230">    return retval;</span>
+<span class="fc" id="L231">    return retval;</span>
   }
 
   // ====================================================================
@@ -236,25 +237,26 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleLet(LetexprContext context) {
-<span class="fc" id="L239">    @NonNull IExpression retval = ObjectUtils.notNull(context.exprsingle().accept(this));</span>
+    @NonNull
+<span class="fc" id="L241">    IExpression retval = ObjectUtils.notNull(context.exprsingle().accept(this));</span>
 
-<span class="fc" id="L241">    SimpleletclauseContext letClause = context.simpleletclause();</span>
-<span class="fc" id="L242">    List&lt;SimpleletbindingContext&gt; clauses = letClause.simpleletbinding();</span>
+<span class="fc" id="L243">    SimpleletclauseContext letClause = context.simpleletclause();</span>
+<span class="fc" id="L244">    List&lt;SimpleletbindingContext&gt; clauses = letClause.simpleletbinding();</span>
 
-<span class="fc" id="L244">    ListIterator&lt;SimpleletbindingContext&gt; reverseListIterator = clauses.listIterator(clauses.size());</span>
-<span class="fc bfc" id="L245" title="All 2 branches covered.">    while (reverseListIterator.hasPrevious()) {</span>
-<span class="fc" id="L246">      SimpleletbindingContext simpleCtx = reverseListIterator.previous();</span>
+<span class="fc" id="L246">    ListIterator&lt;SimpleletbindingContext&gt; reverseListIterator = clauses.listIterator(clauses.size());</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">    while (reverseListIterator.hasPrevious()) {</span>
+<span class="fc" id="L248">      SimpleletbindingContext simpleCtx = reverseListIterator.previous();</span>
 
-<span class="fc" id="L248">      IExpression boundExpression = simpleCtx.exprsingle().accept(this);</span>
-<span class="pc bpc" id="L249" title="1 of 2 branches missed.">      assert boundExpression != null;</span>
+<span class="fc" id="L250">      IExpression boundExpression = simpleCtx.exprsingle().accept(this);</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">      assert boundExpression != null;</span>
 
-<span class="fc" id="L251">      QName varName = EQNameUtils.parseName(</span>
-<span class="fc" id="L252">          ObjectUtils.notNull(simpleCtx.varname().eqname().getText()),</span>
-<span class="fc" id="L253">          getContext().getVariablePrefixResolver());</span>
+<span class="fc" id="L253">      QName varName = EQNameUtils.parseName(</span>
+<span class="fc" id="L254">          ObjectUtils.notNull(simpleCtx.varname().eqname().getText()),</span>
+<span class="fc" id="L255">          getContext().getVariablePrefixResolver());</span>
 
-<span class="fc" id="L255">      retval = new Let(varName, boundExpression, retval); // NOPMD intended</span>
-<span class="fc" id="L256">    }</span>
-<span class="fc" id="L257">    return retval;</span>
+<span class="fc" id="L257">      retval = new Let(varName, boundExpression, retval); // NOPMD intended</span>
+<span class="fc" id="L258">    }</span>
+<span class="fc" id="L259">    return retval;</span>
   }
 
   // ======================================================================
@@ -263,22 +265,22 @@ public class BuildCSTVisitor
 
   @Override
   protected MapConstructor handleMapConstructor(MapconstructorContext context) {
-<span class="fc bfc" id="L266" title="All 2 branches covered.">    return context.getChildCount() == 3</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">    return context.getChildCount() == 3</span>
         // empty
-<span class="fc" id="L268">        ? new MapConstructor(CollectionUtil.emptyList())</span>
+<span class="fc" id="L270">        ? new MapConstructor(CollectionUtil.emptyList())</span>
         // with members
-<span class="fc" id="L270">        : nairyToCollection(context, 3, 2,</span>
+<span class="fc" id="L272">        : nairyToCollection(context, 3, 2,</span>
             (ctx, idx) -&gt; {
-<span class="fc" id="L272">              int pos = (idx - 3) / 2;</span>
-<span class="fc" id="L273">              MapconstructorentryContext entry = ctx.mapconstructorentry(pos);</span>
-<span class="pc bpc" id="L274" title="1 of 2 branches missed.">              assert entry != null;</span>
-<span class="fc" id="L275">              return new MapConstructor.Entry(</span>
-<span class="fc" id="L276">                  ObjectUtils.notNull(entry.mapkeyexpr().accept(this)),</span>
-<span class="fc" id="L277">                  ObjectUtils.notNull(entry.mapvalueexpr().accept(this)));</span>
+<span class="fc" id="L274">              int pos = (idx - 3) / 2;</span>
+<span class="fc" id="L275">              MapconstructorentryContext entry = ctx.mapconstructorentry(pos);</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">              assert entry != null;</span>
+<span class="fc" id="L277">              return new MapConstructor.Entry(</span>
+<span class="fc" id="L278">                  ObjectUtils.notNull(entry.mapkeyexpr().accept(this)),</span>
+<span class="fc" id="L279">                  ObjectUtils.notNull(entry.mapvalueexpr().accept(this)));</span>
             },
             children -&gt; {
-<span class="pc bpc" id="L280" title="1 of 2 branches missed.">              assert children != null;</span>
-<span class="fc" id="L281">              return new MapConstructor(children);</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">              assert children != null;</span>
+<span class="fc" id="L283">              return new MapConstructor(children);</span>
             });
   }
 
@@ -288,25 +290,25 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleArrayConstructor(SquarearrayconstructorContext context) {
-<span class="fc bfc" id="L291" title="All 2 branches covered.">    return context.getChildCount() == 2</span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">    return context.getChildCount() == 2</span>
         // empty
-<span class="fc" id="L293">        ? new ArraySquareConstructor(CollectionUtil.emptyList())</span>
+<span class="fc" id="L295">        ? new ArraySquareConstructor(CollectionUtil.emptyList())</span>
         // with members
-<span class="fc" id="L295">        : nairyToCollection(context, 1, 2,</span>
+<span class="fc" id="L297">        : nairyToCollection(context, 1, 2,</span>
             (ctx, idx) -&gt; {
-<span class="fc" id="L297">              int pos = (idx - 1) / 2;</span>
-<span class="fc" id="L298">              ParseTree tree = ctx.exprsingle(pos);</span>
-<span class="fc" id="L299">              return visit(tree);</span>
+<span class="fc" id="L299">              int pos = (idx - 1) / 2;</span>
+<span class="fc" id="L300">              ParseTree tree = ctx.exprsingle(pos);</span>
+<span class="fc" id="L301">              return visit(tree);</span>
             },
             children -&gt; {
-<span class="pc bpc" id="L302" title="1 of 2 branches missed.">              assert children != null;</span>
-<span class="fc" id="L303">              return new ArraySquareConstructor(children);</span>
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">              assert children != null;</span>
+<span class="fc" id="L305">              return new ArraySquareConstructor(children);</span>
             });
   }
 
   @Override
   protected IExpression handleArrayConstructor(CurlyarrayconstructorContext ctx) {
-<span class="fc" id="L309">    return new ArraySequenceConstructor(visit(ctx.enclosedexpr()));</span>
+<span class="fc" id="L311">    return new ArraySequenceConstructor(visit(ctx.enclosedexpr()));</span>
   }
 
   // ===============================================
@@ -317,26 +319,26 @@ public class BuildCSTVisitor
   @NonNull
   private IKeySpecifier toKeySpecifier(@NonNull KeyspecifierContext specifier) {
     IKeySpecifier keySpecifier;
-<span class="pc bpc" id="L320" title="1 of 2 branches missed.">    if (specifier.parenthesizedexpr() != null) {</span>
-<span class="nc" id="L321">      keySpecifier = AbstractKeySpecifier.newParenthesizedExprKeySpecifier(</span>
-<span class="nc" id="L322">          ObjectUtils.requireNonNull(specifier.parenthesizedexpr().accept(this)));</span>
-<span class="fc bfc" id="L323" title="All 2 branches covered.">    } else if (specifier.NCName() != null) {</span>
-<span class="fc" id="L324">      keySpecifier = AbstractKeySpecifier.newNameKeySpecifier(</span>
-<span class="fc" id="L325">          ObjectUtils.requireNonNull(specifier.NCName().getText()));</span>
-<span class="fc bfc" id="L326" title="All 2 branches covered.">    } else if (specifier.IntegerLiteral() != null) {</span>
-<span class="fc" id="L327">      keySpecifier = AbstractKeySpecifier.newIntegerLiteralKeySpecifier(</span>
-<span class="fc" id="L328">          IIntegerItem.valueOf(ObjectUtils.requireNonNull(specifier.IntegerLiteral().getText())));</span>
-<span class="pc bpc" id="L329" title="1 of 2 branches missed.">    } else if (specifier.STAR() != null) {</span>
-<span class="fc" id="L330">      keySpecifier = AbstractKeySpecifier.newWildcardKeySpecifier();</span>
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">    if (specifier.parenthesizedexpr() != null) {</span>
+<span class="nc" id="L323">      keySpecifier = AbstractKeySpecifier.newParenthesizedExprKeySpecifier(</span>
+<span class="nc" id="L324">          ObjectUtils.requireNonNull(specifier.parenthesizedexpr().accept(this)));</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">    } else if (specifier.NCName() != null) {</span>
+<span class="fc" id="L326">      keySpecifier = AbstractKeySpecifier.newNameKeySpecifier(</span>
+<span class="fc" id="L327">          ObjectUtils.requireNonNull(specifier.NCName().getText()));</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">    } else if (specifier.IntegerLiteral() != null) {</span>
+<span class="fc" id="L329">      keySpecifier = AbstractKeySpecifier.newIntegerLiteralKeySpecifier(</span>
+<span class="fc" id="L330">          IIntegerItem.valueOf(ObjectUtils.requireNonNull(specifier.IntegerLiteral().getText())));</span>
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">    } else if (specifier.STAR() != null) {</span>
+<span class="fc" id="L332">      keySpecifier = AbstractKeySpecifier.newWildcardKeySpecifier();</span>
     } else {
-<span class="nc" id="L332">      throw new UnsupportedOperationException(&quot;unknown key specifier&quot;);</span>
+<span class="nc" id="L334">      throw new UnsupportedOperationException(&quot;unknown key specifier&quot;);</span>
     }
-<span class="fc" id="L334">    return keySpecifier;</span>
+<span class="fc" id="L336">    return keySpecifier;</span>
   }
 
   @Override
   protected IExpression handleUnarylookup(UnarylookupContext ctx) {
-<span class="fc" id="L339">    return new UnaryLookup(toKeySpecifier(ObjectUtils.requireNonNull(ctx.keyspecifier())));</span>
+<span class="fc" id="L341">    return new UnaryLookup(toKeySpecifier(ObjectUtils.requireNonNull(ctx.keyspecifier())));</span>
   }
 
   // =========================================================
@@ -347,36 +349,36 @@ public class BuildCSTVisitor
   @Override
   protected IExpression handleQuantifiedexpr(QuantifiedexprContext ctx) {
     Quantified.Quantifier quantifier;
-<span class="fc" id="L350">    int type = ((TerminalNode) ctx.getChild(0)).getSymbol().getType();</span>
-<span class="pc bpc" id="L351" title="1 of 3 branches missed.">    switch (type) {</span>
+<span class="fc" id="L352">    int type = ((TerminalNode) ctx.getChild(0)).getSymbol().getType();</span>
+<span class="pc bpc" id="L353" title="1 of 3 branches missed.">    switch (type) {</span>
     case Metapath10Lexer.KW_SOME:
-<span class="fc" id="L353">      quantifier = Quantified.Quantifier.SOME;</span>
-<span class="fc" id="L354">      break;</span>
+<span class="fc" id="L355">      quantifier = Quantified.Quantifier.SOME;</span>
+<span class="fc" id="L356">      break;</span>
     case Metapath10Lexer.KW_EVERY:
-<span class="fc" id="L356">      quantifier = Quantified.Quantifier.EVERY;</span>
-<span class="fc" id="L357">      break;</span>
+<span class="fc" id="L358">      quantifier = Quantified.Quantifier.EVERY;</span>
+<span class="fc" id="L359">      break;</span>
     default:
-<span class="nc" id="L359">      throw new UnsupportedOperationException(((TerminalNode) ctx.getChild(0)).getSymbol().getText());</span>
+<span class="nc" id="L361">      throw new UnsupportedOperationException(((TerminalNode) ctx.getChild(0)).getSymbol().getText());</span>
     }
 
-<span class="fc" id="L362">    int numVars = (ctx.getChildCount() - 2) / 5; // children - &quot;satisfies expr&quot; / &quot;, $ varName in expr&quot;</span>
-<span class="fc" id="L363">    Map&lt;QName, IExpression&gt; vars = new LinkedHashMap&lt;&gt;(); // NOPMD ordering needed</span>
-<span class="fc" id="L364">    int offset = 0;</span>
-<span class="fc bfc" id="L365" title="All 2 branches covered.">    for (; offset &lt; numVars; offset++) {</span>
+<span class="fc" id="L364">    int numVars = (ctx.getChildCount() - 2) / 5; // children - &quot;satisfies expr&quot; / &quot;, $ varName in expr&quot;</span>
+<span class="fc" id="L365">    Map&lt;QName, IExpression&gt; vars = new LinkedHashMap&lt;&gt;(); // NOPMD ordering needed</span>
+<span class="fc" id="L366">    int offset = 0;</span>
+<span class="fc bfc" id="L367" title="All 2 branches covered.">    for (; offset &lt; numVars; offset++) {</span>
       // $
-<span class="fc" id="L367">      QName varName = EQNameUtils.parseName(</span>
-<span class="fc" id="L368">          ObjectUtils.notNull(ctx.varname(offset).eqname().getText()),</span>
-<span class="fc" id="L369">          getContext().getVariablePrefixResolver());</span>
+<span class="fc" id="L369">      QName varName = EQNameUtils.parseName(</span>
+<span class="fc" id="L370">          ObjectUtils.notNull(ctx.varname(offset).eqname().getText()),</span>
+<span class="fc" id="L371">          getContext().getVariablePrefixResolver());</span>
 
       // in
-<span class="fc" id="L372">      IExpression varExpr = visit(ctx.exprsingle(offset));</span>
+<span class="fc" id="L374">      IExpression varExpr = visit(ctx.exprsingle(offset));</span>
 
-<span class="fc" id="L374">      vars.put(varName, varExpr);</span>
+<span class="fc" id="L376">      vars.put(varName, varExpr);</span>
     }
 
-<span class="fc" id="L377">    IExpression satisfies = visit(ctx.exprsingle(offset));</span>
+<span class="fc" id="L379">    IExpression satisfies = visit(ctx.exprsingle(offset));</span>
 
-<span class="fc" id="L379">    return new Quantified(quantifier, vars, satisfies);</span>
+<span class="fc" id="L381">    return new Quantified(quantifier, vars, satisfies);</span>
   }
 
   // =======================================================================
@@ -386,25 +388,25 @@ public class BuildCSTVisitor
   @Override
   protected IExpression handleArrowexpr(ArrowexprContext context) {
     // TODO: handle additional syntax for varef and parenthesized
-<span class="fc" id="L389">    return handleGroupedNAiry(context, 0, 3, (ctx, idx, left) -&gt; {</span>
+<span class="fc" id="L391">    return handleGroupedNAiry(context, 0, 3, (ctx, idx, left) -&gt; {</span>
       // the next child is &quot;=&gt;&quot;
-<span class="pc bpc" id="L391" title="1 of 2 branches missed.">      assert &quot;=&gt;&quot;.equals(ctx.getChild(idx).getText());</span>
+<span class="pc bpc" id="L393" title="1 of 2 branches missed.">      assert &quot;=&gt;&quot;.equals(ctx.getChild(idx).getText());</span>
 
-<span class="fc" id="L393">      int offset = (idx - 1) / 3;</span>
+<span class="fc" id="L395">      int offset = (idx - 1) / 3;</span>
 
-<span class="fc" id="L395">      ArrowfunctionspecifierContext fcCtx = ctx.getChild(ArrowfunctionspecifierContext.class, offset);</span>
-<span class="fc" id="L396">      ArgumentlistContext argumentCtx = ctx.getChild(ArgumentlistContext.class, offset);</span>
+<span class="fc" id="L397">      ArrowfunctionspecifierContext fcCtx = ctx.getChild(ArrowfunctionspecifierContext.class, offset);</span>
+<span class="fc" id="L398">      ArgumentlistContext argumentCtx = ctx.getChild(ArgumentlistContext.class, offset);</span>
 
-<span class="fc" id="L398">      QName name = EQNameUtils.parseName(</span>
-<span class="fc" id="L399">          ObjectUtils.notNull(fcCtx.eqname().getText()),</span>
-<span class="fc" id="L400">          getContext().getFunctionPrefixResolver());</span>
+<span class="fc" id="L400">      QName name = EQNameUtils.parseName(</span>
+<span class="fc" id="L401">          ObjectUtils.notNull(fcCtx.eqname().getText()),</span>
+<span class="fc" id="L402">          getContext().getFunctionPrefixResolver());</span>
 
-<span class="fc" id="L402">      try (Stream&lt;IExpression&gt; args = Stream.concat(</span>
-<span class="fc" id="L403">          Stream.of(left),</span>
-<span class="fc" id="L404">          parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {</span>
-<span class="pc bpc" id="L405" title="1 of 2 branches missed.">        assert args != null;</span>
+<span class="fc" id="L404">      try (Stream&lt;IExpression&gt; args = Stream.concat(</span>
+<span class="fc" id="L405">          Stream.of(left),</span>
+<span class="fc" id="L406">          parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {</span>
+<span class="pc bpc" id="L407" title="1 of 2 branches missed.">        assert args != null;</span>
 
-<span class="fc" id="L407">        return new StaticFunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));</span>
+<span class="fc" id="L409">        return new StaticFunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));</span>
       }
     });
   }
@@ -416,7 +418,7 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleEmptyParenthesizedexpr(ParenthesizedexprContext ctx) {
-<span class="fc" id="L419">    return EmptySequence.instance();</span>
+<span class="fc" id="L421">    return EmptySequence.instance();</span>
   }
 
   // ==========================================================
@@ -426,7 +428,7 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleContextitemexpr(ContextitemexprContext ctx) {
-<span class="fc" id="L429">    return ContextItem.instance();</span>
+<span class="fc" id="L431">    return ContextItem.instance();</span>
   }
 
   // =========================================================================
@@ -443,30 +445,30 @@ public class BuildCSTVisitor
    */
   @NonNull
   protected Stream&lt;IExpression&gt; parseArgumentList(@NonNull ArgumentlistContext context) {
-<span class="fc" id="L446">    int numChildren = context.getChildCount();</span>
+<span class="fc" id="L448">    int numChildren = context.getChildCount();</span>
 
     Stream&lt;IExpression&gt; retval;
-<span class="fc bfc" id="L449" title="All 2 branches covered.">    if (numChildren == 2) {</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">    if (numChildren == 2) {</span>
       // just the OP CP tokens, which is an empty list
-<span class="fc" id="L451">      retval = Stream.empty();</span>
+<span class="fc" id="L453">      retval = Stream.empty();</span>
     } else {
-<span class="fc" id="L453">      retval = context.argument().stream()</span>
-<span class="fc" id="L454">          .map(argument -&gt; argument.exprsingle().accept(this));</span>
+<span class="fc" id="L455">      retval = context.argument().stream()</span>
+<span class="fc" id="L456">          .map(argument -&gt; argument.exprsingle().accept(this));</span>
     }
-<span class="pc bpc" id="L456" title="1 of 2 branches missed.">    assert retval != null;</span>
+<span class="pc bpc" id="L458" title="1 of 2 branches missed.">    assert retval != null;</span>
 
-<span class="fc" id="L458">    return retval;</span>
+<span class="fc" id="L460">    return retval;</span>
   }
 
   @Override
   protected IExpression handleFunctioncall(FunctioncallContext ctx) {
-<span class="fc" id="L463">    QName qname = EQNameUtils.parseName(</span>
-<span class="fc" id="L464">        ObjectUtils.notNull(ctx.eqname().getText()),</span>
-<span class="fc" id="L465">        getContext().getFunctionPrefixResolver());</span>
-<span class="fc" id="L466">    return new StaticFunctionCall(</span>
+<span class="fc" id="L465">    QName qname = EQNameUtils.parseName(</span>
+<span class="fc" id="L466">        ObjectUtils.notNull(ctx.eqname().getText()),</span>
+<span class="fc" id="L467">        getContext().getFunctionPrefixResolver());</span>
+<span class="fc" id="L468">    return new StaticFunctionCall(</span>
         qname,
-<span class="fc" id="L468">        ObjectUtils.notNull(parseArgumentList(ObjectUtils.notNull(ctx.argumentlist()))</span>
-<span class="fc" id="L469">            .collect(Collectors.toUnmodifiableList())));</span>
+<span class="fc" id="L470">        ObjectUtils.notNull(parseArgumentList(ObjectUtils.notNull(ctx.argumentlist()))</span>
+<span class="fc" id="L471">            .collect(Collectors.toUnmodifiableList())));</span>
   }
 
   // =========================================================================
@@ -483,7 +485,7 @@ public class BuildCSTVisitor
   @NonNull
   protected IExpression parsePredicate(@NonNull PredicateContext predicate) {
     // the expression is always the second child
-<span class="fc" id="L486">    return visit(predicate.getChild(1));</span>
+<span class="fc" id="L488">    return visit(predicate.getChild(1));</span>
   }
 
   /**
@@ -498,56 +500,56 @@ public class BuildCSTVisitor
    */
   @NonNull
   protected List&lt;IExpression&gt; parsePredicates(@NonNull ParseTree context, int staringChild) {
-<span class="fc" id="L501">    int numChildren = context.getChildCount();</span>
-<span class="fc" id="L502">    int numPredicates = numChildren - staringChild;</span>
+<span class="fc" id="L503">    int numChildren = context.getChildCount();</span>
+<span class="fc" id="L504">    int numPredicates = numChildren - staringChild;</span>
 
     List&lt;IExpression&gt; predicates;
-<span class="pc bpc" id="L505" title="1 of 2 branches missed.">    if (numPredicates == 0) {</span>
+<span class="pc bpc" id="L507" title="1 of 2 branches missed.">    if (numPredicates == 0) {</span>
       // no predicates
-<span class="fc" id="L507">      predicates = CollectionUtil.emptyList();</span>
-<span class="nc bnc" id="L508" title="All 2 branches missed.">    } else if (numPredicates == 1) {</span>
+<span class="fc" id="L509">      predicates = CollectionUtil.emptyList();</span>
+<span class="nc bnc" id="L510" title="All 2 branches missed.">    } else if (numPredicates == 1) {</span>
       // single predicate
-<span class="nc" id="L510">      PredicateContext predicate = ObjectUtils.notNull((PredicateContext) context.getChild(staringChild));</span>
-<span class="nc" id="L511">      predicates = CollectionUtil.singletonList(parsePredicate(predicate));</span>
-<span class="nc" id="L512">    } else {</span>
+<span class="nc" id="L512">      PredicateContext predicate = ObjectUtils.notNull((PredicateContext) context.getChild(staringChild));</span>
+<span class="nc" id="L513">      predicates = CollectionUtil.singletonList(parsePredicate(predicate));</span>
+<span class="nc" id="L514">    } else {</span>
       // multiple predicates
-<span class="nc" id="L514">      predicates = new ArrayList&lt;&gt;(numPredicates);</span>
-<span class="nc bnc" id="L515" title="All 2 branches missed.">      for (int i = staringChild; i &lt; numChildren; i++) {</span>
-<span class="nc" id="L516">        PredicateContext predicate = ObjectUtils.notNull((PredicateContext) context.getChild(i));</span>
-<span class="nc" id="L517">        predicates.add(parsePredicate(predicate));</span>
+<span class="nc" id="L516">      predicates = new ArrayList&lt;&gt;(numPredicates);</span>
+<span class="nc bnc" id="L517" title="All 2 branches missed.">      for (int i = staringChild; i &lt; numChildren; i++) {</span>
+<span class="nc" id="L518">        PredicateContext predicate = ObjectUtils.notNull((PredicateContext) context.getChild(i));</span>
+<span class="nc" id="L519">        predicates.add(parsePredicate(predicate));</span>
       }
     }
-<span class="fc" id="L520">    return predicates;</span>
+<span class="fc" id="L522">    return predicates;</span>
   }
 
   @Override
   protected IExpression handlePostfixexpr(PostfixexprContext context) {
-<span class="fc" id="L525">    return handleGroupedNAiry(</span>
+<span class="fc" id="L527">    return handleGroupedNAiry(</span>
         context,
         0,
         1,
         (ctx, idx, left) -&gt; {
-<span class="pc bpc" id="L530" title="1 of 2 branches missed.">          assert left != null;</span>
+<span class="pc bpc" id="L532" title="1 of 2 branches missed.">          assert left != null;</span>
 
-<span class="fc" id="L532">          ParseTree tree = ctx.getChild(idx);</span>
+<span class="fc" id="L534">          ParseTree tree = ctx.getChild(idx);</span>
           IExpression result;
-<span class="fc bfc" id="L534" title="All 2 branches covered.">          if (tree instanceof ArgumentlistContext) {</span>
+<span class="fc bfc" id="L536" title="All 2 branches covered.">          if (tree instanceof ArgumentlistContext) {</span>
             // map or array access using function call syntax
-<span class="fc" id="L536">            result = new FunctionCallAccessor(</span>
+<span class="fc" id="L538">            result = new FunctionCallAccessor(</span>
                 left,
-<span class="fc" id="L538">                ObjectUtils.notNull(parseArgumentList((ArgumentlistContext) tree).findFirst().get()));</span>
-<span class="fc bfc" id="L539" title="All 2 branches covered.">          } else if (tree instanceof PredicateContext) {</span>
-<span class="fc" id="L540">            result = new PredicateExpression(</span>
+<span class="fc" id="L540">                ObjectUtils.notNull(parseArgumentList((ArgumentlistContext) tree).findFirst().get()));</span>
+<span class="fc bfc" id="L541" title="All 2 branches covered.">          } else if (tree instanceof PredicateContext) {</span>
+<span class="fc" id="L542">            result = new PredicateExpression(</span>
                 left,
-<span class="fc" id="L542">                CollectionUtil.singletonList(parsePredicate((PredicateContext) tree)));</span>
-<span class="pc bpc" id="L543" title="1 of 2 branches missed.">          } else if (tree instanceof LookupContext) {</span>
-<span class="fc" id="L544">            result = new PostfixLookup(</span>
+<span class="fc" id="L544">                CollectionUtil.singletonList(parsePredicate((PredicateContext) tree)));</span>
+<span class="pc bpc" id="L545" title="1 of 2 branches missed.">          } else if (tree instanceof LookupContext) {</span>
+<span class="fc" id="L546">            result = new PostfixLookup(</span>
                 left,
-<span class="fc" id="L546">                toKeySpecifier(ObjectUtils.notNull(((LookupContext) tree).keyspecifier())));</span>
+<span class="fc" id="L548">                toKeySpecifier(ObjectUtils.notNull(((LookupContext) tree).keyspecifier())));</span>
           } else {
-<span class="nc" id="L548">            result = visit(tree);</span>
+<span class="nc" id="L550">            result = visit(tree);</span>
           }
-<span class="fc" id="L550">          return result;</span>
+<span class="fc" id="L552">          return result;</span>
         });
   }
 
@@ -557,44 +559,44 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handlePredicate(PredicateContext ctx) {
-<span class="nc" id="L560">    return parsePredicate(ctx);</span>
+<span class="nc" id="L562">    return parsePredicate(ctx);</span>
   }
 
   @Override
   protected IExpression handleLookup(LookupContext ctx) {
-<span class="nc" id="L565">    throw new UnsupportedOperationException(&quot;needs to be implemented&quot;);</span>
+<span class="nc" id="L567">    throw new UnsupportedOperationException(&quot;needs to be implemented&quot;);</span>
   }
 
   @Override
   protected IExpression handlePathexpr(PathexprContext ctx) {
-<span class="fc" id="L570">    int numChildren = ctx.getChildCount();</span>
+<span class="fc" id="L572">    int numChildren = ctx.getChildCount();</span>
 
     IExpression retval;
-<span class="fc" id="L573">    ParseTree tree = ctx.getChild(0);</span>
-<span class="pc bpc" id="L574" title="1 of 2 branches missed.">    if (tree instanceof TerminalNode) {</span>
-<span class="fc" id="L575">      int type = ((TerminalNode) tree).getSymbol().getType();</span>
-<span class="pc bpc" id="L576" title="1 of 3 branches missed.">      switch (type) {</span>
+<span class="fc" id="L575">    ParseTree tree = ctx.getChild(0);</span>
+<span class="pc bpc" id="L576" title="1 of 2 branches missed.">    if (tree instanceof TerminalNode) {</span>
+<span class="fc" id="L577">      int type = ((TerminalNode) tree).getSymbol().getType();</span>
+<span class="pc bpc" id="L578" title="1 of 3 branches missed.">      switch (type) {</span>
       case Metapath10Lexer.SLASH:
         // a slash expression with optional path
-<span class="pc bpc" id="L579" title="1 of 2 branches missed.">        if (numChildren == 2) {</span>
+<span class="pc bpc" id="L581" title="1 of 2 branches missed.">        if (numChildren == 2) {</span>
           // the optional path
-<span class="fc" id="L581">          retval = new RootSlashPath(visit(ctx.getChild(1)));</span>
+<span class="fc" id="L583">          retval = new RootSlashPath(visit(ctx.getChild(1)));</span>
         } else {
-<span class="nc" id="L583">          retval = new RootSlashOnlyPath();</span>
+<span class="nc" id="L585">          retval = new RootSlashOnlyPath();</span>
         }
-<span class="nc" id="L585">        break;</span>
+<span class="nc" id="L587">        break;</span>
       case Metapath10Lexer.SS:
         // a double slash expression with path
-<span class="fc" id="L588">        retval = new RootDoubleSlashPath(visit(ctx.getChild(1)));</span>
-<span class="fc" id="L589">        break;</span>
+<span class="fc" id="L590">        retval = new RootDoubleSlashPath(visit(ctx.getChild(1)));</span>
+<span class="fc" id="L591">        break;</span>
       default:
-<span class="nc" id="L591">        throw new UnsupportedOperationException(((TerminalNode) tree).getSymbol().getText());</span>
+<span class="nc" id="L593">        throw new UnsupportedOperationException(((TerminalNode) tree).getSymbol().getText());</span>
       }
-<span class="fc" id="L593">    } else {</span>
+<span class="fc" id="L595">    } else {</span>
       // a relative expression or something else
-<span class="nc" id="L595">      retval = visit(tree);</span>
+<span class="nc" id="L597">      retval = visit(tree);</span>
     }
-<span class="fc" id="L597">    return retval;</span>
+<span class="fc" id="L599">    return retval;</span>
   }
 
   // ============================================================
@@ -604,26 +606,26 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleRelativepathexpr(RelativepathexprContext context) {
-<span class="fc" id="L607">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
-<span class="pc bpc" id="L608" title="1 of 2 branches missed.">      assert left != null;</span>
+<span class="fc" id="L609">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
+<span class="pc bpc" id="L610" title="1 of 2 branches missed.">      assert left != null;</span>
 
-<span class="fc" id="L610">      ParseTree operatorTree = ctx.getChild(idx);</span>
-<span class="fc" id="L611">      IExpression right = visit(ctx.getChild(idx + 1));</span>
+<span class="fc" id="L612">      ParseTree operatorTree = ctx.getChild(idx);</span>
+<span class="fc" id="L613">      IExpression right = visit(ctx.getChild(idx + 1));</span>
 
-<span class="fc" id="L613">      int type = ((TerminalNode) operatorTree).getSymbol().getType();</span>
+<span class="fc" id="L615">      int type = ((TerminalNode) operatorTree).getSymbol().getType();</span>
 
       IExpression retval;
-<span class="pc bpc" id="L616" title="2 of 3 branches missed.">      switch (type) {</span>
+<span class="pc bpc" id="L618" title="2 of 3 branches missed.">      switch (type) {</span>
       case Metapath10Lexer.SLASH:
-<span class="fc" id="L618">        retval = new RelativeSlashPath(left, right);</span>
-<span class="fc" id="L619">        break;</span>
+<span class="fc" id="L620">        retval = new RelativeSlashPath(left, right);</span>
+<span class="fc" id="L621">        break;</span>
       case Metapath10Lexer.SS:
-<span class="nc" id="L621">        retval = new RelativeDoubleSlashPath(left, right);</span>
-<span class="nc" id="L622">        break;</span>
+<span class="nc" id="L623">        retval = new RelativeDoubleSlashPath(left, right);</span>
+<span class="nc" id="L624">        break;</span>
       default:
-<span class="nc" id="L624">        throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());</span>
+<span class="nc" id="L626">        throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());</span>
       }
-<span class="fc" id="L626">      return retval;</span>
+<span class="fc" id="L628">      return retval;</span>
     });
   }
 
@@ -633,77 +635,77 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleForwardstep(ForwardstepContext ctx) {
-<span class="fc" id="L636">    AbbrevforwardstepContext abbrev = ctx.abbrevforwardstep();</span>
+<span class="fc" id="L638">    AbbrevforwardstepContext abbrev = ctx.abbrevforwardstep();</span>
 
     Step retval;
-<span class="pc bpc" id="L639" title="1 of 2 branches missed.">    if (abbrev == null) {</span>
-<span class="pc bpc" id="L640" title="1 of 2 branches missed.">      assert ctx.getChildCount() == 2;</span>
+<span class="pc bpc" id="L641" title="1 of 2 branches missed.">    if (abbrev == null) {</span>
+<span class="pc bpc" id="L642" title="1 of 2 branches missed.">      assert ctx.getChildCount() == 2;</span>
 
-<span class="fc" id="L642">      Token token = (Token) ctx.forwardaxis().getChild(0).getPayload();</span>
+<span class="fc" id="L644">      Token token = (Token) ctx.forwardaxis().getChild(0).getPayload();</span>
 
       Axis axis;
-<span class="pc bpc" id="L645" title="1 of 8 branches missed.">      switch (token.getType()) {</span>
+<span class="pc bpc" id="L647" title="1 of 8 branches missed.">      switch (token.getType()) {</span>
       case Metapath10Lexer.KW_SELF:
-<span class="fc" id="L647">        axis = Axis.SELF;</span>
-<span class="fc" id="L648">        break;</span>
+<span class="fc" id="L649">        axis = Axis.SELF;</span>
+<span class="fc" id="L650">        break;</span>
       case Metapath10Lexer.KW_CHILD:
-<span class="fc" id="L650">        axis = Axis.CHILDREN;</span>
-<span class="fc" id="L651">        break;</span>
+<span class="fc" id="L652">        axis = Axis.CHILDREN;</span>
+<span class="fc" id="L653">        break;</span>
       case Metapath10Lexer.KW_DESCENDANT:
-<span class="fc" id="L653">        axis = Axis.DESCENDANT;</span>
-<span class="fc" id="L654">        break;</span>
+<span class="fc" id="L655">        axis = Axis.DESCENDANT;</span>
+<span class="fc" id="L656">        break;</span>
       case Metapath10Lexer.KW_DESCENDANT_OR_SELF:
-<span class="fc" id="L656">        axis = Axis.DESCENDANT_OR_SELF;</span>
-<span class="fc" id="L657">        break;</span>
+<span class="fc" id="L658">        axis = Axis.DESCENDANT_OR_SELF;</span>
+<span class="fc" id="L659">        break;</span>
       case Metapath10Lexer.KW_FLAG:
-<span class="fc" id="L659">        axis = Axis.FLAG;</span>
-<span class="fc" id="L660">        break;</span>
+<span class="fc" id="L661">        axis = Axis.FLAG;</span>
+<span class="fc" id="L662">        break;</span>
       case Metapath10Lexer.KW_FOLLOWING_SIBLING:
-<span class="fc" id="L662">        axis = Axis.FOLLOWING_SIBLING;</span>
-<span class="fc" id="L663">        break;</span>
+<span class="fc" id="L664">        axis = Axis.FOLLOWING_SIBLING;</span>
+<span class="fc" id="L665">        break;</span>
       case Metapath10Lexer.KW_FOLLOWING:
-<span class="fc" id="L665">        axis = Axis.FOLLOWING;</span>
-<span class="fc" id="L666">        break;</span>
+<span class="fc" id="L667">        axis = Axis.FOLLOWING;</span>
+<span class="fc" id="L668">        break;</span>
       default:
-<span class="nc" id="L668">        throw new UnsupportedOperationException(token.getText());</span>
+<span class="nc" id="L670">        throw new UnsupportedOperationException(token.getText());</span>
       }
-<span class="fc" id="L670">      retval = new Step(axis,</span>
-<span class="fc" id="L671">          parseNodeTest(ctx.nodetest(), false));</span>
-<span class="fc" id="L672">    } else {</span>
-<span class="nc" id="L673">      retval = new Step(</span>
+<span class="fc" id="L672">      retval = new Step(axis,</span>
+<span class="fc" id="L673">          parseNodeTest(ctx.nodetest(), false));</span>
+<span class="fc" id="L674">    } else {</span>
+<span class="nc" id="L675">      retval = new Step(</span>
           Axis.CHILDREN,
-<span class="nc bnc" id="L675" title="All 2 branches missed.">          parseNodeTest(ctx.nodetest(), abbrev.AT() != null));</span>
+<span class="nc bnc" id="L677" title="All 2 branches missed.">          parseNodeTest(ctx.nodetest(), abbrev.AT() != null));</span>
     }
-<span class="fc" id="L677">    return retval;</span>
+<span class="fc" id="L679">    return retval;</span>
   }
 
   @Override
   protected IExpression handleReversestep(ReversestepContext ctx) {
-<span class="pc bpc" id="L682" title="1 of 2 branches missed.">    assert ctx.getChildCount() == 2;</span>
+<span class="pc bpc" id="L684" title="1 of 2 branches missed.">    assert ctx.getChildCount() == 2;</span>
 
-<span class="fc" id="L684">    Token token = (Token) ctx.reverseaxis().getChild(0).getPayload();</span>
+<span class="fc" id="L686">    Token token = (Token) ctx.reverseaxis().getChild(0).getPayload();</span>
 
     Axis axis;
-<span class="pc bpc" id="L687" title="1 of 6 branches missed.">    switch (token.getType()) {</span>
+<span class="pc bpc" id="L689" title="1 of 6 branches missed.">    switch (token.getType()) {</span>
     case Metapath10Lexer.KW_PARENT:
-<span class="fc" id="L689">      axis = Axis.PARENT;</span>
-<span class="fc" id="L690">      break;</span>
+<span class="fc" id="L691">      axis = Axis.PARENT;</span>
+<span class="fc" id="L692">      break;</span>
     case Metapath10Lexer.KW_ANCESTOR:
-<span class="fc" id="L692">      axis = Axis.ANCESTOR;</span>
-<span class="fc" id="L693">      break;</span>
+<span class="fc" id="L694">      axis = Axis.ANCESTOR;</span>
+<span class="fc" id="L695">      break;</span>
     case Metapath10Lexer.KW_ANCESTOR_OR_SELF:
-<span class="fc" id="L695">      axis = Axis.ANCESTOR_OR_SELF;</span>
-<span class="fc" id="L696">      break;</span>
+<span class="fc" id="L697">      axis = Axis.ANCESTOR_OR_SELF;</span>
+<span class="fc" id="L698">      break;</span>
     case Metapath10Lexer.KW_PRECEDING_SIBLING:
-<span class="fc" id="L698">      axis = Axis.PRECEDING_SIBLING;</span>
-<span class="fc" id="L699">      break;</span>
+<span class="fc" id="L700">      axis = Axis.PRECEDING_SIBLING;</span>
+<span class="fc" id="L701">      break;</span>
     case Metapath10Lexer.KW_PRECEDING:
-<span class="fc" id="L701">      axis = Axis.PRECEDING;</span>
-<span class="fc" id="L702">      break;</span>
+<span class="fc" id="L703">      axis = Axis.PRECEDING;</span>
+<span class="fc" id="L704">      break;</span>
     default:
-<span class="nc" id="L704">      throw new UnsupportedOperationException(token.getText());</span>
+<span class="nc" id="L706">      throw new UnsupportedOperationException(token.getText());</span>
     }
-<span class="fc" id="L706">    return new Step(axis, parseNodeTest(ctx.nodetest(), false));</span>
+<span class="fc" id="L708">    return new Step(axis, parseNodeTest(ctx.nodetest(), false));</span>
   }
 
   // =======================================================
@@ -722,8 +724,8 @@ public class BuildCSTVisitor
   @NonNull
   protected INodeTestExpression parseNodeTest(NodetestContext ctx, boolean flag) {
     // TODO: implement kind test
-<span class="fc" id="L725">    NametestContext nameTestCtx = ctx.nametest();</span>
-<span class="fc" id="L726">    return parseNameTest(nameTestCtx, flag);</span>
+<span class="fc" id="L727">    NametestContext nameTestCtx = ctx.nametest();</span>
+<span class="fc" id="L728">    return parseNameTest(nameTestCtx, flag);</span>
   }
 
   /**
@@ -737,54 +739,54 @@ public class BuildCSTVisitor
    */
   @NonNull
   protected INameTestExpression parseNameTest(NametestContext ctx, boolean flag) {
-<span class="fc" id="L740">    ParseTree testType = ObjectUtils.requireNonNull(ctx.getChild(0));</span>
+<span class="fc" id="L742">    ParseTree testType = ObjectUtils.requireNonNull(ctx.getChild(0));</span>
 
-<span class="fc" id="L742">    StaticContext staticContext = getContext();</span>
+<span class="fc" id="L744">    StaticContext staticContext = getContext();</span>
 
     INameTestExpression retval;
-<span class="fc bfc" id="L745" title="All 2 branches covered.">    if (testType instanceof EqnameContext) {</span>
-<span class="fc" id="L746">      QName qname = EQNameUtils.parseName(</span>
-<span class="fc" id="L747">          ObjectUtils.notNull(ctx.eqname().getText()),</span>
-<span class="fc bfc" id="L748" title="All 2 branches covered.">          flag ? staticContext.getFlagPrefixResolver() : staticContext.getModelPrefixResolver());</span>
+<span class="fc bfc" id="L747" title="All 2 branches covered.">    if (testType instanceof EqnameContext) {</span>
+<span class="fc" id="L748">      QName qname = EQNameUtils.parseName(</span>
+<span class="fc" id="L749">          ObjectUtils.notNull(ctx.eqname().getText()),</span>
+<span class="fc bfc" id="L750" title="All 2 branches covered.">          flag ? staticContext.getFlagPrefixResolver() : staticContext.getModelPrefixResolver());</span>
 
-<span class="fc bfc" id="L750" title="All 2 branches covered.">      if (!flag</span>
-<span class="fc bfc" id="L751" title="All 2 branches covered.">          &amp;&amp; qname.getNamespaceURI().isEmpty()</span>
-<span class="pc bpc" id="L752" title="1 of 2 branches missed.">          &amp;&amp; staticContext.isUseWildcardWhenNamespaceNotDefaulted()) {</span>
+<span class="fc bfc" id="L752" title="All 2 branches covered.">      if (!flag</span>
+<span class="fc bfc" id="L753" title="All 2 branches covered.">          &amp;&amp; qname.getNamespaceURI().isEmpty()</span>
+<span class="pc bpc" id="L754" title="1 of 2 branches missed.">          &amp;&amp; staticContext.isUseWildcardWhenNamespaceNotDefaulted()) {</span>
         // Use a wildcard namespace
-<span class="nc" id="L754">        retval = new Wildcard(new Wildcard.MatchAnyNamespace(ObjectUtils.notNull(qname.getLocalPart())));</span>
+<span class="nc" id="L756">        retval = new Wildcard(new Wildcard.MatchAnyNamespace(ObjectUtils.notNull(qname.getLocalPart())));</span>
       } else {
-<span class="fc" id="L756">        retval = new NameTest(qname);</span>
+<span class="fc" id="L758">        retval = new NameTest(qname);</span>
       }
-<span class="fc" id="L758">    } else { // wildcard</span>
-<span class="fc" id="L759">      retval = handleWildcard((WildcardContext) testType);</span>
+<span class="fc" id="L760">    } else { // wildcard</span>
+<span class="fc" id="L761">      retval = handleWildcard((WildcardContext) testType);</span>
     }
-<span class="fc" id="L761">    return retval;</span>
+<span class="fc" id="L763">    return retval;</span>
   }
 
   @Override
   protected Wildcard handleWildcard(WildcardContext ctx) {
-<span class="fc" id="L766">    Wildcard.IWildcardMatcher matcher = null;</span>
-<span class="pc bpc" id="L767" title="1 of 2 branches missed.">    if (ctx.STAR() == null) {</span>
-<span class="nc bnc" id="L768" title="All 2 branches missed.">      if (ctx.CS() != null) {</span>
+<span class="fc" id="L768">    Wildcard.IWildcardMatcher matcher = null;</span>
+<span class="pc bpc" id="L769" title="1 of 2 branches missed.">    if (ctx.STAR() == null) {</span>
+<span class="nc bnc" id="L770" title="All 2 branches missed.">      if (ctx.CS() != null) {</span>
         // specified prefix, any local-name
-<span class="nc" id="L770">        String prefix = ObjectUtils.notNull(ctx.NCName().getText());</span>
-<span class="nc" id="L771">        String namespace = getContext().lookupNamespaceForPrefix(prefix);</span>
-<span class="nc bnc" id="L772" title="All 2 branches missed.">        if (namespace == null) {</span>
-<span class="nc" id="L773">          throw new IllegalStateException(String.format(&quot;Prefix '%s' did not map to a namespace.&quot;, prefix));</span>
+<span class="nc" id="L772">        String prefix = ObjectUtils.notNull(ctx.NCName().getText());</span>
+<span class="nc" id="L773">        String namespace = getContext().lookupNamespaceForPrefix(prefix);</span>
+<span class="nc bnc" id="L774" title="All 2 branches missed.">        if (namespace == null) {</span>
+<span class="nc" id="L775">          throw new IllegalStateException(String.format(&quot;Prefix '%s' did not map to a namespace.&quot;, prefix));</span>
         }
-<span class="nc" id="L775">        matcher = new Wildcard.MatchAnyLocalName(namespace);</span>
-<span class="nc bnc" id="L776" title="All 2 branches missed.">      } else if (ctx.SC() != null) {</span>
+<span class="nc" id="L777">        matcher = new Wildcard.MatchAnyLocalName(namespace);</span>
+<span class="nc bnc" id="L778" title="All 2 branches missed.">      } else if (ctx.SC() != null) {</span>
         // any prefix, specified local-name
-<span class="nc" id="L778">        matcher = new Wildcard.MatchAnyNamespace(ObjectUtils.notNull(ctx.NCName().getText()));</span>
+<span class="nc" id="L780">        matcher = new Wildcard.MatchAnyNamespace(ObjectUtils.notNull(ctx.NCName().getText()));</span>
       } else {
         // specified braced namespace, any local-name
-<span class="nc" id="L781">        String bracedUriLiteral = ctx.BracedURILiteral().getText();</span>
-<span class="nc" id="L782">        String namespace = ObjectUtils.notNull(bracedUriLiteral.substring(2, bracedUriLiteral.length() - 1));</span>
-<span class="nc" id="L783">        matcher = new Wildcard.MatchAnyLocalName(namespace);</span>
+<span class="nc" id="L783">        String bracedUriLiteral = ctx.BracedURILiteral().getText();</span>
+<span class="nc" id="L784">        String namespace = ObjectUtils.notNull(bracedUriLiteral.substring(2, bracedUriLiteral.length() - 1));</span>
+<span class="nc" id="L785">        matcher = new Wildcard.MatchAnyLocalName(namespace);</span>
       }
     } // star needs no matcher: any prefix, any local-name
 
-<span class="fc" id="L787">    return new Wildcard(matcher);</span>
+<span class="fc" id="L789">    return new Wildcard(matcher);</span>
   }
 
   // ======================================================================
@@ -793,13 +795,13 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleAxisstep(AxisstepContext ctx) {
-<span class="fc" id="L796">    IExpression step = visit(ctx.getChild(0));</span>
-<span class="fc" id="L797">    ParseTree predicateTree = ctx.getChild(1);</span>
-<span class="pc bpc" id="L798" title="1 of 2 branches missed.">    assert predicateTree != null;</span>
+<span class="fc" id="L798">    IExpression step = visit(ctx.getChild(0));</span>
+<span class="fc" id="L799">    ParseTree predicateTree = ctx.getChild(1);</span>
+<span class="pc bpc" id="L800" title="1 of 2 branches missed.">    assert predicateTree != null;</span>
 
-<span class="fc" id="L800">    List&lt;IExpression&gt; predicates = parsePredicates(predicateTree, 0);</span>
+<span class="fc" id="L802">    List&lt;IExpression&gt; predicates = parsePredicates(predicateTree, 0);</span>
 
-<span class="pc bpc" id="L802" title="1 of 2 branches missed.">    return predicates.isEmpty() ? step : new PredicateExpression(step, predicates);</span>
+<span class="pc bpc" id="L804" title="1 of 2 branches missed.">    return predicates.isEmpty() ? step : new PredicateExpression(step, predicates);</span>
   }
 
   // ===========================================================
@@ -808,21 +810,21 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleAbbrevforwardstep(AbbrevforwardstepContext ctx) {
-<span class="fc" id="L811">    int numChildren = ctx.getChildCount();</span>
+<span class="fc" id="L813">    int numChildren = ctx.getChildCount();</span>
 
     IExpression retval;
-<span class="fc bfc" id="L814" title="All 2 branches covered.">    if (numChildren == 1) {</span>
-<span class="fc" id="L815">      retval = new ModelInstance(parseNodeTest(ctx.nodetest(), false));</span>
+<span class="fc bfc" id="L816" title="All 2 branches covered.">    if (numChildren == 1) {</span>
+<span class="fc" id="L817">      retval = new ModelInstance(parseNodeTest(ctx.nodetest(), false));</span>
     } else {
       // this is an AT test
-<span class="fc" id="L818">      retval = new Flag(parseNodeTest(ctx.nodetest(), true));</span>
+<span class="fc" id="L820">      retval = new Flag(parseNodeTest(ctx.nodetest(), true));</span>
     }
-<span class="fc" id="L820">    return retval;</span>
+<span class="fc" id="L822">    return retval;</span>
   }
 
   @Override
   protected IExpression handleAbbrevreversestep(AbbrevreversestepContext ctx) {
-<span class="fc" id="L825">    return Axis.PARENT;</span>
+<span class="fc" id="L827">    return Axis.PARENT;</span>
   }
 
   // ======================================================================
@@ -831,12 +833,12 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleRangeexpr(RangeexprContext ctx) {
-<span class="pc bpc" id="L834" title="1 of 2 branches missed.">    assert ctx.getChildCount() == 3;</span>
+<span class="pc bpc" id="L836" title="1 of 2 branches missed.">    assert ctx.getChildCount() == 3;</span>
 
-<span class="fc" id="L836">    IExpression left = visit(ctx.getChild(0));</span>
-<span class="fc" id="L837">    IExpression right = visit(ctx.getChild(2));</span>
+<span class="fc" id="L838">    IExpression left = visit(ctx.getChild(0));</span>
+<span class="fc" id="L839">    IExpression right = visit(ctx.getChild(2));</span>
 
-<span class="fc" id="L839">    return new Range(left, right);</span>
+<span class="fc" id="L841">    return new Range(left, right);</span>
   }
 
   // ========================================================================
@@ -845,34 +847,34 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleUnionexpr(UnionexprContext ctx) {
-<span class="fc" id="L848">    return handleNAiryCollection(ctx, children -&gt; {</span>
-<span class="pc bpc" id="L849" title="1 of 2 branches missed.">      assert children != null;</span>
-<span class="fc" id="L850">      return new Union(children);</span>
+<span class="fc" id="L850">    return handleNAiryCollection(ctx, children -&gt; {</span>
+<span class="pc bpc" id="L851" title="1 of 2 branches missed.">      assert children != null;</span>
+<span class="fc" id="L852">      return new Union(children);</span>
     });
   }
 
   @Override
   protected IExpression handleIntersectexceptexpr(IntersectexceptexprContext context) {
-<span class="nc" id="L856">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
-<span class="nc bnc" id="L857" title="All 2 branches missed.">      assert left != null;</span>
+<span class="nc" id="L858">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
+<span class="nc bnc" id="L859" title="All 2 branches missed.">      assert left != null;</span>
 
-<span class="nc" id="L859">      ParseTree operatorTree = ctx.getChild(idx);</span>
-<span class="nc" id="L860">      IExpression right = visit(ctx.getChild(idx + 1));</span>
+<span class="nc" id="L861">      ParseTree operatorTree = ctx.getChild(idx);</span>
+<span class="nc" id="L862">      IExpression right = visit(ctx.getChild(idx + 1));</span>
 
-<span class="nc" id="L862">      int type = ((TerminalNode) operatorTree).getSymbol().getType();</span>
+<span class="nc" id="L864">      int type = ((TerminalNode) operatorTree).getSymbol().getType();</span>
 
       IExpression retval;
-<span class="nc bnc" id="L865" title="All 3 branches missed.">      switch (type) {</span>
+<span class="nc bnc" id="L867" title="All 3 branches missed.">      switch (type) {</span>
       case Metapath10Lexer.KW_INTERSECT:
-<span class="nc" id="L867">        retval = new Intersect(left, right);</span>
-<span class="nc" id="L868">        break;</span>
+<span class="nc" id="L869">        retval = new Intersect(left, right);</span>
+<span class="nc" id="L870">        break;</span>
       case Metapath10Lexer.KW_EXCEPT:
-<span class="nc" id="L870">        retval = new Except(left, right);</span>
-<span class="nc" id="L871">        break;</span>
+<span class="nc" id="L872">        retval = new Except(left, right);</span>
+<span class="nc" id="L873">        break;</span>
       default:
-<span class="nc" id="L873">        throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());</span>
+<span class="nc" id="L875">        throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());</span>
       }
-<span class="nc" id="L875">      return retval;</span>
+<span class="nc" id="L877">      return retval;</span>
     });
   }
 
@@ -882,88 +884,88 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleAdditiveexpr(AdditiveexprContext context) {
-<span class="fc" id="L885">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
-<span class="fc" id="L886">      ParseTree operatorTree = ctx.getChild(idx);</span>
-<span class="fc" id="L887">      ParseTree rightTree = ctx.getChild(idx + 1);</span>
-<span class="fc" id="L888">      IExpression right = rightTree.accept(this);</span>
+<span class="fc" id="L887">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
+<span class="fc" id="L888">      ParseTree operatorTree = ctx.getChild(idx);</span>
+<span class="fc" id="L889">      ParseTree rightTree = ctx.getChild(idx + 1);</span>
+<span class="fc" id="L890">      IExpression right = rightTree.accept(this);</span>
 
-<span class="pc bpc" id="L890" title="1 of 2 branches missed.">      assert left != null;</span>
-<span class="pc bpc" id="L891" title="1 of 2 branches missed.">      assert right != null;</span>
+<span class="pc bpc" id="L892" title="1 of 2 branches missed.">      assert left != null;</span>
+<span class="pc bpc" id="L893" title="1 of 2 branches missed.">      assert right != null;</span>
 
-<span class="fc" id="L893">      int type = ((TerminalNode) operatorTree).getSymbol().getType();</span>
+<span class="fc" id="L895">      int type = ((TerminalNode) operatorTree).getSymbol().getType();</span>
 
       IExpression retval;
-<span class="pc bpc" id="L896" title="2 of 3 branches missed.">      switch (type) {</span>
+<span class="pc bpc" id="L898" title="2 of 3 branches missed.">      switch (type) {</span>
       case Metapath10Lexer.PLUS:
-<span class="fc" id="L898">        retval = new Addition(left, right);</span>
-<span class="fc" id="L899">        break;</span>
+<span class="fc" id="L900">        retval = new Addition(left, right);</span>
+<span class="fc" id="L901">        break;</span>
       case Metapath10Lexer.MINUS:
-<span class="nc" id="L901">        retval = new Subtraction(left, right);</span>
-<span class="nc" id="L902">        break;</span>
+<span class="nc" id="L903">        retval = new Subtraction(left, right);</span>
+<span class="nc" id="L904">        break;</span>
       default:
-<span class="nc" id="L904">        throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());</span>
+<span class="nc" id="L906">        throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());</span>
       }
-<span class="fc" id="L906">      return retval;</span>
+<span class="fc" id="L908">      return retval;</span>
     });
   }
 
   @Override
   protected IExpression handleMultiplicativeexpr(MultiplicativeexprContext context) {
-<span class="nc" id="L912">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
-<span class="nc bnc" id="L913" title="All 2 branches missed.">      assert left != null;</span>
+<span class="nc" id="L914">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
+<span class="nc bnc" id="L915" title="All 2 branches missed.">      assert left != null;</span>
 
-<span class="nc" id="L915">      ParseTree operatorTree = ctx.getChild(idx);</span>
-<span class="nc" id="L916">      IExpression right = visit(ctx.getChild(idx + 1));</span>
+<span class="nc" id="L917">      ParseTree operatorTree = ctx.getChild(idx);</span>
+<span class="nc" id="L918">      IExpression right = visit(ctx.getChild(idx + 1));</span>
 
-<span class="nc bnc" id="L918" title="All 2 branches missed.">      assert right != null;</span>
+<span class="nc bnc" id="L920" title="All 2 branches missed.">      assert right != null;</span>
 
-<span class="nc" id="L920">      int type = ((TerminalNode) operatorTree).getSymbol().getType();</span>
+<span class="nc" id="L922">      int type = ((TerminalNode) operatorTree).getSymbol().getType();</span>
       IExpression retval;
-<span class="nc bnc" id="L922" title="All 5 branches missed.">      switch (type) {</span>
+<span class="nc bnc" id="L924" title="All 5 branches missed.">      switch (type) {</span>
       case Metapath10Lexer.STAR:
-<span class="nc" id="L924">        retval = new Multiplication(left, right);</span>
-<span class="nc" id="L925">        break;</span>
+<span class="nc" id="L926">        retval = new Multiplication(left, right);</span>
+<span class="nc" id="L927">        break;</span>
       case Metapath10Lexer.KW_DIV:
-<span class="nc" id="L927">        retval = new Division(left, right);</span>
-<span class="nc" id="L928">        break;</span>
+<span class="nc" id="L929">        retval = new Division(left, right);</span>
+<span class="nc" id="L930">        break;</span>
       case Metapath10Lexer.KW_IDIV:
-<span class="nc" id="L930">        retval = new IntegerDivision(left, right);</span>
-<span class="nc" id="L931">        break;</span>
+<span class="nc" id="L932">        retval = new IntegerDivision(left, right);</span>
+<span class="nc" id="L933">        break;</span>
       case Metapath10Lexer.KW_MOD:
-<span class="nc" id="L933">        retval = new Modulo(left, right);</span>
-<span class="nc" id="L934">        break;</span>
+<span class="nc" id="L935">        retval = new Modulo(left, right);</span>
+<span class="nc" id="L936">        break;</span>
       default:
-<span class="nc" id="L936">        throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());</span>
+<span class="nc" id="L938">        throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());</span>
       }
-<span class="nc" id="L938">      return retval;</span>
+<span class="nc" id="L940">      return retval;</span>
     });
   }
 
   @Override
   protected IExpression handleUnaryexpr(UnaryexprContext ctx) {
-<span class="fc" id="L944">    int numChildren = ctx.getChildCount();</span>
-<span class="fc" id="L945">    int negateCount = 0;</span>
+<span class="fc" id="L946">    int numChildren = ctx.getChildCount();</span>
+<span class="fc" id="L947">    int negateCount = 0;</span>
 
-<span class="fc" id="L947">    int idx = 0;</span>
-<span class="fc bfc" id="L948" title="All 2 branches covered.">    for (; idx &lt; numChildren - 1; idx++) {</span>
-<span class="fc" id="L949">      ParseTree tree = ctx.getChild(idx);</span>
-<span class="fc" id="L950">      int type = ((TerminalNode) tree).getSymbol().getType();</span>
-<span class="pc bpc" id="L951" title="2 of 3 branches missed.">      switch (type) {</span>
+<span class="fc" id="L949">    int idx = 0;</span>
+<span class="fc bfc" id="L950" title="All 2 branches covered.">    for (; idx &lt; numChildren - 1; idx++) {</span>
+<span class="fc" id="L951">      ParseTree tree = ctx.getChild(idx);</span>
+<span class="fc" id="L952">      int type = ((TerminalNode) tree).getSymbol().getType();</span>
+<span class="pc bpc" id="L953" title="2 of 3 branches missed.">      switch (type) {</span>
       case Metapath10Lexer.PLUS:
-<span class="nc" id="L953">        break;</span>
+<span class="nc" id="L955">        break;</span>
       case Metapath10Lexer.MINUS:
-<span class="fc" id="L955">        negateCount++;</span>
-<span class="fc" id="L956">        break;</span>
+<span class="fc" id="L957">        negateCount++;</span>
+<span class="fc" id="L958">        break;</span>
       default:
-<span class="nc" id="L958">        throw new UnsupportedOperationException(((TerminalNode) tree).getSymbol().getText());</span>
+<span class="nc" id="L960">        throw new UnsupportedOperationException(((TerminalNode) tree).getSymbol().getText());</span>
       }
     }
 
-<span class="fc" id="L962">    IExpression retval = visit(ctx.getChild(idx));</span>
-<span class="pc bpc" id="L963" title="1 of 2 branches missed.">    if (negateCount % 2 != 0) {</span>
-<span class="fc" id="L964">      retval = new Negate(retval);</span>
+<span class="fc" id="L964">    IExpression retval = visit(ctx.getChild(idx));</span>
+<span class="pc bpc" id="L965" title="1 of 2 branches missed.">    if (negateCount % 2 != 0) {</span>
+<span class="fc" id="L966">      retval = new Negate(retval);</span>
     }
-<span class="fc" id="L966">    return retval;</span>
+<span class="fc" id="L968">    return retval;</span>
   }
 
   // =====================================================
@@ -973,9 +975,9 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleStringconcatexpr(StringconcatexprContext ctx) {
-<span class="fc" id="L976">    return handleNAiryCollection(ctx, children -&gt; {</span>
-<span class="pc bpc" id="L977" title="1 of 2 branches missed.">      assert children != null;</span>
-<span class="fc" id="L978">      return new StringConcat(children);</span>
+<span class="fc" id="L978">    return handleNAiryCollection(ctx, children -&gt; {</span>
+<span class="pc bpc" id="L979" title="1 of 2 branches missed.">      assert children != null;</span>
+<span class="fc" id="L980">      return new StringConcat(children);</span>
     });
   }
 
@@ -985,73 +987,73 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleComparisonexpr(ComparisonexprContext ctx) { // NOPMD - ok
-<span class="pc bpc" id="L988" title="1 of 2 branches missed.">    assert ctx.getChildCount() == 3;</span>
+<span class="pc bpc" id="L990" title="1 of 2 branches missed.">    assert ctx.getChildCount() == 3;</span>
 
-<span class="fc" id="L990">    IExpression left = visit(ctx.getChild(0));</span>
-<span class="fc" id="L991">    IExpression right = visit(ctx.getChild(2));</span>
+<span class="fc" id="L992">    IExpression left = visit(ctx.getChild(0));</span>
+<span class="fc" id="L993">    IExpression right = visit(ctx.getChild(2));</span>
 
     // the operator
-<span class="fc" id="L994">    ParseTree operatorTree = ctx.getChild(1);</span>
-<span class="fc" id="L995">    Object payload = operatorTree.getPayload();</span>
+<span class="fc" id="L996">    ParseTree operatorTree = ctx.getChild(1);</span>
+<span class="fc" id="L997">    Object payload = operatorTree.getPayload();</span>
 
     ComparisonFunctions.Operator operator;
     IBooleanLogicExpression retval;
-<span class="fc bfc" id="L999" title="All 2 branches covered.">    if (payload instanceof GeneralcompContext) {</span>
-<span class="fc" id="L1000">      GeneralcompContext compContext = (GeneralcompContext) payload;</span>
-<span class="fc" id="L1001">      int type = ((TerminalNode) compContext.getChild(0)).getSymbol().getType();</span>
-<span class="pc bpc" id="L1002" title="1 of 7 branches missed.">      switch (type) {</span>
+<span class="fc bfc" id="L1001" title="All 2 branches covered.">    if (payload instanceof GeneralcompContext) {</span>
+<span class="fc" id="L1002">      GeneralcompContext compContext = (GeneralcompContext) payload;</span>
+<span class="fc" id="L1003">      int type = ((TerminalNode) compContext.getChild(0)).getSymbol().getType();</span>
+<span class="pc bpc" id="L1004" title="1 of 7 branches missed.">      switch (type) {</span>
       case Metapath10Lexer.EQ:
-<span class="fc" id="L1004">        operator = ComparisonFunctions.Operator.EQ;</span>
-<span class="fc" id="L1005">        break;</span>
+<span class="fc" id="L1006">        operator = ComparisonFunctions.Operator.EQ;</span>
+<span class="fc" id="L1007">        break;</span>
       case Metapath10Lexer.NE:
-<span class="fc" id="L1007">        operator = ComparisonFunctions.Operator.NE;</span>
-<span class="fc" id="L1008">        break;</span>
+<span class="fc" id="L1009">        operator = ComparisonFunctions.Operator.NE;</span>
+<span class="fc" id="L1010">        break;</span>
       case Metapath10Lexer.LT:
-<span class="fc" id="L1010">        operator = ComparisonFunctions.Operator.LT;</span>
-<span class="fc" id="L1011">        break;</span>
+<span class="fc" id="L1012">        operator = ComparisonFunctions.Operator.LT;</span>
+<span class="fc" id="L1013">        break;</span>
       case Metapath10Lexer.LE:
-<span class="fc" id="L1013">        operator = ComparisonFunctions.Operator.LE;</span>
-<span class="fc" id="L1014">        break;</span>
+<span class="fc" id="L1015">        operator = ComparisonFunctions.Operator.LE;</span>
+<span class="fc" id="L1016">        break;</span>
       case Metapath10Lexer.GT:
-<span class="fc" id="L1016">        operator = ComparisonFunctions.Operator.GT;</span>
-<span class="fc" id="L1017">        break;</span>
+<span class="fc" id="L1018">        operator = ComparisonFunctions.Operator.GT;</span>
+<span class="fc" id="L1019">        break;</span>
       case Metapath10Lexer.GE:
-<span class="fc" id="L1019">        operator = ComparisonFunctions.Operator.GE;</span>
-<span class="fc" id="L1020">        break;</span>
+<span class="fc" id="L1021">        operator = ComparisonFunctions.Operator.GE;</span>
+<span class="fc" id="L1022">        break;</span>
       default:
-<span class="nc" id="L1022">        throw new UnsupportedOperationException(((TerminalNode) compContext.getChild(0)).getSymbol().getText());</span>
+<span class="nc" id="L1024">        throw new UnsupportedOperationException(((TerminalNode) compContext.getChild(0)).getSymbol().getText());</span>
       }
-<span class="fc" id="L1024">      retval = new GeneralComparison(left, operator, right);</span>
-<span class="pc bpc" id="L1025" title="1 of 2 branches missed.">    } else if (payload instanceof ValuecompContext) {</span>
-<span class="fc" id="L1026">      ValuecompContext compContext = (ValuecompContext) payload;</span>
-<span class="fc" id="L1027">      int type = ((TerminalNode) compContext.getChild(0)).getSymbol().getType();</span>
-<span class="pc bpc" id="L1028" title="1 of 7 branches missed.">      switch (type) {</span>
+<span class="fc" id="L1026">      retval = new GeneralComparison(left, operator, right);</span>
+<span class="pc bpc" id="L1027" title="1 of 2 branches missed.">    } else if (payload instanceof ValuecompContext) {</span>
+<span class="fc" id="L1028">      ValuecompContext compContext = (ValuecompContext) payload;</span>
+<span class="fc" id="L1029">      int type = ((TerminalNode) compContext.getChild(0)).getSymbol().getType();</span>
+<span class="pc bpc" id="L1030" title="1 of 7 branches missed.">      switch (type) {</span>
       case Metapath10Lexer.KW_EQ:
-<span class="fc" id="L1030">        operator = ComparisonFunctions.Operator.EQ;</span>
-<span class="fc" id="L1031">        break;</span>
+<span class="fc" id="L1032">        operator = ComparisonFunctions.Operator.EQ;</span>
+<span class="fc" id="L1033">        break;</span>
       case Metapath10Lexer.KW_NE:
-<span class="fc" id="L1033">        operator = ComparisonFunctions.Operator.NE;</span>
-<span class="fc" id="L1034">        break;</span>
+<span class="fc" id="L1035">        operator = ComparisonFunctions.Operator.NE;</span>
+<span class="fc" id="L1036">        break;</span>
       case Metapath10Lexer.KW_LT:
-<span class="fc" id="L1036">        operator = ComparisonFunctions.Operator.LT;</span>
-<span class="fc" id="L1037">        break;</span>
+<span class="fc" id="L1038">        operator = ComparisonFunctions.Operator.LT;</span>
+<span class="fc" id="L1039">        break;</span>
       case Metapath10Lexer.KW_LE:
-<span class="fc" id="L1039">        operator = ComparisonFunctions.Operator.LE;</span>
-<span class="fc" id="L1040">        break;</span>
+<span class="fc" id="L1041">        operator = ComparisonFunctions.Operator.LE;</span>
+<span class="fc" id="L1042">        break;</span>
       case Metapath10Lexer.KW_GT:
-<span class="fc" id="L1042">        operator = ComparisonFunctions.Operator.GT;</span>
-<span class="fc" id="L1043">        break;</span>
+<span class="fc" id="L1044">        operator = ComparisonFunctions.Operator.GT;</span>
+<span class="fc" id="L1045">        break;</span>
       case Metapath10Lexer.KW_GE:
-<span class="fc" id="L1045">        operator = ComparisonFunctions.Operator.GE;</span>
-<span class="fc" id="L1046">        break;</span>
+<span class="fc" id="L1047">        operator = ComparisonFunctions.Operator.GE;</span>
+<span class="fc" id="L1048">        break;</span>
       default:
-<span class="nc" id="L1048">        throw new UnsupportedOperationException(((TerminalNode) compContext.getChild(0)).getSymbol().getText());</span>
+<span class="nc" id="L1050">        throw new UnsupportedOperationException(((TerminalNode) compContext.getChild(0)).getSymbol().getText());</span>
       }
-<span class="fc" id="L1050">      retval = new ValueComparison(left, operator, right);</span>
-<span class="fc" id="L1051">    } else {</span>
-<span class="nc" id="L1052">      throw new UnsupportedOperationException();</span>
+<span class="fc" id="L1052">      retval = new ValueComparison(left, operator, right);</span>
+<span class="fc" id="L1053">    } else {</span>
+<span class="nc" id="L1054">      throw new UnsupportedOperationException();</span>
     }
-<span class="fc" id="L1054">    return retval;</span>
+<span class="fc" id="L1056">    return retval;</span>
   }
 
   // ============================================================================
@@ -1060,17 +1062,17 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleOrexpr(OrexprContext ctx) {
-<span class="fc" id="L1063">    return handleNAiryCollection(ctx, children -&gt; {</span>
-<span class="pc bpc" id="L1064" title="1 of 2 branches missed.">      assert children != null;</span>
-<span class="fc" id="L1065">      return new Or(children);</span>
+<span class="fc" id="L1065">    return handleNAiryCollection(ctx, children -&gt; {</span>
+<span class="pc bpc" id="L1066" title="1 of 2 branches missed.">      assert children != null;</span>
+<span class="fc" id="L1067">      return new Or(children);</span>
     });
   }
 
   @Override
   protected IExpression handleAndexpr(AndexprContext ctx) {
-<span class="fc" id="L1071">    return handleNAiryCollection(ctx, children -&gt; {</span>
-<span class="pc bpc" id="L1072" title="1 of 2 branches missed.">      assert children != null;</span>
-<span class="fc" id="L1073">      return new And(children);</span>
+<span class="fc" id="L1073">    return handleNAiryCollection(ctx, children -&gt; {</span>
+<span class="pc bpc" id="L1074" title="1 of 2 branches missed.">      assert children != null;</span>
+<span class="fc" id="L1075">      return new And(children);</span>
     });
   }
 
@@ -1080,11 +1082,11 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleIfexpr(IfexprContext ctx) {
-<span class="fc" id="L1083">    IExpression testExpr = visit(ctx.expr());</span>
-<span class="fc" id="L1084">    IExpression thenExpr = visit(ctx.exprsingle(0));</span>
-<span class="fc" id="L1085">    IExpression elseExpr = visit(ctx.exprsingle(1));</span>
+<span class="fc" id="L1085">    IExpression testExpr = visit(ctx.expr());</span>
+<span class="fc" id="L1086">    IExpression thenExpr = visit(ctx.exprsingle(0));</span>
+<span class="fc" id="L1087">    IExpression elseExpr = visit(ctx.exprsingle(1));</span>
 
-<span class="fc" id="L1087">    return new If(testExpr, thenExpr, elseExpr);</span>
+<span class="fc" id="L1089">    return new If(testExpr, thenExpr, elseExpr);</span>
   }
 
   // =========================================================================
@@ -1093,14 +1095,14 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleSimplemapexpr(SimplemapexprContext context) {
-<span class="fc" id="L1096">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
-<span class="pc bpc" id="L1097" title="1 of 2 branches missed.">      assert left != null;</span>
+<span class="fc" id="L1098">    return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -&gt; {</span>
+<span class="pc bpc" id="L1099" title="1 of 2 branches missed.">      assert left != null;</span>
 
       // the next child is &quot;!&quot;
-<span class="pc bpc" id="L1100" title="1 of 2 branches missed.">      assert &quot;!&quot;.equals(ctx.getChild(idx).getText());</span>
-<span class="fc" id="L1101">      IExpression right = ObjectUtils.notNull(ctx.getChild(idx + 1).accept(this));</span>
+<span class="pc bpc" id="L1102" title="1 of 2 branches missed.">      assert &quot;!&quot;.equals(ctx.getChild(idx).getText());</span>
+<span class="fc" id="L1103">      IExpression right = ObjectUtils.notNull(ctx.getChild(idx + 1).accept(this));</span>
 
-<span class="fc" id="L1103">      return new SimpleMap(left, right);</span>
+<span class="fc" id="L1105">      return new SimpleMap(left, right);</span>
     });
   }
 }

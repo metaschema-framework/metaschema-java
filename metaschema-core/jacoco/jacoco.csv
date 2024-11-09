@@ -8,8 +8,8 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,IAssembl
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,AbstractNodeItemFactory,82,222,10,26,12,49,11,26,3,16
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,IFeatureRequiredDataItem,2,0,0,0,1,0,1,0,1,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,IDocumentBasedNodeItem,5,2,0,0,2,1,2,1,2,1
-Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,CycledAssemblyInstanceNodeItemImpl,16,17,0,0,4,6,4,4,4,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,AssemblyOrphanedDefinitionDataNodeItemImpl,10,24,0,0,3,6,1,3,1,3
+Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,CycledAssemblyInstanceNodeItemImpl,16,17,0,0,4,6,4,4,4,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,IDefinitionNodeItem,12,12,2,2,2,4,2,2,1,1
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,IFeatureChildNodeItem,4,0,0,0,1,0,1,0,1,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.node,IModuleNodeItem,17,4,0,0,5,1,5,1,5,1
@@ -90,8 +90,8 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IPosit
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,AbstractStringItem,4,69,3,5,0,16,3,8,0,7
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,AbstractStringItem.MapKey,0,9,0,0,0,2,0,2,0,2
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,AbstractAnyAtomicItem,0,20,0,0,0,6,0,4,0,4
-Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IEmailAddressItem,29,0,0,0,5,0,3,0,3,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,DateWithTimeZoneItemImpl,10,0,0,0,4,0,3,0,3,0
+Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IEmailAddressItem,29,0,0,0,5,0,3,0,3,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,INumericItem,8,116,0,10,2,28,0,8,0,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,AbstractUntypedAtomicItem,9,0,0,0,3,0,2,0,2,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,AnyUriItemImpl,2,4,0,0,1,2,1,1,1,1
@@ -105,7 +105,7 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,Abstra
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,DecimalItemImpl,3,50,3,5,1,9,4,7,1,6
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IDecimalItem,14,79,0,2,2,13,0,14,0,13
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IHostnameItem,29,0,0,0,5,0,3,0,3,0
-Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IStringItem,3,25,0,0,1,6,1,6,1,6
+Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IStringItem,11,25,0,0,3,6,1,6,1,6
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,HostnameItemImpl,6,0,0,0,3,0,2,0,2,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,AbstractIntegerItem,0,57,2,8,0,10,2,10,0,7
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IntegerItemImpl,0,6,0,0,0,3,0,2,0,2
@@ -124,8 +124,8 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IDateT
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IIntegerItem,9,78,0,4,3,21,0,13,0,11
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,StringItemImpl,2,4,0,0,1,2,1,1,1,1
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,ITokenItem,29,0,0,0,5,0,3,0,3,0
-Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IYearMonthDurationItem,28,49,1,1,5,8,4,4,3,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,YearMonthDurationItemImpl.MapKey,30,0,6,0,5,0,7,0,4,0
+Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IYearMonthDurationItem,28,49,1,1,5,8,4,4,3,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,IAnyUriItem,32,27,1,3,6,6,7,4,6,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,UuidItemImpl.MapKey,32,0,6,0,5,0,7,0,4,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.item.atomic,AbstractDateItem,25,0,6,0,6,0,7,0,4,0
@@ -152,9 +152,9 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,DateFormat
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,UriAdapter,15,20,0,0,5,6,4,4,4,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,NonNegativeIntegerAdapter,10,22,0,0,3,7,2,3,2,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,Base64Adapter,28,50,2,0,7,15,3,7,2,7
-Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,DateWithTZAdapter,64,20,2,0,13,7,7,3,6,3
+Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,DateWithTZAdapter,84,20,2,0,18,7,7,3,6,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,AbstractIntegerAdapter,17,9,0,0,7,3,3,2,3,2
-Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,DateTimeWithTZAdapter,29,28,0,0,8,8,5,4,5,4
+Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,DateTimeWithTZAdapter,49,28,0,0,13,8,5,4,5,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,EmailAddressAdapter,9,22,0,0,3,7,2,3,2,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,IntegerAdapter,22,38,5,1,5,11,3,6,0,6
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,DayTimeAdapter,23,20,0,0,7,6,4,4,4,4
@@ -165,11 +165,11 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,DateTimeAd
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,NcNameAdapter,9,22,0,0,3,6,2,3,2,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,YearMonthAdapter,23,20,0,0,7,6,4,4,4,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,IPv6AddressAdapter,15,52,0,0,5,12,4,4,4,4
-Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,BooleanAdapter,23,80,1,3,8,24,4,11,3,10
+Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,BooleanAdapter,32,80,1,3,11,24,4,11,3,10
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,StringAdapter,9,16,0,0,3,5,2,3,2,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,AbstractStringAdapter,5,6,0,0,2,3,2,2,2,2
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,TokenAdapter,9,16,0,0,3,5,2,3,2,3
-Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,UuidAdapter,18,20,0,0,6,7,5,3,5,3
+Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,UuidAdapter,32,20,0,0,9,7,5,3,5,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,PositiveIntegerAdapter,8,24,0,0,2,8,1,4,1,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.adapter,MetaschemaDataTypeProvider,0,157,0,0,0,46,0,2,0,2
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.impl,ImmutableCollections.AbstractImmutableMap,26,3,0,0,13,1,13,1,13,1
@@ -247,7 +247,7 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,F
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,FnMatches,11,162,1,1,3,60,1,5,0,5
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,FnStartsWith,0,84,0,8,0,31,0,7,0,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,MapMerge.Duplicates,22,109,2,2,2,20,3,9,2,8
-Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,FnString,19,76,4,4,3,33,4,4,1,3
+Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,FnString,28,76,4,4,5,34,4,4,1,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,FnData,92,70,13,3,22,35,12,4,4,4
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,FnDocumentAvailable,64,61,7,3,15,29,7,2,2,2
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function.library,FnPath,67,46,5,1,17,26,6,2,3,2
@@ -306,9 +306,9 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function,IFunction
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.function,IFunctionLibrary,18,0,4,0,2,0,4,0,2,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype,AbstractCustomJavaDataType,16,8,0,0,4,3,4,1,4,1
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype,AbstractDataTypeProvider,8,48,1,1,1,13,1,3,0,3
-Metaschema Core API,gov.nist.secauto.metaschema.core.datatype,AbstractDataTypeAdapter,174,56,7,3,46,15,14,6,10,5
-Metaschema Core API,gov.nist.secauto.metaschema.core.datatype,DataTypeService,53,110,6,0,16,26,8,11,5,11
+Metaschema Core API,gov.nist.secauto.metaschema.core.datatype,AbstractDataTypeAdapter,196,59,7,3,55,18,14,6,10,5
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype,IDataTypeAdapter,38,8,0,0,7,1,7,1,7,1
+Metaschema Core API,gov.nist.secauto.metaschema.core.datatype,DataTypeService,53,110,6,0,16,26,8,11,5,11
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype,AbstractCustomJavaDataTypeAdapter,4,4,0,0,1,2,1,1,1,1
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.format,MetapathFormatter,14,29,0,0,4,9,4,5,4,5
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath.format,IPathFormatter,0,19,0,0,0,4,0,3,0,3
@@ -507,7 +507,7 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.model.xml.impl,XmlFlagConta
 Metaschema Core API,gov.nist.secauto.metaschema.core.model.xml.impl,DefaultContainerModelSupport,170,51,20,0,34,17,11,7,1,7
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.markup,AbstractMarkupString,99,147,8,6,20,42,14,11,8,10
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.markup,MarkupLineAdapter,35,17,0,0,11,5,6,3,6,3
-Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.markup,AbstractMarkupAdapter,44,4,0,0,16,2,5,1,5,1
+Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.markup,AbstractMarkupAdapter,58,4,0,0,22,2,5,1,5,1
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.markup,MarkupDataTypeProvider,0,18,0,0,0,6,0,2,0,2
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.markup,MarkupLine,11,85,2,2,2,20,3,7,1,7
 Metaschema Core API,gov.nist.secauto.metaschema.core.datatype.markup,AbstractMarkupString.new NodeVisitor() {...},0,42,1,9,0,8,1,7,0,3
@@ -624,7 +624,7 @@ Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,DynamicContext.Cac
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,DynamicContext,77,91,6,2,14,25,10,12,6,12
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,ISequence,254,173,4,13,16,33,12,24,10,17
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,EQNameUtils,39,65,3,5,8,15,4,6,2,4
-Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,MetapathExpression,115,195,9,7,21,49,8,17,1,14
+Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,MetapathExpression,120,195,9,7,23,49,8,17,1,14
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,MetapathException,3,13,0,0,2,6,1,3,1,3
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,DynamicContext.CachingLoader.ContextUriResolver,36,0,4,0,7,0,4,0,2,0
 Metaschema Core API,gov.nist.secauto.metaschema.core.metapath,MetapathConstants,0,36,0,0,0,13,0,1,0,1

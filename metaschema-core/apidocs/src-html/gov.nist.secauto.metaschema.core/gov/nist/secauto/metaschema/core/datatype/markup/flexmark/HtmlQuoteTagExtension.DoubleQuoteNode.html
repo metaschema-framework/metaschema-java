@@ -90,102 +90,103 @@
 <span class="source-line-no">077</span><span id="line-77">  static class QTagNodeRenderer implements NodeRenderer {</span>
 <span class="source-line-no">078</span><span id="line-78"></span>
 <span class="source-line-no">079</span><span id="line-79">    @Override</span>
-<span class="source-line-no">080</span><span id="line-80">    public @Nullable Set&lt;NodeRenderingHandler&lt;?&gt;&gt; getNodeRenderingHandlers() {</span>
-<span class="source-line-no">081</span><span id="line-81">      return Collections.singleton(</span>
-<span class="source-line-no">082</span><span id="line-82">          new NodeRenderingHandler&lt;&gt;(DoubleQuoteNode.class, this::render));</span>
-<span class="source-line-no">083</span><span id="line-83">    }</span>
-<span class="source-line-no">084</span><span id="line-84"></span>
-<span class="source-line-no">085</span><span id="line-85">    protected void render(@NonNull DoubleQuoteNode node, @NonNull NodeRendererContext context,</span>
-<span class="source-line-no">086</span><span id="line-86">        @NonNull HtmlWriter html) {</span>
-<span class="source-line-no">087</span><span id="line-87">      html.withAttr().tag("q");</span>
-<span class="source-line-no">088</span><span id="line-88">      context.renderChildren(node);</span>
-<span class="source-line-no">089</span><span id="line-89">      html.tag("/q");</span>
-<span class="source-line-no">090</span><span id="line-90">    }</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">    public static class Factory implements NodeRendererFactory {</span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">      @Override</span>
-<span class="source-line-no">095</span><span id="line-95">      public NodeRenderer apply(DataHolder options) {</span>
-<span class="source-line-no">096</span><span id="line-96">        return new QTagNodeRenderer();</span>
-<span class="source-line-no">097</span><span id="line-97">      }</span>
-<span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">    }</span>
-<span class="source-line-no">100</span><span id="line-100">  }</span>
-<span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">  static class QuoteReplacingPostProcessor</span>
-<span class="source-line-no">103</span><span id="line-103">      extends NodePostProcessor {</span>
-<span class="source-line-no">104</span><span id="line-104"></span>
-<span class="source-line-no">105</span><span id="line-105">    @Override</span>
-<span class="source-line-no">106</span><span id="line-106">    public void process(NodeTracker state, Node node) {</span>
-<span class="source-line-no">107</span><span id="line-107">      if (node instanceof TypographicQuotes) {</span>
-<span class="source-line-no">108</span><span id="line-108">        TypographicQuotes typographicQuotes = (TypographicQuotes) node;</span>
-<span class="source-line-no">109</span><span id="line-109">        if (typographicQuotes.getOpeningMarker().matchChars("\"")) {</span>
-<span class="source-line-no">110</span><span id="line-110">          DoubleQuoteNode quoteNode = new DoubleQuoteNode(typographicQuotes);</span>
-<span class="source-line-no">111</span><span id="line-111">          node.insertAfter(quoteNode);</span>
-<span class="source-line-no">112</span><span id="line-112">          state.nodeAdded(quoteNode);</span>
-<span class="source-line-no">113</span><span id="line-113">          node.unlink();</span>
-<span class="source-line-no">114</span><span id="line-114">          state.nodeRemoved(node);</span>
-<span class="source-line-no">115</span><span id="line-115">        }</span>
-<span class="source-line-no">116</span><span id="line-116">      }</span>
-<span class="source-line-no">117</span><span id="line-117">    }</span>
-<span class="source-line-no">118</span><span id="line-118"></span>
-<span class="source-line-no">119</span><span id="line-119">    public static class Factory</span>
-<span class="source-line-no">120</span><span id="line-120">        extends NodePostProcessorFactory {</span>
-<span class="source-line-no">121</span><span id="line-121">      public Factory() {</span>
-<span class="source-line-no">122</span><span id="line-122">        super(false);</span>
-<span class="source-line-no">123</span><span id="line-123">        addNodeWithExclusions(TypographicQuotes.class, DoNotDecorate.class);</span>
-<span class="source-line-no">124</span><span id="line-124">      }</span>
-<span class="source-line-no">125</span><span id="line-125"></span>
-<span class="source-line-no">126</span><span id="line-126">      @NonNull</span>
-<span class="source-line-no">127</span><span id="line-127">      @Override</span>
-<span class="source-line-no">128</span><span id="line-128">      public NodePostProcessor apply(Document document) {</span>
-<span class="source-line-no">129</span><span id="line-129">        return new QuoteReplacingPostProcessor();</span>
-<span class="source-line-no">130</span><span id="line-130">      }</span>
-<span class="source-line-no">131</span><span id="line-131">    }</span>
-<span class="source-line-no">132</span><span id="line-132">  }</span>
-<span class="source-line-no">133</span><span id="line-133"></span>
-<span class="source-line-no">134</span><span id="line-134">  static class QTagHtmlNodeRenderer implements HtmlNodeRenderer {</span>
-<span class="source-line-no">135</span><span id="line-135"></span>
-<span class="source-line-no">136</span><span id="line-136">    @Override</span>
-<span class="source-line-no">137</span><span id="line-137">    public Set&lt;HtmlNodeRendererHandler&lt;?&gt;&gt; getHtmlNodeRendererHandlers() {</span>
-<span class="source-line-no">138</span><span id="line-138">      return Collections.singleton(new HtmlNodeRendererHandler&lt;&gt;("q", Element.class, this::renderMarkdown));</span>
-<span class="source-line-no">139</span><span id="line-139">    }</span>
-<span class="source-line-no">140</span><span id="line-140"></span>
-<span class="source-line-no">141</span><span id="line-141">    protected void renderMarkdown(Element element, HtmlNodeConverterContext context,</span>
-<span class="source-line-no">142</span><span id="line-142">        @SuppressWarnings("unused") HtmlMarkdownWriter out) {</span>
-<span class="source-line-no">143</span><span id="line-143">      context.wrapTextNodes(element, "\"", element.nextElementSibling() != null);</span>
-<span class="source-line-no">144</span><span id="line-144">    }</span>
-<span class="source-line-no">145</span><span id="line-145"></span>
-<span class="source-line-no">146</span><span id="line-146">    public static class Factory implements HtmlNodeRendererFactory {</span>
-<span class="source-line-no">147</span><span id="line-147"></span>
-<span class="source-line-no">148</span><span id="line-148">      @Override</span>
-<span class="source-line-no">149</span><span id="line-149">      public HtmlNodeRenderer apply(DataHolder options) {</span>
-<span class="source-line-no">150</span><span id="line-150">        return new QTagHtmlNodeRenderer();</span>
-<span class="source-line-no">151</span><span id="line-151">      }</span>
-<span class="source-line-no">152</span><span id="line-152">    }</span>
-<span class="source-line-no">153</span><span id="line-153"></span>
-<span class="source-line-no">154</span><span id="line-154">  }</span>
-<span class="source-line-no">155</span><span id="line-155"></span>
-<span class="source-line-no">156</span><span id="line-156">  public static class DoubleQuoteNode</span>
-<span class="source-line-no">157</span><span id="line-157">      extends TypographicQuotes {</span>
-<span class="source-line-no">158</span><span id="line-158"></span>
-<span class="source-line-no">159</span><span id="line-159">    /**</span>
-<span class="source-line-no">160</span><span id="line-160">     * Construct a new double quote node.</span>
-<span class="source-line-no">161</span><span id="line-161">     *</span>
-<span class="source-line-no">162</span><span id="line-162">     * @param node</span>
-<span class="source-line-no">163</span><span id="line-163">     *          the typographic information pertaining to a double quote</span>
-<span class="source-line-no">164</span><span id="line-164">     */</span>
-<span class="source-line-no">165</span><span id="line-165">    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")</span>
-<span class="source-line-no">166</span><span id="line-166">    public DoubleQuoteNode(TypographicQuotes node) {</span>
-<span class="source-line-no">167</span><span id="line-167">      super(node.getOpeningMarker(), node.getText(), node.getClosingMarker());</span>
-<span class="source-line-no">168</span><span id="line-168">      setTypographicOpening(node.getTypographicOpening());</span>
-<span class="source-line-no">169</span><span id="line-169">      setTypographicClosing(node.getTypographicClosing());</span>
-<span class="source-line-no">170</span><span id="line-170">      for (Node child : node.getChildren()) {</span>
-<span class="source-line-no">171</span><span id="line-171">        appendChild(child);</span>
-<span class="source-line-no">172</span><span id="line-172">      }</span>
-<span class="source-line-no">173</span><span id="line-173">    }</span>
-<span class="source-line-no">174</span><span id="line-174">  }</span>
-<span class="source-line-no">175</span><span id="line-175">}</span>
+<span class="source-line-no">080</span><span id="line-80">    public @Nullable</span>
+<span class="source-line-no">081</span><span id="line-81">    Set&lt;NodeRenderingHandler&lt;?&gt;&gt; getNodeRenderingHandlers() {</span>
+<span class="source-line-no">082</span><span id="line-82">      return Collections.singleton(</span>
+<span class="source-line-no">083</span><span id="line-83">          new NodeRenderingHandler&lt;&gt;(DoubleQuoteNode.class, this::render));</span>
+<span class="source-line-no">084</span><span id="line-84">    }</span>
+<span class="source-line-no">085</span><span id="line-85"></span>
+<span class="source-line-no">086</span><span id="line-86">    protected void render(@NonNull DoubleQuoteNode node, @NonNull NodeRendererContext context,</span>
+<span class="source-line-no">087</span><span id="line-87">        @NonNull HtmlWriter html) {</span>
+<span class="source-line-no">088</span><span id="line-88">      html.withAttr().tag("q");</span>
+<span class="source-line-no">089</span><span id="line-89">      context.renderChildren(node);</span>
+<span class="source-line-no">090</span><span id="line-90">      html.tag("/q");</span>
+<span class="source-line-no">091</span><span id="line-91">    }</span>
+<span class="source-line-no">092</span><span id="line-92"></span>
+<span class="source-line-no">093</span><span id="line-93">    public static class Factory implements NodeRendererFactory {</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">      @Override</span>
+<span class="source-line-no">096</span><span id="line-96">      public NodeRenderer apply(DataHolder options) {</span>
+<span class="source-line-no">097</span><span id="line-97">        return new QTagNodeRenderer();</span>
+<span class="source-line-no">098</span><span id="line-98">      }</span>
+<span class="source-line-no">099</span><span id="line-99"></span>
+<span class="source-line-no">100</span><span id="line-100">    }</span>
+<span class="source-line-no">101</span><span id="line-101">  }</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">  static class QuoteReplacingPostProcessor</span>
+<span class="source-line-no">104</span><span id="line-104">      extends NodePostProcessor {</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">    @Override</span>
+<span class="source-line-no">107</span><span id="line-107">    public void process(NodeTracker state, Node node) {</span>
+<span class="source-line-no">108</span><span id="line-108">      if (node instanceof TypographicQuotes) {</span>
+<span class="source-line-no">109</span><span id="line-109">        TypographicQuotes typographicQuotes = (TypographicQuotes) node;</span>
+<span class="source-line-no">110</span><span id="line-110">        if (typographicQuotes.getOpeningMarker().matchChars("\"")) {</span>
+<span class="source-line-no">111</span><span id="line-111">          DoubleQuoteNode quoteNode = new DoubleQuoteNode(typographicQuotes);</span>
+<span class="source-line-no">112</span><span id="line-112">          node.insertAfter(quoteNode);</span>
+<span class="source-line-no">113</span><span id="line-113">          state.nodeAdded(quoteNode);</span>
+<span class="source-line-no">114</span><span id="line-114">          node.unlink();</span>
+<span class="source-line-no">115</span><span id="line-115">          state.nodeRemoved(node);</span>
+<span class="source-line-no">116</span><span id="line-116">        }</span>
+<span class="source-line-no">117</span><span id="line-117">      }</span>
+<span class="source-line-no">118</span><span id="line-118">    }</span>
+<span class="source-line-no">119</span><span id="line-119"></span>
+<span class="source-line-no">120</span><span id="line-120">    public static class Factory</span>
+<span class="source-line-no">121</span><span id="line-121">        extends NodePostProcessorFactory {</span>
+<span class="source-line-no">122</span><span id="line-122">      public Factory() {</span>
+<span class="source-line-no">123</span><span id="line-123">        super(false);</span>
+<span class="source-line-no">124</span><span id="line-124">        addNodeWithExclusions(TypographicQuotes.class, DoNotDecorate.class);</span>
+<span class="source-line-no">125</span><span id="line-125">      }</span>
+<span class="source-line-no">126</span><span id="line-126"></span>
+<span class="source-line-no">127</span><span id="line-127">      @NonNull</span>
+<span class="source-line-no">128</span><span id="line-128">      @Override</span>
+<span class="source-line-no">129</span><span id="line-129">      public NodePostProcessor apply(Document document) {</span>
+<span class="source-line-no">130</span><span id="line-130">        return new QuoteReplacingPostProcessor();</span>
+<span class="source-line-no">131</span><span id="line-131">      }</span>
+<span class="source-line-no">132</span><span id="line-132">    }</span>
+<span class="source-line-no">133</span><span id="line-133">  }</span>
+<span class="source-line-no">134</span><span id="line-134"></span>
+<span class="source-line-no">135</span><span id="line-135">  static class QTagHtmlNodeRenderer implements HtmlNodeRenderer {</span>
+<span class="source-line-no">136</span><span id="line-136"></span>
+<span class="source-line-no">137</span><span id="line-137">    @Override</span>
+<span class="source-line-no">138</span><span id="line-138">    public Set&lt;HtmlNodeRendererHandler&lt;?&gt;&gt; getHtmlNodeRendererHandlers() {</span>
+<span class="source-line-no">139</span><span id="line-139">      return Collections.singleton(new HtmlNodeRendererHandler&lt;&gt;("q", Element.class, this::renderMarkdown));</span>
+<span class="source-line-no">140</span><span id="line-140">    }</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">    protected void renderMarkdown(Element element, HtmlNodeConverterContext context,</span>
+<span class="source-line-no">143</span><span id="line-143">        @SuppressWarnings("unused") HtmlMarkdownWriter out) {</span>
+<span class="source-line-no">144</span><span id="line-144">      context.wrapTextNodes(element, "\"", element.nextElementSibling() != null);</span>
+<span class="source-line-no">145</span><span id="line-145">    }</span>
+<span class="source-line-no">146</span><span id="line-146"></span>
+<span class="source-line-no">147</span><span id="line-147">    public static class Factory implements HtmlNodeRendererFactory {</span>
+<span class="source-line-no">148</span><span id="line-148"></span>
+<span class="source-line-no">149</span><span id="line-149">      @Override</span>
+<span class="source-line-no">150</span><span id="line-150">      public HtmlNodeRenderer apply(DataHolder options) {</span>
+<span class="source-line-no">151</span><span id="line-151">        return new QTagHtmlNodeRenderer();</span>
+<span class="source-line-no">152</span><span id="line-152">      }</span>
+<span class="source-line-no">153</span><span id="line-153">    }</span>
+<span class="source-line-no">154</span><span id="line-154"></span>
+<span class="source-line-no">155</span><span id="line-155">  }</span>
+<span class="source-line-no">156</span><span id="line-156"></span>
+<span class="source-line-no">157</span><span id="line-157">  public static class DoubleQuoteNode</span>
+<span class="source-line-no">158</span><span id="line-158">      extends TypographicQuotes {</span>
+<span class="source-line-no">159</span><span id="line-159"></span>
+<span class="source-line-no">160</span><span id="line-160">    /**</span>
+<span class="source-line-no">161</span><span id="line-161">     * Construct a new double quote node.</span>
+<span class="source-line-no">162</span><span id="line-162">     *</span>
+<span class="source-line-no">163</span><span id="line-163">     * @param node</span>
+<span class="source-line-no">164</span><span id="line-164">     *          the typographic information pertaining to a double quote</span>
+<span class="source-line-no">165</span><span id="line-165">     */</span>
+<span class="source-line-no">166</span><span id="line-166">    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")</span>
+<span class="source-line-no">167</span><span id="line-167">    public DoubleQuoteNode(TypographicQuotes node) {</span>
+<span class="source-line-no">168</span><span id="line-168">      super(node.getOpeningMarker(), node.getText(), node.getClosingMarker());</span>
+<span class="source-line-no">169</span><span id="line-169">      setTypographicOpening(node.getTypographicOpening());</span>
+<span class="source-line-no">170</span><span id="line-170">      setTypographicClosing(node.getTypographicClosing());</span>
+<span class="source-line-no">171</span><span id="line-171">      for (Node child : node.getChildren()) {</span>
+<span class="source-line-no">172</span><span id="line-172">        appendChild(child);</span>
+<span class="source-line-no">173</span><span id="line-173">      }</span>
+<span class="source-line-no">174</span><span id="line-174">    }</span>
+<span class="source-line-no">175</span><span id="line-175">  }</span>
+<span class="source-line-no">176</span><span id="line-176">}</span>
 
 
 

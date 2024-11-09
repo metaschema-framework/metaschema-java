@@ -79,11 +79,12 @@ public interface IGroupable extends IInstance {
   // REFACTOR: consider pushing down the call for getGroupAsXmlNamespace
   @NonNull
   default String getEffectiveGroupAsNamespace() {
-<span class="nc" id="L82">    @Nullable String namespace = getGroupAsXmlNamespace();</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">    if (namespace == null) {</span>
-<span class="nc" id="L84">      namespace = ObjectUtils.notNull(getContainingModule().getXmlNamespace().toASCIIString());</span>
+    @Nullable
+<span class="nc" id="L83">    String namespace = getGroupAsXmlNamespace();</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">    if (namespace == null) {</span>
+<span class="nc" id="L85">      namespace = ObjectUtils.notNull(getContainingModule().getXmlNamespace().toASCIIString());</span>
     }
-<span class="nc" id="L86">    return namespace;</span>
+<span class="nc" id="L87">    return namespace;</span>
   }
 
   /**
@@ -98,11 +99,11 @@ public interface IGroupable extends IInstance {
   // REFACTOR: rename to getXmlGroupAsQName
   @Nullable
   default QName getEffectiveXmlGroupAsQName() {
-<span class="nc bnc" id="L101" title="All 2 branches missed.">    return XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">    return XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())</span>
         // require a group-as name in this case
-<span class="nc" id="L103">        ? new QName(getEffectiveGroupAsNamespace(), ObjectUtils.requireNonNull(getGroupAsName()))</span>
+<span class="nc" id="L104">        ? new QName(getEffectiveGroupAsNamespace(), ObjectUtils.requireNonNull(getGroupAsName()))</span>
         // no group-as name in this case
-<span class="nc" id="L105">        : null;</span>
+<span class="nc" id="L106">        : null;</span>
   }
 
   /**
@@ -120,7 +121,7 @@ public interface IGroupable extends IInstance {
    */
   @NonNull
   default JsonGroupAsBehavior getJsonGroupAsBehavior() {
-<span class="nc" id="L123">    return JsonGroupAsBehavior.NONE;</span>
+<span class="nc" id="L124">    return JsonGroupAsBehavior.NONE;</span>
   }
 
   /**
@@ -133,7 +134,7 @@ public interface IGroupable extends IInstance {
    */
   @NonNull
   default XmlGroupAsBehavior getXmlGroupAsBehavior() {
-<span class="nc" id="L136">    return DEFAULT_XML_GROUP_AS_BEHAVIOR;</span>
+<span class="nc" id="L137">    return DEFAULT_XML_GROUP_AS_BEHAVIOR;</span>
   }
 
   /**
@@ -147,7 +148,7 @@ public interface IGroupable extends IInstance {
   @NonNull
   default Collection&lt;?&gt; getItemValues(@NonNull Object instanceValue) {
     // no item values by default
-<span class="nc" id="L150">    return CollectionUtil.emptyList();</span>
+<span class="nc" id="L151">    return CollectionUtil.emptyList();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -13,32 +13,34 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public interface INamedModelInstanceAbsolute extends INamedModelInstance, IModelInstanceAbsolute {
   @Override
   default String getJsonName() {
-    @NonNull String retval;
-<span class="nc bnc" id="L17" title="All 4 branches missed.">    if (getMaxOccurs() == -1 || getMaxOccurs() &gt; 1) {</span>
-<span class="nc" id="L18">      @NonNull String groupAsName = ObjectUtils.requireNonNull(getGroupAsName(),</span>
-<span class="nc" id="L19">          ObjectUtils.notNull(String.format(&quot;null group-as name in instance '%s' on definition '%s' in '%s'&quot;,</span>
-<span class="nc" id="L20">              this.getName(),</span>
-<span class="nc" id="L21">              this.getContainingDefinition().getName(),</span>
-<span class="nc" id="L22">              this.getContainingModule().getLocation())));</span>
-<span class="nc" id="L23">      retval = groupAsName;</span>
-<span class="nc" id="L24">    } else {</span>
-<span class="nc" id="L25">      retval = getEffectiveName();</span>
+    @NonNull
+    String retval;
+<span class="nc bnc" id="L18" title="All 4 branches missed.">    if (getMaxOccurs() == -1 || getMaxOccurs() &gt; 1) {</span>
+      @NonNull
+<span class="nc" id="L20">      String groupAsName = ObjectUtils.requireNonNull(getGroupAsName(),</span>
+<span class="nc" id="L21">          ObjectUtils.notNull(String.format(&quot;null group-as name in instance '%s' on definition '%s' in '%s'&quot;,</span>
+<span class="nc" id="L22">              this.getName(),</span>
+<span class="nc" id="L23">              this.getContainingDefinition().getName(),</span>
+<span class="nc" id="L24">              this.getContainingModule().getLocation())));</span>
+<span class="nc" id="L25">      retval = groupAsName;</span>
+<span class="nc" id="L26">    } else {</span>
+<span class="nc" id="L27">      retval = getEffectiveName();</span>
     }
-<span class="nc" id="L27">    return retval;</span>
+<span class="nc" id="L29">    return retval;</span>
   }
 
   @Override
   @Nullable
   default IFlagInstance getEffectiveJsonKey() {
-<span class="nc bnc" id="L33" title="All 2 branches missed.">    return JsonGroupAsBehavior.KEYED.equals(getJsonGroupAsBehavior())</span>
-<span class="nc" id="L34">        ? getJsonKey()</span>
-<span class="nc" id="L35">        : null;</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">    return JsonGroupAsBehavior.KEYED.equals(getJsonGroupAsBehavior())</span>
+<span class="nc" id="L36">        ? getJsonKey()</span>
+<span class="nc" id="L37">        : null;</span>
   }
 
   @Override
   @Nullable
   default IFlagInstance getJsonKey() {
-<span class="nc" id="L41">    return getDefinition().getJsonKey();</span>
+<span class="nc" id="L43">    return getDefinition().getJsonKey();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

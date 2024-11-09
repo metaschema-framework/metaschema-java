@@ -466,22 +466,23 @@ public final class SarifValidationHandler {
 <span class="pc bpc" id="L466" title="1 of 2 branches missed.">        assert constraint != null;</span>
 <span class="fc" id="L467">        ConstraintRuleRecord rule = getRuleRecord(constraint);</span>
 
-<span class="fc" id="L469">        @SuppressWarnings(&quot;PMD.AvoidInstantiatingObjectsInLoops&quot;) Result result = new Result();</span>
+        @SuppressWarnings(&quot;PMD.AvoidInstantiatingObjectsInLoops&quot;)
+<span class="fc" id="L470">        Result result = new Result();</span>
 
-<span class="fc" id="L471">        String id = constraint.getId();</span>
-<span class="pc bpc" id="L472" title="1 of 2 branches missed.">        if (id != null) {</span>
-<span class="nc" id="L473">          result.setRuleId(id);</span>
+<span class="fc" id="L472">        String id = constraint.getId();</span>
+<span class="pc bpc" id="L473" title="1 of 2 branches missed.">        if (id != null) {</span>
+<span class="nc" id="L474">          result.setRuleId(id);</span>
         }
-<span class="fc" id="L475">        result.setRuleIndex(BigInteger.valueOf(rule.getIndex()));</span>
-<span class="fc" id="L476">        result.setGuid(rule.getGuid());</span>
-<span class="fc" id="L477">        result.setKind(kind.getLabel());</span>
-<span class="fc" id="L478">        result.setLevel(level.getLabel());</span>
-<span class="fc" id="L479">        message(finding, result);</span>
-<span class="fc" id="L480">        location(finding, result, output);</span>
+<span class="fc" id="L476">        result.setRuleIndex(BigInteger.valueOf(rule.getIndex()));</span>
+<span class="fc" id="L477">        result.setGuid(rule.getGuid());</span>
+<span class="fc" id="L478">        result.setKind(kind.getLabel());</span>
+<span class="fc" id="L479">        result.setLevel(level.getLabel());</span>
+<span class="fc" id="L480">        message(finding, result);</span>
+<span class="fc" id="L481">        location(finding, result, output);</span>
 
-<span class="fc" id="L482">        retval.add(result);</span>
-<span class="fc" id="L483">      }</span>
-<span class="fc" id="L484">      return retval;</span>
+<span class="fc" id="L483">        retval.add(result);</span>
+<span class="fc" id="L484">      }</span>
+<span class="fc" id="L485">      return retval;</span>
     }
   }
 
@@ -490,37 +491,37 @@ public final class SarifValidationHandler {
     @NonNull
     private final UUID guid;
 
-<span class="fc" id="L493">    private AbstractRuleRecord() {</span>
-<span class="fc" id="L494">      this.index = ruleIndex.addAndGet(1);</span>
-<span class="fc" id="L495">      this.guid = ObjectUtils.notNull(UUID.randomUUID());</span>
-<span class="fc" id="L496">    }</span>
+<span class="fc" id="L494">    private AbstractRuleRecord() {</span>
+<span class="fc" id="L495">      this.index = ruleIndex.addAndGet(1);</span>
+<span class="fc" id="L496">      this.guid = ObjectUtils.notNull(UUID.randomUUID());</span>
+<span class="fc" id="L497">    }</span>
 
     public int getIndex() {
-<span class="fc" id="L499">      return index;</span>
+<span class="fc" id="L500">      return index;</span>
     }
 
     @NonNull
     public UUID getGuid() {
-<span class="fc" id="L504">      return guid;</span>
+<span class="fc" id="L505">      return guid;</span>
     }
 
     @NonNull
     protected abstract ReportingDescriptor generate();
   }
 
-<span class="fc" id="L511">  private final class SchemaRuleRecord</span>
+<span class="fc" id="L512">  private final class SchemaRuleRecord</span>
       extends AbstractRuleRecord {
 
     @Override
     protected ReportingDescriptor generate() {
-<span class="nc" id="L516">      ReportingDescriptor retval = new ReportingDescriptor();</span>
-<span class="nc" id="L517">      retval.setId(getId());</span>
-<span class="nc" id="L518">      retval.setGuid(getGuid());</span>
-<span class="nc" id="L519">      return retval;</span>
+<span class="nc" id="L517">      ReportingDescriptor retval = new ReportingDescriptor();</span>
+<span class="nc" id="L518">      retval.setId(getId());</span>
+<span class="nc" id="L519">      retval.setGuid(getGuid());</span>
+<span class="nc" id="L520">      return retval;</span>
     }
 
     public String getId() {
-<span class="nc" id="L523">      return &quot;schema-valid&quot;;</span>
+<span class="nc" id="L524">      return &quot;schema-valid&quot;;</span>
     }
   }
 
@@ -529,69 +530,69 @@ public final class SarifValidationHandler {
     @NonNull
     private final IConstraint constraint;
 
-<span class="fc" id="L532">    public ConstraintRuleRecord(@NonNull IConstraint constraint) {</span>
-<span class="fc" id="L533">      this.constraint = constraint;</span>
-<span class="fc" id="L534">    }</span>
+<span class="fc" id="L533">    public ConstraintRuleRecord(@NonNull IConstraint constraint) {</span>
+<span class="fc" id="L534">      this.constraint = constraint;</span>
+<span class="fc" id="L535">    }</span>
 
     @NonNull
     public IConstraint getConstraint() {
-<span class="fc" id="L538">      return constraint;</span>
+<span class="fc" id="L539">      return constraint;</span>
     }
 
     @Override
     protected ReportingDescriptor generate() {
-<span class="fc" id="L543">      ReportingDescriptor retval = new ReportingDescriptor();</span>
-<span class="fc" id="L544">      IConstraint constraint = getConstraint();</span>
+<span class="fc" id="L544">      ReportingDescriptor retval = new ReportingDescriptor();</span>
+<span class="fc" id="L545">      IConstraint constraint = getConstraint();</span>
 
-<span class="fc" id="L546">      UUID guid = getGuid();</span>
+<span class="fc" id="L547">      UUID guid = getGuid();</span>
 
-<span class="fc" id="L548">      String id = constraint.getId();</span>
-<span class="pc bpc" id="L549" title="1 of 2 branches missed.">      if (id == null) {</span>
-<span class="fc" id="L550">        retval.setId(guid.toString());</span>
+<span class="fc" id="L549">      String id = constraint.getId();</span>
+<span class="pc bpc" id="L550" title="1 of 2 branches missed.">      if (id == null) {</span>
+<span class="fc" id="L551">        retval.setId(guid.toString());</span>
       } else {
-<span class="nc" id="L552">        retval.setId(id);</span>
+<span class="nc" id="L553">        retval.setId(id);</span>
       }
-<span class="fc" id="L554">      retval.setGuid(guid);</span>
-<span class="fc" id="L555">      String formalName = constraint.getFormalName();</span>
-<span class="pc bpc" id="L556" title="1 of 2 branches missed.">      if (formalName != null) {</span>
-<span class="fc" id="L557">        MultiformatMessageString text = new MultiformatMessageString();</span>
-<span class="fc" id="L558">        text.setText(formalName);</span>
-<span class="fc" id="L559">        retval.setShortDescription(text);</span>
+<span class="fc" id="L555">      retval.setGuid(guid);</span>
+<span class="fc" id="L556">      String formalName = constraint.getFormalName();</span>
+<span class="pc bpc" id="L557" title="1 of 2 branches missed.">      if (formalName != null) {</span>
+<span class="fc" id="L558">        MultiformatMessageString text = new MultiformatMessageString();</span>
+<span class="fc" id="L559">        text.setText(formalName);</span>
+<span class="fc" id="L560">        retval.setShortDescription(text);</span>
       }
-<span class="fc" id="L561">      MarkupLine description = constraint.getDescription();</span>
-<span class="pc bpc" id="L562" title="1 of 2 branches missed.">      if (description != null) {</span>
-<span class="fc" id="L563">        MultiformatMessageString text = new MultiformatMessageString();</span>
-<span class="fc" id="L564">        text.setText(description.toText());</span>
-<span class="fc" id="L565">        text.setMarkdown(description.toMarkdown());</span>
-<span class="fc" id="L566">        retval.setFullDescription(text);</span>
-      }
-
-<span class="fc" id="L569">      Set&lt;String&gt; helpUrls = constraint.getPropertyValues(SARIF_HELP_URL_KEY);</span>
-<span class="pc bpc" id="L570" title="1 of 2 branches missed.">      if (!helpUrls.isEmpty()) {</span>
-<span class="fc" id="L571">        retval.setHelpUri(URI.create(helpUrls.stream().findFirst().get()));</span>
+<span class="fc" id="L562">      MarkupLine description = constraint.getDescription();</span>
+<span class="pc bpc" id="L563" title="1 of 2 branches missed.">      if (description != null) {</span>
+<span class="fc" id="L564">        MultiformatMessageString text = new MultiformatMessageString();</span>
+<span class="fc" id="L565">        text.setText(description.toText());</span>
+<span class="fc" id="L566">        text.setMarkdown(description.toMarkdown());</span>
+<span class="fc" id="L567">        retval.setFullDescription(text);</span>
       }
 
-<span class="fc" id="L574">      Set&lt;String&gt; helpText = constraint.getPropertyValues(SARIF_HELP_TEXT_KEY);</span>
-<span class="fc" id="L575">      Set&lt;String&gt; helpMarkdown = constraint.getPropertyValues(SARIF_HELP_MARKDOWN_KEY);</span>
+<span class="fc" id="L570">      Set&lt;String&gt; helpUrls = constraint.getPropertyValues(SARIF_HELP_URL_KEY);</span>
+<span class="pc bpc" id="L571" title="1 of 2 branches missed.">      if (!helpUrls.isEmpty()) {</span>
+<span class="fc" id="L572">        retval.setHelpUri(URI.create(helpUrls.stream().findFirst().get()));</span>
+      }
+
+<span class="fc" id="L575">      Set&lt;String&gt; helpText = constraint.getPropertyValues(SARIF_HELP_TEXT_KEY);</span>
+<span class="fc" id="L576">      Set&lt;String&gt; helpMarkdown = constraint.getPropertyValues(SARIF_HELP_MARKDOWN_KEY);</span>
       // if there is help text or markdown, produce a message
-<span class="pc bpc" id="L577" title="2 of 4 branches missed.">      if (!helpText.isEmpty() || !helpMarkdown.isEmpty()) {</span>
-<span class="fc" id="L578">        MultiformatMessageString help = new MultiformatMessageString();</span>
+<span class="pc bpc" id="L578" title="2 of 4 branches missed.">      if (!helpText.isEmpty() || !helpMarkdown.isEmpty()) {</span>
+<span class="fc" id="L579">        MultiformatMessageString help = new MultiformatMessageString();</span>
 
-<span class="fc" id="L580">        MarkupMultiline markdown = helpMarkdown.stream().map(MarkupMultiline::fromMarkdown).findFirst().orElse(null);</span>
-<span class="pc bpc" id="L581" title="1 of 2 branches missed.">        if (markdown != null) {</span>
+<span class="fc" id="L581">        MarkupMultiline markdown = helpMarkdown.stream().map(MarkupMultiline::fromMarkdown).findFirst().orElse(null);</span>
+<span class="pc bpc" id="L582" title="1 of 2 branches missed.">        if (markdown != null) {</span>
           // markdown is provided
-<span class="fc" id="L583">          help.setMarkdown(markdown.toMarkdown());</span>
+<span class="fc" id="L584">          help.setMarkdown(markdown.toMarkdown());</span>
         }
 
-<span class="pc bpc" id="L586" title="1 of 2 branches missed.">        String text = helpText.isEmpty()</span>
-<span class="fc" id="L587">            ? ObjectUtils.requireNonNull(markdown).toText() // if text is empty, markdown must be provided</span>
-<span class="pc" id="L588">            : helpText.stream().findFirst().get(); // use the provided text</span>
-<span class="fc" id="L589">        help.setText(text);</span>
+<span class="pc bpc" id="L587" title="1 of 2 branches missed.">        String text = helpText.isEmpty()</span>
+<span class="fc" id="L588">            ? ObjectUtils.requireNonNull(markdown).toText() // if text is empty, markdown must be provided</span>
+<span class="pc" id="L589">            : helpText.stream().findFirst().get(); // use the provided text</span>
+<span class="fc" id="L590">        help.setText(text);</span>
 
-<span class="fc" id="L591">        retval.setHelp(help);</span>
+<span class="fc" id="L592">        retval.setHelp(help);</span>
       }
 
-<span class="fc" id="L594">      return retval;</span>
+<span class="fc" id="L595">      return retval;</span>
     }
 
   }
@@ -601,31 +602,31 @@ public final class SarifValidationHandler {
     private final URI uri;
     private final int index;
 
-<span class="fc" id="L604">    public ArtifactRecord(@NonNull URI uri) {</span>
-<span class="fc" id="L605">      this.uri = uri;</span>
-<span class="fc" id="L606">      this.index = artifactIndex.addAndGet(1);</span>
-<span class="fc" id="L607">    }</span>
+<span class="fc" id="L605">    public ArtifactRecord(@NonNull URI uri) {</span>
+<span class="fc" id="L606">      this.uri = uri;</span>
+<span class="fc" id="L607">      this.index = artifactIndex.addAndGet(1);</span>
+<span class="fc" id="L608">    }</span>
 
     @NonNull
     public URI getUri() {
-<span class="fc" id="L611">      return uri;</span>
+<span class="fc" id="L612">      return uri;</span>
     }
 
     public int getIndex() {
-<span class="fc" id="L615">      return index;</span>
+<span class="fc" id="L616">      return index;</span>
     }
 
     public ArtifactLocation generateArtifactLocation(@NonNull URI baseUri) throws IOException {
-<span class="fc" id="L619">      ArtifactLocation location = new ArtifactLocation();</span>
+<span class="fc" id="L620">      ArtifactLocation location = new ArtifactLocation();</span>
 
       try {
-<span class="fc" id="L622">        location.setUri(UriUtils.relativize(baseUri, getUri(), true));</span>
-<span class="nc" id="L623">      } catch (URISyntaxException ex) {</span>
-<span class="nc" id="L624">        throw new IOException(ex);</span>
-<span class="fc" id="L625">      }</span>
+<span class="fc" id="L623">        location.setUri(UriUtils.relativize(baseUri, getUri(), true));</span>
+<span class="nc" id="L624">      } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L625">        throw new IOException(ex);</span>
+<span class="fc" id="L626">      }</span>
 
-<span class="fc" id="L627">      location.setIndex(BigInteger.valueOf(getIndex()));</span>
-<span class="fc" id="L628">      return location;</span>
+<span class="fc" id="L628">      location.setIndex(BigInteger.valueOf(getIndex()));</span>
+<span class="fc" id="L629">      return location;</span>
     }
   }
 }

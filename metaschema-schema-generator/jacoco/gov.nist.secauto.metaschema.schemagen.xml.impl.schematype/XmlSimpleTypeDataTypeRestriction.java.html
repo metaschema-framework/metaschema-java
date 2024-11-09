@@ -65,7 +65,7 @@ public class XmlSimpleTypeDataTypeRestriction
 <span class="fc" id="L65">        state.writeAttribute(&quot;value&quot;, allowedValue.getValue());</span>
 
 <span class="fc" id="L67">        MarkupLine description = allowedValue.getDescription();</span>
-<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!description.isEmpty()) {</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if (!description.isEmpty()) {</span>
 <span class="fc" id="L69">          generateDescriptionAnnotation(</span>
               description,
 <span class="fc" id="L71">              ObjectUtils.notNull(getQName().getNamespaceURI()),</span>

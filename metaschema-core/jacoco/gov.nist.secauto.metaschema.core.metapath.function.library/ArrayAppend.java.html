@@ -62,9 +62,10 @@ public final class ArrayAppend {
       IItem focus) {
 <span class="fc" id="L63">    IArrayItem&lt;T&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(</span>
 <span class="fc" id="L64">        arguments.get(0).getFirstItem(true)));</span>
-<span class="fc" id="L65">    @SuppressWarnings(&quot;unchecked&quot;) T appendage = (T) arguments.get(1).toCollectionValue();</span>
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L66">    T appendage = (T) arguments.get(1).toCollectionValue();</span>
 
-<span class="fc" id="L67">    return ISequence.of(append(array, appendage));</span>
+<span class="fc" id="L68">    return ISequence.of(append(array, appendage));</span>
   }
 
   /**
@@ -84,10 +85,10 @@ public final class ArrayAppend {
       @NonNull IArrayItem&lt;T&gt; array,
       @NonNull T appendage) {
 
-<span class="fc" id="L87">    List&lt;T&gt; copy = new ArrayList&lt;&gt;(array);</span>
-<span class="fc" id="L88">    copy.add(appendage);</span>
+<span class="fc" id="L88">    List&lt;T&gt; copy = new ArrayList&lt;&gt;(array);</span>
+<span class="fc" id="L89">    copy.add(appendage);</span>
 
-<span class="fc" id="L90">    return IArrayItem.ofCollection(copy);</span>
+<span class="fc" id="L91">    return IArrayItem.ofCollection(copy);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

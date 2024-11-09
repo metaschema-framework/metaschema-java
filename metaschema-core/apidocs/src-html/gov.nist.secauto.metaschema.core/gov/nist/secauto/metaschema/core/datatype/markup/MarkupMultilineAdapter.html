@@ -75,33 +75,34 @@
 <span class="source-line-no">062</span><span id="line-62"></span>
 <span class="source-line-no">063</span><span id="line-63">  @Override</span>
 <span class="source-line-no">064</span><span id="line-64">  public MarkupMultiline parse(JsonParser parser) throws IOException {</span>
-<span class="source-line-no">065</span><span id="line-65">    @SuppressWarnings("null") MarkupMultiline retval = parse(parser.getValueAsString());</span>
-<span class="source-line-no">066</span><span id="line-66">    // skip past value</span>
-<span class="source-line-no">067</span><span id="line-67">    parser.nextToken();</span>
-<span class="source-line-no">068</span><span id="line-68">    return retval;</span>
-<span class="source-line-no">069</span><span id="line-69">  }</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  @Override</span>
-<span class="source-line-no">072</span><span id="line-72">  public boolean canHandleQName(QName nextQName) {</span>
-<span class="source-line-no">073</span><span id="line-73">    return true;</span>
-<span class="source-line-no">074</span><span id="line-74">  }</span>
-<span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">  @Override</span>
-<span class="source-line-no">077</span><span id="line-77">  public String getDefaultJsonValueKey() {</span>
-<span class="source-line-no">078</span><span id="line-78">    return "PROSE";</span>
-<span class="source-line-no">079</span><span id="line-79">  }</span>
-<span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">  @Override</span>
-<span class="source-line-no">082</span><span id="line-82">  public Class&lt;IMarkupItem&gt; getItemClass() {</span>
-<span class="source-line-no">083</span><span id="line-83">    return IMarkupItem.class;</span>
-<span class="source-line-no">084</span><span id="line-84">  }</span>
-<span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">  @Override</span>
-<span class="source-line-no">087</span><span id="line-87">  public IMarkupItem newItem(Object value) {</span>
-<span class="source-line-no">088</span><span id="line-88">    MarkupMultiline item = toValue(value);</span>
-<span class="source-line-no">089</span><span id="line-89">    return IMarkupItem.valueOf(item);</span>
-<span class="source-line-no">090</span><span id="line-90">  }</span>
-<span class="source-line-no">091</span><span id="line-91">}</span>
+<span class="source-line-no">065</span><span id="line-65">    @SuppressWarnings("null")</span>
+<span class="source-line-no">066</span><span id="line-66">    MarkupMultiline retval = parse(parser.getValueAsString());</span>
+<span class="source-line-no">067</span><span id="line-67">    // skip past value</span>
+<span class="source-line-no">068</span><span id="line-68">    parser.nextToken();</span>
+<span class="source-line-no">069</span><span id="line-69">    return retval;</span>
+<span class="source-line-no">070</span><span id="line-70">  }</span>
+<span class="source-line-no">071</span><span id="line-71"></span>
+<span class="source-line-no">072</span><span id="line-72">  @Override</span>
+<span class="source-line-no">073</span><span id="line-73">  public boolean canHandleQName(QName nextQName) {</span>
+<span class="source-line-no">074</span><span id="line-74">    return true;</span>
+<span class="source-line-no">075</span><span id="line-75">  }</span>
+<span class="source-line-no">076</span><span id="line-76"></span>
+<span class="source-line-no">077</span><span id="line-77">  @Override</span>
+<span class="source-line-no">078</span><span id="line-78">  public String getDefaultJsonValueKey() {</span>
+<span class="source-line-no">079</span><span id="line-79">    return "PROSE";</span>
+<span class="source-line-no">080</span><span id="line-80">  }</span>
+<span class="source-line-no">081</span><span id="line-81"></span>
+<span class="source-line-no">082</span><span id="line-82">  @Override</span>
+<span class="source-line-no">083</span><span id="line-83">  public Class&lt;IMarkupItem&gt; getItemClass() {</span>
+<span class="source-line-no">084</span><span id="line-84">    return IMarkupItem.class;</span>
+<span class="source-line-no">085</span><span id="line-85">  }</span>
+<span class="source-line-no">086</span><span id="line-86"></span>
+<span class="source-line-no">087</span><span id="line-87">  @Override</span>
+<span class="source-line-no">088</span><span id="line-88">  public IMarkupItem newItem(Object value) {</span>
+<span class="source-line-no">089</span><span id="line-89">    MarkupMultiline item = toValue(value);</span>
+<span class="source-line-no">090</span><span id="line-90">    return IMarkupItem.valueOf(item);</span>
+<span class="source-line-no">091</span><span id="line-91">  }</span>
+<span class="source-line-no">092</span><span id="line-92">}</span>
 
 
 

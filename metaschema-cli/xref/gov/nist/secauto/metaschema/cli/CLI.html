@@ -53,24 +53,25 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> ExitStatus runCli(String... args) {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      System.setProperty(<span class="jxr_string">"java.util.logging.manager"</span>, <span class="jxr_string">"org.apache.logging.log4j.jul.LogManager"</span>);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      @SuppressWarnings(<span class="jxr_string">"PMD.UseConcurrentHashMap"</span>) Map&lt;String, IVersionInfo&gt; versions = <strong class="jxr_keyword">new</strong> LinkedHashMap&lt;&gt;();
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      versions.put(CLIProcessor.COMMAND_VERSION, <strong class="jxr_keyword">new</strong> MetaschemaJavaVersion());
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      versions.put(MetaschemaConstants.METASCHEMA_NAMESPACE, <strong class="jxr_keyword">new</strong> MetaschemaVersion());
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      CLIProcessor processor = <strong class="jxr_keyword">new</strong> CLIProcessor(<span class="jxr_string">"metaschema-cli"</span>, versions);
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>      CommandService.getInstance().getCommands().stream().forEach(command -&gt; {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>        assert command != <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>        processor.addCommandHandler(command);
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      });
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">return</strong> processor.process(args);
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    }
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">private</strong> <a name="CLI" href="../../../../../gov/nist/secauto/metaschema/cli/CLI.html#CLI">CLI</a>() {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      <em class="jxr_comment">// disable construction</em>
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>    }
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  }
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      @SuppressWarnings(<span class="jxr_string">"PMD.UseConcurrentHashMap"</span>)
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      Map&lt;String, IVersionInfo&gt; versions = <strong class="jxr_keyword">new</strong> LinkedHashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      versions.put(CLIProcessor.COMMAND_VERSION, <strong class="jxr_keyword">new</strong> MetaschemaJavaVersion());
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      versions.put(MetaschemaConstants.METASCHEMA_NAMESPACE, <strong class="jxr_keyword">new</strong> MetaschemaVersion());
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      CLIProcessor processor = <strong class="jxr_keyword">new</strong> CLIProcessor(<span class="jxr_string">"metaschema-cli"</span>, versions);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      CommandService.getInstance().getCommands().stream().forEach(command -&gt; {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>        assert command != <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>        processor.addCommandHandler(command);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      });
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">return</strong> processor.process(args);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>    }
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">private</strong> <a name="CLI" href="../../../../../gov/nist/secauto/metaschema/cli/CLI.html#CLI">CLI</a>() {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <em class="jxr_comment">// disable construction</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

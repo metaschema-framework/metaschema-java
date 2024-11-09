@@ -53,26 +53,32 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    @SuppressWarnings(<span class="jxr_string">"null"</span>)
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    @Override
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">public</strong> UUID parse(String value) {
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">return</strong> UUID.fromString(value);
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Override
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">public</strong> UUID copy(Object obj) {
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <em class="jxr_comment">// a UUID is immutable</em>
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">return</strong> (UUID) obj;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>        <strong class="jxr_keyword">return</strong> UUID.fromString(value);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException ex) {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>            String.format(<span class="jxr_string">"Value '%s' is not a valid UUID."</span>, value),
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>            ex);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      }
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    }
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Override
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">public</strong> Class&lt;IUuidItem&gt; getItemClass() {
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">return</strong> IUuidItem.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    }
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Override
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">public</strong> <a name="IUuidItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IUuidItem.html#IUuidItem">IUuidItem</a> newItem(Object value) {
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      UUID item = toValue(value);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">return</strong> IUuidItem.valueOf(item);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">public</strong> UUID copy(Object obj) {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <em class="jxr_comment">// a UUID is immutable</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">return</strong> (UUID) obj;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>    }
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    @Override
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">public</strong> Class&lt;IUuidItem&gt; getItemClass() {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">return</strong> IUuidItem.<strong class="jxr_keyword">class</strong>;
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  }
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    @Override
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">public</strong> <a name="IUuidItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IUuidItem.html#IUuidItem">IUuidItem</a> newItem(Object value) {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      UUID item = toValue(value);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">return</strong> IUuidItem.valueOf(item);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

@@ -83,36 +83,38 @@
 <span class="source-line-no">070</span><span id="line-70">      IItem focus) {</span>
 <span class="source-line-no">071</span><span id="line-71">    IMapItem&lt;V&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
 <span class="source-line-no">072</span><span id="line-72">    IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">073</span><span id="line-73">    @SuppressWarnings("unchecked") V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
-<span class="source-line-no">074</span><span id="line-74"></span>
-<span class="source-line-no">075</span><span id="line-75">    return put(map, key, value).asSequence();</span>
-<span class="source-line-no">076</span><span id="line-76">  }</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">  /**</span>
-<span class="source-line-no">079</span><span id="line-79">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">080</span><span id="line-80">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-put"&gt;map:put&lt;/a&gt;.</span>
-<span class="source-line-no">081</span><span id="line-81">   *</span>
-<span class="source-line-no">082</span><span id="line-82">   * @param &lt;V&gt;</span>
-<span class="source-line-no">083</span><span id="line-83">   *          the type of items in the given Metapath map</span>
-<span class="source-line-no">084</span><span id="line-84">   * @param map</span>
-<span class="source-line-no">085</span><span id="line-85">   *          the map of Metapath items that is to be modified</span>
-<span class="source-line-no">086</span><span id="line-86">   * @param key</span>
-<span class="source-line-no">087</span><span id="line-87">   *          the key for the value to add to the map</span>
-<span class="source-line-no">088</span><span id="line-88">   * @param value</span>
-<span class="source-line-no">089</span><span id="line-89">   *          the value to add to the map</span>
-<span class="source-line-no">090</span><span id="line-90">   * @return the modified map</span>
-<span class="source-line-no">091</span><span id="line-91">   */</span>
-<span class="source-line-no">092</span><span id="line-92">  @NonNull</span>
-<span class="source-line-no">093</span><span id="line-93">  public static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; put(</span>
-<span class="source-line-no">094</span><span id="line-94">      @NonNull IMapItem&lt;V&gt; map,</span>
-<span class="source-line-no">095</span><span id="line-95">      @NonNull IAnyAtomicItem key,</span>
-<span class="source-line-no">096</span><span id="line-96">      @NonNull V value) {</span>
-<span class="source-line-no">097</span><span id="line-97">    @SuppressWarnings("PMD.UseConcurrentHashMap") Map&lt;IMapKey, V&gt; copy = new HashMap&lt;&gt;(map);</span>
-<span class="source-line-no">098</span><span id="line-98">    copy.put(key.asMapKey(), value);</span>
-<span class="source-line-no">099</span><span id="line-99"></span>
-<span class="source-line-no">100</span><span id="line-100">    return IMapItem.ofCollection(copy);</span>
-<span class="source-line-no">101</span><span id="line-101">  }</span>
-<span class="source-line-no">102</span><span id="line-102">}</span>
+<span class="source-line-no">073</span><span id="line-73">    @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">074</span><span id="line-74">    V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">    return put(map, key, value).asSequence();</span>
+<span class="source-line-no">077</span><span id="line-77">  }</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">  /**</span>
+<span class="source-line-no">080</span><span id="line-80">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">081</span><span id="line-81">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-put"&gt;map:put&lt;/a&gt;.</span>
+<span class="source-line-no">082</span><span id="line-82">   *</span>
+<span class="source-line-no">083</span><span id="line-83">   * @param &lt;V&gt;</span>
+<span class="source-line-no">084</span><span id="line-84">   *          the type of items in the given Metapath map</span>
+<span class="source-line-no">085</span><span id="line-85">   * @param map</span>
+<span class="source-line-no">086</span><span id="line-86">   *          the map of Metapath items that is to be modified</span>
+<span class="source-line-no">087</span><span id="line-87">   * @param key</span>
+<span class="source-line-no">088</span><span id="line-88">   *          the key for the value to add to the map</span>
+<span class="source-line-no">089</span><span id="line-89">   * @param value</span>
+<span class="source-line-no">090</span><span id="line-90">   *          the value to add to the map</span>
+<span class="source-line-no">091</span><span id="line-91">   * @return the modified map</span>
+<span class="source-line-no">092</span><span id="line-92">   */</span>
+<span class="source-line-no">093</span><span id="line-93">  @NonNull</span>
+<span class="source-line-no">094</span><span id="line-94">  public static &lt;V extends ICollectionValue&gt; IMapItem&lt;V&gt; put(</span>
+<span class="source-line-no">095</span><span id="line-95">      @NonNull IMapItem&lt;V&gt; map,</span>
+<span class="source-line-no">096</span><span id="line-96">      @NonNull IAnyAtomicItem key,</span>
+<span class="source-line-no">097</span><span id="line-97">      @NonNull V value) {</span>
+<span class="source-line-no">098</span><span id="line-98">    @SuppressWarnings("PMD.UseConcurrentHashMap")</span>
+<span class="source-line-no">099</span><span id="line-99">    Map&lt;IMapKey, V&gt; copy = new HashMap&lt;&gt;(map);</span>
+<span class="source-line-no">100</span><span id="line-100">    copy.put(key.asMapKey(), value);</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">    return IMapItem.ofCollection(copy);</span>
+<span class="source-line-no">103</span><span id="line-103">  }</span>
+<span class="source-line-no">104</span><span id="line-104">}</span>
 
 
 

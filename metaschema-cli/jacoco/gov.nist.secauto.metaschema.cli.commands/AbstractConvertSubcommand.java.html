@@ -145,13 +145,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="nc" id="L145">            handleConversion(source, toFormat, writer, loader);</span>
           }
         }
-<span class="nc" id="L148">      } catch (IOException | IllegalArgumentException ex) {</span>
+<span class="nc" id="L148">      } catch (IllegalArgumentException ex) {</span>
 <span class="nc" id="L149">        throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);</span>
-<span class="fc" id="L150">      }</span>
-<span class="pc bpc" id="L151" title="3 of 4 branches missed.">      if (destination != null &amp;&amp; LOGGER.isInfoEnabled()) {</span>
-<span class="nc" id="L152">        LOGGER.info(&quot;Generated {} file: {}&quot;, toFormat.toString(), destination);</span>
+<span class="nc" id="L150">      } catch (IOException ex) {</span>
+<span class="nc" id="L151">        throw new CommandExecutionException(ExitCode.IO_ERROR, ex);</span>
+<span class="fc" id="L152">      }</span>
+<span class="pc bpc" id="L153" title="3 of 4 branches missed.">      if (destination != null &amp;&amp; LOGGER.isInfoEnabled()) {</span>
+<span class="nc" id="L154">        LOGGER.info(&quot;Generated {} file: {}&quot;, toFormat.toString(), destination);</span>
       }
-<span class="fc" id="L154">    }</span>
+<span class="fc" id="L156">    }</span>
 
     /**
      * Called to perform a content conversion.

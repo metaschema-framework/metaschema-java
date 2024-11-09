@@ -105,16 +105,17 @@ public final class TypeSystem {
 
   @NonNull
   private static Stream&lt;Class&lt;? extends IItem&gt;&gt; getItemInterfaces(@NonNull Class&lt;?&gt; clazz) {
-<span class="pc bpc" id="L108" title="1 of 2 branches missed.">    @SuppressWarnings(&quot;unchecked&quot;) Stream&lt;Class&lt;? extends IItem&gt;&gt; retval = IItem.class.isAssignableFrom(clazz)</span>
-<span class="fc" id="L109">        ? Stream.of((Class&lt;? extends IItem&gt;) clazz)</span>
-<span class="pc" id="L110">        : Stream.empty();</span>
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">    Stream&lt;Class&lt;? extends IItem&gt;&gt; retval = IItem.class.isAssignableFrom(clazz)</span>
+<span class="fc" id="L110">        ? Stream.of((Class&lt;? extends IItem&gt;) clazz)</span>
+<span class="pc" id="L111">        : Stream.empty();</span>
 
-<span class="fc" id="L112">    Class&lt;?&gt;[] interfaces = clazz.getInterfaces();</span>
-<span class="pc bpc" id="L113" title="1 of 2 branches missed.">    if (interfaces.length &gt; 0) {</span>
-<span class="fc" id="L114">      retval = Stream.concat(retval, Arrays.stream(interfaces).flatMap(TypeSystem::getItemInterfaces));</span>
+<span class="fc" id="L113">    Class&lt;?&gt;[] interfaces = clazz.getInterfaces();</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">    if (interfaces.length &gt; 0) {</span>
+<span class="fc" id="L115">      retval = Stream.concat(retval, Arrays.stream(interfaces).flatMap(TypeSystem::getItemInterfaces));</span>
     }
 
-<span class="fc" id="L117">    return ObjectUtils.notNull(retval);</span>
+<span class="fc" id="L118">    return ObjectUtils.notNull(retval);</span>
   }
 
   /**
@@ -125,16 +126,16 @@ public final class TypeSystem {
    * @return the name or {@code null} if no name is registered for the item class
    */
   public static String getName(@NonNull Class&lt;? extends IItem&gt; clazz) {
-<span class="fc" id="L128">    Class&lt;? extends IItem&gt; itemClass = getItemInterfaces(clazz).findFirst().orElse(null);</span>
+<span class="fc" id="L129">    Class&lt;? extends IItem&gt; itemClass = getItemInterfaces(clazz).findFirst().orElse(null);</span>
 
-<span class="fc" id="L130">    QName qname = ITEM_CLASS_TO_QNAME_MAP.get(itemClass);</span>
-<span class="pc bpc" id="L131" title="1 of 2 branches missed.">    return qname == null ? clazz.getName() : asPrefixedName(qname);</span>
+<span class="fc" id="L131">    QName qname = ITEM_CLASS_TO_QNAME_MAP.get(itemClass);</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">    return qname == null ? clazz.getName() : asPrefixedName(qname);</span>
   }
 
   private static String asPrefixedName(@NonNull QName qname) {
-<span class="fc" id="L135">    String namespace = qname.getNamespaceURI();</span>
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">    String prefix = namespace.isEmpty() ? null : StaticContext.getWellKnownPrefixForUri(namespace);</span>
-<span class="pc bpc" id="L137" title="1 of 2 branches missed.">    return prefix == null ? qname.toString() : prefix + &quot;:&quot; + qname.getLocalPart();</span>
+<span class="fc" id="L136">    String namespace = qname.getNamespaceURI();</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">    String prefix = namespace.isEmpty() ? null : StaticContext.getWellKnownPrefixForUri(namespace);</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">    return prefix == null ? qname.toString() : prefix + &quot;:&quot; + qname.getLocalPart();</span>
   }
 
   private TypeSystem() {

@@ -48,8 +48,9 @@ public interface INamed {
   // from INamedModelElement
   @NonNull
   default String getEffectiveName() {
-<span class="fc" id="L51">    @Nullable String useName = getUseName();</span>
-<span class="fc bfc" id="L52" title="All 2 branches covered.">    return useName == null ? getName() : useName;</span>
+    @Nullable
+<span class="fc" id="L52">    String useName = getUseName();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">    return useName == null ? getName() : useName;</span>
   }
 
   /**
@@ -62,7 +63,7 @@ public interface INamed {
    */
   @Nullable
   default String getXmlNamespace() {
-<span class="nc" id="L65">    return getXmlQName().getNamespaceURI();</span>
+<span class="nc" id="L66">    return getXmlQName().getNamespaceURI();</span>
   }
 
   /**
@@ -98,7 +99,7 @@ public interface INamed {
   @Nullable
   default Integer getIndex() {
     // no index by default
-<span class="nc" id="L101">    return null;</span>
+<span class="nc" id="L102">    return null;</span>
   }
 
   /**
@@ -110,7 +111,7 @@ public interface INamed {
   @Nullable
   default Integer getUseIndex() {
     // no use-name index by default
-<span class="nc" id="L113">    return null;</span>
+<span class="nc" id="L114">    return null;</span>
   }
 
   /**
@@ -126,8 +127,9 @@ public interface INamed {
   // from INamedModelElement
   @Nullable
   default Integer getEffectiveIndex() {
-<span class="nc" id="L129">    @Nullable Integer useIndex = getUseIndex();</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">    return useIndex == null ? getIndex() : useIndex;</span>
+    @Nullable
+<span class="nc" id="L131">    Integer useIndex = getUseIndex();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">    return useIndex == null ? getIndex() : useIndex;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

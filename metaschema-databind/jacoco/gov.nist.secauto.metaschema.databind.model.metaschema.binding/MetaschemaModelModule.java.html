@@ -84,50 +84,51 @@ public final class MetaschemaModelModule
   private static final Map&lt;String, String&gt; NAMESPACE_BINDINGS;
 
   static {
-<span class="fc" id="L87">    @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;) Map&lt;String, String&gt; bindings = new LinkedHashMap&lt;&gt;();</span>
+    @SuppressWarnings(&quot;PMD.UseConcurrentHashMap&quot;)
+<span class="fc" id="L88">    Map&lt;String, String&gt; bindings = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="fc" id="L89">    NAMESPACE_BINDINGS = bindings;</span>
-<span class="fc" id="L90">  }</span>
+<span class="fc" id="L90">    NAMESPACE_BINDINGS = bindings;</span>
+<span class="fc" id="L91">  }</span>
 
   public MetaschemaModelModule(
       @NonNull List&lt;? extends IBoundModule&gt; importedModules,
       @NonNull IBindingContext bindingContext) {
-<span class="fc" id="L95">    super(importedModules, bindingContext);</span>
-<span class="fc" id="L96">  }</span>
+<span class="fc" id="L96">    super(importedModules, bindingContext);</span>
+<span class="fc" id="L97">  }</span>
 
   @Override
   public MarkupLine getName() {
-<span class="nc" id="L100">    return NAME;</span>
+<span class="nc" id="L101">    return NAME;</span>
   }
 
   @Override
   public String getShortName() {
-<span class="nc" id="L105">    return SHORT_NAME;</span>
+<span class="nc" id="L106">    return SHORT_NAME;</span>
   }
 
   @Override
   public String getVersion() {
-<span class="nc" id="L110">    return VERSION;</span>
+<span class="nc" id="L111">    return VERSION;</span>
   }
 
   @Override
   public URI getXmlNamespace() {
-<span class="fc" id="L115">    return XML_NAMESPACE;</span>
+<span class="fc" id="L116">    return XML_NAMESPACE;</span>
   }
 
   @Override
   public URI getJsonBaseUri() {
-<span class="nc" id="L120">    return JSON_BASE_URI;</span>
+<span class="nc" id="L121">    return JSON_BASE_URI;</span>
   }
 
   @Override
   public MarkupMultiline getRemarks() {
-<span class="nc" id="L125">    return null;</span>
+<span class="nc" id="L126">    return null;</span>
   }
 
   @Override
   public Map&lt;String, String&gt; getNamespaceBindings() {
-<span class="fc" id="L130">    return NAMESPACE_BINDINGS;</span>
+<span class="fc" id="L131">    return NAMESPACE_BINDINGS;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

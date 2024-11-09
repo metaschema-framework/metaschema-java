@@ -343,15 +343,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
     @Override
     @NonNull
     public BasedSequence[] getSegments() {
-<span class="nc" id="L346">      @NonNull BasedSequence[] retval = { getType(), getIdReference() };</span>
-<span class="nc" id="L347">      return retval;</span>
+      @NonNull
+<span class="nc" id="L347">      BasedSequence[] retval = { getType(), getIdReference() };</span>
+<span class="nc" id="L348">      return retval;</span>
     }
 
     @Override
     public void getAstExtra(StringBuilder out) {
-<span class="fc" id="L352">      segmentSpanChars(out, getType(), &quot;type&quot;);</span>
-<span class="fc" id="L353">      segmentSpanChars(out, getIdReference(), &quot;id-ref&quot;);</span>
-<span class="fc" id="L354">    }</span>
+<span class="fc" id="L353">      segmentSpanChars(out, getType(), &quot;type&quot;);</span>
+<span class="fc" id="L354">      segmentSpanChars(out, getIdReference(), &quot;id-ref&quot;);</span>
+<span class="fc" id="L355">    }</span>
   }
 
   /**
@@ -359,7 +360,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
    */
   public static class InsertVisitor
       extends NodeVisitorBase {
-<span class="nc" id="L362">    @NonNull</span>
+<span class="nc" id="L363">    @NonNull</span>
     private final List&lt;InsertAnchorNode&gt; inserts = new LinkedList&lt;&gt;();
     @NonNull
     private final Predicate&lt;InsertAnchorNode&gt; filter;
@@ -371,9 +372,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
      * @param filter
      *          the match criteria to use to identify matching insert nodes
      */
-<span class="nc" id="L374">    public InsertVisitor(@NonNull Predicate&lt;InsertAnchorNode&gt; filter) {</span>
-<span class="nc" id="L375">      this.filter = filter;</span>
-<span class="nc" id="L376">    }</span>
+<span class="nc" id="L375">    public InsertVisitor(@NonNull Predicate&lt;InsertAnchorNode&gt; filter) {</span>
+<span class="nc" id="L376">      this.filter = filter;</span>
+<span class="nc" id="L377">    }</span>
 
     /**
      * Process markup to identify insert nodes.
@@ -383,21 +384,21 @@ import edu.umd.cs.findbugs.annotations.NonNull;
      * @return this visitor
      */
     public InsertVisitor processNode(@NonNull IMarkupString&lt;?&gt; markup) {
-<span class="nc" id="L386">      visit(markup.getDocument());</span>
-<span class="nc" id="L387">      return this;</span>
+<span class="nc" id="L387">      visit(markup.getDocument());</span>
+<span class="nc" id="L388">      return this;</span>
     }
 
     @Override
     protected void visit(Node node) {
-<span class="nc bnc" id="L392" title="All 2 branches missed.">      if (node instanceof InsertAnchorNode) {</span>
-<span class="nc" id="L393">        InsertAnchorNode insert = (InsertAnchorNode) node;</span>
-<span class="nc bnc" id="L394" title="All 2 branches missed.">        if (filter.test(insert)) {</span>
-<span class="nc" id="L395">          inserts.add((InsertAnchorNode) node);</span>
+<span class="nc bnc" id="L393" title="All 2 branches missed.">      if (node instanceof InsertAnchorNode) {</span>
+<span class="nc" id="L394">        InsertAnchorNode insert = (InsertAnchorNode) node;</span>
+<span class="nc bnc" id="L395" title="All 2 branches missed.">        if (filter.test(insert)) {</span>
+<span class="nc" id="L396">          inserts.add((InsertAnchorNode) node);</span>
         }
-<span class="nc" id="L397">      } else {</span>
-<span class="nc" id="L398">        visitChildren(node);</span>
+<span class="nc" id="L398">      } else {</span>
+<span class="nc" id="L399">        visitChildren(node);</span>
       }
-<span class="nc" id="L400">    }</span>
+<span class="nc" id="L401">    }</span>
 
     /**
      * Get the collected insert nodes.
@@ -406,7 +407,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
      */
     @NonNull
     public List&lt;InsertAnchorNode&gt; getInserts() {
-<span class="nc" id="L409">      return inserts;</span>
+<span class="nc" id="L410">      return inserts;</span>
     }
   }
 }

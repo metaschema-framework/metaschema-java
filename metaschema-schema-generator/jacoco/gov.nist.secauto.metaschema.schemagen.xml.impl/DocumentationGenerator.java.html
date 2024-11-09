@@ -24,82 +24,86 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class DocumentationGenerator {
 
-  private final @Nullable String formalName;
-  private final @Nullable MarkupLine description;
-  private final @NonNull List&lt;MarkupMultiline&gt; remarks;
-  private final @NonNull IModelElement modelElement;
+  @Nullable
+  private final String formalName;
+  @Nullable
+  private final MarkupLine description;
+  @NonNull
+  private final List&lt;MarkupMultiline&gt; remarks;
+  @NonNull
+  private final IModelElement modelElement;
 
-<span class="fc" id="L32">  private DocumentationGenerator(@NonNull IDefinition definition) {</span>
-<span class="fc" id="L33">    this.formalName = definition.getEffectiveFormalName();</span>
-<span class="fc" id="L34">    this.description = definition.getEffectiveDescription();</span>
+<span class="fc" id="L36">  private DocumentationGenerator(@NonNull IDefinition definition) {</span>
+<span class="fc" id="L37">    this.formalName = definition.getEffectiveFormalName();</span>
+<span class="fc" id="L38">    this.description = definition.getEffectiveDescription();</span>
 
-<span class="fc" id="L36">    MarkupMultiline remarks = definition.getRemarks();</span>
-<span class="fc bfc" id="L37" title="All 2 branches covered.">    this.remarks = remarks == null ? CollectionUtil.emptyList() : CollectionUtil.singletonList(remarks);</span>
+<span class="fc" id="L40">    MarkupMultiline remarks = definition.getRemarks();</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">    this.remarks = remarks == null ? CollectionUtil.emptyList() : CollectionUtil.singletonList(remarks);</span>
 
-<span class="fc" id="L39">    this.modelElement = definition;</span>
-<span class="fc" id="L40">  }</span>
+<span class="fc" id="L43">    this.modelElement = definition;</span>
+<span class="fc" id="L44">  }</span>
 
-<span class="fc" id="L42">  private DocumentationGenerator(@NonNull INamedInstance instance) {</span>
-<span class="fc" id="L43">    this.formalName = instance.getEffectiveFormalName();</span>
-<span class="fc" id="L44">    this.description = instance.getEffectiveDescription();</span>
+<span class="fc" id="L46">  private DocumentationGenerator(@NonNull INamedInstance instance) {</span>
+<span class="fc" id="L47">    this.formalName = instance.getEffectiveFormalName();</span>
+<span class="fc" id="L48">    this.description = instance.getEffectiveDescription();</span>
 
-<span class="fc" id="L46">    List&lt;MarkupMultiline&gt; remarks = new ArrayList&lt;&gt;(2);</span>
-<span class="fc" id="L47">    MarkupMultiline remark = instance.getRemarks();</span>
-<span class="fc bfc" id="L48" title="All 2 branches covered.">    if (remark != null) {</span>
-<span class="fc" id="L49">      remarks.add(remark);</span>
+<span class="fc" id="L50">    List&lt;MarkupMultiline&gt; remarks = new ArrayList&lt;&gt;(2);</span>
+<span class="fc" id="L51">    MarkupMultiline remark = instance.getRemarks();</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">    if (remark != null) {</span>
+<span class="fc" id="L53">      remarks.add(remark);</span>
     }
 
-<span class="fc" id="L52">    remark = instance.getDefinition().getRemarks();</span>
-<span class="fc bfc" id="L53" title="All 2 branches covered.">    if (remark != null) {</span>
-<span class="fc" id="L54">      remarks.add(remark);</span>
+<span class="fc" id="L56">    remark = instance.getDefinition().getRemarks();</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">    if (remark != null) {</span>
+<span class="fc" id="L58">      remarks.add(remark);</span>
     }
 
-<span class="fc" id="L57">    this.remarks = CollectionUtil.listOrEmpty(remarks);</span>
+<span class="fc" id="L61">    this.remarks = CollectionUtil.listOrEmpty(remarks);</span>
 
-<span class="fc" id="L59">    this.modelElement = instance;</span>
-<span class="fc" id="L60">  }</span>
+<span class="fc" id="L63">    this.modelElement = instance;</span>
+<span class="fc" id="L64">  }</span>
 
   @Nullable
   public String getFormalName() {
-<span class="fc" id="L64">    return formalName;</span>
+<span class="fc" id="L68">    return formalName;</span>
   }
 
   @Nullable
   public MarkupLine getDescription() {
-<span class="fc" id="L69">    return description;</span>
+<span class="fc" id="L73">    return description;</span>
   }
 
   @NonNull
   public List&lt;MarkupMultiline&gt; getRemarks() {
-<span class="fc" id="L74">    return remarks;</span>
+<span class="fc" id="L78">    return remarks;</span>
   }
 
   @NonNull
   public IModelElement getModelElement() {
-<span class="fc" id="L79">    return modelElement;</span>
+<span class="fc" id="L83">    return modelElement;</span>
   }
 
   private void generate(@NonNull XmlGenerationState state) {
-<span class="fc" id="L83">    String formalName = getFormalName();</span>
-<span class="fc" id="L84">    MarkupLine description = getDescription();</span>
-<span class="fc" id="L85">    List&lt;MarkupMultiline&gt; remarks = getRemarks();</span>
+<span class="fc" id="L87">    String formalName = getFormalName();</span>
+<span class="fc" id="L88">    MarkupLine description = getDescription();</span>
+<span class="fc" id="L89">    List&lt;MarkupMultiline&gt; remarks = getRemarks();</span>
 
-<span class="pc bpc" id="L87" title="1 of 6 branches missed.">    if (formalName != null || description != null || !remarks.isEmpty()) {</span>
-<span class="fc" id="L88">      generateDocumentation(formalName, description, remarks, state.getNS(getModelElement()), state);</span>
+<span class="pc bpc" id="L91" title="1 of 6 branches missed.">    if (formalName != null || description != null || !remarks.isEmpty()) {</span>
+<span class="fc" id="L92">      generateDocumentation(formalName, description, remarks, state.getNS(getModelElement()), state);</span>
     }
-<span class="fc" id="L90">  }</span>
+<span class="fc" id="L94">  }</span>
 
   public static void generateDocumentation(
       @NonNull IDefinition definition,
       @NonNull XmlGenerationState state) {
-<span class="fc" id="L95">    new DocumentationGenerator(definition).generate(state);</span>
-<span class="fc" id="L96">  }</span>
+<span class="fc" id="L99">    new DocumentationGenerator(definition).generate(state);</span>
+<span class="fc" id="L100">  }</span>
 
   public static void generateDocumentation(
       @NonNull INamedInstance instance,
       @NonNull XmlGenerationState state) {
-<span class="fc" id="L101">    new DocumentationGenerator(instance).generate(state);</span>
-<span class="fc" id="L102">  }</span>
+<span class="fc" id="L105">    new DocumentationGenerator(instance).generate(state);</span>
+<span class="fc" id="L106">  }</span>
 
   public static void generateDocumentation( // NOPMD acceptable complexity
       @Nullable String formalName,
@@ -108,52 +112,52 @@ public final class DocumentationGenerator {
       @NonNull String xmlNS, @NonNull XmlGenerationState state) {
 
     try {
-<span class="fc" id="L111">      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, &quot;annotation&quot;, XmlSchemaGenerator.NS_XML_SCHEMA);</span>
-<span class="pc bpc" id="L112" title="1 of 4 branches missed.">      if (formalName != null || description != null) {</span>
-<span class="fc" id="L113">        state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, &quot;appinfo&quot;, XmlSchemaGenerator.NS_XML_SCHEMA);</span>
+<span class="fc" id="L115">      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, &quot;annotation&quot;, XmlSchemaGenerator.NS_XML_SCHEMA);</span>
+<span class="pc bpc" id="L116" title="1 of 4 branches missed.">      if (formalName != null || description != null) {</span>
+<span class="fc" id="L117">        state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, &quot;appinfo&quot;, XmlSchemaGenerator.NS_XML_SCHEMA);</span>
 
-<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (formalName != null) {</span>
-<span class="fc" id="L116">          state.writeStartElement(xmlNS, &quot;formal-name&quot;);</span>
-<span class="fc" id="L117">          state.writeCharacters(formalName);</span>
-<span class="fc" id="L118">          state.writeEndElement();</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (formalName != null) {</span>
+<span class="fc" id="L120">          state.writeStartElement(xmlNS, &quot;formal-name&quot;);</span>
+<span class="fc" id="L121">          state.writeCharacters(formalName);</span>
+<span class="fc" id="L122">          state.writeEndElement();</span>
         }
 
-<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (description != null) {</span>
-<span class="fc" id="L122">          state.writeStartElement(xmlNS, &quot;description&quot;);</span>
-<span class="fc" id="L123">          description.writeXHtml(xmlNS, state.getXMLStreamWriter());</span>
-<span class="fc" id="L124">          state.writeEndElement();</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if (description != null) {</span>
+<span class="fc" id="L126">          state.writeStartElement(xmlNS, &quot;description&quot;);</span>
+<span class="fc" id="L127">          description.writeXHtml(xmlNS, state.getXMLStreamWriter());</span>
+<span class="fc" id="L128">          state.writeEndElement();</span>
         }
 
-<span class="fc" id="L127">        state.writeEndElement(); // xs:appInfo</span>
+<span class="fc" id="L131">        state.writeEndElement(); // xs:appInfo</span>
       }
 
-<span class="fc" id="L130">      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, &quot;documentation&quot;, XmlSchemaGenerator.NS_XML_SCHEMA);</span>
-<span class="fc" id="L131">      state.writeNamespace(&quot;&quot;, XmlSchemaGenerator.NS_XHTML);</span>
+<span class="fc" id="L134">      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, &quot;documentation&quot;, XmlSchemaGenerator.NS_XML_SCHEMA);</span>
+<span class="fc" id="L135">      state.writeNamespace(&quot;&quot;, XmlSchemaGenerator.NS_XHTML);</span>
 
-<span class="fc bfc" id="L133" title="All 2 branches covered.">      if (description != null) {</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">      if (description != null) {</span>
         // write description
-<span class="fc" id="L135">        state.writeStartElement(XmlSchemaGenerator.NS_XHTML, &quot;p&quot;);</span>
+<span class="fc" id="L139">        state.writeStartElement(XmlSchemaGenerator.NS_XHTML, &quot;p&quot;);</span>
 
-<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (formalName != null) {</span>
-<span class="fc" id="L138">          state.writeStartElement(XmlSchemaGenerator.NS_XHTML, &quot;b&quot;);</span>
-<span class="fc" id="L139">          state.writeCharacters(formalName);</span>
-<span class="fc" id="L140">          state.writeEndElement();</span>
-<span class="fc" id="L141">          state.writeCharacters(&quot;: &quot;);</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (formalName != null) {</span>
+<span class="fc" id="L142">          state.writeStartElement(XmlSchemaGenerator.NS_XHTML, &quot;b&quot;);</span>
+<span class="fc" id="L143">          state.writeCharacters(formalName);</span>
+<span class="fc" id="L144">          state.writeEndElement();</span>
+<span class="fc" id="L145">          state.writeCharacters(&quot;: &quot;);</span>
         }
 
-<span class="fc" id="L144">        description.writeXHtml(XmlSchemaGenerator.NS_XHTML, state.getXMLStreamWriter());</span>
-<span class="fc" id="L145">        state.writeEndElement(); // p</span>
+<span class="fc" id="L148">        description.writeXHtml(XmlSchemaGenerator.NS_XHTML, state.getXMLStreamWriter());</span>
+<span class="fc" id="L149">        state.writeEndElement(); // p</span>
       }
 
-<span class="fc bfc" id="L148" title="All 2 branches covered.">      for (MarkupMultiline remark : remarks) {</span>
-<span class="fc" id="L149">        remark.writeXHtml(XmlSchemaGenerator.NS_XHTML, state.getXMLStreamWriter());</span>
-<span class="fc" id="L150">      }</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">      for (MarkupMultiline remark : remarks) {</span>
+<span class="fc" id="L153">        remark.writeXHtml(XmlSchemaGenerator.NS_XHTML, state.getXMLStreamWriter());</span>
+<span class="fc" id="L154">      }</span>
 
-<span class="fc" id="L152">      state.writeEndElement(); // xs:documentation</span>
-<span class="fc" id="L153">      state.writeEndElement(); // xs:annotation</span>
-<span class="nc" id="L154">    } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L155">      throw new SchemaGenerationException(ex);</span>
-<span class="fc" id="L156">    }</span>
-<span class="fc" id="L157">  }</span>
+<span class="fc" id="L156">      state.writeEndElement(); // xs:documentation</span>
+<span class="fc" id="L157">      state.writeEndElement(); // xs:annotation</span>
+<span class="nc" id="L158">    } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L159">      throw new SchemaGenerationException(ex);</span>
+<span class="fc" id="L160">    }</span>
+<span class="fc" id="L161">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

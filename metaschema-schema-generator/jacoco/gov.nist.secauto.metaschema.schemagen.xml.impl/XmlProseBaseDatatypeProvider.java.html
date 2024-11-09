@@ -34,13 +34,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   }
 
   @Override
-  protected @NonNull Map&lt;String, IDatatypeContent&gt; handleResults(@NonNull List&lt;Element&gt; items) {
-<span class="fc" id="L38">    return CollectionUtil.singletonMap(</span>
+  @NonNull
+  protected Map&lt;String, IDatatypeContent&gt; handleResults(@NonNull List&lt;Element&gt; items) {
+<span class="fc" id="L39">    return CollectionUtil.singletonMap(</span>
         DATATYPE_NAME,
         new JDom2DatatypeContent(
             DATATYPE_NAME,
             items,
-<span class="fc" id="L43">            CollectionUtil.emptyList()));</span>
+<span class="fc" id="L44">            CollectionUtil.emptyList()));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

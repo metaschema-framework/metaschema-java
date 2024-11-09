@@ -120,18 +120,21 @@ public final class FnData {
    * @param item
    *          the item to atomize
    * @return the atomized result
+   * @throws InvalidTypeFunctionException
+   *           if the item cannot be cast to an atomic value, most likely because
+   *           it doesn't have a typed value
    */
   @NonNull
   public static IAnyAtomicItem fnDataItem(@NonNull IItem item) {
-<span class="fc" id="L126">    IAnyAtomicItem retval = null;</span>
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">    if (item instanceof IAtomicValuedItem) {</span>
-<span class="fc" id="L128">      retval = ((IAtomicValuedItem) item).toAtomicItem();</span>
+<span class="fc" id="L129">    IAnyAtomicItem retval = null;</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">    if (item instanceof IAtomicValuedItem) {</span>
+<span class="fc" id="L131">      retval = ((IAtomicValuedItem) item).toAtomicItem();</span>
     }
 
-<span class="pc bpc" id="L131" title="1 of 2 branches missed.">    if (retval != null) {</span>
-<span class="fc" id="L132">      return retval;</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">    if (retval != null) {</span>
+<span class="fc" id="L135">      return retval;</span>
     }
-<span class="nc" id="L134">    throw new InvalidTypeFunctionException(InvalidTypeFunctionException.NODE_HAS_NO_TYPED_VALUE, item);</span>
+<span class="nc" id="L137">    throw new InvalidTypeFunctionException(InvalidTypeFunctionException.NODE_HAS_NO_TYPED_VALUE, item);</span>
   }
 
   /**
@@ -145,17 +148,17 @@ public final class FnData {
    */
   @NonNull
   public static Stream&lt;IAnyAtomicItem&gt; fnDataItem(@NonNull IArrayItem&lt;?&gt; item) {
-<span class="nc" id="L148">    return ObjectUtils.notNull(item.stream().flatMap(member -&gt; {</span>
+<span class="nc" id="L151">    return ObjectUtils.notNull(item.stream().flatMap(member -&gt; {</span>
       Stream&lt;IAnyAtomicItem&gt; result;
-<span class="nc bnc" id="L150" title="All 2 branches missed.">      if (member instanceof IItem) {</span>
-<span class="nc" id="L151">        result = atomize((IItem) member);</span>
-<span class="nc bnc" id="L152" title="All 2 branches missed.">      } else if (member instanceof ISequence) {</span>
-<span class="nc" id="L153">        result = ((ISequence&lt;?&gt;) member).stream()</span>
-<span class="nc" id="L154">            .flatMap(FnData::atomize);</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">      if (member instanceof IItem) {</span>
+<span class="nc" id="L154">        result = atomize((IItem) member);</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">      } else if (member instanceof ISequence) {</span>
+<span class="nc" id="L156">        result = ((ISequence&lt;?&gt;) member).stream()</span>
+<span class="nc" id="L157">            .flatMap(FnData::atomize);</span>
       } else {
-<span class="nc" id="L156">        throw new UnsupportedOperationException(&quot;array member not an item or sequence.&quot;);</span>
+<span class="nc" id="L159">        throw new UnsupportedOperationException(&quot;array member not an item or sequence.&quot;);</span>
       }
-<span class="nc" id="L158">      return result;</span>
+<span class="nc" id="L161">      return result;</span>
     }));
   }
 
@@ -171,16 +174,16 @@ public final class FnData {
   @NonNull
   public static Stream&lt;IAnyAtomicItem&gt; atomize(@NonNull IItem item) {
     Stream&lt;IAnyAtomicItem&gt; retval;
-<span class="pc bpc" id="L174" title="1 of 2 branches missed.">    if (item instanceof IAnyAtomicItem) {</span>
-<span class="fc" id="L175">      retval = ObjectUtils.notNull(Stream.of((IAnyAtomicItem) item));</span>
-<span class="nc bnc" id="L176" title="All 2 branches missed.">    } else if (item instanceof IAtomicValuedItem) {</span>
-<span class="nc" id="L177">      retval = ObjectUtils.notNull(Stream.of(((IAtomicValuedItem) item).toAtomicItem()));</span>
-<span class="nc bnc" id="L178" title="All 2 branches missed.">    } else if (item instanceof IArrayItem) {</span>
-<span class="nc" id="L179">      retval = fnDataItem((IArrayItem&lt;?&gt;) item);</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">    if (item instanceof IAnyAtomicItem) {</span>
+<span class="fc" id="L178">      retval = ObjectUtils.notNull(Stream.of((IAnyAtomicItem) item));</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">    } else if (item instanceof IAtomicValuedItem) {</span>
+<span class="nc" id="L180">      retval = ObjectUtils.notNull(Stream.of(((IAtomicValuedItem) item).toAtomicItem()));</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">    } else if (item instanceof IArrayItem) {</span>
+<span class="nc" id="L182">      retval = fnDataItem((IArrayItem&lt;?&gt;) item);</span>
     } else {
-<span class="nc" id="L181">      throw new InvalidTypeFunctionException(InvalidTypeFunctionException.NODE_HAS_NO_TYPED_VALUE, item);</span>
+<span class="nc" id="L184">      throw new InvalidTypeFunctionException(InvalidTypeFunctionException.NODE_HAS_NO_TYPED_VALUE, item);</span>
     }
-<span class="fc" id="L183">    return retval;</span>
+<span class="fc" id="L186">    return retval;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

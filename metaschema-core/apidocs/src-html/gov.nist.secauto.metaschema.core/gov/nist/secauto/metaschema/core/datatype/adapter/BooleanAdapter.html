@@ -107,48 +107,52 @@
 <span class="source-line-no">094</span><span id="line-94">    } else if (item instanceof IStringItem) {</span>
 <span class="source-line-no">095</span><span id="line-95">      retval = castToBoolean((IStringItem) item);</span>
 <span class="source-line-no">096</span><span id="line-96">    } else {</span>
-<span class="source-line-no">097</span><span id="line-97">      retval = castToBoolean(item.asStringItem());</span>
-<span class="source-line-no">098</span><span id="line-98">    }</span>
-<span class="source-line-no">099</span><span id="line-99">    return retval;</span>
-<span class="source-line-no">100</span><span id="line-100">  }</span>
-<span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">  /**</span>
-<span class="source-line-no">103</span><span id="line-103">   * Cast the provided numeric value to a boolean. Any non-zero value will be</span>
-<span class="source-line-no">104</span><span id="line-104">   * {@code true}, or {@code false} otherwise.</span>
-<span class="source-line-no">105</span><span id="line-105">   *</span>
-<span class="source-line-no">106</span><span id="line-106">   * @param item</span>
-<span class="source-line-no">107</span><span id="line-107">   *          the item to cast</span>
-<span class="source-line-no">108</span><span id="line-108">   * @return {@code true} if the item value is non-zero, or {@code false}</span>
-<span class="source-line-no">109</span><span id="line-109">   *         otherwise</span>
-<span class="source-line-no">110</span><span id="line-110">   */</span>
-<span class="source-line-no">111</span><span id="line-111">  @NonNull</span>
-<span class="source-line-no">112</span><span id="line-112">  protected IBooleanItem castToBoolean(@NonNull INumericItem item) {</span>
-<span class="source-line-no">113</span><span id="line-113">    return IBooleanItem.valueOf(item.toEffectiveBoolean());</span>
-<span class="source-line-no">114</span><span id="line-114">  }</span>
-<span class="source-line-no">115</span><span id="line-115"></span>
-<span class="source-line-no">116</span><span id="line-116">  /**</span>
-<span class="source-line-no">117</span><span id="line-117">   * If the string is a numeric value, treat it as so. Otherwise parse the value</span>
-<span class="source-line-no">118</span><span id="line-118">   * as a boolean string.</span>
-<span class="source-line-no">119</span><span id="line-119">   *</span>
-<span class="source-line-no">120</span><span id="line-120">   * @param item</span>
-<span class="source-line-no">121</span><span id="line-121">   *          the item to cast</span>
-<span class="source-line-no">122</span><span id="line-122">   * @return the effective boolean value of the string</span>
-<span class="source-line-no">123</span><span id="line-123">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">124</span><span id="line-124">   *           if the provided item cannot be cast to a boolean value by any means</span>
-<span class="source-line-no">125</span><span id="line-125">   */</span>
-<span class="source-line-no">126</span><span id="line-126">  @NonNull</span>
-<span class="source-line-no">127</span><span id="line-127">  protected IBooleanItem castToBoolean(@NonNull IStringItem item) {</span>
-<span class="source-line-no">128</span><span id="line-128">    IBooleanItem retval;</span>
-<span class="source-line-no">129</span><span id="line-129">    try {</span>
-<span class="source-line-no">130</span><span id="line-130">      INumericItem numeric = INumericItem.cast(item);</span>
-<span class="source-line-no">131</span><span id="line-131">      retval = castToBoolean(numeric);</span>
-<span class="source-line-no">132</span><span id="line-132">    } catch (InvalidValueForCastFunctionException ex) {</span>
-<span class="source-line-no">133</span><span id="line-133">      retval = super.castInternal(item);</span>
-<span class="source-line-no">134</span><span id="line-134">    }</span>
-<span class="source-line-no">135</span><span id="line-135">    return retval;</span>
-<span class="source-line-no">136</span><span id="line-136">  }</span>
-<span class="source-line-no">137</span><span id="line-137"></span>
-<span class="source-line-no">138</span><span id="line-138">}</span>
+<span class="source-line-no">097</span><span id="line-97">      try {</span>
+<span class="source-line-no">098</span><span id="line-98">        retval = castToBoolean(item.asStringItem());</span>
+<span class="source-line-no">099</span><span id="line-99">      } catch (IllegalStateException ex) {</span>
+<span class="source-line-no">100</span><span id="line-100">        throw new InvalidValueForCastFunctionException(ex.getLocalizedMessage(), ex);</span>
+<span class="source-line-no">101</span><span id="line-101">      }</span>
+<span class="source-line-no">102</span><span id="line-102">    }</span>
+<span class="source-line-no">103</span><span id="line-103">    return retval;</span>
+<span class="source-line-no">104</span><span id="line-104">  }</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">  /**</span>
+<span class="source-line-no">107</span><span id="line-107">   * Cast the provided numeric value to a boolean. Any non-zero value will be</span>
+<span class="source-line-no">108</span><span id="line-108">   * {@code true}, or {@code false} otherwise.</span>
+<span class="source-line-no">109</span><span id="line-109">   *</span>
+<span class="source-line-no">110</span><span id="line-110">   * @param item</span>
+<span class="source-line-no">111</span><span id="line-111">   *          the item to cast</span>
+<span class="source-line-no">112</span><span id="line-112">   * @return {@code true} if the item value is non-zero, or {@code false}</span>
+<span class="source-line-no">113</span><span id="line-113">   *         otherwise</span>
+<span class="source-line-no">114</span><span id="line-114">   */</span>
+<span class="source-line-no">115</span><span id="line-115">  @NonNull</span>
+<span class="source-line-no">116</span><span id="line-116">  protected IBooleanItem castToBoolean(@NonNull INumericItem item) {</span>
+<span class="source-line-no">117</span><span id="line-117">    return IBooleanItem.valueOf(item.toEffectiveBoolean());</span>
+<span class="source-line-no">118</span><span id="line-118">  }</span>
+<span class="source-line-no">119</span><span id="line-119"></span>
+<span class="source-line-no">120</span><span id="line-120">  /**</span>
+<span class="source-line-no">121</span><span id="line-121">   * If the string is a numeric value, treat it as so. Otherwise parse the value</span>
+<span class="source-line-no">122</span><span id="line-122">   * as a boolean string.</span>
+<span class="source-line-no">123</span><span id="line-123">   *</span>
+<span class="source-line-no">124</span><span id="line-124">   * @param item</span>
+<span class="source-line-no">125</span><span id="line-125">   *          the item to cast</span>
+<span class="source-line-no">126</span><span id="line-126">   * @return the effective boolean value of the string</span>
+<span class="source-line-no">127</span><span id="line-127">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">128</span><span id="line-128">   *           if the provided item cannot be cast to a boolean value by any means</span>
+<span class="source-line-no">129</span><span id="line-129">   */</span>
+<span class="source-line-no">130</span><span id="line-130">  @NonNull</span>
+<span class="source-line-no">131</span><span id="line-131">  protected IBooleanItem castToBoolean(@NonNull IStringItem item) {</span>
+<span class="source-line-no">132</span><span id="line-132">    IBooleanItem retval;</span>
+<span class="source-line-no">133</span><span id="line-133">    try {</span>
+<span class="source-line-no">134</span><span id="line-134">      INumericItem numeric = INumericItem.cast(item);</span>
+<span class="source-line-no">135</span><span id="line-135">      retval = castToBoolean(numeric);</span>
+<span class="source-line-no">136</span><span id="line-136">    } catch (InvalidValueForCastFunctionException ex) {</span>
+<span class="source-line-no">137</span><span id="line-137">      retval = super.castInternal(item);</span>
+<span class="source-line-no">138</span><span id="line-138">    }</span>
+<span class="source-line-no">139</span><span id="line-139">    return retval;</span>
+<span class="source-line-no">140</span><span id="line-140">  }</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">}</span>
 
 
 

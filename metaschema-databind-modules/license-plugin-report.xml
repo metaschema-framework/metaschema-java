@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1730654498174">
-    <module artifactId="metaschema-databind-modules" groupId="dev.metaschema.java" version="2.0.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1731187189840">
+    <module artifactId="metaschema-databind-modules" groupId="dev.metaschema.java" version="2.0.1"/>
     <files>
         <file path="src/test/java/gov/nist/secauto/metaschema/modules/sarif/SarifValidationHandlerTest.java" result="NOOP"/>
     </files>

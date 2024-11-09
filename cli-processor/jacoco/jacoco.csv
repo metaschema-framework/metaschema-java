@@ -2,7 +2,7 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,CLIProcessor,266,0,10,0,89,0,21,0,16,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,Version,34,0,0,0,10,0,5,0,5,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,NonMessageExitStatus,0,6,0,0,0,3,0,2,0,2
-Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,CLIProcessor.CallingContext,768,0,76,0,210,0,57,0,19,0
+Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,CLIProcessor.CallingContext,765,0,76,0,209,0,57,0,19,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,AbstractExitStatus,14,69,14,10,4,22,11,7,0,6
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,OptionUtils,11,0,2,0,1,0,2,0,1,0
 Metaschema CLI Framework,gov.nist.secauto.metaschema.cli.processor,InvalidArgumentException,11,0,0,0,5,0,3,0,3,0

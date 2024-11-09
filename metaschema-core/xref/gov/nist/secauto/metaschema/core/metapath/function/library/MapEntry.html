@@ -69,30 +69,31 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        @NonNull <a name="DynamicContext" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext,
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>        <a name="IItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/IItem.html#IItem">IItem</a> focus) {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      <a name="IAnyAtomicItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyAtomicItem.html#IAnyAtomicItem">IAnyAtomicItem</a> key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(<strong class="jxr_keyword">true</strong>)));
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      @SuppressWarnings(<span class="jxr_string">"unchecked"</span>) T value = (T) arguments.get(1).toCollectionValue();
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">return</strong> entry(key, value).asSequence();
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   * An implementation of XPath 3.1 &lt;a href=</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-map-entry"&gt;map:entry&lt;/a&gt;.</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">   * @param &lt;T&gt;</em>
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   *          the type of items in the given Metapath map</em>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   * @param key</em>
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   *          the Metapath map entry key</em>
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   * @param value</em>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   *          the Metapath map entry value</em>
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">   * @return a new array containing the modification</em>
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    @NonNull
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> ICollectionValue&gt; IMapItem&lt;T&gt; entry(
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>        @NonNull <a name="IAnyAtomicItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyAtomicItem.html#IAnyAtomicItem">IAnyAtomicItem</a> key,
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>        @NonNull T value) {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">return</strong> IMapItem.ofEntries(IMapItem.entry(key, value));
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>    }
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  }
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      T value = (T) arguments.get(1).toCollectionValue();
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">return</strong> entry(key, value).asSequence();
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    }
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   * An implementation of XPath 3.1 &lt;a href=</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-map-entry"&gt;map:entry&lt;/a&gt;.</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   * @param &lt;T&gt;</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   *          the type of items in the given Metapath map</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   * @param key</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   *          the Metapath map entry key</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   * @param value</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">   *          the Metapath map entry value</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   * @return a new array containing the modification</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    @NonNull
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> ICollectionValue&gt; IMapItem&lt;T&gt; entry(
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        @NonNull <a name="IAnyAtomicItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyAtomicItem.html#IAnyAtomicItem">IAnyAtomicItem</a> key,
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>        @NonNull T value) {
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">return</strong> IMapItem.ofEntries(IMapItem.entry(key, value));
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>    }
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

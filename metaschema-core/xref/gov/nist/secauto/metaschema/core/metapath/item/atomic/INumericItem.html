@@ -154,21 +154,22 @@
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>       BigInteger value = asInteger();
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>       BigInteger divisor = BigInteger.TEN.pow(0 - precision);
 <a class="jxr_linenumber" name="L148" href="#L148">148</a> 
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>       @NonNull BigInteger result;
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>       <strong class="jxr_keyword">if</strong> (divisor.compareTo(value.abs()) &gt; 0) {
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>         result = ObjectUtils.notNull(BigInteger.ZERO);
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>         BigInteger remainder = value.mod(divisor);
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>         BigInteger lessRemainder = value.subtract(remainder);
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>         BigInteger halfDivisor = divisor.divide(BigInteger.TWO);
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>         result = ObjectUtils.notNull(
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>             remainder.compareTo(halfDivisor) &gt;= 0 ? lessRemainder.add(divisor) : lessRemainder);
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>       }
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>       retval = IIntegerItem.valueOf(result);
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>     }
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">return</strong> retval;
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>   }
-<a class="jxr_linenumber" name="L163" href="#L163">163</a> }
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>       @NonNull
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>       BigInteger result;
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>       <strong class="jxr_keyword">if</strong> (divisor.compareTo(value.abs()) &gt; 0) {
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         result = ObjectUtils.notNull(BigInteger.ZERO);
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>         BigInteger remainder = value.mod(divisor);
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>         BigInteger lessRemainder = value.subtract(remainder);
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>         BigInteger halfDivisor = divisor.divide(BigInteger.TWO);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>         result = ObjectUtils.notNull(
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>             remainder.compareTo(halfDivisor) &gt;= 0 ? lessRemainder.add(divisor) : lessRemainder);
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>       }
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>       retval = IIntegerItem.valueOf(result);
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     }
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">return</strong> retval;
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>   }
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

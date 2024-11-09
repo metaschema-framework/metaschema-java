@@ -81,20 +81,22 @@ public interface IFeatureComplexItemValueHandler extends IItemValueHandler&lt;IB
     try {
       CLASS retval;
 <span class="pc bpc" id="L83" title="1 of 2 branches missed.">      if (supplier != null) {</span>
-<span class="fc" id="L84">        @SuppressWarnings(&quot;unchecked&quot;) Constructor&lt;CLASS&gt; constructor</span>
-<span class="fc" id="L85">            = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor(IMetaschemaData.class);</span>
-<span class="fc" id="L86">        retval = constructor.newInstance(supplier.get());</span>
-<span class="fc" id="L87">      } else {</span>
-<span class="nc" id="L88">        @SuppressWarnings(&quot;unchecked&quot;) Constructor&lt;CLASS&gt; constructor</span>
-<span class="nc" id="L89">            = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor();</span>
-<span class="nc" id="L90">        retval = constructor.newInstance();</span>
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L85">        Constructor&lt;CLASS&gt; constructor</span>
+<span class="fc" id="L86">            = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor(IMetaschemaData.class);</span>
+<span class="fc" id="L87">        retval = constructor.newInstance(supplier.get());</span>
+<span class="fc" id="L88">      } else {</span>
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L90">        Constructor&lt;CLASS&gt; constructor</span>
+<span class="nc" id="L91">            = (Constructor&lt;CLASS&gt;) clazz.getDeclaredConstructor();</span>
+<span class="nc" id="L92">        retval = constructor.newInstance();</span>
       }
-<span class="fc" id="L92">      return ObjectUtils.notNull(retval);</span>
-<span class="nc" id="L93">    } catch (NoSuchMethodException ex) {</span>
-<span class="nc" id="L94">      String msg = String.format(&quot;Class '%s' does not have a required no-arg constructor.&quot;, clazz.getName());</span>
-<span class="nc" id="L95">      throw new RuntimeException(msg, ex);</span>
-<span class="nc" id="L96">    } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {</span>
-<span class="nc" id="L97">      throw new RuntimeException(ex);</span>
+<span class="fc" id="L94">      return ObjectUtils.notNull(retval);</span>
+<span class="nc" id="L95">    } catch (NoSuchMethodException ex) {</span>
+<span class="nc" id="L96">      String msg = String.format(&quot;Class '%s' does not have a required no-arg constructor.&quot;, clazz.getName());</span>
+<span class="nc" id="L97">      throw new RuntimeException(msg, ex);</span>
+<span class="nc" id="L98">    } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {</span>
+<span class="nc" id="L99">      throw new RuntimeException(ex);</span>
     }
   }
 

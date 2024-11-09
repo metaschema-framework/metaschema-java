@@ -37,109 +37,109 @@
 <span class="source-line-no">024</span><span id="line-24"></span>
 <span class="source-line-no">025</span><span id="line-25">import javax.xml.namespace.QName;</span>
 <span class="source-line-no">026</span><span id="line-26">import javax.xml.stream.XMLEventWriter;</span>
-<span class="source-line-no">027</span><span id="line-27">import javax.xml.stream.XMLStreamException;</span>
-<span class="source-line-no">028</span><span id="line-28">import javax.xml.stream.events.StartElement;</span>
-<span class="source-line-no">029</span><span id="line-29">import javax.xml.stream.events.XMLEvent;</span>
-<span class="source-line-no">030</span><span id="line-30"></span>
-<span class="source-line-no">031</span><span id="line-31">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">/**</span>
-<span class="source-line-no">034</span><span id="line-34"> * Represents a data type implementation.</span>
-<span class="source-line-no">035</span><span id="line-35"> *</span>
-<span class="source-line-no">036</span><span id="line-36"> * @param &lt;TYPE&gt;</span>
-<span class="source-line-no">037</span><span id="line-37"> *          the Java type of the underlying data value</span>
-<span class="source-line-no">038</span><span id="line-38"> */</span>
-<span class="source-line-no">039</span><span id="line-39">public interface IDataTypeAdapter&lt;TYPE&gt; {</span>
-<span class="source-line-no">040</span><span id="line-40"></span>
-<span class="source-line-no">041</span><span id="line-41">  /**</span>
-<span class="source-line-no">042</span><span id="line-42">   * Get the metaschema type names associated with this adapter. This name must be</span>
-<span class="source-line-no">043</span><span id="line-43">   * unique with respect to all other metaschema types.</span>
-<span class="source-line-no">044</span><span id="line-44">   * &lt;p&gt;</span>
-<span class="source-line-no">045</span><span id="line-45">   * At least one name must be provided, with the first name being the most</span>
-<span class="source-line-no">046</span><span id="line-46">   * preferred name.</span>
-<span class="source-line-no">047</span><span id="line-47">   *</span>
-<span class="source-line-no">048</span><span id="line-48">   * @return the name</span>
-<span class="source-line-no">049</span><span id="line-49">   */</span>
-<span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
-<span class="source-line-no">051</span><span id="line-51">  List&lt;QName&gt; getNames();</span>
-<span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">  /**</span>
-<span class="source-line-no">054</span><span id="line-54">   * Get the most preferred name for this data type.</span>
-<span class="source-line-no">055</span><span id="line-55">   *</span>
-<span class="source-line-no">056</span><span id="line-56">   * @return the name</span>
-<span class="source-line-no">057</span><span id="line-57">   */</span>
-<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
-<span class="source-line-no">059</span><span id="line-59">  default QName getPreferredName() {</span>
-<span class="source-line-no">060</span><span id="line-60">    return ObjectUtils.notNull(getNames().iterator().next());</span>
-<span class="source-line-no">061</span><span id="line-61">  }</span>
-<span class="source-line-no">062</span><span id="line-62"></span>
-<span class="source-line-no">063</span><span id="line-63">  /**</span>
-<span class="source-line-no">064</span><span id="line-64">   * The JSON primative type of the data type.</span>
-<span class="source-line-no">065</span><span id="line-65">   *</span>
-<span class="source-line-no">066</span><span id="line-66">   * @return the JSON data type</span>
-<span class="source-line-no">067</span><span id="line-67">   */</span>
-<span class="source-line-no">068</span><span id="line-68">  JsonFormatTypes getJsonRawType();</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">  /**</span>
-<span class="source-line-no">071</span><span id="line-71">   * Get the Java class supported by this adapter.</span>
-<span class="source-line-no">072</span><span id="line-72">   *</span>
-<span class="source-line-no">073</span><span id="line-73">   * @return the Java class</span>
-<span class="source-line-no">074</span><span id="line-74">   */</span>
-<span class="source-line-no">075</span><span id="line-75">  @NonNull</span>
-<span class="source-line-no">076</span><span id="line-76">  Class&lt;TYPE&gt; getJavaClass();</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">  /**</span>
-<span class="source-line-no">079</span><span id="line-79">   * Casts the provided value to the type associated with this adapter.</span>
-<span class="source-line-no">080</span><span id="line-80">   *</span>
-<span class="source-line-no">081</span><span id="line-81">   * @param value</span>
-<span class="source-line-no">082</span><span id="line-82">   *          a value of the provided type</span>
-<span class="source-line-no">083</span><span id="line-83">   * @return the typed value</span>
-<span class="source-line-no">084</span><span id="line-84">   */</span>
-<span class="source-line-no">085</span><span id="line-85">  @NonNull</span>
-<span class="source-line-no">086</span><span id="line-86">  TYPE toValue(@NonNull Object value);</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">  /**</span>
-<span class="source-line-no">089</span><span id="line-89">   * Gets the value as a string suitable for writing as text. This is intended for</span>
-<span class="source-line-no">090</span><span id="line-90">   * data types that have a simple string-based structure in XML and JSON, such as</span>
-<span class="source-line-no">091</span><span id="line-91">   * for XML attributes or JSON keys. An adapter for a complex data structures</span>
-<span class="source-line-no">092</span><span id="line-92">   * that consist of XML elements will throw an</span>
-<span class="source-line-no">093</span><span id="line-93">   * {@link UnsupportedOperationException} when this is called.</span>
-<span class="source-line-no">094</span><span id="line-94">   *</span>
-<span class="source-line-no">095</span><span id="line-95">   * @param value</span>
-<span class="source-line-no">096</span><span id="line-96">   *          the data to formatted as a string</span>
-<span class="source-line-no">097</span><span id="line-97">   * @return a string</span>
-<span class="source-line-no">098</span><span id="line-98">   * @throws UnsupportedOperationException</span>
-<span class="source-line-no">099</span><span id="line-99">   *           if the data type cannot be represented as a string</span>
-<span class="source-line-no">100</span><span id="line-100">   */</span>
-<span class="source-line-no">101</span><span id="line-101">  @NonNull</span>
-<span class="source-line-no">102</span><span id="line-102">  String asString(@NonNull Object value);</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  /**</span>
-<span class="source-line-no">105</span><span id="line-105">   * Create a copy of the provided value.</span>
-<span class="source-line-no">106</span><span id="line-106">   *</span>
-<span class="source-line-no">107</span><span id="line-107">   * @param obj</span>
-<span class="source-line-no">108</span><span id="line-108">   *          the value to copy</span>
-<span class="source-line-no">109</span><span id="line-109">   * @return the copy</span>
-<span class="source-line-no">110</span><span id="line-110">   */</span>
-<span class="source-line-no">111</span><span id="line-111">  @NonNull</span>
-<span class="source-line-no">112</span><span id="line-112">  TYPE copy(@NonNull Object obj);</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">  /**</span>
-<span class="source-line-no">115</span><span id="line-115">   * Determines if the data type is an atomic, scalar value. Complex structures</span>
-<span class="source-line-no">116</span><span id="line-116">   * such as Markup are not considered atomic.</span>
-<span class="source-line-no">117</span><span id="line-117">   *</span>
-<span class="source-line-no">118</span><span id="line-118">   * @return {@code true} if the data type is an atomic scalar value, or</span>
-<span class="source-line-no">119</span><span id="line-119">   *         {@code false} otherwise</span>
-<span class="source-line-no">120</span><span id="line-120">   */</span>
-<span class="source-line-no">121</span><span id="line-121">  default boolean isAtomic() {</span>
-<span class="source-line-no">122</span><span id="line-122">    return true;</span>
-<span class="source-line-no">123</span><span id="line-123">  }</span>
-<span class="source-line-no">124</span><span id="line-124"></span>
-<span class="source-line-no">125</span><span id="line-125">  /**</span>
-<span class="source-line-no">126</span><span id="line-126">   * Get the java type of the associated item.</span>
-<span class="source-line-no">127</span><span id="line-127">   *</span>
-<span class="source-line-no">128</span><span id="line-128">   * @return the java associated item type</span>
-<span class="source-line-no">129</span><span id="line-129">   */</span>
+<span class="source-line-no">027</span><span id="line-27">import javax.xml.stream.events.StartElement;</span>
+<span class="source-line-no">028</span><span id="line-28">import javax.xml.stream.events.XMLEvent;</span>
+<span class="source-line-no">029</span><span id="line-29"></span>
+<span class="source-line-no">030</span><span id="line-30">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">/**</span>
+<span class="source-line-no">033</span><span id="line-33"> * Represents a data type implementation.</span>
+<span class="source-line-no">034</span><span id="line-34"> *</span>
+<span class="source-line-no">035</span><span id="line-35"> * @param &lt;TYPE&gt;</span>
+<span class="source-line-no">036</span><span id="line-36"> *          the Java type of the underlying data value</span>
+<span class="source-line-no">037</span><span id="line-37"> */</span>
+<span class="source-line-no">038</span><span id="line-38">public interface IDataTypeAdapter&lt;TYPE&gt; {</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  /**</span>
+<span class="source-line-no">041</span><span id="line-41">   * Get the metaschema type names associated with this adapter. This name must be</span>
+<span class="source-line-no">042</span><span id="line-42">   * unique with respect to all other metaschema types.</span>
+<span class="source-line-no">043</span><span id="line-43">   * &lt;p&gt;</span>
+<span class="source-line-no">044</span><span id="line-44">   * At least one name must be provided, with the first name being the most</span>
+<span class="source-line-no">045</span><span id="line-45">   * preferred name.</span>
+<span class="source-line-no">046</span><span id="line-46">   *</span>
+<span class="source-line-no">047</span><span id="line-47">   * @return the name</span>
+<span class="source-line-no">048</span><span id="line-48">   */</span>
+<span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
+<span class="source-line-no">050</span><span id="line-50">  List&lt;QName&gt; getNames();</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  /**</span>
+<span class="source-line-no">053</span><span id="line-53">   * Get the most preferred name for this data type.</span>
+<span class="source-line-no">054</span><span id="line-54">   *</span>
+<span class="source-line-no">055</span><span id="line-55">   * @return the name</span>
+<span class="source-line-no">056</span><span id="line-56">   */</span>
+<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
+<span class="source-line-no">058</span><span id="line-58">  default QName getPreferredName() {</span>
+<span class="source-line-no">059</span><span id="line-59">    return ObjectUtils.notNull(getNames().iterator().next());</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  /**</span>
+<span class="source-line-no">063</span><span id="line-63">   * The JSON primative type of the data type.</span>
+<span class="source-line-no">064</span><span id="line-64">   *</span>
+<span class="source-line-no">065</span><span id="line-65">   * @return the JSON data type</span>
+<span class="source-line-no">066</span><span id="line-66">   */</span>
+<span class="source-line-no">067</span><span id="line-67">  JsonFormatTypes getJsonRawType();</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  /**</span>
+<span class="source-line-no">070</span><span id="line-70">   * Get the Java class supported by this adapter.</span>
+<span class="source-line-no">071</span><span id="line-71">   *</span>
+<span class="source-line-no">072</span><span id="line-72">   * @return the Java class</span>
+<span class="source-line-no">073</span><span id="line-73">   */</span>
+<span class="source-line-no">074</span><span id="line-74">  @NonNull</span>
+<span class="source-line-no">075</span><span id="line-75">  Class&lt;TYPE&gt; getJavaClass();</span>
+<span class="source-line-no">076</span><span id="line-76"></span>
+<span class="source-line-no">077</span><span id="line-77">  /**</span>
+<span class="source-line-no">078</span><span id="line-78">   * Casts the provided value to the type associated with this adapter.</span>
+<span class="source-line-no">079</span><span id="line-79">   *</span>
+<span class="source-line-no">080</span><span id="line-80">   * @param value</span>
+<span class="source-line-no">081</span><span id="line-81">   *          a value of the provided type</span>
+<span class="source-line-no">082</span><span id="line-82">   * @return the typed value</span>
+<span class="source-line-no">083</span><span id="line-83">   */</span>
+<span class="source-line-no">084</span><span id="line-84">  @NonNull</span>
+<span class="source-line-no">085</span><span id="line-85">  TYPE toValue(@NonNull Object value);</span>
+<span class="source-line-no">086</span><span id="line-86"></span>
+<span class="source-line-no">087</span><span id="line-87">  /**</span>
+<span class="source-line-no">088</span><span id="line-88">   * Gets the value as a string suitable for writing as text. This is intended for</span>
+<span class="source-line-no">089</span><span id="line-89">   * data types that have a simple string-based structure in XML and JSON, such as</span>
+<span class="source-line-no">090</span><span id="line-90">   * for XML attributes or JSON keys. An adapter for a complex data structures</span>
+<span class="source-line-no">091</span><span id="line-91">   * that consist of XML elements will throw an</span>
+<span class="source-line-no">092</span><span id="line-92">   * {@link UnsupportedOperationException} when this is called.</span>
+<span class="source-line-no">093</span><span id="line-93">   *</span>
+<span class="source-line-no">094</span><span id="line-94">   * @param value</span>
+<span class="source-line-no">095</span><span id="line-95">   *          the data to formatted as a string</span>
+<span class="source-line-no">096</span><span id="line-96">   * @return a string</span>
+<span class="source-line-no">097</span><span id="line-97">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">098</span><span id="line-98">   *           if the data type cannot be represented as a string</span>
+<span class="source-line-no">099</span><span id="line-99">   */</span>
+<span class="source-line-no">100</span><span id="line-100">  @NonNull</span>
+<span class="source-line-no">101</span><span id="line-101">  String asString(@NonNull Object value);</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">  /**</span>
+<span class="source-line-no">104</span><span id="line-104">   * Create a copy of the provided value.</span>
+<span class="source-line-no">105</span><span id="line-105">   *</span>
+<span class="source-line-no">106</span><span id="line-106">   * @param obj</span>
+<span class="source-line-no">107</span><span id="line-107">   *          the value to copy</span>
+<span class="source-line-no">108</span><span id="line-108">   * @return the copy</span>
+<span class="source-line-no">109</span><span id="line-109">   */</span>
+<span class="source-line-no">110</span><span id="line-110">  @NonNull</span>
+<span class="source-line-no">111</span><span id="line-111">  TYPE copy(@NonNull Object obj);</span>
+<span class="source-line-no">112</span><span id="line-112"></span>
+<span class="source-line-no">113</span><span id="line-113">  /**</span>
+<span class="source-line-no">114</span><span id="line-114">   * Determines if the data type is an atomic, scalar value. Complex structures</span>
+<span class="source-line-no">115</span><span id="line-115">   * such as Markup are not considered atomic.</span>
+<span class="source-line-no">116</span><span id="line-116">   *</span>
+<span class="source-line-no">117</span><span id="line-117">   * @return {@code true} if the data type is an atomic scalar value, or</span>
+<span class="source-line-no">118</span><span id="line-118">   *         {@code false} otherwise</span>
+<span class="source-line-no">119</span><span id="line-119">   */</span>
+<span class="source-line-no">120</span><span id="line-120">  default boolean isAtomic() {</span>
+<span class="source-line-no">121</span><span id="line-121">    return true;</span>
+<span class="source-line-no">122</span><span id="line-122">  }</span>
+<span class="source-line-no">123</span><span id="line-123"></span>
+<span class="source-line-no">124</span><span id="line-124">  /**</span>
+<span class="source-line-no">125</span><span id="line-125">   * Get the java type of the associated item.</span>
+<span class="source-line-no">126</span><span id="line-126">   *</span>
+<span class="source-line-no">127</span><span id="line-127">   * @return the java associated item type</span>
+<span class="source-line-no">128</span><span id="line-128">   */</span>
+<span class="source-line-no">129</span><span id="line-129">  // TODO: move to IAnyAtomicItem</span>
 <span class="source-line-no">130</span><span id="line-130">  @NonNull</span>
 <span class="source-line-no">131</span><span id="line-131">  Class&lt;? extends IAnyAtomicItem&gt; getItemClass();</span>
 <span class="source-line-no">132</span><span id="line-132"></span>
@@ -152,229 +152,239 @@
 <span class="source-line-no">139</span><span id="line-139">   */</span>
 <span class="source-line-no">140</span><span id="line-140">  // TODO: markup types are not atomic values.</span>
 <span class="source-line-no">141</span><span id="line-141">  // Figure out a better base type (i.e., IValuedItem)</span>
-<span class="source-line-no">142</span><span id="line-142">  @NonNull</span>
-<span class="source-line-no">143</span><span id="line-143">  IAnyAtomicItem newItem(@NonNull Object value);</span>
-<span class="source-line-no">144</span><span id="line-144"></span>
-<span class="source-line-no">145</span><span id="line-145">  /**</span>
-<span class="source-line-no">146</span><span id="line-146">   * Cast the provided item to an item of this type, if possible.</span>
-<span class="source-line-no">147</span><span id="line-147">   *</span>
-<span class="source-line-no">148</span><span id="line-148">   * @param item</span>
-<span class="source-line-no">149</span><span id="line-149">   *          the atomic item to cast</span>
-<span class="source-line-no">150</span><span id="line-150">   * @return an atomic item of this type</span>
-<span class="source-line-no">151</span><span id="line-151">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">152</span><span id="line-152">   *           if the provided item type cannot be cast to this item type</span>
-<span class="source-line-no">153</span><span id="line-153">   */</span>
-<span class="source-line-no">154</span><span id="line-154">  @NonNull</span>
-<span class="source-line-no">155</span><span id="line-155">  IAnyAtomicItem cast(IAnyAtomicItem item);</span>
-<span class="source-line-no">156</span><span id="line-156"></span>
-<span class="source-line-no">157</span><span id="line-157">  /**</span>
-<span class="source-line-no">158</span><span id="line-158">   * Determines if adapter can parse the next element. The next element's</span>
-<span class="source-line-no">159</span><span id="line-159">   * {@link QName} is provided for this purpose.</span>
-<span class="source-line-no">160</span><span id="line-160">   * &lt;p&gt;</span>
-<span class="source-line-no">161</span><span id="line-161">   * This will be called when the parser encounter's an element it does not</span>
-<span class="source-line-no">162</span><span id="line-162">   * recognize. This gives the adapter a chance to request parsing of the data.</span>
-<span class="source-line-no">163</span><span id="line-163">   *</span>
-<span class="source-line-no">164</span><span id="line-164">   * @param nextElementQName</span>
-<span class="source-line-no">165</span><span id="line-165">   *          the next element's namespace-qualified name</span>
-<span class="source-line-no">166</span><span id="line-166">   * @return {@code true} if the adapter will parse the element, or {@code false}</span>
-<span class="source-line-no">167</span><span id="line-167">   *         otherwise</span>
-<span class="source-line-no">168</span><span id="line-168">   */</span>
-<span class="source-line-no">169</span><span id="line-169">  boolean canHandleQName(@NonNull QName nextElementQName);</span>
-<span class="source-line-no">170</span><span id="line-170"></span>
-<span class="source-line-no">171</span><span id="line-171">  /**</span>
-<span class="source-line-no">172</span><span id="line-172">   * Parses a provided string. Used to parse XML attributes, simple XML character</span>
-<span class="source-line-no">173</span><span id="line-173">   * data, and JSON/YAML property values.</span>
-<span class="source-line-no">174</span><span id="line-174">   *</span>
-<span class="source-line-no">175</span><span id="line-175">   * @param value</span>
-<span class="source-line-no">176</span><span id="line-176">   *          the string value to parse</span>
-<span class="source-line-no">177</span><span id="line-177">   * @return the parsed data as the adapter's type</span>
-<span class="source-line-no">178</span><span id="line-178">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">179</span><span id="line-179">   *           if the data is not valid to the data type</span>
-<span class="source-line-no">180</span><span id="line-180">   */</span>
-<span class="source-line-no">181</span><span id="line-181">  @NonNull</span>
-<span class="source-line-no">182</span><span id="line-182">  TYPE parse(@NonNull String value);</span>
-<span class="source-line-no">183</span><span id="line-183"></span>
-<span class="source-line-no">184</span><span id="line-184">  /**</span>
-<span class="source-line-no">185</span><span id="line-185">   * This method is expected to parse content starting at the next event. Parsing</span>
-<span class="source-line-no">186</span><span id="line-186">   * will continue until the next event represents content that is not handled by</span>
-<span class="source-line-no">187</span><span id="line-187">   * this adapter. This means the event stream should be positioned after any</span>
-<span class="source-line-no">188</span><span id="line-188">   * {@link XMLEvent#END_ELEMENT} that corresponds to an</span>
-<span class="source-line-no">189</span><span id="line-189">   * {@link XMLEvent#START_ELEMENT} parsed by this adapter.</span>
-<span class="source-line-no">190</span><span id="line-190">   * &lt;p&gt;</span>
-<span class="source-line-no">191</span><span id="line-191">   * If this method parses the {@link XMLEvent#START_ELEMENT} for the element that</span>
-<span class="source-line-no">192</span><span id="line-192">   * contains the value data, then this method must also parse the corresponding</span>
-<span class="source-line-no">193</span><span id="line-193">   * {@link XMLEvent#END_ELEMENT}. Otherwise, the first event to parse will be the</span>
-<span class="source-line-no">194</span><span id="line-194">   * value data.</span>
-<span class="source-line-no">195</span><span id="line-195">   * &lt;p&gt;</span>
-<span class="source-line-no">196</span><span id="line-196">   * The value data is expected to be parsed completely, leaving the event stream</span>
-<span class="source-line-no">197</span><span id="line-197">   * on a peeked event corresponding to content that is not handled by this</span>
-<span class="source-line-no">198</span><span id="line-198">   * method.</span>
-<span class="source-line-no">199</span><span id="line-199">   *</span>
-<span class="source-line-no">200</span><span id="line-200">   * @param eventReader</span>
-<span class="source-line-no">201</span><span id="line-201">   *          the XML parser used to read the parsed value</span>
-<span class="source-line-no">202</span><span id="line-202">   * @return the parsed value</span>
-<span class="source-line-no">203</span><span id="line-203">   * @throws IOException</span>
-<span class="source-line-no">204</span><span id="line-204">   *           if a parsing error occurs</span>
-<span class="source-line-no">205</span><span id="line-205">   */</span>
-<span class="source-line-no">206</span><span id="line-206">  @NonNull</span>
-<span class="source-line-no">207</span><span id="line-207">  TYPE parse(@NonNull XMLEventReader2 eventReader) throws IOException;</span>
-<span class="source-line-no">208</span><span id="line-208"></span>
-<span class="source-line-no">209</span><span id="line-209">  /**</span>
-<span class="source-line-no">210</span><span id="line-210">   * Parses a JSON property value.</span>
-<span class="source-line-no">211</span><span id="line-211">   *</span>
-<span class="source-line-no">212</span><span id="line-212">   * @param parser</span>
-<span class="source-line-no">213</span><span id="line-213">   *          the JSON parser used to read the parsed value</span>
-<span class="source-line-no">214</span><span id="line-214">   * @return the parsed value</span>
-<span class="source-line-no">215</span><span id="line-215">   * @throws IOException</span>
-<span class="source-line-no">216</span><span id="line-216">   *           if a parsing error occurs</span>
-<span class="source-line-no">217</span><span id="line-217">   */</span>
-<span class="source-line-no">218</span><span id="line-218">  @NonNull</span>
-<span class="source-line-no">219</span><span id="line-219">  TYPE parse(@NonNull JsonParser parser) throws IOException;</span>
-<span class="source-line-no">220</span><span id="line-220"></span>
-<span class="source-line-no">221</span><span id="line-221">  /**</span>
-<span class="source-line-no">222</span><span id="line-222">   * Parses a provided string using {@link #parse(String)}.</span>
-<span class="source-line-no">223</span><span id="line-223">   * &lt;p&gt;</span>
-<span class="source-line-no">224</span><span id="line-224">   * This method may pre-parse the data and then return copies, since the data can</span>
-<span class="source-line-no">225</span><span id="line-225">   * only be parsed once, but the supplier might be called multiple times.</span>
-<span class="source-line-no">226</span><span id="line-226">   *</span>
-<span class="source-line-no">227</span><span id="line-227">   * @param value</span>
-<span class="source-line-no">228</span><span id="line-228">   *          the string value to parse</span>
-<span class="source-line-no">229</span><span id="line-229">   * @return a supplier that will provide new instances of the parsed data</span>
-<span class="source-line-no">230</span><span id="line-230">   * @throws IOException</span>
-<span class="source-line-no">231</span><span id="line-231">   *           if an error occurs while parsing</span>
-<span class="source-line-no">232</span><span id="line-232">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">233</span><span id="line-233">   *           if the provided value is invalid based on the data type</span>
-<span class="source-line-no">234</span><span id="line-234">   * @see #parse(String)</span>
-<span class="source-line-no">235</span><span id="line-235">   */</span>
-<span class="source-line-no">236</span><span id="line-236">  @NonNull</span>
-<span class="source-line-no">237</span><span id="line-237">  default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull String value) throws IOException {</span>
-<span class="source-line-no">238</span><span id="line-238">    TYPE retval = parse(value);</span>
-<span class="source-line-no">239</span><span id="line-239">    return () -&gt; copy(retval);</span>
-<span class="source-line-no">240</span><span id="line-240">  }</span>
-<span class="source-line-no">241</span><span id="line-241"></span>
-<span class="source-line-no">242</span><span id="line-242">  /**</span>
-<span class="source-line-no">243</span><span id="line-243">   * Parses a provided string using</span>
-<span class="source-line-no">244</span><span id="line-244">   * {@link IDataTypeAdapter#parse(XMLEventReader2)}.</span>
-<span class="source-line-no">245</span><span id="line-245">   * &lt;p&gt;</span>
-<span class="source-line-no">246</span><span id="line-246">   * This method may pre-parse the data and then return copies, since the data can</span>
-<span class="source-line-no">247</span><span id="line-247">   * only be parsed once, but the supplier might be called multiple times.</span>
-<span class="source-line-no">248</span><span id="line-248">   *</span>
-<span class="source-line-no">249</span><span id="line-249">   * @param eventReader</span>
-<span class="source-line-no">250</span><span id="line-250">   *          the XML parser used to read the parsed value</span>
-<span class="source-line-no">251</span><span id="line-251">   * @return a supplier that will provide new instances of the parsed data</span>
-<span class="source-line-no">252</span><span id="line-252">   * @throws IOException</span>
-<span class="source-line-no">253</span><span id="line-253">   *           if an error occurs while parsing</span>
-<span class="source-line-no">254</span><span id="line-254">   * @see #parse(String)</span>
-<span class="source-line-no">255</span><span id="line-255">   * @see #parse(XMLEventReader2)</span>
-<span class="source-line-no">256</span><span id="line-256">   */</span>
-<span class="source-line-no">257</span><span id="line-257">  @NonNull</span>
-<span class="source-line-no">258</span><span id="line-258">  default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull XMLEventReader2 eventReader) throws IOException {</span>
-<span class="source-line-no">259</span><span id="line-259">    TYPE retval = parse(eventReader);</span>
-<span class="source-line-no">260</span><span id="line-260">    return () -&gt; copy(retval);</span>
-<span class="source-line-no">261</span><span id="line-261">  }</span>
-<span class="source-line-no">262</span><span id="line-262"></span>
-<span class="source-line-no">263</span><span id="line-263">  /**</span>
-<span class="source-line-no">264</span><span id="line-264">   * Parses a provided string using {@link #parse(JsonParser)}.</span>
-<span class="source-line-no">265</span><span id="line-265">   * &lt;p&gt;</span>
-<span class="source-line-no">266</span><span id="line-266">   * This method may pre-parse the data and then return copies, since the data can</span>
-<span class="source-line-no">267</span><span id="line-267">   * only be parsed once, but the supplier might be called multiple times.</span>
-<span class="source-line-no">268</span><span id="line-268">   *</span>
-<span class="source-line-no">269</span><span id="line-269">   * @param parser</span>
-<span class="source-line-no">270</span><span id="line-270">   *          the JSON parser used to read the parsed value</span>
-<span class="source-line-no">271</span><span id="line-271">   * @return a supplier that will provide new instances of the parsed data</span>
-<span class="source-line-no">272</span><span id="line-272">   * @throws IOException</span>
-<span class="source-line-no">273</span><span id="line-273">   *           if an error occurs while parsing</span>
-<span class="source-line-no">274</span><span id="line-274">   * @see #parse(String)</span>
-<span class="source-line-no">275</span><span id="line-275">   * @see #parse(JsonParser)</span>
-<span class="source-line-no">276</span><span id="line-276">   */</span>
-<span class="source-line-no">277</span><span id="line-277">  @NonNull</span>
-<span class="source-line-no">278</span><span id="line-278">  default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull JsonParser parser) throws IOException {</span>
-<span class="source-line-no">279</span><span id="line-279">    TYPE retval = parse(parser);</span>
-<span class="source-line-no">280</span><span id="line-280">    return () -&gt; copy(retval);</span>
-<span class="source-line-no">281</span><span id="line-281">  }</span>
-<span class="source-line-no">282</span><span id="line-282"></span>
-<span class="source-line-no">283</span><span id="line-283">  /**</span>
-<span class="source-line-no">284</span><span id="line-284">   * Writes the provided Java class instance data as XML. The parent element</span>
-<span class="source-line-no">285</span><span id="line-285">   * information is provided as a {@link StartElement} event, which allows</span>
-<span class="source-line-no">286</span><span id="line-286">   * namespace information to be obtained from the parent element using the</span>
-<span class="source-line-no">287</span><span id="line-287">   * {@link StartElement#getName()} and {@link StartElement#getNamespaceContext()}</span>
-<span class="source-line-no">288</span><span id="line-288">   * methods, which can be used when writing the provided instance value.</span>
-<span class="source-line-no">289</span><span id="line-289">   *</span>
-<span class="source-line-no">290</span><span id="line-290">   * @param instance</span>
-<span class="source-line-no">291</span><span id="line-291">   *          the {@link Field} instance value to write</span>
-<span class="source-line-no">292</span><span id="line-292">   * @param parent</span>
-<span class="source-line-no">293</span><span id="line-293">   *          the {@link StartElement} XML event that is the parent of the data to</span>
-<span class="source-line-no">294</span><span id="line-294">   *          write</span>
-<span class="source-line-no">295</span><span id="line-295">   * @param eventFactory</span>
-<span class="source-line-no">296</span><span id="line-296">   *          the XML event factory used to generate XML writing events</span>
-<span class="source-line-no">297</span><span id="line-297">   * @param eventWriter</span>
-<span class="source-line-no">298</span><span id="line-298">   *          the XML writer used to output XML as events</span>
-<span class="source-line-no">299</span><span id="line-299">   * @throws XMLStreamException</span>
-<span class="source-line-no">300</span><span id="line-300">   *           if an unexpected error occurred while processing the XML output</span>
-<span class="source-line-no">301</span><span id="line-301">   * @throws IOException</span>
-<span class="source-line-no">302</span><span id="line-302">   *           if an unexpected error occurred while writing to the output stream</span>
-<span class="source-line-no">303</span><span id="line-303">   */</span>
-<span class="source-line-no">304</span><span id="line-304">  void writeXmlValue(@NonNull Object instance, @NonNull StartElement parent, @NonNull XMLEventFactory2 eventFactory,</span>
-<span class="source-line-no">305</span><span id="line-305">      @NonNull XMLEventWriter eventWriter)</span>
-<span class="source-line-no">306</span><span id="line-306">      throws IOException, XMLStreamException;</span>
-<span class="source-line-no">307</span><span id="line-307"></span>
-<span class="source-line-no">308</span><span id="line-308">  /**</span>
-<span class="source-line-no">309</span><span id="line-309">   * Writes the provided Java class instance data as XML. The parent element</span>
-<span class="source-line-no">310</span><span id="line-310">   * information is provided as an XML {@link QName}, which allows namespace</span>
-<span class="source-line-no">311</span><span id="line-311">   * information to be obtained from the parent element. Additional namespace</span>
-<span class="source-line-no">312</span><span id="line-312">   * information can be gathered using the</span>
-<span class="source-line-no">313</span><span id="line-313">   * {@link XMLStreamWriter2#getNamespaceContext()} method, which can be used when</span>
-<span class="source-line-no">314</span><span id="line-314">   * writing the provided instance value.</span>
-<span class="source-line-no">315</span><span id="line-315">   *</span>
-<span class="source-line-no">316</span><span id="line-316">   * @param instance</span>
-<span class="source-line-no">317</span><span id="line-317">   *          the {@link Field} instance value to write</span>
-<span class="source-line-no">318</span><span id="line-318">   * @param parentName</span>
-<span class="source-line-no">319</span><span id="line-319">   *          the qualified name of the XML data's parent element</span>
-<span class="source-line-no">320</span><span id="line-320">   * @param writer</span>
-<span class="source-line-no">321</span><span id="line-321">   *          the XML writer used to output the XML data</span>
-<span class="source-line-no">322</span><span id="line-322">   * @throws XMLStreamException</span>
-<span class="source-line-no">323</span><span id="line-323">   *           if an unexpected error occurred while processing the XML output</span>
-<span class="source-line-no">324</span><span id="line-324">   */</span>
-<span class="source-line-no">325</span><span id="line-325">  void writeXmlValue(@NonNull Object instance, @NonNull QName parentName, @NonNull XMLStreamWriter2 writer)</span>
-<span class="source-line-no">326</span><span id="line-326">      throws XMLStreamException;</span>
-<span class="source-line-no">327</span><span id="line-327"></span>
-<span class="source-line-no">328</span><span id="line-328">  /**</span>
-<span class="source-line-no">329</span><span id="line-329">   * Writes the provided Java class instance as a JSON/YAML field value.</span>
-<span class="source-line-no">330</span><span id="line-330">   *</span>
-<span class="source-line-no">331</span><span id="line-331">   * @param instance</span>
-<span class="source-line-no">332</span><span id="line-332">   *          the {@link Field} instance value to write</span>
-<span class="source-line-no">333</span><span id="line-333">   * @param writer</span>
-<span class="source-line-no">334</span><span id="line-334">   *          the JSON/YAML writer used to output the JSON/YAML data</span>
-<span class="source-line-no">335</span><span id="line-335">   * @throws IOException</span>
-<span class="source-line-no">336</span><span id="line-336">   *           if an unexpected error occurred while writing the JSON/YAML output</span>
-<span class="source-line-no">337</span><span id="line-337">   */</span>
-<span class="source-line-no">338</span><span id="line-338">  void writeJsonValue(@NonNull Object instance, @NonNull JsonGenerator writer) throws IOException;</span>
-<span class="source-line-no">339</span><span id="line-339"></span>
-<span class="source-line-no">340</span><span id="line-340">  /**</span>
-<span class="source-line-no">341</span><span id="line-341">   * Gets the default value to use as the JSON/YAML field name for a Metaschema</span>
-<span class="source-line-no">342</span><span id="line-342">   * field value if no JSON value key flag or name is configured.</span>
-<span class="source-line-no">343</span><span id="line-343">   *</span>
-<span class="source-line-no">344</span><span id="line-344">   * @return the default field name to use</span>
-<span class="source-line-no">345</span><span id="line-345">   */</span>
-<span class="source-line-no">346</span><span id="line-346">  @NonNull</span>
-<span class="source-line-no">347</span><span id="line-347">  String getDefaultJsonValueKey();</span>
-<span class="source-line-no">348</span><span id="line-348"></span>
-<span class="source-line-no">349</span><span id="line-349">  /**</span>
-<span class="source-line-no">350</span><span id="line-350">   * Determines if the data type's value is allowed to be unwrapped in XML when</span>
-<span class="source-line-no">351</span><span id="line-351">   * the value is a field value.</span>
-<span class="source-line-no">352</span><span id="line-352">   *</span>
-<span class="source-line-no">353</span><span id="line-353">   * @return {@code true} if allowed, or {@code false} otherwise.</span>
-<span class="source-line-no">354</span><span id="line-354">   */</span>
-<span class="source-line-no">355</span><span id="line-355">  boolean isUnrappedValueAllowedInXml();</span>
+<span class="source-line-no">142</span><span id="line-142">  // TODO: move to IAnyAtomicItem</span>
+<span class="source-line-no">143</span><span id="line-143">  @NonNull</span>
+<span class="source-line-no">144</span><span id="line-144">  IAnyAtomicItem newItem(@NonNull Object value);</span>
+<span class="source-line-no">145</span><span id="line-145"></span>
+<span class="source-line-no">146</span><span id="line-146">  /**</span>
+<span class="source-line-no">147</span><span id="line-147">   * Cast the provided item to an item of this type, if possible.</span>
+<span class="source-line-no">148</span><span id="line-148">   *</span>
+<span class="source-line-no">149</span><span id="line-149">   * @param item</span>
+<span class="source-line-no">150</span><span id="line-150">   *          the atomic item to cast</span>
+<span class="source-line-no">151</span><span id="line-151">   * @return an atomic item of this type</span>
+<span class="source-line-no">152</span><span id="line-152">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">153</span><span id="line-153">   *           if the provided item type cannot be cast to this item type</span>
+<span class="source-line-no">154</span><span id="line-154">   */</span>
+<span class="source-line-no">155</span><span id="line-155">  // TODO: move to IAnyAtomicItem</span>
+<span class="source-line-no">156</span><span id="line-156">  @NonNull</span>
+<span class="source-line-no">157</span><span id="line-157">  IAnyAtomicItem cast(IAnyAtomicItem item);</span>
+<span class="source-line-no">158</span><span id="line-158"></span>
+<span class="source-line-no">159</span><span id="line-159">  /**</span>
+<span class="source-line-no">160</span><span id="line-160">   * Determines if adapter can parse the next element. The next element's</span>
+<span class="source-line-no">161</span><span id="line-161">   * {@link QName} is provided for this purpose.</span>
+<span class="source-line-no">162</span><span id="line-162">   * &lt;p&gt;</span>
+<span class="source-line-no">163</span><span id="line-163">   * This will be called when the parser encounter's an element it does not</span>
+<span class="source-line-no">164</span><span id="line-164">   * recognize. This gives the adapter a chance to request parsing of the data.</span>
+<span class="source-line-no">165</span><span id="line-165">   *</span>
+<span class="source-line-no">166</span><span id="line-166">   * @param nextElementQName</span>
+<span class="source-line-no">167</span><span id="line-167">   *          the next element's namespace-qualified name</span>
+<span class="source-line-no">168</span><span id="line-168">   * @return {@code true} if the adapter will parse the element, or {@code false}</span>
+<span class="source-line-no">169</span><span id="line-169">   *         otherwise</span>
+<span class="source-line-no">170</span><span id="line-170">   */</span>
+<span class="source-line-no">171</span><span id="line-171">  boolean canHandleQName(@NonNull QName nextElementQName);</span>
+<span class="source-line-no">172</span><span id="line-172"></span>
+<span class="source-line-no">173</span><span id="line-173">  /**</span>
+<span class="source-line-no">174</span><span id="line-174">   * Parses a provided string. Used to parse XML attributes, simple XML character</span>
+<span class="source-line-no">175</span><span id="line-175">   * data, and JSON/YAML property values.</span>
+<span class="source-line-no">176</span><span id="line-176">   *</span>
+<span class="source-line-no">177</span><span id="line-177">   * @param value</span>
+<span class="source-line-no">178</span><span id="line-178">   *          the string value to parse</span>
+<span class="source-line-no">179</span><span id="line-179">   * @return the parsed data as the adapter's type</span>
+<span class="source-line-no">180</span><span id="line-180">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">181</span><span id="line-181">   *           if the data is not valid to the data type</span>
+<span class="source-line-no">182</span><span id="line-182">   */</span>
+<span class="source-line-no">183</span><span id="line-183">  @NonNull</span>
+<span class="source-line-no">184</span><span id="line-184">  TYPE parse(@NonNull String value);</span>
+<span class="source-line-no">185</span><span id="line-185"></span>
+<span class="source-line-no">186</span><span id="line-186">  /**</span>
+<span class="source-line-no">187</span><span id="line-187">   * This method is expected to parse content starting at the next event. Parsing</span>
+<span class="source-line-no">188</span><span id="line-188">   * will continue until the next event represents content that is not handled by</span>
+<span class="source-line-no">189</span><span id="line-189">   * this adapter. This means the event stream should be positioned after any</span>
+<span class="source-line-no">190</span><span id="line-190">   * {@link XMLEvent#END_ELEMENT} that corresponds to an</span>
+<span class="source-line-no">191</span><span id="line-191">   * {@link XMLEvent#START_ELEMENT} parsed by this adapter.</span>
+<span class="source-line-no">192</span><span id="line-192">   * &lt;p&gt;</span>
+<span class="source-line-no">193</span><span id="line-193">   * If this method parses the {@link XMLEvent#START_ELEMENT} for the element that</span>
+<span class="source-line-no">194</span><span id="line-194">   * contains the value data, then this method must also parse the corresponding</span>
+<span class="source-line-no">195</span><span id="line-195">   * {@link XMLEvent#END_ELEMENT}. Otherwise, the first event to parse will be the</span>
+<span class="source-line-no">196</span><span id="line-196">   * value data.</span>
+<span class="source-line-no">197</span><span id="line-197">   * &lt;p&gt;</span>
+<span class="source-line-no">198</span><span id="line-198">   * The value data is expected to be parsed completely, leaving the event stream</span>
+<span class="source-line-no">199</span><span id="line-199">   * on a peeked event corresponding to content that is not handled by this</span>
+<span class="source-line-no">200</span><span id="line-200">   * method.</span>
+<span class="source-line-no">201</span><span id="line-201">   *</span>
+<span class="source-line-no">202</span><span id="line-202">   * @param eventReader</span>
+<span class="source-line-no">203</span><span id="line-203">   *          the XML parser used to read the parsed value</span>
+<span class="source-line-no">204</span><span id="line-204">   * @return the parsed value</span>
+<span class="source-line-no">205</span><span id="line-205">   * @throws IOException</span>
+<span class="source-line-no">206</span><span id="line-206">   *           if a parsing error occurs</span>
+<span class="source-line-no">207</span><span id="line-207">   */</span>
+<span class="source-line-no">208</span><span id="line-208">  // TODO: migrate code to XML parser implementation.</span>
+<span class="source-line-no">209</span><span id="line-209">  @NonNull</span>
+<span class="source-line-no">210</span><span id="line-210">  TYPE parse(@NonNull XMLEventReader2 eventReader) throws IOException;</span>
+<span class="source-line-no">211</span><span id="line-211"></span>
+<span class="source-line-no">212</span><span id="line-212">  /**</span>
+<span class="source-line-no">213</span><span id="line-213">   * Parses a JSON property value.</span>
+<span class="source-line-no">214</span><span id="line-214">   *</span>
+<span class="source-line-no">215</span><span id="line-215">   * @param parser</span>
+<span class="source-line-no">216</span><span id="line-216">   *          the JSON parser used to read the parsed value</span>
+<span class="source-line-no">217</span><span id="line-217">   * @return the parsed value</span>
+<span class="source-line-no">218</span><span id="line-218">   * @throws IOException</span>
+<span class="source-line-no">219</span><span id="line-219">   *           if a parsing error occurs</span>
+<span class="source-line-no">220</span><span id="line-220">   */</span>
+<span class="source-line-no">221</span><span id="line-221">  // TODO: migrate code to JSON parser implementation.</span>
+<span class="source-line-no">222</span><span id="line-222">  @NonNull</span>
+<span class="source-line-no">223</span><span id="line-223">  TYPE parse(@NonNull JsonParser parser) throws IOException;</span>
+<span class="source-line-no">224</span><span id="line-224"></span>
+<span class="source-line-no">225</span><span id="line-225">  /**</span>
+<span class="source-line-no">226</span><span id="line-226">   * Parses a provided string using {@link #parse(String)}.</span>
+<span class="source-line-no">227</span><span id="line-227">   * &lt;p&gt;</span>
+<span class="source-line-no">228</span><span id="line-228">   * This method may pre-parse the data and then return copies, since the data can</span>
+<span class="source-line-no">229</span><span id="line-229">   * only be parsed once, but the supplier might be called multiple times.</span>
+<span class="source-line-no">230</span><span id="line-230">   *</span>
+<span class="source-line-no">231</span><span id="line-231">   * @param value</span>
+<span class="source-line-no">232</span><span id="line-232">   *          the string value to parse</span>
+<span class="source-line-no">233</span><span id="line-233">   * @return a supplier that will provide new instances of the parsed data</span>
+<span class="source-line-no">234</span><span id="line-234">   * @throws IOException</span>
+<span class="source-line-no">235</span><span id="line-235">   *           if an error occurs while parsing</span>
+<span class="source-line-no">236</span><span id="line-236">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">237</span><span id="line-237">   *           if the provided value is invalid based on the data type</span>
+<span class="source-line-no">238</span><span id="line-238">   * @see #parse(String)</span>
+<span class="source-line-no">239</span><span id="line-239">   */</span>
+<span class="source-line-no">240</span><span id="line-240">  @NonNull</span>
+<span class="source-line-no">241</span><span id="line-241">  default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull String value) throws IOException {</span>
+<span class="source-line-no">242</span><span id="line-242">    TYPE retval = parse(value);</span>
+<span class="source-line-no">243</span><span id="line-243">    return () -&gt; copy(retval);</span>
+<span class="source-line-no">244</span><span id="line-244">  }</span>
+<span class="source-line-no">245</span><span id="line-245"></span>
+<span class="source-line-no">246</span><span id="line-246">  /**</span>
+<span class="source-line-no">247</span><span id="line-247">   * Parses a provided string using</span>
+<span class="source-line-no">248</span><span id="line-248">   * {@link IDataTypeAdapter#parse(XMLEventReader2)}.</span>
+<span class="source-line-no">249</span><span id="line-249">   * &lt;p&gt;</span>
+<span class="source-line-no">250</span><span id="line-250">   * This method may pre-parse the data and then return copies, since the data can</span>
+<span class="source-line-no">251</span><span id="line-251">   * only be parsed once, but the supplier might be called multiple times.</span>
+<span class="source-line-no">252</span><span id="line-252">   *</span>
+<span class="source-line-no">253</span><span id="line-253">   * @param eventReader</span>
+<span class="source-line-no">254</span><span id="line-254">   *          the XML parser used to read the parsed value</span>
+<span class="source-line-no">255</span><span id="line-255">   * @return a supplier that will provide new instances of the parsed data</span>
+<span class="source-line-no">256</span><span id="line-256">   * @throws IOException</span>
+<span class="source-line-no">257</span><span id="line-257">   *           if an error occurs while parsing</span>
+<span class="source-line-no">258</span><span id="line-258">   * @see #parse(String)</span>
+<span class="source-line-no">259</span><span id="line-259">   * @see #parse(XMLEventReader2)</span>
+<span class="source-line-no">260</span><span id="line-260">   */</span>
+<span class="source-line-no">261</span><span id="line-261">  // TODO: migrate code to XML parser implementation.</span>
+<span class="source-line-no">262</span><span id="line-262">  @NonNull</span>
+<span class="source-line-no">263</span><span id="line-263">  default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull XMLEventReader2 eventReader) throws IOException {</span>
+<span class="source-line-no">264</span><span id="line-264">    TYPE retval = parse(eventReader);</span>
+<span class="source-line-no">265</span><span id="line-265">    return () -&gt; copy(retval);</span>
+<span class="source-line-no">266</span><span id="line-266">  }</span>
+<span class="source-line-no">267</span><span id="line-267"></span>
+<span class="source-line-no">268</span><span id="line-268">  /**</span>
+<span class="source-line-no">269</span><span id="line-269">   * Parses a provided string using {@link #parse(JsonParser)}.</span>
+<span class="source-line-no">270</span><span id="line-270">   * &lt;p&gt;</span>
+<span class="source-line-no">271</span><span id="line-271">   * This method may pre-parse the data and then return copies, since the data can</span>
+<span class="source-line-no">272</span><span id="line-272">   * only be parsed once, but the supplier might be called multiple times.</span>
+<span class="source-line-no">273</span><span id="line-273">   *</span>
+<span class="source-line-no">274</span><span id="line-274">   * @param parser</span>
+<span class="source-line-no">275</span><span id="line-275">   *          the JSON parser used to read the parsed value</span>
+<span class="source-line-no">276</span><span id="line-276">   * @return a supplier that will provide new instances of the parsed data</span>
+<span class="source-line-no">277</span><span id="line-277">   * @throws IOException</span>
+<span class="source-line-no">278</span><span id="line-278">   *           if an error occurs while parsing</span>
+<span class="source-line-no">279</span><span id="line-279">   * @see #parse(String)</span>
+<span class="source-line-no">280</span><span id="line-280">   * @see #parse(JsonParser)</span>
+<span class="source-line-no">281</span><span id="line-281">   */</span>
+<span class="source-line-no">282</span><span id="line-282">  // TODO: migrate code to JSON parser implementation.</span>
+<span class="source-line-no">283</span><span id="line-283">  @NonNull</span>
+<span class="source-line-no">284</span><span id="line-284">  default Supplier&lt;TYPE&gt; parseAndSupply(@NonNull JsonParser parser) throws IOException {</span>
+<span class="source-line-no">285</span><span id="line-285">    TYPE retval = parse(parser);</span>
+<span class="source-line-no">286</span><span id="line-286">    return () -&gt; copy(retval);</span>
+<span class="source-line-no">287</span><span id="line-287">  }</span>
+<span class="source-line-no">288</span><span id="line-288"></span>
+<span class="source-line-no">289</span><span id="line-289">  /**</span>
+<span class="source-line-no">290</span><span id="line-290">   * Writes the provided Java class instance data as XML. The parent element</span>
+<span class="source-line-no">291</span><span id="line-291">   * information is provided as a {@link StartElement} event, which allows</span>
+<span class="source-line-no">292</span><span id="line-292">   * namespace information to be obtained from the parent element using the</span>
+<span class="source-line-no">293</span><span id="line-293">   * {@link StartElement#getName()} and {@link StartElement#getNamespaceContext()}</span>
+<span class="source-line-no">294</span><span id="line-294">   * methods, which can be used when writing the provided instance value.</span>
+<span class="source-line-no">295</span><span id="line-295">   *</span>
+<span class="source-line-no">296</span><span id="line-296">   * @param instance</span>
+<span class="source-line-no">297</span><span id="line-297">   *          the {@link Field} instance value to write</span>
+<span class="source-line-no">298</span><span id="line-298">   * @param parent</span>
+<span class="source-line-no">299</span><span id="line-299">   *          the {@link StartElement} XML event that is the parent of the data to</span>
+<span class="source-line-no">300</span><span id="line-300">   *          write</span>
+<span class="source-line-no">301</span><span id="line-301">   * @param eventFactory</span>
+<span class="source-line-no">302</span><span id="line-302">   *          the XML event factory used to generate XML writing events</span>
+<span class="source-line-no">303</span><span id="line-303">   * @param eventWriter</span>
+<span class="source-line-no">304</span><span id="line-304">   *          the XML writer used to output XML as events</span>
+<span class="source-line-no">305</span><span id="line-305">   * @throws IOException</span>
+<span class="source-line-no">306</span><span id="line-306">   *           if an unexpected error occurred while writing to the output stream</span>
+<span class="source-line-no">307</span><span id="line-307">   */</span>
+<span class="source-line-no">308</span><span id="line-308">  // TODO: migrate code to XML writer implementation.</span>
+<span class="source-line-no">309</span><span id="line-309">  void writeXmlValue(@NonNull Object instance, @NonNull StartElement parent, @NonNull XMLEventFactory2 eventFactory,</span>
+<span class="source-line-no">310</span><span id="line-310">      @NonNull XMLEventWriter eventWriter)</span>
+<span class="source-line-no">311</span><span id="line-311">      throws IOException;</span>
+<span class="source-line-no">312</span><span id="line-312"></span>
+<span class="source-line-no">313</span><span id="line-313">  /**</span>
+<span class="source-line-no">314</span><span id="line-314">   * Writes the provided Java class instance data as XML. The parent element</span>
+<span class="source-line-no">315</span><span id="line-315">   * information is provided as an XML {@link QName}, which allows namespace</span>
+<span class="source-line-no">316</span><span id="line-316">   * information to be obtained from the parent element. Additional namespace</span>
+<span class="source-line-no">317</span><span id="line-317">   * information can be gathered using the</span>
+<span class="source-line-no">318</span><span id="line-318">   * {@link XMLStreamWriter2#getNamespaceContext()} method, which can be used when</span>
+<span class="source-line-no">319</span><span id="line-319">   * writing the provided instance value.</span>
+<span class="source-line-no">320</span><span id="line-320">   *</span>
+<span class="source-line-no">321</span><span id="line-321">   * @param instance</span>
+<span class="source-line-no">322</span><span id="line-322">   *          the {@link Field} instance value to write</span>
+<span class="source-line-no">323</span><span id="line-323">   * @param parentName</span>
+<span class="source-line-no">324</span><span id="line-324">   *          the qualified name of the XML data's parent element</span>
+<span class="source-line-no">325</span><span id="line-325">   * @param writer</span>
+<span class="source-line-no">326</span><span id="line-326">   *          the XML writer used to output the XML data</span>
+<span class="source-line-no">327</span><span id="line-327">   * @throws IOException</span>
+<span class="source-line-no">328</span><span id="line-328">   *           if an unexpected error occurred while processing the XML output</span>
+<span class="source-line-no">329</span><span id="line-329">   */</span>
+<span class="source-line-no">330</span><span id="line-330">  // TODO: migrate code to XML writer implementation.</span>
+<span class="source-line-no">331</span><span id="line-331">  void writeXmlValue(@NonNull Object instance, @NonNull QName parentName, @NonNull XMLStreamWriter2 writer)</span>
+<span class="source-line-no">332</span><span id="line-332">      throws IOException;</span>
+<span class="source-line-no">333</span><span id="line-333"></span>
+<span class="source-line-no">334</span><span id="line-334">  /**</span>
+<span class="source-line-no">335</span><span id="line-335">   * Writes the provided Java class instance as a JSON/YAML field value.</span>
+<span class="source-line-no">336</span><span id="line-336">   *</span>
+<span class="source-line-no">337</span><span id="line-337">   * @param instance</span>
+<span class="source-line-no">338</span><span id="line-338">   *          the {@link Field} instance value to write</span>
+<span class="source-line-no">339</span><span id="line-339">   * @param writer</span>
+<span class="source-line-no">340</span><span id="line-340">   *          the JSON/YAML writer used to output the JSON/YAML data</span>
+<span class="source-line-no">341</span><span id="line-341">   * @throws IOException</span>
+<span class="source-line-no">342</span><span id="line-342">   *           if an unexpected error occurred while writing the JSON/YAML output</span>
+<span class="source-line-no">343</span><span id="line-343">   */</span>
+<span class="source-line-no">344</span><span id="line-344">  // TODO: migrate code to JSON writer implementation.</span>
+<span class="source-line-no">345</span><span id="line-345">  void writeJsonValue(@NonNull Object instance, @NonNull JsonGenerator writer) throws IOException;</span>
+<span class="source-line-no">346</span><span id="line-346"></span>
+<span class="source-line-no">347</span><span id="line-347">  /**</span>
+<span class="source-line-no">348</span><span id="line-348">   * Gets the default value to use as the JSON/YAML field name for a Metaschema</span>
+<span class="source-line-no">349</span><span id="line-349">   * field value if no JSON value key flag or name is configured.</span>
+<span class="source-line-no">350</span><span id="line-350">   *</span>
+<span class="source-line-no">351</span><span id="line-351">   * @return the default field name to use</span>
+<span class="source-line-no">352</span><span id="line-352">   */</span>
+<span class="source-line-no">353</span><span id="line-353">  // TODO: migrate code to JSON implementations.</span>
+<span class="source-line-no">354</span><span id="line-354">  @NonNull</span>
+<span class="source-line-no">355</span><span id="line-355">  String getDefaultJsonValueKey();</span>
 <span class="source-line-no">356</span><span id="line-356"></span>
 <span class="source-line-no">357</span><span id="line-357">  /**</span>
-<span class="source-line-no">358</span><span id="line-358">   * Determines if the datatype uses mixed text and element content in XML.</span>
-<span class="source-line-no">359</span><span id="line-359">   *</span>
-<span class="source-line-no">360</span><span id="line-360">   * @return {@code true} if the datatype uses mixed text and element content in</span>
-<span class="source-line-no">361</span><span id="line-361">   *         XML, or {@code false} otherwise</span>
+<span class="source-line-no">358</span><span id="line-358">   * Determines if the data type's value is allowed to be unwrapped in XML when</span>
+<span class="source-line-no">359</span><span id="line-359">   * the value is a field value.</span>
+<span class="source-line-no">360</span><span id="line-360">   *</span>
+<span class="source-line-no">361</span><span id="line-361">   * @return {@code true} if allowed, or {@code false} otherwise.</span>
 <span class="source-line-no">362</span><span id="line-362">   */</span>
-<span class="source-line-no">363</span><span id="line-363">  boolean isXmlMixed();</span>
-<span class="source-line-no">364</span><span id="line-364">}</span>
+<span class="source-line-no">363</span><span id="line-363">  // TODO: migrate code to XML implementations.</span>
+<span class="source-line-no">364</span><span id="line-364">  boolean isUnrappedValueAllowedInXml();</span>
+<span class="source-line-no">365</span><span id="line-365"></span>
+<span class="source-line-no">366</span><span id="line-366">  /**</span>
+<span class="source-line-no">367</span><span id="line-367">   * Determines if the datatype uses mixed text and element content in XML.</span>
+<span class="source-line-no">368</span><span id="line-368">   *</span>
+<span class="source-line-no">369</span><span id="line-369">   * @return {@code true} if the datatype uses mixed text and element content in</span>
+<span class="source-line-no">370</span><span id="line-370">   *         XML, or {@code false} otherwise</span>
+<span class="source-line-no">371</span><span id="line-371">   */</span>
+<span class="source-line-no">372</span><span id="line-372">  // TODO: migrate code to XML implementations.</span>
+<span class="source-line-no">373</span><span id="line-373">  boolean isXmlMixed();</span>
+<span class="source-line-no">374</span><span id="line-374">}</span>
 
 
 

@@ -356,73 +356,74 @@
 <span class="source-line-no">343</span><span id="line-343">    @Override</span>
 <span class="source-line-no">344</span><span id="line-344">    @NonNull</span>
 <span class="source-line-no">345</span><span id="line-345">    public BasedSequence[] getSegments() {</span>
-<span class="source-line-no">346</span><span id="line-346">      @NonNull BasedSequence[] retval = { getType(), getIdReference() };</span>
-<span class="source-line-no">347</span><span id="line-347">      return retval;</span>
-<span class="source-line-no">348</span><span id="line-348">    }</span>
-<span class="source-line-no">349</span><span id="line-349"></span>
-<span class="source-line-no">350</span><span id="line-350">    @Override</span>
-<span class="source-line-no">351</span><span id="line-351">    public void getAstExtra(StringBuilder out) {</span>
-<span class="source-line-no">352</span><span id="line-352">      segmentSpanChars(out, getType(), "type");</span>
-<span class="source-line-no">353</span><span id="line-353">      segmentSpanChars(out, getIdReference(), "id-ref");</span>
-<span class="source-line-no">354</span><span id="line-354">    }</span>
-<span class="source-line-no">355</span><span id="line-355">  }</span>
-<span class="source-line-no">356</span><span id="line-356"></span>
-<span class="source-line-no">357</span><span id="line-357">  /**</span>
-<span class="source-line-no">358</span><span id="line-358">   * Used to collect insert nodes.</span>
-<span class="source-line-no">359</span><span id="line-359">   */</span>
-<span class="source-line-no">360</span><span id="line-360">  public static class InsertVisitor</span>
-<span class="source-line-no">361</span><span id="line-361">      extends NodeVisitorBase {</span>
-<span class="source-line-no">362</span><span id="line-362">    @NonNull</span>
-<span class="source-line-no">363</span><span id="line-363">    private final List&lt;InsertAnchorNode&gt; inserts = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">364</span><span id="line-364">    @NonNull</span>
-<span class="source-line-no">365</span><span id="line-365">    private final Predicate&lt;InsertAnchorNode&gt; filter;</span>
-<span class="source-line-no">366</span><span id="line-366"></span>
-<span class="source-line-no">367</span><span id="line-367">    /**</span>
-<span class="source-line-no">368</span><span id="line-368">     * Construct a new visitor that will use the provided filter to visit matching</span>
-<span class="source-line-no">369</span><span id="line-369">     * insert nodes.</span>
-<span class="source-line-no">370</span><span id="line-370">     *</span>
-<span class="source-line-no">371</span><span id="line-371">     * @param filter</span>
-<span class="source-line-no">372</span><span id="line-372">     *          the match criteria to use to identify matching insert nodes</span>
-<span class="source-line-no">373</span><span id="line-373">     */</span>
-<span class="source-line-no">374</span><span id="line-374">    public InsertVisitor(@NonNull Predicate&lt;InsertAnchorNode&gt; filter) {</span>
-<span class="source-line-no">375</span><span id="line-375">      this.filter = filter;</span>
-<span class="source-line-no">376</span><span id="line-376">    }</span>
-<span class="source-line-no">377</span><span id="line-377"></span>
-<span class="source-line-no">378</span><span id="line-378">    /**</span>
-<span class="source-line-no">379</span><span id="line-379">     * Process markup to identify insert nodes.</span>
-<span class="source-line-no">380</span><span id="line-380">     *</span>
-<span class="source-line-no">381</span><span id="line-381">     * @param markup</span>
-<span class="source-line-no">382</span><span id="line-382">     *          the markup to process</span>
-<span class="source-line-no">383</span><span id="line-383">     * @return this visitor</span>
-<span class="source-line-no">384</span><span id="line-384">     */</span>
-<span class="source-line-no">385</span><span id="line-385">    public InsertVisitor processNode(@NonNull IMarkupString&lt;?&gt; markup) {</span>
-<span class="source-line-no">386</span><span id="line-386">      visit(markup.getDocument());</span>
-<span class="source-line-no">387</span><span id="line-387">      return this;</span>
-<span class="source-line-no">388</span><span id="line-388">    }</span>
-<span class="source-line-no">389</span><span id="line-389"></span>
-<span class="source-line-no">390</span><span id="line-390">    @Override</span>
-<span class="source-line-no">391</span><span id="line-391">    protected void visit(Node node) {</span>
-<span class="source-line-no">392</span><span id="line-392">      if (node instanceof InsertAnchorNode) {</span>
-<span class="source-line-no">393</span><span id="line-393">        InsertAnchorNode insert = (InsertAnchorNode) node;</span>
-<span class="source-line-no">394</span><span id="line-394">        if (filter.test(insert)) {</span>
-<span class="source-line-no">395</span><span id="line-395">          inserts.add((InsertAnchorNode) node);</span>
-<span class="source-line-no">396</span><span id="line-396">        }</span>
-<span class="source-line-no">397</span><span id="line-397">      } else {</span>
-<span class="source-line-no">398</span><span id="line-398">        visitChildren(node);</span>
-<span class="source-line-no">399</span><span id="line-399">      }</span>
-<span class="source-line-no">400</span><span id="line-400">    }</span>
-<span class="source-line-no">401</span><span id="line-401"></span>
-<span class="source-line-no">402</span><span id="line-402">    /**</span>
-<span class="source-line-no">403</span><span id="line-403">     * Get the collected insert nodes.</span>
-<span class="source-line-no">404</span><span id="line-404">     *</span>
-<span class="source-line-no">405</span><span id="line-405">     * @return the nodes</span>
-<span class="source-line-no">406</span><span id="line-406">     */</span>
-<span class="source-line-no">407</span><span id="line-407">    @NonNull</span>
-<span class="source-line-no">408</span><span id="line-408">    public List&lt;InsertAnchorNode&gt; getInserts() {</span>
-<span class="source-line-no">409</span><span id="line-409">      return inserts;</span>
-<span class="source-line-no">410</span><span id="line-410">    }</span>
-<span class="source-line-no">411</span><span id="line-411">  }</span>
-<span class="source-line-no">412</span><span id="line-412">}</span>
+<span class="source-line-no">346</span><span id="line-346">      @NonNull</span>
+<span class="source-line-no">347</span><span id="line-347">      BasedSequence[] retval = { getType(), getIdReference() };</span>
+<span class="source-line-no">348</span><span id="line-348">      return retval;</span>
+<span class="source-line-no">349</span><span id="line-349">    }</span>
+<span class="source-line-no">350</span><span id="line-350"></span>
+<span class="source-line-no">351</span><span id="line-351">    @Override</span>
+<span class="source-line-no">352</span><span id="line-352">    public void getAstExtra(StringBuilder out) {</span>
+<span class="source-line-no">353</span><span id="line-353">      segmentSpanChars(out, getType(), "type");</span>
+<span class="source-line-no">354</span><span id="line-354">      segmentSpanChars(out, getIdReference(), "id-ref");</span>
+<span class="source-line-no">355</span><span id="line-355">    }</span>
+<span class="source-line-no">356</span><span id="line-356">  }</span>
+<span class="source-line-no">357</span><span id="line-357"></span>
+<span class="source-line-no">358</span><span id="line-358">  /**</span>
+<span class="source-line-no">359</span><span id="line-359">   * Used to collect insert nodes.</span>
+<span class="source-line-no">360</span><span id="line-360">   */</span>
+<span class="source-line-no">361</span><span id="line-361">  public static class InsertVisitor</span>
+<span class="source-line-no">362</span><span id="line-362">      extends NodeVisitorBase {</span>
+<span class="source-line-no">363</span><span id="line-363">    @NonNull</span>
+<span class="source-line-no">364</span><span id="line-364">    private final List&lt;InsertAnchorNode&gt; inserts = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">365</span><span id="line-365">    @NonNull</span>
+<span class="source-line-no">366</span><span id="line-366">    private final Predicate&lt;InsertAnchorNode&gt; filter;</span>
+<span class="source-line-no">367</span><span id="line-367"></span>
+<span class="source-line-no">368</span><span id="line-368">    /**</span>
+<span class="source-line-no">369</span><span id="line-369">     * Construct a new visitor that will use the provided filter to visit matching</span>
+<span class="source-line-no">370</span><span id="line-370">     * insert nodes.</span>
+<span class="source-line-no">371</span><span id="line-371">     *</span>
+<span class="source-line-no">372</span><span id="line-372">     * @param filter</span>
+<span class="source-line-no">373</span><span id="line-373">     *          the match criteria to use to identify matching insert nodes</span>
+<span class="source-line-no">374</span><span id="line-374">     */</span>
+<span class="source-line-no">375</span><span id="line-375">    public InsertVisitor(@NonNull Predicate&lt;InsertAnchorNode&gt; filter) {</span>
+<span class="source-line-no">376</span><span id="line-376">      this.filter = filter;</span>
+<span class="source-line-no">377</span><span id="line-377">    }</span>
+<span class="source-line-no">378</span><span id="line-378"></span>
+<span class="source-line-no">379</span><span id="line-379">    /**</span>
+<span class="source-line-no">380</span><span id="line-380">     * Process markup to identify insert nodes.</span>
+<span class="source-line-no">381</span><span id="line-381">     *</span>
+<span class="source-line-no">382</span><span id="line-382">     * @param markup</span>
+<span class="source-line-no">383</span><span id="line-383">     *          the markup to process</span>
+<span class="source-line-no">384</span><span id="line-384">     * @return this visitor</span>
+<span class="source-line-no">385</span><span id="line-385">     */</span>
+<span class="source-line-no">386</span><span id="line-386">    public InsertVisitor processNode(@NonNull IMarkupString&lt;?&gt; markup) {</span>
+<span class="source-line-no">387</span><span id="line-387">      visit(markup.getDocument());</span>
+<span class="source-line-no">388</span><span id="line-388">      return this;</span>
+<span class="source-line-no">389</span><span id="line-389">    }</span>
+<span class="source-line-no">390</span><span id="line-390"></span>
+<span class="source-line-no">391</span><span id="line-391">    @Override</span>
+<span class="source-line-no">392</span><span id="line-392">    protected void visit(Node node) {</span>
+<span class="source-line-no">393</span><span id="line-393">      if (node instanceof InsertAnchorNode) {</span>
+<span class="source-line-no">394</span><span id="line-394">        InsertAnchorNode insert = (InsertAnchorNode) node;</span>
+<span class="source-line-no">395</span><span id="line-395">        if (filter.test(insert)) {</span>
+<span class="source-line-no">396</span><span id="line-396">          inserts.add((InsertAnchorNode) node);</span>
+<span class="source-line-no">397</span><span id="line-397">        }</span>
+<span class="source-line-no">398</span><span id="line-398">      } else {</span>
+<span class="source-line-no">399</span><span id="line-399">        visitChildren(node);</span>
+<span class="source-line-no">400</span><span id="line-400">      }</span>
+<span class="source-line-no">401</span><span id="line-401">    }</span>
+<span class="source-line-no">402</span><span id="line-402"></span>
+<span class="source-line-no">403</span><span id="line-403">    /**</span>
+<span class="source-line-no">404</span><span id="line-404">     * Get the collected insert nodes.</span>
+<span class="source-line-no">405</span><span id="line-405">     *</span>
+<span class="source-line-no">406</span><span id="line-406">     * @return the nodes</span>
+<span class="source-line-no">407</span><span id="line-407">     */</span>
+<span class="source-line-no">408</span><span id="line-408">    @NonNull</span>
+<span class="source-line-no">409</span><span id="line-409">    public List&lt;InsertAnchorNode&gt; getInserts() {</span>
+<span class="source-line-no">410</span><span id="line-410">      return inserts;</span>
+<span class="source-line-no">411</span><span id="line-411">    }</span>
+<span class="source-line-no">412</span><span id="line-412">  }</span>
+<span class="source-line-no">413</span><span id="line-413">}</span>
 
 
 

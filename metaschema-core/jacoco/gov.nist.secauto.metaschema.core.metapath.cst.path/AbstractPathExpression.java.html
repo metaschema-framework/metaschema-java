@@ -52,32 +52,33 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 <span class="fc" id="L52">    outerFocus.getValue();</span>
 
     // check the current focus
-<span class="fc" id="L55">    @SuppressWarnings(&quot;unchecked&quot;) Stream&lt;? extends INodeItem&gt; nodeMatches</span>
-<span class="fc" id="L56">        = (Stream&lt;? extends INodeItem&gt;) expression.accept(dynamicContext, outerFocus).stream();</span>
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L56">    Stream&lt;? extends INodeItem&gt; nodeMatches</span>
+<span class="fc" id="L57">        = (Stream&lt;? extends INodeItem&gt;) expression.accept(dynamicContext, outerFocus).stream();</span>
 
-<span class="fc" id="L58">    Stream&lt;? extends INodeItem&gt; childMatches = outerFocus.stream()</span>
-<span class="fc" id="L59">        .map(ItemUtils::checkItemIsNodeItemForStep)</span>
-<span class="fc" id="L60">        .flatMap(focusedNode -&gt; {</span>
+<span class="fc" id="L59">    Stream&lt;? extends INodeItem&gt; childMatches = outerFocus.stream()</span>
+<span class="fc" id="L60">        .map(ItemUtils::checkItemIsNodeItemForStep)</span>
+<span class="fc" id="L61">        .flatMap(focusedNode -&gt; {</span>
 
           Stream&lt;? extends INodeItem&gt; matches;
-<span class="fc bfc" id="L63" title="All 2 branches covered.">          if (focusedNode instanceof ICycledAssemblyNodeItem) {</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">          if (focusedNode instanceof ICycledAssemblyNodeItem) {</span>
             // prevent stack overflow
-<span class="fc" id="L65">            matches = Stream.empty();</span>
+<span class="fc" id="L66">            matches = Stream.empty();</span>
           } else {
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">            assert focusedNode != null; // may be null?</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">            assert focusedNode != null; // may be null?</span>
             // create a stream of flags and model elements to check
-<span class="fc" id="L69">            Stream&lt;? extends INodeItem&gt; flags = focusedNode.flags();</span>
-<span class="fc" id="L70">            Stream&lt;? extends INodeItem&gt; modelItems = focusedNode.modelItems();</span>
+<span class="fc" id="L70">            Stream&lt;? extends INodeItem&gt; flags = focusedNode.flags();</span>
+<span class="fc" id="L71">            Stream&lt;? extends INodeItem&gt; modelItems = focusedNode.modelItems();</span>
 
-<span class="fc" id="L72">            matches = searchExpression(</span>
+<span class="fc" id="L73">            matches = searchExpression(</span>
                 expression,
                 dynamicContext,
-<span class="fc" id="L75">                ISequence.of(ObjectUtils.notNull(Stream.concat(flags, modelItems))));</span>
+<span class="fc" id="L76">                ISequence.of(ObjectUtils.notNull(Stream.concat(flags, modelItems))));</span>
           }
-<span class="fc" id="L77">          return matches;</span>
+<span class="fc" id="L78">          return matches;</span>
         });
 
-<span class="fc" id="L80">    return ObjectUtils.notNull(Stream.concat(nodeMatches, childMatches).distinct());</span>
+<span class="fc" id="L81">    return ObjectUtils.notNull(Stream.concat(nodeMatches, childMatches).distinct());</span>
   }
 
   /**
@@ -110,7 +111,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
     // retval = searchExpression(expr, dynamicContext, context);
     // }
     // return retval;
-<span class="fc" id="L113">    return searchExpression(expression, dynamicContext, focus);</span>
+<span class="fc" id="L114">    return searchExpression(expression, dynamicContext, focus);</span>
 
   }
 

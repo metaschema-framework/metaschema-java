@@ -52,24 +52,26 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   }
 
   @Override
-  public @NonNull TypeName getJavaFieldType() {
-<span class="fc" id="L56">    TypeName item = getJavaItemType();</span>
+  public @NonNull
+  TypeName getJavaFieldType() {
+<span class="fc" id="L57">    TypeName item = getJavaItemType();</span>
 
-    @NonNull TypeName retval;
-<span class="fc" id="L59">    IModelInstanceAbsolute instance = getInstance();</span>
-<span class="fc" id="L60">    int maxOccurance = instance.getMaxOccurs();</span>
-<span class="pc bpc" id="L61" title="1 of 4 branches missed.">    if (maxOccurance == -1 || maxOccurance &gt; 1) {</span>
-<span class="fc bfc" id="L62" title="All 2 branches covered.">      if (JsonGroupAsBehavior.KEYED.equals(instance.getJsonGroupAsBehavior())) {</span>
-<span class="fc" id="L63">        retval = ObjectUtils.notNull(</span>
-<span class="fc" id="L64">            ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), item));</span>
+    @NonNull
+    TypeName retval;
+<span class="fc" id="L61">    IModelInstanceAbsolute instance = getInstance();</span>
+<span class="fc" id="L62">    int maxOccurance = instance.getMaxOccurs();</span>
+<span class="pc bpc" id="L63" title="1 of 4 branches missed.">    if (maxOccurance == -1 || maxOccurance &gt; 1) {</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">      if (JsonGroupAsBehavior.KEYED.equals(instance.getJsonGroupAsBehavior())) {</span>
+<span class="fc" id="L65">        retval = ObjectUtils.notNull(</span>
+<span class="fc" id="L66">            ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), item));</span>
       } else {
-<span class="fc" id="L66">        retval = ObjectUtils.notNull(ParameterizedTypeName.get(ClassName.get(List.class), item));</span>
+<span class="fc" id="L68">        retval = ObjectUtils.notNull(ParameterizedTypeName.get(ClassName.get(List.class), item));</span>
       }
     } else {
-<span class="fc" id="L69">      retval = item;</span>
+<span class="fc" id="L71">      retval = item;</span>
     }
 
-<span class="fc" id="L72">    return retval;</span>
+<span class="fc" id="L74">    return retval;</span>
   }
 
   @NonNull
@@ -79,42 +81,42 @@ import edu.umd.cs.findbugs.annotations.NonNull;
   public Set&lt;IModelDefinition&gt; buildField(
       TypeSpec.Builder typeBuilder,
       FieldSpec.Builder fieldBuilder) {
-<span class="fc" id="L82">    Set&lt;IModelDefinition&gt; retval = new LinkedHashSet&lt;&gt;(super.buildField(typeBuilder, fieldBuilder));</span>
+<span class="fc" id="L84">    Set&lt;IModelDefinition&gt; retval = new LinkedHashSet&lt;&gt;(super.buildField(typeBuilder, fieldBuilder));</span>
 
-<span class="fc" id="L84">    AnnotationSpec.Builder annotation = newBindingAnnotation();</span>
+<span class="fc" id="L86">    AnnotationSpec.Builder annotation = newBindingAnnotation();</span>
 
-<span class="fc" id="L86">    retval.addAll(buildBindingAnnotation(typeBuilder, fieldBuilder, annotation));</span>
+<span class="fc" id="L88">    retval.addAll(buildBindingAnnotation(typeBuilder, fieldBuilder, annotation));</span>
 
-<span class="fc" id="L88">    fieldBuilder.addAnnotation(annotation.build());</span>
+<span class="fc" id="L90">    fieldBuilder.addAnnotation(annotation.build());</span>
 
-<span class="fc" id="L90">    return retval;</span>
+<span class="fc" id="L92">    return retval;</span>
   }
 
   @NonNull
   protected AnnotationSpec.Builder generateGroupAsAnnotation() {
-<span class="fc" id="L95">    AnnotationSpec.Builder groupAsAnnoation = AnnotationSpec.builder(GroupAs.class);</span>
+<span class="fc" id="L97">    AnnotationSpec.Builder groupAsAnnoation = AnnotationSpec.builder(GroupAs.class);</span>
 
-<span class="fc" id="L97">    IModelInstanceAbsolute modelInstance = getInstance();</span>
+<span class="fc" id="L99">    IModelInstanceAbsolute modelInstance = getInstance();</span>
 
-<span class="fc" id="L99">    groupAsAnnoation.addMember(&quot;name&quot;, &quot;$S&quot;,</span>
-<span class="fc" id="L100">        ObjectUtils.requireNonNull(modelInstance.getGroupAsName(), &quot;The grouping name must be non-null&quot;));</span>
+<span class="fc" id="L101">    groupAsAnnoation.addMember(&quot;name&quot;, &quot;$S&quot;,</span>
+<span class="fc" id="L102">        ObjectUtils.requireNonNull(modelInstance.getGroupAsName(), &quot;The grouping name must be non-null&quot;));</span>
 
     // TODO: handle group-as namespace as a prefix
 
-<span class="fc" id="L104">    JsonGroupAsBehavior jsonGroupAsBehavior = modelInstance.getJsonGroupAsBehavior();</span>
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">    assert jsonGroupAsBehavior != null;</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (!IGroupable.DEFAULT_JSON_GROUP_AS_BEHAVIOR.equals(jsonGroupAsBehavior)) {</span>
-<span class="fc" id="L107">      groupAsAnnoation.addMember(&quot;inJson&quot;, &quot;$T.$L&quot;,</span>
-<span class="fc" id="L108">          JsonGroupAsBehavior.class, jsonGroupAsBehavior.toString());</span>
+<span class="fc" id="L106">    JsonGroupAsBehavior jsonGroupAsBehavior = modelInstance.getJsonGroupAsBehavior();</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">    assert jsonGroupAsBehavior != null;</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (!IGroupable.DEFAULT_JSON_GROUP_AS_BEHAVIOR.equals(jsonGroupAsBehavior)) {</span>
+<span class="fc" id="L109">      groupAsAnnoation.addMember(&quot;inJson&quot;, &quot;$T.$L&quot;,</span>
+<span class="fc" id="L110">          JsonGroupAsBehavior.class, jsonGroupAsBehavior.toString());</span>
     }
 
-<span class="fc" id="L111">    XmlGroupAsBehavior xmlGroupAsBehavior = modelInstance.getXmlGroupAsBehavior();</span>
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">    assert xmlGroupAsBehavior != null;</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">    if (!IGroupable.DEFAULT_XML_GROUP_AS_BEHAVIOR.equals(xmlGroupAsBehavior)) {</span>
-<span class="fc" id="L114">      groupAsAnnoation.addMember(&quot;inXml&quot;, &quot;$T.$L&quot;,</span>
-<span class="fc" id="L115">          XmlGroupAsBehavior.class, xmlGroupAsBehavior.toString());</span>
+<span class="fc" id="L113">    XmlGroupAsBehavior xmlGroupAsBehavior = modelInstance.getXmlGroupAsBehavior();</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">    assert xmlGroupAsBehavior != null;</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">    if (!IGroupable.DEFAULT_XML_GROUP_AS_BEHAVIOR.equals(xmlGroupAsBehavior)) {</span>
+<span class="fc" id="L116">      groupAsAnnoation.addMember(&quot;inXml&quot;, &quot;$T.$L&quot;,</span>
+<span class="fc" id="L117">          XmlGroupAsBehavior.class, xmlGroupAsBehavior.toString());</span>
     }
-<span class="fc" id="L117">    return groupAsAnnoation;</span>
+<span class="fc" id="L119">    return groupAsAnnoation;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

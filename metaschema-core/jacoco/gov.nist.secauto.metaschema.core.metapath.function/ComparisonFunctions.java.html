@@ -172,28 +172,29 @@ public final class ComparisonFunctions {
       @NonNull IAnyAtomicItem left,
       @NonNull Operator operator,
       @NonNull IAnyAtomicItem right) {
-    @NonNull IBooleanItem retval;
-<span class="pc bpc" id="L176" title="1 of 4 branches missed.">    if (left instanceof IStringItem || right instanceof IStringItem) {</span>
-<span class="fc" id="L177">      retval = stringCompare(IStringItem.cast(left), operator, IStringItem.cast(right));</span>
-<span class="pc bpc" id="L178" title="1 of 4 branches missed.">    } else if (left instanceof INumericItem &amp;&amp; right instanceof INumericItem) {</span>
-<span class="fc" id="L179">      retval = numericCompare((INumericItem) left, operator, (INumericItem) right);</span>
-<span class="pc bpc" id="L180" title="2 of 4 branches missed.">    } else if (left instanceof IBooleanItem &amp;&amp; right instanceof IBooleanItem) {</span>
-<span class="fc" id="L181">      retval = booleanCompare((IBooleanItem) left, operator, (IBooleanItem) right);</span>
-<span class="nc bnc" id="L182" title="All 4 branches missed.">    } else if (left instanceof IDateTimeItem &amp;&amp; right instanceof IDateTimeItem) {</span>
-<span class="nc" id="L183">      retval = dateTimeCompare((IDateTimeItem) left, operator, (IDateTimeItem) right);</span>
-<span class="nc bnc" id="L184" title="All 4 branches missed.">    } else if (left instanceof IDateItem &amp;&amp; right instanceof IDateItem) {</span>
-<span class="nc" id="L185">      retval = dateCompare((IDateItem) left, operator, (IDateItem) right);</span>
-<span class="nc bnc" id="L186" title="All 4 branches missed.">    } else if (left instanceof IDurationItem &amp;&amp; right instanceof IDurationItem) {</span>
-<span class="nc" id="L187">      retval = durationCompare((IDurationItem) left, operator, (IDurationItem) right);</span>
-<span class="nc bnc" id="L188" title="All 4 branches missed.">    } else if (left instanceof IBase64BinaryItem &amp;&amp; right instanceof IBase64BinaryItem) {</span>
-<span class="nc" id="L189">      retval = binaryCompare((IBase64BinaryItem) left, operator, (IBase64BinaryItem) right);</span>
+    @NonNull
+    IBooleanItem retval;
+<span class="pc bpc" id="L177" title="1 of 4 branches missed.">    if (left instanceof IStringItem || right instanceof IStringItem) {</span>
+<span class="fc" id="L178">      retval = stringCompare(IStringItem.cast(left), operator, IStringItem.cast(right));</span>
+<span class="pc bpc" id="L179" title="1 of 4 branches missed.">    } else if (left instanceof INumericItem &amp;&amp; right instanceof INumericItem) {</span>
+<span class="fc" id="L180">      retval = numericCompare((INumericItem) left, operator, (INumericItem) right);</span>
+<span class="pc bpc" id="L181" title="2 of 4 branches missed.">    } else if (left instanceof IBooleanItem &amp;&amp; right instanceof IBooleanItem) {</span>
+<span class="fc" id="L182">      retval = booleanCompare((IBooleanItem) left, operator, (IBooleanItem) right);</span>
+<span class="nc bnc" id="L183" title="All 4 branches missed.">    } else if (left instanceof IDateTimeItem &amp;&amp; right instanceof IDateTimeItem) {</span>
+<span class="nc" id="L184">      retval = dateTimeCompare((IDateTimeItem) left, operator, (IDateTimeItem) right);</span>
+<span class="nc bnc" id="L185" title="All 4 branches missed.">    } else if (left instanceof IDateItem &amp;&amp; right instanceof IDateItem) {</span>
+<span class="nc" id="L186">      retval = dateCompare((IDateItem) left, operator, (IDateItem) right);</span>
+<span class="nc bnc" id="L187" title="All 4 branches missed.">    } else if (left instanceof IDurationItem &amp;&amp; right instanceof IDurationItem) {</span>
+<span class="nc" id="L188">      retval = durationCompare((IDurationItem) left, operator, (IDurationItem) right);</span>
+<span class="nc bnc" id="L189" title="All 4 branches missed.">    } else if (left instanceof IBase64BinaryItem &amp;&amp; right instanceof IBase64BinaryItem) {</span>
+<span class="nc" id="L190">      retval = binaryCompare((IBase64BinaryItem) left, operator, (IBase64BinaryItem) right);</span>
     } else {
-<span class="nc" id="L191">      throw new InvalidTypeMetapathException(</span>
+<span class="nc" id="L192">      throw new InvalidTypeMetapathException(</span>
           null,
-<span class="nc" id="L193">          String.format(&quot;invalid types for comparison: %s %s %s&quot;, left.getClass().getName(),</span>
-<span class="nc" id="L194">              operator.name().toLowerCase(Locale.ROOT), right.getClass().getName()));</span>
+<span class="nc" id="L194">          String.format(&quot;invalid types for comparison: %s %s %s&quot;, left.getClass().getName(),</span>
+<span class="nc" id="L195">              operator.name().toLowerCase(Locale.ROOT), right.getClass().getName()));</span>
     }
-<span class="fc" id="L196">    return retval;</span>
+<span class="fc" id="L197">    return retval;</span>
   }
 
   /**
@@ -211,44 +212,44 @@ public final class ComparisonFunctions {
   @NonNull
   public static IBooleanItem stringCompare(@NonNull IStringItem left, @NonNull Operator operator,
       @NonNull IStringItem right) {
-<span class="fc" id="L214">    int result = left.compareTo(right);</span>
+<span class="fc" id="L215">    int result = left.compareTo(right);</span>
     boolean retval;
-<span class="pc bpc" id="L216" title="1 of 7 branches missed.">    switch (operator) {</span>
+<span class="pc bpc" id="L217" title="1 of 7 branches missed.">    switch (operator) {</span>
     case EQ:
       // retval = OperationFunctions.opNumericEqual(left.compare(right),
       // IIntegerItem.ZERO);
-<span class="fc bfc" id="L220" title="All 2 branches covered.">      retval = result == 0;</span>
-<span class="fc" id="L221">      break;</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">      retval = result == 0;</span>
+<span class="fc" id="L222">      break;</span>
     case GE:
       // retval = OperationFunctions.opNumericGreaterThan(left.compare(right),
       // IIntegerItem.NEGATIVE_ONE);
-<span class="fc bfc" id="L225" title="All 2 branches covered.">      retval = result &gt;= 0;</span>
-<span class="fc" id="L226">      break;</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">      retval = result &gt;= 0;</span>
+<span class="fc" id="L227">      break;</span>
     case GT:
       // retval = OperationFunctions.opNumericGreaterThan(left.compare(right),
       // IIntegerItem.ZERO);
-<span class="fc bfc" id="L230" title="All 2 branches covered.">      retval = result &gt; 0;</span>
-<span class="fc" id="L231">      break;</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">      retval = result &gt; 0;</span>
+<span class="fc" id="L232">      break;</span>
     case LE:
       // retval = OperationFunctions.opNumericLessThan(left.compare(right),
       // IIntegerItem.ONE);
-<span class="fc bfc" id="L235" title="All 2 branches covered.">      retval = result &lt;= 0;</span>
-<span class="fc" id="L236">      break;</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">      retval = result &lt;= 0;</span>
+<span class="fc" id="L237">      break;</span>
     case LT:
       // retval = OperationFunctions.opNumericLessThan(left.compare(right),
       // IIntegerItem.ZERO);
-<span class="fc bfc" id="L240" title="All 2 branches covered.">      retval = result &lt; 0;</span>
-<span class="fc" id="L241">      break;</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">      retval = result &lt; 0;</span>
+<span class="fc" id="L242">      break;</span>
     case NE:
       // retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left.compare(right),
       // IIntegerItem.ZERO));
-<span class="fc bfc" id="L245" title="All 2 branches covered.">      retval = result != 0;</span>
-<span class="fc" id="L246">      break;</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">      retval = result != 0;</span>
+<span class="fc" id="L247">      break;</span>
     default:
-<span class="nc" id="L248">      throw new IllegalArgumentException(</span>
-<span class="nc" id="L249">          String.format(&quot;Unsupported operator '%s'&quot;, operator.name())); // NOPMD</span>
+<span class="nc" id="L249">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L250">          String.format(&quot;Unsupported operator '%s'&quot;, operator.name())); // NOPMD</span>
     }
-<span class="fc" id="L251">    return IBooleanItem.valueOf(retval);</span>
+<span class="fc" id="L252">    return IBooleanItem.valueOf(retval);</span>
   }
 
   /**
@@ -267,35 +268,35 @@ public final class ComparisonFunctions {
   public static IBooleanItem numericCompare(@NonNull INumericItem left, @NonNull Operator operator,
       @NonNull INumericItem right) {
     IBooleanItem retval;
-<span class="pc bpc" id="L270" title="6 of 7 branches missed.">    switch (operator) {</span>
+<span class="pc bpc" id="L271" title="6 of 7 branches missed.">    switch (operator) {</span>
     case EQ:
-<span class="fc" id="L272">      retval = OperationFunctions.opNumericEqual(left, right);</span>
-<span class="fc" id="L273">      break;</span>
+<span class="fc" id="L273">      retval = OperationFunctions.opNumericEqual(left, right);</span>
+<span class="fc" id="L274">      break;</span>
     case GE: {
-<span class="nc" id="L275">      IBooleanItem gt = OperationFunctions.opNumericGreaterThan(left, right);</span>
-<span class="nc" id="L276">      IBooleanItem eq = OperationFunctions.opNumericEqual(left, right);</span>
-<span class="nc bnc" id="L277" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L278">      break;</span>
+<span class="nc" id="L276">      IBooleanItem gt = OperationFunctions.opNumericGreaterThan(left, right);</span>
+<span class="nc" id="L277">      IBooleanItem eq = OperationFunctions.opNumericEqual(left, right);</span>
+<span class="nc bnc" id="L278" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L279">      break;</span>
     }
     case GT:
-<span class="nc" id="L281">      retval = OperationFunctions.opNumericGreaterThan(left, right);</span>
-<span class="nc" id="L282">      break;</span>
+<span class="nc" id="L282">      retval = OperationFunctions.opNumericGreaterThan(left, right);</span>
+<span class="nc" id="L283">      break;</span>
     case LE: {
-<span class="nc" id="L284">      IBooleanItem lt = OperationFunctions.opNumericLessThan(left, right);</span>
-<span class="nc" id="L285">      IBooleanItem eq = OperationFunctions.opNumericEqual(left, right);</span>
-<span class="nc bnc" id="L286" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L287">      break;</span>
+<span class="nc" id="L285">      IBooleanItem lt = OperationFunctions.opNumericLessThan(left, right);</span>
+<span class="nc" id="L286">      IBooleanItem eq = OperationFunctions.opNumericEqual(left, right);</span>
+<span class="nc bnc" id="L287" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L288">      break;</span>
     }
     case LT:
-<span class="nc" id="L290">      retval = OperationFunctions.opNumericLessThan(left, right);</span>
-<span class="nc" id="L291">      break;</span>
+<span class="nc" id="L291">      retval = OperationFunctions.opNumericLessThan(left, right);</span>
+<span class="nc" id="L292">      break;</span>
     case NE:
-<span class="nc" id="L293">      retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left, right));</span>
-<span class="nc" id="L294">      break;</span>
+<span class="nc" id="L294">      retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left, right));</span>
+<span class="nc" id="L295">      break;</span>
     default:
-<span class="nc" id="L296">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
+<span class="nc" id="L297">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
     }
-<span class="fc" id="L298">    return retval;</span>
+<span class="fc" id="L299">    return retval;</span>
   }
 
   /**
@@ -314,35 +315,35 @@ public final class ComparisonFunctions {
   public static IBooleanItem booleanCompare(@NonNull IBooleanItem left, @NonNull Operator operator,
       @NonNull IBooleanItem right) {
     IBooleanItem retval;
-<span class="pc bpc" id="L317" title="1 of 7 branches missed.">    switch (operator) {</span>
+<span class="pc bpc" id="L318" title="1 of 7 branches missed.">    switch (operator) {</span>
     case EQ:
-<span class="fc" id="L319">      retval = OperationFunctions.opBooleanEqual(left, right);</span>
-<span class="fc" id="L320">      break;</span>
+<span class="fc" id="L320">      retval = OperationFunctions.opBooleanEqual(left, right);</span>
+<span class="fc" id="L321">      break;</span>
     case GE: {
-<span class="fc" id="L322">      IBooleanItem gt = OperationFunctions.opBooleanGreaterThan(left, right);</span>
-<span class="fc" id="L323">      IBooleanItem eq = OperationFunctions.opBooleanEqual(left, right);</span>
-<span class="pc bpc" id="L324" title="2 of 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="fc" id="L325">      break;</span>
+<span class="fc" id="L323">      IBooleanItem gt = OperationFunctions.opBooleanGreaterThan(left, right);</span>
+<span class="fc" id="L324">      IBooleanItem eq = OperationFunctions.opBooleanEqual(left, right);</span>
+<span class="pc bpc" id="L325" title="2 of 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="fc" id="L326">      break;</span>
     }
     case GT:
-<span class="fc" id="L328">      retval = OperationFunctions.opBooleanGreaterThan(left, right);</span>
-<span class="fc" id="L329">      break;</span>
+<span class="fc" id="L329">      retval = OperationFunctions.opBooleanGreaterThan(left, right);</span>
+<span class="fc" id="L330">      break;</span>
     case LE: {
-<span class="fc" id="L331">      IBooleanItem lt = OperationFunctions.opBooleanLessThan(left, right);</span>
-<span class="fc" id="L332">      IBooleanItem eq = OperationFunctions.opBooleanEqual(left, right);</span>
-<span class="pc bpc" id="L333" title="2 of 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="fc" id="L334">      break;</span>
+<span class="fc" id="L332">      IBooleanItem lt = OperationFunctions.opBooleanLessThan(left, right);</span>
+<span class="fc" id="L333">      IBooleanItem eq = OperationFunctions.opBooleanEqual(left, right);</span>
+<span class="pc bpc" id="L334" title="2 of 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="fc" id="L335">      break;</span>
     }
     case LT:
-<span class="fc" id="L337">      retval = OperationFunctions.opBooleanLessThan(left, right);</span>
-<span class="fc" id="L338">      break;</span>
+<span class="fc" id="L338">      retval = OperationFunctions.opBooleanLessThan(left, right);</span>
+<span class="fc" id="L339">      break;</span>
     case NE:
-<span class="fc" id="L340">      retval = FnNot.fnNot(OperationFunctions.opBooleanEqual(left, right));</span>
-<span class="fc" id="L341">      break;</span>
+<span class="fc" id="L341">      retval = FnNot.fnNot(OperationFunctions.opBooleanEqual(left, right));</span>
+<span class="fc" id="L342">      break;</span>
     default:
-<span class="nc" id="L343">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
+<span class="nc" id="L344">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
     }
-<span class="fc" id="L345">    return retval;</span>
+<span class="fc" id="L346">    return retval;</span>
   }
 
   /**
@@ -361,35 +362,35 @@ public final class ComparisonFunctions {
   public static IBooleanItem dateTimeCompare(@NonNull IDateTimeItem left, @NonNull Operator operator,
       @NonNull IDateTimeItem right) {
     IBooleanItem retval;
-<span class="nc bnc" id="L364" title="All 7 branches missed.">    switch (operator) {</span>
+<span class="nc bnc" id="L365" title="All 7 branches missed.">    switch (operator) {</span>
     case EQ:
-<span class="nc" id="L366">      retval = OperationFunctions.opDateTimeEqual(left, right);</span>
-<span class="nc" id="L367">      break;</span>
+<span class="nc" id="L367">      retval = OperationFunctions.opDateTimeEqual(left, right);</span>
+<span class="nc" id="L368">      break;</span>
     case GE: {
-<span class="nc" id="L369">      IBooleanItem gt = OperationFunctions.opDateTimeGreaterThan(left, right);</span>
-<span class="nc" id="L370">      IBooleanItem eq = OperationFunctions.opDateTimeEqual(left, right);</span>
-<span class="nc bnc" id="L371" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L372">      break;</span>
+<span class="nc" id="L370">      IBooleanItem gt = OperationFunctions.opDateTimeGreaterThan(left, right);</span>
+<span class="nc" id="L371">      IBooleanItem eq = OperationFunctions.opDateTimeEqual(left, right);</span>
+<span class="nc bnc" id="L372" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L373">      break;</span>
     }
     case GT:
-<span class="nc" id="L375">      retval = OperationFunctions.opDateTimeGreaterThan(left, right);</span>
-<span class="nc" id="L376">      break;</span>
+<span class="nc" id="L376">      retval = OperationFunctions.opDateTimeGreaterThan(left, right);</span>
+<span class="nc" id="L377">      break;</span>
     case LE: {
-<span class="nc" id="L378">      IBooleanItem lt = OperationFunctions.opDateTimeLessThan(left, right);</span>
-<span class="nc" id="L379">      IBooleanItem eq = OperationFunctions.opDateTimeEqual(left, right);</span>
-<span class="nc bnc" id="L380" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L381">      break;</span>
+<span class="nc" id="L379">      IBooleanItem lt = OperationFunctions.opDateTimeLessThan(left, right);</span>
+<span class="nc" id="L380">      IBooleanItem eq = OperationFunctions.opDateTimeEqual(left, right);</span>
+<span class="nc bnc" id="L381" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L382">      break;</span>
     }
     case LT:
-<span class="nc" id="L384">      retval = OperationFunctions.opDateTimeLessThan(left, right);</span>
-<span class="nc" id="L385">      break;</span>
+<span class="nc" id="L385">      retval = OperationFunctions.opDateTimeLessThan(left, right);</span>
+<span class="nc" id="L386">      break;</span>
     case NE:
-<span class="nc" id="L387">      retval = FnNot.fnNot(OperationFunctions.opDateTimeEqual(left, right));</span>
-<span class="nc" id="L388">      break;</span>
+<span class="nc" id="L388">      retval = FnNot.fnNot(OperationFunctions.opDateTimeEqual(left, right));</span>
+<span class="nc" id="L389">      break;</span>
     default:
-<span class="nc" id="L390">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
+<span class="nc" id="L391">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
     }
-<span class="nc" id="L392">    return retval;</span>
+<span class="nc" id="L393">    return retval;</span>
   }
 
   /**
@@ -408,35 +409,35 @@ public final class ComparisonFunctions {
   public static IBooleanItem dateCompare(@NonNull IDateItem left, @NonNull Operator operator,
       @NonNull IDateItem right) {
     IBooleanItem retval;
-<span class="nc bnc" id="L411" title="All 7 branches missed.">    switch (operator) {</span>
+<span class="nc bnc" id="L412" title="All 7 branches missed.">    switch (operator) {</span>
     case EQ:
-<span class="nc" id="L413">      retval = OperationFunctions.opDateEqual(left, right);</span>
-<span class="nc" id="L414">      break;</span>
+<span class="nc" id="L414">      retval = OperationFunctions.opDateEqual(left, right);</span>
+<span class="nc" id="L415">      break;</span>
     case GE: {
-<span class="nc" id="L416">      IBooleanItem gt = OperationFunctions.opDateGreaterThan(left, right);</span>
-<span class="nc" id="L417">      IBooleanItem eq = OperationFunctions.opDateEqual(left, right);</span>
-<span class="nc bnc" id="L418" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L419">      break;</span>
+<span class="nc" id="L417">      IBooleanItem gt = OperationFunctions.opDateGreaterThan(left, right);</span>
+<span class="nc" id="L418">      IBooleanItem eq = OperationFunctions.opDateEqual(left, right);</span>
+<span class="nc bnc" id="L419" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L420">      break;</span>
     }
     case GT:
-<span class="nc" id="L422">      retval = OperationFunctions.opDateGreaterThan(left, right);</span>
-<span class="nc" id="L423">      break;</span>
+<span class="nc" id="L423">      retval = OperationFunctions.opDateGreaterThan(left, right);</span>
+<span class="nc" id="L424">      break;</span>
     case LE: {
-<span class="nc" id="L425">      IBooleanItem lt = OperationFunctions.opDateLessThan(left, right);</span>
-<span class="nc" id="L426">      IBooleanItem eq = OperationFunctions.opDateEqual(left, right);</span>
-<span class="nc bnc" id="L427" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L428">      break;</span>
+<span class="nc" id="L426">      IBooleanItem lt = OperationFunctions.opDateLessThan(left, right);</span>
+<span class="nc" id="L427">      IBooleanItem eq = OperationFunctions.opDateEqual(left, right);</span>
+<span class="nc bnc" id="L428" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L429">      break;</span>
     }
     case LT:
-<span class="nc" id="L431">      retval = OperationFunctions.opDateLessThan(left, right);</span>
-<span class="nc" id="L432">      break;</span>
+<span class="nc" id="L432">      retval = OperationFunctions.opDateLessThan(left, right);</span>
+<span class="nc" id="L433">      break;</span>
     case NE:
-<span class="nc" id="L434">      retval = FnNot.fnNot(OperationFunctions.opDateEqual(left, right));</span>
-<span class="nc" id="L435">      break;</span>
+<span class="nc" id="L435">      retval = FnNot.fnNot(OperationFunctions.opDateEqual(left, right));</span>
+<span class="nc" id="L436">      break;</span>
     default:
-<span class="nc" id="L437">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
+<span class="nc" id="L438">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
     }
-<span class="nc" id="L439">    return retval;</span>
+<span class="nc" id="L440">    return retval;</span>
   }
 
   /**
@@ -456,78 +457,78 @@ public final class ComparisonFunctions {
       @NonNull IDurationItem left,
       @NonNull Operator operator,
       @NonNull IDurationItem right) {
-<span class="nc" id="L459">    IBooleanItem retval = null;</span>
-<span class="nc bnc" id="L460" title="All 7 branches missed.">    switch (operator) {</span>
+<span class="nc" id="L460">    IBooleanItem retval = null;</span>
+<span class="nc bnc" id="L461" title="All 7 branches missed.">    switch (operator) {</span>
     case EQ:
-<span class="nc" id="L462">      retval = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="nc" id="L463">      break;</span>
+<span class="nc" id="L463">      retval = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="nc" id="L464">      break;</span>
     case GE:
-<span class="nc bnc" id="L465" title="All 4 branches missed.">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
-<span class="nc" id="L466">        IBooleanItem gt = OperationFunctions.opYearMonthDurationGreaterThan(</span>
+<span class="nc bnc" id="L466" title="All 4 branches missed.">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
+<span class="nc" id="L467">        IBooleanItem gt = OperationFunctions.opYearMonthDurationGreaterThan(</span>
             (IYearMonthDurationItem) left,
             (IYearMonthDurationItem) right);
-<span class="nc" id="L469">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="nc bnc" id="L470" title="All 4 branches missed.">        retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="nc bnc" id="L471" title="All 4 branches missed.">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
-<span class="nc" id="L472">        IBooleanItem gt = OperationFunctions.opDayTimeDurationGreaterThan(</span>
+<span class="nc" id="L470">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="nc bnc" id="L471" title="All 4 branches missed.">        retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="nc bnc" id="L472" title="All 4 branches missed.">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
+<span class="nc" id="L473">        IBooleanItem gt = OperationFunctions.opDayTimeDurationGreaterThan(</span>
             (IDayTimeDurationItem) left,
             (IDayTimeDurationItem) right);
-<span class="nc" id="L475">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="nc bnc" id="L476" title="All 4 branches missed.">        retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L477">      }</span>
+<span class="nc" id="L476">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="nc bnc" id="L477" title="All 4 branches missed.">        retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L478">      }</span>
       break;
     case GT:
-<span class="nc bnc" id="L480" title="All 4 branches missed.">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
-<span class="nc" id="L481">        retval = OperationFunctions.opYearMonthDurationGreaterThan(</span>
+<span class="nc bnc" id="L481" title="All 4 branches missed.">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
+<span class="nc" id="L482">        retval = OperationFunctions.opYearMonthDurationGreaterThan(</span>
             (IYearMonthDurationItem) left,
             (IYearMonthDurationItem) right);
-<span class="nc bnc" id="L484" title="All 4 branches missed.">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
-<span class="nc" id="L485">        retval = OperationFunctions.opDayTimeDurationGreaterThan(</span>
+<span class="nc bnc" id="L485" title="All 4 branches missed.">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
+<span class="nc" id="L486">        retval = OperationFunctions.opDayTimeDurationGreaterThan(</span>
             (IDayTimeDurationItem) left,
             (IDayTimeDurationItem) right);
       }
       break;
     case LE:
-<span class="nc bnc" id="L491" title="All 4 branches missed.">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
-<span class="nc" id="L492">        IBooleanItem lt = OperationFunctions.opYearMonthDurationLessThan(</span>
+<span class="nc bnc" id="L492" title="All 4 branches missed.">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
+<span class="nc" id="L493">        IBooleanItem lt = OperationFunctions.opYearMonthDurationLessThan(</span>
             (IYearMonthDurationItem) left,
             (IYearMonthDurationItem) right);
-<span class="nc" id="L495">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="nc bnc" id="L496" title="All 4 branches missed.">        retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="nc bnc" id="L497" title="All 4 branches missed.">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
-<span class="nc" id="L498">        IBooleanItem lt = OperationFunctions.opDayTimeDurationLessThan(</span>
+<span class="nc" id="L496">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="nc bnc" id="L497" title="All 4 branches missed.">        retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="nc bnc" id="L498" title="All 4 branches missed.">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
+<span class="nc" id="L499">        IBooleanItem lt = OperationFunctions.opDayTimeDurationLessThan(</span>
             (IDayTimeDurationItem) left,
             (IDayTimeDurationItem) right);
-<span class="nc" id="L501">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
-<span class="nc bnc" id="L502" title="All 4 branches missed.">        retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L503">      }</span>
+<span class="nc" id="L502">        IBooleanItem eq = OperationFunctions.opDurationEqual(left, right);</span>
+<span class="nc bnc" id="L503" title="All 4 branches missed.">        retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L504">      }</span>
       break;
     case LT:
-<span class="nc bnc" id="L506" title="All 4 branches missed.">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
-<span class="nc" id="L507">        retval = OperationFunctions.opYearMonthDurationLessThan(</span>
+<span class="nc bnc" id="L507" title="All 4 branches missed.">      if (left instanceof IYearMonthDurationItem &amp;&amp; right instanceof IYearMonthDurationItem) {</span>
+<span class="nc" id="L508">        retval = OperationFunctions.opYearMonthDurationLessThan(</span>
             (IYearMonthDurationItem) left,
             (IYearMonthDurationItem) right);
-<span class="nc bnc" id="L510" title="All 4 branches missed.">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
-<span class="nc" id="L511">        retval = OperationFunctions.opDayTimeDurationLessThan(</span>
+<span class="nc bnc" id="L511" title="All 4 branches missed.">      } else if (left instanceof IDayTimeDurationItem &amp;&amp; right instanceof IDayTimeDurationItem) {</span>
+<span class="nc" id="L512">        retval = OperationFunctions.opDayTimeDurationLessThan(</span>
             (IDayTimeDurationItem) left,
             (IDayTimeDurationItem) right);
       }
       break;
     case NE:
-<span class="nc" id="L517">      retval = FnNot.fnNot(OperationFunctions.opDurationEqual(left, right));</span>
-<span class="nc" id="L518">      break;</span>
+<span class="nc" id="L518">      retval = FnNot.fnNot(OperationFunctions.opDurationEqual(left, right));</span>
+<span class="nc" id="L519">      break;</span>
     default:
-<span class="nc" id="L520">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
+<span class="nc" id="L521">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
     }
 
-<span class="nc bnc" id="L523" title="All 2 branches missed.">    if (retval == null) {</span>
-<span class="nc" id="L524">      throw new InvalidTypeMetapathException(</span>
+<span class="nc bnc" id="L524" title="All 2 branches missed.">    if (retval == null) {</span>
+<span class="nc" id="L525">      throw new InvalidTypeMetapathException(</span>
           null,
-<span class="nc" id="L526">          String.format(&quot;The item types '%s' and '%s' are not comparable&quot;,</span>
-<span class="nc" id="L527">              left.getClass().getName(),</span>
-<span class="nc" id="L528">              right.getClass().getName()));</span>
+<span class="nc" id="L527">          String.format(&quot;The item types '%s' and '%s' are not comparable&quot;,</span>
+<span class="nc" id="L528">              left.getClass().getName(),</span>
+<span class="nc" id="L529">              right.getClass().getName()));</span>
     }
-<span class="nc" id="L530">    return retval;</span>
+<span class="nc" id="L531">    return retval;</span>
   }
 
   /**
@@ -546,35 +547,35 @@ public final class ComparisonFunctions {
   public static IBooleanItem binaryCompare(@NonNull IBase64BinaryItem left, @NonNull Operator operator,
       @NonNull IBase64BinaryItem right) {
     IBooleanItem retval;
-<span class="nc bnc" id="L549" title="All 7 branches missed.">    switch (operator) {</span>
+<span class="nc bnc" id="L550" title="All 7 branches missed.">    switch (operator) {</span>
     case EQ:
-<span class="nc" id="L551">      retval = OperationFunctions.opBase64BinaryEqual(left, right);</span>
-<span class="nc" id="L552">      break;</span>
+<span class="nc" id="L552">      retval = OperationFunctions.opBase64BinaryEqual(left, right);</span>
+<span class="nc" id="L553">      break;</span>
     case GE: {
-<span class="nc" id="L554">      IBooleanItem gt = OperationFunctions.opBase64BinaryGreaterThan(left, right);</span>
-<span class="nc" id="L555">      IBooleanItem eq = OperationFunctions.opBase64BinaryEqual(left, right);</span>
-<span class="nc bnc" id="L556" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L557">      break;</span>
+<span class="nc" id="L555">      IBooleanItem gt = OperationFunctions.opBase64BinaryGreaterThan(left, right);</span>
+<span class="nc" id="L556">      IBooleanItem eq = OperationFunctions.opBase64BinaryEqual(left, right);</span>
+<span class="nc bnc" id="L557" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L558">      break;</span>
     }
     case GT:
-<span class="nc" id="L560">      retval = OperationFunctions.opBase64BinaryGreaterThan(left, right);</span>
-<span class="nc" id="L561">      break;</span>
+<span class="nc" id="L561">      retval = OperationFunctions.opBase64BinaryGreaterThan(left, right);</span>
+<span class="nc" id="L562">      break;</span>
     case LE: {
-<span class="nc" id="L563">      IBooleanItem lt = OperationFunctions.opBase64BinaryLessThan(left, right);</span>
-<span class="nc" id="L564">      IBooleanItem eq = OperationFunctions.opBase64BinaryEqual(left, right);</span>
-<span class="nc bnc" id="L565" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
-<span class="nc" id="L566">      break;</span>
+<span class="nc" id="L564">      IBooleanItem lt = OperationFunctions.opBase64BinaryLessThan(left, right);</span>
+<span class="nc" id="L565">      IBooleanItem eq = OperationFunctions.opBase64BinaryEqual(left, right);</span>
+<span class="nc bnc" id="L566" title="All 4 branches missed.">      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());</span>
+<span class="nc" id="L567">      break;</span>
     }
     case LT:
-<span class="nc" id="L569">      retval = OperationFunctions.opBase64BinaryLessThan(left, right);</span>
-<span class="nc" id="L570">      break;</span>
+<span class="nc" id="L570">      retval = OperationFunctions.opBase64BinaryLessThan(left, right);</span>
+<span class="nc" id="L571">      break;</span>
     case NE:
-<span class="nc" id="L572">      retval = FnNot.fnNot(OperationFunctions.opBase64BinaryEqual(left, right));</span>
-<span class="nc" id="L573">      break;</span>
+<span class="nc" id="L573">      retval = FnNot.fnNot(OperationFunctions.opBase64BinaryEqual(left, right));</span>
+<span class="nc" id="L574">      break;</span>
     default:
-<span class="nc" id="L575">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
+<span class="nc" id="L576">      throw new IllegalArgumentException(String.format(&quot;Unsupported operator '%s'&quot;, operator.name()));</span>
     }
-<span class="nc" id="L577">    return retval;</span>
+<span class="nc" id="L578">    return retval;</span>
   }
 
   /**
@@ -591,7 +592,7 @@ public final class ComparisonFunctions {
   public static IIntegerItem compareTo(
       @NonNull IAnyAtomicItem left,
       @NonNull IAnyAtomicItem right) {
-<span class="nc" id="L594">    return IIntegerItem.valueOf(left.compareTo(right));</span>
+<span class="nc" id="L595">    return IIntegerItem.valueOf(left.compareTo(right));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

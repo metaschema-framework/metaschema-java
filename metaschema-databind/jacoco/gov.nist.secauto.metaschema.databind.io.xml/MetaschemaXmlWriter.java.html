@@ -268,123 +268,124 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemFlag(Object item, IBoundInstanceFlag instance) throws IOException {
-<span class="fc" id="L271">      String itemString = instance.getJavaTypeAdapter().asString(item);</span>
-<span class="fc" id="L272">      QName name = instance.getXmlQName();</span>
+      String itemString;
       try {
-<span class="pc bpc" id="L274" title="1 of 2 branches missed.">        if (name.getNamespaceURI().isEmpty()) {</span>
-<span class="fc" id="L275">          writer.writeAttribute(name.getLocalPart(), itemString);</span>
+<span class="fc" id="L273">        itemString = instance.getJavaTypeAdapter().asString(item);</span>
+<span class="nc" id="L274">      } catch (IllegalArgumentException ex) {</span>
+<span class="nc" id="L275">        throw new IOException(ex);</span>
+<span class="fc" id="L276">      }</span>
+<span class="fc" id="L277">      QName name = instance.getXmlQName();</span>
+      try {
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">        if (name.getNamespaceURI().isEmpty()) {</span>
+<span class="fc" id="L280">          writer.writeAttribute(name.getLocalPart(), itemString);</span>
         } else {
-<span class="nc" id="L277">          writer.writeAttribute(name.getNamespaceURI(), name.getLocalPart(), itemString);</span>
+<span class="nc" id="L282">          writer.writeAttribute(name.getNamespaceURI(), name.getLocalPart(), itemString);</span>
         }
-<span class="nc" id="L279">      } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L280">        throw new IOException(ex);</span>
-<span class="fc" id="L281">      }</span>
-<span class="fc" id="L282">    }</span>
+<span class="nc" id="L284">      } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L285">        throw new IOException(ex);</span>
+<span class="fc" id="L286">      }</span>
+<span class="fc" id="L287">    }</span>
 
     @Override
     public void writeItemField(Object item, IBoundInstanceModelFieldScalar instance) throws IOException {
       try {
-<span class="pc bpc" id="L287" title="1 of 2 branches missed.">        if (instance.isEffectiveValueWrappedInXml()) {</span>
-<span class="fc" id="L288">          QName wrapperQName = instance.getXmlQName();</span>
-<span class="fc" id="L289">          writer.writeStartElement(wrapperQName.getNamespaceURI(), wrapperQName.getLocalPart());</span>
-<span class="fc" id="L290">          instance.getJavaTypeAdapter().writeXmlValue(item, wrapperQName, writer);</span>
-<span class="fc" id="L291">          writer.writeEndElement();</span>
-<span class="fc" id="L292">        } else {</span>
-<span class="nc" id="L293">          instance.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);</span>
+<span class="pc bpc" id="L292" title="1 of 2 branches missed.">        if (instance.isEffectiveValueWrappedInXml()) {</span>
+<span class="fc" id="L293">          QName wrapperQName = instance.getXmlQName();</span>
+<span class="fc" id="L294">          writer.writeStartElement(wrapperQName.getNamespaceURI(), wrapperQName.getLocalPart());</span>
+<span class="fc" id="L295">          instance.getJavaTypeAdapter().writeXmlValue(item, wrapperQName, writer);</span>
+<span class="fc" id="L296">          writer.writeEndElement();</span>
+<span class="fc" id="L297">        } else {</span>
+<span class="nc" id="L298">          instance.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);</span>
         }
-<span class="nc" id="L295">      } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L296">        throw new IOException(ex);</span>
-<span class="fc" id="L297">      }</span>
-<span class="fc" id="L298">    }</span>
+<span class="nc" id="L300">      } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L301">        throw new IOException(ex);</span>
+<span class="fc" id="L302">      }</span>
+<span class="fc" id="L303">    }</span>
 
     @Override
     public void writeItemField(IBoundObject item, IBoundInstanceModelFieldComplex instance) throws IOException {
-<span class="fc" id="L302">      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());</span>
-<span class="fc" id="L303">      writeModelObject(</span>
+<span class="fc" id="L307">      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());</span>
+<span class="fc" id="L308">      writeModelObject(</span>
           instance,
           item,
           ((ObjectWriter&lt;IBoundInstanceModelFieldComplex&gt;) this::writeFlags)
-<span class="fc" id="L307">              .andThen(itemWriter::writeFieldValue));</span>
-<span class="fc" id="L308">    }</span>
+<span class="fc" id="L312">              .andThen(itemWriter::writeFieldValue));</span>
+<span class="fc" id="L313">    }</span>
 
     @Override
     public void writeItemField(IBoundObject item, IBoundInstanceModelGroupedField instance) throws IOException {
-<span class="nc" id="L312">      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());</span>
-<span class="nc" id="L313">      writeGroupedModelObject(</span>
+<span class="nc" id="L317">      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());</span>
+<span class="nc" id="L318">      writeGroupedModelObject(</span>
           instance,
           item,
           ((ObjectWriter&lt;IBoundInstanceModelGroupedField&gt;) this::writeFlags)
-<span class="nc" id="L317">              .andThen(itemWriter::writeFieldValue));</span>
-<span class="nc" id="L318">    }</span>
+<span class="nc" id="L322">              .andThen(itemWriter::writeFieldValue));</span>
+<span class="nc" id="L323">    }</span>
 
     @Override
     public void writeItemField(IBoundObject item, IBoundDefinitionModelFieldComplex definition) throws IOException {
-<span class="nc" id="L322">      ItemWriter itemWriter = new ItemWriter(definition.getXmlQName());</span>
-<span class="nc" id="L323">      writeDefinitionObject(</span>
+<span class="nc" id="L327">      ItemWriter itemWriter = new ItemWriter(definition.getXmlQName());</span>
+<span class="nc" id="L328">      writeDefinitionObject(</span>
           definition,
           item,
           ((ObjectWriter&lt;IBoundDefinitionModelFieldComplex&gt;) this::writeFlags)
-<span class="nc" id="L327">              .andThen(itemWriter::writeFieldValue));</span>
-<span class="nc" id="L328">    }</span>
+<span class="nc" id="L332">              .andThen(itemWriter::writeFieldValue));</span>
+<span class="nc" id="L333">    }</span>
 
     @Override
     public void writeItemFieldValue(Object parentItem, IBoundFieldValue fieldValue) throws IOException {
-<span class="fc" id="L332">      Object item = fieldValue.getValue(parentItem);</span>
-<span class="pc bpc" id="L333" title="1 of 2 branches missed.">      if (item != null) {</span>
-        try {
-<span class="fc" id="L335">          fieldValue.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);</span>
-<span class="nc" id="L336">        } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L337">          throw new IOException(ex);</span>
-<span class="fc" id="L338">        }</span>
+<span class="fc" id="L337">      Object item = fieldValue.getValue(parentItem);</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">      if (item != null) {</span>
+<span class="fc" id="L339">        fieldValue.getJavaTypeAdapter().writeXmlValue(item, getObjectQName(), writer);</span>
       }
-<span class="fc" id="L340">    }</span>
+<span class="fc" id="L341">    }</span>
 
     @Override
     public void writeItemAssembly(IBoundObject item, IBoundInstanceModelAssembly instance) throws IOException {
-<span class="fc" id="L344">      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());</span>
-<span class="fc" id="L345">      writeModelObject(</span>
+<span class="fc" id="L345">      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());</span>
+<span class="fc" id="L346">      writeModelObject(</span>
           instance,
           item,
           ((ObjectWriter&lt;IBoundInstanceModelAssembly&gt;) this::writeFlags)
-<span class="fc" id="L349">              .andThen(itemWriter::writeAssemblyModel));</span>
-<span class="fc" id="L350">    }</span>
+<span class="fc" id="L350">              .andThen(itemWriter::writeAssemblyModel));</span>
+<span class="fc" id="L351">    }</span>
 
     @Override
     public void writeItemAssembly(IBoundObject item, IBoundInstanceModelGroupedAssembly instance) throws IOException {
-<span class="nc" id="L354">      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());</span>
-<span class="nc" id="L355">      writeGroupedModelObject(</span>
+<span class="nc" id="L355">      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());</span>
+<span class="nc" id="L356">      writeGroupedModelObject(</span>
           instance,
           item,
           ((ObjectWriter&lt;IBoundInstanceModelGroupedAssembly&gt;) this::writeFlags)
-<span class="nc" id="L359">              .andThen(itemWriter::writeAssemblyModel));</span>
-<span class="nc" id="L360">    }</span>
+<span class="nc" id="L360">              .andThen(itemWriter::writeAssemblyModel));</span>
+<span class="nc" id="L361">    }</span>
 
     @Override
     public void writeItemAssembly(IBoundObject item, IBoundDefinitionModelAssembly definition) throws IOException {
       // this is a special case where we are writing a top-level, potentially root,
       // element. Need to take the object qname passed in
-<span class="fc" id="L366">      writeDefinitionObject(</span>
+<span class="fc" id="L367">      writeDefinitionObject(</span>
           definition,
           item,
           ((ObjectWriter&lt;IBoundDefinitionModelAssembly&gt;) this::writeFlags)
-<span class="fc" id="L370">              .andThen(this::writeAssemblyModel));</span>
-<span class="fc" id="L371">    }</span>
+<span class="fc" id="L371">              .andThen(this::writeAssemblyModel));</span>
+<span class="fc" id="L372">    }</span>
 
     @Override
     public void writeChoiceGroupItem(IBoundObject item, IBoundInstanceModelChoiceGroup instance) throws IOException {
-<span class="nc" id="L375">      IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
-<span class="nc bnc" id="L376" title="All 2 branches missed.">      assert actualInstance != null;</span>
-<span class="nc" id="L377">      actualInstance.writeItem(item, this);</span>
-<span class="nc" id="L378">    }</span>
+<span class="nc" id="L376">      IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
+<span class="nc bnc" id="L377" title="All 2 branches missed.">      assert actualInstance != null;</span>
+<span class="nc" id="L378">      actualInstance.writeItem(item, this);</span>
+<span class="nc" id="L379">    }</span>
   }
 
   private abstract static class AbstractItemWriter implements IItemWriteHandler {
     @NonNull
     private final QName objectQName;
 
-<span class="fc" id="L385">    protected AbstractItemWriter(@NonNull QName qname) {</span>
-<span class="fc" id="L386">      this.objectQName = qname;</span>
-<span class="fc" id="L387">    }</span>
+<span class="fc" id="L386">    protected AbstractItemWriter(@NonNull QName qname) {</span>
+<span class="fc" id="L387">      this.objectQName = qname;</span>
+<span class="fc" id="L388">    }</span>
 
     /**
      * Get the qualified name of the item's parent.
@@ -393,7 +394,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
      */
     @NonNull
     protected QName getObjectQName() {
-<span class="fc" id="L396">      return objectQName;</span>
+<span class="fc" id="L397">      return objectQName;</span>
     }
   }
 }

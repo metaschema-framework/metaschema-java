@@ -90,23 +90,24 @@ public final class DataTypeService {
             },
             ConcurrentHashMap::new));
 
-    @SuppressWarnings({ &quot;unchecked&quot;, &quot;null&quot; }) Map&lt;Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;,
-<span class="fc" id="L94">        IDataTypeAdapter&lt;?&gt;&gt; typeByClass = dataTypes.stream()</span>
-<span class="fc" id="L95">            .collect(CustomCollectors.toMap(</span>
-<span class="fc" id="L96">                dataType -&gt; (Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;) dataType.getClass(),</span>
-<span class="fc" id="L97">                Function.identity(),</span>
+    @SuppressWarnings({ &quot;unchecked&quot;, &quot;null&quot; })
+    Map&lt;Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;,
+<span class="fc" id="L95">        IDataTypeAdapter&lt;?&gt;&gt; typeByClass = dataTypes.stream()</span>
+<span class="fc" id="L96">            .collect(CustomCollectors.toMap(</span>
+<span class="fc" id="L97">                dataType -&gt; (Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;) dataType.getClass(),</span>
+<span class="fc" id="L98">                Function.identity(),</span>
                 (key, v1, v2) -&gt; {
-<span class="nc bnc" id="L99" title="All 2 branches missed.">                  if (LOGGER.isWarnEnabled()) {</span>
-<span class="nc" id="L100">                    LOGGER.warn(&quot;Duplicate data type class '{}'. Using the first.&quot;,</span>
-<span class="nc" id="L101">                        key.getClass().getName());</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                  if (LOGGER.isWarnEnabled()) {</span>
+<span class="nc" id="L101">                    LOGGER.warn(&quot;Duplicate data type class '{}'. Using the first.&quot;,</span>
+<span class="nc" id="L102">                        key.getClass().getName());</span>
                   }
-<span class="nc" id="L103">                  return v1;</span>
+<span class="nc" id="L104">                  return v1;</span>
                 },
                 ConcurrentHashMap::new));
-<span class="fc" id="L106">    this.typeByName = typeByName;</span>
-<span class="fc" id="L107">    this.typeByQName = typeByQName;</span>
-<span class="fc" id="L108">    this.typeByClass = typeByClass;</span>
-<span class="fc" id="L109">  }</span>
+<span class="fc" id="L107">    this.typeByName = typeByName;</span>
+<span class="fc" id="L108">    this.typeByQName = typeByQName;</span>
+<span class="fc" id="L109">    this.typeByClass = typeByClass;</span>
+<span class="fc" id="L110">  }</span>
 
   /**
    * Lookup a specific {@link IDataTypeAdapter} instance by its name.
@@ -118,7 +119,7 @@ public final class DataTypeService {
    */
   @Nullable
   public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapterByQName(@NonNull QName qname) {
-<span class="nc" id="L121">    return typeByQName.get(qname);</span>
+<span class="nc" id="L122">    return typeByQName.get(qname);</span>
   }
 
   /**
@@ -131,7 +132,7 @@ public final class DataTypeService {
    */
   @Nullable
   public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapterByName(@NonNull String name) {
-<span class="fc" id="L134">    return typeByName.get(name);</span>
+<span class="fc" id="L135">    return typeByName.get(name);</span>
   }
 
   /**
@@ -147,7 +148,7 @@ public final class DataTypeService {
   @SuppressWarnings(&quot;unchecked&quot;)
   @Nullable
   public &lt;TYPE extends IDataTypeAdapter&lt;?&gt;&gt; TYPE getJavaTypeAdapterByClass(@NonNull Class&lt;TYPE&gt; clazz) {
-<span class="nc" id="L150">    return (TYPE) typeByClass.get(clazz);</span>
+<span class="nc" id="L151">    return (TYPE) typeByClass.get(clazz);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

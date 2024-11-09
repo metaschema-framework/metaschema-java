@@ -84,16 +84,17 @@ import edu.umd.cs.findbugs.annotations.Nullable;
       IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; configuration) {
     try {
       // avoid automatically closing streams not owned by the generator
-<span class="fc" id="L87">      @SuppressWarnings({ &quot;PMD.CloseResource&quot;, &quot;resource&quot; }) T schemaWriter = newWriter(out);</span>
-<span class="fc" id="L88">      S generationState = newGenerationState(metaschema, schemaWriter, configuration);</span>
-<span class="fc" id="L89">      generateSchema(generationState);</span>
-<span class="fc" id="L90">      generationState.flushWriter();</span>
-<span class="nc" id="L91">    } catch (SchemaGenerationException ex) { // NOPMD avoid nesting same exception</span>
-<span class="nc" id="L92">      throw ex;</span>
-<span class="nc" id="L93">    } catch (Exception ex) { // NOPMD need to catch close exception</span>
-<span class="nc" id="L94">      throw new SchemaGenerationException(ex);</span>
-<span class="fc" id="L95">    }</span>
-<span class="fc" id="L96">  }</span>
+      @SuppressWarnings({ &quot;PMD.CloseResource&quot;, &quot;resource&quot; })
+<span class="fc" id="L88">      T schemaWriter = newWriter(out);</span>
+<span class="fc" id="L89">      S generationState = newGenerationState(metaschema, schemaWriter, configuration);</span>
+<span class="fc" id="L90">      generateSchema(generationState);</span>
+<span class="fc" id="L91">      generationState.flushWriter();</span>
+<span class="nc" id="L92">    } catch (SchemaGenerationException ex) { // NOPMD avoid nesting same exception</span>
+<span class="nc" id="L93">      throw ex;</span>
+<span class="nc" id="L94">    } catch (Exception ex) { // NOPMD need to catch close exception</span>
+<span class="nc" id="L95">      throw new SchemaGenerationException(ex);</span>
+<span class="fc" id="L96">    }</span>
+<span class="fc" id="L97">  }</span>
 
   /**
    * Determine the collection of root definitions.
@@ -111,27 +112,27 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     // refactoring this in
     // the caller
 
-<span class="fc" id="L114">    List&lt;IAssemblyDefinition&gt; rootAssemblyDefinitions = new LinkedList&lt;&gt;();</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">    for (ModuleIndex.DefinitionEntry entry : generationState.getMetaschemaIndex().getDefinitions()) {</span>
+<span class="fc" id="L115">    List&lt;IAssemblyDefinition&gt; rootAssemblyDefinitions = new LinkedList&lt;&gt;();</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">    for (ModuleIndex.DefinitionEntry entry : generationState.getMetaschemaIndex().getDefinitions()) {</span>
 
-<span class="fc" id="L117">      IDefinition definition = ObjectUtils.notNull(entry.getDefinition());</span>
-<span class="fc bfc" id="L118" title="All 4 branches covered.">      if (definition instanceof IAssemblyDefinition &amp;&amp; ((IAssemblyDefinition) definition).isRoot()) {</span>
+<span class="fc" id="L118">      IDefinition definition = ObjectUtils.notNull(entry.getDefinition());</span>
+<span class="fc bfc" id="L119" title="All 4 branches covered.">      if (definition instanceof IAssemblyDefinition &amp;&amp; ((IAssemblyDefinition) definition).isRoot()) {</span>
         // found root definition
-<span class="fc" id="L120">        IAssemblyDefinition assemblyDefinition = (IAssemblyDefinition) definition;</span>
-<span class="fc" id="L121">        rootAssemblyDefinitions.add(assemblyDefinition);</span>
+<span class="fc" id="L121">        IAssemblyDefinition assemblyDefinition = (IAssemblyDefinition) definition;</span>
+<span class="fc" id="L122">        rootAssemblyDefinitions.add(assemblyDefinition);</span>
       }
 
-<span class="fc" id="L124">      boolean referenced = entry.isReferenced();</span>
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">      if (!referenced) {</span>
+<span class="fc" id="L125">      boolean referenced = entry.isReferenced();</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">      if (!referenced) {</span>
         // skip unreferenced definitions
-<span class="nc" id="L127">        continue;</span>
+<span class="nc" id="L128">        continue;</span>
       }
 
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">      if (handler != null) {</span>
-<span class="fc" id="L131">        handler.accept(entry, definition);</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">      if (handler != null) {</span>
+<span class="fc" id="L132">        handler.accept(entry, definition);</span>
       }
-<span class="fc" id="L133">    }</span>
-<span class="fc" id="L134">    return rootAssemblyDefinitions;</span>
+<span class="fc" id="L134">    }</span>
+<span class="fc" id="L135">    return rootAssemblyDefinitions;</span>
   }
 
 }

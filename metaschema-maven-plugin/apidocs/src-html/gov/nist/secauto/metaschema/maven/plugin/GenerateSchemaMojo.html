@@ -227,91 +227,92 @@
 <span class="source-line-no">214</span><span id="line-214">      @NonNull IConfiguration&lt;SchemaGenerationFeature&lt;?&gt;&gt; schemaGenerationConfig,</span>
 <span class="source-line-no">215</span><span id="line-215">      @NonNull Path schemaPath,</span>
 <span class="source-line-no">216</span><span id="line-216">      @NonNull ISchemaGenerator generator) throws IOException {</span>
-<span class="source-line-no">217</span><span id="line-217">    try (@SuppressWarnings("resource") Writer writer = ObjectUtils.notNull(Files.newBufferedWriter(</span>
-<span class="source-line-no">218</span><span id="line-218">        schemaPath,</span>
-<span class="source-line-no">219</span><span id="line-219">        StandardCharsets.UTF_8,</span>
-<span class="source-line-no">220</span><span id="line-220">        StandardOpenOption.CREATE,</span>
-<span class="source-line-no">221</span><span id="line-221">        StandardOpenOption.WRITE,</span>
-<span class="source-line-no">222</span><span id="line-222">        StandardOpenOption.TRUNCATE_EXISTING))) {</span>
-<span class="source-line-no">223</span><span id="line-223">      generator.generateFromModule(module, writer, schemaGenerationConfig);</span>
-<span class="source-line-no">224</span><span id="line-224">    }</span>
-<span class="source-line-no">225</span><span id="line-225">  }</span>
-<span class="source-line-no">226</span><span id="line-226"></span>
-<span class="source-line-no">227</span><span id="line-227">  @Override</span>
-<span class="source-line-no">228</span><span id="line-228">  public void execute() throws MojoExecutionException {</span>
-<span class="source-line-no">229</span><span id="line-229">    File staleFile = getStaleFile();</span>
-<span class="source-line-no">230</span><span id="line-230">    try {</span>
-<span class="source-line-no">231</span><span id="line-231">      staleFile = ObjectUtils.notNull(staleFile.getCanonicalFile());</span>
-<span class="source-line-no">232</span><span id="line-232">    } catch (IOException ex) {</span>
-<span class="source-line-no">233</span><span id="line-233">      if (getLog().isWarnEnabled()) {</span>
-<span class="source-line-no">234</span><span id="line-234">        getLog().warn("Unable to resolve canonical path to stale file. Treating it as not existing.", ex);</span>
-<span class="source-line-no">235</span><span id="line-235">      }</span>
-<span class="source-line-no">236</span><span id="line-236">    }</span>
-<span class="source-line-no">237</span><span id="line-237"></span>
-<span class="source-line-no">238</span><span id="line-238">    boolean generate;</span>
-<span class="source-line-no">239</span><span id="line-239">    if (shouldExecutionBeSkipped()) {</span>
-<span class="source-line-no">240</span><span id="line-240">      if (getLog().isDebugEnabled()) {</span>
-<span class="source-line-no">241</span><span id="line-241">        getLog().debug(String.format("Schema generation is configured to be skipped. Skipping."));</span>
-<span class="source-line-no">242</span><span id="line-242">      }</span>
-<span class="source-line-no">243</span><span id="line-243">      generate = false;</span>
-<span class="source-line-no">244</span><span id="line-244">    } else if (staleFile.exists()) {</span>
-<span class="source-line-no">245</span><span id="line-245">      generate = isGenerationRequired();</span>
-<span class="source-line-no">246</span><span id="line-246">    } else {</span>
-<span class="source-line-no">247</span><span id="line-247">      if (getLog().isInfoEnabled()) {</span>
-<span class="source-line-no">248</span><span id="line-248">        getLog().info(String.format("Stale file '%s' doesn't exist! Generating source files.", staleFile.getPath()));</span>
-<span class="source-line-no">249</span><span id="line-249">      }</span>
-<span class="source-line-no">250</span><span id="line-250">      generate = true;</span>
-<span class="source-line-no">251</span><span id="line-251">    }</span>
-<span class="source-line-no">252</span><span id="line-252"></span>
-<span class="source-line-no">253</span><span id="line-253">    if (generate) {</span>
-<span class="source-line-no">254</span><span id="line-254">      performGeneration();</span>
-<span class="source-line-no">255</span><span id="line-255">      createStaleFile(staleFile);</span>
-<span class="source-line-no">256</span><span id="line-256"></span>
-<span class="source-line-no">257</span><span id="line-257">      // for m2e</span>
-<span class="source-line-no">258</span><span id="line-258">      getBuildContext().refresh(getOutputDirectory());</span>
-<span class="source-line-no">259</span><span id="line-259">    }</span>
-<span class="source-line-no">260</span><span id="line-260">    // // add generated sources to Maven</span>
-<span class="source-line-no">261</span><span id="line-261">    // try {</span>
-<span class="source-line-no">262</span><span id="line-262">    // getMavenProject()..addCompileSourceRoot(getOutputDirectory().getCanonicalFile().getPath());</span>
-<span class="source-line-no">263</span><span id="line-263">    // } catch (IOException ex) {</span>
-<span class="source-line-no">264</span><span id="line-264">    // throw new MojoExecutionException("Unable to add output directory to maven</span>
-<span class="source-line-no">265</span><span id="line-265">    // sources.", ex);</span>
-<span class="source-line-no">266</span><span id="line-266">    // }</span>
-<span class="source-line-no">267</span><span id="line-267">  }</span>
-<span class="source-line-no">268</span><span id="line-268"></span>
-<span class="source-line-no">269</span><span id="line-269">  @SuppressWarnings("PMD.AvoidCatchingGenericException")</span>
-<span class="source-line-no">270</span><span id="line-270">  private void performGeneration() throws MojoExecutionException {</span>
-<span class="source-line-no">271</span><span id="line-271">    File outputDir = getOutputDirectory();</span>
-<span class="source-line-no">272</span><span id="line-272">    if (getLog().isDebugEnabled()) {</span>
-<span class="source-line-no">273</span><span id="line-273">      getLog().debug(String.format("Using outputDirectory: %s", outputDir.getPath()));</span>
-<span class="source-line-no">274</span><span id="line-274">    }</span>
-<span class="source-line-no">275</span><span id="line-275"></span>
-<span class="source-line-no">276</span><span id="line-276">    if (!outputDir.exists() &amp;&amp; !outputDir.mkdirs()) {</span>
-<span class="source-line-no">277</span><span id="line-277">      throw new MojoExecutionException("Unable to create output directory: " + outputDir);</span>
-<span class="source-line-no">278</span><span id="line-278">    }</span>
-<span class="source-line-no">279</span><span id="line-279"></span>
-<span class="source-line-no">280</span><span id="line-280">    IBindingContext bindingContext;</span>
-<span class="source-line-no">281</span><span id="line-281">    try {</span>
-<span class="source-line-no">282</span><span id="line-282">      bindingContext = newBindingContext();</span>
-<span class="source-line-no">283</span><span id="line-283">    } catch (MetaschemaException | IOException ex) {</span>
-<span class="source-line-no">284</span><span id="line-284">      throw new MojoExecutionException("Failed to create the binding context", ex);</span>
-<span class="source-line-no">285</span><span id="line-285">    }</span>
-<span class="source-line-no">286</span><span id="line-286"></span>
-<span class="source-line-no">287</span><span id="line-287">    IBindingModuleLoader loader = bindingContext.newModuleLoader();</span>
-<span class="source-line-no">288</span><span id="line-288">    loader.allowEntityResolution();</span>
-<span class="source-line-no">289</span><span id="line-289"></span>
-<span class="source-line-no">290</span><span id="line-290">    // generate schemas based on provided metaschema sources</span>
-<span class="source-line-no">291</span><span id="line-291">    Set&lt;IModule&gt; modules;</span>
-<span class="source-line-no">292</span><span id="line-292">    try {</span>
-<span class="source-line-no">293</span><span id="line-293">      modules = getModulesToGenerateFor(bindingContext);</span>
-<span class="source-line-no">294</span><span id="line-294">    } catch (Exception ex) {</span>
-<span class="source-line-no">295</span><span id="line-295">      throw new MojoExecutionException("Loading of metaschema modules failed", ex);</span>
-<span class="source-line-no">296</span><span id="line-296">    }</span>
-<span class="source-line-no">297</span><span id="line-297"></span>
-<span class="source-line-no">298</span><span id="line-298">    generate(modules);</span>
-<span class="source-line-no">299</span><span id="line-299"></span>
-<span class="source-line-no">300</span><span id="line-300">  }</span>
-<span class="source-line-no">301</span><span id="line-301">}</span>
+<span class="source-line-no">217</span><span id="line-217">    try (@SuppressWarnings("resource")</span>
+<span class="source-line-no">218</span><span id="line-218">    Writer writer = ObjectUtils.notNull(Files.newBufferedWriter(</span>
+<span class="source-line-no">219</span><span id="line-219">        schemaPath,</span>
+<span class="source-line-no">220</span><span id="line-220">        StandardCharsets.UTF_8,</span>
+<span class="source-line-no">221</span><span id="line-221">        StandardOpenOption.CREATE,</span>
+<span class="source-line-no">222</span><span id="line-222">        StandardOpenOption.WRITE,</span>
+<span class="source-line-no">223</span><span id="line-223">        StandardOpenOption.TRUNCATE_EXISTING))) {</span>
+<span class="source-line-no">224</span><span id="line-224">      generator.generateFromModule(module, writer, schemaGenerationConfig);</span>
+<span class="source-line-no">225</span><span id="line-225">    }</span>
+<span class="source-line-no">226</span><span id="line-226">  }</span>
+<span class="source-line-no">227</span><span id="line-227"></span>
+<span class="source-line-no">228</span><span id="line-228">  @Override</span>
+<span class="source-line-no">229</span><span id="line-229">  public void execute() throws MojoExecutionException {</span>
+<span class="source-line-no">230</span><span id="line-230">    File staleFile = getStaleFile();</span>
+<span class="source-line-no">231</span><span id="line-231">    try {</span>
+<span class="source-line-no">232</span><span id="line-232">      staleFile = ObjectUtils.notNull(staleFile.getCanonicalFile());</span>
+<span class="source-line-no">233</span><span id="line-233">    } catch (IOException ex) {</span>
+<span class="source-line-no">234</span><span id="line-234">      if (getLog().isWarnEnabled()) {</span>
+<span class="source-line-no">235</span><span id="line-235">        getLog().warn("Unable to resolve canonical path to stale file. Treating it as not existing.", ex);</span>
+<span class="source-line-no">236</span><span id="line-236">      }</span>
+<span class="source-line-no">237</span><span id="line-237">    }</span>
+<span class="source-line-no">238</span><span id="line-238"></span>
+<span class="source-line-no">239</span><span id="line-239">    boolean generate;</span>
+<span class="source-line-no">240</span><span id="line-240">    if (shouldExecutionBeSkipped()) {</span>
+<span class="source-line-no">241</span><span id="line-241">      if (getLog().isDebugEnabled()) {</span>
+<span class="source-line-no">242</span><span id="line-242">        getLog().debug(String.format("Schema generation is configured to be skipped. Skipping."));</span>
+<span class="source-line-no">243</span><span id="line-243">      }</span>
+<span class="source-line-no">244</span><span id="line-244">      generate = false;</span>
+<span class="source-line-no">245</span><span id="line-245">    } else if (staleFile.exists()) {</span>
+<span class="source-line-no">246</span><span id="line-246">      generate = isGenerationRequired();</span>
+<span class="source-line-no">247</span><span id="line-247">    } else {</span>
+<span class="source-line-no">248</span><span id="line-248">      if (getLog().isInfoEnabled()) {</span>
+<span class="source-line-no">249</span><span id="line-249">        getLog().info(String.format("Stale file '%s' doesn't exist! Generating source files.", staleFile.getPath()));</span>
+<span class="source-line-no">250</span><span id="line-250">      }</span>
+<span class="source-line-no">251</span><span id="line-251">      generate = true;</span>
+<span class="source-line-no">252</span><span id="line-252">    }</span>
+<span class="source-line-no">253</span><span id="line-253"></span>
+<span class="source-line-no">254</span><span id="line-254">    if (generate) {</span>
+<span class="source-line-no">255</span><span id="line-255">      performGeneration();</span>
+<span class="source-line-no">256</span><span id="line-256">      createStaleFile(staleFile);</span>
+<span class="source-line-no">257</span><span id="line-257"></span>
+<span class="source-line-no">258</span><span id="line-258">      // for m2e</span>
+<span class="source-line-no">259</span><span id="line-259">      getBuildContext().refresh(getOutputDirectory());</span>
+<span class="source-line-no">260</span><span id="line-260">    }</span>
+<span class="source-line-no">261</span><span id="line-261">    // // add generated sources to Maven</span>
+<span class="source-line-no">262</span><span id="line-262">    // try {</span>
+<span class="source-line-no">263</span><span id="line-263">    // getMavenProject()..addCompileSourceRoot(getOutputDirectory().getCanonicalFile().getPath());</span>
+<span class="source-line-no">264</span><span id="line-264">    // } catch (IOException ex) {</span>
+<span class="source-line-no">265</span><span id="line-265">    // throw new MojoExecutionException("Unable to add output directory to maven</span>
+<span class="source-line-no">266</span><span id="line-266">    // sources.", ex);</span>
+<span class="source-line-no">267</span><span id="line-267">    // }</span>
+<span class="source-line-no">268</span><span id="line-268">  }</span>
+<span class="source-line-no">269</span><span id="line-269"></span>
+<span class="source-line-no">270</span><span id="line-270">  @SuppressWarnings("PMD.AvoidCatchingGenericException")</span>
+<span class="source-line-no">271</span><span id="line-271">  private void performGeneration() throws MojoExecutionException {</span>
+<span class="source-line-no">272</span><span id="line-272">    File outputDir = getOutputDirectory();</span>
+<span class="source-line-no">273</span><span id="line-273">    if (getLog().isDebugEnabled()) {</span>
+<span class="source-line-no">274</span><span id="line-274">      getLog().debug(String.format("Using outputDirectory: %s", outputDir.getPath()));</span>
+<span class="source-line-no">275</span><span id="line-275">    }</span>
+<span class="source-line-no">276</span><span id="line-276"></span>
+<span class="source-line-no">277</span><span id="line-277">    if (!outputDir.exists() &amp;&amp; !outputDir.mkdirs()) {</span>
+<span class="source-line-no">278</span><span id="line-278">      throw new MojoExecutionException("Unable to create output directory: " + outputDir);</span>
+<span class="source-line-no">279</span><span id="line-279">    }</span>
+<span class="source-line-no">280</span><span id="line-280"></span>
+<span class="source-line-no">281</span><span id="line-281">    IBindingContext bindingContext;</span>
+<span class="source-line-no">282</span><span id="line-282">    try {</span>
+<span class="source-line-no">283</span><span id="line-283">      bindingContext = newBindingContext();</span>
+<span class="source-line-no">284</span><span id="line-284">    } catch (MetaschemaException | IOException ex) {</span>
+<span class="source-line-no">285</span><span id="line-285">      throw new MojoExecutionException("Failed to create the binding context", ex);</span>
+<span class="source-line-no">286</span><span id="line-286">    }</span>
+<span class="source-line-no">287</span><span id="line-287"></span>
+<span class="source-line-no">288</span><span id="line-288">    IBindingModuleLoader loader = bindingContext.newModuleLoader();</span>
+<span class="source-line-no">289</span><span id="line-289">    loader.allowEntityResolution();</span>
+<span class="source-line-no">290</span><span id="line-290"></span>
+<span class="source-line-no">291</span><span id="line-291">    // generate schemas based on provided metaschema sources</span>
+<span class="source-line-no">292</span><span id="line-292">    Set&lt;IModule&gt; modules;</span>
+<span class="source-line-no">293</span><span id="line-293">    try {</span>
+<span class="source-line-no">294</span><span id="line-294">      modules = getModulesToGenerateFor(bindingContext);</span>
+<span class="source-line-no">295</span><span id="line-295">    } catch (Exception ex) {</span>
+<span class="source-line-no">296</span><span id="line-296">      throw new MojoExecutionException("Loading of metaschema modules failed", ex);</span>
+<span class="source-line-no">297</span><span id="line-297">    }</span>
+<span class="source-line-no">298</span><span id="line-298"></span>
+<span class="source-line-no">299</span><span id="line-299">    generate(modules);</span>
+<span class="source-line-no">300</span><span id="line-300"></span>
+<span class="source-line-no">301</span><span id="line-301">  }</span>
+<span class="source-line-no">302</span><span id="line-302">}</span>
 
 
 

@@ -61,14 +61,15 @@
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      focus.getValue();
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      <em class="jxr_comment">// now process the union</em>
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      @NonNull Stream&lt;? <strong class="jxr_keyword">extends</strong> IItem&gt; retval = ObjectUtils.notNull(getChildren().stream()
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>          .flatMap(child -&gt; {
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>            ISequence&lt;?&gt; result = child.accept(dynamicContext, focus);
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>            <strong class="jxr_keyword">return</strong> result.stream();
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>          }).distinct());
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">return</strong> ISequence.of(retval);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    }
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  }
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      @NonNull
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      Stream&lt;? <strong class="jxr_keyword">extends</strong> IItem&gt; retval = ObjectUtils.notNull(getChildren().stream()
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          .flatMap(child -&gt; {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>            ISequence&lt;?&gt; result = child.accept(dynamicContext, focus);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>            <strong class="jxr_keyword">return</strong> result.stream();
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          }).distinct());
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">return</strong> ISequence.of(retval);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    }
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>
