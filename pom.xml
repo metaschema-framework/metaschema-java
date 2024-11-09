@@ -88,7 +88,7 @@
 		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
 		<plugin.pmd.version>3.26.0</plugin.pmd.version>
 		<plugin.spotbugs.version>4.8.6.5</plugin.spotbugs.version>
-		<plugin.maven-surefire.version>3.5.1</plugin.maven-surefire.version>
+		<plugin.maven-surefire.version>3.5.2</plugin.maven-surefire.version>
 		<plugin.templating.version>3.0.0</plugin.templating.version>
 
 		<argLine>-Xmx1024m</argLine>
