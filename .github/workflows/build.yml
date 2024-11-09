@@ -84,6 +84,8 @@ jobs:
       if: env.COMMIT_MAVEN_ARTIFACTS == 'true'
       run: |
         MVN_COORDS=$(echo '${project.groupId}:${project.artifactId}:${project.version}' | mvn -N -q -DforceStdout help:evaluate)
+        COMITTER_USERNAME=$(git log -n 1 --pretty=format:%an)
+        COMITTER_EMAIL=$(git log -n 1 --pretty=format:%ae)
         cd maven2
         echo "Configuring git identity"
         git config user.name "GitHub Action"
