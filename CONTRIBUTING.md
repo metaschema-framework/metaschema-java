@@ -78,7 +78,7 @@ The following are some guidelines to consider when performing code reviews.
 - Tone
    - Do ask open-ended questions and avoid making opinionated statements.
    - Do keep feedback positive. Consider the effort the author spent writing the PR. Celebrate good work.
-   - Do differentiate between nits and suggestions vs blocking feedback. Limit nits.
+   - Do differentiate between nits and suggestions vs blocking feedback. Limit nits. Use [Conventional Comments](https://conventionalcomments.org) to the greatest extent possible.
    - Do consider how your feedback could be addressed by follow-on work. Consider opening new issues for less significant concerns.
 - Unit Testing
    - Do consider the coverage of test cases. Do the unit tests cover major code paths and error conditions?
