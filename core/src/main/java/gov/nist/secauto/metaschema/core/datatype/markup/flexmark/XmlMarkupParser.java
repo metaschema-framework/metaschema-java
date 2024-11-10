@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.stax2.XMLEventReader2;
 
+import java.net.URI;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -28,12 +29,20 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides utility functions to support reading and writing XML, and for
+ * producing error and warning messages.
+ */
 public final class XmlMarkupParser {
   private static final Logger LOGGER = LogManager.getLogger(XmlMarkupParser.class);
 
+  /**
+   * The block element names that this parser supports.
+   */
   @NonNull
-  public static final Set<String> BLOCK_ELEMENTS = ObjectUtils.notNull(
+  public static final Set<String> XHTML_BLOCK_ELEMENTS = ObjectUtils.notNull(
       Set.of(
           "h1",
           "h2",
@@ -73,13 +82,17 @@ public final class XmlMarkupParser {
    *
    * @param reader
    *          the XML event stream reader
+   * @param resource
+   *          the resource being parsed
    * @return the markup string
    * @throws XMLStreamException
    *           if an error occurred while parsing
    */
-  public MarkupLine parseMarkupline(XMLEventReader2 reader) throws XMLStreamException { // NOPMD - acceptable
+  public MarkupLine parseMarkupline(
+      @NonNull XMLEventReader2 reader,
+      @NonNull URI resource) throws XMLStreamException { // NOPMD - acceptable
     StringBuilder buffer = new StringBuilder();
-    parseContents(reader, null, buffer);
+    parseContents(reader, resource, null, buffer);
     String html = buffer.toString().trim();
     return html.isEmpty() ? null : MarkupLine.fromHtml(html);
   }
@@ -89,13 +102,17 @@ public final class XmlMarkupParser {
    *
    * @param reader
    *          the XML event stream reader
+   * @param resource
+   *          the resource being parsed
    * @return the markup string
    * @throws XMLStreamException
    *           if an error occurred while parsing
    */
-  public MarkupMultiline parseMarkupMultiline(XMLEventReader2 reader) throws XMLStreamException {
+  public MarkupMultiline parseMarkupMultiline(
+      @NonNull XMLEventReader2 reader,
+      @NonNull URI resource) throws XMLStreamException {
     StringBuilder buffer = new StringBuilder();
-    parseToString(reader, buffer);
+    parseToString(reader, resource, buffer);
     String html = buffer.toString().trim();
 
     if (LOGGER.isDebugEnabled()) {
@@ -109,12 +126,17 @@ public final class XmlMarkupParser {
    *
    * @param reader
    *          the XML event stream reader
+   * @param resource
+   *          the resource being parsed
    * @param buffer
    *          the markup string buffer
    * @throws XMLStreamException
    *           if an error occurred while parsing
    */
-  private void parseToString(XMLEventReader2 reader, StringBuilder buffer) // NOPMD - acceptable
+  private void parseToString(
+      @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
+      @NonNull StringBuilder buffer) // NOPMD - acceptable
       throws XMLStreamException {
     // if (LOGGER.isDebugEnabled()) {
     // LOGGER.debug("parseToString(enter): {}",
@@ -135,17 +157,12 @@ public final class XmlMarkupParser {
 
         // Note: the next element is not consumed. The called method is expected to
         // consume it
-        if (BLOCK_ELEMENTS.contains(name.getLocalPart())) {
-          parseStartElement(reader, start, buffer);
-
-          // the next event should be the event after the start's END_ELEMENT
-          // assert XmlEventUtil.isNextEventEndElement(reader, name) :
-          // XmlEventUtil.toString(reader.peek());
-        } else {
+        if (!XHTML_BLOCK_ELEMENTS.contains(name.getLocalPart())) {
           // throw new IllegalStateException();
           // stop parsing on first unrecognized event
           break outer;
         }
+        parseStartElement(reader, resource, start, buffer);
       }
       // reader.nextEvent();
 
@@ -159,10 +176,14 @@ public final class XmlMarkupParser {
     // }
   }
 
-  private void parseStartElement(XMLEventReader2 reader, StartElement start, StringBuilder buffer)
+  private void parseStartElement(
+      @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
+      @NonNull StartElement start,
+      @NonNull StringBuilder buffer)
       throws XMLStreamException {
     if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("parseStartElement(enter): {}", XmlEventUtil.toString(start));
+      LOGGER.debug("parseStartElement(enter): {}", XmlEventUtil.toString(start, resource));
     }
 
     // consume the start event
@@ -184,13 +205,11 @@ public final class XmlMarkupParser {
     XMLEvent next = reader.peek();
     if (next != null && next.isEndElement()) {
       buffer.append("/>");
-      // consume end element event
-      reader.nextEvent();
     } else {
       buffer.append('>');
 
       // parse until the start's END_ELEMENT is reached
-      parseContents(reader, start, buffer);
+      parseContents(reader, resource, start, buffer);
 
       buffer
           .append("</")
@@ -198,18 +217,24 @@ public final class XmlMarkupParser {
           .append('>');
 
       // the next event should be the start's END_ELEMENT
-      XmlEventUtil.assertNext(reader, XMLStreamConstants.END_ELEMENT, name);
-
-      // consume the start's END_ELEMENT
-      reader.nextEvent();
+      XmlEventUtil.assertNext(reader, resource, XMLStreamConstants.END_ELEMENT, name);
     }
+    // consume end element event
+    reader.nextEvent();
 
     if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("parseStartElement(exit): {}", reader.peek() != null ? XmlEventUtil.toString(reader.peek()) : "");
+      LOGGER.debug("parseStartElement(exit): {}",
+          reader.peek() != null
+              ? XmlEventUtil.toString(reader.peek(), resource)
+              : "");
     }
   }
 
-  private void parseContents(XMLEventReader2 reader, StartElement start, StringBuilder buffer)
+  private void parseContents(
+      @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
+      @Nullable StartElement start,
+      @NonNull StringBuilder buffer)
       throws XMLStreamException {
     // if (LOGGER.isDebugEnabled()) {
     // LOGGER.debug("parseContents(enter): {}",
@@ -226,9 +251,9 @@ public final class XmlMarkupParser {
       // }
 
       if (event.isStartElement()) {
-        StartElement nextStart = event.asStartElement();
+        StartElement nextStart = ObjectUtils.notNull(event.asStartElement());
         // QName nextName = nextStart.getName();
-        parseStartElement(reader, nextStart, buffer);
+        parseStartElement(reader, resource, nextStart, buffer);
 
         // if (LOGGER.isDebugEnabled()) {
         // LOGGER.debug("parseContents(after): {}",
@@ -248,7 +273,7 @@ public final class XmlMarkupParser {
 
     assert start == null
         || XmlEventUtil.isEventEndElement(reader.peek(), ObjectUtils.notNull(start.getName())) : XmlEventUtil
-            .generateExpectedMessage(reader.peek(), XMLStreamConstants.END_ELEMENT, start.getName());
+            .generateExpectedMessage(reader.peek(), resource, XMLStreamConstants.END_ELEMENT, start.getName());
 
     // if (LOGGER.isDebugEnabled()) {
     // LOGGER.debug("parseContents(exit): {}", reader.peek() != null ?

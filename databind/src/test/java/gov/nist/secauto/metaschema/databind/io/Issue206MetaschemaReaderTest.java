@@ -53,6 +53,7 @@ class Issue206MetaschemaReaderTest {
     String json = "{" +
         "   \"flag\": \"flag-value\"" +
         "}";
+    URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
 
     IBindingContext bindingContext = IBindingContext.newInstance();
     bindingContext.registerModule(TestModule.class);
@@ -63,7 +64,7 @@ class Issue206MetaschemaReaderTest {
     try (InputStream is = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8))) {
       try (JsonParser parser = JsonFactoryFactory.instance().createParser(is)) {
         assert parser != null;
-        MetaschemaJsonReader reader = new MetaschemaJsonReader(parser);
+        MetaschemaJsonReader reader = new MetaschemaJsonReader(parser, source);
 
         // assertThrows(IOException.class, () -> {
         // reader.readItemField(null, definition);
@@ -77,6 +78,7 @@ class Issue206MetaschemaReaderTest {
   @Test
   void testIssue205XmlNoValue() throws IOException, XMLStreamException {
     String xml = "<test-field xmlns=\"http://example.com/\" flag=\"flag-value\"/>";
+    URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
 
     IBindingContext bindingContext = IBindingContext.newInstance();
     bindingContext.registerModule(TestModule.class);
@@ -87,7 +89,7 @@ class Issue206MetaschemaReaderTest {
     XMLInputFactory factory = XMLInputFactory.newInstance();
     try (InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
       XMLEventReader2 eventReader = ObjectUtils.notNull((XMLEventReader2) factory.createXMLEventReader(is));
-      MetaschemaXmlReader reader = new MetaschemaXmlReader(eventReader);
+      MetaschemaXmlReader reader = new MetaschemaXmlReader(eventReader, source);
 
       // assertThrows(IOException.class, () -> {
       // reader.read(definition);
@@ -100,6 +102,7 @@ class Issue206MetaschemaReaderTest {
   @Test
   void testIssue205XmlEmptyValue() throws IOException, XMLStreamException {
     String xml = "<test-field xmlns=\"http://example.com/\" flag=\"flag-value\"></test-field>";
+    URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
 
     IBindingContext bindingContext = IBindingContext.newInstance();
     bindingContext.registerModule(TestModule.class);
@@ -110,7 +113,7 @@ class Issue206MetaschemaReaderTest {
     XMLInputFactory factory = XMLInputFactory.newInstance();
     try (InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))) {
       XMLEventReader2 eventReader = ObjectUtils.requireNonNull((XMLEventReader2) factory.createXMLEventReader(is));
-      MetaschemaXmlReader reader = new MetaschemaXmlReader(eventReader);
+      MetaschemaXmlReader reader = new MetaschemaXmlReader(eventReader, source);
 
       TestField field = (TestField) reader.read(definition);
       assertEquals("", field.value);

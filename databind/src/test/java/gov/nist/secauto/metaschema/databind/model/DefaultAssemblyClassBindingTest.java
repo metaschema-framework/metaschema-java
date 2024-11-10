@@ -33,9 +33,10 @@ class DefaultAssemblyClassBindingTest
       IBoundDefinitionModelAssembly classBinding = getRootAssemblyClassBinding();
 
       try (JsonParser parser = newJsonParser(reader)) {
-        Object value = new MetaschemaJsonReader(parser).readObjectRoot(
-            classBinding,
-            ObjectUtils.requireNonNull(classBinding.getRootJsonName()));
+        Object value = new MetaschemaJsonReader(parser, ObjectUtils.notNull(testContent.toUri()))
+            .readObjectRoot(
+                classBinding,
+                ObjectUtils.requireNonNull(classBinding.getRootJsonName()));
         assertNotNull(value, "root was null");
       }
     }

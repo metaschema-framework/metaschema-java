@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
@@ -42,6 +41,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.NotOwning;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
@@ -53,8 +53,14 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Supports reading JSON-based Metaschema module instances.
+ */
+@SuppressWarnings({
+    "PMD.CouplingBetweenObjects",
+    "PMD.GodClass"
+})
 public class MetaschemaJsonReader
     implements IJsonParsingContext, IItemReadHandler {
   private static final Logger LOGGER = LogManager.getLogger(MetaschemaJsonReader.class);
@@ -63,25 +69,27 @@ public class MetaschemaJsonReader
   private final Deque<JsonParser> parserStack = new LinkedList<>();
   // @NonNull
   // private final InstanceReader instanceReader = new InstanceReader();
-
+  @NonNull
+  private final URI source;
   @NonNull
   private final IJsonProblemHandler problemHandler;
-  @NonNull
-  private final Lazy<ObjectMapper> objectMapper;
 
   /**
    * Construct a new Module-aware JSON parser using the default problem handler.
    *
    * @param parser
    *          the JSON parser to parse with
+   * @param source
+   *          the resource being parsed
    * @throws IOException
    *           if an error occurred while reading the JSON
    * @see DefaultJsonProblemHandler
    */
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public MetaschemaJsonReader(
-      @NonNull JsonParser parser) throws IOException {
-    this(parser, new DefaultJsonProblemHandler());
+      @NonNull JsonParser parser,
+      @NonNull URI source) throws IOException {
+    this(parser, source, new DefaultJsonProblemHandler());
   }
 
   /**
@@ -89,6 +97,8 @@ public class MetaschemaJsonReader
    *
    * @param parser
    *          the JSON parser to parse with
+   * @param source
+   *          the resource being parsed
    * @param problemHandler
    *          the problem handler implementation to use
    * @throws IOException
@@ -97,9 +107,10 @@ public class MetaschemaJsonReader
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public MetaschemaJsonReader(
       @NonNull JsonParser parser,
+      @NonNull URI source,
       @NonNull IJsonProblemHandler problemHandler) throws IOException {
+    this.source = source;
     this.problemHandler = problemHandler;
-    this.objectMapper = ObjectUtils.notNull(Lazy.lazy(ObjectMapper::new));
     push(parser);
   }
 
@@ -110,6 +121,10 @@ public class MetaschemaJsonReader
     return ObjectUtils.notNull(parserStack.peek());
   }
 
+  @Override
+  public URI getSource() {
+    return source;
+  }
   // protected void analyzeParserStack(@NonNull String action) throws IOException
   // {
   // StringBuilder builder = new StringBuilder()
@@ -133,8 +148,8 @@ public class MetaschemaJsonReader
   // LOGGER.info(builder.toString());
   // }
 
-  @SuppressWarnings("resource")
-  public final void push(JsonParser parser) throws IOException {
+  @SuppressWarnings({ "resource", "PMD.CloseResource" })
+  private void push(@NonNull JsonParser parser) throws IOException {
     assert !parser.equals(parserStack.peek());
     if (parser.getCurrentToken() == null) {
       parser.nextToken();
@@ -142,9 +157,9 @@ public class MetaschemaJsonReader
     parserStack.push(parser);
   }
 
-  @SuppressWarnings("resource")
+  @SuppressWarnings({ "resource", "PMD.CloseResource" })
   @NonNull
-  public final JsonParser pop(@NonNull JsonParser parser) {
+  private JsonParser pop(@NonNull JsonParser parser) {
     JsonParser old = parserStack.pop();
     assert parser.equals(old);
     return ObjectUtils.notNull(parserStack.peek());
@@ -155,11 +170,17 @@ public class MetaschemaJsonReader
     return problemHandler;
   }
 
-  @NonNull
-  protected ObjectMapper getObjectMapper() {
-    return ObjectUtils.notNull(objectMapper.get());
-  }
-
+  /**
+   * Read a JSON object value based on the provided definition.
+   *
+   * @param <T>
+   *          the Java type of the bound object produced by this parser
+   * @param definition
+   *          the Metaschema module definition that describes the node to parse
+   * @return the resulting parsed bound object
+   * @throws IOException
+   *           if an error occurred while parsing the content
+   */
   @SuppressWarnings("unchecked")
   @NonNull
   public <T> T readObject(@NonNull IBoundDefinitionModelComplex definition) throws IOException {
@@ -167,22 +188,40 @@ public class MetaschemaJsonReader
     if (value == null) {
       throw new IOException(String.format("Failed to read object '%s'%s.",
           definition.getDefinitionQName(),
-          JsonUtil.generateLocationMessage(getReader())));
+          JsonUtil.generateLocationMessage(getReader(), getSource())));
     }
     return value;
   }
 
-  @SuppressWarnings({ "unchecked" })
+  /**
+   * Read a JSON property based on the provided definition.
+   *
+   * @param <T>
+   *          the Java type of the bound object produced by this parser
+   * @param definition
+   *          the Metaschema module definition that describes the node to parse
+   * @param expectedFieldName
+   *          the name of the JSON field to parse
+   * @return the resulting parsed bound object
+   * @throws IOException
+   *           if an error occurred while parsing the content
+   */
+  @SuppressWarnings({
+      "unchecked",
+      "PMD.CyclomaticComplexity"
+  })
   @NonNull
   public <T> T readObjectRoot(
       @NonNull IBoundDefinitionModelComplex definition,
       @NonNull String expectedFieldName) throws IOException {
+    @SuppressWarnings("PMD.CloseResource")
     JsonParser parser = getReader();
+    URI resource = getSource();
 
     boolean hasStartObject = JsonToken.START_OBJECT.equals(parser.currentToken());
     if (hasStartObject) {
       // advance past the start object
-      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);
+      JsonUtil.assertAndAdvance(parser, resource, JsonToken.START_OBJECT);
     }
 
     T retval = null;
@@ -195,7 +234,7 @@ public class MetaschemaJsonReader
       String propertyName = ObjectUtils.notNull(parser.currentName());
       if (expectedFieldName.equals(propertyName)) {
         // process the object value, bound to the requested class
-        JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);
+        JsonUtil.assertAndAdvance(parser, resource, JsonToken.FIELD_NAME);
 
         // stop now, since we found the field
         retval = (T) definition.readItem(null, this);
@@ -206,23 +245,23 @@ public class MetaschemaJsonReader
           definition,
           null,
           propertyName,
-          getReader())) {
+          this)) {
         if (LOGGER.isWarnEnabled()) {
-          LOGGER.warn("Skipping unhandled JSON field '{}'{}.", propertyName, JsonUtil.toString(parser));
+          LOGGER.warn("Skipping unhandled JSON field '{}'{}.", propertyName, JsonUtil.toString(parser, resource));
         }
-        JsonUtil.skipNextValue(parser);
+        JsonUtil.skipNextValue(parser, resource);
       }
     }
 
     if (hasStartObject) {
       // advance past the end object
-      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);
+      JsonUtil.assertAndAdvance(parser, resource, JsonToken.END_OBJECT);
     }
 
     if (retval == null) {
       throw new IOException(String.format("Failed to find property with name '%s'%s.",
           expectedFieldName,
-          JsonUtil.generateLocationMessage(parser)));
+          JsonUtil.generateLocationMessage(parser, resource)));
     }
     return retval;
   }
@@ -329,7 +368,7 @@ public class MetaschemaJsonReader
   private Object checkMissingFieldValue(Object value) throws IOException {
     if (value == null && LOGGER.isWarnEnabled()) {
       LOGGER.atWarn().log("Missing property value{}",
-          JsonUtil.generateLocationMessage(getReader()));
+          JsonUtil.generateLocationMessage(getReader(), getSource()));
     }
     // TODO: change nullness annotations to be @Nullable
     return value;
@@ -373,7 +412,7 @@ public class MetaschemaJsonReader
   @NonNull
   private Object readScalarItem(@NonNull IFeatureScalarItemValueHandler handler)
       throws IOException {
-    return handler.getJavaTypeAdapter().parse(getReader());
+    return handler.getJavaTypeAdapter().parse(getReader(), getSource());
   }
 
   @NonNull
@@ -425,7 +464,7 @@ public class MetaschemaJsonReader
         ? bodyHandler
         : new JsonKeyBodyHandler(jsonKey, bodyHandler);
 
-    @SuppressWarnings("resource")
+    @SuppressWarnings("PMD.CloseResource")
     JsonLocation location = getReader().currentLocation();
 
     // construct the item
@@ -454,6 +493,7 @@ public class MetaschemaJsonReader
   @Override
   public IBoundObject readChoiceGroupItem(IBoundObject parentItem, IBoundInstanceModelChoiceGroup instance)
       throws IOException {
+    @SuppressWarnings("PMD.CloseResource")
     JsonParser parser = getReader();
     ObjectNode node = parser.readValueAsTree();
 
@@ -463,7 +503,7 @@ public class MetaschemaJsonReader
       throw new IllegalArgumentException(String.format(
           "Unable to find discriminator property '%s' for object at '%s'.",
           discriminatorProperty,
-          JsonUtil.toString(parser)));
+          JsonUtil.toString(parser, getSource())));
     }
     String discriminator = ObjectUtils.requireNonNull(discriminatorNode.asText());
 
@@ -472,6 +512,7 @@ public class MetaschemaJsonReader
 
     IBoundObject retval;
     try (JsonParser newParser = node.traverse(parser.getCodec())) {
+      assert newParser != null;
       push(newParser);
 
       // get initial token
@@ -505,9 +546,10 @@ public class MetaschemaJsonReader
         IBoundObject parent,
         IJsonProblemHandler problemHandler)
         throws IOException {
-      @SuppressWarnings("resource")
+      @SuppressWarnings("PMD.CloseResource")
       JsonParser parser = getReader();
-      JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME);
+      URI resource = getSource();
+      JsonUtil.assertCurrent(parser, resource, JsonToken.FIELD_NAME);
 
       // the field will be the JSON key
       String key = ObjectUtils.notNull(parser.currentName());
@@ -518,7 +560,7 @@ public class MetaschemaJsonReader
         throw new IOException(
             String.format("Malformed data '%s'%s. %s",
                 key,
-                JsonUtil.generateLocationMessage(parser),
+                JsonUtil.generateLocationMessage(parser, resource),
                 ex.getLocalizedMessage()),
             ex);
       }
@@ -552,11 +594,12 @@ public class MetaschemaJsonReader
         IBoundObject parent,
         IJsonProblemHandler problemHandler)
         throws IOException {
-      @SuppressWarnings("resource")
+      @SuppressWarnings("PMD.CloseResource")
       JsonParser parser = getReader();
+      URI resource = getSource();
 
       // advance past the start object
-      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);
+      JsonUtil.assertAndAdvance(parser, resource, JsonToken.START_OBJECT);
 
       // make a copy, since we use the remaining values to initialize default values
       Map<String, IBoundProperty<?>> remainingInstances = new HashMap<>(jsonProperties); // NOPMD not concurrent
@@ -591,17 +634,17 @@ public class MetaschemaJsonReader
             definition,
             parent,
             propertyName,
-            getReader())) {
+            MetaschemaJsonReader.this)) {
           if (LOGGER.isWarnEnabled()) {
-            LOGGER.warn("Skipping unhandled JSON field '{}' {}.", propertyName, JsonUtil.toString(parser));
+            LOGGER.warn("Skipping unhandled JSON field '{}' {}.", propertyName, JsonUtil.toString(parser, resource));
           }
-          JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);
-          JsonUtil.skipNextValue(parser);
+          JsonUtil.assertAndAdvance(parser, resource, JsonToken.FIELD_NAME);
+          JsonUtil.skipNextValue(parser, resource);
         }
 
         // the current token will be either the next instance field name or the end of
         // the parent object
-        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);
+        JsonUtil.assertCurrent(parser, resource, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);
       }
 
       problemHandler.handleMissingInstances(
@@ -610,11 +653,11 @@ public class MetaschemaJsonReader
           ObjectUtils.notNull(remainingInstances.values()));
 
       // advance past the end object
-      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);
+      JsonUtil.assertAndAdvance(parser, resource, JsonToken.END_OBJECT);
     }
   }
 
-  private final class GroupedInstanceProblemHandler implements IJsonProblemHandler {
+  private static final class GroupedInstanceProblemHandler implements IJsonProblemHandler {
     @NonNull
     private final IBoundInstanceModelGroupedNamed instance;
     @NonNull
@@ -640,13 +683,13 @@ public class MetaschemaJsonReader
         IBoundDefinitionModelComplex definition,
         IBoundObject parentItem,
         String fieldName,
-        JsonParser parser) throws IOException {
+        IJsonParsingContext parsingContext) throws IOException {
       boolean retval;
       if (instance.getParentContainer().getJsonDiscriminatorProperty().equals(fieldName)) {
-        JsonUtil.skipNextValue(parser);
+        JsonUtil.skipNextValue(parsingContext.getReader(), parsingContext.getSource());
         retval = true;
       } else {
-        retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, getReader());
+        retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, parsingContext);
       }
       return retval;
     }
@@ -679,11 +722,15 @@ public class MetaschemaJsonReader
         IBoundDefinitionModelComplex definition,
         IBoundObject parentItem,
         String fieldName,
-        JsonParser parser) throws IOException {
+        IJsonParsingContext parsingContext) throws IOException {
       boolean retval;
       if (foundJsonValueKey) {
-        retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, parser);
+        retval = delegate.handleUnknownProperty(definition, parentItem, fieldName, parsingContext);
       } else {
+        @SuppressWarnings("PMD.CloseResource")
+        JsonParser parser = parsingContext.getReader();
+        URI resource = parsingContext.getSource();
+
         // handle JSON value key
         String key = ObjectUtils.notNull(parser.currentName());
         try {
@@ -693,12 +740,12 @@ public class MetaschemaJsonReader
           throw new IOException(
               String.format("Malformed data '%s'%s. %s",
                   key,
-                  JsonUtil.generateLocationMessage(parser),
+                  JsonUtil.generateLocationMessage(parser, resource),
                   ex.getLocalizedMessage()),
               ex);
         }
         // advance past the field name
-        JsonUtil.assertAndAdvance(parser, JsonToken.FIELD_NAME);
+        JsonUtil.assertAndAdvance(parser, resource, JsonToken.FIELD_NAME);
 
         IBoundFieldValue fieldValue = ((IBoundDefinitionModelFieldComplex) definition).getFieldValue();
         Object value = readItemFieldValue(ObjectUtils.notNull(parentItem), fieldValue);
@@ -723,13 +770,15 @@ public class MetaschemaJsonReader
 
     @Override
     public List<ITEM> readList() throws IOException {
+      @SuppressWarnings("PMD.CloseResource")
       JsonParser parser = getReader();
+      URI resource = getSource();
 
       List<ITEM> items = new LinkedList<>();
       switch (parser.currentToken()) {
       case START_ARRAY:
         // this is an array, we need to parse the array wrapper then each item
-        JsonUtil.assertAndAdvance(parser, JsonToken.START_ARRAY);
+        JsonUtil.assertAndAdvance(parser, resource, JsonToken.START_ARRAY);
 
         // parse items
         while (!JsonToken.END_ARRAY.equals(parser.currentToken())) {
@@ -737,10 +786,10 @@ public class MetaschemaJsonReader
         }
 
         // this is the other side of the array wrapper, advance past it
-        JsonUtil.assertAndAdvance(parser, JsonToken.END_ARRAY);
+        JsonUtil.assertAndAdvance(parser, resource, JsonToken.END_ARRAY);
         break;
       case VALUE_NULL:
-        JsonUtil.assertAndAdvance(parser, JsonToken.VALUE_NULL);
+        JsonUtil.assertAndAdvance(parser, resource, JsonToken.VALUE_NULL);
         break;
       default:
         // this is a singleton, just parse the value as a single item
@@ -752,7 +801,9 @@ public class MetaschemaJsonReader
 
     @Override
     public Map<String, ITEM> readMap() throws IOException {
+      @SuppressWarnings("PMD.CloseResource")
       JsonParser parser = getReader();
+      URI resource = getSource();
 
       IBoundInstanceModel<?> instance = getCollectionInfo().getInstance();
 
@@ -761,19 +812,19 @@ public class MetaschemaJsonReader
 
       // A map value is always wrapped in a START_OBJECT, since fields are used for
       // the keys
-      JsonUtil.assertAndAdvance(parser, JsonToken.START_OBJECT);
+      JsonUtil.assertAndAdvance(parser, resource, JsonToken.START_OBJECT);
 
       // process all map items
       while (!JsonToken.END_OBJECT.equals(parser.currentToken())) {
 
         // a map item will always start with a FIELD_NAME, since this represents the key
-        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME);
+        JsonUtil.assertCurrent(parser, resource, JsonToken.FIELD_NAME);
 
         // get the object, since it must have a JSON key
         ITEM item = readItem();
         if (item == null) {
           throw new IOException(String.format("Null object encountered'%s.",
-              JsonUtil.generateLocationMessage(parser)));
+              JsonUtil.generateLocationMessage(parser, resource)));
         }
 
         // lookup the key
@@ -792,7 +843,7 @@ public class MetaschemaJsonReader
           throw new IOException(
               String.format("Malformed data '%s'%s. %s",
                   keyValue,
-                  JsonUtil.generateLocationMessage(parser),
+                  JsonUtil.generateLocationMessage(parser, resource),
                   ex.getLocalizedMessage()),
               ex);
         }
@@ -801,11 +852,11 @@ public class MetaschemaJsonReader
         // the next item will be a FIELD_NAME, or we will encounter an END_OBJECT if all
         // items have been
         // read
-        JsonUtil.assertCurrent(parser, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);
+        JsonUtil.assertCurrent(parser, resource, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);
       }
 
       // A map value will always end with an end object, which needs to be consumed
-      JsonUtil.assertAndAdvance(parser, JsonToken.END_OBJECT);
+      JsonUtil.assertAndAdvance(parser, resource, JsonToken.END_OBJECT);
 
       return items;
     }
@@ -817,6 +868,7 @@ public class MetaschemaJsonReader
     }
   }
 
+  @SuppressWarnings("PMD.DataClass")
   private static class MetaschemaData implements IMetaschemaData {
     private final int line;
     private final int column;

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.util.Collections;
 
 import javax.xml.namespace.QName;
@@ -46,6 +47,7 @@ class XmlParserTest
   void testXmlRead() throws IOException, XMLStreamException {
     String xml = "<test xmlns='https://csrc.nist.gov/ns/test/xml'>"
         + "  <field1>field1value</field1>" + "</test>";
+
     XMLInputFactory factory = XMLInputFactory.newInstance();
     assert factory instanceof WstxInputFactory;
     XMLEventReader2 eventReader = (XMLEventReader2) factory.createXMLEventReader(new StringReader(xml));
@@ -60,7 +62,8 @@ class XmlParserTest
 
     assert start != null;
 
-    MetaschemaXmlReader parser = new MetaschemaXmlReader(eventReader);
+    URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
+    MetaschemaXmlReader parser = new MetaschemaXmlReader(eventReader, source);
 
     IBindingContext bindingContext = newBindingContext();
 
@@ -103,7 +106,8 @@ class XmlParserTest
 
     assertEquals(XMLStreamConstants.START_DOCUMENT, eventReader.nextEvent().getEventType());
 
-    MetaschemaXmlReader parser = new MetaschemaXmlReader(eventReader);
+    URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
+    MetaschemaXmlReader parser = new MetaschemaXmlReader(eventReader, source);
     FlaggedAssembly obj = parser.read(assembly);
 
     assertEquals("theId", obj.getId());
@@ -119,6 +123,7 @@ class XmlParserTest
         .append(" </fields2>\n")
         .append("</test>")
         .toString();
+
     XMLInputFactory factory = XMLInputFactory.newInstance();
     assert factory instanceof WstxInputFactory;
     XMLEventReader2 eventReader = (XMLEventReader2) factory.createXMLEventReader(new StringReader(xml));
@@ -134,7 +139,8 @@ class XmlParserTest
 
     assert start != null;
 
-    MetaschemaXmlReader parser = new MetaschemaXmlReader(eventReader);
+    URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
+    MetaschemaXmlReader parser = new MetaschemaXmlReader(eventReader, source);
 
     IBindingContext bindingContext = newBindingContext();
 

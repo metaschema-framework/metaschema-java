@@ -34,6 +34,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Provides support for reading XML-based data based on a bound Metaschema
+ * module.
+ *
+ * @param <CLASS>
+ *          the Java type of the bound object representing the root node to read
+ */
 public class DefaultXmlDeserializer<CLASS extends IBoundObject>
     extends AbstractDeserializer<CLASS> {
   private Lazy<XMLInputFactory2> factory;
@@ -60,6 +67,11 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
     resetFactory();
   }
 
+  /**
+   * For use by subclasses to reset the underlying XML factory when an important
+   * change has occurred that will change how the factory produces an
+   * {@link XMLInputFactory2}.
+   */
   protected final void resetFactory() {
     this.factory = Lazy.lazy(this::newFactoryInstance);
   }
@@ -137,21 +149,21 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
   }
 
   @Override
-  public final CLASS deserializeToValueInternal(Reader reader, URI documentUri) throws IOException {
+  public final CLASS deserializeToValueInternal(Reader reader, URI resource) throws IOException {
     // doesn't auto close the underlying reader
     try (AutoCloser<XMLEventReader2, XMLStreamException> closer = AutoCloser.autoClose(
-        newXMLEventReader2(documentUri, reader), XMLEventReader::close)) {
-      return parseXmlInternal(closer.getResource());
+        newXMLEventReader2(resource, reader), XMLEventReader::close)) {
+      return parseXmlInternal(closer.getResource(), resource);
     } catch (XMLStreamException ex) {
       throw new IOException("Unable to create a new XMLEventReader2 instance.", ex);
     }
   }
 
   @NonNull
-  private CLASS parseXmlInternal(@NonNull XMLEventReader2 reader)
+  private CLASS parseXmlInternal(@NonNull XMLEventReader2 reader, @NonNull URI resource)
       throws IOException {
 
-    MetaschemaXmlReader parser = new MetaschemaXmlReader(reader, new DefaultXmlProblemHandler());
+    MetaschemaXmlReader parser = new MetaschemaXmlReader(reader, resource, new DefaultXmlProblemHandler());
 
     try {
       return parser.read(rootDefinition);

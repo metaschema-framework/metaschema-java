@@ -5,6 +5,10 @@
 
 package gov.nist.secauto.metaschema.databind.io;
 
+import org.eclipse.jdt.annotation.NotOwning;
+
+import java.net.URI;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -22,7 +26,16 @@ public interface IParsingContext<READER, PROBLEM_HANDLER extends IProblemHandler
    * @return the parser
    */
   @NonNull
+  @NotOwning
   READER getReader();
+
+  /**
+   * Get the URI-based resource read by this parser.
+   *
+   * @return the resource URI
+   */
+  @NonNull
+  URI getSource();
 
   /**
    * A handler that provides callbacks used to resolve parsing issues.

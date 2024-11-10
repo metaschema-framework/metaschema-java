@@ -5,8 +5,6 @@
 
 package gov.nist.secauto.metaschema.databind.io.json;
 
-import com.fasterxml.jackson.core.JsonParser;
-
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;
@@ -16,6 +14,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This problem handler implementation handles common issues when parsing
+ * JSON-based Metaschema module instances.
+ */
 public class DefaultJsonProblemHandler
     extends AbstractProblemHandler
     implements IJsonProblemHandler {
@@ -32,10 +34,10 @@ public class DefaultJsonProblemHandler
       IBoundDefinitionModelComplex classBinding,
       IBoundObject targetObject,
       String fieldName,
-      JsonParser parser) throws IOException {
+      IJsonParsingContext parsingContext) throws IOException {
     boolean retval = false;
     if (IGNORED_FIELD_NAMES.contains(fieldName)) {
-      JsonUtil.skipNextValue(parser);
+      JsonUtil.skipNextValue(parsingContext.getReader(), parsingContext.getSource());
       retval = true;
     }
     return retval;

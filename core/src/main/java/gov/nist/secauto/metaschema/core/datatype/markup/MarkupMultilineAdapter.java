@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import org.codehaus.stax2.XMLEventReader2;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -22,6 +23,11 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#markup-line">markup-multiline</a>
+ * data type.
+ */
 public class MarkupMultilineAdapter
     extends AbstractMarkupAdapter<MarkupMultiline> {
   @NonNull
@@ -52,16 +58,16 @@ public class MarkupMultilineAdapter
 
   @SuppressWarnings("null")
   @Override
-  public MarkupMultiline parse(XMLEventReader2 eventReader) throws IOException {
+  public MarkupMultiline parse(XMLEventReader2 eventReader, URI resource) throws IOException {
     try {
-      return XmlMarkupParser.instance().parseMarkupMultiline(eventReader);
+      return XmlMarkupParser.instance().parseMarkupMultiline(eventReader, resource);
     } catch (XMLStreamException ex) {
       throw new IOException(ex);
     }
   }
 
   @Override
-  public MarkupMultiline parse(JsonParser parser) throws IOException {
+  public MarkupMultiline parse(JsonParser parser, URI resource) throws IOException {
     @SuppressWarnings("null")
     MarkupMultiline retval = parse(parser.getValueAsString());
     // skip past value

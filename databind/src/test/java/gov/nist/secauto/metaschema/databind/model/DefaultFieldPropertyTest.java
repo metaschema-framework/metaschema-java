@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -55,7 +56,8 @@ class DefaultFieldPropertyTest {
           = (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(SimpleAssembly.class);
       assert classBinding != null;
 
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
+      URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
+      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, source);
 
       SimpleAssembly obj = parser.readObjectRoot(
           classBinding,
@@ -82,7 +84,8 @@ class DefaultFieldPropertyTest {
       IBoundDefinitionModelComplex classBinding = bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class);
       assert classBinding != null;
 
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
+      URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
+      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, source);
 
       // read the top-level definition
       MultiFieldAssembly obj = ObjectUtils.requireNonNull((MultiFieldAssembly) parser.readObject(classBinding));
@@ -115,7 +118,8 @@ class DefaultFieldPropertyTest {
       IBoundDefinitionModelComplex classBinding = bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class);
       assert classBinding != null;
 
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
+      URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
+      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, source);
 
       // read the top-level definition
       MultiFieldAssembly obj = ObjectUtils.requireNonNull((MultiFieldAssembly) parser.readObject(classBinding));
@@ -141,7 +145,8 @@ class DefaultFieldPropertyTest {
       IBoundDefinitionModelComplex classBinding = bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class);
       assert classBinding != null;
 
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
+      URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
+      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, source);
 
       // read the top-level definition
       MultiFieldAssembly obj = ObjectUtils.requireNonNull((MultiFieldAssembly) parser.readObject(classBinding));
@@ -165,7 +170,8 @@ class DefaultFieldPropertyTest {
       IBoundDefinitionModelComplex classBinding = bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class);
       assert classBinding != null;
 
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
+      URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
+      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, source);
 
       // read the top-level definition
       MultiFieldAssembly obj = ObjectUtils.requireNonNull((MultiFieldAssembly) parser.readObject(classBinding));

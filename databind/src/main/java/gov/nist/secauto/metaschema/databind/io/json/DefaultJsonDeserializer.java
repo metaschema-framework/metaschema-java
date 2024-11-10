@@ -25,6 +25,13 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Provides support for reading JSON-based data based on a bound Metaschema
+ * module.
+ *
+ * @param <CLASS>
+ *          the Java type of the bound object representing the root node to read
+ */
 public class DefaultJsonDeserializer<CLASS extends IBoundObject>
     extends AbstractDeserializer<CLASS> {
   private Lazy<JsonFactory> factory;
@@ -42,6 +49,11 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
     resetFactory();
   }
 
+  /**
+   * For use by subclasses to reset the underlying JSON factory when an important
+   * change has occurred that will change how the factory produces a
+   * {@link JsonParser}.
+   */
   protected final void resetFactory() {
     this.factory = Lazy.lazy(this::newFactoryInstance);
   }
@@ -96,7 +108,7 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
       throws IOException {
     INodeItem retval;
     try (JsonParser jsonParser = newJsonParser(reader)) {
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
+      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, documentUri);
       IBoundDefinitionModelAssembly definition = getDefinition();
       IConfiguration<DeserializationFeature<?>> configuration = getConfiguration();
 
@@ -121,7 +133,7 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
   @Override
   public CLASS deserializeToValueInternal(@NonNull Reader reader, @NonNull URI documentUri) throws IOException {
     try (JsonParser jsonParser = newJsonParser(reader)) {
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser);
+      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, documentUri);
       IBoundDefinitionModelAssembly definition = getDefinition();
       IConfiguration<DeserializationFeature<?>> configuration = getConfiguration();
 

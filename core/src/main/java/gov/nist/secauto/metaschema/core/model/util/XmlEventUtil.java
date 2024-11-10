@@ -11,6 +11,7 @@ import org.codehaus.stax2.XMLEventReader2;
 import org.codehaus.stax2.XMLStreamReader2;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +31,10 @@ import javax.xml.stream.events.XMLEvent;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides utility functions to support reading and writing XML stream events,
+ * and for producing error and warning messages.
+ */
 public final class XmlEventUtil { // NOPMD this is a set of utility methods
   private static final Pattern WHITESPACE_ONLY = Pattern.compile("^\\s+$");
 
@@ -89,10 +94,14 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param xmlEvent
    *          the XML event to generate the message for
+   * @param resource
+   *          the resource being parsed
    * @return the message
    */
   @NonNull
-  public static CharSequence toString(XMLEvent xmlEvent) {
+  public static CharSequence toString(
+      @Nullable XMLEvent xmlEvent,
+      @NonNull URI resource) {
     CharSequence retval;
     if (xmlEvent == null) {
       retval = "EOF";
@@ -113,7 +122,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
       }
       Location location = toLocation(xmlEvent);
       if (location != null) {
-        builder.append(" at ").append(toString(location));
+        builder.append(" at ").append(toString(location, resource));
       }
       retval = builder;
     }
@@ -125,11 +134,13 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param location
    *          the location to generate the message for
+   * @param resource
+   *          the resource being parsed
    * @return the message
    */
   @SuppressWarnings("null")
   @NonNull
-  public static CharSequence toString(@Nullable Location location) {
+  public static CharSequence toString(@Nullable Location location, @NonNull URI resource) {
     return location == null ? "unknown"
         : new StringBuilder()
             .append(location.getLineNumber())
@@ -143,10 +154,14 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param reader
    *          the XML event stream reader
+   * @param resource
+   *          the resource being parsed
    * @return the generated string
    */
   @NonNull
-  public static CharSequence toString(@NonNull XMLStreamReader2 reader) { // NO_UCD (unused code)
+  public static CharSequence toString(
+      @NonNull XMLStreamReader2 reader,
+      @NonNull URI resource) {
     int type = reader.getEventType();
 
     @SuppressWarnings("null")
@@ -164,7 +179,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
     }
     Location location = reader.getLocation();
     if (location != null) {
-      builder.append(" at ").append(toString(location));
+      builder.append(" at ").append(toString(location, resource));
     }
     return builder;
   }
@@ -366,7 +381,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *          the expected element name
    * @return {@code true} if the next event matches the {@code expectedQName}
    */
-  public static boolean isEventEndElement(XMLEvent event, @NonNull QName expectedQName) {
+  public static boolean isEventEndElement(@Nullable XMLEvent event, @NonNull QName expectedQName) {
     return event != null
         && event.isEndElement()
         && expectedQName.equals(event.asEndElement().getName());
@@ -379,7 +394,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *          the XML event
    * @return {@code true} if the next event is an end of document event
    */
-  public static boolean isEventEndDocument(XMLEvent event) {
+  public static boolean isEventEndDocument(@Nullable XMLEvent event) {
     return event != null
         && event.isEndElement();
   }
@@ -397,7 +412,9 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    * @throws XMLStreamException
    *           if an error occurred while looking at the next event
    */
-  public static boolean isEventStartElement(XMLEvent event, @NonNull QName expectedQName) throws XMLStreamException {
+  public static boolean isEventStartElement(
+      @Nullable XMLEvent event,
+      @NonNull QName expectedQName) throws XMLStreamException {
     return event != null
         && event.isStartElement()
         && expectedQName.equals(event.asStartElement().getName());
@@ -409,15 +426,20 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param reader
    *          the XML event reader
+   * @param resource
+   *          the resource being parsed
    * @param presumedEventType
    *          the expected event type as defined by {@link XMLStreamConstants}
    * @return the next event
    * @throws XMLStreamException
    *           if an error occurred while looking at the next event
    */
-  public static XMLEvent consumeAndAssert(XMLEventReader2 reader, int presumedEventType)
+  public static XMLEvent consumeAndAssert(
+      @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
+      int presumedEventType)
       throws XMLStreamException {
-    return consumeAndAssert(reader, presumedEventType, null);
+    return consumeAndAssert(reader, resource, presumedEventType, null);
   }
 
   /**
@@ -427,6 +449,8 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param reader
    *          the XML event reader
+   * @param resource
+   *          the resource being parsed
    * @param presumedEventType
    *          the expected event type as defined by {@link XMLStreamConstants}
    * @param presumedName
@@ -435,7 +459,11 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    * @throws XMLStreamException
    *           if an error occurred while looking at the next event
    */
-  public static XMLEvent consumeAndAssert(XMLEventReader2 reader, int presumedEventType, QName presumedName)
+  public static XMLEvent consumeAndAssert(
+      @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
+      int presumedEventType,
+      @Nullable QName presumedName)
       throws XMLStreamException {
     XMLEvent retval = reader.nextEvent();
 
@@ -445,6 +473,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
         && (presumedName == null
             || presumedName.equals(name)) : generateExpectedMessage(
                 retval,
+                resource,
                 presumedEventType,
                 presumedName);
     return retval;
@@ -456,6 +485,8 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param reader
    *          the XML event reader
+   * @param resource
+   *          the resource being parsed
    * @param presumedName
    *          the qualified name of the expected next event
    * @return the XML start element event
@@ -467,11 +498,13 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
   @NonNull
   public static StartElement requireStartElement(
       @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
       @NonNull QName presumedName) throws IOException, XMLStreamException {
     XMLEvent retval = reader.nextEvent();
     if (!retval.isStartElement() || !presumedName.equals(retval.asStartElement().getName())) {
       throw new IOException(generateExpectedMessage(
           retval,
+          resource,
           XMLStreamConstants.START_ELEMENT,
           presumedName).toString());
     }
@@ -484,6 +517,8 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param reader
    *          the XML event reader
+   * @param resource
+   *          the resource being parsed
    * @param presumedName
    *          the qualified name of the expected next event
    * @return the XML start element event
@@ -495,11 +530,13 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
   @NonNull
   public static EndElement requireEndElement(
       @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
       @NonNull QName presumedName) throws IOException, XMLStreamException {
     XMLEvent retval = reader.nextEvent();
     if (!retval.isEndElement() || !presumedName.equals(retval.asEndElement().getName())) {
       throw new IOException(generateExpectedMessage(
           retval,
+          resource,
           XMLStreamConstants.END_ELEMENT,
           presumedName).toString());
     }
@@ -512,6 +549,8 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param reader
    *          the event reader
+   * @param resource
+   *          the resource being parsed
    * @param presumedEventType
    *          the expected event type as defined by {@link XMLStreamConstants}
    * @return the next event
@@ -522,9 +561,10 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    */
   public static XMLEvent assertNext(
       @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
       int presumedEventType)
       throws XMLStreamException {
-    return assertNext(reader, presumedEventType, null);
+    return assertNext(reader, resource, presumedEventType, null);
   }
 
   /**
@@ -534,6 +574,8 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param reader
    *          the event reader
+   * @param resource
+   *          the resource being parsed
    * @param presumedEventType
    *          the expected event type as defined by {@link XMLStreamConstants}
    * @param presumedName
@@ -546,6 +588,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    */
   public static XMLEvent assertNext(
       @NonNull XMLEventReader2 reader,
+      @NonNull URI resource,
       int presumedEventType,
       @Nullable QName presumedName)
       throws XMLStreamException {
@@ -556,6 +599,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
         && (presumedName == null
             || presumedName.equals(toQName(nextEvent))) : generateExpectedMessage(
                 nextEvent,
+                resource,
                 presumedEventType,
                 presumedName);
     return nextEvent;
@@ -566,11 +610,17 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param event
    *          an XML event
+   * @param resource
+   *          the resource being parsed
    * @return the location string
    */
-  public static CharSequence generateLocationMessage(@NonNull XMLEvent event) {
-    Location location = toLocation(event);
-    return location == null ? "" : generateLocationMessage(location);
+  public static CharSequence generateLocationMessage(
+      @Nullable XMLEvent event,
+      @NonNull URI resource) {
+    Location location = event == null ? null : toLocation(event);
+    return location == null
+        ? " at '" + resource.toString() + "'"
+        : generateLocationMessage(location, resource);
   }
 
   /**
@@ -578,12 +628,18 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param location
    *          an XML event stream location
+   * @param resource
+   *          the resource being parsed
    * @return the location string
    */
-  public static CharSequence generateLocationMessage(@NonNull Location location) {
+  public static CharSequence generateLocationMessage(
+      @NonNull Location location,
+      @NonNull URI resource) {
     return new StringBuilder(12)
-        .append(" at ")
-        .append(XmlEventUtil.toString(location));
+        .append(" in '")
+        .append(resource.toString())
+        .append("' at ")
+        .append(XmlEventUtil.toString(location, resource));
   }
 
   /**
@@ -591,6 +647,8 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    *
    * @param event
    *          the current XML event
+   * @param resource
+   *          the resource being parsed
    * @param presumedEventType
    *          the expected event type ({@link XMLEvent#getEventType()})
    * @param presumedName
@@ -600,6 +658,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    */
   public static CharSequence generateExpectedMessage(
       @Nullable XMLEvent event,
+      @NonNull URI resource,
       int presumedEventType,
       @Nullable QName presumedName) {
     StringBuilder builder = new StringBuilder(64);
@@ -616,7 +675,7 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
       builder.append("', instead found null event");
     } else {
       builder.append("', instead found ")
-          .append(toString(event));
+          .append(toString(event, resource));
     }
     return builder;
   }

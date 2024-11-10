@@ -121,12 +121,14 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *
    * @param is
    *          an input stream for the resource
+   * @param resource
+   *          the URI of the resource
    * @return the format information for the provided resource
    * @throws IOException
    *           if an error occurred while reading the resource
    */
   @NonNull
-  FormatDetector.Result detectFormat(@NonNull InputStream is) throws IOException;
+  FormatDetector.Result detectFormat(@NonNull InputStream is, @NonNull URI resource) throws IOException;
 
   /**
    * Determine the model of the provided resource.
@@ -141,6 +143,8 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *
    * @param is
    *          an input stream for the resource
+   * @param resource
+   *          the URI of the resource
    * @param format
    *          the format of the provided resource
    * @return the model of the provided resource
@@ -149,7 +153,8 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    */
   @NonNull
   @Owning
-  ModelDetector.Result detectModel(@NonNull InputStream is, @NonNull Format format) throws IOException;
+  ModelDetector.Result detectModel(@NonNull InputStream is, @NonNull URI resource, @NonNull Format format)
+      throws IOException;
 
   /**
    * Load data from the provided resource into a bound object.
@@ -240,15 +245,15 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *          the type of the bound object to return
    * @param is
    *          the resource stream
-   * @param documentUri
+   * @param resource
    *          the URI of the resource
    * @return a bound object containing the loaded data
    * @throws IOException
    *           if an error occurred while reading the resource
-   * @see #detectFormat(InputStream)
+   * @see #detectFormat(InputStream, URI)
    */
   @NonNull
-  <CLASS extends IBoundObject> CLASS load(@NonNull InputStream is, @NonNull URI documentUri) throws IOException;
+  <CLASS extends IBoundObject> CLASS load(@NonNull InputStream is, @NonNull URI resource) throws IOException;
 
   /**
    * Load data from the specified resource into a bound object with the type of
@@ -353,7 +358,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *          the class for the java type
    * @param is
    *          the resource stream
-   * @param documentUri
+   * @param resource
    *          the URI of the resource
    * @return the loaded data
    * @throws IOException
@@ -364,7 +369,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
   <CLASS extends IBoundObject> CLASS load(
       @NonNull Class<CLASS> clazz,
       @NonNull InputStream is,
-      @NonNull URI documentUri) throws IOException;
+      @NonNull URI resource) throws IOException;
 
   /**
    * Load data from the specified resource into a bound object with the type of
@@ -381,7 +386,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *          the class for the java type
    * @param is
    *          the resource stream
-   * @param documentUri
+   * @param resource
    *          the URI of the resource
    * @return the loaded data
    * @throws IOException
@@ -393,7 +398,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
       @NonNull Class<CLASS> clazz,
       @NonNull Format format,
       @NonNull InputStream is,
-      @NonNull URI documentUri) throws IOException;
+      @NonNull URI resource) throws IOException;
 
   /**
    * Load data expressed using the provided {@code format} and return that data as
@@ -450,7 +455,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    *          the expected format of the data to parse
    * @param is
    *          the resource stream
-   * @param documentUri
+   * @param resource
    *          the URI of the resource
    * @return the Metapath node item for the parsed data
    * @throws IOException
@@ -461,7 +466,7 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
   IDocumentNodeItem loadAsNodeItem(
       @NonNull Format format,
       @NonNull InputStream is,
-      @NonNull URI documentUri) throws IOException;
+      @NonNull URI resource) throws IOException;
 
   /**
    * Get the configured Module binding context to use to load Java types.

@@ -19,6 +19,7 @@ import org.codehaus.stax2.XMLStreamWriter2;
 import org.codehaus.stax2.evt.XMLEventFactory2;
 
 import java.io.IOException;
+import java.net.URI;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventWriter;
@@ -91,15 +92,14 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   }
 
   @Override
-  public TYPE parse(XMLEventReader2 eventReader) throws IOException {
+  public TYPE parse(XMLEventReader2 eventReader, URI resource) throws IOException {
     StringBuilder builder = new StringBuilder();
     XMLEvent nextEvent;
     try {
       while (!(nextEvent = eventReader.peek()).isEndElement()) {
         if (!nextEvent.isCharacters()) {
-          throw new IOException(String.format("Invalid content '%s' at %s",
-              XmlEventUtil.toString(nextEvent),
-              XmlEventUtil.toString(nextEvent.getLocation())));
+          throw new IOException(String.format("Invalid content %s",
+              XmlEventUtil.toString(nextEvent, resource)));
         }
         Characters characters = nextEvent.asCharacters();
         builder.append(characters.getData());
@@ -115,7 +115,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
         throw new IOException(
             String.format("Malformed data '%s'%s. %s",
                 value,
-                XmlEventUtil.generateLocationMessage(nextEvent),
+                XmlEventUtil.generateLocationMessage(nextEvent, resource),
                 ex.getLocalizedMessage()),
             ex);
       }
@@ -129,12 +129,12 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
    * the string-based parsing method.
    */
   @Override
-  public TYPE parse(JsonParser parser) throws IOException {
+  public TYPE parse(JsonParser parser, URI resource) throws IOException {
     String value = parser.getValueAsString();
     if (value == null) {
       throw new IOException(
           String.format("Unable to get null value as text%s",
-              JsonUtil.generateLocationMessage(parser)));
+              JsonUtil.generateLocationMessage(parser, resource)));
     }
     // skip over value
     parser.nextToken();
@@ -144,7 +144,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
       throw new IOException(
           String.format("Malformed data '%s'%s. %s",
               value,
-              JsonUtil.generateLocationMessage(parser),
+              JsonUtil.generateLocationMessage(parser, resource),
               ex.getLocalizedMessage()),
           ex);
     }
@@ -226,7 +226,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   @NonNull
   protected ITEM_TYPE castInternal(@NonNull IAnyAtomicItem item) {
     // try string based casting as a fallback
-    String itemString = null;
+    String itemString;
     try {
       itemString = item.asString();
       TYPE value = parse(itemString);

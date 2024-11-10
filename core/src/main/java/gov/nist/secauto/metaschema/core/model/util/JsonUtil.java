@@ -20,6 +20,7 @@ import org.json.JSONTokener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +28,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides utility functions to support reading and writing JSON, and for
+ * producing error and warning messages.
+ */
 public final class JsonUtil {
   private static final Logger LOGGER = LogManager.getLogger(JsonUtil.class);
 
@@ -64,19 +69,23 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @return the informational string
    * @throws IOException
    *           if an error occurred while getting the information from the parser
    */
   @SuppressWarnings("null")
   @NonNull
-  public static String toString(@NonNull JsonParser parser) throws IOException {
+  public static String toString(
+      @NonNull JsonParser parser,
+      @NonNull URI resource) throws IOException {
     return new StringBuilder(32)
         .append(parser.currentToken().name())
         .append(" '")
         .append(parser.getText())
         .append('\'')
-        .append(generateLocationMessage(parser))
+        .append(generateLocationMessage(parser, resource))
         .toString();
   }
 
@@ -102,6 +111,8 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @param token
    *          the expected token
    * @return the current token or {@code null} if no tokens remain in the stream
@@ -109,14 +120,16 @@ public final class JsonUtil {
    *           if an error occurred while parsing the JSON
    */
   @Nullable
-  public static JsonToken advanceTo(@NonNull JsonParser parser, @NonNull JsonToken token) throws IOException {
+  public static JsonToken advanceTo(
+      @NonNull JsonParser parser,
+      @NonNull URI resource,
+      @NonNull JsonToken token) throws IOException {
     JsonToken currentToken = null;
     while (parser.hasCurrentToken() && !token.equals(currentToken = parser.currentToken())) {
       currentToken = parser.nextToken();
       if (LOGGER.isWarnEnabled()) {
-        LOGGER.warn("skipping over: {}{}",
-            toString(parser),
-            generateLocationMessage(parser));
+        LOGGER.warn("skipping over: {}",
+            toString(parser, resource));
       }
     }
     return currentToken;
@@ -127,6 +140,8 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @return the current token or {@code null} if no tokens remain in the stream
    * @throws IOException
    *           if an error occurred while parsing the JSON
@@ -136,7 +151,9 @@ public final class JsonUtil {
       "PMD.CyclomaticComplexity" // acceptable
   })
   @Nullable
-  public static JsonToken skipNextValue(@NonNull JsonParser parser) throws IOException {
+  public static JsonToken skipNextValue(
+      @NonNull JsonParser parser,
+      @NonNull URI resource) throws IOException {
 
     JsonToken currentToken = parser.currentToken();
     // skip the field name
@@ -159,9 +176,8 @@ public final class JsonUtil {
       break;
     default:
       // error
-      String msg = String.format("Unhandled JsonToken %s%s.",
-          toString(parser),
-          generateLocationMessage(parser));
+      String msg = String.format("Unhandled JsonToken %s.",
+          toString(parser, resource));
       LOGGER.error(msg);
       throw new UnsupportedOperationException(msg);
     }
@@ -206,17 +222,21 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @param expectedTokens
    *          the tokens for which one is expected to match against the current
    *          token
    */
   public static void assertCurrent(
       @NonNull JsonParser parser,
+      @NonNull URI resource,
       @NonNull JsonToken... expectedTokens) {
     JsonToken current = parser.currentToken();
     assert Arrays.stream(expectedTokens)
         .anyMatch(expected -> expected.equals(current)) : generateExpectedMessage(
             parser,
+            resource,
             expectedTokens,
             parser.currentToken());
   }
@@ -236,6 +256,8 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @param expectedToken
    *          the expected token
    * @return the next token
@@ -245,11 +267,13 @@ public final class JsonUtil {
   @Nullable
   public static JsonToken assertAndAdvance(
       @NonNull JsonParser parser,
+      @NonNull URI resource,
       @NonNull JsonToken expectedToken)
       throws IOException {
     JsonToken token = parser.currentToken();
     assert expectedToken.equals(token) : generateExpectedMessage(
         parser,
+        resource,
         expectedToken,
         token);
     return parser.nextToken();
@@ -261,6 +285,8 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @param expectedToken
    *          the expected token
    * @return the next token
@@ -270,11 +296,13 @@ public final class JsonUtil {
   @Nullable
   public static JsonToken advanceAndAssert(
       @NonNull JsonParser parser,
+      @NonNull URI resource,
       @NonNull JsonToken expectedToken)
       throws IOException {
     JsonToken token = parser.nextToken();
     assert expectedToken.equals(token) : generateExpectedMessage(
         parser,
+        resource,
         expectedToken,
         token);
     return token;
@@ -285,6 +313,8 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @param expectedToken
    *          the expected token
    * @param actualToken
@@ -294,13 +324,14 @@ public final class JsonUtil {
   @NonNull
   private static String generateExpectedMessage(
       @NonNull JsonParser parser,
+      @NonNull URI resource,
       @NonNull JsonToken expectedToken,
       JsonToken actualToken) {
     return ObjectUtils.notNull(
         String.format("Expected JsonToken '%s', but found JsonToken '%s'%s.",
             expectedToken,
             actualToken,
-            generateLocationMessage(parser)));
+            generateLocationMessage(parser, resource)));
   }
 
   /**
@@ -309,6 +340,8 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @param expectedTokens
    *          the set of expected tokens, one of which was expected to match the
    *          actual token
@@ -319,10 +352,11 @@ public final class JsonUtil {
   @NonNull
   private static String generateExpectedMessage(
       @NonNull JsonParser parser,
+      @NonNull URI resource,
       @NonNull JsonToken[] expectedTokens,
       JsonToken actualToken) {
     List<JsonToken> expectedTokensList = ObjectUtils.notNull(Arrays.asList(expectedTokens));
-    return generateExpectedMessage(parser, expectedTokensList, actualToken);
+    return generateExpectedMessage(parser, resource, expectedTokensList, actualToken);
   }
 
   /**
@@ -331,6 +365,8 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @param expectedTokens
    *          the set of expected tokens, one of which was expected to match the
    *          actual token
@@ -341,13 +377,14 @@ public final class JsonUtil {
   @NonNull
   private static String generateExpectedMessage(
       @NonNull JsonParser parser,
+      @NonNull URI resource,
       @NonNull Collection<JsonToken> expectedTokens,
       JsonToken actualToken) {
     return ObjectUtils.notNull(
         String.format("Expected JsonToken(s) '%s', but found JsonToken '%s'%s.",
             expectedTokens.stream().map(Enum::name).collect(CustomCollectors.joiningWithOxfordComma("or")),
             actualToken,
-            generateLocationMessage(parser)));
+            generateLocationMessage(parser, resource)));
   }
 
   /**
@@ -355,12 +392,16 @@ public final class JsonUtil {
    *
    * @param parser
    *          the JSON parser
+   * @param resource
+   *          the resource being parsed
    * @return the location string
    */
   @NonNull
-  public static CharSequence generateLocationMessage(@NonNull JsonParser parser) {
+  public static CharSequence generateLocationMessage(@NonNull JsonParser parser, @NonNull URI resource) {
     JsonLocation location = parser.currentLocation();
-    return location == null ? "" : generateLocationMessage(location);
+    return location == null
+        ? " in '" + resource.toString() + "'"
+        : generateLocationMessage(location, resource);
   }
 
   /**
@@ -368,13 +409,17 @@ public final class JsonUtil {
    *
    * @param location
    *          a JSON token stream location
+   * @param resource
+   *          the resource being parsed
    * @return the location string
    */
   @SuppressWarnings("null")
   @NonNull
-  public static CharSequence generateLocationMessage(@NonNull JsonLocation location) {
+  public static CharSequence generateLocationMessage(@NonNull JsonLocation location, @NonNull URI resource) {
     return new StringBuilder()
-        .append(" at location '")
+        .append(" in '")
+        .append(resource.toString())
+        .append("' at '")
         .append(location.getLineNr())
         .append(':')
         .append(location.getColumnNr())

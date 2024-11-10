@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
+import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.json.JsonFactoryFactory;
@@ -31,12 +32,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
 import java.nio.charset.Charset;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -97,6 +100,8 @@ public class ModelDetector {
    *
    * @param inputStream
    *          the resource stream to analyze
+   * @param resource
+   *          the resource being parsed
    * @param format
    *          the expected format of the data to read
    * @return the analysis result
@@ -105,7 +110,10 @@ public class ModelDetector {
    */
   @NonNull
   @Owning
-  public Result detect(@NonNull @NotOwning InputStream inputStream, @NonNull Format format)
+  public Result detect(
+      @NonNull @NotOwning InputStream inputStream,
+      @NonNull URI resource,
+      @NonNull Format format)
       throws IOException {
     byte[] buf = ObjectUtils.notNull(inputStream.readNBytes(getLookaheadLimit()));
 
@@ -116,18 +124,18 @@ public class ModelDetector {
       case JSON:
         try (JsonParser parser = JsonFactoryFactory.instance().createParser(bis)) {
           assert parser != null;
-          clazz = detectModelJsonClass(parser);
+          clazz = detectModelJsonClass(parser, resource);
         }
         break;
       case YAML:
         YAMLFactory factory = YamlFactoryFactory.newParserFactoryInstance(getConfiguration());
         try (JsonParser parser = factory.createParser(bis)) {
           assert parser != null;
-          clazz = detectModelJsonClass(parser);
+          clazz = detectModelJsonClass(parser, resource);
         }
         break;
       case XML:
-        clazz = detectModelXmlClass(bis);
+        clazz = detectModelXmlClass(bis, resource);
         break;
       default:
         throw new UnsupportedOperationException(
@@ -144,8 +152,10 @@ public class ModelDetector {
   }
 
   @NonNull
-  private Class<? extends IBoundObject> detectModelXmlClass(@NonNull InputStream is) throws IOException {
-    QName startElementQName;
+  private Class<? extends IBoundObject> detectModelXmlClass(
+      @NonNull InputStream is,
+      @NonNull URI resource) throws IOException {
+    StartElement start;
     try {
       XMLInputFactory2 xmlInputFactory = (XMLInputFactory2) XMLInputFactory.newInstance();
       assert xmlInputFactory instanceof WstxInputFactory;
@@ -154,31 +164,39 @@ public class ModelDetector {
 
       Reader reader = new InputStreamReader(is, Charset.forName("UTF8"));
       XMLEventReader2 eventReader = (XMLEventReader2) xmlInputFactory.createXMLEventReader(reader);
+
       while (eventReader.hasNext() && !eventReader.peek().isStartElement()) {
         eventReader.nextEvent();
       }
 
-      if (!eventReader.peek().isStartElement()) {
-        throw new IOException("Unable to detect a start element");
+      XMLEvent nextEvent = eventReader.peek();
+      if (!nextEvent.isStartElement()) {
+        throw new IOException(String.format("Unable to detect a start element%s.",
+            XmlEventUtil.generateLocationMessage(nextEvent, resource)));
       }
 
-      StartElement start = eventReader.nextEvent().asStartElement();
-      startElementQName = ObjectUtils.notNull(start.getName());
+      start = eventReader.nextEvent().asStartElement();
     } catch (XMLStreamException ex) {
       throw new IOException(ex);
     }
 
+    QName startElementQName = ObjectUtils.notNull(start.getName());
     Class<? extends IBoundObject> clazz = getBindingContext().getBoundClassForRootXmlQName(startElementQName);
     if (clazz == null) {
-      throw new IOException("Unrecognized element name: " + startElementQName.toString());
+      throw new IOException(String.format(
+          "Unrecognized element name: %s%s.",
+          startElementQName.toString(),
+          XmlEventUtil.generateLocationMessage(start, resource)));
     }
     return clazz;
   }
 
   @Nullable
-  private Class<? extends IBoundObject> detectModelJsonClass(@NonNull JsonParser parser) throws IOException {
+  private Class<? extends IBoundObject> detectModelJsonClass(
+      @NotOwning @NonNull JsonParser parser,
+      @NonNull URI resource) throws IOException {
     Class<? extends IBoundObject> retval = null;
-    JsonUtil.advanceAndAssert(parser, JsonToken.START_OBJECT);
+    JsonUtil.advanceAndAssert(parser, resource, JsonToken.START_OBJECT);
     outer: while (JsonToken.FIELD_NAME.equals(parser.nextToken())) {
       String name = ObjectUtils.notNull(parser.currentName());
       if (!"$schema".equals(name)) {
@@ -196,6 +214,15 @@ public class ModelDetector {
     return retval;
   }
 
+  /**
+   * Describes the result of detecting which model a resource is described by.
+   * <p>
+   * The method {@link #getBoundClass()} can be used to get class binding for the
+   * identified node in a Metaschema-based model.
+   * <p>
+   * The method {@link #getDataStream()} can be used to get a stream to read the
+   * content used for detection. This will replay any content used for detection.
+   */
   public static final class Result implements Closeable {
     @NonNull
     private final Class<? extends IBoundObject> boundClass;

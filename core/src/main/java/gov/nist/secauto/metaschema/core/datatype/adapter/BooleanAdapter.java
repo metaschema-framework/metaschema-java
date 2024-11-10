@@ -19,12 +19,18 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#boolean">boolean</a>
+ * data type.
+ */
 public class BooleanAdapter
     extends AbstractDataTypeAdapter<Boolean, IBooleanItem> {
   @NonNull
@@ -52,7 +58,7 @@ public class BooleanAdapter
   }
 
   @Override
-  public Boolean parse(JsonParser parser) throws IOException {
+  public Boolean parse(JsonParser parser, URI resource) throws IOException {
     Boolean value = parser.getBooleanValue();
     // skip over value
     parser.nextToken();

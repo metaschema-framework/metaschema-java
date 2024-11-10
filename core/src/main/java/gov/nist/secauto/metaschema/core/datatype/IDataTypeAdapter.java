@@ -19,8 +19,8 @@ import org.codehaus.stax2.evt.XMLEventFactory2;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.List;
-import java.util.function.Supplier;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventWriter;
@@ -201,90 +201,30 @@ public interface IDataTypeAdapter<TYPE> {
    *
    * @param eventReader
    *          the XML parser used to read the parsed value
+   * @param resource
+   *          the resource being parsed
    * @return the parsed value
    * @throws IOException
    *           if a parsing error occurs
    */
   // TODO: migrate code to XML parser implementation.
   @NonNull
-  TYPE parse(@NonNull XMLEventReader2 eventReader) throws IOException;
+  TYPE parse(@NonNull XMLEventReader2 eventReader, @NonNull URI resource) throws IOException;
 
   /**
    * Parses a JSON property value.
    *
    * @param parser
    *          the JSON parser used to read the parsed value
+   * @param resource
+   *          the resource being parsed
    * @return the parsed value
    * @throws IOException
    *           if a parsing error occurs
    */
   // TODO: migrate code to JSON parser implementation.
   @NonNull
-  TYPE parse(@NonNull JsonParser parser) throws IOException;
-
-  /**
-   * Parses a provided string using {@link #parse(String)}.
-   * <p>
-   * This method may pre-parse the data and then return copies, since the data can
-   * only be parsed once, but the supplier might be called multiple times.
-   *
-   * @param value
-   *          the string value to parse
-   * @return a supplier that will provide new instances of the parsed data
-   * @throws IOException
-   *           if an error occurs while parsing
-   * @throws IllegalArgumentException
-   *           if the provided value is invalid based on the data type
-   * @see #parse(String)
-   */
-  @NonNull
-  default Supplier<TYPE> parseAndSupply(@NonNull String value) throws IOException {
-    TYPE retval = parse(value);
-    return () -> copy(retval);
-  }
-
-  /**
-   * Parses a provided string using
-   * {@link IDataTypeAdapter#parse(XMLEventReader2)}.
-   * <p>
-   * This method may pre-parse the data and then return copies, since the data can
-   * only be parsed once, but the supplier might be called multiple times.
-   *
-   * @param eventReader
-   *          the XML parser used to read the parsed value
-   * @return a supplier that will provide new instances of the parsed data
-   * @throws IOException
-   *           if an error occurs while parsing
-   * @see #parse(String)
-   * @see #parse(XMLEventReader2)
-   */
-  // TODO: migrate code to XML parser implementation.
-  @NonNull
-  default Supplier<TYPE> parseAndSupply(@NonNull XMLEventReader2 eventReader) throws IOException {
-    TYPE retval = parse(eventReader);
-    return () -> copy(retval);
-  }
-
-  /**
-   * Parses a provided string using {@link #parse(JsonParser)}.
-   * <p>
-   * This method may pre-parse the data and then return copies, since the data can
-   * only be parsed once, but the supplier might be called multiple times.
-   *
-   * @param parser
-   *          the JSON parser used to read the parsed value
-   * @return a supplier that will provide new instances of the parsed data
-   * @throws IOException
-   *           if an error occurs while parsing
-   * @see #parse(String)
-   * @see #parse(JsonParser)
-   */
-  // TODO: migrate code to JSON parser implementation.
-  @NonNull
-  default Supplier<TYPE> parseAndSupply(@NonNull JsonParser parser) throws IOException {
-    TYPE retval = parse(parser);
-    return () -> copy(retval);
-  }
+  TYPE parse(@NonNull JsonParser parser, @NonNull URI resource) throws IOException;
 
   /**
    * Writes the provided Java class instance data as XML. The parent element
@@ -306,7 +246,10 @@ public interface IDataTypeAdapter<TYPE> {
    *           if an unexpected error occurred while writing to the output stream
    */
   // TODO: migrate code to XML writer implementation.
-  void writeXmlValue(@NonNull Object instance, @NonNull StartElement parent, @NonNull XMLEventFactory2 eventFactory,
+  void writeXmlValue(
+      @NonNull Object instance,
+      @NonNull StartElement parent,
+      @NonNull XMLEventFactory2 eventFactory,
       @NonNull XMLEventWriter eventWriter)
       throws IOException;
 

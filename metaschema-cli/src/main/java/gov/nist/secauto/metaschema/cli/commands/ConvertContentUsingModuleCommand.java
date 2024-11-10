@@ -102,11 +102,11 @@ class ConvertContentUsingModuleCommand
       try (InputStream is = resource.openStream()) {
         assert is != null;
 
-        FormatDetector.Result formatMatch = loader.detectFormat(is);
+        FormatDetector.Result formatMatch = loader.detectFormat(is, resourceUri);
         Format format = formatMatch.getFormat();
 
         try (InputStream formatStream = formatMatch.getDataStream()) {
-          try (ModelDetector.Result modelMatch = loader.detectModel(formatStream, format)) {
+          try (ModelDetector.Result modelMatch = loader.detectModel(formatStream, resourceUri, format)) {
 
             IBindingContext bindingContext = loader.getBindingContext();
 

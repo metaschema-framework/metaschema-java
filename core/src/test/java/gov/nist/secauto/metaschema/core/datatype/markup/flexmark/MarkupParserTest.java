@@ -11,6 +11,7 @@ import com.ctc.wstx.stax.WstxInputFactory;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,7 @@ import org.codehaus.stax2.XMLInputFactory2;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
+import java.net.URI;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -51,17 +53,17 @@ class MarkupParserTest {
         .append("  <p>Some <em>more</em> <strong>text</strong><img alt=\"alt\" src=\"src\"/></p>\n")
         .append("</node>\n")
         .toString();
-
     XMLEventReader2 reader = (XMLEventReader2) factory.createXMLEventReader(new StringReader(html));
+    URI resource = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
 
-    CharSequence startDocument = XmlEventUtil.toString(reader.nextEvent());
+    CharSequence startDocument = XmlEventUtil.toString(reader.nextEvent(), resource);
     LOGGER.atDebug().log("StartDocument: {}", startDocument);
 
-    CharSequence startElement = XmlEventUtil.toString(reader.nextEvent());
+    CharSequence startElement = XmlEventUtil.toString(reader.nextEvent(), resource);
     LOGGER.atDebug().log("StartElement: {}", startElement);
 
     assertDoesNotThrow(() -> {
-      MarkupMultiline markupString = XmlMarkupParser.instance().parseMarkupMultiline(reader);
+      MarkupMultiline markupString = XmlMarkupParser.instance().parseMarkupMultiline(reader, resource);
       AstCollectingVisitor.asString(markupString.getDocument());
       // System.out.println(html);
       // System.out.println(visitor.getAst());
@@ -83,15 +85,16 @@ class MarkupParserTest {
     factory.configureForXmlConformance();
     factory.setProperty(XMLInputFactory.IS_COALESCING, true);
     XMLEventReader2 reader = (XMLEventReader2) factory.createXMLEventReader(new StringReader(html));
+    URI resource = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
 
-    CharSequence startDocument = XmlEventUtil.toString(reader.nextEvent());
+    CharSequence startDocument = XmlEventUtil.toString(reader.nextEvent(), resource);
     LOGGER.atDebug().log("StartDocument: {}", startDocument);
 
-    CharSequence startElement = XmlEventUtil.toString(reader.nextEvent());
+    CharSequence startElement = XmlEventUtil.toString(reader.nextEvent(), resource);
     LOGGER.atDebug().log("StartElement: {}", startElement);
 
     assertDoesNotThrow(() -> {
-      MarkupMultiline ms = XmlMarkupParser.instance().parseMarkupMultiline(reader);
+      MarkupMultiline ms = XmlMarkupParser.instance().parseMarkupMultiline(reader, resource);
       LOGGER.atDebug().log("AST: {}", AstCollectingVisitor.asString(ms.getDocument()));
       LOGGER.atDebug().log("HTML: {}", ms.toXHtml(""));
       LOGGER.atDebug().log("Markdown: {}", ms.toMarkdown());

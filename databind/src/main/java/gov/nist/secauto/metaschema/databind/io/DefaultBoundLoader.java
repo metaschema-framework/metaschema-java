@@ -29,9 +29,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A default implementation of an {@link IBoundLoader}.
  */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class DefaultBoundLoader
     extends AbstractResourceResolver
     implements IBoundLoader {
+  /**
+   * The number of bytes to read ahead when determining the source format.
+   */
   public static final int LOOK_AHEAD_BYTES = 32_768;
   // @NonNull
   // private static final JsonFactory JSON_FACTORY = new JsonFactory();
@@ -106,12 +110,12 @@ public class DefaultBoundLoader
     URL resource = resourceUri.toURL();
 
     try (InputStream is = ObjectUtils.notNull(resource.openStream())) {
-      return detectFormat(is).getFormat();
+      return detectFormat(is, uri).getFormat();
     }
   }
 
   @Override
-  public FormatDetector.Result detectFormat(@NonNull InputStream is) throws IOException {
+  public FormatDetector.Result detectFormat(InputStream is, URI resource) throws IOException {
     return getFormatDetector().detect(is);
   }
 
@@ -137,8 +141,8 @@ public class DefaultBoundLoader
 
   @Override
   @Owning
-  public Result detectModel(@NotOwning InputStream is, Format format) throws IOException {
-    return getModelDetector().detect(is, format);
+  public Result detectModel(@NotOwning InputStream is, URI resource, Format format) throws IOException {
+    return getModelDetector().detect(is, resource, format);
   }
 
   @Override
@@ -156,20 +160,20 @@ public class DefaultBoundLoader
   @NonNull
   public <CLASS extends IBoundObject> CLASS load(
       @NotOwning @NonNull InputStream is,
-      @NonNull URI documentUri)
+      @NonNull URI resource)
       throws IOException {
     FormatDetector.Result formatMatch = getFormatDetector().detect(is);
     Format format = formatMatch.getFormat();
 
     try (InputStream formatStream = formatMatch.getDataStream()) {
-      try (ModelDetector.Result modelMatch = detectModel(formatStream, format)) {
+      try (ModelDetector.Result modelMatch = detectModel(formatStream, resource, format)) {
 
         IDeserializer<?> deserializer = getDeserializer(
             modelMatch.getBoundClass(),
             format,
             getConfiguration());
         try (InputStream modelStream = modelMatch.getDataStream()) {
-          return (CLASS) deserializer.deserialize(modelStream, documentUri);
+          return (CLASS) deserializer.deserialize(modelStream, resource);
         }
       }
     }
@@ -242,16 +246,16 @@ public class DefaultBoundLoader
   }
 
   @Override
-  public IDocumentNodeItem loadAsNodeItem(Format format, InputStream is, URI documentUri)
+  public IDocumentNodeItem loadAsNodeItem(Format format, InputStream is, URI resource)
       throws IOException {
-    try (ModelDetector.Result modelMatch = detectModel(is, format)) {
+    try (ModelDetector.Result modelMatch = detectModel(is, resource, format)) {
 
       IDeserializer<?> deserializer = getDeserializer(
           modelMatch.getBoundClass(),
           format,
           getConfiguration());
       try (InputStream modelStream = modelMatch.getDataStream()) {
-        return (IDocumentNodeItem) deserializer.deserializeToNodeItem(modelStream, documentUri);
+        return (IDocumentNodeItem) deserializer.deserializeToNodeItem(modelStream, resource);
       }
     }
   }

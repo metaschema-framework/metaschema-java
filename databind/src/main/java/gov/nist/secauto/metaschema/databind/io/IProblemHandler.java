@@ -14,6 +14,9 @@ import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implementations support handling common parsing issues.
+ */
 // TODO: consider what methods can be defined here
 public interface IProblemHandler {
   /**
