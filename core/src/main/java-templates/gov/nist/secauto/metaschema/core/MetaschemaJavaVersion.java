@@ -3,15 +3,18 @@ package gov.nist.secauto.metaschema.core;
 
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 
+/**
+ * Provides version information for this library.
+ */
 public class MetaschemaJavaVersion implements IVersionInfo {
 
-  public static final String NAME = "metaschema-java";
-  public static final String VERSION = "${project.version}";
-  public static final String BUILD_TIMESTAMP = "${timestamp}";
-  public static final String COMMIT = "@git.commit.id.abbrev@";
-  public static final String BRANCH = "@git.branch@";
-  public static final String CLOSEST_TAG = "@git.closest.tag.name@";
-  public static final String ORIGIN = "@git.remote.origin.url@";
+  private static final String NAME = "metaschema-java";
+  private static final String VERSION = "${project.version}";
+  private static final String BUILD_TIMESTAMP = "${timestamp}";
+  private static final String COMMIT = "@git.commit.id.abbrev@";
+  private static final String BRANCH = "@git.branch@";
+  private static final String CLOSEST_TAG = "@git.closest.tag.name@";
+  private static final String ORIGIN = "@git.remote.origin.url@";
 
   @Override
   public String getName() {

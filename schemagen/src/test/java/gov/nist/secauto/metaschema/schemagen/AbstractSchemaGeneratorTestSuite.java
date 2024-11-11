@@ -26,7 +26,6 @@ import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 
 import org.junit.platform.commons.JUnitException;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,7 +122,7 @@ public abstract class AbstractSchemaGeneratorTestSuite
             = new StreamSource(schemaResource.openStream(), schemaResource.toString());
         List<? extends Source> schemaSources = Collections.singletonList(source);
         return new XmlSchemaContentValidator(schemaSources);
-      } catch (IOException | SAXException ex) {
+      } catch (IOException ex) {
         throw new IllegalStateException(ex);
       }
     };

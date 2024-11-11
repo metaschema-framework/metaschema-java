@@ -39,18 +39,17 @@ public class XmlSchemaContentValidator
 
   @SuppressWarnings("null")
   @NonNull
-  private static Schema toSchema(@NonNull List<? extends Source> schemaSources) throws SAXException {
+  private static Schema toSchema(@NonNull List<? extends Source> schemaSources) throws IOException {
     SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     // schemafactory.setResourceResolver(new ClasspathResourceResolver());
-    Schema retval;
-    if (schemaSources.isEmpty()) {
-      retval = schemafactory.newSchema();
-    } else {
-      retval = schemafactory.newSchema(schemaSources.toArray(new Source[0]));
-    }
-
     // TODO verify source input streams are closed
-    return retval;
+    try {
+      return schemaSources.isEmpty()
+          ? schemafactory.newSchema()
+          : schemafactory.newSchema(schemaSources.toArray(new Source[0]));
+    } catch (SAXException ex) {
+      throw new IOException(ex);
+    }
   }
 
   /**
@@ -58,10 +57,10 @@ public class XmlSchemaContentValidator
    *
    * @param schemaSources
    *          the XML schemas to use for validation
-   * @throws SAXException
+   * @throws IOException
    *           if an error occurred while parsing the provided XML schemas
    */
-  public XmlSchemaContentValidator(@Owning @NonNull List<? extends Source> schemaSources) throws SAXException {
+  public XmlSchemaContentValidator(@Owning @NonNull List<? extends Source> schemaSources) throws IOException {
     this(toSchema(ObjectUtils.requireNonNull(schemaSources, "schemaSources")));
   }
 

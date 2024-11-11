@@ -215,8 +215,10 @@ public class CLITest {
           .contains("expect-default-non-zero: Expect constraint '. > 0' did not match the data",
               "expect-custom-non-zero: No default message, custom error message for expect-custom-non-zero constraint.",
               "matches-default-regex-letters-only: Value '1' did not match the pattern",
-              "matches-custom-regex-letters-only: No default message, custom error message for matches-custom-regex-letters-only constraint.",
-              "cardinality-default-two-minimum: The cardinality '1' is below the required minimum '2' for items matching",
+              "matches-custom-regex-letters-only: No default message, custom error message for" +
+                  " matches-custom-regex-letters-only constraint.",
+              "cardinality-default-two-minimum: The cardinality '1' is below the required minimum '2' for items" +
+                  " matching",
               "index-items-default: Index 'index-items-default' has duplicate key for items",
               "index-items-custom: No default message, custom error message for index-item-custom.",
               "is-unique-default: Unique constraint violation at paths",
