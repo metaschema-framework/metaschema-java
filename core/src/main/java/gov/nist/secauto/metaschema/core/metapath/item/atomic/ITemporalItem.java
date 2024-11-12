@@ -9,6 +9,9 @@ import java.time.ZonedDateTime;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a temporal data value.
+ */
 public interface ITemporalItem extends IAnyAtomicItem {
   /**
    * Determine if the temporal item has a timezone.

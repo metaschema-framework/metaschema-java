@@ -24,6 +24,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports a data value which is a single line of markup.
+ * <p>
+ * This markup can be presented as XHTML or Markdown.
+ */
 public final class MarkupLine
     extends AbstractMarkupString<MarkupLine> {
 

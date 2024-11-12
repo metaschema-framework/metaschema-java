@@ -23,6 +23,11 @@ import inet.ipaddr.IPAddressStringParameters;
 import inet.ipaddr.IncompatibleAddressException;
 import inet.ipaddr.ipv6.IPv6Address;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address">ip-v6-address</a>
+ * data type.
+ */
 public class IPv6AddressAdapter
     extends AbstractDataTypeAdapter<IPv6Address, IIPv6AddressItem> {
   @NonNull

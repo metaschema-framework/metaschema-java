@@ -20,6 +20,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#year-month-duration">year-month-duration</a>
+ * data type.
+ */
 public class YearMonthAdapter
     extends AbstractDataTypeAdapter<Period, IYearMonthDurationItem> {
   @NonNull

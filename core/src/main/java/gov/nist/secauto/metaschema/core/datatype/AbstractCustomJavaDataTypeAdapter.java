@@ -43,5 +43,4 @@ public abstract class AbstractCustomJavaDataTypeAdapter<
     // method.
     return ((TYPE) obj).copy();
   }
-
 }

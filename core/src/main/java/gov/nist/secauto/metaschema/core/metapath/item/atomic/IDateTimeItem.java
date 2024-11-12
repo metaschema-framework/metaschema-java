@@ -7,12 +7,18 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.DateTime;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateTimeWithTimeZoneItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateTimeWithoutTimeZoneItemImpl;
 
 import java.time.ZonedDateTime;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a date/time data value.
+ */
 public interface IDateTimeItem extends ITemporalItem {
   /**
    * Construct a new date/time item using the provided string {@code value}.
@@ -26,7 +32,11 @@ public interface IDateTimeItem extends ITemporalItem {
     try {
       return valueOf(MetaschemaDataTypeProvider.DATE_TIME.parse(value));
     } catch (IllegalArgumentException ex) {
-      throw new InvalidValueForCastFunctionException(String.format("Unable to parse string value '%s'", value),
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid date/time. %s",
+              value,
+              ex.getLocalizedMessage()),
           ex);
     }
   }
@@ -67,7 +77,23 @@ public interface IDateTimeItem extends ITemporalItem {
    */
   @NonNull
   static IDateTimeItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.DATE_TIME.cast(item);
+    IDateTimeItem retval;
+    if (item instanceof IDateTimeItem) {
+      retval = (IDateTimeItem) item;
+    } else {
+      String itemString = item.asString();
+      try {
+        retval = valueOf(itemString);
+      } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+        // asString can throw IllegalStateException exception
+        throw new InvalidValueForCastFunctionException(
+            String.format("The value '%s' is not compatible with the type '%s'",
+                item.getValue(),
+                item.getClass().getName()),
+            ex);
+      }
+    }
+    return retval;
   }
 
   @Override

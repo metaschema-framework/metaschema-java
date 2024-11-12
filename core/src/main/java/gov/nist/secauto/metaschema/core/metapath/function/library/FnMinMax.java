@@ -15,13 +15,19 @@ import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctio
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,7 +43,16 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public final class FnMinMax {
   private static final String NAME_MIN = "min";
   private static final String NAME_MAX = "max";
-
+  @NonNull
+  private static final Set<Class<? extends IAnyAtomicItem>> PRIMITIVE_ITEM_TYPES = ObjectUtils.notNull(Set.of(
+      IStringItem.class,
+      IBooleanItem.class,
+      IDecimalItem.class,
+      IDurationItem.class,
+      IDateTimeItem.class,
+      IDateItem.class,
+      IBase64BinaryItem.class,
+      IAnyUriItem.class));
   @NonNull
   static final IFunction SIGNATURE_MIN = IFunction.builder()
       .name(NAME_MIN)
@@ -154,7 +169,7 @@ public final class FnMinMax {
         .collect(Collectors.toList()));
 
     Map<Class<? extends IAnyAtomicItem>, Integer> counts = FunctionUtils.countTypes(
-        IAnyAtomicItem.PRIMITIVE_ITEM_TYPES,
+        PRIMITIVE_ITEM_TYPES,
         resultingItems);
 
     Stream<? extends IAnyAtomicItem> stream = null;

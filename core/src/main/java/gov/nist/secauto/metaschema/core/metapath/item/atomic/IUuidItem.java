@@ -6,13 +6,40 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.UuidItemImpl;
 
 import java.util.UUID;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a UUID data value.
+ */
 public interface IUuidItem extends IStringItem {
+  /**
+   * Construct a new URI item using the provided string {@code value}.
+   *
+   * @param value
+   *          a string representing a URI
+   * @return the new item
+   * @throws InvalidTypeMetapathException
+   *           if the given string violates RFC4122
+   */
+  @NonNull
+  static IUuidItem valueOf(@NonNull String value) {
+    try {
+      return valueOf(MetaschemaDataTypeProvider.UUID.parse(value));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid UUID. %s",
+              value,
+              ex.getLocalizedMessage()),
+          ex);
+    }
+  }
 
   /**
    * Construct a new item using the provided {@code value}.
@@ -49,7 +76,14 @@ public interface IUuidItem extends IStringItem {
    */
   @NonNull
   static IUuidItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.UUID.cast(item);
+    try {
+      return item instanceof IUuidItem
+          ? (IUuidItem) item
+          : valueOf(item.asString());
+    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   /**

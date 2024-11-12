@@ -127,6 +127,9 @@ public final class FunctionUtils {
   public static INumericItem toNumeric(@NonNull IItem item) {
     // atomize
     IAnyAtomicItem atomicItem = ISequence.getFirstItem(FnData.atomize(item), true);
+    if (atomicItem == null) {
+      throw new InvalidTypeMetapathException(item, "Unable to cast null item");
+    }
     return toNumeric(atomicItem);
   }
 
@@ -140,7 +143,7 @@ public final class FunctionUtils {
    *           if the item cannot be cast to a numeric value
    */
   @NonNull
-  public static INumericItem toNumeric(@Nullable IAnyAtomicItem item) {
+  public static INumericItem toNumeric(@NonNull IAnyAtomicItem item) {
     try {
       return IDecimalItem.cast(item);
     } catch (InvalidValueForCastFunctionException ex) {
@@ -237,7 +240,8 @@ public final class FunctionUtils {
           null,
           String.format("Expected non-null type '%s', but the node was null.",
               clazz.getName()));
-    } else if (!clazz.isInstance(item)) {
+    }
+    if (!clazz.isInstance(item)) {
       throw new InvalidTypeMetapathException(
           item,
           String.format("Expected type '%s', but the node was type '%s'.",

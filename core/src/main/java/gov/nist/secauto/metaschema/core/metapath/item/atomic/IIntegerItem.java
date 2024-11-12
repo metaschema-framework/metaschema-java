@@ -5,25 +5,34 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.IntegerItemImpl;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigInteger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing an integer data value.
+ */
 public interface IIntegerItem extends IDecimalItem {
-
-  @SuppressWarnings("null")
+  /**
+   * The integer value "1".
+   */
   @NonNull
-  IIntegerItem ONE = valueOf(BigInteger.ONE);
-  @SuppressWarnings("null")
+  IIntegerItem ONE = valueOf(ObjectUtils.notNull(BigInteger.ONE));
+  /**
+   * The integer value "0".
+   */
   @NonNull
-  IIntegerItem ZERO = valueOf(BigInteger.ZERO);
-  @SuppressWarnings("null")
+  IIntegerItem ZERO = valueOf(ObjectUtils.notNull(BigInteger.ZERO));
+  /**
+   * The integer value "-1".
+   */
   @NonNull
-  IIntegerItem NEGATIVE_ONE = valueOf(BigInteger.ONE.negate());
+  IIntegerItem NEGATIVE_ONE = valueOf(ObjectUtils.notNull(BigInteger.ONE.negate()));
 
   /**
    * Create an item from an existing integer value.
@@ -79,6 +88,18 @@ public interface IIntegerItem extends IDecimalItem {
    * Construct a new integer item using the provided {@code value}.
    *
    * @param value
+   *          a long value
+   * @return the new item
+   */
+  @NonNull
+  static IIntegerItem valueOf(boolean value) {
+    return valueOf(ObjectUtils.notNull(value ? BigInteger.ONE : BigInteger.ZERO));
+  }
+
+  /**
+   * Construct a new integer item using the provided {@code value}.
+   *
+   * @param value
    *          an integer value
    * @return the new item
    */
@@ -109,7 +130,27 @@ public interface IIntegerItem extends IDecimalItem {
    */
   @NonNull
   static IIntegerItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.INTEGER.cast(item);
+    IIntegerItem retval;
+    if (item instanceof IIntegerItem) {
+      retval = (IIntegerItem) item;
+    } else if (item instanceof INumericItem) {
+      retval = valueOf(((INumericItem) item).asInteger());
+    } else if (item instanceof IBooleanItem) {
+      retval = valueOf(((IBooleanItem) item).toBoolean());
+    } else {
+      try {
+        retval = valueOf(item.asString());
+      } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+        // asString can throw IllegalStateException exception
+        throw new InvalidValueForCastFunctionException(ex);
+      }
+    }
+    return retval;
+  }
+
+  @Override
+  default IIntegerItem castAsType(IAnyAtomicItem item) {
+    return cast(item);
   }
 
   @Override
@@ -123,11 +164,6 @@ public interface IIntegerItem extends IDecimalItem {
   @Override
   default IIntegerItem floor() {
     return this;
-  }
-
-  @Override
-  default IIntegerItem castAsType(IAnyAtomicItem item) {
-    return valueOf(cast(item).asInteger());
   }
 
   @Override

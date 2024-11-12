@@ -7,7 +7,10 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.Date;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateWithTimeZoneItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateWithoutTimeZoneItemImpl;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.ZonedDateTime;
@@ -15,6 +18,9 @@ import java.time.temporal.ChronoUnit;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a date data value.
+ */
 public interface IDateItem extends ITemporalItem {
 
   /**
@@ -29,7 +35,12 @@ public interface IDateItem extends ITemporalItem {
     try {
       return valueOf(MetaschemaDataTypeProvider.DATE.parse(value));
     } catch (IllegalArgumentException ex) {
-      throw new InvalidValueForCastFunctionException(String.format("Unable to parse string value '%s'", value), ex);
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid date. %s",
+              value,
+              ex.getLocalizedMessage()),
+          ex);
     }
   }
 
@@ -71,13 +82,28 @@ public interface IDateItem extends ITemporalItem {
    */
   @NonNull
   static IDateItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.DATE.cast(item);
+    IDateItem retval;
+    if (item instanceof IDateItem) {
+      retval = (IDateItem) item;
+    } else if (item instanceof IDateTimeItem) {
+      ZonedDateTime value = ((IDateTimeItem) item).asZonedDateTime();
+      retval = valueOf(value);
+    } else if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {
+      try {
+        retval = valueOf(item.asString());
+      } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+        // asString can throw IllegalStateException exception
+        throw new InvalidValueForCastFunctionException(ex);
+      }
+    } else {
+      throw new InvalidValueForCastFunctionException(
+          String.format("unsupported item type '%s'", item.getClass().getName()));
+    }
+    return retval;
   }
 
   @Override
-  default IDateItem castAsType(IAnyAtomicItem item) {
-    return cast(item);
-  }
+  IDateItem castAsType(IAnyAtomicItem item);
 
   @Override
   default int compareTo(IAnyAtomicItem item) {

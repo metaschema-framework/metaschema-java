@@ -20,6 +20,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#day-time-duration">day-time-duration</a>
+ * data type.
+ */
 public class DayTimeAdapter
     extends AbstractDataTypeAdapter<Duration, IDayTimeDurationItem> {
   @NonNull

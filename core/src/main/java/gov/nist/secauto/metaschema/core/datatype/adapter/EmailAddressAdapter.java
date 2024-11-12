@@ -15,6 +15,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#email-address">email-address</a>
+ * data type.
+ */
 public class EmailAddressAdapter
     extends AbstractStringAdapter<IEmailAddressItem> {
   @NonNull

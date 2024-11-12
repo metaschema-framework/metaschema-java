@@ -10,10 +10,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
@@ -25,13 +22,14 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#decimal">decimal</a>
+ * data type.
+ */
 public class DecimalAdapter
     extends AbstractDataTypeAdapter<BigDecimal, IDecimalItem> {
-  public static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
-  @NonNull
-  private static final BigDecimal DECIMAL_BOOLEAN_TRUE = new BigDecimal("1.0");
-  @NonNull
-  private static final BigDecimal DECIMAL_BOOLEAN_FALSE = new BigDecimal("0.0");
+  private static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
   @NonNull
   private static final List<QName> NAMES = ObjectUtils.notNull(
       List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "decimal")));
@@ -79,19 +77,5 @@ public class DecimalAdapter
   public IDecimalItem newItem(Object value) {
     BigDecimal item = toValue(value);
     return IDecimalItem.valueOf(item);
-  }
-
-  @Override
-  protected IDecimalItem castInternal(@NonNull IAnyAtomicItem item) {
-    IDecimalItem retval;
-    if (item instanceof INumericItem) {
-      retval = newItem(((INumericItem) item).asDecimal());
-    } else if (item instanceof IBooleanItem) {
-      boolean value = ((IBooleanItem) item).toBoolean();
-      retval = newItem(value ? DECIMAL_BOOLEAN_TRUE : DECIMAL_BOOLEAN_FALSE);
-    } else {
-      retval = super.castInternal(item);
-    }
-    return retval;
   }
 }

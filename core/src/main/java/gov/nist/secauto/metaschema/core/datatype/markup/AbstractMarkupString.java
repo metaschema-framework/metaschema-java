@@ -52,6 +52,12 @@ import javax.xml.stream.XMLStreamWriter;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * The common base for all markup implementations.
+ *
+ * @param <TYPE>
+ *          the Java type of the concrete markup implementation
+ */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public abstract class AbstractMarkupString<TYPE extends AbstractMarkupString<TYPE>>
     implements IMarkupString<TYPE> {

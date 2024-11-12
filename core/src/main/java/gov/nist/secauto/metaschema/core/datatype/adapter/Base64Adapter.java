@@ -20,6 +20,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#base64">base64</a>
+ * data type.
+ */
 public class Base64Adapter
     extends AbstractDataTypeAdapter<ByteBuffer, IBase64BinaryItem> {
   @NonNull
@@ -43,12 +48,11 @@ public class Base64Adapter
     return JsonFormatTypes.STRING;
   }
 
-  @SuppressWarnings("null")
   @Override
   public ByteBuffer parse(String value) {
     Base64.Decoder decoder = Base64.getDecoder();
     byte[] result = decoder.decode(value);
-    return ByteBuffer.wrap(result);
+    return ObjectUtils.notNull(ByteBuffer.wrap(result));
   }
 
   @Override
@@ -62,11 +66,10 @@ public class Base64Adapter
     return clone;
   }
 
-  @SuppressWarnings("null")
   @Override
   public String asString(Object value) {
     Base64.Encoder encoder = Base64.getEncoder();
-    return encoder.encodeToString(((ByteBuffer) value).array());
+    return ObjectUtils.notNull(encoder.encodeToString(((ByteBuffer) value).array()));
   }
 
   @Override

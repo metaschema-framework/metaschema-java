@@ -21,6 +21,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#date-time-with-timezone">date-time-with-timezone</a>
+ * data type.
+ */
 public class DateTimeWithTZAdapter
     extends AbstractDataTypeAdapter<ZonedDateTime, IDateTimeItem> {
   @NonNull

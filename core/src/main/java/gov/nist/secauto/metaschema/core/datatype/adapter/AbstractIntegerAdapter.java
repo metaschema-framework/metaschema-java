@@ -39,7 +39,11 @@ public abstract class AbstractIntegerAdapter<ITEM_TYPE extends IIntegerItem>
 
   @Override
   public BigInteger parse(String value) {
-    return new BigInteger(value);
+    try {
+      return new BigInteger(value);
+    } catch (NumberFormatException ex) {
+      throw new IllegalArgumentException(ex);
+    }
   }
 
   @Override

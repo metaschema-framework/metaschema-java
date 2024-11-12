@@ -6,13 +6,18 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.YearMonthDurationItemImpl;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.Period;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a duration data value in years and months.
+ */
 public interface IYearMonthDurationItem extends IDurationItem {
   /**
    * Construct a new year month day duration item using the provided string
@@ -21,6 +26,9 @@ public interface IYearMonthDurationItem extends IDurationItem {
    * @param value
    *          a string representing a year month day duration
    * @return the new item
+   * @throws InvalidTypeMetapathException
+   *           if the provided string value is not a day/time duration value
+   *           according to ISO 8601
    */
   @NonNull
   static IYearMonthDurationItem valueOf(@NonNull String value) {
@@ -28,7 +36,11 @@ public interface IYearMonthDurationItem extends IDurationItem {
       Period period = ObjectUtils.notNull(MetaschemaDataTypeProvider.YEAR_MONTH_DURATION.parse(value).withDays(0));
       return valueOf(period);
     } catch (IllegalArgumentException ex) {
-      throw new InvalidValueForCastFunctionException(String.format("Unable to parse string value '%s'", value),
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid year/month duration. %s",
+              value,
+              ex.getLocalizedMessage()),
           ex);
     }
   }
@@ -55,10 +67,9 @@ public interface IYearMonthDurationItem extends IDurationItem {
    *          the number of months in the period
    * @return the new item
    */
-  @SuppressWarnings("null")
   @NonNull
   static IYearMonthDurationItem valueOf(int years, int months) {
-    return valueOf(Period.of(years, months, 0));
+    return valueOf(ObjectUtils.notNull(Period.of(years, months, 0)));
   }
 
   /**
@@ -73,7 +84,14 @@ public interface IYearMonthDurationItem extends IDurationItem {
    */
   @NonNull
   static IYearMonthDurationItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.YEAR_MONTH_DURATION.cast(item);
+    try {
+      return item instanceof IYearMonthDurationItem
+          ? (IYearMonthDurationItem) item
+          : valueOf(item.asString());
+    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   /**

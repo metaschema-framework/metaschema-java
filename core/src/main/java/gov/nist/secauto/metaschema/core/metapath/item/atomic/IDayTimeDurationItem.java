@@ -6,12 +6,18 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DayTimeDurationItemImpl;
 
 import java.time.Duration;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a duration data value in days, hours, and
+ * seconds.
+ */
 public interface IDayTimeDurationItem extends IDurationItem {
   /**
    * Construct a new day time duration item using the provided string
@@ -20,13 +26,20 @@ public interface IDayTimeDurationItem extends IDurationItem {
    * @param value
    *          a string representing a day time duration
    * @return the new item
+   * @throws InvalidTypeMetapathException
+   *           if the provided string value is not a day/time duration value
+   *           according to ISO 8601
    */
   @NonNull
   static IDayTimeDurationItem valueOf(@NonNull String value) {
     try {
       return valueOf(MetaschemaDataTypeProvider.DAY_TIME_DURATION.parse(value));
     } catch (IllegalArgumentException ex) {
-      throw new InvalidValueForCastFunctionException(String.format("Unable to parse string value '%s'", value),
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid day/time duration. %s",
+              value,
+              ex.getLocalizedMessage()),
           ex);
     }
   }
@@ -55,7 +68,14 @@ public interface IDayTimeDurationItem extends IDurationItem {
    */
   @NonNull
   static IDayTimeDurationItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.DAY_TIME_DURATION.cast(item);
+    try {
+      return item instanceof IDayTimeDurationItem
+          ? (IDayTimeDurationItem) item
+          : valueOf(item.asString());
+    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   /**

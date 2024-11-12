@@ -11,6 +11,9 @@ import java.time.temporal.TemporalAmount;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item representing a duration data value.
+ */
 public interface IDurationItem extends IAnyAtomicItem {
   /**
    * Cast the provided type to this item type.
@@ -28,11 +31,19 @@ public interface IDurationItem extends IAnyAtomicItem {
     if (item instanceof IDurationItem) {
       retval = (IDurationItem) item;
     } else {
+      String value;
       try {
-        retval = IDayTimeDurationItem.valueOf(item.asString());
+        value = item.asString();
+      } catch (IllegalStateException ex) {
+        // asString can throw IllegalStateException exception
+        throw new InvalidValueForCastFunctionException(ex);
+      }
+
+      try {
+        retval = IDayTimeDurationItem.valueOf(value);
       } catch (IllegalStateException ex) {
         try {
-          retval = IYearMonthDurationItem.valueOf(item.asString());
+          retval = IYearMonthDurationItem.valueOf(value);
         } catch (IllegalStateException ex2) {
           InvalidValueForCastFunctionException newEx = new InvalidValueForCastFunctionException(ex2);
           newEx.addSuppressed(ex);

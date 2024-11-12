@@ -15,8 +15,18 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public final class MarkupDataTypeProvider
     extends AbstractDataTypeProvider {
+  /**
+   * The Metaschema <a href=
+   * "https://pages.nist.gov/metaschema/specification/datatypes/#markup-line">markup-line</a>
+   * data type instance.
+   */
   @NonNull
   public static final MarkupLineAdapter MARKUP_LINE = new MarkupLineAdapter();
+  /**
+   * The Metaschema <a href=
+   * "https://pages.nist.gov/metaschema/specification/datatypes/#markup-multiline">markup-multiline</a>
+   * data type instance.
+   */
   @NonNull
   public static final MarkupMultilineAdapter MARKUP_MULTILINE = new MarkupMultilineAdapter();
 

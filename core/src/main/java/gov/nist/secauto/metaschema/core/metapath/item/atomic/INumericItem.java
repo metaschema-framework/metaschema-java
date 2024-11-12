@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
@@ -18,6 +18,9 @@ import java.math.RoundingMode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a numeric data value.
+ */
 public interface INumericItem extends IAnyAtomicItem {
 
   /**
@@ -32,7 +35,14 @@ public interface INumericItem extends IAnyAtomicItem {
    */
   @NonNull
   static INumericItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.DECIMAL.cast(item);
+    try {
+      return item instanceof INumericItem
+          ? (INumericItem) item
+          : IDecimalItem.valueOf(item.asString());
+    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   /**

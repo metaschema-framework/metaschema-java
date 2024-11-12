@@ -150,7 +150,7 @@ public final class ComparisonFunctions {
     } else if (item instanceof IDayTimeDurationItem) {
       retval = IYearMonthDurationItem.cast(other);
     } else {
-      retval = item.getJavaTypeAdapter().cast(other);
+      retval = item.castAsType(other);
     }
     return retval;
   }

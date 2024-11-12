@@ -23,6 +23,11 @@ import inet.ipaddr.IPAddressStringParameters;
 import inet.ipaddr.IncompatibleAddressException;
 import inet.ipaddr.ipv4.IPv4Address;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address">ip-v4-address</a>
+ * data type.
+ */
 public class IPv4AddressAdapter
     extends AbstractDataTypeAdapter<IPv4Address, IIPv4AddressItem> {
   @NonNull

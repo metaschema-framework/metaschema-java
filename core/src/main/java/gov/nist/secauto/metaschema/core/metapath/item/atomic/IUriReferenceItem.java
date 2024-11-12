@@ -6,13 +6,41 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.UriReferenceItemImpl;
 
 import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a URI reference data value.
+ */
 public interface IUriReferenceItem extends IAnyUriItem {
+  /**
+   * Construct a new URI item using the provided string {@code value}.
+   *
+   * @param value
+   *          a string representing a URI
+   * @return the new item
+   * @throws InvalidTypeMetapathException
+   *           if the given string violates RFC2396
+   */
+  @NonNull
+  static IUriReferenceItem valueOf(@NonNull String value) {
+    try {
+      return valueOf(MetaschemaDataTypeProvider.URI_REFERENCE.parse(value));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid URI reference. %s",
+              value,
+              ex.getLocalizedMessage()),
+          ex);
+    }
+  }
+
   /**
    * Construct a new item using the provided URI {@code value}.
    *
@@ -37,7 +65,16 @@ public interface IUriReferenceItem extends IAnyUriItem {
    */
   @NonNull
   static IUriReferenceItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.URI_REFERENCE.cast(item);
+    try {
+      return item instanceof IUriReferenceItem
+          ? (IUriReferenceItem) item
+          : item instanceof IAnyUriItem
+              ? valueOf(((IAnyUriItem) item).asUri())
+              : valueOf(item.asString());
+    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   @Override

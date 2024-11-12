@@ -15,6 +15,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#ncname">ncname</a>
+ * data type.
+ */
 @Deprecated(since = "0.7.0")
 public class NcNameAdapter
     extends AbstractStringAdapter<INcNameItem> {

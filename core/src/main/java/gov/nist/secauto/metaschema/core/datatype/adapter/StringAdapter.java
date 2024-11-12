@@ -15,6 +15,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#string">string</a>
+ * data type.
+ */
 public class StringAdapter
     extends AbstractStringAdapter<IStringItem> {
   @NonNull

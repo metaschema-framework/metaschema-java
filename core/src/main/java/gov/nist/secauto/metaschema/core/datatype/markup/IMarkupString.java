@@ -26,6 +26,12 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The common interface for all markup implementations.
+ *
+ * @param <TYPE>
+ *          the Java type of the concrete markup implementation
+ */
 public interface IMarkupString<TYPE extends IMarkupString<TYPE>>
     extends ICustomJavaDataType<TYPE> {
   /**
@@ -50,22 +56,6 @@ public interface IMarkupString<TYPE extends IMarkupString<TYPE>>
    * @return {@code true} if the markup has no contents or {@code false} otherwise
    */
   boolean isEmpty();
-
-  // /**
-  // * Write HTML content to the provided {@code xmlStreamWriter} using the
-  // provided {@code
-  // namespace}.
-  // *
-  // * @param writer
-  // * the writer
-  // * @param namespace
-  // * the XML namespace for the HTML
-  // * @throws XMLStreamException
-  // * if an error occurred while writing
-  // */
-  // void writeHtml(@NonNull XMLStreamWriter2 writer, @NonNull String namespace)
-  // throws
-  // XMLStreamException;
 
   /**
    * Get the HyperText Markup Language (HTML) representation of this markup

@@ -6,7 +6,9 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.BooleanItemImpl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -34,6 +36,8 @@ public interface IBooleanItem extends IAnyAtomicItem {
    * @param value
    *          a string representing a boolean value
    * @return the new item
+   * @throws InvalidTypeMetapathException
+   *           if the provided value is not a valid boolean value
    */
   @NonNull
   static IBooleanItem valueOf(@NonNull String value) {
@@ -42,10 +46,13 @@ public interface IBooleanItem extends IAnyAtomicItem {
       retval = TRUE;
     } else {
       try {
-        Boolean bool = MetaschemaDataTypeProvider.BOOLEAN.parse(value);
-        retval = valueOf(bool);
+        retval = valueOf(MetaschemaDataTypeProvider.BOOLEAN.parse(value));
       } catch (IllegalArgumentException ex) {
-        throw new InvalidValueForCastFunctionException(String.format("Unable to parse string value '%s'", value),
+        throw new InvalidTypeMetapathException(
+            null,
+            String.format("The value '%s' is not a valid boolean value. %s",
+                value,
+                ex.getLocalizedMessage()),
             ex);
       }
     }
@@ -76,7 +83,29 @@ public interface IBooleanItem extends IAnyAtomicItem {
    */
   @NonNull
   static IBooleanItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.BOOLEAN.cast(item);
+    IBooleanItem retval;
+    if (item instanceof INumericItem) {
+      retval = valueOf(((INumericItem) item).toEffectiveBoolean());
+    } else {
+      try {
+        retval = valueOf(INumericItem.cast(item).toEffectiveBoolean());
+      } catch (InvalidValueForCastFunctionException ex) {
+        try {
+          retval = valueOf(item.asString());
+        } catch (IllegalStateException | InvalidTypeMetapathException ex2) {
+          // asString can throw IllegalStateException exception
+          InvalidValueForCastFunctionException thrown = new InvalidValueForCastFunctionException(ex2);
+          thrown.addSuppressed(ex);
+          throw thrown;
+        }
+      }
+    }
+    return retval;
+  }
+
+  @Override
+  default IBooleanItem castAsType(IAnyAtomicItem item) {
+    return cast(item);
   }
 
   /**
@@ -85,11 +114,6 @@ public interface IBooleanItem extends IAnyAtomicItem {
    * @return the underlying boolean value
    */
   boolean toBoolean();
-
-  @Override
-  default IBooleanItem castAsType(IAnyAtomicItem item) {
-    return cast(item);
-  }
 
   /**
    * Get the boolean negation of this value.
@@ -103,7 +127,7 @@ public interface IBooleanItem extends IAnyAtomicItem {
 
   @Override
   default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
+    return compareTo(castAsType(item));
   }
 
   /**

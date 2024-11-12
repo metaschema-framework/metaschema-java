@@ -16,6 +16,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#positive-integer">positive-integer</a>
+ * data type.
+ */
 public class PositiveIntegerAdapter
     extends AbstractIntegerAdapter<IPositiveIntegerItem> {
   @NonNull

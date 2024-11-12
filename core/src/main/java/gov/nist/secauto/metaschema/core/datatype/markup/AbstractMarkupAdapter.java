@@ -24,7 +24,12 @@ import javax.xml.stream.events.StartElement;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public abstract class AbstractMarkupAdapter<TYPE extends IMarkupString<TYPE>>
+/**
+ * Provides base support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#markup-data-types">markup</a>
+ * data types.
+ */
+abstract class AbstractMarkupAdapter<TYPE extends IMarkupString<TYPE>>
     extends AbstractCustomJavaDataTypeAdapter<TYPE, IMarkupItem> {
 
   /**
@@ -47,7 +52,6 @@ public abstract class AbstractMarkupAdapter<TYPE extends IMarkupString<TYPE>>
     return true;
   }
 
-  // TODO: verify that read/write methods cannot be generalized in the base class
   @Override
   public void writeXmlValue(
       Object value,

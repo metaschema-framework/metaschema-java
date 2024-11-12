@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
-import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -142,19 +141,19 @@ public interface IDataTypeAdapter<TYPE> {
   // TODO: move to IAnyAtomicItem
   @NonNull
   IAnyAtomicItem newItem(@NonNull Object value);
-
-  /**
-   * Cast the provided item to an item of this type, if possible.
-   *
-   * @param item
-   *          the atomic item to cast
-   * @return an atomic item of this type
-   * @throws InvalidValueForCastFunctionException
-   *           if the provided item type cannot be cast to this item type
-   */
-  // TODO: move to IAnyAtomicItem
-  @NonNull
-  IAnyAtomicItem cast(IAnyAtomicItem item);
+  //
+  // /**
+  // * Cast the provided item to an item of this type, if possible.
+  // *
+  // * @param item
+  // * the atomic item to cast
+  // * @return an atomic item of this type
+  // * @throws InvalidValueForCastFunctionException
+  // * if the provided item type cannot be cast to this item type
+  // */
+  // // TODO: move to IAnyAtomicItem
+  // @NonNull
+  // IAnyAtomicItem cast(IAnyAtomicItem item);
 
   /**
    * Determines if adapter can parse the next element. The next element's

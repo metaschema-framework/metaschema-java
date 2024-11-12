@@ -6,12 +6,38 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.IPv4AddressItemImpl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.ipv4.IPv4Address;
 
+/**
+ * A Metapath atomic item containing an IPv4 address data value.
+ */
 public interface IIPv4AddressItem extends IIPAddressItem {
+
+  /**
+   * Construct a new IPv4 item using the provided {@code value}.
+   *
+   * @param value
+   *          an IPv4 value
+   * @return the new item
+   */
+  @NonNull
+  static IIPv4AddressItem valueOf(@NonNull String value) {
+    try {
+      return valueOf(MetaschemaDataTypeProvider.IP_V4_ADDRESS.parse(value));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid IPv4 address. %s",
+              value,
+              ex.getLocalizedMessage()),
+          ex);
+    }
+  }
 
   /**
    * Construct a new IPv4 item using the provided {@code value}.
@@ -37,7 +63,14 @@ public interface IIPv4AddressItem extends IIPAddressItem {
    */
   @NonNull
   static IIPv4AddressItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.IP_V4_ADDRESS.cast(item);
+    try {
+      return item instanceof IIPv4AddressItem
+          ? (IIPv4AddressItem) item
+          : valueOf(item.asString());
+    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   @Override

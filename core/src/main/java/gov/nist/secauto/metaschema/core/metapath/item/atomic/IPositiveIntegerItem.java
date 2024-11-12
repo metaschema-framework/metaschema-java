@@ -5,15 +5,21 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.PositiveIntegerItemImpl;
 
 import java.math.BigInteger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a positive integer data value.
+ */
 public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
+  /**
+   * The integer value "1".
+   */
   @SuppressWarnings("null")
   @NonNull
   IPositiveIntegerItem ONE = valueOf(BigInteger.ONE);
@@ -31,9 +37,12 @@ public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
   static IPositiveIntegerItem valueOf(@NonNull String value) {
     try {
       return valueOf(new BigInteger(value));
-    } catch (NumberFormatException ex) {
-      throw new InvalidTypeMetapathException(null,
-          ex.getMessage(),
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid positive integer. %s",
+              value,
+              ex.getLocalizedMessage()),
           ex);
     }
   }
@@ -48,7 +57,7 @@ public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
    *           if the provided value is not a positive integer
    */
   @NonNull
-  static IPositiveIntegerItem valueOf(@NonNull IIntegerItem value) {
+  static IPositiveIntegerItem valueOf(@NonNull INumericItem value) {
     return valueOf(value.asInteger());
   }
 
@@ -98,11 +107,20 @@ public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
    */
   @NonNull
   static IPositiveIntegerItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.POSITIVE_INTEGER.cast(item);
+    try {
+      return item instanceof IPositiveIntegerItem
+          ? (IPositiveIntegerItem) item
+          : item instanceof INumericItem
+              ? valueOf((INumericItem) item)
+              : valueOf(item.asString());
+    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   @Override
   default IPositiveIntegerItem castAsType(IAnyAtomicItem item) {
-    return valueOf(cast(item).asInteger());
+    return cast(item);
   }
 }

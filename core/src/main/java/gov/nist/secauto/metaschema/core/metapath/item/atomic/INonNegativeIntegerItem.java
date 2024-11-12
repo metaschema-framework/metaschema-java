@@ -8,18 +8,27 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.NonNegativeIntegerItemImpl;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigInteger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath atomic item containing a non-negative integer data value.
+ */
 public interface INonNegativeIntegerItem extends IIntegerItem {
-  @SuppressWarnings("null")
+  /**
+   * The integer value "1".
+   */
   @NonNull
-  INonNegativeIntegerItem ONE = valueOf(BigInteger.ONE);
-  @SuppressWarnings("null")
+  INonNegativeIntegerItem ONE = valueOf(ObjectUtils.notNull(BigInteger.ONE));
+  /**
+   * The integer value "0".
+   */
   @NonNull
-  INonNegativeIntegerItem ZERO = valueOf(BigInteger.ZERO);
+  INonNegativeIntegerItem ZERO = valueOf(ObjectUtils.notNull(BigInteger.ZERO));
 
   /**
    * Create an item from an existing integer value.
@@ -33,10 +42,13 @@ public interface INonNegativeIntegerItem extends IIntegerItem {
   @NonNull
   static INonNegativeIntegerItem valueOf(@NonNull String value) {
     try {
-      return valueOf(new BigInteger(value));
-    } catch (NumberFormatException ex) {
-      throw new InvalidTypeMetapathException(null,
-          ex.getMessage(),
+      return new NonNegativeIntegerItemImpl(MetaschemaDataTypeProvider.NON_NEGATIVE_INTEGER.parse(value));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid non-negative integer. %s",
+              value,
+              ex.getLocalizedMessage()),
           ex);
     }
   }
@@ -51,7 +63,7 @@ public interface INonNegativeIntegerItem extends IIntegerItem {
    *           if the provided value is not a non-negative integer
    */
   @NonNull
-  static INonNegativeIntegerItem valueOf(@NonNull IIntegerItem value) {
+  static INonNegativeIntegerItem valueOf(@NonNull INumericItem value) {
     return valueOf(value.asInteger());
   }
 
@@ -101,11 +113,19 @@ public interface INonNegativeIntegerItem extends IIntegerItem {
    */
   @NonNull
   static INonNegativeIntegerItem cast(@NonNull IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.NON_NEGATIVE_INTEGER.cast(item);
+    try {
+      return item instanceof INonNegativeIntegerItem
+          ? (INonNegativeIntegerItem) item
+          : item instanceof INumericItem
+              ? valueOf((INumericItem) item)
+              : valueOf(item.asString());
+    } catch (InvalidTypeMetapathException ex) {
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   @Override
   default INonNegativeIntegerItem castAsType(IAnyAtomicItem item) {
-    return valueOf(cast(item).asInteger());
+    return cast(item);
   }
 }

@@ -6,19 +6,25 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DecimalItemImpl;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A Metapath atomic item containing a decimal data value.
+ */
 public interface IDecimalItem extends INumericItem {
-  @SuppressWarnings("null")
+  /**
+   * The decimal item with the value "0".
+   */
   @NonNull
-  IDecimalItem ZERO = valueOf(BigDecimal.ZERO);
+  IDecimalItem ZERO = valueOf(ObjectUtils.notNull(BigDecimal.ZERO));
 
   /**
    * Construct a new decimal item using the provided string {@code value}.
@@ -26,13 +32,19 @@ public interface IDecimalItem extends INumericItem {
    * @param value
    *          a string representing a decimal value
    * @return the new item
+   * @throws InvalidTypeMetapathException
+   *           if the given string is not a decimal value
    */
   @NonNull
   static IDecimalItem valueOf(@NonNull String value) {
     try {
       return valueOf(MetaschemaDataTypeProvider.DECIMAL.parse(value));
     } catch (IllegalArgumentException ex) {
-      throw new InvalidValueForCastFunctionException(String.format("Unable to parse string value '%s'", value),
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The value '%s' is not a valid decimal. %s",
+              value,
+              ex.getLocalizedMessage()),
           ex);
     }
   }
@@ -65,6 +77,18 @@ public interface IDecimalItem extends INumericItem {
    * Construct a new decimal item using the provided {@code value}.
    *
    * @param value
+   *          a double value
+   * @return the new item
+   */
+  @NonNull
+  static IDecimalItem valueOf(boolean value) {
+    return valueOf(DecimalItemImpl.toBigDecimal(value));
+  }
+
+  /**
+   * Construct a new decimal item using the provided {@code value}.
+   *
+   * @param value
    *          a decimal value
    * @return the new item
    */
@@ -84,13 +108,28 @@ public interface IDecimalItem extends INumericItem {
    *           if the provided {@code item} cannot be cast to this type
    */
   @NonNull
-  static IDecimalItem cast(@Nullable IAnyAtomicItem item) {
-    return MetaschemaDataTypeProvider.DECIMAL.cast(item);
+  static IDecimalItem cast(@NonNull IAnyAtomicItem item) {
+    IDecimalItem retval;
+    if (item instanceof IDecimalItem) {
+      retval = (IDecimalItem) item;
+    } else if (item instanceof INumericItem) {
+      retval = valueOf(((INumericItem) item).asDecimal());
+    } else if (item instanceof IBooleanItem) {
+      retval = valueOf(((IBooleanItem) item).toBoolean());
+    } else {
+      try {
+        retval = valueOf(item.asString());
+      } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+        // asString can throw IllegalStateException exception
+        throw new InvalidValueForCastFunctionException(ex);
+      }
+    }
+    return retval;
   }
 
   @Override
   default IDecimalItem castAsType(IAnyAtomicItem item) {
-    return valueOf(cast(item).asDecimal());
+    return cast(item);
   }
 
   @Override

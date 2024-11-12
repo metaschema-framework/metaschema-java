@@ -20,12 +20,18 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#uuid">uuid</a>
+ * data type.
+ */
 public class UuidAdapter
     extends AbstractDataTypeAdapter<UUID, IUuidItem> {
   @NonNull
   private static final List<QName> NAMES = ObjectUtils.notNull(
       List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "uuid")));
-  public static final Pattern UUID_PATTERN
+  @SuppressWarnings({ "unused", "PMD.UnusedPrivateField" })
+  private static final Pattern UUID_PATTERN
       = Pattern.compile("^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$");
 
   UuidAdapter() {

@@ -11,6 +11,11 @@ import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.FlexmarkFactory
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports a data value which may be multiple lines of markup.
+ * <p>
+ * This markup can be presented as XHTML or Markdown.
+ */
 public class MarkupMultiline
     extends AbstractMarkupString<MarkupMultiline> {
 

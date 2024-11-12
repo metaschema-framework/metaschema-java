@@ -16,6 +16,11 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Support for the Metaschema <a href=
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#non-negative-integer">non-negative-integer</a>
+ * data type.
+ */
 public class NonNegativeIntegerAdapter
     extends AbstractIntegerAdapter<INonNegativeIntegerItem> {
   @NonNull
