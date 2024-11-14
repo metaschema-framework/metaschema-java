@@ -14,6 +14,10 @@ import java.io.PrintStream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports walking an ANTLR parse tree to generate a textual representation of
+ * the tree.
+ */
 public class ParseTreePrinter {
   @SuppressWarnings("resource")
   @NotOwning

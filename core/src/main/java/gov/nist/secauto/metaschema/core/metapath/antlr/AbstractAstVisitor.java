@@ -79,7 +79,15 @@ import java.util.function.Function;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public abstract class AbstractAstVisitor<R> // NOPMD
+/**
+ * This abstract class supports processing an ANTLR-based abstract syntax tree
+ * by walking the tree using a visitor pattern.
+ *
+ * @param <R>
+ *          the Java type of the result produced through visitation
+ */
+@SuppressWarnings({ "PMD.ExcessivePublicCount", "PMD.CyclomaticComplexity" })
+public abstract class AbstractAstVisitor<R>
     extends Metapath10BaseVisitor<R> {
 
   /**
@@ -150,7 +158,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitExpr(ExprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleExpr(ctx));
+    return handle(ctx, context -> handleExpr(ctx));
   }
 
   @Override
@@ -185,7 +193,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitLiteral(LiteralContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleStringLiteral(ctx));
+    return handle(ctx, context -> handleStringLiteral(ctx));
   }
 
   /**
@@ -200,7 +208,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitNumericliteral(NumericliteralContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleNumericLiteral(ctx));
+    return handle(ctx, context -> handleNumericLiteral(ctx));
   }
 
   // ==================================================================
@@ -266,7 +274,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitContextitemexpr(ContextitemexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleContextitemexpr(ctx));
+    return handle(ctx, context -> handleContextitemexpr(ctx));
   }
 
   // =========================================================================
@@ -285,7 +293,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitFunctioncall(FunctioncallContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleFunctioncall(ctx));
+    return handle(ctx, context -> handleFunctioncall(ctx));
   }
 
   @Override
@@ -326,7 +334,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitPostfixexpr(PostfixexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handlePostfixexpr(ctx));
+    return handle(ctx, context -> handlePostfixexpr(ctx));
   }
 
   /**
@@ -375,7 +383,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitPathexpr(PathexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handlePathexpr(ctx));
+    return handle(ctx, context -> handlePathexpr(ctx));
   }
 
   // ============================================================
@@ -395,7 +403,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitRelativepathexpr(RelativepathexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleRelativepathexpr(ctx));
+    return handle(ctx, context -> handleRelativepathexpr(ctx));
   }
 
   // ================================================
@@ -421,7 +429,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   public R visitForwardstep(ForwardstepContext ctx) {
     assert ctx != null;
     // this will either call the handler or forward for AbbrevforwardstepContext
-    return handle(ctx, (context) -> handleForwardstep(ctx));
+    return handle(ctx, context -> handleForwardstep(ctx));
   }
 
   /**
@@ -437,7 +445,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   public R visitReversestep(ReversestepContext ctx) {
     assert ctx != null;
     // this will either call the handler or forward for AbbrevreversestepContext
-    return handle(ctx, (context) -> handleReversestep(ctx));
+    return handle(ctx, context -> handleReversestep(ctx));
   }
 
   // ======================================================================
@@ -456,7 +464,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitAxisstep(AxisstepContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleAxisstep(ctx));
+    return handle(ctx, context -> handleAxisstep(ctx));
   }
 
   @Override
@@ -569,7 +577,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitRangeexpr(RangeexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleRangeexpr(ctx));
+    return handle(ctx, context -> handleRangeexpr(ctx));
   }
 
   // ========================================================================
@@ -588,7 +596,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitUnionexpr(UnionexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleUnionexpr(ctx));
+    return handle(ctx, context -> handleUnionexpr(ctx));
   }
 
   /**
@@ -603,7 +611,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitIntersectexceptexpr(IntersectexceptexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleIntersectexceptexpr(ctx));
+    return handle(ctx, context -> handleIntersectexceptexpr(ctx));
   }
 
   // ======================================================================
@@ -622,7 +630,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitAdditiveexpr(AdditiveexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleAdditiveexpr(ctx));
+    return handle(ctx, context -> handleAdditiveexpr(ctx));
   }
 
   /**
@@ -637,7 +645,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitMultiplicativeexpr(MultiplicativeexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleMultiplicativeexpr(ctx));
+    return handle(ctx, context -> handleMultiplicativeexpr(ctx));
   }
 
   /**
@@ -652,7 +660,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitUnaryexpr(UnaryexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleUnaryexpr(ctx));
+    return handle(ctx, context -> handleUnaryexpr(ctx));
   }
 
   @Override
@@ -678,7 +686,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitStringconcatexpr(StringconcatexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleStringconcatexpr(ctx));
+    return handle(ctx, context -> handleStringconcatexpr(ctx));
   }
 
   // =======================================================================
@@ -697,7 +705,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitComparisonexpr(ComparisonexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleComparisonexpr(ctx));
+    return handle(ctx, context -> handleComparisonexpr(ctx));
   }
 
   @Override
@@ -728,7 +736,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitOrexpr(OrexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleOrexpr(ctx));
+    return handle(ctx, context -> handleOrexpr(ctx));
   }
 
   /**
@@ -743,7 +751,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitAndexpr(AndexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleAndexpr(ctx));
+    return handle(ctx, context -> handleAndexpr(ctx));
   }
 
   // ====================================================================
@@ -762,7 +770,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitForexpr(ForexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleForexpr(ctx));
+    return handle(ctx, context -> handleForexpr(ctx));
   }
 
   @Override
@@ -922,7 +930,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitIfexpr(IfexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleIfexpr(ctx));
+    return handle(ctx, context -> handleIfexpr(ctx));
   }
 
   /*
@@ -966,7 +974,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitSimplemapexpr(SimplemapexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleSimplemapexpr(ctx));
+    return handle(ctx, context -> handleSimplemapexpr(ctx));
   }
 
   /*
@@ -987,7 +995,7 @@ public abstract class AbstractAstVisitor<R> // NOPMD
   @Override
   public R visitArrowexpr(ArrowexprContext ctx) {
     assert ctx != null;
-    return handle(ctx, (context) -> handleArrowexpr(ctx));
+    return handle(ctx, context -> handleArrowexpr(ctx));
   }
 
   @Override
