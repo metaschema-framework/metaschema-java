@@ -34,6 +34,7 @@ public class DefaultFunctionLibrary
   /**
    * Initialize the built-in function library.
    */
+  @SuppressWarnings("deprecation")
   public DefaultFunctionLibrary() { // NOPMD - intentional
     // https://www.w3.org/TR/xpath-functions-31/#func-abs
     registerFunction(FnAbs.SIGNATURE);

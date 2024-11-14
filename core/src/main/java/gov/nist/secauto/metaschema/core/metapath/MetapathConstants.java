@@ -9,48 +9,84 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 
-import javax.xml.XMLConstants;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Provides constant values used in Metapath.
+ * Provides constant values for use in Metapath.
  */
 @SuppressWarnings("PMD.DataClass")
 public final class MetapathConstants {
+  /**
+   * The namespace URI for Metapath data types and built-in casting functions.
+   */
   @NonNull
   public static final URI NS_METAPATH = ObjectUtils.requireNonNull(
       URI.create("http://csrc.nist.gov/ns/metaschema/metapath"));
-  @NonNull
-  public static final URI NS_XML_SCHEMA = ObjectUtils.requireNonNull(
-      URI.create(XMLConstants.W3C_XML_SCHEMA_NS_URI));
+  /**
+   * The namespace URI for Metapath built-in functions.
+   *
+   * @see #PREFIX_METAPATH for the default prefix for this namespace
+   */
   @NonNull
   public static final URI NS_METAPATH_FUNCTIONS = ObjectUtils.requireNonNull(
       URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions"));
+  /**
+   * The namespace URI for Metapath math-related built-in functions.
+   *
+   * @see #PREFIX_METAPATH_FUNCTIONS_MATH for the default prefix for this
+   *      namespace
+   */
   @NonNull
   public static final URI NS_METAPATH_FUNCTIONS_MATH = ObjectUtils.requireNonNull(
       URI.create(NS_METAPATH_FUNCTIONS + "/math"));
+  /**
+   * The namespace URI for Metapath array-related built-in functions.
+   *
+   * @see #PREFIX_METAPATH_FUNCTIONS_ARRAY for the default prefix for this
+   *      namespace
+   */
   @NonNull
   public static final URI NS_METAPATH_FUNCTIONS_ARRAY = ObjectUtils.requireNonNull(
       URI.create(NS_METAPATH_FUNCTIONS + "/array"));
+  /**
+   * The namespace URI for Metapath map-related built-in functions.
+   *
+   * @see #PREFIX_METAPATH_FUNCTIONS_MAP for the default prefix for this namespace
+   */
   @NonNull
   public static final URI NS_METAPATH_FUNCTIONS_MAP = ObjectUtils.requireNonNull(
       URI.create(NS_METAPATH_FUNCTIONS + "/map"));
+  /**
+   * The namespace URI for Metapath extension built-in functions.
+   */
   @NonNull
   public static final URI NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH_FUNCTIONS;
 
+  /**
+   * The namespace prefix for Metapath data types and built-in casting functions.
+   */
   @NonNull
   public static final String PREFIX_METAPATH = "meta";
+  /**
+   * The namespace prefix for Metapath built-in functions.
+   */
   @NonNull
-  public static final String PREFIX_XML_SCHEMA = "xs";
+  public static final String PREFIX_METAPATH_FUNCTIONS = "mp";
+  /**
+   * The namespace prefix for Metapath math-related built-in functions.
+   */
   @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS = "mp";
+  public static final String PREFIX_METAPATH_FUNCTIONS_MATH = "math";
+  /**
+   * The namespace prefix for Metapath array-related built-in functions.
+   */
   @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_MATH = "math";
+  public static final String PREFIX_METAPATH_FUNCTIONS_ARRAY = "array";
+  /**
+   * The namespace prefix for Metapath map-related built-in functions.
+   */
   @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_ARRAY = "array";
-  @NonNull
-  public static final String PREFIX_XPATH_FUNCTIONS_MAP = "map";
+  public static final String PREFIX_METAPATH_FUNCTIONS_MAP = "map";
 
   private MetapathConstants() {
     // disable construction

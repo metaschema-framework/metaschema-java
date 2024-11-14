@@ -47,7 +47,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     "PMD.CouplingBetweenObjects" // necessary since this class aggregates functionality
 })
 public class MetapathExpression {
-
+  /**
+   * Identifies the expected type for a Metapath evaluation result.
+   */
   public enum ResultType {
     /**
      * The result is expected to be a {@link BigDecimal} value.
@@ -73,6 +75,9 @@ public class MetapathExpression {
 
   private static final Logger LOGGER = LogManager.getLogger(MetapathExpression.class);
 
+  /**
+   * The Metapath expression identifying the current context node.
+   */
   @NonNull
   public static final MetapathExpression CONTEXT_NODE
       = new MetapathExpression(".", ContextItem.instance(), StaticContext.instance());

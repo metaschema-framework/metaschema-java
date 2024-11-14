@@ -37,19 +37,16 @@ public final class StaticContext {
         MetapathConstants.PREFIX_METAPATH,
         MetapathConstants.NS_METAPATH);
     knownNamespaces.put(
-        MetapathConstants.PREFIX_XML_SCHEMA,
-        MetapathConstants.NS_XML_SCHEMA);
-    knownNamespaces.put(
-        MetapathConstants.PREFIX_XPATH_FUNCTIONS,
+        MetapathConstants.PREFIX_METAPATH_FUNCTIONS,
         MetapathConstants.NS_METAPATH_FUNCTIONS);
     knownNamespaces.put(
-        MetapathConstants.PREFIX_XPATH_FUNCTIONS_MATH,
+        MetapathConstants.PREFIX_METAPATH_FUNCTIONS_MATH,
         MetapathConstants.NS_METAPATH_FUNCTIONS_MATH);
     knownNamespaces.put(
-        MetapathConstants.PREFIX_XPATH_FUNCTIONS_ARRAY,
+        MetapathConstants.PREFIX_METAPATH_FUNCTIONS_ARRAY,
         MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY);
     knownNamespaces.put(
-        MetapathConstants.PREFIX_XPATH_FUNCTIONS_MAP,
+        MetapathConstants.PREFIX_METAPATH_FUNCTIONS_MAP,
         MetapathConstants.NS_METAPATH_FUNCTIONS_MAP);
     WELL_KNOWN_NAMESPACES = CollectionUtil.unmodifiableMap(knownNamespaces);
 
@@ -362,7 +359,7 @@ public final class StaticContext {
    * A builder used to generate the static context.
    */
   public static final class Builder {
-    public boolean useWildcardWhenNamespaceNotDefaulted; // false
+    private boolean useWildcardWhenNamespaceNotDefaulted; // false
     @Nullable
     private URI baseUri;
     @NonNull
@@ -377,13 +374,10 @@ public final class StaticContext {
           MetapathConstants.PREFIX_METAPATH,
           MetapathConstants.NS_METAPATH);
       namespaces.put(
-          MetapathConstants.PREFIX_XML_SCHEMA,
-          MetapathConstants.NS_XML_SCHEMA);
-      namespaces.put(
-          MetapathConstants.PREFIX_XPATH_FUNCTIONS,
+          MetapathConstants.PREFIX_METAPATH_FUNCTIONS,
           MetapathConstants.NS_METAPATH_FUNCTIONS);
       namespaces.put(
-          MetapathConstants.PREFIX_XPATH_FUNCTIONS_MATH,
+          MetapathConstants.PREFIX_METAPATH_FUNCTIONS_MATH,
           MetapathConstants.NS_METAPATH_FUNCTIONS_MATH);
     }
 

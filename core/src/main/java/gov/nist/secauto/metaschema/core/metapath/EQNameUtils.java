@@ -13,6 +13,9 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Utilities for managing qualified names.
+ */
 public final class EQNameUtils {
   private static final Pattern URI_QUALIFIED_NAME = Pattern.compile("^Q\\{([^{}]*)\\}(.+)$");
   private static final Pattern LEXICAL_NAME = Pattern.compile("^(?:([^:]+):)?(.+)$");

@@ -47,21 +47,22 @@ public class ModuleLoader
   private final List<IModuleLoader.IModulePostProcessor> modulePostProcessors;
 
   /**
-   * Construct a new Metaschema loader.
-   */
-  public ModuleLoader() {
-    this(CollectionUtil.<IModuleLoader.IModulePostProcessor>emptyList());
-  }
-
-  /**
    * Construct a new Metaschema loader, which applies the provided constraints to
    * loaded modules.
    *
    * @param constraints
    *          a set of Metaschema module constraints
+   * @return the loader
    */
-  public ModuleLoader(@NonNull Collection<IConstraintSet> constraints) {
-    this(CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));
+  public ModuleLoader newInstanceUsingCoinstraints(@NonNull Collection<IConstraintSet> constraints) {
+    return new ModuleLoader(CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));
+  }
+
+  /**
+   * Construct a new Metaschema loader.
+   */
+  public ModuleLoader() {
+    this(CollectionUtil.<IModuleLoader.IModulePostProcessor>emptyList());
   }
 
   /**

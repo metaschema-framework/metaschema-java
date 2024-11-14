@@ -12,6 +12,9 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A data value that can be a value in a Metapath array or map.
+ */
 public interface ICollectionValue {
   /**
    * Get the collection value as a sequence.

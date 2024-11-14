@@ -96,6 +96,12 @@ public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctio
     return ISequence.of(castItem);
   }
 
+  /**
+   * A callback used to perform a casting operation.
+   *
+   * @param <ITEM>
+   *          the Java type for the resulting item
+   */
   @FunctionalInterface
   public interface ICastExecutor<ITEM extends IAnyAtomicItem> {
     /**
