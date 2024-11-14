@@ -9,12 +9,19 @@ import java.time.ZonedDateTime;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class DateTime
-    extends AbstractAmbiguousTemporal<DateTime> {
+/**
+ * Represents a date/time value which may not have a timezone making it
+ * ambiguous as a point in time.
+ */
+public class AmbiguousDateTime
+    extends AbstractAmbiguousTemporal<AmbiguousDateTime> {
 
   /**
    * Construct a new date/time object. This type supports ambiguous dates/times
    * that were provided without a time zone.
+   * <p>
+   * The date/time value will be ambiguous if the {@code hasTimeZone} is
+   * {@code false}.
    *
    * @param value
    *          the date/time value
@@ -22,12 +29,12 @@ public class DateTime
    *          {@code true} if the date/time is intended to have an associated time
    *          zone or {@code false} otherwise
    */
-  public DateTime(@NonNull ZonedDateTime value, boolean hasTimeZone) {
+  public AmbiguousDateTime(@NonNull ZonedDateTime value, boolean hasTimeZone) {
     super(value, hasTimeZone);
   }
 
   @Override
-  public DateTime copy() {
-    return new DateTime(getValue(), hasTimeZone());
+  public AmbiguousDateTime copy() {
+    return new AmbiguousDateTime(getValue(), hasTimeZone());
   }
 }

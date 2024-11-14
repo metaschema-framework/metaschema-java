@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.datatype.adapter;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.datatype.object.Date;
+import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -33,7 +33,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data type.
  */
 public class DateAdapter
-    extends AbstractCustomJavaDataTypeAdapter<Date, IDateItem> {
+    extends AbstractCustomJavaDataTypeAdapter<AmbiguousDate, IDateItem> {
   @NonNull
   private static final List<QName> NAMES = ObjectUtils.notNull(
       List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "date")));
@@ -48,7 +48,7 @@ public class DateAdapter
           + "(Z|[+-][0-9]{2}:[0-9]{2})?$"));
 
   DateAdapter() {
-    super(Date.class);
+    super(AmbiguousDate.class);
   }
 
   @Override
@@ -62,7 +62,7 @@ public class DateAdapter
   }
 
   @Override
-  public Date parse(String value) {
+  public AmbiguousDate parse(String value) {
     Matcher matcher = DATE_TIMEZONE.matcher(value);
     if (!matcher.matches()) {
       throw new IllegalArgumentException("Invalid date: " + value);
@@ -72,12 +72,12 @@ public class DateAdapter
         = String.format("%sT00:00:00%s", matcher.group(1), matcher.group(2) == null ? "" : matcher.group(2));
     try {
       TemporalAccessor accessor = DateFormats.DATE_TIME_WITH_TZ.parse(parseValue);
-      return new Date(ObjectUtils.notNull(ZonedDateTime.from(accessor)), true); // NOPMD - readability
+      return new AmbiguousDate(ObjectUtils.notNull(ZonedDateTime.from(accessor)), true); // NOPMD - readability
     } catch (DateTimeParseException ex) {
       try {
         TemporalAccessor accessor = DateFormats.DATE_TIME_WITHOUT_TZ.parse(parseValue);
         LocalDate date = LocalDate.from(accessor);
-        return new Date(ObjectUtils.notNull(ZonedDateTime.of(date, LocalTime.MIN, ZoneOffset.UTC)), false);
+        return new AmbiguousDate(ObjectUtils.notNull(ZonedDateTime.of(date, LocalTime.MIN, ZoneOffset.UTC)), false);
       } catch (DateTimeParseException ex2) {
         IllegalArgumentException newEx = new IllegalArgumentException(ex2.getLocalizedMessage(), ex2);
         newEx.addSuppressed(ex);
@@ -88,7 +88,7 @@ public class DateAdapter
 
   @Override
   public String asString(Object obj) {
-    Date value = (Date) obj;
+    AmbiguousDate value = (AmbiguousDate) obj;
     return ObjectUtils.notNull(value.hasTimeZone()
         ? DateFormats.DATE_WITH_TZ.format(value.getValue())
         : DateFormats.DATE_WITHOUT_TZ.format(value.getValue()));
@@ -101,7 +101,7 @@ public class DateAdapter
 
   @Override
   public IDateItem newItem(Object value) {
-    Date item = toValue(value);
+    AmbiguousDate item = toValue(value);
     return IDateItem.valueOf(item);
   }
 }

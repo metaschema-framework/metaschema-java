@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.DateAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.object.Date;
+import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
 
 import java.time.ZonedDateTime;
 
@@ -18,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * may not have an explicit timezone.
  */
 public class DateWithoutTimeZoneItemImpl
-    extends AbstractDateItem<Date> {
+    extends AbstractDateItem<AmbiguousDate> {
 
   /**
    * Construct a new item with the provided {@code value}.
@@ -26,7 +26,7 @@ public class DateWithoutTimeZoneItemImpl
    * @param value
    *          the value to wrap
    */
-  public DateWithoutTimeZoneItemImpl(@NonNull Date value) {
+  public DateWithoutTimeZoneItemImpl(@NonNull AmbiguousDate value) {
     super(value);
   }
 

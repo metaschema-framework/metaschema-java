@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.object.DateTime;
+import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
 import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateTimeWithTimeZoneItemImpl;
@@ -49,7 +49,7 @@ public interface IDateTimeItem extends ITemporalItem {
    * @return the new item
    */
   @NonNull
-  static IDateTimeItem valueOf(@NonNull DateTime value) {
+  static IDateTimeItem valueOf(@NonNull AmbiguousDateTime value) {
     return new DateTimeWithoutTimeZoneItemImpl(value);
   }
 

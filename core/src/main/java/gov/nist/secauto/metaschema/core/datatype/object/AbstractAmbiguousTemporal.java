@@ -12,6 +12,9 @@ import java.time.ZonedDateTime;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
+ * Implementations of this class represent a temporal value which may not have a
+ * timezone making it ambiguous as a point/window in time.
+ * <p>
  * Metaschema has a need to represent dates and times that allow for an
  * ambiguous time zone. This is due to some models not requiring a time zone as
  * part of a date/time. An ambiguous dateTime allows a time zone to be inferred,

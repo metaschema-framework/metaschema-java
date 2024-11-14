@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.datatype.adapter;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.datatype.object.DateTime;
+import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -29,7 +29,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data type.
  */
 public class DateTimeAdapter
-    extends AbstractCustomJavaDataTypeAdapter<DateTime, IDateTimeItem> {
+    extends AbstractCustomJavaDataTypeAdapter<AmbiguousDateTime, IDateTimeItem> {
   @NonNull
   private static final List<QName> NAMES = ObjectUtils.notNull(
       List.of(
@@ -38,7 +38,7 @@ public class DateTimeAdapter
           new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "dateTime")));
 
   DateTimeAdapter() {
-    super(DateTime.class);
+    super(AmbiguousDateTime.class);
   }
 
   @Override
@@ -52,16 +52,16 @@ public class DateTimeAdapter
   }
 
   @Override
-  public DateTime parse(String value) {
-    DateTime retval;
+  public AmbiguousDateTime parse(String value) {
+    AmbiguousDateTime retval;
     try {
-      retval = new DateTime(
+      retval = new AmbiguousDateTime(
           ObjectUtils.notNull(ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(value))),
           true);
     } catch (DateTimeParseException ex) {
       try {
         LocalDateTime dateTime = LocalDateTime.from(DateFormats.DATE_TIME_WITHOUT_TZ.parse(value));
-        retval = new DateTime(
+        retval = new AmbiguousDateTime(
             ObjectUtils.notNull(ZonedDateTime.of(dateTime, ZoneOffset.UTC)),
             false);
       } catch (DateTimeParseException ex2) {
@@ -75,7 +75,7 @@ public class DateTimeAdapter
 
   @Override
   public String asString(Object obj) {
-    DateTime value = (DateTime) obj;
+    AmbiguousDateTime value = (AmbiguousDateTime) obj;
     return ObjectUtils.notNull(value.hasTimeZone()
         ? DateFormats.DATE_TIME_WITH_TZ.format(value.getValue())
         : DateFormats.DATE_TIME_WITHOUT_TZ.format(value.getValue()));
@@ -88,7 +88,7 @@ public class DateTimeAdapter
 
   @Override
   public IDateTimeItem newItem(Object value) {
-    DateTime item = toValue(value);
+    AmbiguousDateTime item = toValue(value);
     return IDateTimeItem.valueOf(item);
   }
 }
