@@ -51,7 +51,7 @@ public class SuppressPTagExtension
 
     @Override
     public @Nullable
-        Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
+    Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
       return Collections.singleton(
           new NodeRenderingHandler<>(Paragraph.class, this::render));
     }

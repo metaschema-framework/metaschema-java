@@ -27,7 +27,10 @@ class FnCeilingTest
   private static Stream<Arguments> provideValues() {
     return Stream.of(
         Arguments.of(integer(11), decimal("10.5")),
-        Arguments.of(integer(-10), decimal("-10.5")));
+        Arguments.of(integer(-10), decimal("-10.5")),
+        Arguments.of(integer(11), decimal("10.1")),
+        Arguments.of(integer(0), decimal("0.0")),
+        Arguments.of(integer(1), decimal("0.999999")));
   }
 
   @ParameterizedTest

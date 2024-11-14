@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.TokenItemImpl;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a text token data value.
+ * An atomic Metapath item containing a text token data value.
  */
 public interface ITokenItem extends IStringItem {
   /**
@@ -32,7 +32,7 @@ public interface ITokenItem extends IStringItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid token. %s",
+          String.format("Invalid token value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

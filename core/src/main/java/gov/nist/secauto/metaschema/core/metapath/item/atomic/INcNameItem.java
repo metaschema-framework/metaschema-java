@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.NcNameItemImpl
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a non-colonized name data value.
+ * An atomic Metapath item containing a non-colonized name (NCName) data value.
  */
 @Deprecated(forRemoval = true, since = "0.7.0")
 public interface INcNameItem extends IStringItem {
@@ -32,7 +32,7 @@ public interface INcNameItem extends IStringItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid non-colonized name. %s",
+          String.format("Invalid non-colonized name value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

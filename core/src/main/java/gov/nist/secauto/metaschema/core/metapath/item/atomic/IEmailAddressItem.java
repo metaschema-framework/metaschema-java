@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.EmailAddressIt
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing an email address data value.
+ * An atomic Metapath item containing an email address data value.
  */
 public interface IEmailAddressItem extends IStringItem {
   /**
@@ -32,7 +32,7 @@ public interface IEmailAddressItem extends IStringItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid email address. %s",
+          String.format("Invalid email address value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

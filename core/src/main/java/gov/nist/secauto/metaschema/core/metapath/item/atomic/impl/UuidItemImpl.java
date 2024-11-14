@@ -80,7 +80,7 @@ public class UuidItemImpl
 
     @Override
     public int hashCode() {
-      return getKey().hashCode();
+      return getKey().asUuid().hashCode();
     }
 
     @Override

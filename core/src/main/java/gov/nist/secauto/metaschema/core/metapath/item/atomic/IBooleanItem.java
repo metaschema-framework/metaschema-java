@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.BooleanItemImp
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item with a boolean value.
+ * An atomic Metapath item with a boolean value.
  */
 public interface IBooleanItem extends IAnyAtomicItem {
   /**
@@ -50,7 +50,7 @@ public interface IBooleanItem extends IAnyAtomicItem {
       } catch (IllegalArgumentException ex) {
         throw new InvalidTypeMetapathException(
             null,
-            String.format("The value '%s' is not a valid boolean value. %s",
+            String.format("Invalid boolean value '%s'. %s",
                 value,
                 ex.getLocalizedMessage()),
             ex);

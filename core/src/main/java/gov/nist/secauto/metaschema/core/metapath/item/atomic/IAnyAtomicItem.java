@@ -15,7 +15,9 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * The interface shares by all atomic items.
+ * The interface shared by all atomic items, representing indivisible data
+ * values that serve as the fundamental building blocks for complex data
+ * structures in the Metaschema framework.
  */
 public interface IAnyAtomicItem extends IAtomicValuedItem, IPrintable {
 

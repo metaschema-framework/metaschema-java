@@ -16,7 +16,7 @@ import java.math.BigInteger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a non-negative integer data value.
+ * An atomic Metapath item containing a non-negative integer data value.
  */
 public interface INonNegativeIntegerItem extends IIntegerItem {
   /**
@@ -42,11 +42,11 @@ public interface INonNegativeIntegerItem extends IIntegerItem {
   @NonNull
   static INonNegativeIntegerItem valueOf(@NonNull String value) {
     try {
-      return new NonNegativeIntegerItemImpl(MetaschemaDataTypeProvider.NON_NEGATIVE_INTEGER.parse(value));
+      return valueOf(MetaschemaDataTypeProvider.NON_NEGATIVE_INTEGER.parse(value));
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid non-negative integer. %s",
+          String.format("Invalid non-negative integer value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);
@@ -96,7 +96,7 @@ public interface INonNegativeIntegerItem extends IIntegerItem {
     if (value.compareTo(BigInteger.ZERO) < 0) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("Integer value '%s' is negative.", value));
+          String.format("Integer value '%s' must not be negative.", value));
     }
     return new NonNegativeIntegerItemImpl(value);
   }

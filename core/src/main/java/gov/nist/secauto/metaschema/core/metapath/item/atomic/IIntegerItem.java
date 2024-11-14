@@ -15,7 +15,7 @@ import java.math.BigInteger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing an integer data value.
+ * An atomic Metapath item containing an integer data value.
  */
 public interface IIntegerItem extends IDecimalItem {
   /**

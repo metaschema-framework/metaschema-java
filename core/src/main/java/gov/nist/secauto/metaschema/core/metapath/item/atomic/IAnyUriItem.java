@@ -16,7 +16,7 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a URI data value.
+ * An atomic Metapath item containing a URI data value.
  */
 public interface IAnyUriItem extends IAnyAtomicItem {
   /**
@@ -35,7 +35,7 @@ public interface IAnyUriItem extends IAnyAtomicItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid URI. %s",
+          String.format("Invalid URI value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);
@@ -44,6 +44,13 @@ public interface IAnyUriItem extends IAnyAtomicItem {
 
   /**
    * Construct a new URI item using the provided URI {@code value}.
+   * <p>
+   * Example usage:
+   *
+   * <pre>
+   * URI uri = URI.create("http://example.com");
+   * IAnyUriItem item = IAnyUriItem.valueOf(uri);
+   * </pre>
    *
    * @param value
    *          a URI

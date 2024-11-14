@@ -11,7 +11,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.IPAddress;
 
 /**
- * A Metapath atomic item representing an IP address data value.
+ * An atomic Metapath item representing an IP address data value.
  */
 public interface IIPAddressItem extends IUntypedAtomicItem {
   /**

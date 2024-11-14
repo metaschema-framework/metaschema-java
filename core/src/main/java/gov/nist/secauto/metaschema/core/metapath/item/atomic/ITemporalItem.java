@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a temporal data value.
+ * An atomic Metapath item containing a temporal data value.
  */
 public interface ITemporalItem extends IAnyAtomicItem {
   /**

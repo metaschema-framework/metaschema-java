@@ -16,7 +16,7 @@ import java.time.Period;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a duration data value in years and months.
+ * An atomic Metapath item containing a duration data value in years and months.
  */
 public interface IYearMonthDurationItem extends IDurationItem {
   /**
@@ -38,7 +38,7 @@ public interface IYearMonthDurationItem extends IDurationItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid year/month duration. %s",
+          String.format("Invalid year/month duration value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

@@ -13,14 +13,14 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.HostnameItemIm
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a hostname data value.
+ * An atomic Metapath item containing a hostname data value.
  */
 public interface IHostnameItem extends IStringItem {
   /**
    * Construct a new host name item using the provided string {@code value}.
    *
    * @param value
-   *          a string representing an host name value
+   *          a string representing a host name value
    * @return the new item
    */
   @NonNull
@@ -30,7 +30,7 @@ public interface IHostnameItem extends IStringItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid hostname. %s",
+          String.format("Invalid hostname value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

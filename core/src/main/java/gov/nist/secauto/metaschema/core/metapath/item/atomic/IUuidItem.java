@@ -15,14 +15,14 @@ import java.util.UUID;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a UUID data value.
+ * An atomic Metapath item containing a UUID data value.
  */
 public interface IUuidItem extends IStringItem {
   /**
-   * Construct a new URI item using the provided string {@code value}.
+   * Construct a new UUID item using the provided string {@code value}.
    *
    * @param value
-   *          a string representing a URI
+   *          a string representing a UUID
    * @return the new item
    * @throws InvalidTypeMetapathException
    *           if the given string violates RFC4122
@@ -34,7 +34,7 @@ public interface IUuidItem extends IStringItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid UUID. %s",
+          String.format("Invalid UUID value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

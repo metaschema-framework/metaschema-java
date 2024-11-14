@@ -82,7 +82,7 @@ public class HtmlQuoteTagExtension
 
     @Override
     public @Nullable
-        Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
+    Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
       return Collections.singleton(
           new NodeRenderingHandler<>(DoubleQuoteNode.class, this::render));
     }

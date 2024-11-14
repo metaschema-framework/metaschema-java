@@ -14,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.ipv6.IPv6Address;
 
 /**
- * A Metapath atomic item containing an IPv4 address data value.
+ * An atomic Metapath item containing an IPv6 address data value.
  */
 public interface IIPv6AddressItem extends IIPAddressItem {
 
@@ -32,7 +32,7 @@ public interface IIPv6AddressItem extends IIPAddressItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid IPv6 address. %s",
+          String.format("Invalid IPv6 address value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

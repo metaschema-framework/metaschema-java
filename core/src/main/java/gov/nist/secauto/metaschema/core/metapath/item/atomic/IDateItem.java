@@ -19,7 +19,7 @@ import java.time.temporal.ChronoUnit;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a date data value.
+ * An atomic Metapath item containing a date data value.
  */
 public interface IDateItem extends ITemporalItem {
 
@@ -37,7 +37,7 @@ public interface IDateItem extends ITemporalItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid date. %s",
+          String.format("Invalid date value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

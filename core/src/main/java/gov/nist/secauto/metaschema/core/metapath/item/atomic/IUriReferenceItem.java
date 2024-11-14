@@ -15,7 +15,12 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a URI reference data value.
+ * An atomic Metapath item containing a URI reference data value that complies
+ * with RFC2396. URI references can be absolute URIs, relative URIs, or
+ * same-document references.
+ *
+ * @see java.net.URI
+ * @see <a href="https://www.ietf.org/rfc/rfc2396.txt">RFC2396</a>
  */
 public interface IUriReferenceItem extends IAnyUriItem {
   /**
@@ -34,7 +39,7 @@ public interface IUriReferenceItem extends IAnyUriItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid URI reference. %s",
+          String.format("Invalid URI reference value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

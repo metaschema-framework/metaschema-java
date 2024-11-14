@@ -17,7 +17,7 @@ import java.math.RoundingMode;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a decimal data value.
+ * An atomic Metapath item containing a decimal data value.
  */
 public interface IDecimalItem extends INumericItem {
   /**
@@ -42,7 +42,7 @@ public interface IDecimalItem extends INumericItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid decimal. %s",
+          String.format("Invalid decimal value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

@@ -5,6 +5,9 @@ import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 
 /**
  * Provides version information for this library.
+ * <p>
+ * This class exposes build-time metadata including version numbers, build
+ * timestamps, and Git repository information.
  */
 public class MetaschemaJavaVersion implements IVersionInfo {
 

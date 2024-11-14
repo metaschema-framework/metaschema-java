@@ -43,6 +43,11 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public final class FnMinMax {
   private static final String NAME_MIN = "min";
   private static final String NAME_MAX = "max";
+  /**
+   * Defines the set of primitive atomic item types supported by the min/max
+   * functions. This set is used for type validation and normalization during
+   * comparison operations.
+   */
   @NonNull
   private static final Set<Class<? extends IAnyAtomicItem>> PRIMITIVE_ITEM_TYPES = ObjectUtils.notNull(Set.of(
       IStringItem.class,
@@ -164,24 +169,40 @@ public final class FnMinMax {
       return Stream.of(items.get(0));
     }
 
-    List<? extends IAnyAtomicItem> resultingItems = ObjectUtils.notNull(items.stream()
+    List<? extends IAnyAtomicItem> resultingItems = convertUntypedItems(items);
+    Map<Class<? extends IAnyAtomicItem>, Integer> counts = countItemTypes(resultingItems);
+    return createNormalizedStream(resultingItems, counts);
+  }
+
+  @NonNull
+  private static List<? extends IAnyAtomicItem> convertUntypedItems(
+      @NonNull List<? extends IAnyAtomicItem> items) {
+    return ObjectUtils.notNull(items.stream()
         .map(item -> item instanceof IUntypedAtomicItem ? IDecimalItem.cast(item) : item)
         .collect(Collectors.toList()));
+  }
 
-    Map<Class<? extends IAnyAtomicItem>, Integer> counts = FunctionUtils.countTypes(
-        PRIMITIVE_ITEM_TYPES,
-        resultingItems);
+  @NonNull
+  private static Map<Class<? extends IAnyAtomicItem>, Integer> countItemTypes(
+      @NonNull List<? extends IAnyAtomicItem> items) {
+    return FunctionUtils.countTypes(PRIMITIVE_ITEM_TYPES, items);
+  }
+
+  @NonNull
+  private static Stream<? extends IAnyAtomicItem> createNormalizedStream(
+      @NonNull List<? extends IAnyAtomicItem> items,
+      @NonNull Map<Class<? extends IAnyAtomicItem>, Integer> counts) {
 
     Stream<? extends IAnyAtomicItem> stream = null;
     if (counts.size() == 1) {
-      stream = resultingItems.stream();
+      stream = items.stream();
     } else if (counts.size() > 1) {
-      int size = resultingItems.size();
+      int size = items.size();
       if (counts.getOrDefault(IStringItem.class, 0) + counts.getOrDefault(IAnyUriItem.class, 0) == size) {
-        stream = resultingItems.stream()
+        stream = items.stream()
             .map(IAnyAtomicItem::asStringItem);
       } else if (counts.getOrDefault(IDecimalItem.class, 0) == size) {
-        stream = resultingItems.stream()
+        stream = items.stream()
             .map(item -> (IDecimalItem) item);
       }
     }
@@ -190,7 +211,7 @@ public final class FnMinMax {
       throw new InvalidArgumentFunctionException(
           InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
           String.format("Values must all be of a single atomic type. Their types are '%s'.",
-              FunctionUtils.getTypes(resultingItems).stream()
+              FunctionUtils.getTypes(items).stream()
                   .map(Class::getName)
                   .collect(Collectors.joining(","))));
     }

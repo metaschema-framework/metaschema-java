@@ -15,7 +15,7 @@ import java.time.Duration;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a duration data value in days, hours, and
+ * An atomic Metapath item containing a duration data value in days, hours, and
  * seconds.
  */
 public interface IDayTimeDurationItem extends IDurationItem {
@@ -37,7 +37,7 @@ public interface IDayTimeDurationItem extends IDurationItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid day/time duration. %s",
+          String.format("Invalid day/time value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

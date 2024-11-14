@@ -14,7 +14,7 @@ import java.math.BigInteger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a positive integer data value.
+ * An atomic Metapath item containing a positive integer data value.
  */
 public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
   /**
@@ -40,7 +40,7 @@ public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid positive integer. %s",
+          String.format("Invalid positive integer value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

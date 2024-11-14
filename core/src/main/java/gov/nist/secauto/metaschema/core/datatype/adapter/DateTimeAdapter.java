@@ -55,15 +55,10 @@ public class DateTimeAdapter
   public AmbiguousDateTime parse(String value) {
     AmbiguousDateTime retval;
     try {
-      retval = new AmbiguousDateTime(
-          ObjectUtils.notNull(ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(value))),
-          true);
+      retval = parseWithTimeZone(value);
     } catch (DateTimeParseException ex) {
       try {
-        LocalDateTime dateTime = LocalDateTime.from(DateFormats.DATE_TIME_WITHOUT_TZ.parse(value));
-        retval = new AmbiguousDateTime(
-            ObjectUtils.notNull(ZonedDateTime.of(dateTime, ZoneOffset.UTC)),
-            false);
+        retval = parseWithoutTimeZone(value);
       } catch (DateTimeParseException ex2) {
         IllegalArgumentException newEx = new IllegalArgumentException(ex2.getLocalizedMessage(), ex2);
         newEx.addSuppressed(ex);
@@ -71,6 +66,21 @@ public class DateTimeAdapter
       }
     }
     return retval;
+  }
+
+  @NonNull
+  private static AmbiguousDateTime parseWithTimeZone(@NonNull String value) {
+    return new AmbiguousDateTime(
+        ObjectUtils.notNull(ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(value))),
+        true);
+  }
+
+  @NonNull
+  private static AmbiguousDateTime parseWithoutTimeZone(@NonNull String value) {
+    LocalDateTime dateTime = LocalDateTime.from(DateFormats.DATE_TIME_WITHOUT_TZ.parse(value));
+    return new AmbiguousDateTime(
+        ObjectUtils.notNull(ZonedDateTime.of(dateTime, ZoneOffset.UTC)),
+        false);
   }
 
   @Override

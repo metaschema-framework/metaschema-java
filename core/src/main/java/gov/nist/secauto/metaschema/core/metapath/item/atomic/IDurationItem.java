@@ -12,7 +12,17 @@ import java.time.temporal.TemporalAmount;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item representing a duration data value.
+ * An atomic Metapath item representing a duration data value.
+ * <p>
+ * This interface supports both day-time and year-month duration formats
+ * following the ISO 8601 standard. Examples of valid durations include:
+ * <ul>
+ * <li>P1Y2M (1 year, 2 months)</li>
+ * <li>P3DT4H5M (3 days, 4 hours, 5 minutes)</li>
+ * </ul>
+ *
+ * @see IDayTimeDurationItem
+ * @see IYearMonthDurationItem
  */
 public interface IDurationItem extends IAnyAtomicItem {
   /**
@@ -45,7 +55,9 @@ public interface IDurationItem extends IAnyAtomicItem {
         try {
           retval = IYearMonthDurationItem.valueOf(value);
         } catch (IllegalStateException ex2) {
-          InvalidValueForCastFunctionException newEx = new InvalidValueForCastFunctionException(ex2);
+          InvalidValueForCastFunctionException newEx = new InvalidValueForCastFunctionException(
+              String.format("Value '%s' cannot be parsed as either a day-time or year-month duration", value),
+              ex2);
           newEx.addSuppressed(ex);
           throw newEx; // NOPMD context as suppressed
         }

@@ -17,7 +17,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.MarkupMultiLin
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item representing a Markup data value.
+ * An atomic Metapath item representing a Markup data value.
  */
 public interface IMarkupItem extends IUntypedAtomicItem {
   /**

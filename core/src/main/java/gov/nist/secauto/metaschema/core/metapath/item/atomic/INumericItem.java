@@ -19,7 +19,7 @@ import java.math.RoundingMode;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a numeric data value.
+ * An atomic Metapath item containing a numeric data value.
  */
 public interface INumericItem extends IAnyAtomicItem {
 
@@ -120,7 +120,6 @@ public interface INumericItem extends IAnyAtomicItem {
    *          (negative value} or after (positive value) the decimal point.
    * @return the rounded value
    */
-  @SuppressWarnings("PMD.CognitiveComplexity") // ok
   @NonNull
   default INumericItem round(@NonNull IIntegerItem precisionItem) {
     int precision;
@@ -130,45 +129,38 @@ public interface INumericItem extends IAnyAtomicItem {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR,
           "Numeric operation overflow/underflow.", ex);
     }
-    INumericItem retval;
-    if (precision >= 0) {
-      // round to precision decimal places
-      if (this instanceof IIntegerItem) {
-        retval = this;
-      } else {
-        // IDecimalItem
-        BigDecimal value = asDecimal();
-        if (value.signum() == -1) {
-          retval = IDecimalItem.valueOf(
-              ObjectUtils.notNull(
-                  value.round(new MathContext(precision + value.precision() - value.scale(), RoundingMode.HALF_DOWN))));
-        } else {
-          retval = IDecimalItem.valueOf(
-              ObjectUtils.notNull(
-                  value.round(new MathContext(precision + value.precision() - value.scale(), RoundingMode.HALF_UP))));
-        }
+    return precision >= 0
+        ? roundWithPositivePrecision(precision)
+        : roundWithNegativePrecision(precision);
+  }
 
-        // cast result to original type
-        retval = castAsType(retval);
-      }
-    } else {
-      // round to a power of 10
-      BigInteger value = asInteger();
-      BigInteger divisor = BigInteger.TEN.pow(0 - precision);
-
-      @NonNull
-      BigInteger result;
-      if (divisor.compareTo(value.abs()) > 0) {
-        result = ObjectUtils.notNull(BigInteger.ZERO);
-      } else {
-        BigInteger remainder = value.mod(divisor);
-        BigInteger lessRemainder = value.subtract(remainder);
-        BigInteger halfDivisor = divisor.divide(BigInteger.TWO);
-        result = ObjectUtils.notNull(
-            remainder.compareTo(halfDivisor) >= 0 ? lessRemainder.add(divisor) : lessRemainder);
-      }
-      retval = IIntegerItem.valueOf(result);
+  @SuppressWarnings("PMD.OnlyOneReturn")
+  @NonNull
+  private INumericItem roundWithPositivePrecision(int precision) {
+    if (this instanceof IIntegerItem) {
+      return this;
     }
-    return retval;
+    BigDecimal value = asDecimal();
+    BigDecimal rounded = value.signum() == -1
+        ? value.round(new MathContext(precision + value.precision() - value.scale(), RoundingMode.HALF_DOWN))
+        : value.round(new MathContext(precision + value.precision() - value.scale(), RoundingMode.HALF_UP));
+    return castAsType(IDecimalItem.valueOf(ObjectUtils.notNull(rounded)));
+  }
+
+  @SuppressWarnings("PMD.OnlyOneReturn")
+  @NonNull
+  private INumericItem roundWithNegativePrecision(int precision) {
+    BigInteger value = asInteger();
+    BigInteger divisor = BigInteger.TEN.pow(0 - precision);
+    if (divisor.compareTo(value.abs()) > 0) {
+      return IIntegerItem.ZERO;
+    }
+    BigInteger remainder = value.mod(divisor);
+    BigInteger lessRemainder = value.subtract(remainder);
+    BigInteger halfDivisor = divisor.divide(BigInteger.TWO);
+    BigInteger result = remainder.compareTo(halfDivisor) >= 0
+        ? lessRemainder.add(divisor)
+        : lessRemainder;
+    return IIntegerItem.valueOf(ObjectUtils.notNull(result));
   }
 }

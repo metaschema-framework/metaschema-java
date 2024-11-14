@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a date/time data value.
+ * An atomic Metapath item containing a date/time data value.
  */
 public interface IDateTimeItem extends ITemporalItem {
   /**
@@ -34,7 +34,7 @@ public interface IDateTimeItem extends ITemporalItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid date/time. %s",
+          String.format("Invalid date/time value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);
@@ -43,10 +43,15 @@ public interface IDateTimeItem extends ITemporalItem {
 
   /**
    * Construct a new date/time item using the provided {@code value}.
+   * <p>
+   * This method handles recording if an explicit timezone was provided using the
+   * {@link AmbiguousDateTime}. The {@link AmbiguousDateTime#hasTimeZone()} method
+   * can be called to determine if timezone information is present.
    *
    * @param value
    *          a date/time, without time zone information
    * @return the new item
+   * @see AmbiguousDateTime for more details on timezone handling
    */
   @NonNull
   static IDateTimeItem valueOf(@NonNull AmbiguousDateTime value) {
@@ -55,6 +60,10 @@ public interface IDateTimeItem extends ITemporalItem {
 
   /**
    * Construct a new date/time item using the provided {@code value}.
+   * <p>
+   * This method handles dates with explicit timezone information using
+   * ZonedDateTime. The timezone is preserved as specified in the input and is
+   * significant for date/time operations and comparisons.
    *
    * @param value
    *          a date/time, with time zone information

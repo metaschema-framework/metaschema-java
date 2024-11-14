@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.StringItemImpl
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metapath atomic item containing a text data value.
+ * An atomic Metapath item containing a text data value.
  */
 public interface IStringItem extends IAnyAtomicItem {
   /**
@@ -30,7 +30,7 @@ public interface IStringItem extends IAnyAtomicItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value '%s' is not a valid IPv4 address. %s",
+          String.format("Invalid string value '%s'. %s",
               value,
               ex.getLocalizedMessage()),
           ex);

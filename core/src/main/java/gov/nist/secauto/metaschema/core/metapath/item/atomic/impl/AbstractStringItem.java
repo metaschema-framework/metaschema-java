@@ -21,8 +21,17 @@ public abstract class AbstractStringItem
     extends AbstractAnyAtomicItem<String>
     implements IStringItem {
   private static final String WHITESPACE_SEGMENT = "[ \t\r\n]";
+  /**
+   * Pattern to match one or more whitespace characters at the end of a string.
+   */
   private static final Pattern TRIM_END = Pattern.compile(WHITESPACE_SEGMENT + "++$");
+  /**
+   * Pattern to match one or more whitespace characters at the start of a string.
+   */
   private static final Pattern TRIM_START = Pattern.compile("^" + WHITESPACE_SEGMENT + "+");
+  /**
+   * Pattern to match two or more consecutive whitespace characters.
+   */
   private static final Pattern TRIM_MIDDLE = Pattern.compile(WHITESPACE_SEGMENT + "{2,}");
 
   /**
