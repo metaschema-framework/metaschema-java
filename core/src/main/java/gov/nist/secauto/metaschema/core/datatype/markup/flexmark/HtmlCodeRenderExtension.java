@@ -32,6 +32,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Ensures code blocks are properly handled.
+ */
 public class HtmlCodeRenderExtension
     implements HtmlRenderer.HtmlRendererExtension {
   private static final Pattern EOL_PATTERN = Pattern.compile("\r\n|\r|\n");
@@ -79,12 +82,10 @@ public class HtmlCodeRenderExtension
       boolean customTag = htmlOptions.codeStyleHtmlOpen != null || htmlOptions.codeStyleHtmlClose != null;
       if (customTag) {
         html.raw(ObjectUtils.notNull(htmlOptions.codeStyleHtmlOpen));
+      } else if (context.getHtmlOptions().sourcePositionParagraphLines) {
+        html.withAttr().tag("code");
       } else {
-        if (context.getHtmlOptions().sourcePositionParagraphLines) {
-          html.withAttr().tag("code");
-        } else {
-          html.srcPos(node.getText()).withAttr().tag("code");
-        }
+        html.srcPos(node.getText()).withAttr().tag("code");
       }
 
       if (codeSoftLineBreaks && !htmlOptions.isSoftBreakAllSpaces) {

@@ -48,7 +48,7 @@ public final class MarkupLine
     options.set(Parser.LIST_BLOCK_PARSER, false);
     options.set(HtmlRenderer.SUPPRESS_HTML_BLOCKS, true);
 
-    Collection<Extension> currentExtensions = Parser.EXTENSIONS.get(FlexmarkConfiguration.FLEXMARK_CONFIG);
+    Collection<Extension> currentExtensions = Parser.EXTENSIONS.get(FlexmarkConfiguration.instance());
     List<Extension> extensions = new LinkedList<>(currentExtensions);
     extensions.add(SuppressPTagExtension.newInstance());
     Parser.EXTENSIONS.set(options, extensions);

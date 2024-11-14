@@ -27,6 +27,9 @@ import javax.xml.stream.events.StartElement;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides support for writing Flexmark markup nodes to an XML event stream.
+ */
 public class MarkupXmlEventWriter
     extends AbstractMarkupWriter<XMLEventWriter, XMLStreamException> {
 

@@ -36,6 +36,10 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Adds support for the use of "q" tags in HTML to replace quotation marks.
+ * These are translated to double quotes in Markdown.
+ */
 public class HtmlQuoteTagExtension
     implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension,
     FlexmarkHtmlConverter.HtmlConverterExtension {
@@ -78,7 +82,7 @@ public class HtmlQuoteTagExtension
 
     @Override
     public @Nullable
-    Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
+        Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
       return Collections.singleton(
           new NodeRenderingHandler<>(DoubleQuoteNode.class, this::render));
     }
@@ -154,6 +158,9 @@ public class HtmlQuoteTagExtension
 
   }
 
+  /**
+   * A Flexmark node implementation representing a quotation mark.
+   */
   public static class DoubleQuoteNode
       extends TypographicQuotes {
 

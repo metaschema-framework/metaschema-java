@@ -17,7 +17,9 @@ import com.vladsch.flexmark.util.sequence.BasedSequence;
 
 /**
  * Provides a temporary fix for the broken {@link EmphasisDelimiterProcessor} in
- * Flexmark.
+ * Flexmark. See the
+ * <a href="https://github.com/vsch/flexmark-java/pull/580">GitHub pull
+ * request</a>.
  */
 public class FixedEmphasisDelimiterProcessor
     extends AsteriskDelimiterProcessor {

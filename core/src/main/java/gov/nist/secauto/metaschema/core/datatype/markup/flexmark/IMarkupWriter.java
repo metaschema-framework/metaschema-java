@@ -40,6 +40,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * A common interface for writing markup to some form of an output sync.
+ *
+ * @param <T>
+ *          the Java type of sync to write to
+ * @param <E>
+ *          the Java type of exception that can be thrown when a writing error
+ *          occurs
+ */
 @SuppressFBWarnings(value = "THROWS_METHOD_THROWS_CLAUSE_THROWABLE",
     justification = "There is a need to support varying exceptions from multiple stream writers")
 public interface IMarkupWriter<T, E extends Throwable> { // NOPMD

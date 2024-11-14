@@ -12,9 +12,13 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * This class supports building a text-based representation of a Markup node
+ * tree.
+ */
 public final class AstCollectingVisitor
     extends NodeVisitorBase {
-  public static final String EOL = "\n";
+  private static final String EOL = System.lineSeparator();
 
   @SuppressWarnings("PMD.AvoidStringBufferField") // short lived
   private final StringBuilder strBuilder;

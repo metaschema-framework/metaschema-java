@@ -58,7 +58,7 @@ public final class FlexmarkFactory {
   }
 
   private FlexmarkFactory() {
-    this(FlexmarkConfiguration.FLEXMARK_CONFIG);
+    this(FlexmarkConfiguration.instance());
   }
 
   @SuppressWarnings("null")

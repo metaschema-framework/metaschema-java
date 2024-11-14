@@ -11,6 +11,9 @@ import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A collection of constant values related to Metaschema handling.
+ */
 public final class MetaschemaConstants {
   /**
    * This is the namespace used by Metaschema in formats that require or use a

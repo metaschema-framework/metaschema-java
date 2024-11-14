@@ -50,12 +50,16 @@ import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * This adds support for insert anchors, which are used in OSCAL statements
+ * currently, but can be used more generally in other OSCAL models.
+ */
 public class InsertAnchorExtension
     implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension,
     Formatter.FormatterExtension, FlexmarkHtmlConverter.HtmlConverterExtension {
-  public static final DataKey<Boolean> ENABLE_INLINE_INSERT_ANCHORS
+  private static final DataKey<Boolean> ENABLE_INLINE_INSERT_ANCHORS
       = new DataKey<>("ENABLE_INLINE_INSERT_ANCHORS", true);
-  public static final DataKey<Boolean> ENABLE_RENDERING = new DataKey<>("ENABLE_RENDERING", true);
+  private static final DataKey<Boolean> ENABLE_RENDERING = new DataKey<>("ENABLE_RENDERING", true);
 
   /**
    * Construct a new extension instance.
@@ -276,6 +280,9 @@ public class InsertAnchorExtension
     }
   }
 
+  /**
+   * The flexmark node for an insert anchor.
+   */
   public static class InsertAnchorNode
       extends Node {
 
@@ -343,9 +350,7 @@ public class InsertAnchorExtension
     @Override
     @NonNull
     public BasedSequence[] getSegments() {
-      @NonNull
-      BasedSequence[] retval = { getType(), getIdReference() };
-      return retval;
+      return new BasedSequence[] { getType(), getIdReference() };
     }
 
     @Override

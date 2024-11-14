@@ -17,7 +17,9 @@ import javax.xml.stream.XMLStreamWriter;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-// TODO: Is this orphaned code needed?
+/**
+ * Provides support for writing Flexmark markup nodes to an XML stream.
+ */
 public class MarkupXmlStreamWriter
     extends AbstractMarkupWriter<XMLStreamWriter, XMLStreamException> {
 

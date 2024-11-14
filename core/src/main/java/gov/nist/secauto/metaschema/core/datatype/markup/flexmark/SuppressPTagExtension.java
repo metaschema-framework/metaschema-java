@@ -21,6 +21,10 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides the ability to suppress paragraph "p" tags for single line markup
+ * generation.
+ */
 public class SuppressPTagExtension
     implements HtmlRenderer.HtmlRendererExtension {
 
@@ -47,7 +51,7 @@ public class SuppressPTagExtension
 
     @Override
     public @Nullable
-    Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
+        Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
       return Collections.singleton(
           new NodeRenderingHandler<>(Paragraph.class, this::render));
     }

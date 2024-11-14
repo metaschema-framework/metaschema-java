@@ -21,20 +21,41 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import com.vladsch.flexmark.util.format.options.ListBulletMarker;
 import com.vladsch.flexmark.util.misc.Extension;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * This class manages a shared Flexmark configuration for use by other
+ * implementations.
+ */
 public final class FlexmarkConfiguration {
 
   @NonNull
   private static final ParserEmulationProfile PARSER_PROFILE = ParserEmulationProfile.COMMONMARK_0_29;
 
+  /**
+   * The shared Flexmark configuration.
+   */
   @NonNull
-  public static final DataSet FLEXMARK_CONFIG = initFlexmarkConfig();
+  private static final Lazy<DataSet> FLEXMARK_CONFIG
+      = ObjectUtils.notNull(Lazy.lazy(FlexmarkConfiguration::initFlexmarkConfig));
+
+  /**
+   * Get the singleton configuration instance.
+   *
+   * @return the configuration
+   */
+  @NonNull
+  public static DataSet instance() {
+    return ObjectUtils.notNull(FLEXMARK_CONFIG.get());
+  }
 
   @SuppressWarnings("null")
   @NonNull
@@ -133,7 +154,7 @@ public final class FlexmarkConfiguration {
    * @return the configuration
    */
   public static DataSet newFlexmarkConfig(@Nullable DataHolder options) {
-    return options == null ? FLEXMARK_CONFIG : DataSet.merge(FLEXMARK_CONFIG, options);
+    return options == null ? instance() : DataSet.merge(instance(), options);
   }
 
   private FlexmarkConfiguration() {
