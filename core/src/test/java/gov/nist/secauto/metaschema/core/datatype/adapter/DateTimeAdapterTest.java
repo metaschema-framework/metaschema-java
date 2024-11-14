@@ -5,27 +5,75 @@
 
 package gov.nist.secauto.metaschema.core.datatype.adapter;
 
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
 
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 class DateTimeAdapterTest {
+  private static final DateTimeAdapter ADAPTER = new DateTimeAdapter();
 
-  @ParameterizedTest
-  @ValueSource(strings = {
-      "2018-01-01T00:00:00",
-      "2019-09-28T23:20:50.52Z",
-      "2019-09-28T23:20:50.0Z",
-      "2019-09-28T23:20:50.5200",
-      "2019-12-02T16:39:57-08:00",
-      "2019-12-02T16:39:57.100-08:00",
-      "2019-12-02T16:39:57",
-      "2019-12-31T23:59:59Z",
-      "2019-12-31T23:59:59"
-  })
-  void testSimpleDate(String date) {
-    new DateTimeAdapter().parse(ObjectUtils.requireNonNull(date));
+  private static Stream<Arguments> provideValues() {
+    return Stream.of(
+        Arguments.of(
+            "2018-01-01T00:00:00",
+            true,
+            ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
+        Arguments.of(
+            "2019-09-28T23:20:50.52Z",
+            false,
+            ZonedDateTime.of(2019, 9, 28, 23, 20, 50, toNanos(0.52), ZoneOffset.UTC)),
+        Arguments.of(
+            "2019-09-28T23:20:50.0Z",
+            false,
+            ZonedDateTime.of(2019, 9, 28, 23, 20, 50, 0, ZoneOffset.UTC)),
+        Arguments.of(
+            "2019-09-28T23:20:50.5200",
+            true,
+            ZonedDateTime.of(2019, 9, 28, 23, 20, 50, toNanos(0.5200), ZoneOffset.UTC)),
+        Arguments.of(
+            "2019-12-02T16:39:57-08:00",
+            false,
+            ZonedDateTime.of(2019, 12, 2, 16, 39, 57, 0, ZoneOffset.of("-08:00"))),
+        Arguments.of(
+            "2019-12-02T16:39:57.100-08:00",
+            false,
+            ZonedDateTime.of(2019, 12, 2, 16, 39, 57, toNanos(0.100), ZoneOffset.of("-08:00"))),
+        Arguments.of(
+            "2019-12-02T16:39:57",
+            true,
+            ZonedDateTime.of(2019, 12, 2, 16, 39, 57, 0, ZoneOffset.UTC)),
+        Arguments.of(
+            "2019-12-31T23:59:59Z",
+            false,
+            ZonedDateTime.of(2019, 12, 31, 23, 59, 59, 0, ZoneOffset.UTC)),
+        Arguments.of(
+            "2019-12-31T23:59:59",
+            true,
+            ZonedDateTime.of(2019, 12, 31, 23, 59, 59, 0, ZoneOffset.UTC)));
   }
 
+  private static int toNanos(double fraction) {
+    return (int) Math.round(TimeUnit.SECONDS.toNanos(1) * fraction);
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideValues")
+  void testSimpleDateTime(@NonNull String actual, boolean ambiguous, @NonNull ZonedDateTime expected) {
+    AmbiguousDateTime date = ADAPTER.parse(actual);
+    assertAll(
+        () -> assertEquals(ambiguous, !date.hasTimeZone()),
+        () -> assertEquals(expected, date.getValue()));
+  }
 }
