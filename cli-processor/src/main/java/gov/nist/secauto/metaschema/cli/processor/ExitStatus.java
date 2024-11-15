@@ -8,6 +8,10 @@ package gov.nist.secauto.metaschema.cli.processor;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Implementations provide details around the result of processing a set of
+ * command line arguments.
+ */
 public interface ExitStatus {
   /**
    * Get the exit code information associated with this exit status.
@@ -17,6 +21,11 @@ public interface ExitStatus {
   @NonNull
   ExitCode getExitCode();
 
+  /**
+   * Get a throwable that is associated with this exit status.
+   *
+   * @return the throwable or {@code null} if no throwable is associated
+   */
   @Nullable
   Throwable getThrowable();
 

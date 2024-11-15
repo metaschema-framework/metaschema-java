@@ -11,6 +11,10 @@ import org.apache.commons.cli.ParseException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Thrown when an option argument is found to be invalid during parsing of a
+ * command-line.
+ */
 public class InvalidArgumentException
     extends ParseException {
 

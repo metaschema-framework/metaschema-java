@@ -5,6 +5,10 @@
 
 package gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.handler;
 
+/**
+ * An XMLBeans value handler for parsing and writing boolean generation result
+ * type values.
+ */
 public final class GenerationResultType {
   private GenerationResultType() {
     // disable

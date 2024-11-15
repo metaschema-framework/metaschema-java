@@ -43,7 +43,6 @@ import com.vladsch.flexmark.util.sequence.BasedSequence;
 import com.vladsch.flexmark.util.sequence.Escaping;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.HtmlQuoteTagExtension.DoubleQuoteNode;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupWriter;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;

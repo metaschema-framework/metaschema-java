@@ -3,11 +3,9 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.datatype.markup.flexmark;
+package gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl;
 
 import com.vladsch.flexmark.parser.ListOptions;
-
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.AbstractMarkupWriter;
 
 import java.util.Map;
 

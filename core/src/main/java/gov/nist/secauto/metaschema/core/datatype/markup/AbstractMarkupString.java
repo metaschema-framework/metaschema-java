@@ -14,15 +14,15 @@ import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.ast.TextCollectingVisitor;
 
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.AstCollectingVisitor;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupVisitor;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupWriter;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupVisitor;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupXmlEventWriter;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupXmlStreamWriter;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.IMarkupVisitor;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.IMarkupWriter;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.MarkupVisitor;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.MarkupXmlEventWriter;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.MarkupXmlStreamWriter;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.logging.log4j.LogManager;

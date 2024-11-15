@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.datatype.markup.flexmark;
+package gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl;
 
 import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.SubscriptExtension;
@@ -21,6 +21,8 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import com.vladsch.flexmark.util.format.options.ListBulletMarker;
 import com.vladsch.flexmark.util.misc.Extension;
 
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.HtmlQuoteTagExtension;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;

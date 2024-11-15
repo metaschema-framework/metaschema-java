@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.nist.secauto.metaschema.core.MetaschemaConstants;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.XmlMarkupParser;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.codehaus.stax2.XMLStreamWriter2;

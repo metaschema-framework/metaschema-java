@@ -7,6 +7,9 @@ package gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.handler;
 
 import gov.nist.secauto.metaschema.databind.io.Format;
 
+/**
+ * An XMLBeans value handler for parsing and writing {@link Format} values.
+ */
 public final class FormatType {
   private FormatType() {
     // disable

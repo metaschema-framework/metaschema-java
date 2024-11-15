@@ -30,8 +30,11 @@ public class UuidAdapter
   @NonNull
   private static final List<QName> NAMES = ObjectUtils.notNull(
       List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "uuid")));
-  @SuppressWarnings({ "unused", "PMD.UnusedPrivateField" })
-  private static final Pattern UUID_PATTERN
+
+  /**
+   * A regular expression that matches a valid UUID.
+   */
+  public static final Pattern UUID_PATTERN
       = Pattern.compile("^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$");
 
   UuidAdapter() {

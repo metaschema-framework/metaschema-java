@@ -5,12 +5,17 @@
 
 package gov.nist.secauto.metaschema.cli.processor;
 
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An {@link ExitStatus} implementation with an associated message.
+ */
 public class MessageExitStatus
     extends AbstractExitStatus {
   private final List<Object> messageArguments;
@@ -26,11 +31,8 @@ public class MessageExitStatus
    */
   public MessageExitStatus(@NonNull ExitCode code, @NonNull Object... messageArguments) {
     super(code);
-    if (messageArguments.length == 0) {
-      this.messageArguments = Collections.emptyList();
-    } else {
-      this.messageArguments = Arrays.asList(messageArguments);
-    }
+    this.messageArguments = CollectionUtil.unmodifiableList(
+        ObjectUtils.notNull(Arrays.asList(messageArguments)));
   }
 
   @Override

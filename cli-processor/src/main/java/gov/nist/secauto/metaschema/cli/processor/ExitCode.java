@@ -7,6 +7,9 @@ package gov.nist.secauto.metaschema.cli.processor;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An enumeration of supported exit code values.
+ */
 public enum ExitCode {
   /**
    * The command executed without issue.

@@ -3,12 +3,10 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.datatype.markup.flexmark;
+package gov.nist.secauto.metaschema.core.datatype.markup;
 
 import com.vladsch.flexmark.util.sequence.Escaping;
 
-import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
-import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;

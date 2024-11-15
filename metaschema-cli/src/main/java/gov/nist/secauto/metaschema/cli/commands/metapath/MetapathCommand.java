@@ -19,7 +19,6 @@ public class MetapathCommand
    * Constructor for a new Metapath command.
    */
   public MetapathCommand() {
-    super(true);
     addCommandHandler(new ListFunctionsSubcommand());
     addCommandHandler(new EvaluateMetapathCommand());
   }

@@ -17,8 +17,8 @@ import com.vladsch.flexmark.ext.escaped.character.EscapedCharacter;
 import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.AstCollectingVisitor;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.apache.logging.log4j.LogManager;

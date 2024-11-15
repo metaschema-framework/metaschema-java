@@ -14,51 +14,155 @@ import org.apache.commons.cli.Option;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A command line interface command.
+ */
 public interface ICommand {
+  /**
+   * Get the name of the command.
+   * <p>
+   * This name is used to call the command as a command line argument.
+   *
+   * @return the command's name
+   */
   @NonNull
   String getName();
 
+  /**
+   * Get a description of what the command does.
+   * <p>
+   * This description is displayed in help output.
+   *
+   * @return the description
+   */
   @NonNull
   String getDescription();
 
+  /**
+   * Get the non-option arguments.
+   *
+   * @return the arguments, or an empty list if there are no arguments
+   */
   @NonNull
   default List<ExtraArgument> getExtraArguments() {
     return CollectionUtil.emptyList();
   }
 
-  default int requiredExtraArgumentsCount() {
-    return (int) getExtraArguments().stream()
-        .filter(ExtraArgument::isRequired)
-        .count();
-  }
-
+  /**
+   * Used to gather options directly associated with this command.
+   *
+   * @return the options
+   */
   @NonNull
   default Collection<? extends Option> gatherOptions() {
     // by default there are no options to handle
     return CollectionUtil.emptyList();
   }
 
+  /**
+   * Get any sub-commands associated with this command.
+   *
+   * @return the sub-commands
+   */
   @NonNull
-  Collection<ICommand> getSubCommands();
+  default Collection<ICommand> getSubCommands() {
+    // no sub-commands by default
+    return CollectionUtil.emptyList();
+  }
 
-  boolean isSubCommandRequired();
-
-  @SuppressWarnings("unused")
+  /**
+   * Get a sub-command by it's command name.
+   *
+   * @param name
+   *          the requested sub-command name
+   * @return the command or {@code null} if no sub-command exists with that name
+   */
+  @Nullable
   default ICommand getSubCommandByName(@NonNull String name) {
-    // no sub commands by default
+    // no sub-commands by default
     return null;
   }
 
-  @SuppressWarnings("unused")
+  /**
+   * Determine if this command requires the use of a sub-command.
+   *
+   * @return {@code true} if a sub-command is required or {@code false} otherwise
+   */
+  default boolean isSubCommandRequired() {
+    // no sub-commands by default
+    return false;
+  }
+
+  /**
+   * Validate the options provided on the command line based on what is required
+   * for this command.
+   *
+   * @param callingContext
+   *          the context of the command execution
+   * @param commandLine
+   *          the parsed command line details
+   * @throws InvalidArgumentException
+   *           if a problem was found while validating the options
+   */
   default void validateOptions(
       @NonNull CallingContext callingContext,
-      @NonNull CommandLine cmdLine) throws InvalidArgumentException {
+      @NonNull CommandLine commandLine) throws InvalidArgumentException {
     // by default there are no options to handle
   }
 
+  /**
+   * Create a new executor for this command.
+   *
+   * @param callingContext
+   *          the context of the command execution
+   * @param commandLine
+   *          the parsed command line details
+   * @return the executor
+   */
   @NonNull
-  ICommandExecutor newExecutor(@NonNull CallingContext callingContext, @NonNull CommandLine cmdLine);
+  ICommandExecutor newExecutor(
+      @NonNull CallingContext callingContext,
+      @NonNull CommandLine commandLine);
+
+  /**
+   * Validates that the provided extra arguments meet expectations.
+   *
+   * @param callingContext
+   *          the context of the command execution
+   * @param commandLine
+   *          the parsed command line details
+   * @throws InvalidArgumentException
+   *           if a problem was found while validating the extra arguments
+   */
+  default void validateExtraArguments(
+      @NonNull CallingContext callingContext,
+      @NonNull CommandLine commandLine)
+      throws InvalidArgumentException {
+    if (isSubCommandRequired()) {
+      throw new InvalidArgumentException("Please choose a valid sub-command.");
+    }
+
+    List<ExtraArgument> extraArguments = getExtraArguments();
+    int maxArguments = extraArguments.size();
+
+    List<String> actualArgs = commandLine.getArgList();
+    if (actualArgs.size() > maxArguments) {
+      throw new InvalidArgumentException(
+          "The provided extra arguments exceed the number of allowed arguments.");
+    }
+
+    List<ExtraArgument> requiredExtraArguments = getExtraArguments().stream()
+        .filter(ExtraArgument::isRequired)
+        .collect(Collectors.toUnmodifiableList());
+
+    if (actualArgs.size() < requiredExtraArguments.size()) {
+      throw new InvalidArgumentException(
+          "Please provide the required extra arguments.");
+    }
+  }
 }

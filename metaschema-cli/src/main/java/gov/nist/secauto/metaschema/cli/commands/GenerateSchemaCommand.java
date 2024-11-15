@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
-import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
@@ -49,8 +48,8 @@ class GenerateSchemaCommand
   private static final String COMMAND = "generate-schema";
   @NonNull
   private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
-      new DefaultExtraArgument("metaschema-module-file-or-URL", true),
-      new DefaultExtraArgument("destination-schema-file", false)));
+      ExtraArgument.newInstance("metaschema-module-file-or-URL", true),
+      ExtraArgument.newInstance("destination-schema-file", false)));
 
   private static final Option INLINE_TYPES_OPTION = ObjectUtils.notNull(
       Option.builder()

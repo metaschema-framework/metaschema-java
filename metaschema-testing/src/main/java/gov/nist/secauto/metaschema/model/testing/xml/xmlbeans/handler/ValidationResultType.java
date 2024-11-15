@@ -5,6 +5,11 @@
 
 package gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.handler;
 
+/**
+ * An XMLBeans value handler for parsing and writing boolean validation result
+ * type values.
+ */
+
 public final class ValidationResultType {
   private ValidationResultType() {
     // disable

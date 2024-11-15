@@ -11,7 +11,6 @@ import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractCommandExecutor;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
-import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.util.LoggingValidationHandler;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
@@ -58,7 +57,7 @@ public abstract class AbstractValidateContentCommand
   private static final String COMMAND = "validate";
   @NonNull
   private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
-      new DefaultExtraArgument("file-or-URI-to-validate", true)));
+      ExtraArgument.newInstance("file-or-URI-to-validate", true)));
 
   @NonNull
   private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(

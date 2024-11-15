@@ -57,6 +57,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * This abstract implementation dynamically produces JUnit tests based on a test
+ * suite definition.
+ *
+ * @see #getTestSuiteURI()
+ */
+@SuppressWarnings({
+    "PMD.GodClass",
+    "PMD.CouplingBetweenObjects"
+})
 public abstract class AbstractTestSuite {
   private static final Logger LOGGER = LogManager.getLogger(AbstractTestSuite.class);
 
@@ -118,6 +128,9 @@ public abstract class AbstractTestSuite {
 
   /**
    * Dynamically generate the unit tests.
+   *
+   * @param bindingContext
+   *          the Module binding context
    *
    * @return the steam of unit tests
    */
@@ -223,6 +236,39 @@ public abstract class AbstractTestSuite {
             .sequential());
   }
 
+  @NonNull
+  private Path generateSchema(
+      @NonNull IModule module,
+      @NonNull Lazy<Path> scenarioGenerationPath) {
+    String schemaExtension;
+    Format requiredContentFormat = getRequiredContentFormat();
+    switch (requiredContentFormat) {
+    case JSON:
+    case YAML:
+      schemaExtension = ".json";
+      break;
+    case XML:
+      schemaExtension = ".xsd";
+      break;
+    default:
+      throw new IllegalStateException();
+    }
+
+    // determine what file to use for the schema
+    Path schemaPath;
+    try {
+      schemaPath = Files.createTempFile(scenarioGenerationPath.get(), "", "-schema" + schemaExtension);
+    } catch (IOException ex) {
+      throw new JUnitException("Unable to create schema temp file", ex);
+    }
+    try {
+      generateSchema(ObjectUtils.notNull(module), ObjectUtils.notNull(schemaPath), getSchemaGeneratorSupplier());
+    } catch (IOException ex) {
+      throw new IllegalStateException(ex);
+    }
+    return ObjectUtils.notNull(schemaPath);
+  }
+
   /**
    * Generate a schema for the provided module using the provided schema
    * generator.
@@ -270,7 +316,7 @@ public abstract class AbstractTestSuite {
       @NonNull URI collectionUri,
       @NonNull Lazy<Path> collectionGenerationPath,
       @NonNull IBindingContext bindingContext) {
-    Lazy<Path> scenarioGenerationPath = Lazy.lazy(() -> {
+    Lazy<Path> scenarioGenerationPath = ObjectUtils.notNull(Lazy.lazy(() -> {
       Path retval;
       try {
         retval = Files.createTempDirectory(collectionGenerationPath.get(), "scenario-");
@@ -278,15 +324,7 @@ public abstract class AbstractTestSuite {
         throw new JUnitException("Unable to create scenario temp directory", ex);
       }
       return retval;
-    });
-
-    // try {
-    // // create the directories the schema will be stored in
-    // Files.createDirectories(scenarioGenerationPath);
-    // } catch (IOException ex) {
-    // throw new JUnitException("Unable to create test directories for path: " +
-    // scenarioGenerationPath, ex);
-    // }
+    }));
 
     GenerateSchema generateSchema = scenario.getGenerateSchema();
     MetaschemaDocument.Metaschema metaschemaDirective = generateSchema.getMetaschema();
@@ -301,35 +339,7 @@ public abstract class AbstractTestSuite {
       throw new JUnitException("Unable to generate classes for metaschema: " + metaschemaUri, ex);
     }
 
-    Lazy<Path> lazySchema = Lazy.lazy(() -> {
-      String schemaExtension;
-      Format requiredContentFormat = getRequiredContentFormat();
-      switch (requiredContentFormat) {
-      case JSON:
-      case YAML:
-        schemaExtension = ".json";
-        break;
-      case XML:
-        schemaExtension = ".xsd";
-        break;
-      default:
-        throw new IllegalStateException();
-      }
-
-      // determine what file to use for the schema
-      Path schemaPath;
-      try {
-        schemaPath = Files.createTempFile(scenarioGenerationPath.get(), "", "-schema" + schemaExtension);
-      } catch (IOException ex) {
-        throw new JUnitException("Unable to create schema temp file", ex);
-      }
-      try {
-        generateSchema(ObjectUtils.notNull(module), ObjectUtils.notNull(schemaPath), getSchemaGeneratorSupplier());
-      } catch (IOException ex) {
-        throw new IllegalStateException(ex);
-      }
-      return schemaPath;
-    });
+    Lazy<Path> lazySchema = Lazy.lazy(() -> generateSchema(module, scenarioGenerationPath));
 
     Lazy<IContentValidator> lazyContentValidator = Lazy.lazy(() -> {
       Path schemaPath = lazySchema.get();

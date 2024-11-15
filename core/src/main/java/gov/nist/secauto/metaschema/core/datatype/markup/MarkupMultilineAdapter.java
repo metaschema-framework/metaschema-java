@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.datatype.markup;
 
 import com.fasterxml.jackson.core.JsonParser;
 
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.XmlMarkupParser;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;

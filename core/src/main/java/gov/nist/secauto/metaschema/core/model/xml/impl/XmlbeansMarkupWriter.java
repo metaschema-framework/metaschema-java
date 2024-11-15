@@ -8,10 +8,10 @@ package gov.nist.secauto.metaschema.core.model.xml.impl;
 import com.vladsch.flexmark.parser.ListOptions;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.IMarkupString;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupVisitor;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.IMarkupWriter;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.MarkupVisitor;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.AbstractMarkupWriter;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.IMarkupVisitor;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.IMarkupWriter;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.MarkupVisitor;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.XmlCursor;

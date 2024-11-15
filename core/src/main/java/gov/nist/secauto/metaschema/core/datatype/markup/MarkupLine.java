@@ -14,9 +14,9 @@ import com.vladsch.flexmark.util.data.DataSet;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import com.vladsch.flexmark.util.misc.Extension;
 
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.FlexmarkConfiguration;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
-import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.SuppressPTagExtension;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.FlexmarkConfiguration;
+import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.SuppressPTagExtension;
 
 import java.util.Collection;
 import java.util.LinkedList;

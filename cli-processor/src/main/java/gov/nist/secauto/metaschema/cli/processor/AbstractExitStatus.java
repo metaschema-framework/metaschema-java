@@ -13,6 +13,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Records information about the exit status of a CLI command.
+ */
 public abstract class AbstractExitStatus implements ExitStatus {
   private static final Logger LOGGER = LogManager.getLogger(AbstractExitStatus.class);
 
@@ -61,8 +64,8 @@ public abstract class AbstractExitStatus implements ExitStatus {
   @Nullable
   protected abstract String getMessage();
 
-  @Override
-  public void generateMessage(boolean showStackTrace) {
+  @Nullable
+  private LogBuilder getLogBuilder() {
     LogBuilder logBuilder = null;
     if (getExitCode().getStatusCode() <= 0) {
       if (LOGGER.isInfoEnabled()) {
@@ -71,24 +74,31 @@ public abstract class AbstractExitStatus implements ExitStatus {
     } else if (LOGGER.isErrorEnabled()) {
       logBuilder = LOGGER.atError();
     }
+    return logBuilder;
+  }
 
-    if (logBuilder != null) {
-      if (showStackTrace && throwable != null) {
-        Throwable throwable = getThrowable();
-        logBuilder.withThrowable(throwable);
-      }
+  @Override
+  public void generateMessage(boolean showStackTrace) {
+    LogBuilder logBuilder = getLogBuilder();
+    if (logBuilder == null) {
+      return;
+    }
 
-      String message = getMessage();
-      if (message == null && throwable != null) {
-        message = throwable.getLocalizedMessage();
-      }
+    boolean useStackTrace = showStackTrace && throwable != null;
+    if (useStackTrace) {
+      logBuilder.withThrowable(throwable);
+    }
 
-      if (message != null && !message.isEmpty()) {
-        logBuilder.log(message);
-      } else if (showStackTrace && throwable != null) {
-        // log the throwable
-        logBuilder.log();
-      }
+    String message = getMessage();
+    if (throwable != null && message == null) {
+      message = throwable.getLocalizedMessage();
+    }
+
+    if (message != null && !message.isEmpty()) {
+      logBuilder.log(message);
+    } else if (useStackTrace) {
+      // log the throwable
+      logBuilder.log();
     }
   }
 
