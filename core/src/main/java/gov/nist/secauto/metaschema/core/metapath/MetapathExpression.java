@@ -18,7 +18,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -47,6 +46,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     "PMD.CouplingBetweenObjects" // necessary since this class aggregates functionality
 })
 public class MetapathExpression {
+
   /**
    * Identifies the expected type for a Metapath evaluation result.
    */
@@ -54,26 +54,75 @@ public class MetapathExpression {
     /**
      * The result is expected to be a {@link BigDecimal} value.
      */
-    NUMBER,
+    NUMBER(BigDecimal.class, sequence -> {
+      INumericItem numeric = FunctionUtils.toNumeric(sequence, true);
+      return numeric == null ? null : numeric.asDecimal();
+    }),
     /**
      * The result is expected to be a {@link String} value.
      */
-    STRING,
+    STRING(String.class, sequence -> {
+      IAnyAtomicItem item = FnData.fnData(sequence).getFirstItem(true);
+      return item == null ? "" : item.asString();
+    }),
     /**
      * The result is expected to be a {@link Boolean} value.
      */
-    BOOLEAN,
+    BOOLEAN(Boolean.class, sequence -> FnBoolean.fnBoolean(sequence).toBoolean()),
     /**
      * The result is expected to be an {@link ISequence} value.
      */
-    SEQUENCE,
+    SEQUENCE(ISequence.class, sequence -> sequence),
     /**
      * The result is expected to be an {@link IItem} value.
      */
-    ITEM;
-  }
+    ITEM(IItem.class, sequence -> sequence.getFirstItem(true));
 
-  private static final Logger LOGGER = LogManager.getLogger(MetapathExpression.class);
+    @NonNull
+    private final Class<?> clazz;
+    private final ConversionFunction converter;
+
+    ResultType(@NonNull Class<?> clazz, @NonNull ConversionFunction converter) {
+      this.clazz = clazz;
+      this.converter = converter;
+    }
+
+    /**
+     * Get the expected class for the result type.
+     *
+     * @return the expected class
+     *
+     */
+    @NonNull
+    public Class<?> expectedClass() {
+      return clazz;
+    }
+
+    /**
+     * Convert the provided sequence to the expected type.
+     *
+     * @param <T>
+     *          the Java type of the expected return value
+     * @param sequence
+     *          the Metapath result sequence to convert
+     * @return the converted sequence as the expected type
+     * @throws TypeMetapathException
+     *           if the provided sequence is incompatible with the expected result
+     *           type
+     */
+    @Nullable
+    public <T> T convert(@NonNull ISequence<?> sequence) {
+      try {
+        return ObjectUtils.asNullableType(converter.convert(sequence));
+      } catch (ClassCastException ex) {
+        throw new InvalidTypeMetapathException(null,
+            String.format("Unable to cast to expected result type '%s' using expected type '%s'.",
+                name(),
+                expectedClass().getName()),
+            ex);
+      }
+    }
+  }
 
   /**
    * The Metapath expression identifying the current context node.
@@ -81,6 +130,7 @@ public class MetapathExpression {
   @NonNull
   public static final MetapathExpression CONTEXT_NODE
       = new MetapathExpression(".", ContextItem.instance(), StaticContext.instance());
+  private static final Logger LOGGER = LogManager.getLogger(MetapathExpression.class);
 
   @NonNull
   private final String path;
@@ -236,7 +286,7 @@ public class MetapathExpression {
    *           type
    * @throws MetapathException
    *           if an error occurred during evaluation
-   * @see #toResultType(ISequence, ResultType)
+   * @see ResultType#convert(ISequence)
    */
   @Nullable
   public <T> T evaluateAs(@NonNull ResultType resultType) {
@@ -260,14 +310,14 @@ public class MetapathExpression {
    *           type
    * @throws MetapathException
    *           if an error occurred during evaluation
-   * @see #toResultType(ISequence, ResultType)
+   * @see ResultType#convert(ISequence)
    */
   @Nullable
   public <T> T evaluateAs(
       @Nullable IItem focus,
       @NonNull ResultType resultType) {
     ISequence<?> result = evaluate(focus);
-    return toResultType(result, resultType);
+    return resultType.convert(result);
   }
 
   /**
@@ -291,7 +341,7 @@ public class MetapathExpression {
    *           type
    * @throws MetapathException
    *           if an error occurred during evaluation
-   * @see #toResultType(ISequence, ResultType)
+   * @see ResultType#convert(ISequence)
    */
   @Nullable
   public <T> T evaluateAs(
@@ -299,62 +349,7 @@ public class MetapathExpression {
       @NonNull ResultType resultType,
       @NonNull DynamicContext dynamicContext) {
     ISequence<?> result = evaluate(focus, dynamicContext);
-    return toResultType(result, resultType);
-  }
-
-  /**
-   * Converts the provided {@code sequence} to the requested {@code resultType}.
-   * <p>
-   * The {@code resultType} determines the returned result, which is derived from
-   * the evaluation result sequence, as follows:
-   * <ul>
-   * <li>BOOLEAN - the effective boolean result is produced using
-   * {@link FnBoolean#fnBoolean(ISequence)}.</li>
-   * <li>NODE - the first result item in the sequence is returned.</li>
-   * <li>NUMBER - the sequence is cast to a number using
-   * {@link IDecimalItem#cast(IAnyAtomicItem)}.</li>
-   * <li>SEQUENCE - the evaluation result sequence.</li>
-   * <li>STRING - the string value of the first result item in the sequence.</li>
-   * </ul>
-   *
-   * @param <T>
-   *          the requested return value
-   * @param sequence
-   *          the sequence to convert
-   * @param resultType
-   *          the type of result to produce
-   * @return the converted result
-   * @throws TypeMetapathException
-   *           if the provided sequence is incompatible with the requested result
-   *           type
-   */
-  @SuppressWarnings({ "PMD.NullAssignment", "PMD.CyclomaticComplexity" }) // for readability
-  @Nullable
-  protected <T> T toResultType(@NonNull ISequence<?> sequence, @NonNull ResultType resultType) {
-    Object result;
-    switch (resultType) {
-    case BOOLEAN:
-      result = FnBoolean.fnBoolean(sequence).toBoolean();
-      break;
-    case ITEM:
-      result = sequence.getFirstItem(true);
-      break;
-    case NUMBER:
-      INumericItem numeric = FunctionUtils.toNumeric(sequence, true);
-      result = numeric == null ? null : numeric.asDecimal();
-      break;
-    case SEQUENCE:
-      result = sequence;
-      break;
-    case STRING:
-      IAnyAtomicItem item = FnData.fnData(sequence).getFirstItem(true);
-      result = item == null ? "" : item.asString();
-      break;
-    default:
-      throw new InvalidTypeMetapathException(null, String.format("unsupported result type '%s'", resultType.name()));
-    }
-
-    return ObjectUtils.asNullableType(result);
+    return resultType.convert(result);
   }
 
   /**
@@ -423,5 +418,11 @@ public class MetapathExpression {
               ex.getLocalizedMessage()),
           ex);
     }
+  }
+
+  @FunctionalInterface
+  interface ConversionFunction {
+    @Nullable
+    Object convert(@NonNull ISequence<?> sequence);
   }
 }
