@@ -420,6 +420,11 @@ public class CLIProcessor {
     })
     @NonNull
     public ExitStatus processCommand() {
+      // TODO: Consider refactoring as follows to reduce complexity:
+      // - Extract the parsing logic for each phase into separate methods (e.g.,
+      // parsePhaseOneOptions, parsePhaseTwoOptions).
+      // - Encapsulate error handling into dedicated methods.
+      // - Separate command execution logic into its own method if possible.
       CommandLineParser parser = new DefaultParser();
 
       // this uses a three phase approach where:
