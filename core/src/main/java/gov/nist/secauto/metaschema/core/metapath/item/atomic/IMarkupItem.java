@@ -32,7 +32,7 @@ public interface IMarkupItem extends IUntypedAtomicItem {
   static IMarkupItem valueOf(@NonNull String value) {
     try {
       return valueOf(MarkupDataTypeProvider.MARKUP_LINE.parse(value));
-    } catch (RuntimeException ex) { // TODO: Replace with the specific exception(s) thrown by parse()
+    } catch (IllegalArgumentException ex) {
       throw new InvalidValueForCastFunctionException(ex);
     }
   }
