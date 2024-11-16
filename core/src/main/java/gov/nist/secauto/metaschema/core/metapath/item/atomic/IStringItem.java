@@ -20,8 +20,11 @@ public interface IStringItem extends IAnyAtomicItem {
    * Construct a new item using the provided string {@code value}.
    *
    * @param value
-   *          a string value
+   *          a string value that must conform to Metaschema string validation
+   *          rules
    * @return the new item
+   * @throws InvalidTypeMetapathException
+   *           if the value fails string validation
    */
   @NonNull
   static IStringItem valueOf(@NonNull String value) {

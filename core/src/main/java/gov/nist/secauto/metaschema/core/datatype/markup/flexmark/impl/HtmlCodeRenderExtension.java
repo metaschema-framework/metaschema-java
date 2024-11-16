@@ -33,7 +33,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * Ensures code blocks are properly handled.
+ * A Flexmark HTML renderer extension that customizes the rendering of code
+ * blocks within Metaschema documents. This implementation provides special
+ * handling for source position tracking and custom HTML tags while maintaining
+ * standard Markdown code block semantics.
  */
 public class HtmlCodeRenderExtension
     implements HtmlRenderer.HtmlRendererExtension {

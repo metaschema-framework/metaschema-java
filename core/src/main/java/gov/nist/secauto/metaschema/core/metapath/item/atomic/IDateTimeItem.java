@@ -17,7 +17,13 @@ import java.time.ZonedDateTime;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item containing a date/time data value.
+ * An atomic Metapath item representing a date/time value in the Metapath
+ * system.
+ * <p>
+ * This interface provides functionality for handling date/time values with and
+ * without time zone information, supporting parsing, casting, and comparison
+ * operations. It works in conjunction with {@link AmbiguousDateTime} to
+ * properly handle time zone ambiguity.
  */
 public interface IDateTimeItem extends ITemporalItem {
   /**
@@ -45,6 +51,28 @@ public interface IDateTimeItem extends ITemporalItem {
    * Construct a new date/time item using the provided {@code value}.
    * <p>
    * This method handles recording if an explicit timezone was provided using the
+   * {@code hasTimeZone} parameter. The {@link AmbiguousDateTime#hasTimeZone()}
+   * method can be called to determine if timezone information is present.
+   *
+   * @param value
+   *          a date/time, without time zone information
+   * @param hasTimeZone
+   *          {@code true} if the date/time is intended to have an associated time
+   *          zone or {@code false} otherwise
+   * @return the new item
+   * @see AmbiguousDateTime for more details on timezone handling
+   */
+  @NonNull
+  static IDateTimeItem valueOf(@NonNull ZonedDateTime value, boolean hasTimeZone) {
+    return hasTimeZone
+        ? valueOf(value)
+        : valueOf(new AmbiguousDateTime(value, false));
+  }
+
+  /**
+   * Construct a new date/time item using the provided {@code value}.
+   * <p>
+   * This method handles recording if an explicit timezone was provided using the
    * {@link AmbiguousDateTime}. The {@link AmbiguousDateTime#hasTimeZone()} method
    * can be called to determine if timezone information is present.
    *
@@ -55,7 +83,9 @@ public interface IDateTimeItem extends ITemporalItem {
    */
   @NonNull
   static IDateTimeItem valueOf(@NonNull AmbiguousDateTime value) {
-    return new DateTimeWithoutTimeZoneItemImpl(value);
+    return value.hasTimeZone()
+        ? valueOf(value.getValue())
+        : new DateTimeWithoutTimeZoneItemImpl(value);
   }
 
   /**

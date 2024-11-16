@@ -12,7 +12,10 @@ import org.apache.commons.cli.CommandLine;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implementing class perform the operation supported by a command.
+ * An abstract base class that implements the {@link ICommandExecutor}
+ * interface, providing common functionality for command execution
+ * implementations. Concrete subclasses must implement the {@link #execute()}
+ * method to define specific command behavior.
  */
 public interface ICommandExecutor {
   /**
@@ -50,7 +53,7 @@ public interface ICommandExecutor {
   @FunctionalInterface
   interface ExecutionFunction {
     /**
-     * Create a new command executor.
+     * Execute a command operation.
      *
      * @param callingContext
      *          the context of the command execution

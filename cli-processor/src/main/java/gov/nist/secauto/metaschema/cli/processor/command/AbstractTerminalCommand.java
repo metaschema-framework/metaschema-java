@@ -17,13 +17,17 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
- * A base class for commands that have no children.
+ * A base class for terminal commands in the command processing hierarchy.
+ * Terminal commands represent leaf nodes that perform actual operations and
+ * cannot have child commands.
  */
 public abstract class AbstractTerminalCommand implements ICommand {
-  private static Lazy<Path> currentWorkingDirectory = Lazy.lazy(() -> Paths.get("").toAbsolutePath());
+  private static Lazy<Path> currentWorkingDirectory = Lazy.lazy(() -> Paths.get(System.getProperty("user.dir")));
 
   /**
    * A utility method that can be used to get the current working directory.
+   * <p>
+   * This method is thread-safe due to lazy initialization.
    *
    * @return the current working directory
    */
@@ -35,6 +39,8 @@ public abstract class AbstractTerminalCommand implements ICommand {
   /**
    * A utility method that can be used to resolve a path against the current
    * working directory.
+   * <p>
+   * If the path is already absolute, then the provided path is returned.
    *
    * @param path
    *          the path to resolve
@@ -43,12 +49,21 @@ public abstract class AbstractTerminalCommand implements ICommand {
    */
   @NonNull
   protected static Path resolveAgainstCWD(@NonNull Path path) {
-    return ObjectUtils.notNull(getCurrentWorkingDirectory().resolve(path).normalize());
+
+    return path.isAbsolute()
+        ? path
+        : ObjectUtils.notNull(getCurrentWorkingDirectory().resolve(path).normalize());
   }
 
   /**
    * A utility method that can be used to resolve a URI against the URI for the
    * current working directory.
+   * <p>
+   * If the URI is already absolute, then the provided URI is returned.
+   * <p>
+   * The path is normalized after resolution to remove any redundant name elements
+   * (like "." or "..").
+   *
    *
    * @param uri
    *          the uri to resolve
@@ -57,7 +72,9 @@ public abstract class AbstractTerminalCommand implements ICommand {
    */
   @NonNull
   protected static URI resolveAgainstCWD(@NonNull URI uri) {
-    return ObjectUtils.notNull(getCurrentWorkingDirectory().toUri().resolve(uri.normalize()));
+    return uri.isAbsolute()
+        ? uri
+        : ObjectUtils.notNull(getCurrentWorkingDirectory().toUri().resolve(uri.normalize()));
   }
 
   /**

@@ -7,12 +7,15 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
+import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
 import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateWithTimeZoneItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateWithoutTimeZoneItemImpl;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -46,14 +49,53 @@ public interface IDateItem extends ITemporalItem {
 
   /**
    * Construct a new date item using the provided {@code value}.
+   * <p>
+   * This method handles recording that the timezone is implicit.
    *
    * @param value
    *          a date, without time zone information
    * @return the new item
+   * @see AmbiguousDateTime for more details on timezone handling
+   */
+  @NonNull
+  static IDateItem valueOf(@NonNull LocalDate value) {
+    return valueOf(ObjectUtils.notNull(value.atStartOfDay(ZoneOffset.UTC)), false);
+  }
+
+  /**
+   * Construct a new date item using the provided {@code value}.
+   * <p>
+   * This method handles recording if an explicit timezone was provided using the
+   * {@code hasTimeZone} parameter. The {@link AmbiguousDate#hasTimeZone()} method
+   * can be called to determine if timezone information is present.
+   *
+   * @param value
+   *          a date, without time zone information
+   * @param hasTimeZone
+   *          {@code true} if the date/time is intended to have an associated time
+   *          zone or {@code false} otherwise
+   * @return the new item
+   * @see AmbiguousDateTime for more details on timezone handling
+   */
+  @NonNull
+  static IDateItem valueOf(@NonNull ZonedDateTime value, boolean hasTimeZone) {
+    return hasTimeZone
+        ? valueOf(value)
+        : valueOf(new AmbiguousDate(value, false));
+  }
+
+  /**
+   * Construct a new date item using the provided {@code value}.
+   *
+   * @param value
+   *          an ambiguous date with time zone information already identified
+   * @return the new item
    */
   @NonNull
   static IDateItem valueOf(@NonNull AmbiguousDate value) {
-    return new DateWithoutTimeZoneItemImpl(value);
+    return value.hasTimeZone()
+        ? valueOf(value.getValue())
+        : new DateWithoutTimeZoneItemImpl(value);
   }
 
   /**

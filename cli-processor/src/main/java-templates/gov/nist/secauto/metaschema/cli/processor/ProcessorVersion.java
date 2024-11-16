@@ -12,7 +12,7 @@ import gov.nist.secauto.metaschema.core.util.IVersionInfo;
  */
 public class ProcessorVersion implements IVersionInfo {
 
-  private static final String NAME = "metaschema-java";
+  private static final String NAME = "${project.name}";
   private static final String VERSION = "${project.version}";
   private static final String BUILD_TIMESTAMP = "${timestamp}";
   private static final String COMMIT = "@git.commit.id.abbrev@";

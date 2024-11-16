@@ -25,7 +25,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * written back out in such cases.
  *
  * @param <TYPE>
- *          the bound object type
+ *          the bound object type that extends this class, used for proper type
+ *          inheritance in implementing classes like {@code AmbiguousDate} or
+ *          {@code AmbiguousDateTime}
  */
 public abstract class AbstractAmbiguousTemporal<TYPE extends AbstractAmbiguousTemporal<TYPE>>
     extends AbstractCustomJavaDataType<TYPE, ZonedDateTime> {
@@ -55,4 +57,10 @@ public abstract class AbstractAmbiguousTemporal<TYPE extends AbstractAmbiguousTe
   public boolean hasTimeZone() {
     return timeZone;
   }
+
+  @Override
+  public String toString() {
+    return getValue().toString() + (hasTimeZone() ? "" : "(abiguous)");
+  }
+
 }

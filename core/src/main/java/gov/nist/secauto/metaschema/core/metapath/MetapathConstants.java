@@ -58,32 +58,46 @@ public final class MetapathConstants {
       URI.create(NS_METAPATH_FUNCTIONS + "/map"));
   /**
    * The namespace URI for Metapath extension built-in functions.
+   * <p>
+   * This is currently an alias for {@link #NS_METAPATH_FUNCTIONS} and can be used
+   * when implementing custom extension functions to distinguish them from core
+   * functions.
    */
   @NonNull
   public static final URI NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH_FUNCTIONS;
 
   /**
    * The namespace prefix for Metapath data types and built-in casting functions.
+   *
+   * @see #NS_METAPATH for the corresponding namespace URI
    */
   @NonNull
   public static final String PREFIX_METAPATH = "meta";
   /**
    * The namespace prefix for Metapath built-in functions.
+   *
+   * @see #NS_METAPATH_FUNCTIONS for the corresponding namespace URI
    */
   @NonNull
   public static final String PREFIX_METAPATH_FUNCTIONS = "mp";
   /**
    * The namespace prefix for Metapath math-related built-in functions.
+   *
+   * @see #NS_METAPATH_FUNCTIONS_MATH for the corresponding namespace URI
    */
   @NonNull
   public static final String PREFIX_METAPATH_FUNCTIONS_MATH = "math";
   /**
    * The namespace prefix for Metapath array-related built-in functions.
+   *
+   * @see #NS_METAPATH_FUNCTIONS_ARRAY for the corresponding namespace URI
    */
   @NonNull
   public static final String PREFIX_METAPATH_FUNCTIONS_ARRAY = "array";
   /**
    * The namespace prefix for Metapath map-related built-in functions.
+   *
+   * @see #NS_METAPATH_FUNCTIONS_MAP for the corresponding namespace URI
    */
   @NonNull
   public static final String PREFIX_METAPATH_FUNCTIONS_MAP = "map";

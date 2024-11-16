@@ -16,6 +16,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * An implementation of a Metapath atomic item containing a date/time data value
  * that may not have an explicit timezone.
+ * <p>
+ * For example, when parsing dates from data sources that don't specify timezone
+ * information, such as "2024-01-01" as compared to "2024-01-01Z" or
+ * "2024-01-01+05:00".
  */
 public class DateTimeWithoutTimeZoneItemImpl
     extends AbstractDateTimeItem<AmbiguousDateTime> {

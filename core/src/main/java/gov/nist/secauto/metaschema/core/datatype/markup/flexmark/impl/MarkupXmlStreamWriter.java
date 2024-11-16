@@ -16,7 +16,22 @@ import javax.xml.stream.XMLStreamWriter;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Provides support for writing Flexmark markup nodes to an XML stream.
+ * Provides support for writing Flexmark markup nodes to an XML stream. This
+ * implementation uses {@link XMLStreamWriter} to write markup elements and
+ * their attributes in a streaming fashion.
+ * <p>
+ * This class is not thread-safe and should not be shared between threads
+ * without external synchronization.
+ * <p>
+ * Example usage:
+ *
+ * <pre>{@code
+ * XMLStreamWriter writer = ...;
+ * MarkupXmlStreamWriter markupWriter = new MarkupXmlStreamWriter(
+ *     "http://example.com/ns",
+ *     ListOptions.getDefaultListOptions(),
+ *     writer);
+ * }</pre>
  */
 public class MarkupXmlStreamWriter
     extends AbstractMarkupWriter<XMLStreamWriter, XMLStreamException> {

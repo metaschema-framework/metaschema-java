@@ -51,14 +51,14 @@ public interface IIPAddressItem extends IUntypedAtomicItem {
       try {
         value = item.asString();
       } catch (IllegalStateException ex) {
-        // do nothing
+        // do nothing. this is a best effort to get the value
       }
 
       throw new InvalidValueForCastFunctionException(
           String.format("The value '%s' of type '%s' is not an internet protocol address.",
-              value,
+              value == null ? "(unknown)" : value,
               item.getJavaTypeAdapter().getPreferredName()));
     }
-    return (IIPv4AddressItem) item;
+    return (IIPAddressItem) item;
   }
 }

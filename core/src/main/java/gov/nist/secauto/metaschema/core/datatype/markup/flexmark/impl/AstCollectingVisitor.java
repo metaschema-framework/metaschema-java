@@ -18,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public final class AstCollectingVisitor
     extends NodeVisitorBase {
-  private static final String EOL = System.lineSeparator();
+  private static final String LINE_SEPARATOR = System.lineSeparator();
 
   @SuppressWarnings("PMD.AvoidStringBufferField") // short lived
   private final StringBuilder strBuilder;
@@ -59,7 +59,7 @@ public final class AstCollectingVisitor
     assert node != null;
     appendIndent();
     node.astString(strBuilder, true);
-    strBuilder.append(EOL);
+    strBuilder.append(LINE_SEPARATOR);
     indent++;
 
     try {

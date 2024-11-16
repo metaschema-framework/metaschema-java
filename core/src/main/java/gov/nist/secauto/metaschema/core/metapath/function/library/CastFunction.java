@@ -36,12 +36,12 @@ public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctio
   static <ITEM extends IAnyAtomicItem> IFunction signature(
       @NonNull URI namespace,
       @NonNull String name,
-      @NonNull Class<ITEM> resulingAtomicType,
+      @NonNull Class<ITEM> resultingAtomicType,
       @NonNull ICastExecutor<ITEM> executor) {
     return signature(
         ObjectUtils.notNull(namespace.toASCIIString()),
         name,
-        resulingAtomicType,
+        resultingAtomicType,
         executor);
   }
 

@@ -38,7 +38,8 @@ public abstract class AbstractCommandExecutor implements ICommandExecutor {
   }
 
   /**
-   * Get the context of the command execution.
+   * Get the context of the command execution, which provides access to the
+   * execution environment needed for command processing.
    *
    * @return the context
    */
@@ -48,7 +49,8 @@ public abstract class AbstractCommandExecutor implements ICommandExecutor {
   }
 
   /**
-   * Get the parsed command line details.
+   * Get the parsed command line details containing the command options and
+   * arguments provided by the user during execution.
    *
    * @return the cli details
    */

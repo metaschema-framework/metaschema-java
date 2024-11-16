@@ -15,6 +15,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Records information about the exit status of a CLI command.
+ * <p>
+ * This abstract class provides base functionality for handling CLI command exit
+ * statuses, including error logging and throwable management. Implementing
+ * classes must provide the {@link #getMessage()} implementation to define the
+ * status message content.
  */
 public abstract class AbstractExitStatus implements ExitStatus {
   private static final Logger LOGGER = LogManager.getLogger(AbstractExitStatus.class);
@@ -64,6 +69,14 @@ public abstract class AbstractExitStatus implements ExitStatus {
   @Nullable
   protected abstract String getMessage();
 
+  /**
+   * Determines the appropriate LogBuilder based on the exit code status. For
+   * non-positive exit codes (success/info), returns an INFO level builder. For
+   * positive exit codes (errors), returns an ERROR level builder.
+   *
+   * @return the appropriate LogBuilder based on exit status, or {@code null} if
+   *         logging is disabled at the determined level
+   */
   @Nullable
   private LogBuilder getLogBuilder() {
     LogBuilder logBuilder = null;
@@ -77,6 +90,15 @@ public abstract class AbstractExitStatus implements ExitStatus {
     return logBuilder;
   }
 
+  /**
+   * Generates and logs a message based on the current exit status. The message is
+   * logged at either INFO level (for success/info status) or ERROR level (for
+   * error status).
+   *
+   * @param showStackTrace
+   *          if {@code true} and a throwable is present, includes the stack trace
+   *          in the log
+   */
   @Override
   public void generateMessage(boolean showStackTrace) {
     LogBuilder logBuilder = getLogBuilder();
@@ -99,7 +121,7 @@ public abstract class AbstractExitStatus implements ExitStatus {
     } else if (useStackTrace) {
       // log the throwable
       logBuilder.log();
-    }
+    } // else avoid an empty log line
   }
 
 }

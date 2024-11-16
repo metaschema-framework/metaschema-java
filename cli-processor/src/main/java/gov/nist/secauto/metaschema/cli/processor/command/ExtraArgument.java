@@ -24,6 +24,9 @@ public interface ExtraArgument {
    */
   @NonNull
   static ExtraArgument newInstance(@NonNull String name, boolean required) {
+    if (name.isBlank()) {
+      throw new IllegalArgumentException("name cannot be empty or blank");
+    }
     return new DefaultExtraArgument(name, required);
   }
 

@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 class UriUtilsTest {
   private static Stream<Arguments> provideValuesTestToUri() throws MalformedURLException, URISyntaxException {
-    String base = Paths.get("").toAbsolutePath().toUri().toURL().toURI().toASCIIString();
+    String base = Paths.get(System.getProperty("user.dir")).toUri().toURL().toURI().toASCIIString();
     return Stream.of(
         Arguments.of("http://example.org/valid", "http://example.org/valid", true),
         Arguments.of("https://example.org/valid", "https://example.org/valid", true),
@@ -46,9 +46,9 @@ class UriUtilsTest {
   @MethodSource("provideValuesTestToUri")
   void testToUri(@NonNull String location, @NonNull String expectedLocation, boolean expectedResult)
       throws MalformedURLException {
-    Path cwd = Paths.get("");
+    Path cwd = Paths.get(System.getProperty("user.dir"));
     try {
-      URI uri = UriUtils.toUri(location, ObjectUtils.notNull(cwd.toAbsolutePath().toUri())).normalize().toURL().toURI();
+      URI uri = UriUtils.toUri(location, ObjectUtils.notNull(cwd.toUri())).normalize().toURL().toURI();
       System.out.println(String.format("%s -> %s", location, uri.toASCIIString()));
       assertAll(
           () -> assertEquals(uri.toASCIIString(), expectedLocation),

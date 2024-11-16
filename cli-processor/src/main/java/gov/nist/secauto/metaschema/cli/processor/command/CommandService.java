@@ -17,6 +17,9 @@ import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * A service that loads commands using SPI.
+ * <p>
+ * This class implements the singleton pattern to ensure a single instance of
+ * the command service is used throughout the application.
  *
  * @see ServiceLoader for more information
  */
@@ -36,8 +39,12 @@ public final class CommandService {
 
   /**
    * Construct a new service.
+   * <p>
+   * Initializes the ServiceLoader for ICommand implementations.
+   * <p>
+   * This constructor is private to enforce the singleton pattern.
    */
-  public CommandService() {
+  private CommandService() {
     ServiceLoader<ICommand> loader = ServiceLoader.load(ICommand.class);
     assert loader != null;
     this.loader = loader;

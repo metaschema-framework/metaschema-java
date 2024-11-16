@@ -15,6 +15,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * An {@link ExitStatus} implementation with an associated message.
+ * <p>
+ * The message arguments are stored in an unmodifiable list to ensure
+ * thread-safety and immutability.
  */
 public class MessageExitStatus
     extends AbstractExitStatus {

@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.datatype.object;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -35,5 +36,23 @@ public class AmbiguousDate
   @Override
   public AmbiguousDate copy() {
     return new AmbiguousDate(getValue(), hasTimeZone());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getValue(), hasTimeZone());
+  }
+
+  @SuppressWarnings("PMD.OnlyOneReturn")
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof AmbiguousDate)) {
+      return false;
+    }
+    AmbiguousDate other = (AmbiguousDate) obj;
+    return hasTimeZone() == other.hasTimeZone() && getValue().equals(other.getValue());
   }
 }

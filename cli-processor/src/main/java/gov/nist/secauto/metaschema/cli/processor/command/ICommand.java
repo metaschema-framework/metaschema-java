@@ -143,26 +143,45 @@ public interface ICommand {
       @NonNull CallingContext callingContext,
       @NonNull CommandLine commandLine)
       throws InvalidArgumentException {
+
+    validateSubCommandRequirement();
+    validateArgumentCount(commandLine);
+    validateRequiredArguments(commandLine);
+  }
+
+  private void validateSubCommandRequirement() throws InvalidArgumentException {
     if (isSubCommandRequired()) {
       throw new InvalidArgumentException("Please choose a valid sub-command.");
     }
+  }
 
+  private void validateArgumentCount(@NonNull CommandLine commandLine) throws InvalidArgumentException {
     List<ExtraArgument> extraArguments = getExtraArguments();
     int maxArguments = extraArguments.size();
-
     List<String> actualArgs = commandLine.getArgList();
+
     if (actualArgs.size() > maxArguments) {
       throw new InvalidArgumentException(
-          "The provided extra arguments exceed the number of allowed arguments.");
+          String.format("Too many extra arguments provided. Expected at most %d, but got %d.",
+              maxArguments, actualArgs.size()));
     }
 
+  }
+
+  private void validateRequiredArguments(@NonNull CommandLine commandLine) throws InvalidArgumentException {
+    List<String> actualArgs = commandLine.getArgList();
     List<ExtraArgument> requiredExtraArguments = getExtraArguments().stream()
         .filter(ExtraArgument::isRequired)
         .collect(Collectors.toUnmodifiableList());
 
     if (actualArgs.size() < requiredExtraArguments.size()) {
       throw new InvalidArgumentException(
-          "Please provide the required extra arguments.");
+          String.format("Missing required arguments: %s. Expected %d required arguments, but got %d.",
+              requiredExtraArguments.stream()
+                  .map(arg -> "<" + arg.getName() + ">")
+                  .collect(Collectors.joining(" ")),
+              requiredExtraArguments.size(),
+              actualArgs.size()));
     }
   }
 }

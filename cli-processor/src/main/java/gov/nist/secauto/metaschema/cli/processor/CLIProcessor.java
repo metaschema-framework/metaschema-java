@@ -51,6 +51,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Processes command line arguments and dispatches called commands.
+ * <p>
+ * This implementation make significant use of the command pattern to support a
+ * delegation chain of commands based on implementations of {@link ICommand}.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class CLIProcessor {
@@ -114,7 +117,7 @@ public class CLIProcessor {
   @NonNull
   private final List<ICommand> commands = new LinkedList<>();
   @NonNull
-  private final String args;
+  private final String exec;
   @NonNull
   private final Map<String, IVersionInfo> versionInfos;
 
@@ -152,13 +155,13 @@ public class CLIProcessor {
    * <p>
    * This uses the provided version information.
    *
-   * @param args
-   *          the command line arguments
+   * @param exec
+   *          the command name
    * @param versionInfos
    *          the version info to display when the version option is provided
    */
-  public CLIProcessor(@NonNull String args, @NonNull Map<String, IVersionInfo> versionInfos) {
-    this.args = args;
+  public CLIProcessor(@NonNull String exec, @NonNull Map<String, IVersionInfo> versionInfos) {
+    this.exec = exec;
     this.versionInfos = versionInfos;
     AnsiConsole.systemInstall();
   }
@@ -169,8 +172,8 @@ public class CLIProcessor {
    * @return the command name
    */
   @NonNull
-  public String getArguments() {
-    return args;
+  public String getExec() {
+    return exec;
   }
 
   /**
@@ -631,7 +634,7 @@ public class CLIProcessor {
         builder
             .append(System.lineSeparator())
             .append('\'')
-            .append(getArguments())
+            .append(getExec())
             .append(" <command> --help' will show help on that specific command.")
             .append(System.lineSeparator());
         retval = builder.toString();
@@ -648,7 +651,7 @@ public class CLIProcessor {
     private String buildHelpCliSyntax() {
 
       StringBuilder builder = new StringBuilder(64);
-      builder.append(getArguments());
+      builder.append(getExec());
 
       List<ICommand> calledCommands = getCalledCommands();
       if (!calledCommands.isEmpty()) {

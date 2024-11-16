@@ -10,7 +10,12 @@ import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * This implementation of an extra argument.
+ * A default implementation of the {@link ExtraArgument} interface that
+ * represents a named command-line argument which can be marked as required or
+ * optional.
+ * <p>
+ * This implementation is used by the command processor to handle additional
+ * arguments that are not covered by specific command options.
  */
 public class DefaultExtraArgument implements ExtraArgument {
   private final String name;

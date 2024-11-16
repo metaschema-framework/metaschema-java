@@ -21,7 +21,11 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A base class for a command that has child commands.
+ * A base class for a command that supports hierarchical command structure with
+ * child commands. This class provides the foundation for implementing complex
+ * CLI commands that can have multiple levels of sub-commands.
+ * <p>
+ * This class is thread-safe and supports concurrent access to command handlers.
  */
 public abstract class AbstractParentCommand implements ICommand {
   @NonNull
