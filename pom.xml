@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>5</version>
+		<version>6-SNAPSHOT</version>
 	</parent>
 
 	<groupId>dev.metaschema.java</groupId>
@@ -57,7 +57,6 @@
 		<dependency.jdom2.version>2.0.6.1</dependency.jdom2.version>
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
 		<dependency.json.version>20240303</dependency.json.version>
-		<dependency.junit5.version>5.11.3</dependency.junit5.version>
 		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.9.3</dependency.logcaptor.version>
 		<dependency.mokito.version>5.14.2</dependency.mokito.version>
@@ -65,9 +64,7 @@
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.2</dependency.plexus-utils.version>
 		<dependency.plexus-build-api.version>1.2.0</dependency.plexus-build-api.version>
-		<dependency.pmd.version>7.7.0</dependency.pmd.version>
 		<dependency.saxon.version>12.5</dependency.saxon.version>
-		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
 		<dependency.stax2-api.version>4.2.2</dependency.stax2-api.version>
 		<dependency.thymeleaf.version>3.1.2.RELEASE</dependency.thymeleaf.version>
 		<dependency.woodstox.version>7.1.0</dependency.woodstox.version>
@@ -82,13 +79,7 @@
 		<plugin.antlr4test.version>1.22</plugin.antlr4test.version>
 		<plugin.appassembler.version>2.1.0</plugin.appassembler.version>
 		<plugin.git-commit-id.version>9.0.1</plugin.git-commit-id.version>
-		<plugin.maven-javadoc.version>3.11.1</plugin.maven-javadoc.version>
-		<plugin.maven-changes.version>2.12.1</plugin.maven-changes.version>
-		<plugin.maven-invoker.version>3.8.1</plugin.maven-invoker.version>
-		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
-		<plugin.pmd.version>3.26.0</plugin.pmd.version>
-		<plugin.spotbugs.version>4.8.6.5</plugin.spotbugs.version>
-		<plugin.maven-surefire.version>3.5.2</plugin.maven-surefire.version>
+		
 		<plugin.templating.version>3.0.0</plugin.templating.version>
 
 		<argLine>-Xmx1024m</argLine>
@@ -438,11 +429,6 @@
 				<version>2.26ea0</version>
 			</dependency>
 			<dependency>
-				<groupId>com.github.spotbugs</groupId>
-				<artifactId>spotbugs-annotations</artifactId>
-				<version>${dependency.spotbugs-annotations.version}</version>
-			</dependency>
-			<dependency>
 			    <groupId>org.eclipse.jdt</groupId>
 			    <artifactId>org.eclipse.jdt.annotation</artifactId>
 			    <version>${dependency.eclipse-jdt.version}</version>
@@ -451,13 +437,6 @@
 			    <groupId>com.github.ben-manes.caffeine</groupId>
 			    <artifactId>caffeine</artifactId>
 			    <version>${dependency.caffeine.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>${dependency.junit5.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.jmock</groupId>
@@ -500,11 +479,6 @@
 				<version>${dependency.assertj.version}</version>
 				<scope>test</scope>
 			</dependency>	
-			<dependency>
-				<groupId>org.apache.maven.plugin-tools</groupId>
-				<artifactId>maven-plugin-annotations</artifactId>
-				<version>3.15.1</version>
-			</dependency>
 			<dependency>
 				<!-- Remove compile warning -->
 				<groupId>biz.aQute.bnd</groupId>
@@ -549,7 +523,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-toolchains-plugin</artifactId>
-					<version>${plugin.maven-toolchains.version}</version>
 					<executions>
 						<execution>
 							<goals>
@@ -642,7 +615,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jxr-plugin</artifactId>
-					<version>3.6.0</version>
 					<configuration>
 						<excludes>
 							<exclude>**/module-info.java</exclude>
@@ -652,7 +624,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${plugin.maven-javadoc.version}</version>
 					<configuration>
 						<excludePackageNames>*.xmlbeans:*.xmlbeans.*:*.antlr</excludePackageNames>
 						<failOnWarnings>false</failOnWarnings>
@@ -679,17 +650,11 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>${plugin.spotbugs.version}</version>
 					<configuration>
 						<excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
 						<sarifOutput>true</sarifOutput>
 						<sarifOutputFilename>spotbugs.sarif</sarifOutputFilename>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-invoker-plugin</artifactId>
-					<version>${plugin.maven-invoker.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>io.github.git-commit-id</groupId>
@@ -714,7 +679,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${plugin.maven-surefire.version}</version>
 					<configuration>
 						<forkCount>1.5C</forkCount>
 						<reuseForks>true</reuseForks>
@@ -729,19 +693,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
-					<version>${plugin.pmd.version}</version>
-					<dependencies>
-						<dependency>
-							<groupId>net.sourceforge.pmd</groupId>
-							<artifactId>pmd-core</artifactId>
-							<version>${dependency.pmd.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>net.sourceforge.pmd</groupId>
-							<artifactId>pmd-java</artifactId>
-							<version>${dependency.pmd.version}</version>
-						</dependency>
-					</dependencies>
 					<executions>
 						<execution>
 							<id>pmd-verify</id>

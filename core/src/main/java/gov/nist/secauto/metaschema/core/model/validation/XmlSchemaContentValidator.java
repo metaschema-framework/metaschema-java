@@ -37,18 +37,28 @@ public class XmlSchemaContentValidator
     extends AbstractContentValidator {
   private final Schema schema;
 
-  @SuppressWarnings("null")
+  @SuppressWarnings({ "resource", "PMD.UseTryWithResources" })
   @NonNull
   private static Schema toSchema(@NonNull List<? extends Source> schemaSources) throws IOException {
     SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     // schemafactory.setResourceResolver(new ClasspathResourceResolver());
     // TODO verify source input streams are closed
     try {
-      return schemaSources.isEmpty()
+      return ObjectUtils.notNull(schemaSources.isEmpty()
           ? schemafactory.newSchema()
-          : schemafactory.newSchema(schemaSources.toArray(new Source[0]));
+          : schemafactory.newSchema(schemaSources.toArray(new Source[0])));
     } catch (SAXException ex) {
       throw new IOException(ex);
+    } finally {
+      // Close all source input streams
+      for (Source source : schemaSources) {
+        if (source instanceof StreamSource) {
+          StreamSource streamSource = (StreamSource) source;
+          if (streamSource.getInputStream() != null) {
+            streamSource.getInputStream().close();
+          }
+        }
+      }
     }
   }
 
