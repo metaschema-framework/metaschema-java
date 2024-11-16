@@ -136,24 +136,8 @@ public interface IDataTypeAdapter<TYPE> {
    *          the item's value
    * @return a new item
    */
-  // TODO: markup types are not atomic values.
-  // Figure out a better base type (i.e., IValuedItem)
-  // TODO: move to IAnyAtomicItem
   @NonNull
   IAnyAtomicItem newItem(@NonNull Object value);
-  //
-  // /**
-  // * Cast the provided item to an item of this type, if possible.
-  // *
-  // * @param item
-  // * the atomic item to cast
-  // * @return an atomic item of this type
-  // * @throws InvalidValueForCastFunctionException
-  // * if the provided item type cannot be cast to this item type
-  // */
-  // // TODO: move to IAnyAtomicItem
-  // @NonNull
-  // IAnyAtomicItem cast(IAnyAtomicItem item);
 
   /**
    * Determines if adapter can parse the next element. The next element's
