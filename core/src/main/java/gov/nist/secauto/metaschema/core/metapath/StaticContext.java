@@ -370,15 +370,7 @@ public final class StaticContext {
     private URI defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS;
 
     private Builder() {
-      namespaces.put(
-          MetapathConstants.PREFIX_METAPATH,
-          MetapathConstants.NS_METAPATH);
-      namespaces.put(
-          MetapathConstants.PREFIX_METAPATH_FUNCTIONS,
-          MetapathConstants.NS_METAPATH_FUNCTIONS);
-      namespaces.put(
-          MetapathConstants.PREFIX_METAPATH_FUNCTIONS_MATH,
-          MetapathConstants.NS_METAPATH_FUNCTIONS_MATH);
+      // avoid direct construction
     }
 
     /**

@@ -51,8 +51,8 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * This adds support for insert anchors, which are used in OSCAL statements
- * currently, but can be used more generally in other OSCAL models.
+ * Extension that adds support for insert anchors, used in OSCAL statements, and
+ * applicable more generally in other Metaschema-based models.
  */
 public class InsertAnchorExtension
     implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension,

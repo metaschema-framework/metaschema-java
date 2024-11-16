@@ -81,8 +81,8 @@ public class HtmlQuoteTagExtension
   static class QTagNodeRenderer implements NodeRenderer {
 
     @Override
-    public @Nullable
-    Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
+    @Nullable
+    public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
       return Collections.singleton(
           new NodeRenderingHandler<>(DoubleQuoteNode.class, this::render));
     }
@@ -143,7 +143,9 @@ public class HtmlQuoteTagExtension
       return Collections.singleton(new HtmlNodeRendererHandler<>("q", Element.class, this::renderMarkdown));
     }
 
-    protected void renderMarkdown(Element element, HtmlNodeConverterContext context,
+    protected void renderMarkdown(
+        Element element,
+        HtmlNodeConverterContext context,
         @SuppressWarnings("unused") HtmlMarkdownWriter out) {
       context.wrapTextNodes(element, "\"", element.nextElementSibling() != null);
     }
@@ -161,7 +163,7 @@ public class HtmlQuoteTagExtension
   /**
    * A Flexmark node implementation representing a quotation mark.
    */
-  public static class DoubleQuoteNode
+  public static final class DoubleQuoteNode
       extends TypographicQuotes {
 
     /**
@@ -170,7 +172,6 @@ public class HtmlQuoteTagExtension
      * @param node
      *          the typographic information pertaining to a double quote
      */
-    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
     public DoubleQuoteNode(TypographicQuotes node) {
       super(node.getOpeningMarker(), node.getText(), node.getClosingMarker());
       setTypographicOpening(node.getTypographicOpening());

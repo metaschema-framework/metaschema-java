@@ -89,6 +89,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 @SuppressWarnings({ "PMD.ExcessivePublicCount", "PMD.CyclomaticComplexity" })
 public abstract class AbstractAstVisitor<R>
     extends Metapath10BaseVisitor<R> {
+  private static final String ERR_NO_DELEGATION
+      = "This method should never be called directly as it is handled by the parent expression.";
+  private static final String ERR_SINGLE_CHILD = "A single child expression was expected.";
 
   /**
    * This dispatch method will call the node handler on a leaf node or if multiple
@@ -133,7 +136,7 @@ public abstract class AbstractAstVisitor<R>
     if (ctx.getChildCount() == 1) {
       return ctx.getChild(0).accept(this);
     }
-    throw new IllegalStateException("a single child expression was expected");
+    throw new IllegalStateException(ERR_SINGLE_CHILD);
   }
 
   // ============================================================
@@ -299,13 +302,13 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitArgumentlist(ArgumentlistContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitArgument(ArgumentContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   // =======================================================================
@@ -470,7 +473,7 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitPredicatelist(PredicatelistContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   // ===========================================
@@ -480,13 +483,13 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitForwardaxis(ForwardaxisContext ctx) {
     // should never be called, since this is handled by handleForwardstep
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitReverseaxis(ReverseaxisContext ctx) {
     // should never be called, since this is handled by handleReversestep
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   // =======================================================
@@ -496,19 +499,19 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitNodetest(NodetestContext ctx) {
     // should never be called, since this is handled by the calling context
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitNametest(NametestContext ctx) {
     // should never be called, since this is handled by the calling context
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitEqname(EqnameContext ctx) {
     // should never be called, since this is handled by the calling context
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   /**
@@ -711,13 +714,13 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitValuecomp(ValuecompContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitGeneralcomp(GeneralcompContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   // ============================================================================
@@ -776,13 +779,13 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitSimpleforclause(SimpleforclauseContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitSimpleforbinding(SimpleforbindingContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   // ====================================================================
@@ -807,13 +810,13 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitSimpleletclause(SimpleletclauseContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitSimpleletbinding(SimpleletbindingContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   // ======================================================================
@@ -838,7 +841,7 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitMapconstructorentry(MapconstructorentryContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
@@ -896,7 +899,7 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitKeyspecifier(KeyspecifierContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   /**
@@ -1001,6 +1004,6 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitArrowfunctionspecifier(ArrowfunctionspecifierContext ctx) {
     // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException();
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 }

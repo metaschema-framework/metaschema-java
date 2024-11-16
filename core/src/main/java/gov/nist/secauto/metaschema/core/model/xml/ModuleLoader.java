@@ -51,15 +51,18 @@ public class ModuleLoader
    * loaded modules.
    *
    * @param constraints
-   *          a set of Metaschema module constraints
-   * @return the loader
+   *          a set of Metaschema module constraints to be applied during loading
+   * @return the loader instance configured with the specified constraints
    */
-  public ModuleLoader newInstanceUsingCoinstraints(@NonNull Collection<IConstraintSet> constraints) {
+  public static ModuleLoader newInstanceUsingConstraints(@NonNull Collection<IConstraintSet> constraints) {
     return new ModuleLoader(CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));
   }
 
   /**
-   * Construct a new Metaschema loader.
+   * Construct a new Metaschema loader with no constraints.
+   *
+   * @see #newInstanceUsingConstraints(Collection) for creating an instance with
+   *      constraints
    */
   public ModuleLoader() {
     this(CollectionUtil.<IModuleLoader.IModulePostProcessor>emptyList());

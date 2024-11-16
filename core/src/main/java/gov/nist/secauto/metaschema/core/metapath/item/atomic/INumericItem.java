@@ -19,7 +19,13 @@ import java.math.RoundingMode;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item containing a numeric data value.
+ * Represents an atomic Metapath item containing a numeric data value, which can
+ * be either an integer or decimal. This interface provides operations for
+ * numeric type conversion, comparison, and mathematical operations commonly
+ * used in Metapath expressions.
+ *
+ * @see IIntegerItem
+ * @see IDecimalItem
  */
 public interface INumericItem extends IAnyAtomicItem {
 
@@ -134,33 +140,47 @@ public interface INumericItem extends IAnyAtomicItem {
         : roundWithNegativePrecision(precision);
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   private INumericItem roundWithPositivePrecision(int precision) {
+    INumericItem retval;
     if (this instanceof IIntegerItem) {
-      return this;
+      retval = this;
+    } else {
+      BigDecimal value = asDecimal();
+      BigDecimal rounded = value.signum() == -1
+          ? value.round(new MathContext(precision + value.precision() - value.scale(), RoundingMode.HALF_DOWN))
+          : value.round(new MathContext(precision + value.precision() - value.scale(), RoundingMode.HALF_UP));
+      retval = castAsType(IDecimalItem.valueOf(ObjectUtils.notNull(rounded)));
     }
-    BigDecimal value = asDecimal();
-    BigDecimal rounded = value.signum() == -1
-        ? value.round(new MathContext(precision + value.precision() - value.scale(), RoundingMode.HALF_DOWN))
-        : value.round(new MathContext(precision + value.precision() - value.scale(), RoundingMode.HALF_UP));
-    return castAsType(IDecimalItem.valueOf(ObjectUtils.notNull(rounded)));
+    return retval;
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
+  /**
+   * Rounds a number to the specified negative precision by: 1. Computing the
+   * divisor (10^|precision|) 2. If the absolute value is less than the divisor,
+   * returns 0 3. Otherwise, rounds to the nearest multiple of the divisor
+   *
+   * @param precision
+   *          the negative precision to round to
+   * @return the rounded value
+   */
   @NonNull
   private INumericItem roundWithNegativePrecision(int precision) {
     BigInteger value = asInteger();
     BigInteger divisor = BigInteger.TEN.pow(0 - precision);
+
+    INumericItem retval;
     if (divisor.compareTo(value.abs()) > 0) {
-      return IIntegerItem.ZERO;
+      retval = IIntegerItem.ZERO;
+    } else {
+      BigInteger remainder = value.mod(divisor);
+      BigInteger lessRemainder = value.subtract(remainder);
+      BigInteger halfDivisor = divisor.divide(BigInteger.TWO);
+      BigInteger roundedValue = remainder.compareTo(halfDivisor) >= 0
+          ? lessRemainder.add(divisor)
+          : lessRemainder;
+      retval = IIntegerItem.valueOf(ObjectUtils.notNull(roundedValue));
     }
-    BigInteger remainder = value.mod(divisor);
-    BigInteger lessRemainder = value.subtract(remainder);
-    BigInteger halfDivisor = divisor.divide(BigInteger.TWO);
-    BigInteger result = remainder.compareTo(halfDivisor) >= 0
-        ? lessRemainder.add(divisor)
-        : lessRemainder;
-    return IIntegerItem.valueOf(ObjectUtils.notNull(result));
+    return retval;
   }
 }

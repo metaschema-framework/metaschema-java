@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * This command implementation supports generation of schemas in a variety of
@@ -96,10 +97,6 @@ class GenerateSchemaCommand
    * @throws CommandExecutionException
    *           if an error occurred while determining the source format
    */
-  @SuppressWarnings({
-      "PMD.OnlyOneReturn", // readability
-      "PMD.CyclomaticComplexity"
-  })
   protected void executeCommand(
       @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) throws CommandExecutionException {
@@ -113,6 +110,14 @@ class GenerateSchemaCommand
 
     SchemaFormat asFormat = MetaschemaCommands.getSchemaFormat(cmdLine, MetaschemaCommands.AS_SCHEMA_FORMAT_OPTION);
 
+    IMutableConfiguration<SchemaGenerationFeature<?>> configuration = createConfiguration(cmdLine, asFormat);
+    generateSchema(extraArgs, destination, asFormat, configuration);
+  }
+
+  @NonNull
+  private static IMutableConfiguration<SchemaGenerationFeature<?>> createConfiguration(
+      @NonNull CommandLine cmdLine,
+      @NonNull SchemaFormat asFormat) {
     IMutableConfiguration<SchemaGenerationFeature<?>> configuration = new DefaultConfiguration<>();
     if (cmdLine.hasOption(INLINE_TYPES_OPTION)) {
       configuration.enableFeature(SchemaGenerationFeature.INLINE_DEFINITIONS);
@@ -122,7 +127,14 @@ class GenerateSchemaCommand
         configuration.enableFeature(SchemaGenerationFeature.INLINE_CHOICE_DEFINITIONS);
       }
     }
+    return configuration;
+  }
 
+  private static void generateSchema(
+      @NonNull List<String> extraArgs,
+      @Nullable Path destination,
+      @NonNull SchemaFormat asFormat,
+      @NonNull IMutableConfiguration<SchemaGenerationFeature<?>> configuration) throws CommandExecutionException {
     IBindingContext bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
     IModule module = MetaschemaCommands.loadModule(
         ObjectUtils.requireNonNull(extraArgs.get(0)),

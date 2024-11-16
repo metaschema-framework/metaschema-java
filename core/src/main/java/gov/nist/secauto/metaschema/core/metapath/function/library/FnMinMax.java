@@ -188,33 +188,38 @@ public final class FnMinMax {
     return FunctionUtils.countTypes(PRIMITIVE_ITEM_TYPES, items);
   }
 
+  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   private static Stream<? extends IAnyAtomicItem> createNormalizedStream(
       @NonNull List<? extends IAnyAtomicItem> items,
       @NonNull Map<Class<? extends IAnyAtomicItem>, Integer> counts) {
 
-    Stream<? extends IAnyAtomicItem> stream = null;
+    // Single type - no conversion needed
     if (counts.size() == 1) {
-      stream = items.stream();
-    } else if (counts.size() > 1) {
-      int size = items.size();
+      return ObjectUtils.notNull(items.stream());
+    }
+
+    // Multiple types - attempt conversion
+    int size = items.size();
+    if (counts.size() > 1) {
+      // Check if all items are either String or AnyUri
       if (counts.getOrDefault(IStringItem.class, 0) + counts.getOrDefault(IAnyUriItem.class, 0) == size) {
-        stream = items.stream()
-            .map(IAnyAtomicItem::asStringItem);
-      } else if (counts.getOrDefault(IDecimalItem.class, 0) == size) {
-        stream = items.stream()
-            .map(item -> (IDecimalItem) item);
+        return ObjectUtils.notNull(items.stream().map(IAnyAtomicItem::asStringItem));
+      }
+
+      // Check if all items are Decimal
+      if (counts.getOrDefault(IDecimalItem.class, 0) == size) {
+        return ObjectUtils.notNull(items.stream().map(item -> (IDecimalItem) item));
       }
     }
 
-    if (stream == null) {
-      throw new InvalidArgumentFunctionException(
-          InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
-          String.format("Values must all be of a single atomic type. Their types are '%s'.",
-              FunctionUtils.getTypes(items).stream()
-                  .map(Class::getName)
-                  .collect(Collectors.joining(","))));
-    }
-    return stream;
+    // No valid conversion possible
+    throw new InvalidArgumentFunctionException(
+        InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
+        String.format(
+            "Values must all be of a single atomic type. Found multiple types: [%s]",
+            FunctionUtils.getTypes(items).stream()
+                .map(Class::getSimpleName)
+                .collect(Collectors.joining(", "))));
   }
 }
