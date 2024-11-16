@@ -27,10 +27,14 @@ public interface IMarkupItem extends IUntypedAtomicItem {
    *          a line of markup
    * @return the new item
    */
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   @NonNull
   static IMarkupItem valueOf(@NonNull String value) {
-    // TODO: figure out what error is returned
-    return valueOf(MarkupDataTypeProvider.MARKUP_LINE.parse(value));
+    try {
+      return valueOf(MarkupDataTypeProvider.MARKUP_LINE.parse(value));
+    } catch (RuntimeException ex) { // TODO: Replace with the specific exception(s) thrown by parse()
+      throw new InvalidValueForCastFunctionException(ex);
+    }
   }
 
   /**

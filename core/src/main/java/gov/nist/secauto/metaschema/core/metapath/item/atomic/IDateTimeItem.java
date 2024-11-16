@@ -120,9 +120,8 @@ public interface IDateTimeItem extends ITemporalItem {
     if (item instanceof IDateTimeItem) {
       retval = (IDateTimeItem) item;
     } else {
-      String itemString = item.asString();
       try {
-        retval = valueOf(itemString);
+        retval = valueOf(item.asString());
       } catch (IllegalStateException | InvalidTypeMetapathException ex) {
         // asString can throw IllegalStateException exception
         throw new InvalidValueForCastFunctionException(
