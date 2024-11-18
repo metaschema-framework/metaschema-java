@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.model.IFlagContainerBuilder;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
@@ -19,8 +20,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefin
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -87,7 +86,7 @@ public final class FlagContainerSupport {
       @NonNull IBindingDefinitionModel parent) {
     IModule module = parent.getContainingModule();
 
-    QName qname = module.toFlagQName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName qname = module.toFlagQName(ObjectUtils.requireNonNull(obj.getRef()));
     IFlagDefinition definition = module.getScopedFlagDefinitionByName(qname);
     if (definition == null) {
       throw new IllegalStateException(

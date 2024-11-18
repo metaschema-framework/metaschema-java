@@ -6,9 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.IPv4AddressItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.ipv4.IPv4Address;
@@ -17,6 +18,10 @@ import inet.ipaddr.ipv4.IPv4Address;
  * An atomic Metapath item containing an IPv4 address data value.
  */
 public interface IIPv4AddressItem extends IIPAddressItem {
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return MetaschemaDataTypeProvider.IP_V4_ADDRESS.getItemType();
+  }
 
   /**
    * Construct a new IPv4 item using the provided {@code value}.

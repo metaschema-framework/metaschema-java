@@ -6,9 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.UriReferenceItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 
 import java.net.URI;
 
@@ -23,6 +24,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @see <a href="https://www.ietf.org/rfc/rfc2396.txt">RFC2396</a>
  */
 public interface IUriReferenceItem extends IAnyUriItem {
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return MetaschemaDataTypeProvider.URI_REFERENCE.getItemType();
+  }
+
   /**
    * Construct a new URI item using the provided string {@code value}.
    *

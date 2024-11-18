@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
@@ -30,8 +31,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -46,11 +45,11 @@ class AssemblyModelContainerSupport
   @NonNull
   private final List<IBoundInstanceModel<?>> modelInstances;
   @NonNull
-  private final Map<QName, IBoundInstanceModelNamed<?>> namedModelInstances;
+  private final Map<IEnhancedQName, IBoundInstanceModelNamed<?>> namedModelInstances;
   @NonNull
-  private final Map<QName, IBoundInstanceModelField<?>> fieldInstances;
+  private final Map<IEnhancedQName, IBoundInstanceModelField<?>> fieldInstances;
   @NonNull
-  private final Map<QName, IBoundInstanceModelAssembly> assemblyInstances;
+  private final Map<IEnhancedQName, IBoundInstanceModelAssembly> assemblyInstances;
   @NonNull
   private final Map<String, IBoundInstanceModelChoiceGroup> choiceGroupInstances;
 
@@ -62,14 +61,14 @@ class AssemblyModelContainerSupport
         getModelInstanceStream(containingDefinition, containingDefinition.getBoundClass())
             .collect(Collectors.toUnmodifiableList())));
 
-    Map<QName, IBoundInstanceModelNamed<?>> namedModelInstances = new LinkedHashMap<>();
-    Map<QName, IBoundInstanceModelField<?>> fieldInstances = new LinkedHashMap<>();
-    Map<QName, IBoundInstanceModelAssembly> assemblyInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, IBoundInstanceModelNamed<?>> namedModelInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, IBoundInstanceModelField<?>> fieldInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, IBoundInstanceModelAssembly> assemblyInstances = new LinkedHashMap<>();
     Map<String, IBoundInstanceModelChoiceGroup> choiceGroupInstances = new LinkedHashMap<>();
     for (IBoundInstanceModel<?> instance : this.modelInstances) {
       if (instance instanceof IBoundInstanceModelNamed) {
         IBoundInstanceModelNamed<?> named = (IBoundInstanceModelNamed<?>) instance;
-        QName key = named.getXmlQName();
+        IEnhancedQName key = named.getXmlQName();
         namedModelInstances.put(key, named);
 
         if (instance instanceof IBoundInstanceModelField) {
@@ -152,17 +151,17 @@ class AssemblyModelContainerSupport
   }
 
   @Override
-  public Map<QName, IBoundInstanceModelNamed<?>> getNamedModelInstanceMap() {
+  public Map<IEnhancedQName, IBoundInstanceModelNamed<?>> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<QName, IBoundInstanceModelField<?>> getFieldInstanceMap() {
+  public Map<IEnhancedQName, IBoundInstanceModelField<?>> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<QName, IBoundInstanceModelAssembly> getAssemblyInstanceMap() {
+  public Map<IEnhancedQName, IBoundInstanceModelAssembly> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 

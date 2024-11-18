@@ -36,10 +36,10 @@ public final class ArraySize {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("array")
-          .type(IArrayItem.class)
+          .type(IArrayItem.type())
           .one()
           .build())
-      .returnType(IIntegerItem.class)
+      .returnType(IIntegerItem.type())
       .returnOne()
       .functionHandler(ArraySize::execute)
       .build();

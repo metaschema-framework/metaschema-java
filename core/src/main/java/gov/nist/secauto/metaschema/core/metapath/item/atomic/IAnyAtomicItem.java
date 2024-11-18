@@ -11,6 +11,8 @@ import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFun
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -20,6 +22,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * structures in the Metaschema framework.
  */
 public interface IAnyAtomicItem extends IAtomicValuedItem, IPrintable {
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return IItemType.anyAtomic();
+  }
 
   @Override
   @NonNull

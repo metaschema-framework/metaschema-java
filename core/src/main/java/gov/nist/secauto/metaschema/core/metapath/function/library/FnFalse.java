@@ -30,7 +30,7 @@ public final class FnFalse {
       .deterministic()
       .contextIndependent()
       .focusIndependent()
-      .returnType(IBooleanItem.class)
+      .returnType(IBooleanItem.type())
       .returnOne()
       .functionHandler(FnFalse::execute)
       .build();

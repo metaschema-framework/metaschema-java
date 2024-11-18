@@ -51,10 +51,10 @@ public final class FnAvg {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IAnyAtomicItem.class)
+          .type(IAnyAtomicItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IAnyAtomicItem.class)
+      .returnType(IAnyAtomicItem.type())
       .returnZeroOrOne()
       .functionHandler(FnAvg::execute)
       .build();

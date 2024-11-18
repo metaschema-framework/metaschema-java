@@ -5,9 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -25,9 +24,9 @@ public abstract class AbstractGlobalDefinition<MODULE extends IModule, INSTANCE 
   @NonNull
   private final MODULE module;
   @NonNull
-  private final Lazy<QName> qname;
+  private final Lazy<IEnhancedQName> qname;
   @NonNull
-  private final Lazy<QName> definitionQName;
+  private final Lazy<IEnhancedQName> definitionQName;
 
   /**
    * Construct a new global definition.
@@ -50,13 +49,13 @@ public abstract class AbstractGlobalDefinition<MODULE extends IModule, INSTANCE 
 
   @SuppressWarnings("null")
   @Override
-  public final QName getXmlQName() {
+  public final IEnhancedQName getXmlQName() {
     return qname.get();
   }
 
   @SuppressWarnings("null")
   @Override
-  public final QName getDefinitionQName() {
+  public final IEnhancedQName getDefinitionQName() {
     return definitionQName.get();
   }
 
@@ -85,6 +84,6 @@ public abstract class AbstractGlobalDefinition<MODULE extends IModule, INSTANCE 
      * @return the qualified name for the provided name
      */
     @NonNull
-    QName apply(@NonNull String name);
+    IEnhancedQName apply(@NonNull String name);
   }
 }

@@ -37,10 +37,10 @@ public final class FnLowerCase {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IStringItem.class)
+          .type(IStringItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IStringItem.class)
+      .returnType(IStringItem.type())
       .returnOne()
       .functionHandler(FnLowerCase::executeOneArg)
       .build();

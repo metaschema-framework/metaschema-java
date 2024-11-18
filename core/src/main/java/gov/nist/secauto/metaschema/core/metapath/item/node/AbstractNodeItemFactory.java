@@ -14,12 +14,11 @@ import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -143,7 +142,7 @@ public abstract class AbstractNodeItemFactory implements INodeItemFactory, INode
 
   @Nullable
   private IAssemblyNodeItem getCycledInstance(
-      @NonNull QName name,
+      @NonNull IEnhancedQName name,
       @NonNull IAssemblyDefinition definition,
       @NonNull IAssemblyNodeItem parent) {
     IAssemblyNodeItem retval = null;

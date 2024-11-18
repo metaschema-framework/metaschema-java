@@ -20,7 +20,6 @@ import inet.ipaddr.ipv6.IPv6Address;
 public class IPv6AddressItemImpl
     extends AbstractUntypedAtomicItem<IPv6Address>
     implements IIPv6AddressItem {
-
   /**
    * Construct a new item with the provided {@code value}.
    *

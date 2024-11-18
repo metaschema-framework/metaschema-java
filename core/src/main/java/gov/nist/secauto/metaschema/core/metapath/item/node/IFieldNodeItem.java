@@ -18,8 +18,8 @@ public interface IFieldNodeItem
     extends IModelNodeItem<IFieldDefinition, IFieldInstance>,
     IAtomicValuedItem {
   @Override
-  default NodeItemType getNodeItemType() {
-    return NodeItemType.FIELD;
+  default NodeItemKind getNodeItemKind() {
+    return NodeItemKind.FIELD;
   }
 
   @Override

@@ -9,8 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
-
-import javax.xml.namespace.QName;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -23,7 +22,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 @SuppressWarnings("PMD.DataClass")
 public class DefaultLet implements ILet {
   @NonNull
-  private final QName name;
+  private final IEnhancedQName name;
   @NonNull
   private final MetapathExpression valueExpression;
   @NonNull
@@ -44,7 +43,7 @@ public class DefaultLet implements ILet {
    *          remarks about the let statement
    */
   public DefaultLet(
-      @NonNull QName name,
+      @NonNull IEnhancedQName name,
       @NonNull MetapathExpression metapath,
       @NonNull ISource source,
       @Nullable MarkupMultiline remarks) {
@@ -55,7 +54,7 @@ public class DefaultLet implements ILet {
   }
 
   @Override
-  public QName getName() {
+  public IEnhancedQName getName() {
     return name;
   }
 

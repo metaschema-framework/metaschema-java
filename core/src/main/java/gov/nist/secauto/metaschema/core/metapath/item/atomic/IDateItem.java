@@ -8,10 +8,11 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
-import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateWithTimeZoneItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateWithoutTimeZoneItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.LocalDate;
@@ -25,6 +26,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a date data value.
  */
 public interface IDateItem extends ITemporalItem {
+
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return MetaschemaDataTypeProvider.DATE.getItemType();
+  }
 
   /**
    * Construct a new date item using the provided string {@code value}.

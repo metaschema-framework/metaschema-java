@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.model.impl.DefaultContainerFlagSupport;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -18,8 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -27,7 +26,7 @@ public class FlagContainerBuilder<T extends IFlagInstance> implements IFlagConta
   private static final Logger LOGGER = LogManager.getLogger(FlagContainerBuilder.class);
 
   @Nullable
-  private final QName jsonKeyName;
+  private final IEnhancedQName jsonKeyName;
   @NonNull
   private final List<T> flags;
 
@@ -39,7 +38,7 @@ public class FlagContainerBuilder<T extends IFlagInstance> implements IFlagConta
    *          the qualified name of the JSON key or {@code null} if no JSON key is
    *          configured
    */
-  public FlagContainerBuilder(@Nullable QName jsonKeyName) {
+  public FlagContainerBuilder(@Nullable IEnhancedQName jsonKeyName) {
     this.jsonKeyName = jsonKeyName;
     this.flags = new LinkedList<>();
   }
@@ -57,7 +56,7 @@ public class FlagContainerBuilder<T extends IFlagInstance> implements IFlagConta
     if (flags.isEmpty()) {
       retval = IContainerFlagSupport.empty();
     } else {
-      Map<QName, T> flagMap = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(flags.stream()
+      Map<IEnhancedQName, T> flagMap = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(flags.stream()
           .collect(
               CustomCollectors.toMap(
                   INamed::getXmlQName,
@@ -72,7 +71,7 @@ public class FlagContainerBuilder<T extends IFlagInstance> implements IFlagConta
   }
 
   private static <INSTANCE extends IFlagInstance> INSTANCE handleShadowedInstances(
-      @NonNull QName key,
+      @NonNull IEnhancedQName key,
       @NonNull INSTANCE shadowed,
       @NonNull INSTANCE shadowing) {
     if (!shadowed.equals(shadowing) && LOGGER.isErrorEnabled()) {

@@ -10,12 +10,12 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUriReferenceItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -27,15 +27,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class UriReferenceAdapter
     extends AbstractDataTypeAdapter<URI, IUriReferenceItem> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
-      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "uri-reference")));
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
+      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "uri-reference")));
 
   UriReferenceAdapter() {
-    super(URI.class);
+    super(URI.class, IUriReferenceItem.class);
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
@@ -54,11 +54,6 @@ public class UriReferenceAdapter
   public URI copy(Object obj) {
     // a URI is immutable
     return (URI) obj;
-  }
-
-  @Override
-  public Class<IUriReferenceItem> getItemClass() {
-    return IUriReferenceItem.class;
   }
 
   @Override

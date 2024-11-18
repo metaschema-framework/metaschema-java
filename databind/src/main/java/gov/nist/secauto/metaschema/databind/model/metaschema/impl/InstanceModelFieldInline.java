@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
@@ -33,8 +34,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonValueKe
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -200,7 +199,7 @@ public class InstanceModelFieldInline
     String namespace = getContainingModule().getXmlNamespace().toASCIIString();
     return name == null ? null
         : ObjectUtils.requireNonNull(getFlagInstanceByName(
-            new QName(namespace, name)));
+            EQNameFactory.of(namespace, name)));
   }
 
   @Override

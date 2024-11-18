@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import javax.xml.namespace.QName;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -31,5 +31,5 @@ public interface INamedInstance extends INamedModelElement, IAttributable, IInst
    * @see IDefinition#getDefinitionQName()
    */
   @NonNull
-  QName getReferencedDefinitionQName();
+  IEnhancedQName getReferencedDefinitionQName();
 }

@@ -7,12 +7,12 @@ package gov.nist.secauto.metaschema.core.datatype.adapter;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IPositiveIntegerItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigInteger;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -24,24 +24,20 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class PositiveIntegerAdapter
     extends AbstractIntegerAdapter<IPositiveIntegerItem> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
-          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "positive-integer"),
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "positive-integer"),
           // for backwards compatibility with original type name
-          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "positiveInteger")));
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "positiveInteger")));
 
   PositiveIntegerAdapter() {
+    super(IPositiveIntegerItem.class);
     // avoid general construction
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
-  }
-
-  @Override
-  public Class<IPositiveIntegerItem> getItemClass() {
-    return IPositiveIntegerItem.class;
   }
 
   @Override

@@ -5,10 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+
 import java.util.Collection;
 import java.util.function.Predicate;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -52,7 +52,7 @@ public interface IModelDefinition extends IDefinition, IContainer {
    *         matching the specified name
    */
   @Nullable
-  IFlagInstance getFlagInstanceByName(@NonNull QName name);
+  IFlagInstance getFlagInstanceByName(@NonNull IEnhancedQName name);
 
   /**
    * Retrieves the flag instances for all flags defined on the containing

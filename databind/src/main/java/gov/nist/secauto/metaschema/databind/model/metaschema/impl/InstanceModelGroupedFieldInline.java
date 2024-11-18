@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModel;
@@ -30,8 +31,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonValueKe
 
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -169,8 +168,19 @@ public class InstanceModelGroupedFieldInline
   @Override
   public IFlagInstance getJsonValueKeyFlagInstance() {
     JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();
-    String flagName = obj == null ? null : obj.getFlagRef();
-    return flagName == null ? null : getFlagInstanceByName(new QName(getXmlNamespace(), flagName));
+
+    IFlagInstance retval = null;
+    if (obj != null) {
+      String flagName = obj.getFlagRef();
+      if (flagName != null) {
+        String namespace = getXmlNamespace();
+        retval = getFlagInstanceByName(
+            namespace == null
+                ? EQNameFactory.of(flagName)
+                : EQNameFactory.of(namespace, flagName));
+      }
+    }
+    return retval;
   }
 
   @Override

@@ -67,6 +67,6 @@ public abstract class AbstractDatatypeManager implements IDatatypeManager {
   public String getTypeNameForDatatype(@NonNull IDataTypeAdapter<?> datatype) {
     return datatypeToTypeMap.computeIfAbsent(
         datatype,
-        key -> getDatatypeTranslationMap().get(key.getPreferredName().getLocalPart()));
+        key -> getDatatypeTranslationMap().get(key.getPreferredName().getLocalName()));
   }
 }

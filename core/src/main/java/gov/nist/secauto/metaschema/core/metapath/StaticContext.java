@@ -5,19 +5,25 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.EQNameUtils.PrefixToNamespaceResolver;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
+import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionService;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.NamespaceCache;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -52,6 +58,9 @@ public final class StaticContext {
         MetapathConstants.PREFIX_METAPATH_FUNCTIONS_MAP,
         MetapathConstants.NS_METAPATH_FUNCTIONS_MAP);
     WELL_KNOWN_NAMESPACES = CollectionUtil.unmodifiableMap(knownNamespaces);
+
+    WELL_KNOWN_NAMESPACES.forEach(
+        (prefix, namespace) -> NamespaceCache.instance().of(ObjectUtils.notNull(namespace)));
 
     WELL_KNOWN_URI_TO_PREFIX = ObjectUtils.notNull(WELL_KNOWN_NAMESPACES.entrySet().stream()
         .collect(Collectors.toUnmodifiableMap(
@@ -126,6 +135,10 @@ public final class StaticContext {
     this.useWildcardWhenNamespaceNotDefaulted = builder.useWildcardWhenNamespaceNotDefaulted;
   }
 
+  private EQNameFactory getEqNameFactory() {
+    return EQNameFactory.instance();
+  }
+
   /**
    * Get the static base URI to use in resolving URIs handled by the Metapath
    * processor. This URI, if provided, will be used when a document base URI is
@@ -157,7 +170,7 @@ public final class StaticContext {
    * @see #getWellKnownNamespacesMap()
    */
   @Nullable
-  public URI lookupNamespaceURIForPrefix(@NonNull String prefix) {
+  private URI lookupNamespaceURIForPrefix(@NonNull String prefix) {
     URI retval = knownNamespaces.get(prefix);
     if (retval == null) {
       // fall back to well-known namespaces
@@ -188,7 +201,7 @@ public final class StaticContext {
    * @return the namespace if defined or {@code null} otherwise
    */
   @Nullable
-  public URI getDefaultModelNamespace() {
+  private URI getDefaultModelNamespace() {
     return defaultModelNamespace;
   }
 
@@ -199,29 +212,27 @@ public final class StaticContext {
    * @return the namespace if defined or {@code null} otherwise
    */
   @Nullable
-  public URI getDefaultFunctionNamespace() {
+  private URI getDefaultFunctionNamespace() {
     return defaultFunctionNamespace;
   }
 
-  /**
-   * Get a prefix resolver for use with Metapath function names that will attempt
-   * to identify the namespace corresponding to a given prefix.
-   * <p>
-   * This will use the following lookup order, advancing to the next when a
-   * {@code null} value is returned:
-   * <ol>
-   * <li>Lookup the prefix using
-   * {@link StaticContext#lookupNamespaceForPrefix(String)}</li>
-   * <li>Return the result of
-   * {@link StaticContext#getDefaultFunctionNamespace()}</li>
-   * <li>Return {@link XMLConstants#NULL_NS_URI}</li>
-   * </ol>
-   *
-   * @return the resolver
-   */
+  private String resolveBasicPrefix(@NonNull String prefix) {
+    String ns = lookupNamespaceForPrefix(prefix);
+    return ns == null ? XMLConstants.NULL_NS_URI : ns;
+  }
+
   @NonNull
-  public PrefixToNamespaceResolver getFunctionPrefixResolver() {
-    return this::resolveFunctionPrefix;
+  private IEnhancedQName parseDataTypeName(@NonNull String name) {
+    return getEqNameFactory().parseName(
+        name,
+        this::resolveBasicPrefix);
+  }
+
+  @NonNull
+  private IEnhancedQName parseFunctionName(@NonNull String name) {
+    return getEqNameFactory().parseName(
+        name,
+        this::resolveFunctionPrefix);
   }
 
   @NonNull
@@ -237,49 +248,52 @@ public final class StaticContext {
   }
 
   /**
-   * Get a prefix resolver for use with Metapath flag node names that will attempt
-   * to identify the namespace corresponding to a given prefix.
+   * Parse a flag name.
    * <p>
-   * This will use the following lookup order, advancing to the next when a
-   * {@code null} value is returned:
+   * This method will attempt to identify the namespace corresponding to a given
+   * prefix.
+   * <p>
+   * The prefix will be resolved using the following lookup order, advancing to
+   * the next when a {@code null} value is returned:
    * <ol>
-   * <li>Lookup the prefix using
-   * {@link StaticContext#lookupNamespaceForPrefix(String)}</li>
-   * <li>Return {@link XMLConstants#NULL_NS_URI}</li>
+   * <li>Lookup the prefix using the namespaces registered with the static
+   * context.</li>
+   * <li>Lookup the prefix in the well-known namespaces.</li>
+   * <li>Use {@link XMLConstants#NULL_NS_URI}.</li>
    * </ol>
    *
-   * @return the resolver
+   * @return the parsed qualified name
    */
   @NonNull
-  public PrefixToNamespaceResolver getFlagPrefixResolver() {
-    return this::resolveFlagReferencePrefix;
-  }
-
-  @NonNull
-  private String resolveFlagReferencePrefix(@NonNull String prefix) {
-    String ns = lookupNamespaceForPrefix(prefix);
-    return ns == null ? XMLConstants.NULL_NS_URI : ns;
+  public IEnhancedQName parseFlagName(@NonNull String name) {
+    return getEqNameFactory().parseName(
+        name,
+        this::resolveBasicPrefix);
   }
 
   /**
-   * Get a prefix resolver for use with Metapath model node names that will
-   * attempt to identify the namespace corresponding to a given prefix.
+   * Parse a model name.
    * <p>
-   * This will use the following lookup order, advancing to the next when a
-   * {@code null} value is returned:
+   * This method will attempt to identify the namespace corresponding to a given
+   * prefix.
+   * <p>
+   * The prefix will be resolved using the following lookup order, advancing to
+   * the next when a {@code null} value is returned:
    * <ol>
-   * <li>Lookup the prefix using
-   * {@link StaticContext#lookupNamespaceForPrefix(String)}</li>
-   * <li>Return the result of
-   * {@link StaticContext#getDefaultModelNamespace()}</li>
-   * <li>Return {@link XMLConstants#NULL_NS_URI}</li>
+   * <li>Lookup the prefix using the namespaces registered with the static
+   * context.</li>
+   * <li>Lookup the prefix in the well-known namespaces.</li>
+   * <li>Use the default model namespace (see
+   * {@link Builder#defaultModelNamespace(String)}).</li>
    * </ol>
    *
-   * @return the resolver
+   * @return the parsed qualified name
    */
   @NonNull
-  public PrefixToNamespaceResolver getModelPrefixResolver() {
-    return this::resolveModelReferencePrefix;
+  public IEnhancedQName parseModelName(@NonNull String name) {
+    return getEqNameFactory().parseName(
+        name,
+        this::resolveModelReferencePrefix);
   }
 
   @NonNull
@@ -295,28 +309,28 @@ public final class StaticContext {
   }
 
   /**
-   * Get a prefix resolver for use with Metapath variable names that will attempt
-   * to identify the namespace corresponding to a given prefix.
+   * Parse a variable name.
    * <p>
-   * This will use the following lookup order, advancing to the next when a
-   * {@code null} value is returned:
+   * This method will attempt to identify the namespace corresponding to a given
+   * prefix.
+   * <p>
+   * The prefix will be resolved using the following lookup order, advancing to
+   * the next when a {@code null} value is returned:
+   *
    * <ol>
-   * <li>Lookup the prefix using
-   * {@link StaticContext#lookupNamespaceForPrefix(String)}</li>
-   * <li>Return {@link XMLConstants#NULL_NS_URI}</li>
+   * <li>Lookup the prefix using the namespaces registered with the static
+   * context.</li>
+   * <li>Lookup the prefix in the well-known namespaces.</li>
+   * <li>Use {@link XMLConstants#NULL_NS_URI}.</li>
    * </ol>
    *
-   * @return the resolver
+   * @return the parsed qualified name
    */
   @NonNull
-  public PrefixToNamespaceResolver getVariablePrefixResolver() {
-    return this::resolveVariablePrefix;
-  }
-
-  @NonNull
-  private String resolveVariablePrefix(@NonNull String prefix) {
-    String ns = lookupNamespaceForPrefix(prefix);
-    return ns == null ? XMLConstants.NULL_NS_URI : ns;
+  public IEnhancedQName parseVariableName(@NonNull String name) {
+    return getEqNameFactory().parseName(
+        name,
+        this::resolveBasicPrefix);
   }
 
   /**
@@ -414,6 +428,7 @@ public final class StaticContext {
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull URI uri) {
       this.namespaces.put(prefix, uri);
+      NamespaceCache.instance().of(uri);
       return this;
     }
 
@@ -448,6 +463,7 @@ public final class StaticContext {
     @NonNull
     public Builder defaultModelNamespace(@NonNull URI uri) {
       this.defaultModelNamespace = uri;
+      NamespaceCache.instance().of(uri);
       return this;
     }
 
@@ -478,6 +494,7 @@ public final class StaticContext {
     @NonNull
     public Builder defaultFunctionNamespace(@NonNull URI uri) {
       this.defaultFunctionNamespace = uri;
+      NamespaceCache.instance().of(uri);
       return this;
     }
 
@@ -519,11 +536,44 @@ public final class StaticContext {
     }
   }
 
-  @NonNull
-  public IItemType lookupDataType(QName name) {
+  @Nullable
+  public IFunction lookupFunction(@NonNull String name, int arity) {
+    IEnhancedQName qname = parseFunctionName(name);
+    return lookupFunction(qname, arity);
   }
 
-  @NonNull
-  public IItemType lookupDataType(Class<? extends IItem> clazz) {
+  @Nullable
+  public IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
+    return FunctionService.getInstance().getFunction(
+        Objects.requireNonNull(qname, "name"),
+        arity);
+  }
+
+  @Nullable
+  public IItemType lookupDataTypeItemType(@NonNull String name) {
+    IEnhancedQName eqName = parseDataTypeName(name);
+    return lookupDataTypeItemType(eqName);
+  }
+
+  @Nullable
+  public IItemType lookupDataTypeItemType(@NonNull IEnhancedQName qname) {
+    IDataTypeAdapter<?> adapter = DataTypeService.instance()
+        .getJavaTypeAdapterByQNameIndex(qname.getIndexPosition());
+
+    IItemType retval = null;
+
+    // Expected a non-null adapter result, since the QName was found
+    // if an adapter is not found, this is likely because someone is squating on
+    // the namespace
+    if (adapter != null) {
+      retval = adapter.getItemType();
+    }
+    return retval;
+  }
+
+  @Nullable
+  public IItemType lookupDataTypeItemType(Class<? extends IAnyAtomicItem> clazz) {
+    IDataTypeAdapter<?> adapter = DataTypeService.instance().getJavaTypeAdapterByItemClass(clazz);
+    return adapter == null ? null : adapter.getItemType();
   }
 }

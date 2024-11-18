@@ -10,6 +10,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Objects;
@@ -83,10 +85,10 @@ public interface IArgument {
     private Builder(@NonNull StaticContext staticContext) {
       // construct a new non-initialized builder
       this.staticContext = staticContext;
-      this.type = staticContext.lookupDataType(IItem.class);
+      this.type = IItem.type();
     }
 
-    protected StaticContext getStaticContext() {
+    private StaticContext getStaticContext() {
       return staticContext;
     }
 
@@ -112,13 +114,38 @@ public interface IArgument {
      * By default an argument has the type {@link IItem}.
      *
      * @param type
-     *          the argument's type
+     *          the qualified name of the argument's type
+     * @return this builder
+     */
+    @NonNull
+    public Builder type(@NonNull IEnhancedQName name) {
+      IItemType result = getStaticContext().lookupDataTypeItemType(name);
+      if (result == null) {
+        throw new IllegalArgumentException(
+            String.format("No data type with the name '%s'.", name));
+      }
+      this.type = result;
+      return this;
+    }
+
+    /**
+     * Define the type of the function argument.
+     * <p>
+     * By default an argument has the type {@link IItem}.
+     *
+     * @param name
+     *          the qualified name of the argument's type
      * @return this builder
      */
     @NonNull
     public Builder type(@NonNull QName name) {
-      this.type = getStaticContext().lookupDataType(name);
-      return this;
+      IEnhancedQName result = QNameCache.instance().get(name);
+      if (result == null) {
+        throw new IllegalArgumentException(
+            String.format("A data type with the qname '%s' was not found.",
+                name));
+      }
+      return type(result);
     }
 
     /**
@@ -131,8 +158,8 @@ public interface IArgument {
      * @return this builder
      */
     @NonNull
-    public Builder type(@NonNull Class<? extends IItem> type) {
-      this.type = getStaticContext().lookupDataType(type);
+    public Builder type(@NonNull IItemType type) {
+      this.type = type;
       return this;
     }
 

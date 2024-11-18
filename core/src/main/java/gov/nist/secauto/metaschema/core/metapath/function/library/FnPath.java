@@ -40,7 +40,7 @@ public final class FnPath {
       .deterministic()
       .contextDependent()
       .focusDependent()
-      .returnType(IStringItem.class)
+      .returnType(IStringItem.type())
       .returnZeroOrOne()
       .functionHandler(FnPath::executeNoArg)
       .build();
@@ -54,10 +54,10 @@ public final class FnPath {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(INodeItem.class)
+          .type(INodeItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IStringItem.class)
+      .returnType(IStringItem.type())
       .returnZeroOrOne()
       .functionHandler(FnPath::executeOneArg)
       .build();

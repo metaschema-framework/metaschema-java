@@ -74,7 +74,7 @@ class ListFunctionsSubcommand
 
     Map<String, Map<String, List<IFunction>>> namespaceToNameToFunctionMap = FunctionService.getInstance().stream()
         .collect(Collectors.groupingBy(
-            function -> function.getQName().getNamespaceURI(),
+            function -> function.getQName().getNamespace(),
             Collectors.groupingBy(
                 IFunction::getName,
                 Collectors.toList())));
@@ -106,7 +106,7 @@ class ListFunctionsSubcommand
 
         for (IFunction function : functions) {
           String functionRef = prefix == null
-              ? String.format("Q{%s}%s", function.getQName().getNamespaceURI(), function.getName())
+              ? String.format("Q{%s}%s", function.getQName().getNamespace(), function.getName())
               : String.format("%s:%s", prefix, function.getName());
 
           LOGGER.atInfo().log(String.format("%s(%s) as %s",

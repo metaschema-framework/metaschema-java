@@ -20,6 +20,7 @@ import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedChoiceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedFieldReferenceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedInlineAssemblyDefinitionType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedInlineFieldDefinitionType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,8 +28,6 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -217,13 +216,13 @@ class XmlChoiceGroupInstance
     }
 
     public void append(@NonNull IFieldInstanceGrouped instance) {
-      QName key = instance.getXmlQName();
+      IEnhancedQName key = instance.getXmlQName();
       getFieldInstanceMap().put(key, instance);
       getNamedModelInstanceMap().put(key, instance);
     }
 
     public void append(@NonNull IAssemblyInstanceGrouped instance) {
-      QName key = instance.getXmlQName();
+      IEnhancedQName key = instance.getXmlQName();
       getAssemblyInstanceMap().put(key, instance);
       getNamedModelInstanceMap().put(key, instance);
     }

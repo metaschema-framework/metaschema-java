@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractSchemaGenerator;
@@ -198,9 +199,9 @@ public class XmlSchemaGenerator
       generateSchemaMetadata(module, state);
 
       for (IAssemblyDefinition definition : rootAssemblyDefinitions) {
-        QName xmlQName = definition.getRootXmlQName();
+        IEnhancedQName xmlQName = definition.getRootXmlQName();
         if (xmlQName != null
-            && (xmlQName.getNamespaceURI() == null || state.getDefaultNS().equals(xmlQName.getNamespaceURI()))) {
+            && (xmlQName.getNamespace() == null || state.getDefaultNS().equals(xmlQName.getNamespace()))) {
           generateRootElement(definition, state);
         }
       }
@@ -255,10 +256,10 @@ public class XmlSchemaGenerator
     assert definition.isRoot();
 
     XMLStreamWriter2 writer = state.getXMLStreamWriter();
-    QName xmlQName = definition.getRootXmlQName();
+    IEnhancedQName xmlQName = definition.getRootXmlQName();
 
     writer.writeStartElement(PREFIX_XML_SCHEMA, "element", NS_XML_SCHEMA);
-    writer.writeAttribute("name", xmlQName.getLocalPart());
+    writer.writeAttribute("name", xmlQName.getLocalName());
     writer.writeAttribute("type", state.getXmlForDefinition(definition).getTypeReference());
 
     writer.writeEndElement();

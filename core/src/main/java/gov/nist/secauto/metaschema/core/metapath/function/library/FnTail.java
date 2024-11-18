@@ -35,10 +35,10 @@ public final class FnTail {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IItem.class)
+          .type(IItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IItem.class)
+      .returnType(IItem.type())
       .returnZeroOrMore()
       .functionHandler(FnTail::execute)
       .build();

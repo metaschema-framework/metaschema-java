@@ -38,7 +38,7 @@ public final class FnData {
       .deterministic()
       .contextDependent()
       .focusDependent()
-      .returnType(IAnyAtomicItem.class)
+      .returnType(IAnyAtomicItem.type())
       .returnOne()
       .functionHandler(FnData::executeNoArg)
       .build();
@@ -52,10 +52,10 @@ public final class FnData {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IItem.class)
+          .type(IItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IAnyAtomicItem.class)
+      .returnType(IAnyAtomicItem.type())
       .returnOne()
       .functionHandler(FnData::executeOneArg)
       .build();

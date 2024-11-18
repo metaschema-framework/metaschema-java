@@ -6,9 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.UuidItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 
 import java.util.UUID;
 
@@ -18,6 +19,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a UUID data value.
  */
 public interface IUuidItem extends IStringItem {
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return MetaschemaDataTypeProvider.UUID.getItemType();
+  }
+
   /**
    * Construct a new UUID item using the provided string {@code value}.
    *

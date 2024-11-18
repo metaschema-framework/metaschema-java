@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import java.util.Collection;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
-import javax.xml.namespace.QName;
+import java.util.Collection;
 
 public interface IContainerModelAbsolute extends IContainerModel {
 
@@ -18,17 +18,17 @@ public interface IContainerModelAbsolute extends IContainerModel {
   Collection<? extends INamedModelInstanceAbsolute> getNamedModelInstances();
 
   @Override
-  INamedModelInstanceAbsolute getNamedModelInstanceByName(QName name);
+  INamedModelInstanceAbsolute getNamedModelInstanceByName(IEnhancedQName name);
 
   @Override
   Collection<? extends IFieldInstanceAbsolute> getFieldInstances();
 
   @Override
-  IFieldInstanceAbsolute getFieldInstanceByName(QName name);
+  IFieldInstanceAbsolute getFieldInstanceByName(IEnhancedQName name);
 
   @Override
   Collection<? extends IAssemblyInstanceAbsolute> getAssemblyInstances();
 
   @Override
-  IAssemblyInstanceAbsolute getAssemblyInstanceByName(QName name);
+  IAssemblyInstanceAbsolute getAssemblyInstanceByName(IEnhancedQName name);
 }

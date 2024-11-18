@@ -40,7 +40,7 @@ public final class FnBaseUri {
       .deterministic()
       .contextDependent()
       .focusDependent()
-      .returnType(IAnyUriItem.class)
+      .returnType(IAnyUriItem.type())
       .returnOne()
       .functionHandler(FnBaseUri::executeNoArg)
       .build();
@@ -54,10 +54,10 @@ public final class FnBaseUri {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(INodeItem.class)
+          .type(INodeItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IAnyUriItem.class)
+      .returnType(IAnyUriItem.type())
       .returnOne()
       .functionHandler(FnBaseUri::executeOneArg)
       .build();

@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelElement;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelElement;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -18,8 +19,6 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 
 import java.net.URI;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -139,7 +138,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
         allowing(instance).getXmlNamespace();
         will(returnValue(namespace));
         allowing(instance).getXmlQName();
-        will(returnValue(new QName(namespace, name)));
+        will(returnValue(EQNameFactory.of(namespace, name)));
         allowing(instance).getDefinition();
         will(returnValue(definition));
         allowing(instance).getContainingDefinition();
@@ -165,7 +164,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
         allowing(element).getUseName();
         will(returnValue(null));
         allowing(element).getXmlQName();
-        will(returnValue(new QName(namespace, name)));
+        will(returnValue(EQNameFactory.of(namespace, name)));
         allowing(element).getEffectiveName();
         will(returnValue(name));
         allowing(element).getFormalName();

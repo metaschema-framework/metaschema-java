@@ -28,6 +28,7 @@ import gov.nist.secauto.metaschema.core.model.xml.impl.XmlObjectParser;
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlObjectParser.Handler;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.METASCHEMACONSTRAINTSDocument;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.METASCHEMACONSTRAINTSDocument.METASCHEMACONSTRAINTS.Scope;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -47,8 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -65,7 +64,7 @@ public class XmlConstraintLoader
 
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  private static final Map<QName,
+  private static final Map<IEnhancedQName,
       Handler<Pair<ISource, List<ITargetedConstraints>>>> SCOPE_OBJECT_MAPPING = ObjectUtils.notNull(
           Map.ofEntries(
               Map.entry(XmlModuleConstants.ASSEMBLY_QNAME, XmlConstraintLoader::handleScopedAssembly),

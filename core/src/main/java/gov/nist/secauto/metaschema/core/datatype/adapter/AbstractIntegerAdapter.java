@@ -14,6 +14,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import java.io.IOException;
 import java.math.BigInteger;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * Provides a common base class for integer-based data types.
  * <p>
@@ -27,9 +29,13 @@ public abstract class AbstractIntegerAdapter<ITEM_TYPE extends IIntegerItem>
 
   /**
    * Construct a new integer-based adapter.
+   *
+   * @param itemClass
+   *          the Java type of the Matepath item this adapter supports
    */
-  protected AbstractIntegerAdapter() {
-    super(BigInteger.class);
+  protected AbstractIntegerAdapter(
+      @NonNull Class<ITEM_TYPE> itemClass) {
+    super(BigInteger.class, itemClass);
   }
 
   @Override

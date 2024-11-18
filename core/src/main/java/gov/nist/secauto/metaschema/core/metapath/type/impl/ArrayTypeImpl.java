@@ -1,7 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IArrayType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
@@ -21,15 +24,16 @@ public class ArrayTypeImpl implements IArrayType {
     return valueType;
   }
 
-  @Override
-  public boolean matches(IItem item) {
-    return item instanceof IArrayItem
-        ? ((IArrayItem<?>) item).stream().allMatch(valueType::matches)
-        : false;
-  }
+  // @Override
+  // public boolean matches(IItem item) {
+  // return item instanceof IArrayItem
+  // ? ((IArrayItem<?>) item).stream().allMatch(valueType::matches)
+  // : false;
+  // }
 
+  @SuppressWarnings({ "rawtypes" })
   @Override
-  public Class<? extends IItem> getItemClass() {
+  public Class<? extends IArrayItem> getItemClass() {
     return IArrayItem.class;
   }
 

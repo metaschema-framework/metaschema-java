@@ -3,9 +3,8 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -21,7 +20,7 @@ public interface IRootAssemblyNodeItem extends IAssemblyNodeItem, IFeatureChildN
    * This overrides the default behavior using the root name for the assembly.
    */
   @Override
-  default QName getQName() {
+  default IEnhancedQName getQName() {
     return ObjectUtils.requireNonNull(getDefinition().getRootXmlQName());
   }
 

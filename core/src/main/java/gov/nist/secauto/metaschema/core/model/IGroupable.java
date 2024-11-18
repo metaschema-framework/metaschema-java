@@ -5,12 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -98,10 +98,10 @@ public interface IGroupable extends IInstance {
    */
   // REFACTOR: rename to getXmlGroupAsQName
   @Nullable
-  default QName getEffectiveXmlGroupAsQName() {
+  default IEnhancedQName getEffectiveXmlGroupAsQName() {
     return XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())
         // require a group-as name in this case
-        ? new QName(getEffectiveGroupAsNamespace(), ObjectUtils.requireNonNull(getGroupAsName()))
+        ? EQNameFactory.of(getEffectiveGroupAsNamespace(), ObjectUtils.requireNonNull(getGroupAsName()))
         // no group-as name in this case
         : null;
   }

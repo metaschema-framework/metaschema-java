@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.XmlConstraintLoader;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.test.TestMetaschema;
@@ -23,8 +24,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 class DefaultBindingContextTest {
 
@@ -41,7 +40,7 @@ class DefaultBindingContextTest {
     IBoundModule module = bindingContext.registerModule(TestMetaschema.class);
 
     IAssemblyDefinition root
-        = module.getExportedAssemblyDefinitionByName(new QName("https://csrc.nist.gov/ns/test/xml", "root"));
+        = module.getExportedAssemblyDefinitionByName(EQNameFactory.of("https://csrc.nist.gov/ns/test/xml", "root"));
 
     assertNotNull(root, "root not found");
     List<? extends IConstraint> constraints = root.getConstraints();

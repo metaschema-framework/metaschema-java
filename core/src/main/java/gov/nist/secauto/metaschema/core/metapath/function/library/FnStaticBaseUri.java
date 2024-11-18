@@ -36,10 +36,10 @@ public final class FnStaticBaseUri {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IStringItem.class)
+          .type(IStringItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IAnyUriItem.class)
+      .returnType(IAnyUriItem.type())
       .returnOne()
       .functionHandler(FnStaticBaseUri::execute)
       .build();

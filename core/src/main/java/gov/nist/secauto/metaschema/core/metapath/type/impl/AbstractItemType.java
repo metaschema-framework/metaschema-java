@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
@@ -12,11 +16,6 @@ public abstract class AbstractItemType<I extends IItem> implements IItemType {
 
   protected AbstractItemType(@NonNull Class<? extends I> itemClass) {
     this.itemClass = itemClass;
-  }
-
-  @Override
-  public boolean matches(IItem item) {
-    return getItemClass().isInstance(item);
   }
 
   @Override

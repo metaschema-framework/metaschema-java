@@ -36,10 +36,10 @@ public final class MapSize {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("map")
-          .type(IMapItem.class)
+          .type(IMapItem.type())
           .one()
           .build())
-      .returnType(IIntegerItem.class)
+      .returnType(IIntegerItem.type())
       .returnOne()
       .functionHandler(MapSize::execute)
       .build();

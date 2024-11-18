@@ -73,7 +73,7 @@ public class InvalidTypeFunctionException
     if (item instanceof INodeItem) {
       INodeItem nodeItem = (INodeItem) item;
       retval = String.format("The %s node item at path '%s' has no typed value",
-          nodeItem.getNodeItemType().name().toLowerCase(Locale.ROOT),
+          nodeItem.getNodeItemKind().name().toLowerCase(Locale.ROOT),
           nodeItem.getMetapath());
     } else {
       retval = String.format("Item '%s' has no typed value", item.getClass().getName());

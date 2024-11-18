@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.DateTimeException;
@@ -18,8 +20,6 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -31,9 +31,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class DateWithTZAdapter
     extends AbstractDataTypeAdapter<ZonedDateTime, IDateItem> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
-      List.of(
-          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "date-with-timezone")));
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
+      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date-with-timezone")));
   private static final Pattern DATE_TIMEZONE = Pattern.compile("^("
       + "^(?:(?:2000|2400|2800|(?:19|2[0-9](?:0[48]|[2468][048]|[13579][26])))-02-29)"
       + "|(?:(?:(?:19|2[0-9])[0-9]{2})-02-(?:0[1-9]|1[0-9]|2[0-8]))"
@@ -43,11 +42,11 @@ public class DateWithTZAdapter
       + "(Z|[+-][0-9]{2}:[0-9]{2})$");
 
   DateWithTZAdapter() {
-    super(ZonedDateTime.class);
+    super(ZonedDateTime.class, IDateItem.class);
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
@@ -89,11 +88,6 @@ public class DateWithTZAdapter
   @Override
   public ZonedDateTime copy(Object obj) {
     return ZonedDateTime.from((ZonedDateTime) obj);
-  }
-
-  @Override
-  public Class<IDateItem> getItemClass() {
-    return IDateItem.class;
   }
 
   @Override

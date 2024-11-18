@@ -66,7 +66,7 @@ public abstract class ModelTestBase {
                     "rootName"),
                 () -> assertEquals(
                     assembly.getContainingModule().getXmlNamespace().toASCIIString(),
-                    assembly.getRootXmlQName().getNamespaceURI(),
+                    assembly.getRootXmlQName().getNamespace(),
                     "rootNamespace"),
                 () -> assertTrue(true));
           } else {

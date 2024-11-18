@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
@@ -19,7 +23,7 @@ public final class AnyItemType
   }
 
   @Override
-  public boolean matches(IItem item) {
+  public boolean isInstance(IItem item) {
     // any item type always matches
     return true;
   }

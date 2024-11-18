@@ -106,6 +106,8 @@ public interface IAttributable {
   /**
    * Represents a property key based on a name and a namespace.
    */
+  // FIXME: use IEnhancedQName instead of name and namespace, or replace key
+  // altogether with an integer value
   @SuppressWarnings("PMD.ShortClassName")
   final class Key {
     @NonNull

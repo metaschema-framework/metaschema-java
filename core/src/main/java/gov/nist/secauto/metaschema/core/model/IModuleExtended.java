@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
@@ -12,8 +13,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -25,11 +24,11 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * can be accessed using {@link #getImportedModules()}.
  * <p>
  * Global scoped Metaschema definitions can be accessed using
- * {@link #getScopedAssemblyDefinitionByName(QName)},
- * {@link #getScopedFieldDefinitionByName(QName)}, and
- * {@link #getScopedFlagDefinitionByName(QName)}. These methods take into
- * consideration the import order to provide the global definitions that are in
- * scope within the given Metschema module.
+ * {@link #getScopedAssemblyDefinitionByName(IEnhancedQName)},
+ * {@link #getScopedFieldDefinitionByName(IEnhancedQName)}, and
+ * {@link #getScopedFlagDefinitionByName(IEnhancedQName)}. These methods take
+ * into consideration the import order to provide the global definitions that
+ * are in scope within the given Metschema module.
  * <p>
  * Global scoped definitions exported by this Metaschema module, available for
  * use by importing Metaschema modules, can be accessed using
@@ -99,7 +98,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  FL getFlagDefinitionByName(@NonNull QName name);
+  FL getFlagDefinitionByName(@NonNull IEnhancedQName name);
 
   @Override
   @NonNull
@@ -107,7 +106,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  A getAssemblyDefinitionByName(@NonNull QName name);
+  A getAssemblyDefinitionByName(@NonNull IEnhancedQName name);
 
   @Override
   @NonNull
@@ -115,7 +114,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  FI getFieldDefinitionByName(@NonNull QName name);
+  FI getFieldDefinitionByName(@NonNull IEnhancedQName name);
 
   @Override
   @SuppressWarnings("unchecked")
@@ -130,7 +129,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  default A getScopedAssemblyDefinitionByName(@NonNull QName name) {
+  default A getScopedAssemblyDefinitionByName(@NonNull IEnhancedQName name) {
     // first try local/global top-level definitions from current metaschema module
     A retval = getAssemblyDefinitionByName(name);
     if (retval == null) {
@@ -142,7 +141,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  default FI getScopedFieldDefinitionByName(@NonNull QName name) {
+  default FI getScopedFieldDefinitionByName(@NonNull IEnhancedQName name) {
     // first try local/global top-level definitions from current metaschema module
     FI retval = getFieldDefinitionByName(name);
     if (retval == null) {
@@ -154,7 +153,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  default FL getScopedFlagDefinitionByName(@NonNull QName name) {
+  default FL getScopedFlagDefinitionByName(@NonNull IEnhancedQName name) {
     // first try local/global top-level definitions from current metaschema module
     FL retval = getFlagDefinitionByName(name);
     if (retval == null) {
@@ -186,7 +185,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  FL getExportedFlagDefinitionByName(QName name);
+  FL getExportedFlagDefinitionByName(IEnhancedQName name);
 
   @Override
   @NonNull
@@ -194,7 +193,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  FI getExportedFieldDefinitionByName(QName name);
+  FI getExportedFieldDefinitionByName(IEnhancedQName name);
 
   @Override
   @NonNull
@@ -202,5 +201,5 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  A getExportedAssemblyDefinitionByName(QName name);
+  A getExportedAssemblyDefinitionByName(IEnhancedQName name);
 }

@@ -11,6 +11,8 @@ import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapt
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.LocalDate;
@@ -23,8 +25,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -35,8 +35,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class DateAdapter
     extends AbstractCustomJavaDataTypeAdapter<AmbiguousDate, IDateItem> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
-      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "date")));
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
+      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date")));
   @NonNull
   private static final Pattern DATE_TIMEZONE = ObjectUtils.notNull(
       Pattern.compile("^("
@@ -48,11 +48,11 @@ public class DateAdapter
           + "(Z|[+-][0-9]{2}:[0-9]{2})?$"));
 
   DateAdapter() {
-    super(AmbiguousDate.class);
+    super(AmbiguousDate.class, IDateItem.class);
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
@@ -92,11 +92,6 @@ public class DateAdapter
     return ObjectUtils.notNull(value.hasTimeZone()
         ? DateFormats.DATE_WITH_TZ.format(value.getValue())
         : DateFormats.DATE_WITHOUT_TZ.format(value.getValue()));
-  }
-
-  @Override
-  public Class<IDateItem> getItemClass() {
-    return IDateItem.class;
   }
 
   @Override

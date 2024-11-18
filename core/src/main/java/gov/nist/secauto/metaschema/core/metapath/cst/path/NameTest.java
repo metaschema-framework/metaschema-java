@@ -11,9 +11,8 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -27,7 +26,7 @@ public class NameTest
     implements INameTestExpression {
 
   @NonNull
-  private final QName name;
+  private final IEnhancedQName name;
 
   /**
    * Construct a new expanded QName-based literal expression.
@@ -35,7 +34,7 @@ public class NameTest
    * @param name
    *          the literal value
    */
-  public NameTest(@NonNull QName name) {
+  public NameTest(@NonNull IEnhancedQName name) {
     this.name = name;
   }
 
@@ -45,7 +44,7 @@ public class NameTest
    * @return the string value of the name
    */
   @NonNull
-  public QName getName() {
+  public IEnhancedQName getName() {
     return name;
   }
 

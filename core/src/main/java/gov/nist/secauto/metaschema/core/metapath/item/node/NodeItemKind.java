@@ -2,10 +2,10 @@
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 /**
- * This enumeration provides a listing of the available types of
+ * This enumeration provides a listing of the available kinds of
  * {@link INodeItem} implementations.
  */
-public enum NodeItemType {
+public enum NodeItemKind {
   /**
    * An {@link INodeItem} based on a Metaschema (@link {@link IModuleNodeItem}}).
    */

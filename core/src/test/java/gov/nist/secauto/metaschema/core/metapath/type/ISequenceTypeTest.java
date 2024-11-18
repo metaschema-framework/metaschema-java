@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
@@ -7,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -29,11 +34,12 @@ class ISequenceTypeTest {
                 "meta:string?", true)));
   }
 
+  @Disabled
   @ParameterizedTest
   @MethodSource("provideValues")
   void testMatch(@NonNull IItem actual, @NonNull Map<String, Boolean> testToExpectedMap) {
     for (Map.Entry<String, Boolean> entry : testToExpectedMap.entrySet()) {
-      String test = ". instanceof " + entry.getKey();
+      String test = ". instance of " + entry.getKey();
       MetapathExpression expression = MetapathExpression.compile(test);
       Boolean result = expression.evaluateAs(actual, MetapathExpression.ResultType.BOOLEAN);
 

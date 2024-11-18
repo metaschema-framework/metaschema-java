@@ -8,11 +8,10 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -38,7 +37,8 @@ public class Let implements IExpression {
    * @param returnExpression
    *          the inner expression to evaluate with the variable in-scope
    */
-  public Let(@NonNull QName name, @NonNull IExpression boundExpression, @NonNull IExpression returnExpression) {
+  public Let(@NonNull IEnhancedQName name, @NonNull IExpression boundExpression,
+      @NonNull IExpression returnExpression) {
     this.variable = new VariableDeclaration(name, boundExpression);
     this.returnExpression = returnExpression;
   }
@@ -88,7 +88,7 @@ public class Let implements IExpression {
    */
   public static class VariableDeclaration {
     @NonNull
-    private final QName name;
+    private final IEnhancedQName name;
     @NonNull
     private final IExpression boundExpression;
 
@@ -101,7 +101,7 @@ public class Let implements IExpression {
      * @param boundExpression
      *          the bound expression
      */
-    public VariableDeclaration(@NonNull QName name, @NonNull IExpression boundExpression) {
+    public VariableDeclaration(@NonNull IEnhancedQName name, @NonNull IExpression boundExpression) {
       this.name = name;
       this.boundExpression = boundExpression;
     }
@@ -112,7 +112,7 @@ public class Let implements IExpression {
      * @return the variable name
      */
     @NonNull
-    public QName getName() {
+    public IEnhancedQName getName() {
       return name;
     }
 

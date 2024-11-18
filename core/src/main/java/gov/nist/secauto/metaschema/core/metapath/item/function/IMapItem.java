@@ -16,14 +16,14 @@ import gov.nist.secauto.metaschema.core.metapath.impl.MapItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -35,6 +35,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public interface IMapItem<VALUE extends ICollectionValue>
     extends IFunction, IItem, Map<IMapKey, VALUE>, IPrintable {
+  @NonNull
+  static IItemType type() {
+    return IItemType.map();
+  }
+
   /**
    * Get an empty, immutable map item.
    *
@@ -48,7 +53,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
   }
 
   @Override
-  default QName getQName() {
+  default IEnhancedQName getQName() {
     return AbstractMapItem.QNAME;
   }
 

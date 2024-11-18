@@ -29,7 +29,7 @@ public final class FnCurrentDateTime {
       .deterministic()
       .contextDependent()
       .focusIndependent()
-      .returnType(IDateTimeItem.class)
+      .returnType(IDateTimeItem.type())
       .returnOne()
       .functionHandler(FnCurrentDateTime::execute)
       .build();

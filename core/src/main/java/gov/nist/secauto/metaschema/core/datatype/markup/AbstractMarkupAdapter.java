@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.codehaus.stax2.XMLStreamWriter2;
@@ -17,7 +18,6 @@ import org.codehaus.stax2.evt.XMLEventFactory2;
 
 import java.io.IOException;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
@@ -35,11 +35,12 @@ abstract class AbstractMarkupAdapter<TYPE extends IMarkupString<TYPE>>
   /**
    * Construct a new adapter.
    *
-   * @param clazz
-   *          the markup type class
+   * @param valueClass
+   *          the Java value object type this adapter supports
    */
-  protected AbstractMarkupAdapter(@NonNull Class<TYPE> clazz) {
-    super(clazz);
+  protected AbstractMarkupAdapter(
+      @NonNull Class<TYPE> valueClass) {
+    super(valueClass, IMarkupItem.class);
   }
 
   @Override
@@ -73,13 +74,13 @@ abstract class AbstractMarkupAdapter<TYPE extends IMarkupString<TYPE>>
   }
 
   @Override
-  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 streamWriter)
+  public void writeXmlValue(Object value, IEnhancedQName parentName, XMLStreamWriter2 streamWriter)
       throws IOException {
     IMarkupString<?> markupString = (IMarkupString<?>) value;
 
     try {
       markupString.writeXHtml(
-          ObjectUtils.notNull(parentName.getNamespaceURI()),
+          ObjectUtils.notNull(parentName.getNamespace()),
           streamWriter);
     } catch (XMLStreamException ex) {
       throw new IOException(ex);

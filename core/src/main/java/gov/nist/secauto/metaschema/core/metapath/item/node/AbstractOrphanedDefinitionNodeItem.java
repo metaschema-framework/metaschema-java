@@ -26,7 +26,7 @@ abstract class AbstractOrphanedDefinitionNodeItem<D extends IDefinition, I exten
     this.baseUri = baseUri;
     StaticContext.Builder builder = StaticContext.builder();
 
-    builder.defaultModelNamespace(ObjectUtils.notNull(definition.getXmlQName().getNamespaceURI()));
+    builder.defaultModelNamespace(ObjectUtils.notNull(definition.getXmlQName().getNamespace()));
 
     if (baseUri != null) {
       builder.baseUri(baseUri);

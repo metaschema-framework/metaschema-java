@@ -15,7 +15,9 @@ import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.ArrayItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -31,8 +33,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -46,6 +46,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 @SuppressWarnings("PMD.ShortMethodName")
 public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, IItem, List<ITEM>, IPrintable {
+  @NonNull
+  static IItemType type() {
+    return IItemType.array();
+  }
+
   /**
    * Get an empty, immutable array item.
    *
@@ -59,7 +64,7 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
   }
 
   @Override
-  default QName getQName() {
+  default IEnhancedQName getQName() {
     return AbstractArrayItem.QNAME;
   }
 

@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference;
@@ -23,8 +24,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldRefere
 
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -38,9 +37,9 @@ public abstract class AbstractBindingModelContainerSupport
   protected static void addInstance(
       @NonNull IAssemblyInstanceAbsolute assembly,
       @NonNull List<IModelInstanceAbsolute> modelInstances,
-      @NonNull Map<QName, INamedModelInstanceAbsolute> namedModelInstances,
-      @NonNull Map<QName, IAssemblyInstanceAbsolute> assemblyInstances) {
-    QName effectiveName = assembly.getXmlQName();
+      @NonNull Map<IEnhancedQName, INamedModelInstanceAbsolute> namedModelInstances,
+      @NonNull Map<IEnhancedQName, IAssemblyInstanceAbsolute> assemblyInstances) {
+    IEnhancedQName effectiveName = assembly.getXmlQName();
     modelInstances.add(assembly);
     namedModelInstances.put(effectiveName, assembly);
     assemblyInstances.put(effectiveName, assembly);
@@ -49,9 +48,9 @@ public abstract class AbstractBindingModelContainerSupport
   protected static void addInstance(
       @NonNull IFieldInstanceAbsolute field,
       @NonNull List<IModelInstanceAbsolute> modelInstances,
-      @NonNull Map<QName, INamedModelInstanceAbsolute> namedModelInstances,
-      @NonNull Map<QName, IFieldInstanceAbsolute> fieldInstances) {
-    QName effectiveName = field.getXmlQName();
+      @NonNull Map<IEnhancedQName, INamedModelInstanceAbsolute> namedModelInstances,
+      @NonNull Map<IEnhancedQName, IFieldInstanceAbsolute> fieldInstances) {
+    IEnhancedQName effectiveName = field.getXmlQName();
     modelInstances.add(field);
     namedModelInstances.put(effectiveName, field);
     fieldInstances.put(effectiveName, field);

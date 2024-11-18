@@ -5,9 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -44,7 +43,7 @@ public abstract class AbstractAssemblyInstance<
 
   @Override
   public DEFINITION getDefinition() {
-    QName qname = getReferencedDefinitionQName();
+    IEnhancedQName qname = getReferencedDefinitionQName();
     // this should always be not null
     IAssemblyDefinition definition = getContainingModule().getScopedAssemblyDefinitionByName(qname);
     if (definition == null) {

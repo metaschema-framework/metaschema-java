@@ -20,7 +20,6 @@ import inet.ipaddr.ipv4.IPv4Address;
 public class IPv4AddressItemImpl
     extends AbstractUntypedAtomicItem<IPv4Address>
     implements IIPv4AddressItem {
-
   /**
    * Construct a new item with the provided {@code value}.
    *

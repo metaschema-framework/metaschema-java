@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
@@ -25,15 +26,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanceFlag> {
   @NonNull
-  private final Map<QName, IBoundInstanceFlag> flagInstances;
+  private final Map<IEnhancedQName, IBoundInstanceFlag> flagInstances;
   @Nullable
   private IBoundInstanceFlag jsonKeyFlag;
 
@@ -115,7 +114,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
 
   @Override
   @NonNull
-  public Map<QName, IBoundInstanceFlag> getFlagInstanceMap() {
+  public Map<IEnhancedQName, IBoundInstanceFlag> getFlagInstanceMap() {
     return flagInstances;
   }
 

@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.LinkedHashMap;
@@ -15,14 +16,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ValueConstraintSet implements IValueConstrained { // NOPMD - intentional
   @SuppressWarnings("PMD.UseConcurrentHashMap") // need ordering
   @NonNull
-  private final Map<QName, ILet> lets = new LinkedHashMap<>();
+  private final Map<IEnhancedQName, ILet> lets = new LinkedHashMap<>();
   @NonNull
   protected final List<IConstraint> constraints = new LinkedList<>();
   @NonNull
@@ -37,7 +36,7 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   protected final ReadWriteLock instanceLock = new ReentrantReadWriteLock();
 
   @Override
-  public Map<QName, ILet> getLetExpressions() {
+  public Map<IEnhancedQName, ILet> getLetExpressions() {
     return lets;
   }
 

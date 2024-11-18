@@ -38,10 +38,10 @@ public final class ArrayJoin {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("array")
-          .type(IArrayItem.class)
+          .type(IArrayItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IItem.class)
+      .returnType(IItem.type())
       .returnZeroOrOne()
       .functionHandler(ArrayJoin::execute)
       .build();

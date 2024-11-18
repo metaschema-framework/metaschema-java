@@ -34,7 +34,7 @@ public final class FnStringLength {
       .deterministic()
       .contextDependent()
       .focusDependent()
-      .returnType(IIntegerItem.class)
+      .returnType(IIntegerItem.type())
       .returnOne()
       .functionHandler(FnStringLength::executeNoArg)
       .build();
@@ -48,10 +48,10 @@ public final class FnStringLength {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IStringItem.class)
+          .type(IStringItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IIntegerItem.class)
+      .returnType(IIntegerItem.type())
       .returnOne()
       .functionHandler(FnStringLength::executeOneArg)
       .build();

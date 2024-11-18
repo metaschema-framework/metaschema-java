@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.IModuleExtended;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 
@@ -14,8 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -65,11 +64,11 @@ public interface IBoundModule
   Collection<IBoundDefinitionModelAssembly> getAssemblyDefinitions();
 
   @Override
-  IBoundDefinitionModelAssembly getAssemblyDefinitionByName(@NonNull QName name);
+  IBoundDefinitionModelAssembly getAssemblyDefinitionByName(@NonNull IEnhancedQName name);
 
   @Override
   Collection<IBoundDefinitionModelField<?>> getFieldDefinitions();
 
   @Override
-  IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull QName name);
+  IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull IEnhancedQName name);
 }

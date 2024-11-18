@@ -15,7 +15,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class StringItemImpl
     extends AbstractStringItem {
-
   /**
    * Construct a new item with the provided {@code value}.
    *

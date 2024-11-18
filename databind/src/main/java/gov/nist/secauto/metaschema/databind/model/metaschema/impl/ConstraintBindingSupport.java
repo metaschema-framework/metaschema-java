@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConfigurableMessageConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
@@ -49,8 +50,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedMat
 import java.math.BigInteger;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -189,6 +188,8 @@ public final class ConstraintBindingSupport {
       @NonNull IValueConstrained constraintSet,
       @NonNull IValueConstraintsBase constraints,
       @NonNull ISource source) {
+    StaticContext staticContext = source.getStaticContext();
+
     // parse let expressions
     constraints.getLets().stream()
         .map(letObj -> {
@@ -199,7 +200,7 @@ public final class ConstraintBindingSupport {
           }
 
           return ILet.of(
-              ObjectUtils.requireNonNull(new QName(letObj.getVar())),
+              staticContext.parseVariableName(ObjectUtils.requireNonNull(letObj.getVar())),
               ObjectUtils.requireNonNull(letObj.getExpression()),
               source,
               remarks);

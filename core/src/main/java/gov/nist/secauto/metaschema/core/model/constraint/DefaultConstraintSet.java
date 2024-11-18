@@ -6,6 +6,8 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -26,7 +28,7 @@ public class DefaultConstraintSet implements IConstraintSet {
   @NonNull
   private final Set<IConstraintSet> importedConstraintSets;
   @NonNull
-  private final Map<QName, List<IScopedContraints>> scopedContraints;
+  private final Map<IEnhancedQName, List<IScopedContraints>> scopedContraints;
 
   /**
    * Construct a new constraint set.
@@ -48,7 +50,7 @@ public class DefaultConstraintSet implements IConstraintSet {
         .collect(
             Collectors.collectingAndThen(
                 Collectors.groupingBy(
-                    scope -> new QName(scope.getModuleNamespace().toString(), scope.getModuleShortName()),
+                    scope -> EQNameFactory.of(scope.getModuleNamespace().toString(), scope.getModuleShortName()),
                     Collectors.toUnmodifiableList()),
                 Collections::unmodifiableMap));
     this.importedConstraintSets = CollectionUtil.unmodifiableSet(importedConstraintSets);
@@ -71,7 +73,7 @@ public class DefaultConstraintSet implements IConstraintSet {
    * @return the mapping of QName to scoped constraints
    */
   @NonNull
-  public Map<QName, List<IScopedContraints>> getScopedContraints() {
+  public Map<IEnhancedQName, List<IScopedContraints>> getScopedContraints() {
     return scopedContraints;
   }
 
@@ -82,9 +84,9 @@ public class DefaultConstraintSet implements IConstraintSet {
 
   @Override
   public Iterable<ITargetedConstraints> getTargetedConstraintsForModule(@NonNull IModule module) {
-    QName qname = module.getQName();
+    IEnhancedQName qname = module.getQName();
 
-    Map<QName, List<IScopedContraints>> map = getScopedContraints();
+    Map<IEnhancedQName, List<IScopedContraints>> map = getScopedContraints();
     List<IScopedContraints> scopes = map.getOrDefault(qname, CollectionUtil.emptyList());
     return CollectionUtil.toIterable(ObjectUtils.notNull(scopes.stream()
         .flatMap(scoped -> scoped.getTargetedContraints().stream())));

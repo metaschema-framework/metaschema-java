@@ -40,10 +40,10 @@ public final class FnDoc {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IStringItem.class)
+          .type(IStringItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IDocumentNodeItem.class)
+      .returnType(IDocumentNodeItem.type())
       .returnOne()
       .functionHandler(FnDoc::execute)
       .build();

@@ -5,9 +5,8 @@
 
 package gov.nist.secauto.metaschema.databind.model;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.databind.model.info.IItemValueHandler;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -28,5 +27,5 @@ public interface IBoundModelObject<ITEM> extends IItemValueHandler<ITEM> {
    * @return {@code true} if the instance will handle this name, or {@code false}
    *         otherwise
    */
-  boolean canHandleXmlQName(@NonNull QName qname);
+  boolean canHandleXmlQName(@NonNull IEnhancedQName qname);
 }

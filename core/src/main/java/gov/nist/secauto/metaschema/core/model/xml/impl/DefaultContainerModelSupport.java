@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -18,8 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -58,11 +57,11 @@ public class DefaultContainerModelSupport<
   @NonNull
   private final List<MI> modelInstances;
   @NonNull
-  private final Map<QName, NMI> namedModelInstances;
+  private final Map<IEnhancedQName, NMI> namedModelInstances;
   @NonNull
-  private final Map<QName, FI> fieldInstances;
+  private final Map<IEnhancedQName, FI> fieldInstances;
   @NonNull
-  private final Map<QName, AI> assemblyInstances;
+  private final Map<IEnhancedQName, AI> assemblyInstances;
 
   /**
    * Construct an empty, mutable container.
@@ -110,13 +109,13 @@ public class DefaultContainerModelSupport<
 
     this.modelInstances = ObjectUtils.notNull(List.copyOf(instances));
 
-    Map<QName, NMI> namedModelInstances = new LinkedHashMap<>();
-    Map<QName, FI> fieldInstances = new LinkedHashMap<>();
-    Map<QName, AI> assemblyInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, NMI> namedModelInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, FI> fieldInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, AI> assemblyInstances = new LinkedHashMap<>();
     for (MI instance : instances) {
       if (namedModelClass.isInstance(instance)) {
         NMI named = namedModelClass.cast(instance);
-        QName key = named.getXmlQName();
+        IEnhancedQName key = named.getXmlQName();
         namedModelInstances.put(key, named);
 
         if (fieldClass.isInstance(instance)) {
@@ -152,9 +151,9 @@ public class DefaultContainerModelSupport<
    */
   protected DefaultContainerModelSupport(
       @NonNull List<MI> modelInstances,
-      @NonNull Map<QName, NMI> namedModelInstances,
-      @NonNull Map<QName, FI> fieldInstances,
-      @NonNull Map<QName, AI> assemblyInstances) {
+      @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
+      @NonNull Map<IEnhancedQName, FI> fieldInstances,
+      @NonNull Map<IEnhancedQName, AI> assemblyInstances) {
     this.modelInstances = modelInstances;
     this.namedModelInstances = namedModelInstances;
     this.fieldInstances = fieldInstances;
@@ -167,17 +166,17 @@ public class DefaultContainerModelSupport<
   }
 
   @Override
-  public Map<QName, NMI> getNamedModelInstanceMap() {
+  public Map<IEnhancedQName, NMI> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<QName, FI> getFieldInstanceMap() {
+  public Map<IEnhancedQName, FI> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<QName, AI> getAssemblyInstanceMap() {
+  public Map<IEnhancedQName, AI> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 }

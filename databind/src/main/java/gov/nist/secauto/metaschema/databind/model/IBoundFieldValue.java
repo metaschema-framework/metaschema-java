@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.info.IFeatureScalarItemValueHandler;
@@ -13,8 +14,6 @@ import gov.nist.secauto.metaschema.databind.model.info.IItemReadHandler;
 import gov.nist.secauto.metaschema.databind.model.info.IItemWriteHandler;
 
 import java.io.IOException;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -78,7 +77,7 @@ public interface IBoundFieldValue extends IFeatureScalarItemValueHandler, IBound
   }
 
   @Override
-  default boolean canHandleXmlQName(QName qname) {
+  default boolean canHandleXmlQName(IEnhancedQName qname) {
     // REFACTOR: Is this correct?
     return getJavaTypeAdapter().canHandleQName(qname);
   }

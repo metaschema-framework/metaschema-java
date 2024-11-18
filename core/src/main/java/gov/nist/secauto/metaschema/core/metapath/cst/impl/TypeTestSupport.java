@@ -1,7 +1,12 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.cst.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArraytestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AtomicoruniontypeContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctiontestContext;
@@ -14,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -23,7 +29,7 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-public class TypeTestSupport {
+public final class TypeTestSupport {
 
   private static final Map<
       Class<? extends ParseTree>,
@@ -71,6 +77,7 @@ public class TypeTestSupport {
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     FunctiontestContext ctx = (FunctiontestContext) tree;
+    assert ctx != null;
     throw new UnsupportedOperationException("implement");
   }
 
@@ -79,6 +86,7 @@ public class TypeTestSupport {
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     MaptestContext ctx = (MaptestContext) tree;
+    assert ctx != null;
     throw new UnsupportedOperationException("implement");
   }
 
@@ -87,6 +95,7 @@ public class TypeTestSupport {
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     ArraytestContext ctx = (ArraytestContext) tree;
+    assert ctx != null;
     throw new UnsupportedOperationException("implement");
   }
 
@@ -95,7 +104,15 @@ public class TypeTestSupport {
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     AtomicoruniontypeContext ctx = (AtomicoruniontypeContext) tree;
-    throw new UnsupportedOperationException("implement");
+
+    String name = ObjectUtils.requireNonNull(ctx.eqname().getText());
+    IItemType retval = staticContext.lookupDataTypeItemType(name);
+    if (retval == null) {
+      throw new StaticMetapathException(
+          StaticMetapathException.UNKNOWN_TYPE,
+          String.format("Unknown data type '%s'.", name));
+    }
+    return retval;
   }
 
   @NonNull

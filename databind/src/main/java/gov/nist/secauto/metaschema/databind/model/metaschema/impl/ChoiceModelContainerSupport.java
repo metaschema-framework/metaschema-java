@@ -12,23 +12,22 @@ import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -39,11 +38,11 @@ class ChoiceModelContainerSupport
   @NonNull
   private final List<IModelInstanceAbsolute> modelInstances;
   @NonNull
-  private final Map<QName, INamedModelInstanceAbsolute> namedModelInstances;
+  private final Map<IEnhancedQName, INamedModelInstanceAbsolute> namedModelInstances;
   @NonNull
-  private final Map<QName, IFieldInstanceAbsolute> fieldInstances;
+  private final Map<IEnhancedQName, IFieldInstanceAbsolute> fieldInstances;
   @NonNull
-  private final Map<QName, IAssemblyInstanceAbsolute> assemblyInstances;
+  private final Map<IEnhancedQName, IAssemblyInstanceAbsolute> assemblyInstances;
 
   @SuppressWarnings("PMD.ShortMethodName")
   public static IContainerModelSupport<
@@ -87,9 +86,9 @@ class ChoiceModelContainerSupport
 
     // create temporary collections to store the child binding objects
     final List<IModelInstanceAbsolute> modelInstances = new LinkedList<>();
-    final Map<QName, INamedModelInstanceAbsolute> namedModelInstances = new LinkedHashMap<>();
-    final Map<QName, IFieldInstanceAbsolute> fieldInstances = new LinkedHashMap<>();
-    final Map<QName, IAssemblyInstanceAbsolute> assemblyInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, INamedModelInstanceAbsolute> namedModelInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, IFieldInstanceAbsolute> fieldInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, IAssemblyInstanceAbsolute> assemblyInstances = new LinkedHashMap<>();
 
     // create counters to track child positions
     AtomicInteger assemblyReferencePosition = new AtomicInteger();
@@ -163,17 +162,17 @@ class ChoiceModelContainerSupport
   }
 
   @Override
-  public Map<QName, INamedModelInstanceAbsolute> getNamedModelInstanceMap() {
+  public Map<IEnhancedQName, INamedModelInstanceAbsolute> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<QName, IFieldInstanceAbsolute> getFieldInstanceMap() {
+  public Map<IEnhancedQName, IFieldInstanceAbsolute> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<QName, IAssemblyInstanceAbsolute> getAssemblyInstanceMap() {
+  public Map<IEnhancedQName, IAssemblyInstanceAbsolute> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 }

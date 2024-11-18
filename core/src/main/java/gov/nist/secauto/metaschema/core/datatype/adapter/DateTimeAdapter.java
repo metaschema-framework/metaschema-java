@@ -11,6 +11,8 @@ import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapt
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.LocalDateTime;
@@ -18,8 +20,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -31,18 +31,18 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class DateTimeAdapter
     extends AbstractCustomJavaDataTypeAdapter<AmbiguousDateTime, IDateTimeItem> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
-          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "date-time"),
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date-time"),
           // for backwards compatibility with original type name
-          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "dateTime")));
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "dateTime")));
 
   DateTimeAdapter() {
-    super(AmbiguousDateTime.class);
+    super(AmbiguousDateTime.class, IDateTimeItem.class);
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
@@ -89,11 +89,6 @@ public class DateTimeAdapter
     return ObjectUtils.notNull(value.hasTimeZone()
         ? DateFormats.DATE_TIME_WITH_TZ.format(value.getValue())
         : DateFormats.DATE_TIME_WITHOUT_TZ.format(value.getValue()));
-  }
-
-  @Override
-  public Class<IDateTimeItem> getItemClass() {
-    return IDateTimeItem.class;
   }
 
   @Override

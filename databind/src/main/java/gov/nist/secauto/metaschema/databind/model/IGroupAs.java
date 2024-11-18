@@ -7,8 +7,7 @@ package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
-
-import javax.xml.namespace.QName;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -20,7 +19,7 @@ public interface IGroupAs {
   @NonNull
   IGroupAs SINGLETON_GROUP_AS = new IGroupAs() {
     @Override
-    public QName getGroupAsQName() {
+    public IEnhancedQName getGroupAsQName() {
       return null;
     }
 
@@ -36,18 +35,18 @@ public interface IGroupAs {
   };
 
   @Nullable
-  QName getGroupAsQName();
+  IEnhancedQName getGroupAsQName();
 
   @Nullable
   default String getGroupAsName() {
-    QName qname = getGroupAsQName();
-    return qname == null ? null : qname.getLocalPart();
+    IEnhancedQName qname = getGroupAsQName();
+    return qname == null ? null : qname.getLocalName();
   }
 
   @Nullable
   default String getGroupAsXmlNamespace() {
-    QName qname = getGroupAsQName();
-    return qname == null ? null : qname.getNamespaceURI();
+    IEnhancedQName qname = getGroupAsQName();
+    return qname == null ? null : qname.getNamespace();
   }
 
   @NonNull

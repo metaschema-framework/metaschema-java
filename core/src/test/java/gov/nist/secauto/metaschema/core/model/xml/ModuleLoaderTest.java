@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModu
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -27,8 +28,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 class ModuleLoaderTest {
 
@@ -45,7 +44,7 @@ class ModuleLoaderTest {
     IXmlMetaschemaModule metadataModule = oscalCatalogModule.getImportedModuleByShortName("oscal-metadata");
     assertNotNull(metadataModule, "metadata metaschema not found");
     IFlagDefinition flag
-        = metadataModule.getScopedFlagDefinitionByName(new QName("location-type"));
+        = metadataModule.getScopedFlagDefinitionByName(EQNameFactory.of("location-type"));
     assertNotNull(flag, "flag not found");
     List<? extends IConstraint> constraints = flag.getConstraints();
     assertFalse(constraints.isEmpty(), "a constraint was expected");
@@ -74,7 +73,7 @@ class ModuleLoaderTest {
         "https://raw.githubusercontent.com/usnistgov/OSCAL/v1.0.0/src/metaschema/oscal_complete_metaschema.xml"));
     IXmlMetaschemaModule module = loader.load(moduleUri);
     IAssemblyDefinition catalog
-        = module.getExportedAssemblyDefinitionByName(new QName("http://csrc.nist.gov/ns/oscal/1.0", "catalog"));
+        = module.getExportedAssemblyDefinitionByName(EQNameFactory.of("http://csrc.nist.gov/ns/oscal/1.0", "catalog"));
 
     assertNotNull(catalog, "catalog not found");
     List<? extends IConstraint> constraints = catalog.getConstraints();
@@ -89,13 +88,13 @@ class ModuleLoaderTest {
         = loader.load(ObjectUtils.notNull(Paths.get("src/test/resources/content/custom-entity-metaschema.xml")));
 
     IAssemblyDefinition root = module.getExportedRootAssemblyDefinitionByName(
-        new QName("http://csrc.nist.gov/ns/test/metaschema/entity", "root"));
+        EQNameFactory.of("http://csrc.nist.gov/ns/test/metaschema/entity", "root"));
     assert root != null;
     List<? extends IAllowedValuesConstraint> allowedValues = root.getAllowedValuesConstraints();
 
     assertAll(
         () -> assertEquals(1, allowedValues.size(), "Expecting a single constraint."),
-        () -> assertEquals(1, allowedValues.get(0).getAllowedValues().values().size(),
+        () -> assertEquals(1, allowedValues.get(0).getAllowedValues().size(),
             "Expecting a single allowed value. Entity reference not parsed."));
   }
 }

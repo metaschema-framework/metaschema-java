@@ -48,8 +48,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -497,9 +495,9 @@ public final class ModelFactory {
       @NonNull ConstraintLetType xmlObject,
       @NonNull ISource source) {
 
-    // TODO: figure out how to resolve the namespace prefix on var
+    // FIXME: figure out how to resolve the namespace prefix on var
     return ILet.of(
-        new QName(xmlObject.getVar()),
+        source.getStaticContext().parseVariableName(ObjectUtils.requireNonNull(xmlObject.getVar())),
         ObjectUtils.notNull(xmlObject.getExpression()),
         source,
         xmlObject.isSetRemarks()

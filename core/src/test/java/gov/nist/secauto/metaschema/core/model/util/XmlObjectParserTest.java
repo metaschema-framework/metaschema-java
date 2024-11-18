@@ -7,6 +7,8 @@ package gov.nist.secauto.metaschema.core.model.util;
 
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlObjectParser;
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlObjectParser.Handler;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.XmlCursor;
@@ -50,12 +52,12 @@ class XmlObjectParserTest {
     obj.dump();
 
     Procesor processor = new Procesor();
-    Map<QName, Handler<Void>> objMapping = ObjectUtils.notNull(Map.ofEntries(
-        Map.entry(new QName(TEST_NS, "A"), processor::handleA),
-        Map.entry(new QName(TEST_NS, "B"), processor::handleB),
-        Map.entry(new QName(TEST_NS, "C"), processor::handleC)));
+    Map<IEnhancedQName, Handler<Void>> objMapping = ObjectUtils.notNull(Map.ofEntries(
+        Map.entry(EQNameFactory.of(TEST_NS, "A"), processor::handleA),
+        Map.entry(EQNameFactory.of(TEST_NS, "B"), processor::handleB),
+        Map.entry(EQNameFactory.of(TEST_NS, "C"), processor::handleC)));
 
-    new XmlObjectParser<Void>(objMapping).parse(obj, null);
+    new XmlObjectParser<>(objMapping).parse(obj, null);
   }
 
   @SuppressWarnings("unused")

@@ -29,6 +29,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Generates a mermaid diagram from a Metaschema {@link IModule}.
+ */
 @SuppressWarnings({ "PMD.CouplingBetweenObjects", "PMD.UseConcurrentHashMap" })
 public final class MermaidErDiagramGenerator {
   @NonNull
@@ -74,7 +77,7 @@ public final class MermaidErDiagramGenerator {
 
       for (IDiagramNode.IAttribute attribute : node.getAttributes()) {
         writer.format("    %s %s%n",
-            attribute.getDataType().getPreferredName().getLocalPart(),
+            attribute.getDataType().getPreferredName().getLocalName(),
             attribute.getLabel());
       }
       writer.format("  }%n");

@@ -286,27 +286,34 @@ public class DefaultFunctionLibrary
 
     // metapath casting functions
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "boolean", IBooleanItem.class, IBooleanItem::cast));
+        MetapathConstants.NS_METAPATH, "boolean", IBooleanItem.type(), IBooleanItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "date", IDateItem.class, IDateItem::cast));
+        MetapathConstants.NS_METAPATH, "date", IDateItem.type(), IDateItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "date-time", IDateTimeItem.class, IDateTimeItem::cast));
+        MetapathConstants.NS_METAPATH, "date-time", IDateTimeItem.type(), IDateTimeItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "decimal", IDecimalItem.class, IDecimalItem::cast));
+        MetapathConstants.NS_METAPATH, "decimal", IDecimalItem.type(), IDecimalItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "duration", IDurationItem.class, IDurationItem::cast));
+        MetapathConstants.NS_METAPATH, "duration", IDurationItem.type(), IDurationItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "integer", IIntegerItem.class, IIntegerItem::cast));
+        MetapathConstants.NS_METAPATH, "integer", IIntegerItem.type(), IIntegerItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "ncname", INcNameItem.class, INcNameItem::cast));
+        MetapathConstants.NS_METAPATH, "ncname", INcNameItem.type(), INcNameItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "non-negative-integer", INonNegativeIntegerItem.class,
+        MetapathConstants.NS_METAPATH,
+        "non-negative-integer",
+        INonNegativeIntegerItem.type(),
         INonNegativeIntegerItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "positive-integer", IPositiveIntegerItem.class,
+        MetapathConstants.NS_METAPATH,
+        "positive-integer",
+        IPositiveIntegerItem.type(),
         IPositiveIntegerItem::cast));
     registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "string", IStringItem.class, IStringItem::cast));
+        MetapathConstants.NS_METAPATH,
+        "string",
+        IStringItem.type(),
+        IStringItem::cast));
 
     // extra functions
     registerFunction(MpRecurseDepth.SIGNATURE_ONE_ARG);

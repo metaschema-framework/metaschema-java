@@ -33,7 +33,7 @@ public final class FnNormalizeSpace {
       .deterministic()
       .contextDependent()
       .focusDependent()
-      .returnType(IStringItem.class)
+      .returnType(IStringItem.type())
       .returnOne()
       .functionHandler(FnNormalizeSpace::executeNoArg)
       .build();
@@ -47,10 +47,10 @@ public final class FnNormalizeSpace {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IStringItem.class)
+          .type(IStringItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IStringItem.class)
+      .returnType(IStringItem.type())
       .returnOne()
       .functionHandler(FnNormalizeSpace::executeOneArg)
       .build();

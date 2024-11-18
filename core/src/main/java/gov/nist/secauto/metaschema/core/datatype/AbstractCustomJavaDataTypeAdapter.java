@@ -29,11 +29,15 @@ public abstract class AbstractCustomJavaDataTypeAdapter<
    * Construct a new Java type adapter for the class based on
    * {@link ICustomJavaDataType}.
    *
-   * @param clazz
+   * @param valueClass
    *          a data type class based on {@link ICustomJavaDataType}
+   * @param itemClass
+   *          the Java type of the Matepath item this adapter supports
    */
-  public AbstractCustomJavaDataTypeAdapter(@NonNull Class<TYPE> clazz) {
-    super(clazz);
+  public AbstractCustomJavaDataTypeAdapter(
+      @NonNull Class<TYPE> valueClass,
+      @NonNull Class<ITEM_TYPE> itemClass) {
+    super(valueClass, itemClass);
   }
 
   @SuppressWarnings("unchecked")

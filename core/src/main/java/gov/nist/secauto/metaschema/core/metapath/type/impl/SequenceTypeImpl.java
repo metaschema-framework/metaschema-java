@@ -44,7 +44,9 @@ public class SequenceTypeImpl implements ISequenceType {
     }
   };
 
+  @NonNull
   private final IItemType type;
+  @NonNull
   private final Occurrence occurrence;
 
   public SequenceTypeImpl(@NonNull IItemType type, @NonNull Occurrence occurrence) {

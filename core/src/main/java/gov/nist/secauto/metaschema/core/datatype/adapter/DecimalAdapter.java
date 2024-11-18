@@ -11,14 +11,14 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -31,15 +31,15 @@ public class DecimalAdapter
     extends AbstractDataTypeAdapter<BigDecimal, IDecimalItem> {
   private static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
-      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "decimal")));
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
+      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "decimal")));
 
   DecimalAdapter() {
-    super(BigDecimal.class);
+    super(BigDecimal.class, IDecimalItem.class);
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
@@ -66,11 +66,6 @@ public class DecimalAdapter
   public BigDecimal copy(Object obj) {
     // a BigDecimal is immutable
     return (BigDecimal) obj;
-  }
-
-  @Override
-  public Class<IDecimalItem> getItemClass() {
-    return IDecimalItem.class;
   }
 
   @Override

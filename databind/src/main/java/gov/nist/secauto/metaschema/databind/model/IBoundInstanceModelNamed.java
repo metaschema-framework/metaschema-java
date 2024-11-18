@@ -7,10 +7,9 @@ package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Collection;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -58,7 +57,7 @@ public interface IBoundInstanceModelNamed<ITEM>
   }
 
   @Override
-  default boolean canHandleXmlQName(QName qname) {
+  default boolean canHandleXmlQName(IEnhancedQName qname) {
     return qname.equals(getXmlQName());
   }
 }

@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
@@ -15,8 +16,6 @@ import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -33,9 +32,9 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
   @NonNull
   private final IBoundModule module;
   @NonNull
-  private final Lazy<QName> qname;
+  private final Lazy<IEnhancedQName> qname;
   @NonNull
-  private final Lazy<QName> definitionQName;
+  private final Lazy<IEnhancedQName> definitionQName;
   @Nullable
   private final Method beforeDeserializeMethod;
   @Nullable
@@ -86,13 +85,13 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
 
   @SuppressWarnings("null")
   @Override
-  public final QName getXmlQName() {
+  public final IEnhancedQName getXmlQName() {
     return qname.get();
   }
 
   @SuppressWarnings("null")
   @Override
-  public final QName getDefinitionQName() {
+  public final IEnhancedQName getDefinitionQName() {
     return definitionQName.get();
   }
 

@@ -1,12 +1,15 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyAtomicItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyRawItemType;
-import gov.nist.secauto.metaschema.core.metapath.type.impl.ArrayTypeImpl;
-import gov.nist.secauto.metaschema.core.metapath.type.impl.DataTypeItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.NodeItemType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -25,6 +28,8 @@ public interface IItemType {
   //
   // }
 
+  @SuppressWarnings("unchecked")
+  @NonNull
   static IItemType map() {
     return AnyRawItemType.ANY_MAP;
   }
@@ -34,22 +39,40 @@ public interface IItemType {
   //
   // }
 
+  @SuppressWarnings("unchecked")
   @NonNull
   static IItemType array() {
     return AnyRawItemType.ANY_ARRAY;
   }
 
-  @NonNull
-  static IArrayType array(@NonNull ISequenceType value) {
-    return new ArrayTypeImpl(value);
-  }
+  // @NonNull
+  // static <T extends IItem> IArrayType<T> array(@NonNull ISequenceType<T> value)
+  // {
+  // return new ArrayTypeImpl<T, ?>(value);
+  // }
 
   @NonNull
-  static IItemType type(@NonNull IDataTypeAdapter<?> adapter) {
-    return new DataTypeItemType(adapter);
+  static IAtomicOrUnionType anyAtomic() {
+    return AnyAtomicItemType.instance();
   }
 
-  boolean matches(@NonNull IItem item);
+  @SuppressWarnings("unchecked")
+  @NonNull
+  static IItemType node() {
+    return NodeItemType.ANY_NODE;
+  }
+
+  static IItemType document() {
+    return NodeItemType.ANY_DOCUMENT;
+  }
+
+  static IItemType assembly() {
+    return NodeItemType.ANY_ASSEMBLY;
+  }
+
+  default boolean isInstance(IItem item) {
+    return getItemClass().isInstance(item);
+  }
 
   @NonNull
   Class<? extends IItem> getItemClass();
@@ -57,7 +80,4 @@ public interface IItemType {
   @NonNull
   String toSignature();
 
-  // static IItemType node(Class<? extends INodeItem> itemClass, String nodeName)
-  // {
-  // }
 }

@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
-import gov.nist.secauto.metaschema.core.metapath.EQNameUtils;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevforwardstepContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevreversestepContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AdditiveexprContext;
@@ -86,10 +86,12 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Step;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -106,8 +108,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -193,9 +193,8 @@ public class BuildCSTVisitor
   @Override
   protected IExpression handleVarref(VarrefContext ctx) {
     return new VariableReference(
-        EQNameUtils.parseName(
-            ObjectUtils.notNull(ctx.varname().eqname().getText()),
-            getContext().getVariablePrefixResolver()));
+        getContext().parseVariableName(
+            ObjectUtils.notNull(ctx.varname().eqname().getText())));
   }
 
   // ====================================================================
@@ -223,9 +222,8 @@ public class BuildCSTVisitor
       IExpression boundExpression = exprSingle.accept(this);
       assert boundExpression != null;
 
-      QName qname = EQNameUtils.parseName(
-          ObjectUtils.notNull(varName.eqname().getText()),
-          getContext().getVariablePrefixResolver());
+      IEnhancedQName qname = getContext().parseVariableName(
+          ObjectUtils.notNull(varName.eqname().getText()));
 
       Let.VariableDeclaration variable = new Let.VariableDeclaration(qname, boundExpression);
 
@@ -253,9 +251,8 @@ public class BuildCSTVisitor
       IExpression boundExpression = simpleCtx.exprsingle().accept(this);
       assert boundExpression != null;
 
-      QName varName = EQNameUtils.parseName(
-          ObjectUtils.notNull(simpleCtx.varname().eqname().getText()),
-          getContext().getVariablePrefixResolver());
+      IEnhancedQName varName = getContext().parseVariableName(
+          ObjectUtils.notNull(simpleCtx.varname().eqname().getText()));
 
       retval = new Let(varName, boundExpression, retval); // NOPMD intended
     }
@@ -395,13 +392,29 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleFunctioncall(FunctioncallContext ctx) {
-    QName qname = EQNameUtils.parseName(
-        ObjectUtils.notNull(ctx.eqname().getText()),
-        getContext().getFunctionPrefixResolver());
+    List<IExpression> arguments = ObjectUtils.notNull(
+        parseArgumentList(ObjectUtils.notNull(ctx.argumentlist()))
+            .collect(Collectors.toUnmodifiableList()));
+
     return new StaticFunctionCall(
-        qname,
-        ObjectUtils.notNull(parseArgumentList(ObjectUtils.notNull(ctx.argumentlist()))
-            .collect(Collectors.toUnmodifiableList())));
+        () -> lookupFunction(
+            ObjectUtils.notNull(ctx.eqname().getText()),
+            arguments.size()),
+        arguments);
+  }
+
+  @NonNull
+  private IFunction lookupFunction(@NonNull String name, int arity) {
+    IFunction function = getContext().lookupFunction(name, arity);
+
+    if (function == null) {
+      throw new StaticMetapathException(
+          StaticMetapathException.NO_FUNCTION_MATCH,
+          String.format("No function found with the name '%s' and arity '%d'.",
+              name,
+              arity));
+    }
+    return function;
   }
 
   // =========================================================================
@@ -678,15 +691,16 @@ public class BuildCSTVisitor
 
     INameTestExpression retval;
     if (testType instanceof EqnameContext) {
-      QName qname = EQNameUtils.parseName(
-          ObjectUtils.notNull(ctx.eqname().getText()),
-          flag ? staticContext.getFlagPrefixResolver() : staticContext.getModelPrefixResolver());
+      String name = ObjectUtils.notNull(ctx.eqname().getText());
+      IEnhancedQName qname = flag
+          ? staticContext.parseFlagName(name)
+          : staticContext.parseModelName(name);
 
       if (!flag
-          && qname.getNamespaceURI().isEmpty()
+          && qname.getNamespace().isEmpty()
           && staticContext.isUseWildcardWhenNamespaceNotDefaulted()) {
         // Use a wildcard namespace
-        retval = new Wildcard(new Wildcard.MatchAnyNamespace(ObjectUtils.notNull(qname.getLocalPart())));
+        retval = new Wildcard(new Wildcard.MatchAnyNamespace(ObjectUtils.notNull(qname.getLocalName())));
       } else {
         retval = new NameTest(qname);
       }
@@ -1043,13 +1057,12 @@ public class BuildCSTVisitor
     }
 
     int numVars = (ctx.getChildCount() - 2) / 5; // children - "satisfies expr" / ", $ varName in expr"
-    Map<QName, IExpression> vars = new LinkedHashMap<>(); // NOPMD ordering needed
+    Map<IEnhancedQName, IExpression> vars = new LinkedHashMap<>(); // NOPMD ordering needed
     int offset = 0;
     for (; offset < numVars; offset++) {
       // $
-      QName varName = EQNameUtils.parseName(
-          ObjectUtils.notNull(ctx.varname(offset).eqname().getText()),
-          getContext().getVariablePrefixResolver());
+      IEnhancedQName varName = getContext().parseVariableName(ObjectUtils.notNull(
+          ctx.varname(offset).eqname().getText()));
 
       // in
       IExpression varExpr = visit(ctx.exprsingle(offset));
@@ -1117,16 +1130,18 @@ public class BuildCSTVisitor
       ArrowfunctionspecifierContext fcCtx = ctx.getChild(ArrowfunctionspecifierContext.class, offset);
       ArgumentlistContext argumentCtx = ctx.getChild(ArgumentlistContext.class, offset);
 
-      QName name = EQNameUtils.parseName(
-          ObjectUtils.notNull(fcCtx.eqname().getText()),
-          getContext().getFunctionPrefixResolver());
-
       try (Stream<IExpression> args = Stream.concat(
           Stream.of(left),
           parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {
         assert args != null;
 
-        return new StaticFunctionCall(name, ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList())));
+        List<IExpression> arguments = ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList()));
+
+        return new StaticFunctionCall(
+            () -> lookupFunction(
+                ObjectUtils.notNull(fcCtx.eqname().getText()),
+                arguments.size()),
+            arguments);
       }
     });
   }

@@ -8,6 +8,8 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.model.AbstractChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -36,8 +38,6 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -69,7 +69,7 @@ public final class InstanceModelChoiceGroup
   @NonNull
   private final Lazy<Map<Class<?>, IBoundInstanceModelGroupedNamed>> classToInstanceMap;
   @NonNull
-  private final Lazy<Map<QName, IBoundInstanceModelGroupedNamed>> qnameToInstanceMap;
+  private final Lazy<Map<IEnhancedQName, IBoundInstanceModelGroupedNamed>> qnameToInstanceMap;
   @NonNull
   private final Lazy<Map<String, IBoundInstanceModelGroupedNamed>> discriminatorToInstanceMap;
 
@@ -173,7 +173,7 @@ public final class InstanceModelChoiceGroup
    */
   @SuppressWarnings("null")
   @NonNull
-  protected Map<QName, IBoundInstanceModelGroupedNamed> getQNameToInstanceMap() {
+  protected Map<IEnhancedQName, IBoundInstanceModelGroupedNamed> getQNameToInstanceMap() {
     return qnameToInstanceMap.get();
   }
 
@@ -208,7 +208,7 @@ public final class InstanceModelChoiceGroup
 
   @Override
   @Nullable
-  public IBoundInstanceModelGroupedNamed getGroupedModelInstance(@NonNull QName name) {
+  public IBoundInstanceModelGroupedNamed getGroupedModelInstance(@NonNull IEnhancedQName name) {
     return getQNameToInstanceMap().get(name);
   }
 
@@ -267,8 +267,11 @@ public final class InstanceModelChoiceGroup
       Class<?> clazz = item.getClass();
 
       IBoundInstanceModelGroupedNamed itemInstance = getClassToInstanceMap().get(clazz);
+      String namespace = itemInstance.getXmlNamespace();
       retval = itemInstance.getDefinition().getFlagInstanceByName(
-          new QName(itemInstance.getXmlNamespace(), jsonKeyFlagName));
+          namespace == null
+              ? EQNameFactory.of(jsonKeyFlagName)
+              : EQNameFactory.of(namespace, jsonKeyFlagName));
     }
     return retval;
   }
@@ -281,11 +284,11 @@ public final class InstanceModelChoiceGroup
           IBoundInstanceModelGroupedAssembly> {
 
     @NonNull
-    private final Map<QName, IBoundInstanceModelGroupedNamed> namedModelInstances;
+    private final Map<IEnhancedQName, IBoundInstanceModelGroupedNamed> namedModelInstances;
     @NonNull
-    private final Map<QName, IBoundInstanceModelGroupedField> fieldInstances;
+    private final Map<IEnhancedQName, IBoundInstanceModelGroupedField> fieldInstances;
     @NonNull
-    private final Map<QName, IBoundInstanceModelGroupedAssembly> assemblyInstances;
+    private final Map<IEnhancedQName, IBoundInstanceModelGroupedAssembly> assemblyInstances;
 
     public ChoiceGroupModelContainerSupport(
         @NonNull BoundGroupedAssembly[] assemblies,
@@ -329,17 +332,17 @@ public final class InstanceModelChoiceGroup
     }
 
     @Override
-    public Map<QName, IBoundInstanceModelGroupedNamed> getNamedModelInstanceMap() {
+    public Map<IEnhancedQName, IBoundInstanceModelGroupedNamed> getNamedModelInstanceMap() {
       return namedModelInstances;
     }
 
     @Override
-    public Map<QName, IBoundInstanceModelGroupedField> getFieldInstanceMap() {
+    public Map<IEnhancedQName, IBoundInstanceModelGroupedField> getFieldInstanceMap() {
       return fieldInstances;
     }
 
     @Override
-    public Map<QName, IBoundInstanceModelGroupedAssembly> getAssemblyInstanceMap() {
+    public Map<IEnhancedQName, IBoundInstanceModelGroupedAssembly> getAssemblyInstanceMap() {
       return assemblyInstances;
     }
   }

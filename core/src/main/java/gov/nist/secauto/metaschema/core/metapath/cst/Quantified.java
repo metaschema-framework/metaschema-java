@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -23,8 +24,6 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class Quantified
@@ -37,7 +36,7 @@ public class Quantified
   @NonNull
   private final Quantifier quantifier;
   @NonNull
-  private final Map<QName, IExpression> inClauses;
+  private final Map<IEnhancedQName, IExpression> inClauses;
   @NonNull
   private final IExpression satisfies;
 
@@ -55,7 +54,7 @@ public class Quantified
    */
   public Quantified(
       @NonNull Quantifier quantifier,
-      @NonNull Map<QName, IExpression> inClauses,
+      @NonNull Map<IEnhancedQName, IExpression> inClauses,
       @NonNull IExpression satisfies) {
     this.quantifier = quantifier;
     this.inClauses = inClauses;
@@ -79,7 +78,7 @@ public class Quantified
    * @return the variable names mapped to the associated Metapath expression
    */
   @NonNull
-  public Map<QName, IExpression> getInClauses() {
+  public Map<IEnhancedQName, IExpression> getInClauses() {
     return inClauses;
   }
 
@@ -103,20 +102,20 @@ public class Quantified
   @SuppressWarnings("PMD.SystemPrintln")
   @Override
   public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    Map<QName, ISequence<? extends IItem>> clauses = getInClauses().entrySet().stream()
+    Map<IEnhancedQName, ISequence<? extends IItem>> clauses = getInClauses().entrySet().stream()
         .map(entry -> Map.entry(
             entry.getKey(),
             entry.getValue().accept(dynamicContext, focus)))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-    List<QName> clauseKeys = new ArrayList<>(clauses.keySet());
+    List<IEnhancedQName> clauseKeys = new ArrayList<>(clauses.keySet());
     List<? extends Collection<? extends IItem>> clauseValues = new ArrayList<>(clauses.values());
 
     boolean retval = true;
     for (List<IItem> product : new CartesianProduct<>(clauseValues)) {
       DynamicContext subDynamicContext = dynamicContext.subContext();
       for (int idx = 0; idx < product.size(); idx++) {
-        QName var = clauseKeys.get(idx);
+        IEnhancedQName var = clauseKeys.get(idx);
         IItem item = product.get(idx);
 
         assert var != null;
@@ -128,7 +127,8 @@ public class Quantified
         // fail on first false
         retval = false;
         break;
-      } else if (Quantifier.SOME.equals(quantifier)) {
+      }
+      if (Quantifier.SOME.equals(quantifier)) {
         if (result) {
           // pass on first true
           retval = true;

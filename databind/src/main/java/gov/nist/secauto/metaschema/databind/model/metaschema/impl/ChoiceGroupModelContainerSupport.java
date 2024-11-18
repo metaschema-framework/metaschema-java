@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
@@ -24,8 +25,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -38,11 +37,11 @@ class ChoiceGroupModelContainerSupport
         IFieldInstanceGrouped,
         IAssemblyInstanceGrouped> {
   @NonNull
-  private final Map<QName, INamedModelInstanceGrouped> namedModelInstances;
+  private final Map<IEnhancedQName, INamedModelInstanceGrouped> namedModelInstances;
   @NonNull
-  private final Map<QName, IFieldInstanceGrouped> fieldInstances;
+  private final Map<IEnhancedQName, IFieldInstanceGrouped> fieldInstances;
   @NonNull
-  private final Map<QName, IAssemblyInstanceGrouped> assemblyInstances;
+  private final Map<IEnhancedQName, IAssemblyInstanceGrouped> assemblyInstances;
 
   @SuppressWarnings("PMD.ShortMethodName")
   public static IContainerModelSupport<
@@ -85,9 +84,9 @@ class ChoiceGroupModelContainerSupport
       @NonNull INodeItemFactory nodeItemFactory) {
 
     // create temporary collections to store the child binding objects
-    final Map<QName, INamedModelInstanceGrouped> namedModelInstances = new LinkedHashMap<>();
-    final Map<QName, IFieldInstanceGrouped> fieldInstances = new LinkedHashMap<>();
-    final Map<QName, IAssemblyInstanceGrouped> assemblyInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, INamedModelInstanceGrouped> namedModelInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, IFieldInstanceGrouped> fieldInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, IAssemblyInstanceGrouped> assemblyInstances = new LinkedHashMap<>();
 
     // create counters to track child positions
     int assemblyReferencePosition = 0;
@@ -152,18 +151,18 @@ class ChoiceGroupModelContainerSupport
 
   protected static void addInstance(
       @NonNull IAssemblyInstanceGrouped assembly,
-      @NonNull Map<QName, INamedModelInstanceGrouped> namedModelInstances,
-      @NonNull Map<QName, IAssemblyInstanceGrouped> assemblyInstances) {
-    QName effectiveName = assembly.getXmlQName();
+      @NonNull Map<IEnhancedQName, INamedModelInstanceGrouped> namedModelInstances,
+      @NonNull Map<IEnhancedQName, IAssemblyInstanceGrouped> assemblyInstances) {
+    IEnhancedQName effectiveName = assembly.getXmlQName();
     namedModelInstances.put(effectiveName, assembly);
     assemblyInstances.put(effectiveName, assembly);
   }
 
   protected static void addInstance(
       @NonNull IFieldInstanceGrouped field,
-      @NonNull Map<QName, INamedModelInstanceGrouped> namedModelInstances,
-      @NonNull Map<QName, IFieldInstanceGrouped> fieldInstances) {
-    QName effectiveName = field.getXmlQName();
+      @NonNull Map<IEnhancedQName, INamedModelInstanceGrouped> namedModelInstances,
+      @NonNull Map<IEnhancedQName, IFieldInstanceGrouped> fieldInstances) {
+    IEnhancedQName effectiveName = field.getXmlQName();
     namedModelInstances.put(effectiveName, field);
     fieldInstances.put(effectiveName, field);
   }
@@ -177,7 +176,7 @@ class ChoiceGroupModelContainerSupport
     IAssemblyDefinition owningDefinition = parent.getOwningDefinition();
     IModule module = owningDefinition.getContainingModule();
 
-    QName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(name);
 
     if (definition == null) {
@@ -199,7 +198,7 @@ class ChoiceGroupModelContainerSupport
     IAssemblyDefinition owningDefinition = parent.getOwningDefinition();
     IModule module = owningDefinition.getContainingModule();
 
-    QName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));
     IFieldDefinition definition = module.getScopedFieldDefinitionByName(name);
     if (definition == null) {
       throw new IllegalStateException(
@@ -218,17 +217,17 @@ class ChoiceGroupModelContainerSupport
   }
 
   @Override
-  public Map<QName, INamedModelInstanceGrouped> getNamedModelInstanceMap() {
+  public Map<IEnhancedQName, INamedModelInstanceGrouped> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<QName, IFieldInstanceGrouped> getFieldInstanceMap() {
+  public Map<IEnhancedQName, IFieldInstanceGrouped> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<QName, IAssemblyInstanceGrouped> getAssemblyInstanceMap() {
+  public Map<IEnhancedQName, IAssemblyInstanceGrouped> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 }

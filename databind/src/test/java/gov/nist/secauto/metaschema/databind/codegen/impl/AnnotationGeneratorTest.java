@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 
@@ -23,8 +24,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 class AnnotationGeneratorTest {
   @RegisterExtension
@@ -41,7 +40,7 @@ class AnnotationGeneratorTest {
     MarkupMultiline remarks = MarkupMultiline.fromMarkdown("Test");
 
     ILet let = ILet.of(
-        new QName(variable),
+        EQNameFactory.of(variable),
         expression,
         source,
         remarks);

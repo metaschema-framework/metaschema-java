@@ -6,11 +6,10 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Locale;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -30,7 +29,7 @@ public interface IFeatureDefinitionInstanceInlined<
     extends IDefinition, INamedInstance {
 
   @Override
-  default QName getDefinitionQName() {
+  default IEnhancedQName getDefinitionQName() {
     return getReferencedDefinitionQName();
   }
 

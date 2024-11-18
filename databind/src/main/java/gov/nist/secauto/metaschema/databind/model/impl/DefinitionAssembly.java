@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -34,8 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -63,7 +62,7 @@ public final class DefinitionAssembly
   @NonNull
   private final Lazy<IModelConstrained> constraints;
   @NonNull
-  private final Lazy<QName> xmlRootQName;
+  private final Lazy<IEnhancedQName> xmlRootQName;
   @NonNull
   private final Lazy<Map<String, IBoundProperty<?>>> jsonProperties;
   @NonNull
@@ -201,7 +200,7 @@ public final class DefinitionAssembly
 
   @Override
   @Nullable
-  public QName getRootXmlQName() {
+  public IEnhancedQName getRootXmlQName() {
     // Overriding this is more efficient, since it is already built
     return xmlRootQName.get();
   }
@@ -217,8 +216,8 @@ public final class DefinitionAssembly
   @Nullable
   public String getRootName() {
     // Overriding this is more efficient, since it is already built
-    QName qname = getRootXmlQName();
-    return qname == null ? null : qname.getLocalPart();
+    IEnhancedQName qname = getRootXmlQName();
+    return qname == null ? null : qname.getLocalName();
   }
 
   @Override

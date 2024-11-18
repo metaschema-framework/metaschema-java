@@ -9,10 +9,12 @@ import gov.nist.secauto.metaschema.core.datatype.markup.IMarkupString;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.AtomicItemConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.MarkupLineItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.MarkupMultiLineItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -20,6 +22,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item representing a Markup data value.
  */
 public interface IMarkupItem extends IUntypedAtomicItem {
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return AtomicItemConstants.MARKUP_ITEM_TYPE;
+  }
+
   /**
    * Construct a new item using the provided {@code value}.
    *

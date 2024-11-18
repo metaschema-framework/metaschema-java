@@ -5,14 +5,13 @@ import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -24,8 +23,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public interface IFlagNodeItem
     extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedItem {
   @Override
-  default NodeItemType getNodeItemType() {
-    return NodeItemType.FLAG;
+  default NodeItemKind getNodeItemKind() {
+    return NodeItemKind.FLAG;
   }
 
   @Override
@@ -61,7 +60,7 @@ public interface IFlagNodeItem
    * FlagContainer do not have flag items. This call should return {@code null}.
    */
   @Override
-  default IFlagNodeItem getFlagByName(@NonNull QName name) {
+  default IFlagNodeItem getFlagByName(@NonNull IEnhancedQName name) {
     // a flag does not have flags
     return null;
   }
@@ -95,7 +94,7 @@ public interface IFlagNodeItem
    */
   @SuppressWarnings("null")
   @Override
-  default List<? extends IModelNodeItem<?, ?>> getModelItemsByName(QName name) {
+  default List<? extends IModelNodeItem<?, ?>> getModelItemsByName(IEnhancedQName name) {
     // a flag does not have model items
     return Collections.emptyList();
   }

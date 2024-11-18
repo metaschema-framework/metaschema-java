@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
@@ -34,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -206,7 +205,7 @@ public class BindingModule
   }
 
   @NonNull
-  private Map<QName, IAssemblyDefinition> getAssemblyDefinitionMap() {
+  private Map<IEnhancedQName, IAssemblyDefinition> getAssemblyDefinitionMap() {
     return getDefinitions().assemblyDefinitions;
   }
 
@@ -216,12 +215,12 @@ public class BindingModule
   }
 
   @Override
-  public IAssemblyDefinition getAssemblyDefinitionByName(@NonNull QName name) {
+  public IAssemblyDefinition getAssemblyDefinitionByName(@NonNull IEnhancedQName name) {
     return getAssemblyDefinitionMap().get(name);
   }
 
   @NonNull
-  private Map<QName, IFieldDefinition> getFieldDefinitionMap() {
+  private Map<IEnhancedQName, IFieldDefinition> getFieldDefinitionMap() {
     return getDefinitions().fieldDefinitions;
   }
 
@@ -232,7 +231,7 @@ public class BindingModule
   }
 
   @Override
-  public IFieldDefinition getFieldDefinitionByName(@NonNull QName name) {
+  public IFieldDefinition getFieldDefinitionByName(@NonNull IEnhancedQName name) {
     return getFieldDefinitionMap().get(name);
   }
 
@@ -244,7 +243,7 @@ public class BindingModule
   }
 
   @NonNull
-  private Map<QName, IFlagDefinition> getFlagDefinitionMap() {
+  private Map<IEnhancedQName, IFlagDefinition> getFlagDefinitionMap() {
     return getDefinitions().flagDefinitions;
   }
 
@@ -255,11 +254,11 @@ public class BindingModule
   }
 
   @Override
-  public IFlagDefinition getFlagDefinitionByName(@NonNull QName name) {
+  public IFlagDefinition getFlagDefinitionByName(@NonNull IEnhancedQName name) {
     return getFlagDefinitionMap().get(name);
   }
 
-  private Map<QName, ? extends IAssemblyDefinition> getRootAssemblyDefinitionMap() {
+  private Map<IEnhancedQName, ? extends IAssemblyDefinition> getRootAssemblyDefinitionMap() {
     return getDefinitions().rootAssemblyDefinitions;
   }
 
@@ -271,13 +270,13 @@ public class BindingModule
 
   private final class Definitions {
     @NonNull
-    private final Map<QName, IFlagDefinition> flagDefinitions;
+    private final Map<IEnhancedQName, IFlagDefinition> flagDefinitions;
     @NonNull
-    private final Map<QName, IFieldDefinition> fieldDefinitions;
+    private final Map<IEnhancedQName, IFieldDefinition> fieldDefinitions;
     @NonNull
-    private final Map<QName, IAssemblyDefinition> assemblyDefinitions;
+    private final Map<IEnhancedQName, IAssemblyDefinition> assemblyDefinitions;
     @NonNull
-    private final Map<QName, IAssemblyDefinition> rootAssemblyDefinitions;
+    private final Map<IEnhancedQName, IAssemblyDefinition> rootAssemblyDefinitions;
 
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Definitions(
@@ -311,7 +310,7 @@ public class BindingModule
               globalAssemblyPosition++,
               BindingModule.this,
               nodeItemFactory);
-          QName name = definition.getDefinitionQName();
+          IEnhancedQName name = definition.getDefinitionQName();
           assemblyDefinitions.put(name, definition);
           if (definition.isRoot()) {
             rootAssemblyDefinitions.put(name, definition);
@@ -322,7 +321,7 @@ public class BindingModule
               objInstance,
               globalFieldPosition++,
               BindingModule.this);
-          QName name = definition.getDefinitionQName();
+          IEnhancedQName name = definition.getDefinitionQName();
           fieldDefinitions.put(name, definition);
         } else if (obj instanceof METASCHEMA.DefineFlag) {
           IFlagDefinition definition = new DefinitionFlagGlobal(
@@ -330,7 +329,7 @@ public class BindingModule
               objInstance,
               globalFlagPosition++,
               BindingModule.this);
-          QName name = definition.getDefinitionQName();
+          IEnhancedQName name = definition.getDefinitionQName();
           flagDefinitions.put(name, definition);
         } else {
           throw new IllegalStateException(

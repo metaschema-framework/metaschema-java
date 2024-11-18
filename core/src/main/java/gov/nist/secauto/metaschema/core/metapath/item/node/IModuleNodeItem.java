@@ -34,8 +34,8 @@ public interface IModuleNodeItem extends IDocumentBasedNodeItem, IFeatureNoDataV
   }
 
   @Override
-  default NodeItemType getNodeItemType() {
-    return NodeItemType.METASCHEMA;
+  default NodeItemKind getNodeItemKind() {
+    return NodeItemKind.METASCHEMA;
   }
 
   @Override

@@ -4,8 +4,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
-
-import javax.xml.namespace.QName;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -17,7 +16,7 @@ public interface IDefinitionNodeItem<D extends IDefinition, I extends INamedInst
    * @return the qualified name
    */
   @NonNull
-  default QName getQName() {
+  default IEnhancedQName getQName() {
     I instance = getInstance();
     return instance == null
         ? getDefinition().getXmlQName()

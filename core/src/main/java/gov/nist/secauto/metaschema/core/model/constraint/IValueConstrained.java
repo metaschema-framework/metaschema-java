@@ -5,10 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -23,7 +23,7 @@ public interface IValueConstrained extends IConstrained {
    * @return the constraints or an empty list
    */
   @NonNull
-  Map<QName, ILet> getLetExpressions();
+  Map<IEnhancedQName, ILet> getLetExpressions();
 
   /**
    * Get the collection of allowed value constraints, if any.

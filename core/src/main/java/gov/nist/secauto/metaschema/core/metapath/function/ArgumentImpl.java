@@ -55,10 +55,7 @@ class ArgumentImpl implements IArgument {
     if (this == obj) {
       return true; // NOPMD - readability
     }
-    if (obj == null) {
-      return false; // NOPMD - readability
-    }
-    if (getClass() != obj.getClass()) {
+    if (obj == null || getClass() != obj.getClass()) {
       return false; // NOPMD - readability
     }
     ArgumentImpl other = (ArgumentImpl) obj;

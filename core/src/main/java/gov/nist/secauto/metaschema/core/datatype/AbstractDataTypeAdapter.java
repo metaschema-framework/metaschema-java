@@ -9,8 +9,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.DataTypeItemType;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.codehaus.stax2.XMLEventReader2;
@@ -20,7 +23,6 @@ import org.codehaus.stax2.evt.XMLEventFactory2;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Characters;
@@ -47,16 +49,23 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   public static final String DEFAULT_JSON_FIELD_VALUE_NAME = "STRVALUE";
 
   @NonNull
-  private final Class<TYPE> clazz;
+  private final Class<TYPE> valueClass;
+  @NonNull
+  private final IAtomicOrUnionType itemType;
 
   /**
    * Construct a new Java type adapter for a provided class.
    *
-   * @param clazz
-   *          the Java type this adapter supports
+   * @param valueClass
+   *          the Java value object type this adapter supports
+   * @param itemClass
+   *          the Java type of the Matepath item this adapter supports
    */
-  protected AbstractDataTypeAdapter(@NonNull Class<TYPE> clazz) {
-    this.clazz = clazz;
+  protected AbstractDataTypeAdapter(
+      @NonNull Class<TYPE> valueClass,
+      @NonNull Class<ITEM_TYPE> itemClass) {
+    this.valueClass = valueClass;
+    this.itemType = new DataTypeItemType(this, itemClass);
   }
 
   @Override
@@ -67,11 +76,16 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
 
   @Override
   public Class<TYPE> getJavaClass() {
-    return clazz;
+    return valueClass;
   }
 
   @Override
-  public boolean canHandleQName(QName nextQName) {
+  public IAtomicOrUnionType getItemType() {
+    return itemType;
+  }
+
+  @Override
+  public boolean canHandleQName(IEnhancedQName nextQName) {
     return false;
   }
 
@@ -172,7 +186,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   }
 
   @Override
-  public void writeXmlValue(Object value, QName parentName, XMLStreamWriter2 writer) throws IOException {
+  public void writeXmlValue(Object value, IEnhancedQName parentName, XMLStreamWriter2 writer) throws IOException {
     String content;
     try {
       content = asString(value);
@@ -190,9 +204,6 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
       throw new IOException(ex);
     }
   }
-
-  @Override
-  public abstract Class<ITEM_TYPE> getItemClass();
 
   @Override
   public abstract ITEM_TYPE newItem(Object value);

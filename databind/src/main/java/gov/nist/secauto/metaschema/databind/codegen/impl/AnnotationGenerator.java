@@ -32,6 +32,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
@@ -54,8 +55,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -135,7 +134,7 @@ public final class AnnotationGenerator {
       @NonNull AnnotationSpec.Builder builder,
       @NonNull IFlagDefinition definition) {
 
-    Map<QName, ? extends ILet> lets = definition.getLetExpressions();
+    Map<IEnhancedQName, ? extends ILet> lets = definition.getLetExpressions();
     if (!lets.isEmpty() || !definition.getConstraints().isEmpty()) {
       AnnotationSpec.Builder annotation = AnnotationSpec.builder(ValueConstraints.class);
       assert annotation != null;
@@ -162,7 +161,7 @@ public final class AnnotationGenerator {
       @NonNull AnnotationSpec.Builder builder,
       @NonNull IModelDefinition definition) {
 
-    Map<QName, ? extends ILet> lets = definition.getLetExpressions();
+    Map<IEnhancedQName, ? extends ILet> lets = definition.getLetExpressions();
     List<? extends IAllowedValuesConstraint> allowedValues = definition.getAllowedValuesConstraints();
     List<? extends IIndexHasKeyConstraint> indexHasKey = definition.getIndexHasKeyConstraints();
     List<? extends IMatchesConstraint> matches = definition.getMatchesConstraints();
@@ -212,7 +211,7 @@ public final class AnnotationGenerator {
 
   private static void applyLetAssignments(
       @NonNull AnnotationSpec.Builder annotation,
-      @NonNull Map<QName, ? extends ILet> lets) {
+      @NonNull Map<IEnhancedQName, ? extends ILet> lets) {
     for (ILet let : lets.values()) {
       AnnotationSpec.Builder letAnnotation = AnnotationSpec.builder(Let.class);
       letAnnotation.addMember("name", "$S", let.getName());

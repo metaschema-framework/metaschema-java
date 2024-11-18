@@ -5,8 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+
 import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -63,7 +64,7 @@ public interface INamed {
    */
   @Nullable
   default String getXmlNamespace() {
-    return getXmlQName().getNamespaceURI();
+    return getXmlQName().getNamespace();
   }
 
   /**
@@ -86,9 +87,9 @@ public interface INamed {
    *
    * @return the XML qualified name, or {@code null} if there isn't one
    */
-  // REFACTOR: rename to getQName
+  // FIXME: rename to getQName
   @NonNull
-  QName getXmlQName();
+  IEnhancedQName getXmlQName();
 
   /**
    * Retrieve the index value to use for binary naming.

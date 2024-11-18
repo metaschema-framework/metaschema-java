@@ -12,11 +12,10 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -70,7 +69,7 @@ public class Flag // NOPMD - intentional name
 
     INodeTestExpression test = getTest();
     if (test instanceof NameTest) {
-      QName name = ((NameTest) getTest()).getName();
+      IEnhancedQName name = ((NameTest) getTest()).getName();
 
       IFlagNodeItem item = focusedItem.getFlagByName(name);
       retval = item == null ? Stream.empty() : Stream.of(item);

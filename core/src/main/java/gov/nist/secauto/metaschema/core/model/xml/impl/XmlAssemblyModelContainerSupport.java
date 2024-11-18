@@ -21,6 +21,7 @@ import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.FieldReferenceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedChoiceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.InlineAssemblyDefinitionType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.InlineFieldDefinitionType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -28,8 +29,6 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -182,7 +181,7 @@ public class XmlAssemblyModelContainerSupport
    *          the instance to append
    */
   public void append(@NonNull IFieldInstanceAbsolute instance) {
-    QName key = instance.getXmlQName();
+    IEnhancedQName key = instance.getXmlQName();
     getFieldInstanceMap().put(key, instance);
     getNamedModelInstanceMap().put(key, instance);
     getModelInstances().add(instance);
@@ -195,7 +194,7 @@ public class XmlAssemblyModelContainerSupport
    *          the instance to append
    */
   public void append(@NonNull IAssemblyInstanceAbsolute instance) {
-    QName key = instance.getXmlQName();
+    IEnhancedQName key = instance.getXmlQName();
     getAssemblyInstanceMap().put(key, instance);
     getNamedModelInstanceMap().put(key, instance);
     getModelInstances().add(instance);

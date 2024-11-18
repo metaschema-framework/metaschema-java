@@ -2,13 +2,19 @@
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IDocumentNodeItem extends IDocumentBasedNodeItem {
+  @NonNull
+  static IItemType type() {
+    return IItemType.document();
+  }
+
   @Override
-  default NodeItemType getNodeItemType() {
-    return NodeItemType.DOCUMENT;
+  default NodeItemKind getNodeItemKind() {
+    return NodeItemKind.DOCUMENT;
   }
 
   @Override

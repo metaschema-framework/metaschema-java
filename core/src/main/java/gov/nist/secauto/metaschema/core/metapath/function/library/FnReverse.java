@@ -36,10 +36,10 @@ public final class FnReverse {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("target")
-          .type(IItem.class)
+          .type(IItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IItem.class)
+      .returnType(IItem.type())
       .returnZeroOrMore()
       .functionHandler(FnReverse::execute)
       .build();

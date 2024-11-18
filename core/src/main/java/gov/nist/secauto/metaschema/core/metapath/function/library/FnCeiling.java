@@ -36,10 +36,10 @@ public final class FnCeiling {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(INumericItem.class)
+          .type(INumericItem.type())
           .zeroOrOne()
           .build())
-      .returnType(INumericItem.class)
+      .returnType(INumericItem.type())
       .returnZeroOrOne()
       .functionHandler(FnCeiling::execute)
       .build();

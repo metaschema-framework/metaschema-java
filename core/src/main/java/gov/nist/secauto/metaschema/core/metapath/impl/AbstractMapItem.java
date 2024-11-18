@@ -17,6 +17,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.EnumSet;
@@ -24,23 +26,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractMapItem<VALUE extends ICollectionValue>
     extends ImmutableCollections.AbstractImmutableDelegatedMap<IMapKey, VALUE>
     implements IMapItem<VALUE> {
   @NonNull
-  public static final QName QNAME = new QName("map");
+  public static final IEnhancedQName QNAME = EQNameFactory.of("map");
   @NonNull
   public static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(
       EnumSet.of(FunctionProperty.DETERMINISTIC));
   @NonNull
   public static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
-      IArgument.builder().name("key").type(IAnyAtomicItem.class).one().build()));
+      IArgument.builder().name("key").type(IAnyAtomicItem.type()).one().build()));
   @NonNull
-  public static final ISequenceType RESULT = ISequenceType.of(IAnyAtomicItem.class, Occurrence.ZERO_OR_ONE);
+  public static final ISequenceType RESULT = ISequenceType.of(
+      IAnyAtomicItem.type(), Occurrence.ZERO_OR_ONE);
 
   @NonNull
   private static final IMapItem<?> EMPTY = new MapItemN<>();

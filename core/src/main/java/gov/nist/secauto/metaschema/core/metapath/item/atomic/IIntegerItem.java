@@ -5,8 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.IntegerItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -34,6 +36,11 @@ public interface IIntegerItem extends IDecimalItem {
   @NonNull
   IIntegerItem NEGATIVE_ONE = valueOf(ObjectUtils.notNull(BigInteger.ONE.negate()));
 
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return MetaschemaDataTypeProvider.INTEGER.getItemType();
+  }
+
   /**
    * Create an item from an existing integer value.
    *
@@ -46,7 +53,7 @@ public interface IIntegerItem extends IDecimalItem {
   @NonNull
   static IIntegerItem valueOf(@NonNull String value) {
     try {
-      return valueOf(new BigInteger(value));
+      return valueOf(MetaschemaDataTypeProvider.INTEGER.parse(value));
     } catch (NumberFormatException ex) {
       throw new InvalidTypeMetapathException(null,
           ex.getMessage(),

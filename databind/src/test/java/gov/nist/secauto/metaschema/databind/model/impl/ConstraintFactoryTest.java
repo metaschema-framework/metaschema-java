@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.Let;
 
@@ -21,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.net.URI;
-
-import javax.xml.namespace.QName;
 
 class ConstraintFactoryTest {
   @RegisterExtension
@@ -54,7 +53,7 @@ class ConstraintFactoryTest {
 
     ILet let = ConstraintFactory.newLetExpression(annotation, source);
     assertAll(
-        () -> assertEquals(new QName(variable), let.getName()),
+        () -> assertEquals(EQNameFactory.of(variable), let.getName()),
         () -> assertEquals(expression, let.getValueExpression().getPath()),
         () -> assertEquals(source, let.getSource()),
         () -> assertEquals("Test", let.getRemarks().toMarkdown()));

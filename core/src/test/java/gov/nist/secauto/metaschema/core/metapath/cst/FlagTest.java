@@ -14,14 +14,14 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.NameTest;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.NodeItemType;
+import gov.nist.secauto.metaschema.core.metapath.item.node.NodeItemKind;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -40,14 +40,14 @@ class FlagTest
     IFlagInstance instance = context.mock(IFlagInstance.class);
     IFlagNodeItem flagNode = context.mock(IFlagNodeItem.class);
 
-    QName flagName = new QName("test");
+    IEnhancedQName flagName = EQNameFactory.of("test");
 
     context.checking(new Expectations() {
       { // NOPMD - intentional
         allowing(focusItem).getNodeItem();
         will(returnValue(focusItem));
-        allowing(focusItem).getNodeItemType();
-        will(returnValue(NodeItemType.ASSEMBLY));
+        allowing(focusItem).getNodeItemKind();
+        will(returnValue(NodeItemKind.ASSEMBLY));
         allowing(focusItem).getFlagByName(flagName);
         will(returnValue(flagNode));
 

@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.model;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.impl.DefinitionField;
@@ -15,8 +16,6 @@ import gov.nist.secauto.metaschema.databind.model.impl.InstanceModelFieldComplex
 import gov.nist.secauto.metaschema.databind.model.impl.InstanceModelFieldScalar;
 
 import java.lang.reflect.Field;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -60,7 +59,7 @@ public interface IBoundInstanceModelField<ITEM> extends IBoundInstanceModelNamed
   }
 
   @Override
-  default boolean canHandleXmlQName(QName qname) {
+  default boolean canHandleXmlQName(IEnhancedQName qname) {
     boolean retval;
     if (isEffectiveValueWrappedInXml()) {
       retval = qname.equals(getXmlQName());

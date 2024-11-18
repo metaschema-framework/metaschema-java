@@ -25,6 +25,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -40,8 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -948,7 +947,7 @@ public class DefaultConstraintValidator
     @NonNull
     private DynamicContext handleLetStatements(
         @NonNull INodeItem focus,
-        @NonNull Map<QName, ILet> letExpressions,
+        @NonNull Map<IEnhancedQName, ILet> letExpressions,
         @NonNull DynamicContext dynamicContext) {
 
       DynamicContext retval;
@@ -959,7 +958,7 @@ public class DefaultConstraintValidator
         final DynamicContext subContext = dynamicContext.subContext();
 
         for (ILet let : lets) {
-          QName name = let.getName();
+          IEnhancedQName name = let.getName();
           ISequence<?> result = let.getValueExpression().evaluate(focus, subContext);
 
           // ensure the sequence is list backed

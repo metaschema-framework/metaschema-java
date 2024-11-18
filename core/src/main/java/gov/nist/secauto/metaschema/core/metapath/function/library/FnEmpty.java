@@ -36,10 +36,10 @@ public final class FnEmpty {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IItem.class)
+          .type(IItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IBooleanItem.class)
+      .returnType(IBooleanItem.type())
       .returnOne()
       .functionHandler(FnEmpty::execute)
       .build();

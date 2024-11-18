@@ -8,11 +8,10 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -23,7 +22,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class VariableReference implements IExpression {
   @NonNull
-  private final QName name;
+  private final IEnhancedQName name;
 
   /**
    * Construct a new Metapath variable reference CST node.
@@ -31,7 +30,7 @@ public class VariableReference implements IExpression {
    * @param name
    *          the variable name
    */
-  public VariableReference(@NonNull QName name) {
+  public VariableReference(@NonNull IEnhancedQName name) {
     this.name = name;
   }
 
@@ -41,7 +40,7 @@ public class VariableReference implements IExpression {
    * @return the variable name
    */
   @NonNull
-  public QName getName() {
+  public IEnhancedQName getName() {
     return name;
   }
 

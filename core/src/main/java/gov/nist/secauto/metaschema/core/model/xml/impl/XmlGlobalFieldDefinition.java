@@ -18,13 +18,12 @@ import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalFieldDefinitionType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.UseNameType;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Map;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -171,10 +170,13 @@ class XmlGlobalFieldDefinition
   public IFlagInstance getJsonValueKeyFlagInstance() {
     IFlagInstance retval = null;
     if (getXmlObject().isSetJsonValueKeyFlag() && getXmlObject().getJsonValueKeyFlag().isSetFlagRef()) {
+      String namespace = getXmlNamespace();
+      String name = ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef());
+
       retval = getFlagInstanceByName(
-          new QName(
-              getXmlNamespace(),
-              ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef())));
+          namespace == null
+              ? EQNameFactory.of(name)
+              : EQNameFactory.of(namespace, name));
     }
     return retval;
   }

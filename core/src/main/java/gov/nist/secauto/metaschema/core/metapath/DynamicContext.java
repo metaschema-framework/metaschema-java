@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.DefaultFunction.Callin
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction.FunctionProperty;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IUriResolver;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
@@ -27,8 +28,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -39,7 +38,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 public class DynamicContext { // NOPMD - intentional data class
   @NonNull
-  private final Map<QName, ISequence<?>> letVariableMap;
+  private final Map<Integer, ISequence<?>> letVariableMap;
   @NonNull
   private final SharedState sharedState;
 
@@ -266,13 +265,13 @@ public class DynamicContext { // NOPMD - intentional data class
    *           {@code null}
    */
   @NonNull
-  public ISequence<?> getVariableValue(@NonNull QName name) {
-    ISequence<?> retval = letVariableMap.get(name);
+  public ISequence<?> getVariableValue(@NonNull IEnhancedQName name) {
+    ISequence<?> retval = letVariableMap.get(name.getIndexPosition());
     if (retval == null) {
-      if (!letVariableMap.containsKey(name)) {
-        throw new MetapathException(String.format("Variable '%s' not defined in context.", name));
+      if (letVariableMap.containsKey(name.getIndexPosition())) {
+        throw new MetapathException(String.format("Variable '%s' has null contents.", name));
       }
-      throw new MetapathException(String.format("Variable '%s' has null contents.", name));
+      throw new MetapathException(String.format("Variable '%s' not defined in context.", name));
     }
     return retval;
   }
@@ -287,8 +286,8 @@ public class DynamicContext { // NOPMD - intentional data class
    * @return this dynamic context
    */
   @NonNull
-  public DynamicContext bindVariableValue(@NonNull QName name, @NonNull ISequence<?> boundValue) {
-    letVariableMap.put(name, boundValue);
+  public DynamicContext bindVariableValue(@NonNull IEnhancedQName name, @NonNull ISequence<?> boundValue) {
+    letVariableMap.put(name.getIndexPosition(), boundValue);
     return this;
   }
 

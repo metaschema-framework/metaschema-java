@@ -3,11 +3,10 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Collection;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -48,7 +47,7 @@ class CycledAssemblyInstanceNodeItemImpl
   }
 
   @Override
-  public IFlagNodeItem getFlagByName(@NonNull QName name) {
+  public IFlagNodeItem getFlagByName(@NonNull IEnhancedQName name) {
     return getCycledNodeItem().getFlagByName(name);
   }
 
@@ -58,7 +57,7 @@ class CycledAssemblyInstanceNodeItemImpl
   }
 
   @Override
-  public List<? extends IModelNodeItem<?, ?>> getModelItemsByName(QName name) {
+  public List<? extends IModelNodeItem<?, ?>> getModelItemsByName(IEnhancedQName name) {
     return getCycledNodeItem().getModelItemsByName(name);
   }
 

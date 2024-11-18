@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
@@ -70,15 +71,14 @@ public class XmlComplexTypeAssemblyDefinition
       // handle grouping
       state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "element", XmlSchemaGenerator.NS_XML_SCHEMA);
 
-      QName groupAsQName = ObjectUtils.requireNonNull(modelInstance.getEffectiveXmlGroupAsQName());
+      IEnhancedQName groupAsQName = ObjectUtils.requireNonNull(modelInstance.getEffectiveXmlGroupAsQName());
 
-      if (state.getDefaultNS().equals(groupAsQName.getNamespaceURI())) {
-        state.writeAttribute("name", ObjectUtils.requireNonNull(groupAsQName.getLocalPart()));
-      } else {
+      if (!state.getDefaultNS().equals(groupAsQName.getNamespace())) {
         throw new SchemaGenerationException(
             String.format("Attempt to create element '%s' on definition '%s' with different namespace", groupAsQName,
                 getDefinition().toCoordinates()));
       }
+      state.writeAttribute("name", ObjectUtils.requireNonNull(groupAsQName.getLocalName()));
 
       if (modelInstance.getMinOccurs() == 0) {
         // this is an optional instance group

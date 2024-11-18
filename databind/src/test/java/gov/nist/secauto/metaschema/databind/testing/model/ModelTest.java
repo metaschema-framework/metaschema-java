@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.DefaultBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -34,8 +35,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 class ModelTest
     extends ModelTestBase {
   private static final String NS = "https://csrc.nist.gov/ns/test/xml";
@@ -51,11 +50,11 @@ class ModelTest
           context.getBoundDefinitionForClass(RootAssemblyWithFlags.class));
 
       IBoundInstanceFlag idFlag = ObjectUtils.requireNonNull(definition.getFlagInstanceByName(
-          new QName("id")));
+          EQNameFactory.of("id")));
       IBoundInstanceFlag defaultFlag = ObjectUtils.requireNonNull(definition.getFlagInstanceByName(
-          new QName("defaultFlag")));
+          EQNameFactory.of("defaultFlag")));
       IBoundInstanceFlag numberFlag = ObjectUtils.requireNonNull(definition.getFlagInstanceByName(
-          new QName("number")));
+          EQNameFactory.of("number")));
 
       assertAll(
           "root assembly",
@@ -138,17 +137,17 @@ class ModelTest
           (IBoundDefinitionModelAssembly) context.getBoundDefinitionForClass(RootAssemblyWithFields.class));
 
       IBoundInstanceModelField<?> defaultField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(new QName(NS, "defaultField")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "defaultField")));
       IBoundInstanceModelField<?> collectionField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(new QName(NS, "field2")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field2")));
       IBoundInstanceModelField<?> specifiedValueKeyField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(new QName(NS, "field-value-key")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-value-key")));
       IBoundInstanceModelField<?> defaultValueKeyField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(new QName(NS, "field-default-value-key")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-default-value-key")));
       IBoundInstanceModelField<?> flagValueKeyField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(new QName(NS, "field-flag-value-key")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-flag-value-key")));
       IBoundInstanceModelField<?> flagJsonKeyField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(new QName(NS, "field-json-key")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-json-key")));
 
       assertAll(
           "root assembly",

@@ -10,13 +10,13 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -28,15 +28,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class YearMonthAdapter
     extends AbstractDataTypeAdapter<Period, IYearMonthDurationItem> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
-      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "year-month-duration")));
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
+      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "year-month-duration")));
 
   YearMonthAdapter() {
-    super(Period.class);
+    super(Period.class, IYearMonthDurationItem.class);
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
@@ -59,11 +59,6 @@ public class YearMonthAdapter
     } catch (DateTimeParseException ex) {
       throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);
     }
-  }
-
-  @Override
-  public Class<IYearMonthDurationItem> getItemClass() {
-    return IYearMonthDurationItem.class;
   }
 
   @Override

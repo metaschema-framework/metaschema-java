@@ -5,15 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import java.util.List;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
-import javax.xml.namespace.QName;
+import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 abstract class AbstractFunction implements IFunction {
   @NonNull
-  private final QName qname;
+  private final IEnhancedQName qname;
   @NonNull
   private final List<IArgument> arguments;
 
@@ -21,18 +22,18 @@ abstract class AbstractFunction implements IFunction {
       @NonNull String name,
       @NonNull String namespace,
       @NonNull List<IArgument> arguments) {
-    this(new QName(namespace, name), arguments);
+    this(EQNameFactory.of(namespace, name), arguments);
   }
 
   protected AbstractFunction(
-      @NonNull QName qname,
+      @NonNull IEnhancedQName qname,
       @NonNull List<IArgument> arguments) {
     this.qname = qname;
     this.arguments = arguments;
   }
 
   @Override
-  public QName getQName() {
+  public IEnhancedQName getQName() {
     return qname;
   }
 

@@ -6,9 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.Base64BinaryItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 
 import java.nio.ByteBuffer;
 
@@ -18,6 +19,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a Base64 encoded data value.
  */
 public interface IBase64BinaryItem extends IAnyAtomicItem {
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return MetaschemaDataTypeProvider.BASE64.getItemType();
+  }
 
   /**
    * Construct a new base64 encoded byte sequence item using the provided string

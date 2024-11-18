@@ -6,10 +6,9 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.model.impl.EmptyFlagContainer;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -51,7 +50,7 @@ public interface IContainerFlagSupport<FI extends IFlagInstance> {
    * @return the flag container
    */
   @NonNull
-  static <T extends IFlagInstance> IFlagContainerBuilder<T> builder(@NonNull QName jsonKey) {
+  static <T extends IFlagInstance> IFlagContainerBuilder<T> builder(@NonNull IEnhancedQName jsonKey) {
     return new FlagContainerBuilder<>(jsonKey);
   }
 
@@ -61,7 +60,7 @@ public interface IContainerFlagSupport<FI extends IFlagInstance> {
    * @return the mapping of flag effective name to flag instance
    */
   @NonNull
-  Map<QName, FI> getFlagInstanceMap();
+  Map<IEnhancedQName, FI> getFlagInstanceMap();
 
   /**
    * Get the JSON key flag instance.

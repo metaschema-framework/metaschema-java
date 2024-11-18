@@ -6,6 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.AtomicItemConstants;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.IPAddress;
@@ -14,6 +16,11 @@ import inet.ipaddr.IPAddress;
  * An atomic Metapath item representing an IP address data value.
  */
 public interface IIPAddressItem extends IUntypedAtomicItem {
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return AtomicItemConstants.IP_ADDRESS_ITEM_TYPE;
+  }
+
   /**
    * Get the "wrapped" IP address value.
    *

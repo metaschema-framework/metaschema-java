@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import java.util.Collection;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
-import javax.xml.namespace.QName;
+import java.util.Collection;
 
 /**
  * Common interface for model container support classes.
@@ -33,7 +33,7 @@ public interface IFeatureContainerModelAbsolute<
   }
 
   @Override
-  default NMI getNamedModelInstanceByName(QName name) {
+  default NMI getNamedModelInstanceByName(IEnhancedQName name) {
     return getModelContainer().getNamedModelInstanceMap().get(name);
   }
 
@@ -44,7 +44,7 @@ public interface IFeatureContainerModelAbsolute<
   }
 
   @Override
-  default FI getFieldInstanceByName(QName name) {
+  default FI getFieldInstanceByName(IEnhancedQName name) {
     return getModelContainer().getFieldInstanceMap().get(name);
   }
 
@@ -55,7 +55,7 @@ public interface IFeatureContainerModelAbsolute<
   }
 
   @Override
-  default AI getAssemblyInstanceByName(QName name) {
+  default AI getAssemblyInstanceByName(IEnhancedQName name) {
     return getModelContainer().getAssemblyInstanceMap().get(name);
   }
 

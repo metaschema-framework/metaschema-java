@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelAssembly;
@@ -20,20 +21,18 @@ import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -51,11 +50,11 @@ class AssemblyModelContainerSupport
   @NonNull
   private final List<IModelInstanceAbsolute> modelInstances;
   @NonNull
-  private final Map<QName, INamedModelInstanceAbsolute> namedModelInstances;
+  private final Map<IEnhancedQName, INamedModelInstanceAbsolute> namedModelInstances;
   @NonNull
-  private final Map<QName, IFieldInstanceAbsolute> fieldInstances;
+  private final Map<IEnhancedQName, IFieldInstanceAbsolute> fieldInstances;
   @NonNull
-  private final Map<QName, IAssemblyInstanceAbsolute> assemblyInstances;
+  private final Map<IEnhancedQName, IAssemblyInstanceAbsolute> assemblyInstances;
   @NonNull
   private final List<IChoiceInstance> choiceInstances;
   @NonNull
@@ -110,9 +109,9 @@ class AssemblyModelContainerSupport
 
     // create temporary collections to store the child binding objects
     final List<IModelInstanceAbsolute> modelInstances = new LinkedList<>();
-    final Map<QName, INamedModelInstanceAbsolute> namedModelInstances = new LinkedHashMap<>();
-    final Map<QName, IFieldInstanceAbsolute> fieldInstances = new LinkedHashMap<>();
-    final Map<QName, IAssemblyInstanceAbsolute> assemblyInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, INamedModelInstanceAbsolute> namedModelInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, IFieldInstanceAbsolute> fieldInstances = new LinkedHashMap<>();
+    final Map<IEnhancedQName, IAssemblyInstanceAbsolute> assemblyInstances = new LinkedHashMap<>();
     final List<IChoiceInstance> choiceInstances = new LinkedList<>();
     final Map<String, IChoiceGroupInstance> choiceGroupInstances = new LinkedHashMap<>();
 
@@ -209,17 +208,17 @@ class AssemblyModelContainerSupport
   }
 
   @Override
-  public Map<QName, INamedModelInstanceAbsolute> getNamedModelInstanceMap() {
+  public Map<IEnhancedQName, INamedModelInstanceAbsolute> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<QName, IFieldInstanceAbsolute> getFieldInstanceMap() {
+  public Map<IEnhancedQName, IFieldInstanceAbsolute> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<QName, IAssemblyInstanceAbsolute> getAssemblyInstanceMap() {
+  public Map<IEnhancedQName, IAssemblyInstanceAbsolute> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 

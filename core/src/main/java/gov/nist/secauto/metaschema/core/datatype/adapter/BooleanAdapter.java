@@ -12,13 +12,13 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -30,15 +30,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class BooleanAdapter
     extends AbstractDataTypeAdapter<Boolean, IBooleanItem> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
-      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "boolean")));
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
+      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "boolean")));
 
   BooleanAdapter() {
-    super(Boolean.class);
+    super(Boolean.class, IBooleanItem.class);
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
@@ -75,11 +75,6 @@ public class BooleanAdapter
   public Boolean copy(Object obj) {
     // the value is immutable
     return (Boolean) obj;
-  }
-
-  @Override
-  public Class<IBooleanItem> getItemClass() {
-    return IBooleanItem.class;
   }
 
   @Override

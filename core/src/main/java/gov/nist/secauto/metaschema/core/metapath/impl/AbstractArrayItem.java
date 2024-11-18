@@ -15,6 +15,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.EnumSet;
@@ -22,23 +24,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
     extends ImmutableCollections.AbstractImmutableDelegatedList<ITEM>
     implements IArrayItem<ITEM> {
   @NonNull
-  public static final QName QNAME = new QName("array");
+  public static final IEnhancedQName QNAME = EQNameFactory.of("array");
   @NonNull
   public static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(
       EnumSet.of(FunctionProperty.DETERMINISTIC));
   @NonNull
   public static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
-      IArgument.builder().name("position").type(IIntegerItem.class).one().build()));
+      IArgument.builder().name("position").type(IIntegerItem.type()).one().build()));
   @NonNull
-  public static final ISequenceType RESULT = ISequenceType.of(IAnyAtomicItem.class, Occurrence.ZERO_OR_ONE);
+  public static final ISequenceType RESULT = ISequenceType.of(
+      IAnyAtomicItem.type(), Occurrence.ZERO_OR_ONE);
 
   @NonNull
   private static final IArrayItem<?> EMPTY = new ArrayItemN<>();

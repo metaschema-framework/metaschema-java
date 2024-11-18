@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import javax.xml.namespace.QName;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 public interface IFlagInstance extends IFlag, IValuedInstance, IInstanceAbsolute {
 
@@ -33,12 +33,12 @@ public interface IFlagInstance extends IFlag, IValuedInstance, IInstanceAbsolute
   }
 
   @Override
-  default QName getReferencedDefinitionQName() {
+  default IEnhancedQName getReferencedDefinitionQName() {
     return getContainingModule().toFlagQName(getName());
   }
 
   @Override
-  default QName getXmlQName() {
+  default IEnhancedQName getXmlQName() {
     // flags do not have a namespace by default
     return getContainingModule().toFlagQName(getEffectiveName());
   }

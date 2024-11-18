@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import java.util.stream.Stream;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
-import javax.xml.namespace.QName;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -49,7 +49,7 @@ public interface IFunctionLibrary {
    * @return {@code true} if a function signature matches or {@code false}
    *         otherwise
    */
-  default boolean hasFunction(@NonNull QName name, int arity) {
+  default boolean hasFunction(@NonNull IEnhancedQName name, int arity) {
     return getFunction(name, arity) != null;
   }
 
@@ -78,5 +78,5 @@ public interface IFunctionLibrary {
    *          match
    * @return the matching function or {@code null} if no match exists
    */
-  IFunction getFunction(@NonNull QName name, int arity);
+  IFunction getFunction(@NonNull IEnhancedQName name, int arity);
 }

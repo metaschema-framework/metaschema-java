@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.HashMap;
@@ -14,15 +15,13 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class FunctionLibrary implements IFunctionLibrary {
 
   @NonNull
-  private final Map<QName, NamedFunctionSet> libraryByQName = new HashMap<>(); // NOPMD - intentional
+  private final Map<IEnhancedQName, NamedFunctionSet> libraryByQName = new HashMap<>(); // NOPMD - intentional
   @NonNull
   private final Map<String, NamedFunctionSet> libraryByName = new HashMap<>(); // NOPMD - intentional
   @NonNull
@@ -43,7 +42,7 @@ public class FunctionLibrary implements IFunctionLibrary {
   }
 
   private void registerFunctionByQName(@NonNull IFunction function) {
-    QName qname = function.getQName();
+    IEnhancedQName qname = function.getQName();
     IFunction duplicate;
     Lock writeLock = instanceLock.writeLock();
     writeLock.lock();
@@ -108,7 +107,7 @@ public class FunctionLibrary implements IFunctionLibrary {
   }
 
   @Override
-  public IFunction getFunction(@NonNull QName name, int arity) {
+  public IFunction getFunction(@NonNull IEnhancedQName name, int arity) {
     IFunction retval = null;
     Lock readLock = instanceLock.readLock();
     readLock.lock();

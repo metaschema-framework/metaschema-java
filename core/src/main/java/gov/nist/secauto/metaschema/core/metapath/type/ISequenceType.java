@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.type;
 
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.SequenceTypeImpl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -13,8 +14,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface ISequenceType {
 
+  @SuppressWarnings("unchecked")
   @NonNull
-  static ISequenceType empty() {
+  static <T extends IItem> ISequenceType empty() {
     return SequenceTypeImpl.EMPTY;
   }
 

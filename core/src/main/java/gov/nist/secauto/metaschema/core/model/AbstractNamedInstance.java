@@ -6,9 +6,8 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.model.AbstractGlobalDefinition.NameInitializer;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -18,9 +17,9 @@ public abstract class AbstractNamedInstance<
     extends AbstractInstance<PARENT>
     implements INamedInstance {
   @NonNull
-  private final Lazy<QName> qname;
+  private final Lazy<IEnhancedQName> qname;
   @NonNull
-  private final Lazy<QName> definitionQName;
+  private final Lazy<IEnhancedQName> definitionQName;
 
   /**
    * Construct a new instance.
@@ -38,13 +37,13 @@ public abstract class AbstractNamedInstance<
 
   @SuppressWarnings("null")
   @Override
-  public final QName getXmlQName() {
+  public final IEnhancedQName getXmlQName() {
     return qname.get();
   }
 
   @SuppressWarnings("null")
   @Override
-  public final QName getReferencedDefinitionQName() {
+  public final IEnhancedQName getReferencedDefinitionQName() {
     return definitionQName.get();
   }
 }

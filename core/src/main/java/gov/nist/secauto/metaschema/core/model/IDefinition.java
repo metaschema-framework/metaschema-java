@@ -6,10 +6,10 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.model.constraint.IFeatureValueConstrained;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Locale;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -51,9 +51,9 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
    * @return the definition's qualified name
    */
   @NonNull
-  default QName getDefinitionQName() {
-    return new QName(
-        getContainingModule().getXmlNamespace().toASCIIString(),
+  default IEnhancedQName getDefinitionQName() {
+    return EQNameFactory.of(
+        getContainingModule().getXmlNamespace(),
         getName());
   }
 

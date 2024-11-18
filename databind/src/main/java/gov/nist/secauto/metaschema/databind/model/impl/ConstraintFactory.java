@@ -42,8 +42,6 @@ import gov.nist.secauto.metaschema.databind.model.annotations.Property;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -154,7 +152,7 @@ final class ConstraintFactory {
   @Nullable
   static IDataTypeAdapter<?> toDataType(@NonNull Class<? extends IDataTypeAdapter<?>> adapterClass) {
     return adapterClass.isAssignableFrom(NullJavaTypeAdapter.class) ? null
-        : DataTypeService.getInstance().getJavaTypeAdapterByClass(adapterClass);
+        : DataTypeService.instance().getJavaTypeAdapterByClass(adapterClass);
   }
 
   @NonNull
@@ -340,7 +338,7 @@ final class ConstraintFactory {
         ? null
         : MarkupMultiline.fromMarkdown(remarkMarkdown);
     return ILet.of(
-        new QName(annotation.name()),
+        source.getStaticContext().parseVariableName(annotation.name()),
         annotation.target(),
         source,
         remarks);

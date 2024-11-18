@@ -36,10 +36,10 @@ public final class FnCount {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IItem.class)
+          .type(IItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IIntegerItem.class)
+      .returnType(IIntegerItem.type())
       .returnOne()
       .functionHandler(FnCount::execute)
       .build();

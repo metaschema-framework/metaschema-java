@@ -6,10 +6,13 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import gov.nist.secauto.metaschema.core.metapath.EQNameUtils;
-import gov.nist.secauto.metaschema.core.metapath.EQNameUtils.PrefixToNamespaceResolver;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -17,73 +20,119 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+// FIXME: Move to correct package
 class EQNameUtilsTest {
+  private static final String MODEL_NS = "http://example.com/ns/model";
   private static final StaticContext STATIC_CONTEXT = StaticContext.builder()
-      .namespace("prefix", "http://example.com/ns/prefix")
-      .defaultFunctionNamespace("http://example.com/ns/function")
-      .defaultModelNamespace("http://example.com/ns/model")
+      .namespace("prefix", MetapathConstants.NS_METAPATH_FUNCTIONS)
+      .namespace("model-prefix", MODEL_NS)
+      .defaultFunctionNamespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
+      .defaultModelNamespace(MODEL_NS)
       .build();
+  private static final IEnhancedQName COUNT_QNAME = EQNameFactory.of(
+      MetapathConstants.NS_METAPATH_FUNCTIONS,
+      "count");
+  private static final IEnhancedQName LOCAL_NAME_QNAME = EQNameFactory.of("local-name");
+  private static final IEnhancedQName MODEL_QNAME = EQNameFactory.of(MODEL_NS, "local-name");
 
-  static Stream<Arguments> provideValues() {
+  static Stream<Arguments> provideFunctionValues() {
     return Stream.of(
+        // prefixed lexical name
+        Arguments.of("prefix:count", COUNT_QNAME),
+        // qualified name
         Arguments.of(
-            "prefix:local-name",
-            new QName("http://example.com/ns/prefix", "local-name"),
-            STATIC_CONTEXT.getFunctionPrefixResolver()),
-        Arguments.of(
-            "prefix:local-name",
-            new QName("http://example.com/ns/prefix", "local-name"),
-            STATIC_CONTEXT.getFlagPrefixResolver()),
-        Arguments.of(
-            "prefix:local-name",
-            new QName("http://example.com/ns/prefix", "local-name"),
-            STATIC_CONTEXT.getVariablePrefixResolver()),
-        Arguments.of(
-            "prefix:local-name",
-            new QName("http://example.com/ns/prefix", "local-name"),
-            STATIC_CONTEXT.getModelPrefixResolver()),
-        Arguments.of(
-            "local-name",
-            new QName("http://example.com/ns/function", "local-name"),
-            STATIC_CONTEXT.getFunctionPrefixResolver()),
-        Arguments.of(
-            "local-name",
-            new QName("local-name"),
-            STATIC_CONTEXT.getFlagPrefixResolver()),
-        Arguments.of(
-            "local-name",
-            new QName("local-name"),
-            STATIC_CONTEXT.getVariablePrefixResolver()),
-        Arguments.of(
-            "local-name",
-            new QName("http://example.com/ns/model", "local-name"),
-            STATIC_CONTEXT.getModelPrefixResolver()),
-        Arguments.of("Q{http://example.com/ns}local-name",
-            new QName("http://example.com/ns", "local-name"),
-            STATIC_CONTEXT.getFunctionPrefixResolver()),
-        Arguments.of("Q{http://example.com/ns}local-name",
-            new QName("http://example.com/ns", "local-name"),
-            STATIC_CONTEXT.getFlagPrefixResolver()),
-        Arguments.of("Q{http://example.com/ns}local-name",
-            new QName("http://example.com/ns", "local-name"),
-            STATIC_CONTEXT.getVariablePrefixResolver()),
-        Arguments.of("Q{http://example.com/ns}local-name",
-            new QName("http://example.com/ns", "local-name"),
-            STATIC_CONTEXT.getModelPrefixResolver()));
+            "Q{" + MetapathConstants.NS_METAPATH_FUNCTIONS + "}count",
+            COUNT_QNAME),
+        // defaulted namespace using just local name
+        Arguments.of("count", COUNT_QNAME));
   }
 
   @ParameterizedTest
-  @MethodSource("provideValues")
-  void test(
+  @MethodSource("provideFunctionValues")
+  void testFunctions(
       @NonNull String eqname,
-      @NonNull QName expected,
-      @NonNull PrefixToNamespaceResolver resolver) {
+      @NonNull IEnhancedQName expected) {
 
-    QName actual = EQNameUtils.parseName(eqname, resolver);
-    assertEquals(expected, actual);
+    IFunction function = STATIC_CONTEXT.lookupFunction(eqname, 1);
+    assertNotNull(function, "Expected function to be non-null");
+    assertEquals(expected, function.getQName());
+  }
+
+  static Stream<Arguments> provideFlagValues() {
+    return Stream.of(
+        // prefixed lexical name
+        Arguments.of(
+            "model-prefix:local-name",
+            MODEL_QNAME),
+        // qualified name
+        Arguments.of(
+            "Q{" + MODEL_NS + "}local-name",
+            MODEL_QNAME),
+        // just local name
+        Arguments.of(
+            "local-name",
+            LOCAL_NAME_QNAME));
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideFlagValues")
+  void testFlagValue(
+      @NonNull String eqname,
+      @NonNull IEnhancedQName expected) {
+
+    IEnhancedQName qname = STATIC_CONTEXT.parseFlagName(eqname);
+    assertEquals(expected, qname);
+  }
+
+  static Stream<Arguments> provideModelValues() {
+    return Stream.of(
+        // prefixed lexical name
+        Arguments.of(
+            "model-prefix:local-name",
+            MODEL_QNAME),
+        // qualified name
+        Arguments.of("Q{" + MODEL_NS + "}local-name",
+            MODEL_QNAME),
+        // defaulted namespace using just local name
+        Arguments.of(
+            "local-name",
+            MODEL_QNAME));
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideModelValues")
+  void testModelValues(
+      @NonNull String eqname,
+      @NonNull IEnhancedQName expected) {
+
+    IEnhancedQName qname = STATIC_CONTEXT.parseModelName(eqname);
+    assertEquals(expected, qname);
+  }
+
+  static Stream<Arguments> provideVariableValues() {
+    return Stream.of(
+        // prefixed lexical name
+        Arguments.of(
+            "model-prefix:local-name",
+            MODEL_QNAME),
+        // qualified name
+        Arguments.of("Q{" + MODEL_NS + "}local-name",
+            MODEL_QNAME),
+        // just local name
+        Arguments.of(
+            "local-name",
+            LOCAL_NAME_QNAME));
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideVariableValues")
+  void testVariableValues(
+      @NonNull String eqname,
+      @NonNull IEnhancedQName expected) {
+
+    IEnhancedQName qname = STATIC_CONTEXT.parseVariableName(eqname);
+    assertEquals(expected, qname);
   }
 }

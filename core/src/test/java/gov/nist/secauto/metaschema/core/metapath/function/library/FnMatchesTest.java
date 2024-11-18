@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
@@ -28,8 +29,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -85,7 +84,7 @@ class FnMatchesTest
   protected static DynamicContext newDynamicContext() {
     DynamicContext retval = ExpressionTestBase.newDynamicContext();
 
-    retval.bindVariableValue(new QName("poem"), ISequence.of(IStringItem.valueOf(POEM)));
+    retval.bindVariableValue(EQNameFactory.of("poem"), ISequence.of(IStringItem.valueOf(POEM)));
 
     return retval;
   }

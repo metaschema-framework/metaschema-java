@@ -107,7 +107,7 @@ public class Wildcard implements INameTestExpression {
 
     @Override
     public boolean test(IDefinitionNodeItem<?, ?> item) {
-      return localName.equals(item.getQName().getLocalPart());
+      return localName.equals(item.getQName().getLocalName());
     }
 
     @Override
@@ -135,7 +135,7 @@ public class Wildcard implements INameTestExpression {
 
     @Override
     public boolean test(IDefinitionNodeItem<?, ?> item) {
-      return namespace.equals(item.getQName().getNamespaceURI());
+      return namespace.equals(item.getQName().getNamespace());
     }
 
     @Override

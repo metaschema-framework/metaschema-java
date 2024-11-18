@@ -41,7 +41,7 @@ public class MetapathFormatter implements IPathFormatter {
 
   @Override
   public String formatRootAssembly(IRootAssemblyNodeItem root) {
-    return ObjectUtils.notNull(root.getQName().getLocalPart());
+    return ObjectUtils.notNull(root.getQName().getLocalName());
   }
 
   @Override
@@ -69,7 +69,7 @@ public class MetapathFormatter implements IPathFormatter {
   @SuppressWarnings("null")
   @NonNull
   private static String formatModelPathSegment(@NonNull IModelNodeItem<?, ?> item) {
-    StringBuilder builder = new StringBuilder(item.getQName().getLocalPart())
+    StringBuilder builder = new StringBuilder(item.getQName().getLocalName())
         .append('[')
         .append(item.getPosition())
         .append(']');

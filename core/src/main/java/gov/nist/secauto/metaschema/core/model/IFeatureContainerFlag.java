@@ -5,11 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -31,7 +30,7 @@ public interface IFeatureContainerFlag<FI extends IFlagInstance> extends IModelD
 
   @Override
   @Nullable
-  default FI getFlagInstanceByName(QName name) {
+  default FI getFlagInstanceByName(IEnhancedQName name) {
     return getFlagContainer().getFlagInstanceMap().get(name);
   }
 

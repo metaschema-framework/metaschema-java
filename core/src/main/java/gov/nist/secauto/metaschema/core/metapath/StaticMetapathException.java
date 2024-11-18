@@ -35,6 +35,18 @@ public class StaticMetapathException
   public static final int NO_FUNCTION_MATCH = 17;
 
   /**
+   * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPST0051">err:MPST0051</a>: It
+   * is a static error if the
+   * <a href="https://www.w3.org/TR/xpath-31/#dt-expanded-qname">expanded
+   * QName</a> for an AtomicOrUnionType in a SequenceType is not defined in the
+   * <a href="https://www.w3.org/TR/xpath-31/#dt-is-types">in-scope schema
+   * types</a> as a <a href=
+   * "https://www.w3.org/TR/xpath-31/#dt-generalized-atomic-type">generalized
+   * atomic type</a>.
+   */
+  public static final int UNKNOWN_TYPE = 51;
+
+  /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXQST0070">err:MPST0070</a>: A
    * <a href="https://www.w3.org/TR/xpath-31/#dt-static-error">static error</a> is
    * raised if any of the following conditions is statically detected in any

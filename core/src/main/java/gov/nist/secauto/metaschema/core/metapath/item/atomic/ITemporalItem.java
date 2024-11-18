@@ -5,6 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.AtomicItemConstants;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+
 import java.time.ZonedDateTime;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -13,6 +16,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a temporal data value.
  */
 public interface ITemporalItem extends IAnyAtomicItem {
+  @NonNull
+  static IAtomicOrUnionType type() {
+    return AtomicItemConstants.TEMPORAL_ITEM_TYPE;
+  }
+
   /**
    * Determine if the temporal item has a timezone.
    *

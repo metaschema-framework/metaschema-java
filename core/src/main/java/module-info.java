@@ -84,6 +84,7 @@ module gov.nist.secauto.metaschema.core {
   exports gov.nist.secauto.metaschema.core.model.util;
   exports gov.nist.secauto.metaschema.core.model.validation;
   exports gov.nist.secauto.metaschema.core.model.xml;
+  exports gov.nist.secauto.metaschema.core.qname;
   exports gov.nist.secauto.metaschema.core.util;
 
   exports gov.nist.secauto.metaschema.core.datatype.markup.flexmark

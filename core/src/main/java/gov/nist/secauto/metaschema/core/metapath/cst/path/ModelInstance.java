@@ -12,12 +12,11 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -76,7 +75,7 @@ public class ModelInstance
 
     INodeTestExpression test = getTest();
     if (test instanceof NameTest) {
-      QName name = ((NameTest) getTest()).getName();
+      IEnhancedQName name = ((NameTest) getTest()).getName();
       List<? extends IModelNodeItem<?, ?>> items = focusedItem.getModelItemsByName(name);
       retval = items.stream();
     } else if (test instanceof Wildcard) {

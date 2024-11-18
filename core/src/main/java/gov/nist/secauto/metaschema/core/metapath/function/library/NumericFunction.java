@@ -47,10 +47,10 @@ public final class NumericFunction implements IFunctionExecutor {
         .focusIndependent()
         .argument(IArgument.builder()
             .name("arg1")
-            .type(INumericItem.class)
+            .type(INumericItem.type())
             .zeroOrOne()
             .build())
-        .returnType(INumericItem.class)
+        .returnType(INumericItem.type())
         .returnZeroOrOne()
         .functionHandler(newFunctionHandler(executor))
         .build();

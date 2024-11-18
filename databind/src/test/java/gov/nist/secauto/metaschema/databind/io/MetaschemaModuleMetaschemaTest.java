@@ -47,7 +47,6 @@ class MetaschemaModuleMetaschemaTest
   }
 
   @Test
-  @Disabled
   void testReadMetaschemaAsXml() throws IOException {
     IBindingContext context = IBindingContext.newInstance();
 

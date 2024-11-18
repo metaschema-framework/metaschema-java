@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.testing.MockedModelTestSupport;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -22,8 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -55,7 +54,8 @@ class DefaultNodeItemFactoryTest
     // setup the value calls
     getContext().checking(new Expectations() {
       { // NOPMD - intentional
-        allowing(fieldInstance.getDefinition().getFlagInstanceByName(new QName(NS, "flag1"))).getValue(fieldValue);
+        allowing(fieldInstance.getDefinition().getFlagInstanceByName(EQNameFactory.of(NS, "flag1")))
+            .getValue(fieldValue);
         will(returnValue("flag1 value"));
       }
     });
@@ -66,8 +66,8 @@ class DefaultNodeItemFactoryTest
     Collection<? extends IFlagNodeItem> flagItems = field.getFlags();
     assertThat(flagItems, containsInAnyOrder(
         allOf(
-            match("name", flag -> flag.getQName(), equalTo(new QName(NS, "flag1"))),
-            match("value", flag -> flag.getValue(), equalTo("flag1 value"))))); // NOPMD
+            match("name", IFlagNodeItem::getQName, equalTo(EQNameFactory.of(NS, "flag1"))),
+            match("value", IFlagNodeItem::getValue, equalTo("flag1 value"))))); // NOPMD
   }
 
   @Test
@@ -88,11 +88,11 @@ class DefaultNodeItemFactoryTest
     // Setup the value calls
     getContext().checking(new Expectations() {
       { // NOPMD - intentional
-        allowing(assembly.getFlagInstanceByName(new QName(NS, "flag1"))).getValue(assemblyValue);
+        allowing(assembly.getFlagInstanceByName(EQNameFactory.of(NS, "flag1"))).getValue(assemblyValue);
         will(returnValue(flagValue));
-        allowing(assembly.getNamedModelInstanceByName(new QName(NS, "field1"))).getValue(assemblyValue);
+        allowing(assembly.getNamedModelInstanceByName(EQNameFactory.of(NS, "field1"))).getValue(assemblyValue);
         will(returnValue(fieldValue));
-        allowing(assembly.getNamedModelInstanceByName(new QName(NS, "field1"))).getItemValues(fieldValue);
+        allowing(assembly.getNamedModelInstanceByName(EQNameFactory.of(NS, "field1"))).getItemValues(fieldValue);
         will(returnValue(List.of(fieldValue)));
       }
     });
@@ -105,19 +105,21 @@ class DefaultNodeItemFactoryTest
     assertAll(
         () -> assertThat(flagItems, containsInAnyOrder(
             allOf(
-                match("name", flag -> flag.getQName(), equalTo(new QName(NS, "flag1"))),
-                match("value", flag -> flag.getValue(), equalTo("flag1 value"))))),
+                match("name", IFlagNodeItem::getQName, equalTo(EQNameFactory.of(NS, "flag1"))),
+                match("value", IFlagNodeItem::getValue, equalTo("flag1 value"))))),
         () -> assertThat(modelItems, containsInAnyOrder(
             allOf(
-                match("name", model -> model.getQName(), equalTo(new QName(NS, "field1"))),
-                match("value", model -> model.getValue(), equalTo("field1 value"))))));
+                match("name", IModelNodeItem::getQName,
+                    equalTo(EQNameFactory.of(NS, "field1"))),
+                match("value", IModelNodeItem::getValue,
+                    equalTo("field1 value"))))));
   }
 
   private static <T, R> FeatureMatcher<T, R> match(
       @NonNull String label,
       @NonNull Function<T, R> lambda,
       Matcher<R> matcher) {
-    return new FeatureMatcher<T, R>(matcher, label, label) {
+    return new FeatureMatcher<>(matcher, label, label) {
       @Override
       protected R featureValueOf(T actual) {
         return lambda.apply(actual);

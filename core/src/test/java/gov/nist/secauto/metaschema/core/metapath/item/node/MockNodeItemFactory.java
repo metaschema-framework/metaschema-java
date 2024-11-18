@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.withSettings;
 
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -20,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -46,7 +45,7 @@ public class MockNodeItemFactory {
   @NonNull
   public IDocumentNodeItem document(
       URI documentURI,
-      QName rootName,
+      IEnhancedQName rootName,
       List<IFlagNodeItem> flags,
       List<IModelNodeItem<?, ?>> modelItems) {
     String qname = ObjectUtils.requireNonNull(rootName.toString());
@@ -81,14 +80,14 @@ public class MockNodeItemFactory {
       assert flag != null;
 
       // handle each flag child
-      QName qname = flag.getQName();
+      IEnhancedQName qname = flag.getQName();
       doReturn(flag).when(item).getFlagByName(qname);
       // link parent
       doReturn(item).when(flag).getParentNodeItem();
       doReturn(item).when(flag).getParentContentNodeItem();
     });
 
-    Map<QName, List<IModelNodeItem<?, ?>>> modelItemsMap = toModelItemsMap(modelItems);
+    Map<IEnhancedQName, List<IModelNodeItem<?, ?>>> modelItemsMap = toModelItemsMap(modelItems);
 
     doReturn(modelItemsMap.values()).when(item).getModelItems();
 
@@ -112,12 +111,12 @@ public class MockNodeItemFactory {
 
   @SuppressWarnings("static-method")
   @NonNull
-  private Map<QName, List<IModelNodeItem<?, ?>>>
+  private Map<IEnhancedQName, List<IModelNodeItem<?, ?>>>
       toModelItemsMap(List<IModelNodeItem<?, ?>> modelItems) {
 
-    Map<QName, List<IModelNodeItem<?, ?>>> retval = new LinkedHashMap<>(); // NOPMD - intentional
+    Map<IEnhancedQName, List<IModelNodeItem<?, ?>>> retval = new LinkedHashMap<>(); // NOPMD - intentional
     for (IModelNodeItem<?, ?> item : ObjectUtils.requireNonNull(modelItems)) {
-      QName name = item.getQName();
+      IEnhancedQName name = item.getQName();
       List<IModelNodeItem<?, ?>> namedItems = retval.get(name);
       if (namedItems == null) {
         namedItems = new LinkedList<>(); // NOPMD - intentional
@@ -129,7 +128,7 @@ public class MockNodeItemFactory {
   }
 
   @NonNull
-  public IFlagNodeItem flag(@NonNull QName name, @NonNull IAnyAtomicItem value) {
+  public IFlagNodeItem flag(@NonNull IEnhancedQName name, @NonNull IAnyAtomicItem value) {
     IFlagNodeItem flag = newMock(IFlagNodeItem.class, ObjectUtils.notNull(name.toString()));
 
     doReturn(name).when(flag).getQName();
@@ -143,13 +142,13 @@ public class MockNodeItemFactory {
   }
 
   @NonNull
-  public IFieldNodeItem field(@NonNull QName name, @NonNull IAnyAtomicItem value) {
+  public IFieldNodeItem field(@NonNull IEnhancedQName name, @NonNull IAnyAtomicItem value) {
     return field(name, value, CollectionUtil.emptyList());
   }
 
   @NonNull
   public IFieldNodeItem field(
-      @NonNull QName name,
+      @NonNull IEnhancedQName name,
       @NonNull IAnyAtomicItem value,
       List<IFlagNodeItem> flags) {
     IFieldNodeItem field = newMock(IFieldNodeItem.class, ObjectUtils.notNull(name.toString()));
@@ -165,7 +164,7 @@ public class MockNodeItemFactory {
 
   @NonNull
   public IAssemblyNodeItem assembly(
-      @NonNull QName name,
+      @NonNull IEnhancedQName name,
       List<IFlagNodeItem> flags,
       List<IModelNodeItem<?, ?>> modelItems) {
     IAssemblyNodeItem assembly = newMock(IAssemblyNodeItem.class, ObjectUtils.notNull(name.toString()));

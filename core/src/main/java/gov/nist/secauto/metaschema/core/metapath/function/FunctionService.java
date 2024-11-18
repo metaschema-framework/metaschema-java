@@ -6,13 +6,12 @@
 package gov.nist.secauto.metaschema.core.metapath.function;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -111,7 +110,7 @@ public final class FunctionService {
    * @throws StaticMetapathException
    *           if a matching function was not found
    */
-  public IFunction getFunction(@NonNull QName name, int arity) {
+  public IFunction getFunction(@NonNull IEnhancedQName name, int arity) {
     IFunction retval = getLibrary().getFunction(name, arity);
 
     if (retval == null) {

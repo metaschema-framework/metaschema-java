@@ -1,22 +1,30 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.metapath.EQNameUtils;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class DataTypeItemType
-    implements IItemType {
+    implements IAtomicOrUnionType {
 
   @NonNull
   private final IDataTypeAdapter<?> adapter;
+  @NonNull
+  private final Class<? extends IAnyAtomicItem> itemClass;
 
-  public DataTypeItemType(@NonNull IDataTypeAdapter<?> adapter) {
+  public DataTypeItemType(
+      @NonNull IDataTypeAdapter<?> adapter,
+      @NonNull Class<? extends IAnyAtomicItem> itemClass) {
     this.adapter = adapter;
+    this.itemClass = itemClass;
   }
 
   @NonNull
@@ -25,17 +33,12 @@ public class DataTypeItemType
   }
 
   @Override
+  public IEnhancedQName getQName() {
+    return getAdapter().getPreferredName();
+  }
+
+  @Override
   public Class<? extends IAnyAtomicItem> getItemClass() {
-    return getAdapter().getItemClass();
-  }
-
-  @Override
-  public boolean matches(IItem item) {
-    return getItemClass().isInstance(item);
-  }
-
-  @Override
-  public String toSignature() {
-    return EQNameUtils.toEQName(getAdapter().getPreferredName(), null);
+    return itemClass;
   }
 }

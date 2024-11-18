@@ -13,12 +13,11 @@ import gov.nist.secauto.metaschema.core.model.IFeatureContainerModelAssembly;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -47,7 +46,7 @@ public interface IFeatureBindingContainerModelAssembly
   }
 
   @Override
-  default INamedModelInstanceAbsolute getNamedModelInstanceByName(QName name) {
+  default INamedModelInstanceAbsolute getNamedModelInstanceByName(IEnhancedQName name) {
     return getModelContainer().getNamedModelInstanceMap().get(name);
   }
 
@@ -58,7 +57,7 @@ public interface IFeatureBindingContainerModelAssembly
   }
 
   @Override
-  default IFieldInstanceAbsolute getFieldInstanceByName(QName name) {
+  default IFieldInstanceAbsolute getFieldInstanceByName(IEnhancedQName name) {
     return getModelContainer().getFieldInstanceMap().get(name);
   }
 
@@ -69,7 +68,7 @@ public interface IFeatureBindingContainerModelAssembly
   }
 
   @Override
-  default IAssemblyInstanceAbsolute getAssemblyInstanceByName(QName name) {
+  default IAssemblyInstanceAbsolute getAssemblyInstanceByName(IEnhancedQName name) {
     return getModelContainer().getAssemblyInstanceMap().get(name);
   }
 

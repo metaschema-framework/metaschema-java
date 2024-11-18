@@ -6,10 +6,9 @@
 package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.IContainerModelGrouped;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Collection;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -25,7 +24,7 @@ public interface IBoundContainerModelChoiceGroup extends IContainerModelGrouped 
   Collection<? extends IBoundInstanceModelGroupedNamed> getNamedModelInstances();
 
   @Override
-  IBoundInstanceModelGroupedNamed getNamedModelInstanceByName(QName name);
+  IBoundInstanceModelGroupedNamed getNamedModelInstanceByName(IEnhancedQName name);
 
   @Override
   @NonNull
@@ -33,7 +32,7 @@ public interface IBoundContainerModelChoiceGroup extends IContainerModelGrouped 
 
   @Override
   @Nullable
-  IBoundInstanceModelGroupedField getFieldInstanceByName(QName name);
+  IBoundInstanceModelGroupedField getFieldInstanceByName(IEnhancedQName name);
 
   @Override
   @NonNull
@@ -41,5 +40,5 @@ public interface IBoundContainerModelChoiceGroup extends IContainerModelGrouped 
 
   @Override
   @Nullable
-  IBoundInstanceModelGroupedAssembly getAssemblyInstanceByName(QName name);
+  IBoundInstanceModelGroupedAssembly getAssemblyInstanceByName(IEnhancedQName name);
 }

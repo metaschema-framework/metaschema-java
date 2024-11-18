@@ -28,14 +28,14 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.MockNodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -44,8 +44,8 @@ class DefaultConstraintValidatorTest {
   private static final String NS = URI.create("http://example.com/ns").toASCIIString();
 
   @NonNull
-  private static QName qname(@NonNull String name) {
-    return new QName(NS, name);
+  private static IEnhancedQName qname(@NonNull String name) {
+    return EQNameFactory.of(NS, name);
   }
 
   @SuppressWarnings("null")

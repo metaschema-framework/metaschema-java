@@ -9,14 +9,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
-
-import javax.xml.namespace.QName;
 
 class ExamplesTest {
 
@@ -40,7 +39,7 @@ class ExamplesTest {
     IXmlMetaschemaModule module = loader.load(moduleUri);
 
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(
-        new QName("http://csrc.nist.gov/ns/oscal/1.0", "property"));
+        EQNameFactory.of("http://csrc.nist.gov/ns/oscal/1.0", "property"));
     assertNotNull(definition, "definition not found");
   }
 

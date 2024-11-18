@@ -35,10 +35,10 @@ public final class ArrayFlatten {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("input")
-          .type(IItem.class)
+          .type(IItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IItem.class)
+      .returnType(IItem.type())
       .returnZeroOrMore()
       .functionHandler(ArrayFlatten::execute)
       .build();

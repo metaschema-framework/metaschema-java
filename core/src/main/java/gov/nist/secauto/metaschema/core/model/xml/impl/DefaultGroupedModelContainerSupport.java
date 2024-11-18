@@ -9,13 +9,12 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -44,11 +43,11 @@ public class DefaultGroupedModelContainerSupport<
     implements IContainerModelSupport<NMI, NMI, FI, AI> {
 
   @NonNull
-  private final Map<QName, NMI> namedModelInstances;
+  private final Map<IEnhancedQName, NMI> namedModelInstances;
   @NonNull
-  private final Map<QName, FI> fieldInstances;
+  private final Map<IEnhancedQName, FI> fieldInstances;
   @NonNull
-  private final Map<QName, AI> assemblyInstances;
+  private final Map<IEnhancedQName, AI> assemblyInstances;
 
   /**
    * Construct an empty, mutable container.
@@ -82,11 +81,11 @@ public class DefaultGroupedModelContainerSupport<
         fieldClass.getName(),
         assemblyClass.getName());
 
-    Map<QName, NMI> namedModelInstances = new LinkedHashMap<>();
-    Map<QName, FI> fieldInstances = new LinkedHashMap<>();
-    Map<QName, AI> assemblyInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, NMI> namedModelInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, FI> fieldInstances = new LinkedHashMap<>();
+    Map<IEnhancedQName, AI> assemblyInstances = new LinkedHashMap<>();
     for (NMI instance : instances) {
-      QName key = instance.getXmlQName();
+      IEnhancedQName key = instance.getXmlQName();
       namedModelInstances.put(key, instance);
 
       if (fieldClass.isInstance(instance)) {
@@ -118,9 +117,9 @@ public class DefaultGroupedModelContainerSupport<
    *          a collection of assembly instances
    */
   protected DefaultGroupedModelContainerSupport(
-      @NonNull Map<QName, NMI> namedModelInstances,
-      @NonNull Map<QName, FI> fieldInstances,
-      @NonNull Map<QName, AI> assemblyInstances) {
+      @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
+      @NonNull Map<IEnhancedQName, FI> fieldInstances,
+      @NonNull Map<IEnhancedQName, AI> assemblyInstances) {
     this.namedModelInstances = namedModelInstances;
     this.fieldInstances = fieldInstances;
     this.assemblyInstances = assemblyInstances;
@@ -133,17 +132,17 @@ public class DefaultGroupedModelContainerSupport<
   }
 
   @Override
-  public Map<QName, NMI> getNamedModelInstanceMap() {
+  public Map<IEnhancedQName, NMI> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<QName, FI> getFieldInstanceMap() {
+  public Map<IEnhancedQName, FI> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<QName, AI> getAssemblyInstanceMap() {
+  public Map<IEnhancedQName, AI> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 }

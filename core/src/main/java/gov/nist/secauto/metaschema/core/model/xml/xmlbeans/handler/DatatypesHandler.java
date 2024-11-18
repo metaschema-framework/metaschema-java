@@ -7,10 +7,14 @@ package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.SimpleValue;
 
+import javax.xml.namespace.QName;
+
+// FIXME: remove this handler to ensure that prefixes can be handled
 public final class DatatypesHandler {
   private DatatypesHandler() {
     // disable construction
@@ -72,7 +76,8 @@ public final class DatatypesHandler {
 
   private static IDataTypeAdapter<?> decode(SimpleValue target) {
     String name = ObjectUtils.requireNonNull(target.getStringValue());
-    IDataTypeAdapter<?> retval = DataTypeService.getInstance().getJavaTypeAdapterByName(name);
+    IDataTypeAdapter<?> retval = DataTypeService.instance()
+        .getJavaTypeAdapterByQName(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), name));
     if (retval == null) {
       throw new IllegalStateException("Unrecognized data type: " + name);
     }
@@ -81,7 +86,7 @@ public final class DatatypesHandler {
 
   private static void encode(IDataTypeAdapter<?> datatype, SimpleValue target) {
     if (datatype != null) {
-      target.setStringValue(datatype.getPreferredName().getLocalPart());
+      target.setStringValue(datatype.getItemType().getQName().getLocalName());
     }
   }
 

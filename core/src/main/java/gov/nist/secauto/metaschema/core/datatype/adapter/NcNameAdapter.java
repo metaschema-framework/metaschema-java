@@ -7,11 +7,12 @@ package gov.nist.secauto.metaschema.core.datatype.adapter;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INcNameItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
-
-import javax.xml.namespace.QName;
+import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -24,23 +25,40 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class NcNameAdapter
     extends AbstractStringAdapter<INcNameItem> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
-      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "ncname"),
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
+      List.of(
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "ncname"),
           // for backwards compatibility with original type name
-          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "NCName")));
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "NCName")));
+  private static final Pattern NCNAME = Pattern.compile(String.format("^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$"));
+
+  /**
+   * Determine if the name is a non-colonized name.
+   *
+   * @param name
+   *          the name to test
+   * @return {@code true} if the name is not colonized, or {@code false} otherwise
+   */
+  public static boolean isNcName(@NonNull String name) {
+    return NCNAME.matcher(name).matches();
+  }
 
   NcNameAdapter() {
+    super(INcNameItem.class);
     // avoid general construction
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
   @Override
-  public Class<INcNameItem> getItemClass() {
-    return INcNameItem.class;
+  public String parse(String value) {
+    if (!isNcName(value)) {
+      throw new IllegalArgumentException(String.format("Value '%s' is not a valid ncname.", value));
+    }
+    return super.parse(value);
   }
 
   @Override

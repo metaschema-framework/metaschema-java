@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.jmock.Expectations;
@@ -18,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -120,13 +119,13 @@ public final class AssemblyBuilder
     IAssemblyDefinition retval = mock(IAssemblyDefinition.class);
     applyDefinition(retval);
 
-    Map<QName, IFlagInstance> flags = this.flags.stream()
+    Map<IEnhancedQName, IFlagInstance> flags = this.flags.stream()
         .map(builder -> builder.toInstance(retval))
         .collect(Collectors.toUnmodifiableMap(
             IFlagInstance::getXmlQName,
             Function.identity()));
 
-    Map<QName, ? extends INamedModelInstanceAbsolute> modelInstances = this.modelInstances.stream()
+    Map<IEnhancedQName, ? extends INamedModelInstanceAbsolute> modelInstances = this.modelInstances.stream()
         .map(builder -> builder.toInstance(retval))
         .collect(Collectors.toUnmodifiableMap(
             INamedModelInstanceAbsolute::getXmlQName,

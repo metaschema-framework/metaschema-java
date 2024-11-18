@@ -7,6 +7,8 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
@@ -17,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.events.Attribute;
 
 /**
@@ -32,9 +33,9 @@ public class DefaultXmlProblemHandler
     implements IXmlProblemHandler {
   private static final Logger LOGGER = LogManager.getLogger(DefaultXmlProblemHandler.class);
 
-  private static final QName XSI_SCHEMA_LOCATION
-      = new QName("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation");
-  private static final Set<QName> IGNORED_QNAMES;
+  private static final IEnhancedQName XSI_SCHEMA_LOCATION
+      = EQNameFactory.of("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation");
+  private static final Set<IEnhancedQName> IGNORED_QNAMES;
 
   static {
     IGNORED_QNAMES = new HashSet<>();
@@ -47,7 +48,7 @@ public class DefaultXmlProblemHandler
       IBoundObject targetObject,
       Attribute attribute,
       IXmlParsingContext parsingContext) {
-    QName qname = attribute.getName();
+    IEnhancedQName qname = EQNameFactory.of(attribute.getName());
     // check if warning is needed
     if (LOGGER.isWarnEnabled() && !IGNORED_QNAMES.contains(qname)) {
       LOGGER.atWarn().log("Skipping unrecognized attribute '{}'{}.",

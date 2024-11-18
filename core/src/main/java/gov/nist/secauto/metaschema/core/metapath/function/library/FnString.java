@@ -37,7 +37,7 @@ public final class FnString {
       .deterministic()
       .contextDependent()
       .focusDependent()
-      .returnType(IStringItem.class)
+      .returnType(IStringItem.type())
       .returnOne()
       .functionHandler(FnString::executeNoArg)
       .build();
@@ -51,10 +51,10 @@ public final class FnString {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IItem.class)
+          .type(IItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IStringItem.class)
+      .returnType(IStringItem.type())
       .returnOne()
       .functionHandler(FnString::executeOneArg)
       .build();

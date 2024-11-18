@@ -5,10 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -28,7 +28,7 @@ public interface IFeatureValueConstrained extends IValueConstrained {
   }
 
   @Override
-  default Map<QName, ILet> getLetExpressions() {
+  default Map<IEnhancedQName, ILet> getLetExpressions() {
     return getConstraintSupport().getLetExpressions();
   }
 

@@ -37,7 +37,7 @@ public final class FnDocumentUri {
       .deterministic()
       .contextDependent()
       .focusDependent()
-      .returnType(IAnyUriItem.class)
+      .returnType(IAnyUriItem.type())
       .returnOne()
       .functionHandler(FnDocumentUri::executeNoArg)
       .build();
@@ -51,10 +51,10 @@ public final class FnDocumentUri {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IDocumentNodeItem.class)
+          .type(IDocumentNodeItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IAnyUriItem.class)
+      .returnType(IAnyUriItem.type())
       .returnOne()
       .functionHandler(FnDocumentUri::executeOneArg)
       .build();

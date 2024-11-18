@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractModule;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
@@ -24,8 +25,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
@@ -40,9 +39,9 @@ public abstract class AbstractBoundModule
   @NonNull
   private final IBindingContext bindingContext;
   @NonNull
-  private final Lazy<Map<QName, IBoundDefinitionModelAssembly>> assemblyDefinitions;
+  private final Lazy<Map<IEnhancedQName, IBoundDefinitionModelAssembly>> assemblyDefinitions;
   @NonNull
-  private final Lazy<Map<QName, IBoundDefinitionModelField<?>>> fieldDefinitions;
+  private final Lazy<Map<IEnhancedQName, IBoundDefinitionModelField<?>>> fieldDefinitions;
   @NonNull
   private final Lazy<StaticContext> staticContext;
   @NonNull
@@ -159,7 +158,7 @@ public abstract class AbstractBoundModule
    *
    * @return the mapping
    */
-  protected Map<QName, IBoundDefinitionModelAssembly> getAssemblyDefinitionMap() {
+  protected Map<IEnhancedQName, IBoundDefinitionModelAssembly> getAssemblyDefinitionMap() {
     return assemblyDefinitions.get();
   }
 
@@ -170,7 +169,7 @@ public abstract class AbstractBoundModule
   }
 
   @Override
-  public IBoundDefinitionModelAssembly getAssemblyDefinitionByName(@NonNull QName name) {
+  public IBoundDefinitionModelAssembly getAssemblyDefinitionByName(@NonNull IEnhancedQName name) {
     return getAssemblyDefinitionMap().get(name);
   }
 
@@ -179,7 +178,7 @@ public abstract class AbstractBoundModule
    *
    * @return the mapping
    */
-  protected Map<QName, IBoundDefinitionModelField<?>> getFieldDefinitionMap() {
+  protected Map<IEnhancedQName, IBoundDefinitionModelField<?>> getFieldDefinitionMap() {
     return fieldDefinitions.get();
   }
 
@@ -190,7 +189,7 @@ public abstract class AbstractBoundModule
   }
 
   @Override
-  public IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull QName name) {
+  public IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull IEnhancedQName name) {
     return getFieldDefinitionMap().get(name);
   }
 
@@ -202,7 +201,7 @@ public abstract class AbstractBoundModule
   }
 
   @Override
-  public IBoundDefinitionFlag getFlagDefinitionByName(@NonNull QName name) {
+  public IBoundDefinitionFlag getFlagDefinitionByName(@NonNull IEnhancedQName name) {
     // Flags are always inline, so they do not have separate definitions
     return null;
   }

@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * Provides a common base class for string-based data types.
  *
@@ -21,9 +23,12 @@ public abstract class AbstractStringAdapter<ITEM_TYPE extends IStringItem>
 
   /**
    * Construct a new string-based adapter.
+   *
+   * @param itemClass
+   *          the Java type of the Matepath item this adapter supports
    */
-  protected AbstractStringAdapter() {
-    super(String.class);
+  protected AbstractStringAdapter(@NonNull Class<ITEM_TYPE> itemClass) {
+    super(String.class, itemClass);
   }
 
   @Override

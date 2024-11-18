@@ -9,6 +9,8 @@ import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.codehaus.stax2.XMLEventReader2;
@@ -17,7 +19,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -30,15 +31,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class MarkupLineAdapter
     extends AbstractMarkupAdapter<MarkupLine> {
   @NonNull
-  private static final List<QName> NAMES = ObjectUtils.notNull(
-      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "markup-line")));
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
+      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "markup-line")));
 
   MarkupLineAdapter() {
     super(MarkupLine.class);
   }
 
   @Override
-  public List<QName> getNames() {
+  public List<IEnhancedQName> getNames() {
     return NAMES;
   }
 
@@ -72,11 +73,6 @@ public class MarkupLineAdapter
   @Override
   public String getDefaultJsonValueKey() {
     return "RICHTEXT";
-  }
-
-  @Override
-  public Class<IMarkupItem> getItemClass() {
-    return IMarkupItem.class;
   }
 
   @Override

@@ -16,6 +16,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.MockNodeItemFactory;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.assertj.core.api.Assertions;
@@ -24,253 +26,251 @@ import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class StepTest
     extends ExpressionTestBase {
 
   @NonNull
-  private static final QName ROOT = new QName(NS, "root");
+  private static final IEnhancedQName ROOT = EQNameFactory.of(NS, "root");
 
   IDocumentNodeItem getTestNodeItem() {
     MockNodeItemFactory factory = new MockNodeItemFactory();
 
     return factory.document(URI.create("http://example.com/content"), ROOT, List.of(), List.of(
-        factory.assembly(new QName(NS, "node-1"),
+        factory.assembly(EQNameFactory.of(NS, "node-1"),
             List.of(
-                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-v1")),
-                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-v2")),
-                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-v3"))),
+                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-v1")),
+                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-v2")),
+                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-v3"))),
             List.of(
-                factory.assembly(new QName(NS, "a"),
+                factory.assembly(EQNameFactory.of(NS, "a"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-a-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-a-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-a-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-a-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-a-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-a-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-a-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-a-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-a-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-a-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-a-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-a-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-a-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-a-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-a-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-a-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-a-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-a-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-a-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-a-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-a-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-a-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-a-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-a-z-v3"))),
                             List.of()))),
-                factory.assembly(new QName(NS, "b"),
+                factory.assembly(EQNameFactory.of(NS, "b"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-b-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-b-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-b-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-b-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-b-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-b-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-b-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-b-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-b-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-b-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-b-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-b-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-b-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-b-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-b-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-b-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-b-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-b-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-b-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-b-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-b-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-b-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-b-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-b-z-v3"))),
                             List.of()))),
-                factory.assembly(new QName(NS, "c"),
+                factory.assembly(EQNameFactory.of(NS, "c"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-c-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-c-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-c-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-c-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-c-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-c-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-c-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-c-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-c-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-c-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-c-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-c-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-c-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-c-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-c-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-c-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-c-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-c-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-1-c-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-1-c-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-1-c-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-1-c-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-1-c-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-1-c-z-v3"))),
                             List.of()))))),
-        factory.assembly(new QName(NS, "node-2"),
+        factory.assembly(EQNameFactory.of(NS, "node-2"),
             List.of(
-                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-v1")),
-                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-v2")),
-                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-v3"))),
+                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-v1")),
+                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-v2")),
+                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-v3"))),
             List.of(
-                factory.assembly(new QName(NS, "a"),
+                factory.assembly(EQNameFactory.of(NS, "a"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-a-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-a-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-a-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-a-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-a-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-a-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-a-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-a-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-a-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-a-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-a-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-a-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-a-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-a-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-a-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-a-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-a-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-a-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-a-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-a-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-a-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-a-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-a-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-a-z-v3"))),
                             List.of()))),
-                factory.assembly(new QName(NS, "b"),
+                factory.assembly(EQNameFactory.of(NS, "b"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-b-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-b-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-b-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-b-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-b-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-b-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-b-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-b-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-b-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-b-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-b-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-b-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-b-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-b-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-b-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-b-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-b-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-b-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-b-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-b-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-b-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-b-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-b-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-b-z-v3"))),
                             List.of()))),
-                factory.assembly(new QName(NS, "c"),
+                factory.assembly(EQNameFactory.of(NS, "c"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-c-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-c-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-c-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-c-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-c-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-c-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-c-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-c-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-c-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-c-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-c-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-c-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-c-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-c-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-c-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-c-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-c-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-c-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-2-c-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-2-c-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-2-c-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-2-c-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-2-c-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-2-c-z-v3"))),
                             List.of()))))),
-        factory.assembly(new QName(NS, "node-3"),
+        factory.assembly(EQNameFactory.of(NS, "node-3"),
             List.of(
-                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-v1")),
-                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-v2")),
-                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-v3"))),
+                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-v1")),
+                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-v2")),
+                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-v3"))),
             List.of(
-                factory.assembly(new QName(NS, "a"),
+                factory.assembly(EQNameFactory.of(NS, "a"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-a-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-a-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-a-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-a-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-a-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-a-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-a-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-a-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-a-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-a-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-a-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-a-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-a-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-a-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-a-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-a-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-a-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-a-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-a-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-a-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-a-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-a-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-a-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-a-z-v3"))),
                             List.of()))),
-                factory.assembly(new QName(NS, "b"),
+                factory.assembly(EQNameFactory.of(NS, "b"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-b-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-b-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-b-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-b-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-b-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-b-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-b-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-b-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-b-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-b-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-b-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-b-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-b-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-b-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-b-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-b-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-b-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-b-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-b-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-b-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-b-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-b-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-b-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-b-z-v3"))),
                             List.of()))),
-                factory.assembly(new QName(NS, "c"),
+                factory.assembly(EQNameFactory.of(NS, "c"),
                     List.of(
-                        factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-c-v1")),
-                        factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-c-v2")),
-                        factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-c-v3"))),
+                        factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-c-v1")),
+                        factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-c-v2")),
+                        factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-c-v3"))),
                     List.of(
-                        factory.assembly(new QName(NS, "x"),
+                        factory.assembly(EQNameFactory.of(NS, "x"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-c-x-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-c-x-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-c-x-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-c-x-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-c-x-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-c-x-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "y"),
+                        factory.assembly(EQNameFactory.of(NS, "y"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-c-y-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-c-y-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-c-y-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-c-y-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-c-y-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-c-y-v3"))),
                             List.of()),
-                        factory.assembly(new QName(NS, "z"),
+                        factory.assembly(EQNameFactory.of(NS, "z"),
                             List.of(
-                                factory.flag(new QName("flag-v1"), IStringItem.valueOf("flag-3-c-z-v1")),
-                                factory.flag(new QName("flag-v2"), IStringItem.valueOf("flag-3-c-z-v2")),
-                                factory.flag(new QName("flag-v3"), IStringItem.valueOf("flag-3-c-z-v3"))),
+                                factory.flag(EQNameFactory.of("flag-v1"), IStringItem.valueOf("flag-3-c-z-v1")),
+                                factory.flag(EQNameFactory.of("flag-v2"), IStringItem.valueOf("flag-3-c-z-v2")),
+                                factory.flag(EQNameFactory.of("flag-v3"), IStringItem.valueOf("flag-3-c-z-v3"))),
                             List.of())))))));
   }
 
@@ -335,7 +335,7 @@ class StepTest
 
     Assertions.assertThat(actual.getValue()).isEqualTo(List.of(
         document.getRootAssemblyNodeItem()
-            .getModelItemsByName(new QName(NS, "node-2"))
+            .getModelItemsByName(EQNameFactory.of(NS, "node-2"))
             .iterator().next(),
         document.getRootAssemblyNodeItem(),
         document));
@@ -357,7 +357,7 @@ class StepTest
     Assertions.assertThat(actual.getValue()).isEqualTo(List.of(
         nodeB,
         document.getRootAssemblyNodeItem()
-            .getModelItemsByName(new QName(NS, "node-2"))
+            .getModelItemsByName(EQNameFactory.of(NS, "node-2"))
             .iterator().next(),
         document.getRootAssemblyNodeItem(),
         document));
@@ -379,9 +379,9 @@ class StepTest
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next()));
   }
 
   @Test
@@ -399,26 +399,26 @@ class StepTest
             .evaluate(node2, dynamicContext);
 
     IModelNodeItem<?, ?> nodeA
-        = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "a"))).iterator().next();
+        = ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "a"))).iterator().next();
     IModelNodeItem<?, ?> nodeB
-        = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "b"))).iterator().next();
+        = ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "b"))).iterator().next();
     IModelNodeItem<?, ?> nodeC
-        = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "c"))).iterator().next();
+        = ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "c"))).iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
             nodeA,
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next(),
             nodeB,
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next(),
             nodeC,
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next()));
   }
 
   @Test
@@ -436,27 +436,27 @@ class StepTest
             .evaluate(node2, dynamicContext);
 
     IModelNodeItem<?, ?> nodeA
-        = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "a"))).iterator().next();
+        = ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "a"))).iterator().next();
     IModelNodeItem<?, ?> nodeB
-        = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "b"))).iterator().next();
+        = ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "b"))).iterator().next();
     IModelNodeItem<?, ?> nodeC
-        = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "c"))).iterator().next();
+        = ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "c"))).iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
             node2,
             nodeA,
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next(),
             nodeB,
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(new QName(NS, "z"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeB.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next(),
             nodeC,
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next()));
   }
 
   @Test
@@ -474,11 +474,11 @@ class StepTest
             .evaluate(nodeB, dynamicContext);
 
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()
-        .getModelItemsByName(new QName(NS, "node-2"))
+        .getModelItemsByName(EQNameFactory.of(NS, "node-2"))
         .iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
-        List.of(ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "c"))).iterator().next()));
+        List.of(ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "c"))).iterator().next()));
   }
 
   @Test
@@ -496,11 +496,11 @@ class StepTest
             .evaluate(nodeB, dynamicContext);
 
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()
-        .getModelItemsByName(new QName(NS, "node-2"))
+        .getModelItemsByName(EQNameFactory.of(NS, "node-2"))
         .iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
-        List.of(ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "a"))).iterator().next()));
+        List.of(ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "a"))).iterator().next()));
   }
 
   @Test
@@ -518,18 +518,18 @@ class StepTest
             .evaluate(nodeB, dynamicContext);
 
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()
-        .getModelItemsByName(new QName(NS, "node-2"))
+        .getModelItemsByName(EQNameFactory.of(NS, "node-2"))
         .iterator().next();
 
     IModelNodeItem<?, ?> nodeC
-        = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "c"))).iterator().next();
+        = ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "c"))).iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
             nodeC,
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeC.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next()));
   }
 
   @Test
@@ -547,17 +547,17 @@ class StepTest
             .evaluate(nodeB, dynamicContext);
 
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()
-        .getModelItemsByName(new QName(NS, "node-2"))
+        .getModelItemsByName(EQNameFactory.of(NS, "node-2"))
         .iterator().next();
 
     IModelNodeItem<?, ?> nodeA
-        = ObjectUtils.requireNonNull(node2.getModelItemsByName(new QName(NS, "a"))).iterator().next();
+        = ObjectUtils.requireNonNull(node2.getModelItemsByName(EQNameFactory.of(NS, "a"))).iterator().next();
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
         List.of(
             nodeA,
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "x"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "y"))).iterator().next(),
-            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(new QName(NS, "z"))).iterator().next()));
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "x"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "y"))).iterator().next(),
+            ObjectUtils.requireNonNull(nodeA.getModelItemsByName(EQNameFactory.of(NS, "z"))).iterator().next()));
   }
 }

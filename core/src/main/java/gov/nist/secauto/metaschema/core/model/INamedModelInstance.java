@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import java.util.function.Predicate;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
-import javax.xml.namespace.QName;
+import java.util.function.Predicate;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -76,12 +76,12 @@ public interface INamedModelInstance extends IModelInstance, INamedInstance {
   IFlagInstance getJsonKey();
 
   @Override
-  default QName getReferencedDefinitionQName() {
+  default IEnhancedQName getReferencedDefinitionQName() {
     return getContainingModule().toModelQName(getName());
   }
 
   @Override
-  default QName getXmlQName() {
+  default IEnhancedQName getXmlQName() {
     return getContainingModule().toModelQName(getEffectiveName());
   }
 }

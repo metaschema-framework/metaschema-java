@@ -43,10 +43,10 @@ public final class FnDocumentAvailable {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IStringItem.class)
+          .type(IStringItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IBooleanItem.class)
+      .returnType(IBooleanItem.type())
       .returnOne()
       .functionHandler(FnDocumentAvailable::execute)
       .build();

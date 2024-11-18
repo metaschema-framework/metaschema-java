@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -18,13 +19,12 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -52,7 +52,7 @@ final class DefaultNodeItemFactory
   @NonNull
   public Supplier<FlagContainer> newDataModelSupplier(@NonNull IFieldNodeItem item) {
     return () -> {
-      Map<QName, IFlagNodeItem> flags = generateFlags(item);
+      Map<IEnhancedQName, IFlagNodeItem> flags = generateFlags(item);
       return new FlagContainer(flags);
     };
   }
@@ -61,8 +61,8 @@ final class DefaultNodeItemFactory
   @NonNull
   public Supplier<ModelContainer> newDataModelSupplier(@NonNull IAssemblyNodeItem item) {
     return () -> {
-      Map<QName, IFlagNodeItem> flags = generateFlags(item);
-      Map<QName, List<? extends IModelNodeItem<?, ?>>> modelItems = generateModelItems(item);
+      Map<IEnhancedQName, IFlagNodeItem> flags = generateFlags(item);
+      Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> modelItems = generateModelItems(item);
       return new ModelContainer(flags, modelItems);
     };
   }
@@ -70,7 +70,7 @@ final class DefaultNodeItemFactory
   @Override
   public Supplier<ModelContainer> newDataModelSupplier(IRootAssemblyNodeItem item) {
     return () -> {
-      Map<QName, List<? extends IModelNodeItem<?, ?>>> modelItems = CollectionUtil.singletonMap(
+      Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> modelItems = CollectionUtil.singletonMap(
           item.getQName(),
           CollectionUtil.singletonList(item));
       return new ModelContainer(CollectionUtil.emptyMap(), modelItems);
@@ -87,8 +87,8 @@ final class DefaultNodeItemFactory
    */
   @SuppressWarnings("PMD.UseConcurrentHashMap") // need an ordered Map
   @NonNull
-  protected Map<QName, IFlagNodeItem> generateFlags(@NonNull IModelNodeItem<?, ?> parent) {
-    Map<QName, IFlagNodeItem> retval = new LinkedHashMap<>();
+  protected Map<IEnhancedQName, IFlagNodeItem> generateFlags(@NonNull IModelNodeItem<?, ?> parent) {
+    Map<IEnhancedQName, IFlagNodeItem> retval = new LinkedHashMap<>();
 
     Object parentValue = parent.getValue();
     assert parentValue != null;
@@ -112,9 +112,9 @@ final class DefaultNodeItemFactory
    */
   @SuppressWarnings({ "PMD.UseConcurrentHashMap", "PMD.CognitiveComplexity" }) // need an ordered map
   @NonNull
-  protected Map<QName, List<? extends IModelNodeItem<?, ?>>> generateModelItems(
+  protected Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> generateModelItems(
       @NonNull IAssemblyNodeItem parent) {
-    Map<QName, List<? extends IModelNodeItem<?, ?>>> retval = new LinkedHashMap<>();
+    Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> retval = new LinkedHashMap<>();
 
     Object parentValue = parent.getValue();
     assert parentValue != null;
@@ -143,9 +143,9 @@ final class DefaultNodeItemFactory
                     return Map.entry(itemInstance, item);
                   })
                   .collect(Collectors.groupingBy(
-                      entry -> entry.getKey(),
+                      Entry::getKey,
                       LinkedHashMap::new,
-                      Collectors.mapping(entry -> entry.getValue(), Collectors.toUnmodifiableList())));
+                      Collectors.mapping(Entry::getValue, Collectors.toUnmodifiableList())));
 
           for (Map.Entry<INamedModelInstanceGrouped, List<Object>> entry : instanceMap.entrySet()) {
             INamedModelInstanceGrouped namedInstance = entry.getKey();
@@ -183,7 +183,7 @@ final class DefaultNodeItemFactory
       IModule module = item.getModule();
 
       // build flags from Metaschema definitions
-      Map<QName, IFlagNodeItem> flags = ObjectUtils.notNull(
+      Map<IEnhancedQName, IFlagNodeItem> flags = ObjectUtils.notNull(
           Collections.unmodifiableMap(module.getExportedFlagDefinitions().stream()
               .map(def -> newFlagNodeItem(ObjectUtils.notNull(def), item))
               .collect(
@@ -199,7 +199,7 @@ final class DefaultNodeItemFactory
       Stream<IAssemblyNodeItem> assemblyStream = module.getExportedAssemblyDefinitions().stream()
           .map(def -> newAssemblyNodeItem(ObjectUtils.notNull(def), item));
 
-      Map<QName, List<? extends IModelNodeItem<?, ?>>> modelItems
+      Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> modelItems
           = ObjectUtils.notNull(Stream.concat(fieldStream, assemblyStream)
               .collect(
                   Collectors.collectingAndThen(
@@ -212,7 +212,7 @@ final class DefaultNodeItemFactory
   @Override
   public Supplier<FlagContainer> newMetaschemaModelSupplier(@NonNull IFieldNodeItem item) {
     return () -> {
-      Map<QName, IFlagNodeItem> flags = generateMetaschemaFlags(item);
+      Map<IEnhancedQName, IFlagNodeItem> flags = generateMetaschemaFlags(item);
       return new FlagContainer(flags);
     };
   }
@@ -221,16 +221,16 @@ final class DefaultNodeItemFactory
   public Supplier<ModelContainer> newMetaschemaModelSupplier(
       @NonNull IAssemblyNodeItem item) {
     return () -> {
-      Map<QName, IFlagNodeItem> flags = generateMetaschemaFlags(item);
-      Map<QName, List<? extends IModelNodeItem<?, ?>>> modelItems = generateMetaschemaModelItems(item);
+      Map<IEnhancedQName, IFlagNodeItem> flags = generateMetaschemaFlags(item);
+      Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> modelItems = generateMetaschemaModelItems(item);
       return new ModelContainer(flags, modelItems);
     };
   }
 
   @NonNull
-  protected Map<QName, IFlagNodeItem> generateMetaschemaFlags(
+  protected Map<IEnhancedQName, IFlagNodeItem> generateMetaschemaFlags(
       @NonNull IModelNodeItem<?, ?> parent) {
-    Map<QName, IFlagNodeItem> retval = new LinkedHashMap<>(); // NOPMD - intentional
+    Map<IEnhancedQName, IFlagNodeItem> retval = new LinkedHashMap<>(); // NOPMD - intentional
 
     for (IFlagInstance instance : parent.getDefinition().getFlagInstances()) {
       assert instance != null;
@@ -241,9 +241,9 @@ final class DefaultNodeItemFactory
   }
 
   @NonNull
-  protected Map<QName, List<? extends IModelNodeItem<?, ?>>> generateMetaschemaModelItems(
+  protected Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> generateMetaschemaModelItems(
       @NonNull IAssemblyNodeItem parent) {
-    Map<QName, List<? extends IModelNodeItem<?, ?>>> retval = new LinkedHashMap<>(); // NOPMD - intentional
+    Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> retval = new LinkedHashMap<>(); // NOPMD - intentional
 
     for (INamedModelInstance instance : CollectionUtil.toIterable(getNamedModelInstances(parent.getDefinition()))) {
       assert instance != null;

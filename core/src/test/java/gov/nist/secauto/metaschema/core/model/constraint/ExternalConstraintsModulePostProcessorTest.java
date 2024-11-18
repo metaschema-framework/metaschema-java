@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.model.xml.XmlMetaConstraintLoader;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -20,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 class ExternalConstraintsModulePostProcessorTest {
 
@@ -38,7 +37,7 @@ class ExternalConstraintsModulePostProcessorTest {
                 Paths.get("src/test/resources/content/issue184-metaschema.xml")));
 
     IAssemblyDefinition definition = ObjectUtils.requireNonNull(module.getAssemblyDefinitionByName(
-        new QName("http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test", "a")));
+        EQNameFactory.of("http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test", "a")));
 
     assertEquals(1, definition.getConstraints().size());
   }

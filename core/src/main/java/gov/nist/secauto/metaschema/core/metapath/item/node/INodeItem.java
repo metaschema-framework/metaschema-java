@@ -6,15 +6,15 @@ import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathSegment;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -23,6 +23,11 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents a queryable Metapath model node.
  */
 public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
+  @NonNull
+  static IItemType type() {
+    return IItemType.node();
+  }
+
   /**
    * Retrieve the relative position of this node relative to sibling nodes.
    * <p>
@@ -91,12 +96,12 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   IModelNodeItem<?, ?> getParentContentNodeItem();
 
   /**
-   * Get the type of node item this is.
+   * Get the kind of node item this is.
    *
-   * @return the node item's type
+   * @return the node item's kind
    */
   @NonNull
-  NodeItemType getNodeItemType();
+  NodeItemKind getNodeItemKind();
 
   /**
    * Retrieve the base URI of this node.
@@ -273,7 +278,7 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    *         was found
    */
   @Nullable
-  IFlagNodeItem getFlagByName(@NonNull QName name);
+  IFlagNodeItem getFlagByName(@NonNull IEnhancedQName name);
 
   /**
    * Get the flags and value data associated with this node as a stream.
@@ -314,7 +319,7 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    *         empty list if an instance with that name is not present
    */
   @NonNull
-  List<? extends IModelNodeItem<?, ?>> getModelItemsByName(@NonNull QName name);
+  List<? extends IModelNodeItem<?, ?>> getModelItemsByName(@NonNull IEnhancedQName name);
 
   /**
    * Get the model items (i.e., fields, assemblies) and value data associated this

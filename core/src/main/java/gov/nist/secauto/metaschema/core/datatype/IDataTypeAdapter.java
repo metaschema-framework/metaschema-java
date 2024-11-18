@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.codehaus.stax2.XMLEventReader2;
@@ -46,7 +48,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @return the name
    */
   @NonNull
-  List<QName> getNames();
+  List<IEnhancedQName> getNames();
 
   /**
    * Get the most preferred name for this data type.
@@ -54,7 +56,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @return the name
    */
   @NonNull
-  default QName getPreferredName() {
+  default IEnhancedQName getPreferredName() {
     return ObjectUtils.notNull(getNames().iterator().next());
   }
 
@@ -121,13 +123,12 @@ public interface IDataTypeAdapter<TYPE> {
   }
 
   /**
-   * Get the java type of the associated item.
+   * Get the item type information of the associated item.
    *
-   * @return the java associated item type
+   * @return the item type information
    */
-  // TODO: move to IAnyAtomicItem
   @NonNull
-  Class<? extends IAnyAtomicItem> getItemClass();
+  IAtomicOrUnionType getItemType();
 
   /**
    * Construct a new item of this type using the provided value.
@@ -151,7 +152,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @return {@code true} if the adapter will parse the element, or {@code false}
    *         otherwise
    */
-  boolean canHandleQName(@NonNull QName nextElementQName);
+  boolean canHandleQName(@NonNull IEnhancedQName nextElementQName);
 
   /**
    * Parses a provided string. Used to parse XML attributes, simple XML character
@@ -233,8 +234,7 @@ public interface IDataTypeAdapter<TYPE> {
       @NonNull Object instance,
       @NonNull StartElement parent,
       @NonNull XMLEventFactory2 eventFactory,
-      @NonNull XMLEventWriter eventWriter)
-      throws IOException;
+      @NonNull XMLEventWriter eventWriter) throws IOException;
 
   /**
    * Writes the provided Java class instance data as XML. The parent element
@@ -254,8 +254,10 @@ public interface IDataTypeAdapter<TYPE> {
    *           if an unexpected error occurred while processing the XML output
    */
   // TODO: migrate code to XML writer implementation.
-  void writeXmlValue(@NonNull Object instance, @NonNull QName parentName, @NonNull XMLStreamWriter2 writer)
-      throws IOException;
+  void writeXmlValue(
+      @NonNull Object instance,
+      @NonNull IEnhancedQName parentName,
+      @NonNull XMLStreamWriter2 writer) throws IOException;
 
   /**
    * Writes the provided Java class instance as a JSON/YAML field value.

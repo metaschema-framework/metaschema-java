@@ -42,6 +42,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.MockNodeItemFactory;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.antlr.v4.runtime.CharStreams;
@@ -59,8 +61,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.TooManyStaticImports")
@@ -70,15 +70,15 @@ class BuildCstVisitorTest {
   @NonNull
   private static final String NS = ObjectUtils.notNull(NS_URI.toASCIIString());
   @NonNull
-  private static final QName ROOT = new QName(NS, "root");
+  private static final IEnhancedQName ROOT = EQNameFactory.of(NS, "root");
   @NonNull
-  private static final QName FIELD1 = new QName(NS, "field1");
+  private static final IEnhancedQName FIELD1 = EQNameFactory.of(NS, "field1");
   @NonNull
-  private static final QName FIELD2 = new QName(NS, "field2");
+  private static final IEnhancedQName FIELD2 = EQNameFactory.of(NS, "field2");
   @NonNull
-  private static final QName UUID = new QName(NS, "uuid");
+  private static final IEnhancedQName UUID = EQNameFactory.of(NS, "uuid");
   @NonNull
-  private static final QName FLAG = new QName("flag");
+  private static final IEnhancedQName FLAG = EQNameFactory.of("flag");
 
   @RegisterExtension
   Mockery context = new JUnit5Mockery();

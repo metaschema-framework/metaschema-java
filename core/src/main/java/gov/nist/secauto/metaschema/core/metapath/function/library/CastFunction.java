@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunctionExecutor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -36,7 +37,7 @@ public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctio
   static <ITEM extends IAnyAtomicItem> IFunction signature(
       @NonNull URI namespace,
       @NonNull String name,
-      @NonNull Class<ITEM> resultingAtomicType,
+      @NonNull IAtomicOrUnionType resultingAtomicType,
       @NonNull ICastExecutor<ITEM> executor) {
     return signature(
         ObjectUtils.notNull(namespace.toASCIIString()),
@@ -49,7 +50,7 @@ public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctio
   static <ITEM extends IAnyAtomicItem> IFunction signature(
       @NonNull String namespace,
       @NonNull String name,
-      @NonNull Class<ITEM> resulingAtomicType,
+      @NonNull IAtomicOrUnionType resulingAtomicType,
       @NonNull ICastExecutor<ITEM> executor) {
     return IFunction.builder()
         .name(name)
@@ -59,7 +60,7 @@ public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctio
         .focusIndependent()
         .argument(IArgument.builder()
             .name("arg1")
-            .type(IAnyAtomicItem.class)
+            .type(IAnyAtomicItem.type())
             .zeroOrOne()
             .build())
         .returnType(resulingAtomicType)

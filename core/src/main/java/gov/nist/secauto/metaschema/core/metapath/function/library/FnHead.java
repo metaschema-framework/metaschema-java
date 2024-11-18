@@ -34,10 +34,10 @@ public final class FnHead {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IItem.class)
+          .type(IItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IItem.class)
+      .returnType(IItem.type())
       .returnZeroOrOne()
       .functionHandler(FnHead::execute)
       .build();

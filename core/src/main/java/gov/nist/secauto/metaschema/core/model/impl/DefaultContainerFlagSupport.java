@@ -7,17 +7,16 @@ package gov.nist.secauto.metaschema.core.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class DefaultContainerFlagSupport<FI extends IFlagInstance> implements IContainerFlagSupport<FI> {
   @NonNull
-  private final Map<QName, FI> instances;
+  private final Map<IEnhancedQName, FI> instances;
   @Nullable
   private final FI jsonKey;
 
@@ -31,14 +30,14 @@ public class DefaultContainerFlagSupport<FI extends IFlagInstance> implements IC
    *          configured
    */
   public DefaultContainerFlagSupport(
-      @NonNull Map<QName, FI> instances,
+      @NonNull Map<IEnhancedQName, FI> instances,
       @Nullable FI jsonKey) {
     this.instances = instances;
     this.jsonKey = jsonKey;
   }
 
   @Override
-  public Map<QName, FI> getFlagInstanceMap() {
+  public Map<IEnhancedQName, FI> getFlagInstanceMap() {
     return instances;
   }
 

@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -23,8 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -76,7 +75,7 @@ public interface IFunction extends IItem {
    */
   @NonNull
   default String getName() {
-    return ObjectUtils.notNull(getQName().getLocalPart());
+    return ObjectUtils.notNull(getQName().getLocalName());
   }
 
   /**
@@ -85,7 +84,7 @@ public interface IFunction extends IItem {
    * @return the namespace qualified name
    */
   @NonNull
-  QName getQName();
+  IEnhancedQName getQName();
 
   /**
    * Retrieve the set of assigned function properties.
@@ -236,6 +235,7 @@ public interface IFunction extends IItem {
   /**
    * Used to create a function's signature using a builder pattern.
    */
+  // FIXME: Should return type be ISequenceType?
   @SuppressWarnings("PMD.LooseCoupling")
   final class Builder {
     @NonNull
@@ -255,10 +255,10 @@ public interface IFunction extends IItem {
 
     private Builder(@NonNull StaticContext staticContext) {
       this.staticContext = staticContext;
-      returnType = staticContext.lookupDataType(IItem.class);
+      returnType = IItem.type();
     }
 
-    protected StaticContext getStaticContext() {
+    private StaticContext getStaticContext() {
       return staticContext;
     }
 
@@ -402,12 +402,35 @@ public interface IFunction extends IItem {
      * Define the return sequence Java type of the function.
      *
      * @param name
+     *          the extended qualified name of the function's return data type
+     * @return this builder
+     */
+    @NonNull
+    public Builder returnType(@NonNull String name) {
+      IItemType result = getStaticContext().lookupDataTypeItemType(name);
+      if (result == null) {
+        throw new IllegalArgumentException(
+            String.format("No data type with the name '%s'.", name));
+      }
+      this.returnType = result;
+      return this;
+    }
+
+    /**
+     * Define the return sequence Java type of the function.
+     *
+     * @param name
      *          the qualified name of the function's return data type
      * @return this builder
      */
     @NonNull
-    public Builder returnType(@NonNull QName name) {
-      this.returnType = getStaticContext().lookupDataType(name);
+    public Builder returnType(@NonNull IEnhancedQName name) {
+      IItemType result = getStaticContext().lookupDataTypeItemType(name);
+      if (result == null) {
+        throw new IllegalArgumentException(
+            String.format("No data type with the name '%s'.", name));
+      }
+      this.returnType = result;
       return this;
     }
 
@@ -419,8 +442,8 @@ public interface IFunction extends IItem {
      * @return this builder
      */
     @NonNull
-    public Builder returnType(@NonNull Class<? extends IItem> type) {
-      this.returnType = getStaticContext().lookupDataType(type);
+    public Builder returnType(@NonNull IItemType type) {
+      this.returnType = type;
       return this;
     }
 
