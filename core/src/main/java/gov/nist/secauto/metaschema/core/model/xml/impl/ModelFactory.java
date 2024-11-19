@@ -495,7 +495,6 @@ public final class ModelFactory {
       @NonNull ConstraintLetType xmlObject,
       @NonNull ISource source) {
 
-    // FIXME: figure out how to resolve the namespace prefix on var
     return ILet.of(
         source.getStaticContext().parseVariableName(ObjectUtils.requireNonNull(xmlObject.getVar())),
         ObjectUtils.notNull(xmlObject.getExpression()),

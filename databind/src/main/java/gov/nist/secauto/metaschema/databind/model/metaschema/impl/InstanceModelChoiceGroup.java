@@ -57,7 +57,7 @@ public class InstanceModelChoiceGroup
     super(parent);
     this.binding = binding;
     this.groupAs = ModelSupport.groupAs(binding.getGroupAs(), parent.getContainingModule());
-    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> ChoiceGroupModelContainerSupport.of(
+    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> ChoiceGroupModelGenerator.of(
         binding,
         bindingInstance,
         this,

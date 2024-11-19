@@ -74,7 +74,6 @@ public interface INamed {
    *
    * @return the XML qualified name, or {@code null} if there isn't one
    */
-  // FIXME: rename to getQName
   @NonNull
   IEnhancedQName getQName();
 

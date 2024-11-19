@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
+import gov.nist.secauto.metaschema.core.model.DefaultAssemblyModelBuilder;
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
@@ -23,81 +23,52 @@ import gov.nist.secauto.metaschema.databind.model.annotations.Ignore;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-class AssemblyModelContainerSupport
-    implements IContainerModelAssemblySupport<
-        IBoundInstanceModel<?>,
+final class AssemblyModelGenerator {
+
+  @SuppressWarnings("PMD.ShortMethodName")
+  @NonNull
+  public static IContainerModelAssemblySupport<
+      IBoundInstanceModel<?>,
+      IBoundInstanceModelNamed<?>,
+      IBoundInstanceModelField<?>,
+      IBoundInstanceModelAssembly,
+      IChoiceInstance,
+      IBoundInstanceModelChoiceGroup> of(@NonNull DefinitionAssembly containingDefinition) {
+    DefaultAssemblyModelBuilder<IBoundInstanceModel<?>,
         IBoundInstanceModelNamed<?>,
         IBoundInstanceModelField<?>,
         IBoundInstanceModelAssembly,
         IChoiceInstance,
-        IBoundInstanceModelChoiceGroup> {
-  @NonNull
-  private final List<IBoundInstanceModel<?>> modelInstances;
-  @NonNull
-  private final Map<IEnhancedQName, IBoundInstanceModelNamed<?>> namedModelInstances;
-  @NonNull
-  private final Map<IEnhancedQName, IBoundInstanceModelField<?>> fieldInstances;
-  @NonNull
-  private final Map<IEnhancedQName, IBoundInstanceModelAssembly> assemblyInstances;
-  @NonNull
-  private final Map<String, IBoundInstanceModelChoiceGroup> choiceGroupInstances;
+        IBoundInstanceModelChoiceGroup> builder = new DefaultAssemblyModelBuilder<>();
 
-  @SuppressWarnings("PMD.UseConcurrentHashMap")
-  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
-  public AssemblyModelContainerSupport(
-      @NonNull DefinitionAssembly containingDefinition) {
-    this.modelInstances = CollectionUtil.unmodifiableList(ObjectUtils.notNull(
+    List<IBoundInstanceModel<?>> modelInstances = CollectionUtil.unmodifiableList(ObjectUtils.notNull(
         getModelInstanceStream(containingDefinition, containingDefinition.getBoundClass())
             .collect(Collectors.toUnmodifiableList())));
 
-    Map<IEnhancedQName, IBoundInstanceModelNamed<?>> namedModelInstances = new LinkedHashMap<>();
-    Map<IEnhancedQName, IBoundInstanceModelField<?>> fieldInstances = new LinkedHashMap<>();
-    Map<IEnhancedQName, IBoundInstanceModelAssembly> assemblyInstances = new LinkedHashMap<>();
-    Map<String, IBoundInstanceModelChoiceGroup> choiceGroupInstances = new LinkedHashMap<>();
-    for (IBoundInstanceModel<?> instance : this.modelInstances) {
+    for (IBoundInstanceModel<?> instance : modelInstances) {
       if (instance instanceof IBoundInstanceModelNamed) {
         IBoundInstanceModelNamed<?> named = (IBoundInstanceModelNamed<?>) instance;
-        IEnhancedQName key = named.getQName();
-        namedModelInstances.put(key, named);
-
         if (instance instanceof IBoundInstanceModelField) {
-          fieldInstances.put(key, (IBoundInstanceModelField<?>) named);
+          builder.append((IBoundInstanceModelField<?>) named);
         } else if (instance instanceof IBoundInstanceModelAssembly) {
-          assemblyInstances.put(key, (IBoundInstanceModelAssembly) named);
+          builder.append((IBoundInstanceModelAssembly) named);
         }
       } else if (instance instanceof IBoundInstanceModelChoiceGroup) {
         IBoundInstanceModelChoiceGroup choiceGroup = (IBoundInstanceModelChoiceGroup) instance;
-        String key = ObjectUtils.requireNonNull(choiceGroup.getGroupAsName());
-        choiceGroupInstances.put(key, choiceGroup);
+        builder.append(choiceGroup);
       }
     }
-
-    this.namedModelInstances = namedModelInstances.isEmpty()
-        ? CollectionUtil.emptyMap()
-        : CollectionUtil.unmodifiableMap(namedModelInstances);
-    this.fieldInstances = fieldInstances.isEmpty()
-        ? CollectionUtil.emptyMap()
-        : CollectionUtil.unmodifiableMap(fieldInstances);
-    this.assemblyInstances = assemblyInstances.isEmpty()
-        ? CollectionUtil.emptyMap()
-        : CollectionUtil.unmodifiableMap(assemblyInstances);
-    this.choiceGroupInstances = choiceGroupInstances.isEmpty()
-        ? CollectionUtil.emptyMap()
-        : CollectionUtil.unmodifiableMap(choiceGroupInstances);
+    return builder.buildAssembly();
   }
 
-  protected static IBoundInstanceModel<?> newBoundModelInstance(
+  private static IBoundInstanceModel<?> newBoundModelInstance(
       @NonNull Field field,
       @NonNull IBoundDefinitionModelAssembly definition) {
     IBoundInstanceModel<?> retval = null;
@@ -112,7 +83,7 @@ class AssemblyModelContainerSupport
   }
 
   @NonNull
-  protected static Stream<IBoundInstanceModel<?>> getModelInstanceStream(
+  private static Stream<IBoundInstanceModel<?>> getModelInstanceStream(
       @NonNull IBoundDefinitionModelAssembly definition,
       @NonNull Class<?> clazz) {
 
@@ -145,34 +116,7 @@ class AssemblyModelContainerSupport
         .filter(Objects::nonNull)));
   }
 
-  @Override
-  public Collection<IBoundInstanceModel<?>> getModelInstances() {
-    return modelInstances;
-  }
-
-  @Override
-  public Map<IEnhancedQName, IBoundInstanceModelNamed<?>> getNamedModelInstanceMap() {
-    return namedModelInstances;
-  }
-
-  @Override
-  public Map<IEnhancedQName, IBoundInstanceModelField<?>> getFieldInstanceMap() {
-    return fieldInstances;
-  }
-
-  @Override
-  public Map<IEnhancedQName, IBoundInstanceModelAssembly> getAssemblyInstanceMap() {
-    return assemblyInstances;
-  }
-
-  @Override
-  public List<IChoiceInstance> getChoiceInstances() {
-    // not supported
-    return CollectionUtil.emptyList();
-  }
-
-  @Override
-  public Map<String, IBoundInstanceModelChoiceGroup> getChoiceGroupInstanceMap() {
-    return choiceGroupInstances;
+  private AssemblyModelGenerator() {
+    // disable construction
   }
 }

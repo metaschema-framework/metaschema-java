@@ -149,6 +149,14 @@ public final class DataTypeService {
     return (TYPE) typeByAdapterClass.get(clazz);
   }
 
+  /**
+   * Lookup a specific {@link IDataTypeAdapter} instance by its item class.
+   *
+   * @param clazz
+   *          the adapter class to get the instance for
+   * @return the instance or {@code null} if the instance is unknown to the type
+   *         system
+   */
   @Nullable
   public IDataTypeAdapter<?> getJavaTypeAdapterByItemClass(Class<? extends IAnyAtomicItem> clazz) {
     return typeByItemClass.get(clazz);

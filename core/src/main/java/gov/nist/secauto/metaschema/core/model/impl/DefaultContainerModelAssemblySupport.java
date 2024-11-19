@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.xml.impl;
+package gov.nist.secauto.metaschema.core.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
@@ -14,9 +14,7 @@ import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +51,11 @@ public class DefaultContainerModelAssemblySupport<
     extends DefaultContainerModelSupport<MI, NMI, FI, AI>
     implements IContainerModelAssemblySupport<MI, NMI, FI, AI, CI, CGI> {
 
+  /**
+   * An empty, immutable container.
+   */
   @SuppressWarnings("rawtypes")
+  @NonNull
   public static final DefaultContainerModelAssemblySupport EMPTY = new DefaultContainerModelAssemblySupport<>(
       CollectionUtil.emptyList(),
       CollectionUtil.emptyMap(),
@@ -82,52 +84,6 @@ public class DefaultContainerModelAssemblySupport<
   }
 
   /**
-   * Construct an immutable container from a collection of model instances.
-   *
-   * @param instances
-   *          the collection of model instances to add to the new container.
-   * @param namedModelClass
-   *          the Java type for named model instances
-   * @param fieldClass
-   *          the Java type for field instances
-   * @param assemblyClass
-   *          the Java type for assembly instances
-   * @param choiceClass
-   *          the Java type for choice instances
-   * @param choiceGroupClass
-   *          the Java type for choice group instances
-   */
-  @SuppressWarnings({ "PMD.UseConcurrentHashMap" })
-  public DefaultContainerModelAssemblySupport(
-      @NonNull Collection<MI> instances,
-      @NonNull Class<NMI> namedModelClass,
-      @NonNull Class<FI> fieldClass,
-      @NonNull Class<AI> assemblyClass,
-      @NonNull Class<CI> choiceClass,
-      @NonNull Class<CGI> choiceGroupClass) {
-    super(instances, namedModelClass, fieldClass, assemblyClass);
-    List<CI> choiceInstances = new LinkedList<>();
-    Map<String, CGI> choiceGroupInstances = new LinkedHashMap<>();
-    for (MI instance : instances) {
-      if (choiceClass.isInstance(instance)) {
-        CI choice = choiceClass.cast(instance);
-        choiceInstances.add(choice);
-      } else if (choiceGroupClass.isInstance(instance)) {
-        CGI choiceGroup = choiceGroupClass.cast(instance);
-        String key = ObjectUtils.requireNonNull(choiceGroup.getGroupAsName());
-        choiceGroupInstances.put(key, choiceGroup);
-      }
-    }
-
-    this.choiceInstances = choiceInstances.isEmpty()
-        ? CollectionUtil.emptyList()
-        : CollectionUtil.unmodifiableList(choiceInstances);
-    this.choiceGroupInstances = choiceGroupInstances.isEmpty()
-        ? CollectionUtil.emptyMap()
-        : CollectionUtil.unmodifiableMap(choiceGroupInstances);
-  }
-
-  /**
    * Construct an new container using the provided collections.
    *
    * @param instances
@@ -143,7 +99,7 @@ public class DefaultContainerModelAssemblySupport<
    * @param choiceGroupInstances
    *          a collection of choice group instances
    */
-  protected DefaultContainerModelAssemblySupport(
+  public DefaultContainerModelAssemblySupport(
       @NonNull List<MI> instances,
       @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
       @NonNull Map<IEnhancedQName, FI> fieldInstances,

@@ -9,6 +9,8 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
+import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
@@ -47,18 +49,18 @@ import nl.talsmasoftware.lazy4j.Lazy;
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class DefinitionAssembly
     extends AbstractBoundDefinitionModelComplex<MetaschemaAssembly>
-    implements IBoundDefinitionModelAssembly,
-    IFeatureBoundContainerModelAssembly<
-        IBoundInstanceModel<?>,
-        IBoundInstanceModelNamed<?>,
-        IBoundInstanceModelField<?>,
-        IBoundInstanceModelAssembly,
-        IBoundInstanceModelChoiceGroup> {
+    implements IBoundDefinitionModelAssembly {
 
   @NonNull
   private final Lazy<FlagContainerSupport> flagContainer;
   @NonNull
-  private final Lazy<AssemblyModelContainerSupport> modelContainer;
+  private final Lazy<IContainerModelAssemblySupport<
+      IBoundInstanceModel<?>,
+      IBoundInstanceModelNamed<?>,
+      IBoundInstanceModelField<?>,
+      IBoundInstanceModelAssembly,
+      IChoiceInstance,
+      IBoundInstanceModelChoiceGroup>> modelContainer;
   @NonNull
   private final Lazy<IModelConstrained> constraints;
   @NonNull
@@ -103,7 +105,7 @@ public final class DefinitionAssembly
         ? null
         : getContainingModule().getModuleStaticContext().parseModelName(rootLocalName)));
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> new FlagContainerSupport(this, null)));
-    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> new AssemblyModelContainerSupport(this)));
+    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelGenerator.of(this)));
 
     ISource moduleSource = module.getSource();
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
@@ -153,7 +155,13 @@ public final class DefinitionAssembly
   @Override
   @SuppressWarnings("null")
   @NonNull
-  public AssemblyModelContainerSupport getModelContainer() {
+  public IContainerModelAssemblySupport<
+      IBoundInstanceModel<?>,
+      IBoundInstanceModelNamed<?>,
+      IBoundInstanceModelField<?>,
+      IBoundInstanceModelAssembly,
+      IChoiceInstance,
+      IBoundInstanceModelChoiceGroup> getModelContainer() {
     return modelContainer.get();
   }
 

@@ -51,6 +51,21 @@ public class InstanceModelFieldReference
   @Nullable
   private final Object defaultValue;
 
+  /**
+   * Construct a new field reference.
+   *
+   * @param binding
+   *          the field reference instance object bound to a Java class
+   * @param bindingInstance
+   *          the Metaschema instance for the bound object
+   * @param position
+   *          the zero-based position of this bound object relative to its bound
+   *          object siblings
+   * @param definition
+   *          the referenced global field definition
+   * @param parent
+   *          the assembly definition containing this binding
+   */
   public InstanceModelFieldReference(
       @NonNull FieldReference binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,

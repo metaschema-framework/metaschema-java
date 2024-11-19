@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.model.xml.impl.DefaultContainerModelAssemblySupport;
+import gov.nist.secauto.metaschema.core.model.impl.DefaultContainerModelAssemblySupport;
 
 import java.util.List;
 import java.util.Map;
@@ -54,6 +54,7 @@ public interface IContainerModelAssemblySupport<
    * @return the empty container
    */
   @SuppressWarnings("unchecked")
+  @NonNull
   static <
       MI extends IModelInstance,
       NMI extends INamedModelInstance,

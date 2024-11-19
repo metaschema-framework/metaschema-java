@@ -7,12 +7,16 @@ package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
+import gov.nist.secauto.metaschema.core.model.IFeatureContainerModelAssembly;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.info.IItemReadHandler;
 import gov.nist.secauto.metaschema.databind.model.info.IItemWriteHandler;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -26,7 +30,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents an assembly definition bound to a Java class.
  */
 public interface IBoundDefinitionModelAssembly
-    extends IBoundDefinitionModelComplex, IBoundContainerModelAssembly, IAssemblyDefinition {
+    extends IBoundDefinitionModelComplex, IAssemblyDefinition,
+    IFeatureContainerModelAssembly<
+        IBoundInstanceModel<?>,
+        IBoundInstanceModelNamed<?>,
+        IBoundInstanceModelField<?>,
+        IBoundInstanceModelAssembly,
+        IChoiceInstance,
+        IBoundInstanceModelChoiceGroup> { // , IBoundContainerModelAssembly
 
   // Assembly Definition Features
   // ============================
@@ -48,12 +59,13 @@ public interface IBoundDefinitionModelAssembly
     // never inline
     return null;
   }
-  //
-  // @Override
-  // @NonNull
-  // default QName getXmlQName() {
-  // return ObjectUtils.requireNonNull(getRootXmlQName());
-  // }
+
+  @Override
+  @NonNull
+  default List<IChoiceInstance> getChoiceInstances() {
+    // not supported
+    return CollectionUtil.emptyList();
+  }
 
   @Override
   @NonNull

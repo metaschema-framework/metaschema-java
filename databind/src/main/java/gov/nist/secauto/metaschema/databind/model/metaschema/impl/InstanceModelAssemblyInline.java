@@ -57,7 +57,7 @@ public class InstanceModelAssemblyInline
         IChoiceInstance,
         IChoiceGroupInstance>
     implements IAssemblyInstanceAbsolute, IBindingInstance, IBindingDefinitionModelAssembly,
-    IFeatureInstanceModelGroupAs, IFeatureBindingContainerModelAssembly {
+    IFeatureInstanceModelGroupAs {
   @NonNull
   private final InlineDefineAssembly binding;
   @NonNull
@@ -116,7 +116,7 @@ public class InstanceModelAssemblyInline
           this,
           jsonKey == null ? null : jsonKey.getFlagRef());
     }));
-    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelContainerSupport.of(
+    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelGenerator.of(
         binding.getModel(),
         ObjectUtils.requireNonNull(bindingInstance.getDefinition()
             .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME)),

@@ -15,13 +15,12 @@ public interface IFeatureContainerModelGrouped<
     NMI extends INamedModelInstanceGrouped,
     FI extends IFieldInstanceGrouped,
     AI extends IAssemblyInstanceGrouped>
-    extends IContainerModelGrouped, IFeatureContainerModel<NMI, NMI, FI, AI> {
+    extends IContainerModelGrouped, IContainerModel {
   /**
-   * Lazy initialize the model instances associated with this choice group.
+   * Get the model container implementation instance.
    *
-   * @return the model container
+   * @return the model container instance
    */
-  @Override
   @NonNull
   IContainerModelSupport<NMI, NMI, FI, AI> getModelContainer();
 
@@ -32,7 +31,7 @@ public interface IFeatureContainerModelGrouped<
 
   @Override
   default Collection<NMI> getModelInstances() {
-    return getModelContainer().getModelInstances();
+    return getNamedModelInstances();
   }
 
   @Override

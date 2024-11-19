@@ -3,30 +3,19 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.xml.impl;
+package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
-import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
-import gov.nist.secauto.metaschema.core.model.IFieldInstance;
-import gov.nist.secauto.metaschema.core.model.IModelInstance;
-import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * Provides model container support.
- * <p>
- * This class supports generic model instance operations on model instances.
+ * Supports model instance operations on assembly model instances.
  * <p>
  * This implementation uses underlying {@link LinkedHashMap} instances to
  * preserve ordering.
@@ -40,22 +29,13 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @param <AI>
  *          the assembly instance Java type
  */
-public class DefaultContainerModelSupport<
+public abstract class AbstractContainerModelSupport<
     MI extends IModelInstance,
     NMI extends INamedModelInstance,
     FI extends IFieldInstance,
     AI extends IAssemblyInstance>
     implements IContainerModelSupport<MI, NMI, FI, AI> {
 
-  @SuppressWarnings("rawtypes")
-  public static final DefaultContainerModelSupport EMPTY = new DefaultContainerModelSupport<>(
-      CollectionUtil.emptyList(),
-      CollectionUtil.emptyMap(),
-      CollectionUtil.emptyMap(),
-      CollectionUtil.emptyMap());
-
-  @NonNull
-  private final List<MI> modelInstances;
   @NonNull
   private final Map<IEnhancedQName, NMI> namedModelInstances;
   @NonNull
@@ -67,12 +47,30 @@ public class DefaultContainerModelSupport<
    * Construct an empty, mutable container.
    */
   @SuppressWarnings("PMD.UseConcurrentHashMap")
-  public DefaultContainerModelSupport() {
+  public AbstractContainerModelSupport() {
     this(
-        new LinkedList<>(),
         new LinkedHashMap<>(),
         new LinkedHashMap<>(),
         new LinkedHashMap<>());
+  }
+
+  /**
+   * Construct an new container using the provided collections.
+   *
+   * @param namedModelInstances
+   *          a collection of named model instances
+   * @param fieldInstances
+   *          a collection of field instances
+   * @param assemblyInstances
+   *          a collection of assembly instances
+   */
+  protected AbstractContainerModelSupport(
+      @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
+      @NonNull Map<IEnhancedQName, FI> fieldInstances,
+      @NonNull Map<IEnhancedQName, AI> assemblyInstances) {
+    this.namedModelInstances = namedModelInstances;
+    this.fieldInstances = fieldInstances;
+    this.assemblyInstances = assemblyInstances;
   }
 
   /**
@@ -87,10 +85,9 @@ public class DefaultContainerModelSupport<
    * @param assemblyClass
    *          the Java type for assembly instances
    */
-  @SuppressWarnings({ "PMD.UseConcurrentHashMap" })
-  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
-  protected DefaultContainerModelSupport(
-      @NonNull Collection<MI> instances,
+  @SuppressWarnings("PMD.UseConcurrentHashMap")
+  protected AbstractContainerModelSupport(
+      @NonNull Stream<NMI> instances,
       @NonNull Class<NMI> namedModelClass,
       @NonNull Class<FI> fieldClass,
       @NonNull Class<AI> assemblyClass) {
@@ -107,24 +104,20 @@ public class DefaultContainerModelSupport<
         fieldClass.getName(),
         assemblyClass.getName());
 
-    this.modelInstances = ObjectUtils.notNull(List.copyOf(instances));
-
     Map<IEnhancedQName, NMI> namedModelInstances = new LinkedHashMap<>();
     Map<IEnhancedQName, FI> fieldInstances = new LinkedHashMap<>();
     Map<IEnhancedQName, AI> assemblyInstances = new LinkedHashMap<>();
-    for (MI instance : instances) {
-      if (namedModelClass.isInstance(instance)) {
-        NMI named = namedModelClass.cast(instance);
-        IEnhancedQName key = named.getQName();
-        namedModelInstances.put(key, named);
 
-        if (fieldClass.isInstance(instance)) {
-          fieldInstances.put(key, fieldClass.cast(named));
-        } else if (assemblyClass.isInstance(instance)) {
-          assemblyInstances.put(key, assemblyClass.cast(named));
-        }
+    instances.forEachOrdered(instance -> {
+      IEnhancedQName key = instance.getQName();
+      namedModelInstances.put(key, instance);
+
+      if (fieldClass.isInstance(instance)) {
+        fieldInstances.put(key, fieldClass.cast(instance));
+      } else if (assemblyClass.isInstance(instance)) {
+        assemblyInstances.put(key, assemblyClass.cast(instance));
       }
-    }
+    });
 
     this.namedModelInstances = namedModelInstances.isEmpty()
         ? CollectionUtil.emptyMap()
@@ -135,34 +128,6 @@ public class DefaultContainerModelSupport<
     this.assemblyInstances = assemblyInstances.isEmpty()
         ? CollectionUtil.emptyMap()
         : CollectionUtil.unmodifiableMap(assemblyInstances);
-  }
-
-  /**
-   * Construct an new container using the provided collections.
-   *
-   * @param modelInstances
-   *          a collection of model instances
-   * @param namedModelInstances
-   *          a collection of named model instances
-   * @param fieldInstances
-   *          a collection of field instances
-   * @param assemblyInstances
-   *          a collection of assembly instances
-   */
-  protected DefaultContainerModelSupport(
-      @NonNull List<MI> modelInstances,
-      @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
-      @NonNull Map<IEnhancedQName, FI> fieldInstances,
-      @NonNull Map<IEnhancedQName, AI> assemblyInstances) {
-    this.modelInstances = modelInstances;
-    this.namedModelInstances = namedModelInstances;
-    this.fieldInstances = fieldInstances;
-    this.assemblyInstances = assemblyInstances;
-  }
-
-  @Override
-  public List<MI> getModelInstances() {
-    return modelInstances;
   }
 
   @Override
@@ -178,5 +143,12 @@ public class DefaultContainerModelSupport<
   @Override
   public Map<IEnhancedQName, AI> getAssemblyInstanceMap() {
     return assemblyInstances;
+  }
+
+  @SuppressWarnings({ "PMD.EmptyFinalizer", "checkstyle:NoFinalizer" })
+  @Override
+  protected final void finalize() {
+    // Address SEI CERT Rule OBJ-11:
+    // https://wiki.sei.cmu.edu/confluence/display/java/OBJ11-J.+Be+wary+of+letting+constructors+throw+exceptions
   }
 }

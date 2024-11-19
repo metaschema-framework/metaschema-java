@@ -102,7 +102,7 @@ public class DefinitionAssemblyGlobal
           this,
           jsonKey == null ? null : jsonKey.getFlagRef());
     }));
-    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelContainerSupport.of(
+    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelGenerator.of(
         binding.getModel(),
         ObjectUtils.requireNonNull(bindingInstance.getDefinition()
             .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME)),
@@ -123,7 +123,7 @@ public class DefinitionAssemblyGlobal
   }
 
   @NonNull
-  protected METASCHEMA.DefineAssembly getBinding() {
+  private METASCHEMA.DefineAssembly getBinding() {
     return binding;
   }
 

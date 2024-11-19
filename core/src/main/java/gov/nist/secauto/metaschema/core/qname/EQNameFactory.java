@@ -1,0 +1,193 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.qname;
+
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+import nl.talsmasoftware.lazy4j.Lazy;
+
+public class EQNameFactory {
+  private static final Pattern URI_QUALIFIED_NAME = Pattern.compile("^Q\\{([^{}]*)\\}(.+)$");
+  private static final Pattern LEXICAL_NAME = Pattern.compile("^(?:([^:]+):)?(.+)$");
+  @NonNull
+  private static final Lazy<EQNameFactory> INSTANCE = ObjectUtils.notNull(Lazy.lazy(EQNameFactory::new));
+
+  @NonNull
+  private final QNameCache cache;
+
+  @NonNull
+  public static EQNameFactory instance() {
+    return ObjectUtils.notNull(INSTANCE.get());
+  }
+
+  @NonNull
+  public static IEnhancedQName of(@NonNull QName qname) {
+    return instance().newQName(qname);
+  }
+
+  @NonNull
+  public static IEnhancedQName of(@NonNull String localName) {
+    return instance().newQName(localName);
+  }
+
+  @NonNull
+  public static IEnhancedQName of(@NonNull String namespace, @NonNull String localName) {
+    return instance().newQName(namespace, localName);
+  }
+
+  @NonNull
+  public static IEnhancedQName of(@NonNull URI namespace, @NonNull String localName) {
+    return instance().newQName(namespace, localName);
+  }
+
+  private EQNameFactory() {
+    // disable construction
+    this(QNameCache.instance());
+  }
+
+  public EQNameFactory(@NonNull QNameCache cache) {
+    this.cache = cache;
+  }
+
+  @NonNull
+  public IEnhancedQName newQName(@NonNull QName qname) {
+    return cache.of(qname);
+  }
+
+  @NonNull
+  public IEnhancedQName newQName(@NonNull String localName) {
+    return cache.of("", localName);
+  }
+
+  @NonNull
+  public IEnhancedQName newQName(@NonNull String namespace, @NonNull String localName) {
+    return cache.of(namespace, localName);
+  }
+
+  @NonNull
+  public IEnhancedQName newQName(@NonNull URI namespace, @NonNull String localName) {
+    return cache.of(namespace, localName);
+  }
+
+  /**
+   * Parse a name as a qualified name.
+   * <p>
+   * The name can be:
+   * <ul>
+   * <li>A URI qualified name of the form <code>Q{URI}name</code>, where the URI
+   * represents the namespace</li>
+   * <li>A lexical name of the forms <code>prefix:name</code> or
+   * <code>name</code>, where the prefix represents the namespace</li>
+   * </ul>
+   *
+   * @param name
+   *          the name to parse
+   * @param resolver
+   *          the prefix resolver to use to determine the namespace for a given
+   *          prefix
+   * @return the parsed qualified name
+   */
+  @NonNull
+  public IEnhancedQName parseName(
+      @NonNull String name,
+      @NonNull PrefixToNamespaceResolver resolver) {
+    Matcher matcher = URI_QUALIFIED_NAME.matcher(name);
+    return matcher.matches()
+        ? newUriQualifiedName(matcher)
+        : parseLexicalQName(name, resolver);
+  }
+
+  /**
+   * Parse a URI qualified name.
+   * <p>
+   * The name is expected to be a URI qualified name of the form
+   * <code>{URI}name</code>, where the URI represents the namespace.
+   *
+   * @param name
+   *          the name to parse
+   * @return the parsed qualified name
+   */
+  @NonNull
+  public IEnhancedQName parseUriQualifiedName(@NonNull String name) {
+    Matcher matcher = URI_QUALIFIED_NAME.matcher(name);
+    if (!matcher.matches()) {
+      throw new IllegalArgumentException(
+          String.format("The name '%s' is not a valid BracedURILiteral of the form: Q{URI}local-name", name));
+    }
+    return newUriQualifiedName(matcher);
+  }
+
+  @NonNull
+  private IEnhancedQName newUriQualifiedName(@NonNull Matcher matcher) {
+    return cache.of(matcher.group(1), matcher.group(2));
+  }
+
+  /**
+   * Parse a lexical name as a qualified name.
+   * <p>
+   * The name is expected to be a lexical name of the forms
+   * <code>prefix:name</code> or <code>name</code>, where the prefix represents
+   * the namespace.
+   *
+   * @param name
+   *          the name to parse
+   * @param resolver
+   *          the prefix resolver to use to determine the namespace for a given
+   *          prefix
+   * @return the parsed qualified name
+   */
+  @NonNull
+  public IEnhancedQName parseLexicalQName(
+      @NonNull String name,
+      @NonNull PrefixToNamespaceResolver resolver) {
+    Matcher matcher = LEXICAL_NAME.matcher(name);
+    if (!matcher.matches()) {
+      throw new IllegalArgumentException(
+          String.format("The name '%s' is not a valid lexical QName of the form: prefix:local-name or local-name",
+              name));
+    }
+    String prefix = matcher.group(1);
+
+    if (prefix == null) {
+      prefix = XMLConstants.DEFAULT_NS_PREFIX;
+    }
+
+    String namespace = resolver.resolve(prefix);
+    if (namespace == null) {
+      throw new IllegalArgumentException(
+          String.format("The prefix '%s' is not bound for name '%s'",
+              prefix,
+              name));
+    }
+    return cache.of(namespace, matcher.group(2));
+  }
+
+  /**
+   * Provides a callback for resolving namespace prefixes.
+   */
+  @FunctionalInterface
+  public interface PrefixToNamespaceResolver {
+    /**
+     * Get the URI string for the provided namespace prefix.
+     *
+     * @param prefix
+     *          the namespace prefix
+     * @return the URI string or {@code null} if the prefix is unbound
+     */
+    @Nullable
+    String resolve(@NonNull String prefix);
+  }
+
+}

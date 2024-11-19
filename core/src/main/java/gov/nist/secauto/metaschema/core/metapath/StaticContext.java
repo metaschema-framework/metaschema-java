@@ -135,10 +135,6 @@ public final class StaticContext {
     this.useWildcardWhenNamespaceNotDefaulted = builder.useWildcardWhenNamespaceNotDefaulted;
   }
 
-  private EQNameFactory getEqNameFactory() {
-    return EQNameFactory.instance();
-  }
-
   /**
    * Get the static base URI to use in resolving URIs handled by the Metapath
    * processor. This URI, if provided, will be used when a document base URI is
@@ -223,14 +219,14 @@ public final class StaticContext {
 
   @NonNull
   private IEnhancedQName parseDataTypeName(@NonNull String name) {
-    return getEqNameFactory().parseName(
+    return EQNameFactory.instance().parseName(
         name,
         this::resolveBasicPrefix);
   }
 
   @NonNull
   private IEnhancedQName parseFunctionName(@NonNull String name) {
-    return getEqNameFactory().parseName(
+    return EQNameFactory.instance().parseName(
         name,
         this::resolveFunctionPrefix);
   }
@@ -262,11 +258,13 @@ public final class StaticContext {
    * <li>Use {@link XMLConstants#NULL_NS_URI}.</li>
    * </ol>
    *
+   * @param name
+   *          the name
    * @return the parsed qualified name
    */
   @NonNull
   public IEnhancedQName parseFlagName(@NonNull String name) {
-    return getEqNameFactory().parseName(
+    return EQNameFactory.instance().parseName(
         name,
         this::resolveBasicPrefix);
   }
@@ -287,11 +285,13 @@ public final class StaticContext {
    * {@link Builder#defaultModelNamespace(String)}).</li>
    * </ol>
    *
+   * @param name
+   *          the name
    * @return the parsed qualified name
    */
   @NonNull
   public IEnhancedQName parseModelName(@NonNull String name) {
-    return getEqNameFactory().parseName(
+    return EQNameFactory.instance().parseName(
         name,
         this::resolveModelReferencePrefix);
   }
@@ -324,11 +324,13 @@ public final class StaticContext {
    * <li>Use {@link XMLConstants#NULL_NS_URI}.</li>
    * </ol>
    *
+   * @param name
+   *          the name
    * @return the parsed qualified name
    */
   @NonNull
   public IEnhancedQName parseVariableName(@NonNull String name) {
-    return getEqNameFactory().parseName(
+    return EQNameFactory.instance().parseName(
         name,
         this::resolveBasicPrefix);
   }
@@ -350,9 +352,9 @@ public final class StaticContext {
   }
 
   /**
-   * Indicates if a name match should use a wildcard for the namespace is the
-   * namespace does not have a value and the {@link #getDefaultModelNamespace()}
-   * is {@code null}.
+   * Indicates if a name match should use a wildcard for the namespace if the
+   * namespace does not have a value and the default model namespace is
+   * {@code null}.
    *
    * @return {@code true} if a wildcard match on the name space should be used or
    *         {@code false} otherwise
@@ -422,7 +424,6 @@ public final class StaticContext {
      *          the namespace URI
      * @return this builder
      * @see StaticContext#lookupNamespaceForPrefix(String)
-     * @see StaticContext#lookupNamespaceURIForPrefix(String)
      * @see StaticContext#getWellKnownNamespacesMap()
      */
     @NonNull
@@ -443,7 +444,6 @@ public final class StaticContext {
      * @throws IllegalArgumentException
      *           if the provided URI is invalid
      * @see StaticContext#lookupNamespaceForPrefix(String)
-     * @see StaticContext#lookupNamespaceURIForPrefix(String)
      * @see StaticContext#getWellKnownNamespacesMap()
      */
     @NonNull
@@ -458,7 +458,6 @@ public final class StaticContext {
      * @param uri
      *          the namespace URI
      * @return this builder
-     * @see StaticContext#getDefaultModelNamespace()
      */
     @NonNull
     public Builder defaultModelNamespace(@NonNull URI uri) {
@@ -475,7 +474,6 @@ public final class StaticContext {
      * @return this builder
      * @throws IllegalArgumentException
      *           if the provided URI is invalid
-     * @see StaticContext#getDefaultModelNamespace()
      */
     @NonNull
     public Builder defaultModelNamespace(@NonNull String uri) {
@@ -489,7 +487,6 @@ public final class StaticContext {
      * @param uri
      *          the namespace URI
      * @return this builder
-     * @see StaticContext#getDefaultFunctionNamespace()
      */
     @NonNull
     public Builder defaultFunctionNamespace(@NonNull URI uri) {
@@ -506,7 +503,6 @@ public final class StaticContext {
      * @return this builder
      * @throws IllegalArgumentException
      *           if the provided URI is invalid
-     * @see StaticContext#getDefaultFunctionNamespace()
      */
     @NonNull
     public Builder defaultFunctionNamespace(@NonNull String uri) {

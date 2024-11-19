@@ -3,13 +3,11 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.core.metapath;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -22,8 +20,7 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-// FIXME: Move to correct package
-class EQNameUtilsTest {
+class StaticContextTest {
   private static final String MODEL_NS = "http://example.com/ns/model";
   private static final StaticContext STATIC_CONTEXT = StaticContext.builder()
       .namespace("prefix", MetapathConstants.NS_METAPATH_FUNCTIONS)

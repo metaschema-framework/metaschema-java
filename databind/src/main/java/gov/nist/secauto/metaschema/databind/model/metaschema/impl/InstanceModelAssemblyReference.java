@@ -54,7 +54,7 @@ public class InstanceModelAssemblyReference
    * @param binding
    *          the assembly reference instance object bound to a Java class
    * @param bindingInstance
-   *          the Metaschema module instance for the bound object
+   *          the Metaschema instance for the bound object
    * @param position
    *          the zero-based position of this bound object relative to its bound
    *          object siblings

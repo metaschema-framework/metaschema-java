@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
+import gov.nist.secauto.metaschema.core.model.IFeatureContainerModelGrouped;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
@@ -24,7 +25,11 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents a choice group instance bound to Java field.
  */
 public interface IBoundInstanceModelChoiceGroup
-    extends IBoundInstanceModel<IBoundObject>, IBoundContainerModelChoiceGroup, IChoiceGroupInstance {
+    extends IBoundInstanceModel<IBoundObject>, IFeatureContainerModelGrouped<
+        IBoundInstanceModelGroupedNamed,
+        IBoundInstanceModelGroupedField,
+        IBoundInstanceModelGroupedAssembly>,
+    IChoiceGroupInstance {
 
   /**
    * Create a new bound choice group instance.

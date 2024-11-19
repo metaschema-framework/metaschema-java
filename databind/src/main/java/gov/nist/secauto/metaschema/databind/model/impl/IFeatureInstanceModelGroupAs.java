@@ -50,5 +50,4 @@ public interface IFeatureInstanceModelGroupAs extends IGroupable {
   default XmlGroupAsBehavior getXmlGroupAsBehavior() {
     return getGroupAs().getXmlGroupAsBehavior();
   }
-
 }
