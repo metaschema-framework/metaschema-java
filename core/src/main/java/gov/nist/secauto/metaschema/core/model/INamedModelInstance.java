@@ -77,11 +77,11 @@ public interface INamedModelInstance extends IModelInstance, INamedInstance {
 
   @Override
   default IEnhancedQName getReferencedDefinitionQName() {
-    return getContainingModule().toModelQName(getName());
+    return getContainingModule().getModuleStaticContext().parseModelName(getName());
   }
 
   @Override
-  default IEnhancedQName getXmlQName() {
-    return getContainingModule().toModelQName(getEffectiveName());
+  default IEnhancedQName getQName() {
+    return getContainingModule().getModuleStaticContext().parseModelName(getEffectiveName());
   }
 }

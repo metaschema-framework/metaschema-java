@@ -61,7 +61,8 @@ public interface INamedModelInstanceGrouped extends INamedModelInstance {
     String name = getParentContainer().getJsonKeyFlagInstanceName();
     return name == null
         ? null
-        : ObjectUtils.requireNonNull(getDefinition().getFlagInstanceByName(getContainingModule().toFlagQName(name)));
+        : ObjectUtils.requireNonNull(getDefinition().getFlagInstanceByName(
+            getContainingModule().getModuleStaticContext().parseFlagName(name)));
   }
 
   @Override

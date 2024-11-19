@@ -34,7 +34,7 @@ public abstract class AbstractFlagInstance<
    *          the parent model containing this instance
    */
   protected AbstractFlagInstance(@NonNull PARENT parent) {
-    super(parent, name -> parent.getContainingModule().toFlagQName(name));
+    super(parent, name -> parent.getContainingModule().getModuleStaticContext().parseFlagName(name));
   }
 
   @Override
@@ -67,7 +67,7 @@ public abstract class AbstractFlagInstance<
   public String toCoordinates() {
     IDefinition definition = getDefinition();
     return String.format("flag instance %s -> %s in module %s (@%d(%d)",
-        getXmlQName(),
+        getQName(),
         definition.getDefinitionQName(),
         getContainingDefinition().getContainingModule().getShortName(),
         hashCode(),

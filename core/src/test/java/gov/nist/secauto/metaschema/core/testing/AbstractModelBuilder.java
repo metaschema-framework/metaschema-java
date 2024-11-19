@@ -135,9 +135,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
     applyAttributable(instance);
     getContext().checking(new Expectations() {
       {
-        allowing(instance).getXmlNamespace();
-        will(returnValue(namespace));
-        allowing(instance).getXmlQName();
+        allowing(instance).getQName();
         will(returnValue(EQNameFactory.of(namespace, name)));
         allowing(instance).getDefinition();
         will(returnValue(definition));
@@ -163,7 +161,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
         will(returnValue(name));
         allowing(element).getUseName();
         will(returnValue(null));
-        allowing(element).getXmlQName();
+        allowing(element).getQName();
         will(returnValue(EQNameFactory.of(namespace, name)));
         allowing(element).getEffectiveName();
         will(returnValue(name));

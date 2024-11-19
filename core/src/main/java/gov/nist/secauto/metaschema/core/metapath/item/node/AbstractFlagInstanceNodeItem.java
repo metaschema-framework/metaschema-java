@@ -21,7 +21,7 @@ abstract class AbstractFlagInstanceNodeItem
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder()
-        .append(getInstance().getXmlQName().toString());
+        .append(getInstance().getQName().toString());
     IAnyAtomicItem value = toAtomicItem();
     if (value != null) {
       builder

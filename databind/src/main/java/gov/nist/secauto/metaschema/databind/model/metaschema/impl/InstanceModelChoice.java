@@ -56,7 +56,7 @@ public class InstanceModelChoice
         nodeItemFactory)));
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())
-            .getModelItemsByName(bindingInstance.getXmlQName())
+            .getModelItemsByName(bindingInstance.getQName())
             .get(position)));
   }
 
@@ -90,8 +90,4 @@ public class InstanceModelChoice
     return null;
   }
 
-  @Override
-  public String getGroupAsXmlNamespace() {
-    return null;
-  }
 }

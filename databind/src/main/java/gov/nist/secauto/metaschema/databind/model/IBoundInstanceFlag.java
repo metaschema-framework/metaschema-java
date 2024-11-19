@@ -116,6 +116,6 @@ public interface IBoundInstanceFlag
 
   @Override
   default boolean canHandleXmlQName(@NonNull IEnhancedQName qname) {
-    return qname.equals(getXmlQName());
+    return qname.equals(getQName());
   }
 }

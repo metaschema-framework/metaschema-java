@@ -146,7 +146,7 @@ public final class FieldBuilder
     Map<IEnhancedQName, IFlagInstance> flags = this.flags.stream()
         .map(builder -> builder.toInstance(retval))
         .collect(Collectors.toUnmodifiableMap(
-            IFlagInstance::getXmlQName,
+            IFlagInstance::getQName,
             Function.identity()));
 
     getContext().checking(new Expectations() {

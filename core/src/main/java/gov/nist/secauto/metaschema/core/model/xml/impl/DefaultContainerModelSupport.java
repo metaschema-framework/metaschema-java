@@ -115,7 +115,7 @@ public class DefaultContainerModelSupport<
     for (MI instance : instances) {
       if (namedModelClass.isInstance(instance)) {
         NMI named = namedModelClass.cast(instance);
-        IEnhancedQName key = named.getXmlQName();
+        IEnhancedQName key = named.getQName();
         namedModelInstances.put(key, named);
 
         if (fieldClass.isInstance(instance)) {

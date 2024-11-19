@@ -215,7 +215,7 @@ public abstract class AbstractModule<
           : CollectionUtil.unmodifiableMap(ObjectUtils.notNull(exportedAssemblyDefinitions.values().stream()
               .filter(IAssemblyDefinition::isRoot)
               .collect(CustomCollectors.toMap(
-                  IAssemblyDefinition::getRootXmlQName,
+                  IAssemblyDefinition::getRootQName,
                   CustomCollectors.identity(),
                   AbstractModule::handleShadowedDefinitions))));
     }

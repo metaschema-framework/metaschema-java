@@ -181,7 +181,7 @@ public class XmlAssemblyModelContainerSupport
    *          the instance to append
    */
   public void append(@NonNull IFieldInstanceAbsolute instance) {
-    IEnhancedQName key = instance.getXmlQName();
+    IEnhancedQName key = instance.getQName();
     getFieldInstanceMap().put(key, instance);
     getNamedModelInstanceMap().put(key, instance);
     getModelInstances().add(instance);
@@ -194,7 +194,7 @@ public class XmlAssemblyModelContainerSupport
    *          the instance to append
    */
   public void append(@NonNull IAssemblyInstanceAbsolute instance) {
-    IEnhancedQName key = instance.getXmlQName();
+    IEnhancedQName key = instance.getQName();
     getAssemblyInstanceMap().put(key, instance);
     getNamedModelInstanceMap().put(key, instance);
     getModelInstances().add(instance);

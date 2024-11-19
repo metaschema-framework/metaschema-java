@@ -54,7 +54,7 @@ public class InstanceModelGroupedFieldReference
     this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())
-            .getModelItemsByName(bindingInstance.getXmlQName())
+            .getModelItemsByName(bindingInstance.getQName())
             .get(position)));
   }
 

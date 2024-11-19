@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+
 import java.util.Locale;
 
 /**
@@ -35,6 +37,12 @@ public interface IChoiceInstance extends IModelInstanceAbsolute, IContainerModel
   @Override
   default int getMaxOccurs() {
     return 1;
+  }
+
+  @Override
+  default IEnhancedQName getEffectiveXmlGroupAsQName() {
+    // never grouped
+    return null;
   }
 
   @Override

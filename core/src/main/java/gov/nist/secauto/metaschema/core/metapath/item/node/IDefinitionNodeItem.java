@@ -19,8 +19,8 @@ public interface IDefinitionNodeItem<D extends IDefinition, I extends INamedInst
   default IEnhancedQName getQName() {
     I instance = getInstance();
     return instance == null
-        ? getDefinition().getXmlQName()
-        : instance.getXmlQName();
+        ? getDefinition().getQName()
+        : instance.getQName();
   }
 
   /**

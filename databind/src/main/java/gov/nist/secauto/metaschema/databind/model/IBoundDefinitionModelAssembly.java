@@ -81,6 +81,6 @@ public interface IBoundDefinitionModelAssembly
 
   @Override
   default boolean canHandleXmlQName(@NonNull IEnhancedQName qname) {
-    return qname.equals(getRootXmlQName());
+    return qname.equals(getRootQName());
   }
 }

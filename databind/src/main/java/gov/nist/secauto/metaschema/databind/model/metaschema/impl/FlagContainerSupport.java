@@ -41,7 +41,8 @@ public final class FlagContainerSupport {
     // create temporary collections to store the child binding objects
     IFlagContainerBuilder<IFlagInstance> builder = jsonKeyName == null
         ? IContainerFlagSupport.builder()
-        : IContainerFlagSupport.builder(parent.getContainingModule().toFlagQName(jsonKeyName));
+        : IContainerFlagSupport.builder(
+            parent.getContainingModule().getModuleStaticContext().parseFlagName(jsonKeyName));
 
     // create counter to track child positions
     AtomicInteger flagReferencePosition = new AtomicInteger();
@@ -86,7 +87,7 @@ public final class FlagContainerSupport {
       @NonNull IBindingDefinitionModel parent) {
     IModule module = parent.getContainingModule();
 
-    IEnhancedQName qname = module.toFlagQName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName qname = module.getModuleStaticContext().parseFlagName(ObjectUtils.requireNonNull(obj.getRef()));
     IFlagDefinition definition = module.getScopedFlagDefinitionByName(qname);
     if (definition == null) {
       throw new IllegalStateException(

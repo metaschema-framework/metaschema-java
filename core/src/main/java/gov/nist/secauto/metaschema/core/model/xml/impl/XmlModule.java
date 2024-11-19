@@ -260,7 +260,7 @@ public class XmlModule
             : Collections.unmodifiableMap(this.assemblyDefinitions.values().stream()
                 .filter(IAssemblyDefinition::isRoot)
                 .collect(Collectors.toMap(
-                    IAssemblyDefinition::getRootXmlQName,
+                    IAssemblyDefinition::getRootQName,
                     Function.identity(),
                     (v1, v2) -> {
                       throw new IllegalStateException(

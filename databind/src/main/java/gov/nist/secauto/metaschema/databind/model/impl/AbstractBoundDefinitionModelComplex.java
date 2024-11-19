@@ -49,8 +49,10 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
     this.annotation = annotation;
     this.bindingContext = bindingContext;
     this.module = module;
-    this.qname = ObjectUtils.notNull(Lazy.lazy(() -> getContainingModule().toModelQName(getEffectiveName())));
-    this.definitionQName = ObjectUtils.notNull(Lazy.lazy(() -> getContainingModule().toModelQName(getName())));
+    this.qname = ObjectUtils.notNull(Lazy.lazy(() -> getContainingModule()
+        .getModuleStaticContext().parseModelName(getEffectiveName())));
+    this.definitionQName = ObjectUtils.notNull(Lazy.lazy(() -> getContainingModule()
+        .getModuleStaticContext().parseModelName(getName())));
     this.beforeDeserializeMethod = ClassIntrospector.getMatchingMethod(
         clazz,
         "beforeDeserialize",
@@ -85,7 +87,7 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
 
   @SuppressWarnings("null")
   @Override
-  public final IEnhancedQName getXmlQName() {
+  public final IEnhancedQName getQName() {
     return qname.get();
   }
 

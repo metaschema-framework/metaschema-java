@@ -96,7 +96,7 @@ final class DefaultNodeItemFactory
       Object flagValue = instance.getValue(parentValue);
       if (flagValue != null) {
         IFlagNodeItem item = newFlagNodeItem(instance, parent, flagValue);
-        retval.put(instance.getXmlQName(), item);
+        retval.put(instance.getQName(), item);
       }
     }
     return retval.isEmpty() ? CollectionUtil.emptyMap() : CollectionUtil.unmodifiableMap(retval);
@@ -128,7 +128,7 @@ final class DefaultNodeItemFactory
               parent,
               namedInstance,
               ObjectUtils.notNull(namedInstance.getItemValues(instanceValue).stream()));
-          retval.put(namedInstance.getXmlQName(), items);
+          retval.put(namedInstance.getQName(), items);
         }
       } else if (instance instanceof IChoiceGroupInstance) {
         IChoiceGroupInstance choiceInstance = (IChoiceGroupInstance) instance;
@@ -155,7 +155,7 @@ final class DefaultNodeItemFactory
                 parent,
                 namedInstance,
                 ObjectUtils.notNull(entry.getValue().stream()));
-            retval.put(namedInstance.getXmlQName(), items);
+            retval.put(namedInstance.getQName(), items);
           }
         }
       }
@@ -235,7 +235,7 @@ final class DefaultNodeItemFactory
     for (IFlagInstance instance : parent.getDefinition().getFlagInstances()) {
       assert instance != null;
       IFlagNodeItem item = newFlagNodeItem(instance, parent);
-      retval.put(instance.getXmlQName(), item);
+      retval.put(instance.getQName(), item);
     }
     return retval.isEmpty() ? CollectionUtil.emptyMap() : CollectionUtil.unmodifiableMap(retval);
   }
@@ -248,7 +248,7 @@ final class DefaultNodeItemFactory
     for (INamedModelInstance instance : CollectionUtil.toIterable(getNamedModelInstances(parent.getDefinition()))) {
       assert instance != null;
       IModelNodeItem<?, ?> item = newModelItem(instance, parent);
-      retval.put(instance.getXmlQName(), Collections.singletonList(item));
+      retval.put(instance.getQName(), Collections.singletonList(item));
     }
     return retval.isEmpty() ? CollectionUtil.emptyMap() : CollectionUtil.unmodifiableMap(retval);
   }

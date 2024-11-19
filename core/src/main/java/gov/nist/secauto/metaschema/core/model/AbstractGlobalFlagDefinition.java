@@ -27,6 +27,6 @@ public abstract class AbstractGlobalFlagDefinition<MODULE extends IModule, INSTA
    *          the parent module containing this definition
    */
   protected AbstractGlobalFlagDefinition(@NonNull MODULE module) {
-    super(module, module::toFlagQName);
+    super(module, name -> module.getModuleStaticContext().parseFlagName(name));
   }
 }

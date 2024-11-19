@@ -63,7 +63,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
     this.flagInstances = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(instances
         .peek(intermediate)
         .collect(Collectors.toMap(
-            IBoundInstanceFlag::getXmlQName,
+            IBoundInstanceFlag::getQName,
             Function.identity(),
             (v1, v2) -> v2,
             LinkedHashMap::new))));

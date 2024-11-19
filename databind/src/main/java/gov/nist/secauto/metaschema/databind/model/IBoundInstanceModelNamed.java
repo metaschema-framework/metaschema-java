@@ -58,6 +58,6 @@ public interface IBoundInstanceModelNamed<ITEM>
 
   @Override
   default boolean canHandleXmlQName(IEnhancedQName qname) {
-    return qname.equals(getXmlQName());
+    return qname.equals(getQName());
   }
 }

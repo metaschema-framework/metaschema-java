@@ -85,7 +85,7 @@ public class DefaultGroupedModelContainerSupport<
     Map<IEnhancedQName, FI> fieldInstances = new LinkedHashMap<>();
     Map<IEnhancedQName, AI> assemblyInstances = new LinkedHashMap<>();
     for (NMI instance : instances) {
-      IEnhancedQName key = instance.getXmlQName();
+      IEnhancedQName key = instance.getQName();
       namedModelInstances.put(key, instance);
 
       if (fieldClass.isInstance(instance)) {

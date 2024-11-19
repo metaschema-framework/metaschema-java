@@ -118,7 +118,7 @@ public class DefinitionAssemblyGlobal
     }));
     this.boundNodeItem = ObjectUtils.notNull(Lazy.lazy(() -> ObjectUtils.requireNonNull(ModelSupport.toNodeItem(
         module,
-        bindingInstance.getXmlQName(),
+        bindingInstance.getQName(),
         position))));
   }
 

@@ -59,7 +59,7 @@ public class FlagContainerBuilder<T extends IFlagInstance> implements IFlagConta
       Map<IEnhancedQName, T> flagMap = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(flags.stream()
           .collect(
               CustomCollectors.toMap(
-                  INamed::getXmlQName,
+                  INamed::getQName,
                   CustomCollectors.identity(),
                   FlagContainerBuilder::handleShadowedInstances,
                   LinkedHashMap::new))));

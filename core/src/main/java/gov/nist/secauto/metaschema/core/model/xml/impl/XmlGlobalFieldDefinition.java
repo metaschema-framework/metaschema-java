@@ -170,11 +170,11 @@ class XmlGlobalFieldDefinition
   public IFlagInstance getJsonValueKeyFlagInstance() {
     IFlagInstance retval = null;
     if (getXmlObject().isSetJsonValueKeyFlag() && getXmlObject().getJsonValueKeyFlag().isSetFlagRef()) {
-      String namespace = getXmlNamespace();
+      String namespace = getQName().getNamespace();
       String name = ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef());
 
       retval = getFlagInstanceByName(
-          namespace == null
+          namespace.isEmpty()
               ? EQNameFactory.of(name)
               : EQNameFactory.of(namespace, name));
     }

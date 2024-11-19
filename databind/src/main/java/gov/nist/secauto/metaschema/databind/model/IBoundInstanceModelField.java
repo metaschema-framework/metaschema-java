@@ -62,7 +62,7 @@ public interface IBoundInstanceModelField<ITEM> extends IBoundInstanceModelNamed
   default boolean canHandleXmlQName(IEnhancedQName qname) {
     boolean retval;
     if (isEffectiveValueWrappedInXml()) {
-      retval = qname.equals(getXmlQName());
+      retval = qname.equals(getQName());
     } else {
       IDataTypeAdapter<?> adapter = getDefinition().getJavaTypeAdapter();
       // we are to parse the data type

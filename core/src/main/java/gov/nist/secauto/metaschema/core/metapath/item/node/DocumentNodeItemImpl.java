@@ -33,7 +33,7 @@ class DocumentNodeItemImpl
 
     StaticContext.Builder builder = StaticContext.builder()
         .baseUri(documentUri)
-        .defaultModelNamespace(ObjectUtils.requireNonNull(root.getXmlNamespace()));
+        .defaultModelNamespace(ObjectUtils.requireNonNull(root.getRootQName().getNamespace()));
 
     // obj.getNamespaceBindingList().stream()
     // .forEach(binding -> builder.namespace(

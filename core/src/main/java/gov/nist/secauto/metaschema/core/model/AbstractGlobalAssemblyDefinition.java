@@ -56,6 +56,6 @@ public abstract class AbstractGlobalAssemblyDefinition<
    *          the parent module containing this definition
    */
   protected AbstractGlobalAssemblyDefinition(@NonNull MODULE module) {
-    super(module, module::toModelQName);
+    super(module, name -> module.getModuleStaticContext().parseModelName(name));
   }
 }

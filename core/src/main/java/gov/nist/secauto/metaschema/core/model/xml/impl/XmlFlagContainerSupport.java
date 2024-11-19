@@ -92,8 +92,9 @@ final class XmlFlagContainerSupport {
       @NonNull IFieldDefinition container) {
     if (!xmlField.getFlagList().isEmpty() || !xmlField.getDefineFlagList().isEmpty()) {
       IFlagContainerBuilder<IFlagInstance> builder = xmlField.isSetJsonKey()
-          ? IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(
-              ObjectUtils.requireNonNull(xmlField.getJsonKey().getFlagRef())))
+          ? IContainerFlagSupport.builder(
+              container.getContainingModule().getModuleStaticContext().parseFlagName(
+                  ObjectUtils.requireNonNull(xmlField.getJsonKey().getFlagRef())))
           : IContainerFlagSupport.builder();
       parseLocalFlags(xmlField, container, builder);
       return builder.build();
@@ -115,8 +116,9 @@ final class XmlFlagContainerSupport {
       @NonNull IFieldDefinition container) {
     if (!xmlField.getFlagList().isEmpty() || !xmlField.getDefineFlagList().isEmpty()) {
       IFlagContainerBuilder<IFlagInstance> builder = xmlField.isSetJsonKey()
-          ? IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(
-              ObjectUtils.requireNonNull(xmlField.getJsonKey().getFlagRef())))
+          ? IContainerFlagSupport.builder(
+              container.getContainingModule().getModuleStaticContext().parseFlagName(
+                  ObjectUtils.requireNonNull(xmlField.getJsonKey().getFlagRef())))
           : IContainerFlagSupport.builder();
       parseLocalFlags(xmlField, container, builder);
       return builder.build();
@@ -140,7 +142,8 @@ final class XmlFlagContainerSupport {
     if (!xmlField.getFlagList().isEmpty() || !xmlField.getDefineFlagList().isEmpty()) {
       IFlagContainerBuilder<IFlagInstance> builder = jsonKeyName == null
           ? IContainerFlagSupport.builder()
-          : IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(jsonKeyName));
+          : IContainerFlagSupport.builder(
+              container.getContainingModule().getModuleStaticContext().parseFlagName(jsonKeyName));
       parseLocalFlags(xmlField, container, builder);
       return builder.build();
     }
@@ -161,8 +164,9 @@ final class XmlFlagContainerSupport {
       @NonNull IAssemblyDefinition container) {
     if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {
       IFlagContainerBuilder<IFlagInstance> builder = xmlAssembly.isSetJsonKey()
-          ? IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(
-              ObjectUtils.requireNonNull(xmlAssembly.getJsonKey().getFlagRef())))
+          ? IContainerFlagSupport.builder(
+              container.getContainingModule().getModuleStaticContext().parseFlagName(
+                  ObjectUtils.requireNonNull(xmlAssembly.getJsonKey().getFlagRef())))
           : IContainerFlagSupport.builder();
       parseLocalFlags(xmlAssembly, container, builder);
       return builder.build();
@@ -184,8 +188,9 @@ final class XmlFlagContainerSupport {
       @NonNull IAssemblyDefinition container) {
     if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {
       IFlagContainerBuilder<IFlagInstance> builder = xmlAssembly.isSetJsonKey()
-          ? IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(
-              ObjectUtils.requireNonNull(xmlAssembly.getJsonKey().getFlagRef())))
+          ? IContainerFlagSupport.builder(
+              container.getContainingModule().getModuleStaticContext().parseFlagName(
+                  ObjectUtils.requireNonNull(xmlAssembly.getJsonKey().getFlagRef())))
           : IContainerFlagSupport.builder();
       parseLocalFlags(xmlAssembly, container, builder);
       return builder.build();
@@ -209,7 +214,8 @@ final class XmlFlagContainerSupport {
     if (!xmlAssembly.getFlagList().isEmpty() || !xmlAssembly.getDefineFlagList().isEmpty()) {
       IFlagContainerBuilder<IFlagInstance> builder = jsonKeyName == null
           ? IContainerFlagSupport.builder()
-          : IContainerFlagSupport.builder(container.getContainingModule().toFlagQName(jsonKeyName));
+          : IContainerFlagSupport.builder(
+              container.getContainingModule().getModuleStaticContext().parseFlagName(jsonKeyName));
       parseLocalFlags(xmlAssembly, container, builder);
       return builder.build();
     }

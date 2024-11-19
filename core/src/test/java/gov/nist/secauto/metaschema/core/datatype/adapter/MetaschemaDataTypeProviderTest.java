@@ -9,17 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 
 import org.junit.jupiter.api.Test;
-
-import javax.xml.namespace.QName;
 
 class MetaschemaDataTypeProviderTest {
 
   @Test
   void test() {
-    assertNotNull(DataTypeService.instance()
-        .getJavaTypeAdapterByQName(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "uuid")));
+    assertNotNull(DataTypeService.instance().getJavaTypeAdapterByQNameIndex(
+        EQNameFactory.of(MetapathConstants.NS_METAPATH, "uuid").getIndexPosition()));
   }
 
 }

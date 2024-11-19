@@ -5,27 +5,40 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
-import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IGroupable;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
-import gov.nist.secauto.metaschema.databind.io.BindingException;
-import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModel;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public interface IFeatureInstanceModelGroupAs<ITEM> extends IBoundInstanceModel<ITEM> {
+public interface IFeatureInstanceModelGroupAs extends IGroupable {
+  /**
+   * Get the underlying group-as provider.
+   *
+   * @return the group-as provider
+   */
   @NonNull
   IGroupAs getGroupAs();
 
   @Override
   default String getGroupAsName() {
-    return getGroupAs().getGroupAsName();
+    IEnhancedQName qname = getGroupAs().getGroupAsQName();
+    return qname == null ? null : qname.getLocalName();
   }
 
   @Override
-  default String getGroupAsXmlNamespace() {
-    return getGroupAs().getGroupAsXmlNamespace();
+  default IEnhancedQName getEffectiveXmlGroupAsQName() {
+    IEnhancedQName retval = null;
+    if (XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())) {
+      IEnhancedQName qname = getGroupAs().getGroupAsQName();
+      if (qname == null) {
+        throw new IllegalStateException("Instance is grouped, but no group-as QName was provided.");
+      }
+      retval = qname;
+    }
+    return retval;
   }
 
   @Override
@@ -38,12 +51,4 @@ public interface IFeatureInstanceModelGroupAs<ITEM> extends IBoundInstanceModel<
     return getGroupAs().getXmlGroupAsBehavior();
   }
 
-  @Override
-  default void deepCopy(@NonNull IBoundObject fromInstance, @NonNull IBoundObject toInstance) throws BindingException {
-    Object value = getValue(fromInstance);
-    if (value != null) {
-      value = getCollectionInfo().deepCopyItems(fromInstance, toInstance);
-    }
-    setValue(toInstance, value);
-  }
 }

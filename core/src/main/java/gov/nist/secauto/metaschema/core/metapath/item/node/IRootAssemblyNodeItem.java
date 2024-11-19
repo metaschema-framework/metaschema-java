@@ -21,7 +21,7 @@ public interface IRootAssemblyNodeItem extends IAssemblyNodeItem, IFeatureChildN
    */
   @Override
   default IEnhancedQName getQName() {
-    return ObjectUtils.requireNonNull(getDefinition().getRootXmlQName());
+    return ObjectUtils.requireNonNull(getDefinition().getRootQName());
   }
 
   /**

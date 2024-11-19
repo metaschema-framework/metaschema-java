@@ -66,7 +66,7 @@ public abstract class AbstractFieldInstance<
   public String toCoordinates() {
     IDefinition definition = getDefinition();
     return String.format("field instance %s -> %s in module %s (@%d(%d)",
-        getXmlQName(),
+        getQName(),
         definition.getDefinitionQName(),
         getContainingDefinition().getContainingModule().getShortName(),
         hashCode(),

@@ -73,7 +73,9 @@ public interface IBoundFieldValue extends IFeatureScalarItemValueHandler, IBound
   @Override
   default void deepCopy(@NonNull IBoundObject fromInstance, @NonNull IBoundObject toInstance) throws BindingException {
     Object value = getValue(fromInstance);
-    setValue(toInstance, value);
+    if (value != null) {
+      setValue(toInstance, value);
+    }
   }
 
   @Override

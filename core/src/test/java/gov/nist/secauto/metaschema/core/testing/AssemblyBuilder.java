@@ -122,13 +122,13 @@ public final class AssemblyBuilder
     Map<IEnhancedQName, IFlagInstance> flags = this.flags.stream()
         .map(builder -> builder.toInstance(retval))
         .collect(Collectors.toUnmodifiableMap(
-            IFlagInstance::getXmlQName,
+            IFlagInstance::getQName,
             Function.identity()));
 
     Map<IEnhancedQName, ? extends INamedModelInstanceAbsolute> modelInstances = this.modelInstances.stream()
         .map(builder -> builder.toInstance(retval))
         .collect(Collectors.toUnmodifiableMap(
-            INamedModelInstanceAbsolute::getXmlQName,
+            INamedModelInstanceAbsolute::getQName,
             Function.identity()));
 
     getContext().checking(new Expectations() {

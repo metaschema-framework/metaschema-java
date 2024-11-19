@@ -51,7 +51,7 @@ public final class InstanceModelFieldScalar
         IBoundInstanceModelFieldScalar,
         IBoundDefinitionModelAssembly,
         IBoundInstanceFlag>
-    implements IBoundInstanceModelFieldScalar, IFeatureInstanceModelGroupAs<Object> {
+    implements IBoundInstanceModelFieldScalar, IFeatureInstanceModelGroupAs {
   @NonNull
   private final Field javaField;
   @NonNull

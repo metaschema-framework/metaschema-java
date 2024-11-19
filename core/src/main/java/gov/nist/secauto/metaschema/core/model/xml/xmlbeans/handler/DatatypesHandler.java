@@ -8,11 +8,10 @@ package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.SimpleValue;
-
-import javax.xml.namespace.QName;
 
 // FIXME: remove this handler to ensure that prefixes can be handled
 public final class DatatypesHandler {
@@ -76,8 +75,8 @@ public final class DatatypesHandler {
 
   private static IDataTypeAdapter<?> decode(SimpleValue target) {
     String name = ObjectUtils.requireNonNull(target.getStringValue());
-    IDataTypeAdapter<?> retval = DataTypeService.instance()
-        .getJavaTypeAdapterByQName(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), name));
+    IDataTypeAdapter<?> retval = DataTypeService.instance().getJavaTypeAdapterByQNameIndex(
+        EQNameFactory.of(MetapathConstants.NS_METAPATH, name).getIndexPosition());
     if (retval == null) {
       throw new IllegalStateException("Unrecognized data type: " + name);
     }

@@ -16,8 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -343,65 +341,6 @@ public interface IModule {
    */
   @NonNull
   Map<String, String> getNamespaceBindings();
-
-  /**
-   * Used to parse a flag name reference to produce a qualified name.
-   *
-   * @param nameRef
-   *          the name reference
-   * @return the qualified name
-   */
-  // FIXME: resolve name through source.getStaticContext().parseFlagName
-  @NonNull
-  default IEnhancedQName toFlagQName(@NonNull String nameRef) {
-    return getModuleStaticContext().parseFlagName(nameRef);
-  }
-
-  /**
-   * Used to parse a flag name reference to produce a qualified name.
-   *
-   * @param modelNamespace
-   *          the namespace to use or {@code null}
-   * @param nameRef
-   *          the name reference
-   * @return the qualified name
-   */
-  // FIXME: resolve name through source.getStaticContext().parseFlagName
-  @NonNull
-  default IEnhancedQName toFlagQName(@Nullable String modelNamespace, @NonNull String nameRef) {
-    return modelNamespace == null
-        ? EQNameFactory.of(nameRef)
-        : EQNameFactory.of(modelNamespace, nameRef);
-  }
-
-  /**
-   * Used to parse a model name reference to produce a qualified name.
-   *
-   * @param nameRef
-   *          the name reference
-   * @return the qualified name
-   */
-  // FIXME: resolve name through source.getStaticContext().parseFlagName
-  @NonNull
-  default IEnhancedQName toModelQName(@NonNull String nameRef) {
-    return getModuleStaticContext().parseModelName(nameRef);
-  }
-
-  /**
-   * Used to parse a flag name reference to produce a qualified name.
-   *
-   * @param modelNamespace
-   *          the namespace to use or {@code null}
-   * @param nameRef
-   *          the name reference
-   * @return the qualified name
-   */
-  // FIXME: resolve name through source.getStaticContext().parseFlagName
-  @NonNull
-  default QName toModelQName(@Nullable String modelNamespace, @NonNull String nameRef) {
-    String namespace = modelNamespace == null ? getXmlNamespace().toASCIIString() : modelNamespace;
-    return new QName(namespace, nameRef);
-  }
 
   /**
    * Get the Metapath static context for compiling Metapath expressions that query

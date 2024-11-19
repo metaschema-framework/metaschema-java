@@ -34,12 +34,12 @@ public interface IFlagInstance extends IFlag, IValuedInstance, IInstanceAbsolute
 
   @Override
   default IEnhancedQName getReferencedDefinitionQName() {
-    return getContainingModule().toFlagQName(getName());
+    return getContainingModule().getModuleStaticContext().parseFlagName(getName());
   }
 
   @Override
-  default IEnhancedQName getXmlQName() {
+  default IEnhancedQName getQName() {
     // flags do not have a namespace by default
-    return getContainingModule().toFlagQName(getEffectiveName());
+    return getContainingModule().getModuleStaticContext().parseFlagName(getEffectiveName());
   }
 }

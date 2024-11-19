@@ -47,7 +47,7 @@ public final class InstanceModelFieldComplex
         IBoundDefinitionModelFieldComplex,
         IBoundInstanceModelFieldComplex,
         IBoundDefinitionModelAssembly>
-    implements IBoundInstanceModelFieldComplex, IFeatureInstanceModelGroupAs<IBoundObject> {
+    implements IBoundInstanceModelFieldComplex, IFeatureInstanceModelGroupAs {
   @NonNull
   private final Field javaField;
   @NonNull

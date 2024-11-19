@@ -118,7 +118,7 @@ public abstract class AbstractNodeItemFactory implements INodeItemFactory, INode
     IAssemblyNodeItem retval = null;
     if (!instance.getDefinition().isInline()) {
       // if not inline, need to check for a cycle
-      IAssemblyNodeItem cycle = getCycledInstance(instance.getXmlQName(), instance.getDefinition(), parent);
+      IAssemblyNodeItem cycle = getCycledInstance(instance.getQName(), instance.getDefinition(), parent);
       if (cycle != null) {
         // generate a cycle wrapper of the original node item
         retval = new CycledAssemblyInstanceNodeItemImpl(instance, parent, cycle);

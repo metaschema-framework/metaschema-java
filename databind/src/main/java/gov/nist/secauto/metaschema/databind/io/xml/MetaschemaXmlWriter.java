@@ -67,7 +67,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
       @NonNull IBoundDefinitionModelComplex definition,
       @NonNull IBoundObject item) throws IOException {
 
-    IEnhancedQName qname = definition.getXmlQName();
+    IEnhancedQName qname = definition.getQName();
 
     definition.writeItem(item, new ItemWriter(qname));
   }
@@ -76,11 +76,11 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
   public void writeRoot(
       @NonNull IBoundDefinitionModelAssembly definition,
       @NonNull IBoundObject item) throws IOException {
-    IEnhancedQName rootEQName = definition.getRootXmlQName();
+    IEnhancedQName rootEQName = definition.getRootQName();
     if (rootEQName == null) {
       throw new IllegalArgumentException(
           String.format("The assembly definition '%s' does not have a root QName.",
-              definition.getXmlQName()));
+              definition.getQName()));
     }
 
     definition.writeItem(item, new ItemWriter(rootEQName));
@@ -222,7 +222,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
         @NonNull IBoundObject parentItem,
         @NonNull ObjectWriter<T> propertyWriter) throws IOException {
       try {
-        IEnhancedQName wrapperQName = instance.getXmlQName();
+        IEnhancedQName wrapperQName = instance.getQName();
         writer.writeStartElement(wrapperQName.getNamespace(), wrapperQName.getLocalName());
 
         propertyWriter.accept(parentItem, instance);
@@ -238,7 +238,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
         @NonNull IBoundObject parentItem,
         @NonNull ObjectWriter<T> propertyWriter) throws IOException {
       try {
-        IEnhancedQName wrapperQName = instance.getXmlQName();
+        IEnhancedQName wrapperQName = instance.getQName();
         writer.writeStartElement(wrapperQName.getNamespace(), wrapperQName.getLocalName());
 
         propertyWriter.accept(parentItem, instance);
@@ -280,7 +280,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
       } catch (IllegalArgumentException ex) {
         throw new IOException(ex);
       }
-      IEnhancedQName name = instance.getXmlQName();
+      IEnhancedQName name = instance.getQName();
       try {
         if (name.getNamespace().isEmpty()) {
           writer.writeAttribute(name.getLocalName(), itemString);
@@ -296,7 +296,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
     public void writeItemField(Object item, IBoundInstanceModelFieldScalar instance) throws IOException {
       try {
         if (instance.isEffectiveValueWrappedInXml()) {
-          IEnhancedQName wrapperQName = instance.getXmlQName();
+          IEnhancedQName wrapperQName = instance.getQName();
           writer.writeStartElement(wrapperQName.getNamespace(), wrapperQName.getLocalName());
           instance.getJavaTypeAdapter().writeXmlValue(item, wrapperQName, writer);
           writer.writeEndElement();
@@ -310,7 +310,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemField(IBoundObject item, IBoundInstanceModelFieldComplex instance) throws IOException {
-      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());
+      ItemWriter itemWriter = new ItemWriter(instance.getQName());
       writeModelObject(
           instance,
           item,
@@ -320,7 +320,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemField(IBoundObject item, IBoundInstanceModelGroupedField instance) throws IOException {
-      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());
+      ItemWriter itemWriter = new ItemWriter(instance.getQName());
       writeGroupedModelObject(
           instance,
           item,
@@ -330,7 +330,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemField(IBoundObject item, IBoundDefinitionModelFieldComplex definition) throws IOException {
-      ItemWriter itemWriter = new ItemWriter(definition.getXmlQName());
+      ItemWriter itemWriter = new ItemWriter(definition.getQName());
       writeDefinitionObject(
           definition,
           item,
@@ -348,7 +348,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemAssembly(IBoundObject item, IBoundInstanceModelAssembly instance) throws IOException {
-      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());
+      ItemWriter itemWriter = new ItemWriter(instance.getQName());
       writeModelObject(
           instance,
           item,
@@ -358,7 +358,7 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
 
     @Override
     public void writeItemAssembly(IBoundObject item, IBoundInstanceModelGroupedAssembly instance) throws IOException {
-      ItemWriter itemWriter = new ItemWriter(instance.getXmlQName());
+      ItemWriter itemWriter = new ItemWriter(instance.getQName());
       writeGroupedModelObject(
           instance,
           item,

@@ -34,7 +34,7 @@ public abstract class AbstractInlineFlagDefinition<
    *          the parent model containing this instance
    */
   protected AbstractInlineFlagDefinition(@NonNull PARENT parent) {
-    super(parent, name -> parent.getContainingModule().toFlagQName(name));
+    super(parent, name -> parent.getContainingModule().getModuleStaticContext().parseFlagName(name));
   }
 
   @Override

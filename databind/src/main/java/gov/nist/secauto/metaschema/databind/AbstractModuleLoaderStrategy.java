@@ -152,7 +152,7 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
             String.format("The provided definition '%s' is not a root assembly.",
                 definition.getBoundClass().getName()));
       }
-      IEnhancedQName qname = definition.getRootXmlQName();
+      IEnhancedQName qname = definition.getRootQName();
       retval = IBindingMatcher.of(definition);
       // always replace the existing matcher to ensure the last loaded module wins
       IBindingMatcher old = bindingMatchers.put(qname, retval);

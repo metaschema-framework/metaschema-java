@@ -58,51 +58,23 @@ public interface IGroupable extends IInstance {
   }
 
   /**
-   * Retrieve the XML namespace for this grouping.
-   *
-   * @return the XML namespace or {@code null} if no namespace is configured
-   */
-  @Nullable
-  default String getGroupAsXmlNamespace() {
-    return getContainingDefinition().getXmlNamespace();
-  }
-
-  /**
-   * Retrieve the XML namespace for this grouping.
-   * <p>
-   * If this instance doesn't have a namespace defined, then the module's XML
-   * namespace will be used.
-   *
-   * @return the XML namespace
-   */
-  // REFACTOR: remove this method
-  // REFACTOR: consider pushing down the call for getGroupAsXmlNamespace
-  @NonNull
-  default String getEffectiveGroupAsNamespace() {
-    @Nullable
-    String namespace = getGroupAsXmlNamespace();
-    if (namespace == null) {
-      namespace = ObjectUtils.notNull(getContainingModule().getXmlNamespace().toASCIIString());
-    }
-    return namespace;
-  }
-
-  /**
    * Get the name used for the associated element wrapping a collection of
    * elements in XML. This value is required when {@link #getXmlGroupAsBehavior()}
    * = {@link XmlGroupAsBehavior#GROUPED}. This name will be the element name
    * wrapping a collection of elements.
+   * <p>
+   * If this instance doesn't have a namespace defined, then the module's XML
+   * namespace will be used.
    *
    * @return the groupAs QName or {@code null} if no name is configured, such as
    *         when {@link #getMaxOccurs()} = 1.
    */
-  // REFACTOR: rename to getXmlGroupAsQName
   @Nullable
   default IEnhancedQName getEffectiveXmlGroupAsQName() {
     return XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())
-        // require a group-as name in this case
-        ? EQNameFactory.of(getEffectiveGroupAsNamespace(), ObjectUtils.requireNonNull(getGroupAsName()))
-        // no group-as name in this case
+        ? EQNameFactory.of(
+            getContainingDefinition().getQName().getNamespace(),
+            ObjectUtils.requireNonNull(getGroupAsName()))
         : null;
   }
 

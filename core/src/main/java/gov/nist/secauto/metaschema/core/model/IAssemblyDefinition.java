@@ -58,11 +58,11 @@ public interface IAssemblyDefinition
    * @return the root XML qualified name if this assembly is a top-level root, or
    *         {@code null} otherwise
    */
-  default IEnhancedQName getRootXmlQName() {
+  default IEnhancedQName getRootQName() {
     IEnhancedQName retval = null;
     String rootName = getRootName();
     if (rootName != null) {
-      retval = getContainingModule().toModelQName(rootName);
+      retval = getContainingModule().getModuleStaticContext().parseModelName(rootName);
     }
     return retval;
   }

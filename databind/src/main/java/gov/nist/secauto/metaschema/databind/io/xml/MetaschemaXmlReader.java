@@ -194,7 +194,7 @@ public class MetaschemaXmlReader
 
     Map<IEnhancedQName, IBoundInstanceFlag> flagInstanceMap = targetDefinition.getFlagInstances().stream()
         .collect(Collectors.toMap(
-            IBoundInstanceFlag::getXmlQName,
+            IBoundInstanceFlag::getQName,
             Function.identity()));
 
     for (Attribute attribute : CollectionUtil.toIterable(ObjectUtils.notNull(start.getAttributes()))) {
@@ -527,7 +527,7 @@ public class MetaschemaXmlReader
       try {
         QName wrapper = null;
         if (instance.isEffectiveValueWrappedInXml()) {
-          wrapper = instance.getXmlQName().toQName();
+          wrapper = instance.getQName().toQName();
 
           XmlEventUtil.skipWhitespace(reader);
           XmlEventUtil.requireStartElement(reader, resource, wrapper);
@@ -554,7 +554,7 @@ public class MetaschemaXmlReader
       return readDefinitionElement(
           instance.getDefinition(),
           getStartElement(),
-          instance.getXmlQName(),
+          instance.getQName(),
           parent,
           this::handleFieldDefinitionBody);
     }
@@ -565,7 +565,7 @@ public class MetaschemaXmlReader
       return readDefinitionElement(
           instance.getDefinition(),
           getStartElement(),
-          instance.getXmlQName(),
+          instance.getQName(),
           parent,
           this::handleFieldDefinitionBody);
     }
@@ -577,7 +577,7 @@ public class MetaschemaXmlReader
       return readDefinitionElement(
           definition,
           getStartElement(),
-          definition.getXmlQName(),
+          definition.getQName(),
           parent,
           this::handleFieldDefinitionBody);
     }
@@ -612,7 +612,7 @@ public class MetaschemaXmlReader
       return readDefinitionElement(
           instance.getDefinition(),
           getStartElement(),
-          instance.getXmlQName(),
+          instance.getQName(),
           parent,
           this::handleAssemblyDefinitionBody);
     }
@@ -623,7 +623,7 @@ public class MetaschemaXmlReader
       return readDefinitionElement(
           instance.getDefinition(),
           getStartElement(),
-          instance.getXmlQName(),
+          instance.getQName(),
           parent,
           this::handleAssemblyDefinitionBody);
     }
@@ -635,7 +635,7 @@ public class MetaschemaXmlReader
       return readDefinitionElement(
           definition,
           getStartElement(),
-          ObjectUtils.requireNonNull(definition.getRootXmlQName()),
+          ObjectUtils.requireNonNull(definition.getRootQName()),
           parent,
           this::handleAssemblyDefinitionBody);
     }

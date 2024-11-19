@@ -78,7 +78,7 @@ public class DefinitionFieldGlobal
     }));
     this.boundNodeItem = ObjectUtils.notNull(Lazy.lazy(() -> ObjectUtils.requireNonNull(ModelSupport.toNodeItem(
         module,
-        bindingInstance.getXmlQName(),
+        bindingInstance.getQName(),
         position))));
   }
 
@@ -167,7 +167,7 @@ public class DefinitionFieldGlobal
     String name = obj == null ? null : obj.getFlagRef();
     return name == null ? null
         : ObjectUtils.requireNonNull(getFlagInstanceByName(
-            getContainingModule().toFlagQName(name)));
+            getContainingModule().getModuleStaticContext().parseFlagName(name)));
   }
 
   @Override

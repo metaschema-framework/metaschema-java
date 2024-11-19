@@ -24,7 +24,7 @@ class GroupAsImpl implements IGroupAs {
   private final XmlGroupAsBehavior xmlBehavior;
 
   public GroupAsImpl(@NonNull GroupingAs groupAs, @NonNull IModule module) {
-    this.qname = module.toModelQName(ObjectUtils.requireNonNull(groupAs.getName()));
+    this.qname = module.getModuleStaticContext().parseModelName(ObjectUtils.requireNonNull(groupAs.getName()));
     this.jsonBehavior = ModelSupport.groupAsJsonBehavior(groupAs.getInJson());
     this.xmlBehavior = ModelSupport.groupAsXmlBehavior(groupAs.getInXml());
   }

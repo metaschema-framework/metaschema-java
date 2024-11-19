@@ -37,18 +37,6 @@ public interface IGroupAs {
   @Nullable
   IEnhancedQName getGroupAsQName();
 
-  @Nullable
-  default String getGroupAsName() {
-    IEnhancedQName qname = getGroupAsQName();
-    return qname == null ? null : qname.getLocalName();
-  }
-
-  @Nullable
-  default String getGroupAsXmlNamespace() {
-    IEnhancedQName qname = getGroupAsQName();
-    return qname == null ? null : qname.getNamespace();
-  }
-
   @NonNull
   JsonGroupAsBehavior getJsonGroupAsBehavior();
 

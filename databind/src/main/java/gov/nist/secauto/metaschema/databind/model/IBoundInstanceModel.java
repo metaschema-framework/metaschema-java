@@ -5,8 +5,10 @@
 
 package gov.nist.secauto.metaschema.databind.model;
 
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 
 import java.lang.reflect.Field;
@@ -128,4 +130,13 @@ public interface IBoundInstanceModel<ITEM>
    */
   @Nullable
   IBoundInstanceFlag getItemJsonKey(@NonNull Object item);
+
+  @Override
+  default void deepCopy(@NonNull IBoundObject fromInstance, @NonNull IBoundObject toInstance) throws BindingException {
+    Object value = getValue(fromInstance);
+    if (value != null) {
+      value = getCollectionInfo().deepCopyItems(fromInstance, toInstance);
+    }
+    setValue(toInstance, value);
+  }
 }

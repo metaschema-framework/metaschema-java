@@ -66,13 +66,13 @@ public abstract class ModelTestBase {
                     "rootName"),
                 () -> assertEquals(
                     assembly.getContainingModule().getXmlNamespace().toASCIIString(),
-                    assembly.getRootXmlQName().getNamespace(),
+                    assembly.getRootQName().getNamespace(),
                     "rootNamespace"),
                 () -> assertTrue(true));
           } else {
             assertEquals(
                 null,
-                assembly.getRootXmlQName(),
+                assembly.getRootQName(),
                 "rootNamespace");
           }
         });
@@ -165,7 +165,7 @@ public abstract class ModelTestBase {
             "defaultValue"),
         () -> assertEquals(
             field.getContainingModule().getXmlNamespace().toASCIIString(),
-            field.getXmlNamespace(),
+            field.getQName().getNamespace(),
             "namespace"),
         () -> assertEquals(
             annotation.inXmlWrapped(),

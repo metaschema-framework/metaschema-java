@@ -32,6 +32,6 @@ public abstract class AbstractGlobalFieldDefinition<
    *          the parent module containing this definition
    */
   protected AbstractGlobalFieldDefinition(@NonNull MODULE module) {
-    super(module, module::toModelQName);
+    super(module, name -> module.getModuleStaticContext().parseModelName(name));
   }
 }

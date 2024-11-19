@@ -49,7 +49,7 @@ public abstract class AbstractGlobalDefinition<MODULE extends IModule, INSTANCE 
 
   @SuppressWarnings("null")
   @Override
-  public final IEnhancedQName getXmlQName() {
+  public final IEnhancedQName getQName() {
     return qname.get();
   }
 

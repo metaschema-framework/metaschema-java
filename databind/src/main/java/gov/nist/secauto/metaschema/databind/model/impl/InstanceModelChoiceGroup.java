@@ -55,7 +55,7 @@ public final class InstanceModelChoiceGroup
         IBoundInstanceModelGroupedField,
         IBoundInstanceModelGroupedAssembly>
     implements IBoundInstanceModelChoiceGroup,
-    IFeatureBoundContainerModelChoiceGroup, IFeatureInstanceModelGroupAs<IBoundObject> {
+    IFeatureBoundContainerModelChoiceGroup, IFeatureInstanceModelGroupAs {
   @NonNull
   private final Field javaField;
   @NonNull
@@ -131,7 +131,7 @@ public final class InstanceModelChoiceGroup
     this.qnameToInstanceMap = ObjectUtils.notNull(Lazy.lazy(() -> Collections.unmodifiableMap(
         getNamedModelInstances().stream()
             .collect(Collectors.toMap(
-                IBoundInstanceModelGroupedNamed::getXmlQName,
+                IBoundInstanceModelGroupedNamed::getQName,
                 CustomCollectors.identity())))));
     this.discriminatorToInstanceMap = ObjectUtils.notNull(Lazy.lazy(() -> Collections.unmodifiableMap(
         getNamedModelInstances().stream()
@@ -267,9 +267,9 @@ public final class InstanceModelChoiceGroup
       Class<?> clazz = item.getClass();
 
       IBoundInstanceModelGroupedNamed itemInstance = getClassToInstanceMap().get(clazz);
-      String namespace = itemInstance.getXmlNamespace();
+      String namespace = itemInstance.getQName().getNamespace();
       retval = itemInstance.getDefinition().getFlagInstanceByName(
-          namespace == null
+          namespace.isEmpty()
               ? EQNameFactory.of(jsonKeyFlagName)
               : EQNameFactory.of(namespace, jsonKeyFlagName));
     }
@@ -301,7 +301,7 @@ public final class InstanceModelChoiceGroup
                 container);
           })
           .collect(Collectors.toMap(
-              IBoundInstanceModelGroupedAssembly::getXmlQName,
+              IBoundInstanceModelGroupedAssembly::getQName,
               Function.identity(),
               CustomCollectors.useLastMapper(),
               LinkedHashMap::new))));
@@ -311,7 +311,7 @@ public final class InstanceModelChoiceGroup
             return IBoundInstanceModelGroupedField.newInstance(instance, container);
           })
           .collect(Collectors.toMap(
-              IBoundInstanceModelGroupedField::getXmlQName,
+              IBoundInstanceModelGroupedField::getQName,
               Function.identity(),
               CustomCollectors.useLastMapper(),
               LinkedHashMap::new))));

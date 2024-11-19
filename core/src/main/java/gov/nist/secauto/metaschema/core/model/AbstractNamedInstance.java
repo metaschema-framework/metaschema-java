@@ -37,7 +37,7 @@ public abstract class AbstractNamedInstance<
 
   @SuppressWarnings("null")
   @Override
-  public final IEnhancedQName getXmlQName() {
+  public final IEnhancedQName getQName() {
     return qname.get();
   }
 

@@ -153,7 +153,7 @@ class ChoiceGroupModelContainerSupport
       @NonNull IAssemblyInstanceGrouped assembly,
       @NonNull Map<IEnhancedQName, INamedModelInstanceGrouped> namedModelInstances,
       @NonNull Map<IEnhancedQName, IAssemblyInstanceGrouped> assemblyInstances) {
-    IEnhancedQName effectiveName = assembly.getXmlQName();
+    IEnhancedQName effectiveName = assembly.getQName();
     namedModelInstances.put(effectiveName, assembly);
     assemblyInstances.put(effectiveName, assembly);
   }
@@ -162,7 +162,7 @@ class ChoiceGroupModelContainerSupport
       @NonNull IFieldInstanceGrouped field,
       @NonNull Map<IEnhancedQName, INamedModelInstanceGrouped> namedModelInstances,
       @NonNull Map<IEnhancedQName, IFieldInstanceGrouped> fieldInstances) {
-    IEnhancedQName effectiveName = field.getXmlQName();
+    IEnhancedQName effectiveName = field.getQName();
     namedModelInstances.put(effectiveName, field);
     fieldInstances.put(effectiveName, field);
   }
@@ -176,7 +176,8 @@ class ChoiceGroupModelContainerSupport
     IAssemblyDefinition owningDefinition = parent.getOwningDefinition();
     IModule module = owningDefinition.getContainingModule();
 
-    IEnhancedQName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName name = parent.getContainingModule().getModuleStaticContext()
+        .parseModelName(ObjectUtils.requireNonNull(obj.getRef()));
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(name);
 
     if (definition == null) {
@@ -198,7 +199,8 @@ class ChoiceGroupModelContainerSupport
     IAssemblyDefinition owningDefinition = parent.getOwningDefinition();
     IModule module = owningDefinition.getContainingModule();
 
-    IEnhancedQName name = parent.getContainingModule().toModelQName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName name = parent.getContainingModule().getModuleStaticContext()
+        .parseModelName(ObjectUtils.requireNonNull(obj.getRef()));
     IFieldDefinition definition = module.getScopedFieldDefinitionByName(name);
     if (definition == null) {
       throw new IllegalStateException(

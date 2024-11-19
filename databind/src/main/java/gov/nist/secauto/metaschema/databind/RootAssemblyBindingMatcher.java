@@ -20,7 +20,7 @@ class RootAssemblyBindingMatcher implements IBindingMatcher {
   private final IBoundDefinitionModelAssembly definition;
   @NonNull
   private final Lazy<QName> rootQName = ObjectUtils.notNull(
-      Lazy.lazy(() -> getDefinition().getRootXmlQName().toQName()));
+      Lazy.lazy(() -> getDefinition().getRootQName().toQName()));
 
   public RootAssemblyBindingMatcher(
       @NonNull IBoundDefinitionModelAssembly definition) {
@@ -58,6 +58,6 @@ class RootAssemblyBindingMatcher implements IBindingMatcher {
 
   @Override
   public String toString() {
-    return getDefinition().getRootXmlQName().toString();
+    return getDefinition().getRootQName().toString();
   }
 }

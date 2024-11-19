@@ -199,7 +199,7 @@ public class XmlSchemaGenerator
       generateSchemaMetadata(module, state);
 
       for (IAssemblyDefinition definition : rootAssemblyDefinitions) {
-        IEnhancedQName xmlQName = definition.getRootXmlQName();
+        IEnhancedQName xmlQName = definition.getRootQName();
         if (xmlQName != null
             && (xmlQName.getNamespace() == null || state.getDefaultNS().equals(xmlQName.getNamespace()))) {
           generateRootElement(definition, state);
@@ -256,7 +256,7 @@ public class XmlSchemaGenerator
     assert definition.isRoot();
 
     XMLStreamWriter2 writer = state.getXMLStreamWriter();
-    IEnhancedQName xmlQName = definition.getRootXmlQName();
+    IEnhancedQName xmlQName = definition.getRootQName();
 
     writer.writeStartElement(PREFIX_XML_SCHEMA, "element", NS_XML_SCHEMA);
     writer.writeAttribute("name", xmlQName.getLocalName());

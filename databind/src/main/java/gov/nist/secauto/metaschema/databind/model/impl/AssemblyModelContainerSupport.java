@@ -68,7 +68,7 @@ class AssemblyModelContainerSupport
     for (IBoundInstanceModel<?> instance : this.modelInstances) {
       if (instance instanceof IBoundInstanceModelNamed) {
         IBoundInstanceModelNamed<?> named = (IBoundInstanceModelNamed<?>) instance;
-        IEnhancedQName key = named.getXmlQName();
+        IEnhancedQName key = named.getQName();
         namedModelInstances.put(key, named);
 
         if (instance instanceof IBoundInstanceModelField) {

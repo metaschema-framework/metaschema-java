@@ -216,13 +216,13 @@ class XmlChoiceGroupInstance
     }
 
     public void append(@NonNull IFieldInstanceGrouped instance) {
-      IEnhancedQName key = instance.getXmlQName();
+      IEnhancedQName key = instance.getQName();
       getFieldInstanceMap().put(key, instance);
       getNamedModelInstanceMap().put(key, instance);
     }
 
     public void append(@NonNull IAssemblyInstanceGrouped instance) {
-      IEnhancedQName key = instance.getXmlQName();
+      IEnhancedQName key = instance.getQName();
       getAssemblyInstanceMap().put(key, instance);
       getNamedModelInstanceMap().put(key, instance);
     }

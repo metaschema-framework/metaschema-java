@@ -39,7 +39,7 @@ public abstract class AbstractBindingModelContainerSupport
       @NonNull List<IModelInstanceAbsolute> modelInstances,
       @NonNull Map<IEnhancedQName, INamedModelInstanceAbsolute> namedModelInstances,
       @NonNull Map<IEnhancedQName, IAssemblyInstanceAbsolute> assemblyInstances) {
-    IEnhancedQName effectiveName = assembly.getXmlQName();
+    IEnhancedQName effectiveName = assembly.getQName();
     modelInstances.add(assembly);
     namedModelInstances.put(effectiveName, assembly);
     assemblyInstances.put(effectiveName, assembly);
@@ -50,7 +50,7 @@ public abstract class AbstractBindingModelContainerSupport
       @NonNull List<IModelInstanceAbsolute> modelInstances,
       @NonNull Map<IEnhancedQName, INamedModelInstanceAbsolute> namedModelInstances,
       @NonNull Map<IEnhancedQName, IFieldInstanceAbsolute> fieldInstances) {
-    IEnhancedQName effectiveName = field.getXmlQName();
+    IEnhancedQName effectiveName = field.getQName();
     modelInstances.add(field);
     namedModelInstances.put(effectiveName, field);
     fieldInstances.put(effectiveName, field);
@@ -83,7 +83,7 @@ public abstract class AbstractBindingModelContainerSupport
 
     String name = ObjectUtils.requireNonNull(obj.getRef());
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(
-        module.toModelQName(name));
+        module.getModuleStaticContext().parseModelName(name));
 
     if (definition == null) {
       throw new IllegalStateException(
@@ -106,7 +106,7 @@ public abstract class AbstractBindingModelContainerSupport
 
     String name = ObjectUtils.requireNonNull(obj.getRef());
     IFieldDefinition definition = module.getScopedFieldDefinitionByName(
-        module.toModelQName(name));
+        module.getModuleStaticContext().parseModelName(name));
     if (definition == null) {
       throw new IllegalStateException(
           String.format("Unable to resolve field reference '%s' in definition '%s' in module '%s'",

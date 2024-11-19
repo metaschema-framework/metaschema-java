@@ -30,7 +30,8 @@ public abstract class AbstractNamedModelInstance<
    *          the parent containing the instance
    */
   protected AbstractNamedModelInstance(@NonNull PARENT parent) {
-    super(parent, name -> parent.getOwningDefinition().getContainingModule().toModelQName(name));
+    super(parent, name -> parent.getOwningDefinition().getContainingModule()
+        .getModuleStaticContext().parseModelName(name));
   }
 
   @Override

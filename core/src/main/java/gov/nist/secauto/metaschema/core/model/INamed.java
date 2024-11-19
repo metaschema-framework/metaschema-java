@@ -55,19 +55,6 @@ public interface INamed {
   }
 
   /**
-   * Retrieve the XML namespace for this instance.
-   * <p>
-   * Multiple calls to this method are expected to produce the same, deterministic
-   * return value.
-   *
-   * @return the XML namespace or {@code null} if no namespace is defined
-   */
-  @Nullable
-  default String getXmlNamespace() {
-    return getXmlQName().getNamespace();
-  }
-
-  /**
    * Get the unique XML qualified name for this model element.
    * <p>
    * The qualified name is considered to be unique relative to all sibling
@@ -89,7 +76,7 @@ public interface INamed {
    */
   // FIXME: rename to getQName
   @NonNull
-  IEnhancedQName getXmlQName();
+  IEnhancedQName getQName();
 
   /**
    * Retrieve the index value to use for binary naming.

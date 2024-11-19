@@ -34,7 +34,7 @@ public class DefaultGroupAs implements IGroupAs {
               GroupAs.class.getName(),
               annotation.name()));
     }
-    this.qname = module.toModelQName(value);
+    this.qname = module.getModuleStaticContext().parseModelName(value);
   }
 
   @Override

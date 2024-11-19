@@ -87,7 +87,7 @@ public class InstanceModelGroupedFieldInline
     }));
     this.boundNodeItem = ObjectUtils.notNull(
         Lazy.lazy(() -> (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())
-            .getModelItemsByName(bindingInstance.getXmlQName())
+            .getModelItemsByName(bindingInstance.getQName())
             .get(position)));
   }
 
@@ -173,9 +173,9 @@ public class InstanceModelGroupedFieldInline
     if (obj != null) {
       String flagName = obj.getFlagRef();
       if (flagName != null) {
-        String namespace = getXmlNamespace();
+        String namespace = getQName().getNamespace();
         retval = getFlagInstanceByName(
-            namespace == null
+            namespace.isEmpty()
                 ? EQNameFactory.of(flagName)
                 : EQNameFactory.of(namespace, flagName));
       }

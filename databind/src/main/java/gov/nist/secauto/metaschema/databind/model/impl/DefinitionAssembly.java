@@ -101,7 +101,7 @@ public final class DefinitionAssembly
     String rootLocalName = ModelUtil.resolveNoneOrDefault(getAnnotation().rootName(), null);
     this.xmlRootQName = ObjectUtils.notNull(Lazy.lazy(() -> rootLocalName == null
         ? null
-        : getContainingModule().toModelQName(rootLocalName)));
+        : getContainingModule().getModuleStaticContext().parseModelName(rootLocalName)));
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> new FlagContainerSupport(this, null)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> new AssemblyModelContainerSupport(this)));
 
@@ -200,7 +200,7 @@ public final class DefinitionAssembly
 
   @Override
   @Nullable
-  public IEnhancedQName getRootXmlQName() {
+  public IEnhancedQName getRootQName() {
     // Overriding this is more efficient, since it is already built
     return xmlRootQName.get();
   }
@@ -209,14 +209,14 @@ public final class DefinitionAssembly
   public boolean isRoot() {
     // Overriding this is more efficient, since the root name is derived from the
     // XML QName
-    return getRootXmlQName() != null;
+    return getRootQName() != null;
   }
 
   @Override
   @Nullable
   public String getRootName() {
     // Overriding this is more efficient, since it is already built
-    IEnhancedQName qname = getRootXmlQName();
+    IEnhancedQName qname = getRootQName();
     return qname == null ? null : qname.getLocalName();
   }
 

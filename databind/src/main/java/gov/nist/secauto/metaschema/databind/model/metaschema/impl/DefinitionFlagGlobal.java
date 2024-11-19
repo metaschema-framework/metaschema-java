@@ -77,7 +77,7 @@ public class DefinitionFlagGlobal
     }));
     this.boundNodeItem = ObjectUtils.notNull(Lazy.lazy(() -> ObjectUtils.requireNonNull(ModelSupport.toNodeItem(
         module,
-        bindingInstance.getXmlQName(),
+        bindingInstance.getQName(),
         position))));
   }
 
