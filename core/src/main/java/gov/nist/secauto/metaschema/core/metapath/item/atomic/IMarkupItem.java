@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.AtomicItemConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.MarkupLineItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.MarkupMultiLineItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -24,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface IMarkupItem extends IUntypedAtomicItem {
   @NonNull
   static IAtomicOrUnionType type() {
-    return AtomicItemConstants.MARKUP_ITEM_TYPE;
+    return MarkupDataTypeProvider.MARKUP_TYPE;
   }
 
   /**

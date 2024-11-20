@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.SequenceTypeImpl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface ISequenceType {
 
@@ -51,7 +50,7 @@ public interface ISequenceType {
    *
    * @return the type of the sequence or {@code null} if the sequence is empty
    */
-  @Nullable
+  @NonNull
   IItemType getType();
 
   /**

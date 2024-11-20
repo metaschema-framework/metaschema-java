@@ -18,7 +18,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModu
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -44,7 +44,7 @@ class ModuleLoaderTest {
     IXmlMetaschemaModule metadataModule = oscalCatalogModule.getImportedModuleByShortName("oscal-metadata");
     assertNotNull(metadataModule, "metadata metaschema not found");
     IFlagDefinition flag
-        = metadataModule.getScopedFlagDefinitionByName(EQNameFactory.of("location-type"));
+        = metadataModule.getScopedFlagDefinitionByName(IEnhancedQName.of("location-type"));
     assertNotNull(flag, "flag not found");
     List<? extends IConstraint> constraints = flag.getConstraints();
     assertFalse(constraints.isEmpty(), "a constraint was expected");
@@ -74,7 +74,7 @@ class ModuleLoaderTest {
     IXmlMetaschemaModule module = loader.load(moduleUri);
     IAssemblyDefinition catalog
         = module.getExportedAssemblyDefinitionByName(
-            EQNameFactory.of("http://csrc.nist.gov/ns/oscal/1.0", "catalog").getIndexPosition());
+            IEnhancedQName.of("http://csrc.nist.gov/ns/oscal/1.0", "catalog").getIndexPosition());
 
     assertNotNull(catalog, "catalog not found");
     List<? extends IConstraint> constraints = catalog.getConstraints();
@@ -89,7 +89,7 @@ class ModuleLoaderTest {
         = loader.load(ObjectUtils.notNull(Paths.get("src/test/resources/content/custom-entity-metaschema.xml")));
 
     IAssemblyDefinition root = module.getExportedRootAssemblyDefinitionByName(
-        EQNameFactory.of("http://csrc.nist.gov/ns/test/metaschema/entity", "root").getIndexPosition());
+        IEnhancedQName.of("http://csrc.nist.gov/ns/test/metaschema/entity", "root").getIndexPosition());
     assert root != null;
     List<? extends IAllowedValuesConstraint> allowedValues = root.getAllowedValuesConstraints();
 

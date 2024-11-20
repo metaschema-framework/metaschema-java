@@ -124,6 +124,12 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
     return true;
   }
 
+  @Override
+  default ISequence<?> contentsAsSequence() {
+    return ISequence.of(stream()
+        .flatMap(ICollectionValue::normalizeAsItems));
+  }
+
   /**
    * Determine if this sequence is empty.
    *
@@ -240,7 +246,7 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
   }
 
   @Override
-  default ISequence<? extends IArrayItem<ITEM>> asSequence() {
+  default ISequence<? extends IArrayItem<ITEM>> toSequence() {
     return ISequence.of(this);
   }
 

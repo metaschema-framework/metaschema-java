@@ -113,6 +113,12 @@ public interface IMapItem<VALUE extends ICollectionValue>
     return true;
   }
 
+  @Override
+  default ISequence<?> contentsAsSequence() {
+    return ISequence.of(values().stream()
+        .flatMap(ICollectionValue::normalizeAsItems));
+  }
+
   /**
    * Determine if this sequence is empty.
    *
@@ -136,7 +142,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
   }
 
   @Override
-  default ISequence<IMapItem<VALUE>> asSequence() {
+  default ISequence<IMapItem<VALUE>> toSequence() {
     return ISequence.of(this);
   }
 

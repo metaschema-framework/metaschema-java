@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
+import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -42,7 +43,7 @@ public class RootSlashPath
         .map(ItemUtils::checkItemIsNodeItemForStep)
         // the previous checks for a null instance
         .flatMap(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).limit(1))
-        .collect(ISequence.toSequence()));
+        .collect(CustomCollectors.toSequence()));
 
     return getExpression().accept(dynamicContext, roots);
   }

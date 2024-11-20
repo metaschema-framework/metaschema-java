@@ -6,6 +6,15 @@
 package gov.nist.secauto.metaschema.core.datatype.adapter;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPAddressItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.qname.QNameCache;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -178,6 +187,37 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   @NonNull
   public static final StringAdapter DEFAULT_DATA_TYPE = STRING;
 
+  @NonNull
+  public static final IAtomicOrUnionType ANY_ATOMIC_TYPE
+      = IAtomicOrUnionType.of(
+          IAnyAtomicItem.class,
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "any-atomic-type"));
+  @NonNull
+  public static final IAtomicOrUnionType UNTYPED_ATOMIC_TYPE
+      = IAtomicOrUnionType.of(
+          IUntypedAtomicItem.class,
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "untyped-atomic"));
+  @NonNull
+  public static final IAtomicOrUnionType DURATION_TYPE
+      = IAtomicOrUnionType.of(
+          IDurationItem.class,
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "duration"));
+  @NonNull
+  public static final IAtomicOrUnionType IP_ADDRESS_TYPE
+      = IAtomicOrUnionType.of(
+          IIPAddressItem.class,
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "ip-address"));
+  @NonNull
+  public static final IAtomicOrUnionType NUMERIC_TYPE
+      = IAtomicOrUnionType.of(
+          INumericItem.class,
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "numeric"));
+  @NonNull
+  public static final IAtomicOrUnionType TEMPORAL_TYPE
+      = IAtomicOrUnionType.of(
+          ITemporalItem.class,
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "temporal"));
+
   /**
    * Initialize the built-in data types.
    */
@@ -187,26 +227,35 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
     // Java type. This ensures that when a data type is resolved that this data type
     // is matched first
     // before other String-based data types.
-    registerDatatype(STRING);
-    registerDatatype(BASE64);
-    registerDatatype(BOOLEAN);
-    registerDatatype(DATE);
-    registerDatatype(DATE_WITH_TZ);
-    registerDatatype(DATE_TIME);
-    registerDatatype(DATE_TIME_WITH_TZ);
-    registerDatatype(DAY_TIME_DURATION);
-    registerDatatype(DECIMAL);
-    registerDatatype(EMAIL_ADDRESS);
-    registerDatatype(HOSTNAME);
-    registerDatatype(INTEGER);
-    registerDatatype(IP_V4_ADDRESS);
-    registerDatatype(IP_V6_ADDRESS);
-    registerDatatype(NON_NEGATIVE_INTEGER);
-    registerDatatype(POSITIVE_INTEGER);
-    registerDatatype(TOKEN);
-    registerDatatype(URI);
-    registerDatatype(URI_REFERENCE);
-    registerDatatype(UUID);
-    registerDatatype(YEAR_MONTH_DURATION);
+    register(STRING);
+    register(BASE64);
+    register(BOOLEAN);
+    register(DATE);
+    register(DATE_WITH_TZ);
+    register(DATE_TIME);
+    register(DATE_TIME_WITH_TZ);
+    register(DAY_TIME_DURATION);
+    register(DECIMAL);
+    register(EMAIL_ADDRESS);
+    register(HOSTNAME);
+    register(INTEGER);
+    register(IP_V4_ADDRESS);
+    register(IP_V6_ADDRESS);
+    register(NON_NEGATIVE_INTEGER);
+    register(POSITIVE_INTEGER);
+    register(TOKEN);
+    register(URI);
+    register(URI_REFERENCE);
+    register(UUID);
+    register(YEAR_MONTH_DURATION);
+
+    // register abstract types
+    // FIXME: Add IDateItem and IDateTimeItem
+    register(ANY_ATOMIC_TYPE);
+    register(UNTYPED_ATOMIC_TYPE);
+    register(DURATION_TYPE);
+    register(IP_ADDRESS_TYPE);
+    register(NUMERIC_TYPE);
+    register(TEMPORAL_TYPE);
   }
 }

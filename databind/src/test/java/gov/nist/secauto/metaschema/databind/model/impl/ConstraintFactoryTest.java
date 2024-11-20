@@ -12,7 +12,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.Let;
 
@@ -53,7 +53,7 @@ class ConstraintFactoryTest {
 
     ILet let = ConstraintFactory.newLetExpression(annotation, source);
     assertAll(
-        () -> assertEquals(EQNameFactory.of(variable), let.getName()),
+        () -> assertEquals(IEnhancedQName.of(variable), let.getName()),
         () -> assertEquals(expression, let.getValueExpression().getPath()),
         () -> assertEquals(source, let.getSource()),
         () -> assertEquals("Test", let.getRemarks().toMarkdown()));

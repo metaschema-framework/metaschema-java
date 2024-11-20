@@ -6,11 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath;
 
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionService;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.qname.NamespaceCache;
@@ -19,8 +18,10 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
@@ -36,12 +37,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public final class StaticContext {
   @NonNull
-  private static final Map<String, URI> WELL_KNOWN_NAMESPACES;
+  private static final Map<String, String> WELL_KNOWN_NAMESPACES;
   @NonNull
   private static final Map<String, String> WELL_KNOWN_URI_TO_PREFIX;
 
   static {
-    Map<String, URI> knownNamespaces = new ConcurrentHashMap<>();
+    Map<String, String> knownNamespaces = new ConcurrentHashMap<>();
     knownNamespaces.put(
         MetapathConstants.PREFIX_METAPATH,
         MetapathConstants.NS_METAPATH);
@@ -64,7 +65,7 @@ public final class StaticContext {
 
     WELL_KNOWN_URI_TO_PREFIX = ObjectUtils.notNull(WELL_KNOWN_NAMESPACES.entrySet().stream()
         .collect(Collectors.toUnmodifiableMap(
-            entry -> entry.getValue().toASCIIString(),
+            (Function<? super Entry<String, String>, ? extends String>) Entry::getValue,
             Map.Entry::getKey,
             (v1, v2) -> v2)));
   }
@@ -72,7 +73,7 @@ public final class StaticContext {
   @Nullable
   private final URI baseUri;
   @NonNull
-  private final Map<String, URI> knownNamespaces;
+  private final Map<String, String> knownNamespaces;
   @Nullable
   private final URI defaultModelNamespace;
   @Nullable
@@ -89,7 +90,7 @@ public final class StaticContext {
    * @return the mapping of prefix to namespace URI for all well-known namespaces
    */
   @SuppressFBWarnings("MS_EXPOSE_REP")
-  public static Map<String, URI> getWellKnownNamespacesMap() {
+  public static Map<String, String> getWellKnownNamespacesMap() {
     return WELL_KNOWN_NAMESPACES;
   }
 
@@ -166,8 +167,8 @@ public final class StaticContext {
    * @see #getWellKnownNamespacesMap()
    */
   @Nullable
-  private URI lookupNamespaceURIForPrefix(@NonNull String prefix) {
-    URI retval = knownNamespaces.get(prefix);
+  private String lookupNamespaceURIForPrefix(@NonNull String prefix) {
+    String retval = knownNamespaces.get(prefix);
     if (retval == null) {
       // fall back to well-known namespaces
       retval = WELL_KNOWN_NAMESPACES.get(prefix);
@@ -184,10 +185,11 @@ public final class StaticContext {
    * @return the namespace string bound to the prefix, or {@code null} if no
    *         namespace is bound to the prefix
    */
+  // FIXME: check for https://www.w3.org/TR/xpath-31/#ERRXPST0081
   @Nullable
   public String lookupNamespaceForPrefix(@NonNull String prefix) {
-    URI result = lookupNamespaceURIForPrefix(prefix);
-    return result == null ? null : result.toASCIIString();
+    String result = lookupNamespaceURIForPrefix(prefix);
+    return result == null ? null : result;
   }
 
   /**
@@ -219,9 +221,71 @@ public final class StaticContext {
 
   @NonNull
   private IEnhancedQName parseDataTypeName(@NonNull String name) {
-    return EQNameFactory.instance().parseName(
-        name,
-        this::resolveBasicPrefix);
+    try {
+      return EQNameFactory.instance().parseName(
+          name,
+          this::resolveDataTypePrefix);
+    } catch (StaticMetapathException ex) {
+      throw new StaticMetapathException(
+          StaticMetapathException.NOT_DEFINED,
+          String.format("The data type named '%s' was not found.", name), ex);
+    }
+  }
+
+  private String resolveDataTypePrefix(@NonNull String prefix) {
+    String ns = lookupNamespaceForPrefix(prefix);
+    if (ns == null) {
+      if (!prefix.isEmpty()) {
+        throw new StaticMetapathException(
+            StaticMetapathException.PREFIX_NOT_EXPANDABLE,
+            String.format("The namespace prefix '%s'  is not expandable.",
+                prefix));
+      }
+      // use the default data type namespace
+      ns = MetapathConstants.NS_METAPATH;
+    }
+    return ns;
+  }
+
+  @Nullable
+  public IFunction lookupFunction(@NonNull String name, int arity) {
+    IEnhancedQName qname = parseFunctionName(name);
+    return lookupFunction(qname, arity);
+  }
+
+  @Nullable
+  public static IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
+    return FunctionService.getInstance().getFunction(
+        Objects.requireNonNull(qname, "name"),
+        arity);
+  }
+
+  @NonNull
+  public IAtomicOrUnionType lookupDataTypeItemType(@NonNull String name) {
+    IEnhancedQName qname = parseDataTypeName(name);
+    return lookupDataTypeItemType(qname);
+  }
+
+  @NonNull
+  public static IAtomicOrUnionType lookupDataTypeItemType(@NonNull IEnhancedQName qname) {
+    IAtomicOrUnionType retval = DataTypeService.instance().getDataTypeByQNameIndex(qname.getIndexPosition());
+    if (retval == null) {
+      throw new StaticMetapathException(
+          StaticMetapathException.UNKNOWN_TYPE,
+          String.format("The data type named '%s' was not found.", qname));
+    }
+    return retval;
+  }
+
+  @NonNull
+  public static IAtomicOrUnionType lookupDataTypeItemType(Class<? extends IAnyAtomicItem> clazz) {
+    IAtomicOrUnionType retval = DataTypeService.instance().getDataTypeByItemClass(clazz);
+    if (retval == null) {
+      throw new StaticMetapathException(
+          StaticMetapathException.UNKNOWN_TYPE,
+          String.format("The data type for item class '%s' was not found.", clazz.getName()));
+    }
+    return retval;
   }
 
   @NonNull
@@ -382,11 +446,11 @@ public final class StaticContext {
     @Nullable
     private URI baseUri;
     @NonNull
-    private final Map<String, URI> namespaces = new ConcurrentHashMap<>();
+    private final Map<String, String> namespaces = new ConcurrentHashMap<>();
     @Nullable
     private URI defaultModelNamespace;
     @Nullable
-    private URI defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS;
+    private URI defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS_URI;
 
     private Builder() {
       // avoid direct construction
@@ -426,11 +490,10 @@ public final class StaticContext {
      * @see StaticContext#lookupNamespaceForPrefix(String)
      * @see StaticContext#getWellKnownNamespacesMap()
      */
+    // FIXME: check for https://www.w3.org/TR/xpath-31/#ERRXPST0070 for "meta"
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull URI uri) {
-      this.namespaces.put(prefix, uri);
-      NamespaceCache.instance().of(uri);
-      return this;
+      return namespace(prefix, ObjectUtils.notNull(uri.toASCIIString()));
     }
 
     /**
@@ -448,7 +511,9 @@ public final class StaticContext {
      */
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull String uri) {
-      return namespace(prefix, ObjectUtils.notNull(URI.create(uri)));
+      this.namespaces.put(prefix, uri);
+      NamespaceCache.instance().of(uri);
+      return this;
     }
 
     /**
@@ -530,46 +595,5 @@ public final class StaticContext {
     public StaticContext build() {
       return new StaticContext(this);
     }
-  }
-
-  @Nullable
-  public IFunction lookupFunction(@NonNull String name, int arity) {
-    IEnhancedQName qname = parseFunctionName(name);
-    return lookupFunction(qname, arity);
-  }
-
-  @Nullable
-  public static IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
-    return FunctionService.getInstance().getFunction(
-        Objects.requireNonNull(qname, "name"),
-        arity);
-  }
-
-  @Nullable
-  public IItemType lookupDataTypeItemType(@NonNull String name) {
-    IEnhancedQName eqName = parseDataTypeName(name);
-    return lookupDataTypeItemType(eqName);
-  }
-
-  @Nullable
-  public static IItemType lookupDataTypeItemType(@NonNull IEnhancedQName qname) {
-    IDataTypeAdapter<?> adapter = DataTypeService.instance()
-        .getJavaTypeAdapterByQNameIndex(qname.getIndexPosition());
-
-    IItemType retval = null;
-
-    // Expected a non-null adapter result, since the QName was found
-    // if an adapter is not found, this is likely because someone is squating on
-    // the namespace
-    if (adapter != null) {
-      retval = adapter.getItemType();
-    }
-    return retval;
-  }
-
-  @Nullable
-  public static IItemType lookupDataTypeItemType(Class<? extends IAnyAtomicItem> clazz) {
-    IDataTypeAdapter<?> adapter = DataTypeService.instance().getJavaTypeAdapterByItemClass(clazz);
-    return adapter == null ? null : adapter.getItemType();
   }
 }

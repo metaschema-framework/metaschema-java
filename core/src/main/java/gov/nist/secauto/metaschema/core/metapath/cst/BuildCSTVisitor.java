@@ -76,6 +76,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.INameTestExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.INodeTestExpression;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.IWildcardMatcher;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.NameTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
@@ -700,7 +701,7 @@ public class BuildCSTVisitor
           && qname.getNamespace().isEmpty()
           && staticContext.isUseWildcardWhenNamespaceNotDefaulted()) {
         // Use a wildcard namespace
-        retval = new Wildcard(new Wildcard.MatchAnyNamespace(ObjectUtils.notNull(qname.getLocalName())));
+        retval = new Wildcard(IWildcardMatcher.anyNamespace(ObjectUtils.notNull(qname.getLocalName())));
       } else {
         retval = new NameTest(qname);
       }
@@ -712,7 +713,7 @@ public class BuildCSTVisitor
 
   @Override
   protected Wildcard handleWildcard(WildcardContext ctx) {
-    Wildcard.IWildcardMatcher matcher = null;
+    IWildcardMatcher matcher = null;
     if (ctx.STAR() == null) {
       if (ctx.CS() != null) {
         // specified prefix, any local-name
@@ -721,15 +722,15 @@ public class BuildCSTVisitor
         if (namespace == null) {
           throw new IllegalStateException(String.format("Prefix '%s' did not map to a namespace.", prefix));
         }
-        matcher = new Wildcard.MatchAnyLocalName(namespace);
+        matcher = IWildcardMatcher.anyLocalName(namespace);
       } else if (ctx.SC() != null) {
         // any prefix, specified local-name
-        matcher = new Wildcard.MatchAnyNamespace(ObjectUtils.notNull(ctx.NCName().getText()));
+        matcher = IWildcardMatcher.anyNamespace(ObjectUtils.notNull(ctx.NCName().getText()));
       } else {
         // specified braced namespace, any local-name
         String bracedUriLiteral = ctx.BracedURILiteral().getText();
         String namespace = ObjectUtils.notNull(bracedUriLiteral.substring(2, bracedUriLiteral.length() - 1));
-        matcher = new Wildcard.MatchAnyLocalName(namespace);
+        matcher = IWildcardMatcher.anyLocalName(namespace);
       }
     } // star needs no matcher: any prefix, any local-name
 

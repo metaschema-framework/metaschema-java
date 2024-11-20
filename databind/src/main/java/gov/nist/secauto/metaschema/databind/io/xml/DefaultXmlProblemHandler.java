@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;
@@ -34,7 +33,7 @@ public class DefaultXmlProblemHandler
   private static final Logger LOGGER = LogManager.getLogger(DefaultXmlProblemHandler.class);
 
   private static final IEnhancedQName XSI_SCHEMA_LOCATION
-      = EQNameFactory.of("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation");
+      = IEnhancedQName.of("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation");
   private static final Set<IEnhancedQName> IGNORED_QNAMES;
 
   static {
@@ -48,7 +47,7 @@ public class DefaultXmlProblemHandler
       IBoundObject targetObject,
       Attribute attribute,
       IXmlParsingContext parsingContext) {
-    IEnhancedQName qname = EQNameFactory.of(attribute.getName());
+    IEnhancedQName qname = IEnhancedQName.of(attribute.getName());
     // check if warning is needed
     if (LOGGER.isWarnEnabled() && !IGNORED_QNAMES.contains(qname)) {
       LOGGER.atWarn().log("Skipping unrecognized attribute '{}'{}.",

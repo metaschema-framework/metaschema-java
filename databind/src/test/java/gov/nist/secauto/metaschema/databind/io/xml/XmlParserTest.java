@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.ctc.wstx.stax.WstxInputFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
@@ -72,10 +72,10 @@ class XmlParserTest
             (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(MultiFieldAssembly.class));
 
     IBoundInstanceModelField<?> field1Instance = ObjectUtils.requireNonNull(assembly.getFieldInstanceByName(
-        EQNameFactory.of(NS, "field1").getIndexPosition()));
+        IEnhancedQName.of(NS, "field1").getIndexPosition()));
 
     IBoundInstanceModelField<?> field2Instance = ObjectUtils.requireNonNull(assembly.getFieldInstanceByName(
-        EQNameFactory.of(NS, "field2").getIndexPosition()));
+        IEnhancedQName.of(NS, "field2").getIndexPosition()));
 
     MultiFieldAssembly obj = new MultiFieldAssembly();
 
@@ -101,7 +101,7 @@ class XmlParserTest
             .requireNonNull(
                 (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(FlaggedAssembly.class));
 
-    IBoundInstanceFlag idProperty = assembly.getFlagInstanceByName(EQNameFactory.of("id"));
+    IBoundInstanceFlag idProperty = assembly.getFlagInstanceByName(IEnhancedQName.of("id"));
     assert idProperty != null;
 
     assertEquals(XMLStreamConstants.START_DOCUMENT, eventReader.nextEvent().getEventType());
@@ -150,11 +150,11 @@ class XmlParserTest
 
     IBoundInstanceModelField<?> field1Instance
         = ObjectUtils
-            .requireNonNull(assembly.getFieldInstanceByName(EQNameFactory.of(NS, "field1").getIndexPosition()));
+            .requireNonNull(assembly.getFieldInstanceByName(IEnhancedQName.of(NS, "field1").getIndexPosition()));
 
     IBoundInstanceModelField<?> field2Instance
         = ObjectUtils
-            .requireNonNull(assembly.getFieldInstanceByName(EQNameFactory.of(NS, "field2").getIndexPosition()));
+            .requireNonNull(assembly.getFieldInstanceByName(IEnhancedQName.of(NS, "field2").getIndexPosition()));
 
     MultiFieldAssembly obj = new MultiFieldAssembly();
 

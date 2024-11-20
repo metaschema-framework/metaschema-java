@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -58,8 +57,7 @@ public class StaticFunctionCall implements IExpression {
 
   @Override
   public Class<? extends IItem> getBaseResultType() {
-    IItemType type = getFunction().getResult().getType();
-    return type == null ? IItem.class : type.getItemClass();
+    return getFunction().getResult().getType().getItemClass();
   }
 
   @SuppressWarnings("null")

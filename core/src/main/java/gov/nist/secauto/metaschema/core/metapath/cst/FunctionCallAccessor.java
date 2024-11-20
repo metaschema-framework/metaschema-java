@@ -86,7 +86,7 @@ public class FunctionCallAccessor implements IExpression {
       retval = MapGet.get((IMapItem<?>) collection, key);
     }
 
-    return retval == null ? ISequence.empty() : retval.asSequence();
+    return retval == null ? ISequence.empty() : retval.toSequence();
   }
 
   @Override

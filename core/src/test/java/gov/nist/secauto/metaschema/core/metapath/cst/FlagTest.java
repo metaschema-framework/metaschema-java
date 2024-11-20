@@ -16,7 +16,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.NodeItemKind;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import org.jmock.Expectations;
@@ -40,7 +39,7 @@ class FlagTest
     IFlagInstance instance = context.mock(IFlagInstance.class);
     IFlagNodeItem flagNode = context.mock(IFlagNodeItem.class);
 
-    IEnhancedQName flagName = EQNameFactory.of("test");
+    IEnhancedQName flagName = IEnhancedQName.of("test");
 
     context.checking(new Expectations() {
       { // NOPMD - intentional

@@ -20,7 +20,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
@@ -217,7 +217,7 @@ class BasicMetaschemaTest
     boolean result = ObjectUtils.requireNonNull(path.evaluateAs(
         moduleItem,
         MetapathExpression.ResultType.BOOLEAN,
-        dynamicContext.subContext().bindVariableValue(EQNameFactory.of("all-imports"), allImports)));
+        dynamicContext.subContext().bindVariableValue(IEnhancedQName.of("all-imports"), allImports)));
 
     assertTrue(result, "no root");
   }

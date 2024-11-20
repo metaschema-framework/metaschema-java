@@ -21,6 +21,21 @@ public class StaticMetapathException
   public static final int INVALID_PATH_GRAMMAR = 3;
 
   /**
+   * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPST0008">err:MPST0008</a>: It
+   * is a <a href="https://www.w3.org/TR/xpath-31/#dt-static-error">static
+   * error</a> if an expression refers to an element name, attribute name, schema
+   * type name, namespace prefix, or variable name that is not defined in the
+   * <a href="https://www.w3.org/TR/xpath-31/#dt-static-context">static
+   * context</a>, except for an ElementName in an <a href=
+   * "https://www.w3.org/TR/xpath-31/#doc-xpath31-ElementTest">ElementTest</a> or
+   * an AttributeName in an <a href=
+   * "https://www.w3.org/TR/xpath-31/#doc-xpath31-AttributeTest">AttributeTest</a>.
+   */
+  // FIXME: Check for use in all calls to the static or dyanmic context to lookup
+  // a name
+  public static final int NOT_DEFINED = 3;
+
+  /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPST0017">err:MPST0017</a>: It
    * is a <a href="https://www.w3.org/TR/xpath-31/#dt-static-error">static
    * error</a> if the

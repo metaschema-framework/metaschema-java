@@ -48,7 +48,7 @@ public class InstanceOf
   @Override
   public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     return IBooleanItem.valueOf(sequenceType.matches(getValue().accept(dynamicContext, focus)))
-        .asSequence();
+        .toSequence();
   }
 
   @Override

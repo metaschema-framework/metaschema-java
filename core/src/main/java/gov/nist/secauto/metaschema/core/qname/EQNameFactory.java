@@ -32,26 +32,6 @@ public class EQNameFactory {
     return ObjectUtils.notNull(INSTANCE.get());
   }
 
-  @NonNull
-  public static IEnhancedQName of(@NonNull QName qname) {
-    return instance().newQName(qname);
-  }
-
-  @NonNull
-  public static IEnhancedQName of(@NonNull String localName) {
-    return instance().newQName(localName);
-  }
-
-  @NonNull
-  public static IEnhancedQName of(@NonNull String namespace, @NonNull String localName) {
-    return instance().newQName(namespace, localName);
-  }
-
-  @NonNull
-  public static IEnhancedQName of(@NonNull URI namespace, @NonNull String localName) {
-    return instance().newQName(namespace, localName);
-  }
-
   private EQNameFactory() {
     // disable construction
     this(QNameCache.instance());
@@ -76,6 +56,7 @@ public class EQNameFactory {
     return cache.of(namespace, localName);
   }
 
+  // FIXME: check for use and prefer the string version
   @NonNull
   public IEnhancedQName newQName(@NonNull URI namespace, @NonNull String localName) {
     return cache.of(namespace, localName);

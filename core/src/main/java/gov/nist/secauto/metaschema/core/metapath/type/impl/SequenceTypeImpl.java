@@ -6,6 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
@@ -25,7 +27,7 @@ public class SequenceTypeImpl implements ISequenceType {
 
     @Override
     public IItemType getType() {
-      return null;
+      return IItemType.item();
     }
 
     @Override
@@ -82,9 +84,7 @@ public class SequenceTypeImpl implements ISequenceType {
 
     IItemType type = getType();
     // name
-    builder.append(type == null
-        ? ""
-        : type.toSignature())
+    builder.append(type.toSignature())
         // occurrence
         .append(getOccurrence().getIndicator());
 
@@ -110,6 +110,37 @@ public class SequenceTypeImpl implements ISequenceType {
 
   @Override
   public boolean matches(ICollectionValue item) {
-    throw new UnsupportedOperationException("implement");
+    ISequence<?> sequence = item instanceof IItem ? ((IItem) item).toSequence() : (ISequence<?>) item;
+
+    boolean retval;
+    // check the occurrence matches
+    int size = sequence.size();
+    switch (getOccurrence()) {
+    case ONE:
+      retval = size == 1;
+      break;
+    case ONE_OR_MORE:
+      retval = size >= 1;
+      break;
+    case ZERO:
+      retval = size == 0;
+      break;
+    case ZERO_OR_MORE:
+      retval = true;
+      break;
+    case ZERO_OR_ONE:
+      retval = size <= 1;
+      break;
+    default:
+      throw new UnsupportedOperationException(
+          String.format("Unsupported occurrence type '%s'.", getOccurrence().name()));
+    }
+
+    if (retval) {
+      // check the item type matches
+      IItemType type = getType();
+      retval = sequence.stream().allMatch(type::isInstance);
+    }
+    return retval;
   }
 }

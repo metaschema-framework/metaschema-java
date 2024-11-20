@@ -62,7 +62,7 @@ public class MapConstructor implements IExpression {
 
               return IMapItem.entry(key, value);
             }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))))
-        .asSequence();
+        .toSequence();
   }
 
   @Override

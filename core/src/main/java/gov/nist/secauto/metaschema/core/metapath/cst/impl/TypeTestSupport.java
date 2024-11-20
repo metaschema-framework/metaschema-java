@@ -6,19 +6,30 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AnykindtestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArraytestContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AssemblytestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AtomicoruniontypeContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.DocumenttestContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FieldtestContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FlagnameorwildcardContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FlagtestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctiontestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ItemtypeContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.KindtestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MaptestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.OccurrenceindicatorContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParenthesizeditemtypeContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SequencetypeContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TypedarraytestContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TypedmaptestContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.Typename_Context;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -34,11 +45,22 @@ public final class TypeTestSupport {
   private static final Map<
       Class<? extends ParseTree>,
       ParseTreeParser<IItemType>> ITEM_TYPE_HANDLER_MAP
-          = Map.of(FunctiontestContext.class, TypeTestSupport::parseFunctionTest,
+          = Map.of(
+              KindtestContext.class, TypeTestSupport::parseKindTest,
+              FunctiontestContext.class, TypeTestSupport::parseFunctionTest,
               MaptestContext.class, TypeTestSupport::parseMapTest,
               ArraytestContext.class, TypeTestSupport::parseArrayTest,
               AtomicoruniontypeContext.class, TypeTestSupport::parseAtomicType,
               ParenthesizeditemtypeContext.class, TypeTestSupport::parseParenthesizedItemType);
+  private static final Map<
+      Class<? extends ParseTree>,
+      ParseTreeParser<IItemType>> KIND_TEST_HANDLER_MAP
+          = Map.of(
+              DocumenttestContext.class, TypeTestSupport::parseKindDocumentTest,
+              FieldtestContext.class, TypeTestSupport::parseKindFieldTest,
+              AssemblytestContext.class, TypeTestSupport::parseKindAssemblyTest,
+              FlagtestContext.class, TypeTestSupport::parseKindFlagTest,
+              AnykindtestContext.class, TypeTestSupport::parseKindAny);
 
   @NonNull
   public static ISequenceType parseSequenceType(
@@ -47,7 +69,6 @@ public final class TypeTestSupport {
     return ctx.KW_EMPTY_SEQUENCE() == null
         ? parseSequenceType(ctx.itemtype(), ctx.occurrenceindicator(), staticContext)
         : ISequenceType.empty();
-
   }
 
   private static ISequenceType parseSequenceType(
@@ -59,6 +80,7 @@ public final class TypeTestSupport {
     return ISequenceType.of(itemType, occurrence);
   }
 
+  @NonNull
   private static IItemType parseItemType(
       @NonNull ItemtypeContext ctx,
       @NonNull StaticContext staticContext) {
@@ -70,6 +92,79 @@ public final class TypeTestSupport {
       retval = ITEM_TYPE_HANDLER_MAP.get(tree.getClass()).parse(tree, staticContext);
     }
     return retval;
+  }
+
+  @NonNull
+  private static IItemType parseKindTest(
+      @NonNull ParseTree tree,
+      @NonNull StaticContext staticContext) {
+    ParseTree child = ObjectUtils.requireNonNull(tree.getChild(0));
+    return KIND_TEST_HANDLER_MAP.get(child.getClass()).parse(child, staticContext);
+  }
+
+  @NonNull
+  private static IItemType parseKindDocumentTest(
+      @NonNull ParseTree tree,
+      @NonNull StaticContext staticContext) {
+    DocumenttestContext ctx = (DocumenttestContext) tree;
+    assert ctx != null;
+    throw new UnsupportedOperationException("implement");
+  }
+
+  @NonNull
+  private static IItemType parseKindFieldTest(
+      @NonNull ParseTree tree,
+      @NonNull StaticContext staticContext) {
+    FieldtestContext ctx = (FieldtestContext) tree;
+    assert ctx != null;
+    throw new UnsupportedOperationException("implement");
+  }
+
+  @NonNull
+  private static IItemType parseKindAssemblyTest(
+      @NonNull ParseTree tree,
+      @NonNull StaticContext staticContext) {
+    AssemblytestContext ctx = (AssemblytestContext) tree;
+    assert ctx != null;
+    throw new UnsupportedOperationException("implement");
+  }
+
+  @NonNull
+  private static IItemType parseKindFlagTest(
+      @NonNull ParseTree tree,
+      @NonNull StaticContext staticContext) {
+    FlagtestContext ctx = (FlagtestContext) tree;
+
+    FlagnameorwildcardContext nameOrWildcard = ctx.flagnameorwildcard();
+    IItemType retval;
+    if (nameOrWildcard == null) {
+      retval = IItemType.flag();
+    } else {
+      IEnhancedQName name = nameOrWildcard.STAR() == null
+          // eqname
+          ? staticContext.parseFlagName(nameOrWildcard.flagname().eqname().getText())
+          // STAR
+          : null;
+
+      IAtomicOrUnionType dataType = null;
+      Typename_Context typeName = ctx.typename_();
+      if (typeName != null) {
+        String dataTypeName = ObjectUtils.notNull(typeName.eqname().getText());
+        dataType = staticContext.lookupDataTypeItemType(dataTypeName);
+      }
+
+      retval = IItemType.flag(name, dataType);
+    }
+    return retval;
+  }
+
+  @NonNull
+  private static IItemType parseKindAny(
+      @NonNull ParseTree tree,
+      @SuppressWarnings("unused") @NonNull StaticContext staticContext) {
+    AnykindtestContext ctx = (AnykindtestContext) tree;
+    assert ctx != null;
+    return IItemType.node();
   }
 
   @NonNull
@@ -86,8 +181,23 @@ public final class TypeTestSupport {
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     MaptestContext ctx = (MaptestContext) tree;
-    assert ctx != null;
-    throw new UnsupportedOperationException("implement");
+
+    ctx.anymaptest();
+    ctx.typedmaptest();
+
+    IItemType retval;
+    if (ctx.anymaptest() != null) {
+      retval = IItemType.map();
+    } else {
+      TypedmaptestContext typedMapCtx = ctx.typedmaptest();
+
+      String dataTypeName = ObjectUtils.notNull(typedMapCtx.atomicoruniontype().getText());
+      IAtomicOrUnionType dataType = staticContext.lookupDataTypeItemType(dataTypeName);
+      retval = IItemType.map(
+          dataType,
+          parseSequenceType(ObjectUtils.requireNonNull(typedMapCtx.sequencetype()), staticContext));
+    }
+    return retval;
   }
 
   @NonNull
@@ -95,8 +205,16 @@ public final class TypeTestSupport {
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     ArraytestContext ctx = (ArraytestContext) tree;
-    assert ctx != null;
-    throw new UnsupportedOperationException("implement");
+    IItemType retval;
+    if (ctx.anyarraytest() != null) {
+      retval = IItemType.array();
+    } else {
+      TypedarraytestContext typedArrayCtx = ctx.typedarraytest();
+      retval = IItemType.array(parseSequenceType(
+          ObjectUtils.notNull(typedArrayCtx.sequencetype()),
+          staticContext));
+    }
+    return retval;
   }
 
   @NonNull
@@ -105,14 +223,8 @@ public final class TypeTestSupport {
       @NonNull StaticContext staticContext) {
     AtomicoruniontypeContext ctx = (AtomicoruniontypeContext) tree;
 
-    String name = ObjectUtils.requireNonNull(ctx.eqname().getText());
-    IItemType retval = staticContext.lookupDataTypeItemType(name);
-    if (retval == null) {
-      throw new StaticMetapathException(
-          StaticMetapathException.UNKNOWN_TYPE,
-          String.format("Unknown data type '%s'.", name));
-    }
-    return retval;
+    String name = ObjectUtils.notNull(ctx.eqname().getText());
+    return staticContext.lookupDataTypeItemType(name);
   }
 
   @NonNull
@@ -120,7 +232,7 @@ public final class TypeTestSupport {
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     ParenthesizeditemtypeContext ctx = (ParenthesizeditemtypeContext) tree;
-    return parseItemType(ctx.itemtype(), staticContext);
+    return parseItemType(ObjectUtils.notNull(ctx.itemtype()), staticContext);
   }
 
   @NonNull

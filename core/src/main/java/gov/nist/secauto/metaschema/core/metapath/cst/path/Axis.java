@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+// FIXME: check for https://www.w3.org/TR/xpath-31/#ERRXQST0134 or err:XPST0010
 @SuppressWarnings("PMD.ShortClassName") // intentional
 public enum Axis implements IExpression {
   SELF(Stream::of),

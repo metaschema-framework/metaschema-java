@@ -17,7 +17,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -32,7 +31,7 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
     extends ImmutableCollections.AbstractImmutableDelegatedMap<IMapKey, VALUE>
     implements IMapItem<VALUE> {
   @NonNull
-  public static final IEnhancedQName QNAME = EQNameFactory.of("map");
+  public static final IEnhancedQName QNAME = IEnhancedQName.of("map");
   @NonNull
   public static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(
       EnumSet.of(FunctionProperty.DETERMINISTIC));
@@ -72,7 +71,7 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
     }
 
     ICollectionValue result = MapGet.get(this, key);
-    return result == null ? ISequence.empty() : result.asSequence();
+    return result == null ? ISequence.empty() : result.toSequence();
   }
 
   @Override

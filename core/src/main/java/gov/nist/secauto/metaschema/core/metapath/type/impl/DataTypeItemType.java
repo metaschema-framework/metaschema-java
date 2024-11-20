@@ -41,4 +41,9 @@ public class DataTypeItemType
   public Class<? extends IAnyAtomicItem> getItemClass() {
     return itemClass;
   }
+
+  @Override
+  public String toString() {
+    return toSignature();
+  }
 }

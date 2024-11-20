@@ -7,14 +7,13 @@ package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.model.constraint.IFeatureModelConstrained;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IAssemblyDefinition
     extends IModelDefinition, IContainerModelAssembly, IAssembly, IFeatureModelConstrained {
-  IEnhancedQName MODEL_QNAME = EQNameFactory.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "model");
+  IEnhancedQName MODEL_QNAME = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "model");
 
   /**
    * Check if the assembly is a top-level root assembly.

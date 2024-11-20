@@ -105,29 +105,32 @@ typedeclaration : KW_AS sequencetype ;
 sequencetype : KW_EMPTY_SEQUENCE OP CP | itemtype occurrenceindicator? ;
 // [80]
 occurrenceindicator : QM | STAR | PLUS ;
-itemtype : KW_ITEM OP CP | functiontest | maptest | arraytest | atomicoruniontype | parenthesizeditemtype ;
 // itemtype : kindtest | KW_ITEM OP CP | functiontest | maptest | arraytest | atomicoruniontype | parenthesizeditemtype ;
+itemtype : kindtest | KW_ITEM OP CP | functiontest | maptest | arraytest | atomicoruniontype | parenthesizeditemtype ;
 atomicoruniontype : eqname ;
-// kindtest : documenttest | elementtest | attributetest | schemaelementtest | schemaattributetest | pitest | commenttest | texttest | namespacenodetest | anykindtest ;
-// anykindtest : KW_NODE OP CP ;
+// kindtest : documenttest | fieldtest | assemblytest | flagtest | schemaelementtest | schemaattributetest | pitest | commenttest | texttest | namespacenodetest | anykindtest ;
+kindtest : documenttest | fieldtest | assemblytest | flagtest | anykindtest ;
+anykindtest : KW_NODE OP CP ;
 // [85]
-// documenttest : KW_DOCUMENT_NODE OP (elementtest | schemaelementtest)? CP ;
-// texttest : KW_TEXT OP CP ;
+// documenttest : KW_DOCUMENT_NODE OP (fieldtest | assemblytest | schemaelementtest)? CP ;
+documenttest : KW_DOCUMENT_NODE OP (fieldtest | assemblytest)? CP ;
+texttest : KW_TEXT OP CP ;
 // commenttest : KW_COMMENT OP CP ;
 // namespacenodetest : KW_NAMESPACE_NODE OP CP ;
 // pitest : KW_PROCESSING_INSTRUCTION OP (NCName | StringLiteral)? CP ;
 // [90]
-// attributetest : KW_FLAG OP (attribnameorwildcard ( COMMA typename_)?)? CP ;
-// attribnameorwildcard : attributename | STAR ;
-// schemaattributetest : KW_SCHEMA_ATTRIBUTE OP attributedeclaration CP ;
-// attributedeclaration : attributename ;
-// elementtest : KW_ELEMENT OP (elementnameorwildcard ( COMMA typename_ QM?)?)? CP ;
+flagtest : KW_FLAG OP (flagnameorwildcard ( COMMA typename_)?)? CP ;
+flagnameorwildcard : flagname | STAR ;
+// schemaattributetest : KW_SCHEMA_ATTRIBUTE OP flagdeclaration CP ;
+// flagdeclaration : flagname ;
+fieldtest : KW_FIELD OP (elementnameorwildcard ( COMMA typename_ QM?)?)? CP ;
+assemblytest : KW_ASSEMBLY OP (elementnameorwildcard ( COMMA typename_ QM?)?)? CP ;
 // [95]
-// elementnameorwildcard : elementname | STAR ;
+elementnameorwildcard : elementname | STAR ;
 // schemaelementtest : KW_SCHEMA_ELEMENT OP elementdeclaration CP ;
-// elementdeclaration : elementname ;
-// attributename : eqname ;
-// elementname : eqname ;
+elementdeclaration : elementname ;
+flagname : eqname ;
+elementname : eqname ;
 // [100]
 simpletypename : typename_ ;
 typename_ : eqname ;
@@ -161,7 +164,8 @@ eqname : NCName | QName | URIQualifiedName
  | KW_DESCENDANT_OR_SELF
  | KW_DIV
  | KW_DOCUMENT_NODE
- | KW_ELEMENT
+ | KW_FIELD
+ | KW_ASSEMBLY
  | KW_ELSE
  | KW_EMPTY_SEQUENCE
  | KW_EQ

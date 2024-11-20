@@ -5,21 +5,23 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
-import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IGroupable;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -118,15 +120,25 @@ public final class ModelSupport {
   }
 
   @NonNull
-  public static IDataTypeAdapter<?> dataType(@Nullable String dataType) {
+  public static IDataTypeAdapter<?> dataType(
+      @Nullable String dataType,
+      @NonNull ISource source) {
     IDataTypeAdapter<?> retval;
     if (dataType == null) {
       retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;
     } else {
-      retval = DataTypeService.instance().getJavaTypeAdapterByQNameIndex(
-          EQNameFactory.of(MetapathConstants.NS_METAPATH, dataType).getIndexPosition());
+      IEnhancedQName qname = IEnhancedQName.of(MetapathConstants.NS_METAPATH, dataType);
+      IAtomicOrUnionType type;
+      try {
+        source.getStaticContext();
+        type = StaticContext.lookupDataTypeItemType(qname);
+      } catch (StaticMetapathException ex) {
+        throw new IllegalStateException("Unrecognized data type: " + qname, ex);
+
+      }
+      retval = type.getAdapter();
       if (retval == null) {
-        throw new IllegalStateException("Unrecognized data type: " + dataType);
+        throw new IllegalStateException("No type adapter registered for data type: " + qname);
       }
     }
     return retval;

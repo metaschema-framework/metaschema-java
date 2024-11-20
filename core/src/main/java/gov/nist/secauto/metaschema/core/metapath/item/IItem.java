@@ -47,7 +47,7 @@ public interface IItem extends ICollectionValue {
   }
 
   @Override
-  default ISequence<?> asSequence() {
+  default ISequence<?> toSequence() {
     return ISequence.of(this);
   }
 
@@ -64,4 +64,9 @@ public interface IItem extends ICollectionValue {
    *          the visitor to call back
    */
   void accept(@NonNull IItemVisitor visitor);
+
+  @Override
+  default ISequence<?> contentsAsSequence() {
+    return toSequence();
+  }
 }

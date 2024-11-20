@@ -22,7 +22,7 @@ import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.InlineFieldDefinitionType;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -200,8 +200,8 @@ class XmlInlineFieldDefinition
 
       retval = getFlagInstanceByName(
           namespace.isEmpty()
-              ? EQNameFactory.of(name)
-              : EQNameFactory.of(namespace, name));
+              ? IEnhancedQName.of(name)
+              : IEnhancedQName.of(namespace, name));
     }
     return retval;
   }

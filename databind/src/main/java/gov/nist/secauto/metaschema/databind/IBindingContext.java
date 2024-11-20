@@ -333,8 +333,8 @@ public interface IBindingContext {
    *         bound
    */
   @Nullable
-  default <TYPE extends IDataTypeAdapter<?>> TYPE getJavaTypeAdapterInstance(@NonNull Class<TYPE> clazz) {
-    return DataTypeService.instance().getJavaTypeAdapterByClass(clazz);
+  default <TYPE extends IDataTypeAdapter<?>> TYPE getDataTypeAdapterInstance(@NonNull Class<TYPE> clazz) {
+    return DataTypeService.instance().getDataTypeByAdapterClass(clazz);
   }
 
   /**

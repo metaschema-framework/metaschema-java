@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
@@ -16,7 +17,6 @@ import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedList;
@@ -248,14 +248,13 @@ public interface IFunction extends IItem {
     @NonNull
     private final List<IArgument> arguments = new LinkedList<>();
     @NonNull
-    private IItemType returnType;
+    private IItemType returnType = IItem.type();
     @NonNull
     private Occurrence returnOccurrence = Occurrence.ONE;
     private IFunctionExecutor functionHandler;
 
     private Builder(@NonNull StaticContext staticContext) {
       this.staticContext = staticContext;
-      returnType = IItem.type();
     }
 
     private StaticContext getStaticContext() {
@@ -279,17 +278,17 @@ public interface IFunction extends IItem {
       return this;
     }
 
-    /**
-     * Define the namespace of the function.
-     *
-     * @param uri
-     *          the function's namespace URI
-     * @return this builder
-     */
-    @NonNull
-    public Builder namespace(@NonNull URI uri) {
-      return namespace(ObjectUtils.notNull(uri.toASCIIString()));
-    }
+    // /**
+    // * Define the namespace of the function.
+    // *
+    // * @param uri
+    // * the function's namespace URI
+    // * @return this builder
+    // */
+    // @NonNull
+    // public Builder namespace(@NonNull URI uri) {
+    // return namespace(ObjectUtils.notNull(uri.toASCIIString()));
+    // }
 
     /**
      * Define the namespace of the function.
@@ -407,12 +406,12 @@ public interface IFunction extends IItem {
      */
     @NonNull
     public Builder returnType(@NonNull String name) {
-      IItemType result = getStaticContext().lookupDataTypeItemType(name);
-      if (result == null) {
+      try {
+        this.returnType = getStaticContext().lookupDataTypeItemType(name);
+      } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(
-            String.format("No data type with the name '%s'.", name));
+            String.format("No data type with the name '%s'.", name), ex);
       }
-      this.returnType = result;
       return this;
     }
 
@@ -425,12 +424,12 @@ public interface IFunction extends IItem {
      */
     @NonNull
     public Builder returnType(@NonNull IEnhancedQName name) {
-      IItemType result = StaticContext.lookupDataTypeItemType(name);
-      if (result == null) {
+      try {
+        this.returnType = StaticContext.lookupDataTypeItemType(name);
+      } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(
-            String.format("No data type with the name '%s'.", name));
+            String.format("No data type with the name '%s'.", name), ex);
       }
-      this.returnType = result;
       return this;
     }
 

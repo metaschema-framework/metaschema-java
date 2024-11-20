@@ -76,7 +76,7 @@ public final class ArrayPut {
     @SuppressWarnings("unchecked")
     T member = (T) arguments.get(2).toCollectionValue();
 
-    return put(array, position, member).asSequence();
+    return put(array, position, member).toSequence();
   }
 
   /**

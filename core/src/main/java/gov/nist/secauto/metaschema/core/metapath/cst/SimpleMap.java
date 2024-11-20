@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -39,7 +40,7 @@ public class SimpleMap
     IExpression right = getRight();
     return ObjectUtils.notNull(leftResult.stream()
         .flatMap(item -> right.accept(dynamicContext, ISequence.of(item)).stream())
-        .collect(ISequence.toSequence()));
+        .collect(CustomCollectors.toSequence()));
   }
 
   @Override

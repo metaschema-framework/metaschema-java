@@ -188,7 +188,7 @@ public final class ModelUtil {
     if (NullJavaTypeAdapter.class.equals(adapterClass)) {
       retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;
     } else {
-      retval = bindingContext.getJavaTypeAdapterInstance(adapterClass);
+      retval = bindingContext.getDataTypeAdapterInstance(adapterClass);
       if (retval == null) {
         throw new IllegalArgumentException("Unable to get type adapter instance for class: " + adapterClass.getName());
       }

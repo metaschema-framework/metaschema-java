@@ -5,99 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.antlr; // NOPMD requires a large number of public methods
 
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevforwardstepContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevreversestepContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AdditiveexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AndexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AnyarraytestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AnyfunctiontestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AnymaptestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArgumentContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArgumentlistContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArrayconstructorContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArraytestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArrowexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArrowfunctionspecifierContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AtomicoruniontypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AxisstepContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.CastableexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.CastexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ComparisonexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ContextitemexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.CurlyarrayconstructorContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.EnclosedexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.EqnameContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ExprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ExprsingleContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ForexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ForwardaxisContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ForwardstepContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctionbodyContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctioncallContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctionitemexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctiontestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.GeneralcompContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IfexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.InlinefunctionexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.InstanceofexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.IntersectexceptexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ItemtypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.KeyspecifierContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LetexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LiteralContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.LookupContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MapconstructorContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MapconstructorentryContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MapkeyexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MaptestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MapvalueexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MetapathContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MultiplicativeexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NamedfunctionrefContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NametestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NodetestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.NumericliteralContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.OccurrenceindicatorContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.OrexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParamContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParamlistContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParenthesizedexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParenthesizeditemtypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.PathexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.PostfixexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.PredicateContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.PredicatelistContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.PrimaryexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.QuantifiedexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.RangeexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.RelativepathexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ReverseaxisContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ReversestepContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SequencetypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimpleforbindingContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimpleforclauseContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimpleletbindingContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimpleletclauseContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimplemapexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SimpletypenameContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SingletypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SquarearrayconstructorContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.StepexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.StringconcatexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TreatexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TypedarraytestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TypedeclarationContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TypedfunctiontestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TypedmaptestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.Typename_Context;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnaryexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnarylookupContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.UnionexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ValuecompContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ValueexprContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.VarnameContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.VarrefContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.WildcardContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.*;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -1158,6 +1066,8 @@ public abstract class AbstractAstVisitor<R>
     return super.visitTypename_(ctx);
   }
 
+  // these are handled
+
   @Override
   public R visitFunctiontest(FunctiontestContext ctx) {
     // TODO Auto-generated method stub
@@ -1218,4 +1128,75 @@ public abstract class AbstractAstVisitor<R>
     return super.visitParenthesizeditemtype(ctx);
   }
 
+  @Override
+  public R visitKindtest(KindtestContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitKindtest(ctx);
+  }
+
+  @Override
+  public R visitAnykindtest(AnykindtestContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitAnykindtest(ctx);
+  }
+
+  @Override
+  public R visitDocumenttest(DocumenttestContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitDocumenttest(ctx);
+  }
+
+  @Override
+  public R visitTexttest(TexttestContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitTexttest(ctx);
+  }
+
+  @Override
+  public R visitFlagtest(FlagtestContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitFlagtest(ctx);
+  }
+
+  @Override
+  public R visitFlagnameorwildcard(FlagnameorwildcardContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitFlagnameorwildcard(ctx);
+  }
+
+  @Override
+  public R visitFieldtest(FieldtestContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitFieldtest(ctx);
+  }
+
+  @Override
+  public R visitAssemblytest(AssemblytestContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitAssemblytest(ctx);
+  }
+
+  @Override
+  public R visitElementnameorwildcard(ElementnameorwildcardContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitElementnameorwildcard(ctx);
+  }
+
+  @Override
+  public R visitElementdeclaration(ElementdeclarationContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitElementdeclaration(ctx);
+  }
+
+  @Override
+  public R visitFlagname(FlagnameContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitFlagname(ctx);
+  }
+
+  @Override
+  public R visitElementname(ElementnameContext ctx) {
+    // TODO Auto-generated method stub
+    return super.visitElementname(ctx);
+  }
 }

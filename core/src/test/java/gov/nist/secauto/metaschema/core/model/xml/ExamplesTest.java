@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class ExamplesTest {
     IXmlMetaschemaModule module = loader.load(moduleUri);
 
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(
-        EQNameFactory.of("http://csrc.nist.gov/ns/oscal/1.0", "property").getIndexPosition());
+        IEnhancedQName.of("http://csrc.nist.gov/ns/oscal/1.0", "property").getIndexPosition());
     assertNotNull(definition, "definition not found");
   }
 

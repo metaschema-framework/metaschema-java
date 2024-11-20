@@ -12,7 +12,7 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.model.xml.XmlMetaConstraintLoader;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -37,7 +37,8 @@ class ExternalConstraintsModulePostProcessorTest {
                 Paths.get("src/test/resources/content/issue184-metaschema.xml")));
 
     IAssemblyDefinition definition = ObjectUtils.requireNonNull(module.getAssemblyDefinitionByName(
-        EQNameFactory.of("http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test", "a").getIndexPosition()));
+        IEnhancedQName.of("http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test", "a")
+            .getIndexPosition()));
 
     assertEquals(1, definition.getConstraints().size());
   }

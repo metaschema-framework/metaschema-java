@@ -15,7 +15,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -30,7 +29,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
     extends ImmutableCollections.AbstractImmutableDelegatedList<ITEM>
     implements IArrayItem<ITEM> {
   @NonNull
-  public static final IEnhancedQName QNAME = EQNameFactory.of("array");
+  public static final IEnhancedQName QNAME = IEnhancedQName.of("array");
   @NonNull
   public static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(
       EnumSet.of(FunctionProperty.DETERMINISTIC));
@@ -70,7 +69,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
 
     int index = position.asInteger().intValueExact() - 1;
     ICollectionValue result = getValue().get(index);
-    return result.asSequence();
+    return result.toSequence();
   }
 
   @Override

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.testing.MockedModelTestSupport;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -54,7 +54,7 @@ class DefaultNodeItemFactoryTest
     // setup the value calls
     getContext().checking(new Expectations() {
       { // NOPMD - intentional
-        allowing(fieldInstance.getDefinition().getFlagInstanceByName(EQNameFactory.of(NS, "flag1")))
+        allowing(fieldInstance.getDefinition().getFlagInstanceByName(IEnhancedQName.of(NS, "flag1")))
             .getValue(fieldValue);
         will(returnValue("flag1 value"));
       }
@@ -66,7 +66,7 @@ class DefaultNodeItemFactoryTest
     Collection<? extends IFlagNodeItem> flagItems = field.getFlags();
     assertThat(flagItems, containsInAnyOrder(
         allOf(
-            match("name", IFlagNodeItem::getQName, equalTo(EQNameFactory.of(NS, "flag1"))),
+            match("name", IFlagNodeItem::getQName, equalTo(IEnhancedQName.of(NS, "flag1"))),
             match("value", IFlagNodeItem::getValue, equalTo("flag1 value"))))); // NOPMD
   }
 
@@ -88,12 +88,12 @@ class DefaultNodeItemFactoryTest
     // Setup the value calls
     getContext().checking(new Expectations() {
       { // NOPMD - intentional
-        allowing(assembly.getFlagInstanceByName(EQNameFactory.of(NS, "flag1"))).getValue(assemblyValue);
+        allowing(assembly.getFlagInstanceByName(IEnhancedQName.of(NS, "flag1"))).getValue(assemblyValue);
         will(returnValue(flagValue));
-        allowing(assembly.getNamedModelInstanceByName(EQNameFactory.of(NS, "field1").getIndexPosition()))
+        allowing(assembly.getNamedModelInstanceByName(IEnhancedQName.of(NS, "field1").getIndexPosition()))
             .getValue(assemblyValue);
         will(returnValue(fieldValue));
-        allowing(assembly.getNamedModelInstanceByName(EQNameFactory.of(NS, "field1").getIndexPosition()))
+        allowing(assembly.getNamedModelInstanceByName(IEnhancedQName.of(NS, "field1").getIndexPosition()))
             .getItemValues(fieldValue);
         will(returnValue(List.of(fieldValue)));
       }
@@ -107,12 +107,12 @@ class DefaultNodeItemFactoryTest
     assertAll(
         () -> assertThat(flagItems, containsInAnyOrder(
             allOf(
-                match("name", IFlagNodeItem::getQName, equalTo(EQNameFactory.of(NS, "flag1"))),
+                match("name", IFlagNodeItem::getQName, equalTo(IEnhancedQName.of(NS, "flag1"))),
                 match("value", IFlagNodeItem::getValue, equalTo("flag1 value"))))),
         () -> assertThat(modelItems, containsInAnyOrder(
             allOf(
                 match("name", IModelNodeItem::getQName,
-                    equalTo(EQNameFactory.of(NS, "field1"))),
+                    equalTo(IEnhancedQName.of(NS, "field1"))),
                 match("value", IModelNodeItem::getValue,
                     equalTo("field1 value"))))));
   }

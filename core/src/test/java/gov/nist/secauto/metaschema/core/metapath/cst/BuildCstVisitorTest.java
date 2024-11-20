@@ -42,7 +42,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.MockNodeItemFactory;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -70,15 +69,15 @@ class BuildCstVisitorTest {
   @NonNull
   private static final String NS = ObjectUtils.notNull(NS_URI.toASCIIString());
   @NonNull
-  private static final IEnhancedQName ROOT = EQNameFactory.of(NS, "root");
+  private static final IEnhancedQName ROOT = IEnhancedQName.of(NS, "root");
   @NonNull
-  private static final IEnhancedQName FIELD1 = EQNameFactory.of(NS, "field1");
+  private static final IEnhancedQName FIELD1 = IEnhancedQName.of(NS, "field1");
   @NonNull
-  private static final IEnhancedQName FIELD2 = EQNameFactory.of(NS, "field2");
+  private static final IEnhancedQName FIELD2 = IEnhancedQName.of(NS, "field2");
   @NonNull
-  private static final IEnhancedQName UUID = EQNameFactory.of(NS, "uuid");
+  private static final IEnhancedQName UUID = IEnhancedQName.of(NS, "uuid");
   @NonNull
-  private static final IEnhancedQName FLAG = EQNameFactory.of("flag");
+  private static final IEnhancedQName FLAG = IEnhancedQName.of("flag");
 
   @RegisterExtension
   Mockery context = new JUnit5Mockery();

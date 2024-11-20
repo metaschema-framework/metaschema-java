@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.model.constraint.IFeatureValueConstrained;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Locale;
@@ -50,9 +49,10 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
    *
    * @return the definition's qualified name
    */
+  // FIXME: cache this value
   @NonNull
   default IEnhancedQName getDefinitionQName() {
-    return EQNameFactory.of(
+    return IEnhancedQName.of(
         getContainingModule().getXmlNamespace(),
         getName());
   }

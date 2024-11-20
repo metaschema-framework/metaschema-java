@@ -18,7 +18,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModel;
@@ -67,7 +67,9 @@ public class InstanceModelGroupedFieldInline
     super(parent);
     this.binding = binding;
     this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
-    this.javaTypeAdapter = ModelSupport.dataType(binding.getAsType());
+    this.javaTypeAdapter = ModelSupport.dataType(
+        binding.getAsType(),
+        bindingInstance.getContainingModule().getSource());
     this.defaultValue = ModelSupport.defaultValue(binding.getDefault(), this.javaTypeAdapter);
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> FlagContainerSupport.newFlagContainer(
         binding.getFlags(),
@@ -176,8 +178,8 @@ public class InstanceModelGroupedFieldInline
         String namespace = getQName().getNamespace();
         retval = getFlagInstanceByName(
             namespace.isEmpty()
-                ? EQNameFactory.of(flagName)
-                : EQNameFactory.of(namespace, flagName));
+                ? IEnhancedQName.of(flagName)
+                : IEnhancedQName.of(namespace, flagName));
       }
     }
     return retval;

@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.datatype;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.ArrayList;
@@ -26,9 +27,22 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
   @NonNull
+  private final List<IAtomicOrUnionType> abstractTypes = new LinkedList<>();
+  @NonNull
   private final List<IDataTypeAdapter<?>> library = new LinkedList<>();
   @NonNull
   private final ReadWriteLock libraryLock = new ReentrantReadWriteLock();
+
+  @Override
+  public List<? extends IAtomicOrUnionType> getAbstractTypes() {
+    Lock readLock = libraryLock.readLock();
+    readLock.lock();
+    try {
+      return CollectionUtil.unmodifiableList(new ArrayList<>(abstractTypes));
+    } finally {
+      readLock.unlock();
+    }
+  }
 
   @Override
   public List<? extends IDataTypeAdapter<?>> getJavaTypeAdapters() {
@@ -43,14 +57,38 @@ public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
   }
 
   /**
-   * Register the provided {@code adapter} with the type system.
+   * Register the provided abstract {@link IAtomicOrUnionType} with the type
+   * system.
+   *
+   * @param type
+   *          the abstract type to register
+   * @throws IllegalArgumentException
+   *           if the type is not abstract
+   */
+  protected void register(@NonNull IAtomicOrUnionType type) {
+    if (type.getAdapter() != null) {
+      throw new IllegalArgumentException(
+          String.format("The type '%s' has an adapter and must be registered using the adapter.",
+              type.toSignature()));
+    }
+    Lock writeLock = libraryLock.writeLock();
+    writeLock.lock();
+    try {
+      abstractTypes.add(type);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  /**
+   * Register the provided {@link IDataTypeAdapter} with the type system.
    *
    * @param adapter
    *          the adapter to register
    * @throws IllegalArgumentException
    *           if another type adapter has no name
    */
-  protected void registerDatatype(@NonNull IDataTypeAdapter<?> adapter) {
+  protected void register(@NonNull IDataTypeAdapter<?> adapter) {
     if (adapter.getNames().isEmpty()) {
       throw new IllegalArgumentException("The adapter has no name: " + adapter.getClass().getName());
     }

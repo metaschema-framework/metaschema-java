@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.AtomicItemConstants;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -18,7 +18,7 @@ import inet.ipaddr.IPAddress;
 public interface IIPAddressItem extends IUntypedAtomicItem {
   @NonNull
   static IAtomicOrUnionType type() {
-    return AtomicItemConstants.IP_ADDRESS_ITEM_TYPE;
+    return MetaschemaDataTypeProvider.IP_ADDRESS_TYPE;
   }
 
   /**

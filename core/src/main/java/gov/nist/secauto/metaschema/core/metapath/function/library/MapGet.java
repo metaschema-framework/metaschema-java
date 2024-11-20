@@ -65,7 +65,7 @@ public final class MapGet {
     IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
     ICollectionValue value = get(map, key);
-    return value == null ? ISequence.empty() : value.asSequence();
+    return value == null ? ISequence.empty() : value.toSequence();
   }
 
   /**

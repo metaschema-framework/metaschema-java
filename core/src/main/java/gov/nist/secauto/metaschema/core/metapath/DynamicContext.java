@@ -271,7 +271,9 @@ public class DynamicContext { // NOPMD - intentional data class
       if (letVariableMap.containsKey(name.getIndexPosition())) {
         throw new MetapathException(String.format("Variable '%s' has null contents.", name));
       }
-      throw new MetapathException(String.format("Variable '%s' not defined in context.", name));
+      throw new StaticMetapathException(
+          StaticMetapathException.NOT_DEFINED,
+          String.format("Variable '%s' not defined in the dynamic context.", name));
     }
     return retval;
   }

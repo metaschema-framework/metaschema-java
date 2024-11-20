@@ -14,7 +14,7 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.XmlConstraintLoader;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.test.TestMetaschema;
@@ -41,7 +41,7 @@ class DefaultBindingContextTest {
 
     IAssemblyDefinition root
         = module.getExportedAssemblyDefinitionByName(
-            EQNameFactory.of("https://csrc.nist.gov/ns/test/xml", "root").getIndexPosition());
+            IEnhancedQName.of("https://csrc.nist.gov/ns/test/xml", "root").getIndexPosition());
 
     assertNotNull(root, "root not found");
     List<? extends IConstraint> constraints = root.getConstraints();

@@ -5,11 +5,14 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyAtomicItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyRawItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.ArrayTestImpl;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.MapTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.NodeItemType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -34,10 +37,10 @@ public interface IItemType {
     return AnyRawItemType.ANY_MAP;
   }
 
-  // static IMapTest map(@NonNull IAtomicOrUnionType key, @NonNull ISequenceType
-  // value) {
-  //
-  // }
+  @NonNull
+  static IMapTest map(@NonNull IAtomicOrUnionType key, @NonNull ISequenceType value) {
+    return new MapTestImpl(key, value);
+  }
 
   @SuppressWarnings("unchecked")
   @NonNull
@@ -45,15 +48,14 @@ public interface IItemType {
     return AnyRawItemType.ANY_ARRAY;
   }
 
-  // @NonNull
-  // static <T extends IItem> IArrayType<T> array(@NonNull ISequenceType<T> value)
-  // {
-  // return new ArrayTypeImpl<T, ?>(value);
-  // }
+  @NonNull
+  static <T extends IItem> IItemType array(@NonNull ISequenceType value) {
+    return new ArrayTestImpl(value);
+  }
 
   @NonNull
   static IAtomicOrUnionType anyAtomic() {
-    return AnyAtomicItemType.instance();
+    return MetaschemaDataTypeProvider.ANY_ATOMIC_TYPE;
   }
 
   @SuppressWarnings("unchecked")
@@ -62,12 +64,25 @@ public interface IItemType {
     return NodeItemType.ANY_NODE;
   }
 
+  @NonNull
   static IItemType document() {
     return NodeItemType.ANY_DOCUMENT;
   }
 
+  @NonNull
   static IItemType assembly() {
     return NodeItemType.ANY_ASSEMBLY;
+  }
+
+  @NonNull
+  static IItemType flag() {
+    return NodeItemType.ANY_FLAG;
+  }
+
+  @NonNull
+  static IItemType flag(IEnhancedQName name, IAtomicOrUnionType dataType) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException();
   }
 
   default boolean isInstance(IItem item) {
@@ -79,5 +94,4 @@ public interface IItemType {
 
   @NonNull
   String toSignature();
-
 }

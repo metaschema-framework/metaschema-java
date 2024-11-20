@@ -22,4 +22,9 @@ public abstract class AbstractItemType<I extends IItem> implements IItemType {
   public Class<? extends I> getItemClass() {
     return itemClass;
   }
+
+  @Override
+  public String toString() {
+    return toSignature();
+  }
 }

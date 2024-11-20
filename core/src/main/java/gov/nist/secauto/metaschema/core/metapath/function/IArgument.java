@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
@@ -99,12 +100,12 @@ public interface IArgument {
      */
     @NonNull
     public Builder type(@NonNull IEnhancedQName name) {
-      IItemType result = StaticContext.lookupDataTypeItemType(name);
-      if (result == null) {
+      try {
+        this.type = StaticContext.lookupDataTypeItemType(name);
+      } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(
-            String.format("No data type with the name '%s'.", name));
+            String.format("No data type with the name '%s'.", name), ex);
       }
-      this.type = result;
       return this;
     }
 

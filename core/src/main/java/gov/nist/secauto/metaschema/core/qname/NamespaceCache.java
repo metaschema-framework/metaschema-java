@@ -41,6 +41,7 @@ public final class NamespaceCache {
     assert noNamespaceIndex == 0;
   }
 
+  // FIXME: check for use and prefer the string version
   public int of(@NonNull URI namespace) {
     return of(namespace.toASCIIString());
   }

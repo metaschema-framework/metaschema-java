@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.model.AbstractChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.DefaultChoiceGroupModelBuilder;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -300,8 +299,8 @@ public final class InstanceModelChoiceGroup
       String namespace = itemInstance.getQName().getNamespace();
       retval = itemInstance.getDefinition().getFlagInstanceByName(
           namespace.isEmpty()
-              ? EQNameFactory.of(jsonKeyFlagName)
-              : EQNameFactory.of(namespace, jsonKeyFlagName));
+              ? IEnhancedQName.of(jsonKeyFlagName)
+              : IEnhancedQName.of(namespace, jsonKeyFlagName));
     }
     return retval;
   }

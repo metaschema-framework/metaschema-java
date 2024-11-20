@@ -59,7 +59,9 @@ public class InstanceFlagInline
     super(parent);
     this.binding = binding;
     this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
-    this.javaTypeAdapter = ModelSupport.dataType(binding.getAsType());
+    this.javaTypeAdapter = ModelSupport.dataType(
+        binding.getAsType(),
+        bindingInstance.getContainingModule().getSource());
     this.defaultValue = ModelSupport.defaultValue(binding.getDefault(), this.javaTypeAdapter);
 
     IModule module = parent.getContainingModule();

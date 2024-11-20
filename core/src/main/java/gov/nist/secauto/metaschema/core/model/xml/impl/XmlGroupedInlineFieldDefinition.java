@@ -20,7 +20,7 @@ import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupedInlineFieldDefinitionType;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -161,8 +161,8 @@ public class XmlGroupedInlineFieldDefinition
 
       retval = getFlagInstanceByName(
           namespace.isEmpty()
-              ? EQNameFactory.of(name)
-              : EQNameFactory.of(namespace, name));
+              ? IEnhancedQName.of(name)
+              : IEnhancedQName.of(namespace, name));
     }
     return retval;
   }

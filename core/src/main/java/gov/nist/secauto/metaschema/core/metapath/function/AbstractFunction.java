@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.List;
@@ -22,7 +21,7 @@ abstract class AbstractFunction implements IFunction {
       @NonNull String name,
       @NonNull String namespace,
       @NonNull List<IArgument> arguments) {
-    this(EQNameFactory.of(namespace, name), arguments);
+    this(IEnhancedQName.of(namespace, name), arguments);
   }
 
   protected AbstractFunction(

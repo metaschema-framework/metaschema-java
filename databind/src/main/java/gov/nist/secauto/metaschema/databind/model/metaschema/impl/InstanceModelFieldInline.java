@@ -18,7 +18,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
@@ -79,7 +79,9 @@ public class InstanceModelFieldInline
         Lazy.lazy(() -> (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())
             .getModelItemsByName(bindingInstance.getQName())
             .get(position)));
-    this.javaTypeAdapter = ModelSupport.dataType(binding.getAsType());
+    this.javaTypeAdapter = ModelSupport.dataType(
+        binding.getAsType(),
+        bindingInstance.getContainingModule().getSource());
     this.defaultValue = ModelSupport.defaultValue(binding.getDefault(), this.javaTypeAdapter);
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> {
       JsonKey jsonKey = binding.getJsonKey();
@@ -200,7 +202,7 @@ public class InstanceModelFieldInline
     String namespace = getContainingModule().getXmlNamespace().toASCIIString();
     return name == null ? null
         : ObjectUtils.requireNonNull(getFlagInstanceByName(
-            EQNameFactory.of(namespace, name)));
+            IEnhancedQName.of(namespace, name)));
   }
 
   @Override

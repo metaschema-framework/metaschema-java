@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.ConstraintLetType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.RemarksType;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import org.apache.xmlbeans.XmlException;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ class ModelFactoryTest {
 
     ILet let = ModelFactory.newLet(letObj, source);
     assertAll(
-        () -> assertEquals(EQNameFactory.of(variable), let.getName()),
+        () -> assertEquals(IEnhancedQName.of(variable), let.getName()),
         () -> assertEquals(expression, let.getValueExpression().getPath()),
         () -> assertEquals(source, let.getSource()),
         () -> assertEquals("Test", let.getRemarks().toMarkdown()));

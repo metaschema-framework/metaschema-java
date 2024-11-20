@@ -18,6 +18,52 @@ public final class ObjectUtils {
   }
 
   /**
+   * Require a non-empty string value.
+   *
+   * @param <T>
+   *          the type of the reference
+   * @param string
+   *          the object reference to check for emptiness
+   * @return {@code string} if not {@code null} or empty
+   * @throws NullPointerException
+   *           if {@code string} is {@code null}
+   * @throws IllegalArgumentException
+   *           if {@code string} is empty
+   */
+  @NonNull
+  @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
+  public static String requireNonEmpty(@Nullable String string) {
+    if (string.isEmpty()) {
+      throw new IllegalArgumentException("String is empty.");
+    }
+    return string;
+  }
+
+  /**
+   * Require a non-empty string value.
+   *
+   * @param <T>
+   *          the type of the reference
+   * @param string
+   *          the object reference to check for emptiness
+   * @return {@code string} if not {@code null} or empty
+   * @throws NullPointerException
+   *           if {@code string} is {@code null}
+   * @throws IllegalArgumentException
+   *           if {@code string} is empty
+   */
+  @NonNull
+  @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
+  public static String requireNonEmpty(@Nullable String string, @NonNull String message) {
+    if (string.isEmpty()) {
+      throw new IllegalArgumentException(message);
+    }
+    return string;
+  }
+
+  /**
    * Assert that the provided object is not {@code null}.
    * <p>
    * This method sets the expectation that the provided object is not {@code null}

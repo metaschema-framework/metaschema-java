@@ -12,7 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 
@@ -40,7 +40,7 @@ class AnnotationGeneratorTest {
     MarkupMultiline remarks = MarkupMultiline.fromMarkdown("Test");
 
     ILet let = ILet.of(
-        EQNameFactory.of(variable),
+        IEnhancedQName.of(variable),
         expression,
         source,
         remarks);

@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+// FIXME: remove this?
 @SuppressWarnings("removal")
 public final class TypeSystem {
   private static final Map<Class<? extends IItem>, IItemType> ITEM_CLASS_TO_TYPE_MAP;

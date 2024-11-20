@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.model;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.net.URI;
@@ -92,8 +91,9 @@ public interface IModule {
    *
    * @return the qualified name
    */
+  // FIXME: cache this value
   default IEnhancedQName getQName() {
-    return EQNameFactory.of(getXmlNamespace(), getShortName());
+    return IEnhancedQName.of(getXmlNamespace(), getShortName());
   }
 
   /**

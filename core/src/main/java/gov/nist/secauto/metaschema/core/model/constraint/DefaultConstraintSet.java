@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -50,7 +49,7 @@ public class DefaultConstraintSet implements IConstraintSet {
         .collect(
             Collectors.collectingAndThen(
                 Collectors.groupingBy(
-                    scope -> EQNameFactory.of(scope.getModuleNamespace().toString(), scope.getModuleShortName()),
+                    scope -> IEnhancedQName.of(scope.getModuleNamespace().toString(), scope.getModuleShortName()),
                     Collectors.toUnmodifiableList()),
                 Collections::unmodifiableMap));
     this.importedConstraintSets = CollectionUtil.unmodifiableSet(importedConstraintSets);

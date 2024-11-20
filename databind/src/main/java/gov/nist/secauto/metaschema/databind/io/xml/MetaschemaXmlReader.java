@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -198,7 +197,7 @@ public class MetaschemaXmlReader
             Function.identity()));
 
     for (Attribute attribute : CollectionUtil.toIterable(ObjectUtils.notNull(start.getAttributes()))) {
-      IEnhancedQName qname = EQNameFactory.of(attribute.getName());
+      IEnhancedQName qname = IEnhancedQName.of(attribute.getName());
       IBoundInstanceFlag instance = flagInstanceMap.get(qname);
       if (instance == null) {
         // unrecognized flag
@@ -300,7 +299,7 @@ public class MetaschemaXmlReader
 
     boolean retval = nextEvent.isStartElement();
     if (retval) {
-      IEnhancedQName qname = EQNameFactory.of(ObjectUtils.notNull(nextEvent.asStartElement().getName()));
+      IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.notNull(nextEvent.asStartElement().getName()));
       retval = qname.equals(targetInstance.getEffectiveXmlGroupAsQName()) // parse the grouping element
           || targetInstance.canHandleXmlQName(qname); // parse the instance(s)
     }
@@ -410,7 +409,7 @@ public class MetaschemaXmlReader
         XMLEvent event;
         while ((event = reader.peek()).isStartElement()
             && instance.canHandleXmlQName(
-                EQNameFactory.of(ObjectUtils.notNull(event.asStartElement().getName())))) {
+                IEnhancedQName.of(ObjectUtils.notNull(event.asStartElement().getName())))) {
 
           // Consume the start element
           ITEM value = readItem();
@@ -655,7 +654,7 @@ public class MetaschemaXmlReader
         XmlEventUtil.skipWhitespace(eventReader);
 
         XMLEvent event = eventReader.peek();
-        IEnhancedQName nextQName = EQNameFactory.of(ObjectUtils.notNull(event.asStartElement().getName()));
+        IEnhancedQName nextQName = IEnhancedQName.of(ObjectUtils.notNull(event.asStartElement().getName()));
         IBoundInstanceModelGroupedNamed actualInstance = instance.getGroupedModelInstance(nextQName);
         assert actualInstance != null;
         return actualInstance.readItem(parent, this);

@@ -58,7 +58,7 @@ public final class ArrayHead {
     IArrayItem<?> array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
 
     ICollectionValue result = head(array);
-    return result == null ? ISequence.empty() : result.asSequence();
+    return result == null ? ISequence.empty() : result.toSequence();
   }
 
   /**

@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -42,6 +43,6 @@ public class RootSlashOnlyPath
     return ObjectUtils.notNull(focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep)
         .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).findFirst().get())
-        .collect(ISequence.toSequence()));
+        .collect(CustomCollectors.toSequence()));
   }
 }

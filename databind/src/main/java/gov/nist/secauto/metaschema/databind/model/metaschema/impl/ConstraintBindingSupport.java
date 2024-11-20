@@ -317,7 +317,9 @@ public final class ConstraintBindingSupport {
 
     String dataType = obj.getDatatype();
     if (dataType != null) {
-      IDataTypeAdapter<?> javaTypeAdapter = ModelSupport.dataType(obj.getDatatype());
+      IDataTypeAdapter<?> javaTypeAdapter = ModelSupport.dataType(
+          obj.getDatatype(),
+          source);
       builder.datatype(javaTypeAdapter);
     }
 
@@ -338,7 +340,9 @@ public final class ConstraintBindingSupport {
 
     String dataType = obj.getDatatype();
     if (dataType != null) {
-      IDataTypeAdapter<?> javaTypeAdapter = ModelSupport.dataType(obj.getDatatype());
+      IDataTypeAdapter<?> javaTypeAdapter = ModelSupport.dataType(
+          obj.getDatatype(),
+          source);
       builder.datatype(javaTypeAdapter);
     }
 

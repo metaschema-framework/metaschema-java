@@ -8,7 +8,8 @@ package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.SimpleValue;
@@ -75,10 +76,14 @@ public final class DatatypesHandler {
 
   private static IDataTypeAdapter<?> decode(SimpleValue target) {
     String name = ObjectUtils.requireNonNull(target.getStringValue());
-    IDataTypeAdapter<?> retval = DataTypeService.instance().getJavaTypeAdapterByQNameIndex(
-        EQNameFactory.of(MetapathConstants.NS_METAPATH, name).getIndexPosition());
-    if (retval == null) {
+    IAtomicOrUnionType type = DataTypeService.instance().getDataTypeByQNameIndex(
+        IEnhancedQName.of(MetapathConstants.NS_METAPATH, name).getIndexPosition());
+    if (type == null) {
       throw new IllegalStateException("Unrecognized data type: " + name);
+    }
+    IDataTypeAdapter<?> retval = type.getAdapter();
+    if (retval == null) {
+      throw new IllegalStateException("No data type adpter found for name: " + name);
     }
     return retval;
   }

@@ -95,8 +95,8 @@ public final class MapMerge {
     @SuppressWarnings("checkstyle:Indentation")
     COMBINE(
         "combine",
-        (key, v1, v2) -> Stream.concat(v1.asSequence().stream(), v2.asSequence().stream())
-            .collect(ISequence.toSequence()));
+        (key, v1, v2) -> Stream.concat(v1.toSequence().stream(), v2.toSequence().stream())
+            .collect(CustomCollectors.toSequence()));
 
     private static final Map<String, Duplicates> BY_NAME;
 
@@ -188,7 +188,7 @@ public final class MapMerge {
       duplicates = Duplicates.USE_FIRST;
     } else {
       // resolve the provided option
-      IAnyAtomicItem atomicValue = FnData.fnData(duplicatesOption.asSequence()).getFirstItem(true);
+      IAnyAtomicItem atomicValue = FnData.fnData(duplicatesOption.toSequence()).getFirstItem(true);
       if (atomicValue == null) {
         throw new JsonFunctionException(
             JsonFunctionException.INVALID_OPTION,

@@ -38,6 +38,11 @@ public final class AnyItemType
     return "item()";
   }
 
+  @Override
+  public String toString() {
+    return toSignature();
+  }
+
   private AnyItemType() {
     // disable construction
   }

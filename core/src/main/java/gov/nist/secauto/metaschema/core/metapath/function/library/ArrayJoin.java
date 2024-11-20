@@ -58,7 +58,7 @@ public final class ArrayJoin {
       IItem focus) {
     ISequence<? extends IArrayItem<T>> arrays = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
 
-    return join(arrays).asSequence();
+    return join(arrays).toSequence();
   }
 
   /**

@@ -28,7 +28,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.MockNodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
@@ -45,7 +44,7 @@ class DefaultConstraintValidatorTest {
 
   @NonNull
   private static IEnhancedQName qname(@NonNull String name) {
-    return EQNameFactory.of(NS, name);
+    return IEnhancedQName.of(NS, name);
   }
 
   @SuppressWarnings("null")

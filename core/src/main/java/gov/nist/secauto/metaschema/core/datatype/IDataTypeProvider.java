@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.datatype;
 
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -18,6 +20,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * runtime using the {@link DataTypeService}.
  */
 public interface IDataTypeProvider {
+  List<? extends IAtomicOrUnionType> getAbstractTypes();
+
   /**
    * Get the {@link IDataTypeAdapter} instances associated with this provider.
    *

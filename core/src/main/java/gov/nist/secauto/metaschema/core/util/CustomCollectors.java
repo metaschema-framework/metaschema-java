@@ -5,11 +5,18 @@
 
 package gov.nist.secauto.metaschema.core.util;
 
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -245,6 +252,48 @@ public final class CustomCollectors {
   @NonNull
   public static <T> BinaryOperator<T> useLastMapper() {
     return (value1, value2) -> value2;
+  }
+
+  /**
+   * A {@link Collector} implementation to generates a sequence from a stream of
+   * Metapath items.
+   *
+   * @param <ITEM_TYPE>
+   *          the Java type of the items
+   * @return a collector that will generate a sequence
+   */
+  @NonNull
+  public static <ITEM_TYPE extends IItem> Collector<ITEM_TYPE, ?, ISequence<ITEM_TYPE>> toSequence() {
+    return new Collector<ITEM_TYPE, List<ITEM_TYPE>, ISequence<ITEM_TYPE>>() {
+
+      @Override
+      public Supplier<List<ITEM_TYPE>> supplier() {
+        return ArrayList::new;
+      }
+
+      @Override
+      public BiConsumer<List<ITEM_TYPE>, ITEM_TYPE> accumulator() {
+        return List::add;
+      }
+
+      @Override
+      public BinaryOperator<List<ITEM_TYPE>> combiner() {
+        return (list1, list2) -> {
+          list1.addAll(list2);
+          return list1;
+        };
+      }
+
+      @Override
+      public Function<List<ITEM_TYPE>, ISequence<ITEM_TYPE>> finisher() {
+        return list -> ISequence.ofCollection(ObjectUtils.notNull(list));
+      }
+
+      @Override
+      public Set<Characteristics> characteristics() {
+        return Collections.emptySet();
+      }
+    };
   }
 
   private CustomCollectors() {

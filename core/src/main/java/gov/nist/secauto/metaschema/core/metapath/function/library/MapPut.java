@@ -73,7 +73,7 @@ public final class MapPut {
     @SuppressWarnings("unchecked")
     V value = (V) ObjectUtils.requireNonNull(arguments.get(2)).toCollectionValue();
 
-    return put(map, key, value).asSequence();
+    return put(map, key, value).toSequence();
   }
 
   /**

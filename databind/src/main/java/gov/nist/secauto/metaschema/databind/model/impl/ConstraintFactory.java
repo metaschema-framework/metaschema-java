@@ -152,7 +152,7 @@ final class ConstraintFactory {
   @Nullable
   static IDataTypeAdapter<?> toDataType(@NonNull Class<? extends IDataTypeAdapter<?>> adapterClass) {
     return adapterClass.isAssignableFrom(NullJavaTypeAdapter.class) ? null
-        : DataTypeService.instance().getJavaTypeAdapterByClass(adapterClass);
+        : DataTypeService.instance().getDataTypeByAdapterClass(adapterClass);
   }
 
   @NonNull

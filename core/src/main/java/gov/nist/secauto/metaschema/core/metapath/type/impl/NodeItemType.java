@@ -30,6 +30,11 @@ public class NodeItemType
       IAssemblyNodeItem.class,
       "");
   @NonNull
+  public static final NodeItemType ANY_FLAG = new NodeItemType(
+      "flag",
+      IAssemblyNodeItem.class,
+      "");
+  @NonNull
   private final String nodeName;
   @NonNull
   private final String signature;
@@ -57,5 +62,4 @@ public class NodeItemType
   public String toSignature() {
     return signature;
   }
-
 }

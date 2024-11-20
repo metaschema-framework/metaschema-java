@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,11 +27,11 @@ class StaticContextTest {
       .defaultFunctionNamespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .defaultModelNamespace(MODEL_NS)
       .build();
-  private static final IEnhancedQName COUNT_QNAME = EQNameFactory.of(
+  private static final IEnhancedQName COUNT_QNAME = IEnhancedQName.of(
       MetapathConstants.NS_METAPATH_FUNCTIONS,
       "count");
-  private static final IEnhancedQName LOCAL_NAME_QNAME = EQNameFactory.of("local-name");
-  private static final IEnhancedQName MODEL_QNAME = EQNameFactory.of(MODEL_NS, "local-name");
+  private static final IEnhancedQName LOCAL_NAME_QNAME = IEnhancedQName.of("local-name");
+  private static final IEnhancedQName MODEL_QNAME = IEnhancedQName.of(MODEL_NS, "local-name");
 
   static Stream<Arguments> provideFunctionValues() {
     return Stream.of(

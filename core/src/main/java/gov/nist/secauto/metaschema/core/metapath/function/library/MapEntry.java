@@ -64,7 +64,7 @@ public final class MapEntry {
     @SuppressWarnings("unchecked")
     T value = (T) arguments.get(1).toCollectionValue();
 
-    return entry(key, value).asSequence();
+    return entry(key, value).toSequence();
   }
 
   /**

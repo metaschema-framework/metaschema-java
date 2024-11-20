@@ -5,50 +5,95 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class ISequenceTypeTest {
+class ISequenceTypeTest
+    extends ExpressionTestBase {
 
+  // FIXME: Use test vectors from
+  // https://www.w3.org/TR/xpath-31/#id-sequencetype-syntax
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
-        Arguments.of(
-            string("a"),
-            Map.of(
-                "meta:string", true,
-                "sequence()", false,
-                "item()", true,
-                "meta:string?", true)));
+        // data type tests
+        Arguments.of("'a' instance of string", true),
+        Arguments.of("'a' instance of meta:string", true),
+        Arguments.of("'a' instance of meta:uuid", false),
+        Arguments.of("'a' instance of node()", false),
+        Arguments.of("'a' instance of item()", true),
+        Arguments.of("'a' instance of meta:string?", true),
+        // sequence tests
+        Arguments.of("() instance of string", false),
+        Arguments.of("('a', 1) instance of meta:string+", false),
+        Arguments.of("('a', 1) instance of item()+", true),
+        Arguments.of("() instance of item()+", false),
+        // array tests
+        Arguments.of("[ 1, 2 ] instance of array(integer+)", true),
+        Arguments.of("[ 1, 'not an integer' ] instance of array(integer+)", false),
+        // map tests
+        Arguments.of("$M instance of map(*)", true),
+        Arguments.of("$M instance of map(meta:integer, meta:string)", true),
+        Arguments.of("$M instance of map(meta:decimal, meta:any-atomic-type)", true),
+        Arguments.of("not($M instance of map(meta:uuid, meta:string))", true),
+        Arguments.of("not($M instance of map(meta:integer, meta:token))", true));
   }
 
-  @Disabled
   @ParameterizedTest
   @MethodSource("provideValues")
-  void testMatch(@NonNull IItem actual, @NonNull Map<String, Boolean> testToExpectedMap) {
-    for (Map.Entry<String, Boolean> entry : testToExpectedMap.entrySet()) {
-      String test = ". instance of " + entry.getKey();
-      MetapathExpression expression = MetapathExpression.compile(test);
-      Boolean result = expression.evaluateAs(actual, MetapathExpression.ResultType.BOOLEAN);
+  void testMatch(@NonNull String test, boolean expected) {
+    DynamicContext dynamicContext = new DynamicContext();
+    dynamicContext.bindVariableValue(
+        IEnhancedQName.of("M"),
+        IMapItem.of(integer(0), string("no"), integer(1), string("yes")).toSequence());
 
-      assertEquals(
-          entry.getValue(),
-          result,
-          String.format("Expected `%s` to evaluate to '%s'",
-              test,
-              entry.getValue()));
-    }
+    MetapathExpression metapath = MetapathExpression.compile(test);
+    Boolean result = metapath.evaluateAs(null, MetapathExpression.ResultType.BOOLEAN, dynamicContext);
+
+    assertEquals(
+        expected,
+        result,
+        String.format("Expected `%s` to evaluate to '%s'",
+            test,
+            expected));
+  }
+
+  @Test
+  void lookupNonExistantDataType() {
+    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+      StaticContext.instance().lookupDataTypeItemType("xs:string");
+    });
+
+    assertAll(
+        () -> assertEquals(StaticMetapathException.NOT_DEFINED, ex.getCode()),
+        () -> assertEquals(StaticMetapathException.PREFIX_NOT_EXPANDABLE,
+            ((StaticMetapathException) ex.getCause()).getCode()));
+  }
+
+  @Test
+  void lookupExistingDataType() {
+    assertAll(
+        () -> assertNotNull(StaticContext.instance().lookupDataTypeItemType("string")),
+        () -> assertNotNull(StaticContext.instance().lookupDataTypeItemType("meta:string")));
   }
 }

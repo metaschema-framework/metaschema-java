@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.model.util;
 
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlObjectParser;
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlObjectParser.Handler;
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -53,9 +52,9 @@ class XmlObjectParserTest {
 
     Procesor processor = new Procesor();
     Map<IEnhancedQName, Handler<Void>> objMapping = ObjectUtils.notNull(Map.ofEntries(
-        Map.entry(EQNameFactory.of(TEST_NS, "A"), processor::handleA),
-        Map.entry(EQNameFactory.of(TEST_NS, "B"), processor::handleB),
-        Map.entry(EQNameFactory.of(TEST_NS, "C"), processor::handleC)));
+        Map.entry(IEnhancedQName.of(TEST_NS, "A"), processor::handleA),
+        Map.entry(IEnhancedQName.of(TEST_NS, "B"), processor::handleB),
+        Map.entry(IEnhancedQName.of(TEST_NS, "C"), processor::handleC)));
 
     new XmlObjectParser<>(objMapping).parse(obj, null);
   }

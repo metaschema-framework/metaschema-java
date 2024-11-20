@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.model.xml.impl;
 
-import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -153,7 +152,7 @@ public class XmlObjectParser<T> {
    */
   @NonNull
   protected Handler<T> identifyHandler(@NonNull XmlCursor cursor, @NonNull XmlObject obj) {
-    IEnhancedQName qname = EQNameFactory.of(cursor.getName());
+    IEnhancedQName qname = IEnhancedQName.of(cursor.getName());
     Handler<T> retval = getElementNameToHandlerMap().get(qname);
     if (retval == null) {
       String location = toLocation(cursor);

@@ -64,7 +64,7 @@ public final class MapContains {
     IMapItem<?> map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
     IAnyAtomicItem key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
-    return IBooleanItem.valueOf(contains(map, key)).asSequence();
+    return IBooleanItem.valueOf(contains(map, key)).toSequence();
   }
 
   /**
