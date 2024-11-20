@@ -58,7 +58,7 @@
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
 		<dependency.json.version>20240303</dependency.json.version>
 		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
-		<dependency.logcaptor.version>2.9.3</dependency.logcaptor.version>
+		<dependency.logcaptor.version>2.10.0</dependency.logcaptor.version>
 		<dependency.mokito.version>5.14.2</dependency.mokito.version>
 		<dependency.moxy.version>4.0.4</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
