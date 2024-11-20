@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.databind.model;
 
 import gov.nist.secauto.metaschema.core.model.IModuleExtended;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 
@@ -64,11 +63,11 @@ public interface IBoundModule
   Collection<IBoundDefinitionModelAssembly> getAssemblyDefinitions();
 
   @Override
-  IBoundDefinitionModelAssembly getAssemblyDefinitionByName(@NonNull IEnhancedQName name);
+  IBoundDefinitionModelAssembly getAssemblyDefinitionByName(@NonNull Integer name);
 
   @Override
   Collection<IBoundDefinitionModelField<?>> getFieldDefinitions();
 
   @Override
-  IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull IEnhancedQName name);
+  IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull Integer name);
 }

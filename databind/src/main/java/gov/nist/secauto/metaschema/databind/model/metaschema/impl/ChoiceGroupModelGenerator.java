@@ -152,7 +152,7 @@ public final class ChoiceGroupModelGenerator
 
     IEnhancedQName name = parent.getContainingModule().getModuleStaticContext()
         .parseModelName(ObjectUtils.requireNonNull(obj.getRef()));
-    IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(name);
+    IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(name.getIndexPosition());
 
     if (definition == null) {
       throw new IllegalStateException(
@@ -188,7 +188,7 @@ public final class ChoiceGroupModelGenerator
 
     IEnhancedQName name = parent.getContainingModule().getModuleStaticContext()
         .parseModelName(ObjectUtils.requireNonNull(obj.getRef()));
-    IFieldDefinition definition = module.getScopedFieldDefinitionByName(name);
+    IFieldDefinition definition = module.getScopedFieldDefinitionByName(name.getIndexPosition());
     if (definition == null) {
       throw new IllegalStateException(
           String.format("Unable to resolve field reference '%s' in definition '%s' in module '%s'",

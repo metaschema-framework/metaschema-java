@@ -5,12 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -37,11 +33,11 @@ public abstract class AbstractContainerModelSupport<
     implements IContainerModelSupport<MI, NMI, FI, AI> {
 
   @NonNull
-  private final Map<IEnhancedQName, NMI> namedModelInstances;
+  private final Map<Integer, NMI> namedModelInstances;
   @NonNull
-  private final Map<IEnhancedQName, FI> fieldInstances;
+  private final Map<Integer, FI> fieldInstances;
   @NonNull
-  private final Map<IEnhancedQName, AI> assemblyInstances;
+  private final Map<Integer, AI> assemblyInstances;
 
   /**
    * Construct an empty, mutable container.
@@ -65,83 +61,26 @@ public abstract class AbstractContainerModelSupport<
    *          a collection of assembly instances
    */
   protected AbstractContainerModelSupport(
-      @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
-      @NonNull Map<IEnhancedQName, FI> fieldInstances,
-      @NonNull Map<IEnhancedQName, AI> assemblyInstances) {
+      @NonNull Map<Integer, NMI> namedModelInstances,
+      @NonNull Map<Integer, FI> fieldInstances,
+      @NonNull Map<Integer, AI> assemblyInstances) {
     this.namedModelInstances = namedModelInstances;
     this.fieldInstances = fieldInstances;
     this.assemblyInstances = assemblyInstances;
   }
 
-  /**
-   * Construct an immutable container from a collection of model instances.
-   *
-   * @param instances
-   *          the collection of model instances to add to the new container.
-   * @param namedModelClass
-   *          the Java type for named model instances
-   * @param fieldClass
-   *          the Java type for field instances
-   * @param assemblyClass
-   *          the Java type for assembly instances
-   */
-  @SuppressWarnings("PMD.UseConcurrentHashMap")
-  protected AbstractContainerModelSupport(
-      @NonNull Stream<NMI> instances,
-      @NonNull Class<NMI> namedModelClass,
-      @NonNull Class<FI> fieldClass,
-      @NonNull Class<AI> assemblyClass) {
-    assert namedModelClass.isAssignableFrom(fieldClass) : String.format(
-        "The field class '%s' is not assignment compatible to class '%s'.",
-        fieldClass.getName(),
-        namedModelClass.getName());
-    assert namedModelClass.isAssignableFrom(assemblyClass) : String.format(
-        "The assembly class '%s' is not assignment compatible to class '%s'.",
-        assemblyClass.getName(),
-        namedModelClass.getName());
-    assert !fieldClass.isAssignableFrom(assemblyClass) : String.format(
-        "The field class '%s' must not be assignment compatible to the assembly class '%s'.",
-        fieldClass.getName(),
-        assemblyClass.getName());
-
-    Map<IEnhancedQName, NMI> namedModelInstances = new LinkedHashMap<>();
-    Map<IEnhancedQName, FI> fieldInstances = new LinkedHashMap<>();
-    Map<IEnhancedQName, AI> assemblyInstances = new LinkedHashMap<>();
-
-    instances.forEachOrdered(instance -> {
-      IEnhancedQName key = instance.getQName();
-      namedModelInstances.put(key, instance);
-
-      if (fieldClass.isInstance(instance)) {
-        fieldInstances.put(key, fieldClass.cast(instance));
-      } else if (assemblyClass.isInstance(instance)) {
-        assemblyInstances.put(key, assemblyClass.cast(instance));
-      }
-    });
-
-    this.namedModelInstances = namedModelInstances.isEmpty()
-        ? CollectionUtil.emptyMap()
-        : CollectionUtil.unmodifiableMap(namedModelInstances);
-    this.fieldInstances = fieldInstances.isEmpty()
-        ? CollectionUtil.emptyMap()
-        : CollectionUtil.unmodifiableMap(fieldInstances);
-    this.assemblyInstances = assemblyInstances.isEmpty()
-        ? CollectionUtil.emptyMap()
-        : CollectionUtil.unmodifiableMap(assemblyInstances);
-  }
-
   @Override
-  public Map<IEnhancedQName, NMI> getNamedModelInstanceMap() {
+  public Map<Integer, NMI> getNamedModelInstanceMap() {
     return namedModelInstances;
   }
 
   @Override
-  public Map<IEnhancedQName, FI> getFieldInstanceMap() {
+  public Map<Integer, FI> getFieldInstanceMap() {
     return fieldInstances;
   }
 
   @Override
-  public Map<IEnhancedQName, AI> getAssemblyInstanceMap() {
+  public Map<Integer, AI> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
 

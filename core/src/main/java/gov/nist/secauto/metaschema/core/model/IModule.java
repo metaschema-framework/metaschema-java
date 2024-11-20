@@ -133,7 +133,7 @@ public interface IModule {
    * @return the matching assembly definition, or {@code null} if none match
    */
   @Nullable
-  IAssemblyDefinition getAssemblyDefinitionByName(@NonNull IEnhancedQName name);
+  IAssemblyDefinition getAssemblyDefinitionByName(@NonNull Integer name);
 
   /**
    * Retrieves the top-level field definitions in this Metaschema module.
@@ -153,7 +153,7 @@ public interface IModule {
    * @return the matching field definition, or {@code null} if none match
    */
   @Nullable
-  IFieldDefinition getFieldDefinitionByName(@NonNull IEnhancedQName name);
+  IFieldDefinition getFieldDefinitionByName(@NonNull Integer name);
 
   /**
    * Retrieves the top-level assembly and field definitions in this Metaschema
@@ -195,7 +195,7 @@ public interface IModule {
    * @return the assembly definition
    */
   @Nullable
-  IAssemblyDefinition getScopedAssemblyDefinitionByName(@NonNull IEnhancedQName name);
+  IAssemblyDefinition getScopedAssemblyDefinitionByName(@NonNull Integer name);
 
   /**
    * Retrieves the field definition with a matching name from either: 1) the
@@ -207,7 +207,7 @@ public interface IModule {
    * @return the field definition
    */
   @Nullable
-  IFieldDefinition getScopedFieldDefinitionByName(@NonNull IEnhancedQName name);
+  IFieldDefinition getScopedFieldDefinitionByName(@NonNull Integer name);
 
   /**
    * Retrieves the flag definition with a matching name from either: 1) the
@@ -282,7 +282,7 @@ public interface IModule {
    * @return the field definition, or {@code null} if it doesn't exist.
    */
   @Nullable
-  IFieldDefinition getExportedFieldDefinitionByName(@NonNull IEnhancedQName name);
+  IFieldDefinition getExportedFieldDefinitionByName(@NonNull Integer name);
 
   /**
    * Retrieve the top-level assembly definitions that are marked global in this
@@ -309,7 +309,7 @@ public interface IModule {
    * @return the assembly definition, or {@code null} if it doesn't exist.
    */
   @Nullable
-  IAssemblyDefinition getExportedAssemblyDefinitionByName(@NonNull IEnhancedQName name);
+  IAssemblyDefinition getExportedAssemblyDefinitionByName(@NonNull Integer name);
 
   /**
    * Retrieves the top-level assembly definitions that are marked as roots from
@@ -331,7 +331,7 @@ public interface IModule {
    * @return the assembly definition, or {@code null} if it doesn't exist.
    */
   @Nullable
-  IAssemblyDefinition getExportedRootAssemblyDefinitionByName(IEnhancedQName name);
+  IAssemblyDefinition getExportedRootAssemblyDefinitionByName(Integer name);
 
   /**
    * Get the mapping of prefix to namespace URI for use in resolving the namespace

@@ -39,9 +39,9 @@ public abstract class AbstractBoundModule
   @NonNull
   private final IBindingContext bindingContext;
   @NonNull
-  private final Lazy<Map<IEnhancedQName, IBoundDefinitionModelAssembly>> assemblyDefinitions;
+  private final Lazy<Map<Integer, IBoundDefinitionModelAssembly>> assemblyDefinitions;
   @NonNull
-  private final Lazy<Map<IEnhancedQName, IBoundDefinitionModelField<?>>> fieldDefinitions;
+  private final Lazy<Map<Integer, IBoundDefinitionModelField<?>>> fieldDefinitions;
   @NonNull
   private final Lazy<StaticContext> staticContext;
   @NonNull
@@ -67,7 +67,7 @@ public abstract class AbstractBoundModule
               .requireNonNull(bindingContext.getBoundDefinitionForClass(clazz));
         })
         .collect(Collectors.toUnmodifiableMap(
-            IBoundDefinitionModelAssembly::getDefinitionQName,
+            def -> def.getDefinitionQName().getIndexPosition(),
             Function.identity()))));
     this.fieldDefinitions = ObjectUtils.notNull(Lazy.lazy(() -> Arrays.stream(getFieldClasses())
         .map(clazz -> {
@@ -76,7 +76,7 @@ public abstract class AbstractBoundModule
               .requireNonNull(bindingContext.getBoundDefinitionForClass(clazz));
         })
         .collect(Collectors.toUnmodifiableMap(
-            IBoundDefinitionModelField::getDefinitionQName,
+            def -> def.getDefinitionQName().getIndexPosition(),
             Function.identity()))));
     this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -> {
       StaticContext.Builder builder = StaticContext.builder()
@@ -158,7 +158,7 @@ public abstract class AbstractBoundModule
    *
    * @return the mapping
    */
-  protected Map<IEnhancedQName, IBoundDefinitionModelAssembly> getAssemblyDefinitionMap() {
+  protected Map<Integer, IBoundDefinitionModelAssembly> getAssemblyDefinitionMap() {
     return assemblyDefinitions.get();
   }
 
@@ -169,7 +169,7 @@ public abstract class AbstractBoundModule
   }
 
   @Override
-  public IBoundDefinitionModelAssembly getAssemblyDefinitionByName(@NonNull IEnhancedQName name) {
+  public IBoundDefinitionModelAssembly getAssemblyDefinitionByName(@NonNull Integer name) {
     return getAssemblyDefinitionMap().get(name);
   }
 
@@ -178,7 +178,7 @@ public abstract class AbstractBoundModule
    *
    * @return the mapping
    */
-  protected Map<IEnhancedQName, IBoundDefinitionModelField<?>> getFieldDefinitionMap() {
+  protected Map<Integer, IBoundDefinitionModelField<?>> getFieldDefinitionMap() {
     return fieldDefinitions.get();
   }
 
@@ -189,7 +189,7 @@ public abstract class AbstractBoundModule
   }
 
   @Override
-  public IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull IEnhancedQName name) {
+  public IBoundDefinitionModelField<?> getFieldDefinitionByName(@NonNull Integer name) {
     return getFieldDefinitionMap().get(name);
   }
 

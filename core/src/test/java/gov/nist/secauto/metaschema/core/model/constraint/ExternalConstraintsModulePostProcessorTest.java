@@ -37,7 +37,7 @@ class ExternalConstraintsModulePostProcessorTest {
                 Paths.get("src/test/resources/content/issue184-metaschema.xml")));
 
     IAssemblyDefinition definition = ObjectUtils.requireNonNull(module.getAssemblyDefinitionByName(
-        EQNameFactory.of("http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test", "a")));
+        EQNameFactory.of("http://csrc.nist.gov/ns/test/metaschema/constraint-targeting-test", "a").getIndexPosition()));
 
     assertEquals(1, definition.getConstraints().size());
   }

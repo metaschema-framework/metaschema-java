@@ -5,8 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-
 import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -43,7 +41,7 @@ public interface IContainerModelGrouped extends IContainerModel {
    */
   @Override
   @Nullable
-  INamedModelInstanceGrouped getNamedModelInstanceByName(IEnhancedQName name);
+  INamedModelInstanceGrouped getNamedModelInstanceByName(Integer name);
 
   /**
    * Get all field instances within the container.
@@ -65,7 +63,7 @@ public interface IContainerModelGrouped extends IContainerModel {
    */
   @Override
   @Nullable
-  IFieldInstanceGrouped getFieldInstanceByName(IEnhancedQName name);
+  IFieldInstanceGrouped getFieldInstanceByName(Integer name);
 
   /**
    * Get all assembly instances within the container.
@@ -87,5 +85,5 @@ public interface IContainerModelGrouped extends IContainerModel {
    */
   @Override
   @Nullable
-  IAssemblyInstanceGrouped getAssemblyInstanceByName(IEnhancedQName name);
+  IAssemblyInstanceGrouped getAssemblyInstanceByName(Integer name);
 }

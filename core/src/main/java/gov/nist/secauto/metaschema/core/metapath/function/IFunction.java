@@ -425,7 +425,7 @@ public interface IFunction extends IItem {
      */
     @NonNull
     public Builder returnType(@NonNull IEnhancedQName name) {
-      IItemType result = getStaticContext().lookupDataTypeItemType(name);
+      IItemType result = StaticContext.lookupDataTypeItemType(name);
       if (result == null) {
         throw new IllegalArgumentException(
             String.format("No data type with the name '%s'.", name));

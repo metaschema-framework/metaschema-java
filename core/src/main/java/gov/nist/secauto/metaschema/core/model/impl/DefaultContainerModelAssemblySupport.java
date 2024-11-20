@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.LinkedHashMap;
@@ -101,9 +100,9 @@ public class DefaultContainerModelAssemblySupport<
    */
   public DefaultContainerModelAssemblySupport(
       @NonNull List<MI> instances,
-      @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
-      @NonNull Map<IEnhancedQName, FI> fieldInstances,
-      @NonNull Map<IEnhancedQName, AI> assemblyInstances,
+      @NonNull Map<Integer, NMI> namedModelInstances,
+      @NonNull Map<Integer, FI> fieldInstances,
+      @NonNull Map<Integer, AI> assemblyInstances,
       @NonNull List<CI> choiceInstances,
       @NonNull Map<String, CGI> choiceGroupInstances) {
     super(instances, namedModelInstances, fieldInstances, assemblyInstances);

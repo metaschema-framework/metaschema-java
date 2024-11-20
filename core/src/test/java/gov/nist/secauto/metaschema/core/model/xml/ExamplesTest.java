@@ -39,7 +39,7 @@ class ExamplesTest {
     IXmlMetaschemaModule module = loader.load(moduleUri);
 
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(
-        EQNameFactory.of("http://csrc.nist.gov/ns/oscal/1.0", "property"));
+        EQNameFactory.of("http://csrc.nist.gov/ns/oscal/1.0", "property").getIndexPosition());
     assertNotNull(definition, "definition not found");
   }
 

@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.model.AbstractContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
@@ -48,9 +47,9 @@ public class DefaultContainerModelChoiceGroupSupport<
    *          a collection of assembly instances
    */
   public DefaultContainerModelChoiceGroupSupport(
-      @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
-      @NonNull Map<IEnhancedQName, FI> fieldInstances,
-      @NonNull Map<IEnhancedQName, AI> assemblyInstances) {
+      @NonNull Map<Integer, NMI> namedModelInstances,
+      @NonNull Map<Integer, FI> fieldInstances,
+      @NonNull Map<Integer, AI> assemblyInstances) {
     super(namedModelInstances, fieldInstances, assemblyInstances);
   }
 

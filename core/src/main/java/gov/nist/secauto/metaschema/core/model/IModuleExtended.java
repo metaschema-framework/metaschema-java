@@ -24,8 +24,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * can be accessed using {@link #getImportedModules()}.
  * <p>
  * Global scoped Metaschema definitions can be accessed using
- * {@link #getScopedAssemblyDefinitionByName(IEnhancedQName)},
- * {@link #getScopedFieldDefinitionByName(IEnhancedQName)}, and
+ * {@link #getScopedAssemblyDefinitionByName(Integer)},
+ * {@link #getScopedFieldDefinitionByName(Integer)}, and
  * {@link #getScopedFlagDefinitionByName(IEnhancedQName)}. These methods take
  * into consideration the import order to provide the global definitions that
  * are in scope within the given Metschema module.
@@ -106,7 +106,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  A getAssemblyDefinitionByName(@NonNull IEnhancedQName name);
+  A getAssemblyDefinitionByName(@NonNull Integer name);
 
   @Override
   @NonNull
@@ -114,7 +114,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  FI getFieldDefinitionByName(@NonNull IEnhancedQName name);
+  FI getFieldDefinitionByName(@NonNull Integer name);
 
   @Override
   @SuppressWarnings("unchecked")
@@ -129,7 +129,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  default A getScopedAssemblyDefinitionByName(@NonNull IEnhancedQName name) {
+  default A getScopedAssemblyDefinitionByName(@NonNull Integer name) {
     // first try local/global top-level definitions from current metaschema module
     A retval = getAssemblyDefinitionByName(name);
     if (retval == null) {
@@ -141,7 +141,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  default FI getScopedFieldDefinitionByName(@NonNull IEnhancedQName name) {
+  default FI getScopedFieldDefinitionByName(@NonNull Integer name) {
     // first try local/global top-level definitions from current metaschema module
     FI retval = getFieldDefinitionByName(name);
     if (retval == null) {
@@ -193,7 +193,7 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  FI getExportedFieldDefinitionByName(IEnhancedQName name);
+  FI getExportedFieldDefinitionByName(Integer name);
 
   @Override
   @NonNull
@@ -201,5 +201,5 @@ public interface IModuleExtended<
 
   @Override
   @Nullable
-  A getExportedAssemblyDefinitionByName(IEnhancedQName name);
+  A getExportedAssemblyDefinitionByName(Integer name);
 }

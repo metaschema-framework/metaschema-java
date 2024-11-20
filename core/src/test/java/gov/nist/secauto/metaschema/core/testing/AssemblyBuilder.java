@@ -142,7 +142,7 @@ public final class AssemblyBuilder
         allowing(retval).getModelInstances();
         will(returnValue(modelInstances.values()));
         modelInstances.forEach((key, value) -> {
-          allowing(retval).getNamedModelInstanceByName(with(key));
+          allowing(retval).getNamedModelInstanceByName(with(key.getIndexPosition()));
           will(returnValue(value));
         });
       }

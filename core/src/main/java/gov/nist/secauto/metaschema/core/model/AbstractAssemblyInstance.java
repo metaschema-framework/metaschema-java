@@ -45,7 +45,7 @@ public abstract class AbstractAssemblyInstance<
   public DEFINITION getDefinition() {
     IEnhancedQName qname = getReferencedDefinitionQName();
     // this should always be not null
-    IAssemblyDefinition definition = getContainingModule().getScopedAssemblyDefinitionByName(qname);
+    IAssemblyDefinition definition = getContainingModule().getScopedAssemblyDefinitionByName(qname.getIndexPosition());
     if (definition == null) {
       throw new IllegalStateException(
           String.format("Unable to resolve assembly reference '%s' in definition '%s' in module '%s'",

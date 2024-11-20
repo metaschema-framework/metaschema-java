@@ -90,9 +90,11 @@ class DefaultNodeItemFactoryTest
       { // NOPMD - intentional
         allowing(assembly.getFlagInstanceByName(EQNameFactory.of(NS, "flag1"))).getValue(assemblyValue);
         will(returnValue(flagValue));
-        allowing(assembly.getNamedModelInstanceByName(EQNameFactory.of(NS, "field1"))).getValue(assemblyValue);
+        allowing(assembly.getNamedModelInstanceByName(EQNameFactory.of(NS, "field1").getIndexPosition()))
+            .getValue(assemblyValue);
         will(returnValue(fieldValue));
-        allowing(assembly.getNamedModelInstanceByName(EQNameFactory.of(NS, "field1"))).getItemValues(fieldValue);
+        allowing(assembly.getNamedModelInstanceByName(EQNameFactory.of(NS, "field1").getIndexPosition()))
+            .getItemValues(fieldValue);
         will(returnValue(List.of(fieldValue)));
       }
     });

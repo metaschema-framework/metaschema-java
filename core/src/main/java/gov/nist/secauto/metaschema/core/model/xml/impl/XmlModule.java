@@ -199,7 +199,7 @@ public class XmlModule
   }
 
   @Override
-  public IAssemblyDefinition getAssemblyDefinitionByName(@NonNull IEnhancedQName name) {
+  public IAssemblyDefinition getAssemblyDefinitionByName(@NonNull Integer name) {
     return getDefinitions().getAssemblyDefinitionMap().get(name);
   }
 
@@ -210,7 +210,7 @@ public class XmlModule
   }
 
   @Override
-  public IFieldDefinition getFieldDefinitionByName(@NonNull IEnhancedQName name) {
+  public IFieldDefinition getFieldDefinitionByName(@NonNull Integer name) {
     return getDefinitions().getFieldDefinitionMap().get(name);
   }
 
@@ -240,9 +240,9 @@ public class XmlModule
 
   private final class Definitions {
     private final Map<IEnhancedQName, IFlagDefinition> flagDefinitions;
-    private final Map<IEnhancedQName, IFieldDefinition> fieldDefinitions;
-    private final Map<IEnhancedQName, IAssemblyDefinition> assemblyDefinitions;
-    private final Map<IEnhancedQName, IAssemblyDefinition> rootAssemblyDefinitions;
+    private final Map<Integer, IFieldDefinition> fieldDefinitions;
+    private final Map<Integer, IAssemblyDefinition> assemblyDefinitions;
+    private final Map<Integer, IAssemblyDefinition> rootAssemblyDefinitions;
 
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Definitions(@NonNull METASCHEMA metaschemaNode) {
@@ -260,7 +260,7 @@ public class XmlModule
             : Collections.unmodifiableMap(this.assemblyDefinitions.values().stream()
                 .filter(IAssemblyDefinition::isRoot)
                 .collect(Collectors.toMap(
-                    IAssemblyDefinition::getRootQName,
+                    def -> def.getRootQName().getIndexPosition(),
                     Function.identity(),
                     (v1, v2) -> {
                       throw new IllegalStateException(
@@ -305,20 +305,20 @@ public class XmlModule
         "PMD.AvoidInstantiatingObjectsInLoops"
     })
     @NonNull
-    private Map<IEnhancedQName, IFieldDefinition> parseFields(@NonNull XmlCursor cursor) {
+    private Map<Integer, IFieldDefinition> parseFields(@NonNull XmlCursor cursor) {
       cursor.push();
 
       // now field definitions
       cursor.selectPath(FIELD_DEFINITION_XPATH);
 
-      Map<IEnhancedQName, IFieldDefinition> fields = new LinkedHashMap<>();
+      Map<Integer, IFieldDefinition> fields = new LinkedHashMap<>();
       while (cursor.toNextSelection()) {
         GlobalFieldDefinitionType obj = ObjectUtils.notNull((GlobalFieldDefinitionType) cursor.getObject());
         XmlGlobalFieldDefinition field = new XmlGlobalFieldDefinition(obj, XmlModule.this);
         if (LOGGER.isTraceEnabled()) {
           LOGGER.trace("New field definition '{}'", field.toCoordinates());
         }
-        fields.put(field.getDefinitionQName(), field);
+        fields.put(field.getDefinitionQName().getIndexPosition(), field);
       }
 
       cursor.pop();
@@ -333,20 +333,20 @@ public class XmlModule
         "PMD.AvoidInstantiatingObjectsInLoops"
     })
     @NonNull
-    private Map<IEnhancedQName, IAssemblyDefinition> parseAssemblies(XmlCursor cursor) {
+    private Map<Integer, IAssemblyDefinition> parseAssemblies(XmlCursor cursor) {
       cursor.push();
 
       // finally assembly definitions
       cursor.selectPath(ASSEMBLY_DEFINITION_XPATH);
 
-      Map<IEnhancedQName, IAssemblyDefinition> assemblies = new LinkedHashMap<>();
+      Map<Integer, IAssemblyDefinition> assemblies = new LinkedHashMap<>();
       while (cursor.toNextSelection()) {
         GlobalAssemblyDefinitionType obj = ObjectUtils.notNull((GlobalAssemblyDefinitionType) cursor.getObject());
         XmlGlobalAssemblyDefinition assembly = new XmlGlobalAssemblyDefinition(obj, XmlModule.this);
         if (LOGGER.isTraceEnabled()) {
           LOGGER.trace("New assembly definition '{}'", assembly.toCoordinates());
         }
-        assemblies.put(assembly.getDefinitionQName(), assembly);
+        assemblies.put(assembly.getDefinitionQName().getIndexPosition(), assembly);
       }
 
       cursor.pop();
@@ -360,15 +360,15 @@ public class XmlModule
       return flagDefinitions;
     }
 
-    public Map<IEnhancedQName, IFieldDefinition> getFieldDefinitionMap() {
+    public Map<Integer, IFieldDefinition> getFieldDefinitionMap() {
       return fieldDefinitions;
     }
 
-    public Map<IEnhancedQName, IAssemblyDefinition> getAssemblyDefinitionMap() {
+    public Map<Integer, IAssemblyDefinition> getAssemblyDefinitionMap() {
       return assemblyDefinitions;
     }
 
-    public Map<IEnhancedQName, ? extends IAssemblyDefinition> getRootAssemblyDefinitionMap() {
+    public Map<Integer, ? extends IAssemblyDefinition> getRootAssemblyDefinitionMap() {
       return rootAssemblyDefinitions;
     }
 

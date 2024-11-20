@@ -11,7 +11,6 @@ import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstance;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.LinkedHashMap;
@@ -94,9 +93,9 @@ public class DefaultContainerModelSupport<
   @SuppressFBWarnings(value = "SING_SINGLETON_HAS_NONPRIVATE_CONSTRUCTOR", justification = "false positive")
   public DefaultContainerModelSupport(
       @NonNull List<MI> modelInstances,
-      @NonNull Map<IEnhancedQName, NMI> namedModelInstances,
-      @NonNull Map<IEnhancedQName, FI> fieldInstances,
-      @NonNull Map<IEnhancedQName, AI> assemblyInstances) {
+      @NonNull Map<Integer, NMI> namedModelInstances,
+      @NonNull Map<Integer, FI> fieldInstances,
+      @NonNull Map<Integer, AI> assemblyInstances) {
     super(namedModelInstances, fieldInstances, assemblyInstances);
     this.modelInstances = modelInstances;
   }

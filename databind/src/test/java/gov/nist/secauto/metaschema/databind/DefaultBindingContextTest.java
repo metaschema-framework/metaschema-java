@@ -40,7 +40,8 @@ class DefaultBindingContextTest {
     IBoundModule module = bindingContext.registerModule(TestMetaschema.class);
 
     IAssemblyDefinition root
-        = module.getExportedAssemblyDefinitionByName(EQNameFactory.of("https://csrc.nist.gov/ns/test/xml", "root"));
+        = module.getExportedAssemblyDefinitionByName(
+            EQNameFactory.of("https://csrc.nist.gov/ns/test/xml", "root").getIndexPosition());
 
     assertNotNull(root, "root not found");
     List<? extends IConstraint> constraints = root.getConstraints();

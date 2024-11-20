@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.model.impl.DefaultContainerModelChoiceGroupSupport;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.LinkedHashMap;
@@ -37,11 +36,11 @@ public class DefaultChoiceGroupModelBuilder<
 
   // collections to store model instances
   @NonNull
-  private final Map<IEnhancedQName, NMI> namedModelInstances = new LinkedHashMap<>();
+  private final Map<Integer, NMI> namedModelInstances = new LinkedHashMap<>();
   @NonNull
-  private final Map<IEnhancedQName, FI> fieldInstances = new LinkedHashMap<>();
+  private final Map<Integer, FI> fieldInstances = new LinkedHashMap<>();
   @NonNull
-  private final Map<IEnhancedQName, AI> assemblyInstances = new LinkedHashMap<>();
+  private final Map<Integer, AI> assemblyInstances = new LinkedHashMap<>();
 
   /**
    * Append the instance.
@@ -51,7 +50,7 @@ public class DefaultChoiceGroupModelBuilder<
    */
   @SuppressWarnings("unchecked")
   public void append(@NonNull FI instance) {
-    IEnhancedQName key = instance.getQName();
+    Integer key = instance.getQName().getIndexPosition();
     namedModelInstances.put(key, (NMI) instance);
     fieldInstances.put(key, instance);
   }
@@ -64,7 +63,7 @@ public class DefaultChoiceGroupModelBuilder<
    */
   @SuppressWarnings("unchecked")
   public void append(@NonNull AI instance) {
-    IEnhancedQName key = instance.getQName();
+    Integer key = instance.getQName().getIndexPosition();
     namedModelInstances.put(key, (NMI) instance);
     assemblyInstances.put(key, instance);
   }
@@ -75,7 +74,7 @@ public class DefaultChoiceGroupModelBuilder<
    * @return the instances or an empty map if no instances were appended
    */
   @NonNull
-  protected Map<IEnhancedQName, NMI> getNamedModelInstances() {
+  protected Map<Integer, NMI> getNamedModelInstances() {
     return namedModelInstances;
   }
 
@@ -85,7 +84,7 @@ public class DefaultChoiceGroupModelBuilder<
    * @return the instances or an empty map if no instances were appended
    */
   @NonNull
-  protected Map<IEnhancedQName, FI> getFieldInstances() {
+  protected Map<Integer, FI> getFieldInstances() {
     return fieldInstances;
   }
 
@@ -95,7 +94,7 @@ public class DefaultChoiceGroupModelBuilder<
    * @return the instances or an empty map if no instances were appended
    */
   @NonNull
-  protected Map<IEnhancedQName, AI> getAssemblyInstances() {
+  protected Map<Integer, AI> getAssemblyInstances() {
     return assemblyInstances;
   }
 

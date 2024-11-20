@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.model.impl.DefaultContainerModelSupport;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Collection;
 import java.util.Map;
@@ -68,7 +67,7 @@ public interface IContainerModelSupport<
    * @return the mapping
    */
   @NonNull
-  Map<IEnhancedQName, NMI> getNamedModelInstanceMap();
+  Map<Integer, NMI> getNamedModelInstanceMap();
 
   /**
    * Get a mapping of all field instances, mapped from their effective name to the
@@ -77,7 +76,7 @@ public interface IContainerModelSupport<
    * @return the mapping
    */
   @NonNull
-  Map<IEnhancedQName, FI> getFieldInstanceMap();
+  Map<Integer, FI> getFieldInstanceMap();
 
   /**
    * Get a mapping of all assembly instances, mapped from their effective name to
@@ -86,5 +85,5 @@ public interface IContainerModelSupport<
    * @return the mapping
    */
   @NonNull
-  Map<IEnhancedQName, AI> getAssemblyInstanceMap();
+  Map<Integer, AI> getAssemblyInstanceMap();
 }

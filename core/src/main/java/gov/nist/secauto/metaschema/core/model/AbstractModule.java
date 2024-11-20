@@ -107,7 +107,7 @@ public abstract class AbstractModule<
   }
 
   @Override
-  public FI getExportedFieldDefinitionByName(IEnhancedQName name) {
+  public FI getExportedFieldDefinitionByName(Integer name) {
     return getExports().getExportedFieldDefinitionMap().get(name);
   }
 
@@ -118,12 +118,12 @@ public abstract class AbstractModule<
   }
 
   @Override
-  public A getExportedAssemblyDefinitionByName(IEnhancedQName name) {
+  public A getExportedAssemblyDefinitionByName(Integer name) {
     return getExports().getExportedAssemblyDefinitionMap().get(name);
   }
 
   @Override
-  public A getExportedRootAssemblyDefinitionByName(IEnhancedQName name) {
+  public A getExportedRootAssemblyDefinitionByName(Integer name) {
     return getExports().getExportedRootAssemblyDefinitionMap().get(name);
   }
 
@@ -143,15 +143,31 @@ public abstract class AbstractModule<
     return newDef;
   }
 
+  @SuppressWarnings({ "unused", "PMD.UnusedPrivateMethod" }) // used by lambda
+  private static <DEF extends IDefinition> DEF handleShadowedDefinitions(
+      @NonNull Integer key,
+      @NonNull DEF oldDef,
+      @NonNull DEF newDef) {
+    if (!oldDef.equals(newDef) && LOGGER.isWarnEnabled()) {
+      LOGGER.warn("The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'",
+          newDef.getModelType().name().toLowerCase(Locale.ROOT),
+          newDef.getName(),
+          newDef.getContainingModule().getShortName(),
+          oldDef.getName(),
+          oldDef.getContainingModule().getShortName());
+    }
+    return newDef;
+  }
+
   private class Exports {
     @NonNull
     private final Map<IEnhancedQName, FL> exportedFlagDefinitions;
     @NonNull
-    private final Map<IEnhancedQName, FI> exportedFieldDefinitions;
+    private final Map<Integer, FI> exportedFieldDefinitions;
     @NonNull
-    private final Map<IEnhancedQName, A> exportedAssemblyDefinitions;
+    private final Map<Integer, A> exportedAssemblyDefinitions;
     @NonNull
-    private final Map<IEnhancedQName, A> exportedRootAssemblyDefinitions;
+    private final Map<Integer, A> exportedRootAssemblyDefinitions;
 
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
     public Exports(@NonNull List<? extends M> importedModules) {
@@ -190,14 +206,14 @@ public abstract class AbstractModule<
               IFlagDefinition::getDefinitionQName,
               CustomCollectors.identity(),
               AbstractModule::handleShadowedDefinitions));
-      Map<IEnhancedQName, FI> exportedFieldDefinitions = fields.collect(
+      Map<Integer, FI> exportedFieldDefinitions = fields.collect(
           CustomCollectors.toMap(
-              IFieldDefinition::getDefinitionQName,
+              def -> def.getDefinitionQName().getIndexPosition(),
               CustomCollectors.identity(),
               AbstractModule::handleShadowedDefinitions));
-      Map<IEnhancedQName, A> exportedAssemblyDefinitions = assemblies.collect(
+      Map<Integer, A> exportedAssemblyDefinitions = assemblies.collect(
           CustomCollectors.toMap(
-              IAssemblyDefinition::getDefinitionQName,
+              def -> def.getDefinitionQName().getIndexPosition(),
               CustomCollectors.identity(),
               AbstractModule::handleShadowedDefinitions));
 
@@ -215,7 +231,7 @@ public abstract class AbstractModule<
           : CollectionUtil.unmodifiableMap(ObjectUtils.notNull(exportedAssemblyDefinitions.values().stream()
               .filter(IAssemblyDefinition::isRoot)
               .collect(CustomCollectors.toMap(
-                  IAssemblyDefinition::getRootQName,
+                  def -> def.getRootQName().getIndexPosition(),
                   CustomCollectors.identity(),
                   AbstractModule::handleShadowedDefinitions))));
     }
@@ -226,17 +242,17 @@ public abstract class AbstractModule<
     }
 
     @NonNull
-    public Map<IEnhancedQName, FI> getExportedFieldDefinitionMap() {
+    public Map<Integer, FI> getExportedFieldDefinitionMap() {
       return this.exportedFieldDefinitions;
     }
 
     @NonNull
-    public Map<IEnhancedQName, A> getExportedAssemblyDefinitionMap() {
+    public Map<Integer, A> getExportedAssemblyDefinitionMap() {
       return this.exportedAssemblyDefinitions;
     }
 
     @NonNull
-    public Map<IEnhancedQName, A> getExportedRootAssemblyDefinitionMap() {
+    public Map<Integer, A> getExportedRootAssemblyDefinitionMap() {
       return this.exportedRootAssemblyDefinitions;
     }
   }

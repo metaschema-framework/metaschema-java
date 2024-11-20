@@ -5,8 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-
 import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -35,7 +33,7 @@ public interface IFeatureContainerModelGrouped<
   }
 
   @Override
-  default NMI getNamedModelInstanceByName(IEnhancedQName name) {
+  default NMI getNamedModelInstanceByName(Integer name) {
     return getModelContainer().getNamedModelInstanceMap().get(name);
   }
 
@@ -46,7 +44,7 @@ public interface IFeatureContainerModelGrouped<
   }
 
   @Override
-  default FI getFieldInstanceByName(IEnhancedQName name) {
+  default FI getFieldInstanceByName(Integer name) {
     return getModelContainer().getFieldInstanceMap().get(name);
   }
 
@@ -57,7 +55,7 @@ public interface IFeatureContainerModelGrouped<
   }
 
   @Override
-  default AI getAssemblyInstanceByName(IEnhancedQName name) {
+  default AI getAssemblyInstanceByName(Integer name) {
     return getModelContainer().getAssemblyInstanceMap().get(name);
   }
 

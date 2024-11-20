@@ -539,7 +539,7 @@ public final class StaticContext {
   }
 
   @Nullable
-  public IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
+  public static IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
     return FunctionService.getInstance().getFunction(
         Objects.requireNonNull(qname, "name"),
         arity);
@@ -552,7 +552,7 @@ public final class StaticContext {
   }
 
   @Nullable
-  public IItemType lookupDataTypeItemType(@NonNull IEnhancedQName qname) {
+  public static IItemType lookupDataTypeItemType(@NonNull IEnhancedQName qname) {
     IDataTypeAdapter<?> adapter = DataTypeService.instance()
         .getJavaTypeAdapterByQNameIndex(qname.getIndexPosition());
 
@@ -568,7 +568,7 @@ public final class StaticContext {
   }
 
   @Nullable
-  public IItemType lookupDataTypeItemType(Class<? extends IAnyAtomicItem> clazz) {
+  public static IItemType lookupDataTypeItemType(Class<? extends IAnyAtomicItem> clazz) {
     IDataTypeAdapter<?> adapter = DataTypeService.instance().getJavaTypeAdapterByItemClass(clazz);
     return adapter == null ? null : adapter.getItemType();
   }

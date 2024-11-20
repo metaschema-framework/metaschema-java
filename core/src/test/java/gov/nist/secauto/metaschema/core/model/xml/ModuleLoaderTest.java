@@ -73,7 +73,8 @@ class ModuleLoaderTest {
         "https://raw.githubusercontent.com/usnistgov/OSCAL/v1.0.0/src/metaschema/oscal_complete_metaschema.xml"));
     IXmlMetaschemaModule module = loader.load(moduleUri);
     IAssemblyDefinition catalog
-        = module.getExportedAssemblyDefinitionByName(EQNameFactory.of("http://csrc.nist.gov/ns/oscal/1.0", "catalog"));
+        = module.getExportedAssemblyDefinitionByName(
+            EQNameFactory.of("http://csrc.nist.gov/ns/oscal/1.0", "catalog").getIndexPosition());
 
     assertNotNull(catalog, "catalog not found");
     List<? extends IConstraint> constraints = catalog.getConstraints();
@@ -88,7 +89,7 @@ class ModuleLoaderTest {
         = loader.load(ObjectUtils.notNull(Paths.get("src/test/resources/content/custom-entity-metaschema.xml")));
 
     IAssemblyDefinition root = module.getExportedRootAssemblyDefinitionByName(
-        EQNameFactory.of("http://csrc.nist.gov/ns/test/metaschema/entity", "root"));
+        EQNameFactory.of("http://csrc.nist.gov/ns/test/metaschema/entity", "root").getIndexPosition());
     assert root != null;
     List<? extends IAllowedValuesConstraint> allowedValues = root.getAllowedValuesConstraints();
 

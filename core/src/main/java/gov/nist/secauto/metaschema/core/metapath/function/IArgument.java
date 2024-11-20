@@ -51,45 +51,25 @@ public interface IArgument {
   /**
    * Get a new argument builder.
    *
-   * @return the new builder instance
-   */
-  @NonNull
-  static Builder builder() {
-    return builder(StaticContext.instance());
-  }
-
-  /**
-   * Get a new argument builder.
-   *
-   * @param staticContext
-   *          the static context used to lookup data types and function
-   *          implementations
    * @return the new argument builder
    */
   @NonNull
-  static Builder builder(@NonNull StaticContext staticContext) {
-    return new Builder(staticContext);
+  static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Used to create an argument's signature using a builder pattern.
    */
   final class Builder {
-    @NonNull
-    private final StaticContext staticContext;
     private String name;
     @NonNull
     private IItemType type;
     private Occurrence occurrence;
 
-    private Builder(@NonNull StaticContext staticContext) {
+    private Builder() {
       // construct a new non-initialized builder
-      this.staticContext = staticContext;
       this.type = IItem.type();
-    }
-
-    private StaticContext getStaticContext() {
-      return staticContext;
     }
 
     /**
@@ -113,13 +93,13 @@ public interface IArgument {
      * <p>
      * By default an argument has the type {@link IItem}.
      *
-     * @param type
+     * @param name
      *          the qualified name of the argument's type
      * @return this builder
      */
     @NonNull
     public Builder type(@NonNull IEnhancedQName name) {
-      IItemType result = getStaticContext().lookupDataTypeItemType(name);
+      IItemType result = StaticContext.lookupDataTypeItemType(name);
       if (result == null) {
         throw new IllegalArgumentException(
             String.format("No data type with the name '%s'.", name));

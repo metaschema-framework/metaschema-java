@@ -137,17 +137,17 @@ class ModelTest
           (IBoundDefinitionModelAssembly) context.getBoundDefinitionForClass(RootAssemblyWithFields.class));
 
       IBoundInstanceModelField<?> defaultField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(EQNameFactory.of(NS, "defaultField")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "defaultField").getIndexPosition()));
       IBoundInstanceModelField<?> collectionField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field2")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field2").getIndexPosition()));
       IBoundInstanceModelField<?> specifiedValueKeyField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-value-key")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-value-key").getIndexPosition()));
       IBoundInstanceModelField<?> defaultValueKeyField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-default-value-key")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-default-value-key").getIndexPosition()));
       IBoundInstanceModelField<?> flagValueKeyField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-flag-value-key")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-flag-value-key").getIndexPosition()));
       IBoundInstanceModelField<?> flagJsonKeyField = ObjectUtils.requireNonNull(
-          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-json-key")));
+          definition.getFieldInstanceByName(EQNameFactory.of(NS, "field-json-key").getIndexPosition()));
 
       assertAll(
           "root assembly",

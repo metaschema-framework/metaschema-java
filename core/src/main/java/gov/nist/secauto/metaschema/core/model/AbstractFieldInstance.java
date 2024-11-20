@@ -45,7 +45,7 @@ public abstract class AbstractFieldInstance<
   public DEFINITION getDefinition() {
     IEnhancedQName qname = getReferencedDefinitionQName();
     // this should always be not null
-    IFieldDefinition definition = getContainingModule().getScopedFieldDefinitionByName(qname);
+    IFieldDefinition definition = getContainingModule().getScopedFieldDefinitionByName(qname.getIndexPosition());
     if (definition == null) {
       throw new IllegalStateException(
           String.format("Unable to resolve field reference '%s' in definition '%s' in module '%s'",

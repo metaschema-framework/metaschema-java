@@ -126,7 +126,7 @@ public abstract class AbstractAbsoluteModelGenerator<
 
     String name = ObjectUtils.requireNonNull(obj.getRef());
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(
-        module.getModuleStaticContext().parseModelName(name));
+        module.getModuleStaticContext().parseModelName(name).getIndexPosition());
 
     if (definition == null) {
       throw new IllegalStateException(
@@ -180,7 +180,7 @@ public abstract class AbstractAbsoluteModelGenerator<
 
     String name = ObjectUtils.requireNonNull(obj.getRef());
     IFieldDefinition definition = module.getScopedFieldDefinitionByName(
-        module.getModuleStaticContext().parseModelName(name));
+        module.getModuleStaticContext().parseModelName(name).getIndexPosition());
     if (definition == null) {
       throw new IllegalStateException(
           String.format("Unable to resolve field reference '%s' in definition '%s' in module '%s'",
