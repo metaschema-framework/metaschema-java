@@ -47,7 +47,7 @@ public abstract class AbstractValidationResultProcessor {
       } else if (finding instanceof ConstraintValidationFinding) {
         handleConstraintValidationFinding((ConstraintValidationFinding) finding);
       } else {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException("Unsupported finding type: " + finding.getClass().getName());
       }
     }
   }

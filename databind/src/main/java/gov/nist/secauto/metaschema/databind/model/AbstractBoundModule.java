@@ -98,6 +98,11 @@ public abstract class AbstractBoundModule
   }
 
   @Override
+  public String getLocationHint() {
+    return ObjectUtils.notNull(getClass().getName());
+  }
+
+  @Override
   public StaticContext getModuleStaticContext() {
     return ObjectUtils.notNull(staticContext.get());
   }

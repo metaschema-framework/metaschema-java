@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractKeyConstraintBuilder;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.ICardinalityConstraint;
@@ -109,14 +110,17 @@ public final class ModelFactory {
    */
   @NonNull
   private static Map<String, IAllowedValue> toAllowedValues(
-      @NonNull AllowedValuesType xmlObject) {
+      @NonNull AllowedValuesType xmlObject,
+      @NonNull ISource source) {
     Map<String, IAllowedValue> allowedValues // NOPMD - intentional
         = new LinkedHashMap<>(xmlObject.sizeOfEnumArray());
     for (AllowedValueType xmlEnum : xmlObject.getEnumList()) {
       String value = xmlEnum.getValue();
       if (value == null) {
-        throw new IllegalStateException(String.format("Null value found in allowed value enumeration: %s",
-            xmlObject.xmlText()));
+        throw new ConstraintInitializationException(
+            String.format("Null value found in allowed value enumeration in '%s': %s",
+                source.getLocationHint(),
+                xmlObject.xmlText()));
       }
 
       IAllowedValue allowedValue = IAllowedValue.of(
@@ -174,7 +178,7 @@ public final class ModelFactory {
       builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));
     }
 
-    builder.allowedValues(toAllowedValues(xmlObject));
+    builder.allowedValues(toAllowedValues(xmlObject, source));
     if (xmlObject.isSetAllowOther()) {
       builder.allowsOther(xmlObject.getAllowOther());
     }

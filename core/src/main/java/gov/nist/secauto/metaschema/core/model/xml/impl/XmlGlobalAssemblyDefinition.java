@@ -20,6 +20,7 @@ import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalAssemblyDefinitionType;
@@ -79,10 +80,11 @@ class XmlGlobalAssemblyDefinition
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> XmlFlagContainerSupport.newInstance(xmlObject, this)));
     this.modelContainer = ObjectUtils.notNull(
         Lazy.lazy(() -> XmlAssemblyModelContainerSupport.of(xmlObject.getModel(), this)));
+    ISource source = module.getSource();
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-      IModelConstrained retval = new AssemblyConstraintSet();
+      IModelConstrained retval = new AssemblyConstraintSet(source);
       if (xmlObject.isSetConstraint()) {
-        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(xmlObject.getConstraint()), module.getSource());
+        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(xmlObject.getConstraint()), source);
       }
       return retval;
     }));

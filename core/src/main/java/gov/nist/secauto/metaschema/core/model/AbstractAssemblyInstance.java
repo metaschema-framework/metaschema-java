@@ -47,7 +47,7 @@ public abstract class AbstractAssemblyInstance<
     // this should always be not null
     IAssemblyDefinition definition = getContainingModule().getScopedAssemblyDefinitionByName(qname.getIndexPosition());
     if (definition == null) {
-      throw new IllegalStateException(
+      throw new ModelInitializationException(
           String.format("Unable to resolve assembly reference '%s' in definition '%s' in module '%s'",
               qname,
               getParentContainer().getOwningDefinition().getName(),

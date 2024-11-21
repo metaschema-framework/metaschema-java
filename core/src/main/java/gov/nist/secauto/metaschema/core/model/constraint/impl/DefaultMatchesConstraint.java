@@ -10,6 +10,8 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
 
 import java.util.Map;
@@ -74,7 +76,10 @@ public final class DefaultMatchesConstraint
       @Nullable MarkupMultiline remarks) {
     super(id, formalName, description, source, level, target, properties, message, remarks);
     if (pattern == null && dataType == null) {
-      throw new IllegalArgumentException("a pattern or data type must be provided");
+      throw new ConstraintInitializationException(
+          String.format("The constraint %s must provide a pattern or data type in '%s'",
+              IConstraint.getConstraintIdentity(this),
+              source.getLocationHint()));
     }
     this.pattern = pattern;
     this.dataType = dataType;

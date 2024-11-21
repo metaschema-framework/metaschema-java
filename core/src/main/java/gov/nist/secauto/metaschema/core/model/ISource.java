@@ -18,7 +18,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * A descriptor that identifies where a given constraint was defined.
  */
 public interface ISource {
-  enum SourceType {
+  /**
+   * The relative location of the source.
+   */
+  enum SourceLocation {
     /**
      * A constraint embedded in a model.
      */
@@ -31,7 +34,7 @@ public interface ISource {
 
   /**
    * Get the descriptor for a
-   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#MODEL}
+   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceLocation#MODEL}
    * source with as associated resource.
    *
    * @param module
@@ -46,7 +49,25 @@ public interface ISource {
 
   /**
    * Get the descriptor for a
-   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#EXTERNAL}
+   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceLocation#EXTERNAL}
+   * source for the provided resource.
+   *
+   * @param location
+   *          the resource used as the source
+   *
+   * @return the source descriptor
+   */
+  @NonNull
+  static ISource externalSource(@NonNull URI location) {
+    return StaticContextSource.instance(
+        StaticContext.builder()
+            .baseUri(location)
+            .build());
+  }
+
+  /**
+   * Get the descriptor for a
+   * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceLocation#EXTERNAL}
    * source with as associated resource.
    * <p>
    * The provided static context idenfies the location of this source based on the
@@ -72,7 +93,7 @@ public interface ISource {
    * @return the type
    */
   @NonNull
-  ISource.SourceType getSourceType();
+  ISource.SourceLocation getSourceType();
 
   /**
    * Get the resource where the constraint was defined, if known.
@@ -81,6 +102,16 @@ public interface ISource {
    */
   @Nullable
   URI getSource();
+
+  /**
+   * Get a hint about where the source is location.
+   * <p>
+   * This value will typically be a URI or class name.
+   *
+   * @return the hint
+   */
+  @NonNull
+  String getLocationHint();
 
   /**
    * Get the static Metapath context to use when compiling Metapath expressions.

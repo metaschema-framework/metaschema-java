@@ -108,7 +108,7 @@ public interface IMatchesConstraint extends IConfigurableMessageConstraint {
       super.validate();
 
       if (getPattern() == null && getDatatype() == null) {
-        throw new IllegalStateException("A pattern or data type must be provided at minimum.");
+        throw new ConstraintInitializationException("A pattern or data type must be provided at minimum.");
       }
     }
 

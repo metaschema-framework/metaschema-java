@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -19,7 +21,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractGlobalFlagDefinition<MODULE extends IModule, INSTANCE extends IFlagInstance>
     extends AbstractGlobalDefinition<MODULE, INSTANCE>
     implements IFlagDefinition {
-
   /**
    * Construct a new global flag definition.
    *
@@ -27,6 +28,6 @@ public abstract class AbstractGlobalFlagDefinition<MODULE extends IModule, INSTA
    *          the parent module containing this definition
    */
   protected AbstractGlobalFlagDefinition(@NonNull MODULE module) {
-    super(module, name -> module.getModuleStaticContext().parseFlagName(name));
+    super(module, name -> ModuleUtils.parseFlagName(module, name));
   }
 }

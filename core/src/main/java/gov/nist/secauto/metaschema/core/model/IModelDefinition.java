@@ -43,16 +43,16 @@ public interface IModelDefinition extends IDefinition, IContainer {
   }
 
   /**
-   * Retrieves a flag instance, by the flag's effective name, that is defined on
-   * the containing definition.
+   * Retrieves a flag instance, by the flag's effective name-based qualified name
+   * index.
    *
-   * @param name
-   *          the flag's name
+   * @param index
+   *          the flag's name-based qualified name index
    * @return the matching flag instance, or {@code null} if there is no flag
    *         matching the specified name
    */
   @Nullable
-  IFlagInstance getFlagInstanceByName(@NonNull IEnhancedQName name);
+  IFlagInstance getFlagInstanceByName(@NonNull IEnhancedQName index);
 
   /**
    * Retrieves the flag instances for all flags defined on the containing

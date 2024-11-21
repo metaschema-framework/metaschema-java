@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -30,9 +29,7 @@ class ConstraintFactoryTest {
   @SuppressWarnings("null")
   @Test
   void letExpressionTest() {
-    ISource source = ISource.externalSource(StaticContext.builder()
-        .baseUri(ObjectUtils.notNull(URI.create("https://example.com/")))
-        .build());
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create("https://example.com/")));
 
     String variable = "var1";
     String expression = "1 + 1";

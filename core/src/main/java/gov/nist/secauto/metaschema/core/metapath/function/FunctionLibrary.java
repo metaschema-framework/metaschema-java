@@ -23,8 +23,6 @@ public class FunctionLibrary implements IFunctionLibrary {
   @NonNull
   private final Map<IEnhancedQName, NamedFunctionSet> libraryByQName = new HashMap<>(); // NOPMD - intentional
   @NonNull
-  private final Map<String, NamedFunctionSet> libraryByName = new HashMap<>(); // NOPMD - intentional
-  @NonNull
   private final ReadWriteLock instanceLock = new ReentrantReadWriteLock();
 
   /**
@@ -38,7 +36,6 @@ public class FunctionLibrary implements IFunctionLibrary {
    */
   public final void registerFunction(@NonNull IFunction function) {
     registerFunctionByQName(function);
-    registerFunctionByName(function);
   }
 
   private void registerFunctionByQName(@NonNull IFunction function) {
@@ -62,23 +59,6 @@ public class FunctionLibrary implements IFunctionLibrary {
     }
   }
 
-  private void registerFunctionByName(@NonNull IFunction function) {
-    String name = function.getName();
-    Lock writeLock = instanceLock.writeLock();
-    writeLock.lock();
-    try {
-      NamedFunctionSet functions = libraryByName.get(name);
-      if (functions == null) {
-        functions = new NamedFunctionSet();
-        libraryByName.put(name, functions);
-      }
-      // replace duplicates
-      functions.addFunction(function);
-    } finally {
-      writeLock.unlock();
-    }
-  }
-
   @Override
   public Stream<IFunction> stream() {
     Lock readLock = instanceLock.readLock();
@@ -88,22 +68,6 @@ public class FunctionLibrary implements IFunctionLibrary {
     } finally {
       readLock.unlock();
     }
-  }
-
-  @Override
-  public IFunction getFunction(@NonNull String name, int arity) {
-    IFunction retval = null;
-    Lock readLock = instanceLock.readLock();
-    readLock.lock();
-    try {
-      NamedFunctionSet functions = libraryByName.get(name);
-      if (functions != null) {
-        retval = functions.getFunctionWithArity(arity);
-      }
-    } finally {
-      readLock.unlock();
-    }
-    return retval;
   }
 
   @Override

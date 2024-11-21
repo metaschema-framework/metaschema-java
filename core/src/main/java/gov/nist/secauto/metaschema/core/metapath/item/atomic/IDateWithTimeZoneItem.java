@@ -89,4 +89,10 @@ public interface IDateWithTimeZoneItem extends IDateItem {
   default IDateWithTimeZoneItem castAsType(IAnyAtomicItem item) {
     return cast(item);
   }
+
+  @Override
+  default int compareTo(IAnyAtomicItem item) {
+    return compareTo(cast(item));
+  }
+
 }

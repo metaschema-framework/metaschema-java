@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -49,10 +50,12 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
     this.annotation = annotation;
     this.bindingContext = bindingContext;
     this.module = module;
-    this.qname = ObjectUtils.notNull(Lazy.lazy(() -> getContainingModule()
-        .getModuleStaticContext().parseModelName(getEffectiveName())));
-    this.definitionQName = ObjectUtils.notNull(Lazy.lazy(() -> getContainingModule()
-        .getModuleStaticContext().parseModelName(getName())));
+    this.qname = ObjectUtils.notNull(Lazy.lazy(() -> ModuleUtils.parseModelName(
+        getContainingModule(),
+        getEffectiveName())));
+    this.definitionQName = ObjectUtils.notNull(Lazy.lazy(() -> ModuleUtils.parseModelName(
+        getContainingModule(),
+        getName())));
     this.beforeDeserializeMethod = ClassIntrospector.getMatchingMethod(
         clazz,
         "beforeDeserialize",

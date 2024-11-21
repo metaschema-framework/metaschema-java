@@ -51,7 +51,6 @@ import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.TargetedKeyConstraint
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.TargetedMatchesConstraintType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
@@ -71,7 +70,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public final class ConstraintXmlSupport {
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  private static final XmlObjectParser<Pair<ISource, IValueConstrained>> FLAG_PARSER
+  private static final XmlObjectParser<IValueConstrained> FLAG_PARSER
       = new XmlObjectParser<>(ObjectUtils.notNull(
           Map.ofEntries(
               Map.entry(XmlModuleConstants.ALLOWED_VALUES_CONSTRAINT_QNAME, ConstraintXmlSupport::handleAllowedValues),
@@ -80,8 +79,8 @@ public final class ConstraintXmlSupport {
               Map.entry(XmlModuleConstants.EXPECT_CONSTRAINT_QNAME, ConstraintXmlSupport::handleExpect)))) {
 
         @Override
-        protected Handler<Pair<ISource, IValueConstrained>> identifyHandler(XmlCursor cursor, XmlObject obj) {
-          Handler<Pair<ISource, IValueConstrained>> retval;
+        protected Handler<IValueConstrained> identifyHandler(XmlCursor cursor, XmlObject obj) {
+          Handler<IValueConstrained> retval;
           if (obj instanceof AllowedValuesType) {
             retval = ConstraintXmlSupport::handleAllowedValues;
           } else if (obj instanceof IndexHasKeyConstraintType) {
@@ -99,74 +98,72 @@ public final class ConstraintXmlSupport {
 
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  private static final XmlObjectParser<Pair<ISource,
-      IValueConstrained>> FIELD_PARSER
-          = new XmlObjectParser<>(ObjectUtils.notNull(Map.ofEntries(
-              Map.entry(XmlModuleConstants.ALLOWED_VALUES_CONSTRAINT_QNAME,
-                  ConstraintXmlSupport::handleScopedAllowedValues),
-              Map.entry(XmlModuleConstants.INDEX_HAS_KEY_CONSTRAINT_QNAME,
-                  ConstraintXmlSupport::handleScopedIndexHasKey),
-              Map.entry(XmlModuleConstants.MATCHES_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedMatches),
-              Map.entry(XmlModuleConstants.EXPECT_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedExpect)))) {
+  private static final XmlObjectParser<IValueConstrained> FIELD_PARSER
+      = new XmlObjectParser<>(ObjectUtils.notNull(Map.ofEntries(
+          Map.entry(XmlModuleConstants.ALLOWED_VALUES_CONSTRAINT_QNAME,
+              ConstraintXmlSupport::handleScopedAllowedValues),
+          Map.entry(XmlModuleConstants.INDEX_HAS_KEY_CONSTRAINT_QNAME,
+              ConstraintXmlSupport::handleScopedIndexHasKey),
+          Map.entry(XmlModuleConstants.MATCHES_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedMatches),
+          Map.entry(XmlModuleConstants.EXPECT_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedExpect)))) {
 
-            @Override
-            protected Handler<Pair<ISource, IValueConstrained>> identifyHandler(XmlCursor cursor, XmlObject obj) {
-              Handler<Pair<ISource, IValueConstrained>> retval;
-              if (obj instanceof TargetedAllowedValuesConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedAllowedValues;
-              } else if (obj instanceof TargetedIndexHasKeyConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedIndexHasKey;
-              } else if (obj instanceof TargetedMatchesConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedMatches;
-              } else if (obj instanceof TargetedExpectConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedExpect;
-              } else {
-                retval = super.identifyHandler(cursor, obj);
-              }
-              return retval;
-            }
-          };
+        @Override
+        protected Handler<IValueConstrained> identifyHandler(XmlCursor cursor, XmlObject obj) {
+          Handler<IValueConstrained> retval;
+          if (obj instanceof TargetedAllowedValuesConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedAllowedValues;
+          } else if (obj instanceof TargetedIndexHasKeyConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedIndexHasKey;
+          } else if (obj instanceof TargetedMatchesConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedMatches;
+          } else if (obj instanceof TargetedExpectConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedExpect;
+          } else {
+            retval = super.identifyHandler(cursor, obj);
+          }
+          return retval;
+        }
+      };
 
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  private static final XmlObjectParser<Pair<ISource,
-      IModelConstrained>> ASSEMBLY_PARSER
-          = new XmlObjectParser<>(ObjectUtils.notNull(Map.ofEntries(
-              Map.entry(XmlModuleConstants.ALLOWED_VALUES_CONSTRAINT_QNAME,
-                  ConstraintXmlSupport::handleScopedAllowedValues),
-              Map.entry(XmlModuleConstants.INDEX_HAS_KEY_CONSTRAINT_QNAME,
-                  ConstraintXmlSupport::handleScopedIndexHasKey),
-              Map.entry(XmlModuleConstants.MATCHES_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedMatches),
-              Map.entry(XmlModuleConstants.EXPECT_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedExpect),
-              Map.entry(XmlModuleConstants.INDEX_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedIndex),
-              Map.entry(XmlModuleConstants.IS_UNIQUE_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedIsUnique),
-              Map.entry(XmlModuleConstants.HAS_CARDINALITY_CONSTRAINT_QNAME,
-                  ConstraintXmlSupport::handleScopedHasCardinality)))) {
+  private static final XmlObjectParser<IModelConstrained> ASSEMBLY_PARSER
+      = new XmlObjectParser<>(ObjectUtils.notNull(Map.ofEntries(
+          Map.entry(XmlModuleConstants.ALLOWED_VALUES_CONSTRAINT_QNAME,
+              ConstraintXmlSupport::handleScopedAllowedValues),
+          Map.entry(XmlModuleConstants.INDEX_HAS_KEY_CONSTRAINT_QNAME,
+              ConstraintXmlSupport::handleScopedIndexHasKey),
+          Map.entry(XmlModuleConstants.MATCHES_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedMatches),
+          Map.entry(XmlModuleConstants.EXPECT_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedExpect),
+          Map.entry(XmlModuleConstants.INDEX_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedIndex),
+          Map.entry(XmlModuleConstants.IS_UNIQUE_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedIsUnique),
+          Map.entry(XmlModuleConstants.HAS_CARDINALITY_CONSTRAINT_QNAME,
+              ConstraintXmlSupport::handleScopedHasCardinality)))) {
 
-            @Override
-            protected Handler<Pair<ISource, IModelConstrained>> identifyHandler(XmlCursor cursor, XmlObject obj) {
-              Handler<Pair<ISource, IModelConstrained>> retval;
-              if (obj instanceof TargetedAllowedValuesConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedAllowedValues;
-              } else if (obj instanceof TargetedIndexHasKeyConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedIndexHasKey;
-              } else if (obj instanceof TargetedMatchesConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedMatches;
-              } else if (obj instanceof TargetedExpectConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedExpect;
-              } else if (obj instanceof TargetedIndexConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedIndex;
-              } else if (obj instanceof TargetedKeyConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedIsUnique;
-              } else if (obj instanceof TargetedHasCardinalityConstraintType) {
-                retval = ConstraintXmlSupport::handleScopedHasCardinality;
-              } else {
-                retval = super.identifyHandler(cursor, obj);
-              }
-              return retval;
-            }
+        @Override
+        protected Handler<IModelConstrained> identifyHandler(XmlCursor cursor, XmlObject obj) {
+          Handler<IModelConstrained> retval;
+          if (obj instanceof TargetedAllowedValuesConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedAllowedValues;
+          } else if (obj instanceof TargetedIndexHasKeyConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedIndexHasKey;
+          } else if (obj instanceof TargetedMatchesConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedMatches;
+          } else if (obj instanceof TargetedExpectConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedExpect;
+          } else if (obj instanceof TargetedIndexConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedIndex;
+          } else if (obj instanceof TargetedKeyConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedIsUnique;
+          } else if (obj instanceof TargetedHasCardinalityConstraintType) {
+            retval = ConstraintXmlSupport::handleScopedHasCardinality;
+          } else {
+            retval = super.identifyHandler(cursor, obj);
+          }
+          return retval;
+        }
 
-          };
+      };
 
   private static void parseLets(
       @NonNull List<ConstraintLetType> letList,
@@ -249,12 +246,12 @@ public final class ConstraintXmlSupport {
   }
 
   private static <T> void parse(
-      @NonNull XmlObjectParser<Pair<ISource, T>> parser,
+      @NonNull XmlObjectParser<T> parser,
       @NonNull T constraints,
       @NonNull XmlObject xmlObject,
       @NonNull ISource source) {
     try {
-      parser.parse(xmlObject, Pair.of(source, constraints));
+      parser.parse(source, xmlObject, constraints);
     } catch (MetapathException | XmlValueNotSupportedException ex) {
       if (ex.getCause() instanceof MetapathException) {
         throw new MetapathException(
@@ -269,106 +266,123 @@ public final class ConstraintXmlSupport {
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static void handleAllowedValues(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
-      Pair<ISource, IValueConstrained> state) {
+      IValueConstrained state) {
     IAllowedValuesConstraint constraint = ModelFactory.newAllowedValuesConstraint(
         (AllowedValuesType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static void handleScopedAllowedValues(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
-      Pair<ISource, ? extends IValueConstrained> state) {
+      IValueConstrained state) {
     IAllowedValuesConstraint constraint = ModelFactory.newAllowedValuesConstraint(
         (TargetedAllowedValuesConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static void handleMatches(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
-      Pair<ISource, IValueConstrained> state) {
+      IValueConstrained state) {
     IMatchesConstraint constraint = ModelFactory.newMatchesConstraint(
         (MatchesConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static void handleScopedMatches(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
-      Pair<ISource, ? extends IValueConstrained> state) {
+      IValueConstrained state) {
     IMatchesConstraint constraint = ModelFactory.newMatchesConstraint(
         (TargetedMatchesConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static void handleIndexHasKey(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
-      Pair<ISource, IValueConstrained> state) {
+      IValueConstrained state) {
     IIndexHasKeyConstraint constraint = ModelFactory.newIndexHasKeyConstraint(
         (IndexHasKeyConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static void handleScopedIndexHasKey(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
-      Pair<ISource, ? extends IValueConstrained> state) {
+      IValueConstrained state) {
     IIndexHasKeyConstraint constraint = ModelFactory.newIndexHasKeyConstraint(
         (TargetedIndexHasKeyConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static void handleExpect(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
-      Pair<ISource, IValueConstrained> state) {
+      IValueConstrained state) {
     IExpectConstraint constraint = ModelFactory.newExpectConstraint(
         (ExpectConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static void handleScopedExpect(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
-      Pair<ISource, ? extends IValueConstrained> state) {
+      IValueConstrained state) {
     IExpectConstraint constraint = ModelFactory.newExpectConstraint(
         (TargetedExpectConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
-  private static void handleScopedIndex(@NonNull XmlObject obj, Pair<ISource, IModelConstrained> state) {
+  private static void handleScopedIndex(
+      @NonNull ISource source,
+      @NonNull XmlObject obj,
+      IModelConstrained state) {
     IIndexConstraint constraint = ModelFactory.newIndexConstraint(
         (TargetedIndexConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
-  private static void handleScopedIsUnique(@NonNull XmlObject obj, Pair<ISource, IModelConstrained> state) {
+  private static void handleScopedIsUnique(
+      @NonNull ISource source,
+      @NonNull XmlObject obj,
+      IModelConstrained state) {
     IUniqueConstraint constraint = ModelFactory.newUniqueConstraint(
         (TargetedKeyConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
-  private static void handleScopedHasCardinality(@NonNull XmlObject obj, Pair<ISource, IModelConstrained> state) {
+  private static void handleScopedHasCardinality(
+      @NonNull ISource source,
+      @NonNull XmlObject obj,
+      IModelConstrained state) {
     ICardinalityConstraint constraint = ModelFactory.newCardinalityConstraint(
         (TargetedHasCardinalityConstraintType) obj,
-        ObjectUtils.notNull(state.getLeft()));
-    state.getRight().addConstraint(constraint);
+        source);
+    state.addConstraint(constraint);
   }
 
   private ConstraintXmlSupport() {

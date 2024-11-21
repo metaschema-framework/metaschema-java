@@ -84,24 +84,26 @@ public final class FnMatches {
       .build();
   // CPD-ON
 
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IBooleanItem> executeTwoArg(
-      @SuppressWarnings("unused") @NonNull IFunction function,
+      @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
-      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,
-      @SuppressWarnings("unused") IItem focus) {
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
     IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));
 
     return execute(input, pattern, IStringItem.valueOf(""));
   }
 
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IBooleanItem> executeThreeArg(
-      @SuppressWarnings("unused") @NonNull IFunction function,
+      @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
-      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,
-      @SuppressWarnings("unused") IItem focus) {
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
     IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));
     IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));

@@ -33,6 +33,15 @@ public class ChoiceGroupTypeInfoImpl
     extends AbstractModelInstanceTypeInfo<IChoiceGroupInstance>
     implements IChoiceGroupTypeInfo {
 
+  /**
+   * Create a type information object describing a choice group instance.
+   *
+   * @param instance
+   *          the choice group instance to generate type information for
+   * @param parent
+   *          the type information for the parent assembly definition containing
+   *          the choice group
+   */
   public ChoiceGroupTypeInfoImpl(
       @NonNull IChoiceGroupInstance instance,
       @NonNull IAssemblyDefinitionTypeInfo parent) {
@@ -49,7 +58,7 @@ public class ChoiceGroupTypeInfoImpl
     return ObjectUtils.notNull(AnnotationSpec.builder(BoundChoiceGroup.class));
   }
 
-  @SuppressWarnings("PMD.UseConcurrentHashMap")
+  @SuppressWarnings({ "PMD.UseConcurrentHashMap", "PMD.NPathComplexity", "PMD.CyclomaticComplexity" })
   @Override
   public Set<IModelDefinition> buildBindingAnnotation(
       TypeSpec.Builder typeBuilder,
@@ -70,6 +79,11 @@ public class ChoiceGroupTypeInfoImpl
     int maxOccurs = choiceGroup.getMaxOccurs();
     if (maxOccurs != IGroupable.DEFAULT_GROUP_AS_MAX_OCCURS) {
       annotation.addMember("maxOccurs", "$L", maxOccurs);
+    }
+
+    if (maxOccurs == -1 || maxOccurs > 1) {
+      // requires a group-as
+      annotation.addMember("groupAs", "$L", generateGroupAsAnnotation().build());
     }
 
     String jsonKeyName = choiceGroup.getJsonKeyFlagInstanceName();
@@ -104,11 +118,7 @@ public class ChoiceGroupTypeInfoImpl
           typeBuilder,
           referencedDefinitions.get(className).size() > 1));
     }
-
-    if (maxOccurs == -1 || maxOccurs > 1) {
-      // requires a group-as
-      annotation.addMember("groupAs", "$L", generateGroupAsAnnotation().build());
-    }
     return retval;
   }
+
 }

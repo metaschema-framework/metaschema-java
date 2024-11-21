@@ -20,6 +20,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * runtime using the {@link DataTypeService}.
  */
 public interface IDataTypeProvider {
+  /**
+   * Get the type information for abstract item types that do not have an
+   * associated data type adpater.
+   *
+   * @return the abstract item types provided
+   */
   List<? extends IAtomicOrUnionType> getAbstractTypes();
 
   /**

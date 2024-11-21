@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -25,8 +26,7 @@ public abstract class AbstractFlagInstance<
     DEFINITION extends IFlagDefinition,
     INSTANCE extends IFlagInstance>
     extends AbstractNamedInstance<PARENT>
-    implements IFlagInstance, IFeatureDefinitionReferenceInstance<DEFINITION, INSTANCE> {
-
+    implements IFlagInstance {
   /**
    * Construct a new flag instance.
    *
@@ -34,7 +34,7 @@ public abstract class AbstractFlagInstance<
    *          the parent model containing this instance
    */
   protected AbstractFlagInstance(@NonNull PARENT parent) {
-    super(parent, name -> parent.getContainingModule().getModuleStaticContext().parseFlagName(name));
+    super(parent, name -> ModuleUtils.parseFlagName(parent.getContainingModule(), name));
   }
 
   @Override
@@ -43,7 +43,7 @@ public abstract class AbstractFlagInstance<
     // this should always be not null
     IFlagDefinition definition = getContainingModule().getScopedFlagDefinitionByName(qname);
     if (definition == null) {
-      throw new IllegalStateException(
+      throw new ModelInitializationException(
           String.format("Unable to resolve field reference '%s' in definition '%s' in module '%s'",
               qname,
               getContainingDefinition().getName(),

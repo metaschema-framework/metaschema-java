@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
@@ -18,7 +19,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeSystem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,7 +97,8 @@ public class DefaultFunction
   @NonNull
   public static List<ISequence<?>> convertArguments(
       @NonNull IFunction function,
-      @NonNull List<? extends ISequence<?>> parameters) {
+      @NonNull List<? extends ISequence<?>> parameters,
+      @NonNull DynamicContext dynamicContext) {
     @NonNull
     List<ISequence<?>> retval = new ArrayList<>(parameters.size());
 
@@ -115,36 +116,36 @@ public class DefaultFunction
       assert argument != null;
       assert parameter != null;
 
-      retval.add(convertArgument(argument, parameter));
+      retval.add(convertArgument(argument, parameter, dynamicContext));
     }
     return retval;
   }
 
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<?> convertArgument(
       @NonNull IArgument argument,
-      @NonNull ISequence<?> parameter) {
+      @NonNull ISequence<?> parameter,
+      @NonNull DynamicContext dynamicContext) {
     // apply occurrence
     ISequence<?> retval = argument.getSequenceType().getOccurrence().getSequenceHandler().handle(parameter);
 
     // apply function conversion and type promotion to the parameter
     if (!retval.isEmpty()) {
       IItemType type = argument.getSequenceType().getType();
-      if (type != null) {
-        // this is not required to be an empty sequence
-        retval = convertSequence(argument, retval, type);
+      // this is not required to be an empty sequence
+      retval = convertSequence(argument, retval, type);
 
-        // verify resulting values
-        Class<? extends IItem> argumentClass = type.getItemClass();
-        for (IItem item : retval.getValue()) {
-          Class<? extends IItem> itemClass = item.getClass();
-          if (!argumentClass.isAssignableFrom(itemClass)) {
-            throw new InvalidTypeMetapathException(
-                item,
-                String.format("The type '%s' is not a subtype of '%s'",
-                    TypeSystem.getName(itemClass),
-                    TypeSystem.getName(argumentClass)));
-          }
+      // verify resulting values
+      Class<? extends IItem> argumentClass = type.getItemClass();
+      for (IItem item : retval.getValue()) {
+        Class<? extends IItem> itemClass = item.getClass();
+        if (!argumentClass.isAssignableFrom(itemClass)) {
+          throw new InvalidTypeMetapathException(
+              item,
+              String.format("The type '%s' is not a subtype of '%s'",
+                  StaticContext.lookupItemType(itemClass),
+                  type));
         }
       }
     }
@@ -222,7 +223,7 @@ public class DefaultFunction
     try {
       IItem contextItem = getContextItem(focus);
 
-      List<ISequence<?>> convertedArguments = convertArguments(this, arguments);
+      List<ISequence<?>> convertedArguments = convertArguments(this, arguments, dynamicContext);
 
       CallingContext callingContext = null;
       ISequence<?> result = null;

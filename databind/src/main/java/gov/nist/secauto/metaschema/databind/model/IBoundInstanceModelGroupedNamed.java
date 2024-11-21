@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.model;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
@@ -38,8 +39,8 @@ public interface IBoundInstanceModelGroupedNamed
     String name = getParentContainer().getJsonKeyFlagInstanceName();
     return name == null
         ? null
-        : ObjectUtils.requireNonNull(getDefinition().getFlagInstanceByName(
-            getContainingModule().getModuleStaticContext().parseFlagName(name)));
+        : ObjectUtils.requireNonNull(
+            getDefinition().getFlagInstanceByName(ModuleUtils.parseFlagName(getContainingModule(), name)));
   }
 
   @Override

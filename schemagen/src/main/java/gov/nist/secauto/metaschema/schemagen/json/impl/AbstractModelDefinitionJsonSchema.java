@@ -5,9 +5,11 @@
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.IGenerationState;
 import gov.nist.secauto.metaschema.schemagen.json.IDefinitionJsonSchema;
@@ -52,8 +54,13 @@ public abstract class AbstractModelDefinitionJsonSchema<D extends IModelDefiniti
 
     // determine the flag instances to generate
     if (jsonKeyFlagName != null) {
-      IFlagInstance jsonKeyFlag = definition.getFlagInstanceByName(
-          definition.getContainingModule().getModuleStaticContext().parseFlagName(jsonKeyFlagName));
+      IFlagInstance jsonKeyFlag;
+      try {
+        jsonKeyFlag = definition.getFlagInstanceByName(
+            ModuleUtils.parseFlagName(definition.getContainingModule(), jsonKeyFlagName));
+      } catch (StaticMetapathException ex) {
+        throw new IllegalArgumentException(ex);
+      }
       if (jsonKeyFlag == null) {
         throw new IllegalArgumentException(
             String.format("The referenced json-key flag-name '%s' does not exist on definition '%s'.",

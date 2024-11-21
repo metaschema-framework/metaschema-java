@@ -680,6 +680,7 @@ public abstract class AbstractMetaschemaMojo
      * Metaschema module module twice, when this module is selected as the source
      * for generation.
      */
+    @Override
     public void processModule(IModule module) {
       if (!(module instanceof MetaschemaModelModule)) {
         super.processModule(module);

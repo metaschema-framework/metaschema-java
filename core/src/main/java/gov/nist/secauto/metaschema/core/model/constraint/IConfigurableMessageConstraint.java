@@ -36,7 +36,7 @@ public interface IConfigurableMessageConstraint extends IConstraint {
    * @param context
    *          the dynamic context for Metapath evaluation
    * @return the message
-   * @throws IllegalStateException
+   * @throws ConstraintInitializationException
    *           if a custom message is not defined, which will occur if this method
    *           is called while {@link #getMessage()} returns {@code null}
    */

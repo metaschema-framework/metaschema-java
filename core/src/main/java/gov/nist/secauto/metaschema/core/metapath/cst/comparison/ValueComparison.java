@@ -16,6 +16,11 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Supports Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#id-value-comparisons">value
+ * comparisons</a>.
+ */
 public class ValueComparison
     extends AbstractComparison {
 

@@ -8,12 +8,12 @@ package gov.nist.secauto.metaschema.core.model.xml.impl;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.ConstraintLetType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.RemarksType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.XmlException;
 import org.junit.jupiter.api.Test;
@@ -25,9 +25,7 @@ class ModelFactoryTest {
   @SuppressWarnings("null")
   @Test
   void letTest() throws XmlException {
-    ISource source = ISource.externalSource(StaticContext.builder()
-        .baseUri(URI.create("https://example.com/"))
-        .build());
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create("https://example.com/")));
 
     String variable = "var1";
     String expression = "1 + 1";

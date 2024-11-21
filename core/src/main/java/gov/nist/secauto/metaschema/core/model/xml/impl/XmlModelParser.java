@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.model.xml.impl;
 import gov.nist.secauto.metaschema.core.model.IGroupable;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GroupAsType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -87,7 +88,7 @@ public final class XmlModelParser {
       } else if (value instanceof BigInteger) {
         retval = ((BigInteger) value).intValueExact();
       } else {
-        throw new IllegalStateException("Invalid type: " + value.getClass().getName());
+        throw new ConstraintInitializationException("Invalid type: " + value.getClass().getName());
       }
     }
     return retval;

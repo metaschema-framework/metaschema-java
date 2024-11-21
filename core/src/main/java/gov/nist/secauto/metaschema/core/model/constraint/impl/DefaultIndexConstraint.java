@@ -9,6 +9,8 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 
@@ -75,7 +77,10 @@ public final class DefaultIndexConstraint
       @Nullable MarkupMultiline remarks) {
     super(id, formalName, description, source, level, target, properties, keyFields, message, remarks);
     if (name.isBlank()) {
-      throw new IllegalArgumentException("The index name must be a non-blank string");
+      throw new ConstraintInitializationException(
+          String.format("The index name must be a non-blank string in the constraint %s in '%s'",
+              IConstraint.getConstraintIdentity(this),
+              source.getLocationHint()));
     }
     this.name = name;
   }

@@ -131,7 +131,7 @@ public final class ModelSupport {
       IAtomicOrUnionType type;
       try {
         source.getStaticContext();
-        type = StaticContext.lookupDataTypeItemType(qname);
+        type = StaticContext.lookupAtomicType(qname);
       } catch (StaticMetapathException ex) {
         throw new IllegalStateException("Unrecognized data type: " + qname, ex);
 

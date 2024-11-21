@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference;
@@ -126,7 +127,7 @@ public abstract class AbstractAbsoluteModelGenerator<
 
     String name = ObjectUtils.requireNonNull(obj.getRef());
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(
-        module.getModuleStaticContext().parseModelName(name).getIndexPosition());
+        ModuleUtils.parseModelName(module, name).getIndexPosition());
 
     if (definition == null) {
       throw new IllegalStateException(
@@ -180,7 +181,7 @@ public abstract class AbstractAbsoluteModelGenerator<
 
     String name = ObjectUtils.requireNonNull(obj.getRef());
     IFieldDefinition definition = module.getScopedFieldDefinitionByName(
-        module.getModuleStaticContext().parseModelName(name).getIndexPosition());
+        ModuleUtils.parseModelName(module, name).getIndexPosition());
     if (definition == null) {
       throw new IllegalStateException(
           String.format("Unable to resolve field reference '%s' in definition '%s' in module '%s'",

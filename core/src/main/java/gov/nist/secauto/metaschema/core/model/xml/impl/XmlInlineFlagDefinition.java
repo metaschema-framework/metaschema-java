@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.InlineFlagDefinitionType;
@@ -54,11 +55,13 @@ class XmlInlineFlagDefinition
     this.defaultValue = xmlObject.isSetDefault()
         ? getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))
         : null;
+
+    ISource source = parent.getContainingModule().getSource();
+
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-      IValueConstrained retval = new ValueConstraintSet();
+      IValueConstrained retval = new ValueConstraintSet(source);
       if (getXmlObject().isSetConstraint()) {
-        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()),
-            getContainingModule().getSource());
+        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()), source);
       }
       return retval;
     }));

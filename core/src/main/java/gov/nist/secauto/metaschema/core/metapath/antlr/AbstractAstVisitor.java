@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.antlr; // NOPMD requires a large number of public methods
 
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.*;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -80,7 +79,7 @@ public abstract class AbstractAstVisitor<R>
   // ============================================================
 
   @Override
-  public R visitMetapath(MetapathContext ctx) {
+  public R visitMetapath(Metapath10.MetapathContext ctx) {
     assert ctx != null;
     return ctx.expr().accept(this);
   }
@@ -92,16 +91,16 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleExpr(@NonNull ExprContext ctx);
+  protected abstract R handleExpr(@NonNull Metapath10.ExprContext ctx);
 
   @Override
-  public R visitExpr(ExprContext ctx) {
+  public R visitExpr(Metapath10.ExprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleExpr);
   }
 
   @Override
-  public R visitExprsingle(ExprsingleContext ctx) {
+  public R visitExprsingle(Metapath10.ExprsingleContext ctx) {
     assert ctx != null;
     return delegateToChild(ctx);
   }
@@ -111,7 +110,7 @@ public abstract class AbstractAstVisitor<R>
   // ============================================================================
 
   @Override
-  public R visitPrimaryexpr(PrimaryexprContext ctx) {
+  public R visitPrimaryexpr(Metapath10.PrimaryexprContext ctx) {
     assert ctx != null;
     return delegateToChild(ctx);
   }
@@ -127,10 +126,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleStringLiteral(@NonNull LiteralContext ctx);
+  protected abstract R handleStringLiteral(@NonNull Metapath10.LiteralContext ctx);
 
   @Override
-  public R visitLiteral(LiteralContext ctx) {
+  public R visitLiteral(Metapath10.LiteralContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleStringLiteral);
   }
@@ -142,10 +141,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleNumericLiteral(@NonNull NumericliteralContext ctx);
+  protected abstract R handleNumericLiteral(@NonNull Metapath10.NumericliteralContext ctx);
 
   @Override
-  public R visitNumericliteral(NumericliteralContext ctx) {
+  public R visitNumericliteral(Metapath10.NumericliteralContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleNumericLiteral);
   }
@@ -161,16 +160,16 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleVarref(@NonNull VarrefContext ctx);
+  protected abstract R handleVarref(@NonNull Metapath10.VarrefContext ctx);
 
   @Override
-  public R visitVarref(VarrefContext ctx) {
+  public R visitVarref(Metapath10.VarrefContext ctx) {
     assert ctx != null;
     return handleVarref(ctx);
   }
 
   @Override
-  public R visitVarname(VarnameContext ctx) {
+  public R visitVarname(Metapath10.VarnameContext ctx) {
     assert ctx != null;
     return delegateToChild(ctx);
   }
@@ -187,12 +186,12 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleEmptyParenthesizedexpr(@NonNull ParenthesizedexprContext ctx);
+  protected abstract R handleEmptyParenthesizedexpr(@NonNull Metapath10.ParenthesizedexprContext ctx);
 
   @Override
-  public R visitParenthesizedexpr(ParenthesizedexprContext ctx) {
+  public R visitParenthesizedexpr(Metapath10.ParenthesizedexprContext ctx) {
     assert ctx != null;
-    ExprContext expr = ctx.expr();
+    Metapath10.ExprContext expr = ctx.expr();
     return expr == null ? handleEmptyParenthesizedexpr(ctx) : visit(expr);
   }
 
@@ -208,10 +207,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleContextitemexpr(@NonNull ContextitemexprContext ctx);
+  protected abstract R handleContextitemexpr(@NonNull Metapath10.ContextitemexprContext ctx);
 
   @Override
-  public R visitContextitemexpr(ContextitemexprContext ctx) {
+  public R visitContextitemexpr(Metapath10.ContextitemexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleContextitemexpr);
   }
@@ -227,22 +226,22 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleFunctioncall(@NonNull FunctioncallContext ctx);
+  protected abstract R handleFunctioncall(@NonNull Metapath10.FunctioncallContext ctx);
 
   @Override
-  public R visitFunctioncall(FunctioncallContext ctx) {
+  public R visitFunctioncall(Metapath10.FunctioncallContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleFunctioncall);
   }
 
   @Override
-  public R visitArgumentlist(ArgumentlistContext ctx) {
+  public R visitArgumentlist(Metapath10.ArgumentlistContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
-  public R visitArgument(ArgumentContext ctx) {
+  public R visitArgument(Metapath10.ArgumentContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -252,8 +251,8 @@ public abstract class AbstractAstVisitor<R>
   // =======================================================================
 
   @Override
-  public R visitEnclosedexpr(EnclosedexprContext ctx) {
-    ExprContext expr = ctx.expr();
+  public R visitEnclosedexpr(Metapath10.EnclosedexprContext ctx) {
+    Metapath10.ExprContext expr = ctx.expr();
     return expr == null ? null : expr.accept(this);
   }
 
@@ -268,10 +267,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handlePostfixexpr(@NonNull PostfixexprContext ctx);
+  protected abstract R handlePostfixexpr(@NonNull Metapath10.PostfixexprContext ctx);
 
   @Override
-  public R visitPostfixexpr(PostfixexprContext ctx) {
+  public R visitPostfixexpr(Metapath10.PostfixexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handlePostfixexpr);
   }
@@ -283,10 +282,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handlePredicate(@NonNull PredicateContext ctx);
+  protected abstract R handlePredicate(@NonNull Metapath10.PredicateContext ctx);
 
   @Override
-  public R visitPredicate(PredicateContext ctx) {
+  public R visitPredicate(Metapath10.PredicateContext ctx) {
     assert ctx != null;
     return handlePredicate(ctx);
   }
@@ -298,10 +297,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleLookup(@NonNull LookupContext ctx);
+  protected abstract R handleLookup(@NonNull Metapath10.LookupContext ctx);
 
   @Override
-  public R visitLookup(LookupContext ctx) {
+  public R visitLookup(Metapath10.LookupContext ctx) {
     assert ctx != null;
     return handleLookup(ctx);
   }
@@ -317,10 +316,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handlePathexpr(@NonNull PathexprContext ctx);
+  protected abstract R handlePathexpr(@NonNull Metapath10.PathexprContext ctx);
 
   @Override
-  public R visitPathexpr(PathexprContext ctx) {
+  public R visitPathexpr(Metapath10.PathexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handlePathexpr);
   }
@@ -337,10 +336,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleRelativepathexpr(@NonNull RelativepathexprContext ctx);
+  protected abstract R handleRelativepathexpr(@NonNull Metapath10.RelativepathexprContext ctx);
 
   @Override
-  public R visitRelativepathexpr(RelativepathexprContext ctx) {
+  public R visitRelativepathexpr(Metapath10.RelativepathexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleRelativepathexpr);
   }
@@ -350,7 +349,7 @@ public abstract class AbstractAstVisitor<R>
   // ================================================
 
   @Override
-  public R visitStepexpr(StepexprContext ctx) {
+  public R visitStepexpr(Metapath10.StepexprContext ctx) {
     assert ctx != null;
     return delegateToChild(ctx);
   }
@@ -362,10 +361,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleForwardstep(@NonNull ForwardstepContext ctx);
+  protected abstract R handleForwardstep(@NonNull Metapath10.ForwardstepContext ctx);
 
   @Override
-  public R visitForwardstep(ForwardstepContext ctx) {
+  public R visitForwardstep(Metapath10.ForwardstepContext ctx) {
     assert ctx != null;
     // this will either call the handler or forward for AbbrevforwardstepContext
     return handle(ctx, this::handleForwardstep);
@@ -378,10 +377,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleReversestep(@NonNull ReversestepContext ctx);
+  protected abstract R handleReversestep(@NonNull Metapath10.ReversestepContext ctx);
 
   @Override
-  public R visitReversestep(ReversestepContext ctx) {
+  public R visitReversestep(Metapath10.ReversestepContext ctx) {
     assert ctx != null;
     // this will either call the handler or forward for AbbrevreversestepContext
     return handle(ctx, this::handleReversestep);
@@ -398,16 +397,16 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleAxisstep(@NonNull AxisstepContext ctx);
+  protected abstract R handleAxisstep(@NonNull Metapath10.AxisstepContext ctx);
 
   @Override
-  public R visitAxisstep(AxisstepContext ctx) {
+  public R visitAxisstep(Metapath10.AxisstepContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleAxisstep);
   }
 
   @Override
-  public R visitPredicatelist(PredicatelistContext ctx) {
+  public R visitPredicatelist(Metapath10.PredicatelistContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -417,13 +416,13 @@ public abstract class AbstractAstVisitor<R>
   // ===========================================
 
   @Override
-  public R visitForwardaxis(ForwardaxisContext ctx) {
+  public R visitForwardaxis(Metapath10.ForwardaxisContext ctx) {
     // should never be called, since this is handled by handleForwardstep
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
-  public R visitReverseaxis(ReverseaxisContext ctx) {
+  public R visitReverseaxis(Metapath10.ReverseaxisContext ctx) {
     // should never be called, since this is handled by handleReversestep
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -433,19 +432,19 @@ public abstract class AbstractAstVisitor<R>
   // =======================================================
 
   @Override
-  public R visitNodetest(NodetestContext ctx) {
+  public R visitNodetest(Metapath10.NodetestContext ctx) {
     // should never be called, since this is handled by the calling context
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
-  public R visitNametest(NametestContext ctx) {
+  public R visitNametest(Metapath10.NametestContext ctx) {
     // should never be called, since this is handled by the calling context
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
-  public R visitEqname(EqnameContext ctx) {
+  public R visitEqname(Metapath10.EqnameContext ctx) {
     // should never be called, since this is handled by the calling context
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -458,10 +457,10 @@ public abstract class AbstractAstVisitor<R>
    * @return the result
    */
   @NonNull
-  protected abstract R handleWildcard(@NonNull WildcardContext ctx);
+  protected abstract R handleWildcard(@NonNull Metapath10.WildcardContext ctx);
 
   @Override
-  public R visitWildcard(WildcardContext ctx) {
+  public R visitWildcard(Metapath10.WildcardContext ctx) {
     assert ctx != null;
     return handleWildcard(ctx);
   }
@@ -477,10 +476,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleAbbrevforwardstep(@NonNull AbbrevforwardstepContext ctx);
+  protected abstract R handleAbbrevforwardstep(@NonNull Metapath10.AbbrevforwardstepContext ctx);
 
   @Override
-  public R visitAbbrevforwardstep(AbbrevforwardstepContext ctx) {
+  public R visitAbbrevforwardstep(Metapath10.AbbrevforwardstepContext ctx) {
     assert ctx != null;
     return handleAbbrevforwardstep(ctx);
   }
@@ -492,10 +491,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleAbbrevreversestep(@NonNull AbbrevreversestepContext ctx);
+  protected abstract R handleAbbrevreversestep(@NonNull Metapath10.AbbrevreversestepContext ctx);
 
   @Override
-  public R visitAbbrevreversestep(AbbrevreversestepContext ctx) {
+  public R visitAbbrevreversestep(Metapath10.AbbrevreversestepContext ctx) {
     assert ctx != null;
     return handleAbbrevreversestep(ctx);
   }
@@ -511,10 +510,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleRangeexpr(@NonNull RangeexprContext ctx);
+  protected abstract R handleRangeexpr(@NonNull Metapath10.RangeexprContext ctx);
 
   @Override
-  public R visitRangeexpr(RangeexprContext ctx) {
+  public R visitRangeexpr(Metapath10.RangeexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleRangeexpr);
   }
@@ -530,10 +529,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleUnionexpr(@NonNull UnionexprContext ctx);
+  protected abstract R handleUnionexpr(@NonNull Metapath10.UnionexprContext ctx);
 
   @Override
-  public R visitUnionexpr(UnionexprContext ctx) {
+  public R visitUnionexpr(Metapath10.UnionexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleUnionexpr);
   }
@@ -545,10 +544,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleIntersectexceptexpr(@NonNull IntersectexceptexprContext ctx);
+  protected abstract R handleIntersectexceptexpr(@NonNull Metapath10.IntersectexceptexprContext ctx);
 
   @Override
-  public R visitIntersectexceptexpr(IntersectexceptexprContext ctx) {
+  public R visitIntersectexceptexpr(Metapath10.IntersectexceptexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleIntersectexceptexpr);
   }
@@ -564,10 +563,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleAdditiveexpr(@NonNull AdditiveexprContext ctx);
+  protected abstract R handleAdditiveexpr(@NonNull Metapath10.AdditiveexprContext ctx);
 
   @Override
-  public R visitAdditiveexpr(AdditiveexprContext ctx) {
+  public R visitAdditiveexpr(Metapath10.AdditiveexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleAdditiveexpr);
   }
@@ -579,10 +578,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleMultiplicativeexpr(@NonNull MultiplicativeexprContext ctx);
+  protected abstract R handleMultiplicativeexpr(@NonNull Metapath10.MultiplicativeexprContext ctx);
 
   @Override
-  public R visitMultiplicativeexpr(MultiplicativeexprContext ctx) {
+  public R visitMultiplicativeexpr(Metapath10.MultiplicativeexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleMultiplicativeexpr);
   }
@@ -594,16 +593,16 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleUnaryexpr(@NonNull UnaryexprContext ctx);
+  protected abstract R handleUnaryexpr(@NonNull Metapath10.UnaryexprContext ctx);
 
   @Override
-  public R visitUnaryexpr(UnaryexprContext ctx) {
+  public R visitUnaryexpr(Metapath10.UnaryexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleUnaryexpr);
   }
 
   @Override
-  public R visitValueexpr(ValueexprContext ctx) {
+  public R visitValueexpr(Metapath10.ValueexprContext ctx) {
     assert ctx != null;
     return delegateToChild(ctx);
   }
@@ -620,10 +619,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleStringconcatexpr(@NonNull StringconcatexprContext ctx);
+  protected abstract R handleStringconcatexpr(@NonNull Metapath10.StringconcatexprContext ctx);
 
   @Override
-  public R visitStringconcatexpr(StringconcatexprContext ctx) {
+  public R visitStringconcatexpr(Metapath10.StringconcatexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleStringconcatexpr);
   }
@@ -639,22 +638,22 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleComparisonexpr(@NonNull ComparisonexprContext ctx);
+  protected abstract R handleComparisonexpr(@NonNull Metapath10.ComparisonexprContext ctx);
 
   @Override
-  public R visitComparisonexpr(ComparisonexprContext ctx) {
+  public R visitComparisonexpr(Metapath10.ComparisonexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleComparisonexpr);
   }
 
   @Override
-  public R visitValuecomp(ValuecompContext ctx) {
+  public R visitValuecomp(Metapath10.ValuecompContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
-  public R visitGeneralcomp(GeneralcompContext ctx) {
+  public R visitGeneralcomp(Metapath10.GeneralcompContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -670,10 +669,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleOrexpr(@NonNull OrexprContext ctx);
+  protected abstract R handleOrexpr(@NonNull Metapath10.OrexprContext ctx);
 
   @Override
-  public R visitOrexpr(OrexprContext ctx) {
+  public R visitOrexpr(Metapath10.OrexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleOrexpr);
   }
@@ -685,10 +684,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleAndexpr(@NonNull AndexprContext ctx);
+  protected abstract R handleAndexpr(@NonNull Metapath10.AndexprContext ctx);
 
   @Override
-  public R visitAndexpr(AndexprContext ctx) {
+  public R visitAndexpr(Metapath10.AndexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleAndexpr);
   }
@@ -704,22 +703,22 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleForexpr(@NonNull ForexprContext ctx);
+  protected abstract R handleForexpr(@NonNull Metapath10.ForexprContext ctx);
 
   @Override
-  public R visitForexpr(ForexprContext ctx) {
+  public R visitForexpr(Metapath10.ForexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleForexpr);
   }
 
   @Override
-  public R visitSimpleforclause(SimpleforclauseContext ctx) {
+  public R visitSimpleforclause(Metapath10.SimpleforclauseContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
-  public R visitSimpleforbinding(SimpleforbindingContext ctx) {
+  public R visitSimpleforbinding(Metapath10.SimpleforbindingContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -735,22 +734,22 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleLet(@NonNull LetexprContext ctx);
+  protected abstract R handleLet(@NonNull Metapath10.LetexprContext ctx);
 
   @Override
-  public R visitLetexpr(LetexprContext ctx) {
+  public R visitLetexpr(Metapath10.LetexprContext ctx) {
     assert ctx != null;
     return handleLet(ctx);
   }
 
   @Override
-  public R visitSimpleletclause(SimpleletclauseContext ctx) {
+  public R visitSimpleletclause(Metapath10.SimpleletclauseContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
-  public R visitSimpleletbinding(SimpleletbindingContext ctx) {
+  public R visitSimpleletbinding(Metapath10.SimpleletbindingContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -766,28 +765,28 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleMapConstructor(@NonNull MapconstructorContext ctx);
+  protected abstract R handleMapConstructor(@NonNull Metapath10.MapconstructorContext ctx);
 
   @Override
-  public R visitMapconstructor(MapconstructorContext ctx) {
+  public R visitMapconstructor(Metapath10.MapconstructorContext ctx) {
     assert ctx != null;
     return handleMapConstructor(ctx);
   }
 
   @Override
-  public R visitMapconstructorentry(MapconstructorentryContext ctx) {
+  public R visitMapconstructorentry(Metapath10.MapconstructorentryContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
-  public R visitMapkeyexpr(MapkeyexprContext ctx) {
+  public R visitMapkeyexpr(Metapath10.MapkeyexprContext ctx) {
     assert ctx != null;
     return delegateToChild(ctx);
   }
 
   @Override
-  public R visitMapvalueexpr(MapvalueexprContext ctx) {
+  public R visitMapvalueexpr(Metapath10.MapvalueexprContext ctx) {
     assert ctx != null;
     return delegateToChild(ctx);
   }
@@ -797,7 +796,7 @@ public abstract class AbstractAstVisitor<R>
   // ==============================================================
 
   @Override
-  public R visitArrayconstructor(ArrayconstructorContext ctx) {
+  public R visitArrayconstructor(Metapath10.ArrayconstructorContext ctx) {
     assert ctx != null;
     return delegateToChild(ctx);
   }
@@ -809,7 +808,7 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleArrayConstructor(@NonNull SquarearrayconstructorContext ctx);
+  protected abstract R handleArrayConstructor(@NonNull Metapath10.SquarearrayconstructorContext ctx);
 
   /**
    * Handle the provided expression.
@@ -818,22 +817,22 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleArrayConstructor(@NonNull CurlyarrayconstructorContext ctx);
+  protected abstract R handleArrayConstructor(@NonNull Metapath10.CurlyarrayconstructorContext ctx);
 
   @Override
-  public R visitSquarearrayconstructor(SquarearrayconstructorContext ctx) {
+  public R visitSquarearrayconstructor(Metapath10.SquarearrayconstructorContext ctx) {
     assert ctx != null;
     return handleArrayConstructor(ctx);
   }
 
   @Override
-  public R visitCurlyarrayconstructor(CurlyarrayconstructorContext ctx) {
+  public R visitCurlyarrayconstructor(Metapath10.CurlyarrayconstructorContext ctx) {
     assert ctx != null;
     return handleArrayConstructor(ctx);
   }
 
   @Override
-  public R visitKeyspecifier(KeyspecifierContext ctx) {
+  public R visitKeyspecifier(Metapath10.KeyspecifierContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -845,10 +844,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleUnarylookup(@NonNull UnarylookupContext ctx);
+  protected abstract R handleUnarylookup(@NonNull Metapath10.UnarylookupContext ctx);
 
   @Override
-  public R visitUnarylookup(UnarylookupContext ctx) {
+  public R visitUnarylookup(Metapath10.UnarylookupContext ctx) {
     assert ctx != null;
     return handleUnarylookup(ctx);
   }
@@ -864,10 +863,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleIfexpr(@NonNull IfexprContext ctx);
+  protected abstract R handleIfexpr(@NonNull Metapath10.IfexprContext ctx);
 
   @Override
-  public R visitIfexpr(IfexprContext ctx) {
+  public R visitIfexpr(Metapath10.IfexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleIfexpr);
   }
@@ -885,10 +884,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleQuantifiedexpr(@NonNull QuantifiedexprContext ctx);
+  protected abstract R handleQuantifiedexpr(@NonNull Metapath10.QuantifiedexprContext ctx);
 
   @Override
-  public R visitQuantifiedexpr(QuantifiedexprContext ctx) {
+  public R visitQuantifiedexpr(Metapath10.QuantifiedexprContext ctx) {
     assert ctx != null;
     return handleQuantifiedexpr(ctx);
   }
@@ -906,10 +905,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleInstanceofexpr(@NonNull InstanceofexprContext ctx);
+  protected abstract R handleInstanceofexpr(@NonNull Metapath10.InstanceofexprContext ctx);
 
   @Override
-  public R visitInstanceofexpr(InstanceofexprContext ctx) {
+  public R visitInstanceofexpr(Metapath10.InstanceofexprContext ctx) {
     assert ctx != null;
     return handle(ctx, context -> handleInstanceofexpr(ctx));
   }
@@ -927,10 +926,10 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleSimplemapexpr(@NonNull SimplemapexprContext ctx);
+  protected abstract R handleSimplemapexpr(@NonNull Metapath10.SimplemapexprContext ctx);
 
   @Override
-  public R visitSimplemapexpr(SimplemapexprContext ctx) {
+  public R visitSimplemapexpr(Metapath10.SimplemapexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleSimplemapexpr);
   }
@@ -948,16 +947,16 @@ public abstract class AbstractAstVisitor<R>
    *          the provided expression context
    * @return the result
    */
-  protected abstract R handleArrowexpr(@NonNull ArrowexprContext ctx);
+  protected abstract R handleArrowexpr(@NonNull Metapath10.ArrowexprContext ctx);
 
   @Override
-  public R visitArrowexpr(ArrowexprContext ctx) {
+  public R visitArrowexpr(Metapath10.ArrowexprContext ctx) {
     assert ctx != null;
     return handle(ctx, this::handleArrowexpr);
   }
 
   @Override
-  public R visitArrowfunctionspecifier(ArrowfunctionspecifierContext ctx) {
+  public R visitArrowfunctionspecifier(Metapath10.ArrowfunctionspecifierContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
@@ -965,103 +964,103 @@ public abstract class AbstractAstVisitor<R>
   // TODO: implement these
 
   @Override
-  public R visitParamlist(ParamlistContext ctx) {
+  public R visitParamlist(Metapath10.ParamlistContext ctx) {
     // TODO Auto-generated method stub
     return super.visitParamlist(ctx);
   }
 
   @Override
-  public R visitParam(ParamContext ctx) {
+  public R visitParam(Metapath10.ParamContext ctx) {
     // TODO Auto-generated method stub
     return super.visitParam(ctx);
   }
 
   @Override
-  public R visitFunctionbody(FunctionbodyContext ctx) {
+  public R visitFunctionbody(Metapath10.FunctionbodyContext ctx) {
     // TODO Auto-generated method stub
     return super.visitFunctionbody(ctx);
   }
 
   @Override
-  public R visitTreatexpr(TreatexprContext ctx) {
+  public R visitTreatexpr(Metapath10.TreatexprContext ctx) {
     // TODO Auto-generated method stub
     return super.visitTreatexpr(ctx);
   }
 
   @Override
-  public R visitCastableexpr(CastableexprContext ctx) {
+  public R visitCastableexpr(Metapath10.CastableexprContext ctx) {
     // TODO Auto-generated method stub
     return super.visitCastableexpr(ctx);
   }
 
   @Override
-  public R visitCastexpr(CastexprContext ctx) {
+  public R visitCastexpr(Metapath10.CastexprContext ctx) {
     // TODO Auto-generated method stub
     return super.visitCastexpr(ctx);
   }
 
   @Override
-  public R visitFunctionitemexpr(FunctionitemexprContext ctx) {
+  public R visitFunctionitemexpr(Metapath10.FunctionitemexprContext ctx) {
     // TODO Auto-generated method stub
     return super.visitFunctionitemexpr(ctx);
   }
 
   @Override
-  public R visitNamedfunctionref(NamedfunctionrefContext ctx) {
+  public R visitNamedfunctionref(Metapath10.NamedfunctionrefContext ctx) {
     // TODO Auto-generated method stub
     return super.visitNamedfunctionref(ctx);
   }
 
   @Override
-  public R visitInlinefunctionexpr(InlinefunctionexprContext ctx) {
+  public R visitInlinefunctionexpr(Metapath10.InlinefunctionexprContext ctx) {
     // TODO Auto-generated method stub
     return super.visitInlinefunctionexpr(ctx);
   }
 
   @Override
-  public R visitSingletype(SingletypeContext ctx) {
+  public R visitSingletype(Metapath10.SingletypeContext ctx) {
     // TODO Auto-generated method stub
     return super.visitSingletype(ctx);
   }
 
   @Override
-  public R visitTypedeclaration(TypedeclarationContext ctx) {
+  public R visitTypedeclaration(Metapath10.TypedeclarationContext ctx) {
     // TODO Auto-generated method stub
     return super.visitTypedeclaration(ctx);
   }
 
   @Override
-  public R visitSequencetype(SequencetypeContext ctx) {
+  public R visitSequencetype(Metapath10.SequencetypeContext ctx) {
     // TODO Auto-generated method stub
     return super.visitSequencetype(ctx);
   }
 
   @Override
-  public R visitOccurrenceindicator(OccurrenceindicatorContext ctx) {
+  public R visitOccurrenceindicator(Metapath10.OccurrenceindicatorContext ctx) {
     // TODO Auto-generated method stub
     return super.visitOccurrenceindicator(ctx);
   }
 
   @Override
-  public R visitItemtype(ItemtypeContext ctx) {
+  public R visitItemtype(Metapath10.ItemtypeContext ctx) {
     // TODO Auto-generated method stub
     return super.visitItemtype(ctx);
   }
 
   @Override
-  public R visitAtomicoruniontype(AtomicoruniontypeContext ctx) {
+  public R visitAtomicoruniontype(Metapath10.AtomicoruniontypeContext ctx) {
     // TODO Auto-generated method stub
     return super.visitAtomicoruniontype(ctx);
   }
 
   @Override
-  public R visitSimpletypename(SimpletypenameContext ctx) {
+  public R visitSimpletypename(Metapath10.SimpletypenameContext ctx) {
     // TODO Auto-generated method stub
     return super.visitSimpletypename(ctx);
   }
 
   @Override
-  public R visitTypename_(Typename_Context ctx) {
+  public R visitTypename_(Metapath10.Typename_Context ctx) {
     // TODO Auto-generated method stub
     return super.visitTypename_(ctx);
   }
@@ -1069,133 +1068,133 @@ public abstract class AbstractAstVisitor<R>
   // these are handled
 
   @Override
-  public R visitFunctiontest(FunctiontestContext ctx) {
+  public R visitFunctiontest(Metapath10.FunctiontestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitFunctiontest(ctx);
   }
 
   @Override
-  public R visitAnyfunctiontest(AnyfunctiontestContext ctx) {
+  public R visitAnyfunctiontest(Metapath10.AnyfunctiontestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitAnyfunctiontest(ctx);
   }
 
   @Override
-  public R visitTypedfunctiontest(TypedfunctiontestContext ctx) {
+  public R visitTypedfunctiontest(Metapath10.TypedfunctiontestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitTypedfunctiontest(ctx);
   }
 
   @Override
-  public R visitMaptest(MaptestContext ctx) {
+  public R visitMaptest(Metapath10.MaptestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitMaptest(ctx);
   }
 
   @Override
-  public R visitAnymaptest(AnymaptestContext ctx) {
+  public R visitAnymaptest(Metapath10.AnymaptestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitAnymaptest(ctx);
   }
 
   @Override
-  public R visitTypedmaptest(TypedmaptestContext ctx) {
+  public R visitTypedmaptest(Metapath10.TypedmaptestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitTypedmaptest(ctx);
   }
 
   @Override
-  public R visitArraytest(ArraytestContext ctx) {
+  public R visitArraytest(Metapath10.ArraytestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitArraytest(ctx);
   }
 
   @Override
-  public R visitAnyarraytest(AnyarraytestContext ctx) {
+  public R visitAnyarraytest(Metapath10.AnyarraytestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitAnyarraytest(ctx);
   }
 
   @Override
-  public R visitTypedarraytest(TypedarraytestContext ctx) {
+  public R visitTypedarraytest(Metapath10.TypedarraytestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitTypedarraytest(ctx);
   }
 
   @Override
-  public R visitParenthesizeditemtype(ParenthesizeditemtypeContext ctx) {
+  public R visitParenthesizeditemtype(Metapath10.ParenthesizeditemtypeContext ctx) {
     // TODO Auto-generated method stub
     return super.visitParenthesizeditemtype(ctx);
   }
 
   @Override
-  public R visitKindtest(KindtestContext ctx) {
+  public R visitKindtest(Metapath10.KindtestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitKindtest(ctx);
   }
 
   @Override
-  public R visitAnykindtest(AnykindtestContext ctx) {
+  public R visitAnykindtest(Metapath10.AnykindtestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitAnykindtest(ctx);
   }
 
   @Override
-  public R visitDocumenttest(DocumenttestContext ctx) {
+  public R visitDocumenttest(Metapath10.DocumenttestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitDocumenttest(ctx);
   }
 
   @Override
-  public R visitTexttest(TexttestContext ctx) {
+  public R visitTexttest(Metapath10.TexttestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitTexttest(ctx);
   }
 
   @Override
-  public R visitFlagtest(FlagtestContext ctx) {
+  public R visitFlagtest(Metapath10.FlagtestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitFlagtest(ctx);
   }
 
   @Override
-  public R visitFlagnameorwildcard(FlagnameorwildcardContext ctx) {
+  public R visitFlagnameorwildcard(Metapath10.FlagnameorwildcardContext ctx) {
     // TODO Auto-generated method stub
     return super.visitFlagnameorwildcard(ctx);
   }
 
   @Override
-  public R visitFieldtest(FieldtestContext ctx) {
+  public R visitFieldtest(Metapath10.FieldtestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitFieldtest(ctx);
   }
 
   @Override
-  public R visitAssemblytest(AssemblytestContext ctx) {
+  public R visitAssemblytest(Metapath10.AssemblytestContext ctx) {
     // TODO Auto-generated method stub
     return super.visitAssemblytest(ctx);
   }
 
   @Override
-  public R visitElementnameorwildcard(ElementnameorwildcardContext ctx) {
+  public R visitElementnameorwildcard(Metapath10.ElementnameorwildcardContext ctx) {
     // TODO Auto-generated method stub
     return super.visitElementnameorwildcard(ctx);
   }
 
   @Override
-  public R visitElementdeclaration(ElementdeclarationContext ctx) {
+  public R visitElementdeclaration(Metapath10.ElementdeclarationContext ctx) {
     // TODO Auto-generated method stub
     return super.visitElementdeclaration(ctx);
   }
 
   @Override
-  public R visitFlagname(FlagnameContext ctx) {
+  public R visitFlagname(Metapath10.FlagnameContext ctx) {
     // TODO Auto-generated method stub
     return super.visitFlagname(ctx);
   }
 
   @Override
-  public R visitElementname(ElementnameContext ctx) {
+  public R visitElementname(Metapath10.ElementnameContext ctx) {
     // TODO Auto-generated method stub
     return super.visitElementname(ctx);
   }

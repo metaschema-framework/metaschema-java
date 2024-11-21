@@ -66,14 +66,17 @@ public final class TypeTestSupport {
   public static ISequenceType parseSequenceType(
       @NonNull SequencetypeContext ctx,
       @NonNull StaticContext staticContext) {
-    return ctx.KW_EMPTY_SEQUENCE() == null
-        ? parseSequenceType(ctx.itemtype(), ctx.occurrenceindicator(), staticContext)
-        : ISequenceType.empty();
+    return ObjectUtils.notNull(ctx.KW_EMPTY_SEQUENCE() == null
+        ? parseSequenceType(
+            ObjectUtils.requireNonNull(ctx.itemtype()),
+            ctx.occurrenceindicator(),
+            staticContext)
+        : ISequenceType.empty());
   }
 
   private static ISequenceType parseSequenceType(
       @NonNull ItemtypeContext itemTypeCtx,
-      @NonNull OccurrenceindicatorContext occurrenceIndicatorCtx,
+      @Nullable OccurrenceindicatorContext occurrenceIndicatorCtx,
       @NonNull StaticContext staticContext) {
     IItemType itemType = parseItemType(itemTypeCtx, staticContext);
     Occurrence occurrence = parseOccurrence(occurrenceIndicatorCtx);
@@ -142,7 +145,7 @@ public final class TypeTestSupport {
     } else {
       IEnhancedQName name = nameOrWildcard.STAR() == null
           // eqname
-          ? staticContext.parseFlagName(nameOrWildcard.flagname().eqname().getText())
+          ? staticContext.parseFlagName(ObjectUtils.requireNonNull(nameOrWildcard.flagname().eqname().getText()))
           // STAR
           : null;
 
@@ -150,7 +153,7 @@ public final class TypeTestSupport {
       Typename_Context typeName = ctx.typename_();
       if (typeName != null) {
         String dataTypeName = ObjectUtils.notNull(typeName.eqname().getText());
-        dataType = staticContext.lookupDataTypeItemType(dataTypeName);
+        dataType = staticContext.lookupAtomicType(dataTypeName);
       }
 
       retval = IItemType.flag(name, dataType);
@@ -192,7 +195,7 @@ public final class TypeTestSupport {
       TypedmaptestContext typedMapCtx = ctx.typedmaptest();
 
       String dataTypeName = ObjectUtils.notNull(typedMapCtx.atomicoruniontype().getText());
-      IAtomicOrUnionType dataType = staticContext.lookupDataTypeItemType(dataTypeName);
+      IAtomicOrUnionType dataType = staticContext.lookupAtomicType(dataTypeName);
       retval = IItemType.map(
           dataType,
           parseSequenceType(ObjectUtils.requireNonNull(typedMapCtx.sequencetype()), staticContext));
@@ -224,7 +227,7 @@ public final class TypeTestSupport {
     AtomicoruniontypeContext ctx = (AtomicoruniontypeContext) tree;
 
     String name = ObjectUtils.notNull(ctx.eqname().getText());
-    return staticContext.lookupDataTypeItemType(name);
+    return staticContext.lookupAtomicType(name);
   }
 
   @NonNull

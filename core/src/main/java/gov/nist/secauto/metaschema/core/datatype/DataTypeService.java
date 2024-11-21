@@ -5,8 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.datatype;
 
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -17,6 +19,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
@@ -38,12 +42,31 @@ public final class DataTypeService {
   private static final Logger LOGGER = LogManager.getLogger(DataTypeService.class);
   private static final Lazy<DataTypeService> INSTANCE = Lazy.lazy(DataTypeService::new);
 
+  private static final List<IItemType> BUILTIN_ITEM_TYPES;
+
+  static {
+    List<IItemType> builtinItemTypes = new LinkedList<>();
+    builtinItemTypes.add(IItemType.item());
+    builtinItemTypes.add(IItemType.array());
+    builtinItemTypes.add(IItemType.map());
+    builtinItemTypes.add(IItemType.node());
+    builtinItemTypes.add(IItemType.document());
+    builtinItemTypes.add(IItemType.assembly());
+    // builtinItemTypes.add(IItemType.field());
+    builtinItemTypes.add(IItemType.flag());
+    // builtinItemTypes.add(IItemType.module());
+
+    BUILTIN_ITEM_TYPES = CollectionUtil.unmodifiableList(builtinItemTypes);
+  }
+
   @NonNull
   private final Map<Integer, IAtomicOrUnionType> typeByQNameIndex;
   @NonNull
-  private final Map<Class<? extends IDataTypeAdapter<?>>, IDataTypeAdapter<?>> typeByAdapterClass;
+  private final Map<Class<? extends IDataTypeAdapter<?>>, IDataTypeAdapter<?>> atomicTypeByAdapterClass;
   @NonNull
-  private final Map<Class<? extends IAnyAtomicItem>, IAtomicOrUnionType> typeByItemClass;
+  private final Map<Class<? extends IAnyAtomicItem>, IAtomicOrUnionType> atomicTypeByItemClass;
+  @NonNull
+  private final Map<Class<? extends IItem>, IItemType> itemTypeByItemClass;
 
   /**
    * Get the singleton service instance, which will be lazy constructed on first
@@ -60,7 +83,7 @@ public final class DataTypeService {
   private DataTypeService() {
     ServiceLoader<IDataTypeProvider> loader = ServiceLoader.load(IDataTypeProvider.class);
 
-    this.typeByAdapterClass = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+    this.atomicTypeByAdapterClass = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
         loader.stream()
             .map(Provider<IDataTypeProvider>::get)
             .flatMap(provider -> provider.getJavaTypeAdapters().stream())
@@ -76,7 +99,7 @@ public final class DataTypeService {
                 },
                 LinkedHashMap::new))));
 
-    Stream<Map.Entry<Integer, IAtomicOrUnionType>> adapterStream = this.typeByAdapterClass.values().stream()
+    Stream<Map.Entry<Integer, IAtomicOrUnionType>> adapterStream = this.atomicTypeByAdapterClass.values().stream()
         .flatMap(dataType -> dataType.getNames().stream()
             .map(qname -> Map.entry(qname.getIndexPosition(), dataType.getItemType())));
 
@@ -101,8 +124,26 @@ public final class DataTypeService {
                 },
                 ConcurrentHashMap::new))));
 
-    this.typeByItemClass = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+    this.atomicTypeByItemClass = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
         this.typeByQNameIndex.values().stream()
+            .collect(CustomCollectors.toMap(
+                type -> ObjectUtils.asNullableType(type.getItemClass()),
+                CustomCollectors.identity(),
+                (key, v1, v2) -> {
+                  if (!Objects.equals(v1, v2) && LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("Duplicate atomic item class '{}' declared by types '{}' and '{}'. Using the first.",
+                        key.getName(),
+                        v1.toSignature(),
+                        v2.toSignature());
+                  }
+                  return v1;
+                },
+                ConcurrentHashMap::new))));
+
+    this.itemTypeByItemClass = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+        Stream.concat(
+            BUILTIN_ITEM_TYPES.stream(),
+            this.atomicTypeByItemClass.values().stream())
             .collect(CustomCollectors.toMap(
                 type -> ObjectUtils.asNullableType(type.getItemClass()),
                 CustomCollectors.identity(),
@@ -127,9 +168,9 @@ public final class DataTypeService {
    *         system
    */
   @Nullable
-  public IAtomicOrUnionType getDataTypeByQName(@NonNull QName qname) {
+  public IAtomicOrUnionType getAtomicTypeByQName(@NonNull QName qname) {
     IEnhancedQName result = QNameCache.instance().get(qname);
-    return result == null ? null : getDataTypeByQNameIndex(result.getIndexPosition());
+    return result == null ? null : getAtomicTypeByQNameIndex(result.getIndexPosition());
   }
 
   /**
@@ -142,7 +183,7 @@ public final class DataTypeService {
    *         system
    */
   @Nullable
-  public IAtomicOrUnionType getDataTypeByQNameIndex(int qnameIndexPosition) {
+  public IAtomicOrUnionType getAtomicTypeByQNameIndex(int qnameIndexPosition) {
     return typeByQNameIndex.get(qnameIndexPosition);
   }
 
@@ -155,8 +196,21 @@ public final class DataTypeService {
    *         system
    */
   @Nullable
-  public IAtomicOrUnionType getDataTypeByItemClass(Class<? extends IAnyAtomicItem> clazz) {
-    return typeByItemClass.get(clazz);
+  public IAtomicOrUnionType getAtomicTypeByItemClass(Class<? extends IAnyAtomicItem> clazz) {
+    return atomicTypeByItemClass.get(clazz);
+  }
+
+  /**
+   * Lookup a specific {@link IAtomicOrUnionType} by its item class.
+   *
+   * @param clazz
+   *          the adapter class to get the instance for
+   * @return the data type or {@code null} if the data type is unknown to the type
+   *         system
+   */
+  @Nullable
+  public IItemType getItemTypeByItemClass(Class<? extends IItem> clazz) {
+    return itemTypeByItemClass.get(clazz);
   }
 
   /**
@@ -173,6 +227,6 @@ public final class DataTypeService {
   @Nullable
   public <TYPE extends IDataTypeAdapter<?>> TYPE getDataTypeByAdapterClass(
       @NonNull Class<TYPE> clazz) {
-    return (TYPE) typeByAdapterClass.get(clazz);
+    return (TYPE) atomicTypeByAdapterClass.get(clazz);
   }
 }

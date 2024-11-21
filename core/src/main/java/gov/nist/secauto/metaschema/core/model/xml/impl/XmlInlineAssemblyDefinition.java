@@ -20,6 +20,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
@@ -88,13 +89,15 @@ class XmlInlineAssemblyDefinition
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> XmlFlagContainerSupport.newInstance(xmlObject, this)));
     this.modelContainer
         = ObjectUtils.notNull(Lazy.lazy(() -> XmlAssemblyModelContainerSupport.of(xmlObject.getModel(), this)));
+
+    ISource source = parent.getOwningDefinition().getContainingModule().getSource();
+
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-      IModelConstrained retval = new AssemblyConstraintSet();
+      IModelConstrained retval = new AssemblyConstraintSet(source);
       if (getXmlObject().isSetConstraint()) {
         ConstraintXmlSupport.parse(
             retval,
-            ObjectUtils.notNull(getXmlObject().getConstraint()),
-            getContainingModule().getSource());
+            ObjectUtils.notNull(getXmlObject().getConstraint()), source);
       }
       return retval;
     }));

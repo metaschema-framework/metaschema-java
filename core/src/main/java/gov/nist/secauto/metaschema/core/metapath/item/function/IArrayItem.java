@@ -44,7 +44,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <ITEM>
  *          the Metapath item type of array members
  */
-@SuppressWarnings("PMD.ShortMethodName")
+@SuppressWarnings({ "PMD.ShortMethodName", "PMD.ExcessivePublicCount" })
 public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, IItem, List<ITEM>, IPrintable {
   @NonNull
   static IItemType type() {
@@ -126,8 +126,8 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
 
   @Override
   default ISequence<?> contentsAsSequence() {
-    return ISequence.of(stream()
-        .flatMap(ICollectionValue::normalizeAsItems));
+    return ISequence.of(ObjectUtils.notNull(stream()
+        .flatMap(ICollectionValue::normalizeAsItems)));
   }
 
   /**
@@ -214,7 +214,6 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
   static <T extends ICollectionValue> Collector<T, ?, IArrayItem<T>> toArrayItem() {
     return new Collector<T, List<T>, IArrayItem<T>>() {
 
-      @SuppressWarnings("null")
       @Override
       public Supplier<List<T>> supplier() {
         return ArrayList::new;

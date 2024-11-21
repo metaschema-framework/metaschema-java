@@ -47,7 +47,7 @@ public abstract class AbstractFieldInstance<
     // this should always be not null
     IFieldDefinition definition = getContainingModule().getScopedFieldDefinitionByName(qname.getIndexPosition());
     if (definition == null) {
-      throw new IllegalStateException(
+      throw new ModelInitializationException(
           String.format("Unable to resolve field reference '%s' in definition '%s' in module '%s'",
               qname,
               getParentContainer().getOwningDefinition().getName(),

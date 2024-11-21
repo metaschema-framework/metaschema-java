@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Implements a
- * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#MODEL}
+ * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceLocation#MODEL}
  * source with no associated resource.
  */
 public final class InternalModelSource implements ISource {
@@ -56,13 +56,18 @@ public final class InternalModelSource implements ISource {
   }
 
   @Override
-  public SourceType getSourceType() {
-    return SourceType.MODEL;
+  public SourceLocation getSourceType() {
+    return SourceLocation.MODEL;
   }
 
   @Override
   public URI getSource() {
     return module.getLocation();
+  }
+
+  @Override
+  public String getLocationHint() {
+    return module.getLocationHint();
   }
 
   @Override

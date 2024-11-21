@@ -198,7 +198,7 @@ public abstract class AbstractConstraintBuilder<
    *
    * @throws NullPointerException
    *           if a required value is {@code null}
-   * @throws IllegalStateException
+   * @throws ConstraintInitializationException
    *           in other cases where the combination of values is inappropriate
    */
   protected void validate() {
@@ -217,6 +217,8 @@ public abstract class AbstractConstraintBuilder<
    * Generate the built instance after validating the provided data.
    *
    * @return the built instance
+   * @throws ConstraintInitializationException
+   *           if the underlying data is incomplete or invalid
    */
   @NonNull
   public R build() {

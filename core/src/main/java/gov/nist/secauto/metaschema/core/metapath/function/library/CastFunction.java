@@ -16,7 +16,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.net.URI;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -32,19 +31,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctionExecutor {
   @NonNull
   private final ICastExecutor<ITEM> castExecutor;
-
-  @NonNull
-  static <ITEM extends IAnyAtomicItem> IFunction signature(
-      @NonNull URI namespace,
-      @NonNull String name,
-      @NonNull IAtomicOrUnionType resultingAtomicType,
-      @NonNull ICastExecutor<ITEM> executor) {
-    return signature(
-        ObjectUtils.notNull(namespace.toASCIIString()),
-        name,
-        resultingAtomicType,
-        executor);
-  }
 
   @NonNull
   static <ITEM extends IAnyAtomicItem> IFunction signature(

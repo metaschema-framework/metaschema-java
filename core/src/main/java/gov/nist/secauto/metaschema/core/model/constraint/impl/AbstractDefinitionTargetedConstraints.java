@@ -9,7 +9,9 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractTargetedConstraints;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 
 import java.util.Locale;
@@ -34,15 +36,18 @@ public abstract class AbstractDefinitionTargetedConstraints<
   /**
    * Construct a new set of targeted constraints.
    *
+   * @param source
+   *          information about the resource the constraints were sources from
    * @param target
    *          the Metapath expression that can be used to find matching targets
    * @param constraints
    *          the constraints to apply to matching targets
    */
   protected AbstractDefinitionTargetedConstraints(
+      @NonNull ISource source,
       @NonNull String target,
       @NonNull S constraints) {
-    super(target, constraints);
+    super(source, target, constraints);
   }
 
   /**
@@ -63,28 +68,28 @@ public abstract class AbstractDefinitionTargetedConstraints<
 
   @Override
   public void target(@NonNull IFlagDefinition definition) {
-    throw new IllegalStateException(
-        String.format("The targeted definition '%s' from metaschema '%s' is not a %s definition.",
-            definition.getEffectiveName(),
-            definition.getContainingModule().getQName().toString(),
-            definition.getModelType().name().toLowerCase(Locale.ROOT)));
+    wrongDefinitionTypeTargeted(definition);
   }
 
   @Override
   public void target(@NonNull IFieldDefinition definition) {
-    throw new IllegalStateException(
-        String.format("The targeted definition '%s' from metaschema '%s' is not a %s definition.",
-            definition.getEffectiveName(),
-            definition.getContainingModule().getQName().toString(),
-            definition.getModelType().name().toLowerCase(Locale.ROOT)));
+    wrongDefinitionTypeTargeted(definition);
   }
 
   @Override
   public void target(@NonNull IAssemblyDefinition definition) {
-    throw new IllegalStateException(
-        String.format("The targeted definition '%s' from metaschema '%s' is not a %s definition.",
+    wrongDefinitionTypeTargeted(definition);
+  }
+
+  private void wrongDefinitionTypeTargeted(@NonNull IDefinition definition) {
+    throw new ConstraintInitializationException(
+        String.format(
+            "The %s named '%s' from metaschema '%s' is incorrectly targeted by a set of" +
+                " constraints with the target '%s'. Ensure the target expression is correct in '%s'.",
+            definition.getModelType().name().toLowerCase(Locale.ROOT),
             definition.getEffectiveName(),
             definition.getContainingModule().getQName().toString(),
-            definition.getModelType().name().toLowerCase(Locale.ROOT)));
+            getTargetExpression(),
+            getSource().getLocationHint()));
   }
 }

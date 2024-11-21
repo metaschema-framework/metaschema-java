@@ -278,18 +278,6 @@ public interface IFunction extends IItem {
       return this;
     }
 
-    // /**
-    // * Define the namespace of the function.
-    // *
-    // * @param uri
-    // * the function's namespace URI
-    // * @return this builder
-    // */
-    // @NonNull
-    // public Builder namespace(@NonNull URI uri) {
-    // return namespace(ObjectUtils.notNull(uri.toASCIIString()));
-    // }
-
     /**
      * Define the namespace of the function.
      *
@@ -407,7 +395,7 @@ public interface IFunction extends IItem {
     @NonNull
     public Builder returnType(@NonNull String name) {
       try {
-        this.returnType = getStaticContext().lookupDataTypeItemType(name);
+        this.returnType = getStaticContext().lookupAtomicType(name);
       } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(
             String.format("No data type with the name '%s'.", name), ex);
@@ -425,7 +413,7 @@ public interface IFunction extends IItem {
     @NonNull
     public Builder returnType(@NonNull IEnhancedQName name) {
       try {
-        this.returnType = StaticContext.lookupDataTypeItemType(name);
+        this.returnType = StaticContext.lookupAtomicType(name);
       } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(
             String.format("No data type with the name '%s'.", name), ex);

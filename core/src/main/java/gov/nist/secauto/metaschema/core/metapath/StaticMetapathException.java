@@ -33,7 +33,7 @@ public class StaticMetapathException
    */
   // FIXME: Check for use in all calls to the static or dyanmic context to lookup
   // a name
-  public static final int NOT_DEFINED = 3;
+  public static final int NOT_DEFINED = 8;
 
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPST0017">err:MPST0017</a>: It

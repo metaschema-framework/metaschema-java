@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
@@ -122,14 +123,17 @@ public class InstanceModelAssemblyInline
             .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME.getIndexPosition())),
         this,
         nodeItemFactory)));
+
+    ISource source = parent.getOwningDefinition().getContainingModule().getSource();
+
     this.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-      IModelConstrained retval = new AssemblyConstraintSet();
+      IModelConstrained retval = new AssemblyConstraintSet(source);
       AssemblyConstraints constraints = getBinding().getConstraint();
       if (constraints != null) {
         ConstraintBindingSupport.parse(
             retval,
             constraints,
-            parent.getOwningDefinition().getContainingModule().getSource());
+            source);
       }
       return retval;
     }));

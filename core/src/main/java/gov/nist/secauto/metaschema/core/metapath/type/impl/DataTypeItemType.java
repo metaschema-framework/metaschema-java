@@ -27,6 +27,7 @@ public class DataTypeItemType
     this.itemClass = itemClass;
   }
 
+  @Override
   @NonNull
   public IDataTypeAdapter<?> getAdapter() {
     return adapter;

@@ -42,10 +42,12 @@ public final class NamespaceCache {
   }
 
   // FIXME: check for use and prefer the string version
+  @SuppressWarnings("PMD.ShortMethodName")
   public int of(@NonNull URI namespace) {
-    return of(namespace.toASCIIString());
+    return of(ObjectUtils.notNull(namespace.toASCIIString()));
   }
 
+  @SuppressWarnings("PMD.ShortMethodName")
   public int of(@NonNull String namespace) {
     return nsToIndex.computeIfAbsent(namespace, key -> {
       int nextIndex = indexCounter.getAndIncrement();

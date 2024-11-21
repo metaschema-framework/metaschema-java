@@ -101,7 +101,7 @@ public interface IArgument {
     @NonNull
     public Builder type(@NonNull IEnhancedQName name) {
       try {
-        this.type = StaticContext.lookupDataTypeItemType(name);
+        this.type = StaticContext.lookupAtomicType(name);
       } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(
             String.format("No data type with the name '%s'.", name), ex);

@@ -11,33 +11,39 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemVisitor;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
 import gov.nist.secauto.metaschema.core.model.constraint.ITargetedConstraints;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Applies targeted constraints to their intended targets.
+ */
 public class ConstraintComposingVisitor
     implements INodeItemVisitor<ITargetedConstraints, Void> {
 
   @Override
-  public Void visitDocument(@NonNull IDocumentNodeItem item, ITargetedConstraints context) {
-    throw new UnsupportedOperationException("constraints can only apply to an assembly, field, or flag definition");
+  public Void visitDocument(IDocumentNodeItem item, ITargetedConstraints context) {
+    illegalTargetError(item, context);
+    return null;
   }
 
   @Override
-  public Void visitFlag(@NonNull IFlagNodeItem item, ITargetedConstraints context) {
+  public Void visitFlag(IFlagNodeItem item, ITargetedConstraints context) {
     context.target(item.getDefinition());
     return null;
   }
 
   @Override
-  public Void visitField(@NonNull IFieldNodeItem item, ITargetedConstraints context) {
+  public Void visitField(IFieldNodeItem item, ITargetedConstraints context) {
     context.target(item.getDefinition());
     return null;
   }
 
   @Override
-  public Void visitAssembly(@NonNull IAssemblyNodeItem item, ITargetedConstraints context) {
+  public Void visitAssembly(IAssemblyNodeItem item, ITargetedConstraints context) {
     context.target(item.getDefinition());
     return null;
   }
@@ -50,7 +56,20 @@ public class ConstraintComposingVisitor
 
   @Override
   public Void visitMetaschema(@NonNull IModuleNodeItem item, ITargetedConstraints context) {
-    throw new UnsupportedOperationException("constraints can only apply to an assembly, field, or flag definition");
+    illegalTargetError(item, context);
+    return null;
   }
 
+  private static void illegalTargetError(
+      @NonNull INodeItem item,
+      ITargetedConstraints context) {
+    throw new ConstraintInitializationException(
+        String.format(
+            "Invalid target '%s' for constraints targeting '%s' in '%s'. A document node is an" +
+                " invalid constraint target. Constraints can only apply to an assembly, field, or flag definition.",
+            item.getMetapath(),
+            context.getTargetExpression(),
+            context.getSource().getLocationHint()));
+
+  }
 }

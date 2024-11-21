@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndex;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -50,8 +52,14 @@ public class DefaultIndex implements IIndex {
 
   @Override
   public INodeItem get(List<String> key) {
-    if (getKeyFields().size() != key.size()) {
-      throw new IllegalArgumentException("Provided key is not the same size as the index requires.");
+    int requiredSize = getKeyFields().size();
+    if (requiredSize != key.size()) {
+      throw new ConstraintInitializationException(
+          String.format("Provided key '%s' is not the size '%d' required by the index.",
+              key.stream()
+                  .map(value -> new StringBuilder().append('"').append(value).append('"').toString())
+                  .collect(Collectors.joining(",", "{", "}")),
+              requiredSize));
     }
     return keyToItemMap.get(key);
   }

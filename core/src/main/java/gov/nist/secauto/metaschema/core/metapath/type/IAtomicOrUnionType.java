@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IAtomicOrUnionType extends IItemType {
+  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IAtomicOrUnionType of(
       Class<? extends IAnyAtomicItem> itemClass,

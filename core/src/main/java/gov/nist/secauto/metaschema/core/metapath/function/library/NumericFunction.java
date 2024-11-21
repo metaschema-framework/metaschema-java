@@ -15,7 +15,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -31,11 +30,6 @@ public final class NumericFunction implements IFunctionExecutor {
 
   @NonNull
   private final INumericExecutor executor;
-
-  @NonNull
-  static IFunction signature(@NonNull URI namespace, @NonNull String name, @NonNull INumericExecutor executor) {
-    return signature(ObjectUtils.notNull(namespace.toASCIIString()), name, executor);
-  }
 
   @NonNull
   static IFunction signature(@NonNull String namespace, @NonNull String name, @NonNull INumericExecutor executor) {

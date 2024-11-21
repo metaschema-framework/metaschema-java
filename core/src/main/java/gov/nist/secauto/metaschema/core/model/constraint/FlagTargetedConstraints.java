@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.AbstractDefinitionTargetedConstraints;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -22,15 +23,18 @@ public class FlagTargetedConstraints
   /**
    * Construct a new set of targeted constraints.
    *
+   * @param source
+   *          information about the resource the constraints were sources from
    * @param target
    *          the Metapath expression that can be used to find matching targets
    * @param constraints
    *          the constraints to apply to matching targets
    */
   public FlagTargetedConstraints(
+      @NonNull ISource source,
       @NonNull String target,
       @NonNull IValueConstrained constraints) {
-    super(target, constraints);
+    super(source, target, constraints);
   }
 
   @Override

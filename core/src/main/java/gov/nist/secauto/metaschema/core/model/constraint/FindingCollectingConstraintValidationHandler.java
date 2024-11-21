@@ -85,7 +85,7 @@ public class FindingCollectingConstraintValidationHandler
       retval = Kind.PASS;
       break;
     default:
-      throw new IllegalArgumentException(String.format("Unsupported level '%s'.", level));
+      throw new UnsupportedOperationException(String.format("Unsupported level '%s'.", level));
     }
 
     return retval;

@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
@@ -80,6 +81,8 @@ class XmlChoiceGroupInstance
   /**
    * Parse a choice group XMLBeans object.
    *
+   * @param source
+   *          information about the parsed resource
    * @param xmlObject
    *          the XMLBeans object
    * @param parent
@@ -90,10 +93,11 @@ class XmlChoiceGroupInstance
       INamedModelInstanceGrouped,
       IFieldInstanceGrouped,
       IAssemblyInstanceGrouped> newContainer(
+          @NonNull ISource source,
           @NonNull GroupedChoiceType xmlObject,
           @NonNull IChoiceGroupInstance parent) {
     ModelBuilder builder = new ModelBuilder();
-    XML_MODEL_PARSER.parse(xmlObject, Pair.of(parent, builder));
+    XML_MODEL_PARSER.parse(source, xmlObject, Pair.of(parent, builder));
     return builder.buildChoiceGroup();
   }
 
@@ -105,7 +109,9 @@ class XmlChoiceGroupInstance
     // no other methods
   }
 
-  private static void handleField( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleField(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IChoiceGroupInstance, ModelBuilder> state) {
     IFieldInstanceGrouped instance = new XmlGroupedFieldInstance(
@@ -114,7 +120,9 @@ class XmlChoiceGroupInstance
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleDefineField( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleDefineField(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IChoiceGroupInstance, ModelBuilder> state) {
     IFieldInstanceGrouped instance = new XmlGroupedInlineFieldDefinition(
@@ -123,7 +131,9 @@ class XmlChoiceGroupInstance
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleAssembly( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleAssembly(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IChoiceGroupInstance, ModelBuilder> state) {
     IAssemblyInstanceGrouped instance = new XmlGroupedAssemblyInstance(
@@ -132,7 +142,9 @@ class XmlChoiceGroupInstance
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleDefineAssembly( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleDefineAssembly(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IChoiceGroupInstance, ModelBuilder> state) {
     IAssemblyInstanceGrouped instance = new XmlGroupedInlineAssemblyDefinition(
@@ -154,7 +166,10 @@ class XmlChoiceGroupInstance
       @NonNull IAssemblyDefinition parent) {
     super(parent);
     this.xmlObject = xmlObject;
-    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> newContainer(xmlObject, this)));
+    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> newContainer(
+        parent.getContainingModule().getSource(),
+        xmlObject,
+        this)));
   }
 
   @Override

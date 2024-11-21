@@ -5,12 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -50,10 +54,13 @@ class StaticContextTest {
   void testFunctions(
       @NonNull String eqname,
       @NonNull IEnhancedQName expected) {
+    assertDoesNotThrow(() -> {
+      IFunction function = STATIC_CONTEXT.lookupFunction(eqname, 1);
+      assertAll(
+          () -> assertNotNull(function, "Expected function to be non-null"),
+          () -> assertEquals(expected, function.getQName()));
 
-    IFunction function = STATIC_CONTEXT.lookupFunction(eqname, 1);
-    assertNotNull(function, "Expected function to be non-null");
-    assertEquals(expected, function.getQName());
+    });
   }
 
   static Stream<Arguments> provideFlagValues() {
@@ -130,5 +137,21 @@ class StaticContextTest {
 
     IEnhancedQName qname = STATIC_CONTEXT.parseVariableName(eqname);
     assertEquals(expected, qname);
+  }
+
+  @Test
+  void lookupNonExistantDataType() {
+    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+      StaticContext.instance().lookupAtomicType("xs:string");
+    });
+
+    assertEquals(StaticMetapathException.PREFIX_NOT_EXPANDABLE, ex.getCode());
+  }
+
+  @Test
+  void lookupExistingDataType() {
+    assertAll(
+        () -> assertNotNull(StaticContext.instance().lookupAtomicType("string")),
+        () -> assertNotNull(StaticContext.instance().lookupAtomicType("meta:string")));
   }
 }

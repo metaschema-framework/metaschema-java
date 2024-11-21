@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -56,6 +58,6 @@ public abstract class AbstractGlobalAssemblyDefinition<
    *          the parent module containing this definition
    */
   protected AbstractGlobalAssemblyDefinition(@NonNull MODULE module) {
-    super(module, name -> module.getModuleStaticContext().parseModelName(name));
+    super(module, name -> ModuleUtils.parseModelName(module, name));
   }
 }

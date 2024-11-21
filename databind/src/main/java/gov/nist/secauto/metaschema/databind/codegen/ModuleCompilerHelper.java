@@ -120,22 +120,49 @@ public final class ModuleCompilerHelper {
         .map(IGeneratedClass::getClassFile)
         .collect(Collectors.toUnmodifiableList()));
 
+    // configure the compiler
     JavaCompilerSupport compiler = new JavaCompilerSupport(classDir);
 
-    boolean usingModule = false;
+    // determine if we need to use the module path
+    boolean useModulePath = false;
     Module databindModule = IBindingContext.class.getModule();
     if (databindModule != null) {
       ModuleDescriptor descriptor = databindModule.getDescriptor();
       if (descriptor != null) {
         // add the databind module to the task
         compiler.addRootModule(ObjectUtils.notNull(descriptor.name()));
-        usingModule = true;
+        useModulePath = true;
       }
     }
 
+    handleClassAndModulePath(compiler, useModulePath);
+
+    // perform compilation
+    JavaCompilerSupport.CompilationResult result = compiler.compile(classes, null);
+
+    if (!result.isSuccessful()) {
+      // log compilation diagnostics
+      DiagnosticCollector<?> diagnostics = new DiagnosticCollector<>();
+      if (LOGGER.isErrorEnabled()) {
+        LOGGER.error(diagnostics.getDiagnostics().toString());
+      }
+      throw new IllegalStateException(String.format("failed to compile classes: %s%nClasspath: %s%nModule Path: %s%n%s",
+          classesToCompile.stream()
+              .map(clazz -> clazz.getClassName().canonicalName())
+              .collect(Collectors.joining(",")),
+          diagnostics.getDiagnostics().toString(),
+          compiler.getClassPath().stream()
+              .collect(Collectors.joining(":")),
+          compiler.getModulePath().stream()
+              .collect(Collectors.joining(":"))));
+    }
+    return production;
+  }
+
+  private static void handleClassAndModulePath(JavaCompilerSupport compiler, boolean useModulePath) {
     String classPath = System.getProperty("java.class.path");
     String modulePath = System.getProperty("jdk.module.path");
-    if (usingModule) {
+    if (useModulePath) {
       // use classpath and modulepath from the JDK
       if (classPath != null) {
         Arrays.stream(classPath.split(":")).forEachOrdered(compiler::addToClassPath);
@@ -155,23 +182,5 @@ public final class ModuleCompilerHelper {
       }
     }
 
-    JavaCompilerSupport.CompilationResult result = compiler.compile(classes, null);
-
-    if (!result.isSuccessful()) {
-      DiagnosticCollector<?> diagnostics = new DiagnosticCollector<>();
-      if (LOGGER.isErrorEnabled()) {
-        LOGGER.error(diagnostics.getDiagnostics().toString());
-      }
-      throw new IllegalStateException(String.format("failed to compile classes: %s%nClasspath: %s%nModule Path: %s%n%s",
-          classesToCompile.stream()
-              .map(clazz -> clazz.getClassName().canonicalName())
-              .collect(Collectors.joining(",")),
-          diagnostics.getDiagnostics().toString(),
-          compiler.getClassPath().stream()
-              .collect(Collectors.joining(":")),
-          compiler.getModulePath().stream()
-              .collect(Collectors.joining(":"))));
-    }
-    return production;
   }
 }

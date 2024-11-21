@@ -28,23 +28,31 @@ public interface IEnhancedQName {
   @NonNull
   String getLocalName();
 
+  @SuppressWarnings("PMD.ShortMethodName")
+  @Nullable
+  static IEnhancedQName of(int index) {
+    return EQNameFactory.instance().get(index);
+  }
+
+  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull QName qname) {
     return EQNameFactory.instance().newQName(qname);
   }
 
+  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull String localName) {
     return EQNameFactory.instance().newQName(localName);
   }
 
-  // FIXME: check for use of toAsciiString and prefer the string version
+  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull String namespace, @NonNull String localName) {
     return EQNameFactory.instance().newQName(namespace, localName);
   }
 
-  // FIXME: check for use and prefer the string version
+  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull URI namespace, @NonNull String localName) {
     return EQNameFactory.instance().newQName(namespace, localName);

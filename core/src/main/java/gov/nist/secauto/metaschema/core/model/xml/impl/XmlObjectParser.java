@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.xml.impl;
 
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -22,7 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Supports parsing Metaschema assembly and field XMLBeans objects that contain
@@ -97,12 +97,12 @@ public class XmlObjectParser<T> {
    *
    * @param obj
    *          the XMLBeans object to get the location for
-   * @return the resource location or {@code null} if the location is not known
+   * @return the resource location or an empty string if the location is not known
    */
-  @SuppressWarnings({ "resource", "null" })
-  @Nullable
+  @SuppressWarnings({ "resource" })
+  @NonNull
   public static String toLocation(@NonNull XmlObject obj) {
-    return toLocation(obj.newCursor());
+    return toLocation(ObjectUtils.notNull(obj.newCursor()));
   }
 
   /**
@@ -112,9 +112,9 @@ public class XmlObjectParser<T> {
    *          the XMLBeans cursor to get the location for
    * @return the resource location or {@code null} if the location is not known
    */
-  @Nullable
+  @NonNull
   public static String toLocation(@NonNull XmlCursor cursor) {
-    String retval = null;
+    String retval = "";
     XmlBookmark bookmark = cursor.getBookmark(XmlLineNumber.class);
     if (bookmark != null) {
       StringBuilder locationBuilder = new StringBuilder();
@@ -130,7 +130,7 @@ public class XmlObjectParser<T> {
           .append(':')
           .append(lineNumber.getColumn());
 
-      retval = locationBuilder.toString();
+      retval = ObjectUtils.notNull(locationBuilder.toString());
     }
     return retval;
   }
@@ -152,13 +152,11 @@ public class XmlObjectParser<T> {
    */
   @NonNull
   protected Handler<T> identifyHandler(@NonNull XmlCursor cursor, @NonNull XmlObject obj) {
-    IEnhancedQName qname = IEnhancedQName.of(cursor.getName());
+    IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.notNull(cursor.getName()));
     Handler<T> retval = getElementNameToHandlerMap().get(qname);
     if (retval == null) {
       String location = toLocation(cursor);
-      if (location == null) {
-        location = "";
-      } else {
+      if (!location.isEmpty()) {
         location = new StringBuilder()
             .append(" at location '")
             .append(location)
@@ -173,13 +171,15 @@ public class XmlObjectParser<T> {
   /**
    * Parse an XmlObject element tree using the configured child element handlers.
    *
+   * @param source
+   *          information about the parsed resource
    * @param xmlObject
    *          the XmlObject container to parse
    * @param state
    *          parsing state to pass to the handlers
    * @return the state
    */
-  public T parse(@NonNull XmlObject xmlObject, T state) {
+  public T parse(@NonNull ISource source, @NonNull XmlObject xmlObject, T state) {
     try (XmlCursor cursor = xmlObject.newCursor()) {
       assert cursor != null;
       cursor.selectPath(getXpath(), XML_OPTIONS);
@@ -187,7 +187,7 @@ public class XmlObjectParser<T> {
         XmlObject obj = cursor.getObject();
         assert obj != null;
         Handler<T> handler = identifyHandler(cursor, obj);
-        handler.handle(obj, state);
+        handler.handle(source, obj, state);
       }
     }
     return state;
@@ -205,11 +205,13 @@ public class XmlObjectParser<T> {
     /**
      * Parse the provided {@code obj} using the provided {@code state}.
      *
-     * @param obj
+     * @param source
+     *          information about the parsed resource
+     * @param xmlObject
      *          the object to parse
      * @param state
      *          the state to use for parsing
      */
-    void handle(@NonNull XmlObject obj, T state);
+    void handle(@NonNull ISource source, @NonNull XmlObject xmlObject, T state);
   }
 }

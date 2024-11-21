@@ -66,8 +66,8 @@ public interface INamed {
    * Multiple calls to this method are expected to produce the same, deterministic
    * return value.
    * <p>
-   * If {@link #getXmlNamespace()} is {@code null}, the the resulting QName will
-   * have the namespace {@link XMLConstants#NULL_NS_URI}.
+   * If the namespace is not specified, then the resulting QName will have the
+   * namespace {@link XMLConstants#NULL_NS_URI}.
    * <p>
    * This implementation may be overridden by implementation that cache the QName
    * or provide for a more efficient method for QName creation.

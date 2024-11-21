@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -115,8 +116,8 @@ public interface IMapItem<VALUE extends ICollectionValue>
 
   @Override
   default ISequence<?> contentsAsSequence() {
-    return ISequence.of(values().stream()
-        .flatMap(ICollectionValue::normalizeAsItems));
+    return ISequence.of(ObjectUtils.notNull(values().stream()
+        .flatMap(ICollectionValue::normalizeAsItems)));
   }
 
   /**

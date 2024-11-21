@@ -17,7 +17,7 @@ class MetaschemaDataTypeProviderTest {
 
   @Test
   void test() {
-    assertNotNull(DataTypeService.instance().getDataTypeByQNameIndex(
+    assertNotNull(DataTypeService.instance().getAtomicTypeByQNameIndex(
         IEnhancedQName.of(MetapathConstants.NS_METAPATH, "uuid").getIndexPosition()));
   }
 

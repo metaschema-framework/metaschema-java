@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.model.impl;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
@@ -34,7 +35,7 @@ public class DefaultGroupAs implements IGroupAs {
               GroupAs.class.getName(),
               annotation.name()));
     }
-    this.qname = module.getModuleStaticContext().parseModelName(value);
+    this.qname = ModuleUtils.parseModelName(module, value);
   }
 
   @Override

@@ -8,8 +8,10 @@ package gov.nist.secauto.metaschema.core.metapath;
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionService;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.qname.NamespaceCache;
@@ -17,6 +19,7 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -75,9 +78,9 @@ public final class StaticContext {
   @NonNull
   private final Map<String, String> knownNamespaces;
   @Nullable
-  private final URI defaultModelNamespace;
+  private final String defaultModelNamespace;
   @Nullable
-  private final URI defaultFunctionNamespace;
+  private final String defaultFunctionNamespace;
   private final boolean useWildcardWhenNamespaceNotDefaulted;
 
   /**
@@ -199,7 +202,7 @@ public final class StaticContext {
    * @return the namespace if defined or {@code null} otherwise
    */
   @Nullable
-  private URI getDefaultModelNamespace() {
+  private String getDefaultModelNamespace() {
     return defaultModelNamespace;
   }
 
@@ -210,80 +213,115 @@ public final class StaticContext {
    * @return the namespace if defined or {@code null} otherwise
    */
   @Nullable
-  private URI getDefaultFunctionNamespace() {
+  private String getDefaultFunctionNamespace() {
     return defaultFunctionNamespace;
   }
 
-  private String resolveBasicPrefix(@NonNull String prefix) {
-    String ns = lookupNamespaceForPrefix(prefix);
-    return ns == null ? XMLConstants.NULL_NS_URI : ns;
-  }
-
   @NonNull
-  private IEnhancedQName parseDataTypeName(@NonNull String name) {
-    try {
-      return EQNameFactory.instance().parseName(
-          name,
-          this::resolveDataTypePrefix);
-    } catch (StaticMetapathException ex) {
-      throw new StaticMetapathException(
-          StaticMetapathException.NOT_DEFINED,
-          String.format("The data type named '%s' was not found.", name), ex);
-    }
+  private IEnhancedQName parseAtomicTypeName(@NonNull String name) {
+    return EQNameFactory.instance().parseName(
+        name,
+        this::resolveAtomicTypePrefix);
   }
 
-  private String resolveDataTypePrefix(@NonNull String prefix) {
+  private String resolveAtomicTypePrefix(@NonNull String prefix) {
     String ns = lookupNamespaceForPrefix(prefix);
     if (ns == null) {
-      if (!prefix.isEmpty()) {
-        throw new StaticMetapathException(
-            StaticMetapathException.PREFIX_NOT_EXPANDABLE,
-            String.format("The namespace prefix '%s'  is not expandable.",
-                prefix));
-      }
+      checkForUnknownPrefix(prefix);
       // use the default data type namespace
       ns = MetapathConstants.NS_METAPATH;
     }
     return ns;
   }
 
-  @Nullable
-  public IFunction lookupFunction(@NonNull String name, int arity) {
-    IEnhancedQName qname = parseFunctionName(name);
-    return lookupFunction(qname, arity);
-  }
-
-  @Nullable
-  public static IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
-    return FunctionService.getInstance().getFunction(
-        Objects.requireNonNull(qname, "name"),
-        arity);
-  }
-
+  /**
+   * Lookup the atomic type with the provided name in the static context.
+   * <p>
+   * This method will first attempt to expand the namespace prefix for a lexical
+   * QName. A {@link StaticMetapathException} with the code
+   * {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE} if the prefix is not
+   * know to the static context.
+   * <p>
+   * Once the qualified name has been produced, the atomic type will be retrieved
+   * from the available atomic types. If the atomic type was not found, a
+   * {@link StaticMetapathException} with the code
+   * {@link StaticMetapathException#UNKNOWN_TYPE} will be thrown. Otherwise, the
+   * type information is returned for the matching atomic type.
+   *
+   * @param name
+   *          the namespace qualified or lexical name of the data type.
+   * @return the data type information
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
+   *           if the lexical name was not able to be expanded or the code
+   *           {@link StaticMetapathException#NO_FUNCTION_MATCH} if a matching
+   *           type was not found
+   */
   @NonNull
-  public IAtomicOrUnionType lookupDataTypeItemType(@NonNull String name) {
-    IEnhancedQName qname = parseDataTypeName(name);
-    return lookupDataTypeItemType(qname);
+  public IAtomicOrUnionType lookupAtomicType(@NonNull String name) {
+    IEnhancedQName qname = parseAtomicTypeName(name);
+    return lookupAtomicType(qname);
   }
 
+  /**
+   * Lookup a known Metapath atomic type based on the type's qualified name.
+   *
+   * @param qname
+   *          the qualified name
+   * @return the type
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
+   *           type was not found
+   */
   @NonNull
-  public static IAtomicOrUnionType lookupDataTypeItemType(@NonNull IEnhancedQName qname) {
-    IAtomicOrUnionType retval = DataTypeService.instance().getDataTypeByQNameIndex(qname.getIndexPosition());
+  public static IAtomicOrUnionType lookupAtomicType(@NonNull IEnhancedQName qname) {
+    IAtomicOrUnionType retval = DataTypeService.instance().getAtomicTypeByQNameIndex(qname.getIndexPosition());
     if (retval == null) {
       throw new StaticMetapathException(
           StaticMetapathException.UNKNOWN_TYPE,
-          String.format("The data type named '%s' was not found.", qname));
+          String.format("The atomic type named '%s' was not found.", qname));
     }
     return retval;
   }
 
+  /**
+   * Lookup a known Metapath atomic type based on the type's item class.
+   *
+   * @param clazz
+   *          the item class associated with the atomic type
+   * @return the type
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
+   *           type was not found
+   */
   @NonNull
-  public static IAtomicOrUnionType lookupDataTypeItemType(Class<? extends IAnyAtomicItem> clazz) {
-    IAtomicOrUnionType retval = DataTypeService.instance().getDataTypeByItemClass(clazz);
+  public static IAtomicOrUnionType lookupAtomicType(Class<? extends IAnyAtomicItem> clazz) {
+    IAtomicOrUnionType retval = DataTypeService.instance().getAtomicTypeByItemClass(clazz);
     if (retval == null) {
       throw new StaticMetapathException(
           StaticMetapathException.UNKNOWN_TYPE,
-          String.format("The data type for item class '%s' was not found.", clazz.getName()));
+          String.format("The atomic type for item class '%s' was not found.", clazz.getName()));
+    }
+    return retval;
+  }
+
+  /**
+   * Lookup a known Metapath item type based on the type's item class.
+   *
+   * @param clazz
+   *          the item class associated with the atomic type
+   * @return the type
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
+   *           type was not found
+   */
+  @NonNull
+  public static IItemType lookupItemType(Class<? extends IItem> clazz) {
+    IItemType retval = DataTypeService.instance().getItemTypeByItemClass(clazz);
+    if (retval == null) {
+      throw new StaticMetapathException(
+          StaticMetapathException.UNKNOWN_TYPE,
+          String.format("The item type for item class '%s' was not found.", clazz.getName()));
     }
     return retval;
   }
@@ -299,12 +337,80 @@ public final class StaticContext {
   private String resolveFunctionPrefix(@NonNull String prefix) {
     String ns = lookupNamespaceForPrefix(prefix);
     if (ns == null) {
-      URI uri = getDefaultFunctionNamespace();
-      if (uri != null) {
-        ns = uri.toASCIIString();
-      }
+      checkForUnknownPrefix(prefix);
+      // use the default namespace, since the namespace was omitted
+      ns = getDefaultFunctionNamespace();
     }
     return ns == null ? XMLConstants.NULL_NS_URI : ns;
+  }
+
+  /**
+   * Checks if the provided prefix is not-empty, which means the prefix was not
+   * resolvable.
+   *
+   * @param prefix
+   *          the lexical prefix to check
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
+   *           if a non-empty prefix is provided
+   */
+  private static void checkForUnknownPrefix(@NonNull String prefix) {
+    if (!prefix.isEmpty()) {
+      throw new StaticMetapathException(
+          StaticMetapathException.PREFIX_NOT_EXPANDABLE,
+          String.format("The namespace prefix '%s' is not expandable.",
+              prefix));
+    }
+  }
+
+  /**
+   * Lookup a known Metapath function based on the function's name and arity.
+   * <p>
+   * This method will first attempt to expand the namespace prefix for a lexical
+   * QName. A {@link StaticMetapathException} with the code
+   * {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE} if the prefix is not
+   * know to the static context.
+   * <p>
+   * Once the qualified name has been produced, the function will be retrieved
+   * from the available functions. If the function was not found, a
+   * {@link StaticMetapathException} with the code
+   * {@link StaticMetapathException#UNKNOWN_TYPE} will be thrown. Otherwise, the
+   * data type information is returned for the matching data type.
+   *
+   * @param name
+   *          the qualified or lexical name of the function
+   * @param arity
+   *          the number of arguments
+   * @return the type
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
+   *           if the lexical name was not able to be expanded or the code
+   *           {@link StaticMetapathException#NO_FUNCTION_MATCH} if a matching
+   *           function was not found
+   */
+  @NonNull
+  public IFunction lookupFunction(@NonNull String name, int arity) {
+    IEnhancedQName qname = parseFunctionName(name);
+    return lookupFunction(qname, arity);
+  }
+
+  /**
+   * Lookup a known Metapath function based on the function's name and arity.
+   *
+   * @param qname
+   *          the qualified name of the function
+   * @param arity
+   *          the number of arguments
+   * @return the type
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
+   *           a matching function was not found
+   */
+  @NonNull
+  public static IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
+    return FunctionService.getInstance().getFunction(
+        Objects.requireNonNull(qname, "name"),
+        arity);
   }
 
   /**
@@ -331,6 +437,14 @@ public final class StaticContext {
     return EQNameFactory.instance().parseName(
         name,
         this::resolveBasicPrefix);
+  }
+
+  private String resolveBasicPrefix(@NonNull String prefix) {
+    String ns = lookupNamespaceForPrefix(prefix);
+    if (ns == null) {
+      checkForUnknownPrefix(prefix);
+    }
+    return ns == null ? XMLConstants.NULL_NS_URI : ns;
   }
 
   /**
@@ -364,10 +478,8 @@ public final class StaticContext {
   private String resolveModelReferencePrefix(@NonNull String prefix) {
     String ns = lookupNamespaceForPrefix(prefix);
     if (ns == null) {
-      URI uri = getDefaultModelNamespace();
-      if (uri != null) {
-        ns = uri.toASCIIString();
-      }
+      checkForUnknownPrefix(prefix);
+      ns = getDefaultModelNamespace();
     }
     return ns == null ? XMLConstants.NULL_NS_URI : ns;
   }
@@ -448,9 +560,9 @@ public final class StaticContext {
     @NonNull
     private final Map<String, String> namespaces = new ConcurrentHashMap<>();
     @Nullable
-    private URI defaultModelNamespace;
+    private String defaultModelNamespace;
     @Nullable
-    private URI defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS_URI;
+    private String defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS;
 
     private Builder() {
       // avoid direct construction
@@ -520,12 +632,13 @@ public final class StaticContext {
      * Defines the default namespace to use for assembly, field, or flag references
      * that have no namespace prefix.
      *
-     * @param uri
+     * @param namespace
      *          the namespace URI
      * @return this builder
      */
     @NonNull
-    public Builder defaultModelNamespace(@NonNull URI uri) {
+    public Builder defaultModelNamespace(@NonNull URI namespace) {
+      String uri = ObjectUtils.notNull(namespace.toASCIIString());
       this.defaultModelNamespace = uri;
       NamespaceCache.instance().of(uri);
       return this;
@@ -542,19 +655,26 @@ public final class StaticContext {
      */
     @NonNull
     public Builder defaultModelNamespace(@NonNull String uri) {
-      return defaultModelNamespace(ObjectUtils.notNull(URI.create(uri)));
+      try {
+        this.defaultModelNamespace = new URI(uri).toASCIIString();
+      } catch (URISyntaxException ex) {
+        throw new IllegalArgumentException(ex);
+      }
+      NamespaceCache.instance().of(uri);
+      return this;
     }
 
     /**
      * Defines the default namespace to use for assembly, field, or flag references
      * that have no namespace prefix.
      *
-     * @param uri
+     * @param namespace
      *          the namespace URI
      * @return this builder
      */
     @NonNull
-    public Builder defaultFunctionNamespace(@NonNull URI uri) {
+    public Builder defaultFunctionNamespace(@NonNull URI namespace) {
+      String uri = ObjectUtils.notNull(namespace.toASCIIString());
       this.defaultFunctionNamespace = uri;
       NamespaceCache.instance().of(uri);
       return this;
@@ -571,7 +691,13 @@ public final class StaticContext {
      */
     @NonNull
     public Builder defaultFunctionNamespace(@NonNull String uri) {
-      return defaultFunctionNamespace(ObjectUtils.notNull(URI.create(uri)));
+      try {
+        this.defaultFunctionNamespace = new URI(uri).toASCIIString();
+      } catch (URISyntaxException ex) {
+        throw new IllegalArgumentException(ex);
+      }
+      NamespaceCache.instance().of(uri);
+      return this;
     }
 
     /**

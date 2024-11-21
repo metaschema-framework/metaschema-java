@@ -30,6 +30,7 @@ import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.TooManyStaticImports")
 class DefaultConstraintValidatorTest {
-  private static final String NS = URI.create("http://example.com/ns").toASCIIString();
+  @NonNull
+  private static final String NS = ObjectUtils.notNull(URI.create("http://example.com/ns").toASCIIString());
 
   @NonNull
   private static IEnhancedQName qname(@NonNull String name) {

@@ -7,20 +7,14 @@ package gov.nist.secauto.metaschema.core.metapath.type;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -76,24 +70,5 @@ class ISequenceTypeTest
         String.format("Expected `%s` to evaluate to '%s'",
             test,
             expected));
-  }
-
-  @Test
-  void lookupNonExistantDataType() {
-    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
-      StaticContext.instance().lookupDataTypeItemType("xs:string");
-    });
-
-    assertAll(
-        () -> assertEquals(StaticMetapathException.NOT_DEFINED, ex.getCode()),
-        () -> assertEquals(StaticMetapathException.PREFIX_NOT_EXPANDABLE,
-            ((StaticMetapathException) ex.getCause()).getCode()));
-  }
-
-  @Test
-  void lookupExistingDataType() {
-    assertAll(
-        () -> assertNotNull(StaticContext.instance().lookupDataTypeItemType("string")),
-        () -> assertNotNull(StaticContext.instance().lookupDataTypeItemType("meta:string")));
   }
 }

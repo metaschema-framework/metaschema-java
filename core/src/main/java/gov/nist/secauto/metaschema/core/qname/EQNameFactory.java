@@ -41,6 +41,11 @@ public class EQNameFactory {
     this.cache = cache;
   }
 
+  @Nullable
+  public IEnhancedQName get(int index) {
+    return cache.get(index);
+  }
+
   @NonNull
   public IEnhancedQName newQName(@NonNull QName qname) {
     return cache.of(qname);
@@ -56,7 +61,6 @@ public class EQNameFactory {
     return cache.of(namespace, localName);
   }
 
-  // FIXME: check for use and prefer the string version
   @NonNull
   public IEnhancedQName newQName(@NonNull URI namespace, @NonNull String localName) {
     return cache.of(namespace, localName);
@@ -112,7 +116,9 @@ public class EQNameFactory {
 
   @NonNull
   private IEnhancedQName newUriQualifiedName(@NonNull Matcher matcher) {
-    return cache.of(matcher.group(1), matcher.group(2));
+    return cache.of(
+        ObjectUtils.notNull(matcher.group(1)),
+        ObjectUtils.notNull(matcher.group(2)));
   }
 
   /**
@@ -152,7 +158,7 @@ public class EQNameFactory {
               prefix,
               name));
     }
-    return cache.of(namespace, matcher.group(2));
+    return cache.of(namespace, ObjectUtils.notNull(matcher.group(2)));
   }
 
   /**

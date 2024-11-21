@@ -87,7 +87,7 @@ public interface IChoiceGroupInstance
    */
   @NonNull
   default INamedModelInstanceGrouped getItemInstance(@NonNull Object item) {
-    throw new UnsupportedOperationException("no value");
+    throw new UnsupportedOperationException("Method not needed.");
   }
 
   @Override

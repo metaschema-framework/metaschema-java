@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
@@ -18,7 +19,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ValueConstraintSet implements IValueConstrained { // NOPMD - intentional
+/**
+ * A container of rules constraining the effective model of a Metaschema field
+ * or flag data instance.
+ */
+public class ValueConstraintSet implements IValueConstrained {
+  @NonNull
+  private final ISource source;
   @SuppressWarnings("PMD.UseConcurrentHashMap") // need ordering
   @NonNull
   private final Map<IEnhancedQName, ILet> lets = new LinkedHashMap<>();
@@ -34,6 +41,15 @@ public class ValueConstraintSet implements IValueConstrained { // NOPMD - intent
   private final List<IExpectConstraint> expectConstraints = new LinkedList<>();
   @NonNull
   protected final ReadWriteLock instanceLock = new ReentrantReadWriteLock();
+
+  public ValueConstraintSet(@NonNull ISource source) {
+    this.source = source;
+  }
+
+  @NonNull
+  public ISource getSource() {
+    return source;
+  }
 
   @Override
   public Map<IEnhancedQName, ILet> getLetExpressions() {

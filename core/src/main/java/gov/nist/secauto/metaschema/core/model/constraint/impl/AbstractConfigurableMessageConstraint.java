@@ -12,7 +12,9 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConfigurableMessageConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.ReplacementScanner;
 
@@ -85,7 +87,10 @@ public abstract class AbstractConfigurableMessageConstraint
   public String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context) {
     String message = getMessage();
     if (message == null) {
-      throw new IllegalStateException("A custom message is not defined.");
+      throw new ConstraintInitializationException(
+          String.format("A custom message is not defined in the constraint %s in %s.",
+              IConstraint.getConstraintIdentity(this),
+              getSource().getLocationHint()));
     }
 
     return ObjectUtils.notNull(ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {

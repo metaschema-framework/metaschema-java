@@ -79,6 +79,7 @@ public class QNameCache {
         .computeIfAbsent(namespacePosition, key -> new ConcurrentHashMap<>());
 
     return ObjectUtils.notNull(namespaceNames.computeIfAbsent(name, key -> {
+      assert key != null;
       QNameRecord record = new QNameRecord(namespacePosition, namespace, key);
       indexToQName.put(record.getIndexPosition(), record);
       return record;

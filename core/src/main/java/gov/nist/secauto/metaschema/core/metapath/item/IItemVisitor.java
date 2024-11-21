@@ -13,6 +13,9 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Use to visit the major types of items.
+ */
 public interface IItemVisitor {
   /**
    * Visit the array item instance.
@@ -52,5 +55,5 @@ public interface IItemVisitor {
    * @param function
    *          the instance to visit
    */
-  void visit(IFunction function);
+  void visit(@NonNull IFunction function);
 }

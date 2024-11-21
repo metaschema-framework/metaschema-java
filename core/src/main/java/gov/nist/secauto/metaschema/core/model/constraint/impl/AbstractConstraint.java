@@ -91,7 +91,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   }
 
   @Override
-  public String getId() {
+  public final String getId() {
     return id;
   }
 
@@ -101,7 +101,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   }
 
   @Override
-  public String getFormalName() {
+  public final String getFormalName() {
     return formalName;
   }
 
@@ -117,7 +117,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   }
 
   @Override
-  public String getTarget() {
+  public final String getTarget() {
     return getTargetMetapath().getPath();
   }
 
@@ -137,7 +137,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
    * @return the compiled Metapath expression
    */
   @NonNull
-  public MetapathExpression getTargetMetapath() {
+  public final MetapathExpression getTargetMetapath() {
     return ObjectUtils.notNull(targetMetapath.get());
   }
 
@@ -148,5 +148,4 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
       @NonNull DynamicContext dynamicContext) {
     return item.hasValue() ? getTargetMetapath().evaluate(item, dynamicContext) : ISequence.empty();
   }
-
 }

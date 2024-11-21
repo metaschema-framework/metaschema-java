@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractGlobalFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalFlagDefinitionType;
@@ -53,10 +54,11 @@ class XmlGlobalFlagDefinition
       defaultValue = getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlFlag.getDefault()));
     }
     this.defaultValue = defaultValue;
+    ISource source = module.getSource();
     this.constraints = Lazy.lazy(() -> {
-      IValueConstrained retval = new ValueConstraintSet();
+      IValueConstrained retval = new ValueConstraintSet(source);
       if (getXmlFlag().isSetConstraint()) {
-        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlFlag().getConstraint()), module.getSource());
+        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlFlag().getConstraint()), source);
       }
       return retval;
     });

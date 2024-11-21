@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -103,18 +104,18 @@ public final class DefinitionAssembly
     String rootLocalName = ModelUtil.resolveNoneOrDefault(getAnnotation().rootName(), null);
     this.xmlRootQName = ObjectUtils.notNull(Lazy.lazy(() -> rootLocalName == null
         ? null
-        : getContainingModule().getModuleStaticContext().parseModelName(rootLocalName)));
+        : ModuleUtils.parseModelName(getContainingModule(), rootLocalName)));
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> new FlagContainerSupport(this, null)));
     this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> AssemblyModelGenerator.of(this)));
 
-    ISource moduleSource = module.getSource();
+    ISource source = module.getSource();
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-      IModelConstrained retval = new AssemblyConstraintSet();
+      IModelConstrained retval = new AssemblyConstraintSet(source);
       ValueConstraints valueAnnotation = getAnnotation().valueConstraints();
-      ConstraintSupport.parse(valueAnnotation, moduleSource, retval);
+      ConstraintSupport.parse(valueAnnotation, source, retval);
 
       AssemblyConstraints assemblyAnnotation = getAnnotation().modelConstraints();
-      ConstraintSupport.parse(assemblyAnnotation, moduleSource, retval);
+      ConstraintSupport.parse(assemblyAnnotation, source, retval);
       return retval;
     }));
     this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -> getJsonProperties(null)));

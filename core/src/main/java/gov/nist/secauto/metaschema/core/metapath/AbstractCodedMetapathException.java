@@ -37,8 +37,8 @@ public abstract class AbstractCodedMetapathException
   }
 
   /**
-   * Constructs a new Metapath exception with the provided {@code message} and
-   * {@code cause}.
+   * Constructs a new Metapath exception with the provided {@code code},
+   * {@code message}, and {@code cause}.
    *
    * @param code
    *          the error code value

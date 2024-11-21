@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.model.IFlagContainerBuilder;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
@@ -41,8 +42,7 @@ public final class FlagContainerSupport {
     // create temporary collections to store the child binding objects
     IFlagContainerBuilder<IFlagInstance> builder = jsonKeyName == null
         ? IContainerFlagSupport.builder()
-        : IContainerFlagSupport.builder(
-            parent.getContainingModule().getModuleStaticContext().parseFlagName(jsonKeyName));
+        : IContainerFlagSupport.builder(ModuleUtils.parseFlagName(parent.getContainingModule(), jsonKeyName));
 
     // create counter to track child positions
     AtomicInteger flagReferencePosition = new AtomicInteger();
@@ -87,7 +87,7 @@ public final class FlagContainerSupport {
       @NonNull IBindingDefinitionModel parent) {
     IModule module = parent.getContainingModule();
 
-    IEnhancedQName qname = module.getModuleStaticContext().parseFlagName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName qname = ModuleUtils.parseFlagName(module, ObjectUtils.requireNonNull(obj.getRef()));
     IFlagDefinition definition = module.getScopedFlagDefinitionByName(qname);
     if (definition == null) {
       throw new IllegalStateException(

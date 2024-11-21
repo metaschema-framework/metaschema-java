@@ -59,7 +59,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
- * Provides methods to load a constraint set expressed in XML.
+ * Provides methods to load a constraint set expressed in any supported
+ * Metaschema format.
  * <p>
  * Loaded constraint instances are cached to avoid the need to load them for
  * every use. Any constraint set imported is also loaded and cached
@@ -72,6 +73,12 @@ public class BindingConstraintLoader
   @NonNull
   private final IBoundLoader loader;
 
+  /**
+   * Construct a new loader.
+   *
+   * @param bindingContext
+   *          the Metaschema binding information used to parse constraint data
+   */
   public BindingConstraintLoader(@NonNull IBindingContext bindingContext) {
     this.loader = bindingContext.newBoundLoader();
     // this.loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
@@ -116,11 +123,11 @@ public class BindingConstraintLoader
           .forEach(binding -> builder.namespace(
               ObjectUtils.notNull(binding.getPrefix()),
               ObjectUtils.notNull(binding.getUri())));
-      ISource source = ISource.externalSource(builder.build());
+      ISource source = ISource.externalSource(resource);
 
       // now create this constraint set
       retval = CollectionUtil.singletonList(new DefaultConstraintSet(
-          resource,
+          source,
           parseScopedConstraints(obj, source),
           new LinkedHashSet<>(importedConstraints)));
     } else if (constraintsDocument instanceof MetaschemaMetaConstraints) {
@@ -154,7 +161,7 @@ public class BindingConstraintLoader
           .flatMap(context -> parseContext(ObjectUtils.notNull(context), null, source)
               .getTargetedConstraints().stream())
           .collect(Collectors.toList()));
-      retval.add(new MetaConstraintSet(targetedConstraints));
+      retval.add(new MetaConstraintSet(source, targetedConstraints));
 
       retval = CollectionUtil.unmodifiableList(retval);
     } else {
@@ -224,9 +231,10 @@ public class BindingConstraintLoader
   private static AssemblyTargetedConstraints handleScopedAssembly(
       @NonNull MetaschemaModuleConstraints.Scope.Assembly obj,
       @NonNull ISource source) {
-    IModelConstrained constraints = new AssemblyConstraintSet();
+    IModelConstrained constraints = new AssemblyConstraintSet(source);
     ConstraintBindingSupport.parse(constraints, obj, source);
     return new AssemblyTargetedConstraints(
+        source,
         ObjectUtils.requireNonNull(obj.getTarget()),
         constraints);
   }
@@ -234,10 +242,11 @@ public class BindingConstraintLoader
   private static FieldTargetedConstraints handleScopedField(
       @NonNull MetaschemaModuleConstraints.Scope.Field obj,
       @NonNull ISource source) {
-    IValueConstrained constraints = new ValueConstraintSet();
+    IValueConstrained constraints = new ValueConstraintSet(source);
     ConstraintBindingSupport.parse(constraints, obj, source);
 
     return new FieldTargetedConstraints(
+        source,
         ObjectUtils.requireNonNull(obj.getTarget()),
         constraints);
   }
@@ -245,10 +254,11 @@ public class BindingConstraintLoader
   private static FlagTargetedConstraints handleScopedFlag(
       @NonNull MetaschemaModuleConstraints.Scope.Flag obj,
       @NonNull ISource source) {
-    IValueConstrained constraints = new ValueConstraintSet();
+    IValueConstrained constraints = new ValueConstraintSet(source);
     ConstraintBindingSupport.parse(constraints, obj, source);
 
     return new FlagTargetedConstraints(
+        source,
         ObjectUtils.requireNonNull(obj.getTarget()),
         constraints);
   }
@@ -274,11 +284,11 @@ public class BindingConstraintLoader
     }
 
     AssemblyConstraints contextConstraints = contextObj.getConstraints();
-    IModelConstrained constraints = new AssemblyConstraintSet();
+    IModelConstrained constraints = new AssemblyConstraintSet(source);
     if (contextConstraints != null) {
       ConstraintBindingSupport.parse(constraints, contextConstraints, source);
     }
-    Context context = new Context(metapaths, constraints);
+    Context context = new Context(source, metapaths, constraints);
 
     List<Context> childContexts = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getContexts()).stream()
         .map(childObj -> parseContext(ObjectUtils.notNull(childObj), context, source))
@@ -298,13 +308,14 @@ public class BindingConstraintLoader
     private final Lazy<List<ITargetedConstraints>> targetedConstraints;
 
     public Context(
+        @NonNull ISource source,
         @NonNull List<String> metapaths,
         @NonNull IModelConstrained constraints) {
       this.metapaths = metapaths;
       this.targetedConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
 
         Stream<ITargetedConstraints> paths = getMetapaths().stream()
-            .map(metapath -> new MetaTargetedContraints(ObjectUtils.notNull(metapath), constraints));
+            .map(metapath -> new MetaTargetedContraints(source, ObjectUtils.notNull(metapath), constraints));
         Stream<ITargetedConstraints> childPaths = childContexts.stream()
             .flatMap(child -> child.getTargetedConstraints().stream());
 
@@ -333,9 +344,10 @@ public class BindingConstraintLoader
       implements IFeatureModelConstrained {
 
     protected MetaTargetedContraints(
+        @NonNull ISource source,
         @NonNull String target,
         @NonNull IModelConstrained constraints) {
-      super(target, constraints);
+      super(source, target, constraints);
     }
 
     /**
@@ -380,10 +392,20 @@ public class BindingConstraintLoader
 
   private static final class MetaConstraintSet implements IConstraintSet {
     @NonNull
+    private final ISource source;
+    @NonNull
     private final List<ITargetedConstraints> targetedConstraints;
 
-    private MetaConstraintSet(@NonNull List<ITargetedConstraints> targetedConstraints) {
+    private MetaConstraintSet(
+        @NonNull ISource source,
+        @NonNull List<ITargetedConstraints> targetedConstraints) {
+      this.source = source;
       this.targetedConstraints = targetedConstraints;
+    }
+
+    @Override
+    public ISource getSource() {
+      return source;
     }
 
     @Override

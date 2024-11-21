@@ -16,7 +16,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Represents a container of rules constraining the effective model of a
  * Metaschema field or flag data instance.
  */
-public interface IValueConstrained extends IConstrained {
+public interface IValueConstrained {
+  /**
+   * Retrieve the ordered collection of constraints.
+   *
+   * @return the constraints or an empty list
+   */
+  @NonNull
+  List<? extends IConstraint> getConstraints();
+
   /**
    * Get the collection of let expressions, if any.
    *

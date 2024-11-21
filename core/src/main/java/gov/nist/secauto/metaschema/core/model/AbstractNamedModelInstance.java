@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -30,8 +31,7 @@ public abstract class AbstractNamedModelInstance<
    *          the parent containing the instance
    */
   protected AbstractNamedModelInstance(@NonNull PARENT parent) {
-    super(parent, name -> parent.getOwningDefinition().getContainingModule()
-        .getModuleStaticContext().parseModelName(name));
+    super(parent, name -> ModuleUtils.parseModelName(parent.getOwningDefinition().getContainingModule(), name));
   }
 
   @Override

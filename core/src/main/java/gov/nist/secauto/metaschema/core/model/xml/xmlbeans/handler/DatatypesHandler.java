@@ -76,7 +76,7 @@ public final class DatatypesHandler {
 
   private static IDataTypeAdapter<?> decode(SimpleValue target) {
     String name = ObjectUtils.requireNonNull(target.getStringValue());
-    IAtomicOrUnionType type = DataTypeService.instance().getDataTypeByQNameIndex(
+    IAtomicOrUnionType type = DataTypeService.instance().getAtomicTypeByQNameIndex(
         IEnhancedQName.of(MetapathConstants.NS_METAPATH, name).getIndexPosition());
     if (type == null) {
       throw new IllegalStateException("Unrecognized data type: " + name);

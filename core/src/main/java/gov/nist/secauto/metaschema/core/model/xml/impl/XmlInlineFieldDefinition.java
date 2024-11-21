@@ -17,6 +17,7 @@ import gov.nist.secauto.metaschema.core.model.IContainerModel;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
@@ -69,11 +70,13 @@ class XmlInlineFieldDefinition
         ? getJavaTypeAdapter().parse(ObjectUtils.requireNonNull(xmlObject.getDefault()))
         : null;
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> XmlFlagContainerSupport.newInstance(xmlObject, this)));
+
+    ISource source = parent.getOwningDefinition().getContainingModule().getSource();
+
     this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-      IValueConstrained retval = new ValueConstraintSet();
+      IValueConstrained retval = new ValueConstraintSet(source);
       if (getXmlObject().isSetConstraint()) {
-        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()),
-            getContainingModule().getSource());
+        ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()), source);
       }
       return retval;
     }));

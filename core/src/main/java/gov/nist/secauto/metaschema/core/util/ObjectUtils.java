@@ -20,8 +20,6 @@ public final class ObjectUtils {
   /**
    * Require a non-empty string value.
    *
-   * @param <T>
-   *          the type of the reference
    * @param string
    *          the object reference to check for emptiness
    * @return {@code string} if not {@code null} or empty
@@ -43,10 +41,11 @@ public final class ObjectUtils {
   /**
    * Require a non-empty string value.
    *
-   * @param <T>
-   *          the type of the reference
    * @param string
    *          the object reference to check for emptiness
+   * @param message
+   *          detail message to be used in the event that an {@code
+   *                IllegalArgumentException} is thrown
    * @return {@code string} if not {@code null} or empty
    * @throws NullPointerException
    *           if {@code string} is {@code null}

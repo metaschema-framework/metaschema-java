@@ -18,17 +18,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public final class MetapathConstants {
   /**
    * The namespace URI for Metapath data types and built-in casting functions, as
-   * a URI.
-   */
-  @NonNull
-  public static final URI NS_METAPATH_URI = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath"));
-  /**
-   * The namespace URI for Metapath data types and built-in casting functions, as
    * a string.
    */
   @NonNull
-  public static final String NS_METAPATH = ObjectUtils.requireNonNull(NS_METAPATH_URI.toASCIIString());
+  public static final String NS_METAPATH = "http://csrc.nist.gov/ns/metaschema/metapath";
   /**
    * The namespace URI for Metapath built-in functions, as a URI.
    *
@@ -130,7 +123,7 @@ public final class MetapathConstants {
    * @see #NS_METAPATH_FUNCTIONS for the corresponding namespace URI
    */
   @NonNull
-  public static final String PREFIX_METAPATH_FUNCTIONS = "mp";
+  public static final String PREFIX_METAPATH_FUNCTIONS = "fn";
   /**
    * The namespace prefix for Metapath math-related built-in functions.
    *

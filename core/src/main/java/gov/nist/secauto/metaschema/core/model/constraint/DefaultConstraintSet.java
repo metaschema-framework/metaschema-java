@@ -6,11 +6,11 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +21,13 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The default implementation of a constraint set sourced from an external
+ * constraint resource.
+ */
 public class DefaultConstraintSet implements IConstraintSet {
   @NonNull
-  private final URI resourceLocation;
+  private final ISource source;
   @NonNull
   private final Set<IConstraintSet> importedConstraintSets;
   @NonNull
@@ -32,7 +36,7 @@ public class DefaultConstraintSet implements IConstraintSet {
   /**
    * Construct a new constraint set.
    *
-   * @param resourceLocation
+   * @param source
    *          the resource the constraint was provided from
    * @param scopedContraints
    *          a set of constraints qualified by a scope path
@@ -41,10 +45,10 @@ public class DefaultConstraintSet implements IConstraintSet {
    */
   @SuppressWarnings("null")
   public DefaultConstraintSet(
-      @NonNull URI resourceLocation,
+      @NonNull ISource source,
       @NonNull List<IScopedContraints> scopedContraints,
       @NonNull Set<IConstraintSet> importedConstraintSets) {
-    this.resourceLocation = resourceLocation;
+    this.source = source;
     this.scopedContraints = scopedContraints.stream()
         .collect(
             Collectors.collectingAndThen(
@@ -60,9 +64,9 @@ public class DefaultConstraintSet implements IConstraintSet {
    *
    * @return the resource
    */
-  @NonNull
-  protected URI getResourceLocation() {
-    return resourceLocation;
+  @Override
+  public ISource getSource() {
+    return source;
   }
 
   /**

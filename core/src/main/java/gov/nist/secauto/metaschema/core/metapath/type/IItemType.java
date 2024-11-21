@@ -31,7 +31,6 @@ public interface IItemType {
   //
   // }
 
-  @SuppressWarnings("unchecked")
   @NonNull
   static IItemType map() {
     return AnyRawItemType.ANY_MAP;
@@ -42,14 +41,13 @@ public interface IItemType {
     return new MapTestImpl(key, value);
   }
 
-  @SuppressWarnings("unchecked")
   @NonNull
   static IItemType array() {
     return AnyRawItemType.ANY_ARRAY;
   }
 
   @NonNull
-  static <T extends IItem> IItemType array(@NonNull ISequenceType value) {
+  static IItemType array(@NonNull ISequenceType value) {
     return new ArrayTestImpl(value);
   }
 
@@ -58,7 +56,6 @@ public interface IItemType {
     return MetaschemaDataTypeProvider.ANY_ATOMIC_TYPE;
   }
 
-  @SuppressWarnings("unchecked")
   @NonNull
   static IItemType node() {
     return NodeItemType.ANY_NODE;
@@ -81,7 +78,6 @@ public interface IItemType {
 
   @NonNull
   static IItemType flag(IEnhancedQName name, IAtomicOrUnionType dataType) {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException();
   }
 

@@ -40,6 +40,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * A Metaschema module backed by a bound Metaschema Java object.
+ */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class BindingModule
     extends AbstractModule<
@@ -110,6 +113,11 @@ public class BindingModule
   @Override
   public ISource getSource() {
     return source;
+  }
+
+  @Override
+  public String getLocationHint() {
+    return ObjectUtils.notNull(getBinding().getClass().getName());
   }
 
   @Override

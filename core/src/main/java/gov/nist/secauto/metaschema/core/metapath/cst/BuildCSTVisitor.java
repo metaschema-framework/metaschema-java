@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevforwardstepContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AbbrevreversestepContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AdditiveexprContext;
@@ -87,7 +86,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Step;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
-import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
@@ -121,6 +119,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
     "PMD.GodClass", "PMD.CyclomaticComplexity", // acceptable complexity
     "PMD.CouplingBetweenObjects" // needed
 })
+// TODO: Support node comparisons
+// https://www.w3.org/TR/xpath-31/#id-node-comparisons
 public class BuildCSTVisitor
     extends AbstractCSTVisitorBase {
   @NonNull
@@ -398,24 +398,10 @@ public class BuildCSTVisitor
             .collect(Collectors.toUnmodifiableList()));
 
     return new StaticFunctionCall(
-        () -> lookupFunction(
+        () -> getContext().lookupFunction(
             ObjectUtils.notNull(ctx.eqname().getText()),
             arguments.size()),
         arguments);
-  }
-
-  @NonNull
-  private IFunction lookupFunction(@NonNull String name, int arity) {
-    IFunction function = getContext().lookupFunction(name, arity);
-
-    if (function == null) {
-      throw new StaticMetapathException(
-          StaticMetapathException.NO_FUNCTION_MATCH,
-          String.format("No function found with the name '%s' and arity '%d'.",
-              name,
-              arity));
-    }
-    return function;
   }
 
   // =========================================================================
@@ -1139,7 +1125,7 @@ public class BuildCSTVisitor
         List<IExpression> arguments = ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList()));
 
         return new StaticFunctionCall(
-            () -> lookupFunction(
+            () -> getContext().lookupFunction(
                 ObjectUtils.notNull(fcCtx.eqname().getText()),
                 arguments.size()),
             arguments);

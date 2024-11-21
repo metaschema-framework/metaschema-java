@@ -80,7 +80,7 @@ class ListFunctionsSubcommand
                 Collectors.toList())));
 
     Map<String, String> namespaceToPrefixMap = StaticContext.getWellKnownNamespacesMap().entrySet().stream()
-        .collect(Collectors.toMap(entry -> entry.getValue(), Map.Entry::getKey));
+        .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
     List<String> namespaces = new ArrayList<>(namespaceToNameToFunctionMap.keySet());
 

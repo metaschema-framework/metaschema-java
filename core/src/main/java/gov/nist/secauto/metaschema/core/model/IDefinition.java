@@ -49,13 +49,8 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
    *
    * @return the definition's qualified name
    */
-  // FIXME: cache this value
   @NonNull
-  default IEnhancedQName getDefinitionQName() {
-    return IEnhancedQName.of(
-        getContainingModule().getXmlNamespace(),
-        getName());
-  }
+  IEnhancedQName getDefinitionQName();
 
   /**
    * Determine if the definition is defined inline, meaning the definition is

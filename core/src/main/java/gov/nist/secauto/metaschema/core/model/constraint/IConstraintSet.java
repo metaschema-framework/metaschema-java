@@ -6,12 +6,21 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.ISource;
 
 import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IConstraintSet {
+  /**
+   * Get information about where the constraint set was sourced from.
+   *
+   * @return the source information
+   */
+  @NonNull
+  ISource getSource();
+
   /**
    * Get the constraints in the constraint set that apply to the provided module.
    *

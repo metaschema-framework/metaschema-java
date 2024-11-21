@@ -30,6 +30,16 @@ public interface IModule {
   URI getLocation();
 
   /**
+   * Get a hint about where the source is location.
+   * <p>
+   * This value will typically be a URI or class name.
+   *
+   * @return the hint
+   */
+  @NonNull
+  String getLocationHint();
+
+  /**
    * Get the source information for the module.
    *
    * @return the source information

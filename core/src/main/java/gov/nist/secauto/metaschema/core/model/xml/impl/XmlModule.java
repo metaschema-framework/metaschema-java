@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.ModelInitializationException;
 import gov.nist.secauto.metaschema.core.model.xml.IXmlMetaschemaModule;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalAssemblyDefinitionType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.GlobalFieldDefinitionType;
@@ -24,6 +25,7 @@ import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.METASCHEMADocument.ME
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.NamespaceBindingType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +38,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -128,6 +129,11 @@ public class XmlModule
   @Override
   public URI getLocation() {
     return ObjectUtils.notNull(getModuleStaticContext().getBaseUri());
+  }
+
+  @Override
+  public String getLocationHint() {
+    return ObjectUtils.notNull(getLocation().toASCIIString());
   }
 
   /**
@@ -259,14 +265,16 @@ public class XmlModule
             ? Collections.emptyMap()
             : Collections.unmodifiableMap(this.assemblyDefinitions.values().stream()
                 .filter(IAssemblyDefinition::isRoot)
-                .collect(Collectors.toMap(
+                .collect(CustomCollectors.toMap(
                     def -> def.getRootQName().getIndexPosition(),
-                    Function.identity(),
-                    (v1, v2) -> {
-                      throw new IllegalStateException(
-                          String.format("Duplicate root QName '%s' for root assemblies: %s and %s.",
+                    CustomCollectors.identity(),
+                    (key, v1, v2) -> {
+                      throw new ModelInitializationException(
+                          String.format("Duplicate root QName '%s' for root assemblies: %s and %s in %s.",
+                              IEnhancedQName.of(key),
                               v1.getName(),
-                              v2.getName()));
+                              v2.getName(),
+                              XmlObjectParser.toLocation(cursor)));
                     },
                     LinkedHashMap::new)));
       }

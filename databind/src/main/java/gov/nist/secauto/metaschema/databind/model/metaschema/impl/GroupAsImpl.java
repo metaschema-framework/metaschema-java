@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
@@ -24,7 +25,7 @@ class GroupAsImpl implements IGroupAs {
   private final XmlGroupAsBehavior xmlBehavior;
 
   public GroupAsImpl(@NonNull GroupingAs groupAs, @NonNull IModule module) {
-    this.qname = module.getModuleStaticContext().parseModelName(ObjectUtils.requireNonNull(groupAs.getName()));
+    this.qname = ModuleUtils.parseModelName(module, ObjectUtils.requireNonNull(groupAs.getName()));
     this.jsonBehavior = ModelSupport.groupAsJsonBehavior(groupAs.getInJson());
     this.xmlBehavior = ModelSupport.groupAsXmlBehavior(groupAs.getInXml());
   }

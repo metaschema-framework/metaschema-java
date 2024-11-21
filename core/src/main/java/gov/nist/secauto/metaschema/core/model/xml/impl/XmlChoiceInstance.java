@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.model.IContainerModelSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.AssemblyReferenceType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.ChoiceType;
@@ -94,7 +95,10 @@ class XmlChoiceInstance
           @NonNull ChoiceType xmlObject,
           @NonNull IChoiceInstance parent) {
     ModelBuilder builder = new ModelBuilder();
-    XML_MODEL_PARSER.parse(xmlObject, Pair.of(parent, builder));
+    XML_MODEL_PARSER.parse(
+        parent.getContainingModule().getSource(),
+        xmlObject,
+        Pair.of(parent, builder));
     return builder.buildChoice();
   }
 
@@ -107,7 +111,9 @@ class XmlChoiceInstance
     // no other methods
   }
 
-  private static void handleField( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleField(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IChoiceInstance, ModelBuilder> state) {
     IFieldInstanceAbsolute instance = new XmlFieldInstance(
@@ -116,7 +122,9 @@ class XmlChoiceInstance
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleDefineField( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleDefineField(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IChoiceInstance, ModelBuilder> state) {
     IFieldInstanceAbsolute instance = new XmlInlineFieldDefinition(
@@ -125,7 +133,9 @@ class XmlChoiceInstance
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleAssembly( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleAssembly(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IChoiceInstance, ModelBuilder> state) {
     IAssemblyInstanceAbsolute instance = new XmlAssemblyInstance(
@@ -134,7 +144,9 @@ class XmlChoiceInstance
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleDefineAssembly( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleDefineAssembly(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IChoiceInstance, ModelBuilder> state) {
     IAssemblyInstanceAbsolute instance = new XmlInlineAssemblyDefinition(

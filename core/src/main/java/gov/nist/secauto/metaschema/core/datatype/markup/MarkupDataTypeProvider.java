@@ -34,6 +34,9 @@ public final class MarkupDataTypeProvider
   @NonNull
   public static final MarkupMultilineAdapter MARKUP_MULTILINE = new MarkupMultilineAdapter();
 
+  /**
+   * The Metaschema data type that represents all markup types.
+   */
   @NonNull
   public static final IAtomicOrUnionType MARKUP_TYPE
       = IAtomicOrUnionType.of(

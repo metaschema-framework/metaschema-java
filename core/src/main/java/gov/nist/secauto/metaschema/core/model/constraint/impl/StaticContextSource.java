@@ -19,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Implements a
- * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceType#EXTERNAL}
+ * {@link gov.nist.secauto.metaschema.core.model.ISource.SourceLocation#EXTERNAL}
  * source with an associated resource.
  */
 public final class StaticContextSource implements ISource {
@@ -60,17 +60,26 @@ public final class StaticContextSource implements ISource {
    *          expressions in this source
    */
   private StaticContextSource(@NonNull StaticContext staticContext) {
+    assert staticContext.getBaseUri() != null;
     this.staticContext = staticContext;
   }
 
   @Override
-  public SourceType getSourceType() {
-    return SourceType.EXTERNAL;
+  public SourceLocation getSourceType() {
+    return SourceLocation.EXTERNAL;
   }
 
   @Override
   public URI getSource() {
     return staticContext.getBaseUri();
+  }
+
+  @Override
+  public String getLocationHint() {
+
+    return ObjectUtils.notNull(
+        // we can assume the base URI is always not null, since this is checked
+        ObjectUtils.requireNonNull(staticContext.getBaseUri()).toASCIIString());
   }
 
   @Override

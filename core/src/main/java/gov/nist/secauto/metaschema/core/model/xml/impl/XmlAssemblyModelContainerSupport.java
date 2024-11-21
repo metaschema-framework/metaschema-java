@@ -14,6 +14,8 @@ import gov.nist.secauto.metaschema.core.model.IContainerModelAssemblySupport;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.ModelInitializationException;
 import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.AssemblyModelType;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.AssemblyReferenceType;
@@ -96,7 +98,10 @@ public final class XmlAssemblyModelContainerSupport {
           @NonNull IAssemblyDefinition parent) {
     return xmlObject == null
         ? IContainerModelAssemblySupport.empty()
-        : newContainer(xmlObject, parent);
+        : newContainer(
+            parent.getContainingModule().getSource(),
+            xmlObject,
+            parent);
   }
 
   private static IContainerModelAssemblySupport<
@@ -106,14 +111,17 @@ public final class XmlAssemblyModelContainerSupport {
       IAssemblyInstanceAbsolute,
       IChoiceInstance,
       IChoiceGroupInstance> newContainer(
+          @NonNull ISource source,
           @NonNull AssemblyModelType xmlObject,
           @NonNull IAssemblyDefinition parent) {
     ModelBuilder builder = new ModelBuilder();
-    XML_MODEL_PARSER.parse(xmlObject, Pair.of(parent, builder));
+    XML_MODEL_PARSER.parse(source, xmlObject, Pair.of(parent, builder));
     return builder.buildAssembly();
   }
 
-  private static void handleField( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleField(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IAssemblyDefinition, ModelBuilder> state) {
     IFieldInstanceAbsolute instance = new XmlFieldInstance(
@@ -122,7 +130,9 @@ public final class XmlAssemblyModelContainerSupport {
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleDefineField( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleDefineField(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IAssemblyDefinition, ModelBuilder> state) {
     IFieldInstanceAbsolute instance = new XmlInlineFieldDefinition(
@@ -131,7 +141,9 @@ public final class XmlAssemblyModelContainerSupport {
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleAssemmbly( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleAssemmbly(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IAssemblyDefinition, ModelBuilder> state) {
     IAssemblyInstanceAbsolute instance = new XmlAssemblyInstance(
@@ -140,7 +152,9 @@ public final class XmlAssemblyModelContainerSupport {
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
-  private static void handleDefineAssembly( // NOPMD false positive
+  @SuppressWarnings("unused")
+  private static void handleDefineAssembly(
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IAssemblyDefinition, ModelBuilder> state) {
     IAssemblyInstanceAbsolute instance = new XmlInlineAssemblyDefinition(
@@ -149,7 +163,9 @@ public final class XmlAssemblyModelContainerSupport {
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
+  @SuppressWarnings("unused")
   private static void handleChoice( // NOPMD false positive
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IAssemblyDefinition, ModelBuilder> state) {
     XmlChoiceInstance instance = new XmlChoiceInstance(
@@ -158,7 +174,9 @@ public final class XmlAssemblyModelContainerSupport {
     ObjectUtils.notNull(state.getRight()).append(instance);
   }
 
+  @SuppressWarnings("unused")
   private static void handleChoiceGroup( // NOPMD false positive
+      @NonNull ISource source,
       @NonNull XmlObject obj,
       Pair<IAssemblyDefinition, ModelBuilder> state) {
     XmlChoiceGroupInstance instance = new XmlChoiceGroupInstance(
@@ -168,11 +186,11 @@ public final class XmlAssemblyModelContainerSupport {
     String groupAsName = instance.getGroupAsName();
     if (groupAsName == null) {
       String location = XmlObjectParser.toLocation(obj);
-      String locationCtx = location == null ? "" : " at location " + location;
-      throw new IllegalArgumentException(
+      location = location.isEmpty() ? "" : " at location " + location;
+      throw new ModelInitializationException(
           String.format("Missing group-as for a choice group within the definition '%s'%s.",
               instance.getContainingDefinition().getName(),
-              locationCtx));
+              location));
     }
     ObjectUtils.notNull(state.getRight()).append(instance);
   }

@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.AbstractFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
+import gov.nist.secauto.metaschema.core.model.IFeatureDefinitionReferenceInstance;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
@@ -24,7 +25,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 class XmlFlagInstance
-    extends AbstractFlagInstance<IModelDefinition, IFlagDefinition, IFlagInstance> {
+    extends AbstractFlagInstance<IModelDefinition, IFlagDefinition, IFlagInstance>
+    implements IFeatureDefinitionReferenceInstance<IFlagDefinition, IFlagInstance> {
   @NonNull
   private final FlagReferenceType xmlFlag;
   @Nullable

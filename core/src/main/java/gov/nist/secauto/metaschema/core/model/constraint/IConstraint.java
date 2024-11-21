@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDescribable;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -68,6 +69,27 @@ public interface IConstraint extends IAttributable, IDescribable {
    */
   @NonNull
   String DEFAULT_TARGET_METAPATH = ".";
+
+  /**
+   * Get a string that identifies the provided constraint using the most specific
+   * information available.
+   *
+   * @param constraint
+   *          the constraint to identify
+   * @return the constraint identification statement
+   */
+  @NonNull
+  static String getConstraintIdentity(@NonNull IConstraint constraint) {
+    String identity;
+    if (constraint.getId() != null) {
+      identity = String.format("with id '%s'", constraint.getId());
+    } else if (constraint.getFormalName() != null) {
+      identity = String.format("with the formal name '%s'", constraint.getFormalName());
+    } else {
+      identity = String.format("targeting '%s'", constraint.getTarget());
+    }
+    return ObjectUtils.notNull(identity);
+  }
 
   /**
    * Retrieve the unique identifier for the constraint.

@@ -101,7 +101,7 @@ public interface ICardinalityConstraint extends IConfigurableMessageConstraint {
       super.validate();
 
       if (getMinOccurs() == null && getMaxOccurs() == null) {
-        throw new IllegalStateException("At least one of minOccurs or maxOccurs must be provided.");
+        throw new ConstraintInitializationException("At least one of minOccurs or maxOccurs must be provided.");
       }
     }
 

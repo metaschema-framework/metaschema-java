@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -67,9 +68,12 @@ public class InstanceModelGroupedFieldInline
     super(parent);
     this.binding = binding;
     this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
+
+    ISource source = parent.getContainingModule().getSource();
+
     this.javaTypeAdapter = ModelSupport.dataType(
         binding.getAsType(),
-        bindingInstance.getContainingModule().getSource());
+        source);
     this.defaultValue = ModelSupport.defaultValue(binding.getDefault(), this.javaTypeAdapter);
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> FlagContainerSupport.newFlagContainer(
         binding.getFlags(),
@@ -77,13 +81,13 @@ public class InstanceModelGroupedFieldInline
         this,
         getParentContainer().getJsonKeyFlagInstanceName())));
     this.valueConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-      IValueConstrained retval = new ValueConstraintSet();
+      IValueConstrained retval = new ValueConstraintSet(source);
       FieldConstraints constraints = binding.getConstraint();
       if (constraints != null) {
         ConstraintBindingSupport.parse(
             retval,
             constraints,
-            parent.getOwningDefinition().getContainingModule().getSource());
+            source);
       }
       return retval;
     }));

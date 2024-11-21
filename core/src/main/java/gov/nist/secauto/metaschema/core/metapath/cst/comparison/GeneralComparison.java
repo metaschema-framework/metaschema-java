@@ -16,6 +16,11 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#id-general-comparisons">general
+ * comparisons</a>.
+ */
 public class GeneralComparison
     extends AbstractComparison {
 

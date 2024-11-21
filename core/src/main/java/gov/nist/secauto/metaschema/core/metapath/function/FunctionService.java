@@ -70,6 +70,7 @@ public final class FunctionService {
    *
    * @return a stream of function signatures
    */
+  @NonNull
   public Stream<IFunction> stream() {
     return getLibrary().stream();
   }
@@ -85,31 +86,10 @@ public final class FunctionService {
    *          match
    * @return the matching function or {@code null} if no match exists
    * @throws StaticMetapathException
-   *           if a matching function was not found
+   *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
+   *           a matching function was not found
    */
-  public IFunction getFunction(@NonNull String name, int arity) {
-    IFunction retval = getLibrary().getFunction(name, arity);
-
-    if (retval == null) {
-      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,
-          String.format("unable to find function with name '%s' having arity '%d'", name, arity));
-    }
-    return retval;
-  }
-
-  /**
-   * Retrieve the function with the provided name that supports the signature of
-   * the provided methods, if such a function exists.
-   *
-   * @param name
-   *          the name of a group of functions
-   * @param arity
-   *          the count of arguments for use in determining an argument signature
-   *          match
-   * @return the matching function or {@code null} if no match exists
-   * @throws StaticMetapathException
-   *           if a matching function was not found
-   */
+  @NonNull
   public IFunction getFunction(@NonNull IEnhancedQName name, int arity) {
     IFunction retval = getLibrary().getFunction(name, arity);
 

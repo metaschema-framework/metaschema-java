@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
+import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
@@ -150,8 +151,9 @@ public final class ChoiceGroupModelGenerator
     IAssemblyDefinition owningDefinition = parent.getOwningDefinition();
     IModule module = owningDefinition.getContainingModule();
 
-    IEnhancedQName name = parent.getContainingModule().getModuleStaticContext()
-        .parseModelName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName name = ModuleUtils.parseModelName(
+        parent.getContainingModule(),
+        ObjectUtils.requireNonNull(obj.getRef()));
     IAssemblyDefinition definition = module.getScopedAssemblyDefinitionByName(name.getIndexPosition());
 
     if (definition == null) {
@@ -186,8 +188,9 @@ public final class ChoiceGroupModelGenerator
     IAssemblyDefinition owningDefinition = parent.getOwningDefinition();
     IModule module = owningDefinition.getContainingModule();
 
-    IEnhancedQName name = parent.getContainingModule().getModuleStaticContext()
-        .parseModelName(ObjectUtils.requireNonNull(obj.getRef()));
+    IEnhancedQName name = ModuleUtils.parseModelName(
+        parent.getContainingModule(),
+        ObjectUtils.requireNonNull(obj.getRef()));
     IFieldDefinition definition = module.getScopedFieldDefinitionByName(name.getIndexPosition());
     if (definition == null) {
       throw new IllegalStateException(

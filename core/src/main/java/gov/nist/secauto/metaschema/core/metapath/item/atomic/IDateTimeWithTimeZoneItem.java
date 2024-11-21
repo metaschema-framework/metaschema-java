@@ -77,16 +77,32 @@ public interface IDateTimeWithTimeZoneItem extends IDateTimeItem {
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
+  @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.CyclomaticComplexity" })
   @NonNull
   static IDateTimeWithTimeZoneItem cast(@NonNull IAnyAtomicItem item) {
-    try {
-      return item instanceof IDateTimeWithTimeZoneItem
-          ? (IDateTimeWithTimeZoneItem) item
-          : valueOf(item.asString());
-    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
-      // asString can throw IllegalStateException exception
-      throw new InvalidValueForCastFunctionException(ex);
+    if (item instanceof IDateTimeWithTimeZoneItem) {
+      return (IDateTimeWithTimeZoneItem) item;
     }
+
+    if (item instanceof ITemporalItem) {
+      ITemporalItem temporal = (ITemporalItem) item;
+      if (!temporal.hasTimezone()) {
+        throw new InvalidValueForCastFunctionException(
+            String.format("The temporal value '%s' does not have timezone information.", temporal.asString()));
+      }
+      return valueOf(temporal.asZonedDateTime());
+    }
+
+    if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {
+      try {
+        return valueOf(item.asString());
+      } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+        // asString can throw IllegalStateException exception
+        throw new InvalidValueForCastFunctionException(ex);
+      }
+    }
+    throw new InvalidValueForCastFunctionException(
+        String.format("unsupported item type '%s'", item.getClass().getName()));
   }
 
   @Override

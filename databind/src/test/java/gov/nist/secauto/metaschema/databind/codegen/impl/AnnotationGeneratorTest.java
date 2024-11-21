@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.databind.codegen.impl;
 import com.squareup.javapoet.AnnotationSpec;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
@@ -31,9 +30,7 @@ class AnnotationGeneratorTest {
 
   @Test
   void letAssignmentTest() {
-    ISource source = ISource.externalSource(StaticContext.builder()
-        .baseUri(ObjectUtils.notNull(URI.create("https://example.com/")))
-        .build());
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create("https://example.com/")));
 
     String variable = "var1";
     String expression = "1 + 1";
