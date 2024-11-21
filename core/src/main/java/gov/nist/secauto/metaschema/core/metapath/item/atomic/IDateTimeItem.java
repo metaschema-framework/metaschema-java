@@ -8,12 +8,8 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateTimeWithTimeZoneItemImpl;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateTimeWithoutTimeZoneItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-
-import java.time.ZonedDateTime;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -29,85 +25,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface IDateTimeItem extends ITemporalItem {
   @NonNull
   static IAtomicOrUnionType type() {
-    return MetaschemaDataTypeProvider.DATE_TIME.getItemType();
-  }
-
-  /**
-   * Construct a new date/time item using the provided string {@code value}.
-   *
-   * @param value
-   *          a string representing a date/time
-   * @return the new item
-   */
-  @NonNull
-  static IDateTimeItem valueOf(@NonNull String value) {
-    try {
-      return valueOf(MetaschemaDataTypeProvider.DATE_TIME.parse(value));
-    } catch (IllegalArgumentException ex) {
-      throw new InvalidTypeMetapathException(
-          null,
-          String.format("Invalid date/time value '%s'. %s",
-              value,
-              ex.getLocalizedMessage()),
-          ex);
-    }
-  }
-
-  /**
-   * Construct a new date/time item using the provided {@code value}.
-   * <p>
-   * This method handles recording if an explicit timezone was provided using the
-   * {@code hasTimeZone} parameter. The {@link AmbiguousDateTime#hasTimeZone()}
-   * method can be called to determine if timezone information is present.
-   *
-   * @param value
-   *          a date/time, without time zone information
-   * @param hasTimeZone
-   *          {@code true} if the date/time is intended to have an associated time
-   *          zone or {@code false} otherwise
-   * @return the new item
-   * @see AmbiguousDateTime for more details on timezone handling
-   */
-  @NonNull
-  static IDateTimeItem valueOf(@NonNull ZonedDateTime value, boolean hasTimeZone) {
-    return hasTimeZone
-        ? valueOf(value)
-        : valueOf(new AmbiguousDateTime(value, false));
-  }
-
-  /**
-   * Construct a new date/time item using the provided {@code value}.
-   * <p>
-   * This method handles recording if an explicit timezone was provided using the
-   * {@link AmbiguousDateTime}. The {@link AmbiguousDateTime#hasTimeZone()} method
-   * can be called to determine if timezone information is present.
-   *
-   * @param value
-   *          a date/time, without time zone information
-   * @return the new item
-   * @see AmbiguousDateTime for more details on timezone handling
-   */
-  @NonNull
-  static IDateTimeItem valueOf(@NonNull AmbiguousDateTime value) {
-    return value.hasTimeZone()
-        ? valueOf(value.getValue())
-        : new DateTimeWithoutTimeZoneItemImpl(value);
-  }
-
-  /**
-   * Construct a new date/time item using the provided {@code value}.
-   * <p>
-   * This method handles dates with explicit timezone information using
-   * ZonedDateTime. The timezone is preserved as specified in the input and is
-   * significant for date/time operations and comparisons.
-   *
-   * @param value
-   *          a date/time, with time zone information
-   * @return the new item
-   */
-  @NonNull
-  static IDateTimeItem valueOf(@NonNull ZonedDateTime value) {
-    return new DateTimeWithTimeZoneItemImpl(value);
+    return MetaschemaDataTypeProvider.DATE_TIME_TYPE;
   }
 
   /**
@@ -127,7 +45,7 @@ public interface IDateTimeItem extends ITemporalItem {
       retval = (IDateTimeItem) item;
     } else {
       try {
-        retval = valueOf(item.asString());
+        retval = IDateTimeWithoutTimeZoneItem.valueOf(item.asString());
       } catch (IllegalStateException | InvalidTypeMetapathException ex) {
         // asString can throw IllegalStateException exception
         throw new InvalidValueForCastFunctionException(

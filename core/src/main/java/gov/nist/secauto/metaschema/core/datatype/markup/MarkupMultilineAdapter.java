@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.datatype.markup;
 import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupMultilineItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -29,13 +29,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data type.
  */
 public class MarkupMultilineAdapter
-    extends AbstractMarkupAdapter<MarkupMultiline> {
+    extends AbstractMarkupAdapter<MarkupMultiline, IMarkupMultilineItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "markup-multiline")));
 
   MarkupMultilineAdapter() {
-    super(MarkupMultiline.class);
+    super(MarkupMultiline.class, IMarkupMultilineItem.class);
   }
 
   @Override
@@ -86,8 +86,8 @@ public class MarkupMultilineAdapter
   }
 
   @Override
-  public IMarkupItem newItem(Object value) {
+  public IMarkupMultilineItem newItem(Object value) {
     MarkupMultiline item = toValue(value);
-    return IMarkupItem.valueOf(item);
+    return IMarkupMultilineItem.valueOf(item);
   }
 }

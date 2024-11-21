@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.datatype.markup;
 import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupLineItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -29,13 +29,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data type.
  */
 public class MarkupLineAdapter
-    extends AbstractMarkupAdapter<MarkupLine> {
+    extends AbstractMarkupAdapter<MarkupLine, IMarkupLineItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "markup-line")));
 
   MarkupLineAdapter() {
-    super(MarkupLine.class);
+    super(MarkupLine.class, IMarkupLineItem.class);
   }
 
   @Override
@@ -76,8 +76,8 @@ public class MarkupLineAdapter
   }
 
   @Override
-  public IMarkupItem newItem(Object value) {
+  public IMarkupLineItem newItem(Object value) {
     MarkupLine item = toValue(value);
-    return IMarkupItem.valueOf(item);
+    return IMarkupLineItem.valueOf(item);
   }
 }

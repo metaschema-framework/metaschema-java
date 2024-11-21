@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateWithoutTimeZoneItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -33,7 +33,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data type.
  */
 public class DateAdapter
-    extends AbstractCustomJavaDataTypeAdapter<AmbiguousDate, IDateItem> {
+    extends AbstractCustomJavaDataTypeAdapter<AmbiguousDate, IDateWithoutTimeZoneItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date")));
@@ -48,7 +48,7 @@ public class DateAdapter
           + "(Z|[+-][0-9]{2}:[0-9]{2})?$"));
 
   DateAdapter() {
-    super(AmbiguousDate.class, IDateItem.class);
+    super(AmbiguousDate.class, IDateWithoutTimeZoneItem.class);
   }
 
   @Override
@@ -95,8 +95,8 @@ public class DateAdapter
   }
 
   @Override
-  public IDateItem newItem(Object value) {
+  public IDateWithoutTimeZoneItem newItem(Object value) {
     AmbiguousDate item = toValue(value);
-    return IDateItem.valueOf(item);
+    return IDateWithoutTimeZoneItem.valueOf(item);
   }
 }

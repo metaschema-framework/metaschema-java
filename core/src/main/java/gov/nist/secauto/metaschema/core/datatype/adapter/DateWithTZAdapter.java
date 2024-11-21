@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateWithTimeZoneItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -29,7 +29,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data type.
  */
 public class DateWithTZAdapter
-    extends AbstractDataTypeAdapter<ZonedDateTime, IDateItem> {
+    extends AbstractDataTypeAdapter<ZonedDateTime, IDateWithTimeZoneItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date-with-timezone")));
@@ -42,7 +42,7 @@ public class DateWithTZAdapter
       + "(Z|[+-][0-9]{2}:[0-9]{2})$");
 
   DateWithTZAdapter() {
-    super(ZonedDateTime.class, IDateItem.class);
+    super(ZonedDateTime.class, IDateWithTimeZoneItem.class);
   }
 
   @Override
@@ -91,8 +91,8 @@ public class DateWithTZAdapter
   }
 
   @Override
-  public IDateItem newItem(Object value) {
+  public IDateWithTimeZoneItem newItem(Object value) {
     ZonedDateTime item = toValue(value);
-    return IDateItem.valueOf(item);
+    return IDateWithTimeZoneItem.valueOf(item);
   }
 }

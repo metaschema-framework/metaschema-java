@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 import gov.nist.secauto.metaschema.core.datatype.adapter.DateTimeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeWithoutTimeZoneItem;
 
 import java.time.ZonedDateTime;
 
@@ -22,7 +23,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "2024-01-01+05:00".
  */
 public class DateTimeWithoutTimeZoneItemImpl
-    extends AbstractDateTimeItem<AmbiguousDateTime> {
+    extends AbstractDateTimeItem<AmbiguousDateTime>
+    implements IDateTimeWithoutTimeZoneItem {
 
   /**
    * Construct a new item with the provided {@code value}.
@@ -43,5 +45,4 @@ public class DateTimeWithoutTimeZoneItemImpl
   public DateTimeAdapter getJavaTypeAdapter() {
     return MetaschemaDataTypeProvider.DATE_TIME;
   }
-
 }

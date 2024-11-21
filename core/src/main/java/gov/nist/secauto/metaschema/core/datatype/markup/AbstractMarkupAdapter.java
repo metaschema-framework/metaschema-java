@@ -29,18 +29,23 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://pages.nist.gov/metaschema/specification/datatypes/#markup-data-types">markup</a>
  * data types.
  */
-abstract class AbstractMarkupAdapter<TYPE extends IMarkupString<TYPE>>
-    extends AbstractCustomJavaDataTypeAdapter<TYPE, IMarkupItem> {
+abstract class AbstractMarkupAdapter<
+    TYPE extends IMarkupString<TYPE>,
+    ITEM_TYPE extends IMarkupItem>
+    extends AbstractCustomJavaDataTypeAdapter<TYPE, ITEM_TYPE> {
 
   /**
    * Construct a new adapter.
    *
    * @param valueClass
    *          the Java value object type this adapter supports
+   * @param itemClass
+   *          the Java type of the Metapath item this adapter supports
    */
   protected AbstractMarkupAdapter(
-      @NonNull Class<TYPE> valueClass) {
-    super(valueClass, IMarkupItem.class);
+      @NonNull Class<TYPE> valueClass,
+      @NonNull Class<ITEM_TYPE> itemClass) {
+    super(valueClass, itemClass);
   }
 
   @Override

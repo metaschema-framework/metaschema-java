@@ -8,6 +8,8 @@ package gov.nist.secauto.metaschema.core.datatype.adapter;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPAddressItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
@@ -197,6 +199,16 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
       = IAtomicOrUnionType.of(
           IUntypedAtomicItem.class,
           QNameCache.instance().of(MetapathConstants.NS_METAPATH, "untyped-atomic"));
+  @NonNull
+  public static final IAtomicOrUnionType DATE_TYPE
+      = IAtomicOrUnionType.of(
+          IDateItem.class,
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date"));
+  @NonNull
+  public static final IAtomicOrUnionType DATE_TIME_TYPE
+      = IAtomicOrUnionType.of(
+          IDateTimeItem.class,
+          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date"));
   @NonNull
   public static final IAtomicOrUnionType DURATION_TYPE
       = IAtomicOrUnionType.of(

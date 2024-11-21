@@ -20,8 +20,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the Metapath item type associated with the adapter
  */
 public abstract class AbstractCustomJavaDataTypeAdapter<
-    TYPE extends ICustomJavaDataType<
-        TYPE>,
+    TYPE extends ICustomJavaDataType<TYPE>,
     ITEM_TYPE extends IAnyAtomicItem>
     extends AbstractDataTypeAdapter<TYPE, ITEM_TYPE> {
 
@@ -32,7 +31,7 @@ public abstract class AbstractCustomJavaDataTypeAdapter<
    * @param valueClass
    *          a data type class based on {@link ICustomJavaDataType}
    * @param itemClass
-   *          the Java type of the Matepath item this adapter supports
+   *          the Java type of the Metapath item this adapter supports
    */
   public AbstractCustomJavaDataTypeAdapter(
       @NonNull Class<TYPE> valueClass,

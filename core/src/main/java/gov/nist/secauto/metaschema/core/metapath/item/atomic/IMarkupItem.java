@@ -7,11 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.IMarkupString;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
-import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.MarkupLineItemImpl;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.MarkupMultiLineItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 
@@ -24,47 +20,6 @@ public interface IMarkupItem extends IUntypedAtomicItem {
   @NonNull
   static IAtomicOrUnionType type() {
     return MarkupDataTypeProvider.MARKUP_TYPE;
-  }
-
-  /**
-   * Construct a new item using the provided {@code value}.
-   *
-   * @param value
-   *          a line of markup
-   * @return the new item
-   */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
-  @NonNull
-  static IMarkupItem valueOf(@NonNull String value) {
-    try {
-      return valueOf(MarkupDataTypeProvider.MARKUP_LINE.parse(value));
-    } catch (IllegalArgumentException ex) {
-      throw new InvalidValueForCastFunctionException(ex);
-    }
-  }
-
-  /**
-   * Construct a new item using the provided {@code value}.
-   *
-   * @param value
-   *          a line of markup
-   * @return the new item
-   */
-  @NonNull
-  static IMarkupItem valueOf(@NonNull MarkupLine value) {
-    return new MarkupLineItemImpl(value);
-  }
-
-  /**
-   * Construct a new item using the provided {@code value}.
-   *
-   * @param value
-   *          multiple lines of markup
-   * @return the new item
-   */
-  @NonNull
-  static IMarkupItem valueOf(@NonNull MarkupMultiline value) {
-    return new MarkupMultiLineItemImpl(value);
   }
 
   /**
@@ -82,7 +37,7 @@ public interface IMarkupItem extends IUntypedAtomicItem {
     try {
       return item instanceof IMarkupItem
           ? (IMarkupItem) item
-          : valueOf(item.asString());
+          : IMarkupMultilineItem.valueOf(item.asString());
     } catch (IllegalStateException | InvalidTypeMetapathException ex) {
       // asString can throw IllegalStateException exception
       throw new InvalidValueForCastFunctionException(ex);

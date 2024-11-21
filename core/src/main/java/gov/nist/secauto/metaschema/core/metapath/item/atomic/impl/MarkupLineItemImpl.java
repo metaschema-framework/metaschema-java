@@ -9,7 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractUntypedAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupLineItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -19,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class MarkupLineItemImpl
     extends AbstractUntypedAtomicItem<MarkupLine>
-    implements IMarkupItem {
+    implements IMarkupLineItem {
 
   /**
    * Construct a new item with the provided {@code value}.

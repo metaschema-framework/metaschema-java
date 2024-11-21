@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeWithTimeZoneItem;
 
 import java.util.List;
 
@@ -57,6 +58,6 @@ public final class FnCurrentDateTime {
    */
   @NonNull
   public static IDateTimeItem fnCurrentDateTime(@NonNull DynamicContext dynamicContext) {
-    return IDateTimeItem.valueOf(dynamicContext.getCurrentDateTime());
+    return IDateTimeWithTimeZoneItem.valueOf(dynamicContext.getCurrentDateTime());
   }
 }

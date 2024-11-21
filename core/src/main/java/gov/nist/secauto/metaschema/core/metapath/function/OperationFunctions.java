@@ -10,6 +10,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeWithTimeZoneItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateWithTimeZoneItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
@@ -82,7 +84,7 @@ public final class OperationFunctions { // NOPMD - intentional
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
     }
     assert result != null;
-    return IDateItem.valueOf(result);
+    return IDateWithTimeZoneItem.valueOf(result);
   }
 
   /**
@@ -160,7 +162,7 @@ public final class OperationFunctions { // NOPMD - intentional
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
     }
     assert result != null;
-    return IDateTimeItem.valueOf(result);
+    return IDateTimeWithTimeZoneItem.valueOf(result);
   }
 
   /**
@@ -184,7 +186,7 @@ public final class OperationFunctions { // NOPMD - intentional
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
     }
     assert result != null;
-    return IDateTimeItem.valueOf(result);
+    return IDateTimeWithTimeZoneItem.valueOf(result);
   }
 
   /**
@@ -240,10 +242,8 @@ public final class OperationFunctions { // NOPMD - intentional
   private static IDateItem subtractDurationFromDate(
       @NonNull ZonedDateTime dateTime,
       @NonNull TemporalAmount duration) {
-    @SuppressWarnings("null")
-    @NonNull
-    ZonedDateTime result = dateTime.minus(duration);
-    return IDateItem.valueOf(result);
+    return IDateWithTimeZoneItem.valueOf(
+        ObjectUtils.notNull(dateTime.minus(duration)));
   }
 
   /**
@@ -263,10 +263,8 @@ public final class OperationFunctions { // NOPMD - intentional
     Period duration1 = arg1.asPeriod();
     Period duration2 = arg2.asPeriod();
 
-    @SuppressWarnings("null")
-    @NonNull
-    Period duration = duration1.minus(duration2);
-    return IYearMonthDurationItem.valueOf(duration);
+    return IYearMonthDurationItem.valueOf(
+        ObjectUtils.notNull(duration1.minus(duration2)));
   }
 
   /**
@@ -286,10 +284,8 @@ public final class OperationFunctions { // NOPMD - intentional
     Duration duration1 = arg1.asDuration();
     Duration duration2 = arg2.asDuration();
 
-    @SuppressWarnings("null")
-    @NonNull
-    Duration duration = duration1.minus(duration2);
-    return IDayTimeDurationItem.valueOf(duration);
+    return IDayTimeDurationItem.valueOf(
+        ObjectUtils.notNull(duration1.minus(duration2)));
   }
 
   /**
@@ -319,10 +315,8 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   private static IDayTimeDurationItem between(@NonNull ZonedDateTime time1, @NonNull ZonedDateTime time2) {
-    @SuppressWarnings("null")
-    @NonNull
-    Duration between = Duration.between(time1, time2);
-    return IDayTimeDurationItem.valueOf(between);
+    return IDayTimeDurationItem.valueOf(
+        ObjectUtils.notNull(Duration.between(time1, time2)));
   }
 
   /**
@@ -339,10 +333,8 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IDateTimeItem opSubtractYearMonthDurationFromDateTime(
       @NonNull IDateTimeItem moment,
       @NonNull IYearMonthDurationItem duration) {
-    @SuppressWarnings("null")
-    @NonNull
-    ZonedDateTime dateTime = moment.asZonedDateTime().minus(duration.asPeriod());
-    return IDateTimeItem.valueOf(dateTime);
+    return IDateTimeWithTimeZoneItem.valueOf(
+        ObjectUtils.notNull(moment.asZonedDateTime().minus(duration.asPeriod())));
   }
 
   /**
@@ -359,11 +351,8 @@ public final class OperationFunctions { // NOPMD - intentional
   public static IDateTimeItem opSubtractDayTimeDurationFromDateTime(
       @NonNull IDateTimeItem moment,
       @NonNull IDayTimeDurationItem duration) {
-
-    @SuppressWarnings("null")
-    @NonNull
-    ZonedDateTime dateTime = moment.asZonedDateTime().plus(duration.asDuration());
-    return IDateTimeItem.valueOf(dateTime);
+    return IDateTimeWithTimeZoneItem.valueOf(
+        ObjectUtils.notNull(moment.asZonedDateTime().plus(duration.asDuration())));
   }
 
   /**
@@ -388,10 +377,8 @@ public final class OperationFunctions { // NOPMD - intentional
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
     }
 
-    @SuppressWarnings("null")
-    @NonNull
-    Period period = arg1.asPeriod().multipliedBy(arg2Int);
-    return IYearMonthDurationItem.valueOf(period);
+    return IYearMonthDurationItem.valueOf(
+        ObjectUtils.notNull(arg1.asPeriod().multipliedBy(arg2Int)));
   }
 
   /**
@@ -414,11 +401,8 @@ public final class OperationFunctions { // NOPMD - intentional
     } catch (ArithmeticException ex) {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
     }
-
-    @SuppressWarnings("null")
-    @NonNull
-    Duration duration = arg1.asDuration().multipliedBy(arg2Long);
-    return IDayTimeDurationItem.valueOf(duration);
+    return IDayTimeDurationItem.valueOf(
+        ObjectUtils.notNull(arg1.asDuration().multipliedBy(arg2Long)));
   }
 
   /**
@@ -464,10 +448,8 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull IDayTimeDurationItem arg1,
       @NonNull INumericItem arg2) {
     try {
-      @SuppressWarnings("null")
-      @NonNull
-      Duration duration = arg1.asDuration().dividedBy(FunctionUtils.asLong(arg2.round()));
-      return IDayTimeDurationItem.valueOf(duration);
+      return IDayTimeDurationItem.valueOf(
+          ObjectUtils.notNull(arg1.asDuration().dividedBy(FunctionUtils.asLong(arg2.round()))));
     } catch (ArithmeticException ex) {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO, "Division by zero", ex);
     }
@@ -758,20 +740,14 @@ public final class OperationFunctions { // NOPMD - intentional
       // create an integer result
       BigInteger integerLeft = left.asInteger();
       BigInteger integerRight = right.asInteger();
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigInteger result = integerLeft.add(integerRight);
-      retval = IIntegerItem.valueOf(result);
+      retval = IIntegerItem.valueOf(
+          ObjectUtils.notNull(integerLeft.add(integerRight)));
     } else {
       // create a decimal result
       BigDecimal decimalLeft = left.asDecimal();
       BigDecimal decimalRight = right.asDecimal();
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigDecimal result = decimalLeft.add(decimalRight, FunctionUtils.MATH_CONTEXT);
-      retval = IDecimalItem.valueOf(result);
+      retval = IDecimalItem.valueOf(
+          ObjectUtils.notNull(decimalLeft.add(decimalRight, FunctionUtils.MATH_CONTEXT)));
     }
     return retval;
   }
@@ -793,20 +769,14 @@ public final class OperationFunctions { // NOPMD - intentional
       // create an integer result
       BigInteger integerLeft = left.asInteger();
       BigInteger integerRight = right.asInteger();
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigInteger result = integerLeft.subtract(integerRight);
-      retval = IIntegerItem.valueOf(result);
+      retval = IIntegerItem.valueOf(
+          ObjectUtils.notNull(integerLeft.subtract(integerRight)));
     } else {
       // create a decimal result
       BigDecimal decimalLeft = left.asDecimal();
       BigDecimal decimalRight = right.asDecimal();
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigDecimal result = decimalLeft.subtract(decimalRight, FunctionUtils.MATH_CONTEXT);
-      retval = IDecimalItem.valueOf(result);
+      retval = IDecimalItem.valueOf(
+          ObjectUtils.notNull(decimalLeft.subtract(decimalRight, FunctionUtils.MATH_CONTEXT)));
     }
     return retval;
   }
@@ -826,19 +796,14 @@ public final class OperationFunctions { // NOPMD - intentional
     INumericItem retval;
     if (left instanceof IIntegerItem || right instanceof IIntegerItem) {
       // create an integer result
-      @SuppressWarnings("null")
-      @NonNull
-      BigInteger result = left.asInteger().multiply(right.asInteger());
-      retval = IIntegerItem.valueOf(result);
+      retval = IIntegerItem.valueOf(
+          ObjectUtils.notNull(left.asInteger().multiply(right.asInteger())));
     } else {
       // create a decimal result
       BigDecimal decimalLeft = left.asDecimal();
       BigDecimal decimalRight = right.asDecimal();
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigDecimal result = decimalLeft.multiply(decimalRight, FunctionUtils.MATH_CONTEXT);
-      retval = IDecimalItem.valueOf(result);
+      retval = IDecimalItem.valueOf(
+          ObjectUtils.notNull(decimalLeft.multiply(decimalRight, FunctionUtils.MATH_CONTEXT)));
     }
     return retval;
   }
@@ -864,11 +829,8 @@ public final class OperationFunctions { // NOPMD - intentional
     }
 
     BigDecimal decimalDividend = dividend.asDecimal();
-
-    @SuppressWarnings("null")
-    @NonNull
-    BigDecimal result = decimalDividend.divide(decimalDivisor, FunctionUtils.MATH_CONTEXT);
-    return IDecimalItem.valueOf(result);
+    return IDecimalItem.valueOf(
+        ObjectUtils.notNull(decimalDividend.divide(decimalDivisor, FunctionUtils.MATH_CONTEXT)));
   }
 
   /**
@@ -892,11 +854,8 @@ public final class OperationFunctions { // NOPMD - intentional
         throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,
             ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
       }
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigInteger result = dividend.asInteger().divide(integerDivisor);
-      retval = IIntegerItem.valueOf(result);
+      retval = IIntegerItem.valueOf(
+          ObjectUtils.notNull(dividend.asInteger().divide(integerDivisor)));
     } else {
       // create a decimal result
       BigDecimal decimalDivisor = divisor.asDecimal();
@@ -907,12 +866,9 @@ public final class OperationFunctions { // NOPMD - intentional
       }
 
       BigDecimal decimalDividend = dividend.asDecimal();
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigInteger result
-          = decimalDividend.divideToIntegralValue(decimalDivisor, FunctionUtils.MATH_CONTEXT).toBigInteger();
-      retval = IIntegerItem.valueOf(result);
+      retval = IIntegerItem.valueOf(
+          ObjectUtils.notNull(decimalDividend
+              .divideToIntegralValue(decimalDivisor, FunctionUtils.MATH_CONTEXT).toBigInteger()));
     }
     return retval;
   }
@@ -942,10 +898,8 @@ public final class OperationFunctions { // NOPMD - intentional
     if (BigDecimal.ZERO.equals(decimalDividend)) {
       retval = dividend;
     } else {
-      @SuppressWarnings("null")
-      @NonNull
-      BigDecimal result = decimalDividend.remainder(decimalDivisor, FunctionUtils.MATH_CONTEXT);
-      retval = IDecimalItem.valueOf(result);
+      retval = IDecimalItem.valueOf(
+          ObjectUtils.notNull(decimalDividend.remainder(decimalDivisor, FunctionUtils.MATH_CONTEXT)));
     }
     return retval;
   }
@@ -964,19 +918,13 @@ public final class OperationFunctions { // NOPMD - intentional
     if (item instanceof IIntegerItem) {
       // create a decimal result
       BigInteger integer = item.asInteger();
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigInteger result = integer.negate();
-      retval = IIntegerItem.valueOf(result);
+      retval = IIntegerItem.valueOf(
+          ObjectUtils.notNull(integer.negate()));
     } else if (item instanceof IDecimalItem) {
       // create a decimal result
       BigDecimal decimal = item.asDecimal();
-
-      @SuppressWarnings("null")
-      @NonNull
-      BigDecimal result = decimal.negate(FunctionUtils.MATH_CONTEXT);
-      retval = IDecimalItem.valueOf(result);
+      retval = IDecimalItem.valueOf(
+          ObjectUtils.notNull(decimal.negate(FunctionUtils.MATH_CONTEXT)));
     } else {
       throw new InvalidTypeMetapathException(item);
     }

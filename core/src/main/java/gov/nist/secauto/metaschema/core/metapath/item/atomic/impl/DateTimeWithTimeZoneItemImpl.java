@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.DateTimeWithTZAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeWithTimeZoneItem;
 
 import java.time.ZonedDateTime;
 
@@ -17,7 +18,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * that has a required timezone.
  */
 public class DateTimeWithTimeZoneItemImpl
-    extends AbstractDateTimeItem<ZonedDateTime> {
+    extends AbstractDateTimeItem<ZonedDateTime>
+    implements IDateTimeWithTimeZoneItem {
 
   /**
    * Construct a new item with the provided {@code value}.

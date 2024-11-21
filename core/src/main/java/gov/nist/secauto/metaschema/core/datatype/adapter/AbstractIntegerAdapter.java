@@ -31,7 +31,7 @@ public abstract class AbstractIntegerAdapter<ITEM_TYPE extends IIntegerItem>
    * Construct a new integer-based adapter.
    *
    * @param itemClass
-   *          the Java type of the Matepath item this adapter supports
+   *          the Java type of the Metapath item this adapter supports
    */
   protected AbstractIntegerAdapter(
       @NonNull Class<ITEM_TYPE> itemClass) {

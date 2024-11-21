@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -33,11 +32,6 @@ public abstract class AbstractDateTimeItem<TYPE>
   @Override
   public boolean hasTimezone() {
     return true;
-  }
-
-  @Override
-  public IDateTimeItem castAsType(IAnyAtomicItem item) {
-    return IDateTimeItem.cast(item);
   }
 
   @Override
