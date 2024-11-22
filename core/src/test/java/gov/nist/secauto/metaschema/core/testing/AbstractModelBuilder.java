@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
     extends MockFactory {
 
-  private String namespace;
+  private String namespace = "";
   private String name;
 
   /**
@@ -136,9 +136,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
     getContext().checking(new Expectations() {
       {
         allowing(instance).getQName();
-        will(returnValue(namespace == null
-            ? IEnhancedQName.of(ObjectUtils.notNull(name))
-            : IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
+        will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
         allowing(instance).getDefinition();
         will(returnValue(definition));
         allowing(instance).getContainingDefinition();
@@ -164,9 +162,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
         allowing(element).getUseName();
         will(returnValue(null));
         allowing(element).getQName();
-        will(returnValue(namespace == null
-            ? IEnhancedQName.of(ObjectUtils.notNull(name))
-            : IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
+        will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
         allowing(element).getEffectiveName();
         will(returnValue(name));
         allowing(element).getFormalName();

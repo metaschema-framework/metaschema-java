@@ -297,10 +297,8 @@ public final class InstanceModelChoiceGroup
 
       IBoundInstanceModelGroupedNamed itemInstance = getClassToInstanceMap().get(clazz);
       String namespace = itemInstance.getQName().getNamespace();
-      retval = itemInstance.getDefinition().getFlagInstanceByName(
-          namespace.isEmpty()
-              ? IEnhancedQName.of(jsonKeyFlagName)
-              : IEnhancedQName.of(namespace, jsonKeyFlagName));
+      retval = itemInstance.getDefinition().getFlagInstanceByName(IEnhancedQName.of(namespace, jsonKeyFlagName)
+          .getIndexPosition());
     }
     return retval;
   }

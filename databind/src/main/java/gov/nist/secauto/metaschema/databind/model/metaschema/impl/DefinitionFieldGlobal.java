@@ -173,7 +173,8 @@ public class DefinitionFieldGlobal
     JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();
     String name = obj == null ? null : obj.getFlagRef();
     return name == null ? null
-        : ObjectUtils.requireNonNull(getFlagInstanceByName(ModuleUtils.parseFlagName(getContainingModule(), name)));
+        : ObjectUtils.requireNonNull(getFlagInstanceByName(
+            ModuleUtils.parseFlagName(getContainingModule(), name).getIndexPosition()));
   }
 
   @Override

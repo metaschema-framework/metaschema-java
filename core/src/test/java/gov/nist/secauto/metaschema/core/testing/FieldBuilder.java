@@ -135,7 +135,6 @@ public final class FieldBuilder
    *
    * @return the new mocked definition
    */
-  @SuppressWarnings("null")
   @NonNull
   public IFieldDefinition toDefinition() {
     validate();
@@ -158,7 +157,7 @@ public final class FieldBuilder
         allowing(retval).getFlagInstances();
         will(returnValue(flags.values()));
         flags.forEach((key, value) -> {
-          allowing(retval).getFlagInstanceByName(with(key));
+          allowing(retval).getFlagInstanceByName(with(key.getIndexPosition()));
           will(returnValue(value));
         });
       }

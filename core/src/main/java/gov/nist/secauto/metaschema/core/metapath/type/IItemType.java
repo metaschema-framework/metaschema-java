@@ -5,13 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyRawItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.ArrayTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.MapTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.NodeItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -53,12 +53,17 @@ public interface IItemType {
 
   @NonNull
   static IAtomicOrUnionType anyAtomic() {
-    return MetaschemaDataTypeProvider.ANY_ATOMIC_TYPE;
+    return TypeConstants.ANY_ATOMIC_TYPE;
   }
 
   @NonNull
   static IItemType node() {
     return NodeItemType.ANY_NODE;
+  }
+
+  @NonNull
+  static IItemType module() {
+    return NodeItemType.ANY_MODULE;
   }
 
   @NonNull
@@ -69,6 +74,11 @@ public interface IItemType {
   @NonNull
   static IItemType assembly() {
     return NodeItemType.ANY_ASSEMBLY;
+  }
+
+  @NonNull
+  static IItemType field() {
+    return NodeItemType.ANY_FIELD;
   }
 
   @NonNull

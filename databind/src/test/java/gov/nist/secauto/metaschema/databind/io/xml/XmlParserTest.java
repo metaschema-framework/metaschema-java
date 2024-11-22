@@ -101,7 +101,7 @@ class XmlParserTest
             .requireNonNull(
                 (IBoundDefinitionModelAssembly) bindingContext.getBoundDefinitionForClass(FlaggedAssembly.class));
 
-    IBoundInstanceFlag idProperty = assembly.getFlagInstanceByName(IEnhancedQName.of("id"));
+    IBoundInstanceFlag idProperty = assembly.getFlagInstanceByName(IEnhancedQName.of("id").getIndexPosition());
     assert idProperty != null;
 
     assertEquals(XMLStreamConstants.START_DOCUMENT, eventReader.nextEvent().getEventType());

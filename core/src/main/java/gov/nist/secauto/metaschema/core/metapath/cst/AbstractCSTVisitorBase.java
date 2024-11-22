@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.AbstractAstVisitor;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.EqnameContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -55,7 +55,8 @@ public abstract class AbstractCSTVisitorBase
    */
   @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.CognitiveComplexity" })
   @NonNull
-  static QName toQName(@NonNull EqnameContext eqname, @NonNull StaticContext context, boolean requireNamespace) {
+  static QName toQName(@NonNull Metapath10.EqnameContext eqname, @NonNull StaticContext context,
+      boolean requireNamespace) {
     String namespaceUri;
     String localName;
     TerminalNode node;
@@ -63,13 +64,12 @@ public abstract class AbstractCSTVisitorBase
       // BracedURILiteral - Q{uri}name -
       // https://www.w3.org/TR/xpath-31/#doc-xpath31-BracedURILiteral
       Matcher matcher = QUALIFIED_NAME_PATTERN.matcher(node.getText());
-      if (matcher.matches()) {
-        namespaceUri = matcher.group(1);
-        localName = matcher.group(2);
-      } else {
+      if (!matcher.matches()) {
         // the syntax should always match above, since ANTLR is parsing it
         throw new IllegalStateException();
       }
+      namespaceUri = matcher.group(1);
+      localName = matcher.group(2);
     } else {
       String prefix;
       String[] tokens = eqname.getText().split(":", 2);
@@ -185,10 +185,7 @@ public abstract class AbstractCSTVisitorBase
     return handleNAiryCollection(context, 1, 2, (ctx, idx) -> {
       // skip operator, since we know what it is
       ParseTree tree = ctx.getChild(idx + 1);
-      @SuppressWarnings({ "unchecked", "null" })
-      @NonNull
-      NODE node = (NODE) tree.accept(this);
-      return node;
+      return (NODE) tree.accept(this);
     }, supplier);
   }
 
@@ -233,7 +230,8 @@ public abstract class AbstractCSTVisitorBase
 
     if (numChildren == 0) {
       throw new IllegalStateException("there should always be a child expression");
-    } else if (startIndex > numChildren) {
+    }
+    if (startIndex > numChildren) {
       throw new IllegalStateException("Start index is out of bounds");
     }
 

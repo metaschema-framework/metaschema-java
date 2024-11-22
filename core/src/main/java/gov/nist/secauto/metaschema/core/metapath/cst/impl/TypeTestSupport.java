@@ -6,23 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AnykindtestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ArraytestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AssemblytestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.AtomicoruniontypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.DocumenttestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FieldtestContext;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FlagnameorwildcardContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FlagtestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FunctiontestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ItemtypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.KindtestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.MaptestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.OccurrenceindicatorContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParenthesizeditemtypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.SequencetypeContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TypedarraytestContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.TypedmaptestContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.Typename_Context;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -46,25 +31,25 @@ public final class TypeTestSupport {
       Class<? extends ParseTree>,
       ParseTreeParser<IItemType>> ITEM_TYPE_HANDLER_MAP
           = Map.of(
-              KindtestContext.class, TypeTestSupport::parseKindTest,
-              FunctiontestContext.class, TypeTestSupport::parseFunctionTest,
-              MaptestContext.class, TypeTestSupport::parseMapTest,
-              ArraytestContext.class, TypeTestSupport::parseArrayTest,
-              AtomicoruniontypeContext.class, TypeTestSupport::parseAtomicType,
-              ParenthesizeditemtypeContext.class, TypeTestSupport::parseParenthesizedItemType);
+              Metapath10.KindtestContext.class, TypeTestSupport::parseKindTest,
+              Metapath10.FunctiontestContext.class, TypeTestSupport::parseFunctionTest,
+              Metapath10.MaptestContext.class, TypeTestSupport::parseMapTest,
+              Metapath10.ArraytestContext.class, TypeTestSupport::parseArrayTest,
+              Metapath10.AtomicoruniontypeContext.class, TypeTestSupport::parseAtomicType,
+              Metapath10.ParenthesizeditemtypeContext.class, TypeTestSupport::parseParenthesizedItemType);
   private static final Map<
       Class<? extends ParseTree>,
       ParseTreeParser<IItemType>> KIND_TEST_HANDLER_MAP
           = Map.of(
-              DocumenttestContext.class, TypeTestSupport::parseKindDocumentTest,
-              FieldtestContext.class, TypeTestSupport::parseKindFieldTest,
-              AssemblytestContext.class, TypeTestSupport::parseKindAssemblyTest,
-              FlagtestContext.class, TypeTestSupport::parseKindFlagTest,
-              AnykindtestContext.class, TypeTestSupport::parseKindAny);
+              Metapath10.DocumenttestContext.class, TypeTestSupport::parseKindDocumentTest,
+              Metapath10.FieldtestContext.class, TypeTestSupport::parseKindFieldTest,
+              Metapath10.AssemblytestContext.class, TypeTestSupport::parseKindAssemblyTest,
+              Metapath10.FlagtestContext.class, TypeTestSupport::parseKindFlagTest,
+              Metapath10.AnykindtestContext.class, TypeTestSupport::parseKindAny);
 
   @NonNull
   public static ISequenceType parseSequenceType(
-      @NonNull SequencetypeContext ctx,
+      @NonNull Metapath10.SequencetypeContext ctx,
       @NonNull StaticContext staticContext) {
     return ObjectUtils.notNull(ctx.KW_EMPTY_SEQUENCE() == null
         ? parseSequenceType(
@@ -75,8 +60,8 @@ public final class TypeTestSupport {
   }
 
   private static ISequenceType parseSequenceType(
-      @NonNull ItemtypeContext itemTypeCtx,
-      @Nullable OccurrenceindicatorContext occurrenceIndicatorCtx,
+      @NonNull Metapath10.ItemtypeContext itemTypeCtx,
+      @Nullable Metapath10.OccurrenceindicatorContext occurrenceIndicatorCtx,
       @NonNull StaticContext staticContext) {
     IItemType itemType = parseItemType(itemTypeCtx, staticContext);
     Occurrence occurrence = parseOccurrence(occurrenceIndicatorCtx);
@@ -85,7 +70,7 @@ public final class TypeTestSupport {
 
   @NonNull
   private static IItemType parseItemType(
-      @NonNull ItemtypeContext ctx,
+      @NonNull Metapath10.ItemtypeContext ctx,
       @NonNull StaticContext staticContext) {
     IItemType retval;
     if (ctx.KW_ITEM() != null) {
@@ -109,7 +94,7 @@ public final class TypeTestSupport {
   private static IItemType parseKindDocumentTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    DocumenttestContext ctx = (DocumenttestContext) tree;
+    Metapath10.DocumenttestContext ctx = (Metapath10.DocumenttestContext) tree;
     assert ctx != null;
     throw new UnsupportedOperationException("implement");
   }
@@ -118,7 +103,7 @@ public final class TypeTestSupport {
   private static IItemType parseKindFieldTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    FieldtestContext ctx = (FieldtestContext) tree;
+    Metapath10.FieldtestContext ctx = (Metapath10.FieldtestContext) tree;
     assert ctx != null;
     throw new UnsupportedOperationException("implement");
   }
@@ -127,7 +112,7 @@ public final class TypeTestSupport {
   private static IItemType parseKindAssemblyTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    AssemblytestContext ctx = (AssemblytestContext) tree;
+    Metapath10.AssemblytestContext ctx = (Metapath10.AssemblytestContext) tree;
     assert ctx != null;
     throw new UnsupportedOperationException("implement");
   }
@@ -136,7 +121,7 @@ public final class TypeTestSupport {
   private static IItemType parseKindFlagTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    FlagtestContext ctx = (FlagtestContext) tree;
+    Metapath10.FlagtestContext ctx = (Metapath10.FlagtestContext) tree;
 
     FlagnameorwildcardContext nameOrWildcard = ctx.flagnameorwildcard();
     IItemType retval;
@@ -165,7 +150,7 @@ public final class TypeTestSupport {
   private static IItemType parseKindAny(
       @NonNull ParseTree tree,
       @SuppressWarnings("unused") @NonNull StaticContext staticContext) {
-    AnykindtestContext ctx = (AnykindtestContext) tree;
+    Metapath10.AnykindtestContext ctx = (Metapath10.AnykindtestContext) tree;
     assert ctx != null;
     return IItemType.node();
   }
@@ -174,7 +159,7 @@ public final class TypeTestSupport {
   private static IItemType parseFunctionTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    FunctiontestContext ctx = (FunctiontestContext) tree;
+    Metapath10.FunctiontestContext ctx = (Metapath10.FunctiontestContext) tree;
     assert ctx != null;
     throw new UnsupportedOperationException("implement");
   }
@@ -183,7 +168,7 @@ public final class TypeTestSupport {
   private static IItemType parseMapTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    MaptestContext ctx = (MaptestContext) tree;
+    Metapath10.MaptestContext ctx = (Metapath10.MaptestContext) tree;
 
     ctx.anymaptest();
     ctx.typedmaptest();
@@ -192,7 +177,7 @@ public final class TypeTestSupport {
     if (ctx.anymaptest() != null) {
       retval = IItemType.map();
     } else {
-      TypedmaptestContext typedMapCtx = ctx.typedmaptest();
+      Metapath10.TypedmaptestContext typedMapCtx = ctx.typedmaptest();
 
       String dataTypeName = ObjectUtils.notNull(typedMapCtx.atomicoruniontype().getText());
       IAtomicOrUnionType dataType = staticContext.lookupAtomicType(dataTypeName);
@@ -207,12 +192,12 @@ public final class TypeTestSupport {
   private static IItemType parseArrayTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    ArraytestContext ctx = (ArraytestContext) tree;
+    Metapath10.ArraytestContext ctx = (Metapath10.ArraytestContext) tree;
     IItemType retval;
     if (ctx.anyarraytest() != null) {
       retval = IItemType.array();
     } else {
-      TypedarraytestContext typedArrayCtx = ctx.typedarraytest();
+      Metapath10.TypedarraytestContext typedArrayCtx = ctx.typedarraytest();
       retval = IItemType.array(parseSequenceType(
           ObjectUtils.notNull(typedArrayCtx.sequencetype()),
           staticContext));
@@ -224,7 +209,7 @@ public final class TypeTestSupport {
   private static IItemType parseAtomicType(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    AtomicoruniontypeContext ctx = (AtomicoruniontypeContext) tree;
+    Metapath10.AtomicoruniontypeContext ctx = (Metapath10.AtomicoruniontypeContext) tree;
 
     String name = ObjectUtils.notNull(ctx.eqname().getText());
     return staticContext.lookupAtomicType(name);
@@ -234,12 +219,12 @@ public final class TypeTestSupport {
   private static IItemType parseParenthesizedItemType(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
-    ParenthesizeditemtypeContext ctx = (ParenthesizeditemtypeContext) tree;
+    Metapath10.ParenthesizeditemtypeContext ctx = (Metapath10.ParenthesizeditemtypeContext) tree;
     return parseItemType(ObjectUtils.notNull(ctx.itemtype()), staticContext);
   }
 
   @NonNull
-  public static Occurrence parseOccurrence(@Nullable OccurrenceindicatorContext ctx) {
+  public static Occurrence parseOccurrence(@Nullable Metapath10.OccurrenceindicatorContext ctx) {
     Occurrence retval;
     if (ctx == null) {
       retval = Occurrence.ONE;

@@ -50,11 +50,11 @@ class ModelTest
           context.getBoundDefinitionForClass(RootAssemblyWithFlags.class));
 
       IBoundInstanceFlag idFlag = ObjectUtils.requireNonNull(definition.getFlagInstanceByName(
-          IEnhancedQName.of("id")));
+          IEnhancedQName.of("id").getIndexPosition()));
       IBoundInstanceFlag defaultFlag = ObjectUtils.requireNonNull(definition.getFlagInstanceByName(
-          IEnhancedQName.of("defaultFlag")));
+          IEnhancedQName.of("defaultFlag").getIndexPosition()));
       IBoundInstanceFlag numberFlag = ObjectUtils.requireNonNull(definition.getFlagInstanceByName(
-          IEnhancedQName.of("number")));
+          IEnhancedQName.of("number").getIndexPosition()));
 
       assertAll(
           "root assembly",

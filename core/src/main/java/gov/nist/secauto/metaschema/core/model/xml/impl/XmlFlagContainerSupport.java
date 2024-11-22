@@ -216,7 +216,9 @@ final class XmlFlagContainerSupport {
       @NonNull IModelDefinition parent) {
     IFlagContainerBuilder<IFlagInstance> builder = jsonKeyFlagRef == null
         ? IContainerFlagSupport.builder()
-        : IContainerFlagSupport.builder(ModuleUtils.parseFlagName(parent.getContainingModule(), jsonKeyFlagRef));
+        : IContainerFlagSupport.builder(ModuleUtils.parseFlagName(
+            parent.getContainingModule(),
+            jsonKeyFlagRef).getIndexPosition());
     // handle flags
     XML_MODEL_PARSER.parse(
         parent.getContainingModule().getSource(),

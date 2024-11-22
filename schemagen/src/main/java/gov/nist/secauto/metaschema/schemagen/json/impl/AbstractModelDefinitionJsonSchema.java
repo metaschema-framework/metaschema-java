@@ -57,7 +57,7 @@ public abstract class AbstractModelDefinitionJsonSchema<D extends IModelDefiniti
       IFlagInstance jsonKeyFlag;
       try {
         jsonKeyFlag = definition.getFlagInstanceByName(
-            ModuleUtils.parseFlagName(definition.getContainingModule(), jsonKeyFlagName));
+            ModuleUtils.parseFlagName(definition.getContainingModule(), jsonKeyFlagName).getIndexPosition());
       } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(ex);
       }

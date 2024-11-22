@@ -111,7 +111,6 @@ public final class AssemblyBuilder
    *
    * @return the new mocked definition
    */
-  @SuppressWarnings("null")
   @NonNull
   public IAssemblyDefinition toDefinition() {
     validate();
@@ -136,7 +135,7 @@ public final class AssemblyBuilder
         allowing(retval).getFlagInstances();
         will(returnValue(flags.values()));
         flags.forEach((key, value) -> {
-          allowing(retval).getFlagInstanceByName(with(key));
+          allowing(retval).getFlagInstanceByName(with(key.getIndexPosition()));
           will(returnValue(value));
         });
         allowing(retval).getModelInstances();

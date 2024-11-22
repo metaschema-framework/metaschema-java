@@ -180,10 +180,7 @@ public class InstanceModelGroupedFieldInline
       String flagName = obj.getFlagRef();
       if (flagName != null) {
         String namespace = getQName().getNamespace();
-        retval = getFlagInstanceByName(
-            namespace.isEmpty()
-                ? IEnhancedQName.of(flagName)
-                : IEnhancedQName.of(namespace, flagName));
+        retval = getFlagInstanceByName(IEnhancedQName.of(namespace, flagName).getIndexPosition());
       }
     }
     return retval;

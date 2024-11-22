@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;
 
 import java.time.ZonedDateTime;
 
@@ -18,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface ITemporalItem extends IAnyAtomicItem {
   @NonNull
   static IAtomicOrUnionType type() {
-    return MetaschemaDataTypeProvider.TEMPORAL_TYPE;
+    return TypeConstants.TEMPORAL_TYPE;
   }
 
   /**

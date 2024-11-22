@@ -5,12 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -32,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface INumericItem extends IAnyAtomicItem {
   @NonNull
   static IAtomicOrUnionType type() {
-    return MetaschemaDataTypeProvider.NUMERIC_TYPE;
+    return TypeConstants.NUMERIC_TYPE;
   }
 
   /**

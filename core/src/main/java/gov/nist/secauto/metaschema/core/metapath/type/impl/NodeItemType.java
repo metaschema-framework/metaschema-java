@@ -7,6 +7,9 @@ package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -25,14 +28,24 @@ public class NodeItemType
       IDocumentNodeItem.class,
       "");
   @NonNull
+  public static final NodeItemType ANY_MODULE = new NodeItemType(
+      "module",
+      IModuleNodeItem.class,
+      "");
+  @NonNull
   public static final NodeItemType ANY_ASSEMBLY = new NodeItemType(
       "assembly",
       IAssemblyNodeItem.class,
       "");
   @NonNull
+  public static final NodeItemType ANY_FIELD = new NodeItemType(
+      "field",
+      IFieldNodeItem.class,
+      "");
+  @NonNull
   public static final NodeItemType ANY_FLAG = new NodeItemType(
       "flag",
-      IAssemblyNodeItem.class,
+      IFlagNodeItem.class,
       "");
   @NonNull
   private final String nodeName;

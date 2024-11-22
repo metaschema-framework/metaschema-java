@@ -318,7 +318,7 @@ public class CLIProcessor {
 
     @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
     private CallingContext(@NonNull List<String> args) {
-      @SuppressWarnings("PMD.LooseCoupling")
+      @SuppressWarnings("PMD.LooseCoupling") // needed to support getLast
       LinkedList<ICommand> calledCommands = new LinkedList<>();
       List<Option> options = new LinkedList<>(OPTIONS);
       List<String> extraArgs = new LinkedList<>();

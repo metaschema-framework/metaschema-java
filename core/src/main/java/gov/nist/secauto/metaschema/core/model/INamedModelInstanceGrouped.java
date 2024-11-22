@@ -63,7 +63,8 @@ public interface INamedModelInstanceGrouped extends INamedModelInstance {
     return name == null
         ? null
         : ObjectUtils.requireNonNull(
-            getDefinition().getFlagInstanceByName(ModuleUtils.parseFlagName(getContainingModule(), name)));
+            getDefinition().getFlagInstanceByName(
+                ModuleUtils.parseFlagName(getContainingModule(), name).getIndexPosition()));
   }
 
   @Override

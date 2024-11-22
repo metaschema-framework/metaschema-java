@@ -52,9 +52,9 @@ public final class DataTypeService {
     builtinItemTypes.add(IItemType.node());
     builtinItemTypes.add(IItemType.document());
     builtinItemTypes.add(IItemType.assembly());
-    // builtinItemTypes.add(IItemType.field());
+    builtinItemTypes.add(IItemType.field());
     builtinItemTypes.add(IItemType.flag());
-    // builtinItemTypes.add(IItemType.module());
+    builtinItemTypes.add(IItemType.module());
 
     BUILTIN_ITEM_TYPES = CollectionUtil.unmodifiableList(builtinItemTypes);
   }

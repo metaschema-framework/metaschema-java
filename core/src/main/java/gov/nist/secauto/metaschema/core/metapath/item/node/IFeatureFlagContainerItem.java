@@ -58,7 +58,7 @@ public interface IFeatureFlagContainerItem extends INodeItem {
    */
   class FlagContainer {
     @NonNull
-    private final Map<IEnhancedQName, IFlagNodeItem> flags;
+    private final Map<Integer, IFlagNodeItem> flags;
 
     /**
      * Initialize the container with the provided collection of flags.
@@ -67,7 +67,7 @@ public interface IFeatureFlagContainerItem extends INodeItem {
      *          a flag mapping of qualified name to corresponding
      *          {@link IFlagNodeItem}
      */
-    protected FlagContainer(@NonNull Map<IEnhancedQName, IFlagNodeItem> flags) {
+    protected FlagContainer(@NonNull Map<Integer, IFlagNodeItem> flags) {
       this.flags = flags;
     }
 
@@ -81,7 +81,7 @@ public interface IFeatureFlagContainerItem extends INodeItem {
      */
     @Nullable
     public IFlagNodeItem getFlagByName(@NonNull IEnhancedQName name) {
-      return flags.get(name);
+      return flags.get(name.getIndexPosition());
     }
 
     /**

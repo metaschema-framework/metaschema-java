@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.databind.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
@@ -32,7 +31,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanceFlag> {
   @NonNull
-  private final Map<IEnhancedQName, IBoundInstanceFlag> flagInstances;
+  private final Map<Integer, IBoundInstanceFlag> flagInstances;
   @Nullable
   private IBoundInstanceFlag jsonKeyFlag;
 
@@ -63,7 +62,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
     this.flagInstances = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(instances
         .peek(intermediate)
         .collect(Collectors.toMap(
-            IBoundInstanceFlag::getQName,
+            flag -> flag.getQName().getIndexPosition(),
             Function.identity(),
             (v1, v2) -> v2,
             LinkedHashMap::new))));
@@ -114,7 +113,7 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
 
   @Override
   @NonNull
-  public Map<IEnhancedQName, IBoundInstanceFlag> getFlagInstanceMap() {
+  public Map<Integer, IBoundInstanceFlag> getFlagInstanceMap() {
     return flagInstances;
   }
 

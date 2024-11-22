@@ -49,7 +49,9 @@ public interface IEnhancedQName {
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull String namespace, @NonNull String localName) {
-    return EQNameFactory.instance().newQName(namespace, localName);
+    return namespace.isEmpty()
+        ? EQNameFactory.instance().newQName(localName)
+        : EQNameFactory.instance().newQName(namespace, localName);
   }
 
   @SuppressWarnings("PMD.ShortMethodName")

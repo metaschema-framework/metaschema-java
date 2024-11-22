@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;
 
 import java.time.temporal.TemporalAmount;
 
@@ -29,7 +29,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface IDurationItem extends IAnyAtomicItem {
   @NonNull
   static IAtomicOrUnionType type() {
-    return MetaschemaDataTypeProvider.DURATION_TYPE;
+    return TypeConstants.DURATION_TYPE;
   }
 
   /**

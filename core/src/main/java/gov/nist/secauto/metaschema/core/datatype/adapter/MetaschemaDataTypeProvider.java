@@ -6,15 +6,7 @@
 package gov.nist.secauto.metaschema.core.datatype.adapter;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPAddressItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -188,56 +180,6 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   public static final StringAdapter DEFAULT_DATA_TYPE = STRING;
 
   /**
-   * The Metaschema data type that represents all atomic types.
-   */
-  @NonNull
-  public static final IAtomicOrUnionType ANY_ATOMIC_TYPE
-      = IAtomicOrUnionType.of(
-          IAnyAtomicItem.class,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "any-atomic-type"));
-  /**
-   * The Metaschema data type that represents all untyped atomic types.
-   */
-  @NonNull
-  public static final IAtomicOrUnionType UNTYPED_ATOMIC_TYPE
-      = IAtomicOrUnionType.of(
-          IUntypedAtomicItem.class,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "untyped-atomic"));
-  /**
-   * The Metaschema data type that represents all duration types.
-   */
-  @NonNull
-  public static final IAtomicOrUnionType DURATION_TYPE
-      = IAtomicOrUnionType.of(
-          IDurationItem.class,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "duration"));
-  /**
-   * The Metaschema data type that represents all IP address types.
-   */
-  @NonNull
-  public static final IAtomicOrUnionType IP_ADDRESS_TYPE
-      = IAtomicOrUnionType.of(
-          IIPAddressItem.class,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "ip-address"));
-  /**
-   * The Metaschema data type that represents all numeric types.
-   */
-  @NonNull
-  public static final IAtomicOrUnionType NUMERIC_TYPE
-      = IAtomicOrUnionType.of(
-          INumericItem.class,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "numeric"));
-  /**
-   * The Metaschema data type that represents all temporal types that work with
-   * dates and times.
-   */
-  @NonNull
-  public static final IAtomicOrUnionType TEMPORAL_TYPE
-      = IAtomicOrUnionType.of(
-          ITemporalItem.class,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "temporal"));
-
-  /**
    * Initialize the built-in data types.
    */
   public MetaschemaDataTypeProvider() {
@@ -269,11 +211,11 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
     register(YEAR_MONTH_DURATION);
 
     // register abstract types
-    register(ANY_ATOMIC_TYPE);
-    register(UNTYPED_ATOMIC_TYPE);
-    register(DURATION_TYPE);
-    register(IP_ADDRESS_TYPE);
-    register(NUMERIC_TYPE);
-    register(TEMPORAL_TYPE);
+    register(TypeConstants.ANY_ATOMIC_TYPE);
+    register(TypeConstants.UNTYPED_ATOMIC_TYPE);
+    register(TypeConstants.DURATION_TYPE);
+    register(TypeConstants.IP_ADDRESS_TYPE);
+    register(TypeConstants.NUMERIC_TYPE);
+    register(TypeConstants.TEMPORAL_TYPE);
   }
 }

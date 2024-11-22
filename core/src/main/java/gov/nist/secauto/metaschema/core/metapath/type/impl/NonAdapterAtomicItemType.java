@@ -14,6 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class NonAdapterAtomicItemType implements IAtomicOrUnionType {
+
   @NonNull
   private final Class<? extends IAnyAtomicItem> itemClass;
   @NonNull

@@ -206,7 +206,7 @@ public class InstanceModelFieldInline
     String namespace = getContainingModule().getXmlNamespace().toASCIIString();
     return name == null ? null
         : ObjectUtils.requireNonNull(getFlagInstanceByName(
-            IEnhancedQName.of(namespace, name)));
+            IEnhancedQName.of(namespace, name).getIndexPosition()));
   }
 
   @Override

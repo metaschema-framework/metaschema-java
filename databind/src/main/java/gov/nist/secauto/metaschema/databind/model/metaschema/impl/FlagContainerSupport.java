@@ -42,7 +42,8 @@ public final class FlagContainerSupport {
     // create temporary collections to store the child binding objects
     IFlagContainerBuilder<IFlagInstance> builder = jsonKeyName == null
         ? IContainerFlagSupport.builder()
-        : IContainerFlagSupport.builder(ModuleUtils.parseFlagName(parent.getContainingModule(), jsonKeyName));
+        : IContainerFlagSupport.builder(
+            ModuleUtils.parseFlagName(parent.getContainingModule(), jsonKeyName).getIndexPosition());
 
     // create counter to track child positions
     AtomicInteger flagReferencePosition = new AtomicInteger();

@@ -273,7 +273,7 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    * Lookup a flag and value data on this node by it's effective qualified name.
    *
    * @param name
-   *          the effective name of the flag
+   *          the effective qualified name of the flag
    * @return the flag with the matching effective name or {@code null} if no match
    *         was found
    */

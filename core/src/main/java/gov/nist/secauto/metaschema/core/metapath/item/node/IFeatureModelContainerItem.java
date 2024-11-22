@@ -34,7 +34,7 @@ public interface IFeatureModelContainerItem extends IFeatureFlagContainerItem {
    */
   class ModelContainer
       extends FlagContainer {
-    private final Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> modelItems;
+    private final Map<Integer, List<? extends IModelNodeItem<?, ?>>> modelItems;
 
     /**
      * Creates a new collection of flags and model items.
@@ -45,8 +45,8 @@ public interface IFeatureModelContainerItem extends IFeatureFlagContainerItem {
      *          a mapping of model item name to a list of model items
      */
     protected ModelContainer(
-        @NonNull Map<IEnhancedQName, IFlagNodeItem> flags,
-        @NonNull Map<IEnhancedQName, List<? extends IModelNodeItem<?, ?>>> modelItems) {
+        @NonNull Map<Integer, IFlagNodeItem> flags,
+        @NonNull Map<Integer, List<? extends IModelNodeItem<?, ?>>> modelItems) {
       super(flags);
       this.modelItems = modelItems;
     }
@@ -60,7 +60,7 @@ public interface IFeatureModelContainerItem extends IFeatureFlagContainerItem {
      */
     @NonNull
     public List<? extends IModelNodeItem<?, ?>> getModelItemsByName(@NonNull IEnhancedQName name) {
-      List<? extends IModelNodeItem<?, ?>> result = modelItems.get(name);
+      List<? extends IModelNodeItem<?, ?>> result = modelItems.get(name.getIndexPosition());
       return result == null ? CollectionUtil.emptyList() : result;
     }
 

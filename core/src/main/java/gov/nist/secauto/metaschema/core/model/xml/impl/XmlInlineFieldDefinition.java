@@ -201,10 +201,7 @@ class XmlInlineFieldDefinition
       String namespace = getQName().getNamespace();
       String name = ObjectUtils.notNull(getXmlObject().getJsonValueKeyFlag().getFlagRef());
 
-      retval = getFlagInstanceByName(
-          namespace.isEmpty()
-              ? IEnhancedQName.of(name)
-              : IEnhancedQName.of(namespace, name));
+      retval = getFlagInstanceByName(IEnhancedQName.of(namespace, name).getIndexPosition());
     }
     return retval;
   }

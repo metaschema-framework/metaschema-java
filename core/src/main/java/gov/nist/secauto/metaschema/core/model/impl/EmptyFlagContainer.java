@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IContainerFlagSupport;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.Map;
@@ -19,7 +18,7 @@ public class EmptyFlagContainer<FI extends IFlagInstance> implements IContainerF
   public static final EmptyFlagContainer<?> EMPTY = new EmptyFlagContainer<>();
 
   @Override
-  public Map<IEnhancedQName, FI> getFlagInstanceMap() {
+  public Map<Integer, FI> getFlagInstanceMap() {
     return CollectionUtil.emptyMap();
   }
 

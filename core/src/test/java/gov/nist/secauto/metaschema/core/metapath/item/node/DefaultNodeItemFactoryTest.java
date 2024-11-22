@@ -54,7 +54,7 @@ class DefaultNodeItemFactoryTest
     // setup the value calls
     getContext().checking(new Expectations() {
       { // NOPMD - intentional
-        allowing(fieldInstance.getDefinition().getFlagInstanceByName(IEnhancedQName.of(NS, "flag1")))
+        allowing(fieldInstance.getDefinition().getFlagInstanceByName(IEnhancedQName.of(NS, "flag1").getIndexPosition()))
             .getValue(fieldValue);
         will(returnValue("flag1 value"));
       }
@@ -88,7 +88,8 @@ class DefaultNodeItemFactoryTest
     // Setup the value calls
     getContext().checking(new Expectations() {
       { // NOPMD - intentional
-        allowing(assembly.getFlagInstanceByName(IEnhancedQName.of(NS, "flag1"))).getValue(assemblyValue);
+        allowing(assembly.getFlagInstanceByName(IEnhancedQName.of(NS, "flag1").getIndexPosition()))
+            .getValue(assemblyValue);
         will(returnValue(flagValue));
         allowing(assembly.getNamedModelInstanceByName(IEnhancedQName.of(NS, "field1").getIndexPosition()))
             .getValue(assemblyValue);

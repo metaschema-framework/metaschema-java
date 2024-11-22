@@ -40,7 +40,8 @@ public interface IBoundInstanceModelGroupedNamed
     return name == null
         ? null
         : ObjectUtils.requireNonNull(
-            getDefinition().getFlagInstanceByName(ModuleUtils.parseFlagName(getContainingModule(), name)));
+            getDefinition().getFlagInstanceByName(
+                ModuleUtils.parseFlagName(getContainingModule(), name).getIndexPosition()));
   }
 
   @Override
