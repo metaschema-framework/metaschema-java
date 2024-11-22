@@ -188,7 +188,7 @@ public class MetapathExpression {
           }
         });
 
-        ParseTree tree = ObjectUtils.notNull(parser.expr());
+        ParseTree tree = ObjectUtils.notNull(parser.metapath());
 
         if (LOGGER.isDebugEnabled()) {
           try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {

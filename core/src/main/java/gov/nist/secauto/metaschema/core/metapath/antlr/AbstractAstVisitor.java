@@ -146,7 +146,7 @@ public abstract class AbstractAstVisitor<R>
   @Override
   public R visitMetapath(MetapathContext ctx) {
     assert ctx != null;
-    return delegateToChild(ctx);
+    return ctx.expr().accept(this);
   }
 
   /**
