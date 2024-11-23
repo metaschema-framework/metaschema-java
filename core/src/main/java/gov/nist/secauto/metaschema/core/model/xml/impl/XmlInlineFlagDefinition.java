@@ -71,10 +71,9 @@ class XmlInlineFlagDefinition
    * Used to generate the instances for the constraints in a lazy fashion when the
    * constraints are first accessed.
    */
-  @SuppressWarnings("null")
   @Override
   public IValueConstrained getConstraintSupport() {
-    return constraints.get();
+    return ObjectUtils.notNull(constraints.get());
   }
 
   @Override

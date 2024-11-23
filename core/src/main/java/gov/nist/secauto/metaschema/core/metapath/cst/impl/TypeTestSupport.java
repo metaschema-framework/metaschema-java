@@ -7,11 +7,15 @@ package gov.nist.secauto.metaschema.core.metapath.cst.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.FlagnameorwildcardContext;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.Typename_Context;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -39,7 +43,7 @@ public final class TypeTestSupport {
               Metapath10.ParenthesizeditemtypeContext.class, TypeTestSupport::parseParenthesizedItemType);
   private static final Map<
       Class<? extends ParseTree>,
-      ParseTreeParser<IItemType>> KIND_TEST_HANDLER_MAP
+      ParseTreeParser<? extends IKindTest<?>>> KIND_TEST_HANDLER_MAP
           = Map.of(
               Metapath10.DocumenttestContext.class, TypeTestSupport::parseKindDocumentTest,
               Metapath10.FieldtestContext.class, TypeTestSupport::parseKindFieldTest,
@@ -73,11 +77,11 @@ public final class TypeTestSupport {
       @NonNull Metapath10.ItemtypeContext ctx,
       @NonNull StaticContext staticContext) {
     IItemType retval;
-    if (ctx.KW_ITEM() != null) {
-      retval = IItemType.item();
-    } else {
+    if (ctx.KW_ITEM() == null) {
       ParseTree tree = ctx.getChild(0);
       retval = ITEM_TYPE_HANDLER_MAP.get(tree.getClass()).parse(tree, staticContext);
+    } else {
+      retval = IItemType.item();
     }
     return retval;
   }
@@ -91,63 +95,73 @@ public final class TypeTestSupport {
   }
 
   @NonNull
-  private static IItemType parseKindDocumentTest(
+  private static IKindTest<IDocumentNodeItem> parseKindDocumentTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     Metapath10.DocumenttestContext ctx = (Metapath10.DocumenttestContext) tree;
-    assert ctx != null;
-    throw new UnsupportedOperationException("implement");
+
+    return ctx.assemblytest() == null
+        ? IItemType.document()
+        : IItemType.document(parseKindAssemblyTest(ObjectUtils.notNull(ctx.assemblytest()), staticContext));
   }
 
   @NonNull
-  private static IItemType parseKindFieldTest(
+  private static IKindTest<IAssemblyNodeItem> parseKindAssemblyTest(
+      @NonNull ParseTree tree,
+      @NonNull StaticContext staticContext) {
+
+    Metapath10.AssemblytestContext ctx = (Metapath10.AssemblytestContext) tree;
+    IEnhancedQName instanceName
+        = ctx.elementnameorwildcard() == null || ctx.elementnameorwildcard().elementname() == null
+            ? null
+            : staticContext.parseModelName(ObjectUtils.notNull(
+                ctx.elementnameorwildcard().elementname().eqname().getText()));
+    String typeName = ctx.typename_() == null ? null : ctx.typename_().eqname().getText();
+    return instanceName == null
+        ? typeName == null
+            ? IItemType.assembly()
+            : IItemType.assembly(typeName, staticContext)
+        : IItemType.assembly(instanceName, typeName, staticContext);
+  }
+
+  @NonNull
+  private static IKindTest<IFieldNodeItem> parseKindFieldTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     Metapath10.FieldtestContext ctx = (Metapath10.FieldtestContext) tree;
-    assert ctx != null;
-    throw new UnsupportedOperationException("implement");
+    IEnhancedQName instanceName
+        = ctx.elementnameorwildcard() == null || ctx.elementnameorwildcard().elementname() == null
+            ? null
+            : staticContext.parseModelName(ObjectUtils.notNull(
+                ctx.elementnameorwildcard().elementname().eqname().getText()));
+    String typeName = ctx.typename_() == null ? null : ctx.typename_().eqname().getText();
+    return instanceName == null
+        ? typeName == null
+            ? IItemType.field()
+            : IItemType.field(typeName, staticContext)
+        : IItemType.field(instanceName, typeName, staticContext);
   }
 
   @NonNull
-  private static IItemType parseKindAssemblyTest(
-      @NonNull ParseTree tree,
-      @NonNull StaticContext staticContext) {
-    Metapath10.AssemblytestContext ctx = (Metapath10.AssemblytestContext) tree;
-    assert ctx != null;
-    throw new UnsupportedOperationException("implement");
-  }
-
-  @NonNull
-  private static IItemType parseKindFlagTest(
+  private static IKindTest<IFlagNodeItem> parseKindFlagTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     Metapath10.FlagtestContext ctx = (Metapath10.FlagtestContext) tree;
-
-    FlagnameorwildcardContext nameOrWildcard = ctx.flagnameorwildcard();
-    IItemType retval;
-    if (nameOrWildcard == null) {
-      retval = IItemType.flag();
-    } else {
-      IEnhancedQName name = nameOrWildcard.STAR() == null
-          // eqname
-          ? staticContext.parseFlagName(ObjectUtils.requireNonNull(nameOrWildcard.flagname().eqname().getText()))
-          // STAR
-          : null;
-
-      IAtomicOrUnionType dataType = null;
-      Typename_Context typeName = ctx.typename_();
-      if (typeName != null) {
-        String dataTypeName = ObjectUtils.notNull(typeName.eqname().getText());
-        dataType = staticContext.lookupAtomicType(dataTypeName);
-      }
-
-      retval = IItemType.flag(name, dataType);
-    }
-    return retval;
+    IEnhancedQName instanceName
+        = ctx.flagnameorwildcard() == null || ctx.flagnameorwildcard().flagname() == null
+            ? null
+            : staticContext.parseFlagName(ObjectUtils.notNull(
+                ctx.flagnameorwildcard().flagname().eqname().getText()));
+    String typeName = ctx.typename_() == null ? null : ctx.typename_().eqname().getText();
+    return instanceName == null
+        ? typeName == null
+            ? IItemType.flag()
+            : IItemType.flag(typeName, staticContext)
+        : IItemType.flag(instanceName, typeName, staticContext);
   }
 
   @NonNull
-  private static IItemType parseKindAny(
+  private static IKindTest<INodeItem> parseKindAny(
       @NonNull ParseTree tree,
       @SuppressWarnings("unused") @NonNull StaticContext staticContext) {
     Metapath10.AnykindtestContext ctx = (Metapath10.AnykindtestContext) tree;

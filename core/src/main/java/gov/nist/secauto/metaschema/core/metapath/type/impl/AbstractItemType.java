@@ -12,14 +12,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractItemType<I extends IItem> implements IItemType {
   @NonNull
-  private final Class<? extends I> itemClass;
+  private final Class<I> itemClass;
 
-  protected AbstractItemType(@NonNull Class<? extends I> itemClass) {
+  protected AbstractItemType(@NonNull Class<I> itemClass) {
     this.itemClass = itemClass;
   }
 
   @Override
-  public Class<? extends I> getItemClass() {
+  public Class<I> getItemClass() {
     return itemClass;
   }
 

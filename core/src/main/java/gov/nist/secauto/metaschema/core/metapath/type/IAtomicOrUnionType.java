@@ -41,4 +41,25 @@ public interface IAtomicOrUnionType extends IItemType {
   default String toSignature() {
     return getQName().toEQName(null);
   }
+
+  /**
+   * Check if the other type is a member of this type.
+   *
+   * @param other
+   * @return
+   */
+  default boolean isMemberType(@NonNull IAtomicOrUnionType other) {
+    // member types are not supported
+    return false;
+  }
+
+  /**
+   * Check if this type is the parent type of the other type.
+   *
+   * @param actualType
+   * @return
+   */
+  default boolean isSubType(@NonNull IAtomicOrUnionType other) {
+    return getItemClass().isAssignableFrom(other.getItemClass());
+  }
 }

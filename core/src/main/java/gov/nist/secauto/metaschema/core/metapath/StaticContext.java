@@ -218,7 +218,7 @@ public final class StaticContext {
   }
 
   @NonNull
-  private IEnhancedQName parseAtomicTypeName(@NonNull String name) {
+  public IEnhancedQName parseAtomicTypeName(@NonNull String name) {
     return EQNameFactory.instance().parseName(
         name,
         this::resolveAtomicTypePrefix);
@@ -431,6 +431,9 @@ public final class StaticContext {
    * @param name
    *          the name
    * @return the parsed qualified name
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
+   *           if a non-empty prefix is provided
    */
   @NonNull
   public IEnhancedQName parseFlagName(@NonNull String name) {
@@ -721,5 +724,24 @@ public final class StaticContext {
     public StaticContext build() {
       return new StaticContext(this);
     }
+  }
+
+  /**
+   * Provides a callback for resolving namespace prefixes.
+   */
+  @FunctionalInterface
+  public interface EQNameResolver {
+    /**
+     * Get the URI string for the provided namespace prefix.
+     *
+     * @param name
+     *          the name to resolve
+     * @return the URI string or {@code null} if the prefix is unbound
+     * @throws StaticMetapathException
+     *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
+     *           if a non-empty prefix is provided
+     */
+    @NonNull
+    IEnhancedQName resolve(@NonNull String name);
   }
 }

@@ -10,6 +10,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
+import java.util.Objects;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class DataTypeItemType
@@ -46,5 +48,23 @@ public class DataTypeItemType
   @Override
   public String toString() {
     return toSignature();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(adapter, itemClass);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof DataTypeItemType)) {
+      return false;
+    }
+    DataTypeItemType other = (DataTypeItemType) obj;
+    return Objects.equals(getAdapter(), other.getAdapter())
+        && Objects.equals(getItemClass(), other.getItemClass());
   }
 }

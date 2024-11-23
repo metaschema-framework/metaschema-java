@@ -33,7 +33,7 @@ public final class AnyRawItemType<I extends IItem>
   private final String signature;
 
   private AnyRawItemType(
-      @NonNull Class<? extends I> itemClass,
+      @NonNull Class<I> itemClass,
       @NonNull String signature) {
     super(itemClass);
     this.signature = signature;

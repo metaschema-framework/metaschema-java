@@ -29,8 +29,8 @@ public interface IFeatureContainerFlag<FI extends IFlagInstance> extends IModelD
 
   @Override
   @Nullable
-  default FI getFlagInstanceByName(Integer name) {
-    return getFlagContainer().getFlagInstanceMap().get(name);
+  default FI getFlagInstanceByName(Integer index) {
+    return getFlagContainer().getFlagInstanceMap().get(index);
   }
 
   @Override

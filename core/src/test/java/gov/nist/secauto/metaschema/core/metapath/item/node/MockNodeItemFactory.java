@@ -6,6 +6,9 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.withSettings;
 
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
+import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
+import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -31,7 +34,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class MockNodeItemFactory {
   @SuppressWarnings("null")
   @NonNull
-  protected <T extends INodeItem> T newMock(@NonNull Class<T> clazz, @NonNull String name) {
+  protected <T> T newMock(@NonNull Class<T> clazz, @NonNull String name) {
     String mockName = new StringBuilder()
         .append(clazz.getSimpleName())
         .append('-')
@@ -51,16 +54,21 @@ public class MockNodeItemFactory {
     String qname = ObjectUtils.requireNonNull(rootName.toString());
     IDocumentNodeItem document = newMock(IDocumentNodeItem.class, qname);
     IRootAssemblyNodeItem root = newMock(IRootAssemblyNodeItem.class, qname);
+    IAssemblyDefinition definition = newMock(IAssemblyDefinition.class, qname);
 
     // doAnswer(invocation -> Stream.of(root)).when(document).modelItems();
     doReturn(root).when(document).getRootAssemblyNodeItem();
     doReturn(Collections.singletonList(root)).when(document).getModelItems();
-
     doReturn(documentURI).when(document).getDocumentUri();
+    doReturn(documentURI).when(document).getBaseUri();
+    doReturn(NodeItemKind.DOCUMENT).when(document).getNodeItemKind();
 
     doReturn(rootName).when(root).getQName();
     doReturn(document).when(root).getDocumentNodeItem();
     doReturn(rootName.toString()).when(root).toString();
+
+    doReturn(definition).when(root).getDefinition();
+    doReturn(rootName).when(definition).getDefinitionQName();
 
     handleChildren(document, CollectionUtil.emptyList(), CollectionUtil.singletonList(root));
     handleChildren(root, flags, modelItems);
@@ -111,8 +119,7 @@ public class MockNodeItemFactory {
 
   @SuppressWarnings("static-method")
   @NonNull
-  private Map<IEnhancedQName, List<IModelNodeItem<?, ?>>>
-      toModelItemsMap(List<IModelNodeItem<?, ?>> modelItems) {
+  private Map<IEnhancedQName, List<IModelNodeItem<?, ?>>> toModelItemsMap(List<IModelNodeItem<?, ?>> modelItems) {
 
     Map<IEnhancedQName, List<IModelNodeItem<?, ?>>> retval = new LinkedHashMap<>(); // NOPMD - intentional
     for (IModelNodeItem<?, ?> item : ObjectUtils.requireNonNull(modelItems)) {
@@ -130,11 +137,16 @@ public class MockNodeItemFactory {
   @NonNull
   public IFlagNodeItem flag(@NonNull IEnhancedQName name, @NonNull IAnyAtomicItem value) {
     IFlagNodeItem flag = newMock(IFlagNodeItem.class, ObjectUtils.notNull(name.toString()));
+    IFlagDefinition definition = newMock(IFlagDefinition.class, name.toString());
 
     doReturn(name).when(flag).getQName();
     doReturn(true).when(flag).hasValue();
     doReturn(value).when(flag).toAtomicItem();
     doReturn(name.toString()).when(flag).toString();
+
+    doReturn(definition).when(flag).getDefinition();
+    doReturn(name).when(definition).getDefinitionQName();
+    doReturn(value.getJavaTypeAdapter()).when(definition).getJavaTypeAdapter();
 
     handleChildren(flag, CollectionUtil.emptyList(), CollectionUtil.emptyList());
 
@@ -152,11 +164,16 @@ public class MockNodeItemFactory {
       @NonNull IAnyAtomicItem value,
       List<IFlagNodeItem> flags) {
     IFieldNodeItem field = newMock(IFieldNodeItem.class, ObjectUtils.notNull(name.toString()));
+    IFieldDefinition definition = newMock(IFieldDefinition.class, name.toString());
 
     doReturn(name).when(field).getQName();
     doReturn(true).when(field).hasValue();
     doReturn(value).when(field).toAtomicItem();
     doReturn(name.toString()).when(field).toString();
+
+    doReturn(definition).when(field).getDefinition();
+    doReturn(name).when(definition).getDefinitionQName();
+    doReturn(value.getJavaTypeAdapter()).when(definition).getJavaTypeAdapter();
 
     handleChildren(field, ObjectUtils.requireNonNull(flags), CollectionUtil.emptyList());
     return field;
@@ -168,10 +185,14 @@ public class MockNodeItemFactory {
       List<IFlagNodeItem> flags,
       List<IModelNodeItem<?, ?>> modelItems) {
     IAssemblyNodeItem assembly = newMock(IAssemblyNodeItem.class, ObjectUtils.notNull(name.toString()));
+    IAssemblyDefinition definition = newMock(IAssemblyDefinition.class, name.toString());
 
     doReturn(name).when(assembly).getQName();
     doReturn(false).when(assembly).hasValue();
     doReturn(name.toString()).when(assembly).toString();
+
+    doReturn(definition).when(assembly).getDefinition();
+    doReturn(name).when(definition).getDefinitionQName();
 
     handleChildren(assembly, ObjectUtils.requireNonNull(flags), ObjectUtils.requireNonNull(modelItems));
 
