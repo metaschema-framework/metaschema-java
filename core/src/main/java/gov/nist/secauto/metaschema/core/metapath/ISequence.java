@@ -5,11 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractSequence;
 import gov.nist.secauto.metaschema.core.metapath.impl.SequenceN;
 import gov.nist.secauto.metaschema.core.metapath.impl.SingletonSequence;
 import gov.nist.secauto.metaschema.core.metapath.impl.StreamSequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
@@ -147,6 +149,22 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IPrintable, I
   }
 
   /**
+   * An implementation of XPath 3.1
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-data">fn:data</a>
+   * supporting <a href="https://www.w3.org/TR/xpath-31/#id-atomization">item
+   * atomization</a>.
+   *
+   * @param sequence
+   *          the sequence of items to atomize
+   * @return the atomized result
+   */
+  @NonNull
+  default ISequence<IAnyAtomicItem> atomize() {
+    return of(ObjectUtils.notNull(stream()
+        .flatMap(FnData::atomize)));
+  }
+
+  /**
    * Get this sequence as a collection value.
    *
    * @return the collection value
@@ -171,6 +189,9 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, IPrintable, I
 
   /**
    * Get a stream guaranteed to be backed by a list.
+   * <p>
+   * This call ensures that the sequence is backed by a List and not a stream, so
+   * the underlying collection can be reused.
    *
    * @return the stream
    */

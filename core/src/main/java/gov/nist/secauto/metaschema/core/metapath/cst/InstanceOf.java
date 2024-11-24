@@ -16,6 +16,14 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ *
+ */
+/**
+ * A compact syntax tree node that supports the Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#id-instance-of">"instance of"
+ * operator</a>.
+ */
 public class InstanceOf
     extends AbstractExpression {
   @NonNull
@@ -23,6 +31,14 @@ public class InstanceOf
   @NonNull
   private final ISequenceType sequenceType;
 
+  /**
+   * Construct a new instance of expression.
+   *
+   * @param value
+   *          the expression that will produce the item to test
+   * @param sequenceType
+   *          the sequence type to test with
+   */
   public InstanceOf(
       @NonNull IExpression value,
       @NonNull ISequenceType sequenceType) {
@@ -30,11 +46,26 @@ public class InstanceOf
     this.sequenceType = sequenceType;
   }
 
+  @Override
+  public Class<? extends IItem> getBaseResultType() {
+    return IBooleanItem.class;
+  }
+
+  /**
+   * Get the expression that will produce the item to test.
+   *
+   * @return the expression
+   */
   @NonNull
   public IExpression getValue() {
     return value;
   }
 
+  /**
+   * Get the sequence type to test with.
+   *
+   * @return the sequence type
+   */
   @NonNull
   public ISequenceType getSequenceType() {
     return sequenceType;
@@ -55,4 +86,12 @@ public class InstanceOf
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
     return visitor.visitInstanceOf(this, context);
   }
+
+  @Override
+  public String toASTString() {
+    return ObjectUtils.notNull(String.format("%s[sequenceType=%s]",
+        getClass().getName(),
+        getSequenceType().toSignature()));
+  }
+
 }

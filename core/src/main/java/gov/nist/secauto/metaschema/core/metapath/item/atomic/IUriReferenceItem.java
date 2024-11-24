@@ -24,8 +24,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @see <a href="https://www.ietf.org/rfc/rfc2396.txt">RFC2396</a>
  */
 public interface IUriReferenceItem extends IAnyUriItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IUriReferenceItem> type() {
     return MetaschemaDataTypeProvider.URI_REFERENCE.getItemType();
   }
 

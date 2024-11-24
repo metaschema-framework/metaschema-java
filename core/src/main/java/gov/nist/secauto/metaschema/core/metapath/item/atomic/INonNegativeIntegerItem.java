@@ -31,8 +31,13 @@ public interface INonNegativeIntegerItem extends IIntegerItem {
   @NonNull
   INonNegativeIntegerItem ZERO = valueOf(ObjectUtils.notNull(BigInteger.ZERO));
 
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<INonNegativeIntegerItem> type() {
     return MetaschemaDataTypeProvider.NON_NEGATIVE_INTEGER.getItemType();
   }
 

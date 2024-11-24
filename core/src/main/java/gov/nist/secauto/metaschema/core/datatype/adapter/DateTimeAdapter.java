@@ -38,7 +38,7 @@ public class DateTimeAdapter
           QNameCache.instance().of(MetapathConstants.NS_METAPATH, "dateTime")));
 
   DateTimeAdapter() {
-    super(AmbiguousDateTime.class, IDateTimeItem.class);
+    super(AmbiguousDateTime.class, IDateTimeItem.class, IDateTimeItem::cast);
   }
 
   @Override

@@ -11,6 +11,9 @@ import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides a variety of utilities for working with Metapath items.
+ */
 public final class ItemUtils {
 
   private ItemUtils() {
@@ -26,6 +29,7 @@ public final class ItemUtils {
    * @throws TypeMetapathException
    *           if the item is {@code null} or not an {@link INodeItem}
    */
+  // FIXME: make this a method on the type implementation
   @NonNull
   public static INodeItem checkItemIsNodeItemForStep(@Nullable IItem item) {
     if (item instanceof INodeItem) {
@@ -55,6 +59,7 @@ public final class ItemUtils {
    *           if the item is {@code null} or does not match the type specified by
    *           {@code clazz}
    */
+  // FIXME: make this a method on the type implementation
   @SuppressWarnings("unchecked")
   @NonNull
   public static <TYPE> TYPE checkItemType(@NonNull IItem item, @NonNull Class<TYPE> clazz) {

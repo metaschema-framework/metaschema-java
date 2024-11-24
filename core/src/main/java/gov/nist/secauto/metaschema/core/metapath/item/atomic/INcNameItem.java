@@ -18,8 +18,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 @Deprecated(forRemoval = true, since = "0.7.0")
 public interface INcNameItem extends IStringItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<INcNameItem> type() {
     return MetaschemaDataTypeProvider.NCNAME.getItemType();
   }
 

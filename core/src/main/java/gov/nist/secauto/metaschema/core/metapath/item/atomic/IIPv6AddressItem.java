@@ -18,8 +18,13 @@ import inet.ipaddr.ipv6.IPv6Address;
  * An atomic Metapath item containing an IPv6 address data value.
  */
 public interface IIPv6AddressItem extends IIPAddressItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IIPv6AddressItem> type() {
     return MetaschemaDataTypeProvider.IP_V6_ADDRESS.getItemType();
   }
 

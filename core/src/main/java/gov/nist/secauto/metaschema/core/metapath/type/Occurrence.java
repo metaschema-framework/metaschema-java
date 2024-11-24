@@ -135,10 +135,14 @@ public enum Occurrence {
     return sequence;
   }
 
+  /**
+   * Used to check that a provided sequence matches an associated occurrence
+   * value.
+   */
   @FunctionalInterface
   public interface ISequenceHandler {
     /**
-     * Check the provided sequence matches the occurrence.
+     * Check that the provided sequence matches the occurrence.
      * <p>
      * This method may return a new sequence that more efficiently addresses the
      * occurrence.

@@ -14,6 +14,9 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports writing different types of items using a visitor pattern.
+ */
 public interface IItemWriter extends AutoCloseable {
   /**
    * Write the provided sequence instance.

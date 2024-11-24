@@ -27,7 +27,7 @@ public class TokenAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "token")));
 
   TokenAdapter() {
-    super(ITokenItem.class);
+    super(ITokenItem.class, ITokenItem::cast);
     // avoid general construction
   }
 

@@ -42,7 +42,7 @@ public class IPv6AddressAdapter
   }
 
   IPv6AddressAdapter() {
-    super(IPv6Address.class, IIPv6AddressItem.class);
+    super(IPv6Address.class, IIPv6AddressItem.class, IIPv6AddressItem::cast);
   }
 
   @Override

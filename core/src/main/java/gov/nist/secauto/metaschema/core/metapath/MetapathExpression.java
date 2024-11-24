@@ -15,7 +15,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
@@ -64,7 +63,7 @@ public class MetapathExpression {
      * The result is expected to be a {@link String} value.
      */
     STRING(String.class, sequence -> {
-      IAnyAtomicItem item = FnData.fnData(sequence).getFirstItem(true);
+      IAnyAtomicItem item = sequence.atomize().getFirstItem(true);
       return item == null ? "" : item.asString();
     }),
     /**

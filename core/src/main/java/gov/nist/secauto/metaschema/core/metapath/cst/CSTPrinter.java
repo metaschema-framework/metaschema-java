@@ -89,7 +89,10 @@ public final class CSTPrinter {
      *         its children
      */
     @SuppressWarnings("static-method")
-    protected String appendNode(@NonNull IExpression expr, @Nullable String childResult, @NonNull State context) {
+    protected String appendNode(
+        @NonNull IExpression expr,
+        @Nullable String childResult,
+        @NonNull State context) {
       StringBuilder buffer = new StringBuilder();
       buffer.append(context.getIndentation())
           .append(expr.toASTString());
@@ -355,6 +358,16 @@ public final class CSTPrinter {
     @Override
     public String visitInstanceOf(InstanceOf expr, State context) {
       return appendNode(expr, super.visitInstanceOf(expr, context), context);
+    }
+
+    @Override
+    public String visitCast(Cast expr, State context) {
+      return appendNode(expr, super.visitCast(expr, context), context);
+    }
+
+    @Override
+    public String visitCastable(Castable expr, State context) {
+      return appendNode(expr, super.visitCastable(expr, context), context);
     }
   }
 

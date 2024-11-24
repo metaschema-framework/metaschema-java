@@ -128,7 +128,7 @@ public interface IDataTypeAdapter<TYPE> {
    * @return the item type information
    */
   @NonNull
-  IAtomicOrUnionType getItemType();
+  IAtomicOrUnionType<?> getItemType();
 
   /**
    * Construct a new item of this type using the provided value.

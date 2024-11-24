@@ -17,8 +17,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing an email address data value.
  */
 public interface IEmailAddressItem extends IStringItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IEmailAddressItem> type() {
     return MetaschemaDataTypeProvider.EMAIL_ADDRESS.getItemType();
   }
 

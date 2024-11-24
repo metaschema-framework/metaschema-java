@@ -11,6 +11,9 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Declares the expected type information for a {@link IMapItem}.
+ */
 public interface IMapTest extends IItemType {
   @SuppressWarnings({ "rawtypes" })
   @Override
@@ -18,9 +21,19 @@ public interface IMapTest extends IItemType {
     return IMapItem.class;
   }
 
+  /**
+   * Get the expected atomic type of the map's key.
+   *
+   * @return the atomic type
+   */
   @NonNull
-  IAtomicOrUnionType getKeyType();
+  IAtomicOrUnionType<?> getKeyType();
 
+  /**
+   * Get the sequence test to use to check the map's contents.
+   *
+   * @return the sequence type
+   */
   @NonNull
   ISequenceType getValueType();
 
@@ -31,7 +44,7 @@ public interface IMapTest extends IItemType {
       // this is an array
       IMapItem<?> map = (IMapItem<?>) item;
 
-      IAtomicOrUnionType keyType = getKeyType();
+      IAtomicOrUnionType<?> keyType = getKeyType();
       ISequenceType valueType = getValueType();
       retval = map.entrySet().stream()
           .allMatch(entry -> {

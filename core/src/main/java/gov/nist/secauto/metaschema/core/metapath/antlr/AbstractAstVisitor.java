@@ -913,6 +913,63 @@ public abstract class AbstractAstVisitor<R>
     return handle(ctx, context -> handleInstanceofexpr(ctx));
   }
 
+  // ==============================================
+  // cast - https://www.w3.org/TR/xpath-31/#id-cast
+  // ==============================================
+
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  protected abstract R handleCastexpr(@NonNull Metapath10.CastexprContext ctx);
+
+  @Override
+  public R visitCastexpr(Metapath10.CastexprContext ctx) {
+    assert ctx != null;
+    return handle(ctx, this::handleCastexpr);
+  }
+
+  // ======================================================
+  // castable - https://www.w3.org/TR/xpath-31/#id-castable
+  // ======================================================
+
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  protected abstract R handleCastableexpr(@NonNull Metapath10.CastableexprContext ctx);
+
+  @Override
+  public R visitCastableexpr(Metapath10.CastableexprContext ctx) {
+    assert ctx != null;
+    return handle(ctx, this::handleCastableexpr);
+  }
+
+  // ================================================
+  // treat - https://www.w3.org/TR/xpath-31/#id-treat
+  // ================================================
+
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  protected abstract R handleTreatexpr(@NonNull Metapath10.TreatexprContext ctx);
+
+  @Override
+  public R visitTreatexpr(Metapath10.TreatexprContext ctx) {
+    assert ctx != null;
+    return handle(ctx, this::handleTreatexpr);
+  }
+
   /*
    * =========================================================================
    * Simple map operator (!) - https://www.w3.org/TR/xpath-31/#id-map-operator
@@ -935,8 +992,8 @@ public abstract class AbstractAstVisitor<R>
   }
 
   /*
-   * ======================================================================= Arrow
-   * operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
+   * =======================================================================
+   * Arrow operator (=>) - https://www.w3.org/TR/xpath-31/#id-arrow-operator
    * =======================================================================
    */
 
@@ -961,241 +1018,222 @@ public abstract class AbstractAstVisitor<R>
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
-  // TODO: implement these
-
-  @Override
-  public R visitParamlist(Metapath10.ParamlistContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitParamlist(ctx);
-  }
-
-  @Override
-  public R visitParam(Metapath10.ParamContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitParam(ctx);
-  }
-
-  @Override
-  public R visitFunctionbody(Metapath10.FunctionbodyContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitFunctionbody(ctx);
-  }
-
-  @Override
-  public R visitTreatexpr(Metapath10.TreatexprContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitTreatexpr(ctx);
-  }
-
-  @Override
-  public R visitCastableexpr(Metapath10.CastableexprContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitCastableexpr(ctx);
-  }
-
-  @Override
-  public R visitCastexpr(Metapath10.CastexprContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitCastexpr(ctx);
-  }
-
-  @Override
-  public R visitFunctionitemexpr(Metapath10.FunctionitemexprContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitFunctionitemexpr(ctx);
-  }
-
   @Override
   public R visitNamedfunctionref(Metapath10.NamedfunctionrefContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitNamedfunctionref(ctx);
+    throw new UnsupportedOperationException("expression not supported");
   }
 
   @Override
   public R visitInlinefunctionexpr(Metapath10.InlinefunctionexprContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitInlinefunctionexpr(ctx);
+    throw new UnsupportedOperationException("expression not supported");
   }
 
-  @Override
-  public R visitSingletype(Metapath10.SingletypeContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitSingletype(ctx);
-  }
-
-  @Override
-  public R visitTypedeclaration(Metapath10.TypedeclarationContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitTypedeclaration(ctx);
-  }
-
-  @Override
-  public R visitSequencetype(Metapath10.SequencetypeContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitSequencetype(ctx);
-  }
-
-  @Override
-  public R visitOccurrenceindicator(Metapath10.OccurrenceindicatorContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitOccurrenceindicator(ctx);
-  }
-
-  @Override
-  public R visitItemtype(Metapath10.ItemtypeContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitItemtype(ctx);
-  }
-
-  @Override
-  public R visitAtomicoruniontype(Metapath10.AtomicoruniontypeContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitAtomicoruniontype(ctx);
-  }
-
-  @Override
-  public R visitSimpletypename(Metapath10.SimpletypenameContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitSimpletypename(ctx);
-  }
-
-  @Override
-  public R visitTypename_(Metapath10.Typename_Context ctx) {
-    // TODO Auto-generated method stub
-    return super.visitTypename_(ctx);
-  }
-
-  // these are handled
-
+  /*
+   * ==========================================================
+   * The following are handled inline by other expression types
+   * ==========================================================
+   */
   @Override
   public R visitFunctiontest(Metapath10.FunctiontestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitFunctiontest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitAnyfunctiontest(Metapath10.AnyfunctiontestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitAnyfunctiontest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitTypedfunctiontest(Metapath10.TypedfunctiontestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitTypedfunctiontest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitMaptest(Metapath10.MaptestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitMaptest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitAnymaptest(Metapath10.AnymaptestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitAnymaptest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitTypedmaptest(Metapath10.TypedmaptestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitTypedmaptest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitArraytest(Metapath10.ArraytestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitArraytest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitAnyarraytest(Metapath10.AnyarraytestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitAnyarraytest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitTypedarraytest(Metapath10.TypedarraytestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitTypedarraytest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitParenthesizeditemtype(Metapath10.ParenthesizeditemtypeContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitParenthesizeditemtype(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitKindtest(Metapath10.KindtestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitKindtest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitAnykindtest(Metapath10.AnykindtestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitAnykindtest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitDocumenttest(Metapath10.DocumenttestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitDocumenttest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitTexttest(Metapath10.TexttestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitTexttest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitFlagtest(Metapath10.FlagtestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitFlagtest(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitFlagnameorwildcard(Metapath10.FlagnameorwildcardContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitFlagnameorwildcard(ctx);
-  }
-
-  @Override
-  public R visitFieldtest(Metapath10.FieldtestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitFieldtest(ctx);
-  }
-
-  @Override
-  public R visitAssemblytest(Metapath10.AssemblytestContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitAssemblytest(ctx);
-  }
-
-  @Override
-  public R visitElementnameorwildcard(Metapath10.ElementnameorwildcardContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitElementnameorwildcard(ctx);
-  }
-
-  @Override
-  public R visitElementdeclaration(Metapath10.ElementdeclarationContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitElementdeclaration(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitFlagname(Metapath10.FlagnameContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitFlagname(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitFieldtest(Metapath10.FieldtestContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitAssemblytest(Metapath10.AssemblytestContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitElementnameorwildcard(Metapath10.ElementnameorwildcardContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitElementdeclaration(Metapath10.ElementdeclarationContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
   @Override
   public R visitElementname(Metapath10.ElementnameContext ctx) {
-    // TODO Auto-generated method stub
-    return super.visitElementname(ctx);
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitSingletype(Metapath10.SingletypeContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitSequencetype(Metapath10.SequencetypeContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitItemtype(Metapath10.ItemtypeContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitOccurrenceindicator(Metapath10.OccurrenceindicatorContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitAtomicoruniontype(Metapath10.AtomicoruniontypeContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitSimpletypename(Metapath10.SimpletypenameContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitTypename_(Metapath10.Typename_Context ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitParamlist(Metapath10.ParamlistContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitParam(Metapath10.ParamContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitFunctionbody(Metapath10.FunctionbodyContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitFunctionitemexpr(Metapath10.FunctionitemexprContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
+  }
+
+  @Override
+  public R visitTypedeclaration(Metapath10.TypedeclarationContext ctx) {
+    // should never be called, since this is handled by the parent expression
+    throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 }

@@ -17,11 +17,17 @@ import java.time.Period;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item containing a duration data value in years and months.
+ * An atomic Metapath item containing a duration data value in years, months,
+ * and days.
  */
 public interface IYearMonthDurationItem extends IDurationItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IYearMonthDurationItem> type() {
     return MetaschemaDataTypeProvider.YEAR_MONTH_DURATION.getItemType();
   }
 

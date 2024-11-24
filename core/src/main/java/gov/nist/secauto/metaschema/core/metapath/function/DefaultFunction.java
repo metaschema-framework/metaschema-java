@@ -92,6 +92,8 @@ public class DefaultFunction
    *          the function
    * @param parameters
    *          the argument parameters
+   * @param dynamicContext
+   *          the dynamic evaluation context
    * @return the converted argument list
    */
   @NonNull

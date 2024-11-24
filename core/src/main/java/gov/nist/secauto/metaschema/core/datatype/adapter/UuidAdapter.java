@@ -38,7 +38,7 @@ public class UuidAdapter
       = Pattern.compile("^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$");
 
   UuidAdapter() {
-    super(UUID.class, IUuidItem.class);
+    super(UUID.class, IUuidItem.class, IUuidItem::cast);
   }
 
   @Override

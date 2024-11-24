@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyKindTest;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyRawItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.ArrayTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.KindAssemblyTestImpl;
@@ -21,19 +22,35 @@ import gov.nist.secauto.metaschema.core.metapath.type.impl.KindDocumentTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.KindFieldTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.KindFlagTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.MapTestImpl;
-import gov.nist.secauto.metaschema.core.metapath.type.impl.NodeItemTest;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides type information that be used to discover type information for,
+ * test, and cast various item objects.
+ * <p>
+ * A variety of static methods are provided that can be used to generate tests
+ * that compare an item's actual type against an expectation.
+ */
 public interface IItemType {
+  /**
+   * Get a new kind test that matches any item.
+   *
+   * @return the test
+   */
   @NonNull
   static IItemType item() {
     return AnyItemType.instance();
   }
 
+  /**
+   * Get a new kind test that matches any function item.
+   *
+   * @return the function test
+   */
   static IItemType function() {
     return AnyRawItemType.ANY_FUNCTION;
   }
@@ -43,46 +60,107 @@ public interface IItemType {
   //
   // }
 
+  /**
+   * Get a new kind test that matches any map item.
+   *
+   * @return the map test
+   */
   @NonNull
   static IItemType map() {
     return AnyRawItemType.ANY_MAP;
   }
 
+  /**
+   * Get a new kind test that matches any map item whose keys and values match the
+   * provided atomic type and sequence type respectively.
+   *
+   * @param key
+   *          the expected atomic type of the map's key
+   * @param value
+   *          the sequence test to use to check the map's contents
+   *
+   * @return the map test
+   */
   @NonNull
-  static IMapTest map(@NonNull IAtomicOrUnionType key, @NonNull ISequenceType value) {
+  static IMapTest map(@NonNull IAtomicOrUnionType<?> key, @NonNull ISequenceType value) {
     return new MapTestImpl(key, value);
   }
 
+  /**
+   * Get a new kind test that matches any array item whose values match the
+   * provided sequence.
+   *
+   * @return the array test
+   */
   @NonNull
   static IItemType array() {
     return AnyRawItemType.ANY_ARRAY;
   }
 
+  /**
+   * Get a new kind test that matches any array item whose values match the
+   * provided sequence.
+   *
+   * @param value
+   *          the sequence test to use to check the array's contents
+   *
+   * @return the array test
+   */
   @NonNull
   static IItemType array(@NonNull ISequenceType value) {
     return new ArrayTestImpl(value);
   }
 
+  /**
+   * Get a new kind test that matches any atomic valued item.
+   *
+   * @return the atomic type test
+   */
   @NonNull
-  static IAtomicOrUnionType anyAtomic() {
+  static IAtomicOrUnionType<?> anyAtomic() {
     return TypeConstants.ANY_ATOMIC_TYPE;
   }
 
+  /**
+   * Get a new kind test that matches any node item.
+   *
+   * @return the node kind test
+   */
   @NonNull
   static IKindTest<INodeItem> node() {
-    return NodeItemTest.ANY_NODE;
+    return AnyKindTest.ANY_NODE;
   }
 
+  /**
+   * Get a new kind test that matches any Metaschema module.
+   *
+   * @return the module kind test
+   */
   @NonNull
   static IKindTest<IModuleNodeItem> module() {
-    return NodeItemTest.ANY_MODULE;
+    return AnyKindTest.ANY_MODULE;
   }
 
+  /**
+   * Get a new kind test that matches any document.
+   *
+   * @param test
+   *          the root node test
+   * @return the document kind test
+   */
   @NonNull
   static IKindTest<IDocumentNodeItem> document() {
-    return NodeItemTest.ANY_DOCUMENT;
+    return AnyKindTest.ANY_DOCUMENT;
   }
 
+  /**
+   * Get a new kind test that that matches a document that has a root node of the
+   * provided kind.
+   *
+   * @param test
+   *          the root node test
+   * @return the document kind test
+   */
   @NonNull
   static IKindTest<IDocumentNodeItem> document(@NonNull IKindTest<IAssemblyNodeItem> test) {
     return new KindDocumentTestImpl(test);
@@ -95,14 +173,14 @@ public interface IItemType {
    */
   @NonNull
   static IKindTest<IAssemblyNodeItem> assembly() {
-    return NodeItemTest.ANY_ASSEMBLY;
+    return AnyKindTest.ANY_ASSEMBLY;
   }
 
   /**
    * Matches an assembly with the provided name and a type matching the provided
    * name of a specific assembly definition.
    * <p>
-   * If used as part of a {@link IKindDocumentTest}, the the provided
+   * If used as part of a document kind test, the the provided
    * {@code instanceName} will match the root assembly name of the document's
    * root.
    *
@@ -147,7 +225,7 @@ public interface IItemType {
    */
   @NonNull
   static IKindTest<IFieldNodeItem> field() {
-    return NodeItemTest.ANY_FIELD;
+    return AnyKindTest.ANY_FIELD;
   }
 
   /**
@@ -192,7 +270,7 @@ public interface IItemType {
    */
   @NonNull
   static IKindTest<IFlagNodeItem> flag() {
-    return NodeItemTest.ANY_FLAG;
+    return AnyKindTest.ANY_FLAG;
   }
 
   /**
@@ -230,13 +308,31 @@ public interface IItemType {
     return new KindFlagTestImpl(null, typeName, staticContext);
   }
 
+  /**
+   * Test if the provided item matches this item type.
+   *
+   * @param item
+   *          the item to test
+   * @return {@code true} if the item matches the expectations or {@code false}
+   *         otherwise
+   */
   default boolean isInstance(IItem item) {
     return getItemClass().isInstance(item);
   }
 
+  /**
+   * Get the item Java class associated with this item type.
+   *
+   * @return the item Java class
+   */
   @NonNull
   Class<? extends IItem> getItemClass();
 
+  /**
+   * Get the human-readable signature of the item type.
+   *
+   * @return the signature
+   */
   @NonNull
   String toSignature();
 }

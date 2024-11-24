@@ -16,9 +16,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * An atomic Metapath item representing a Markup data value.
  */
-public interface IMarkupItem extends IUntypedAtomicItem {
+public interface IMarkupItem extends IAnyAtomicItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IMarkupItem> type() {
     return MarkupDataTypeProvider.MARKUP_TYPE;
   }
 

@@ -31,7 +31,7 @@ public class UriReferenceAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "uri-reference")));
 
   UriReferenceAdapter() {
-    super(URI.class, IUriReferenceItem.class);
+    super(URI.class, IUriReferenceItem.class, IUriReferenceItem::cast);
   }
 
   @Override

@@ -32,7 +32,7 @@ public class YearMonthAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "year-month-duration")));
 
   YearMonthAdapter() {
-    super(Period.class, IYearMonthDurationItem.class);
+    super(Period.class, IYearMonthDurationItem.class, IYearMonthDurationItem::cast);
   }
 
   @Override

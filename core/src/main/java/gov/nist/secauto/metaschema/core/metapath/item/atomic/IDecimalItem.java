@@ -27,8 +27,13 @@ public interface IDecimalItem extends INumericItem {
   @NonNull
   IDecimalItem ZERO = valueOf(ObjectUtils.notNull(BigDecimal.ZERO));
 
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IDecimalItem> type() {
     return MetaschemaDataTypeProvider.DECIMAL.getItemType();
   }
 

@@ -48,7 +48,7 @@ public class DateAdapter
           + "(Z|[+-][0-9]{2}:[0-9]{2})?$"));
 
   DateAdapter() {
-    super(AmbiguousDate.class, IDateItem.class);
+    super(AmbiguousDate.class, IDateItem.class, IDateItem::cast);
   }
 
   @Override

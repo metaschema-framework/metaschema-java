@@ -22,9 +22,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * timezone.
  */
 public interface IDateWithTimeZoneItem extends IDateItem {
-
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IDateWithTimeZoneItem> type() {
     return MetaschemaDataTypeProvider.DATE_WITH_TZ.getItemType();
   }
 
@@ -75,14 +79,35 @@ public interface IDateWithTimeZoneItem extends IDateItem {
    */
   @NonNull
   static IDateWithTimeZoneItem cast(@NonNull IAnyAtomicItem item) {
-    try {
-      return item instanceof IDateWithTimeZoneItem
-          ? (IDateWithTimeZoneItem) item
-          : valueOf(item.asString());
-    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
-      // asString can throw IllegalStateException exception
-      throw new InvalidValueForCastFunctionException(ex);
+    IDateWithTimeZoneItem retval;
+    if (item instanceof IDateWithTimeZoneItem) {
+      retval = (IDateWithTimeZoneItem) item;
+    } else if (item instanceof ITemporalItem) {
+      retval = fromTemporal((ITemporalItem) item);
+    } else if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {
+      try {
+        retval = valueOf(item.asString());
+      } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+        // asString can throw IllegalStateException exception
+        throw new InvalidValueForCastFunctionException(ex);
+      }
+    } else {
+      throw new InvalidValueForCastFunctionException(
+          String.format("unsupported item type '%s'", item.getClass().getName()));
     }
+    return retval;
+  }
+
+  @NonNull
+  private static IDateWithTimeZoneItem fromTemporal(@NonNull ITemporalItem temporal) {
+    if (!temporal.hasTimezone()) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(
+          String.format("Unable to cast the temporal value '%s', since it lacks timezone information.",
+              temporal.asString()));
+    }
+    // get the time at midnight
+    return valueOf(ObjectUtils.notNull(temporal.asZonedDateTime().truncatedTo(ChronoUnit.DAYS)));
   }
 
   @Override

@@ -32,8 +32,8 @@ public final class NullJavaTypeAdapter
    * @param clazz
    *          the class to adapt
    */
-  public NullJavaTypeAdapter(@NonNull Class<Void> clazz) {
-    super(clazz, VoidItem.class);
+  public NullJavaTypeAdapter() {
+    super(Void.class, VoidItem.class, VoidItem::cast);
   }
 
   @Override
@@ -63,6 +63,10 @@ public final class NullJavaTypeAdapter
   }
 
   protected static class VoidItem implements IAnyAtomicItem {
+
+    public static VoidItem cast(@NonNull IAnyAtomicItem item) {
+      throw new UnsupportedOperationException(NOT_VALID);
+    }
 
     @Override
     public Void getValue() {

@@ -32,12 +32,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public interface IDateItem extends ITemporalItem {
   /**
-   * Get the data type information for this item.
+   * Get the type information for this item.
    *
-   * @return the data type information
+   * @return the type information
    */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IDateItem> type() {
     return MetaschemaDataTypeProvider.DATE.getItemType();
   }
 
@@ -108,7 +108,9 @@ public interface IDateItem extends ITemporalItem {
    */
   @NonNull
   static IDateItem valueOf(@NonNull AmbiguousDate value) {
-    return new DateWithoutTimeZoneItemImpl(value);
+    return value.hasTimeZone()
+        ? IDateWithTimeZoneItem.valueOf(value.getValue())
+        : new DateWithoutTimeZoneItemImpl(value);
   }
 
   /**

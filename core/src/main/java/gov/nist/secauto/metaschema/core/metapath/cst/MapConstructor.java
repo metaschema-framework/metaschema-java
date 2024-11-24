@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
@@ -52,7 +51,8 @@ public class MapConstructor implements IExpression {
         ObjectUtils.notNull(getChildren().stream()
             .map(item -> {
               IExpression keyExpression = item.getKeyExpression();
-              IAnyAtomicItem key = FnData.fnData(keyExpression.accept(dynamicContext, focus))
+              IAnyAtomicItem key = keyExpression.accept(dynamicContext, focus)
+                  .atomize()
                   .getFirstItem(true);
               if (key == null) {
                 throw new InvalidTypeMetapathException(null, String.format(
@@ -128,6 +128,5 @@ public class MapConstructor implements IExpression {
     public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
       return visitor.visitMapConstructorEntry(this, context);
     }
-
   }
 }

@@ -31,7 +31,7 @@ public class NonNegativeIntegerAdapter
           QNameCache.instance().of(MetapathConstants.NS_METAPATH, "nonNegativeInteger")));
 
   NonNegativeIntegerAdapter() {
-    super(INonNegativeIntegerItem.class);
+    super(INonNegativeIntegerItem.class, INonNegativeIntegerItem::cast);
     // avoid general construction
   }
 

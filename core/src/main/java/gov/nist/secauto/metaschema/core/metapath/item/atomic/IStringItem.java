@@ -17,8 +17,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a text data value.
  */
 public interface IStringItem extends IAnyAtomicItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IStringItem> type() {
     return MetaschemaDataTypeProvider.STRING.getItemType();
   }
 

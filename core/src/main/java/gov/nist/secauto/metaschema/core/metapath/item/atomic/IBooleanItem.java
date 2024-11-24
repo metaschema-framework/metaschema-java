@@ -28,8 +28,13 @@ public interface IBooleanItem extends IAnyAtomicItem {
   @NonNull
   IBooleanItem FALSE = new BooleanItemImpl(false);
 
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IBooleanItem> type() {
     return MetaschemaDataTypeProvider.BOOLEAN.getItemType();
   }
 

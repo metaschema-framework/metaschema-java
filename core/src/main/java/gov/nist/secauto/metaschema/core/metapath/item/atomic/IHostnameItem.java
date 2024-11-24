@@ -17,8 +17,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a hostname data value.
  */
 public interface IHostnameItem extends IStringItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IHostnameItem> type() {
     return MetaschemaDataTypeProvider.HOSTNAME.getItemType();
   }
 

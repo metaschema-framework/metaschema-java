@@ -36,7 +36,7 @@ public class DateTimeWithTZAdapter
           QNameCache.instance().of(MetapathConstants.NS_METAPATH, "dateTime-with-timezone")));
 
   DateTimeWithTZAdapter() {
-    super(ZonedDateTime.class, IDateTimeWithTimeZoneItem.class);
+    super(ZonedDateTime.class, IDateTimeWithTimeZoneItem.class, IDateTimeWithTimeZoneItem::cast);
   }
 
   @Override

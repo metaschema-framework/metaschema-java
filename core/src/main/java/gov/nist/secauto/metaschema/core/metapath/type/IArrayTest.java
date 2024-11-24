@@ -11,6 +11,9 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Declares the expected type information for an {@link IArrayItem}.
+ */
 public interface IArrayTest extends IItemType {
   @SuppressWarnings({ "rawtypes" })
   @Override
@@ -18,6 +21,11 @@ public interface IArrayTest extends IItemType {
     return IArrayItem.class;
   }
 
+  /**
+   * Get the sequence test to use to check the array's contents.
+   *
+   * @return the sequence type
+   */
   @NonNull
   ISequenceType getValueType();
 

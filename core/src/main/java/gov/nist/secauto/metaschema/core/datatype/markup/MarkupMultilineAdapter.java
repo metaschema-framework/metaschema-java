@@ -35,7 +35,7 @@ public class MarkupMultilineAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "markup-multiline")));
 
   MarkupMultilineAdapter() {
-    super(MarkupMultiline.class, IMarkupMultilineItem.class);
+    super(MarkupMultiline.class, IMarkupMultilineItem.class, IMarkupMultilineItem::cast);
   }
 
   @Override

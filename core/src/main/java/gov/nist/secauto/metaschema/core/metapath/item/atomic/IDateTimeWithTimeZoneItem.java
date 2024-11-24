@@ -25,8 +25,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * ambiguity.
  */
 public interface IDateTimeWithTimeZoneItem extends IDateTimeItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IDateTimeWithTimeZoneItem> type() {
     return MetaschemaDataTypeProvider.DATE_TIME_WITH_TZ.getItemType();
   }
 
@@ -77,32 +82,37 @@ public interface IDateTimeWithTimeZoneItem extends IDateTimeItem {
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
-  @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.CyclomaticComplexity" })
   @NonNull
   static IDateTimeWithTimeZoneItem cast(@NonNull IAnyAtomicItem item) {
+    IDateTimeWithTimeZoneItem retval;
     if (item instanceof IDateTimeWithTimeZoneItem) {
-      return (IDateTimeWithTimeZoneItem) item;
-    }
-
-    if (item instanceof ITemporalItem) {
-      ITemporalItem temporal = (ITemporalItem) item;
-      if (!temporal.hasTimezone()) {
-        throw new InvalidValueForCastFunctionException(
-            String.format("The temporal value '%s' does not have timezone information.", temporal.asString()));
-      }
-      return valueOf(temporal.asZonedDateTime());
-    }
-
-    if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {
+      retval = (IDateTimeWithTimeZoneItem) item;
+    } else if (item instanceof ITemporalItem) {
+      retval = fromTemporal((ITemporalItem) item);
+    } else if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {
       try {
-        return valueOf(item.asString());
+        retval = valueOf(item.asString());
       } catch (IllegalStateException | InvalidTypeMetapathException ex) {
         // asString can throw IllegalStateException exception
         throw new InvalidValueForCastFunctionException(ex);
       }
+    } else {
+      throw new InvalidValueForCastFunctionException(
+          String.format("unsupported item type '%s'", item.getClass().getName()));
     }
-    throw new InvalidValueForCastFunctionException(
-        String.format("unsupported item type '%s'", item.getClass().getName()));
+    return retval;
+  }
+
+  @NonNull
+  private static IDateTimeWithTimeZoneItem fromTemporal(@NonNull ITemporalItem temporal) {
+    if (!temporal.hasTimezone()) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(
+          String.format("Unable to cast the temporal value '%s', since it lacks timezone information.",
+              temporal.asString()));
+    }
+    // get the time at midnight
+    return valueOf(temporal.asZonedDateTime());
   }
 
   @Override

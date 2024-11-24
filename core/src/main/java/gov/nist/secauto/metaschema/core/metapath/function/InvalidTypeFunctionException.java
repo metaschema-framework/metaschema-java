@@ -21,12 +21,23 @@ public class InvalidTypeFunctionException
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFOTY0012">err:FOTY0012</a>:
-   * Raised by fn:data, or by implicit atomization, if applied to a node with no
-   * typed value, the main example being an element validated against a complex
-   * type that defines it to have element-only content.
+   * Raised by
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-data">fn:data</a>, or
+   * by implicit atomization, if applied to a node with no typed value, the main
+   * example being an element validated against a complex type that defines it to
+   * have element-only content.
    */
   public static final int NODE_HAS_NO_TYPED_VALUE = 12;
 
+  /**
+   * <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#ERRFOTY0013">err:FOTY0013</a>:
+   * Raised by
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-data">fn:data</a>, or
+   * by implicit atomization, if the sequence to be atomized contains a function
+   * item.
+   */
+  public static final int DATA_ITEM_IS_FUNCTION = 13;
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFOTY0014">err:FOTY0014</a>:
@@ -76,7 +87,7 @@ public class InvalidTypeFunctionException
           nodeItem.getNodeItemKind().name().toLowerCase(Locale.ROOT),
           nodeItem.getMetapath());
     } else {
-      retval = String.format("Item '%s' has no typed value", item.getClass().getName());
+      retval = String.format("Item '%s' has an improperly typed value", item.getClass().getName());
     }
     return retval;
   }

@@ -22,8 +22,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * structures in the Metaschema framework.
  */
 public interface IAnyAtomicItem extends IAtomicValuedItem, IPrintable {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<?> type() {
     return IItemType.anyAtomic();
   }
 
@@ -81,8 +86,20 @@ public interface IAnyAtomicItem extends IAtomicValuedItem, IPrintable {
    */
   @NonNull
   IDataTypeAdapter<?> getJavaTypeAdapter();
-  //
-  // <T extends IValuedItem> T cast(IValuedItem item);
+
+  /**
+   * Cast the provided type to this item type.
+   * <p>
+   * This method simply returns the provided item, since it is already the same
+   * type.
+   *
+   * @param item
+   *          the item to cast
+   * @return the provided item
+   */
+  static IAnyAtomicItem cast(@NonNull IAnyAtomicItem item) {
+    return item;
+  }
 
   /**
    * Cast the provided {@code item} to be the same type as this item.

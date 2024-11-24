@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.datatype;
 
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -32,11 +33,14 @@ public abstract class AbstractCustomJavaDataTypeAdapter<
    *          a data type class based on {@link ICustomJavaDataType}
    * @param itemClass
    *          the Java type of the Metapath item this adapter supports
+   * @param castExecutor
+   *          the method to call to cast an item to an item based on this type
    */
   public AbstractCustomJavaDataTypeAdapter(
       @NonNull Class<TYPE> valueClass,
-      @NonNull Class<ITEM_TYPE> itemClass) {
-    super(valueClass, itemClass);
+      @NonNull Class<ITEM_TYPE> itemClass,
+      @NonNull IAtomicOrUnionType.ICastExecutor<ITEM_TYPE> castExecutor) {
+    super(valueClass, itemClass, castExecutor);
   }
 
   @SuppressWarnings("unchecked")

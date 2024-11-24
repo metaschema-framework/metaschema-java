@@ -14,7 +14,15 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The base interface inherited by all Metapath item implementations.
+ */
 public interface IItem extends ICollectionValue {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
   static IItemType type() {
     return IItemType.item();

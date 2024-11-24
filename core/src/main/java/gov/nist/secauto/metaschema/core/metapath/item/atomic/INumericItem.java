@@ -30,8 +30,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @see IDecimalItem
  */
 public interface INumericItem extends IAnyAtomicItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<INumericItem> type() {
     return TypeConstants.NUMERIC_TYPE;
   }
 

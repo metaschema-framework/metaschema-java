@@ -30,7 +30,7 @@ public class EmailAddressAdapter
           QNameCache.instance().of(MetapathConstants.NS_METAPATH, "email")));
 
   EmailAddressAdapter() {
-    super(IEmailAddressItem.class);
+    super(IEmailAddressItem.class, IEmailAddressItem::cast);
   }
 
   @Override

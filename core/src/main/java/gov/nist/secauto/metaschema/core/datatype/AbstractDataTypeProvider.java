@@ -27,14 +27,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
   @NonNull
-  private final List<IAtomicOrUnionType> abstractTypes = new LinkedList<>();
+  private final List<IAtomicOrUnionType<?>> abstractTypes = new LinkedList<>();
   @NonNull
   private final List<IDataTypeAdapter<?>> library = new LinkedList<>();
   @NonNull
   private final ReadWriteLock libraryLock = new ReentrantReadWriteLock();
 
   @Override
-  public List<? extends IAtomicOrUnionType> getAbstractTypes() {
+  public List<? extends IAtomicOrUnionType<?>> getAbstractTypes() {
     Lock readLock = libraryLock.readLock();
     readLock.lock();
     try {
@@ -65,7 +65,7 @@ public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
    * @throws IllegalArgumentException
    *           if the type is not abstract
    */
-  protected void register(@NonNull IAtomicOrUnionType type) {
+  protected void register(@NonNull IAtomicOrUnionType<?> type) {
     if (type.getAdapter() != null) {
       throw new IllegalArgumentException(
           String.format("The type '%s' has an adapter and must be registered using the adapter.",

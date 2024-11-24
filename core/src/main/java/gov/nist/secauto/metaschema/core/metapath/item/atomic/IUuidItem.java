@@ -19,8 +19,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a UUID data value.
  */
 public interface IUuidItem extends IStringItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IUuidItem> type() {
     return MetaschemaDataTypeProvider.UUID.getItemType();
   }
 

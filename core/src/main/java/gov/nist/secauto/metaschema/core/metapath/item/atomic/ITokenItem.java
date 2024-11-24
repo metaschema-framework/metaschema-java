@@ -17,8 +17,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a text token data value.
  */
 public interface ITokenItem extends IStringItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<ITokenItem> type() {
     return MetaschemaDataTypeProvider.TOKEN.getItemType();
   }
 

@@ -16,43 +16,44 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class NodeItemTest<I extends INodeItem>
+@SuppressWarnings("PMD.TestClassWithoutTestCases")
+public class AnyKindTest<I extends INodeItem>
     extends AbstractItemType<I>
     implements IKindTest<I> {
   @NonNull
-  public static final IKindTest<INodeItem> ANY_NODE = new NodeItemTest(
+  public static final IKindTest<INodeItem> ANY_NODE = new AnyKindTest<>(
       "node",
       INodeItem.class,
       "");
   @NonNull
-  public static final IKindTest<IModuleNodeItem> ANY_MODULE = new NodeItemTest(
+  public static final IKindTest<IModuleNodeItem> ANY_MODULE = new AnyKindTest<>(
       "module",
       IModuleNodeItem.class,
       "");
   @NonNull
-  public static final IKindTest<IDocumentNodeItem> ANY_DOCUMENT = new NodeItemTest(
+  public static final IKindTest<IDocumentNodeItem> ANY_DOCUMENT = new AnyKindTest<>(
       "document-node",
       IDocumentNodeItem.class,
       "");
   @NonNull
-  public static final IKindTest<IAssemblyNodeItem> ANY_ASSEMBLY = new NodeItemTest(
+  public static final IKindTest<IAssemblyNodeItem> ANY_ASSEMBLY = new AnyKindTest<>(
       "assembly",
       IAssemblyNodeItem.class,
       "");
   @NonNull
-  public static final IKindTest<IFieldNodeItem> ANY_FIELD = new NodeItemTest(
+  public static final IKindTest<IFieldNodeItem> ANY_FIELD = new AnyKindTest<>(
       "field",
       IFieldNodeItem.class,
       "");
   @NonNull
-  public static final IKindTest<IFlagNodeItem> ANY_FLAG = new NodeItemTest(
+  public static final IKindTest<IFlagNodeItem> ANY_FLAG = new AnyKindTest<>(
       "flag",
       IFlagNodeItem.class,
       "");
   @NonNull
   private final String signature;
 
-  protected NodeItemTest(
+  protected AnyKindTest(
       @NonNull String testName,
       @NonNull Class<I> itemClass,
       @NonNull String test) {

@@ -42,7 +42,7 @@ public class DateWithTZAdapter
       + "(Z|[+-][0-9]{2}:[0-9]{2})$");
 
   DateWithTZAdapter() {
-    super(ZonedDateTime.class, IDateWithTimeZoneItem.class);
+    super(ZonedDateTime.class, IDateWithTimeZoneItem.class, IDateWithTimeZoneItem::cast);
   }
 
   @Override

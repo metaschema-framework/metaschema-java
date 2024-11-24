@@ -168,8 +168,6 @@ public abstract class AbstractCSTVisitorBase
    *
    * @param <CONTEXT>
    *          the context type to parse
-   * @param <NODE>
-   *          the type of expression
    * @param context
    *          the context instance
    * @param supplier
@@ -178,14 +176,14 @@ public abstract class AbstractCSTVisitorBase
    * @return the left expression or the supplied expression for a collection
    */
   @NonNull
-  protected <CONTEXT extends ParserRuleContext, NODE extends IExpression> IExpression
+  protected <CONTEXT extends ParserRuleContext> IExpression
       handleNAiryCollection(
           @NonNull CONTEXT context,
-          @NonNull Function<List<NODE>, IExpression> supplier) {
+          @NonNull Function<List<IExpression>, IExpression> supplier) {
     return handleNAiryCollection(context, 1, 2, (ctx, idx) -> {
       // skip operator, since we know what it is
       ParseTree tree = ctx.getChild(idx + 1);
-      return (NODE) tree.accept(this);
+      return tree.accept(this);
     }, supplier);
   }
 
@@ -203,8 +201,6 @@ public abstract class AbstractCSTVisitorBase
    *
    * @param <CONTEXT>
    *          the context type to parse
-   * @param <EXPRESSION>
-   *          the child expression type
    * @param context
    *          the context instance
    * @param startIndex
@@ -219,13 +215,13 @@ public abstract class AbstractCSTVisitorBase
    * @return the left expression or the supplied expression for a collection
    */
   @NonNull
-  protected <CONTEXT extends ParserRuleContext, EXPRESSION extends IExpression> IExpression
+  protected <CONTEXT extends ParserRuleContext> IExpression
       handleNAiryCollection(
           @NonNull CONTEXT context,
           int startIndex,
           int step,
-          @NonNull BiFunction<CONTEXT, Integer, EXPRESSION> parser,
-          @NonNull Function<List<EXPRESSION>, IExpression> supplier) {
+          @NonNull BiFunction<CONTEXT, Integer, IExpression> parser,
+          @NonNull Function<List<IExpression>, IExpression> supplier) {
     int numChildren = context.getChildCount();
 
     if (numChildren == 0) {
@@ -236,18 +232,18 @@ public abstract class AbstractCSTVisitorBase
     }
 
     ParseTree leftTree = context.getChild(0);
-    @SuppressWarnings({ "unchecked", "null" })
+    @SuppressWarnings({ "null" })
     @NonNull
-    EXPRESSION leftResult = (EXPRESSION) leftTree.accept(this);
+    IExpression leftResult = leftTree.accept(this);
 
     IExpression retval;
     if (numChildren == 1) {
       retval = leftResult;
     } else {
-      List<EXPRESSION> children = new ArrayList<>(numChildren - 1 / step);
+      List<IExpression> children = new ArrayList<>(numChildren - 1 / step);
       children.add(leftResult);
       for (int i = startIndex; i < numChildren; i = i + step) {
-        EXPRESSION result = parser.apply(context, i);
+        IExpression result = parser.apply(context, i);
         children.add(result);
       }
       IExpression result = ObjectUtils.notNull(supplier.apply(children));

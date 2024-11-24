@@ -31,7 +31,7 @@ public class PositiveIntegerAdapter
           QNameCache.instance().of(MetapathConstants.NS_METAPATH, "positiveInteger")));
 
   PositiveIntegerAdapter() {
-    super(IPositiveIntegerItem.class);
+    super(IPositiveIntegerItem.class, IPositiveIntegerItem::cast);
     // avoid general construction
   }
 

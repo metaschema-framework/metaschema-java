@@ -258,7 +258,7 @@ public final class StaticContext {
    *           type was not found
    */
   @NonNull
-  public IAtomicOrUnionType lookupAtomicType(@NonNull String name) {
+  public IAtomicOrUnionType<?> lookupAtomicType(@NonNull String name) {
     IEnhancedQName qname = parseAtomicTypeName(name);
     return lookupAtomicType(qname);
   }
@@ -274,8 +274,8 @@ public final class StaticContext {
    *           type was not found
    */
   @NonNull
-  public static IAtomicOrUnionType lookupAtomicType(@NonNull IEnhancedQName qname) {
-    IAtomicOrUnionType retval = DataTypeService.instance().getAtomicTypeByQNameIndex(qname.getIndexPosition());
+  public static IAtomicOrUnionType<?> lookupAtomicType(@NonNull IEnhancedQName qname) {
+    IAtomicOrUnionType<?> retval = DataTypeService.instance().getAtomicTypeByQNameIndex(qname.getIndexPosition());
     if (retval == null) {
       throw new StaticMetapathException(
           StaticMetapathException.UNKNOWN_TYPE,
@@ -295,8 +295,8 @@ public final class StaticContext {
    *           type was not found
    */
   @NonNull
-  public static IAtomicOrUnionType lookupAtomicType(Class<? extends IAnyAtomicItem> clazz) {
-    IAtomicOrUnionType retval = DataTypeService.instance().getAtomicTypeByItemClass(clazz);
+  public static <T extends IAnyAtomicItem> IAtomicOrUnionType<T> lookupAtomicType(Class<T> clazz) {
+    IAtomicOrUnionType<T> retval = DataTypeService.instance().getAtomicTypeByItemClass(clazz);
     if (retval == null) {
       throw new StaticMetapathException(
           StaticMetapathException.UNKNOWN_TYPE,

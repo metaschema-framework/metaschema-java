@@ -10,8 +10,17 @@ import gov.nist.secauto.metaschema.core.metapath.type.impl.SequenceTypeImpl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports
+ * <a href="https://www.w3.org/TR/xpath-31/#id-sequencetype-syntax">sequence
+ * type</a> testing.
+ */
 public interface ISequenceType {
-
+  /**
+   * A sequence type representing an empty sequence.
+   *
+   * @return the sequence type
+   */
   @NonNull
   static ISequenceType empty() {
     return SequenceTypeImpl.EMPTY;
@@ -68,5 +77,13 @@ public interface ISequenceType {
   @NonNull
   String toSignature();
 
-  boolean matches(@NonNull ICollectionValue item);
+  /**
+   * Tests that a given collection value matches this sequence type.
+   *
+   * @param value
+   *          the collection value to test
+   * @return {@code true} if the value matches the expectations of this sequence
+   *         type or {@code false} otherwise
+   */
+  boolean matches(@NonNull ICollectionValue value);
 }

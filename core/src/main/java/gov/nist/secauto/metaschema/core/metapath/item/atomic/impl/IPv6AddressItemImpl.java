@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.IPv6AddressAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractUntypedAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPv6AddressItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -18,7 +17,7 @@ import inet.ipaddr.ipv6.IPv6Address;
  * value.
  */
 public class IPv6AddressItemImpl
-    extends AbstractUntypedAtomicItem<IPv6Address>
+    extends AbstractIPAddressItem<IPv6Address>
     implements IIPv6AddressItem {
   /**
    * Construct a new item with the provided {@code value}.

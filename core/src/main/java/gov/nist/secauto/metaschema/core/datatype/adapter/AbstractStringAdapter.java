@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -26,9 +27,13 @@ public abstract class AbstractStringAdapter<ITEM_TYPE extends IStringItem>
    *
    * @param itemClass
    *          the Java type of the Matepath item this adapter supports
+   * @param castExecutor
+   *          the method to call to cast an item to an item based on this type
    */
-  protected AbstractStringAdapter(@NonNull Class<ITEM_TYPE> itemClass) {
-    super(String.class, itemClass);
+  protected AbstractStringAdapter(
+      @NonNull Class<ITEM_TYPE> itemClass,
+      @NonNull IAtomicOrUnionType.ICastExecutor<ITEM_TYPE> castExecutor) {
+    super(String.class, itemClass, castExecutor);
   }
 
   @Override

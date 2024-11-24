@@ -137,7 +137,7 @@ public class MockNodeItemFactory {
   @NonNull
   public IFlagNodeItem flag(@NonNull IEnhancedQName name, @NonNull IAnyAtomicItem value) {
     IFlagNodeItem flag = newMock(IFlagNodeItem.class, ObjectUtils.notNull(name.toString()));
-    IFlagDefinition definition = newMock(IFlagDefinition.class, name.toString());
+    IFlagDefinition definition = newMock(IFlagDefinition.class, ObjectUtils.notNull(name.toString()));
 
     doReturn(name).when(flag).getQName();
     doReturn(true).when(flag).hasValue();
@@ -164,7 +164,7 @@ public class MockNodeItemFactory {
       @NonNull IAnyAtomicItem value,
       List<IFlagNodeItem> flags) {
     IFieldNodeItem field = newMock(IFieldNodeItem.class, ObjectUtils.notNull(name.toString()));
-    IFieldDefinition definition = newMock(IFieldDefinition.class, name.toString());
+    IFieldDefinition definition = newMock(IFieldDefinition.class, ObjectUtils.notNull(name.toString()));
 
     doReturn(name).when(field).getQName();
     doReturn(true).when(field).hasValue();
@@ -185,7 +185,7 @@ public class MockNodeItemFactory {
       List<IFlagNodeItem> flags,
       List<IModelNodeItem<?, ?>> modelItems) {
     IAssemblyNodeItem assembly = newMock(IAssemblyNodeItem.class, ObjectUtils.notNull(name.toString()));
-    IAssemblyDefinition definition = newMock(IAssemblyDefinition.class, name.toString());
+    IAssemblyDefinition definition = newMock(IAssemblyDefinition.class, ObjectUtils.notNull(name.toString()));
 
     doReturn(name).when(assembly).getQName();
     doReturn(false).when(assembly).hasValue();

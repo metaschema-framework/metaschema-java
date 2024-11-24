@@ -27,8 +27,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @see IYearMonthDurationItem
  */
 public interface IDurationItem extends IAnyAtomicItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IDurationItem> type() {
     return TypeConstants.DURATION_TYPE;
   }
 

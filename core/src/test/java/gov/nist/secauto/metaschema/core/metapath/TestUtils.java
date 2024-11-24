@@ -8,7 +8,10 @@ package gov.nist.secauto.metaschema.core.metapath;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
@@ -116,6 +119,18 @@ public final class TestUtils {
   }
 
   /**
+   * Create a base64 item using the provided value.
+   *
+   * @param value
+   *          the value
+   * @return the boolean item
+   */
+  @NonNull
+  public static IBase64BinaryItem base64(@NonNull String value) {
+    return IBase64BinaryItem.valueOf(value);
+  }
+
+  /**
    * Create a boolean item using the provided value.
    *
    * @param value
@@ -198,6 +213,30 @@ public final class TestUtils {
     URI uri = URI.create(value);
     assert uri != null;
     return IAnyUriItem.valueOf(uri);
+  }
+
+  /**
+   * Create a date item using the provided value.
+   *
+   * @param value
+   *          the date value
+   * @return the date item
+   */
+  @NonNull
+  public static IDateItem date(@NonNull String value) {
+    return IDateItem.valueOf(value);
+  }
+
+  /**
+   * Create a date/time item using the provided value.
+   *
+   * @param value
+   *          the date/time value
+   * @return the date item
+   */
+  @NonNull
+  public static IDateTimeItem dateTime(@NonNull String value) {
+    return IDateTimeItem.valueOf(value);
   }
 
   /**

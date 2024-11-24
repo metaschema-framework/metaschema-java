@@ -20,8 +20,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a URI data value.
  */
 public interface IAnyUriItem extends IAnyAtomicItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IAnyUriItem> type() {
     return MetaschemaDataTypeProvider.URI.getItemType();
   }
 

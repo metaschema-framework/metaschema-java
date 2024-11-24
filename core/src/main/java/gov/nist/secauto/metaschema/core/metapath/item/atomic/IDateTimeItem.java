@@ -28,8 +28,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * properly handle time zone ambiguity.
  */
 public interface IDateTimeItem extends ITemporalItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IDateTimeItem> type() {
     return MetaschemaDataTypeProvider.DATE_TIME.getItemType();
   }
 

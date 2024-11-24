@@ -44,7 +44,7 @@ public class NcNameAdapter
   }
 
   NcNameAdapter() {
-    super(INcNameItem.class);
+    super(INcNameItem.class, INcNameItem::cast);
     // avoid general construction
   }
 

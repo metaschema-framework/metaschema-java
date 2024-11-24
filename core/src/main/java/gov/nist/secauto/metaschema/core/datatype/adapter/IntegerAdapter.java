@@ -28,7 +28,7 @@ public class IntegerAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "integer")));
 
   IntegerAdapter() {
-    super(IIntegerItem.class);
+    super(IIntegerItem.class, IIntegerItem::cast);
     // avoid general construction
   }
 

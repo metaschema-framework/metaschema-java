@@ -29,6 +29,10 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides parsing utility methods for sequence and type tests.
+ */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class TypeTestSupport {
 
   private static final Map<
@@ -51,6 +55,15 @@ public final class TypeTestSupport {
               Metapath10.FlagtestContext.class, TypeTestSupport::parseKindFlagTest,
               Metapath10.AnykindtestContext.class, TypeTestSupport::parseKindAny);
 
+  /**
+   * Parse the provided sequence type.
+   *
+   * @param ctx
+   *          the sequence type parse tree
+   * @param staticContext
+   *          the static context used to resolve types and other information
+   * @return the parse sequence type
+   */
   @NonNull
   public static ISequenceType parseSequenceType(
       @NonNull Metapath10.SequencetypeContext ctx,
@@ -160,22 +173,23 @@ public final class TypeTestSupport {
         : IItemType.flag(instanceName, typeName, staticContext);
   }
 
+  @SuppressWarnings("unused")
   @NonNull
   private static IKindTest<INodeItem> parseKindAny(
       @NonNull ParseTree tree,
-      @SuppressWarnings("unused") @NonNull StaticContext staticContext) {
-    Metapath10.AnykindtestContext ctx = (Metapath10.AnykindtestContext) tree;
-    assert ctx != null;
+      @NonNull StaticContext staticContext) {
     return IItemType.node();
   }
 
+  @SuppressWarnings("unused")
   @NonNull
   private static IItemType parseFunctionTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     Metapath10.FunctiontestContext ctx = (Metapath10.FunctiontestContext) tree;
     assert ctx != null;
-    throw new UnsupportedOperationException("implement");
+    throw new UnsupportedOperationException("expression not supported");
+
   }
 
   @NonNull
@@ -194,7 +208,7 @@ public final class TypeTestSupport {
       Metapath10.TypedmaptestContext typedMapCtx = ctx.typedmaptest();
 
       String dataTypeName = ObjectUtils.notNull(typedMapCtx.atomicoruniontype().getText());
-      IAtomicOrUnionType dataType = staticContext.lookupAtomicType(dataTypeName);
+      IAtomicOrUnionType<?> dataType = staticContext.lookupAtomicType(dataTypeName);
       retval = IItemType.map(
           dataType,
           parseSequenceType(ObjectUtils.requireNonNull(typedMapCtx.sequencetype()), staticContext));
@@ -237,6 +251,13 @@ public final class TypeTestSupport {
     return parseItemType(ObjectUtils.notNull(ctx.itemtype()), staticContext);
   }
 
+  /**
+   * Parse the occurrence indicator.
+   *
+   * @param ctx
+   *          the occurrence parse tree
+   * @return the parsed occurrence value
+   */
   @NonNull
   public static Occurrence parseOccurrence(@Nullable Metapath10.OccurrenceindicatorContext ctx) {
     Occurrence retval;

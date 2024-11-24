@@ -34,7 +34,7 @@ public class BooleanAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "boolean")));
 
   BooleanAdapter() {
-    super(Boolean.class, IBooleanItem.class);
+    super(Boolean.class, IBooleanItem.class, IBooleanItem::cast);
   }
 
   @Override

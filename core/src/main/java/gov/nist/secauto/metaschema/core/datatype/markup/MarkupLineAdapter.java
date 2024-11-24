@@ -35,7 +35,7 @@ public class MarkupLineAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "markup-line")));
 
   MarkupLineAdapter() {
-    super(MarkupLine.class, IMarkupLineItem.class);
+    super(MarkupLine.class, IMarkupLineItem.class, IMarkupLineItem::cast);
   }
 
   @Override

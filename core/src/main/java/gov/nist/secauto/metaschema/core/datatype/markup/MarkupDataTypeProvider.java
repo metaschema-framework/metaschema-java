@@ -38,9 +38,10 @@ public final class MarkupDataTypeProvider
    * The Metaschema data type that represents all markup types.
    */
   @NonNull
-  public static final IAtomicOrUnionType MARKUP_TYPE
+  public static final IAtomicOrUnionType<IMarkupItem> MARKUP_TYPE
       = IAtomicOrUnionType.of(
           IMarkupItem.class,
+          IMarkupItem::cast,
           QNameCache.instance().of(MetapathConstants.NS_METAPATH, "markup"));
 
   /**

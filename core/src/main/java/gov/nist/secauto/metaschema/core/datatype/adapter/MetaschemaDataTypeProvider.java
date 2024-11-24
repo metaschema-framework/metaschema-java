@@ -212,7 +212,7 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
 
     // register abstract types
     register(TypeConstants.ANY_ATOMIC_TYPE);
-    register(TypeConstants.UNTYPED_ATOMIC_TYPE);
+    // register(TypeConstants.UNTYPED_ATOMIC_TYPE);
     register(TypeConstants.DURATION_TYPE);
     register(TypeConstants.IP_ADDRESS_TYPE);
     register(TypeConstants.NUMERIC_TYPE);

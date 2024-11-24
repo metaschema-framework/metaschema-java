@@ -60,11 +60,11 @@ public final class DataTypeService {
   }
 
   @NonNull
-  private final Map<Integer, IAtomicOrUnionType> typeByQNameIndex;
+  private final Map<Integer, IAtomicOrUnionType<?>> typeByQNameIndex;
   @NonNull
   private final Map<Class<? extends IDataTypeAdapter<?>>, IDataTypeAdapter<?>> atomicTypeByAdapterClass;
   @NonNull
-  private final Map<Class<? extends IAnyAtomicItem>, IAtomicOrUnionType> atomicTypeByItemClass;
+  private final Map<Class<? extends IAnyAtomicItem>, IAtomicOrUnionType<?>> atomicTypeByItemClass;
   @NonNull
   private final Map<Class<? extends IItem>, IItemType> itemTypeByItemClass;
 
@@ -99,11 +99,11 @@ public final class DataTypeService {
                 },
                 LinkedHashMap::new))));
 
-    Stream<Map.Entry<Integer, IAtomicOrUnionType>> adapterStream = this.atomicTypeByAdapterClass.values().stream()
+    Stream<Map.Entry<Integer, IAtomicOrUnionType<?>>> adapterStream = this.atomicTypeByAdapterClass.values().stream()
         .flatMap(dataType -> dataType.getNames().stream()
             .map(qname -> Map.entry(qname.getIndexPosition(), dataType.getItemType())));
 
-    Stream<Map.Entry<Integer, IAtomicOrUnionType>> abstractStream = loader.stream()
+    Stream<Map.Entry<Integer, IAtomicOrUnionType<?>>> abstractStream = loader.stream()
         .map(Provider<IDataTypeProvider>::get)
         .flatMap(provider -> provider.getAbstractTypes().stream())
         .map(dataType -> Map.entry(dataType.getQName().getIndexPosition(), dataType));
@@ -168,7 +168,7 @@ public final class DataTypeService {
    *         system
    */
   @Nullable
-  public IAtomicOrUnionType getAtomicTypeByQName(@NonNull QName qname) {
+  public IAtomicOrUnionType<?> getAtomicTypeByQName(@NonNull QName qname) {
     IEnhancedQName result = QNameCache.instance().get(qname);
     return result == null ? null : getAtomicTypeByQNameIndex(result.getIndexPosition());
   }
@@ -183,7 +183,7 @@ public final class DataTypeService {
    *         system
    */
   @Nullable
-  public IAtomicOrUnionType getAtomicTypeByQNameIndex(int qnameIndexPosition) {
+  public IAtomicOrUnionType<?> getAtomicTypeByQNameIndex(int qnameIndexPosition) {
     return typeByQNameIndex.get(qnameIndexPosition);
   }
 
@@ -195,9 +195,10 @@ public final class DataTypeService {
    * @return the data type or {@code null} if the data type is unknown to the type
    *         system
    */
+  @SuppressWarnings("unchecked")
   @Nullable
-  public IAtomicOrUnionType getAtomicTypeByItemClass(Class<? extends IAnyAtomicItem> clazz) {
-    return atomicTypeByItemClass.get(clazz);
+  public <T extends IAnyAtomicItem> IAtomicOrUnionType<T> getAtomicTypeByItemClass(Class<T> clazz) {
+    return (IAtomicOrUnionType<T>) atomicTypeByItemClass.get(clazz);
   }
 
   /**

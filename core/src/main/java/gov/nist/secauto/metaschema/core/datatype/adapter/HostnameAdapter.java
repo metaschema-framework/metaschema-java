@@ -27,7 +27,7 @@ public class HostnameAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "hostname")));
 
   HostnameAdapter() {
-    super(IHostnameItem.class);
+    super(IHostnameItem.class, IHostnameItem::cast);
     // avoid general construction
   }
 

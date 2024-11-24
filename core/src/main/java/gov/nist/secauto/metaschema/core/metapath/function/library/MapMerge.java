@@ -188,7 +188,7 @@ public final class MapMerge {
       duplicates = Duplicates.USE_FIRST;
     } else {
       // resolve the provided option
-      IAnyAtomicItem atomicValue = FnData.fnData(duplicatesOption.toSequence()).getFirstItem(true);
+      IAnyAtomicItem atomicValue = duplicatesOption.toSequence().atomize().getFirstItem(true);
       if (atomicValue == null) {
         throw new JsonFunctionException(
             JsonFunctionException.INVALID_OPTION,

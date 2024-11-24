@@ -26,8 +26,13 @@ public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
   @NonNull
   IPositiveIntegerItem ONE = valueOf(BigInteger.ONE);
 
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IPositiveIntegerItem> type() {
     return MetaschemaDataTypeProvider.POSITIVE_INTEGER.getItemType();
   }
 

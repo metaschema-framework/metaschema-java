@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 
@@ -48,8 +47,8 @@ public class GeneralComparison
 
   @Override
   public ISequence<? extends IBooleanItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    ISequence<? extends IAnyAtomicItem> leftItems = FnData.fnData(getLeft().accept(dynamicContext, focus));
-    ISequence<? extends IAnyAtomicItem> rightItems = FnData.fnData(getRight().accept(dynamicContext, focus));
+    ISequence<? extends IAnyAtomicItem> leftItems = getLeft().accept(dynamicContext, focus).atomize();
+    ISequence<? extends IAnyAtomicItem> rightItems = getRight().accept(dynamicContext, focus).atomize();
     return ISequence.of(ComparisonFunctions.generalCompairison(leftItems, getOperator(), rightItems));
   }
 }

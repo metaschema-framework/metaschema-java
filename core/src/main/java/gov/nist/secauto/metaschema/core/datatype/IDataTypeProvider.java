@@ -26,7 +26,7 @@ public interface IDataTypeProvider {
    *
    * @return the abstract item types provided
    */
-  List<? extends IAtomicOrUnionType> getAbstractTypes();
+  List<? extends IAtomicOrUnionType<?>> getAbstractTypes();
 
   /**
    * Get the {@link IDataTypeAdapter} instances associated with this provider.

@@ -50,7 +50,7 @@ public class IPv4AddressAdapter
   }
 
   IPv4AddressAdapter() {
-    super(IPv4Address.class, IIPv4AddressItem.class);
+    super(IPv4Address.class, IIPv4AddressItem.class, IIPv4AddressItem::cast);
   }
 
   @Override

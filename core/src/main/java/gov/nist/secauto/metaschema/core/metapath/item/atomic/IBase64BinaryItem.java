@@ -19,8 +19,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An atomic Metapath item containing a Base64 encoded data value.
  */
 public interface IBase64BinaryItem extends IAnyAtomicItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IBase64BinaryItem> type() {
     return MetaschemaDataTypeProvider.BASE64.getItemType();
   }
 

@@ -91,25 +91,7 @@ public final class FnData {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    ISequence<?> sequence = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
-    return fnData(sequence);
-  }
-
-  /**
-   * An implementation of XPath 3.1
-   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-data">fn:data</a>
-   * supporting <a href="https://www.w3.org/TR/xpath-31/#id-atomization">item
-   * atomization</a>.
-   *
-   * @param sequence
-   *          the sequence of items to atomize
-   * @return the atomized result
-   */
-  @SuppressWarnings("null")
-  @NonNull
-  public static ISequence<IAnyAtomicItem> fnData(@NonNull ISequence<? extends IItem> sequence) {
-    return ISequence.of(sequence.stream()
-        .flatMap(FnData::atomize));
+    return FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0))).atomize();
   }
 
   /**
@@ -146,6 +128,7 @@ public final class FnData {
    *          the item to atomize
    * @return the atomized result
    */
+  // FIXME: implement atomize on the called methods
   @NonNull
   public static Stream<IAnyAtomicItem> fnDataItem(@NonNull IArrayItem<?> item) {
     return ObjectUtils.notNull(item.stream().flatMap(member -> {
@@ -180,6 +163,8 @@ public final class FnData {
       retval = ObjectUtils.notNull(Stream.of(((IAtomicValuedItem) item).toAtomicItem()));
     } else if (item instanceof IArrayItem) {
       retval = fnDataItem((IArrayItem<?>) item);
+    } else if (item instanceof IFunction) {
+      throw new InvalidTypeFunctionException(InvalidTypeFunctionException.DATA_ITEM_IS_FUNCTION, item);
     } else {
       throw new InvalidTypeFunctionException(InvalidTypeFunctionException.NODE_HAS_NO_TYPED_VALUE, item);
     }

@@ -27,7 +27,7 @@ public class StringAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "string")));
 
   StringAdapter() {
-    super(IStringItem.class);
+    super(IStringItem.class, IStringItem::cast);
     // avoid general construction
   }
 

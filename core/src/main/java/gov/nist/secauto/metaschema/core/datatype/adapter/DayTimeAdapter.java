@@ -32,7 +32,7 @@ public class DayTimeAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "day-time-duration")));
 
   DayTimeAdapter() {
-    super(Duration.class, IDayTimeDurationItem.class);
+    super(Duration.class, IDayTimeDurationItem.class, IDayTimeDurationItem::cast);
   }
 
   @Override

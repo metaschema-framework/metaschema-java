@@ -18,8 +18,13 @@ import inet.ipaddr.ipv4.IPv4Address;
  * An atomic Metapath item containing an IPv4 address data value.
  */
 public interface IIPv4AddressItem extends IIPAddressItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IIPv4AddressItem> type() {
     return MetaschemaDataTypeProvider.IP_V4_ADDRESS.getItemType();
   }
 

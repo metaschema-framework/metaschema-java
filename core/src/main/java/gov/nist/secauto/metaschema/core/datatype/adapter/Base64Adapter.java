@@ -35,7 +35,7 @@ public class Base64Adapter
           QNameCache.instance().of(MetapathConstants.NS_METAPATH, "base64Binary")));
 
   Base64Adapter() {
-    super(ByteBuffer.class, IBase64BinaryItem.class);
+    super(ByteBuffer.class, IBase64BinaryItem.class, IBase64BinaryItem::cast);
   }
 
   @Override

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -41,11 +42,14 @@ abstract class AbstractMarkupAdapter<
    *          the Java value object type this adapter supports
    * @param itemClass
    *          the Java type of the Metapath item this adapter supports
+   * @param castExecutor
+   *          the method to call to cast an item to an item based on this type
    */
   protected AbstractMarkupAdapter(
       @NonNull Class<TYPE> valueClass,
-      @NonNull Class<ITEM_TYPE> itemClass) {
-    super(valueClass, itemClass);
+      @NonNull Class<ITEM_TYPE> itemClass,
+      @NonNull IAtomicOrUnionType.ICastExecutor<ITEM_TYPE> castExecutor) {
+    super(valueClass, itemClass, castExecutor);
   }
 
   @Override

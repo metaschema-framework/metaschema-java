@@ -579,4 +579,26 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    * @return the visitation result or {@code null} if no result was produced
    */
   RESULT visitInstanceOf(@NonNull InstanceOf expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
+  RESULT visitCast(@NonNull Cast expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
+  RESULT visitCastable(@NonNull Castable expr, @NonNull CONTEXT context);
 }

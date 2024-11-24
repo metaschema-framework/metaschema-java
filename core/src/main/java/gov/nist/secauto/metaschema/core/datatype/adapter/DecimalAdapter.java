@@ -35,7 +35,7 @@ public class DecimalAdapter
       List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "decimal")));
 
   DecimalAdapter() {
-    super(BigDecimal.class, IDecimalItem.class);
+    super(BigDecimal.class, IDecimalItem.class, IDecimalItem::cast);
   }
 
   @Override

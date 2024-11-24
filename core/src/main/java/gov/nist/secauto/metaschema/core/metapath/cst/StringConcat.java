@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnConcat;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -49,6 +48,6 @@ public class StringConcat
   public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(FnConcat.concat(ObjectUtils.notNull(getChildren().stream()
         .map(child -> child.accept(dynamicContext, focus))
-        .flatMap(result -> FnData.fnData(ObjectUtils.notNull(result)).stream()))));
+        .flatMap(result -> ObjectUtils.notNull(result).atomize().stream()))));
   }
 }

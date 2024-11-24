@@ -74,10 +74,10 @@ public final class DynamicTypeSupport {
 
   private static boolean compareAtomicTypes(
       @NonNull String expected,
-      @NonNull IAtomicOrUnionType actualType,
+      @NonNull IAtomicOrUnionType<?> actualType,
       @NonNull StaticContext staticContext) {
     // lookup the expected type
-    IAtomicOrUnionType expectedType;
+    IAtomicOrUnionType<?> expectedType;
     try {
       expectedType = staticContext.lookupAtomicType(expected);
     } catch (StaticMetapathException ex) {

@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;
 import gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -73,7 +72,9 @@ public class FunctionCallAccessor implements IExpression {
   public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<?> target = getBase().accept(dynamicContext, focus);
     IItem collection = target.getFirstItem(true);
-    IAnyAtomicItem key = FnData.fnData(getArgument().accept(dynamicContext, focus)).getFirstItem(false);
+    IAnyAtomicItem key = getArgument().accept(dynamicContext, focus)
+        .atomize()
+        .getFirstItem(false);
     if (key == null) {
       throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,
           "No key provided for functional call lookup");

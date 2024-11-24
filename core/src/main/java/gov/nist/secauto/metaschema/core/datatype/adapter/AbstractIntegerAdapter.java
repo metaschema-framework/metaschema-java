@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -32,10 +33,13 @@ public abstract class AbstractIntegerAdapter<ITEM_TYPE extends IIntegerItem>
    *
    * @param itemClass
    *          the Java type of the Metapath item this adapter supports
+   * @param castExecutor
+   *          the method to call to cast an item to an item based on this type
    */
   protected AbstractIntegerAdapter(
-      @NonNull Class<ITEM_TYPE> itemClass) {
-    super(BigInteger.class, itemClass);
+      @NonNull Class<ITEM_TYPE> itemClass,
+      @NonNull IAtomicOrUnionType.ICastExecutor<ITEM_TYPE> castExecutor) {
+    super(BigInteger.class, itemClass, castExecutor);
   }
 
   @Override

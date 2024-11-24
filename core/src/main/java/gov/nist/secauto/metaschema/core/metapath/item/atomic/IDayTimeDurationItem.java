@@ -20,8 +20,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * seconds.
  */
 public interface IDayTimeDurationItem extends IDurationItem {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
-  static IAtomicOrUnionType type() {
+  static IAtomicOrUnionType<IDayTimeDurationItem> type() {
     return MetaschemaDataTypeProvider.DAY_TIME_DURATION.getItemType();
   }
 

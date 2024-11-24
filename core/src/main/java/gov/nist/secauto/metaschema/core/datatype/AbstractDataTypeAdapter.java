@@ -9,8 +9,9 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.type.DataTypeItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.metapath.type.impl.DataTypeItemType;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -51,7 +52,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   @NonNull
   private final Class<TYPE> valueClass;
   @NonNull
-  private final IAtomicOrUnionType itemType;
+  private final IAtomicOrUnionType<ITEM_TYPE> itemType;
 
   /**
    * Construct a new Java type adapter for a provided class.
@@ -60,12 +61,15 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
    *          the Java value object type this adapter supports
    * @param itemClass
    *          the Java type of the Matepath item this adapter supports
+   * @param castExecutor
+   *          the method to call to cast an item to an item based on this type
    */
   protected AbstractDataTypeAdapter(
       @NonNull Class<TYPE> valueClass,
-      @NonNull Class<ITEM_TYPE> itemClass) {
+      @NonNull Class<ITEM_TYPE> itemClass,
+      @NonNull AbstractAtomicOrUnionType.ICastExecutor<ITEM_TYPE> castExecutor) {
     this.valueClass = valueClass;
-    this.itemType = new DataTypeItemType(this, itemClass);
+    this.itemType = new DataTypeItemType<>(this, itemClass, castExecutor);
   }
 
   @Override
@@ -80,7 +84,7 @@ public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomic
   }
 
   @Override
-  public IAtomicOrUnionType getItemType() {
+  public IAtomicOrUnionType<ITEM_TYPE> getItemType() {
     return itemType;
   }
 

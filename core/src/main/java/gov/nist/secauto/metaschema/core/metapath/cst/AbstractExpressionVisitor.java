@@ -372,4 +372,14 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   public RESULT visitInstanceOf(InstanceOf expr, CONTEXT context) {
     return visitChildren(expr, context);
   }
+
+  @Override
+  public RESULT visitCast(Cast expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
+  public RESULT visitCastable(Castable expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
 }
