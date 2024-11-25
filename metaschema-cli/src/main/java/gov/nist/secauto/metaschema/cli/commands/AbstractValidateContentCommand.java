@@ -249,7 +249,8 @@ public abstract class AbstractValidateContentCommand
 
       IValidationResult validationResult = null;
       try {
-        IModule module = bindingContext.registerModule(getModule(commandLine, bindingContext));
+        // get the module, but don't register it
+        IModule module = getModule(commandLine, bindingContext);
         if (!commandLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {
           // perform schema validation
           validationResult = getSchemaValidationProvider(module, commandLine, bindingContext)
@@ -263,6 +264,7 @@ public abstract class AbstractValidateContentCommand
           }
 
           // perform constraint validation
+          bindingContext.registerModule(module); // ensure the module is registered
           IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);
           validationResult = validationResult == null
               ? constraintValidationResult
