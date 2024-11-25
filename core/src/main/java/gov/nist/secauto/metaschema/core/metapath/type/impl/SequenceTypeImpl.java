@@ -17,9 +17,14 @@ import java.util.Objects;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A concrete implementation that supports
+ * <a href="https://www.w3.org/TR/xpath-31/#id-sequencetype-syntax">sequence
+ * type</a> testing.
+ */
 public class SequenceTypeImpl implements ISequenceType {
   @NonNull
-  public static final ISequenceType EMPTY = new ISequenceType() {
+  private static final ISequenceType EMPTY = new ISequenceType() {
     @Override
     public boolean isEmpty() {
       return true;
@@ -51,6 +56,24 @@ public class SequenceTypeImpl implements ISequenceType {
   @NonNull
   private final Occurrence occurrence;
 
+  /**
+   * Matches an empty sequence.
+   *
+   * @return the empty sequence type
+   */
+  @NonNull
+  public static ISequenceType empty() {
+    return EMPTY;
+  }
+
+  /**
+   * Construct a new sequence type.
+   *
+   * @param type
+   *          the type of items in the sequence
+   * @param occurrence
+   *          the occurrence of items in the sequence
+   */
   public SequenceTypeImpl(@NonNull IItemType type, @NonNull Occurrence occurrence) {
     Objects.requireNonNull(type, "type");
     Objects.requireNonNull(occurrence, "occurrence");

@@ -21,8 +21,24 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides a variety of methods to check the dynamic type of a definition-based
+ * node item.
+ */
 public final class DynamicTypeSupport {
 
+  /**
+   * Checks that the provided actual item matches the provided expected type name.
+   *
+   * @param actual
+   *          the item to check
+   * @param expected
+   *          the expected definition or atomic type name
+   * @param staticContext
+   *          used to resolve definition names and lookup atomic type names
+   * @return {@code true} if the expected name matches either the node's
+   *         definition name or the node's atomic type, or {@code false} otherwise
+   */
   public static boolean derivesFrom(
       @NonNull IFlagNodeItem actual,
       @NonNull String expected,
@@ -32,6 +48,18 @@ public final class DynamicTypeSupport {
         || compareAtomicTypes(expected, definition.getJavaTypeAdapter().getItemType(), staticContext);
   }
 
+  /**
+   * Checks that the provided actual item matches the provided expected type name.
+   *
+   * @param actual
+   *          the item to check
+   * @param expected
+   *          the expected definition or atomic type name
+   * @param staticContext
+   *          used to resolve definition names and lookup atomic type names
+   * @return {@code true} if the expected name matches either the node's
+   *         definition name or the node's atomic type, or {@code false} otherwise
+   */
   public static boolean derivesFrom(
       @NonNull IFieldNodeItem actual,
       @NonNull String expected,
@@ -41,6 +69,18 @@ public final class DynamicTypeSupport {
         || compareAtomicTypes(expected, definition.getJavaTypeAdapter().getItemType(), staticContext);
   }
 
+  /**
+   * Checks that the provided actual item matches the provided expected type name.
+   *
+   * @param actual
+   *          the item to check
+   * @param expected
+   *          the expected definition name
+   * @param staticContext
+   *          used to resolve definition names
+   * @return {@code true} if the expected name matches the node's definition name,
+   *         or {@code false} otherwise
+   */
   public static boolean derivesFrom(
       @NonNull IAssemblyNodeItem actual,
       @NonNull String expected,

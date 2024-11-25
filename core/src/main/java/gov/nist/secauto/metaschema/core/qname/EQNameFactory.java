@@ -7,18 +7,24 @@ package gov.nist.secauto.metaschema.core.qname;
 
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.net.URI;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
-public class EQNameFactory {
+/**
+ * A factory that produces qualified names.
+ * <p>
+ * This implementation uses an underlying integer-based cache to reduce the
+ * memory footprint of qualified names and namespaces by reusing instances with
+ * the same namespace and local name.
+ */
+public final class EQNameFactory {
   private static final Pattern URI_QUALIFIED_NAME = Pattern.compile("^Q\\{([^{}]*)\\}(.+)$");
   private static final Pattern LEXICAL_NAME = Pattern.compile("^(?:([^:]+):)?(.+)$");
   @NonNull
@@ -27,6 +33,11 @@ public class EQNameFactory {
   @NonNull
   private final QNameCache cache;
 
+  /**
+   * Get the singleton instance.
+   *
+   * @return the singleton instance
+   */
   @NonNull
   public static EQNameFactory instance() {
     return ObjectUtils.notNull(INSTANCE.get());
@@ -37,32 +48,35 @@ public class EQNameFactory {
     this(QNameCache.instance());
   }
 
-  public EQNameFactory(@NonNull QNameCache cache) {
+  private EQNameFactory(@NonNull QNameCache cache) {
     this.cache = cache;
   }
 
-  @Nullable
-  public IEnhancedQName get(int index) {
-    return cache.get(index);
-  }
-
+  /**
+   * Get an existing qualified name by looking up the cached entry using the
+   * provided index value.
+   *
+   * @param index
+   *          the index value to lookup
+   * @return an optional containing the qualified name, if it exists
+   */
   @NonNull
-  public IEnhancedQName newQName(@NonNull QName qname) {
-    return cache.of(qname);
+  public Optional<IEnhancedQName> get(int index) {
+    return ObjectUtils.notNull(Optional.ofNullable(cache.get(index)));
   }
 
-  @NonNull
-  public IEnhancedQName newQName(@NonNull String localName) {
-    return cache.of("", localName);
-  }
-
+  /**
+   * Get a new qualified name based on the provided namespace and local name.
+   *
+   * @param namespace
+   *          the namespace part of the qualified name
+   * @param localName
+   *          the local part of the qualified name
+   *
+   * @return the qualified name
+   */
   @NonNull
   public IEnhancedQName newQName(@NonNull String namespace, @NonNull String localName) {
-    return cache.of(namespace, localName);
-  }
-
-  @NonNull
-  public IEnhancedQName newQName(@NonNull URI namespace, @NonNull String localName) {
     return cache.of(namespace, localName);
   }
 

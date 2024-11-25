@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
@@ -32,7 +32,8 @@ public class DecimalAdapter
   private static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
-      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "decimal")));
+      List.of(
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "decimal")));
 
   DecimalAdapter() {
     super(BigDecimal.class, IDecimalItem.class, IDecimalItem::cast);

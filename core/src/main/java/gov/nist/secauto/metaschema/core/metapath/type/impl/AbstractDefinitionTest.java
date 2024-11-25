@@ -15,11 +15,28 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * This abstract implementation supports kind tests based on node item that have
+ * an underlying Metaschema definition.
+ * <p>
+ * This class uses late binding for the type name, to ensure that the same name
+ * can be used to identify the name of the definition or the name of the atomic
+ * type (in the case of a field or flag).
+ *
+ * @param <T>
+ *          the Java type of the node-based item supported by the implementation
+ */
 public abstract class AbstractDefinitionTest<T extends IDefinitionNodeItem<?, ?>> implements IKindTest<T> {
+  /**
+   * The qualified name of the node instance.
+   */
   @Nullable
-  protected final IEnhancedQName instanceName;
+  private final IEnhancedQName instanceName;
+  /**
+   * The qualified name of the definition or atomic type.
+   */
   @Nullable
-  protected final String typeName;
+  private final String typeName;
   @NonNull
   private final String signature;
   @NonNull
@@ -69,6 +86,31 @@ public abstract class AbstractDefinitionTest<T extends IDefinitionNodeItem<?, ?>
         .toString());
   }
 
+  /**
+   * Get the qualified name of the node instance.
+   *
+   * @return the qualified name
+   */
+  @Nullable
+  protected IEnhancedQName getInstanceName() {
+    return instanceName;
+  }
+
+  /**
+   * Get the qualified name of the definition or atomic type.
+   *
+   * @return the qualified name or {@code null} if this value should not be tested
+   */
+  @Nullable
+  protected String getTypeName() {
+    return typeName;
+  }
+
+  /**
+   * Get the static context used to lookup names and types for the test.
+   *
+   * @return the static context
+   */
   @NonNull
   protected StaticContext getTestStaticContext() {
     return testStaticContext;
@@ -87,13 +129,21 @@ public abstract class AbstractDefinitionTest<T extends IDefinitionNodeItem<?, ?>
         && matches((T) item);
   }
 
-  protected boolean matches(@NonNull T item) {
+  private boolean matches(@NonNull T item) {
     return matchesInstance(item) && matchesType(item);
   }
 
-  protected boolean matchesInstance(@NonNull T item) {
+  private boolean matchesInstance(@NonNull T item) {
     return instanceName == null || ObjectUtils.notNull(instanceName).equals(item.getQName());
   }
 
+  /**
+   * Perform the model type-specific checks.
+   *
+   * @param item
+   *          the item to test
+   * @return {@code true} if the item meets expectations, or {@code false}
+   *         otherwise
+   */
   protected abstract boolean matchesType(@NonNull T item);
 }

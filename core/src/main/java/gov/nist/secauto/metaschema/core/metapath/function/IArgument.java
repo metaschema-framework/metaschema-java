@@ -12,12 +12,9 @@ import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Objects;
-
-import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -107,26 +104,6 @@ public interface IArgument {
             String.format("No data type with the name '%s'.", name), ex);
       }
       return this;
-    }
-
-    /**
-     * Define the type of the function argument.
-     * <p>
-     * By default an argument has the type {@link IItem}.
-     *
-     * @param name
-     *          the qualified name of the argument's type
-     * @return this builder
-     */
-    @NonNull
-    public Builder type(@NonNull QName name) {
-      IEnhancedQName result = QNameCache.instance().get(name);
-      if (result == null) {
-        throw new IllegalArgumentException(
-            String.format("A data type with the qname '%s' was not found.",
-                name));
-      }
-      return type(result);
     }
 
     /**

@@ -16,6 +16,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * An integer-based cache of namespaces to reduce the memory footprint of
+ * namespaces used by reusing instances with the same namespace.
+ */
 public final class NamespaceCache {
   @NonNull
   private static final Lazy<NamespaceCache> INSTANCE = ObjectUtils.notNull(Lazy.lazy(NamespaceCache::new));
@@ -30,25 +34,31 @@ public final class NamespaceCache {
    */
   private final AtomicInteger indexCounter = new AtomicInteger();
 
+  /**
+   * Get the singleton instance.
+   *
+   * @return the singleton instance
+   */
   @NonNull
   public static NamespaceCache instance() {
     return ObjectUtils.notNull(INSTANCE.get());
   }
 
-  public NamespaceCache() {
+  private NamespaceCache() {
     // claim the "0" position
-    int noNamespaceIndex = of("");
+    int noNamespaceIndex = indexOf("");
     assert noNamespaceIndex == 0;
   }
 
-  // FIXME: check for use and prefer the string version
+  /**
+   * Get the index value of the provided namespace.
+   *
+   * @param namespace
+   *          the namespace
+   * @return the index value
+   */
   @SuppressWarnings("PMD.ShortMethodName")
-  public int of(@NonNull URI namespace) {
-    return of(ObjectUtils.notNull(namespace.toASCIIString()));
-  }
-
-  @SuppressWarnings("PMD.ShortMethodName")
-  public int of(@NonNull String namespace) {
+  public int indexOf(@NonNull String namespace) {
     return nsToIndex.computeIfAbsent(namespace, key -> {
       int nextIndex = indexCounter.getAndIncrement();
       indexToNs.put(nextIndex, namespace);
@@ -56,16 +66,38 @@ public final class NamespaceCache {
     });
   }
 
+  /**
+   * Lookup the index value for an existing namespace.
+   *
+   * @param namespace
+   *          the namespace to lookup
+   * @return an optional containing the index value, if it exists
+   */
   @NonNull
   public Optional<Integer> get(@NonNull String namespace) {
     return ObjectUtils.notNull(Optional.ofNullable(nsToIndex.get(namespace)));
   }
 
+  /**
+   * Lookup the namespace using the index value for an existing namespace.
+   *
+   * @param index
+   *          the index value to lookup
+   * @return an optional containing the namespace, if the index value exists
+   */
   @NonNull
   public Optional<String> get(int index) {
     return ObjectUtils.notNull(Optional.ofNullable(indexToNs.get(index)));
   }
 
+  /**
+   * Lookup the namespace using the index value for an existing namespace.
+   *
+   * @param index
+   *          the index value to lookup
+   * @return an optional containing the namespace as a URI, if the index value
+   *         exists
+   */
   @NonNull
   public Optional<URI> getAsURI(int index) {
     return ObjectUtils.notNull(Optional.ofNullable(indexToNsUri.computeIfAbsent(index, key -> {

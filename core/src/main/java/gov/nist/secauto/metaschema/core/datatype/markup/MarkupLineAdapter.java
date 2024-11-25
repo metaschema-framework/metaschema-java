@@ -9,8 +9,8 @@ import com.fasterxml.jackson.core.JsonParser;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupLineItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.codehaus.stax2.XMLEventReader2;
@@ -32,7 +32,8 @@ public class MarkupLineAdapter
     extends AbstractMarkupAdapter<MarkupLine, IMarkupLineItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
-      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "markup-line")));
+      List.of(
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "markup-line")));
 
   MarkupLineAdapter() {
     super(MarkupLine.class, IMarkupLineItem.class, IMarkupLineItem::cast);

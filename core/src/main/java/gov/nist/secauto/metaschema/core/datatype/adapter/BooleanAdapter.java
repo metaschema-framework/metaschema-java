@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
@@ -31,7 +31,8 @@ public class BooleanAdapter
     extends AbstractDataTypeAdapter<Boolean, IBooleanItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
-      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "boolean")));
+      List.of(
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "boolean")));
 
   BooleanAdapter() {
     super(Boolean.class, IBooleanItem.class, IBooleanItem::cast);

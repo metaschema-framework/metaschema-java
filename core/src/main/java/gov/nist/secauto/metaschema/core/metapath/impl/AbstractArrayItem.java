@@ -25,19 +25,26 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The base class for {@link IArrayItem} implementations, that provides an
+ * implementation of common methods.
+ *
+ * @param <ITEM>
+ *          the Java type of the items contained within the sequence
+ */
 public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
     extends ImmutableCollections.AbstractImmutableDelegatedList<ITEM>
     implements IArrayItem<ITEM> {
   @NonNull
-  public static final IEnhancedQName QNAME = IEnhancedQName.of("array");
+  private static final IEnhancedQName QNAME = IEnhancedQName.of("array");
   @NonNull
-  public static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(
+  private static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(
       EnumSet.of(FunctionProperty.DETERMINISTIC));
   @NonNull
-  public static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
+  private static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
       IArgument.builder().name("position").type(IIntegerItem.type()).one().build()));
   @NonNull
-  public static final ISequenceType RESULT = ISequenceType.of(
+  private static final ISequenceType RESULT = ISequenceType.of(
       IAnyAtomicItem.type(), Occurrence.ZERO_OR_ONE);
 
   @NonNull
@@ -54,6 +61,51 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
   @NonNull
   public static <T extends ICollectionValue> IArrayItem<T> empty() {
     return (IArrayItem<T>) EMPTY;
+  }
+
+  @Override
+  public boolean isDeterministic() {
+    return true;
+  }
+
+  @Override
+  public boolean isContextDepenent() {
+    return false;
+  }
+
+  @Override
+  public boolean isFocusDepenent() {
+    return false;
+  }
+
+  @Override
+  public IEnhancedQName getQName() {
+    return QNAME;
+  }
+
+  @Override
+  public Set<FunctionProperty> getProperties() {
+    return PROPERTIES;
+  }
+
+  @Override
+  public List<IArgument> getArguments() {
+    return ARGUMENTS;
+  }
+
+  @Override
+  public int arity() {
+    return 1;
+  }
+
+  @Override
+  public boolean isArityUnbounded() {
+    return false;
+  }
+
+  @Override
+  public ISequenceType getResult() {
+    return RESULT;
   }
 
   @Override

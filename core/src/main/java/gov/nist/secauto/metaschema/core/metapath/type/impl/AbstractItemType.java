@@ -10,16 +10,28 @@ import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public abstract class AbstractItemType<I extends IItem> implements IItemType {
+/**
+ * A common base class for item type implementations.
+ *
+ * @param <T>
+ *          the Java type of the item supported by the implementation
+ */
+public abstract class AbstractItemType<T extends IItem> implements IItemType {
   @NonNull
-  private final Class<I> itemClass;
+  private final Class<T> itemClass;
 
-  protected AbstractItemType(@NonNull Class<I> itemClass) {
+  /**
+   * Construct a new item type.
+   *
+   * @param itemClass
+   *          the item class this type supports
+   */
+  protected AbstractItemType(@NonNull Class<T> itemClass) {
     this.itemClass = itemClass;
   }
 
   @Override
-  public Class<I> getItemClass() {
+  public Class<T> getItemClass() {
     return itemClass;
   }
 

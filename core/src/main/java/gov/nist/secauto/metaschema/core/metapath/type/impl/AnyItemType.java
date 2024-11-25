@@ -11,12 +11,20 @@ import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * An item type that applies to all items.
+ */
 @SuppressFBWarnings(value = "SING_SINGLETON_GETTER_NOT_SYNCHRONIZED", justification = "false positive")
 public final class AnyItemType
     implements IItemType {
   @NonNull
   private static final AnyItemType INSTANCE = new AnyItemType();
 
+  /**
+   * Get the singleton instance.
+   *
+   * @return the singleton instance
+   */
   @NonNull
   public static AnyItemType instance() {
     return INSTANCE;

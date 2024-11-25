@@ -11,8 +11,8 @@ import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapt
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.LocalDate;
@@ -36,7 +36,8 @@ public class DateAdapter
     extends AbstractCustomJavaDataTypeAdapter<AmbiguousDate, IDateItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
-      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date")));
+      List.of(
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "date")));
   @NonNull
   private static final Pattern DATE_TIMEZONE = ObjectUtils.notNull(
       Pattern.compile("^("

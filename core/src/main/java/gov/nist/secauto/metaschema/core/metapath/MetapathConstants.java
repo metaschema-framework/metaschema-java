@@ -5,10 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -23,30 +19,12 @@ public final class MetapathConstants {
   @NonNull
   public static final String NS_METAPATH = "http://csrc.nist.gov/ns/metaschema/metapath";
   /**
-   * The namespace URI for Metapath built-in functions, as a URI.
-   *
-   * @see #PREFIX_METAPATH for the default prefix for this namespace
-   */
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_URI = ObjectUtils.requireNonNull(
-      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions"));
-  /**
    * The namespace URI for Metapath built-in functions, as a string.
    *
    * @see #PREFIX_METAPATH for the default prefix for this namespace
    */
   @NonNull
-  public static final String NS_METAPATH_FUNCTIONS = ObjectUtils.requireNonNull(
-      NS_METAPATH_FUNCTIONS_URI.toASCIIString());
-  /**
-   * The namespace URI for Metapath math-related built-in functions, as a URI.
-   *
-   * @see #PREFIX_METAPATH_FUNCTIONS_MATH for the default prefix for this
-   *      namespace
-   */
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_MATH_URI = ObjectUtils.requireNonNull(
-      URI.create(NS_METAPATH_FUNCTIONS + "/math"));
+  public static final String NS_METAPATH_FUNCTIONS = "http://csrc.nist.gov/ns/metaschema/metapath-functions";
   /**
    * The namespace URI for Metapath math-related built-in functions, as a string.
    *
@@ -54,17 +32,7 @@ public final class MetapathConstants {
    *      namespace
    */
   @NonNull
-  public static final String NS_METAPATH_FUNCTIONS_MATH = ObjectUtils.requireNonNull(
-      NS_METAPATH_FUNCTIONS_MATH_URI.toASCIIString());
-  /**
-   * The namespace URI for Metapath array-related built-in functions, as a URI.
-   *
-   * @see #PREFIX_METAPATH_FUNCTIONS_ARRAY for the default prefix for this
-   *      namespace
-   */
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_ARRAY_URI = ObjectUtils.requireNonNull(
-      URI.create(NS_METAPATH_FUNCTIONS + "/array"));
+  public static final String NS_METAPATH_FUNCTIONS_MATH = NS_METAPATH_FUNCTIONS + "/math";
   /**
    * The namespace URI for Metapath array-related built-in functions, as a string.
    *
@@ -72,33 +40,14 @@ public final class MetapathConstants {
    *      namespace
    */
   @NonNull
-  public static final String NS_METAPATH_FUNCTIONS_ARRAY = ObjectUtils.requireNonNull(
-      NS_METAPATH_FUNCTIONS_ARRAY_URI.toASCIIString());
-  /**
-   * The namespace URI for Metapath map-related built-in functions, as a URI.
-   *
-   * @see #PREFIX_METAPATH_FUNCTIONS_MAP for the default prefix for this namespace
-   */
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_MAP_URI = ObjectUtils.requireNonNull(
-      URI.create(NS_METAPATH_FUNCTIONS + "/map"));
+  public static final String NS_METAPATH_FUNCTIONS_ARRAY = NS_METAPATH_FUNCTIONS + "/array";
   /**
    * The namespace URI for Metapath map-related built-in functions, as a string.
    *
    * @see #PREFIX_METAPATH_FUNCTIONS_MAP for the default prefix for this namespace
    */
   @NonNull
-  public static final String NS_METAPATH_FUNCTIONS_MAP = ObjectUtils.requireNonNull(
-      NS_METAPATH_FUNCTIONS_MAP_URI.toASCIIString());
-  /**
-   * The namespace URI for Metapath extension built-in functions, as a URI.
-   * <p>
-   * This is currently an alias for {@link #NS_METAPATH_FUNCTIONS} and can be used
-   * when implementing custom extension functions to distinguish them from core
-   * functions.
-   */
-  @NonNull
-  public static final URI NS_METAPATH_FUNCTIONS_EXTENDED_URI = NS_METAPATH_FUNCTIONS_URI;
+  public static final String NS_METAPATH_FUNCTIONS_MAP = NS_METAPATH_FUNCTIONS + "/map";
   /**
    * The namespace URI for Metapath extension built-in functions, as a string.
    * <p>
@@ -107,8 +56,7 @@ public final class MetapathConstants {
    * functions.
    */
   @NonNull
-  public static final String NS_METAPATH_FUNCTIONS_EXTENDED = ObjectUtils.requireNonNull(
-      NS_METAPATH_FUNCTIONS_EXTENDED_URI.toASCIIString());
+  public static final String NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH_FUNCTIONS;
 
   /**
    * The namespace prefix for Metapath data types and built-in casting functions.

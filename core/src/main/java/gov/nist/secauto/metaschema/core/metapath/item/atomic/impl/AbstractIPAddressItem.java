@@ -12,10 +12,23 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.IPAddress;
 
+/**
+ * An abstract implementation of a Metapath atomic item representing an IP
+ * address-based data value.
+ *
+ * @param <TYPE>
+ *          the Java type of the data value
+ */
 public abstract class AbstractIPAddressItem<TYPE extends IPAddress>
     extends AbstractAnyAtomicItem<TYPE>
     implements IIPAddressItem {
 
+  /**
+   * Construct a new item.
+   *
+   * @param value
+   *          the item's data value
+   */
   protected AbstractIPAddressItem(@NonNull TYPE value) {
     super(value);
   }

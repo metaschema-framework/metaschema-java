@@ -9,6 +9,9 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The key value used in an {@link IMapItem}.
+ */
 public interface IMapKey {
 
   /**

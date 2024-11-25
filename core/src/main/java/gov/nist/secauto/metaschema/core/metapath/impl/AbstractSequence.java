@@ -13,6 +13,13 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The base class for {@link ISequence} implementations, that provides an
+ * implementation of common methods.
+ *
+ * @param <ITEM>
+ *          the Java type of the items contained within the sequence
+ */
 public abstract class AbstractSequence<ITEM extends IItem>
     extends ImmutableCollections.AbstractImmutableDelegatedList<ITEM>
     implements ISequence<ITEM> {

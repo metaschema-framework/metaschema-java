@@ -11,8 +11,8 @@ import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapt
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.LocalDateTime;
@@ -33,9 +33,9 @@ public class DateTimeAdapter
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date-time"),
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "date-time"),
           // for backwards compatibility with original type name
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "dateTime")));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "dateTime")));
 
   DateTimeAdapter() {
     super(AmbiguousDateTime.class, IDateTimeItem.class, IDateTimeItem::cast);

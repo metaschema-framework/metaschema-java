@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateWithTimeZoneItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.DateTimeException;
@@ -32,7 +32,8 @@ public class DateWithTZAdapter
     extends AbstractDataTypeAdapter<ZonedDateTime, IDateWithTimeZoneItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
-      List.of(QNameCache.instance().of(MetapathConstants.NS_METAPATH, "date-with-timezone")));
+      List.of(
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "date-with-timezone")));
   private static final Pattern DATE_TIMEZONE = Pattern.compile("^("
       + "^(?:(?:2000|2400|2800|(?:19|2[0-9](?:0[48]|[2468][048]|[13579][26])))-02-29)"
       + "|(?:(?:(?:19|2[0-9])[0-9]{2})-02-(?:0[1-9]|1[0-9]|2[0-8]))"

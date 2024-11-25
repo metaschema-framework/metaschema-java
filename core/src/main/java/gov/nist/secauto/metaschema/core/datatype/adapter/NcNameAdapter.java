@@ -7,8 +7,8 @@ package gov.nist.secauto.metaschema.core.datatype.adapter;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INcNameItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -27,9 +27,9 @@ public class NcNameAdapter
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "ncname"),
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "ncname"),
           // for backwards compatibility with original type name
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "NCName")));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "NCName")));
   private static final Pattern NCNAME = Pattern.compile(String.format("^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$"));
 
   /**

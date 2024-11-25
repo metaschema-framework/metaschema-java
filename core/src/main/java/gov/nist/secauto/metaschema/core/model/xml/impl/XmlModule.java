@@ -271,7 +271,7 @@ public class XmlModule
                     (key, v1, v2) -> {
                       throw new ModelInitializationException(
                           String.format("Duplicate root QName '%s' for root assemblies: %s and %s in %s.",
-                              IEnhancedQName.of(key),
+                              IEnhancedQName.of(key).or(null),
                               v1.getName(),
                               v2.getName(),
                               XmlObjectParser.toLocation(cursor)));

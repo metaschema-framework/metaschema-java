@@ -7,8 +7,8 @@ package gov.nist.secauto.metaschema.core.datatype.adapter;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IPositiveIntegerItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigInteger;
@@ -26,9 +26,9 @@ public class PositiveIntegerAdapter
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "positive-integer"),
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "positive-integer"),
           // for backwards compatibility with original type name
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "positiveInteger")));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "positiveInteger")));
 
   PositiveIntegerAdapter() {
     super(IPositiveIntegerItem.class, IPositiveIntegerItem::cast);

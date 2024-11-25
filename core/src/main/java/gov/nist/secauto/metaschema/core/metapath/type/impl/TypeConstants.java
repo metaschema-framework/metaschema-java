@@ -12,10 +12,13 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPAddressItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides static instances for all abstract atomic types.
+ */
 @SuppressWarnings("PMD.DataClass")
 public final class TypeConstants {
 
@@ -27,7 +30,7 @@ public final class TypeConstants {
       = IAtomicOrUnionType.of(
           IAnyAtomicItem.class,
           IAnyAtomicItem::cast,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "any-atomic-type"));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "any-atomic-type"));
   /**
    * The Metaschema data type that represents all duration types.
    */
@@ -36,7 +39,7 @@ public final class TypeConstants {
       = IAtomicOrUnionType.of(
           IDurationItem.class,
           IDurationItem::cast,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "duration"));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "duration"));
   /**
    * The Metaschema data type that represents all IP address types.
    */
@@ -45,7 +48,7 @@ public final class TypeConstants {
       = IAtomicOrUnionType.of(
           IIPAddressItem.class,
           IIPAddressItem::cast,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "ip-address"));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "ip-address"));
   /**
    * The Metaschema data type that represents all numeric types.
    */
@@ -54,7 +57,7 @@ public final class TypeConstants {
       = IAtomicOrUnionType.of(
           INumericItem.class,
           INumericItem::cast,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "numeric"));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "numeric"));
   /**
    * The Metaschema data type that represents all temporal types that work with
    * dates and times.
@@ -64,7 +67,7 @@ public final class TypeConstants {
       = IAtomicOrUnionType.of(
           ITemporalItem.class,
           ITemporalItem::cast,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "temporal"));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "temporal"));
 
   private TypeConstants() {
     // disable construction

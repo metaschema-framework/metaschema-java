@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.nio.ByteBuffer;
@@ -30,9 +30,9 @@ public class Base64Adapter
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "base64"),
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "base64"),
           // for backwards compatibility with original type name
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "base64Binary")));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "base64Binary")));
 
   Base64Adapter() {
     super(ByteBuffer.class, IBase64BinaryItem.class, IBase64BinaryItem::cast);

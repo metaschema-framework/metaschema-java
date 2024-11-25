@@ -13,9 +13,9 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyFunctionItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyKindTest;
-import gov.nist.secauto.metaschema.core.metapath.type.impl.AnyRawItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.ArrayTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.KindAssemblyTestImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.KindDocumentTestImpl;
@@ -52,7 +52,7 @@ public interface IItemType {
    * @return the function test
    */
   static IItemType function() {
-    return AnyRawItemType.ANY_FUNCTION;
+    return AnyFunctionItemType.ANY_FUNCTION;
   }
 
   // static IFunctionTest function(@NonNull ISequenceType result, @NonNull
@@ -67,7 +67,7 @@ public interface IItemType {
    */
   @NonNull
   static IItemType map() {
-    return AnyRawItemType.ANY_MAP;
+    return AnyFunctionItemType.ANY_MAP;
   }
 
   /**
@@ -94,7 +94,7 @@ public interface IItemType {
    */
   @NonNull
   static IItemType array() {
-    return AnyRawItemType.ANY_ARRAY;
+    return AnyFunctionItemType.ANY_ARRAY;
   }
 
   /**
@@ -122,7 +122,7 @@ public interface IItemType {
   }
 
   /**
-   * Get a new kind test that matches any node item.
+   * Get a new kind test that matches any {@link INodeItem}.
    *
    * @return the node kind test
    */
@@ -132,7 +132,7 @@ public interface IItemType {
   }
 
   /**
-   * Get a new kind test that matches any Metaschema module.
+   * Get a new kind test that matches any Metaschema {@link IModuleNodeItem}.
    *
    * @return the module kind test
    */
@@ -142,7 +142,7 @@ public interface IItemType {
   }
 
   /**
-   * Get a new kind test that matches any document.
+   * Get a new kind test that matches any {@link IDocumentNodeItem}.
    *
    * @param test
    *          the root node test
@@ -154,8 +154,8 @@ public interface IItemType {
   }
 
   /**
-   * Get a new kind test that that matches a document that has a root node of the
-   * provided kind.
+   * Get a new kind test that that matches an {@link IDocumentNodeItem} that has a
+   * root node of the provided kind.
    *
    * @param test
    *          the root node test
@@ -167,7 +167,7 @@ public interface IItemType {
   }
 
   /**
-   * Matches any assembly regardless of its name or type.
+   * Matches any {@link IAssemblyNodeItem} regardless of its name or type.
    *
    * @return the test
    */
@@ -177,8 +177,9 @@ public interface IItemType {
   }
 
   /**
-   * Matches an assembly with the provided name and a type matching the provided
-   * name of a specific assembly definition.
+   * Get a new kind test that matches a {@link IAssemblyNodeItem} with the
+   * provided name and a type matching the provided name of a specific assembly
+   * definition.
    * <p>
    * If used as part of a document kind test, the the provided
    * {@code instanceName} will match the root assembly name of the document's
@@ -202,8 +203,8 @@ public interface IItemType {
   }
 
   /**
-   * Matches an assembly with any name and a type matching the provided name of a
-   * specific assembly definition.
+   * Get a new kind test that matches an {@link IAssemblyNodeItem} with any name
+   * and a type matching the provided name of a specific assembly definition.
    *
    * @param typeName
    *          the name of the assembly definition to match
@@ -219,7 +220,7 @@ public interface IItemType {
   }
 
   /**
-   * Matches any field regardless of its name or type.
+   * Matches any {@link IFieldNodeItem} regardless of its name or type.
    *
    * @return the test
    */
@@ -229,8 +230,8 @@ public interface IItemType {
   }
 
   /**
-   * Matches an field with the provided name and a type matching the provided name
-   * of a specific field definition.
+   * Matches any {@link IFieldNodeItem} with the provided name and a type matching
+   * the provided name of a specific field definition.
    *
    * @param instanceName
    *          the name of the field instance to match depending on the use context
@@ -249,8 +250,8 @@ public interface IItemType {
   }
 
   /**
-   * Matches an field with any name and a type matching the provided name of a
-   * specific field definition.
+   * Matches any {@link IFieldNodeItem} with a name and type matching the provided
+   * name of a specific field definition.
    *
    * @param typeName
    *          the name of the field definition to match
@@ -264,7 +265,7 @@ public interface IItemType {
   }
 
   /**
-   * Matches any flag regardless of its name or type.
+   * Matches any {@link IFlagNodeItem} regardless of its name or type.
    *
    * @return the test
    */
@@ -274,8 +275,8 @@ public interface IItemType {
   }
 
   /**
-   * Matches an flag with the provided name and a type matching the provided name
-   * of a specific globally-scoped flag definition.
+   * Matches any {@link IFlagNodeItem} with the provided name and type matching
+   * the provided name of a specific globally-scoped flag definition.
    *
    * @param instanceName
    *          the name of the flag instance to match
@@ -294,8 +295,8 @@ public interface IItemType {
   }
 
   /**
-   * Matches an flag with any name and a type matching the provided name of a
-   * specific globally-scoped flag definition.
+   * Matches any {@link IFlagNodeItem} with any name and type matching the
+   * provided name of a specific globally-scoped flag definition.
    *
    * @param typeName
    *          the name of the globally-scoped flag definition to match

@@ -14,18 +14,21 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Tests that that a given item is an {@link IDocumentNodeItem} that has a root
+ * node of the provided kind.
+ */
 public class KindDocumentTestImpl implements IKindTest<IDocumentNodeItem> {
-  @NonNull
-  public static final KindDocumentTestImpl ANY = new KindDocumentTestImpl();
   private final IKindTest<IAssemblyNodeItem> assemblyTest;
   @NonNull
   private final String signature;
 
-  private KindDocumentTestImpl() {
-    this.assemblyTest = null;
-    this.signature = "document()";
-  }
-
+  /**
+   * Construct a new test.
+   *
+   * @param assemblyTest
+   *          the root node test
+   */
   public KindDocumentTestImpl(@NonNull IKindTest<IAssemblyNodeItem> assemblyTest) {
     this.assemblyTest = assemblyTest;
 

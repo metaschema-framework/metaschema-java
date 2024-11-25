@@ -9,8 +9,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -28,10 +28,9 @@ import java.util.ServiceLoader.Provider;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
@@ -167,10 +166,13 @@ public final class DataTypeService {
    * @return the data type or {@code null} if the data type is unknown to the type
    *         system
    */
+  @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive")
   @Nullable
-  public IAtomicOrUnionType<?> getAtomicTypeByQName(@NonNull QName qname) {
-    IEnhancedQName result = QNameCache.instance().get(qname);
-    return result == null ? null : getAtomicTypeByQNameIndex(result.getIndexPosition());
+  public IAtomicOrUnionType<?> getAtomicTypeByQName(@NonNull IEnhancedQName qname) {
+    return EQNameFactory.instance()
+        .get(qname.getIndexPosition())
+        .map(name -> getAtomicTypeByQNameIndex(name.getIndexPosition()))
+        .orElse(null);
   }
 
   /**

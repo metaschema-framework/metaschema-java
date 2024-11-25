@@ -12,11 +12,24 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An abstract implementation of a Metapath atomic item representing a
+ * markup-based data value.
+ *
+ * @param <TYPE>
+ *          the Java type of this markup item
+ */
 public abstract class AbstractMarkupItem<TYPE extends IMarkupString<TYPE>>
     extends AbstractAnyAtomicItem<TYPE>
     implements IMarkupItem {
 
-  public AbstractMarkupItem(@NonNull TYPE value) {
+  /**
+   * Construct a new item.
+   *
+   * @param value
+   *          the item's data value
+   */
+  protected AbstractMarkupItem(@NonNull TYPE value) {
     super(value);
   }
 

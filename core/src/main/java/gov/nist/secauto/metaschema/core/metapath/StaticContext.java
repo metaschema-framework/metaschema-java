@@ -64,7 +64,7 @@ public final class StaticContext {
     WELL_KNOWN_NAMESPACES = CollectionUtil.unmodifiableMap(knownNamespaces);
 
     WELL_KNOWN_NAMESPACES.forEach(
-        (prefix, namespace) -> NamespaceCache.instance().of(ObjectUtils.notNull(namespace)));
+        (prefix, namespace) -> NamespaceCache.instance().indexOf(ObjectUtils.notNull(namespace)));
 
     WELL_KNOWN_URI_TO_PREFIX = ObjectUtils.notNull(WELL_KNOWN_NAMESPACES.entrySet().stream()
         .collect(Collectors.toUnmodifiableMap(
@@ -217,6 +217,31 @@ public final class StaticContext {
     return defaultFunctionNamespace;
   }
 
+  /**
+   * Parse the name of an atomic type.
+   *
+   * <p>
+   * This method will attempt to identify the namespace corresponding to a given
+   * prefix.
+   * <p>
+   * The prefix will be resolved using the following lookup order, advancing to
+   * the next when a {@code null} value is returned:
+   * <ol>
+   * <li>Lookup the prefix using the namespaces registered with the static
+   * context.</li>
+   * <li>Lookup the prefix in the well-known namespaces.</li>
+   * </ol>
+   *
+   * If an empty prefix is provided, the {@link MetapathConstants#NS_METAPATH}
+   * namespace will be used.</li>
+   *
+   * @param name
+   *          the name
+   * @return the parsed qualified name
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
+   *           if a non-empty prefix is provided
+   */
   @NonNull
   public IEnhancedQName parseAtomicTypeName(@NonNull String name) {
     return EQNameFactory.instance().parseName(
@@ -425,8 +450,10 @@ public final class StaticContext {
    * <li>Lookup the prefix using the namespaces registered with the static
    * context.</li>
    * <li>Lookup the prefix in the well-known namespaces.</li>
-   * <li>Use {@link XMLConstants#NULL_NS_URI}.</li>
    * </ol>
+   *
+   * If an empty prefix is provided, the {@link XMLConstants#NULL_NS_URI}
+   * namespace will be used.</li>
    *
    * @param name
    *          the name
@@ -462,9 +489,9 @@ public final class StaticContext {
    * <li>Lookup the prefix using the namespaces registered with the static
    * context.</li>
    * <li>Lookup the prefix in the well-known namespaces.</li>
-   * <li>Use the default model namespace (see
-   * {@link Builder#defaultModelNamespace(String)}).</li>
    * </ol>
+   * If an empty prefix is provided, the
+   * {@link Builder#defaultModelNamespace(String)} namespace will be used.</li>
    *
    * @param name
    *          the name
@@ -500,8 +527,9 @@ public final class StaticContext {
    * <li>Lookup the prefix using the namespaces registered with the static
    * context.</li>
    * <li>Lookup the prefix in the well-known namespaces.</li>
-   * <li>Use {@link XMLConstants#NULL_NS_URI}.</li>
    * </ol>
+   * If an empty prefix is provided, the {@link XMLConstants#NULL_NS_URI}
+   * namespace will be used.</li>
    *
    * @param name
    *          the name
@@ -627,7 +655,7 @@ public final class StaticContext {
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull String uri) {
       this.namespaces.put(prefix, uri);
-      NamespaceCache.instance().of(uri);
+      NamespaceCache.instance().indexOf(uri);
       return this;
     }
 
@@ -643,7 +671,7 @@ public final class StaticContext {
     public Builder defaultModelNamespace(@NonNull URI namespace) {
       String uri = ObjectUtils.notNull(namespace.toASCIIString());
       this.defaultModelNamespace = uri;
-      NamespaceCache.instance().of(uri);
+      NamespaceCache.instance().indexOf(uri);
       return this;
     }
 
@@ -663,7 +691,7 @@ public final class StaticContext {
       } catch (URISyntaxException ex) {
         throw new IllegalArgumentException(ex);
       }
-      NamespaceCache.instance().of(uri);
+      NamespaceCache.instance().indexOf(uri);
       return this;
     }
 
@@ -679,7 +707,7 @@ public final class StaticContext {
     public Builder defaultFunctionNamespace(@NonNull URI namespace) {
       String uri = ObjectUtils.notNull(namespace.toASCIIString());
       this.defaultFunctionNamespace = uri;
-      NamespaceCache.instance().of(uri);
+      NamespaceCache.instance().indexOf(uri);
       return this;
     }
 
@@ -699,7 +727,7 @@ public final class StaticContext {
       } catch (URISyntaxException ex) {
         throw new IllegalArgumentException(ex);
       }
-      NamespaceCache.instance().of(uri);
+      NamespaceCache.instance().indexOf(uri);
       return this;
     }
 

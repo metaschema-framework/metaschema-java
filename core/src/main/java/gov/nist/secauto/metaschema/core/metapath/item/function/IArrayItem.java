@@ -5,19 +5,15 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.IPrintable;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.ArrayItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
-import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -46,6 +42,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 @SuppressWarnings({ "PMD.ShortMethodName", "PMD.ExcessivePublicCount" })
 public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, IItem, List<ITEM>, IPrintable {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
   static IItemType type() {
     return IItemType.array();
@@ -61,59 +62,6 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
   @NonNull
   static <T extends ICollectionValue> IArrayItem<T> empty() {
     return AbstractArrayItem.empty();
-  }
-
-  @Override
-  default IEnhancedQName getQName() {
-    return AbstractArrayItem.QNAME;
-  }
-
-  @Override
-  default Set<FunctionProperty> getProperties() {
-    return AbstractArrayItem.PROPERTIES;
-  }
-
-  @Override
-  default boolean isDeterministic() {
-    return true;
-  }
-
-  @Override
-  default boolean isContextDepenent() {
-    return false;
-  }
-
-  @Override
-  default boolean isFocusDepenent() {
-    return false;
-  }
-
-  @Override
-  default List<IArgument> getArguments() {
-    return AbstractArrayItem.ARGUMENTS;
-  }
-
-  @Override
-  default int arity() {
-    return 1;
-  }
-
-  @Override
-  default boolean isArityUnbounded() {
-    return false;
-  }
-
-  @Override
-  default ISequenceType getResult() {
-    return AbstractArrayItem.RESULT;
-  }
-
-  @Override
-  ISequence<?> execute(List<? extends ISequence<?>> arguments, DynamicContext dynamicContext, ISequence<?> focus);
-
-  @Override
-  default String toSignature() {
-    return "array()";
   }
 
   @Override

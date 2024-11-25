@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
-public class QNameCache {
+final class QNameCache {
   @NonNull
   private static final Lazy<QNameCache> INSTANCE = ObjectUtils.notNull(Lazy.lazy(QNameCache::new));
 
@@ -34,6 +34,11 @@ public class QNameCache {
    */
   private final AtomicInteger indexCounter = new AtomicInteger();
 
+  /**
+   * Get the singleton qualified name cache.
+   *
+   * @return the singleton instance
+   */
   @NonNull
   public static QNameCache instance() {
     return ObjectUtils.notNull(INSTANCE.get());
@@ -44,36 +49,20 @@ public class QNameCache {
     this(NamespaceCache.instance());
   }
 
-  public QNameCache(@NonNull NamespaceCache nsCache) {
+  private QNameCache(@NonNull NamespaceCache nsCache) {
     this.namespaceCache = nsCache;
   }
 
   @NonNull
-  public NamespaceCache getNamespaceCache() {
+  private NamespaceCache getNamespaceCache() {
     return namespaceCache;
   }
 
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
-  public IEnhancedQName of(@NonNull URI namespace, @NonNull String name) {
-    return of(
-        ObjectUtils.notNull(namespace.toASCIIString()),
-        name);
-  }
+  IEnhancedQName of(@NonNull String namespace, @NonNull String name) {
 
-  @SuppressWarnings("PMD.ShortMethodName")
-  @NonNull
-  public IEnhancedQName of(@NonNull QName qname) {
-    return of(
-        ObjectUtils.notNull(qname.getNamespaceURI()),
-        ObjectUtils.notNull(qname.getLocalPart()));
-  }
-
-  @SuppressWarnings("PMD.ShortMethodName")
-  @NonNull
-  public IEnhancedQName of(@NonNull String namespace, @NonNull String name) {
-
-    int namespacePosition = namespaceCache.of(namespace);
+    int namespacePosition = namespaceCache.indexOf(namespace);
 
     Map<String, QNameRecord> namespaceNames = nsIndexToLocalNameToIndex
         .computeIfAbsent(namespacePosition, key -> new ConcurrentHashMap<>());
@@ -87,14 +76,14 @@ public class QNameCache {
   }
 
   @Nullable
-  public IEnhancedQName get(@NonNull QName qname) {
+  IEnhancedQName get(@NonNull QName qname) {
     return get(
         ObjectUtils.notNull(qname.getNamespaceURI()),
         ObjectUtils.notNull(qname.getLocalPart()));
   }
 
   @Nullable
-  public IEnhancedQName get(@NonNull String namespace, @NonNull String name) {
+  IEnhancedQName get(@NonNull String namespace, @NonNull String name) {
     Optional<Integer> nsPosition = namespaceCache.get(namespace);
     if (!nsPosition.isPresent()) {
       throw new IllegalArgumentException(
@@ -108,7 +97,7 @@ public class QNameCache {
   }
 
   @Nullable
-  public IEnhancedQName get(int index) {
+  IEnhancedQName get(int index) {
     return indexToQName.get(index);
   }
 

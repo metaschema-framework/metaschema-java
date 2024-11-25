@@ -7,6 +7,9 @@ package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
+/**
+ * An implementation of a {@link IMapKey} that uses a string-based value.
+ */
 public abstract class AbstractStringMapKey
     implements IMapKey {
 
@@ -18,7 +21,7 @@ public abstract class AbstractStringMapKey
   @Override
   public boolean equals(Object obj) {
     return this == obj ||
-        (obj instanceof AbstractStringMapKey
-            && getKey().asStringItem().equals(((AbstractStringMapKey) obj).getKey().asStringItem()));
+        obj instanceof AbstractStringMapKey
+            && getKey().asStringItem().equals(((AbstractStringMapKey) obj).getKey().asStringItem());
   }
 }

@@ -79,7 +79,7 @@ public class FlagContainerBuilder<T extends IFlagInstance> implements IFlagConta
       IModelDefinition owningDefinition = shadowing.getContainingDefinition();
       IModule module = owningDefinition.getContainingModule();
       LOGGER.error("Unexpected duplicate flag instance name '%s' in definition '%s' in module name '%s' at '%s'",
-          EQNameFactory.instance().get(keyIndex),
+          EQNameFactory.instance().get(keyIndex).or(null),
           owningDefinition.getDefinitionQName(),
           module.getShortName(),
           module.getLocation());

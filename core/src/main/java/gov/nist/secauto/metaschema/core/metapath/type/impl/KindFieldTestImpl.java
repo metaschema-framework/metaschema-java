@@ -9,15 +9,28 @@ import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Tests that that a given item is an {@link IFieldNodeItem} with the provided
+ * node and type name.
+ */
 public class KindFieldTestImpl
     extends AbstractDefinitionTest<IFieldNodeItem>
     implements IKindTest<IFieldNodeItem> {
 
+  /**
+   * Construct a new test.
+   *
+   * @param instanceName
+   *          the name of the node
+   * @param typeName
+   *          the expected definition or atomic type name to check against
+   * @param staticContext
+   *          used to resolve definition names and lookup atomic type names
+   */
   public KindFieldTestImpl(
       @Nullable IEnhancedQName instanceName,
       @Nullable String typeName,
@@ -32,7 +45,8 @@ public class KindFieldTestImpl
 
   @Override
   protected boolean matchesType(IFieldNodeItem item) {
+    String typeName = getTypeName();
     return typeName == null
-        || DynamicTypeSupport.derivesFrom(item, ObjectUtils.notNull(typeName), getTestStaticContext());
+        || DynamicTypeSupport.derivesFrom(item, typeName, getTestStaticContext());
   }
 }

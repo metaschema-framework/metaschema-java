@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
+import java.util.Optional;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -16,47 +17,115 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * An efficient cache-backed representation of a qualified name.
+ * <p>
+ * This implementation uses an underlying integer-based cache to reduce the
+ * memory footprint of qualified names and namespaces by reusing instances with
+ * the same namespace and local name.
+ */
 public interface IEnhancedQName {
+  /**
+   * Get the index position of the qualified name.
+   * <p>
+   * This value can be used in place of this object. The object can be retrieved
+   * using this index with the {@link #of(int)} method.
+   *
+   * @return the index position
+   */
   int getIndexPosition();
 
+  /**
+   * Get the namespace part of the qualified name.
+   *
+   * @return the namespace
+   */
   @NonNull
   String getNamespace();
 
+  /**
+   * Get the namespace part of the qualified name.
+   *
+   * @return the namespace as a URI
+   */
   @NonNull
   URI getNamespaceAsUri();
 
+  /**
+   * Get the local part of the qualified name.
+   *
+   * @return the local name
+   */
   @NonNull
   String getLocalName();
 
+  /**
+   * Get an existing qualified name by looking up the cached entry using the
+   * provided index value.
+   *
+   * @param index
+   *          the index value to lookup
+   * @return an optional containing the qualified name, if it exists
+   */
   @SuppressWarnings("PMD.ShortMethodName")
-  @Nullable
-  static IEnhancedQName of(int index) {
+  @NonNull
+  static Optional<IEnhancedQName> of(int index) {
     return EQNameFactory.instance().get(index);
   }
 
+  /**
+   * Get a qualified name using the provided {@link QName} value.
+   *
+   * @param qname
+   *          the qualified name to get
+   * @return the qualified name
+   */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull QName qname) {
-    return EQNameFactory.instance().newQName(qname);
+    return of(ObjectUtils.notNull(qname.getNamespaceURI()), ObjectUtils.notNull(qname.getLocalPart()));
   }
 
+  /**
+   * Get a qualified name using the provided local name value with no namespace.
+   *
+   * @param localName
+   *          the qualified name local part
+   * @return the qualified name
+   */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull String localName) {
-    return EQNameFactory.instance().newQName(localName);
+    return of("", localName);
   }
 
-  @SuppressWarnings("PMD.ShortMethodName")
-  @NonNull
-  static IEnhancedQName of(@NonNull String namespace, @NonNull String localName) {
-    return namespace.isEmpty()
-        ? EQNameFactory.instance().newQName(localName)
-        : EQNameFactory.instance().newQName(namespace, localName);
-  }
-
+  /**
+   * Get a qualified name using the provided namespace and local name.
+   *
+   * @param namespace
+   *          the qualified name namespace part
+   * @param localName
+   *          the qualified name local part
+   * @return the qualified name
+   */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull URI namespace, @NonNull String localName) {
+    return of(ObjectUtils.notNull(namespace.toASCIIString()), localName);
+  }
+
+  /**
+   * Get a qualified name using the provided namespace and local name.
+   *
+   * @param namespace
+   *          the qualified name namespace part
+   * @param localName
+   *          the qualified name local part
+   * @return the qualified name
+   */
+  @SuppressWarnings("PMD.ShortMethodName")
+  @NonNull
+  static IEnhancedQName of(@NonNull String namespace, @NonNull String localName) {
     return EQNameFactory.instance().newQName(namespace, localName);
   }
 
@@ -91,11 +160,23 @@ public interface IEnhancedQName {
         .toString());
   }
 
+  /**
+   * Generate a {@link QName} without a namespace prefix.
+   *
+   * @return the name
+   */
   @NonNull
   default QName toQName() {
     return toQName(XMLConstants.DEFAULT_NS_PREFIX);
   }
 
+  /**
+   * Generate a {@link QName} using the provided namespace prefix.
+   *
+   * @param prefix
+   *          the prefix to use
+   * @return the name
+   */
   @NonNull
   QName toQName(@NonNull String prefix);
 

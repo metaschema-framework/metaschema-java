@@ -16,11 +16,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * An abstract implementation of an atomic type backed by a data type adapter.
  *
- * @param <I>
+ * @param <T>
  *          the Java type of the item supported by the implementation
  */
-public class DataTypeItemType<I extends IAnyAtomicItem>
-    extends AbstractAtomicOrUnionType<I> {
+public class DataTypeItemType<T extends IAnyAtomicItem>
+    extends AbstractAtomicOrUnionType<T> {
   @NonNull
   private final IDataTypeAdapter<?> adapter;
 
@@ -36,8 +36,8 @@ public class DataTypeItemType<I extends IAnyAtomicItem>
    */
   public DataTypeItemType(
       @NonNull IDataTypeAdapter<?> adapter,
-      @NonNull Class<I> itemClass,
-      @NonNull ICastExecutor<I> castExecutor) {
+      @NonNull Class<T> itemClass,
+      @NonNull ICastExecutor<T> castExecutor) {
     super(itemClass, castExecutor);
     this.adapter = adapter;
   }

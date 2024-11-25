@@ -15,14 +15,30 @@ import java.util.Objects;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-public class NonAdapterAtomicItemType<I extends IAnyAtomicItem>
-    extends AbstractAtomicOrUnionType<I> {
+/**
+ * An abstract implementation of an abstract atomic type.
+ *
+ * @param <T>
+ *          the Java type of the item supported by the implementation
+ */
+public class NonAdapterAtomicItemType<T extends IAnyAtomicItem>
+    extends AbstractAtomicOrUnionType<T> {
   @NonNull
   private final IEnhancedQName qname;
 
+  /**
+   * Construct a new atomic type.
+   *
+   * @param itemClass
+   *          the item class this atomic type supports
+   * @param castExecutor
+   *          the executor used to cast an item to an item of this type
+   * @param qname
+   *          the qualified name of the data type
+   */
   public NonAdapterAtomicItemType(
-      @NonNull Class<I> itemClass,
-      @NonNull ICastExecutor<I> castExecutor,
+      @NonNull Class<T> itemClass,
+      @NonNull ICastExecutor<T> castExecutor,
       @NonNull IEnhancedQName qname) {
     super(itemClass, castExecutor);
     this.qname = qname;

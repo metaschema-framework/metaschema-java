@@ -26,6 +26,9 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A variety of collector and other stream utilities.
+ */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class CustomCollectors {
   /**

@@ -23,7 +23,7 @@ public interface ISequenceType {
    */
   @NonNull
   static ISequenceType empty() {
-    return SequenceTypeImpl.EMPTY;
+    return SequenceTypeImpl.empty();
   }
 
   /**

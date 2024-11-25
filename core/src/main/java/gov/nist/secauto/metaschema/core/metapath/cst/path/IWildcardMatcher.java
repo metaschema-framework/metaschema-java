@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.metapath.cst.impl.MatchAnyLocalName;
-import gov.nist.secauto.metaschema.core.metapath.cst.impl.MatchAnyNamespace;
+import gov.nist.secauto.metaschema.core.metapath.cst.type.MatchAnyLocalName;
+import gov.nist.secauto.metaschema.core.metapath.cst.type.MatchAnyNamespace;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 
 import java.util.function.Predicate;

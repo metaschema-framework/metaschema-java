@@ -9,7 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.qname.QNameCache;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -42,7 +42,7 @@ public final class MarkupDataTypeProvider
       = IAtomicOrUnionType.of(
           IMarkupItem.class,
           IMarkupItem::cast,
-          QNameCache.instance().of(MetapathConstants.NS_METAPATH, "markup"));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "markup"));
 
   /**
    * Create the data type provider.

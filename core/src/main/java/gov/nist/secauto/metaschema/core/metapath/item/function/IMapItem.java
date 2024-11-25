@@ -5,11 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.IPrintable;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.MapItemN;
@@ -17,14 +15,10 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
-import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -36,6 +30,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public interface IMapItem<VALUE extends ICollectionValue>
     extends IFunction, IItem, Map<IMapKey, VALUE>, IPrintable {
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
   @NonNull
   static IItemType type() {
     return IItemType.map();
@@ -51,59 +50,6 @@ public interface IMapItem<VALUE extends ICollectionValue>
   @NonNull
   static <V extends ICollectionValue> IMapItem<V> empty() {
     return AbstractMapItem.empty();
-  }
-
-  @Override
-  default IEnhancedQName getQName() {
-    return AbstractMapItem.QNAME;
-  }
-
-  @Override
-  default Set<FunctionProperty> getProperties() {
-    return AbstractMapItem.PROPERTIES;
-  }
-
-  @Override
-  default boolean isDeterministic() {
-    return true;
-  }
-
-  @Override
-  default boolean isContextDepenent() {
-    return false;
-  }
-
-  @Override
-  default boolean isFocusDepenent() {
-    return false;
-  }
-
-  @Override
-  default List<IArgument> getArguments() {
-    return AbstractMapItem.ARGUMENTS;
-  }
-
-  @Override
-  default int arity() {
-    return 1;
-  }
-
-  @Override
-  default boolean isArityUnbounded() {
-    return false;
-  }
-
-  @Override
-  default ISequenceType getResult() {
-    return AbstractMapItem.RESULT;
-  }
-
-  @Override
-  ISequence<?> execute(List<? extends ISequence<?>> arguments, DynamicContext dynamicContext, ISequence<?> focus);
-
-  @Override
-  default String toSignature() {
-    return "array()";
   }
 
   @Override
