@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -214,6 +215,16 @@ public final class DataTypeService {
   @Nullable
   public IItemType getItemTypeByItemClass(Class<? extends IItem> clazz) {
     return itemTypeByItemClass.get(clazz);
+  }
+
+  /**
+   * Get the collection of data type adapters provided by this service.
+   *
+   * @return the data type adapters
+   */
+  @NonNull
+  public Collection<? extends IDataTypeAdapter<?>> getDataTypes() {
+    return ObjectUtils.notNull(atomicTypeByAdapterClass.values());
   }
 
   /**

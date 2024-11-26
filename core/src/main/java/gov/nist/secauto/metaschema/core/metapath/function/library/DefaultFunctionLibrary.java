@@ -5,19 +5,11 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
+import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionLibrary;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INcNameItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INonNegativeIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IPositiveIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -254,70 +246,12 @@ public class DefaultFunctionLibrary
     registerFunction(MapRemove.SIGNATURE);
     // P3: https://www.w3.org/TR/xpath-functions-31/#func-map-for-each
 
-    // // xpath casting functions
-    // FIXME: add these
-    // registerFunction(
-    // CastFunction.signature(MetapathConstants.NS_XML_SCHEMA, "boolean",
-    // IBooleanItem.class, IBooleanItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "date", IDateItem.class, IDateItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "dateTime", IDateTimeItem.class,
-    // IDateTimeItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "decimal", IDecimalItem.class,
-    // IDecimalItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "duration", IDurationItem.class,
-    // IDurationItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "integer", IIntegerItem.class,
-    // IIntegerItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "NCName", INcNameItem.class,
-    // INcNameItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "nonNegativeInteger",
-    // INonNegativeIntegerItem.class,
-    // INonNegativeIntegerItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "positiveInteger",
-    // IPositiveIntegerItem.class,
-    // IPositiveIntegerItem::cast));
-    // registerFunction(CastFunction.signature(
-    // MetapathConstants.NS_XML_SCHEMA, "string", IStringItem.class,
-    // IStringItem::cast));
-
     // metapath casting functions
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "boolean", IBooleanItem.type(), IBooleanItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "date", IDateItem.type(), IDateItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "date-time", IDateTimeItem.type(), IDateTimeItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "decimal", IDecimalItem.type(), IDecimalItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "duration", IDurationItem.type(), IDurationItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "integer", IIntegerItem.type(), IIntegerItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH, "ncname", INcNameItem.type(), INcNameItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH,
-        "non-negative-integer",
-        INonNegativeIntegerItem.type(),
-        INonNegativeIntegerItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH,
-        "positive-integer",
-        IPositiveIntegerItem.type(),
-        IPositiveIntegerItem::cast));
-    registerFunction(CastFunction.signature(
-        MetapathConstants.NS_METAPATH,
-        "string",
-        IStringItem.type(),
-        IStringItem::cast));
+    DataTypeService.instance().getDataTypes().stream()
+        .map(IDataTypeAdapter::getItemType)
+        .forEachOrdered(type -> {
+          registerFunction(CastFunction.signature(type.getQName(), type, type::cast));
+        });
 
     // extra functions
     registerFunction(MpRecurseDepth.SIGNATURE_ONE_ARG);

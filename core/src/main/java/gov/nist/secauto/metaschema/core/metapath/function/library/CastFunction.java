@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -32,6 +33,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctionExecutor {
   @NonNull
   private final IAtomicOrUnionType.ICastExecutor<ITEM> castExecutor;
+
+  @NonNull
+  static <ITEM extends IAnyAtomicItem> IFunction signature(
+      @NonNull IEnhancedQName name,
+      @NonNull IAtomicOrUnionType<?> resulingAtomicType,
+      @NonNull IAtomicOrUnionType.ICastExecutor<ITEM> executor) {
+    return signature(name.getNamespace(), name.getLocalName(), resulingAtomicType, executor);
+  }
 
   @NonNull
   static <ITEM extends IAnyAtomicItem> IFunction signature(
