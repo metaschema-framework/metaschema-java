@@ -10,9 +10,12 @@ import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -29,7 +32,7 @@ public final class FnImplicitTimezone {
       .deterministic()
       .contextDependent()
       .focusIndependent()
-      .returnType(IDayTimeDurationItem.class)
+      .returnType(IDayTimeDurationItem.type())
       .returnOne()
       .functionHandler(FnImplicitTimezone::execute)
       .build();
@@ -57,6 +60,10 @@ public final class FnImplicitTimezone {
    */
   @NonNull
   public static IDayTimeDurationItem fnImplicitTimezone(@NonNull DynamicContext dynamicContext) {
-    return IDayTimeDurationItem.valueOf(dynamicContext.getImplicitTimeZone().toString());
+    ZonedDateTime now = dynamicContext.getCurrentDateTime();
+    return IDayTimeDurationItem.valueOf(ObjectUtils.notNull(
+        Duration.between(
+            now,
+            now.withZoneSameLocal(ZoneId.of("UTC")))));
   }
 }
