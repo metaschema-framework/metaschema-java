@@ -31,9 +31,9 @@ public abstract class AbstractAtomicItemBase<TYPE> implements IAnyAtomicItem {
   public String toSignature() {
     return ObjectUtils.notNull(new StringBuilder()
         .append(getType().toSignature())
-        .append("(")
+        .append('(')
         .append(getValueSignature())
-        .append(")")
+        .append(')')
         .toString());
   }
 

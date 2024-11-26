@@ -1154,16 +1154,12 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleArrowexpr(Metapath10.ArrowexprContext context) {
-    // FIXME: handle additional syntax for varef and parenthesized
-
     return handleGroupedNAiry(context, 0, 3, (ctx, idx, left) -> {
       // the next child is "=>"
       assert "=>".equals(ctx.getChild(idx).getText());
 
       int offset = (idx - 1) / 3;
 
-      Metapath10.ArrowfunctionspecifierContext fcCtx
-          = ctx.getChild(Metapath10.ArrowfunctionspecifierContext.class, offset);
       Metapath10.ArgumentlistContext argumentCtx = ctx.getChild(Metapath10.ArgumentlistContext.class, offset);
 
       try (Stream<IExpression> args = Stream.concat(
@@ -1171,12 +1167,35 @@ public class BuildCSTVisitor
           parseArgumentList(ObjectUtils.notNull(argumentCtx)))) {
         assert args != null;
 
-        List<IExpression> arguments = ObjectUtils.notNull(args.collect(Collectors.toUnmodifiableList()));
+        // prepend the focus
+        List<IExpression> arguments = ObjectUtils.notNull(args
+            .collect(Collectors.toUnmodifiableList()));
 
-        return new StaticFunctionCall(
-            () -> getContext().lookupFunction(
-                ObjectUtils.notNull(fcCtx.eqname().getText()),
-                arguments.size()),
+        Metapath10.ArrowfunctionspecifierContext arrowCtx
+            = ctx.getChild(Metapath10.ArrowfunctionspecifierContext.class, offset);
+        if (arrowCtx.eqname() != null) {
+          // named function
+          return new StaticFunctionCall(
+              () -> getContext().lookupFunction(ObjectUtils.notNull(arrowCtx.eqname().getText()), arguments.size()),
+              arguments);
+        }
+
+        IExpression result;
+        if (arrowCtx.varref() != null) {
+          // function instance or name reference
+          result = new VariableReference(getContext().parseVariableName(
+              ObjectUtils.notNull(arrowCtx.varref().varname().eqname().getText())));
+        } else if (arrowCtx.parenthesizedexpr() != null) {
+          // function expression
+          result = visit(arrowCtx.parenthesizedexpr().expr());
+        } else {
+          throw new StaticMetapathException(
+              StaticMetapathException.INVALID_PATH_GRAMMAR,
+              String.format("Unable to get function name using arrow specifier '%s'.", arrowCtx.getText()));
+        }
+
+        return new DynamicFunctionCall(
+            result,
             arguments);
       }
     });

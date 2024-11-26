@@ -11,14 +11,14 @@ public abstract class AbstractNodeItem implements INodeItem {
   public final String toSignature() {
     StringBuilder builder = new StringBuilder()
         .append(getType().toSignature())
-        .append("⪻")
+        .append('⪻')
         .append(getMetapath())
-        .append("⪼");
+        .append('⪼');
     String value = getValueSignature();
     if (value != null) {
-      builder.append("(");
-      builder.append(value);
-      builder.append(")");
+      builder.append('(')
+          .append(value)
+          .append(')');
     }
     return ObjectUtils.notNull(builder.toString());
   }

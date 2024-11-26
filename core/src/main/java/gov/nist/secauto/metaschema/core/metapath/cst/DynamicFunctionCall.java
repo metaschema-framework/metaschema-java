@@ -13,70 +13,52 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
- * Executes a function call based on the provided function and multiple argument
- * expressions that are used to determine the function arguments.
+ * Executes a function call based on a specifier expression that is used to
+ * dtermine the function and multiple argument expressions that are used to
+ * determine the function arguments.
  */
-
-public class StaticFunctionCall implements IExpression {
+public class DynamicFunctionCall implements IExpression {
   @NonNull
-  private final Lazy<IFunction> functionSupplier;
+  private final IExpression functionIdentifier;
   @NonNull
   private final List<IExpression> arguments;
 
   /**
    * Construct a new function call expression.
    *
-   * @param functionSupplier
-   *          the function supplier
+   * @param functionIdentifier
+   *          the function expression, identifying either a function or function
+   *          name
    * @param arguments
    *          the expressions used to provide arguments to the function call
    */
-  public StaticFunctionCall(@NonNull Supplier<IFunction> functionSupplier, @NonNull List<IExpression> arguments) {
-    // lazy fetches the function so that Metapaths can parse even if a function does
-    // not exist
-    this.functionSupplier = ObjectUtils.notNull(Lazy.lazy(functionSupplier));
+  public DynamicFunctionCall(@NonNull IExpression functionIdentifier, @NonNull List<IExpression> arguments) {
+    this.functionIdentifier = functionIdentifier;
     this.arguments = arguments;
-  }
-
-  /**
-   * Retrieve the associated function.
-   *
-   * @return the function or {@code null} if no function matched the defined name
-   *         and arguments
-   * @throws StaticMetapathException
-   *           if the function was not found
-   */
-  public IFunction getFunction() {
-    return functionSupplier.get();
   }
 
   @Override
   public List<IExpression> getChildren() {
-    return arguments;
+    return ObjectUtils.notNull(Stream.concat(
+        Stream.of(functionIdentifier),
+        arguments.stream())
+        .collect(Collectors.toUnmodifiableList()));
   }
 
   @Override
   public Class<? extends IItem> getBaseResultType() {
-    return getFunction().getResult().getType().getItemClass();
-  }
-
-  @SuppressWarnings("null")
-  @Override
-  public String toASTString() {
-    return String.format("%s[name=%s, arity=%d]", getClass().getName(), getFunction().getQName(),
-        getFunction().arity());
+    return IItem.class;
   }
 
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitStaticFunctionCall(this, context);
+    return visitor.visitDynamicFunctionCall(this, context);
   }
 
   @Override
@@ -84,7 +66,19 @@ public class StaticFunctionCall implements IExpression {
     List<ISequence<?>> arguments = ObjectUtils.notNull(this.arguments.stream()
         .map(expression -> expression.accept(dynamicContext, focus)).collect(Collectors.toList()));
 
-    IFunction function = getFunction();
+    IItem specifier = functionIdentifier.accept(dynamicContext, focus).getFirstItem(true);
+    IFunction function;
+    if (specifier instanceof IFunction) {
+      function = (IFunction) specifier;
+    } else if (specifier != null) {
+      function = dynamicContext.getStaticContext().lookupFunction(
+          specifier.toAtomicItem().asString(),
+          arguments.size());
+    } else {
+      throw new StaticMetapathException(
+          StaticMetapathException.NO_FUNCTION_MATCH,
+          "Unable to get function name. The error specifier is an empty sequence.");
+    }
     return function.execute(arguments, dynamicContext, focus);
   }
 }

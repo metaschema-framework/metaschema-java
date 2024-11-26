@@ -192,8 +192,13 @@ public final class CSTPrinter {
     }
 
     @Override
-    public String visitFunctionCall(StaticFunctionCall expr, State context) {
-      return appendNode(expr, super.visitFunctionCall(expr, context), context);
+    public String visitStaticFunctionCall(StaticFunctionCall expr, State context) {
+      return appendNode(expr, super.visitStaticFunctionCall(expr, context), context);
+    }
+
+    @Override
+    public String visitDynamicFunctionCall(DynamicFunctionCall expr, State context) {
+      return appendNode(expr, super.visitDynamicFunctionCall(expr, context), context);
     }
 
     @Override

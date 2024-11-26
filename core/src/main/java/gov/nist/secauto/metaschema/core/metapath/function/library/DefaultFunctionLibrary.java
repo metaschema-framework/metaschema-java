@@ -18,7 +18,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * <a href= "https://www.w3.org/TR/xpath-functions-31/">function
  * specification</a>.
  */
-@SuppressWarnings({ "removal" })
 @SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
 public class DefaultFunctionLibrary
     extends FunctionLibrary {

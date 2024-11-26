@@ -55,6 +55,7 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
    *
    * @return a new string item
    */
+  @NonNull
   default IStringItem asStringItem() {
     return IStringItem.valueOf(asString());
   }

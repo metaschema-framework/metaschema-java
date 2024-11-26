@@ -39,6 +39,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * The implementation of a Metapath
  * <a href="https://www.w3.org/TR/xpath-31/#static_context">static context</a>.
  */
+// FIXME: refactor well-known into a new class
 public final class StaticContext {
   @NonNull
   private static final Map<String, String> WELL_KNOWN_NAMESPACES;

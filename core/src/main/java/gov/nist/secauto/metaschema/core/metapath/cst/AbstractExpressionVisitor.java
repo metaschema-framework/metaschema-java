@@ -210,7 +210,12 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   }
 
   @Override
-  public RESULT visitFunctionCall(StaticFunctionCall expr, CONTEXT context) {
+  public RESULT visitStaticFunctionCall(StaticFunctionCall expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
+  public RESULT visitDynamicFunctionCall(DynamicFunctionCall expr, CONTEXT context) {
     return visitChildren(expr, context);
   }
 

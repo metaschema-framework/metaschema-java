@@ -197,7 +197,18 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    *          the processing context
    * @return the visitation result or {@code null} if no result was produced
    */
-  RESULT visitFunctionCall(@NonNull StaticFunctionCall expr, @NonNull CONTEXT context);
+  RESULT visitStaticFunctionCall(@NonNull StaticFunctionCall expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
+  RESULT visitDynamicFunctionCall(@NonNull DynamicFunctionCall expr, @NonNull CONTEXT context);
 
   /**
    * Visit the CST node.
