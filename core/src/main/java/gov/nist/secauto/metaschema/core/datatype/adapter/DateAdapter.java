@@ -76,7 +76,7 @@ public class DateAdapter
       return new AmbiguousDate(ObjectUtils.notNull(ZonedDateTime.from(accessor)), true); // NOPMD - readability
     } catch (DateTimeParseException ex) {
       try {
-        TemporalAccessor accessor = DateFormats.DATE_TIME_WITHOUT_TZ.parse(parseValue);
+        TemporalAccessor accessor = DateFormats.DATE_TIME_WITH_OPTIONAL_TZ.parse(parseValue);
         LocalDate date = LocalDate.from(accessor);
         return new AmbiguousDate(ObjectUtils.notNull(ZonedDateTime.of(date, LocalTime.MIN, ZoneOffset.UTC)), false);
       } catch (DateTimeParseException ex2) {
@@ -89,10 +89,10 @@ public class DateAdapter
 
   @Override
   public String asString(Object obj) {
-    AmbiguousDate value = (AmbiguousDate) obj;
+    AmbiguousDate value = toValue(obj);
     return ObjectUtils.notNull(value.hasTimeZone()
         ? DateFormats.DATE_WITH_TZ.format(value.getValue())
-        : DateFormats.DATE_WITHOUT_TZ.format(value.getValue()));
+        : DateFormats.DATE_WITH_OPTIONAL_TZ.format(value.getValue()));
   }
 
   @Override

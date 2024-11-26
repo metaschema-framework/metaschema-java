@@ -30,11 +30,6 @@ public abstract class AbstractDateTimeItem<TYPE>
   }
 
   @Override
-  public boolean hasTimezone() {
-    return true;
-  }
-
-  @Override
   public int hashCode() {
     return asZonedDateTime().hashCode();
   }

@@ -25,9 +25,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://www.w3.org/TR/xpath-functions-31/#func-implicit-timezone">fn:implicit-timezone</a>.
  */
 public final class FnImplicitTimezone {
+  private static final String NAME = "implicit-timezone";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("implicit-timezone")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()

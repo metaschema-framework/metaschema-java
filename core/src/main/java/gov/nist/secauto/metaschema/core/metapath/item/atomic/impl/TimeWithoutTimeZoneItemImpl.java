@@ -5,24 +5,24 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.DateTimeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
+import gov.nist.secauto.metaschema.core.datatype.adapter.TimeAdapter;
+import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousTime;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetTime;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An implementation of a Metapath atomic item containing a date/time data value
- * that may not have an explicit timezone.
+ * An implementation of a Metapath atomic item containing a time data value that
+ * may not have an explicit timezone.
  * <p>
  * For example, when parsing dates from data sources that don't specify timezone
  * information, such as "2024-01-01" as compared to "2024-01-01Z" or
  * "2024-01-01+05:00".
  */
-public class DateTimeWithoutTimeZoneItemImpl
-    extends AbstractDateTimeItem<AmbiguousDateTime> {
+public class TimeWithoutTimeZoneItemImpl
+    extends AbstractTimeItem<AmbiguousTime> {
 
   /**
    * Construct a new item with the provided {@code value}.
@@ -30,7 +30,7 @@ public class DateTimeWithoutTimeZoneItemImpl
    * @param value
    *          the value to wrap
    */
-  public DateTimeWithoutTimeZoneItemImpl(@NonNull AmbiguousDateTime value) {
+  public TimeWithoutTimeZoneItemImpl(@NonNull AmbiguousTime value) {
     super(value);
   }
 
@@ -40,12 +40,12 @@ public class DateTimeWithoutTimeZoneItemImpl
   }
 
   @Override
-  public ZonedDateTime asZonedDateTime() {
-    return getValue().getValue();
+  public TimeAdapter getJavaTypeAdapter() {
+    return MetaschemaDataTypeProvider.TIME;
   }
 
   @Override
-  public DateTimeAdapter getJavaTypeAdapter() {
-    return MetaschemaDataTypeProvider.DATE_TIME;
+  public OffsetTime asOffsetTime() {
+    return getValue().getValue();
   }
 }

@@ -77,7 +77,7 @@ public class DateTimeAdapter
 
   @NonNull
   private static AmbiguousDateTime parseWithoutTimeZone(@NonNull String value) {
-    LocalDateTime dateTime = LocalDateTime.from(DateFormats.DATE_TIME_WITHOUT_TZ.parse(value));
+    LocalDateTime dateTime = LocalDateTime.from(DateFormats.DATE_TIME_WITH_OPTIONAL_TZ.parse(value));
     return new AmbiguousDateTime(
         ObjectUtils.notNull(ZonedDateTime.of(dateTime, ZoneOffset.UTC)),
         false);
@@ -85,10 +85,10 @@ public class DateTimeAdapter
 
   @Override
   public String asString(Object obj) {
-    AmbiguousDateTime value = (AmbiguousDateTime) obj;
+    AmbiguousDateTime value = toValue(obj);
     return ObjectUtils.notNull(value.hasTimeZone()
         ? DateFormats.DATE_TIME_WITH_TZ.format(value.getValue())
-        : DateFormats.DATE_TIME_WITHOUT_TZ.format(value.getValue()));
+        : DateFormats.DATE_TIME_WITH_OPTIONAL_TZ.format(value.getValue()));
   }
 
   @Override

@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.datatype.object;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataType;
 
-import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -28,9 +28,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the bound object type that extends this class, used for proper type
  *          inheritance in implementing classes like {@code AmbiguousDate} or
  *          {@code AmbiguousDateTime}
+ * @param <U>
+ *          the Java type of the temporal value
  */
-public abstract class AbstractAmbiguousTemporal<TYPE extends AbstractAmbiguousTemporal<TYPE>>
-    extends AbstractCustomJavaDataType<TYPE, ZonedDateTime> {
+public abstract class AbstractAmbiguousTemporal<TYPE extends AbstractAmbiguousTemporal<TYPE, U>, U extends Temporal>
+    extends AbstractCustomJavaDataType<TYPE, U> {
   private final boolean timeZone;
 
   /**
@@ -43,7 +45,7 @@ public abstract class AbstractAmbiguousTemporal<TYPE extends AbstractAmbiguousTe
    *          {@code true} if the date is intended to have an associated time zone
    *          or {@code false} otherwise
    */
-  public AbstractAmbiguousTemporal(@NonNull ZonedDateTime value, boolean hasTimeZone) {
+  public AbstractAmbiguousTemporal(@NonNull U value, boolean hasTimeZone) {
     super(value);
     this.timeZone = hasTimeZone;
   }

@@ -166,6 +166,18 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   @NonNull
   public static final StringAdapter STRING = new StringAdapter();
   /**
+   * The Metaschema time data type instance.
+   */
+  // FIXME: add documentation link
+  @NonNull
+  public static final TimeAdapter TIME = new TimeAdapter();
+  /**
+   * The Metaschema time with timezone data type instance.
+   */
+  // FIXME: add documentation link
+  @NonNull
+  public static final TimeWithTZAdapter TIME_WITH_TZ = new TimeWithTZAdapter();
+  /**
    * The Metaschema <a href=
    * "https://pages.nist.gov/metaschema/specification/datatypes/#token">token</a>
    * data type instance.

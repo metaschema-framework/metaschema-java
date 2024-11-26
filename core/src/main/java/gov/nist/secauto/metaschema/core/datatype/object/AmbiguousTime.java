@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.datatype.object;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetTime;
 import java.util.Objects;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -14,8 +14,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Represents a date value which may not have a timezone making it ambiguous as
  * a window in time.
  */
-public class AmbiguousDate
-    extends AbstractAmbiguousTemporal<AmbiguousDate, ZonedDateTime> {
+public class AmbiguousTime
+    extends AbstractAmbiguousTemporal<AmbiguousTime, OffsetTime> {
 
   /**
    * Construct a new date object. This type supports ambiguous dates that were
@@ -29,13 +29,13 @@ public class AmbiguousDate
    *          {@code true} if the date is intended to have an associated time zone
    *          or {@code false} otherwise
    */
-  public AmbiguousDate(@NonNull ZonedDateTime value, boolean hasTimeZone) {
+  public AmbiguousTime(@NonNull OffsetTime value, boolean hasTimeZone) {
     super(value, hasTimeZone);
   }
 
   @Override
-  public AmbiguousDate copy() {
-    return new AmbiguousDate(getValue(), hasTimeZone());
+  public AmbiguousTime copy() {
+    return new AmbiguousTime(getValue(), hasTimeZone());
   }
 
   @Override
@@ -49,10 +49,10 @@ public class AmbiguousDate
     if (this == obj) {
       return true;
     }
-    if (!(obj instanceof AmbiguousDate)) {
+    if (!(obj instanceof AmbiguousTime)) {
       return false;
     }
-    AmbiguousDate other = (AmbiguousDate) obj;
+    AmbiguousTime other = (AmbiguousTime) obj;
     return hasTimeZone() == other.hasTimeZone() && getValue().equals(other.getValue());
   }
 }

@@ -75,7 +75,7 @@ public class DateWithTZAdapter
   @Override
   public String asString(Object value) {
     try {
-      return DateFormats.DATE_WITH_TZ.format((ZonedDateTime) value);
+      return DateFormats.DATE_WITH_TZ.format(toValue(value));
     } catch (DateTimeException ex) {
       throw new IllegalArgumentException(
           String.format("The provided value '%s' cannot be formatted as a date value. %s",

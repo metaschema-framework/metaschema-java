@@ -15,7 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * ambiguous as a point in time.
  */
 public class AmbiguousDateTime
-    extends AbstractAmbiguousTemporal<AmbiguousDateTime> {
+    extends AbstractAmbiguousTemporal<AmbiguousDateTime, ZonedDateTime> {
 
   /**
    * Construct a new date/time object. This type supports ambiguous dates/times

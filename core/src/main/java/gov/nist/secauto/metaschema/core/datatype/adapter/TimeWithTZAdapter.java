@@ -9,13 +9,13 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeWithTimeZoneItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeWithTimeZoneItem;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.DateTimeException;
-import java.time.ZonedDateTime;
+import java.time.OffsetTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -26,17 +26,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://pages.nist.gov/metaschema/specification/datatypes/#date-time-with-timezone">date-time-with-timezone</a>
  * data type.
  */
-public class DateTimeWithTZAdapter
-    extends AbstractDataTypeAdapter<ZonedDateTime, IDateTimeWithTimeZoneItem> {
+public class TimeWithTZAdapter
+    extends AbstractDataTypeAdapter<OffsetTime, ITimeWithTimeZoneItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
-          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "date-time-with-timezone"),
-          // for backwards compatibility with original type name
-          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "dateTime-with-timezone")));
+          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "time-with-timezone")));
 
-  DateTimeWithTZAdapter() {
-    super(ZonedDateTime.class, IDateTimeWithTimeZoneItem.class, IDateTimeWithTimeZoneItem::cast);
+  TimeWithTZAdapter() {
+    super(OffsetTime.class, ITimeWithTimeZoneItem.class, ITimeWithTimeZoneItem::cast);
   }
 
   @Override
@@ -51,9 +49,9 @@ public class DateTimeWithTZAdapter
 
   @SuppressWarnings("null")
   @Override
-  public ZonedDateTime parse(String value) {
+  public OffsetTime parse(String value) {
     try {
-      return ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(value));
+      return OffsetTime.from(DateFormats.TIME_WITH_TZ.parse(value));
     } catch (DateTimeParseException ex) {
       throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);
     }
@@ -63,10 +61,10 @@ public class DateTimeWithTZAdapter
   @Override
   public String asString(Object value) {
     try {
-      return DateFormats.DATE_TIME_WITH_TZ.format(toValue(value));
+      return DateFormats.TIME_WITH_TZ.format(toValue(value));
     } catch (DateTimeException ex) {
       throw new IllegalArgumentException(
-          String.format("The provided value '%s' cannot be formatted as a date/time value. %s",
+          String.format("The provided value '%s' cannot be formatted as a time value. %s",
               value.toString(),
               ex.getMessage()),
           ex);
@@ -75,13 +73,13 @@ public class DateTimeWithTZAdapter
 
   @SuppressWarnings("null")
   @Override
-  public ZonedDateTime copy(Object obj) {
-    return ZonedDateTime.from((ZonedDateTime) obj);
+  public OffsetTime copy(Object obj) {
+    return OffsetTime.from((OffsetTime) obj);
   }
 
   @Override
-  public IDateTimeWithTimeZoneItem newItem(Object value) {
-    ZonedDateTime item = toValue(value);
-    return IDateTimeWithTimeZoneItem.valueOf(item);
+  public ITimeWithTimeZoneItem newItem(Object value) {
+    OffsetTime item = toValue(value);
+    return ITimeWithTimeZoneItem.valueOf(item);
   }
 }

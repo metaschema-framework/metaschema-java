@@ -32,6 +32,11 @@ public class DateWithTimeZoneItemImpl
   }
 
   @Override
+  public boolean hasTimezone() {
+    return true;
+  }
+
+  @Override
   public ZonedDateTime asZonedDateTime() {
     return getValue();
   }
