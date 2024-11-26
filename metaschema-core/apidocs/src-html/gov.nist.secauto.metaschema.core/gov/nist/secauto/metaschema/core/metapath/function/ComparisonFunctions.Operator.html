@@ -19,21 +19,21 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.function;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.library.FnNot;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;</span>
-<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
-<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;</span>
-<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.function.library.FnNot;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;</span>
+<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;</span>
+<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;</span>
 <span class="source-line-no">024</span><span id="line-24"></span>
 <span class="source-line-no">025</span><span id="line-25">import java.util.Locale;</span>
 <span class="source-line-no">026</span><span id="line-26"></span>
@@ -160,10 +160,10 @@
 <span class="source-line-no">147</span><span id="line-147">      retval = IDecimalItem.cast(other);</span>
 <span class="source-line-no">148</span><span id="line-148">    } else if (item instanceof IDayTimeDurationItem) {</span>
 <span class="source-line-no">149</span><span id="line-149">      retval = IDayTimeDurationItem.cast(other);</span>
-<span class="source-line-no">150</span><span id="line-150">    } else if (item instanceof IDayTimeDurationItem) {</span>
+<span class="source-line-no">150</span><span id="line-150">    } else if (item instanceof IYearMonthDurationItem) {</span>
 <span class="source-line-no">151</span><span id="line-151">      retval = IYearMonthDurationItem.cast(other);</span>
 <span class="source-line-no">152</span><span id="line-152">    } else {</span>
-<span class="source-line-no">153</span><span id="line-153">      retval = item.getJavaTypeAdapter().cast(other);</span>
+<span class="source-line-no">153</span><span id="line-153">      retval = item.castAsType(other);</span>
 <span class="source-line-no">154</span><span id="line-154">    }</span>
 <span class="source-line-no">155</span><span id="line-155">    return retval;</span>
 <span class="source-line-no">156</span><span id="line-156">  }</span>

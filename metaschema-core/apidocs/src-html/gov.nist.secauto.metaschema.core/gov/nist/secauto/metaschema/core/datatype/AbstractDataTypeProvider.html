@@ -19,63 +19,101 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.datatype;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import java.util.ArrayList;</span>
-<span class="source-line-no">012</span><span id="line-12">import java.util.LinkedList;</span>
-<span class="source-line-no">013</span><span id="line-13">import java.util.List;</span>
-<span class="source-line-no">014</span><span id="line-14">import java.util.concurrent.locks.Lock;</span>
-<span class="source-line-no">015</span><span id="line-15">import java.util.concurrent.locks.ReadWriteLock;</span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.concurrent.locks.ReentrantReadWriteLock;</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">/**</span>
-<span class="source-line-no">021</span><span id="line-21"> * A base implementation of an {@link IDataTypeProvider}, supporting dynamic</span>
-<span class="source-line-no">022</span><span id="line-22"> * loading of Metaschema data type extensions at runtime.</span>
-<span class="source-line-no">023</span><span id="line-23"> * &lt;p&gt;</span>
-<span class="source-line-no">024</span><span id="line-24"> * The {@link MetaschemaDataTypeProvider} class provides an example of how to</span>
-<span class="source-line-no">025</span><span id="line-25"> * use this class to provide new data types.</span>
-<span class="source-line-no">026</span><span id="line-26"> */</span>
-<span class="source-line-no">027</span><span id="line-27">public abstract class AbstractDataTypeProvider implements IDataTypeProvider {</span>
-<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
-<span class="source-line-no">029</span><span id="line-29">  private final List&lt;IDataTypeAdapter&lt;?&gt;&gt; library = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
-<span class="source-line-no">031</span><span id="line-31">  private final ReadWriteLock libraryLock = new ReentrantReadWriteLock();</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">  @Override</span>
-<span class="source-line-no">034</span><span id="line-34">  public List&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; getJavaTypeAdapters() {</span>
-<span class="source-line-no">035</span><span id="line-35">    Lock readLock = libraryLock.readLock();</span>
-<span class="source-line-no">036</span><span id="line-36">    readLock.lock();</span>
-<span class="source-line-no">037</span><span id="line-37">    try {</span>
-<span class="source-line-no">038</span><span id="line-38">      // make a defensive copy to protect callers from potential modifications</span>
-<span class="source-line-no">039</span><span id="line-39">      return CollectionUtil.unmodifiableList(new ArrayList&lt;&gt;(library));</span>
-<span class="source-line-no">040</span><span id="line-40">    } finally {</span>
-<span class="source-line-no">041</span><span id="line-41">      readLock.unlock();</span>
-<span class="source-line-no">042</span><span id="line-42">    }</span>
-<span class="source-line-no">043</span><span id="line-43">  }</span>
-<span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">  /**</span>
-<span class="source-line-no">046</span><span id="line-46">   * Register the provided {@code adapter} with the type system.</span>
-<span class="source-line-no">047</span><span id="line-47">   *</span>
-<span class="source-line-no">048</span><span id="line-48">   * @param adapter</span>
-<span class="source-line-no">049</span><span id="line-49">   *          the adapter to register</span>
-<span class="source-line-no">050</span><span id="line-50">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">051</span><span id="line-51">   *           if another type adapter has no name</span>
-<span class="source-line-no">052</span><span id="line-52">   */</span>
-<span class="source-line-no">053</span><span id="line-53">  protected void registerDatatype(@NonNull IDataTypeAdapter&lt;?&gt; adapter) {</span>
-<span class="source-line-no">054</span><span id="line-54">    if (adapter.getNames().isEmpty()) {</span>
-<span class="source-line-no">055</span><span id="line-55">      throw new IllegalArgumentException("The adapter has no name: " + adapter.getClass().getName());</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">011</span><span id="line-11"></span>
+<span class="source-line-no">012</span><span id="line-12">import java.util.ArrayList;</span>
+<span class="source-line-no">013</span><span id="line-13">import java.util.LinkedList;</span>
+<span class="source-line-no">014</span><span id="line-14">import java.util.List;</span>
+<span class="source-line-no">015</span><span id="line-15">import java.util.concurrent.locks.Lock;</span>
+<span class="source-line-no">016</span><span id="line-16">import java.util.concurrent.locks.ReadWriteLock;</span>
+<span class="source-line-no">017</span><span id="line-17">import java.util.concurrent.locks.ReentrantReadWriteLock;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">020</span><span id="line-20"></span>
+<span class="source-line-no">021</span><span id="line-21">/**</span>
+<span class="source-line-no">022</span><span id="line-22"> * A base implementation of an {@link IDataTypeProvider}, supporting dynamic</span>
+<span class="source-line-no">023</span><span id="line-23"> * loading of Metaschema data type extensions at runtime.</span>
+<span class="source-line-no">024</span><span id="line-24"> * &lt;p&gt;</span>
+<span class="source-line-no">025</span><span id="line-25"> * The {@link MetaschemaDataTypeProvider} class provides an example of how to</span>
+<span class="source-line-no">026</span><span id="line-26"> * use this class to provide new data types.</span>
+<span class="source-line-no">027</span><span id="line-27"> */</span>
+<span class="source-line-no">028</span><span id="line-28">public abstract class AbstractDataTypeProvider implements IDataTypeProvider {</span>
+<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
+<span class="source-line-no">030</span><span id="line-30">  private final List&lt;IAtomicOrUnionType&lt;?&gt;&gt; abstractTypes = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
+<span class="source-line-no">032</span><span id="line-32">  private final List&lt;IDataTypeAdapter&lt;?&gt;&gt; library = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
+<span class="source-line-no">034</span><span id="line-34">  private final ReadWriteLock libraryLock = new ReentrantReadWriteLock();</span>
+<span class="source-line-no">035</span><span id="line-35"></span>
+<span class="source-line-no">036</span><span id="line-36">  @Override</span>
+<span class="source-line-no">037</span><span id="line-37">  public List&lt;? extends IAtomicOrUnionType&lt;?&gt;&gt; getAbstractTypes() {</span>
+<span class="source-line-no">038</span><span id="line-38">    Lock readLock = libraryLock.readLock();</span>
+<span class="source-line-no">039</span><span id="line-39">    readLock.lock();</span>
+<span class="source-line-no">040</span><span id="line-40">    try {</span>
+<span class="source-line-no">041</span><span id="line-41">      return CollectionUtil.unmodifiableList(new ArrayList&lt;&gt;(abstractTypes));</span>
+<span class="source-line-no">042</span><span id="line-42">    } finally {</span>
+<span class="source-line-no">043</span><span id="line-43">      readLock.unlock();</span>
+<span class="source-line-no">044</span><span id="line-44">    }</span>
+<span class="source-line-no">045</span><span id="line-45">  }</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">  @Override</span>
+<span class="source-line-no">048</span><span id="line-48">  public List&lt;? extends IDataTypeAdapter&lt;?&gt;&gt; getJavaTypeAdapters() {</span>
+<span class="source-line-no">049</span><span id="line-49">    Lock readLock = libraryLock.readLock();</span>
+<span class="source-line-no">050</span><span id="line-50">    readLock.lock();</span>
+<span class="source-line-no">051</span><span id="line-51">    try {</span>
+<span class="source-line-no">052</span><span id="line-52">      // make a defensive copy to protect callers from potential modifications</span>
+<span class="source-line-no">053</span><span id="line-53">      return CollectionUtil.unmodifiableList(new ArrayList&lt;&gt;(library));</span>
+<span class="source-line-no">054</span><span id="line-54">    } finally {</span>
+<span class="source-line-no">055</span><span id="line-55">      readLock.unlock();</span>
 <span class="source-line-no">056</span><span id="line-56">    }</span>
-<span class="source-line-no">057</span><span id="line-57">    Lock writeLock = libraryLock.writeLock();</span>
-<span class="source-line-no">058</span><span id="line-58">    writeLock.lock();</span>
-<span class="source-line-no">059</span><span id="line-59">    try {</span>
-<span class="source-line-no">060</span><span id="line-60">      library.add(adapter);</span>
-<span class="source-line-no">061</span><span id="line-61">    } finally {</span>
-<span class="source-line-no">062</span><span id="line-62">      writeLock.unlock();</span>
-<span class="source-line-no">063</span><span id="line-63">    }</span>
-<span class="source-line-no">064</span><span id="line-64">  }</span>
-<span class="source-line-no">065</span><span id="line-65">}</span>
+<span class="source-line-no">057</span><span id="line-57">  }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  /**</span>
+<span class="source-line-no">060</span><span id="line-60">   * Register the provided abstract {@link IAtomicOrUnionType} with the type</span>
+<span class="source-line-no">061</span><span id="line-61">   * system.</span>
+<span class="source-line-no">062</span><span id="line-62">   *</span>
+<span class="source-line-no">063</span><span id="line-63">   * @param type</span>
+<span class="source-line-no">064</span><span id="line-64">   *          the abstract type to register</span>
+<span class="source-line-no">065</span><span id="line-65">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">066</span><span id="line-66">   *           if the type is not abstract</span>
+<span class="source-line-no">067</span><span id="line-67">   */</span>
+<span class="source-line-no">068</span><span id="line-68">  protected void register(@NonNull IAtomicOrUnionType&lt;?&gt; type) {</span>
+<span class="source-line-no">069</span><span id="line-69">    if (type.getAdapter() != null) {</span>
+<span class="source-line-no">070</span><span id="line-70">      throw new IllegalArgumentException(</span>
+<span class="source-line-no">071</span><span id="line-71">          String.format("The type '%s' has an adapter and must be registered using the adapter.",</span>
+<span class="source-line-no">072</span><span id="line-72">              type.toSignature()));</span>
+<span class="source-line-no">073</span><span id="line-73">    }</span>
+<span class="source-line-no">074</span><span id="line-74">    Lock writeLock = libraryLock.writeLock();</span>
+<span class="source-line-no">075</span><span id="line-75">    writeLock.lock();</span>
+<span class="source-line-no">076</span><span id="line-76">    try {</span>
+<span class="source-line-no">077</span><span id="line-77">      abstractTypes.add(type);</span>
+<span class="source-line-no">078</span><span id="line-78">    } finally {</span>
+<span class="source-line-no">079</span><span id="line-79">      writeLock.unlock();</span>
+<span class="source-line-no">080</span><span id="line-80">    }</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">  /**</span>
+<span class="source-line-no">084</span><span id="line-84">   * Register the provided {@link IDataTypeAdapter} with the type system.</span>
+<span class="source-line-no">085</span><span id="line-85">   *</span>
+<span class="source-line-no">086</span><span id="line-86">   * @param adapter</span>
+<span class="source-line-no">087</span><span id="line-87">   *          the adapter to register</span>
+<span class="source-line-no">088</span><span id="line-88">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">089</span><span id="line-89">   *           if another type adapter has no name</span>
+<span class="source-line-no">090</span><span id="line-90">   */</span>
+<span class="source-line-no">091</span><span id="line-91">  protected void register(@NonNull IDataTypeAdapter&lt;?&gt; adapter) {</span>
+<span class="source-line-no">092</span><span id="line-92">    if (adapter.getNames().isEmpty()) {</span>
+<span class="source-line-no">093</span><span id="line-93">      throw new IllegalArgumentException("The adapter has no name: " + adapter.getClass().getName());</span>
+<span class="source-line-no">094</span><span id="line-94">    }</span>
+<span class="source-line-no">095</span><span id="line-95">    Lock writeLock = libraryLock.writeLock();</span>
+<span class="source-line-no">096</span><span id="line-96">    writeLock.lock();</span>
+<span class="source-line-no">097</span><span id="line-97">    try {</span>
+<span class="source-line-no">098</span><span id="line-98">      library.add(adapter);</span>
+<span class="source-line-no">099</span><span id="line-99">    } finally {</span>
+<span class="source-line-no">100</span><span id="line-100">      writeLock.unlock();</span>
+<span class="source-line-no">101</span><span id="line-101">    }</span>
+<span class="source-line-no">102</span><span id="line-102">  }</span>
+<span class="source-line-no">103</span><span id="line-103">}</span>
 
 
 

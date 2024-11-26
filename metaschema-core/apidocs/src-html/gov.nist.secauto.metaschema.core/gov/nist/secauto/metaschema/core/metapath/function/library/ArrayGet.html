@@ -51,15 +51,15 @@
 <span class="source-line-no">038</span><span id="line-38">      .focusIndependent()</span>
 <span class="source-line-no">039</span><span id="line-39">      .argument(IArgument.builder()</span>
 <span class="source-line-no">040</span><span id="line-40">          .name("array")</span>
-<span class="source-line-no">041</span><span id="line-41">          .type(IArrayItem.class)</span>
+<span class="source-line-no">041</span><span id="line-41">          .type(IArrayItem.type())</span>
 <span class="source-line-no">042</span><span id="line-42">          .one()</span>
 <span class="source-line-no">043</span><span id="line-43">          .build())</span>
 <span class="source-line-no">044</span><span id="line-44">      .argument(IArgument.builder()</span>
 <span class="source-line-no">045</span><span id="line-45">          .name("position")</span>
-<span class="source-line-no">046</span><span id="line-46">          .type(IIntegerItem.class)</span>
+<span class="source-line-no">046</span><span id="line-46">          .type(IIntegerItem.type())</span>
 <span class="source-line-no">047</span><span id="line-47">          .one()</span>
 <span class="source-line-no">048</span><span id="line-48">          .build())</span>
-<span class="source-line-no">049</span><span id="line-49">      .returnType(IItem.class)</span>
+<span class="source-line-no">049</span><span id="line-49">      .returnType(IItem.type())</span>
 <span class="source-line-no">050</span><span id="line-50">      .returnZeroOrOne()</span>
 <span class="source-line-no">051</span><span id="line-51">      .functionHandler(ArrayGet::execute)</span>
 <span class="source-line-no">052</span><span id="line-52">      .build();</span>
@@ -77,7 +77,7 @@
 <span class="source-line-no">064</span><span id="line-64">    IArrayItem&lt;?&gt; array = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));</span>
 <span class="source-line-no">065</span><span id="line-65">    IIntegerItem position = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
 <span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">    return get(array, position).asSequence();</span>
+<span class="source-line-no">067</span><span id="line-67">    return get(array, position).toSequence();</span>
 <span class="source-line-no">068</span><span id="line-68">  }</span>
 <span class="source-line-no">069</span><span id="line-69"></span>
 <span class="source-line-no">070</span><span id="line-70">  /**</span>

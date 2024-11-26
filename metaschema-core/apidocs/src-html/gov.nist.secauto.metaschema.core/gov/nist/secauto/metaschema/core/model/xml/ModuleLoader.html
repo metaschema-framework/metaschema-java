@@ -60,118 +60,122 @@
 <span class="source-line-no">047</span><span id="line-47">  private final List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors;</span>
 <span class="source-line-no">048</span><span id="line-48"></span>
 <span class="source-line-no">049</span><span id="line-49">  /**</span>
-<span class="source-line-no">050</span><span id="line-50">   * Construct a new Metaschema loader.</span>
-<span class="source-line-no">051</span><span id="line-51">   */</span>
-<span class="source-line-no">052</span><span id="line-52">  public ModuleLoader() {</span>
-<span class="source-line-no">053</span><span id="line-53">    this(CollectionUtil.&lt;IModuleLoader.IModulePostProcessor&gt;emptyList());</span>
-<span class="source-line-no">054</span><span id="line-54">  }</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  /**</span>
-<span class="source-line-no">057</span><span id="line-57">   * Construct a new Metaschema loader, which applies the provided constraints to</span>
-<span class="source-line-no">058</span><span id="line-58">   * loaded modules.</span>
-<span class="source-line-no">059</span><span id="line-59">   *</span>
-<span class="source-line-no">060</span><span id="line-60">   * @param constraints</span>
-<span class="source-line-no">061</span><span id="line-61">   *          a set of Metaschema module constraints</span>
-<span class="source-line-no">062</span><span id="line-62">   */</span>
-<span class="source-line-no">063</span><span id="line-63">  public ModuleLoader(@NonNull Collection&lt;IConstraintSet&gt; constraints) {</span>
-<span class="source-line-no">064</span><span id="line-64">    this(CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  /**</span>
-<span class="source-line-no">068</span><span id="line-68">   * Construct a new Metaschema loader, which use the provided module post</span>
-<span class="source-line-no">069</span><span id="line-69">   * processors when loading a module.</span>
-<span class="source-line-no">070</span><span id="line-70">   *</span>
-<span class="source-line-no">071</span><span id="line-71">   * @param modulePostProcessors</span>
-<span class="source-line-no">072</span><span id="line-72">   *          post processors to perform additional module customization when</span>
-<span class="source-line-no">073</span><span id="line-73">   *          loading</span>
-<span class="source-line-no">074</span><span id="line-74">   */</span>
-<span class="source-line-no">075</span><span id="line-75">  public ModuleLoader(@NonNull List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors) {</span>
-<span class="source-line-no">076</span><span id="line-76">    this.modulePostProcessors = modulePostProcessors;</span>
-<span class="source-line-no">077</span><span id="line-77">  }</span>
-<span class="source-line-no">078</span><span id="line-78"></span>
-<span class="source-line-no">079</span><span id="line-79">  /**</span>
-<span class="source-line-no">080</span><span id="line-80">   * Enable a mode that allows XML entity resolution. This may be needed to parse</span>
-<span class="source-line-no">081</span><span id="line-81">   * some resource files that contain entities. Enabling entity resolution is a</span>
-<span class="source-line-no">082</span><span id="line-82">   * less secure, which requires trust in the resource content being parsed.</span>
-<span class="source-line-no">083</span><span id="line-83">   */</span>
-<span class="source-line-no">084</span><span id="line-84">  public void allowEntityResolution() {</span>
-<span class="source-line-no">085</span><span id="line-85">    resolveEntities = true;</span>
-<span class="source-line-no">086</span><span id="line-86">  }</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">  @Override</span>
-<span class="source-line-no">089</span><span id="line-89">  protected IXmlMetaschemaModule newModule(</span>
-<span class="source-line-no">090</span><span id="line-90">      URI resource,</span>
-<span class="source-line-no">091</span><span id="line-91">      METASCHEMADocument binding,</span>
-<span class="source-line-no">092</span><span id="line-92">      List&lt;? extends IXmlMetaschemaModule&gt; importedModules)</span>
-<span class="source-line-no">093</span><span id="line-93">      throws MetaschemaException {</span>
-<span class="source-line-no">094</span><span id="line-94">    IXmlMetaschemaModule module = new XmlModule(resource, binding, importedModules);</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">    for (IModuleLoader.IModulePostProcessor postProcessor : modulePostProcessors) {</span>
-<span class="source-line-no">097</span><span id="line-97">      postProcessor.processModule(module);</span>
-<span class="source-line-no">098</span><span id="line-98">    }</span>
-<span class="source-line-no">099</span><span id="line-99">    return module;</span>
-<span class="source-line-no">100</span><span id="line-100">  }</span>
-<span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">  @Override</span>
-<span class="source-line-no">103</span><span id="line-103">  protected List&lt;URI&gt; getImports(METASCHEMADocument binding) {</span>
-<span class="source-line-no">104</span><span id="line-104">    return ObjectUtils.notNull(binding.getMETASCHEMA().getImportList().stream()</span>
-<span class="source-line-no">105</span><span id="line-105">        .map(imported -&gt; URI.create(imported.getHref()))</span>
-<span class="source-line-no">106</span><span id="line-106">        .collect(Collectors.toList()));</span>
-<span class="source-line-no">107</span><span id="line-107">  }</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">  /**</span>
-<span class="source-line-no">110</span><span id="line-110">   * Parse the provided XML resource as a Metaschema module.</span>
-<span class="source-line-no">111</span><span id="line-111">   *</span>
-<span class="source-line-no">112</span><span id="line-112">   * @param resource</span>
-<span class="source-line-no">113</span><span id="line-113">   *          the resource to parse</span>
-<span class="source-line-no">114</span><span id="line-114">   * @return the XMLBeans representation of the Metaschema module</span>
-<span class="source-line-no">115</span><span id="line-115">   * @throws IOException</span>
-<span class="source-line-no">116</span><span id="line-116">   *           if a parsing error occurred</span>
-<span class="source-line-no">117</span><span id="line-117">   */</span>
-<span class="source-line-no">118</span><span id="line-118">  @Override</span>
-<span class="source-line-no">119</span><span id="line-119">  protected METASCHEMADocument parseModule(@NonNull URI resource) throws IOException {</span>
-<span class="source-line-no">120</span><span id="line-120">    METASCHEMADocument metaschemaXml;</span>
-<span class="source-line-no">121</span><span id="line-121">    try {</span>
-<span class="source-line-no">122</span><span id="line-122">      XmlOptions options = new XmlOptions();</span>
-<span class="source-line-no">123</span><span id="line-123">      if (resolveEntities) {</span>
-<span class="source-line-no">124</span><span id="line-124">        SAXParserFactory factory = SAXParserFactory.newInstance();</span>
-<span class="source-line-no">125</span><span id="line-125"></span>
-<span class="source-line-no">126</span><span id="line-126">        try {</span>
-<span class="source-line-no">127</span><span id="line-127">          // factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
-<span class="source-line-no">128</span><span id="line-128">          factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);</span>
-<span class="source-line-no">129</span><span id="line-129">          factory.setFeature("http://xml.org/sax/features/external-general-entities", true);</span>
-<span class="source-line-no">130</span><span id="line-130">          factory.setFeature("http://xml.org/sax/features/external-parameter-entities", true);</span>
-<span class="source-line-no">131</span><span id="line-131">          SAXParser parser = factory.newSAXParser();</span>
-<span class="source-line-no">132</span><span id="line-132">          parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "file"); // ,jar:file</span>
-<span class="source-line-no">133</span><span id="line-133">          XMLReader reader = parser.getXMLReader();</span>
-<span class="source-line-no">134</span><span id="line-134">          reader.setEntityResolver((publicId, systemId) -&gt; null);</span>
-<span class="source-line-no">135</span><span id="line-135">          options.setLoadUseXMLReader(reader);</span>
-<span class="source-line-no">136</span><span id="line-136">        } catch (SAXException | ParserConfigurationException ex) {</span>
-<span class="source-line-no">137</span><span id="line-137">          throw new IOException(ex);</span>
-<span class="source-line-no">138</span><span id="line-138">        }</span>
-<span class="source-line-no">139</span><span id="line-139">        // options.setLoadEntityBytesLimit(204800);</span>
-<span class="source-line-no">140</span><span id="line-140">        // options.setLoadUseDefaultResolver();</span>
-<span class="source-line-no">141</span><span id="line-141">        options.setEntityResolver((publicId, systemId) -&gt; {</span>
-<span class="source-line-no">142</span><span id="line-142">          String effectiveSystemId = systemId;</span>
-<span class="source-line-no">143</span><span id="line-143">          // TODO: It's very odd that the system id looks like this. Need to investigate.</span>
-<span class="source-line-no">144</span><span id="line-144">          if (effectiveSystemId.startsWith("file://file://")) {</span>
-<span class="source-line-no">145</span><span id="line-145">            effectiveSystemId = effectiveSystemId.substring(14);</span>
-<span class="source-line-no">146</span><span id="line-146">          }</span>
-<span class="source-line-no">147</span><span id="line-147">          URI resolvedSystemId = resource.resolve(effectiveSystemId);</span>
-<span class="source-line-no">148</span><span id="line-148">          return new InputSource(resolvedSystemId.toString());</span>
-<span class="source-line-no">149</span><span id="line-149">        });</span>
-<span class="source-line-no">150</span><span id="line-150">        options.setLoadDTDGrammar(true);</span>
-<span class="source-line-no">151</span><span id="line-151">      }</span>
-<span class="source-line-no">152</span><span id="line-152">      options.setBaseURI(resource);</span>
-<span class="source-line-no">153</span><span id="line-153">      options.setLoadLineNumbers();</span>
-<span class="source-line-no">154</span><span id="line-154">      metaschemaXml = ObjectUtils.notNull(METASCHEMADocument.Factory.parse(resource.toURL(), options));</span>
-<span class="source-line-no">155</span><span id="line-155">    } catch (XmlException ex) {</span>
-<span class="source-line-no">156</span><span id="line-156">      throw new IOException(ex);</span>
-<span class="source-line-no">157</span><span id="line-157">    }</span>
-<span class="source-line-no">158</span><span id="line-158">    return metaschemaXml;</span>
-<span class="source-line-no">159</span><span id="line-159">  }</span>
-<span class="source-line-no">160</span><span id="line-160"></span>
-<span class="source-line-no">161</span><span id="line-161">}</span>
+<span class="source-line-no">050</span><span id="line-50">   * Construct a new Metaschema loader, which applies the provided constraints to</span>
+<span class="source-line-no">051</span><span id="line-51">   * loaded modules.</span>
+<span class="source-line-no">052</span><span id="line-52">   *</span>
+<span class="source-line-no">053</span><span id="line-53">   * @param constraints</span>
+<span class="source-line-no">054</span><span id="line-54">   *          a set of Metaschema module constraints to be applied during loading</span>
+<span class="source-line-no">055</span><span id="line-55">   * @return the loader instance configured with the specified constraints</span>
+<span class="source-line-no">056</span><span id="line-56">   */</span>
+<span class="source-line-no">057</span><span id="line-57">  public static ModuleLoader newInstanceUsingConstraints(@NonNull Collection&lt;IConstraintSet&gt; constraints) {</span>
+<span class="source-line-no">058</span><span id="line-58">    return new ModuleLoader(CollectionUtil.singletonList(new ExternalConstraintsModulePostProcessor(constraints)));</span>
+<span class="source-line-no">059</span><span id="line-59">  }</span>
+<span class="source-line-no">060</span><span id="line-60"></span>
+<span class="source-line-no">061</span><span id="line-61">  /**</span>
+<span class="source-line-no">062</span><span id="line-62">   * Construct a new Metaschema loader with no constraints.</span>
+<span class="source-line-no">063</span><span id="line-63">   *</span>
+<span class="source-line-no">064</span><span id="line-64">   * @see #newInstanceUsingConstraints(Collection) for creating an instance with</span>
+<span class="source-line-no">065</span><span id="line-65">   *      constraints</span>
+<span class="source-line-no">066</span><span id="line-66">   */</span>
+<span class="source-line-no">067</span><span id="line-67">  public ModuleLoader() {</span>
+<span class="source-line-no">068</span><span id="line-68">    this(CollectionUtil.&lt;IModuleLoader.IModulePostProcessor&gt;emptyList());</span>
+<span class="source-line-no">069</span><span id="line-69">  }</span>
+<span class="source-line-no">070</span><span id="line-70"></span>
+<span class="source-line-no">071</span><span id="line-71">  /**</span>
+<span class="source-line-no">072</span><span id="line-72">   * Construct a new Metaschema loader, which use the provided module post</span>
+<span class="source-line-no">073</span><span id="line-73">   * processors when loading a module.</span>
+<span class="source-line-no">074</span><span id="line-74">   *</span>
+<span class="source-line-no">075</span><span id="line-75">   * @param modulePostProcessors</span>
+<span class="source-line-no">076</span><span id="line-76">   *          post processors to perform additional module customization when</span>
+<span class="source-line-no">077</span><span id="line-77">   *          loading</span>
+<span class="source-line-no">078</span><span id="line-78">   */</span>
+<span class="source-line-no">079</span><span id="line-79">  public ModuleLoader(@NonNull List&lt;IModuleLoader.IModulePostProcessor&gt; modulePostProcessors) {</span>
+<span class="source-line-no">080</span><span id="line-80">    this.modulePostProcessors = modulePostProcessors;</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">  /**</span>
+<span class="source-line-no">084</span><span id="line-84">   * Enable a mode that allows XML entity resolution. This may be needed to parse</span>
+<span class="source-line-no">085</span><span id="line-85">   * some resource files that contain entities. Enabling entity resolution is a</span>
+<span class="source-line-no">086</span><span id="line-86">   * less secure, which requires trust in the resource content being parsed.</span>
+<span class="source-line-no">087</span><span id="line-87">   */</span>
+<span class="source-line-no">088</span><span id="line-88">  public void allowEntityResolution() {</span>
+<span class="source-line-no">089</span><span id="line-89">    resolveEntities = true;</span>
+<span class="source-line-no">090</span><span id="line-90">  }</span>
+<span class="source-line-no">091</span><span id="line-91"></span>
+<span class="source-line-no">092</span><span id="line-92">  @Override</span>
+<span class="source-line-no">093</span><span id="line-93">  protected IXmlMetaschemaModule newModule(</span>
+<span class="source-line-no">094</span><span id="line-94">      URI resource,</span>
+<span class="source-line-no">095</span><span id="line-95">      METASCHEMADocument binding,</span>
+<span class="source-line-no">096</span><span id="line-96">      List&lt;? extends IXmlMetaschemaModule&gt; importedModules)</span>
+<span class="source-line-no">097</span><span id="line-97">      throws MetaschemaException {</span>
+<span class="source-line-no">098</span><span id="line-98">    IXmlMetaschemaModule module = new XmlModule(resource, binding, importedModules);</span>
+<span class="source-line-no">099</span><span id="line-99"></span>
+<span class="source-line-no">100</span><span id="line-100">    for (IModuleLoader.IModulePostProcessor postProcessor : modulePostProcessors) {</span>
+<span class="source-line-no">101</span><span id="line-101">      postProcessor.processModule(module);</span>
+<span class="source-line-no">102</span><span id="line-102">    }</span>
+<span class="source-line-no">103</span><span id="line-103">    return module;</span>
+<span class="source-line-no">104</span><span id="line-104">  }</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">  @Override</span>
+<span class="source-line-no">107</span><span id="line-107">  protected List&lt;URI&gt; getImports(METASCHEMADocument binding) {</span>
+<span class="source-line-no">108</span><span id="line-108">    return ObjectUtils.notNull(binding.getMETASCHEMA().getImportList().stream()</span>
+<span class="source-line-no">109</span><span id="line-109">        .map(imported -&gt; URI.create(imported.getHref()))</span>
+<span class="source-line-no">110</span><span id="line-110">        .collect(Collectors.toList()));</span>
+<span class="source-line-no">111</span><span id="line-111">  }</span>
+<span class="source-line-no">112</span><span id="line-112"></span>
+<span class="source-line-no">113</span><span id="line-113">  /**</span>
+<span class="source-line-no">114</span><span id="line-114">   * Parse the provided XML resource as a Metaschema module.</span>
+<span class="source-line-no">115</span><span id="line-115">   *</span>
+<span class="source-line-no">116</span><span id="line-116">   * @param resource</span>
+<span class="source-line-no">117</span><span id="line-117">   *          the resource to parse</span>
+<span class="source-line-no">118</span><span id="line-118">   * @return the XMLBeans representation of the Metaschema module</span>
+<span class="source-line-no">119</span><span id="line-119">   * @throws IOException</span>
+<span class="source-line-no">120</span><span id="line-120">   *           if a parsing error occurred</span>
+<span class="source-line-no">121</span><span id="line-121">   */</span>
+<span class="source-line-no">122</span><span id="line-122">  @Override</span>
+<span class="source-line-no">123</span><span id="line-123">  protected METASCHEMADocument parseModule(@NonNull URI resource) throws IOException {</span>
+<span class="source-line-no">124</span><span id="line-124">    METASCHEMADocument metaschemaXml;</span>
+<span class="source-line-no">125</span><span id="line-125">    try {</span>
+<span class="source-line-no">126</span><span id="line-126">      XmlOptions options = new XmlOptions();</span>
+<span class="source-line-no">127</span><span id="line-127">      if (resolveEntities) {</span>
+<span class="source-line-no">128</span><span id="line-128">        SAXParserFactory factory = SAXParserFactory.newInstance();</span>
+<span class="source-line-no">129</span><span id="line-129"></span>
+<span class="source-line-no">130</span><span id="line-130">        try {</span>
+<span class="source-line-no">131</span><span id="line-131">          // factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);</span>
+<span class="source-line-no">132</span><span id="line-132">          factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);</span>
+<span class="source-line-no">133</span><span id="line-133">          factory.setFeature("http://xml.org/sax/features/external-general-entities", true);</span>
+<span class="source-line-no">134</span><span id="line-134">          factory.setFeature("http://xml.org/sax/features/external-parameter-entities", true);</span>
+<span class="source-line-no">135</span><span id="line-135">          SAXParser parser = factory.newSAXParser();</span>
+<span class="source-line-no">136</span><span id="line-136">          parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "file"); // ,jar:file</span>
+<span class="source-line-no">137</span><span id="line-137">          XMLReader reader = parser.getXMLReader();</span>
+<span class="source-line-no">138</span><span id="line-138">          reader.setEntityResolver((publicId, systemId) -&gt; null);</span>
+<span class="source-line-no">139</span><span id="line-139">          options.setLoadUseXMLReader(reader);</span>
+<span class="source-line-no">140</span><span id="line-140">        } catch (SAXException | ParserConfigurationException ex) {</span>
+<span class="source-line-no">141</span><span id="line-141">          throw new IOException(ex);</span>
+<span class="source-line-no">142</span><span id="line-142">        }</span>
+<span class="source-line-no">143</span><span id="line-143">        // options.setLoadEntityBytesLimit(204800);</span>
+<span class="source-line-no">144</span><span id="line-144">        // options.setLoadUseDefaultResolver();</span>
+<span class="source-line-no">145</span><span id="line-145">        options.setEntityResolver((publicId, systemId) -&gt; {</span>
+<span class="source-line-no">146</span><span id="line-146">          String effectiveSystemId = systemId;</span>
+<span class="source-line-no">147</span><span id="line-147">          // TODO: It's very odd that the system id looks like this. Need to investigate.</span>
+<span class="source-line-no">148</span><span id="line-148">          if (effectiveSystemId.startsWith("file://file://")) {</span>
+<span class="source-line-no">149</span><span id="line-149">            effectiveSystemId = effectiveSystemId.substring(14);</span>
+<span class="source-line-no">150</span><span id="line-150">          }</span>
+<span class="source-line-no">151</span><span id="line-151">          URI resolvedSystemId = resource.resolve(effectiveSystemId);</span>
+<span class="source-line-no">152</span><span id="line-152">          return new InputSource(resolvedSystemId.toString());</span>
+<span class="source-line-no">153</span><span id="line-153">        });</span>
+<span class="source-line-no">154</span><span id="line-154">        options.setLoadDTDGrammar(true);</span>
+<span class="source-line-no">155</span><span id="line-155">      }</span>
+<span class="source-line-no">156</span><span id="line-156">      options.setBaseURI(resource);</span>
+<span class="source-line-no">157</span><span id="line-157">      options.setLoadLineNumbers();</span>
+<span class="source-line-no">158</span><span id="line-158">      metaschemaXml = ObjectUtils.notNull(METASCHEMADocument.Factory.parse(resource.toURL(), options));</span>
+<span class="source-line-no">159</span><span id="line-159">    } catch (XmlException ex) {</span>
+<span class="source-line-no">160</span><span id="line-160">      throw new IOException(ex);</span>
+<span class="source-line-no">161</span><span id="line-161">    }</span>
+<span class="source-line-no">162</span><span id="line-162">    return metaschemaXml;</span>
+<span class="source-line-no">163</span><span id="line-163">  }</span>
+<span class="source-line-no">164</span><span id="line-164"></span>
+<span class="source-line-no">165</span><span id="line-165">}</span>
 
 
 

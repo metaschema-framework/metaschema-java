@@ -210,7 +210,7 @@
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>   }
 <a class="jxr_linenumber" name="L203" href="#L203">203</a> 
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>   @Test
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>   <strong class="jxr_keyword">void</strong> test() {
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>   <strong class="jxr_keyword">void</strong> testValidateContent() {
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>     <strong class="jxr_keyword">try</strong> (LogCaptor captor = LogCaptor.forRoot()) {
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>       String[] cliArgs = { <span class="jxr_string">"validate-content"</span>,
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>           <span class="jxr_string">"-m"</span>,
@@ -223,17 +223,34 @@
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>           .contains(<span class="jxr_string">"expect-default-non-zero: Expect constraint '. &gt; 0' did not match the data"</span>,
 <a class="jxr_linenumber" name="L216" href="#L216">216</a>               <span class="jxr_string">"expect-custom-non-zero: No default message, custom error message for expect-custom-non-zero constraint."</span>,
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>               <span class="jxr_string">"matches-default-regex-letters-only: Value '1' did not match the pattern"</span>,
-<a class="jxr_linenumber" name="L218" href="#L218">218</a>               <span class="jxr_string">"matches-custom-regex-letters-only: No default message, custom error message for matches-custom-regex-letters-only constraint."</span>,
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>               <span class="jxr_string">"cardinality-default-two-minimum: The cardinality '1' is below the required minimum '2' for items matching"</span>,
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>               <span class="jxr_string">"index-items-default: Index 'index-items-default' has duplicate key for items"</span>,
-<a class="jxr_linenumber" name="L221" href="#L221">221</a>               <span class="jxr_string">"index-items-custom: No default message, custom error message for index-item-custom."</span>,
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>               <span class="jxr_string">"is-unique-default: Unique constraint violation at paths"</span>,
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>               <span class="jxr_string">"is-unique-custom: No default message, custom error message for is-unique-custom."</span>,
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>               <span class="jxr_string">"index-has-key-default: Key reference [2] not found in index 'index-items-default' for item"</span>,
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>               <span class="jxr_string">"index-has-key-custom: No default message, custom error message for index-has-key-custom."</span>);
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>     }
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>   }
-<a class="jxr_linenumber" name="L228" href="#L228">228</a> }
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>               <span class="jxr_string">"matches-custom-regex-letters-only: No default message, custom error message for"</span> +
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>                   <span class="jxr_string">" matches-custom-regex-letters-only constraint."</span>,
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>               <span class="jxr_string">"cardinality-default-two-minimum: The cardinality '1' is below the required minimum '2' for items"</span> +
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>                   <span class="jxr_string">" matching"</span>,
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>               <span class="jxr_string">"index-items-default: Index 'index-items-default' has duplicate key for items"</span>,
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>               <span class="jxr_string">"index-items-custom: No default message, custom error message for index-item-custom."</span>,
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>               <span class="jxr_string">"is-unique-default: Unique constraint violation at paths"</span>,
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>               <span class="jxr_string">"is-unique-custom: No default message, custom error message for is-unique-custom."</span>,
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>               <span class="jxr_string">"index-has-key-default: Key reference [2] not found in index 'index-items-default' for item"</span>,
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>               <span class="jxr_string">"index-has-key-custom: No default message, custom error message for index-has-key-custom."</span>);
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     }
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>   }
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>   @Test
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>   <strong class="jxr_keyword">void</strong> testValidateConstraints() {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     <strong class="jxr_keyword">try</strong> (LogCaptor captor = LogCaptor.forRoot()) {
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>       String[] cliArgs = { <span class="jxr_string">"validate"</span>,
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>           <span class="jxr_string">"src/test/resources/content/constraint-example.xml"</span>,
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>           <span class="jxr_string">"-c"</span>,
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>           <span class="jxr_string">"src/test/resources/content/constraint-constraints.xml"</span>,
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>           <span class="jxr_string">"--disable-schema-validation"</span>,
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>       };
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>       CLI.runCli(cliArgs);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>       assertThat(captor.getErrorLogs().toString())
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>           .contains(<span class="jxr_string">"This constraint SHOULD be violated if test passes."</span>);
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     }
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>   }
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

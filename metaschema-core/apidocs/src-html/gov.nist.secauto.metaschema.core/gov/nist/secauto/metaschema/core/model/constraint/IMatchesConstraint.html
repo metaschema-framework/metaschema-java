@@ -121,7 +121,7 @@
 <span class="source-line-no">108</span><span id="line-108">      super.validate();</span>
 <span class="source-line-no">109</span><span id="line-109"></span>
 <span class="source-line-no">110</span><span id="line-110">      if (getPattern() == null &amp;&amp; getDatatype() == null) {</span>
-<span class="source-line-no">111</span><span id="line-111">        throw new IllegalStateException("A pattern or data type must be provided at minimum.");</span>
+<span class="source-line-no">111</span><span id="line-111">        throw new ConstraintInitializationException("A pattern or data type must be provided at minimum.");</span>
 <span class="source-line-no">112</span><span id="line-112">      }</span>
 <span class="source-line-no">113</span><span id="line-113">    }</span>
 <span class="source-line-no">114</span><span id="line-114"></span>

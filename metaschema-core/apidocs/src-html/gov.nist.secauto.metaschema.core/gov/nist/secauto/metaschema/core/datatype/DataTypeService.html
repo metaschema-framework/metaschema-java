@@ -18,152 +18,234 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.datatype;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.CustomCollectors;</span>
-<span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import org.apache.logging.log4j.LogManager;</span>
-<span class="source-line-no">011</span><span id="line-11">import org.apache.logging.log4j.Logger;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">import java.util.List;</span>
-<span class="source-line-no">014</span><span id="line-14">import java.util.Map;</span>
-<span class="source-line-no">015</span><span id="line-15">import java.util.ServiceLoader;</span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.ServiceLoader.Provider;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.util.concurrent.ConcurrentHashMap;</span>
-<span class="source-line-no">018</span><span id="line-18">import java.util.function.Function;</span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.stream.Collectors;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.type.IItemType;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.qname.EQNameFactory;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.util.CustomCollectors;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">import org.apache.logging.log4j.LogManager;</span>
+<span class="source-line-no">019</span><span id="line-19">import org.apache.logging.log4j.Logger;</span>
 <span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">024</span><span id="line-24">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">025</span><span id="line-25">import nl.talsmasoftware.lazy4j.Lazy;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">/**</span>
-<span class="source-line-no">028</span><span id="line-28"> * This class provides a singleton service to allow data types to be discovered</span>
-<span class="source-line-no">029</span><span id="line-29"> * within the system based on an SPI provided by {@link IDataTypeProvider}.</span>
-<span class="source-line-no">030</span><span id="line-30"> */</span>
-<span class="source-line-no">031</span><span id="line-31">public final class DataTypeService {</span>
-<span class="source-line-no">032</span><span id="line-32">  private static final Logger LOGGER = LogManager.getLogger(DataTypeService.class);</span>
-<span class="source-line-no">033</span><span id="line-33">  private static final Lazy&lt;DataTypeService&gt; INSTANCE = Lazy.lazy(() -&gt; new DataTypeService());</span>
-<span class="source-line-no">034</span><span id="line-34"></span>
-<span class="source-line-no">035</span><span id="line-35">  private final Map&lt;String, IDataTypeAdapter&lt;?&gt;&gt; typeByName;</span>
-<span class="source-line-no">036</span><span id="line-36">  private final Map&lt;QName, IDataTypeAdapter&lt;?&gt;&gt; typeByQName;</span>
-<span class="source-line-no">037</span><span id="line-37">  private final Map&lt;Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;, IDataTypeAdapter&lt;?&gt;&gt; typeByClass;</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  /**</span>
-<span class="source-line-no">040</span><span id="line-40">   * Get the singleton service instance, which will be lazy constructed on first</span>
-<span class="source-line-no">041</span><span id="line-41">   * access.</span>
-<span class="source-line-no">042</span><span id="line-42">   *</span>
-<span class="source-line-no">043</span><span id="line-43">   * @return the service instance</span>
-<span class="source-line-no">044</span><span id="line-44">   */</span>
-<span class="source-line-no">045</span><span id="line-45">  @SuppressWarnings("null")</span>
-<span class="source-line-no">046</span><span id="line-46">  @NonNull</span>
-<span class="source-line-no">047</span><span id="line-47">  public static DataTypeService getInstance() {</span>
-<span class="source-line-no">048</span><span id="line-48">    return INSTANCE.get();</span>
-<span class="source-line-no">049</span><span id="line-49">  }</span>
-<span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">  private DataTypeService() {</span>
-<span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">    ServiceLoader&lt;IDataTypeProvider&gt; loader = ServiceLoader.load(IDataTypeProvider.class);</span>
-<span class="source-line-no">054</span><span id="line-54">    List&lt;IDataTypeAdapter&lt;?&gt;&gt; dataTypes = loader.stream()</span>
-<span class="source-line-no">055</span><span id="line-55">        .map(Provider&lt;IDataTypeProvider&gt;::get)</span>
-<span class="source-line-no">056</span><span id="line-56">        .flatMap(provider -&gt; provider.getJavaTypeAdapters().stream())</span>
-<span class="source-line-no">057</span><span id="line-57">        .collect(Collectors.toList());</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">    Map&lt;String, IDataTypeAdapter&lt;?&gt;&gt; typeByName = dataTypes.stream()</span>
-<span class="source-line-no">060</span><span id="line-60">        .flatMap(dataType -&gt; dataType.getNames().stream()</span>
-<span class="source-line-no">061</span><span id="line-61">            .map(qname -&gt; Map.entry(qname.getLocalPart(), dataType)))</span>
-<span class="source-line-no">062</span><span id="line-62">        .collect(CustomCollectors.toMap(</span>
-<span class="source-line-no">063</span><span id="line-63">            Map.Entry::getKey,</span>
-<span class="source-line-no">064</span><span id="line-64">            Map.Entry::getValue,</span>
-<span class="source-line-no">065</span><span id="line-65">            (key, v1, v2) -&gt; {</span>
-<span class="source-line-no">066</span><span id="line-66">              if (LOGGER.isWarnEnabled()) {</span>
-<span class="source-line-no">067</span><span id="line-67">                LOGGER.warn("Data types '{}' and '{}' have duplicate name '{}'. Using the first.",</span>
-<span class="source-line-no">068</span><span id="line-68">                    v1.getClass().getName(),</span>
-<span class="source-line-no">069</span><span id="line-69">                    v2.getClass().getName(),</span>
-<span class="source-line-no">070</span><span id="line-70">                    key);</span>
-<span class="source-line-no">071</span><span id="line-71">              }</span>
-<span class="source-line-no">072</span><span id="line-72">              return v1;</span>
-<span class="source-line-no">073</span><span id="line-73">            },</span>
-<span class="source-line-no">074</span><span id="line-74">            ConcurrentHashMap::new));</span>
-<span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">    Map&lt;QName, IDataTypeAdapter&lt;?&gt;&gt; typeByQName = dataTypes.stream()</span>
-<span class="source-line-no">077</span><span id="line-77">        .flatMap(dataType -&gt; dataType.getNames().stream()</span>
-<span class="source-line-no">078</span><span id="line-78">            .map(qname -&gt; Map.entry(qname, dataType)))</span>
-<span class="source-line-no">079</span><span id="line-79">        .collect(CustomCollectors.toMap(</span>
-<span class="source-line-no">080</span><span id="line-80">            Map.Entry::getKey,</span>
-<span class="source-line-no">081</span><span id="line-81">            Map.Entry::getValue,</span>
-<span class="source-line-no">082</span><span id="line-82">            (key, v1, v2) -&gt; {</span>
-<span class="source-line-no">083</span><span id="line-83">              if (LOGGER.isWarnEnabled()) {</span>
-<span class="source-line-no">084</span><span id="line-84">                LOGGER.warn("Data types '{}' and '{}' have duplicate name '{}'. Using the first.",</span>
-<span class="source-line-no">085</span><span id="line-85">                    v1.getClass().getName(),</span>
-<span class="source-line-no">086</span><span id="line-86">                    v2.getClass().getName(),</span>
-<span class="source-line-no">087</span><span id="line-87">                    key);</span>
-<span class="source-line-no">088</span><span id="line-88">              }</span>
-<span class="source-line-no">089</span><span id="line-89">              return v1;</span>
-<span class="source-line-no">090</span><span id="line-90">            },</span>
-<span class="source-line-no">091</span><span id="line-91">            ConcurrentHashMap::new));</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">    @SuppressWarnings({ "unchecked", "null" })</span>
-<span class="source-line-no">094</span><span id="line-94">    Map&lt;Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;,</span>
-<span class="source-line-no">095</span><span id="line-95">        IDataTypeAdapter&lt;?&gt;&gt; typeByClass = dataTypes.stream()</span>
-<span class="source-line-no">096</span><span id="line-96">            .collect(CustomCollectors.toMap(</span>
-<span class="source-line-no">097</span><span id="line-97">                dataType -&gt; (Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;) dataType.getClass(),</span>
-<span class="source-line-no">098</span><span id="line-98">                Function.identity(),</span>
-<span class="source-line-no">099</span><span id="line-99">                (key, v1, v2) -&gt; {</span>
-<span class="source-line-no">100</span><span id="line-100">                  if (LOGGER.isWarnEnabled()) {</span>
-<span class="source-line-no">101</span><span id="line-101">                    LOGGER.warn("Duplicate data type class '{}'. Using the first.",</span>
-<span class="source-line-no">102</span><span id="line-102">                        key.getClass().getName());</span>
-<span class="source-line-no">103</span><span id="line-103">                  }</span>
-<span class="source-line-no">104</span><span id="line-104">                  return v1;</span>
-<span class="source-line-no">105</span><span id="line-105">                },</span>
-<span class="source-line-no">106</span><span id="line-106">                ConcurrentHashMap::new));</span>
-<span class="source-line-no">107</span><span id="line-107">    this.typeByName = typeByName;</span>
-<span class="source-line-no">108</span><span id="line-108">    this.typeByQName = typeByQName;</span>
-<span class="source-line-no">109</span><span id="line-109">    this.typeByClass = typeByClass;</span>
-<span class="source-line-no">110</span><span id="line-110">  }</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  /**</span>
-<span class="source-line-no">113</span><span id="line-113">   * Lookup a specific {@link IDataTypeAdapter} instance by its name.</span>
-<span class="source-line-no">114</span><span id="line-114">   *</span>
-<span class="source-line-no">115</span><span id="line-115">   * @param qname</span>
-<span class="source-line-no">116</span><span id="line-116">   *          the qualified name of data type adapter to get the instance for</span>
-<span class="source-line-no">117</span><span id="line-117">   * @return the instance or {@code null} if the instance is unknown to the type</span>
-<span class="source-line-no">118</span><span id="line-118">   *         system</span>
-<span class="source-line-no">119</span><span id="line-119">   */</span>
-<span class="source-line-no">120</span><span id="line-120">  @Nullable</span>
-<span class="source-line-no">121</span><span id="line-121">  public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapterByQName(@NonNull QName qname) {</span>
-<span class="source-line-no">122</span><span id="line-122">    return typeByQName.get(qname);</span>
-<span class="source-line-no">123</span><span id="line-123">  }</span>
-<span class="source-line-no">124</span><span id="line-124"></span>
-<span class="source-line-no">125</span><span id="line-125">  /**</span>
-<span class="source-line-no">126</span><span id="line-126">   * Lookup a specific {@link IDataTypeAdapter} instance by its name.</span>
-<span class="source-line-no">127</span><span id="line-127">   *</span>
-<span class="source-line-no">128</span><span id="line-128">   * @param name</span>
-<span class="source-line-no">129</span><span id="line-129">   *          the name of data type adapter to get the instance for</span>
-<span class="source-line-no">130</span><span id="line-130">   * @return the instance or {@code null} if the instance is unknown to the type</span>
-<span class="source-line-no">131</span><span id="line-131">   *         system</span>
-<span class="source-line-no">132</span><span id="line-132">   */</span>
-<span class="source-line-no">133</span><span id="line-133">  @Nullable</span>
-<span class="source-line-no">134</span><span id="line-134">  public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapterByName(@NonNull String name) {</span>
-<span class="source-line-no">135</span><span id="line-135">    return typeByName.get(name);</span>
-<span class="source-line-no">136</span><span id="line-136">  }</span>
-<span class="source-line-no">137</span><span id="line-137"></span>
-<span class="source-line-no">138</span><span id="line-138">  /**</span>
-<span class="source-line-no">139</span><span id="line-139">   * Lookup a specific {@link IDataTypeAdapter} instance by its class.</span>
-<span class="source-line-no">140</span><span id="line-140">   *</span>
-<span class="source-line-no">141</span><span id="line-141">   * @param clazz</span>
-<span class="source-line-no">142</span><span id="line-142">   *          the adapter class to get the instance for</span>
-<span class="source-line-no">143</span><span id="line-143">   * @param &lt;TYPE&gt;</span>
-<span class="source-line-no">144</span><span id="line-144">   *          the type of the requested adapter</span>
-<span class="source-line-no">145</span><span id="line-145">   * @return the instance or {@code null} if the instance is unknown to the type</span>
-<span class="source-line-no">146</span><span id="line-146">   *         system</span>
-<span class="source-line-no">147</span><span id="line-147">   */</span>
-<span class="source-line-no">148</span><span id="line-148">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">149</span><span id="line-149">  @Nullable</span>
-<span class="source-line-no">150</span><span id="line-150">  public &lt;TYPE extends IDataTypeAdapter&lt;?&gt;&gt; TYPE getJavaTypeAdapterByClass(@NonNull Class&lt;TYPE&gt; clazz) {</span>
-<span class="source-line-no">151</span><span id="line-151">    return (TYPE) typeByClass.get(clazz);</span>
-<span class="source-line-no">152</span><span id="line-152">  }</span>
-<span class="source-line-no">153</span><span id="line-153">}</span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.LinkedHashMap;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.LinkedList;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.util.List;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.util.Map;</span>
+<span class="source-line-no">025</span><span id="line-25">import java.util.Objects;</span>
+<span class="source-line-no">026</span><span id="line-26">import java.util.ServiceLoader;</span>
+<span class="source-line-no">027</span><span id="line-27">import java.util.ServiceLoader.Provider;</span>
+<span class="source-line-no">028</span><span id="line-28">import java.util.concurrent.ConcurrentHashMap;</span>
+<span class="source-line-no">029</span><span id="line-29">import java.util.stream.Stream;</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">032</span><span id="line-32">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">033</span><span id="line-33">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</span>
+<span class="source-line-no">034</span><span id="line-34">import nl.talsmasoftware.lazy4j.Lazy;</span>
+<span class="source-line-no">035</span><span id="line-35"></span>
+<span class="source-line-no">036</span><span id="line-36">/**</span>
+<span class="source-line-no">037</span><span id="line-37"> * This class provides a singleton service to allow data types to be discovered</span>
+<span class="source-line-no">038</span><span id="line-38"> * within the system based on an SPI provided by {@link IDataTypeProvider}.</span>
+<span class="source-line-no">039</span><span id="line-39"> */</span>
+<span class="source-line-no">040</span><span id="line-40">public final class DataTypeService {</span>
+<span class="source-line-no">041</span><span id="line-41">  private static final Logger LOGGER = LogManager.getLogger(DataTypeService.class);</span>
+<span class="source-line-no">042</span><span id="line-42">  private static final Lazy&lt;DataTypeService&gt; INSTANCE = Lazy.lazy(DataTypeService::new);</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  private static final List&lt;IItemType&gt; BUILTIN_ITEM_TYPES;</span>
+<span class="source-line-no">045</span><span id="line-45"></span>
+<span class="source-line-no">046</span><span id="line-46">  static {</span>
+<span class="source-line-no">047</span><span id="line-47">    List&lt;IItemType&gt; builtinItemTypes = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">048</span><span id="line-48">    builtinItemTypes.add(IItemType.item());</span>
+<span class="source-line-no">049</span><span id="line-49">    builtinItemTypes.add(IItemType.array());</span>
+<span class="source-line-no">050</span><span id="line-50">    builtinItemTypes.add(IItemType.map());</span>
+<span class="source-line-no">051</span><span id="line-51">    builtinItemTypes.add(IItemType.node());</span>
+<span class="source-line-no">052</span><span id="line-52">    builtinItemTypes.add(IItemType.document());</span>
+<span class="source-line-no">053</span><span id="line-53">    builtinItemTypes.add(IItemType.assembly());</span>
+<span class="source-line-no">054</span><span id="line-54">    builtinItemTypes.add(IItemType.field());</span>
+<span class="source-line-no">055</span><span id="line-55">    builtinItemTypes.add(IItemType.flag());</span>
+<span class="source-line-no">056</span><span id="line-56">    builtinItemTypes.add(IItemType.module());</span>
+<span class="source-line-no">057</span><span id="line-57"></span>
+<span class="source-line-no">058</span><span id="line-58">    BUILTIN_ITEM_TYPES = CollectionUtil.unmodifiableList(builtinItemTypes);</span>
+<span class="source-line-no">059</span><span id="line-59">  }</span>
+<span class="source-line-no">060</span><span id="line-60"></span>
+<span class="source-line-no">061</span><span id="line-61">  @NonNull</span>
+<span class="source-line-no">062</span><span id="line-62">  private final Map&lt;Integer, IAtomicOrUnionType&lt;?&gt;&gt; typeByQNameIndex;</span>
+<span class="source-line-no">063</span><span id="line-63">  @NonNull</span>
+<span class="source-line-no">064</span><span id="line-64">  private final Map&lt;Class&lt;? extends IDataTypeAdapter&lt;?&gt;&gt;, IDataTypeAdapter&lt;?&gt;&gt; atomicTypeByAdapterClass;</span>
+<span class="source-line-no">065</span><span id="line-65">  @NonNull</span>
+<span class="source-line-no">066</span><span id="line-66">  private final Map&lt;Class&lt;? extends IAnyAtomicItem&gt;, IAtomicOrUnionType&lt;?&gt;&gt; atomicTypeByItemClass;</span>
+<span class="source-line-no">067</span><span id="line-67">  @NonNull</span>
+<span class="source-line-no">068</span><span id="line-68">  private final Map&lt;Class&lt;? extends IItem&gt;, IItemType&gt; itemTypeByItemClass;</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  /**</span>
+<span class="source-line-no">071</span><span id="line-71">   * Get the singleton service instance, which will be lazy constructed on first</span>
+<span class="source-line-no">072</span><span id="line-72">   * access.</span>
+<span class="source-line-no">073</span><span id="line-73">   *</span>
+<span class="source-line-no">074</span><span id="line-74">   * @return the service instance</span>
+<span class="source-line-no">075</span><span id="line-75">   */</span>
+<span class="source-line-no">076</span><span id="line-76">  @SuppressWarnings("null")</span>
+<span class="source-line-no">077</span><span id="line-77">  @NonNull</span>
+<span class="source-line-no">078</span><span id="line-78">  public static DataTypeService instance() {</span>
+<span class="source-line-no">079</span><span id="line-79">    return INSTANCE.get();</span>
+<span class="source-line-no">080</span><span id="line-80">  }</span>
+<span class="source-line-no">081</span><span id="line-81"></span>
+<span class="source-line-no">082</span><span id="line-82">  private DataTypeService() {</span>
+<span class="source-line-no">083</span><span id="line-83">    ServiceLoader&lt;IDataTypeProvider&gt; loader = ServiceLoader.load(IDataTypeProvider.class);</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">    this.atomicTypeByAdapterClass = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="source-line-no">086</span><span id="line-86">        loader.stream()</span>
+<span class="source-line-no">087</span><span id="line-87">            .map(Provider&lt;IDataTypeProvider&gt;::get)</span>
+<span class="source-line-no">088</span><span id="line-88">            .flatMap(provider -&gt; provider.getJavaTypeAdapters().stream())</span>
+<span class="source-line-no">089</span><span id="line-89">            .collect(CustomCollectors.toMap(</span>
+<span class="source-line-no">090</span><span id="line-90">                dataType -&gt; ObjectUtils.asNullableType(dataType.getClass()),</span>
+<span class="source-line-no">091</span><span id="line-91">                CustomCollectors.identity(),</span>
+<span class="source-line-no">092</span><span id="line-92">                (key, v1, v2) -&gt; {</span>
+<span class="source-line-no">093</span><span id="line-93">                  if (LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">094</span><span id="line-94">                    LOGGER.warn("Duplicate data type class '{}'. Using the first.",</span>
+<span class="source-line-no">095</span><span id="line-95">                        key.getClass().getName());</span>
+<span class="source-line-no">096</span><span id="line-96">                  }</span>
+<span class="source-line-no">097</span><span id="line-97">                  return v1;</span>
+<span class="source-line-no">098</span><span id="line-98">                },</span>
+<span class="source-line-no">099</span><span id="line-99">                LinkedHashMap::new))));</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">    Stream&lt;Map.Entry&lt;Integer, IAtomicOrUnionType&lt;?&gt;&gt;&gt; adapterStream = this.atomicTypeByAdapterClass.values().stream()</span>
+<span class="source-line-no">102</span><span id="line-102">        .flatMap(dataType -&gt; dataType.getNames().stream()</span>
+<span class="source-line-no">103</span><span id="line-103">            .map(qname -&gt; Map.entry(qname.getIndexPosition(), dataType.getItemType())));</span>
+<span class="source-line-no">104</span><span id="line-104"></span>
+<span class="source-line-no">105</span><span id="line-105">    Stream&lt;Map.Entry&lt;Integer, IAtomicOrUnionType&lt;?&gt;&gt;&gt; abstractStream = loader.stream()</span>
+<span class="source-line-no">106</span><span id="line-106">        .map(Provider&lt;IDataTypeProvider&gt;::get)</span>
+<span class="source-line-no">107</span><span id="line-107">        .flatMap(provider -&gt; provider.getAbstractTypes().stream())</span>
+<span class="source-line-no">108</span><span id="line-108">        .map(dataType -&gt; Map.entry(dataType.getQName().getIndexPosition(), dataType));</span>
+<span class="source-line-no">109</span><span id="line-109"></span>
+<span class="source-line-no">110</span><span id="line-110">    this.typeByQNameIndex = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="source-line-no">111</span><span id="line-111">        Stream.concat(abstractStream, adapterStream)</span>
+<span class="source-line-no">112</span><span id="line-112">            .collect(CustomCollectors.toMap(</span>
+<span class="source-line-no">113</span><span id="line-113">                Map.Entry::getKey,</span>
+<span class="source-line-no">114</span><span id="line-114">                Map.Entry::getValue,</span>
+<span class="source-line-no">115</span><span id="line-115">                (key, v1, v2) -&gt; {</span>
+<span class="source-line-no">116</span><span id="line-116">                  if (LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">117</span><span id="line-117">                    LOGGER.warn("Duplicate data types '{}' and '{}' with name '{}'. Using the first.",</span>
+<span class="source-line-no">118</span><span id="line-118">                        v1.getClass().getName(),</span>
+<span class="source-line-no">119</span><span id="line-119">                        v2.getClass().getName(),</span>
+<span class="source-line-no">120</span><span id="line-120">                        key);</span>
+<span class="source-line-no">121</span><span id="line-121">                  }</span>
+<span class="source-line-no">122</span><span id="line-122">                  return v1;</span>
+<span class="source-line-no">123</span><span id="line-123">                },</span>
+<span class="source-line-no">124</span><span id="line-124">                ConcurrentHashMap::new))));</span>
+<span class="source-line-no">125</span><span id="line-125"></span>
+<span class="source-line-no">126</span><span id="line-126">    this.atomicTypeByItemClass = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="source-line-no">127</span><span id="line-127">        this.typeByQNameIndex.values().stream()</span>
+<span class="source-line-no">128</span><span id="line-128">            .collect(CustomCollectors.toMap(</span>
+<span class="source-line-no">129</span><span id="line-129">                type -&gt; ObjectUtils.asNullableType(type.getItemClass()),</span>
+<span class="source-line-no">130</span><span id="line-130">                CustomCollectors.identity(),</span>
+<span class="source-line-no">131</span><span id="line-131">                (key, v1, v2) -&gt; {</span>
+<span class="source-line-no">132</span><span id="line-132">                  if (!Objects.equals(v1, v2) &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">133</span><span id="line-133">                    LOGGER.warn("Duplicate atomic item class '{}' declared by types '{}' and '{}'. Using the first.",</span>
+<span class="source-line-no">134</span><span id="line-134">                        key.getName(),</span>
+<span class="source-line-no">135</span><span id="line-135">                        v1.toSignature(),</span>
+<span class="source-line-no">136</span><span id="line-136">                        v2.toSignature());</span>
+<span class="source-line-no">137</span><span id="line-137">                  }</span>
+<span class="source-line-no">138</span><span id="line-138">                  return v1;</span>
+<span class="source-line-no">139</span><span id="line-139">                },</span>
+<span class="source-line-no">140</span><span id="line-140">                ConcurrentHashMap::new))));</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">    this.itemTypeByItemClass = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(</span>
+<span class="source-line-no">143</span><span id="line-143">        Stream.concat(</span>
+<span class="source-line-no">144</span><span id="line-144">            BUILTIN_ITEM_TYPES.stream(),</span>
+<span class="source-line-no">145</span><span id="line-145">            this.atomicTypeByItemClass.values().stream())</span>
+<span class="source-line-no">146</span><span id="line-146">            .collect(CustomCollectors.toMap(</span>
+<span class="source-line-no">147</span><span id="line-147">                type -&gt; ObjectUtils.asNullableType(type.getItemClass()),</span>
+<span class="source-line-no">148</span><span id="line-148">                CustomCollectors.identity(),</span>
+<span class="source-line-no">149</span><span id="line-149">                (key, v1, v2) -&gt; {</span>
+<span class="source-line-no">150</span><span id="line-150">                  if (!Objects.equals(v1, v2) &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">151</span><span id="line-151">                    LOGGER.warn("Duplicate item class '{}' declared by types '{}' and '{}'. Using the first.",</span>
+<span class="source-line-no">152</span><span id="line-152">                        key.getName(),</span>
+<span class="source-line-no">153</span><span id="line-153">                        v1.toSignature(),</span>
+<span class="source-line-no">154</span><span id="line-154">                        v2.toSignature());</span>
+<span class="source-line-no">155</span><span id="line-155">                  }</span>
+<span class="source-line-no">156</span><span id="line-156">                  return v1;</span>
+<span class="source-line-no">157</span><span id="line-157">                },</span>
+<span class="source-line-no">158</span><span id="line-158">                ConcurrentHashMap::new))));</span>
+<span class="source-line-no">159</span><span id="line-159">  }</span>
+<span class="source-line-no">160</span><span id="line-160"></span>
+<span class="source-line-no">161</span><span id="line-161">  /**</span>
+<span class="source-line-no">162</span><span id="line-162">   * Lookup a specific {@link IAtomicOrUnionType} by its QName.</span>
+<span class="source-line-no">163</span><span id="line-163">   *</span>
+<span class="source-line-no">164</span><span id="line-164">   * @param qname</span>
+<span class="source-line-no">165</span><span id="line-165">   *          the qualified name of data type adapter to get the instance for</span>
+<span class="source-line-no">166</span><span id="line-166">   * @return the data type or {@code null} if the data type is unknown to the type</span>
+<span class="source-line-no">167</span><span id="line-167">   *         system</span>
+<span class="source-line-no">168</span><span id="line-168">   */</span>
+<span class="source-line-no">169</span><span id="line-169">  @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "false positive")</span>
+<span class="source-line-no">170</span><span id="line-170">  @Nullable</span>
+<span class="source-line-no">171</span><span id="line-171">  public IAtomicOrUnionType&lt;?&gt; getAtomicTypeByQName(@NonNull IEnhancedQName qname) {</span>
+<span class="source-line-no">172</span><span id="line-172">    return EQNameFactory.instance()</span>
+<span class="source-line-no">173</span><span id="line-173">        .get(qname.getIndexPosition())</span>
+<span class="source-line-no">174</span><span id="line-174">        .map(name -&gt; getAtomicTypeByQNameIndex(name.getIndexPosition()))</span>
+<span class="source-line-no">175</span><span id="line-175">        .orElse(null);</span>
+<span class="source-line-no">176</span><span id="line-176">  }</span>
+<span class="source-line-no">177</span><span id="line-177"></span>
+<span class="source-line-no">178</span><span id="line-178">  /**</span>
+<span class="source-line-no">179</span><span id="line-179">   * Lookup a specific {@link IAtomicOrUnionType} by its QName index position.</span>
+<span class="source-line-no">180</span><span id="line-180">   *</span>
+<span class="source-line-no">181</span><span id="line-181">   * @param qnameIndexPosition</span>
+<span class="source-line-no">182</span><span id="line-182">   *          the position in the global QName index for the qualified name of</span>
+<span class="source-line-no">183</span><span id="line-183">   *          data type adapter to get the instance for</span>
+<span class="source-line-no">184</span><span id="line-184">   * @return the data type or {@code null} if the data type is unknown to the type</span>
+<span class="source-line-no">185</span><span id="line-185">   *         system</span>
+<span class="source-line-no">186</span><span id="line-186">   */</span>
+<span class="source-line-no">187</span><span id="line-187">  @Nullable</span>
+<span class="source-line-no">188</span><span id="line-188">  public IAtomicOrUnionType&lt;?&gt; getAtomicTypeByQNameIndex(int qnameIndexPosition) {</span>
+<span class="source-line-no">189</span><span id="line-189">    return typeByQNameIndex.get(qnameIndexPosition);</span>
+<span class="source-line-no">190</span><span id="line-190">  }</span>
+<span class="source-line-no">191</span><span id="line-191"></span>
+<span class="source-line-no">192</span><span id="line-192">  /**</span>
+<span class="source-line-no">193</span><span id="line-193">   * Lookup a specific {@link IAtomicOrUnionType} by its item class.</span>
+<span class="source-line-no">194</span><span id="line-194">   *</span>
+<span class="source-line-no">195</span><span id="line-195">   * @param clazz</span>
+<span class="source-line-no">196</span><span id="line-196">   *          the adapter class to get the instance for</span>
+<span class="source-line-no">197</span><span id="line-197">   * @return the data type or {@code null} if the data type is unknown to the type</span>
+<span class="source-line-no">198</span><span id="line-198">   *         system</span>
+<span class="source-line-no">199</span><span id="line-199">   */</span>
+<span class="source-line-no">200</span><span id="line-200">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">201</span><span id="line-201">  @Nullable</span>
+<span class="source-line-no">202</span><span id="line-202">  public &lt;T extends IAnyAtomicItem&gt; IAtomicOrUnionType&lt;T&gt; getAtomicTypeByItemClass(Class&lt;T&gt; clazz) {</span>
+<span class="source-line-no">203</span><span id="line-203">    return (IAtomicOrUnionType&lt;T&gt;) atomicTypeByItemClass.get(clazz);</span>
+<span class="source-line-no">204</span><span id="line-204">  }</span>
+<span class="source-line-no">205</span><span id="line-205"></span>
+<span class="source-line-no">206</span><span id="line-206">  /**</span>
+<span class="source-line-no">207</span><span id="line-207">   * Lookup a specific {@link IAtomicOrUnionType} by its item class.</span>
+<span class="source-line-no">208</span><span id="line-208">   *</span>
+<span class="source-line-no">209</span><span id="line-209">   * @param clazz</span>
+<span class="source-line-no">210</span><span id="line-210">   *          the adapter class to get the instance for</span>
+<span class="source-line-no">211</span><span id="line-211">   * @return the data type or {@code null} if the data type is unknown to the type</span>
+<span class="source-line-no">212</span><span id="line-212">   *         system</span>
+<span class="source-line-no">213</span><span id="line-213">   */</span>
+<span class="source-line-no">214</span><span id="line-214">  @Nullable</span>
+<span class="source-line-no">215</span><span id="line-215">  public IItemType getItemTypeByItemClass(Class&lt;? extends IItem&gt; clazz) {</span>
+<span class="source-line-no">216</span><span id="line-216">    return itemTypeByItemClass.get(clazz);</span>
+<span class="source-line-no">217</span><span id="line-217">  }</span>
+<span class="source-line-no">218</span><span id="line-218"></span>
+<span class="source-line-no">219</span><span id="line-219">  /**</span>
+<span class="source-line-no">220</span><span id="line-220">   * Lookup a specific {@link IDataTypeAdapter} by its adapter class.</span>
+<span class="source-line-no">221</span><span id="line-221">   *</span>
+<span class="source-line-no">222</span><span id="line-222">   * @param clazz</span>
+<span class="source-line-no">223</span><span id="line-223">   *          the adapter class to get the instance for</span>
+<span class="source-line-no">224</span><span id="line-224">   * @param &lt;TYPE&gt;</span>
+<span class="source-line-no">225</span><span id="line-225">   *          the type of the requested adapter</span>
+<span class="source-line-no">226</span><span id="line-226">   * @return the adapter or {@code null} if the adapter is unknown to the type</span>
+<span class="source-line-no">227</span><span id="line-227">   *         system</span>
+<span class="source-line-no">228</span><span id="line-228">   */</span>
+<span class="source-line-no">229</span><span id="line-229">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">230</span><span id="line-230">  @Nullable</span>
+<span class="source-line-no">231</span><span id="line-231">  public &lt;TYPE extends IDataTypeAdapter&lt;?&gt;&gt; TYPE getDataTypeByAdapterClass(</span>
+<span class="source-line-no">232</span><span id="line-232">      @NonNull Class&lt;TYPE&gt; clazz) {</span>
+<span class="source-line-no">233</span><span id="line-233">    return (TYPE) atomicTypeByAdapterClass.get(clazz);</span>
+<span class="source-line-no">234</span><span id="line-234">  }</span>
+<span class="source-line-no">235</span><span id="line-235">}</span>
 
 
 

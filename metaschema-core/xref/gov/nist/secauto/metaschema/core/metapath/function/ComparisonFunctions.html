@@ -14,21 +14,21 @@
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.metapath.function;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ISequence;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.library.FnNot;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.library.FnNot;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.util.Locale;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  
@@ -155,10 +155,10 @@
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>       retval = IDecimalItem.<strong class="jxr_keyword">cast</strong>(other);
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (item instanceof <a name="IDayTimeDurationItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IDayTimeDurationItem.html#IDayTimeDurationItem">IDayTimeDurationItem</a>) {
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>       retval = IDayTimeDurationItem.<strong class="jxr_keyword">cast</strong>(other);
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (item instanceof <a name="IDayTimeDurationItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IDayTimeDurationItem.html#IDayTimeDurationItem">IDayTimeDurationItem</a>) {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (item instanceof <a name="IYearMonthDurationItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IYearMonthDurationItem.html#IYearMonthDurationItem">IYearMonthDurationItem</a>) {
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>       retval = IYearMonthDurationItem.<strong class="jxr_keyword">cast</strong>(other);
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>       retval = item.getJavaTypeAdapter().<strong class="jxr_keyword">cast</strong>(other);
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>       retval = item.castAsType(other);
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>     }
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>     <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>   }
@@ -197,7 +197,7 @@
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (left instanceof <a name="IBase64BinaryItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IBase64BinaryItem.html#IBase64BinaryItem">IBase64BinaryItem</a> &amp;&amp; right instanceof <a name="IBase64BinaryItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IBase64BinaryItem.html#IBase64BinaryItem">IBase64BinaryItem</a>) {
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>       retval = binaryCompare((<a name="IBase64BinaryItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IBase64BinaryItem.html#IBase64BinaryItem">IBase64BinaryItem</a>) left, <strong class="jxr_keyword">operator</strong>, (<a name="IBase64BinaryItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IBase64BinaryItem.html#IBase64BinaryItem">IBase64BinaryItem</a>) right);
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="InvalidTypeMetapathException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/InvalidTypeMetapathException.html#InvalidTypeMetapathException">InvalidTypeMetapathException</a>(
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="InvalidTypeMetapathException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/type/InvalidTypeMetapathException.html#InvalidTypeMetapathException">InvalidTypeMetapathException</a>(
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>           <strong class="jxr_keyword">null</strong>,
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>           String.format(<span class="jxr_string">"invalid types for comparison: %s %s %s"</span>, left.getClass().getName(),
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>               <strong class="jxr_keyword">operator</strong>.name().toLowerCase(Locale.ROOT), right.getClass().getName()));
@@ -530,7 +530,7 @@
 <a class="jxr_linenumber" name="L522" href="#L522">522</a>     }
 <a class="jxr_linenumber" name="L523" href="#L523">523</a> 
 <a class="jxr_linenumber" name="L524" href="#L524">524</a>     <strong class="jxr_keyword">if</strong> (retval == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="InvalidTypeMetapathException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/InvalidTypeMetapathException.html#InvalidTypeMetapathException">InvalidTypeMetapathException</a>(
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="InvalidTypeMetapathException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/type/InvalidTypeMetapathException.html#InvalidTypeMetapathException">InvalidTypeMetapathException</a>(
 <a class="jxr_linenumber" name="L526" href="#L526">526</a>           <strong class="jxr_keyword">null</strong>,
 <a class="jxr_linenumber" name="L527" href="#L527">527</a>           String.format(<span class="jxr_string">"The item types '%s' and '%s' are not comparable"</span>,
 <a class="jxr_linenumber" name="L528" href="#L528">528</a>               left.getClass().getName(),

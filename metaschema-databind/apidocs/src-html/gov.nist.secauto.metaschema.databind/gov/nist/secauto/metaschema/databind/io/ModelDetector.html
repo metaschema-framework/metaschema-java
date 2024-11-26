@@ -28,231 +28,258 @@
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.configuration.IConfiguration;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.model.IBoundObject;</span>
 <span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.model.util.JsonUtil;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.databind.io.json.JsonFactoryFactory;</span>
-<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.databind.io.yaml.impl.YamlFactoryFactory;</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">import org.codehaus.stax2.XMLEventReader2;</span>
-<span class="source-line-no">024</span><span id="line-24">import org.codehaus.stax2.XMLInputFactory2;</span>
-<span class="source-line-no">025</span><span id="line-25">import org.eclipse.jdt.annotation.NotOwning;</span>
-<span class="source-line-no">026</span><span id="line-26">import org.eclipse.jdt.annotation.Owning;</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">import java.io.ByteArrayInputStream;</span>
-<span class="source-line-no">029</span><span id="line-29">import java.io.Closeable;</span>
-<span class="source-line-no">030</span><span id="line-30">import java.io.IOException;</span>
-<span class="source-line-no">031</span><span id="line-31">import java.io.InputStream;</span>
-<span class="source-line-no">032</span><span id="line-32">import java.io.InputStreamReader;</span>
-<span class="source-line-no">033</span><span id="line-33">import java.io.Reader;</span>
-<span class="source-line-no">034</span><span id="line-34">import java.nio.charset.Charset;</span>
-<span class="source-line-no">035</span><span id="line-35"></span>
-<span class="source-line-no">036</span><span id="line-36">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">037</span><span id="line-37">import javax.xml.stream.XMLInputFactory;</span>
-<span class="source-line-no">038</span><span id="line-38">import javax.xml.stream.XMLStreamException;</span>
-<span class="source-line-no">039</span><span id="line-39">import javax.xml.stream.events.StartElement;</span>
-<span class="source-line-no">040</span><span id="line-40"></span>
-<span class="source-line-no">041</span><span id="line-41">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">042</span><span id="line-42">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.databind.io.json.JsonFactoryFactory;</span>
+<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.databind.io.yaml.impl.YamlFactoryFactory;</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">import org.codehaus.stax2.XMLEventReader2;</span>
+<span class="source-line-no">025</span><span id="line-25">import org.codehaus.stax2.XMLInputFactory2;</span>
+<span class="source-line-no">026</span><span id="line-26">import org.eclipse.jdt.annotation.NotOwning;</span>
+<span class="source-line-no">027</span><span id="line-27">import org.eclipse.jdt.annotation.Owning;</span>
+<span class="source-line-no">028</span><span id="line-28"></span>
+<span class="source-line-no">029</span><span id="line-29">import java.io.ByteArrayInputStream;</span>
+<span class="source-line-no">030</span><span id="line-30">import java.io.Closeable;</span>
+<span class="source-line-no">031</span><span id="line-31">import java.io.IOException;</span>
+<span class="source-line-no">032</span><span id="line-32">import java.io.InputStream;</span>
+<span class="source-line-no">033</span><span id="line-33">import java.io.InputStreamReader;</span>
+<span class="source-line-no">034</span><span id="line-34">import java.io.Reader;</span>
+<span class="source-line-no">035</span><span id="line-35">import java.net.URI;</span>
+<span class="source-line-no">036</span><span id="line-36">import java.nio.charset.Charset;</span>
+<span class="source-line-no">037</span><span id="line-37"></span>
+<span class="source-line-no">038</span><span id="line-38">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">039</span><span id="line-39">import javax.xml.stream.XMLInputFactory;</span>
+<span class="source-line-no">040</span><span id="line-40">import javax.xml.stream.XMLStreamException;</span>
+<span class="source-line-no">041</span><span id="line-41">import javax.xml.stream.events.StartElement;</span>
+<span class="source-line-no">042</span><span id="line-42">import javax.xml.stream.events.XMLEvent;</span>
 <span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">/**</span>
-<span class="source-line-no">045</span><span id="line-45"> * Provides a means to analyze content to determine what type of bound data it</span>
-<span class="source-line-no">046</span><span id="line-46"> * contains.</span>
-<span class="source-line-no">047</span><span id="line-47"> */</span>
-<span class="source-line-no">048</span><span id="line-48">public class ModelDetector {</span>
-<span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
-<span class="source-line-no">050</span><span id="line-50">  private final IBindingContext bindingContext;</span>
-<span class="source-line-no">051</span><span id="line-51">  @NonNull</span>
-<span class="source-line-no">052</span><span id="line-52">  private final IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration;</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">  /**</span>
-<span class="source-line-no">055</span><span id="line-55">   * Construct a new format detector using the default configuration.</span>
-<span class="source-line-no">056</span><span id="line-56">   *</span>
-<span class="source-line-no">057</span><span id="line-57">   * @param bindingContext</span>
-<span class="source-line-no">058</span><span id="line-58">   *          information about how Java classes are bound to Module definitions</span>
-<span class="source-line-no">059</span><span id="line-59">   */</span>
-<span class="source-line-no">060</span><span id="line-60">  public ModelDetector(</span>
-<span class="source-line-no">061</span><span id="line-61">      @NonNull IBindingContext bindingContext) {</span>
-<span class="source-line-no">062</span><span id="line-62">    this(bindingContext, new DefaultConfiguration&lt;&gt;());</span>
-<span class="source-line-no">063</span><span id="line-63">  }</span>
-<span class="source-line-no">064</span><span id="line-64"></span>
-<span class="source-line-no">065</span><span id="line-65">  /**</span>
-<span class="source-line-no">066</span><span id="line-66">   * Construct a new format detector using the provided {@code configuration}.</span>
-<span class="source-line-no">067</span><span id="line-67">   *</span>
-<span class="source-line-no">068</span><span id="line-68">   * @param bindingContext</span>
-<span class="source-line-no">069</span><span id="line-69">   *          information about how Java classes are bound to Module definitions</span>
-<span class="source-line-no">070</span><span id="line-70">   * @param configuration</span>
-<span class="source-line-no">071</span><span id="line-71">   *          the deserialization configuration</span>
-<span class="source-line-no">072</span><span id="line-72">   */</span>
-<span class="source-line-no">073</span><span id="line-73">  public ModelDetector(</span>
-<span class="source-line-no">074</span><span id="line-74">      @NonNull IBindingContext bindingContext,</span>
-<span class="source-line-no">075</span><span id="line-75">      @NonNull IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration) {</span>
-<span class="source-line-no">076</span><span id="line-76">    this.bindingContext = bindingContext;</span>
-<span class="source-line-no">077</span><span id="line-77">    this.configuration = configuration;</span>
-<span class="source-line-no">078</span><span id="line-78">  }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">  private int getLookaheadLimit() {</span>
-<span class="source-line-no">081</span><span id="line-81">    return configuration.get(DeserializationFeature.FORMAT_DETECTION_LOOKAHEAD_LIMIT);</span>
-<span class="source-line-no">082</span><span id="line-82">  }</span>
-<span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">  @NonNull</span>
-<span class="source-line-no">085</span><span id="line-85">  private IBindingContext getBindingContext() {</span>
-<span class="source-line-no">086</span><span id="line-86">    return bindingContext;</span>
-<span class="source-line-no">087</span><span id="line-87">  }</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">  @NonNull</span>
-<span class="source-line-no">090</span><span id="line-90">  private IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; getConfiguration() {</span>
-<span class="source-line-no">091</span><span id="line-91">    return configuration;</span>
-<span class="source-line-no">092</span><span id="line-92">  }</span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">  /**</span>
-<span class="source-line-no">095</span><span id="line-95">   * Analyzes the data from the provided {@code inputStream} to determine it's</span>
-<span class="source-line-no">096</span><span id="line-96">   * model.</span>
-<span class="source-line-no">097</span><span id="line-97">   *</span>
-<span class="source-line-no">098</span><span id="line-98">   * @param inputStream</span>
-<span class="source-line-no">099</span><span id="line-99">   *          the resource stream to analyze</span>
-<span class="source-line-no">100</span><span id="line-100">   * @param format</span>
-<span class="source-line-no">101</span><span id="line-101">   *          the expected format of the data to read</span>
-<span class="source-line-no">102</span><span id="line-102">   * @return the analysis result</span>
-<span class="source-line-no">103</span><span id="line-103">   * @throws IOException</span>
-<span class="source-line-no">104</span><span id="line-104">   *           if an error occurred while reading the resource</span>
-<span class="source-line-no">105</span><span id="line-105">   */</span>
-<span class="source-line-no">106</span><span id="line-106">  @NonNull</span>
-<span class="source-line-no">107</span><span id="line-107">  @Owning</span>
-<span class="source-line-no">108</span><span id="line-108">  public Result detect(@NonNull @NotOwning InputStream inputStream, @NonNull Format format)</span>
-<span class="source-line-no">109</span><span id="line-109">      throws IOException {</span>
-<span class="source-line-no">110</span><span id="line-110">    byte[] buf = ObjectUtils.notNull(inputStream.readNBytes(getLookaheadLimit()));</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">    Class&lt;? extends IBoundObject&gt; clazz;</span>
-<span class="source-line-no">113</span><span id="line-113">    try (InputStream bis = new ByteArrayInputStream(buf)) {</span>
-<span class="source-line-no">114</span><span id="line-114">      assert bis != null;</span>
-<span class="source-line-no">115</span><span id="line-115">      switch (format) {</span>
-<span class="source-line-no">116</span><span id="line-116">      case JSON:</span>
-<span class="source-line-no">117</span><span id="line-117">        try (JsonParser parser = JsonFactoryFactory.instance().createParser(bis)) {</span>
-<span class="source-line-no">118</span><span id="line-118">          assert parser != null;</span>
-<span class="source-line-no">119</span><span id="line-119">          clazz = detectModelJsonClass(parser);</span>
-<span class="source-line-no">120</span><span id="line-120">        }</span>
-<span class="source-line-no">121</span><span id="line-121">        break;</span>
-<span class="source-line-no">122</span><span id="line-122">      case YAML:</span>
-<span class="source-line-no">123</span><span id="line-123">        YAMLFactory factory = YamlFactoryFactory.newParserFactoryInstance(getConfiguration());</span>
-<span class="source-line-no">124</span><span id="line-124">        try (JsonParser parser = factory.createParser(bis)) {</span>
-<span class="source-line-no">125</span><span id="line-125">          assert parser != null;</span>
-<span class="source-line-no">126</span><span id="line-126">          clazz = detectModelJsonClass(parser);</span>
-<span class="source-line-no">127</span><span id="line-127">        }</span>
-<span class="source-line-no">128</span><span id="line-128">        break;</span>
-<span class="source-line-no">129</span><span id="line-129">      case XML:</span>
-<span class="source-line-no">130</span><span id="line-130">        clazz = detectModelXmlClass(bis);</span>
-<span class="source-line-no">131</span><span id="line-131">        break;</span>
-<span class="source-line-no">132</span><span id="line-132">      default:</span>
-<span class="source-line-no">133</span><span id="line-133">        throw new UnsupportedOperationException(</span>
-<span class="source-line-no">134</span><span id="line-134">            String.format("The format '%s' dataStream not supported", format));</span>
-<span class="source-line-no">135</span><span id="line-135">      }</span>
-<span class="source-line-no">136</span><span id="line-136">    }</span>
-<span class="source-line-no">137</span><span id="line-137"></span>
-<span class="source-line-no">138</span><span id="line-138">    if (clazz == null) {</span>
-<span class="source-line-no">139</span><span id="line-139">      throw new IllegalStateException(</span>
-<span class="source-line-no">140</span><span id="line-140">          String.format("Detected format '%s', but unable to detect the bound data type", format.name()));</span>
-<span class="source-line-no">141</span><span id="line-141">    }</span>
-<span class="source-line-no">142</span><span id="line-142"></span>
-<span class="source-line-no">143</span><span id="line-143">    return new Result(clazz, inputStream, buf);</span>
-<span class="source-line-no">144</span><span id="line-144">  }</span>
+<span class="source-line-no">044</span><span id="line-44">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">045</span><span id="line-45">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">/**</span>
+<span class="source-line-no">048</span><span id="line-48"> * Provides a means to analyze content to determine what type of bound data it</span>
+<span class="source-line-no">049</span><span id="line-49"> * contains.</span>
+<span class="source-line-no">050</span><span id="line-50"> */</span>
+<span class="source-line-no">051</span><span id="line-51">public class ModelDetector {</span>
+<span class="source-line-no">052</span><span id="line-52">  @NonNull</span>
+<span class="source-line-no">053</span><span id="line-53">  private final IBindingContext bindingContext;</span>
+<span class="source-line-no">054</span><span id="line-54">  @NonNull</span>
+<span class="source-line-no">055</span><span id="line-55">  private final IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration;</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">  /**</span>
+<span class="source-line-no">058</span><span id="line-58">   * Construct a new format detector using the default configuration.</span>
+<span class="source-line-no">059</span><span id="line-59">   *</span>
+<span class="source-line-no">060</span><span id="line-60">   * @param bindingContext</span>
+<span class="source-line-no">061</span><span id="line-61">   *          information about how Java classes are bound to Module definitions</span>
+<span class="source-line-no">062</span><span id="line-62">   */</span>
+<span class="source-line-no">063</span><span id="line-63">  public ModelDetector(</span>
+<span class="source-line-no">064</span><span id="line-64">      @NonNull IBindingContext bindingContext) {</span>
+<span class="source-line-no">065</span><span id="line-65">    this(bindingContext, new DefaultConfiguration&lt;&gt;());</span>
+<span class="source-line-no">066</span><span id="line-66">  }</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  /**</span>
+<span class="source-line-no">069</span><span id="line-69">   * Construct a new format detector using the provided {@code configuration}.</span>
+<span class="source-line-no">070</span><span id="line-70">   *</span>
+<span class="source-line-no">071</span><span id="line-71">   * @param bindingContext</span>
+<span class="source-line-no">072</span><span id="line-72">   *          information about how Java classes are bound to Module definitions</span>
+<span class="source-line-no">073</span><span id="line-73">   * @param configuration</span>
+<span class="source-line-no">074</span><span id="line-74">   *          the deserialization configuration</span>
+<span class="source-line-no">075</span><span id="line-75">   */</span>
+<span class="source-line-no">076</span><span id="line-76">  public ModelDetector(</span>
+<span class="source-line-no">077</span><span id="line-77">      @NonNull IBindingContext bindingContext,</span>
+<span class="source-line-no">078</span><span id="line-78">      @NonNull IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; configuration) {</span>
+<span class="source-line-no">079</span><span id="line-79">    this.bindingContext = bindingContext;</span>
+<span class="source-line-no">080</span><span id="line-80">    this.configuration = configuration;</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">  private int getLookaheadLimit() {</span>
+<span class="source-line-no">084</span><span id="line-84">    return configuration.get(DeserializationFeature.FORMAT_DETECTION_LOOKAHEAD_LIMIT);</span>
+<span class="source-line-no">085</span><span id="line-85">  }</span>
+<span class="source-line-no">086</span><span id="line-86"></span>
+<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
+<span class="source-line-no">088</span><span id="line-88">  private IBindingContext getBindingContext() {</span>
+<span class="source-line-no">089</span><span id="line-89">    return bindingContext;</span>
+<span class="source-line-no">090</span><span id="line-90">  }</span>
+<span class="source-line-no">091</span><span id="line-91"></span>
+<span class="source-line-no">092</span><span id="line-92">  @NonNull</span>
+<span class="source-line-no">093</span><span id="line-93">  private IConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; getConfiguration() {</span>
+<span class="source-line-no">094</span><span id="line-94">    return configuration;</span>
+<span class="source-line-no">095</span><span id="line-95">  }</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">  /**</span>
+<span class="source-line-no">098</span><span id="line-98">   * Analyzes the data from the provided {@code inputStream} to determine it's</span>
+<span class="source-line-no">099</span><span id="line-99">   * model.</span>
+<span class="source-line-no">100</span><span id="line-100">   *</span>
+<span class="source-line-no">101</span><span id="line-101">   * @param inputStream</span>
+<span class="source-line-no">102</span><span id="line-102">   *          the resource stream to analyze</span>
+<span class="source-line-no">103</span><span id="line-103">   * @param resource</span>
+<span class="source-line-no">104</span><span id="line-104">   *          the resource being parsed</span>
+<span class="source-line-no">105</span><span id="line-105">   * @param format</span>
+<span class="source-line-no">106</span><span id="line-106">   *          the expected format of the data to read</span>
+<span class="source-line-no">107</span><span id="line-107">   * @return the analysis result</span>
+<span class="source-line-no">108</span><span id="line-108">   * @throws IOException</span>
+<span class="source-line-no">109</span><span id="line-109">   *           if an error occurred while reading the resource</span>
+<span class="source-line-no">110</span><span id="line-110">   */</span>
+<span class="source-line-no">111</span><span id="line-111">  @NonNull</span>
+<span class="source-line-no">112</span><span id="line-112">  @Owning</span>
+<span class="source-line-no">113</span><span id="line-113">  public Result detect(</span>
+<span class="source-line-no">114</span><span id="line-114">      @NonNull @NotOwning InputStream inputStream,</span>
+<span class="source-line-no">115</span><span id="line-115">      @NonNull URI resource,</span>
+<span class="source-line-no">116</span><span id="line-116">      @NonNull Format format)</span>
+<span class="source-line-no">117</span><span id="line-117">      throws IOException {</span>
+<span class="source-line-no">118</span><span id="line-118">    byte[] buf = ObjectUtils.notNull(inputStream.readNBytes(getLookaheadLimit()));</span>
+<span class="source-line-no">119</span><span id="line-119"></span>
+<span class="source-line-no">120</span><span id="line-120">    Class&lt;? extends IBoundObject&gt; clazz;</span>
+<span class="source-line-no">121</span><span id="line-121">    try (InputStream bis = new ByteArrayInputStream(buf)) {</span>
+<span class="source-line-no">122</span><span id="line-122">      assert bis != null;</span>
+<span class="source-line-no">123</span><span id="line-123">      switch (format) {</span>
+<span class="source-line-no">124</span><span id="line-124">      case JSON:</span>
+<span class="source-line-no">125</span><span id="line-125">        try (JsonParser parser = JsonFactoryFactory.instance().createParser(bis)) {</span>
+<span class="source-line-no">126</span><span id="line-126">          assert parser != null;</span>
+<span class="source-line-no">127</span><span id="line-127">          clazz = detectModelJsonClass(parser, resource);</span>
+<span class="source-line-no">128</span><span id="line-128">        }</span>
+<span class="source-line-no">129</span><span id="line-129">        break;</span>
+<span class="source-line-no">130</span><span id="line-130">      case YAML:</span>
+<span class="source-line-no">131</span><span id="line-131">        YAMLFactory factory = YamlFactoryFactory.newParserFactoryInstance(getConfiguration());</span>
+<span class="source-line-no">132</span><span id="line-132">        try (JsonParser parser = factory.createParser(bis)) {</span>
+<span class="source-line-no">133</span><span id="line-133">          assert parser != null;</span>
+<span class="source-line-no">134</span><span id="line-134">          clazz = detectModelJsonClass(parser, resource);</span>
+<span class="source-line-no">135</span><span id="line-135">        }</span>
+<span class="source-line-no">136</span><span id="line-136">        break;</span>
+<span class="source-line-no">137</span><span id="line-137">      case XML:</span>
+<span class="source-line-no">138</span><span id="line-138">        clazz = detectModelXmlClass(bis, resource);</span>
+<span class="source-line-no">139</span><span id="line-139">        break;</span>
+<span class="source-line-no">140</span><span id="line-140">      default:</span>
+<span class="source-line-no">141</span><span id="line-141">        throw new UnsupportedOperationException(</span>
+<span class="source-line-no">142</span><span id="line-142">            String.format("The format '%s' dataStream not supported", format));</span>
+<span class="source-line-no">143</span><span id="line-143">      }</span>
+<span class="source-line-no">144</span><span id="line-144">    }</span>
 <span class="source-line-no">145</span><span id="line-145"></span>
-<span class="source-line-no">146</span><span id="line-146">  @NonNull</span>
-<span class="source-line-no">147</span><span id="line-147">  private Class&lt;? extends IBoundObject&gt; detectModelXmlClass(@NonNull InputStream is) throws IOException {</span>
-<span class="source-line-no">148</span><span id="line-148">    QName startElementQName;</span>
-<span class="source-line-no">149</span><span id="line-149">    try {</span>
-<span class="source-line-no">150</span><span id="line-150">      XMLInputFactory2 xmlInputFactory = (XMLInputFactory2) XMLInputFactory.newInstance();</span>
-<span class="source-line-no">151</span><span id="line-151">      assert xmlInputFactory instanceof WstxInputFactory;</span>
-<span class="source-line-no">152</span><span id="line-152">      xmlInputFactory.configureForXmlConformance();</span>
-<span class="source-line-no">153</span><span id="line-153">      xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, false);</span>
-<span class="source-line-no">154</span><span id="line-154"></span>
-<span class="source-line-no">155</span><span id="line-155">      Reader reader = new InputStreamReader(is, Charset.forName("UTF8"));</span>
-<span class="source-line-no">156</span><span id="line-156">      XMLEventReader2 eventReader = (XMLEventReader2) xmlInputFactory.createXMLEventReader(reader);</span>
-<span class="source-line-no">157</span><span id="line-157">      while (eventReader.hasNext() &amp;&amp; !eventReader.peek().isStartElement()) {</span>
-<span class="source-line-no">158</span><span id="line-158">        eventReader.nextEvent();</span>
-<span class="source-line-no">159</span><span id="line-159">      }</span>
-<span class="source-line-no">160</span><span id="line-160"></span>
-<span class="source-line-no">161</span><span id="line-161">      if (!eventReader.peek().isStartElement()) {</span>
-<span class="source-line-no">162</span><span id="line-162">        throw new IOException("Unable to detect a start element");</span>
-<span class="source-line-no">163</span><span id="line-163">      }</span>
+<span class="source-line-no">146</span><span id="line-146">    if (clazz == null) {</span>
+<span class="source-line-no">147</span><span id="line-147">      throw new IllegalStateException(</span>
+<span class="source-line-no">148</span><span id="line-148">          String.format("Detected format '%s', but unable to detect the bound data type", format.name()));</span>
+<span class="source-line-no">149</span><span id="line-149">    }</span>
+<span class="source-line-no">150</span><span id="line-150"></span>
+<span class="source-line-no">151</span><span id="line-151">    return new Result(clazz, inputStream, buf);</span>
+<span class="source-line-no">152</span><span id="line-152">  }</span>
+<span class="source-line-no">153</span><span id="line-153"></span>
+<span class="source-line-no">154</span><span id="line-154">  @NonNull</span>
+<span class="source-line-no">155</span><span id="line-155">  private Class&lt;? extends IBoundObject&gt; detectModelXmlClass(</span>
+<span class="source-line-no">156</span><span id="line-156">      @NonNull InputStream is,</span>
+<span class="source-line-no">157</span><span id="line-157">      @NonNull URI resource) throws IOException {</span>
+<span class="source-line-no">158</span><span id="line-158">    StartElement start;</span>
+<span class="source-line-no">159</span><span id="line-159">    try {</span>
+<span class="source-line-no">160</span><span id="line-160">      XMLInputFactory2 xmlInputFactory = (XMLInputFactory2) XMLInputFactory.newInstance();</span>
+<span class="source-line-no">161</span><span id="line-161">      assert xmlInputFactory instanceof WstxInputFactory;</span>
+<span class="source-line-no">162</span><span id="line-162">      xmlInputFactory.configureForXmlConformance();</span>
+<span class="source-line-no">163</span><span id="line-163">      xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, false);</span>
 <span class="source-line-no">164</span><span id="line-164"></span>
-<span class="source-line-no">165</span><span id="line-165">      StartElement start = eventReader.nextEvent().asStartElement();</span>
-<span class="source-line-no">166</span><span id="line-166">      startElementQName = ObjectUtils.notNull(start.getName());</span>
-<span class="source-line-no">167</span><span id="line-167">    } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">168</span><span id="line-168">      throw new IOException(ex);</span>
-<span class="source-line-no">169</span><span id="line-169">    }</span>
-<span class="source-line-no">170</span><span id="line-170"></span>
-<span class="source-line-no">171</span><span id="line-171">    Class&lt;? extends IBoundObject&gt; clazz = getBindingContext().getBoundClassForRootXmlQName(startElementQName);</span>
-<span class="source-line-no">172</span><span id="line-172">    if (clazz == null) {</span>
-<span class="source-line-no">173</span><span id="line-173">      throw new IOException("Unrecognized element name: " + startElementQName.toString());</span>
-<span class="source-line-no">174</span><span id="line-174">    }</span>
-<span class="source-line-no">175</span><span id="line-175">    return clazz;</span>
-<span class="source-line-no">176</span><span id="line-176">  }</span>
+<span class="source-line-no">165</span><span id="line-165">      Reader reader = new InputStreamReader(is, Charset.forName("UTF8"));</span>
+<span class="source-line-no">166</span><span id="line-166">      XMLEventReader2 eventReader = (XMLEventReader2) xmlInputFactory.createXMLEventReader(reader);</span>
+<span class="source-line-no">167</span><span id="line-167"></span>
+<span class="source-line-no">168</span><span id="line-168">      while (eventReader.hasNext() &amp;&amp; !eventReader.peek().isStartElement()) {</span>
+<span class="source-line-no">169</span><span id="line-169">        eventReader.nextEvent();</span>
+<span class="source-line-no">170</span><span id="line-170">      }</span>
+<span class="source-line-no">171</span><span id="line-171"></span>
+<span class="source-line-no">172</span><span id="line-172">      XMLEvent nextEvent = eventReader.peek();</span>
+<span class="source-line-no">173</span><span id="line-173">      if (!nextEvent.isStartElement()) {</span>
+<span class="source-line-no">174</span><span id="line-174">        throw new IOException(String.format("Unable to detect a start element%s.",</span>
+<span class="source-line-no">175</span><span id="line-175">            XmlEventUtil.generateLocationMessage(nextEvent, resource)));</span>
+<span class="source-line-no">176</span><span id="line-176">      }</span>
 <span class="source-line-no">177</span><span id="line-177"></span>
-<span class="source-line-no">178</span><span id="line-178">  @Nullable</span>
-<span class="source-line-no">179</span><span id="line-179">  private Class&lt;? extends IBoundObject&gt; detectModelJsonClass(@NonNull JsonParser parser) throws IOException {</span>
-<span class="source-line-no">180</span><span id="line-180">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
-<span class="source-line-no">181</span><span id="line-181">    JsonUtil.advanceAndAssert(parser, JsonToken.START_OBJECT);</span>
-<span class="source-line-no">182</span><span id="line-182">    outer: while (JsonToken.FIELD_NAME.equals(parser.nextToken())) {</span>
-<span class="source-line-no">183</span><span id="line-183">      String name = ObjectUtils.notNull(parser.currentName());</span>
-<span class="source-line-no">184</span><span id="line-184">      if (!"$schema".equals(name)) {</span>
-<span class="source-line-no">185</span><span id="line-185">        IBindingContext bindingContext = getBindingContext();</span>
-<span class="source-line-no">186</span><span id="line-186">        retval = bindingContext.getBoundClassForRootJsonName(name);</span>
-<span class="source-line-no">187</span><span id="line-187">        if (retval == null) {</span>
-<span class="source-line-no">188</span><span id="line-188">          throw new IOException("Unrecognized JSON field name: " + name);</span>
-<span class="source-line-no">189</span><span id="line-189">        }</span>
-<span class="source-line-no">190</span><span id="line-190">        break outer;</span>
-<span class="source-line-no">191</span><span id="line-191">      }</span>
-<span class="source-line-no">192</span><span id="line-192">      // do nothing</span>
-<span class="source-line-no">193</span><span id="line-193">      parser.nextToken();</span>
-<span class="source-line-no">194</span><span id="line-194">      // JsonUtil.skipNextValue(parser);</span>
-<span class="source-line-no">195</span><span id="line-195">    }</span>
-<span class="source-line-no">196</span><span id="line-196">    return retval;</span>
-<span class="source-line-no">197</span><span id="line-197">  }</span>
-<span class="source-line-no">198</span><span id="line-198"></span>
-<span class="source-line-no">199</span><span id="line-199">  public static final class Result implements Closeable {</span>
-<span class="source-line-no">200</span><span id="line-200">    @NonNull</span>
-<span class="source-line-no">201</span><span id="line-201">    private final Class&lt;? extends IBoundObject&gt; boundClass;</span>
-<span class="source-line-no">202</span><span id="line-202">    @Owning</span>
-<span class="source-line-no">203</span><span id="line-203">    private InputStream dataStream;</span>
-<span class="source-line-no">204</span><span id="line-204"></span>
-<span class="source-line-no">205</span><span id="line-205">    private Result(</span>
-<span class="source-line-no">206</span><span id="line-206">        @NonNull Class&lt;? extends IBoundObject&gt; clazz,</span>
-<span class="source-line-no">207</span><span id="line-207">        @NonNull InputStream is,</span>
-<span class="source-line-no">208</span><span id="line-208">        @NonNull byte[] buf) {</span>
-<span class="source-line-no">209</span><span id="line-209">      this.boundClass = clazz;</span>
-<span class="source-line-no">210</span><span id="line-210">      this.dataStream = new MergedStream(null, is, buf, 0, buf.length);</span>
-<span class="source-line-no">211</span><span id="line-211">    }</span>
-<span class="source-line-no">212</span><span id="line-212"></span>
-<span class="source-line-no">213</span><span id="line-213">    /**</span>
-<span class="source-line-no">214</span><span id="line-214">     * Get the Java class representing the detected bound object.</span>
-<span class="source-line-no">215</span><span id="line-215">     *</span>
-<span class="source-line-no">216</span><span id="line-216">     * @return the Java class</span>
-<span class="source-line-no">217</span><span id="line-217">     */</span>
-<span class="source-line-no">218</span><span id="line-218">    @NonNull</span>
-<span class="source-line-no">219</span><span id="line-219">    public Class&lt;? extends IBoundObject&gt; getBoundClass() {</span>
-<span class="source-line-no">220</span><span id="line-220">      return boundClass;</span>
-<span class="source-line-no">221</span><span id="line-221">    }</span>
-<span class="source-line-no">222</span><span id="line-222"></span>
-<span class="source-line-no">223</span><span id="line-223">    /**</span>
-<span class="source-line-no">224</span><span id="line-224">     * Get an {@link InputStream} that can be used to read the analyzed data from</span>
-<span class="source-line-no">225</span><span id="line-225">     * the start.</span>
-<span class="source-line-no">226</span><span id="line-226">     *</span>
-<span class="source-line-no">227</span><span id="line-227">     * @return the stream</span>
-<span class="source-line-no">228</span><span id="line-228">     */</span>
-<span class="source-line-no">229</span><span id="line-229">    @NonNull</span>
-<span class="source-line-no">230</span><span id="line-230">    @Owning</span>
-<span class="source-line-no">231</span><span id="line-231">    public InputStream getDataStream() {</span>
-<span class="source-line-no">232</span><span id="line-232">      return ObjectUtils.requireNonNull(dataStream, "data stream already closed");</span>
-<span class="source-line-no">233</span><span id="line-233">    }</span>
-<span class="source-line-no">234</span><span id="line-234"></span>
-<span class="source-line-no">235</span><span id="line-235">    @SuppressWarnings("PMD.NullAssignment")</span>
-<span class="source-line-no">236</span><span id="line-236">    @Override</span>
-<span class="source-line-no">237</span><span id="line-237">    public void close() throws IOException {</span>
-<span class="source-line-no">238</span><span id="line-238">      this.dataStream.close();</span>
-<span class="source-line-no">239</span><span id="line-239">      this.dataStream = null;</span>
-<span class="source-line-no">240</span><span id="line-240">    }</span>
-<span class="source-line-no">241</span><span id="line-241">  }</span>
-<span class="source-line-no">242</span><span id="line-242">}</span>
+<span class="source-line-no">178</span><span id="line-178">      start = eventReader.nextEvent().asStartElement();</span>
+<span class="source-line-no">179</span><span id="line-179">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">180</span><span id="line-180">      throw new IOException(ex);</span>
+<span class="source-line-no">181</span><span id="line-181">    }</span>
+<span class="source-line-no">182</span><span id="line-182"></span>
+<span class="source-line-no">183</span><span id="line-183">    QName startElementQName = ObjectUtils.notNull(start.getName());</span>
+<span class="source-line-no">184</span><span id="line-184">    Class&lt;? extends IBoundObject&gt; clazz = getBindingContext().getBoundClassForRootXmlQName(startElementQName);</span>
+<span class="source-line-no">185</span><span id="line-185">    if (clazz == null) {</span>
+<span class="source-line-no">186</span><span id="line-186">      throw new IOException(String.format(</span>
+<span class="source-line-no">187</span><span id="line-187">          "Unrecognized element name: %s%s.",</span>
+<span class="source-line-no">188</span><span id="line-188">          startElementQName.toString(),</span>
+<span class="source-line-no">189</span><span id="line-189">          XmlEventUtil.generateLocationMessage(start, resource)));</span>
+<span class="source-line-no">190</span><span id="line-190">    }</span>
+<span class="source-line-no">191</span><span id="line-191">    return clazz;</span>
+<span class="source-line-no">192</span><span id="line-192">  }</span>
+<span class="source-line-no">193</span><span id="line-193"></span>
+<span class="source-line-no">194</span><span id="line-194">  @Nullable</span>
+<span class="source-line-no">195</span><span id="line-195">  private Class&lt;? extends IBoundObject&gt; detectModelJsonClass(</span>
+<span class="source-line-no">196</span><span id="line-196">      @NotOwning @NonNull JsonParser parser,</span>
+<span class="source-line-no">197</span><span id="line-197">      @NonNull URI resource) throws IOException {</span>
+<span class="source-line-no">198</span><span id="line-198">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
+<span class="source-line-no">199</span><span id="line-199">    JsonUtil.advanceAndAssert(parser, resource, JsonToken.START_OBJECT);</span>
+<span class="source-line-no">200</span><span id="line-200">    outer: while (JsonToken.FIELD_NAME.equals(parser.nextToken())) {</span>
+<span class="source-line-no">201</span><span id="line-201">      String name = ObjectUtils.notNull(parser.currentName());</span>
+<span class="source-line-no">202</span><span id="line-202">      if (!"$schema".equals(name)) {</span>
+<span class="source-line-no">203</span><span id="line-203">        IBindingContext bindingContext = getBindingContext();</span>
+<span class="source-line-no">204</span><span id="line-204">        retval = bindingContext.getBoundClassForRootJsonName(name);</span>
+<span class="source-line-no">205</span><span id="line-205">        if (retval == null) {</span>
+<span class="source-line-no">206</span><span id="line-206">          throw new IOException("Unrecognized JSON field name: " + name);</span>
+<span class="source-line-no">207</span><span id="line-207">        }</span>
+<span class="source-line-no">208</span><span id="line-208">        break outer;</span>
+<span class="source-line-no">209</span><span id="line-209">      }</span>
+<span class="source-line-no">210</span><span id="line-210">      // do nothing</span>
+<span class="source-line-no">211</span><span id="line-211">      parser.nextToken();</span>
+<span class="source-line-no">212</span><span id="line-212">      // JsonUtil.skipNextValue(parser);</span>
+<span class="source-line-no">213</span><span id="line-213">    }</span>
+<span class="source-line-no">214</span><span id="line-214">    return retval;</span>
+<span class="source-line-no">215</span><span id="line-215">  }</span>
+<span class="source-line-no">216</span><span id="line-216"></span>
+<span class="source-line-no">217</span><span id="line-217">  /**</span>
+<span class="source-line-no">218</span><span id="line-218">   * Describes the result of detecting which model a resource is described by.</span>
+<span class="source-line-no">219</span><span id="line-219">   * &lt;p&gt;</span>
+<span class="source-line-no">220</span><span id="line-220">   * The method {@link #getBoundClass()} can be used to get class binding for the</span>
+<span class="source-line-no">221</span><span id="line-221">   * identified node in a Metaschema-based model.</span>
+<span class="source-line-no">222</span><span id="line-222">   * &lt;p&gt;</span>
+<span class="source-line-no">223</span><span id="line-223">   * The method {@link #getDataStream()} can be used to get a stream to read the</span>
+<span class="source-line-no">224</span><span id="line-224">   * content used for detection. This will replay any content used for detection.</span>
+<span class="source-line-no">225</span><span id="line-225">   */</span>
+<span class="source-line-no">226</span><span id="line-226">  public static final class Result implements Closeable {</span>
+<span class="source-line-no">227</span><span id="line-227">    @NonNull</span>
+<span class="source-line-no">228</span><span id="line-228">    private final Class&lt;? extends IBoundObject&gt; boundClass;</span>
+<span class="source-line-no">229</span><span id="line-229">    @Owning</span>
+<span class="source-line-no">230</span><span id="line-230">    private InputStream dataStream;</span>
+<span class="source-line-no">231</span><span id="line-231"></span>
+<span class="source-line-no">232</span><span id="line-232">    private Result(</span>
+<span class="source-line-no">233</span><span id="line-233">        @NonNull Class&lt;? extends IBoundObject&gt; clazz,</span>
+<span class="source-line-no">234</span><span id="line-234">        @NonNull InputStream is,</span>
+<span class="source-line-no">235</span><span id="line-235">        @NonNull byte[] buf) {</span>
+<span class="source-line-no">236</span><span id="line-236">      this.boundClass = clazz;</span>
+<span class="source-line-no">237</span><span id="line-237">      this.dataStream = new MergedStream(null, is, buf, 0, buf.length);</span>
+<span class="source-line-no">238</span><span id="line-238">    }</span>
+<span class="source-line-no">239</span><span id="line-239"></span>
+<span class="source-line-no">240</span><span id="line-240">    /**</span>
+<span class="source-line-no">241</span><span id="line-241">     * Get the Java class representing the detected bound object.</span>
+<span class="source-line-no">242</span><span id="line-242">     *</span>
+<span class="source-line-no">243</span><span id="line-243">     * @return the Java class</span>
+<span class="source-line-no">244</span><span id="line-244">     */</span>
+<span class="source-line-no">245</span><span id="line-245">    @NonNull</span>
+<span class="source-line-no">246</span><span id="line-246">    public Class&lt;? extends IBoundObject&gt; getBoundClass() {</span>
+<span class="source-line-no">247</span><span id="line-247">      return boundClass;</span>
+<span class="source-line-no">248</span><span id="line-248">    }</span>
+<span class="source-line-no">249</span><span id="line-249"></span>
+<span class="source-line-no">250</span><span id="line-250">    /**</span>
+<span class="source-line-no">251</span><span id="line-251">     * Get an {@link InputStream} that can be used to read the analyzed data from</span>
+<span class="source-line-no">252</span><span id="line-252">     * the start.</span>
+<span class="source-line-no">253</span><span id="line-253">     *</span>
+<span class="source-line-no">254</span><span id="line-254">     * @return the stream</span>
+<span class="source-line-no">255</span><span id="line-255">     */</span>
+<span class="source-line-no">256</span><span id="line-256">    @NonNull</span>
+<span class="source-line-no">257</span><span id="line-257">    @Owning</span>
+<span class="source-line-no">258</span><span id="line-258">    public InputStream getDataStream() {</span>
+<span class="source-line-no">259</span><span id="line-259">      return ObjectUtils.requireNonNull(dataStream, "data stream already closed");</span>
+<span class="source-line-no">260</span><span id="line-260">    }</span>
+<span class="source-line-no">261</span><span id="line-261"></span>
+<span class="source-line-no">262</span><span id="line-262">    @SuppressWarnings("PMD.NullAssignment")</span>
+<span class="source-line-no">263</span><span id="line-263">    @Override</span>
+<span class="source-line-no">264</span><span id="line-264">    public void close() throws IOException {</span>
+<span class="source-line-no">265</span><span id="line-265">      this.dataStream.close();</span>
+<span class="source-line-no">266</span><span id="line-266">      this.dataStream = null;</span>
+<span class="source-line-no">267</span><span id="line-267">    }</span>
+<span class="source-line-no">268</span><span id="line-268">  }</span>
+<span class="source-line-no">269</span><span id="line-269">}</span>
 
 
 

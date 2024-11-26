@@ -44,15 +44,15 @@
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>        .focusIndependent()
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>            .name(<span class="jxr_string">"sourceString"</span>)
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>            .type(IStringItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>            .type(IStringItem.type())
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>            .zeroOrOne()
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>            .build())
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>            .name(<span class="jxr_string">"start"</span>)
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>            .type(IDecimalItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>            .type(IDecimalItem.type())
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>            .one()
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>            .build())
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>        .returnType(IStringItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>        .returnType(IStringItem.type())
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>        .returnOne()
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>        .functionHandler(FnSubstring::executeTwoArg)
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>        .build();
@@ -66,20 +66,20 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>        .focusIndependent()
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>            .name(<span class="jxr_string">"sourceString"</span>)
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>            .type(IStringItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>            .type(IStringItem.type())
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>            .zeroOrOne()
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>            .build())
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>            .name(<span class="jxr_string">"start"</span>)
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>            .type(IDecimalItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>            .type(IDecimalItem.type())
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>            .one()
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>            .build())
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>            .name(<span class="jxr_string">"length"</span>)
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>            .type(IDecimalItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>            .type(IDecimalItem.type())
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>            .one()
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>            .build())
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>        .returnType(IStringItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>        .returnType(IStringItem.type())
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>        .returnOne()
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>        .functionHandler(FnSubstring::executeThreeArg)
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        .build();
@@ -110,7 +110,7 @@
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>         fnSubstring(
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>             sourceString.asString(),
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>             startIndex,
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>             sourceString.toString().length() - Math.max(startIndex, 1) + 1)));
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>             sourceString.asString().length() - Math.max(startIndex, 1) + 1)));
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>   }
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>   @SuppressWarnings({ <span class="jxr_string">"unused"</span>, <span class="jxr_string">"PMD.OnlyOneReturn"</span> })

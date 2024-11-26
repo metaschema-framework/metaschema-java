@@ -74,13 +74,13 @@
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>                      <span class="jxr_string">"rootName"</span>),
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>                  () -&gt; assertEquals(
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>                      assembly.getContainingModule().getXmlNamespace().toASCIIString(),
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>                      assembly.getRootXmlQName().getNamespaceURI(),
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>                      assembly.getRootQName().getNamespace(),
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>                      <span class="jxr_string">"rootNamespace"</span>),
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>                  () -&gt; assertTrue(<strong class="jxr_keyword">true</strong>));
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>            } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>              assertEquals(
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>                  <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>                  assembly.getRootXmlQName(),
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>                  assembly.getRootQName(),
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>                  <span class="jxr_string">"rootNamespace"</span>);
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>            }
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>          });
@@ -173,7 +173,7 @@
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>             <span class="jxr_string">"defaultValue"</span>),
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>         () -&gt; assertEquals(
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>             field.getContainingModule().getXmlNamespace().toASCIIString(),
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>             field.getXmlNamespace(),
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>             field.getQName().getNamespace(),
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>             <span class="jxr_string">"namespace"</span>),
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>         () -&gt; assertEquals(
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>             annotation.inXmlWrapped(),

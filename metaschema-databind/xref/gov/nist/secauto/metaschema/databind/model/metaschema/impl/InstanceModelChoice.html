@@ -28,7 +28,7 @@
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingInstance;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> nl.talsmasoftware.lazy4j.Lazy;
@@ -51,20 +51,20 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;IAssemblyNodeItem&gt; boundNodeItem;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">public</strong> <a name="InstanceModelChoice" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/impl/InstanceModelChoice.html#InstanceModelChoice">InstanceModelChoice</a>(
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>        @NonNull Choice binding,
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>        @NonNull AssemblyModel.Choice binding,
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>        @NonNull <a name="IBoundInstanceModelGroupedAssembly" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/IBoundInstanceModelGroupedAssembly.html#IBoundInstanceModelGroupedAssembly">IBoundInstanceModelGroupedAssembly</a> bindingInstance,
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>        <strong class="jxr_keyword">int</strong> position,
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>        @NonNull <a name="IBindingDefinitionModelAssembly" href="../../../../../../../../gov/nist/secauto/metaschema/databind/model/metaschema/IBindingDefinitionModelAssembly.html#IBindingDefinitionModelAssembly">IBindingDefinitionModelAssembly</a> parent,
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>        @NonNull INodeItemFactory nodeItemFactory) {
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">super</strong>(parent);
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; ChoiceModelContainerSupport.of(
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; ChoiceModelGenerator.of(
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>          binding,
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          bindingInstance,
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>          <strong class="jxr_keyword">this</strong>,
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>          nodeItemFactory)));
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">this</strong>.boundNodeItem = ObjectUtils.notNull(
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          Lazy.lazy(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>              .getModelItemsByName(bindingInstance.getXmlQName())
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>              .getModelItemsByName(bindingInstance.getQName())
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>              .get(position)));
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    }
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
@@ -98,11 +98,7 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>    @Override
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">public</strong> String getGroupAsXmlNamespace() {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>    }
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

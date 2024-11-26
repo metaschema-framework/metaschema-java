@@ -98,7 +98,7 @@
 <span class="source-line-no">085</span><span id="line-85">      retval = Kind.PASS;</span>
 <span class="source-line-no">086</span><span id="line-86">      break;</span>
 <span class="source-line-no">087</span><span id="line-87">    default:</span>
-<span class="source-line-no">088</span><span id="line-88">      throw new IllegalArgumentException(String.format("Unsupported level '%s'.", level));</span>
+<span class="source-line-no">088</span><span id="line-88">      throw new UnsupportedOperationException(String.format("Unsupported level '%s'.", level));</span>
 <span class="source-line-no">089</span><span id="line-89">    }</span>
 <span class="source-line-no">090</span><span id="line-90"></span>
 <span class="source-line-no">091</span><span id="line-91">    return retval;</span>

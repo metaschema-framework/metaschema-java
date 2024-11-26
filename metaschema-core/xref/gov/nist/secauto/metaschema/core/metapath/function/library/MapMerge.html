@@ -60,10 +60,10 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>        .focusIndependent()
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>            .name(<span class="jxr_string">"maps"</span>)
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>            .type(IMapItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>            .type(IMapItem.type())
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>            .zeroOrMore()
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>            .build())
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>        .returnType(IMapItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>        .returnType(IMapItem.type())
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>        .returnOne()
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>        .functionHandler(MapMerge::executeOneArg)
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>        .build();
@@ -77,15 +77,15 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>        .focusIndependent()
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>            .name(<span class="jxr_string">"maps"</span>)
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>            .type(IMapItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>            .type(IMapItem.type())
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>            .zeroOrMore()
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>            .build())
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>            .name(<span class="jxr_string">"options"</span>)
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>            .type(IMapItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>            .type(IMapItem.type())
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>            .one()
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>            .build())
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>        .returnType(IMapItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>        .returnType(IMapItem.type())
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>        .returnOne()
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>        .functionHandler(MapMerge::executeTwoArg)
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        .build();
@@ -103,8 +103,8 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      @SuppressWarnings(<span class="jxr_string">"checkstyle:Indentation"</span>)
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      COMBINE(
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          <span class="jxr_string">"combine"</span>,
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>          (key, v1, v2) -&gt; Stream.concat(v1.asSequence().stream(), v2.asSequence().stream())
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>              .collect(ISequence.toSequence()));
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          (key, v1, v2) -&gt; Stream.concat(v1.toSequence().stream(), v2.toSequence().stream())
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>              .collect(CustomCollectors.toSequence()));
 <a class="jxr_linenumber" name="L100" href="#L100">100</a> 
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Map&lt;String, Duplicates&gt; BY_NAME;
 <a class="jxr_linenumber" name="L102" href="#L102">102</a> 
@@ -196,7 +196,7 @@
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>       duplicates = Duplicates.USE_FIRST;
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>     } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>       <em class="jxr_comment">// resolve the provided option</em>
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>       <a name="IAnyAtomicItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyAtomicItem.html#IAnyAtomicItem">IAnyAtomicItem</a> atomicValue = FnData.fnData(duplicatesOption.asSequence()).getFirstItem(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>       <a name="IAnyAtomicItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyAtomicItem.html#IAnyAtomicItem">IAnyAtomicItem</a> atomicValue = ISequence.of(duplicatesOption.toSequence().atomize()).getFirstItem(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>       <strong class="jxr_keyword">if</strong> (atomicValue == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="JsonFunctionException" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/JsonFunctionException.html#JsonFunctionException">JsonFunctionException</a>(
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>             JsonFunctionException.INVALID_OPTION,

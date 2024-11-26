@@ -20,117 +20,157 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">/**</span>
-<span class="source-line-no">014</span><span id="line-14"> * A Metapath atomic item with a boolean value.</span>
-<span class="source-line-no">015</span><span id="line-15"> */</span>
-<span class="source-line-no">016</span><span id="line-16">public interface IBooleanItem extends IAnyAtomicItem {</span>
-<span class="source-line-no">017</span><span id="line-17">  /**</span>
-<span class="source-line-no">018</span><span id="line-18">   * The boolean item value of {@code true}.</span>
-<span class="source-line-no">019</span><span id="line-19">   */</span>
-<span class="source-line-no">020</span><span id="line-20">  @NonNull</span>
-<span class="source-line-no">021</span><span id="line-21">  IBooleanItem TRUE = new BooleanItemImpl(true);</span>
-<span class="source-line-no">022</span><span id="line-22">  /**</span>
-<span class="source-line-no">023</span><span id="line-23">   * The boolean item value of {@code false}.</span>
-<span class="source-line-no">024</span><span id="line-24">   */</span>
-<span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
-<span class="source-line-no">026</span><span id="line-26">  IBooleanItem FALSE = new BooleanItemImpl(false);</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  /**</span>
-<span class="source-line-no">029</span><span id="line-29">   * Construct a new boolean item using the provided string {@code value}.</span>
-<span class="source-line-no">030</span><span id="line-30">   * &lt;p&gt;</span>
-<span class="source-line-no">031</span><span id="line-31">   * The item will be {@link #TRUE} if the value is "1" or "true", or</span>
-<span class="source-line-no">032</span><span id="line-32">   * {@link #FALSE} otherwise</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.BooleanItemImpl;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">015</span><span id="line-15"></span>
+<span class="source-line-no">016</span><span id="line-16">/**</span>
+<span class="source-line-no">017</span><span id="line-17"> * An atomic Metapath item with a boolean value.</span>
+<span class="source-line-no">018</span><span id="line-18"> */</span>
+<span class="source-line-no">019</span><span id="line-19">public interface IBooleanItem extends IAnyAtomicItem {</span>
+<span class="source-line-no">020</span><span id="line-20">  /**</span>
+<span class="source-line-no">021</span><span id="line-21">   * The boolean item value of {@code true}.</span>
+<span class="source-line-no">022</span><span id="line-22">   */</span>
+<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
+<span class="source-line-no">024</span><span id="line-24">  IBooleanItem TRUE = new BooleanItemImpl(true);</span>
+<span class="source-line-no">025</span><span id="line-25">  /**</span>
+<span class="source-line-no">026</span><span id="line-26">   * The boolean item value of {@code false}.</span>
+<span class="source-line-no">027</span><span id="line-27">   */</span>
+<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
+<span class="source-line-no">029</span><span id="line-29">  IBooleanItem FALSE = new BooleanItemImpl(false);</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">  /**</span>
+<span class="source-line-no">032</span><span id="line-32">   * Get the type information for this item.</span>
 <span class="source-line-no">033</span><span id="line-33">   *</span>
-<span class="source-line-no">034</span><span id="line-34">   * @param value</span>
-<span class="source-line-no">035</span><span id="line-35">   *          a string representing a boolean value</span>
-<span class="source-line-no">036</span><span id="line-36">   * @return the new item</span>
-<span class="source-line-no">037</span><span id="line-37">   */</span>
-<span class="source-line-no">038</span><span id="line-38">  @NonNull</span>
-<span class="source-line-no">039</span><span id="line-39">  static IBooleanItem valueOf(@NonNull String value) {</span>
-<span class="source-line-no">040</span><span id="line-40">    IBooleanItem retval;</span>
-<span class="source-line-no">041</span><span id="line-41">    if ("1".equals(value)) {</span>
-<span class="source-line-no">042</span><span id="line-42">      retval = TRUE;</span>
-<span class="source-line-no">043</span><span id="line-43">    } else {</span>
-<span class="source-line-no">044</span><span id="line-44">      try {</span>
-<span class="source-line-no">045</span><span id="line-45">        Boolean bool = MetaschemaDataTypeProvider.BOOLEAN.parse(value);</span>
-<span class="source-line-no">046</span><span id="line-46">        retval = valueOf(bool);</span>
-<span class="source-line-no">047</span><span id="line-47">      } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">048</span><span id="line-48">        throw new InvalidValueForCastFunctionException(String.format("Unable to parse string value '%s'", value),</span>
-<span class="source-line-no">049</span><span id="line-49">            ex);</span>
-<span class="source-line-no">050</span><span id="line-50">      }</span>
-<span class="source-line-no">051</span><span id="line-51">    }</span>
-<span class="source-line-no">052</span><span id="line-52">    return retval;</span>
-<span class="source-line-no">053</span><span id="line-53">  }</span>
-<span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">  /**</span>
-<span class="source-line-no">056</span><span id="line-56">   * Construct a new boolean item using the provided {@code value}.</span>
-<span class="source-line-no">057</span><span id="line-57">   *</span>
-<span class="source-line-no">058</span><span id="line-58">   * @param value</span>
-<span class="source-line-no">059</span><span id="line-59">   *          a boolean</span>
-<span class="source-line-no">060</span><span id="line-60">   * @return the new item</span>
-<span class="source-line-no">061</span><span id="line-61">   */</span>
-<span class="source-line-no">062</span><span id="line-62">  @NonNull</span>
-<span class="source-line-no">063</span><span id="line-63">  static IBooleanItem valueOf(boolean value) {</span>
-<span class="source-line-no">064</span><span id="line-64">    return value ? TRUE : FALSE;</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  /**</span>
-<span class="source-line-no">068</span><span id="line-68">   * Cast the provided type to this item type.</span>
-<span class="source-line-no">069</span><span id="line-69">   *</span>
-<span class="source-line-no">070</span><span id="line-70">   * @param item</span>
-<span class="source-line-no">071</span><span id="line-71">   *          the item to cast</span>
-<span class="source-line-no">072</span><span id="line-72">   * @return the original item if it is already this type, otherwise a new item</span>
-<span class="source-line-no">073</span><span id="line-73">   *         cast to this type</span>
-<span class="source-line-no">074</span><span id="line-74">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">075</span><span id="line-75">   *           if the provided {@code item} cannot be cast to this type</span>
-<span class="source-line-no">076</span><span id="line-76">   */</span>
-<span class="source-line-no">077</span><span id="line-77">  @NonNull</span>
-<span class="source-line-no">078</span><span id="line-78">  static IBooleanItem cast(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">079</span><span id="line-79">    return MetaschemaDataTypeProvider.BOOLEAN.cast(item);</span>
-<span class="source-line-no">080</span><span id="line-80">  }</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">  /**</span>
-<span class="source-line-no">083</span><span id="line-83">   * Get the "wrapped" boolean value.</span>
-<span class="source-line-no">084</span><span id="line-84">   *</span>
-<span class="source-line-no">085</span><span id="line-85">   * @return the underlying boolean value</span>
-<span class="source-line-no">086</span><span id="line-86">   */</span>
-<span class="source-line-no">087</span><span id="line-87">  boolean toBoolean();</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">  @Override</span>
-<span class="source-line-no">090</span><span id="line-90">  default IBooleanItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">091</span><span id="line-91">    return cast(item);</span>
-<span class="source-line-no">092</span><span id="line-92">  }</span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">  /**</span>
-<span class="source-line-no">095</span><span id="line-95">   * Get the boolean negation of this value.</span>
-<span class="source-line-no">096</span><span id="line-96">   *</span>
-<span class="source-line-no">097</span><span id="line-97">   * @return the negated boolean value</span>
-<span class="source-line-no">098</span><span id="line-98">   */</span>
-<span class="source-line-no">099</span><span id="line-99">  @NonNull</span>
-<span class="source-line-no">100</span><span id="line-100">  default IBooleanItem negate() {</span>
-<span class="source-line-no">101</span><span id="line-101">    return this.toBoolean() ? FALSE : TRUE;</span>
-<span class="source-line-no">102</span><span id="line-102">  }</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  @Override</span>
-<span class="source-line-no">105</span><span id="line-105">  default int compareTo(IAnyAtomicItem item) {</span>
-<span class="source-line-no">106</span><span id="line-106">    return compareTo(cast(item));</span>
-<span class="source-line-no">107</span><span id="line-107">  }</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">  /**</span>
-<span class="source-line-no">110</span><span id="line-110">   * Compares this value with the argument.</span>
-<span class="source-line-no">111</span><span id="line-111">   *</span>
-<span class="source-line-no">112</span><span id="line-112">   * @param item</span>
-<span class="source-line-no">113</span><span id="line-113">   *          the item to compare with this value</span>
-<span class="source-line-no">114</span><span id="line-114">   * @return a negative integer, zero, or a positive integer if this value is less</span>
-<span class="source-line-no">115</span><span id="line-115">   *         than, equal to, or greater than the {@code item}.</span>
-<span class="source-line-no">116</span><span id="line-116">   */</span>
-<span class="source-line-no">117</span><span id="line-117">  default int compareTo(@NonNull IBooleanItem item) {</span>
-<span class="source-line-no">118</span><span id="line-118">    return Boolean.compare(toBoolean(), item.toBoolean());</span>
-<span class="source-line-no">119</span><span id="line-119">  }</span>
-<span class="source-line-no">120</span><span id="line-120">}</span>
+<span class="source-line-no">034</span><span id="line-34">   * @return the type information</span>
+<span class="source-line-no">035</span><span id="line-35">   */</span>
+<span class="source-line-no">036</span><span id="line-36">  @NonNull</span>
+<span class="source-line-no">037</span><span id="line-37">  static IAtomicOrUnionType&lt;IBooleanItem&gt; type() {</span>
+<span class="source-line-no">038</span><span id="line-38">    return MetaschemaDataTypeProvider.BOOLEAN.getItemType();</span>
+<span class="source-line-no">039</span><span id="line-39">  }</span>
+<span class="source-line-no">040</span><span id="line-40"></span>
+<span class="source-line-no">041</span><span id="line-41">  @Override</span>
+<span class="source-line-no">042</span><span id="line-42">  default IAtomicOrUnionType&lt;IBooleanItem&gt; getType() {</span>
+<span class="source-line-no">043</span><span id="line-43">    return type();</span>
+<span class="source-line-no">044</span><span id="line-44">  }</span>
+<span class="source-line-no">045</span><span id="line-45"></span>
+<span class="source-line-no">046</span><span id="line-46">  /**</span>
+<span class="source-line-no">047</span><span id="line-47">   * Construct a new boolean item using the provided string {@code value}.</span>
+<span class="source-line-no">048</span><span id="line-48">   * &lt;p&gt;</span>
+<span class="source-line-no">049</span><span id="line-49">   * The item will be {@link #TRUE} if the value is "1" or "true", or</span>
+<span class="source-line-no">050</span><span id="line-50">   * {@link #FALSE} otherwise</span>
+<span class="source-line-no">051</span><span id="line-51">   *</span>
+<span class="source-line-no">052</span><span id="line-52">   * @param value</span>
+<span class="source-line-no">053</span><span id="line-53">   *          a string representing a boolean value</span>
+<span class="source-line-no">054</span><span id="line-54">   * @return the new item</span>
+<span class="source-line-no">055</span><span id="line-55">   * @throws InvalidTypeMetapathException</span>
+<span class="source-line-no">056</span><span id="line-56">   *           if the provided value is not a valid boolean value</span>
+<span class="source-line-no">057</span><span id="line-57">   */</span>
+<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
+<span class="source-line-no">059</span><span id="line-59">  static IBooleanItem valueOf(@NonNull String value) {</span>
+<span class="source-line-no">060</span><span id="line-60">    IBooleanItem retval;</span>
+<span class="source-line-no">061</span><span id="line-61">    if ("1".equals(value)) {</span>
+<span class="source-line-no">062</span><span id="line-62">      retval = TRUE;</span>
+<span class="source-line-no">063</span><span id="line-63">    } else {</span>
+<span class="source-line-no">064</span><span id="line-64">      try {</span>
+<span class="source-line-no">065</span><span id="line-65">        retval = valueOf(MetaschemaDataTypeProvider.BOOLEAN.parse(value));</span>
+<span class="source-line-no">066</span><span id="line-66">      } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">067</span><span id="line-67">        throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">068</span><span id="line-68">            null,</span>
+<span class="source-line-no">069</span><span id="line-69">            String.format("Invalid boolean value '%s'. %s",</span>
+<span class="source-line-no">070</span><span id="line-70">                value,</span>
+<span class="source-line-no">071</span><span id="line-71">                ex.getLocalizedMessage()),</span>
+<span class="source-line-no">072</span><span id="line-72">            ex);</span>
+<span class="source-line-no">073</span><span id="line-73">      }</span>
+<span class="source-line-no">074</span><span id="line-74">    }</span>
+<span class="source-line-no">075</span><span id="line-75">    return retval;</span>
+<span class="source-line-no">076</span><span id="line-76">  }</span>
+<span class="source-line-no">077</span><span id="line-77"></span>
+<span class="source-line-no">078</span><span id="line-78">  /**</span>
+<span class="source-line-no">079</span><span id="line-79">   * Construct a new boolean item using the provided {@code value}.</span>
+<span class="source-line-no">080</span><span id="line-80">   *</span>
+<span class="source-line-no">081</span><span id="line-81">   * @param value</span>
+<span class="source-line-no">082</span><span id="line-82">   *          a boolean</span>
+<span class="source-line-no">083</span><span id="line-83">   * @return the new item</span>
+<span class="source-line-no">084</span><span id="line-84">   */</span>
+<span class="source-line-no">085</span><span id="line-85">  @NonNull</span>
+<span class="source-line-no">086</span><span id="line-86">  static IBooleanItem valueOf(boolean value) {</span>
+<span class="source-line-no">087</span><span id="line-87">    return value ? TRUE : FALSE;</span>
+<span class="source-line-no">088</span><span id="line-88">  }</span>
+<span class="source-line-no">089</span><span id="line-89"></span>
+<span class="source-line-no">090</span><span id="line-90">  /**</span>
+<span class="source-line-no">091</span><span id="line-91">   * Cast the provided type to this item type.</span>
+<span class="source-line-no">092</span><span id="line-92">   *</span>
+<span class="source-line-no">093</span><span id="line-93">   * @param item</span>
+<span class="source-line-no">094</span><span id="line-94">   *          the item to cast</span>
+<span class="source-line-no">095</span><span id="line-95">   * @return the original item if it is already this type, otherwise a new item</span>
+<span class="source-line-no">096</span><span id="line-96">   *         cast to this type</span>
+<span class="source-line-no">097</span><span id="line-97">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">098</span><span id="line-98">   *           if the provided {@code item} cannot be cast to this type</span>
+<span class="source-line-no">099</span><span id="line-99">   */</span>
+<span class="source-line-no">100</span><span id="line-100">  @NonNull</span>
+<span class="source-line-no">101</span><span id="line-101">  static IBooleanItem cast(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">102</span><span id="line-102">    IBooleanItem retval;</span>
+<span class="source-line-no">103</span><span id="line-103">    if (item instanceof INumericItem) {</span>
+<span class="source-line-no">104</span><span id="line-104">      retval = valueOf(((INumericItem) item).toEffectiveBoolean());</span>
+<span class="source-line-no">105</span><span id="line-105">    } else {</span>
+<span class="source-line-no">106</span><span id="line-106">      try {</span>
+<span class="source-line-no">107</span><span id="line-107">        retval = valueOf(INumericItem.cast(item).toEffectiveBoolean());</span>
+<span class="source-line-no">108</span><span id="line-108">      } catch (InvalidValueForCastFunctionException ex) {</span>
+<span class="source-line-no">109</span><span id="line-109">        try {</span>
+<span class="source-line-no">110</span><span id="line-110">          retval = valueOf(item.asString());</span>
+<span class="source-line-no">111</span><span id="line-111">        } catch (IllegalStateException | InvalidTypeMetapathException ex2) {</span>
+<span class="source-line-no">112</span><span id="line-112">          // asString can throw IllegalStateException exception</span>
+<span class="source-line-no">113</span><span id="line-113">          InvalidValueForCastFunctionException thrown = new InvalidValueForCastFunctionException(ex2);</span>
+<span class="source-line-no">114</span><span id="line-114">          thrown.addSuppressed(ex);</span>
+<span class="source-line-no">115</span><span id="line-115">          throw thrown;</span>
+<span class="source-line-no">116</span><span id="line-116">        }</span>
+<span class="source-line-no">117</span><span id="line-117">      }</span>
+<span class="source-line-no">118</span><span id="line-118">    }</span>
+<span class="source-line-no">119</span><span id="line-119">    return retval;</span>
+<span class="source-line-no">120</span><span id="line-120">  }</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">  @Override</span>
+<span class="source-line-no">123</span><span id="line-123">  default IBooleanItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">124</span><span id="line-124">    return cast(item);</span>
+<span class="source-line-no">125</span><span id="line-125">  }</span>
+<span class="source-line-no">126</span><span id="line-126"></span>
+<span class="source-line-no">127</span><span id="line-127">  /**</span>
+<span class="source-line-no">128</span><span id="line-128">   * Get the "wrapped" boolean value.</span>
+<span class="source-line-no">129</span><span id="line-129">   *</span>
+<span class="source-line-no">130</span><span id="line-130">   * @return the underlying boolean value</span>
+<span class="source-line-no">131</span><span id="line-131">   */</span>
+<span class="source-line-no">132</span><span id="line-132">  boolean toBoolean();</span>
+<span class="source-line-no">133</span><span id="line-133"></span>
+<span class="source-line-no">134</span><span id="line-134">  /**</span>
+<span class="source-line-no">135</span><span id="line-135">   * Get the boolean negation of this value.</span>
+<span class="source-line-no">136</span><span id="line-136">   *</span>
+<span class="source-line-no">137</span><span id="line-137">   * @return the negated boolean value</span>
+<span class="source-line-no">138</span><span id="line-138">   */</span>
+<span class="source-line-no">139</span><span id="line-139">  @NonNull</span>
+<span class="source-line-no">140</span><span id="line-140">  default IBooleanItem negate() {</span>
+<span class="source-line-no">141</span><span id="line-141">    return this.toBoolean() ? FALSE : TRUE;</span>
+<span class="source-line-no">142</span><span id="line-142">  }</span>
+<span class="source-line-no">143</span><span id="line-143"></span>
+<span class="source-line-no">144</span><span id="line-144">  @Override</span>
+<span class="source-line-no">145</span><span id="line-145">  default int compareTo(IAnyAtomicItem item) {</span>
+<span class="source-line-no">146</span><span id="line-146">    return compareTo(castAsType(item));</span>
+<span class="source-line-no">147</span><span id="line-147">  }</span>
+<span class="source-line-no">148</span><span id="line-148"></span>
+<span class="source-line-no">149</span><span id="line-149">  /**</span>
+<span class="source-line-no">150</span><span id="line-150">   * Compares this value with the argument.</span>
+<span class="source-line-no">151</span><span id="line-151">   *</span>
+<span class="source-line-no">152</span><span id="line-152">   * @param item</span>
+<span class="source-line-no">153</span><span id="line-153">   *          the item to compare with this value</span>
+<span class="source-line-no">154</span><span id="line-154">   * @return a negative integer, zero, or a positive integer if this value is less</span>
+<span class="source-line-no">155</span><span id="line-155">   *         than, equal to, or greater than the {@code item}.</span>
+<span class="source-line-no">156</span><span id="line-156">   */</span>
+<span class="source-line-no">157</span><span id="line-157">  default int compareTo(@NonNull IBooleanItem item) {</span>
+<span class="source-line-no">158</span><span id="line-158">    return Boolean.compare(toBoolean(), item.toBoolean());</span>
+<span class="source-line-no">159</span><span id="line-159">  }</span>
+<span class="source-line-no">160</span><span id="line-160">}</span>
 
 
 

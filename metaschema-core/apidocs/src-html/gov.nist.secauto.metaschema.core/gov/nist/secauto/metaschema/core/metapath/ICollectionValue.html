@@ -19,51 +19,104 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import java.util.stream.Stream;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">public interface ICollectionValue {</span>
-<span class="source-line-no">016</span><span id="line-16">  /**</span>
-<span class="source-line-no">017</span><span id="line-17">   * Get the collection value as a sequence.</span>
-<span class="source-line-no">018</span><span id="line-18">   * &lt;p&gt;</span>
-<span class="source-line-no">019</span><span id="line-19">   * If the collection value is a sequence, then the sequence is returned.</span>
-<span class="source-line-no">020</span><span id="line-20">   *</span>
-<span class="source-line-no">021</span><span id="line-21">   * @return the resulting sequence</span>
-<span class="source-line-no">022</span><span id="line-22">   */</span>
-<span class="source-line-no">023</span><span id="line-23">  // TODO: rename to toSequence and resolve conflicting methods?</span>
-<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
-<span class="source-line-no">025</span><span id="line-25">  ISequence&lt;?&gt; asSequence();</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">  /**</span>
-<span class="source-line-no">028</span><span id="line-28">   * Get the stream of items for the collection value.</span>
-<span class="source-line-no">029</span><span id="line-29">   * &lt;p&gt;</span>
-<span class="source-line-no">030</span><span id="line-30">   * If the collection value is a sequence, then the items in the collection are</span>
-<span class="source-line-no">031</span><span id="line-31">   * returned.</span>
-<span class="source-line-no">032</span><span id="line-32">   *</span>
-<span class="source-line-no">033</span><span id="line-33">   * @param value</span>
-<span class="source-line-no">034</span><span id="line-34">   *          the collection value</span>
-<span class="source-line-no">035</span><span id="line-35">   * @return the sequence of related items</span>
-<span class="source-line-no">036</span><span id="line-36">   */</span>
-<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
-<span class="source-line-no">038</span><span id="line-38">  static Stream&lt;? extends IItem&gt; normalizeAsItems(@NonNull ICollectionValue value) {</span>
-<span class="source-line-no">039</span><span id="line-39">    return value instanceof IItem</span>
-<span class="source-line-no">040</span><span id="line-40">        ? ObjectUtils.notNull(Stream.of((IItem) value))</span>
-<span class="source-line-no">041</span><span id="line-41">        : value.asSequence().stream();</span>
-<span class="source-line-no">042</span><span id="line-42">  }</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  /**</span>
-<span class="source-line-no">045</span><span id="line-45">   * Get the stream of items for the collection value.</span>
-<span class="source-line-no">046</span><span id="line-46">   * &lt;p&gt;</span>
-<span class="source-line-no">047</span><span id="line-47">   * If the collection value contains items, then these items are returned.</span>
-<span class="source-line-no">048</span><span id="line-48">   *</span>
-<span class="source-line-no">049</span><span id="line-49">   * @return a stream of related items</span>
-<span class="source-line-no">050</span><span id="line-50">   */</span>
-<span class="source-line-no">051</span><span id="line-51">  @NonNull</span>
-<span class="source-line-no">052</span><span id="line-52">  Stream&lt;? extends IItem&gt; flatten();</span>
-<span class="source-line-no">053</span><span id="line-53">}</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">import java.util.stream.Stream;</span>
+<span class="source-line-no">015</span><span id="line-15"></span>
+<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">/**</span>
+<span class="source-line-no">019</span><span id="line-19"> * A data value that can be a value in a Metapath array or map.</span>
+<span class="source-line-no">020</span><span id="line-20"> */</span>
+<span class="source-line-no">021</span><span id="line-21">public interface ICollectionValue {</span>
+<span class="source-line-no">022</span><span id="line-22">  /**</span>
+<span class="source-line-no">023</span><span id="line-23">   * Get the collection value as a sequence.</span>
+<span class="source-line-no">024</span><span id="line-24">   * &lt;p&gt;</span>
+<span class="source-line-no">025</span><span id="line-25">   * If the value is already a sequence, the value is returned as a sequence.</span>
+<span class="source-line-no">026</span><span id="line-26">   * Otherwise, if the value is an item, a new sequence will be created containing</span>
+<span class="source-line-no">027</span><span id="line-27">   * only that item.</span>
+<span class="source-line-no">028</span><span id="line-28">   *</span>
+<span class="source-line-no">029</span><span id="line-29">   * @return the resulting sequence</span>
+<span class="source-line-no">030</span><span id="line-30">   */</span>
+<span class="source-line-no">031</span><span id="line-31">  // TODO: rename to toSequence and resolve conflicting methods?</span>
+<span class="source-line-no">032</span><span id="line-32">  @NonNull</span>
+<span class="source-line-no">033</span><span id="line-33">  default ISequence&lt;?&gt; toSequence() {</span>
+<span class="source-line-no">034</span><span id="line-34">    return this instanceof ISequence</span>
+<span class="source-line-no">035</span><span id="line-35">        // return the sequence</span>
+<span class="source-line-no">036</span><span id="line-36">        ? (ISequence&lt;?&gt;) this</span>
+<span class="source-line-no">037</span><span id="line-37">        // return the item as a new sequence</span>
+<span class="source-line-no">038</span><span id="line-38">        : ISequence.of((IItem) this);</span>
+<span class="source-line-no">039</span><span id="line-39">  }</span>
+<span class="source-line-no">040</span><span id="line-40"></span>
+<span class="source-line-no">041</span><span id="line-41">  /**</span>
+<span class="source-line-no">042</span><span id="line-42">   * Get the collection value as a sequence.</span>
+<span class="source-line-no">043</span><span id="line-43">   * &lt;p&gt;</span>
+<span class="source-line-no">044</span><span id="line-44">   * If the value is already a sequence, the value is returned as a sequence.</span>
+<span class="source-line-no">045</span><span id="line-45">   * Otherwise, if the value is an item, what is returned depends on the item</span>
+<span class="source-line-no">046</span><span id="line-46">   * type:</span>
+<span class="source-line-no">047</span><span id="line-47">   * &lt;ul&gt;</span>
+<span class="source-line-no">048</span><span id="line-48">   * &lt;li&gt;{@link IArrayItem} or {@link IMapItem}: the contents of the returned</span>
+<span class="source-line-no">049</span><span id="line-49">   * sequence are the items of the array. Any member values that are a sequence</span>
+<span class="source-line-no">050</span><span id="line-50">   * are flattened.&lt;/li&gt;</span>
+<span class="source-line-no">051</span><span id="line-51">   * &lt;li&gt;Any other item: A singleton sequence is returned containing the</span>
+<span class="source-line-no">052</span><span id="line-52">   * item.&lt;/li&gt;</span>
+<span class="source-line-no">053</span><span id="line-53">   * &lt;/ul&gt;</span>
+<span class="source-line-no">054</span><span id="line-54">   *</span>
+<span class="source-line-no">055</span><span id="line-55">   * @return the resulting sequence</span>
+<span class="source-line-no">056</span><span id="line-56">   */</span>
+<span class="source-line-no">057</span><span id="line-57">  // TODO: rename to toSequence and resolve conflicting methods?</span>
+<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
+<span class="source-line-no">059</span><span id="line-59">  ISequence&lt;?&gt; contentsAsSequence();</span>
+<span class="source-line-no">060</span><span id="line-60"></span>
+<span class="source-line-no">061</span><span id="line-61">  /**</span>
+<span class="source-line-no">062</span><span id="line-62">   * Get the stream of items for the collection value.</span>
+<span class="source-line-no">063</span><span id="line-63">   * &lt;p&gt;</span>
+<span class="source-line-no">064</span><span id="line-64">   * If the collection value is a sequence, then the items in the collection are</span>
+<span class="source-line-no">065</span><span id="line-65">   * returned.</span>
+<span class="source-line-no">066</span><span id="line-66">   *</span>
+<span class="source-line-no">067</span><span id="line-67">   * @param value</span>
+<span class="source-line-no">068</span><span id="line-68">   *          the collection value</span>
+<span class="source-line-no">069</span><span id="line-69">   * @return the sequence of related items</span>
+<span class="source-line-no">070</span><span id="line-70">   */</span>
+<span class="source-line-no">071</span><span id="line-71">  @NonNull</span>
+<span class="source-line-no">072</span><span id="line-72">  static Stream&lt;? extends IItem&gt; normalizeAsItems(@NonNull ICollectionValue value) {</span>
+<span class="source-line-no">073</span><span id="line-73">    return value instanceof IItem</span>
+<span class="source-line-no">074</span><span id="line-74">        ? ObjectUtils.notNull(Stream.of((IItem) value))</span>
+<span class="source-line-no">075</span><span id="line-75">        : value.toSequence().stream();</span>
+<span class="source-line-no">076</span><span id="line-76">  }</span>
+<span class="source-line-no">077</span><span id="line-77"></span>
+<span class="source-line-no">078</span><span id="line-78">  /**</span>
+<span class="source-line-no">079</span><span id="line-79">   * Produce a stream of atomic items based on the atomic value of these items.</span>
+<span class="source-line-no">080</span><span id="line-80">   * &lt;p&gt;</span>
+<span class="source-line-no">081</span><span id="line-81">   * Supports &lt;a href="https://www.w3.org/TR/xpath-31/#id-atomization"&gt;item</span>
+<span class="source-line-no">082</span><span id="line-82">   * atomization&lt;/a&gt;.</span>
+<span class="source-line-no">083</span><span id="line-83">   *</span>
+<span class="source-line-no">084</span><span id="line-84">   * @return a stream of atomized atomic items.</span>
+<span class="source-line-no">085</span><span id="line-85">   */</span>
+<span class="source-line-no">086</span><span id="line-86">  @NonNull</span>
+<span class="source-line-no">087</span><span id="line-87">  Stream&lt;IAnyAtomicItem&gt; atomize();</span>
+<span class="source-line-no">088</span><span id="line-88"></span>
+<span class="source-line-no">089</span><span id="line-89">  /**</span>
+<span class="source-line-no">090</span><span id="line-90">   * Get the stream of items for the collection value.</span>
+<span class="source-line-no">091</span><span id="line-91">   * &lt;p&gt;</span>
+<span class="source-line-no">092</span><span id="line-92">   * If the collection value contains items, then these items are returned.</span>
+<span class="source-line-no">093</span><span id="line-93">   *</span>
+<span class="source-line-no">094</span><span id="line-94">   * @return a stream of related items</span>
+<span class="source-line-no">095</span><span id="line-95">   */</span>
+<span class="source-line-no">096</span><span id="line-96">  @NonNull</span>
+<span class="source-line-no">097</span><span id="line-97">  Stream&lt;? extends IItem&gt; flatten();</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">  /**</span>
+<span class="source-line-no">100</span><span id="line-100">   * Get a representation of the value based on its type signature.</span>
+<span class="source-line-no">101</span><span id="line-101">   *</span>
+<span class="source-line-no">102</span><span id="line-102">   * @return the signature</span>
+<span class="source-line-no">103</span><span id="line-103">   */</span>
+<span class="source-line-no">104</span><span id="line-104">  @NonNull</span>
+<span class="source-line-no">105</span><span id="line-105">  String toSignature();</span>
+<span class="source-line-no">106</span><span id="line-106">}</span>
 
 
 

@@ -20,44 +20,102 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import java.net.URI;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">public interface IUriReferenceItem extends IAnyUriItem {</span>
-<span class="source-line-no">016</span><span id="line-16">  /**</span>
-<span class="source-line-no">017</span><span id="line-17">   * Construct a new item using the provided URI {@code value}.</span>
-<span class="source-line-no">018</span><span id="line-18">   *</span>
-<span class="source-line-no">019</span><span id="line-19">   * @param value</span>
-<span class="source-line-no">020</span><span id="line-20">   *          a string representing a URI</span>
-<span class="source-line-no">021</span><span id="line-21">   * @return the new item as a {@link IUriReferenceItem}</span>
-<span class="source-line-no">022</span><span id="line-22">   */</span>
-<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
-<span class="source-line-no">024</span><span id="line-24">  static IUriReferenceItem valueOf(@NonNull URI value) {</span>
-<span class="source-line-no">025</span><span id="line-25">    return new UriReferenceItemImpl(value);</span>
-<span class="source-line-no">026</span><span id="line-26">  }</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  /**</span>
-<span class="source-line-no">029</span><span id="line-29">   * Cast the provided type to this item type.</span>
-<span class="source-line-no">030</span><span id="line-30">   *</span>
-<span class="source-line-no">031</span><span id="line-31">   * @param item</span>
-<span class="source-line-no">032</span><span id="line-32">   *          the item to cast</span>
-<span class="source-line-no">033</span><span id="line-33">   * @return the original item if it is already this type, otherwise a new item</span>
-<span class="source-line-no">034</span><span id="line-34">   *         cast to this type</span>
-<span class="source-line-no">035</span><span id="line-35">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">036</span><span id="line-36">   *           if the provided {@code item} cannot be cast to this type</span>
-<span class="source-line-no">037</span><span id="line-37">   */</span>
-<span class="source-line-no">038</span><span id="line-38">  @NonNull</span>
-<span class="source-line-no">039</span><span id="line-39">  static IUriReferenceItem cast(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">040</span><span id="line-40">    return MetaschemaDataTypeProvider.URI_REFERENCE.cast(item);</span>
-<span class="source-line-no">041</span><span id="line-41">  }</span>
-<span class="source-line-no">042</span><span id="line-42"></span>
-<span class="source-line-no">043</span><span id="line-43">  @Override</span>
-<span class="source-line-no">044</span><span id="line-44">  default IUriReferenceItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">045</span><span id="line-45">    return cast(item);</span>
-<span class="source-line-no">046</span><span id="line-46">  }</span>
-<span class="source-line-no">047</span><span id="line-47">}</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.UriReferenceItemImpl;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">import java.net.URI;</span>
+<span class="source-line-no">015</span><span id="line-15"></span>
+<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">/**</span>
+<span class="source-line-no">019</span><span id="line-19"> * An atomic Metapath item containing a URI reference data value that complies</span>
+<span class="source-line-no">020</span><span id="line-20"> * with RFC2396. URI references can be absolute URIs, relative URIs, or</span>
+<span class="source-line-no">021</span><span id="line-21"> * same-document references.</span>
+<span class="source-line-no">022</span><span id="line-22"> *</span>
+<span class="source-line-no">023</span><span id="line-23"> * @see java.net.URI</span>
+<span class="source-line-no">024</span><span id="line-24"> * @see &lt;a href="https://www.ietf.org/rfc/rfc2396.txt"&gt;RFC2396&lt;/a&gt;</span>
+<span class="source-line-no">025</span><span id="line-25"> */</span>
+<span class="source-line-no">026</span><span id="line-26">public interface IUriReferenceItem extends IAnyUriItem {</span>
+<span class="source-line-no">027</span><span id="line-27">  /**</span>
+<span class="source-line-no">028</span><span id="line-28">   * Get the type information for this item.</span>
+<span class="source-line-no">029</span><span id="line-29">   *</span>
+<span class="source-line-no">030</span><span id="line-30">   * @return the type information</span>
+<span class="source-line-no">031</span><span id="line-31">   */</span>
+<span class="source-line-no">032</span><span id="line-32">  @NonNull</span>
+<span class="source-line-no">033</span><span id="line-33">  static IAtomicOrUnionType&lt;IUriReferenceItem&gt; type() {</span>
+<span class="source-line-no">034</span><span id="line-34">    return MetaschemaDataTypeProvider.URI_REFERENCE.getItemType();</span>
+<span class="source-line-no">035</span><span id="line-35">  }</span>
+<span class="source-line-no">036</span><span id="line-36"></span>
+<span class="source-line-no">037</span><span id="line-37">  @Override</span>
+<span class="source-line-no">038</span><span id="line-38">  default IAtomicOrUnionType&lt;IUriReferenceItem&gt; getType() {</span>
+<span class="source-line-no">039</span><span id="line-39">    return type();</span>
+<span class="source-line-no">040</span><span id="line-40">  }</span>
+<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">042</span><span id="line-42">  /**</span>
+<span class="source-line-no">043</span><span id="line-43">   * Construct a new URI item using the provided string {@code value}.</span>
+<span class="source-line-no">044</span><span id="line-44">   *</span>
+<span class="source-line-no">045</span><span id="line-45">   * @param value</span>
+<span class="source-line-no">046</span><span id="line-46">   *          a string representing a URI</span>
+<span class="source-line-no">047</span><span id="line-47">   * @return the new item</span>
+<span class="source-line-no">048</span><span id="line-48">   * @throws InvalidTypeMetapathException</span>
+<span class="source-line-no">049</span><span id="line-49">   *           if the given string violates RFC2396</span>
+<span class="source-line-no">050</span><span id="line-50">   */</span>
+<span class="source-line-no">051</span><span id="line-51">  @NonNull</span>
+<span class="source-line-no">052</span><span id="line-52">  static IUriReferenceItem valueOf(@NonNull String value) {</span>
+<span class="source-line-no">053</span><span id="line-53">    try {</span>
+<span class="source-line-no">054</span><span id="line-54">      return valueOf(MetaschemaDataTypeProvider.URI_REFERENCE.parse(value));</span>
+<span class="source-line-no">055</span><span id="line-55">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">056</span><span id="line-56">      throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">057</span><span id="line-57">          null,</span>
+<span class="source-line-no">058</span><span id="line-58">          String.format("Invalid URI reference value '%s'. %s",</span>
+<span class="source-line-no">059</span><span id="line-59">              value,</span>
+<span class="source-line-no">060</span><span id="line-60">              ex.getLocalizedMessage()),</span>
+<span class="source-line-no">061</span><span id="line-61">          ex);</span>
+<span class="source-line-no">062</span><span id="line-62">    }</span>
+<span class="source-line-no">063</span><span id="line-63">  }</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">  /**</span>
+<span class="source-line-no">066</span><span id="line-66">   * Construct a new item using the provided URI {@code value}.</span>
+<span class="source-line-no">067</span><span id="line-67">   *</span>
+<span class="source-line-no">068</span><span id="line-68">   * @param value</span>
+<span class="source-line-no">069</span><span id="line-69">   *          a string representing a URI</span>
+<span class="source-line-no">070</span><span id="line-70">   * @return the new item as a {@link IUriReferenceItem}</span>
+<span class="source-line-no">071</span><span id="line-71">   */</span>
+<span class="source-line-no">072</span><span id="line-72">  @NonNull</span>
+<span class="source-line-no">073</span><span id="line-73">  static IUriReferenceItem valueOf(@NonNull URI value) {</span>
+<span class="source-line-no">074</span><span id="line-74">    return new UriReferenceItemImpl(value);</span>
+<span class="source-line-no">075</span><span id="line-75">  }</span>
+<span class="source-line-no">076</span><span id="line-76"></span>
+<span class="source-line-no">077</span><span id="line-77">  /**</span>
+<span class="source-line-no">078</span><span id="line-78">   * Cast the provided type to this item type.</span>
+<span class="source-line-no">079</span><span id="line-79">   *</span>
+<span class="source-line-no">080</span><span id="line-80">   * @param item</span>
+<span class="source-line-no">081</span><span id="line-81">   *          the item to cast</span>
+<span class="source-line-no">082</span><span id="line-82">   * @return the original item if it is already this type, otherwise a new item</span>
+<span class="source-line-no">083</span><span id="line-83">   *         cast to this type</span>
+<span class="source-line-no">084</span><span id="line-84">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">085</span><span id="line-85">   *           if the provided {@code item} cannot be cast to this type</span>
+<span class="source-line-no">086</span><span id="line-86">   */</span>
+<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
+<span class="source-line-no">088</span><span id="line-88">  static IUriReferenceItem cast(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">089</span><span id="line-89">    try {</span>
+<span class="source-line-no">090</span><span id="line-90">      return item instanceof IUriReferenceItem</span>
+<span class="source-line-no">091</span><span id="line-91">          ? (IUriReferenceItem) item</span>
+<span class="source-line-no">092</span><span id="line-92">          : item instanceof IAnyUriItem</span>
+<span class="source-line-no">093</span><span id="line-93">              ? valueOf(((IAnyUriItem) item).asUri())</span>
+<span class="source-line-no">094</span><span id="line-94">              : valueOf(item.asString());</span>
+<span class="source-line-no">095</span><span id="line-95">    } catch (IllegalStateException | InvalidTypeMetapathException ex) {</span>
+<span class="source-line-no">096</span><span id="line-96">      // asString can throw IllegalStateException exception</span>
+<span class="source-line-no">097</span><span id="line-97">      throw new InvalidValueForCastFunctionException(ex);</span>
+<span class="source-line-no">098</span><span id="line-98">    }</span>
+<span class="source-line-no">099</span><span id="line-99">  }</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">  @Override</span>
+<span class="source-line-no">102</span><span id="line-102">  default IUriReferenceItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">103</span><span id="line-103">    return cast(item);</span>
+<span class="source-line-no">104</span><span id="line-104">  }</span>
+<span class="source-line-no">105</span><span id="line-105">}</span>
 
 
 

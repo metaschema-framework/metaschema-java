@@ -19,47 +19,51 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model.constraint;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.constraint.impl.AbstractDefinitionTargetedConstraints;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">/**</span>
-<span class="source-line-no">014</span><span id="line-14"> * A set of constraints targeting a {@link IAssemblyDefinition} based on a</span>
-<span class="source-line-no">015</span><span id="line-15"> * target Metapath expression.</span>
-<span class="source-line-no">016</span><span id="line-16"> *</span>
-<span class="source-line-no">017</span><span id="line-17"> * @see #getTargetExpression()</span>
-<span class="source-line-no">018</span><span id="line-18"> */</span>
-<span class="source-line-no">019</span><span id="line-19">public class AssemblyTargetedConstraints</span>
-<span class="source-line-no">020</span><span id="line-20">    extends AbstractDefinitionTargetedConstraints&lt;IAssemblyDefinition, IModelConstrained&gt;</span>
-<span class="source-line-no">021</span><span id="line-21">    implements IFeatureModelConstrained {</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">  /**</span>
-<span class="source-line-no">024</span><span id="line-24">   * Construct a new set of targeted constraints.</span>
-<span class="source-line-no">025</span><span id="line-25">   *</span>
-<span class="source-line-no">026</span><span id="line-26">   * @param target</span>
-<span class="source-line-no">027</span><span id="line-27">   *          the Metapath expression that can be used to find matching targets</span>
-<span class="source-line-no">028</span><span id="line-28">   * @param constraints</span>
-<span class="source-line-no">029</span><span id="line-29">   *          the constraints to apply to matching targets</span>
-<span class="source-line-no">030</span><span id="line-30">   */</span>
-<span class="source-line-no">031</span><span id="line-31">  public AssemblyTargetedConstraints(</span>
-<span class="source-line-no">032</span><span id="line-32">      @NonNull String target,</span>
-<span class="source-line-no">033</span><span id="line-33">      @NonNull IModelConstrained constraints) {</span>
-<span class="source-line-no">034</span><span id="line-34">    super(target, constraints);</span>
-<span class="source-line-no">035</span><span id="line-35">  }</span>
-<span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37">  @Override</span>
-<span class="source-line-no">038</span><span id="line-38">  public void target(@NonNull IAssemblyDefinition definition) {</span>
-<span class="source-line-no">039</span><span id="line-39">    applyTo(definition);</span>
-<span class="source-line-no">040</span><span id="line-40">  }</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
-<span class="source-line-no">042</span><span id="line-42">  @Override</span>
-<span class="source-line-no">043</span><span id="line-43">  protected void applyTo(@NonNull IAssemblyDefinition definition) {</span>
-<span class="source-line-no">044</span><span id="line-44">    super.applyTo(definition);</span>
-<span class="source-line-no">045</span><span id="line-45">    getIndexConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">046</span><span id="line-46">    getUniqueConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">047</span><span id="line-47">    getHasCardinalityConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">048</span><span id="line-48">  }</span>
-<span class="source-line-no">049</span><span id="line-49">}</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.ISource;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.constraint.impl.AbstractDefinitionTargetedConstraints;</span>
+<span class="source-line-no">011</span><span id="line-11"></span>
+<span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">/**</span>
+<span class="source-line-no">015</span><span id="line-15"> * A set of constraints targeting a {@link IAssemblyDefinition} based on a</span>
+<span class="source-line-no">016</span><span id="line-16"> * target Metapath expression.</span>
+<span class="source-line-no">017</span><span id="line-17"> *</span>
+<span class="source-line-no">018</span><span id="line-18"> * @see #getTargetExpression()</span>
+<span class="source-line-no">019</span><span id="line-19"> */</span>
+<span class="source-line-no">020</span><span id="line-20">public class AssemblyTargetedConstraints</span>
+<span class="source-line-no">021</span><span id="line-21">    extends AbstractDefinitionTargetedConstraints&lt;IAssemblyDefinition, IModelConstrained&gt;</span>
+<span class="source-line-no">022</span><span id="line-22">    implements IFeatureModelConstrained {</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">  /**</span>
+<span class="source-line-no">025</span><span id="line-25">   * Construct a new set of targeted constraints.</span>
+<span class="source-line-no">026</span><span id="line-26">   *</span>
+<span class="source-line-no">027</span><span id="line-27">   * @param source</span>
+<span class="source-line-no">028</span><span id="line-28">   *          information about the resource the constraints were sources from</span>
+<span class="source-line-no">029</span><span id="line-29">   * @param target</span>
+<span class="source-line-no">030</span><span id="line-30">   *          the Metapath expression that can be used to find matching targets</span>
+<span class="source-line-no">031</span><span id="line-31">   * @param constraints</span>
+<span class="source-line-no">032</span><span id="line-32">   *          the constraints to apply to matching targets</span>
+<span class="source-line-no">033</span><span id="line-33">   */</span>
+<span class="source-line-no">034</span><span id="line-34">  public AssemblyTargetedConstraints(</span>
+<span class="source-line-no">035</span><span id="line-35">      @NonNull ISource source,</span>
+<span class="source-line-no">036</span><span id="line-36">      @NonNull String target,</span>
+<span class="source-line-no">037</span><span id="line-37">      @NonNull IModelConstrained constraints) {</span>
+<span class="source-line-no">038</span><span id="line-38">    super(source, target, constraints);</span>
+<span class="source-line-no">039</span><span id="line-39">  }</span>
+<span class="source-line-no">040</span><span id="line-40"></span>
+<span class="source-line-no">041</span><span id="line-41">  @Override</span>
+<span class="source-line-no">042</span><span id="line-42">  public void target(@NonNull IAssemblyDefinition definition) {</span>
+<span class="source-line-no">043</span><span id="line-43">    applyTo(definition);</span>
+<span class="source-line-no">044</span><span id="line-44">  }</span>
+<span class="source-line-no">045</span><span id="line-45"></span>
+<span class="source-line-no">046</span><span id="line-46">  @Override</span>
+<span class="source-line-no">047</span><span id="line-47">  protected void applyTo(@NonNull IAssemblyDefinition definition) {</span>
+<span class="source-line-no">048</span><span id="line-48">    super.applyTo(definition);</span>
+<span class="source-line-no">049</span><span id="line-49">    getIndexConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">050</span><span id="line-50">    getUniqueConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">051</span><span id="line-51">    getHasCardinalityConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">052</span><span id="line-52">  }</span>
+<span class="source-line-no">053</span><span id="line-53">}</span>
 
 
 

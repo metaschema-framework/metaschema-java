@@ -18,76 +18,79 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">/**</span>
-<span class="source-line-no">014</span><span id="line-14"> * Represents an arbitrary grouping of Metaschema model instances.</span>
-<span class="source-line-no">015</span><span id="line-15"> */</span>
-<span class="source-line-no">016</span><span id="line-16">public interface INamedModelInstanceGrouped extends INamedModelInstance {</span>
-<span class="source-line-no">017</span><span id="line-17">  @Override</span>
-<span class="source-line-no">018</span><span id="line-18">  IChoiceGroupInstance getParentContainer();</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">  @Override</span>
-<span class="source-line-no">021</span><span id="line-21">  default IAssemblyDefinition getContainingDefinition() {</span>
-<span class="source-line-no">022</span><span id="line-22">    return getParentContainer().getContainingDefinition();</span>
-<span class="source-line-no">023</span><span id="line-23">  }</span>
-<span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">  /**</span>
-<span class="source-line-no">026</span><span id="line-26">   * Get the discriminator JSON property name to use to identify the type of a</span>
-<span class="source-line-no">027</span><span id="line-27">   * given instance object.</span>
-<span class="source-line-no">028</span><span id="line-28">   *</span>
-<span class="source-line-no">029</span><span id="line-29">   * @return the discriminator property name or {@code null} if the effective name</span>
-<span class="source-line-no">030</span><span id="line-30">   *         should be used instead</span>
-<span class="source-line-no">031</span><span id="line-31">   */</span>
-<span class="source-line-no">032</span><span id="line-32">  @Nullable</span>
-<span class="source-line-no">033</span><span id="line-33">  String getDiscriminatorValue();</span>
-<span class="source-line-no">034</span><span id="line-34"></span>
-<span class="source-line-no">035</span><span id="line-35">  /**</span>
-<span class="source-line-no">036</span><span id="line-36">   * Get the effective discriminator JSON property name to use to identify the</span>
-<span class="source-line-no">037</span><span id="line-37">   * type of a given instance object.</span>
-<span class="source-line-no">038</span><span id="line-38">   *</span>
-<span class="source-line-no">039</span><span id="line-39">   * @return the discriminator property name</span>
-<span class="source-line-no">040</span><span id="line-40">   */</span>
-<span class="source-line-no">041</span><span id="line-41">  @NonNull</span>
-<span class="source-line-no">042</span><span id="line-42">  default String getEffectiveDisciminatorValue() {</span>
-<span class="source-line-no">043</span><span id="line-43">    String retval = getDiscriminatorValue();</span>
-<span class="source-line-no">044</span><span id="line-44">    if (retval == null) {</span>
-<span class="source-line-no">045</span><span id="line-45">      retval = getEffectiveName();</span>
-<span class="source-line-no">046</span><span id="line-46">    }</span>
-<span class="source-line-no">047</span><span id="line-47">    return retval;</span>
-<span class="source-line-no">048</span><span id="line-48">  }</span>
-<span class="source-line-no">049</span><span id="line-49"></span>
-<span class="source-line-no">050</span><span id="line-50">  @Override</span>
-<span class="source-line-no">051</span><span id="line-51">  @Nullable</span>
-<span class="source-line-no">052</span><span id="line-52">  default IFlagInstance getEffectiveJsonKey() {</span>
-<span class="source-line-no">053</span><span id="line-53">    return JsonGroupAsBehavior.KEYED.equals(getParentContainer().getJsonGroupAsBehavior())</span>
-<span class="source-line-no">054</span><span id="line-54">        ? ObjectUtils.requireNonNull(getJsonKey())</span>
-<span class="source-line-no">055</span><span id="line-55">        : null;</span>
-<span class="source-line-no">056</span><span id="line-56">  }</span>
-<span class="source-line-no">057</span><span id="line-57"></span>
-<span class="source-line-no">058</span><span id="line-58">  @Override</span>
-<span class="source-line-no">059</span><span id="line-59">  @Nullable</span>
-<span class="source-line-no">060</span><span id="line-60">  default IFlagInstance getJsonKey() {</span>
-<span class="source-line-no">061</span><span id="line-61">    String name = getParentContainer().getJsonKeyFlagInstanceName();</span>
-<span class="source-line-no">062</span><span id="line-62">    return name == null</span>
-<span class="source-line-no">063</span><span id="line-63">        ? null</span>
-<span class="source-line-no">064</span><span id="line-64">        : ObjectUtils.requireNonNull(getDefinition().getFlagInstanceByName(getContainingModule().toFlagQName(name)));</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  @Override</span>
-<span class="source-line-no">068</span><span id="line-68">  default int getMinOccurs() {</span>
-<span class="source-line-no">069</span><span id="line-69">    return getParentContainer().getMinOccurs();</span>
-<span class="source-line-no">070</span><span id="line-70">  }</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">  @Override</span>
-<span class="source-line-no">073</span><span id="line-73">  default int getMaxOccurs() {</span>
-<span class="source-line-no">074</span><span id="line-74">    return getParentContainer().getMaxOccurs();</span>
-<span class="source-line-no">075</span><span id="line-75">  }</span>
-<span class="source-line-no">076</span><span id="line-76"></span>
-<span class="source-line-no">077</span><span id="line-77">}</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">010</span><span id="line-10"></span>
+<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">/**</span>
+<span class="source-line-no">015</span><span id="line-15"> * Represents an arbitrary grouping of Metaschema model instances.</span>
+<span class="source-line-no">016</span><span id="line-16"> */</span>
+<span class="source-line-no">017</span><span id="line-17">public interface INamedModelInstanceGrouped extends INamedModelInstance {</span>
+<span class="source-line-no">018</span><span id="line-18">  @Override</span>
+<span class="source-line-no">019</span><span id="line-19">  IChoiceGroupInstance getParentContainer();</span>
+<span class="source-line-no">020</span><span id="line-20"></span>
+<span class="source-line-no">021</span><span id="line-21">  @Override</span>
+<span class="source-line-no">022</span><span id="line-22">  default IAssemblyDefinition getContainingDefinition() {</span>
+<span class="source-line-no">023</span><span id="line-23">    return getParentContainer().getContainingDefinition();</span>
+<span class="source-line-no">024</span><span id="line-24">  }</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">  /**</span>
+<span class="source-line-no">027</span><span id="line-27">   * Get the discriminator JSON property name to use to identify the type of a</span>
+<span class="source-line-no">028</span><span id="line-28">   * given instance object.</span>
+<span class="source-line-no">029</span><span id="line-29">   *</span>
+<span class="source-line-no">030</span><span id="line-30">   * @return the discriminator property name or {@code null} if the effective name</span>
+<span class="source-line-no">031</span><span id="line-31">   *         should be used instead</span>
+<span class="source-line-no">032</span><span id="line-32">   */</span>
+<span class="source-line-no">033</span><span id="line-33">  @Nullable</span>
+<span class="source-line-no">034</span><span id="line-34">  String getDiscriminatorValue();</span>
+<span class="source-line-no">035</span><span id="line-35"></span>
+<span class="source-line-no">036</span><span id="line-36">  /**</span>
+<span class="source-line-no">037</span><span id="line-37">   * Get the effective discriminator JSON property name to use to identify the</span>
+<span class="source-line-no">038</span><span id="line-38">   * type of a given instance object.</span>
+<span class="source-line-no">039</span><span id="line-39">   *</span>
+<span class="source-line-no">040</span><span id="line-40">   * @return the discriminator property name</span>
+<span class="source-line-no">041</span><span id="line-41">   */</span>
+<span class="source-line-no">042</span><span id="line-42">  @NonNull</span>
+<span class="source-line-no">043</span><span id="line-43">  default String getEffectiveDisciminatorValue() {</span>
+<span class="source-line-no">044</span><span id="line-44">    String retval = getDiscriminatorValue();</span>
+<span class="source-line-no">045</span><span id="line-45">    if (retval == null) {</span>
+<span class="source-line-no">046</span><span id="line-46">      retval = getEffectiveName();</span>
+<span class="source-line-no">047</span><span id="line-47">    }</span>
+<span class="source-line-no">048</span><span id="line-48">    return retval;</span>
+<span class="source-line-no">049</span><span id="line-49">  }</span>
+<span class="source-line-no">050</span><span id="line-50"></span>
+<span class="source-line-no">051</span><span id="line-51">  @Override</span>
+<span class="source-line-no">052</span><span id="line-52">  @Nullable</span>
+<span class="source-line-no">053</span><span id="line-53">  default IFlagInstance getEffectiveJsonKey() {</span>
+<span class="source-line-no">054</span><span id="line-54">    return JsonGroupAsBehavior.KEYED.equals(getParentContainer().getJsonGroupAsBehavior())</span>
+<span class="source-line-no">055</span><span id="line-55">        ? ObjectUtils.requireNonNull(getJsonKey())</span>
+<span class="source-line-no">056</span><span id="line-56">        : null;</span>
+<span class="source-line-no">057</span><span id="line-57">  }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  @Override</span>
+<span class="source-line-no">060</span><span id="line-60">  @Nullable</span>
+<span class="source-line-no">061</span><span id="line-61">  default IFlagInstance getJsonKey() {</span>
+<span class="source-line-no">062</span><span id="line-62">    String name = getParentContainer().getJsonKeyFlagInstanceName();</span>
+<span class="source-line-no">063</span><span id="line-63">    return name == null</span>
+<span class="source-line-no">064</span><span id="line-64">        ? null</span>
+<span class="source-line-no">065</span><span id="line-65">        : ObjectUtils.requireNonNull(</span>
+<span class="source-line-no">066</span><span id="line-66">            getDefinition().getFlagInstanceByName(</span>
+<span class="source-line-no">067</span><span id="line-67">                ModuleUtils.parseFlagName(getContainingModule(), name).getIndexPosition()));</span>
+<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  @Override</span>
+<span class="source-line-no">071</span><span id="line-71">  default int getMinOccurs() {</span>
+<span class="source-line-no">072</span><span id="line-72">    return getParentContainer().getMinOccurs();</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  @Override</span>
+<span class="source-line-no">076</span><span id="line-76">  default int getMaxOccurs() {</span>
+<span class="source-line-no">077</span><span id="line-77">    return getParentContainer().getMaxOccurs();</span>
+<span class="source-line-no">078</span><span id="line-78">  }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">}</span>
 
 
 

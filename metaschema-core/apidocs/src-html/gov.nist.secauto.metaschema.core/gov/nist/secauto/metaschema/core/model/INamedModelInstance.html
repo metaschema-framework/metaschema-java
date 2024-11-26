@@ -20,84 +20,72 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import java.util.function.Predicate;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">013</span><span id="line-13">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">010</span><span id="line-10">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">public interface INamedModelInstance extends IModelInstance, INamedInstance {</span>
 <span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">public interface INamedModelInstance extends IModelInstance, INamedInstance {</span>
-<span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">  /**</span>
-<span class="source-line-no">018</span><span id="line-18">   * Tests if the provided instance represents complex data. The data is complex</span>
-<span class="source-line-no">019</span><span id="line-19">   * if one of the following is true:</span>
-<span class="source-line-no">020</span><span id="line-20">   * &lt;ul&gt;</span>
-<span class="source-line-no">021</span><span id="line-21">   * &lt;li&gt;The instance is a {@link IAssemblyInstance}.&lt;/li&gt;</span>
-<span class="source-line-no">022</span><span id="line-22">   * &lt;li&gt;The instance is a {@link IFieldInstance} that has flags.&lt;/li&gt;</span>
-<span class="source-line-no">023</span><span id="line-23">   * &lt;/ul&gt;</span>
+<span class="source-line-no">015</span><span id="line-15">  /**</span>
+<span class="source-line-no">016</span><span id="line-16">   * Tests if the provided instance represents complex data. The data is complex</span>
+<span class="source-line-no">017</span><span id="line-17">   * if one of the following is true:</span>
+<span class="source-line-no">018</span><span id="line-18">   * &lt;ul&gt;</span>
+<span class="source-line-no">019</span><span id="line-19">   * &lt;li&gt;The instance is a {@link IAssemblyInstance}.&lt;/li&gt;</span>
+<span class="source-line-no">020</span><span id="line-20">   * &lt;li&gt;The instance is a {@link IFieldInstance} that has flags.&lt;/li&gt;</span>
+<span class="source-line-no">021</span><span id="line-21">   * &lt;/ul&gt;</span>
+<span class="source-line-no">022</span><span id="line-22">   *</span>
+<span class="source-line-no">023</span><span id="line-23">   * This method can be used as a {@link Predicate}.</span>
 <span class="source-line-no">024</span><span id="line-24">   *</span>
-<span class="source-line-no">025</span><span id="line-25">   * This method can be used as a {@link Predicate}.</span>
-<span class="source-line-no">026</span><span id="line-26">   *</span>
-<span class="source-line-no">027</span><span id="line-27">   * @param instance</span>
-<span class="source-line-no">028</span><span id="line-28">   *          the instance to test</span>
-<span class="source-line-no">029</span><span id="line-29">   * @return {@code true} if the data is complex, or {@code false} otherwise</span>
-<span class="source-line-no">030</span><span id="line-30">   */</span>
-<span class="source-line-no">031</span><span id="line-31">  static boolean complexObjectFilter(INamedModelInstance instance) {</span>
-<span class="source-line-no">032</span><span id="line-32">    boolean retval = true;</span>
-<span class="source-line-no">033</span><span id="line-33">    if (instance instanceof IFieldInstance) {</span>
-<span class="source-line-no">034</span><span id="line-34">      IFieldInstance field = (IFieldInstance) instance;</span>
-<span class="source-line-no">035</span><span id="line-35">      retval = !field.getDefinition().getFlagInstances().isEmpty();</span>
-<span class="source-line-no">036</span><span id="line-36">    }</span>
-<span class="source-line-no">037</span><span id="line-37">    return retval;</span>
-<span class="source-line-no">038</span><span id="line-38">  }</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">  @Override</span>
-<span class="source-line-no">041</span><span id="line-41">  @NonNull</span>
-<span class="source-line-no">042</span><span id="line-42">  IModelDefinition getDefinition();</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  /**</span>
-<span class="source-line-no">045</span><span id="line-45">   * Indicates if a flag's value can be used as a property name in the containing</span>
-<span class="source-line-no">046</span><span id="line-46">   * object in JSON who's value will be the object containing the flag. In such</span>
-<span class="source-line-no">047</span><span id="line-47">   * cases, the flag will not appear in the object. This is only allowed if the</span>
-<span class="source-line-no">048</span><span id="line-48">   * flag is required, as determined by a {@code true} result from</span>
-<span class="source-line-no">049</span><span id="line-49">   * {@link IFlagInstance#isRequired()}. The {@link IFlagInstance} can be</span>
-<span class="source-line-no">050</span><span id="line-50">   * retrieved using {@link #getEffectiveJsonKey()}.</span>
-<span class="source-line-no">051</span><span id="line-51">   *</span>
-<span class="source-line-no">052</span><span id="line-52">   * @return {@code true} if the flag's value can be used as a property name, or</span>
-<span class="source-line-no">053</span><span id="line-53">   *         {@code false} otherwise</span>
-<span class="source-line-no">054</span><span id="line-54">   * @see #getEffectiveJsonKey()</span>
-<span class="source-line-no">055</span><span id="line-55">   */</span>
-<span class="source-line-no">056</span><span id="line-56">  // TODO: remove once moved to the instance side</span>
-<span class="source-line-no">057</span><span id="line-57">  default boolean hasJsonKey() {</span>
-<span class="source-line-no">058</span><span id="line-58">    return getEffectiveJsonKey() != null;</span>
-<span class="source-line-no">059</span><span id="line-59">  }</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  /**</span>
-<span class="source-line-no">062</span><span id="line-62">   * Get the JSON key flag instance for this model instance, if one is configured.</span>
-<span class="source-line-no">063</span><span id="line-63">   *</span>
-<span class="source-line-no">064</span><span id="line-64">   * @return the JSON key flag instance or {@code null} if a JSON key is</span>
-<span class="source-line-no">065</span><span id="line-65">   *         configured</span>
-<span class="source-line-no">066</span><span id="line-66">   */</span>
-<span class="source-line-no">067</span><span id="line-67">  @Nullable</span>
-<span class="source-line-no">068</span><span id="line-68">  IFlagInstance getEffectiveJsonKey();</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">  /**</span>
-<span class="source-line-no">071</span><span id="line-71">   * Get the JSON key associated with this instance.</span>
-<span class="source-line-no">072</span><span id="line-72">   *</span>
-<span class="source-line-no">073</span><span id="line-73">   * @return the configured JSON key or {@code null} if no JSON key is configured</span>
-<span class="source-line-no">074</span><span id="line-74">   */</span>
-<span class="source-line-no">075</span><span id="line-75">  @Nullable</span>
-<span class="source-line-no">076</span><span id="line-76">  IFlagInstance getJsonKey();</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">  @Override</span>
-<span class="source-line-no">079</span><span id="line-79">  default QName getReferencedDefinitionQName() {</span>
-<span class="source-line-no">080</span><span id="line-80">    return getContainingModule().toModelQName(getName());</span>
-<span class="source-line-no">081</span><span id="line-81">  }</span>
-<span class="source-line-no">082</span><span id="line-82"></span>
-<span class="source-line-no">083</span><span id="line-83">  @Override</span>
-<span class="source-line-no">084</span><span id="line-84">  default QName getXmlQName() {</span>
-<span class="source-line-no">085</span><span id="line-85">    return getContainingModule().toModelQName(getEffectiveName());</span>
-<span class="source-line-no">086</span><span id="line-86">  }</span>
-<span class="source-line-no">087</span><span id="line-87">}</span>
+<span class="source-line-no">025</span><span id="line-25">   * @param instance</span>
+<span class="source-line-no">026</span><span id="line-26">   *          the instance to test</span>
+<span class="source-line-no">027</span><span id="line-27">   * @return {@code true} if the data is complex, or {@code false} otherwise</span>
+<span class="source-line-no">028</span><span id="line-28">   */</span>
+<span class="source-line-no">029</span><span id="line-29">  static boolean complexObjectFilter(INamedModelInstance instance) {</span>
+<span class="source-line-no">030</span><span id="line-30">    boolean retval = true;</span>
+<span class="source-line-no">031</span><span id="line-31">    if (instance instanceof IFieldInstance) {</span>
+<span class="source-line-no">032</span><span id="line-32">      IFieldInstance field = (IFieldInstance) instance;</span>
+<span class="source-line-no">033</span><span id="line-33">      retval = !field.getDefinition().getFlagInstances().isEmpty();</span>
+<span class="source-line-no">034</span><span id="line-34">    }</span>
+<span class="source-line-no">035</span><span id="line-35">    return retval;</span>
+<span class="source-line-no">036</span><span id="line-36">  }</span>
+<span class="source-line-no">037</span><span id="line-37"></span>
+<span class="source-line-no">038</span><span id="line-38">  @Override</span>
+<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
+<span class="source-line-no">040</span><span id="line-40">  IModelDefinition getDefinition();</span>
+<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">042</span><span id="line-42">  /**</span>
+<span class="source-line-no">043</span><span id="line-43">   * Indicates if a flag's value can be used as a property name in the containing</span>
+<span class="source-line-no">044</span><span id="line-44">   * object in JSON who's value will be the object containing the flag. In such</span>
+<span class="source-line-no">045</span><span id="line-45">   * cases, the flag will not appear in the object. This is only allowed if the</span>
+<span class="source-line-no">046</span><span id="line-46">   * flag is required, as determined by a {@code true} result from</span>
+<span class="source-line-no">047</span><span id="line-47">   * {@link IFlagInstance#isRequired()}. The {@link IFlagInstance} can be</span>
+<span class="source-line-no">048</span><span id="line-48">   * retrieved using {@link #getEffectiveJsonKey()}.</span>
+<span class="source-line-no">049</span><span id="line-49">   *</span>
+<span class="source-line-no">050</span><span id="line-50">   * @return {@code true} if the flag's value can be used as a property name, or</span>
+<span class="source-line-no">051</span><span id="line-51">   *         {@code false} otherwise</span>
+<span class="source-line-no">052</span><span id="line-52">   * @see #getEffectiveJsonKey()</span>
+<span class="source-line-no">053</span><span id="line-53">   */</span>
+<span class="source-line-no">054</span><span id="line-54">  // TODO: remove once moved to the instance side</span>
+<span class="source-line-no">055</span><span id="line-55">  default boolean hasJsonKey() {</span>
+<span class="source-line-no">056</span><span id="line-56">    return getEffectiveJsonKey() != null;</span>
+<span class="source-line-no">057</span><span id="line-57">  }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  /**</span>
+<span class="source-line-no">060</span><span id="line-60">   * Get the JSON key flag instance for this model instance, if one is configured.</span>
+<span class="source-line-no">061</span><span id="line-61">   *</span>
+<span class="source-line-no">062</span><span id="line-62">   * @return the JSON key flag instance or {@code null} if a JSON key is</span>
+<span class="source-line-no">063</span><span id="line-63">   *         configured</span>
+<span class="source-line-no">064</span><span id="line-64">   */</span>
+<span class="source-line-no">065</span><span id="line-65">  @Nullable</span>
+<span class="source-line-no">066</span><span id="line-66">  IFlagInstance getEffectiveJsonKey();</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  /**</span>
+<span class="source-line-no">069</span><span id="line-69">   * Get the JSON key associated with this instance.</span>
+<span class="source-line-no">070</span><span id="line-70">   *</span>
+<span class="source-line-no">071</span><span id="line-71">   * @return the configured JSON key or {@code null} if no JSON key is configured</span>
+<span class="source-line-no">072</span><span id="line-72">   */</span>
+<span class="source-line-no">073</span><span id="line-73">  @Nullable</span>
+<span class="source-line-no">074</span><span id="line-74">  IFlagInstance getJsonKey();</span>
+<span class="source-line-no">075</span><span id="line-75">}</span>
 
 
 

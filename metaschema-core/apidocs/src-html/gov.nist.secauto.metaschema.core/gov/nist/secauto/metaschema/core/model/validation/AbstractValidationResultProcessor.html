@@ -60,7 +60,7 @@
 <span class="source-line-no">047</span><span id="line-47">      } else if (finding instanceof ConstraintValidationFinding) {</span>
 <span class="source-line-no">048</span><span id="line-48">        handleConstraintValidationFinding((ConstraintValidationFinding) finding);</span>
 <span class="source-line-no">049</span><span id="line-49">      } else {</span>
-<span class="source-line-no">050</span><span id="line-50">        throw new IllegalStateException();</span>
+<span class="source-line-no">050</span><span id="line-50">        throw new UnsupportedOperationException("Unsupported finding type: " + finding.getClass().getName());</span>
 <span class="source-line-no">051</span><span id="line-51">      }</span>
 <span class="source-line-no">052</span><span id="line-52">    }</span>
 <span class="source-line-no">053</span><span id="line-53">  }</span>

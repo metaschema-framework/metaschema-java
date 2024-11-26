@@ -15,9 +15,11 @@ gov.nist.secauto.metaschema.core.metapath.item
 gov.nist.secauto.metaschema.core.metapath.item.atomic
 gov.nist.secauto.metaschema.core.metapath.item.function
 gov.nist.secauto.metaschema.core.metapath.item.node
+gov.nist.secauto.metaschema.core.metapath.type
 gov.nist.secauto.metaschema.core.model
 gov.nist.secauto.metaschema.core.model.constraint
 gov.nist.secauto.metaschema.core.model.util
 gov.nist.secauto.metaschema.core.model.validation
 gov.nist.secauto.metaschema.core.model.xml
+gov.nist.secauto.metaschema.core.qname
 gov.nist.secauto.metaschema.core.util

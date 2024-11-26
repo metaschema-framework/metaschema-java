@@ -18,578 +18,546 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.item.function;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.IPrintable;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.ISequenceType;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.impl.ArrayItemN;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import java.util.ArrayList;</span>
-<span class="source-line-no">022</span><span id="line-22">import java.util.Collection;</span>
-<span class="source-line-no">023</span><span id="line-23">import java.util.Collections;</span>
-<span class="source-line-no">024</span><span id="line-24">import java.util.List;</span>
-<span class="source-line-no">025</span><span id="line-25">import java.util.ListIterator;</span>
-<span class="source-line-no">026</span><span id="line-26">import java.util.Set;</span>
-<span class="source-line-no">027</span><span id="line-27">import java.util.function.BiConsumer;</span>
-<span class="source-line-no">028</span><span id="line-28">import java.util.function.BinaryOperator;</span>
-<span class="source-line-no">029</span><span id="line-29">import java.util.function.Function;</span>
-<span class="source-line-no">030</span><span id="line-30">import java.util.function.Supplier;</span>
-<span class="source-line-no">031</span><span id="line-31">import java.util.stream.Collector;</span>
-<span class="source-line-no">032</span><span id="line-32">import java.util.stream.Stream;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.impl.ArrayItemN;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.type.IItemType;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">import java.util.ArrayList;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.util.Collection;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.Collections;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.List;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.util.ListIterator;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.util.Set;</span>
+<span class="source-line-no">025</span><span id="line-25">import java.util.function.BiConsumer;</span>
+<span class="source-line-no">026</span><span id="line-26">import java.util.function.BinaryOperator;</span>
+<span class="source-line-no">027</span><span id="line-27">import java.util.function.Function;</span>
+<span class="source-line-no">028</span><span id="line-28">import java.util.function.Supplier;</span>
+<span class="source-line-no">029</span><span id="line-29">import java.util.stream.Collector;</span>
+<span class="source-line-no">030</span><span id="line-30">import java.util.stream.Stream;</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">033</span><span id="line-33"></span>
-<span class="source-line-no">034</span><span id="line-34">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">035</span><span id="line-35"></span>
-<span class="source-line-no">036</span><span id="line-36">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">037</span><span id="line-37"></span>
-<span class="source-line-no">038</span><span id="line-38">/**</span>
-<span class="source-line-no">039</span><span id="line-39"> * A representation of a Metapath array item type.</span>
-<span class="source-line-no">040</span><span id="line-40"> * &lt;p&gt;</span>
-<span class="source-line-no">041</span><span id="line-41"> * Instances of this interface are required to enforce non-mutability for array</span>
-<span class="source-line-no">042</span><span id="line-42"> * contents.</span>
-<span class="source-line-no">043</span><span id="line-43"> *</span>
-<span class="source-line-no">044</span><span id="line-44"> * @param &lt;ITEM&gt;</span>
-<span class="source-line-no">045</span><span id="line-45"> *          the Metapath item type of array members</span>
-<span class="source-line-no">046</span><span id="line-46"> */</span>
-<span class="source-line-no">047</span><span id="line-47">@SuppressWarnings("PMD.ShortMethodName")</span>
-<span class="source-line-no">048</span><span id="line-48">public interface IArrayItem&lt;ITEM extends ICollectionValue&gt; extends IFunction, IItem, List&lt;ITEM&gt;, IPrintable {</span>
-<span class="source-line-no">049</span><span id="line-49">  /**</span>
-<span class="source-line-no">050</span><span id="line-50">   * Get an empty, immutable array item.</span>
-<span class="source-line-no">051</span><span id="line-51">   *</span>
-<span class="source-line-no">052</span><span id="line-52">   * @param &lt;T&gt;</span>
-<span class="source-line-no">053</span><span id="line-53">   *          the item Java type</span>
-<span class="source-line-no">054</span><span id="line-54">   * @return an immutable map item</span>
-<span class="source-line-no">055</span><span id="line-55">   */</span>
-<span class="source-line-no">056</span><span id="line-56">  @NonNull</span>
-<span class="source-line-no">057</span><span id="line-57">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; empty() {</span>
-<span class="source-line-no">058</span><span id="line-58">    return AbstractArrayItem.empty();</span>
-<span class="source-line-no">059</span><span id="line-59">  }</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  @Override</span>
-<span class="source-line-no">062</span><span id="line-62">  default QName getQName() {</span>
-<span class="source-line-no">063</span><span id="line-63">    return AbstractArrayItem.QNAME;</span>
-<span class="source-line-no">064</span><span id="line-64">  }</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">  @Override</span>
-<span class="source-line-no">067</span><span id="line-67">  default Set&lt;FunctionProperty&gt; getProperties() {</span>
-<span class="source-line-no">068</span><span id="line-68">    return AbstractArrayItem.PROPERTIES;</span>
-<span class="source-line-no">069</span><span id="line-69">  }</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  @Override</span>
-<span class="source-line-no">072</span><span id="line-72">  default boolean isDeterministic() {</span>
-<span class="source-line-no">073</span><span id="line-73">    return true;</span>
-<span class="source-line-no">074</span><span id="line-74">  }</span>
-<span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">  @Override</span>
-<span class="source-line-no">077</span><span id="line-77">  default boolean isContextDepenent() {</span>
-<span class="source-line-no">078</span><span id="line-78">    return false;</span>
-<span class="source-line-no">079</span><span id="line-79">  }</span>
-<span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">  @Override</span>
-<span class="source-line-no">082</span><span id="line-82">  default boolean isFocusDepenent() {</span>
-<span class="source-line-no">083</span><span id="line-83">    return false;</span>
+<span class="source-line-no">034</span><span id="line-34">/**</span>
+<span class="source-line-no">035</span><span id="line-35"> * A representation of a Metapath array item type.</span>
+<span class="source-line-no">036</span><span id="line-36"> * &lt;p&gt;</span>
+<span class="source-line-no">037</span><span id="line-37"> * Instances of this interface are required to enforce non-mutability for array</span>
+<span class="source-line-no">038</span><span id="line-38"> * contents.</span>
+<span class="source-line-no">039</span><span id="line-39"> *</span>
+<span class="source-line-no">040</span><span id="line-40"> * @param &lt;ITEM&gt;</span>
+<span class="source-line-no">041</span><span id="line-41"> *          the Metapath item type of array members</span>
+<span class="source-line-no">042</span><span id="line-42"> */</span>
+<span class="source-line-no">043</span><span id="line-43">@SuppressWarnings({ "PMD.ShortMethodName", "PMD.ExcessivePublicCount" })</span>
+<span class="source-line-no">044</span><span id="line-44">public interface IArrayItem&lt;ITEM extends ICollectionValue&gt; extends IFunction, IItem, List&lt;ITEM&gt; {</span>
+<span class="source-line-no">045</span><span id="line-45">  /**</span>
+<span class="source-line-no">046</span><span id="line-46">   * Get the type information for this item.</span>
+<span class="source-line-no">047</span><span id="line-47">   *</span>
+<span class="source-line-no">048</span><span id="line-48">   * @return the type information</span>
+<span class="source-line-no">049</span><span id="line-49">   */</span>
+<span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
+<span class="source-line-no">051</span><span id="line-51">  static IItemType type() {</span>
+<span class="source-line-no">052</span><span id="line-52">    return IItemType.array();</span>
+<span class="source-line-no">053</span><span id="line-53">  }</span>
+<span class="source-line-no">054</span><span id="line-54"></span>
+<span class="source-line-no">055</span><span id="line-55">  @Override</span>
+<span class="source-line-no">056</span><span id="line-56">  default IItemType getType() {</span>
+<span class="source-line-no">057</span><span id="line-57">    return type();</span>
+<span class="source-line-no">058</span><span id="line-58">  }</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  /**</span>
+<span class="source-line-no">061</span><span id="line-61">   * Get an empty, immutable array item.</span>
+<span class="source-line-no">062</span><span id="line-62">   *</span>
+<span class="source-line-no">063</span><span id="line-63">   * @param &lt;T&gt;</span>
+<span class="source-line-no">064</span><span id="line-64">   *          the item Java type</span>
+<span class="source-line-no">065</span><span id="line-65">   * @return an immutable map item</span>
+<span class="source-line-no">066</span><span id="line-66">   */</span>
+<span class="source-line-no">067</span><span id="line-67">  @NonNull</span>
+<span class="source-line-no">068</span><span id="line-68">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; empty() {</span>
+<span class="source-line-no">069</span><span id="line-69">    return AbstractArrayItem.empty();</span>
+<span class="source-line-no">070</span><span id="line-70">  }</span>
+<span class="source-line-no">071</span><span id="line-71"></span>
+<span class="source-line-no">072</span><span id="line-72">  @Override</span>
+<span class="source-line-no">073</span><span id="line-73">  List&lt;ITEM&gt; getValue();</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  @Override</span>
+<span class="source-line-no">076</span><span id="line-76">  default boolean hasValue() {</span>
+<span class="source-line-no">077</span><span id="line-77">    return true;</span>
+<span class="source-line-no">078</span><span id="line-78">  }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">  @Override</span>
+<span class="source-line-no">081</span><span id="line-81">  default ISequence&lt;?&gt; contentsAsSequence() {</span>
+<span class="source-line-no">082</span><span id="line-82">    return ISequence.of(ObjectUtils.notNull(stream()</span>
+<span class="source-line-no">083</span><span id="line-83">        .flatMap(ICollectionValue::normalizeAsItems)));</span>
 <span class="source-line-no">084</span><span id="line-84">  }</span>
 <span class="source-line-no">085</span><span id="line-85"></span>
 <span class="source-line-no">086</span><span id="line-86">  @Override</span>
-<span class="source-line-no">087</span><span id="line-87">  default List&lt;IArgument&gt; getArguments() {</span>
-<span class="source-line-no">088</span><span id="line-88">    return AbstractArrayItem.ARGUMENTS;</span>
+<span class="source-line-no">087</span><span id="line-87">  default Stream&lt;IAnyAtomicItem&gt; atomize() {</span>
+<span class="source-line-no">088</span><span id="line-88">    return ObjectUtils.notNull(stream().flatMap(ICollectionValue::atomize));</span>
 <span class="source-line-no">089</span><span id="line-89">  }</span>
 <span class="source-line-no">090</span><span id="line-90"></span>
-<span class="source-line-no">091</span><span id="line-91">  @Override</span>
-<span class="source-line-no">092</span><span id="line-92">  default int arity() {</span>
-<span class="source-line-no">093</span><span id="line-93">    return 1;</span>
-<span class="source-line-no">094</span><span id="line-94">  }</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">  @Override</span>
-<span class="source-line-no">097</span><span id="line-97">  default boolean isArityUnbounded() {</span>
-<span class="source-line-no">098</span><span id="line-98">    return false;</span>
-<span class="source-line-no">099</span><span id="line-99">  }</span>
-<span class="source-line-no">100</span><span id="line-100"></span>
-<span class="source-line-no">101</span><span id="line-101">  @Override</span>
-<span class="source-line-no">102</span><span id="line-102">  default ISequenceType getResult() {</span>
-<span class="source-line-no">103</span><span id="line-103">    return AbstractArrayItem.RESULT;</span>
-<span class="source-line-no">104</span><span id="line-104">  }</span>
-<span class="source-line-no">105</span><span id="line-105"></span>
-<span class="source-line-no">106</span><span id="line-106">  @Override</span>
-<span class="source-line-no">107</span><span id="line-107">  ISequence&lt;?&gt; execute(List&lt;? extends ISequence&lt;?&gt;&gt; arguments, DynamicContext dynamicContext, ISequence&lt;?&gt; focus);</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">  @Override</span>
-<span class="source-line-no">110</span><span id="line-110">  default String toSignature() {</span>
-<span class="source-line-no">111</span><span id="line-111">    return "array()";</span>
-<span class="source-line-no">112</span><span id="line-112">  }</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">  @Override</span>
-<span class="source-line-no">115</span><span id="line-115">  List&lt;ITEM&gt; getValue();</span>
-<span class="source-line-no">116</span><span id="line-116"></span>
-<span class="source-line-no">117</span><span id="line-117">  @Override</span>
-<span class="source-line-no">118</span><span id="line-118">  default boolean hasValue() {</span>
-<span class="source-line-no">119</span><span id="line-119">    return true;</span>
-<span class="source-line-no">120</span><span id="line-120">  }</span>
-<span class="source-line-no">121</span><span id="line-121"></span>
-<span class="source-line-no">122</span><span id="line-122">  /**</span>
-<span class="source-line-no">123</span><span id="line-123">   * Determine if this sequence is empty.</span>
-<span class="source-line-no">124</span><span id="line-124">   *</span>
-<span class="source-line-no">125</span><span id="line-125">   * @return {@code true} if the sequence contains no items, or {@code false}</span>
-<span class="source-line-no">126</span><span id="line-126">   *         otherwise</span>
-<span class="source-line-no">127</span><span id="line-127">   */</span>
+<span class="source-line-no">091</span><span id="line-91">  /**</span>
+<span class="source-line-no">092</span><span id="line-92">   * Determine if this sequence is empty.</span>
+<span class="source-line-no">093</span><span id="line-93">   *</span>
+<span class="source-line-no">094</span><span id="line-94">   * @return {@code true} if the sequence contains no items, or {@code false}</span>
+<span class="source-line-no">095</span><span id="line-95">   *         otherwise</span>
+<span class="source-line-no">096</span><span id="line-96">   */</span>
+<span class="source-line-no">097</span><span id="line-97">  @Override</span>
+<span class="source-line-no">098</span><span id="line-98">  default boolean isEmpty() {</span>
+<span class="source-line-no">099</span><span id="line-99">    return getValue().isEmpty();</span>
+<span class="source-line-no">100</span><span id="line-100">  }</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">  /**</span>
+<span class="source-line-no">103</span><span id="line-103">   * Get the count of items in this sequence.</span>
+<span class="source-line-no">104</span><span id="line-104">   *</span>
+<span class="source-line-no">105</span><span id="line-105">   * @return the count of items</span>
+<span class="source-line-no">106</span><span id="line-106">   */</span>
+<span class="source-line-no">107</span><span id="line-107">  @Override</span>
+<span class="source-line-no">108</span><span id="line-108">  default int size() {</span>
+<span class="source-line-no">109</span><span id="line-109">    return getValue().size();</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">  }</span>
+<span class="source-line-no">112</span><span id="line-112"></span>
+<span class="source-line-no">113</span><span id="line-113">  @Override</span>
+<span class="source-line-no">114</span><span id="line-114">  default boolean contains(Object obj) {</span>
+<span class="source-line-no">115</span><span id="line-115">    return getValue().contains(obj);</span>
+<span class="source-line-no">116</span><span id="line-116">  }</span>
+<span class="source-line-no">117</span><span id="line-117"></span>
+<span class="source-line-no">118</span><span id="line-118">  @Override</span>
+<span class="source-line-no">119</span><span id="line-119">  default Object[] toArray() {</span>
+<span class="source-line-no">120</span><span id="line-120">    return getValue().toArray();</span>
+<span class="source-line-no">121</span><span id="line-121">  }</span>
+<span class="source-line-no">122</span><span id="line-122"></span>
+<span class="source-line-no">123</span><span id="line-123">  @Override</span>
+<span class="source-line-no">124</span><span id="line-124">  default &lt;T&gt; T[] toArray(T[] array) {</span>
+<span class="source-line-no">125</span><span id="line-125">    return getValue().toArray(array);</span>
+<span class="source-line-no">126</span><span id="line-126">  }</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
 <span class="source-line-no">128</span><span id="line-128">  @Override</span>
-<span class="source-line-no">129</span><span id="line-129">  default boolean isEmpty() {</span>
-<span class="source-line-no">130</span><span id="line-130">    return getValue().isEmpty();</span>
+<span class="source-line-no">129</span><span id="line-129">  default boolean containsAll(Collection&lt;?&gt; collection) {</span>
+<span class="source-line-no">130</span><span id="line-130">    return getValue().containsAll(collection);</span>
 <span class="source-line-no">131</span><span id="line-131">  }</span>
 <span class="source-line-no">132</span><span id="line-132"></span>
-<span class="source-line-no">133</span><span id="line-133">  /**</span>
-<span class="source-line-no">134</span><span id="line-134">   * Get the count of items in this sequence.</span>
-<span class="source-line-no">135</span><span id="line-135">   *</span>
-<span class="source-line-no">136</span><span id="line-136">   * @return the count of items</span>
-<span class="source-line-no">137</span><span id="line-137">   */</span>
+<span class="source-line-no">133</span><span id="line-133">  @Override</span>
+<span class="source-line-no">134</span><span id="line-134">  default ITEM get(int index) {</span>
+<span class="source-line-no">135</span><span id="line-135">    return getValue().get(index);</span>
+<span class="source-line-no">136</span><span id="line-136">  }</span>
+<span class="source-line-no">137</span><span id="line-137"></span>
 <span class="source-line-no">138</span><span id="line-138">  @Override</span>
-<span class="source-line-no">139</span><span id="line-139">  default int size() {</span>
-<span class="source-line-no">140</span><span id="line-140">    return getValue().size();</span>
-<span class="source-line-no">141</span><span id="line-141"></span>
-<span class="source-line-no">142</span><span id="line-142">  }</span>
-<span class="source-line-no">143</span><span id="line-143"></span>
-<span class="source-line-no">144</span><span id="line-144">  @Override</span>
-<span class="source-line-no">145</span><span id="line-145">  default boolean contains(Object obj) {</span>
-<span class="source-line-no">146</span><span id="line-146">    return getValue().contains(obj);</span>
-<span class="source-line-no">147</span><span id="line-147">  }</span>
-<span class="source-line-no">148</span><span id="line-148"></span>
-<span class="source-line-no">149</span><span id="line-149">  @Override</span>
-<span class="source-line-no">150</span><span id="line-150">  default Object[] toArray() {</span>
-<span class="source-line-no">151</span><span id="line-151">    return getValue().toArray();</span>
-<span class="source-line-no">152</span><span id="line-152">  }</span>
-<span class="source-line-no">153</span><span id="line-153"></span>
-<span class="source-line-no">154</span><span id="line-154">  @Override</span>
-<span class="source-line-no">155</span><span id="line-155">  default &lt;T&gt; T[] toArray(T[] array) {</span>
-<span class="source-line-no">156</span><span id="line-156">    return getValue().toArray(array);</span>
-<span class="source-line-no">157</span><span id="line-157">  }</span>
-<span class="source-line-no">158</span><span id="line-158"></span>
-<span class="source-line-no">159</span><span id="line-159">  @Override</span>
-<span class="source-line-no">160</span><span id="line-160">  default boolean containsAll(Collection&lt;?&gt; collection) {</span>
-<span class="source-line-no">161</span><span id="line-161">    return getValue().containsAll(collection);</span>
-<span class="source-line-no">162</span><span id="line-162">  }</span>
-<span class="source-line-no">163</span><span id="line-163"></span>
-<span class="source-line-no">164</span><span id="line-164">  @Override</span>
-<span class="source-line-no">165</span><span id="line-165">  default ITEM get(int index) {</span>
-<span class="source-line-no">166</span><span id="line-166">    return getValue().get(index);</span>
-<span class="source-line-no">167</span><span id="line-167">  }</span>
-<span class="source-line-no">168</span><span id="line-168"></span>
-<span class="source-line-no">169</span><span id="line-169">  @Override</span>
-<span class="source-line-no">170</span><span id="line-170">  default int indexOf(Object obj) {</span>
-<span class="source-line-no">171</span><span id="line-171">    return getValue().indexOf(obj);</span>
-<span class="source-line-no">172</span><span id="line-172">  }</span>
-<span class="source-line-no">173</span><span id="line-173"></span>
-<span class="source-line-no">174</span><span id="line-174">  @Override</span>
-<span class="source-line-no">175</span><span id="line-175">  default int lastIndexOf(Object obj) {</span>
-<span class="source-line-no">176</span><span id="line-176">    return getValue().lastIndexOf(obj);</span>
-<span class="source-line-no">177</span><span id="line-177">  }</span>
-<span class="source-line-no">178</span><span id="line-178"></span>
-<span class="source-line-no">179</span><span id="line-179">  @Override</span>
-<span class="source-line-no">180</span><span id="line-180">  default ListIterator&lt;ITEM&gt; listIterator() {</span>
-<span class="source-line-no">181</span><span id="line-181">    return getValue().listIterator();</span>
-<span class="source-line-no">182</span><span id="line-182">  }</span>
-<span class="source-line-no">183</span><span id="line-183"></span>
-<span class="source-line-no">184</span><span id="line-184">  @Override</span>
-<span class="source-line-no">185</span><span id="line-185">  default ListIterator&lt;ITEM&gt; listIterator(int index) {</span>
-<span class="source-line-no">186</span><span id="line-186">    return getValue().listIterator(index);</span>
-<span class="source-line-no">187</span><span id="line-187">  }</span>
-<span class="source-line-no">188</span><span id="line-188"></span>
-<span class="source-line-no">189</span><span id="line-189">  @Override</span>
-<span class="source-line-no">190</span><span id="line-190">  default List&lt;ITEM&gt; subList(int fromIndex, int toIndex) {</span>
-<span class="source-line-no">191</span><span id="line-191">    return getValue().subList(fromIndex, toIndex);</span>
-<span class="source-line-no">192</span><span id="line-192">  }</span>
-<span class="source-line-no">193</span><span id="line-193"></span>
-<span class="source-line-no">194</span><span id="line-194">  /**</span>
-<span class="source-line-no">195</span><span id="line-195">   * A {@link Collector} implementation to generates a sequence from a stream of</span>
-<span class="source-line-no">196</span><span id="line-196">   * Metapath items.</span>
-<span class="source-line-no">197</span><span id="line-197">   *</span>
-<span class="source-line-no">198</span><span id="line-198">   * @param &lt;T&gt;</span>
-<span class="source-line-no">199</span><span id="line-199">   *          the Java type of the items</span>
-<span class="source-line-no">200</span><span id="line-200">   * @return a collector that will generate a sequence</span>
-<span class="source-line-no">201</span><span id="line-201">   */</span>
-<span class="source-line-no">202</span><span id="line-202">  @NonNull</span>
-<span class="source-line-no">203</span><span id="line-203">  static &lt;T extends ICollectionValue&gt; Collector&lt;T, ?, IArrayItem&lt;T&gt;&gt; toArrayItem() {</span>
-<span class="source-line-no">204</span><span id="line-204">    return new Collector&lt;T, List&lt;T&gt;, IArrayItem&lt;T&gt;&gt;() {</span>
-<span class="source-line-no">205</span><span id="line-205"></span>
-<span class="source-line-no">206</span><span id="line-206">      @SuppressWarnings("null")</span>
-<span class="source-line-no">207</span><span id="line-207">      @Override</span>
-<span class="source-line-no">208</span><span id="line-208">      public Supplier&lt;List&lt;T&gt;&gt; supplier() {</span>
-<span class="source-line-no">209</span><span id="line-209">        return ArrayList::new;</span>
-<span class="source-line-no">210</span><span id="line-210">      }</span>
-<span class="source-line-no">211</span><span id="line-211"></span>
-<span class="source-line-no">212</span><span id="line-212">      @Override</span>
-<span class="source-line-no">213</span><span id="line-213">      public BiConsumer&lt;List&lt;T&gt;, T&gt; accumulator() {</span>
-<span class="source-line-no">214</span><span id="line-214">        return List::add;</span>
-<span class="source-line-no">215</span><span id="line-215">      }</span>
+<span class="source-line-no">139</span><span id="line-139">  default int indexOf(Object obj) {</span>
+<span class="source-line-no">140</span><span id="line-140">    return getValue().indexOf(obj);</span>
+<span class="source-line-no">141</span><span id="line-141">  }</span>
+<span class="source-line-no">142</span><span id="line-142"></span>
+<span class="source-line-no">143</span><span id="line-143">  @Override</span>
+<span class="source-line-no">144</span><span id="line-144">  default int lastIndexOf(Object obj) {</span>
+<span class="source-line-no">145</span><span id="line-145">    return getValue().lastIndexOf(obj);</span>
+<span class="source-line-no">146</span><span id="line-146">  }</span>
+<span class="source-line-no">147</span><span id="line-147"></span>
+<span class="source-line-no">148</span><span id="line-148">  @Override</span>
+<span class="source-line-no">149</span><span id="line-149">  default ListIterator&lt;ITEM&gt; listIterator() {</span>
+<span class="source-line-no">150</span><span id="line-150">    return getValue().listIterator();</span>
+<span class="source-line-no">151</span><span id="line-151">  }</span>
+<span class="source-line-no">152</span><span id="line-152"></span>
+<span class="source-line-no">153</span><span id="line-153">  @Override</span>
+<span class="source-line-no">154</span><span id="line-154">  default ListIterator&lt;ITEM&gt; listIterator(int index) {</span>
+<span class="source-line-no">155</span><span id="line-155">    return getValue().listIterator(index);</span>
+<span class="source-line-no">156</span><span id="line-156">  }</span>
+<span class="source-line-no">157</span><span id="line-157"></span>
+<span class="source-line-no">158</span><span id="line-158">  @Override</span>
+<span class="source-line-no">159</span><span id="line-159">  default List&lt;ITEM&gt; subList(int fromIndex, int toIndex) {</span>
+<span class="source-line-no">160</span><span id="line-160">    return getValue().subList(fromIndex, toIndex);</span>
+<span class="source-line-no">161</span><span id="line-161">  }</span>
+<span class="source-line-no">162</span><span id="line-162"></span>
+<span class="source-line-no">163</span><span id="line-163">  /**</span>
+<span class="source-line-no">164</span><span id="line-164">   * A {@link Collector} implementation to generates a sequence from a stream of</span>
+<span class="source-line-no">165</span><span id="line-165">   * Metapath items.</span>
+<span class="source-line-no">166</span><span id="line-166">   *</span>
+<span class="source-line-no">167</span><span id="line-167">   * @param &lt;T&gt;</span>
+<span class="source-line-no">168</span><span id="line-168">   *          the Java type of the items</span>
+<span class="source-line-no">169</span><span id="line-169">   * @return a collector that will generate a sequence</span>
+<span class="source-line-no">170</span><span id="line-170">   */</span>
+<span class="source-line-no">171</span><span id="line-171">  @NonNull</span>
+<span class="source-line-no">172</span><span id="line-172">  static &lt;T extends ICollectionValue&gt; Collector&lt;T, ?, IArrayItem&lt;T&gt;&gt; toArrayItem() {</span>
+<span class="source-line-no">173</span><span id="line-173">    return new Collector&lt;T, List&lt;T&gt;, IArrayItem&lt;T&gt;&gt;() {</span>
+<span class="source-line-no">174</span><span id="line-174"></span>
+<span class="source-line-no">175</span><span id="line-175">      @Override</span>
+<span class="source-line-no">176</span><span id="line-176">      public Supplier&lt;List&lt;T&gt;&gt; supplier() {</span>
+<span class="source-line-no">177</span><span id="line-177">        return ArrayList::new;</span>
+<span class="source-line-no">178</span><span id="line-178">      }</span>
+<span class="source-line-no">179</span><span id="line-179"></span>
+<span class="source-line-no">180</span><span id="line-180">      @Override</span>
+<span class="source-line-no">181</span><span id="line-181">      public BiConsumer&lt;List&lt;T&gt;, T&gt; accumulator() {</span>
+<span class="source-line-no">182</span><span id="line-182">        return List::add;</span>
+<span class="source-line-no">183</span><span id="line-183">      }</span>
+<span class="source-line-no">184</span><span id="line-184"></span>
+<span class="source-line-no">185</span><span id="line-185">      @Override</span>
+<span class="source-line-no">186</span><span id="line-186">      public BinaryOperator&lt;List&lt;T&gt;&gt; combiner() {</span>
+<span class="source-line-no">187</span><span id="line-187">        return (list1, list2) -&gt; {</span>
+<span class="source-line-no">188</span><span id="line-188">          list1.addAll(list2);</span>
+<span class="source-line-no">189</span><span id="line-189">          return list1;</span>
+<span class="source-line-no">190</span><span id="line-190">        };</span>
+<span class="source-line-no">191</span><span id="line-191">      }</span>
+<span class="source-line-no">192</span><span id="line-192"></span>
+<span class="source-line-no">193</span><span id="line-193">      @Override</span>
+<span class="source-line-no">194</span><span id="line-194">      public Function&lt;List&lt;T&gt;, IArrayItem&lt;T&gt;&gt; finisher() {</span>
+<span class="source-line-no">195</span><span id="line-195">        return list -&gt; ofCollection(ObjectUtils.notNull(list));</span>
+<span class="source-line-no">196</span><span id="line-196">      }</span>
+<span class="source-line-no">197</span><span id="line-197"></span>
+<span class="source-line-no">198</span><span id="line-198">      @Override</span>
+<span class="source-line-no">199</span><span id="line-199">      public Set&lt;Characteristics&gt; characteristics() {</span>
+<span class="source-line-no">200</span><span id="line-200">        return Collections.emptySet();</span>
+<span class="source-line-no">201</span><span id="line-201">      }</span>
+<span class="source-line-no">202</span><span id="line-202">    };</span>
+<span class="source-line-no">203</span><span id="line-203">  }</span>
+<span class="source-line-no">204</span><span id="line-204"></span>
+<span class="source-line-no">205</span><span id="line-205">  @Override</span>
+<span class="source-line-no">206</span><span id="line-206">  default ISequence&lt;? extends IArrayItem&lt;ITEM&gt;&gt; toSequence() {</span>
+<span class="source-line-no">207</span><span id="line-207">    return ISequence.of(this);</span>
+<span class="source-line-no">208</span><span id="line-208">  }</span>
+<span class="source-line-no">209</span><span id="line-209"></span>
+<span class="source-line-no">210</span><span id="line-210">  @SuppressWarnings("null")</span>
+<span class="source-line-no">211</span><span id="line-211">  @Override</span>
+<span class="source-line-no">212</span><span id="line-212">  default Stream&lt;? extends IItem&gt; flatten() {</span>
+<span class="source-line-no">213</span><span id="line-213">    return stream()</span>
+<span class="source-line-no">214</span><span id="line-214">        .flatMap(ICollectionValue::flatten);</span>
+<span class="source-line-no">215</span><span id="line-215">  }</span>
 <span class="source-line-no">216</span><span id="line-216"></span>
-<span class="source-line-no">217</span><span id="line-217">      @Override</span>
-<span class="source-line-no">218</span><span id="line-218">      public BinaryOperator&lt;List&lt;T&gt;&gt; combiner() {</span>
-<span class="source-line-no">219</span><span id="line-219">        return (list1, list2) -&gt; {</span>
-<span class="source-line-no">220</span><span id="line-220">          list1.addAll(list2);</span>
-<span class="source-line-no">221</span><span id="line-221">          return list1;</span>
-<span class="source-line-no">222</span><span id="line-222">        };</span>
-<span class="source-line-no">223</span><span id="line-223">      }</span>
-<span class="source-line-no">224</span><span id="line-224"></span>
-<span class="source-line-no">225</span><span id="line-225">      @Override</span>
-<span class="source-line-no">226</span><span id="line-226">      public Function&lt;List&lt;T&gt;, IArrayItem&lt;T&gt;&gt; finisher() {</span>
-<span class="source-line-no">227</span><span id="line-227">        return list -&gt; ofCollection(ObjectUtils.notNull(list));</span>
-<span class="source-line-no">228</span><span id="line-228">      }</span>
-<span class="source-line-no">229</span><span id="line-229"></span>
-<span class="source-line-no">230</span><span id="line-230">      @Override</span>
-<span class="source-line-no">231</span><span id="line-231">      public Set&lt;Characteristics&gt; characteristics() {</span>
-<span class="source-line-no">232</span><span id="line-232">        return Collections.emptySet();</span>
-<span class="source-line-no">233</span><span id="line-233">      }</span>
-<span class="source-line-no">234</span><span id="line-234">    };</span>
-<span class="source-line-no">235</span><span id="line-235">  }</span>
-<span class="source-line-no">236</span><span id="line-236"></span>
-<span class="source-line-no">237</span><span id="line-237">  @Override</span>
-<span class="source-line-no">238</span><span id="line-238">  default ISequence&lt;? extends IArrayItem&lt;ITEM&gt;&gt; asSequence() {</span>
-<span class="source-line-no">239</span><span id="line-239">    return ISequence.of(this);</span>
-<span class="source-line-no">240</span><span id="line-240">  }</span>
-<span class="source-line-no">241</span><span id="line-241"></span>
-<span class="source-line-no">242</span><span id="line-242">  @SuppressWarnings("null")</span>
-<span class="source-line-no">243</span><span id="line-243">  @Override</span>
-<span class="source-line-no">244</span><span id="line-244">  default Stream&lt;? extends IItem&gt; flatten() {</span>
-<span class="source-line-no">245</span><span id="line-245">    return stream()</span>
-<span class="source-line-no">246</span><span id="line-246">        .flatMap(ICollectionValue::flatten);</span>
-<span class="source-line-no">247</span><span id="line-247">  }</span>
-<span class="source-line-no">248</span><span id="line-248"></span>
-<span class="source-line-no">249</span><span id="line-249">  /**</span>
-<span class="source-line-no">250</span><span id="line-250">   * Get a new, immutable array item that contains the items in the provided list.</span>
-<span class="source-line-no">251</span><span id="line-251">   *</span>
-<span class="source-line-no">252</span><span id="line-252">   * @param &lt;T&gt;</span>
-<span class="source-line-no">253</span><span id="line-253">   *          the item Java type</span>
-<span class="source-line-no">254</span><span id="line-254">   * @param items</span>
-<span class="source-line-no">255</span><span id="line-255">   *          the list whose items are to be added to the new array</span>
-<span class="source-line-no">256</span><span id="line-256">   * @return an array item containing the specified entries</span>
-<span class="source-line-no">257</span><span id="line-257">   */</span>
-<span class="source-line-no">258</span><span id="line-258">  @NonNull</span>
-<span class="source-line-no">259</span><span id="line-259">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; ofCollection( // NOPMD - intentional</span>
-<span class="source-line-no">260</span><span id="line-260">      @NonNull List&lt;T&gt; items) {</span>
-<span class="source-line-no">261</span><span id="line-261">    return items.isEmpty() ? empty() : new ArrayItemN&lt;&gt;(items);</span>
-<span class="source-line-no">262</span><span id="line-262">  }</span>
-<span class="source-line-no">263</span><span id="line-263"></span>
-<span class="source-line-no">264</span><span id="line-264">  /**</span>
-<span class="source-line-no">265</span><span id="line-265">   * Returns an unmodifiable array item containing zero elements.</span>
-<span class="source-line-no">266</span><span id="line-266">   *</span>
-<span class="source-line-no">267</span><span id="line-267">   * @param &lt;T&gt;</span>
-<span class="source-line-no">268</span><span id="line-268">   *          the item type</span>
-<span class="source-line-no">269</span><span id="line-269">   * @return an empty {@code IArrayItem}</span>
-<span class="source-line-no">270</span><span id="line-270">   */</span>
-<span class="source-line-no">271</span><span id="line-271">  @NonNull</span>
-<span class="source-line-no">272</span><span id="line-272">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of() {</span>
-<span class="source-line-no">273</span><span id="line-273">    return AbstractArrayItem.empty();</span>
-<span class="source-line-no">274</span><span id="line-274">  }</span>
-<span class="source-line-no">275</span><span id="line-275"></span>
-<span class="source-line-no">276</span><span id="line-276">  /**</span>
-<span class="source-line-no">277</span><span id="line-277">   * Returns an unmodifiable array item containing one item.</span>
-<span class="source-line-no">278</span><span id="line-278">   *</span>
-<span class="source-line-no">279</span><span id="line-279">   * @param &lt;T&gt;</span>
-<span class="source-line-no">280</span><span id="line-280">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">281</span><span id="line-281">   * @param e1</span>
-<span class="source-line-no">282</span><span id="line-282">   *          the single item</span>
-<span class="source-line-no">283</span><span id="line-283">   * @return an {@code IArrayItem} containing the specified item</span>
-<span class="source-line-no">284</span><span id="line-284">   * @throws NullPointerException</span>
-<span class="source-line-no">285</span><span id="line-285">   *           if the item is {@code null}</span>
-<span class="source-line-no">286</span><span id="line-286">   */</span>
-<span class="source-line-no">287</span><span id="line-287">  @NonNull</span>
-<span class="source-line-no">288</span><span id="line-288">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1) {</span>
-<span class="source-line-no">289</span><span id="line-289">    return new ArrayItemN&lt;&gt;(e1);</span>
-<span class="source-line-no">290</span><span id="line-290">  }</span>
-<span class="source-line-no">291</span><span id="line-291"></span>
-<span class="source-line-no">292</span><span id="line-292">  /**</span>
-<span class="source-line-no">293</span><span id="line-293">   * Returns an unmodifiable array item containing two items.</span>
-<span class="source-line-no">294</span><span id="line-294">   *</span>
-<span class="source-line-no">295</span><span id="line-295">   * @param &lt;T&gt;</span>
-<span class="source-line-no">296</span><span id="line-296">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">297</span><span id="line-297">   * @param e1</span>
-<span class="source-line-no">298</span><span id="line-298">   *          the first item</span>
-<span class="source-line-no">299</span><span id="line-299">   * @param e2</span>
-<span class="source-line-no">300</span><span id="line-300">   *          the second item</span>
-<span class="source-line-no">301</span><span id="line-301">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">302</span><span id="line-302">   * @throws NullPointerException</span>
-<span class="source-line-no">303</span><span id="line-303">   *           if an item is {@code null}</span>
-<span class="source-line-no">304</span><span id="line-304">   */</span>
-<span class="source-line-no">305</span><span id="line-305">  @NonNull</span>
-<span class="source-line-no">306</span><span id="line-306">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2) {</span>
-<span class="source-line-no">307</span><span id="line-307">    return new ArrayItemN&lt;&gt;(e1, e2);</span>
-<span class="source-line-no">308</span><span id="line-308">  }</span>
-<span class="source-line-no">309</span><span id="line-309"></span>
-<span class="source-line-no">310</span><span id="line-310">  /**</span>
-<span class="source-line-no">311</span><span id="line-311">   * Returns an unmodifiable array item containing three elements.</span>
-<span class="source-line-no">312</span><span id="line-312">   *</span>
-<span class="source-line-no">313</span><span id="line-313">   * @param &lt;T&gt;</span>
-<span class="source-line-no">314</span><span id="line-314">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">315</span><span id="line-315">   * @param e1</span>
-<span class="source-line-no">316</span><span id="line-316">   *          the first item</span>
-<span class="source-line-no">317</span><span id="line-317">   * @param e2</span>
-<span class="source-line-no">318</span><span id="line-318">   *          the second item</span>
-<span class="source-line-no">319</span><span id="line-319">   * @param e3</span>
-<span class="source-line-no">320</span><span id="line-320">   *          the third item</span>
-<span class="source-line-no">321</span><span id="line-321">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">322</span><span id="line-322">   * @throws NullPointerException</span>
-<span class="source-line-no">323</span><span id="line-323">   *           if an item is {@code null}</span>
-<span class="source-line-no">324</span><span id="line-324">   */</span>
-<span class="source-line-no">325</span><span id="line-325">  @NonNull</span>
-<span class="source-line-no">326</span><span id="line-326">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3) {</span>
-<span class="source-line-no">327</span><span id="line-327">    return new ArrayItemN&lt;&gt;(e1, e2, e3);</span>
-<span class="source-line-no">328</span><span id="line-328">  }</span>
-<span class="source-line-no">329</span><span id="line-329"></span>
-<span class="source-line-no">330</span><span id="line-330">  /**</span>
-<span class="source-line-no">331</span><span id="line-331">   * Returns an unmodifiable array item containing four items.</span>
-<span class="source-line-no">332</span><span id="line-332">   *</span>
-<span class="source-line-no">333</span><span id="line-333">   * @param &lt;T&gt;</span>
-<span class="source-line-no">334</span><span id="line-334">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">335</span><span id="line-335">   * @param e1</span>
-<span class="source-line-no">336</span><span id="line-336">   *          the first item</span>
-<span class="source-line-no">337</span><span id="line-337">   * @param e2</span>
-<span class="source-line-no">338</span><span id="line-338">   *          the second item</span>
-<span class="source-line-no">339</span><span id="line-339">   * @param e3</span>
-<span class="source-line-no">340</span><span id="line-340">   *          the third item</span>
-<span class="source-line-no">341</span><span id="line-341">   * @param e4</span>
-<span class="source-line-no">342</span><span id="line-342">   *          the fourth item</span>
-<span class="source-line-no">343</span><span id="line-343">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">344</span><span id="line-344">   * @throws NullPointerException</span>
-<span class="source-line-no">345</span><span id="line-345">   *           if an item is {@code null}</span>
-<span class="source-line-no">346</span><span id="line-346">   */</span>
-<span class="source-line-no">347</span><span id="line-347">  @NonNull</span>
-<span class="source-line-no">348</span><span id="line-348">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4) {</span>
-<span class="source-line-no">349</span><span id="line-349">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4);</span>
-<span class="source-line-no">350</span><span id="line-350">  }</span>
-<span class="source-line-no">351</span><span id="line-351"></span>
-<span class="source-line-no">352</span><span id="line-352">  /**</span>
-<span class="source-line-no">353</span><span id="line-353">   * Returns an unmodifiable array item containing five items.</span>
-<span class="source-line-no">354</span><span id="line-354">   *</span>
-<span class="source-line-no">355</span><span id="line-355">   * @param &lt;T&gt;</span>
-<span class="source-line-no">356</span><span id="line-356">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">357</span><span id="line-357">   * @param e1</span>
-<span class="source-line-no">358</span><span id="line-358">   *          the first item</span>
-<span class="source-line-no">359</span><span id="line-359">   * @param e2</span>
-<span class="source-line-no">360</span><span id="line-360">   *          the second item</span>
-<span class="source-line-no">361</span><span id="line-361">   * @param e3</span>
-<span class="source-line-no">362</span><span id="line-362">   *          the third item</span>
-<span class="source-line-no">363</span><span id="line-363">   * @param e4</span>
-<span class="source-line-no">364</span><span id="line-364">   *          the fourth item</span>
-<span class="source-line-no">365</span><span id="line-365">   * @param e5</span>
-<span class="source-line-no">366</span><span id="line-366">   *          the fifth item</span>
-<span class="source-line-no">367</span><span id="line-367">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">368</span><span id="line-368">   * @throws NullPointerException</span>
-<span class="source-line-no">369</span><span id="line-369">   *           if an item is {@code null}</span>
-<span class="source-line-no">370</span><span id="line-370">   */</span>
-<span class="source-line-no">371</span><span id="line-371">  @NonNull</span>
-<span class="source-line-no">372</span><span id="line-372">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
-<span class="source-line-no">373</span><span id="line-373">      @NonNull T e5) {</span>
-<span class="source-line-no">374</span><span id="line-374">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5);</span>
-<span class="source-line-no">375</span><span id="line-375">  }</span>
-<span class="source-line-no">376</span><span id="line-376"></span>
-<span class="source-line-no">377</span><span id="line-377">  /**</span>
-<span class="source-line-no">378</span><span id="line-378">   * Returns an unmodifiable array item containing six items.</span>
-<span class="source-line-no">379</span><span id="line-379">   *</span>
-<span class="source-line-no">380</span><span id="line-380">   * @param &lt;T&gt;</span>
-<span class="source-line-no">381</span><span id="line-381">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">382</span><span id="line-382">   * @param e1</span>
-<span class="source-line-no">383</span><span id="line-383">   *          the first item</span>
-<span class="source-line-no">384</span><span id="line-384">   * @param e2</span>
-<span class="source-line-no">385</span><span id="line-385">   *          the second item</span>
-<span class="source-line-no">386</span><span id="line-386">   * @param e3</span>
-<span class="source-line-no">387</span><span id="line-387">   *          the third item</span>
-<span class="source-line-no">388</span><span id="line-388">   * @param e4</span>
-<span class="source-line-no">389</span><span id="line-389">   *          the fourth item</span>
-<span class="source-line-no">390</span><span id="line-390">   * @param e5</span>
-<span class="source-line-no">391</span><span id="line-391">   *          the fifth item</span>
-<span class="source-line-no">392</span><span id="line-392">   * @param e6</span>
-<span class="source-line-no">393</span><span id="line-393">   *          the sixth item</span>
-<span class="source-line-no">394</span><span id="line-394">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">395</span><span id="line-395">   * @throws NullPointerException</span>
-<span class="source-line-no">396</span><span id="line-396">   *           if an item is {@code null}</span>
-<span class="source-line-no">397</span><span id="line-397">   */</span>
-<span class="source-line-no">398</span><span id="line-398">  @NonNull</span>
-<span class="source-line-no">399</span><span id="line-399">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
-<span class="source-line-no">400</span><span id="line-400">      @NonNull T e5, @NonNull T e6) {</span>
-<span class="source-line-no">401</span><span id="line-401">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6);</span>
-<span class="source-line-no">402</span><span id="line-402">  }</span>
-<span class="source-line-no">403</span><span id="line-403"></span>
-<span class="source-line-no">404</span><span id="line-404">  /**</span>
-<span class="source-line-no">405</span><span id="line-405">   * Returns an unmodifiable array item containing seven items.</span>
-<span class="source-line-no">406</span><span id="line-406">   *</span>
-<span class="source-line-no">407</span><span id="line-407">   * @param &lt;T&gt;</span>
-<span class="source-line-no">408</span><span id="line-408">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">409</span><span id="line-409">   * @param e1</span>
-<span class="source-line-no">410</span><span id="line-410">   *          the first item</span>
-<span class="source-line-no">411</span><span id="line-411">   * @param e2</span>
-<span class="source-line-no">412</span><span id="line-412">   *          the second item</span>
-<span class="source-line-no">413</span><span id="line-413">   * @param e3</span>
-<span class="source-line-no">414</span><span id="line-414">   *          the third item</span>
-<span class="source-line-no">415</span><span id="line-415">   * @param e4</span>
-<span class="source-line-no">416</span><span id="line-416">   *          the fourth item</span>
-<span class="source-line-no">417</span><span id="line-417">   * @param e5</span>
-<span class="source-line-no">418</span><span id="line-418">   *          the fifth item</span>
-<span class="source-line-no">419</span><span id="line-419">   * @param e6</span>
-<span class="source-line-no">420</span><span id="line-420">   *          the sixth item</span>
-<span class="source-line-no">421</span><span id="line-421">   * @param e7</span>
-<span class="source-line-no">422</span><span id="line-422">   *          the seventh item</span>
-<span class="source-line-no">423</span><span id="line-423">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">424</span><span id="line-424">   * @throws NullPointerException</span>
-<span class="source-line-no">425</span><span id="line-425">   *           if an item is {@code null}</span>
-<span class="source-line-no">426</span><span id="line-426">   */</span>
-<span class="source-line-no">427</span><span id="line-427">  @NonNull</span>
-<span class="source-line-no">428</span><span id="line-428">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
-<span class="source-line-no">429</span><span id="line-429">      @NonNull T e5, @NonNull T e6, @NonNull T e7) {</span>
-<span class="source-line-no">430</span><span id="line-430">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7);</span>
-<span class="source-line-no">431</span><span id="line-431">  }</span>
-<span class="source-line-no">432</span><span id="line-432"></span>
-<span class="source-line-no">433</span><span id="line-433">  /**</span>
-<span class="source-line-no">434</span><span id="line-434">   * Returns an unmodifiable array item containing eight items.</span>
-<span class="source-line-no">435</span><span id="line-435">   *</span>
-<span class="source-line-no">436</span><span id="line-436">   * @param &lt;T&gt;</span>
-<span class="source-line-no">437</span><span id="line-437">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">438</span><span id="line-438">   * @param e1</span>
-<span class="source-line-no">439</span><span id="line-439">   *          the first item</span>
-<span class="source-line-no">440</span><span id="line-440">   * @param e2</span>
-<span class="source-line-no">441</span><span id="line-441">   *          the second item</span>
-<span class="source-line-no">442</span><span id="line-442">   * @param e3</span>
-<span class="source-line-no">443</span><span id="line-443">   *          the third item</span>
-<span class="source-line-no">444</span><span id="line-444">   * @param e4</span>
-<span class="source-line-no">445</span><span id="line-445">   *          the fourth item</span>
-<span class="source-line-no">446</span><span id="line-446">   * @param e5</span>
-<span class="source-line-no">447</span><span id="line-447">   *          the fifth item</span>
-<span class="source-line-no">448</span><span id="line-448">   * @param e6</span>
-<span class="source-line-no">449</span><span id="line-449">   *          the sixth item</span>
-<span class="source-line-no">450</span><span id="line-450">   * @param e7</span>
-<span class="source-line-no">451</span><span id="line-451">   *          the seventh item</span>
-<span class="source-line-no">452</span><span id="line-452">   * @param e8</span>
-<span class="source-line-no">453</span><span id="line-453">   *          the eighth item</span>
-<span class="source-line-no">454</span><span id="line-454">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">455</span><span id="line-455">   * @throws NullPointerException</span>
-<span class="source-line-no">456</span><span id="line-456">   *           if an item is {@code null}</span>
-<span class="source-line-no">457</span><span id="line-457">   */</span>
-<span class="source-line-no">458</span><span id="line-458">  @NonNull</span>
-<span class="source-line-no">459</span><span id="line-459">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
-<span class="source-line-no">460</span><span id="line-460">      @NonNull T e5, @NonNull T e6, @NonNull T e7, @NonNull T e8) {</span>
-<span class="source-line-no">461</span><span id="line-461">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8);</span>
-<span class="source-line-no">462</span><span id="line-462">  }</span>
-<span class="source-line-no">463</span><span id="line-463"></span>
-<span class="source-line-no">464</span><span id="line-464">  /**</span>
-<span class="source-line-no">465</span><span id="line-465">   * Returns an unmodifiable array item containing nine items.</span>
-<span class="source-line-no">466</span><span id="line-466">   *</span>
-<span class="source-line-no">467</span><span id="line-467">   * @param &lt;T&gt;</span>
-<span class="source-line-no">468</span><span id="line-468">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">469</span><span id="line-469">   * @param e1</span>
-<span class="source-line-no">470</span><span id="line-470">   *          the first item</span>
-<span class="source-line-no">471</span><span id="line-471">   * @param e2</span>
-<span class="source-line-no">472</span><span id="line-472">   *          the second item</span>
-<span class="source-line-no">473</span><span id="line-473">   * @param e3</span>
-<span class="source-line-no">474</span><span id="line-474">   *          the third item</span>
-<span class="source-line-no">475</span><span id="line-475">   * @param e4</span>
-<span class="source-line-no">476</span><span id="line-476">   *          the fourth item</span>
-<span class="source-line-no">477</span><span id="line-477">   * @param e5</span>
-<span class="source-line-no">478</span><span id="line-478">   *          the fifth item</span>
-<span class="source-line-no">479</span><span id="line-479">   * @param e6</span>
-<span class="source-line-no">480</span><span id="line-480">   *          the sixth item</span>
-<span class="source-line-no">481</span><span id="line-481">   * @param e7</span>
-<span class="source-line-no">482</span><span id="line-482">   *          the seventh item</span>
-<span class="source-line-no">483</span><span id="line-483">   * @param e8</span>
-<span class="source-line-no">484</span><span id="line-484">   *          the eighth item</span>
-<span class="source-line-no">485</span><span id="line-485">   * @param e9</span>
-<span class="source-line-no">486</span><span id="line-486">   *          the ninth item</span>
-<span class="source-line-no">487</span><span id="line-487">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">488</span><span id="line-488">   * @throws NullPointerException</span>
-<span class="source-line-no">489</span><span id="line-489">   *           if an item is {@code null}</span>
-<span class="source-line-no">490</span><span id="line-490">   */</span>
-<span class="source-line-no">491</span><span id="line-491">  @NonNull</span>
-<span class="source-line-no">492</span><span id="line-492">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
-<span class="source-line-no">493</span><span id="line-493">      @NonNull T e5, @NonNull T e6, @NonNull T e7, @NonNull T e8, @NonNull T e9) {</span>
-<span class="source-line-no">494</span><span id="line-494">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8, e9);</span>
-<span class="source-line-no">495</span><span id="line-495">  }</span>
-<span class="source-line-no">496</span><span id="line-496"></span>
-<span class="source-line-no">497</span><span id="line-497">  /**</span>
-<span class="source-line-no">498</span><span id="line-498">   * Returns an unmodifiable array item containing ten items.</span>
-<span class="source-line-no">499</span><span id="line-499">   *</span>
-<span class="source-line-no">500</span><span id="line-500">   * @param &lt;T&gt;</span>
-<span class="source-line-no">501</span><span id="line-501">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">502</span><span id="line-502">   * @param e1</span>
-<span class="source-line-no">503</span><span id="line-503">   *          the first item</span>
-<span class="source-line-no">504</span><span id="line-504">   * @param e2</span>
-<span class="source-line-no">505</span><span id="line-505">   *          the second item</span>
-<span class="source-line-no">506</span><span id="line-506">   * @param e3</span>
-<span class="source-line-no">507</span><span id="line-507">   *          the third item</span>
-<span class="source-line-no">508</span><span id="line-508">   * @param e4</span>
-<span class="source-line-no">509</span><span id="line-509">   *          the fourth item</span>
-<span class="source-line-no">510</span><span id="line-510">   * @param e5</span>
-<span class="source-line-no">511</span><span id="line-511">   *          the fifth item</span>
-<span class="source-line-no">512</span><span id="line-512">   * @param e6</span>
-<span class="source-line-no">513</span><span id="line-513">   *          the sixth item</span>
-<span class="source-line-no">514</span><span id="line-514">   * @param e7</span>
-<span class="source-line-no">515</span><span id="line-515">   *          the seventh item</span>
-<span class="source-line-no">516</span><span id="line-516">   * @param e8</span>
-<span class="source-line-no">517</span><span id="line-517">   *          the eighth item</span>
-<span class="source-line-no">518</span><span id="line-518">   * @param e9</span>
-<span class="source-line-no">519</span><span id="line-519">   *          the ninth item</span>
-<span class="source-line-no">520</span><span id="line-520">   * @param e10</span>
-<span class="source-line-no">521</span><span id="line-521">   *          the tenth item</span>
-<span class="source-line-no">522</span><span id="line-522">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">523</span><span id="line-523">   * @throws NullPointerException</span>
-<span class="source-line-no">524</span><span id="line-524">   *           if an item is {@code null}</span>
-<span class="source-line-no">525</span><span id="line-525">   */</span>
-<span class="source-line-no">526</span><span id="line-526">  @NonNull</span>
-<span class="source-line-no">527</span><span id="line-527">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
-<span class="source-line-no">528</span><span id="line-528">      @NonNull T e5, @NonNull T e6, @NonNull T e7, @NonNull T e8, @NonNull T e9, @NonNull T e10) {</span>
-<span class="source-line-no">529</span><span id="line-529">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);</span>
-<span class="source-line-no">530</span><span id="line-530">  }</span>
-<span class="source-line-no">531</span><span id="line-531"></span>
-<span class="source-line-no">532</span><span id="line-532">  /**</span>
-<span class="source-line-no">533</span><span id="line-533">   * Returns an unmodifiable array item containing an arbitrary number of items.</span>
-<span class="source-line-no">534</span><span id="line-534">   *</span>
-<span class="source-line-no">535</span><span id="line-535">   * @param &lt;T&gt;</span>
-<span class="source-line-no">536</span><span id="line-536">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">537</span><span id="line-537">   * @param items</span>
-<span class="source-line-no">538</span><span id="line-538">   *          the items to be contained in the list</span>
-<span class="source-line-no">539</span><span id="line-539">   * @return an {@code IArrayItem} containing the specified items</span>
-<span class="source-line-no">540</span><span id="line-540">   * @throws NullPointerException</span>
-<span class="source-line-no">541</span><span id="line-541">   *           if an item is {@code null} or if the array is {@code null}</span>
-<span class="source-line-no">542</span><span id="line-542">   */</span>
-<span class="source-line-no">543</span><span id="line-543">  @SafeVarargs</span>
-<span class="source-line-no">544</span><span id="line-544">  @NonNull</span>
-<span class="source-line-no">545</span><span id="line-545">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T... items) {</span>
-<span class="source-line-no">546</span><span id="line-546">    return items.length == 0 ? empty() : new ArrayItemN&lt;&gt;(items);</span>
-<span class="source-line-no">547</span><span id="line-547">  }</span>
-<span class="source-line-no">548</span><span id="line-548"></span>
-<span class="source-line-no">549</span><span id="line-549">  /**</span>
-<span class="source-line-no">550</span><span id="line-550">   * Returns an unmodifiable array item containing the items of the given</span>
-<span class="source-line-no">551</span><span id="line-551">   * Collection, in its iteration order. The given Collection must not be null,</span>
-<span class="source-line-no">552</span><span id="line-552">   * and it must not contain any null items. If the given Collection is</span>
-<span class="source-line-no">553</span><span id="line-553">   * subsequently modified, the returned array item will not reflect such</span>
-<span class="source-line-no">554</span><span id="line-554">   * modifications.</span>
-<span class="source-line-no">555</span><span id="line-555">   *</span>
-<span class="source-line-no">556</span><span id="line-556">   * @param &lt;T&gt;</span>
-<span class="source-line-no">557</span><span id="line-557">   *          the {@code IArrayItem}'s item type</span>
-<span class="source-line-no">558</span><span id="line-558">   * @param collection</span>
-<span class="source-line-no">559</span><span id="line-559">   *          a {@code Collection} from which items are drawn, must be non-null</span>
-<span class="source-line-no">560</span><span id="line-560">   * @return an {@code IArrayItem} containing the items of the given</span>
-<span class="source-line-no">561</span><span id="line-561">   *         {@code Collection}</span>
-<span class="source-line-no">562</span><span id="line-562">   * @throws NullPointerException</span>
-<span class="source-line-no">563</span><span id="line-563">   *           if collection is null, or if it contains any nulls</span>
-<span class="source-line-no">564</span><span id="line-564">   */</span>
-<span class="source-line-no">565</span><span id="line-565">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">566</span><span id="line-566">  @NonNull</span>
-<span class="source-line-no">567</span><span id="line-567">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; copyOf(@NonNull Collection&lt;? extends T&gt; collection) {</span>
-<span class="source-line-no">568</span><span id="line-568">    return collection instanceof IArrayItem</span>
-<span class="source-line-no">569</span><span id="line-569">        ? (IArrayItem&lt;T&gt;) collection</span>
-<span class="source-line-no">570</span><span id="line-570">        : collection.isEmpty()</span>
-<span class="source-line-no">571</span><span id="line-571">            ? empty()</span>
-<span class="source-line-no">572</span><span id="line-572">            : new ArrayItemN&lt;&gt;(new ArrayList&lt;&gt;(collection));</span>
-<span class="source-line-no">573</span><span id="line-573">  }</span>
-<span class="source-line-no">574</span><span id="line-574"></span>
-<span class="source-line-no">575</span><span id="line-575">  @Override</span>
-<span class="source-line-no">576</span><span id="line-576">  default void accept(IItemVisitor visitor) {</span>
-<span class="source-line-no">577</span><span id="line-577">    visitor.visit(this);</span>
-<span class="source-line-no">578</span><span id="line-578">  }</span>
-<span class="source-line-no">579</span><span id="line-579">}</span>
+<span class="source-line-no">217</span><span id="line-217">  /**</span>
+<span class="source-line-no">218</span><span id="line-218">   * Get a new, immutable array item that contains the items in the provided list.</span>
+<span class="source-line-no">219</span><span id="line-219">   *</span>
+<span class="source-line-no">220</span><span id="line-220">   * @param &lt;T&gt;</span>
+<span class="source-line-no">221</span><span id="line-221">   *          the item Java type</span>
+<span class="source-line-no">222</span><span id="line-222">   * @param items</span>
+<span class="source-line-no">223</span><span id="line-223">   *          the list whose items are to be added to the new array</span>
+<span class="source-line-no">224</span><span id="line-224">   * @return an array item containing the specified entries</span>
+<span class="source-line-no">225</span><span id="line-225">   */</span>
+<span class="source-line-no">226</span><span id="line-226">  @NonNull</span>
+<span class="source-line-no">227</span><span id="line-227">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; ofCollection( // NOPMD - intentional</span>
+<span class="source-line-no">228</span><span id="line-228">      @NonNull List&lt;T&gt; items) {</span>
+<span class="source-line-no">229</span><span id="line-229">    return items.isEmpty() ? empty() : new ArrayItemN&lt;&gt;(items);</span>
+<span class="source-line-no">230</span><span id="line-230">  }</span>
+<span class="source-line-no">231</span><span id="line-231"></span>
+<span class="source-line-no">232</span><span id="line-232">  /**</span>
+<span class="source-line-no">233</span><span id="line-233">   * Returns an unmodifiable array item containing zero elements.</span>
+<span class="source-line-no">234</span><span id="line-234">   *</span>
+<span class="source-line-no">235</span><span id="line-235">   * @param &lt;T&gt;</span>
+<span class="source-line-no">236</span><span id="line-236">   *          the item type</span>
+<span class="source-line-no">237</span><span id="line-237">   * @return an empty {@code IArrayItem}</span>
+<span class="source-line-no">238</span><span id="line-238">   */</span>
+<span class="source-line-no">239</span><span id="line-239">  @NonNull</span>
+<span class="source-line-no">240</span><span id="line-240">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of() {</span>
+<span class="source-line-no">241</span><span id="line-241">    return AbstractArrayItem.empty();</span>
+<span class="source-line-no">242</span><span id="line-242">  }</span>
+<span class="source-line-no">243</span><span id="line-243"></span>
+<span class="source-line-no">244</span><span id="line-244">  /**</span>
+<span class="source-line-no">245</span><span id="line-245">   * Returns an unmodifiable array item containing one item.</span>
+<span class="source-line-no">246</span><span id="line-246">   *</span>
+<span class="source-line-no">247</span><span id="line-247">   * @param &lt;T&gt;</span>
+<span class="source-line-no">248</span><span id="line-248">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">249</span><span id="line-249">   * @param e1</span>
+<span class="source-line-no">250</span><span id="line-250">   *          the single item</span>
+<span class="source-line-no">251</span><span id="line-251">   * @return an {@code IArrayItem} containing the specified item</span>
+<span class="source-line-no">252</span><span id="line-252">   * @throws NullPointerException</span>
+<span class="source-line-no">253</span><span id="line-253">   *           if the item is {@code null}</span>
+<span class="source-line-no">254</span><span id="line-254">   */</span>
+<span class="source-line-no">255</span><span id="line-255">  @NonNull</span>
+<span class="source-line-no">256</span><span id="line-256">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1) {</span>
+<span class="source-line-no">257</span><span id="line-257">    return new ArrayItemN&lt;&gt;(e1);</span>
+<span class="source-line-no">258</span><span id="line-258">  }</span>
+<span class="source-line-no">259</span><span id="line-259"></span>
+<span class="source-line-no">260</span><span id="line-260">  /**</span>
+<span class="source-line-no">261</span><span id="line-261">   * Returns an unmodifiable array item containing two items.</span>
+<span class="source-line-no">262</span><span id="line-262">   *</span>
+<span class="source-line-no">263</span><span id="line-263">   * @param &lt;T&gt;</span>
+<span class="source-line-no">264</span><span id="line-264">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">265</span><span id="line-265">   * @param e1</span>
+<span class="source-line-no">266</span><span id="line-266">   *          the first item</span>
+<span class="source-line-no">267</span><span id="line-267">   * @param e2</span>
+<span class="source-line-no">268</span><span id="line-268">   *          the second item</span>
+<span class="source-line-no">269</span><span id="line-269">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">270</span><span id="line-270">   * @throws NullPointerException</span>
+<span class="source-line-no">271</span><span id="line-271">   *           if an item is {@code null}</span>
+<span class="source-line-no">272</span><span id="line-272">   */</span>
+<span class="source-line-no">273</span><span id="line-273">  @NonNull</span>
+<span class="source-line-no">274</span><span id="line-274">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2) {</span>
+<span class="source-line-no">275</span><span id="line-275">    return new ArrayItemN&lt;&gt;(e1, e2);</span>
+<span class="source-line-no">276</span><span id="line-276">  }</span>
+<span class="source-line-no">277</span><span id="line-277"></span>
+<span class="source-line-no">278</span><span id="line-278">  /**</span>
+<span class="source-line-no">279</span><span id="line-279">   * Returns an unmodifiable array item containing three elements.</span>
+<span class="source-line-no">280</span><span id="line-280">   *</span>
+<span class="source-line-no">281</span><span id="line-281">   * @param &lt;T&gt;</span>
+<span class="source-line-no">282</span><span id="line-282">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">283</span><span id="line-283">   * @param e1</span>
+<span class="source-line-no">284</span><span id="line-284">   *          the first item</span>
+<span class="source-line-no">285</span><span id="line-285">   * @param e2</span>
+<span class="source-line-no">286</span><span id="line-286">   *          the second item</span>
+<span class="source-line-no">287</span><span id="line-287">   * @param e3</span>
+<span class="source-line-no">288</span><span id="line-288">   *          the third item</span>
+<span class="source-line-no">289</span><span id="line-289">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">290</span><span id="line-290">   * @throws NullPointerException</span>
+<span class="source-line-no">291</span><span id="line-291">   *           if an item is {@code null}</span>
+<span class="source-line-no">292</span><span id="line-292">   */</span>
+<span class="source-line-no">293</span><span id="line-293">  @NonNull</span>
+<span class="source-line-no">294</span><span id="line-294">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3) {</span>
+<span class="source-line-no">295</span><span id="line-295">    return new ArrayItemN&lt;&gt;(e1, e2, e3);</span>
+<span class="source-line-no">296</span><span id="line-296">  }</span>
+<span class="source-line-no">297</span><span id="line-297"></span>
+<span class="source-line-no">298</span><span id="line-298">  /**</span>
+<span class="source-line-no">299</span><span id="line-299">   * Returns an unmodifiable array item containing four items.</span>
+<span class="source-line-no">300</span><span id="line-300">   *</span>
+<span class="source-line-no">301</span><span id="line-301">   * @param &lt;T&gt;</span>
+<span class="source-line-no">302</span><span id="line-302">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">303</span><span id="line-303">   * @param e1</span>
+<span class="source-line-no">304</span><span id="line-304">   *          the first item</span>
+<span class="source-line-no">305</span><span id="line-305">   * @param e2</span>
+<span class="source-line-no">306</span><span id="line-306">   *          the second item</span>
+<span class="source-line-no">307</span><span id="line-307">   * @param e3</span>
+<span class="source-line-no">308</span><span id="line-308">   *          the third item</span>
+<span class="source-line-no">309</span><span id="line-309">   * @param e4</span>
+<span class="source-line-no">310</span><span id="line-310">   *          the fourth item</span>
+<span class="source-line-no">311</span><span id="line-311">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">312</span><span id="line-312">   * @throws NullPointerException</span>
+<span class="source-line-no">313</span><span id="line-313">   *           if an item is {@code null}</span>
+<span class="source-line-no">314</span><span id="line-314">   */</span>
+<span class="source-line-no">315</span><span id="line-315">  @NonNull</span>
+<span class="source-line-no">316</span><span id="line-316">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4) {</span>
+<span class="source-line-no">317</span><span id="line-317">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4);</span>
+<span class="source-line-no">318</span><span id="line-318">  }</span>
+<span class="source-line-no">319</span><span id="line-319"></span>
+<span class="source-line-no">320</span><span id="line-320">  /**</span>
+<span class="source-line-no">321</span><span id="line-321">   * Returns an unmodifiable array item containing five items.</span>
+<span class="source-line-no">322</span><span id="line-322">   *</span>
+<span class="source-line-no">323</span><span id="line-323">   * @param &lt;T&gt;</span>
+<span class="source-line-no">324</span><span id="line-324">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">325</span><span id="line-325">   * @param e1</span>
+<span class="source-line-no">326</span><span id="line-326">   *          the first item</span>
+<span class="source-line-no">327</span><span id="line-327">   * @param e2</span>
+<span class="source-line-no">328</span><span id="line-328">   *          the second item</span>
+<span class="source-line-no">329</span><span id="line-329">   * @param e3</span>
+<span class="source-line-no">330</span><span id="line-330">   *          the third item</span>
+<span class="source-line-no">331</span><span id="line-331">   * @param e4</span>
+<span class="source-line-no">332</span><span id="line-332">   *          the fourth item</span>
+<span class="source-line-no">333</span><span id="line-333">   * @param e5</span>
+<span class="source-line-no">334</span><span id="line-334">   *          the fifth item</span>
+<span class="source-line-no">335</span><span id="line-335">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">336</span><span id="line-336">   * @throws NullPointerException</span>
+<span class="source-line-no">337</span><span id="line-337">   *           if an item is {@code null}</span>
+<span class="source-line-no">338</span><span id="line-338">   */</span>
+<span class="source-line-no">339</span><span id="line-339">  @NonNull</span>
+<span class="source-line-no">340</span><span id="line-340">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
+<span class="source-line-no">341</span><span id="line-341">      @NonNull T e5) {</span>
+<span class="source-line-no">342</span><span id="line-342">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5);</span>
+<span class="source-line-no">343</span><span id="line-343">  }</span>
+<span class="source-line-no">344</span><span id="line-344"></span>
+<span class="source-line-no">345</span><span id="line-345">  /**</span>
+<span class="source-line-no">346</span><span id="line-346">   * Returns an unmodifiable array item containing six items.</span>
+<span class="source-line-no">347</span><span id="line-347">   *</span>
+<span class="source-line-no">348</span><span id="line-348">   * @param &lt;T&gt;</span>
+<span class="source-line-no">349</span><span id="line-349">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">350</span><span id="line-350">   * @param e1</span>
+<span class="source-line-no">351</span><span id="line-351">   *          the first item</span>
+<span class="source-line-no">352</span><span id="line-352">   * @param e2</span>
+<span class="source-line-no">353</span><span id="line-353">   *          the second item</span>
+<span class="source-line-no">354</span><span id="line-354">   * @param e3</span>
+<span class="source-line-no">355</span><span id="line-355">   *          the third item</span>
+<span class="source-line-no">356</span><span id="line-356">   * @param e4</span>
+<span class="source-line-no">357</span><span id="line-357">   *          the fourth item</span>
+<span class="source-line-no">358</span><span id="line-358">   * @param e5</span>
+<span class="source-line-no">359</span><span id="line-359">   *          the fifth item</span>
+<span class="source-line-no">360</span><span id="line-360">   * @param e6</span>
+<span class="source-line-no">361</span><span id="line-361">   *          the sixth item</span>
+<span class="source-line-no">362</span><span id="line-362">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">363</span><span id="line-363">   * @throws NullPointerException</span>
+<span class="source-line-no">364</span><span id="line-364">   *           if an item is {@code null}</span>
+<span class="source-line-no">365</span><span id="line-365">   */</span>
+<span class="source-line-no">366</span><span id="line-366">  @NonNull</span>
+<span class="source-line-no">367</span><span id="line-367">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
+<span class="source-line-no">368</span><span id="line-368">      @NonNull T e5, @NonNull T e6) {</span>
+<span class="source-line-no">369</span><span id="line-369">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6);</span>
+<span class="source-line-no">370</span><span id="line-370">  }</span>
+<span class="source-line-no">371</span><span id="line-371"></span>
+<span class="source-line-no">372</span><span id="line-372">  /**</span>
+<span class="source-line-no">373</span><span id="line-373">   * Returns an unmodifiable array item containing seven items.</span>
+<span class="source-line-no">374</span><span id="line-374">   *</span>
+<span class="source-line-no">375</span><span id="line-375">   * @param &lt;T&gt;</span>
+<span class="source-line-no">376</span><span id="line-376">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">377</span><span id="line-377">   * @param e1</span>
+<span class="source-line-no">378</span><span id="line-378">   *          the first item</span>
+<span class="source-line-no">379</span><span id="line-379">   * @param e2</span>
+<span class="source-line-no">380</span><span id="line-380">   *          the second item</span>
+<span class="source-line-no">381</span><span id="line-381">   * @param e3</span>
+<span class="source-line-no">382</span><span id="line-382">   *          the third item</span>
+<span class="source-line-no">383</span><span id="line-383">   * @param e4</span>
+<span class="source-line-no">384</span><span id="line-384">   *          the fourth item</span>
+<span class="source-line-no">385</span><span id="line-385">   * @param e5</span>
+<span class="source-line-no">386</span><span id="line-386">   *          the fifth item</span>
+<span class="source-line-no">387</span><span id="line-387">   * @param e6</span>
+<span class="source-line-no">388</span><span id="line-388">   *          the sixth item</span>
+<span class="source-line-no">389</span><span id="line-389">   * @param e7</span>
+<span class="source-line-no">390</span><span id="line-390">   *          the seventh item</span>
+<span class="source-line-no">391</span><span id="line-391">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">392</span><span id="line-392">   * @throws NullPointerException</span>
+<span class="source-line-no">393</span><span id="line-393">   *           if an item is {@code null}</span>
+<span class="source-line-no">394</span><span id="line-394">   */</span>
+<span class="source-line-no">395</span><span id="line-395">  @NonNull</span>
+<span class="source-line-no">396</span><span id="line-396">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
+<span class="source-line-no">397</span><span id="line-397">      @NonNull T e5, @NonNull T e6, @NonNull T e7) {</span>
+<span class="source-line-no">398</span><span id="line-398">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7);</span>
+<span class="source-line-no">399</span><span id="line-399">  }</span>
+<span class="source-line-no">400</span><span id="line-400"></span>
+<span class="source-line-no">401</span><span id="line-401">  /**</span>
+<span class="source-line-no">402</span><span id="line-402">   * Returns an unmodifiable array item containing eight items.</span>
+<span class="source-line-no">403</span><span id="line-403">   *</span>
+<span class="source-line-no">404</span><span id="line-404">   * @param &lt;T&gt;</span>
+<span class="source-line-no">405</span><span id="line-405">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">406</span><span id="line-406">   * @param e1</span>
+<span class="source-line-no">407</span><span id="line-407">   *          the first item</span>
+<span class="source-line-no">408</span><span id="line-408">   * @param e2</span>
+<span class="source-line-no">409</span><span id="line-409">   *          the second item</span>
+<span class="source-line-no">410</span><span id="line-410">   * @param e3</span>
+<span class="source-line-no">411</span><span id="line-411">   *          the third item</span>
+<span class="source-line-no">412</span><span id="line-412">   * @param e4</span>
+<span class="source-line-no">413</span><span id="line-413">   *          the fourth item</span>
+<span class="source-line-no">414</span><span id="line-414">   * @param e5</span>
+<span class="source-line-no">415</span><span id="line-415">   *          the fifth item</span>
+<span class="source-line-no">416</span><span id="line-416">   * @param e6</span>
+<span class="source-line-no">417</span><span id="line-417">   *          the sixth item</span>
+<span class="source-line-no">418</span><span id="line-418">   * @param e7</span>
+<span class="source-line-no">419</span><span id="line-419">   *          the seventh item</span>
+<span class="source-line-no">420</span><span id="line-420">   * @param e8</span>
+<span class="source-line-no">421</span><span id="line-421">   *          the eighth item</span>
+<span class="source-line-no">422</span><span id="line-422">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">423</span><span id="line-423">   * @throws NullPointerException</span>
+<span class="source-line-no">424</span><span id="line-424">   *           if an item is {@code null}</span>
+<span class="source-line-no">425</span><span id="line-425">   */</span>
+<span class="source-line-no">426</span><span id="line-426">  @NonNull</span>
+<span class="source-line-no">427</span><span id="line-427">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
+<span class="source-line-no">428</span><span id="line-428">      @NonNull T e5, @NonNull T e6, @NonNull T e7, @NonNull T e8) {</span>
+<span class="source-line-no">429</span><span id="line-429">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8);</span>
+<span class="source-line-no">430</span><span id="line-430">  }</span>
+<span class="source-line-no">431</span><span id="line-431"></span>
+<span class="source-line-no">432</span><span id="line-432">  /**</span>
+<span class="source-line-no">433</span><span id="line-433">   * Returns an unmodifiable array item containing nine items.</span>
+<span class="source-line-no">434</span><span id="line-434">   *</span>
+<span class="source-line-no">435</span><span id="line-435">   * @param &lt;T&gt;</span>
+<span class="source-line-no">436</span><span id="line-436">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">437</span><span id="line-437">   * @param e1</span>
+<span class="source-line-no">438</span><span id="line-438">   *          the first item</span>
+<span class="source-line-no">439</span><span id="line-439">   * @param e2</span>
+<span class="source-line-no">440</span><span id="line-440">   *          the second item</span>
+<span class="source-line-no">441</span><span id="line-441">   * @param e3</span>
+<span class="source-line-no">442</span><span id="line-442">   *          the third item</span>
+<span class="source-line-no">443</span><span id="line-443">   * @param e4</span>
+<span class="source-line-no">444</span><span id="line-444">   *          the fourth item</span>
+<span class="source-line-no">445</span><span id="line-445">   * @param e5</span>
+<span class="source-line-no">446</span><span id="line-446">   *          the fifth item</span>
+<span class="source-line-no">447</span><span id="line-447">   * @param e6</span>
+<span class="source-line-no">448</span><span id="line-448">   *          the sixth item</span>
+<span class="source-line-no">449</span><span id="line-449">   * @param e7</span>
+<span class="source-line-no">450</span><span id="line-450">   *          the seventh item</span>
+<span class="source-line-no">451</span><span id="line-451">   * @param e8</span>
+<span class="source-line-no">452</span><span id="line-452">   *          the eighth item</span>
+<span class="source-line-no">453</span><span id="line-453">   * @param e9</span>
+<span class="source-line-no">454</span><span id="line-454">   *          the ninth item</span>
+<span class="source-line-no">455</span><span id="line-455">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">456</span><span id="line-456">   * @throws NullPointerException</span>
+<span class="source-line-no">457</span><span id="line-457">   *           if an item is {@code null}</span>
+<span class="source-line-no">458</span><span id="line-458">   */</span>
+<span class="source-line-no">459</span><span id="line-459">  @NonNull</span>
+<span class="source-line-no">460</span><span id="line-460">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
+<span class="source-line-no">461</span><span id="line-461">      @NonNull T e5, @NonNull T e6, @NonNull T e7, @NonNull T e8, @NonNull T e9) {</span>
+<span class="source-line-no">462</span><span id="line-462">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8, e9);</span>
+<span class="source-line-no">463</span><span id="line-463">  }</span>
+<span class="source-line-no">464</span><span id="line-464"></span>
+<span class="source-line-no">465</span><span id="line-465">  /**</span>
+<span class="source-line-no">466</span><span id="line-466">   * Returns an unmodifiable array item containing ten items.</span>
+<span class="source-line-no">467</span><span id="line-467">   *</span>
+<span class="source-line-no">468</span><span id="line-468">   * @param &lt;T&gt;</span>
+<span class="source-line-no">469</span><span id="line-469">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">470</span><span id="line-470">   * @param e1</span>
+<span class="source-line-no">471</span><span id="line-471">   *          the first item</span>
+<span class="source-line-no">472</span><span id="line-472">   * @param e2</span>
+<span class="source-line-no">473</span><span id="line-473">   *          the second item</span>
+<span class="source-line-no">474</span><span id="line-474">   * @param e3</span>
+<span class="source-line-no">475</span><span id="line-475">   *          the third item</span>
+<span class="source-line-no">476</span><span id="line-476">   * @param e4</span>
+<span class="source-line-no">477</span><span id="line-477">   *          the fourth item</span>
+<span class="source-line-no">478</span><span id="line-478">   * @param e5</span>
+<span class="source-line-no">479</span><span id="line-479">   *          the fifth item</span>
+<span class="source-line-no">480</span><span id="line-480">   * @param e6</span>
+<span class="source-line-no">481</span><span id="line-481">   *          the sixth item</span>
+<span class="source-line-no">482</span><span id="line-482">   * @param e7</span>
+<span class="source-line-no">483</span><span id="line-483">   *          the seventh item</span>
+<span class="source-line-no">484</span><span id="line-484">   * @param e8</span>
+<span class="source-line-no">485</span><span id="line-485">   *          the eighth item</span>
+<span class="source-line-no">486</span><span id="line-486">   * @param e9</span>
+<span class="source-line-no">487</span><span id="line-487">   *          the ninth item</span>
+<span class="source-line-no">488</span><span id="line-488">   * @param e10</span>
+<span class="source-line-no">489</span><span id="line-489">   *          the tenth item</span>
+<span class="source-line-no">490</span><span id="line-490">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">491</span><span id="line-491">   * @throws NullPointerException</span>
+<span class="source-line-no">492</span><span id="line-492">   *           if an item is {@code null}</span>
+<span class="source-line-no">493</span><span id="line-493">   */</span>
+<span class="source-line-no">494</span><span id="line-494">  @NonNull</span>
+<span class="source-line-no">495</span><span id="line-495">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T e1, @NonNull T e2, @NonNull T e3, @NonNull T e4,</span>
+<span class="source-line-no">496</span><span id="line-496">      @NonNull T e5, @NonNull T e6, @NonNull T e7, @NonNull T e8, @NonNull T e9, @NonNull T e10) {</span>
+<span class="source-line-no">497</span><span id="line-497">    return new ArrayItemN&lt;&gt;(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);</span>
+<span class="source-line-no">498</span><span id="line-498">  }</span>
+<span class="source-line-no">499</span><span id="line-499"></span>
+<span class="source-line-no">500</span><span id="line-500">  /**</span>
+<span class="source-line-no">501</span><span id="line-501">   * Returns an unmodifiable array item containing an arbitrary number of items.</span>
+<span class="source-line-no">502</span><span id="line-502">   *</span>
+<span class="source-line-no">503</span><span id="line-503">   * @param &lt;T&gt;</span>
+<span class="source-line-no">504</span><span id="line-504">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">505</span><span id="line-505">   * @param items</span>
+<span class="source-line-no">506</span><span id="line-506">   *          the items to be contained in the list</span>
+<span class="source-line-no">507</span><span id="line-507">   * @return an {@code IArrayItem} containing the specified items</span>
+<span class="source-line-no">508</span><span id="line-508">   * @throws NullPointerException</span>
+<span class="source-line-no">509</span><span id="line-509">   *           if an item is {@code null} or if the array is {@code null}</span>
+<span class="source-line-no">510</span><span id="line-510">   */</span>
+<span class="source-line-no">511</span><span id="line-511">  @SafeVarargs</span>
+<span class="source-line-no">512</span><span id="line-512">  @NonNull</span>
+<span class="source-line-no">513</span><span id="line-513">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; of(@NonNull T... items) {</span>
+<span class="source-line-no">514</span><span id="line-514">    return items.length == 0 ? empty() : new ArrayItemN&lt;&gt;(items);</span>
+<span class="source-line-no">515</span><span id="line-515">  }</span>
+<span class="source-line-no">516</span><span id="line-516"></span>
+<span class="source-line-no">517</span><span id="line-517">  /**</span>
+<span class="source-line-no">518</span><span id="line-518">   * Returns an unmodifiable array item containing the items of the given</span>
+<span class="source-line-no">519</span><span id="line-519">   * Collection, in its iteration order. The given Collection must not be null,</span>
+<span class="source-line-no">520</span><span id="line-520">   * and it must not contain any null items. If the given Collection is</span>
+<span class="source-line-no">521</span><span id="line-521">   * subsequently modified, the returned array item will not reflect such</span>
+<span class="source-line-no">522</span><span id="line-522">   * modifications.</span>
+<span class="source-line-no">523</span><span id="line-523">   *</span>
+<span class="source-line-no">524</span><span id="line-524">   * @param &lt;T&gt;</span>
+<span class="source-line-no">525</span><span id="line-525">   *          the {@code IArrayItem}'s item type</span>
+<span class="source-line-no">526</span><span id="line-526">   * @param collection</span>
+<span class="source-line-no">527</span><span id="line-527">   *          a {@code Collection} from which items are drawn, must be non-null</span>
+<span class="source-line-no">528</span><span id="line-528">   * @return an {@code IArrayItem} containing the items of the given</span>
+<span class="source-line-no">529</span><span id="line-529">   *         {@code Collection}</span>
+<span class="source-line-no">530</span><span id="line-530">   * @throws NullPointerException</span>
+<span class="source-line-no">531</span><span id="line-531">   *           if collection is null, or if it contains any nulls</span>
+<span class="source-line-no">532</span><span id="line-532">   */</span>
+<span class="source-line-no">533</span><span id="line-533">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">534</span><span id="line-534">  @NonNull</span>
+<span class="source-line-no">535</span><span id="line-535">  static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; copyOf(@NonNull Collection&lt;? extends T&gt; collection) {</span>
+<span class="source-line-no">536</span><span id="line-536">    return collection instanceof IArrayItem</span>
+<span class="source-line-no">537</span><span id="line-537">        ? (IArrayItem&lt;T&gt;) collection</span>
+<span class="source-line-no">538</span><span id="line-538">        : collection.isEmpty()</span>
+<span class="source-line-no">539</span><span id="line-539">            ? empty()</span>
+<span class="source-line-no">540</span><span id="line-540">            : new ArrayItemN&lt;&gt;(new ArrayList&lt;&gt;(collection));</span>
+<span class="source-line-no">541</span><span id="line-541">  }</span>
+<span class="source-line-no">542</span><span id="line-542"></span>
+<span class="source-line-no">543</span><span id="line-543">  @Override</span>
+<span class="source-line-no">544</span><span id="line-544">  default void accept(IItemVisitor visitor) {</span>
+<span class="source-line-no">545</span><span id="line-545">    visitor.visit(this);</span>
+<span class="source-line-no">546</span><span id="line-546">  }</span>
+<span class="source-line-no">547</span><span id="line-547">}</span>
 
 
 

@@ -18,7 +18,7 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.xml.impl.DefaultContainerModelAssemblySupport;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.impl.DefaultContainerModelAssemblySupport;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
 <span class="source-line-no">010</span><span id="line-10">import java.util.List;</span>
 <span class="source-line-no">011</span><span id="line-11">import java.util.Map;</span>
@@ -67,32 +67,33 @@
 <span class="source-line-no">054</span><span id="line-54">   * @return the empty container</span>
 <span class="source-line-no">055</span><span id="line-55">   */</span>
 <span class="source-line-no">056</span><span id="line-56">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">057</span><span id="line-57">  static &lt;</span>
-<span class="source-line-no">058</span><span id="line-58">      MI extends IModelInstance,</span>
-<span class="source-line-no">059</span><span id="line-59">      NMI extends INamedModelInstance,</span>
-<span class="source-line-no">060</span><span id="line-60">      FI extends IFieldInstance,</span>
-<span class="source-line-no">061</span><span id="line-61">      AI extends IAssemblyInstance,</span>
-<span class="source-line-no">062</span><span id="line-62">      CI extends IChoiceInstance,</span>
-<span class="source-line-no">063</span><span id="line-63">      CGI extends IChoiceGroupInstance&gt; IContainerModelAssemblySupport&lt;MI, NMI, FI, AI, CI, CGI&gt; empty() {</span>
-<span class="source-line-no">064</span><span id="line-64">    return DefaultContainerModelAssemblySupport.EMPTY;</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  /**</span>
-<span class="source-line-no">068</span><span id="line-68">   * Get a listing of all choice instances.</span>
-<span class="source-line-no">069</span><span id="line-69">   *</span>
-<span class="source-line-no">070</span><span id="line-70">   * @return the listing</span>
-<span class="source-line-no">071</span><span id="line-71">   */</span>
-<span class="source-line-no">072</span><span id="line-72">  @NonNull</span>
-<span class="source-line-no">073</span><span id="line-73">  List&lt;CI&gt; getChoiceInstances();</span>
-<span class="source-line-no">074</span><span id="line-74"></span>
-<span class="source-line-no">075</span><span id="line-75">  /**</span>
-<span class="source-line-no">076</span><span id="line-76">   * Get a listing of all choice group instances.</span>
-<span class="source-line-no">077</span><span id="line-77">   *</span>
-<span class="source-line-no">078</span><span id="line-78">   * @return the listing</span>
-<span class="source-line-no">079</span><span id="line-79">   */</span>
-<span class="source-line-no">080</span><span id="line-80">  @NonNull</span>
-<span class="source-line-no">081</span><span id="line-81">  Map&lt;String, CGI&gt; getChoiceGroupInstanceMap();</span>
-<span class="source-line-no">082</span><span id="line-82">}</span>
+<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
+<span class="source-line-no">058</span><span id="line-58">  static &lt;</span>
+<span class="source-line-no">059</span><span id="line-59">      MI extends IModelInstance,</span>
+<span class="source-line-no">060</span><span id="line-60">      NMI extends INamedModelInstance,</span>
+<span class="source-line-no">061</span><span id="line-61">      FI extends IFieldInstance,</span>
+<span class="source-line-no">062</span><span id="line-62">      AI extends IAssemblyInstance,</span>
+<span class="source-line-no">063</span><span id="line-63">      CI extends IChoiceInstance,</span>
+<span class="source-line-no">064</span><span id="line-64">      CGI extends IChoiceGroupInstance&gt; IContainerModelAssemblySupport&lt;MI, NMI, FI, AI, CI, CGI&gt; empty() {</span>
+<span class="source-line-no">065</span><span id="line-65">    return DefaultContainerModelAssemblySupport.EMPTY;</span>
+<span class="source-line-no">066</span><span id="line-66">  }</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  /**</span>
+<span class="source-line-no">069</span><span id="line-69">   * Get a listing of all choice instances.</span>
+<span class="source-line-no">070</span><span id="line-70">   *</span>
+<span class="source-line-no">071</span><span id="line-71">   * @return the listing</span>
+<span class="source-line-no">072</span><span id="line-72">   */</span>
+<span class="source-line-no">073</span><span id="line-73">  @NonNull</span>
+<span class="source-line-no">074</span><span id="line-74">  List&lt;CI&gt; getChoiceInstances();</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">  /**</span>
+<span class="source-line-no">077</span><span id="line-77">   * Get a listing of all choice group instances.</span>
+<span class="source-line-no">078</span><span id="line-78">   *</span>
+<span class="source-line-no">079</span><span id="line-79">   * @return the listing</span>
+<span class="source-line-no">080</span><span id="line-80">   */</span>
+<span class="source-line-no">081</span><span id="line-81">  @NonNull</span>
+<span class="source-line-no">082</span><span id="line-82">  Map&lt;String, CGI&gt; getChoiceGroupInstanceMap();</span>
+<span class="source-line-no">083</span><span id="line-83">}</span>
 
 
 

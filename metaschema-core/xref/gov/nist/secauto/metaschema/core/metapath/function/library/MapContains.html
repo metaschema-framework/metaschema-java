@@ -46,15 +46,15 @@
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>        .focusIndependent()
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>            .name(<span class="jxr_string">"map"</span>)
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>            .type(IMapItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>            .type(IMapItem.type())
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>            .one()
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>            .build())
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>            .name(<span class="jxr_string">"key"</span>)
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>            .type(IAnyAtomicItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>            .type(IAnyAtomicItem.type())
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>            .one()
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>            .build())
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>        .returnType(IBooleanItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>        .returnType(IBooleanItem.type())
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>        .returnOne()
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>        .functionHandler(MapContains::execute)
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>        .build();
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      IMapItem&lt;?&gt; map = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(<strong class="jxr_keyword">true</strong>)));
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <a name="IAnyAtomicItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyAtomicItem.html#IAnyAtomicItem">IAnyAtomicItem</a> key = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(<strong class="jxr_keyword">true</strong>)));
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">return</strong> IBooleanItem.valueOf(contains(map, key)).asSequence();
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">return</strong> IBooleanItem.valueOf(contains(map, key)).toSequence();
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    }
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>    <em class="jxr_javadoccomment">/**</em>

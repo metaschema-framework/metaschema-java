@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"gov.nist.secauto.metaschema.cli.processor"},{"l":"gov.nist.secauto.metaschema.cli.processor.command"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"gov.nist.secauto.metaschema.cli.processor"},{"l":"gov.nist.secauto.metaschema.cli.processor.command"},{"l":"gov.nist.secauto.metaschema.cli.processor.command.impl"}];updateSearchResults();

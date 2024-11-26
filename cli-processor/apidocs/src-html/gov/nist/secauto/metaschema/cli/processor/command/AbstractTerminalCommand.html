@@ -25,46 +25,86 @@
 <span class="source-line-no">012</span><span id="line-12">import java.net.URISyntaxException;</span>
 <span class="source-line-no">013</span><span id="line-13">import java.nio.file.Path;</span>
 <span class="source-line-no">014</span><span id="line-14">import java.nio.file.Paths;</span>
-<span class="source-line-no">015</span><span id="line-15">import java.util.Collection;</span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.Collections;</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">019</span><span id="line-19">import nl.talsmasoftware.lazy4j.Lazy;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">public abstract class AbstractTerminalCommand implements ICommand {</span>
-<span class="source-line-no">022</span><span id="line-22">  private static Lazy&lt;Path&gt; currentWorkingDirectory = Lazy.lazy(() -&gt; Paths.get("").toAbsolutePath());</span>
-<span class="source-line-no">023</span><span id="line-23"></span>
-<span class="source-line-no">024</span><span id="line-24">  @SuppressWarnings("null")</span>
-<span class="source-line-no">025</span><span id="line-25">  @Override</span>
-<span class="source-line-no">026</span><span id="line-26">  public Collection&lt;ICommand&gt; getSubCommands() {</span>
-<span class="source-line-no">027</span><span id="line-27">    return Collections.emptyList();</span>
-<span class="source-line-no">028</span><span id="line-28">  }</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">  @Override</span>
-<span class="source-line-no">031</span><span id="line-31">  public boolean isSubCommandRequired() {</span>
-<span class="source-line-no">032</span><span id="line-32">    return false;</span>
-<span class="source-line-no">033</span><span id="line-33">  }</span>
-<span class="source-line-no">034</span><span id="line-34"></span>
-<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
-<span class="source-line-no">036</span><span id="line-36">  protected static Path getCurrentWorkingDirectory() {</span>
-<span class="source-line-no">037</span><span id="line-37">    return ObjectUtils.notNull(currentWorkingDirectory.get());</span>
-<span class="source-line-no">038</span><span id="line-38">  }</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">  @NonNull</span>
-<span class="source-line-no">041</span><span id="line-41">  protected static Path resolveAgainstCWD(@NonNull Path path) {</span>
-<span class="source-line-no">042</span><span id="line-42">    return ObjectUtils.notNull(getCurrentWorkingDirectory().resolve(path).normalize());</span>
-<span class="source-line-no">043</span><span id="line-43">  }</span>
-<span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">  @NonNull</span>
-<span class="source-line-no">046</span><span id="line-46">  protected static URI resolveAgainstCWD(@NonNull URI uri) {</span>
-<span class="source-line-no">047</span><span id="line-47">    return ObjectUtils.notNull(getCurrentWorkingDirectory().toUri().resolve(uri.normalize()));</span>
-<span class="source-line-no">048</span><span id="line-48">  }</span>
-<span class="source-line-no">049</span><span id="line-49"></span>
+<span class="source-line-no">015</span><span id="line-15"></span>
+<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">017</span><span id="line-17">import nl.talsmasoftware.lazy4j.Lazy;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">/**</span>
+<span class="source-line-no">020</span><span id="line-20"> * A base class for terminal commands in the command processing hierarchy.</span>
+<span class="source-line-no">021</span><span id="line-21"> * Terminal commands represent leaf nodes that perform actual operations and</span>
+<span class="source-line-no">022</span><span id="line-22"> * cannot have child commands.</span>
+<span class="source-line-no">023</span><span id="line-23"> */</span>
+<span class="source-line-no">024</span><span id="line-24">public abstract class AbstractTerminalCommand implements ICommand {</span>
+<span class="source-line-no">025</span><span id="line-25">  private static Lazy&lt;Path&gt; currentWorkingDirectory = Lazy.lazy(() -&gt; Paths.get(System.getProperty("user.dir")));</span>
+<span class="source-line-no">026</span><span id="line-26"></span>
+<span class="source-line-no">027</span><span id="line-27">  /**</span>
+<span class="source-line-no">028</span><span id="line-28">   * A utility method that can be used to get the current working directory.</span>
+<span class="source-line-no">029</span><span id="line-29">   * &lt;p&gt;</span>
+<span class="source-line-no">030</span><span id="line-30">   * This method is thread-safe due to lazy initialization.</span>
+<span class="source-line-no">031</span><span id="line-31">   *</span>
+<span class="source-line-no">032</span><span id="line-32">   * @return the current working directory</span>
+<span class="source-line-no">033</span><span id="line-33">   */</span>
+<span class="source-line-no">034</span><span id="line-34">  @NonNull</span>
+<span class="source-line-no">035</span><span id="line-35">  protected static Path getCurrentWorkingDirectory() {</span>
+<span class="source-line-no">036</span><span id="line-36">    return ObjectUtils.notNull(currentWorkingDirectory.get());</span>
+<span class="source-line-no">037</span><span id="line-37">  }</span>
+<span class="source-line-no">038</span><span id="line-38"></span>
+<span class="source-line-no">039</span><span id="line-39">  /**</span>
+<span class="source-line-no">040</span><span id="line-40">   * A utility method that can be used to resolve a path against the current</span>
+<span class="source-line-no">041</span><span id="line-41">   * working directory.</span>
+<span class="source-line-no">042</span><span id="line-42">   * &lt;p&gt;</span>
+<span class="source-line-no">043</span><span id="line-43">   * If the path is already absolute, then the provided path is returned.</span>
+<span class="source-line-no">044</span><span id="line-44">   *</span>
+<span class="source-line-no">045</span><span id="line-45">   * @param path</span>
+<span class="source-line-no">046</span><span id="line-46">   *          the path to resolve</span>
+<span class="source-line-no">047</span><span id="line-47">   *</span>
+<span class="source-line-no">048</span><span id="line-48">   * @return the resolved path</span>
+<span class="source-line-no">049</span><span id="line-49">   */</span>
 <span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
-<span class="source-line-no">051</span><span id="line-51">  protected static URI resolveAgainstCWD(@NonNull String uri) throws URISyntaxException {</span>
-<span class="source-line-no">052</span><span id="line-52">    return UriUtils.toUri(uri, ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()));</span>
-<span class="source-line-no">053</span><span id="line-53">  }</span>
-<span class="source-line-no">054</span><span id="line-54">}</span>
+<span class="source-line-no">051</span><span id="line-51">  protected static Path resolveAgainstCWD(@NonNull Path path) {</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">    return path.isAbsolute()</span>
+<span class="source-line-no">054</span><span id="line-54">        ? path</span>
+<span class="source-line-no">055</span><span id="line-55">        : ObjectUtils.notNull(getCurrentWorkingDirectory().resolve(path).normalize());</span>
+<span class="source-line-no">056</span><span id="line-56">  }</span>
+<span class="source-line-no">057</span><span id="line-57"></span>
+<span class="source-line-no">058</span><span id="line-58">  /**</span>
+<span class="source-line-no">059</span><span id="line-59">   * A utility method that can be used to resolve a URI against the URI for the</span>
+<span class="source-line-no">060</span><span id="line-60">   * current working directory.</span>
+<span class="source-line-no">061</span><span id="line-61">   * &lt;p&gt;</span>
+<span class="source-line-no">062</span><span id="line-62">   * If the URI is already absolute, then the provided URI is returned.</span>
+<span class="source-line-no">063</span><span id="line-63">   * &lt;p&gt;</span>
+<span class="source-line-no">064</span><span id="line-64">   * The path is normalized after resolution to remove any redundant name elements</span>
+<span class="source-line-no">065</span><span id="line-65">   * (like "." or "..").</span>
+<span class="source-line-no">066</span><span id="line-66">   *</span>
+<span class="source-line-no">067</span><span id="line-67">   *</span>
+<span class="source-line-no">068</span><span id="line-68">   * @param uri</span>
+<span class="source-line-no">069</span><span id="line-69">   *          the uri to resolve</span>
+<span class="source-line-no">070</span><span id="line-70">   *</span>
+<span class="source-line-no">071</span><span id="line-71">   * @return the resolved URI</span>
+<span class="source-line-no">072</span><span id="line-72">   */</span>
+<span class="source-line-no">073</span><span id="line-73">  @NonNull</span>
+<span class="source-line-no">074</span><span id="line-74">  protected static URI resolveAgainstCWD(@NonNull URI uri) {</span>
+<span class="source-line-no">075</span><span id="line-75">    return uri.isAbsolute()</span>
+<span class="source-line-no">076</span><span id="line-76">        ? uri</span>
+<span class="source-line-no">077</span><span id="line-77">        : ObjectUtils.notNull(getCurrentWorkingDirectory().toUri().resolve(uri.normalize()));</span>
+<span class="source-line-no">078</span><span id="line-78">  }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">  /**</span>
+<span class="source-line-no">081</span><span id="line-81">   * A utility method that can be used to resolve a URI (as a string) against the</span>
+<span class="source-line-no">082</span><span id="line-82">   * URI for the current working directory.</span>
+<span class="source-line-no">083</span><span id="line-83">   *</span>
+<span class="source-line-no">084</span><span id="line-84">   * @param uri</span>
+<span class="source-line-no">085</span><span id="line-85">   *          the uri to resolve</span>
+<span class="source-line-no">086</span><span id="line-86">   * @return the resolved URI</span>
+<span class="source-line-no">087</span><span id="line-87">   * @throws URISyntaxException</span>
+<span class="source-line-no">088</span><span id="line-88">   *           if the provided URI is not a valid URI</span>
+<span class="source-line-no">089</span><span id="line-89">   */</span>
+<span class="source-line-no">090</span><span id="line-90">  @NonNull</span>
+<span class="source-line-no">091</span><span id="line-91">  protected static URI resolveAgainstCWD(@NonNull String uri) throws URISyntaxException {</span>
+<span class="source-line-no">092</span><span id="line-92">    return UriUtils.toUri(uri, ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()));</span>
+<span class="source-line-no">093</span><span id="line-93">  }</span>
+<span class="source-line-no">094</span><span id="line-94">}</span>
 
 
 

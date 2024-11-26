@@ -20,98 +20,97 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import java.util.Collection;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">013</span><span id="line-13">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">/**</span>
-<span class="source-line-no">016</span><span id="line-16"> * Indicates that the Metaschema type that has a complex model that can contain</span>
-<span class="source-line-no">017</span><span id="line-17"> * field and assembly instances.</span>
-<span class="source-line-no">018</span><span id="line-18"> */</span>
-<span class="source-line-no">019</span><span id="line-19">public interface IContainerModel extends IContainer {</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">  @Override</span>
-<span class="source-line-no">022</span><span id="line-22">  default boolean hasChildren() {</span>
-<span class="source-line-no">023</span><span id="line-23">    return !getModelInstances().isEmpty();</span>
-<span class="source-line-no">024</span><span id="line-24">  }</span>
-<span class="source-line-no">025</span><span id="line-25"></span>
-<span class="source-line-no">026</span><span id="line-26">  /**</span>
-<span class="source-line-no">027</span><span id="line-27">   * Retrieve the Metaschema module definition containing this container.</span>
-<span class="source-line-no">028</span><span id="line-28">   *</span>
-<span class="source-line-no">029</span><span id="line-29">   * @return the containing Metaschema module definition</span>
-<span class="source-line-no">030</span><span id="line-30">   */</span>
-<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
-<span class="source-line-no">032</span><span id="line-32">  IAssemblyDefinition getOwningDefinition();</span>
-<span class="source-line-no">033</span><span id="line-33"></span>
-<span class="source-line-no">034</span><span id="line-34">  /**</span>
-<span class="source-line-no">035</span><span id="line-35">   * Get all model instances within the container.</span>
-<span class="source-line-no">036</span><span id="line-36">   *</span>
-<span class="source-line-no">037</span><span id="line-37">   * @return an ordered collection of model instances</span>
-<span class="source-line-no">038</span><span id="line-38">   */</span>
-<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
-<span class="source-line-no">040</span><span id="line-40">  Collection&lt;? extends IModelInstance&gt; getModelInstances();</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
-<span class="source-line-no">042</span><span id="line-42">  /**</span>
-<span class="source-line-no">043</span><span id="line-43">   * Get all named model instances within the container.</span>
-<span class="source-line-no">044</span><span id="line-44">   *</span>
-<span class="source-line-no">045</span><span id="line-45">   * @return an ordered mapping of use name to model instance</span>
-<span class="source-line-no">046</span><span id="line-46">   */</span>
-<span class="source-line-no">047</span><span id="line-47">  @NonNull</span>
-<span class="source-line-no">048</span><span id="line-48">  Collection&lt;? extends INamedModelInstance&gt; getNamedModelInstances();</span>
-<span class="source-line-no">049</span><span id="line-49"></span>
-<span class="source-line-no">050</span><span id="line-50">  /**</span>
-<span class="source-line-no">051</span><span id="line-51">   * Get the model instance contained within the model with the associated use</span>
-<span class="source-line-no">052</span><span id="line-52">   * name.</span>
-<span class="source-line-no">053</span><span id="line-53">   *</span>
-<span class="source-line-no">054</span><span id="line-54">   * @param name</span>
-<span class="source-line-no">055</span><span id="line-55">   *          the effective name of the model instance</span>
-<span class="source-line-no">056</span><span id="line-56">   * @return the matching model instance, or {@code null} if no match was found</span>
-<span class="source-line-no">057</span><span id="line-57">   * @see INamedModelInstance#getEffectiveName()</span>
-<span class="source-line-no">058</span><span id="line-58">   */</span>
-<span class="source-line-no">059</span><span id="line-59">  @Nullable</span>
-<span class="source-line-no">060</span><span id="line-60">  INamedModelInstance getNamedModelInstanceByName(QName name);</span>
-<span class="source-line-no">061</span><span id="line-61"></span>
-<span class="source-line-no">062</span><span id="line-62">  /**</span>
-<span class="source-line-no">063</span><span id="line-63">   * Get all field instances within the container.</span>
-<span class="source-line-no">064</span><span id="line-64">   *</span>
-<span class="source-line-no">065</span><span id="line-65">   * @return a mapping of use name to field instance</span>
-<span class="source-line-no">066</span><span id="line-66">   */</span>
-<span class="source-line-no">067</span><span id="line-67">  @NonNull</span>
-<span class="source-line-no">068</span><span id="line-68">  Collection&lt;? extends IFieldInstance&gt; getFieldInstances();</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">  /**</span>
-<span class="source-line-no">071</span><span id="line-71">   * Get the field instance contained within the model with the associated use</span>
-<span class="source-line-no">072</span><span id="line-72">   * name.</span>
-<span class="source-line-no">073</span><span id="line-73">   *</span>
-<span class="source-line-no">074</span><span id="line-74">   * @param name</span>
-<span class="source-line-no">075</span><span id="line-75">   *          the use name of the field instance</span>
-<span class="source-line-no">076</span><span id="line-76">   * @return the matching field instance, or {@code null} if no match was found</span>
-<span class="source-line-no">077</span><span id="line-77">   * @see IFieldInstance#getUseName()</span>
-<span class="source-line-no">078</span><span id="line-78">   */</span>
-<span class="source-line-no">079</span><span id="line-79">  @Nullable</span>
-<span class="source-line-no">080</span><span id="line-80">  IFieldInstance getFieldInstanceByName(QName name);</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">  /**</span>
-<span class="source-line-no">083</span><span id="line-83">   * Get all assembly instances within the container.</span>
-<span class="source-line-no">084</span><span id="line-84">   *</span>
-<span class="source-line-no">085</span><span id="line-85">   * @return a mapping of use name to assembly instance</span>
-<span class="source-line-no">086</span><span id="line-86">   */</span>
-<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
-<span class="source-line-no">088</span><span id="line-88">  Collection&lt;? extends IAssemblyInstance&gt; getAssemblyInstances();</span>
-<span class="source-line-no">089</span><span id="line-89"></span>
-<span class="source-line-no">090</span><span id="line-90">  /**</span>
-<span class="source-line-no">091</span><span id="line-91">   * Get the assembly instance contained within the model with the associated use</span>
-<span class="source-line-no">092</span><span id="line-92">   * name.</span>
-<span class="source-line-no">093</span><span id="line-93">   *</span>
-<span class="source-line-no">094</span><span id="line-94">   * @param name</span>
-<span class="source-line-no">095</span><span id="line-95">   *          the effective name of the assembly instance</span>
-<span class="source-line-no">096</span><span id="line-96">   * @return the matching assembly instance, or {@code null} if no match was found</span>
-<span class="source-line-no">097</span><span id="line-97">   * @see INamedModelInstance#getEffectiveName()</span>
-<span class="source-line-no">098</span><span id="line-98">   */</span>
-<span class="source-line-no">099</span><span id="line-99">  @Nullable</span>
-<span class="source-line-no">100</span><span id="line-100">  IAssemblyInstance getAssemblyInstanceByName(QName name);</span>
-<span class="source-line-no">101</span><span id="line-101">}</span>
+<span class="source-line-no">010</span><span id="line-10">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">/**</span>
+<span class="source-line-no">014</span><span id="line-14"> * Indicates that the Metaschema type that has a complex model that can contain</span>
+<span class="source-line-no">015</span><span id="line-15"> * field and assembly instances.</span>
+<span class="source-line-no">016</span><span id="line-16"> */</span>
+<span class="source-line-no">017</span><span id="line-17">public interface IContainerModel extends IContainer {</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">  @Override</span>
+<span class="source-line-no">020</span><span id="line-20">  default boolean hasChildren() {</span>
+<span class="source-line-no">021</span><span id="line-21">    return !getModelInstances().isEmpty();</span>
+<span class="source-line-no">022</span><span id="line-22">  }</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">  /**</span>
+<span class="source-line-no">025</span><span id="line-25">   * Retrieve the Metaschema module definition containing this container.</span>
+<span class="source-line-no">026</span><span id="line-26">   *</span>
+<span class="source-line-no">027</span><span id="line-27">   * @return the containing Metaschema module definition</span>
+<span class="source-line-no">028</span><span id="line-28">   */</span>
+<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
+<span class="source-line-no">030</span><span id="line-30">  IAssemblyDefinition getOwningDefinition();</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">  /**</span>
+<span class="source-line-no">033</span><span id="line-33">   * Get all model instances within the container.</span>
+<span class="source-line-no">034</span><span id="line-34">   *</span>
+<span class="source-line-no">035</span><span id="line-35">   * @return an ordered collection of model instances</span>
+<span class="source-line-no">036</span><span id="line-36">   */</span>
+<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
+<span class="source-line-no">038</span><span id="line-38">  Collection&lt;? extends IModelInstance&gt; getModelInstances();</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  /**</span>
+<span class="source-line-no">041</span><span id="line-41">   * Get all named model instances within the container.</span>
+<span class="source-line-no">042</span><span id="line-42">   *</span>
+<span class="source-line-no">043</span><span id="line-43">   * @return an ordered mapping of use name to model instance</span>
+<span class="source-line-no">044</span><span id="line-44">   */</span>
+<span class="source-line-no">045</span><span id="line-45">  @NonNull</span>
+<span class="source-line-no">046</span><span id="line-46">  Collection&lt;? extends INamedModelInstance&gt; getNamedModelInstances();</span>
+<span class="source-line-no">047</span><span id="line-47"></span>
+<span class="source-line-no">048</span><span id="line-48">  /**</span>
+<span class="source-line-no">049</span><span id="line-49">   * Get the model instance contained within the model with the associated use</span>
+<span class="source-line-no">050</span><span id="line-50">   * name.</span>
+<span class="source-line-no">051</span><span id="line-51">   *</span>
+<span class="source-line-no">052</span><span id="line-52">   * @param index</span>
+<span class="source-line-no">053</span><span id="line-53">   *          the effective name-based qualified name index of the model instance</span>
+<span class="source-line-no">054</span><span id="line-54">   * @return the matching model instance, or {@code null} if no match was found</span>
+<span class="source-line-no">055</span><span id="line-55">   * @see INamedModelInstance#getEffectiveName()</span>
+<span class="source-line-no">056</span><span id="line-56">   */</span>
+<span class="source-line-no">057</span><span id="line-57">  @Nullable</span>
+<span class="source-line-no">058</span><span id="line-58">  INamedModelInstance getNamedModelInstanceByName(Integer index);</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  /**</span>
+<span class="source-line-no">061</span><span id="line-61">   * Get all field instances within the container.</span>
+<span class="source-line-no">062</span><span id="line-62">   *</span>
+<span class="source-line-no">063</span><span id="line-63">   * @return a mapping of use name to field instance</span>
+<span class="source-line-no">064</span><span id="line-64">   */</span>
+<span class="source-line-no">065</span><span id="line-65">  @NonNull</span>
+<span class="source-line-no">066</span><span id="line-66">  Collection&lt;? extends IFieldInstance&gt; getFieldInstances();</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  /**</span>
+<span class="source-line-no">069</span><span id="line-69">   * Get the field instance contained within the model with the associated use</span>
+<span class="source-line-no">070</span><span id="line-70">   * name.</span>
+<span class="source-line-no">071</span><span id="line-71">   *</span>
+<span class="source-line-no">072</span><span id="line-72">   * @param index</span>
+<span class="source-line-no">073</span><span id="line-73">   *          the use name-based qualified name index of the field instance</span>
+<span class="source-line-no">074</span><span id="line-74">   * @return the matching field instance, or {@code null} if no match was found</span>
+<span class="source-line-no">075</span><span id="line-75">   * @see IFieldInstance#getUseName()</span>
+<span class="source-line-no">076</span><span id="line-76">   */</span>
+<span class="source-line-no">077</span><span id="line-77">  @Nullable</span>
+<span class="source-line-no">078</span><span id="line-78">  IFieldInstance getFieldInstanceByName(Integer index);</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">  /**</span>
+<span class="source-line-no">081</span><span id="line-81">   * Get all assembly instances within the container.</span>
+<span class="source-line-no">082</span><span id="line-82">   *</span>
+<span class="source-line-no">083</span><span id="line-83">   * @return a mapping of use name to assembly instance</span>
+<span class="source-line-no">084</span><span id="line-84">   */</span>
+<span class="source-line-no">085</span><span id="line-85">  @NonNull</span>
+<span class="source-line-no">086</span><span id="line-86">  Collection&lt;? extends IAssemblyInstance&gt; getAssemblyInstances();</span>
+<span class="source-line-no">087</span><span id="line-87"></span>
+<span class="source-line-no">088</span><span id="line-88">  /**</span>
+<span class="source-line-no">089</span><span id="line-89">   * Get the assembly instance contained within the model with the associated use</span>
+<span class="source-line-no">090</span><span id="line-90">   * name.</span>
+<span class="source-line-no">091</span><span id="line-91">   *</span>
+<span class="source-line-no">092</span><span id="line-92">   * @param index</span>
+<span class="source-line-no">093</span><span id="line-93">   *          the effective name-based qualified name index of the assembly</span>
+<span class="source-line-no">094</span><span id="line-94">   *          instance</span>
+<span class="source-line-no">095</span><span id="line-95">   * @return the matching assembly instance, or {@code null} if no match was found</span>
+<span class="source-line-no">096</span><span id="line-96">   * @see INamedModelInstance#getEffectiveName()</span>
+<span class="source-line-no">097</span><span id="line-97">   */</span>
+<span class="source-line-no">098</span><span id="line-98">  @Nullable</span>
+<span class="source-line-no">099</span><span id="line-99">  IAssemblyInstance getAssemblyInstanceByName(Integer index);</span>
+<span class="source-line-no">100</span><span id="line-100">}</span>
 
 
 

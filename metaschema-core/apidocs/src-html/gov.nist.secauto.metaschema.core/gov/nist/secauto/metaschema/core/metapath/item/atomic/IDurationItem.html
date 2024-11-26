@@ -19,51 +19,86 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.item.atomic;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
-<span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import java.time.temporal.TemporalAmount;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;</span>
 <span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">012</span><span id="line-12">import java.time.temporal.TemporalAmount;</span>
 <span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">public interface IDurationItem extends IAnyAtomicItem {</span>
-<span class="source-line-no">015</span><span id="line-15">  /**</span>
-<span class="source-line-no">016</span><span id="line-16">   * Cast the provided type to this item type.</span>
-<span class="source-line-no">017</span><span id="line-17">   *</span>
-<span class="source-line-no">018</span><span id="line-18">   * @param item</span>
-<span class="source-line-no">019</span><span id="line-19">   *          the item to cast</span>
-<span class="source-line-no">020</span><span id="line-20">   * @return the original item if it is already this type, otherwise a new item</span>
-<span class="source-line-no">021</span><span id="line-21">   *         cast to this type</span>
-<span class="source-line-no">022</span><span id="line-22">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">023</span><span id="line-23">   *           if the provided {@code item} cannot be cast to this type</span>
-<span class="source-line-no">024</span><span id="line-24">   */</span>
-<span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
-<span class="source-line-no">026</span><span id="line-26">  static IDurationItem cast(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">027</span><span id="line-27">    IDurationItem retval;</span>
-<span class="source-line-no">028</span><span id="line-28">    if (item instanceof IDurationItem) {</span>
-<span class="source-line-no">029</span><span id="line-29">      retval = (IDurationItem) item;</span>
-<span class="source-line-no">030</span><span id="line-30">    } else {</span>
-<span class="source-line-no">031</span><span id="line-31">      try {</span>
-<span class="source-line-no">032</span><span id="line-32">        retval = IDayTimeDurationItem.valueOf(item.asString());</span>
-<span class="source-line-no">033</span><span id="line-33">      } catch (IllegalStateException ex) {</span>
-<span class="source-line-no">034</span><span id="line-34">        try {</span>
-<span class="source-line-no">035</span><span id="line-35">          retval = IYearMonthDurationItem.valueOf(item.asString());</span>
-<span class="source-line-no">036</span><span id="line-36">        } catch (IllegalStateException ex2) {</span>
-<span class="source-line-no">037</span><span id="line-37">          InvalidValueForCastFunctionException newEx = new InvalidValueForCastFunctionException(ex2);</span>
-<span class="source-line-no">038</span><span id="line-38">          newEx.addSuppressed(ex);</span>
-<span class="source-line-no">039</span><span id="line-39">          throw newEx; // NOPMD context as suppressed</span>
-<span class="source-line-no">040</span><span id="line-40">        }</span>
-<span class="source-line-no">041</span><span id="line-41">      }</span>
-<span class="source-line-no">042</span><span id="line-42">    }</span>
-<span class="source-line-no">043</span><span id="line-43">    return retval;</span>
-<span class="source-line-no">044</span><span id="line-44">  }</span>
-<span class="source-line-no">045</span><span id="line-45"></span>
-<span class="source-line-no">046</span><span id="line-46">  @Override</span>
-<span class="source-line-no">047</span><span id="line-47">  TemporalAmount getValue();</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">  @Override</span>
-<span class="source-line-no">050</span><span id="line-50">  default IDurationItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">051</span><span id="line-51">    return cast(item);</span>
-<span class="source-line-no">052</span><span id="line-52">  }</span>
-<span class="source-line-no">053</span><span id="line-53">}</span>
+<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">015</span><span id="line-15"></span>
+<span class="source-line-no">016</span><span id="line-16">/**</span>
+<span class="source-line-no">017</span><span id="line-17"> * An atomic Metapath item representing a duration data value.</span>
+<span class="source-line-no">018</span><span id="line-18"> * &lt;p&gt;</span>
+<span class="source-line-no">019</span><span id="line-19"> * This interface supports both day-time and year-month duration formats</span>
+<span class="source-line-no">020</span><span id="line-20"> * following the ISO 8601 standard. Examples of valid durations include:</span>
+<span class="source-line-no">021</span><span id="line-21"> * &lt;ul&gt;</span>
+<span class="source-line-no">022</span><span id="line-22"> * &lt;li&gt;P1Y2M (1 year, 2 months)&lt;/li&gt;</span>
+<span class="source-line-no">023</span><span id="line-23"> * &lt;li&gt;P3DT4H5M (3 days, 4 hours, 5 minutes)&lt;/li&gt;</span>
+<span class="source-line-no">024</span><span id="line-24"> * &lt;/ul&gt;</span>
+<span class="source-line-no">025</span><span id="line-25"> *</span>
+<span class="source-line-no">026</span><span id="line-26"> * @see IDayTimeDurationItem</span>
+<span class="source-line-no">027</span><span id="line-27"> * @see IYearMonthDurationItem</span>
+<span class="source-line-no">028</span><span id="line-28"> */</span>
+<span class="source-line-no">029</span><span id="line-29">public interface IDurationItem extends IAnyAtomicItem {</span>
+<span class="source-line-no">030</span><span id="line-30">  /**</span>
+<span class="source-line-no">031</span><span id="line-31">   * Get the type information for this item.</span>
+<span class="source-line-no">032</span><span id="line-32">   *</span>
+<span class="source-line-no">033</span><span id="line-33">   * @return the type information</span>
+<span class="source-line-no">034</span><span id="line-34">   */</span>
+<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
+<span class="source-line-no">036</span><span id="line-36">  static IAtomicOrUnionType&lt;IDurationItem&gt; type() {</span>
+<span class="source-line-no">037</span><span id="line-37">    return TypeConstants.DURATION_TYPE;</span>
+<span class="source-line-no">038</span><span id="line-38">  }</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  /**</span>
+<span class="source-line-no">041</span><span id="line-41">   * Cast the provided type to this item type.</span>
+<span class="source-line-no">042</span><span id="line-42">   *</span>
+<span class="source-line-no">043</span><span id="line-43">   * @param item</span>
+<span class="source-line-no">044</span><span id="line-44">   *          the item to cast</span>
+<span class="source-line-no">045</span><span id="line-45">   * @return the original item if it is already this type, otherwise a new item</span>
+<span class="source-line-no">046</span><span id="line-46">   *         cast to this type</span>
+<span class="source-line-no">047</span><span id="line-47">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">048</span><span id="line-48">   *           if the provided {@code item} cannot be cast to this type</span>
+<span class="source-line-no">049</span><span id="line-49">   */</span>
+<span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
+<span class="source-line-no">051</span><span id="line-51">  static IDurationItem cast(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">052</span><span id="line-52">    IDurationItem retval;</span>
+<span class="source-line-no">053</span><span id="line-53">    if (item instanceof IDurationItem) {</span>
+<span class="source-line-no">054</span><span id="line-54">      retval = (IDurationItem) item;</span>
+<span class="source-line-no">055</span><span id="line-55">    } else {</span>
+<span class="source-line-no">056</span><span id="line-56">      String value;</span>
+<span class="source-line-no">057</span><span id="line-57">      try {</span>
+<span class="source-line-no">058</span><span id="line-58">        value = item.asString();</span>
+<span class="source-line-no">059</span><span id="line-59">      } catch (IllegalStateException ex) {</span>
+<span class="source-line-no">060</span><span id="line-60">        // asString can throw IllegalStateException exception</span>
+<span class="source-line-no">061</span><span id="line-61">        throw new InvalidValueForCastFunctionException(ex);</span>
+<span class="source-line-no">062</span><span id="line-62">      }</span>
+<span class="source-line-no">063</span><span id="line-63"></span>
+<span class="source-line-no">064</span><span id="line-64">      try {</span>
+<span class="source-line-no">065</span><span id="line-65">        retval = IDayTimeDurationItem.valueOf(value);</span>
+<span class="source-line-no">066</span><span id="line-66">      } catch (IllegalStateException ex) {</span>
+<span class="source-line-no">067</span><span id="line-67">        try {</span>
+<span class="source-line-no">068</span><span id="line-68">          retval = IYearMonthDurationItem.valueOf(value);</span>
+<span class="source-line-no">069</span><span id="line-69">        } catch (IllegalStateException ex2) {</span>
+<span class="source-line-no">070</span><span id="line-70">          InvalidValueForCastFunctionException newEx = new InvalidValueForCastFunctionException(</span>
+<span class="source-line-no">071</span><span id="line-71">              String.format("Value '%s' cannot be parsed as either a day-time or year-month duration", value),</span>
+<span class="source-line-no">072</span><span id="line-72">              ex2);</span>
+<span class="source-line-no">073</span><span id="line-73">          newEx.addSuppressed(ex);</span>
+<span class="source-line-no">074</span><span id="line-74">          throw newEx; // NOPMD context as suppressed</span>
+<span class="source-line-no">075</span><span id="line-75">        }</span>
+<span class="source-line-no">076</span><span id="line-76">      }</span>
+<span class="source-line-no">077</span><span id="line-77">    }</span>
+<span class="source-line-no">078</span><span id="line-78">    return retval;</span>
+<span class="source-line-no">079</span><span id="line-79">  }</span>
+<span class="source-line-no">080</span><span id="line-80"></span>
+<span class="source-line-no">081</span><span id="line-81">  @Override</span>
+<span class="source-line-no">082</span><span id="line-82">  TemporalAmount getValue();</span>
+<span class="source-line-no">083</span><span id="line-83"></span>
+<span class="source-line-no">084</span><span id="line-84">  @Override</span>
+<span class="source-line-no">085</span><span id="line-85">  default IDurationItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">086</span><span id="line-86">    return cast(item);</span>
+<span class="source-line-no">087</span><span id="line-87">  }</span>
+<span class="source-line-no">088</span><span id="line-88">}</span>
 
 
 

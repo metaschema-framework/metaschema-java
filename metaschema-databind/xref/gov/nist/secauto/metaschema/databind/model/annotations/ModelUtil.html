@@ -196,7 +196,7 @@
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>     <strong class="jxr_keyword">if</strong> (NullJavaTypeAdapter.<strong class="jxr_keyword">class</strong>.equals(adapterClass)) {
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>       retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>       retval = bindingContext.getJavaTypeAdapterInstance(adapterClass);
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>       retval = bindingContext.getDataTypeAdapterInstance(adapterClass);
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>       <strong class="jxr_keyword">if</strong> (retval == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Unable to get type adapter instance for class: "</span> + adapterClass.getName());
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>       }

@@ -20,82 +20,83 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.markup.IMarkupString;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;</span>
 <span class="source-line-no">013</span><span id="line-13"></span>
 <span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">public interface IMarkupItem extends IUntypedAtomicItem {</span>
-<span class="source-line-no">017</span><span id="line-17">  /**</span>
-<span class="source-line-no">018</span><span id="line-18">   * Construct a new item using the provided {@code value}.</span>
-<span class="source-line-no">019</span><span id="line-19">   *</span>
-<span class="source-line-no">020</span><span id="line-20">   * @param value</span>
-<span class="source-line-no">021</span><span id="line-21">   *          a line of markup</span>
-<span class="source-line-no">022</span><span id="line-22">   * @return the new item</span>
-<span class="source-line-no">023</span><span id="line-23">   */</span>
-<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
-<span class="source-line-no">025</span><span id="line-25">  static IMarkupItem valueOf(@NonNull MarkupLine value) {</span>
-<span class="source-line-no">026</span><span id="line-26">    return new MarkupLineItemImpl(value);</span>
-<span class="source-line-no">027</span><span id="line-27">  }</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">  /**</span>
-<span class="source-line-no">030</span><span id="line-30">   * Construct a new item using the provided {@code value}.</span>
-<span class="source-line-no">031</span><span id="line-31">   *</span>
-<span class="source-line-no">032</span><span id="line-32">   * @param value</span>
-<span class="source-line-no">033</span><span id="line-33">   *          multiple lines of markup</span>
-<span class="source-line-no">034</span><span id="line-34">   * @return the new item</span>
-<span class="source-line-no">035</span><span id="line-35">   */</span>
-<span class="source-line-no">036</span><span id="line-36">  @NonNull</span>
-<span class="source-line-no">037</span><span id="line-37">  static IMarkupItem valueOf(@NonNull MarkupMultiline value) {</span>
-<span class="source-line-no">038</span><span id="line-38">    return new MarkupMultiLineItemImpl(value);</span>
-<span class="source-line-no">039</span><span id="line-39">  }</span>
-<span class="source-line-no">040</span><span id="line-40"></span>
-<span class="source-line-no">041</span><span id="line-41">  /**</span>
-<span class="source-line-no">042</span><span id="line-42">   * Cast the provided type to this item type.</span>
-<span class="source-line-no">043</span><span id="line-43">   *</span>
-<span class="source-line-no">044</span><span id="line-44">   * @param item</span>
-<span class="source-line-no">045</span><span id="line-45">   *          the item to cast</span>
-<span class="source-line-no">046</span><span id="line-46">   * @return the original item if it is already this type, otherwise a new item</span>
-<span class="source-line-no">047</span><span id="line-47">   *         cast to this type</span>
-<span class="source-line-no">048</span><span id="line-48">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">049</span><span id="line-49">   *           if the provided {@code item} cannot be cast to this type</span>
-<span class="source-line-no">050</span><span id="line-50">   */</span>
-<span class="source-line-no">051</span><span id="line-51">  @NonNull</span>
-<span class="source-line-no">052</span><span id="line-52">  static IMarkupItem cast(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">053</span><span id="line-53">    return MarkupDataTypeProvider.MARKUP_MULTILINE.cast(item);</span>
-<span class="source-line-no">054</span><span id="line-54">  }</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  /**</span>
-<span class="source-line-no">057</span><span id="line-57">   * Get the "wrapped" markup value.</span>
-<span class="source-line-no">058</span><span id="line-58">   *</span>
-<span class="source-line-no">059</span><span id="line-59">   * @return the underlying markup value</span>
-<span class="source-line-no">060</span><span id="line-60">   */</span>
-<span class="source-line-no">061</span><span id="line-61">  @NonNull</span>
-<span class="source-line-no">062</span><span id="line-62">  IMarkupString&lt;?&gt; asMarkup();</span>
-<span class="source-line-no">063</span><span id="line-63"></span>
-<span class="source-line-no">064</span><span id="line-64">  @Override</span>
-<span class="source-line-no">065</span><span id="line-65">  default IMarkupItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">066</span><span id="line-66">    return cast(item);</span>
-<span class="source-line-no">067</span><span id="line-67">  }</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  @Override</span>
-<span class="source-line-no">070</span><span id="line-70">  default int compareTo(IAnyAtomicItem item) {</span>
-<span class="source-line-no">071</span><span id="line-71">    return compareTo(cast(item));</span>
-<span class="source-line-no">072</span><span id="line-72">  }</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">  /**</span>
-<span class="source-line-no">075</span><span id="line-75">   * Compares this value with the argument.</span>
-<span class="source-line-no">076</span><span id="line-76">   *</span>
-<span class="source-line-no">077</span><span id="line-77">   * @param item</span>
-<span class="source-line-no">078</span><span id="line-78">   *          the item to compare with this value</span>
-<span class="source-line-no">079</span><span id="line-79">   * @return a negative integer, zero, or a positive integer if this value is less</span>
-<span class="source-line-no">080</span><span id="line-80">   *         than, equal to, or greater than the {@code item}.</span>
-<span class="source-line-no">081</span><span id="line-81">   */</span>
-<span class="source-line-no">082</span><span id="line-82">  default int compareTo(@NonNull IMarkupItem item) {</span>
-<span class="source-line-no">083</span><span id="line-83">    return asString().compareTo(item.asString());</span>
-<span class="source-line-no">084</span><span id="line-84">  }</span>
-<span class="source-line-no">085</span><span id="line-85">}</span>
+<span class="source-line-no">016</span><span id="line-16">/**</span>
+<span class="source-line-no">017</span><span id="line-17"> * An atomic Metapath item representing a Markup data value.</span>
+<span class="source-line-no">018</span><span id="line-18"> */</span>
+<span class="source-line-no">019</span><span id="line-19">public interface IMarkupItem extends IAnyAtomicItem {</span>
+<span class="source-line-no">020</span><span id="line-20">  /**</span>
+<span class="source-line-no">021</span><span id="line-21">   * Get the type information for this item.</span>
+<span class="source-line-no">022</span><span id="line-22">   *</span>
+<span class="source-line-no">023</span><span id="line-23">   * @return the type information</span>
+<span class="source-line-no">024</span><span id="line-24">   */</span>
+<span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
+<span class="source-line-no">026</span><span id="line-26">  static IAtomicOrUnionType&lt;IMarkupItem&gt; type() {</span>
+<span class="source-line-no">027</span><span id="line-27">    return MarkupDataTypeProvider.MARKUP_TYPE;</span>
+<span class="source-line-no">028</span><span id="line-28">  }</span>
+<span class="source-line-no">029</span><span id="line-29"></span>
+<span class="source-line-no">030</span><span id="line-30">  @Override</span>
+<span class="source-line-no">031</span><span id="line-31">  default IAtomicOrUnionType&lt;? extends IMarkupItem&gt; getType() {</span>
+<span class="source-line-no">032</span><span id="line-32">    return type();</span>
+<span class="source-line-no">033</span><span id="line-33">  }</span>
+<span class="source-line-no">034</span><span id="line-34"></span>
+<span class="source-line-no">035</span><span id="line-35">  /**</span>
+<span class="source-line-no">036</span><span id="line-36">   * Cast the provided type to this item type.</span>
+<span class="source-line-no">037</span><span id="line-37">   *</span>
+<span class="source-line-no">038</span><span id="line-38">   * @param item</span>
+<span class="source-line-no">039</span><span id="line-39">   *          the item to cast</span>
+<span class="source-line-no">040</span><span id="line-40">   * @return the original item if it is already this type, otherwise a new item</span>
+<span class="source-line-no">041</span><span id="line-41">   *         cast to this type</span>
+<span class="source-line-no">042</span><span id="line-42">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">043</span><span id="line-43">   *           if the provided {@code item} cannot be cast to this type</span>
+<span class="source-line-no">044</span><span id="line-44">   */</span>
+<span class="source-line-no">045</span><span id="line-45">  @NonNull</span>
+<span class="source-line-no">046</span><span id="line-46">  static IMarkupItem cast(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">047</span><span id="line-47">    try {</span>
+<span class="source-line-no">048</span><span id="line-48">      return item instanceof IMarkupItem</span>
+<span class="source-line-no">049</span><span id="line-49">          ? (IMarkupItem) item</span>
+<span class="source-line-no">050</span><span id="line-50">          : IMarkupMultilineItem.valueOf(item.asString());</span>
+<span class="source-line-no">051</span><span id="line-51">    } catch (IllegalStateException | InvalidTypeMetapathException ex) {</span>
+<span class="source-line-no">052</span><span id="line-52">      // asString can throw IllegalStateException exception</span>
+<span class="source-line-no">053</span><span id="line-53">      throw new InvalidValueForCastFunctionException(ex);</span>
+<span class="source-line-no">054</span><span id="line-54">    }</span>
+<span class="source-line-no">055</span><span id="line-55">  }</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">  /**</span>
+<span class="source-line-no">058</span><span id="line-58">   * Get the "wrapped" markup value.</span>
+<span class="source-line-no">059</span><span id="line-59">   *</span>
+<span class="source-line-no">060</span><span id="line-60">   * @return the underlying markup value</span>
+<span class="source-line-no">061</span><span id="line-61">   */</span>
+<span class="source-line-no">062</span><span id="line-62">  @NonNull</span>
+<span class="source-line-no">063</span><span id="line-63">  IMarkupString&lt;?&gt; asMarkup();</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">  @Override</span>
+<span class="source-line-no">066</span><span id="line-66">  default IMarkupItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">067</span><span id="line-67">    return cast(item);</span>
+<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  @Override</span>
+<span class="source-line-no">071</span><span id="line-71">  default int compareTo(IAnyAtomicItem item) {</span>
+<span class="source-line-no">072</span><span id="line-72">    return compareTo(cast(item));</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  /**</span>
+<span class="source-line-no">076</span><span id="line-76">   * Compares this value with the argument.</span>
+<span class="source-line-no">077</span><span id="line-77">   *</span>
+<span class="source-line-no">078</span><span id="line-78">   * @param item</span>
+<span class="source-line-no">079</span><span id="line-79">   *          the item to compare with this value</span>
+<span class="source-line-no">080</span><span id="line-80">   * @return a negative integer, zero, or a positive integer if this value is less</span>
+<span class="source-line-no">081</span><span id="line-81">   *         than, equal to, or greater than the {@code item}.</span>
+<span class="source-line-no">082</span><span id="line-82">   */</span>
+<span class="source-line-no">083</span><span id="line-83">  default int compareTo(@NonNull IMarkupItem item) {</span>
+<span class="source-line-no">084</span><span id="line-84">    return asString().compareTo(item.asString());</span>
+<span class="source-line-no">085</span><span id="line-85">  }</span>
+<span class="source-line-no">086</span><span id="line-86">}</span>
 
 
 

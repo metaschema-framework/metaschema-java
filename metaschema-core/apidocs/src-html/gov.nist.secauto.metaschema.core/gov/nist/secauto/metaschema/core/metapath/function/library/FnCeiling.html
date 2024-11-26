@@ -33,8 +33,8 @@
 <span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">021</span><span id="line-21"></span>
 <span class="source-line-no">022</span><span id="line-22">/**</span>
-<span class="source-line-no">023</span><span id="line-23"> * Implements the XPath 3.1</span>
-<span class="source-line-no">024</span><span id="line-24"> * &lt;a href= "https://www.w3.org/TR/xpath-functions-31/#func-round"&gt;fn:round&lt;/a&gt;</span>
+<span class="source-line-no">023</span><span id="line-23"> * Implements the XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">024</span><span id="line-24"> * "https://www.w3.org/TR/xpath-functions-31/#func-ceiling"&gt;fn:ceiling&lt;/a&gt;</span>
 <span class="source-line-no">025</span><span id="line-25"> * function.</span>
 <span class="source-line-no">026</span><span id="line-26"> */</span>
 <span class="source-line-no">027</span><span id="line-27">public final class FnCeiling {</span>
@@ -49,10 +49,10 @@
 <span class="source-line-no">036</span><span id="line-36">      .focusIndependent()</span>
 <span class="source-line-no">037</span><span id="line-37">      .argument(IArgument.builder()</span>
 <span class="source-line-no">038</span><span id="line-38">          .name("arg")</span>
-<span class="source-line-no">039</span><span id="line-39">          .type(INumericItem.class)</span>
+<span class="source-line-no">039</span><span id="line-39">          .type(INumericItem.type())</span>
 <span class="source-line-no">040</span><span id="line-40">          .zeroOrOne()</span>
 <span class="source-line-no">041</span><span id="line-41">          .build())</span>
-<span class="source-line-no">042</span><span id="line-42">      .returnType(INumericItem.class)</span>
+<span class="source-line-no">042</span><span id="line-42">      .returnType(INumericItem.type())</span>
 <span class="source-line-no">043</span><span id="line-43">      .returnZeroOrOne()</span>
 <span class="source-line-no">044</span><span id="line-44">      .functionHandler(FnCeiling::execute)</span>
 <span class="source-line-no">045</span><span id="line-45">      .build();</span>

@@ -19,102 +19,231 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.datatype.adapter;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;</span>
-<span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">/**</span>
-<span class="source-line-no">013</span><span id="line-13"> * Provides runtime discovery of built-in implementations of the core Metaschema</span>
-<span class="source-line-no">014</span><span id="line-14"> * data types.</span>
-<span class="source-line-no">015</span><span id="line-15"> */</span>
-<span class="source-line-no">016</span><span id="line-16">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
-<span class="source-line-no">017</span><span id="line-17">public final class MetaschemaDataTypeProvider // NOPMD - Used for service initialization</span>
-<span class="source-line-no">018</span><span id="line-18">    extends AbstractDataTypeProvider {</span>
-<span class="source-line-no">019</span><span id="line-19">  @NonNull</span>
-<span class="source-line-no">020</span><span id="line-20">  public static final Base64Adapter BASE64 = new Base64Adapter();</span>
-<span class="source-line-no">021</span><span id="line-21">  @NonNull</span>
-<span class="source-line-no">022</span><span id="line-22">  public static final BooleanAdapter BOOLEAN = new BooleanAdapter();</span>
-<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
-<span class="source-line-no">024</span><span id="line-24">  public static final DateAdapter DATE = new DateAdapter();</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;</span>
+<span class="source-line-no">010</span><span id="line-10"></span>
+<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">/**</span>
+<span class="source-line-no">014</span><span id="line-14"> * Provides runtime discovery of built-in implementations of the core Metaschema</span>
+<span class="source-line-no">015</span><span id="line-15"> * data types.</span>
+<span class="source-line-no">016</span><span id="line-16"> */</span>
+<span class="source-line-no">017</span><span id="line-17">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
+<span class="source-line-no">018</span><span id="line-18">public final class MetaschemaDataTypeProvider // NOPMD - Used for service initialization</span>
+<span class="source-line-no">019</span><span id="line-19">    extends AbstractDataTypeProvider {</span>
+<span class="source-line-no">020</span><span id="line-20">  /**</span>
+<span class="source-line-no">021</span><span id="line-21">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">022</span><span id="line-22">   * "https://pages.nist.gov/metaschema/specification/datatypes/#base64"&gt;base64&lt;/a&gt;</span>
+<span class="source-line-no">023</span><span id="line-23">   * data type instance.</span>
+<span class="source-line-no">024</span><span id="line-24">   */</span>
 <span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
-<span class="source-line-no">026</span><span id="line-26">  public static final DateWithTZAdapter DATE_WITH_TZ = new DateWithTZAdapter();</span>
-<span class="source-line-no">027</span><span id="line-27">  @NonNull</span>
-<span class="source-line-no">028</span><span id="line-28">  public static final DateTimeAdapter DATE_TIME = new DateTimeAdapter();</span>
-<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
-<span class="source-line-no">030</span><span id="line-30">  public static final DateTimeWithTZAdapter DATE_TIME_WITH_TZ = new DateTimeWithTZAdapter();</span>
-<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
-<span class="source-line-no">032</span><span id="line-32">  public static final IPv4AddressAdapter IP_V4_ADDRESS = new IPv4AddressAdapter();</span>
-<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
-<span class="source-line-no">034</span><span id="line-34">  public static final IPv6AddressAdapter IP_V6_ADDRESS = new IPv6AddressAdapter();</span>
-<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
-<span class="source-line-no">036</span><span id="line-36">  public static final UriAdapter URI = new UriAdapter();</span>
-<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
-<span class="source-line-no">038</span><span id="line-38">  public static final UriReferenceAdapter URI_REFERENCE = new UriReferenceAdapter();</span>
+<span class="source-line-no">026</span><span id="line-26">  public static final Base64Adapter BASE64 = new Base64Adapter();</span>
+<span class="source-line-no">027</span><span id="line-27">  /**</span>
+<span class="source-line-no">028</span><span id="line-28">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">029</span><span id="line-29">   * "https://pages.nist.gov/metaschema/specification/datatypes/#boolean"&gt;boolean&lt;/a&gt;</span>
+<span class="source-line-no">030</span><span id="line-30">   * data type instance.</span>
+<span class="source-line-no">031</span><span id="line-31">   */</span>
+<span class="source-line-no">032</span><span id="line-32">  @NonNull</span>
+<span class="source-line-no">033</span><span id="line-33">  public static final BooleanAdapter BOOLEAN = new BooleanAdapter();</span>
+<span class="source-line-no">034</span><span id="line-34">  /**</span>
+<span class="source-line-no">035</span><span id="line-35">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">036</span><span id="line-36">   * "https://pages.nist.gov/metaschema/specification/datatypes/#date"&gt;date&lt;/a&gt;</span>
+<span class="source-line-no">037</span><span id="line-37">   * data type instance.</span>
+<span class="source-line-no">038</span><span id="line-38">   */</span>
 <span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
-<span class="source-line-no">040</span><span id="line-40">  public static final UuidAdapter UUID = new UuidAdapter();</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
-<span class="source-line-no">042</span><span id="line-42">  @NonNull</span>
-<span class="source-line-no">043</span><span id="line-43">  public static final DayTimeAdapter DAY_TIME_DURATION = new DayTimeAdapter();</span>
-<span class="source-line-no">044</span><span id="line-44">  @NonNull</span>
-<span class="source-line-no">045</span><span id="line-45">  public static final YearMonthAdapter YEAR_MONTH_DURATION = new YearMonthAdapter();</span>
-<span class="source-line-no">046</span><span id="line-46"></span>
-<span class="source-line-no">047</span><span id="line-47">  @NonNull</span>
-<span class="source-line-no">048</span><span id="line-48">  public static final DecimalAdapter DECIMAL = new DecimalAdapter();</span>
-<span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
-<span class="source-line-no">050</span><span id="line-50">  public static final IntegerAdapter INTEGER = new IntegerAdapter();</span>
-<span class="source-line-no">051</span><span id="line-51">  @NonNull</span>
-<span class="source-line-no">052</span><span id="line-52">  public static final NonNegativeIntegerAdapter NON_NEGATIVE_INTEGER = new NonNegativeIntegerAdapter();</span>
+<span class="source-line-no">040</span><span id="line-40">  public static final DateAdapter DATE = new DateAdapter();</span>
+<span class="source-line-no">041</span><span id="line-41">  /**</span>
+<span class="source-line-no">042</span><span id="line-42">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">043</span><span id="line-43">   * "https://pages.nist.gov/metaschema/specification/datatypes/#date-with-timezone"&gt;date-with-timezone&lt;/a&gt;</span>
+<span class="source-line-no">044</span><span id="line-44">   * data type instance.</span>
+<span class="source-line-no">045</span><span id="line-45">   */</span>
+<span class="source-line-no">046</span><span id="line-46">  @NonNull</span>
+<span class="source-line-no">047</span><span id="line-47">  public static final DateWithTZAdapter DATE_WITH_TZ = new DateWithTZAdapter();</span>
+<span class="source-line-no">048</span><span id="line-48">  /**</span>
+<span class="source-line-no">049</span><span id="line-49">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">050</span><span id="line-50">   * "https://pages.nist.gov/metaschema/specification/datatypes/#date-time"&gt;date-time&lt;/a&gt;</span>
+<span class="source-line-no">051</span><span id="line-51">   * data type instance.</span>
+<span class="source-line-no">052</span><span id="line-52">   */</span>
 <span class="source-line-no">053</span><span id="line-53">  @NonNull</span>
-<span class="source-line-no">054</span><span id="line-54">  public static final PositiveIntegerAdapter POSITIVE_INTEGER = new PositiveIntegerAdapter();</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  @NonNull</span>
-<span class="source-line-no">057</span><span id="line-57">  public static final EmailAddressAdapter EMAIL_ADDRESS = new EmailAddressAdapter();</span>
-<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
-<span class="source-line-no">059</span><span id="line-59">  public static final HostnameAdapter HOSTNAME = new HostnameAdapter();</span>
-<span class="source-line-no">060</span><span id="line-60">  @Deprecated(since = "0.7.0")</span>
-<span class="source-line-no">061</span><span id="line-61">  @NonNull</span>
-<span class="source-line-no">062</span><span id="line-62">  public static final NcNameAdapter NCNAME = new NcNameAdapter();</span>
-<span class="source-line-no">063</span><span id="line-63">  @NonNull</span>
-<span class="source-line-no">064</span><span id="line-64">  public static final StringAdapter STRING = new StringAdapter();</span>
-<span class="source-line-no">065</span><span id="line-65">  @NonNull</span>
-<span class="source-line-no">066</span><span id="line-66">  public static final TokenAdapter TOKEN = new TokenAdapter();</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">  @NonNull</span>
-<span class="source-line-no">069</span><span id="line-69">  public static final StringAdapter DEFAULT_DATA_TYPE = STRING;</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  /**</span>
-<span class="source-line-no">072</span><span id="line-72">   * Initialize the built-in data types.</span>
+<span class="source-line-no">054</span><span id="line-54">  public static final DateTimeAdapter DATE_TIME = new DateTimeAdapter();</span>
+<span class="source-line-no">055</span><span id="line-55">  /**</span>
+<span class="source-line-no">056</span><span id="line-56">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">057</span><span id="line-57">   * "https://pages.nist.gov/metaschema/specification/datatypes/#date-time-with-timezone"&gt;date-time-with-timezone&lt;/a&gt;</span>
+<span class="source-line-no">058</span><span id="line-58">   * data type instance.</span>
+<span class="source-line-no">059</span><span id="line-59">   */</span>
+<span class="source-line-no">060</span><span id="line-60">  @NonNull</span>
+<span class="source-line-no">061</span><span id="line-61">  public static final DateTimeWithTZAdapter DATE_TIME_WITH_TZ = new DateTimeWithTZAdapter();</span>
+<span class="source-line-no">062</span><span id="line-62">  /**</span>
+<span class="source-line-no">063</span><span id="line-63">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">064</span><span id="line-64">   * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address"&gt;ip-v4-address&lt;/a&gt;</span>
+<span class="source-line-no">065</span><span id="line-65">   * data type instance.</span>
+<span class="source-line-no">066</span><span id="line-66">   */</span>
+<span class="source-line-no">067</span><span id="line-67">  @NonNull</span>
+<span class="source-line-no">068</span><span id="line-68">  public static final IPv4AddressAdapter IP_V4_ADDRESS = new IPv4AddressAdapter();</span>
+<span class="source-line-no">069</span><span id="line-69">  /**</span>
+<span class="source-line-no">070</span><span id="line-70">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">071</span><span id="line-71">   * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address"&gt;ip-v6-address&lt;/a&gt;</span>
+<span class="source-line-no">072</span><span id="line-72">   * data type instance.</span>
 <span class="source-line-no">073</span><span id="line-73">   */</span>
-<span class="source-line-no">074</span><span id="line-74">  public MetaschemaDataTypeProvider() {</span>
-<span class="source-line-no">075</span><span id="line-75">    // The data type "string" must be first since this is the default data type for</span>
-<span class="source-line-no">076</span><span id="line-76">    // the {@link String}</span>
-<span class="source-line-no">077</span><span id="line-77">    // Java type. This ensures that when a data type is resolved that this data type</span>
-<span class="source-line-no">078</span><span id="line-78">    // is matched first</span>
-<span class="source-line-no">079</span><span id="line-79">    // before other String-based data types.</span>
-<span class="source-line-no">080</span><span id="line-80">    registerDatatype(STRING);</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">    registerDatatype(BASE64);</span>
-<span class="source-line-no">083</span><span id="line-83">    registerDatatype(BOOLEAN);</span>
-<span class="source-line-no">084</span><span id="line-84">    registerDatatype(DATE);</span>
-<span class="source-line-no">085</span><span id="line-85">    registerDatatype(DATE_WITH_TZ);</span>
-<span class="source-line-no">086</span><span id="line-86">    registerDatatype(DATE_TIME);</span>
-<span class="source-line-no">087</span><span id="line-87">    registerDatatype(DATE_TIME_WITH_TZ);</span>
-<span class="source-line-no">088</span><span id="line-88">    registerDatatype(DAY_TIME_DURATION);</span>
-<span class="source-line-no">089</span><span id="line-89">    registerDatatype(DECIMAL);</span>
-<span class="source-line-no">090</span><span id="line-90">    registerDatatype(EMAIL_ADDRESS);</span>
-<span class="source-line-no">091</span><span id="line-91">    registerDatatype(HOSTNAME);</span>
-<span class="source-line-no">092</span><span id="line-92">    registerDatatype(INTEGER);</span>
-<span class="source-line-no">093</span><span id="line-93">    registerDatatype(IP_V4_ADDRESS);</span>
-<span class="source-line-no">094</span><span id="line-94">    registerDatatype(IP_V6_ADDRESS);</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">    registerDatatype(NON_NEGATIVE_INTEGER);</span>
-<span class="source-line-no">097</span><span id="line-97">    registerDatatype(POSITIVE_INTEGER);</span>
-<span class="source-line-no">098</span><span id="line-98">    registerDatatype(TOKEN);</span>
-<span class="source-line-no">099</span><span id="line-99">    registerDatatype(URI);</span>
-<span class="source-line-no">100</span><span id="line-100">    registerDatatype(URI_REFERENCE);</span>
-<span class="source-line-no">101</span><span id="line-101">    registerDatatype(UUID);</span>
-<span class="source-line-no">102</span><span id="line-102">    registerDatatype(YEAR_MONTH_DURATION);</span>
-<span class="source-line-no">103</span><span id="line-103">  }</span>
-<span class="source-line-no">104</span><span id="line-104">}</span>
+<span class="source-line-no">074</span><span id="line-74">  @NonNull</span>
+<span class="source-line-no">075</span><span id="line-75">  public static final IPv6AddressAdapter IP_V6_ADDRESS = new IPv6AddressAdapter();</span>
+<span class="source-line-no">076</span><span id="line-76">  /**</span>
+<span class="source-line-no">077</span><span id="line-77">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">078</span><span id="line-78">   * "https://pages.nist.gov/metaschema/specification/datatypes/#uri"&gt;uri&lt;/a&gt; data</span>
+<span class="source-line-no">079</span><span id="line-79">   * type instance.</span>
+<span class="source-line-no">080</span><span id="line-80">   */</span>
+<span class="source-line-no">081</span><span id="line-81">  @NonNull</span>
+<span class="source-line-no">082</span><span id="line-82">  public static final UriAdapter URI = new UriAdapter();</span>
+<span class="source-line-no">083</span><span id="line-83">  /**</span>
+<span class="source-line-no">084</span><span id="line-84">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">085</span><span id="line-85">   * "https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference"&gt;uri-reference&lt;/a&gt;</span>
+<span class="source-line-no">086</span><span id="line-86">   * data type instance.</span>
+<span class="source-line-no">087</span><span id="line-87">   */</span>
+<span class="source-line-no">088</span><span id="line-88">  @NonNull</span>
+<span class="source-line-no">089</span><span id="line-89">  public static final UriReferenceAdapter URI_REFERENCE = new UriReferenceAdapter();</span>
+<span class="source-line-no">090</span><span id="line-90">  /**</span>
+<span class="source-line-no">091</span><span id="line-91">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">092</span><span id="line-92">   * "https://pages.nist.gov/metaschema/specification/datatypes/#uuid"&gt;uuid&lt;/a&gt;</span>
+<span class="source-line-no">093</span><span id="line-93">   * data type instance.</span>
+<span class="source-line-no">094</span><span id="line-94">   */</span>
+<span class="source-line-no">095</span><span id="line-95">  @NonNull</span>
+<span class="source-line-no">096</span><span id="line-96">  public static final UuidAdapter UUID = new UuidAdapter();</span>
+<span class="source-line-no">097</span><span id="line-97">  /**</span>
+<span class="source-line-no">098</span><span id="line-98">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">099</span><span id="line-99">   * "https://pages.nist.gov/metaschema/specification/datatypes/#day-time-duration"&gt;day-time-duration&lt;/a&gt;</span>
+<span class="source-line-no">100</span><span id="line-100">   * data type instance.</span>
+<span class="source-line-no">101</span><span id="line-101">   */</span>
+<span class="source-line-no">102</span><span id="line-102">  @NonNull</span>
+<span class="source-line-no">103</span><span id="line-103">  public static final DayTimeAdapter DAY_TIME_DURATION = new DayTimeAdapter();</span>
+<span class="source-line-no">104</span><span id="line-104">  /**</span>
+<span class="source-line-no">105</span><span id="line-105">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">106</span><span id="line-106">   * "https://pages.nist.gov/metaschema/specification/datatypes/#year-month-duration"&gt;year-month-duration&lt;/a&gt;</span>
+<span class="source-line-no">107</span><span id="line-107">   * data type instance.</span>
+<span class="source-line-no">108</span><span id="line-108">   */</span>
+<span class="source-line-no">109</span><span id="line-109">  @NonNull</span>
+<span class="source-line-no">110</span><span id="line-110">  public static final YearMonthAdapter YEAR_MONTH_DURATION = new YearMonthAdapter();</span>
+<span class="source-line-no">111</span><span id="line-111">  /**</span>
+<span class="source-line-no">112</span><span id="line-112">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">113</span><span id="line-113">   * "https://pages.nist.gov/metaschema/specification/datatypes/#decimal"&gt;decimal&lt;/a&gt;</span>
+<span class="source-line-no">114</span><span id="line-114">   * data type instance.</span>
+<span class="source-line-no">115</span><span id="line-115">   */</span>
+<span class="source-line-no">116</span><span id="line-116">  @NonNull</span>
+<span class="source-line-no">117</span><span id="line-117">  public static final DecimalAdapter DECIMAL = new DecimalAdapter();</span>
+<span class="source-line-no">118</span><span id="line-118">  /**</span>
+<span class="source-line-no">119</span><span id="line-119">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">120</span><span id="line-120">   * "https://pages.nist.gov/metaschema/specification/datatypes/#integer"&gt;integer&lt;/a&gt;</span>
+<span class="source-line-no">121</span><span id="line-121">   * data type instance.</span>
+<span class="source-line-no">122</span><span id="line-122">   */</span>
+<span class="source-line-no">123</span><span id="line-123">  @NonNull</span>
+<span class="source-line-no">124</span><span id="line-124">  public static final IntegerAdapter INTEGER = new IntegerAdapter();</span>
+<span class="source-line-no">125</span><span id="line-125">  /**</span>
+<span class="source-line-no">126</span><span id="line-126">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">127</span><span id="line-127">   * "https://pages.nist.gov/metaschema/specification/datatypes/#non-negative-integer"&gt;non-negative-integer&lt;/a&gt;</span>
+<span class="source-line-no">128</span><span id="line-128">   * data type instance.</span>
+<span class="source-line-no">129</span><span id="line-129">   */</span>
+<span class="source-line-no">130</span><span id="line-130">  @NonNull</span>
+<span class="source-line-no">131</span><span id="line-131">  public static final NonNegativeIntegerAdapter NON_NEGATIVE_INTEGER = new NonNegativeIntegerAdapter();</span>
+<span class="source-line-no">132</span><span id="line-132">  /**</span>
+<span class="source-line-no">133</span><span id="line-133">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">134</span><span id="line-134">   * "https://pages.nist.gov/metaschema/specification/datatypes/#positive-integer"&gt;positive-integer&lt;/a&gt;</span>
+<span class="source-line-no">135</span><span id="line-135">   * data type instance.</span>
+<span class="source-line-no">136</span><span id="line-136">   */</span>
+<span class="source-line-no">137</span><span id="line-137">  @NonNull</span>
+<span class="source-line-no">138</span><span id="line-138">  public static final PositiveIntegerAdapter POSITIVE_INTEGER = new PositiveIntegerAdapter();</span>
+<span class="source-line-no">139</span><span id="line-139">  /**</span>
+<span class="source-line-no">140</span><span id="line-140">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">141</span><span id="line-141">   * "https://pages.nist.gov/metaschema/specification/datatypes/#email-address"&gt;email-address&lt;/a&gt;</span>
+<span class="source-line-no">142</span><span id="line-142">   * data type instance.</span>
+<span class="source-line-no">143</span><span id="line-143">   */</span>
+<span class="source-line-no">144</span><span id="line-144">  @NonNull</span>
+<span class="source-line-no">145</span><span id="line-145">  public static final EmailAddressAdapter EMAIL_ADDRESS = new EmailAddressAdapter();</span>
+<span class="source-line-no">146</span><span id="line-146">  /**</span>
+<span class="source-line-no">147</span><span id="line-147">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">148</span><span id="line-148">   * "https://pages.nist.gov/metaschema/specification/datatypes/#hostname"&gt;hostname&lt;/a&gt;</span>
+<span class="source-line-no">149</span><span id="line-149">   * data type instance.</span>
+<span class="source-line-no">150</span><span id="line-150">   */</span>
+<span class="source-line-no">151</span><span id="line-151">  @NonNull</span>
+<span class="source-line-no">152</span><span id="line-152">  public static final HostnameAdapter HOSTNAME = new HostnameAdapter();</span>
+<span class="source-line-no">153</span><span id="line-153">  /**</span>
+<span class="source-line-no">154</span><span id="line-154">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">155</span><span id="line-155">   * "https://pages.nist.gov/metaschema/specification/datatypes/#ncname"&gt;ncname&lt;/a&gt;</span>
+<span class="source-line-no">156</span><span id="line-156">   * data type instance.</span>
+<span class="source-line-no">157</span><span id="line-157">   */</span>
+<span class="source-line-no">158</span><span id="line-158">  @Deprecated(since = "0.7.0")</span>
+<span class="source-line-no">159</span><span id="line-159">  @NonNull</span>
+<span class="source-line-no">160</span><span id="line-160">  public static final NcNameAdapter NCNAME = new NcNameAdapter();</span>
+<span class="source-line-no">161</span><span id="line-161">  /**</span>
+<span class="source-line-no">162</span><span id="line-162">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">163</span><span id="line-163">   * "https://pages.nist.gov/metaschema/specification/datatypes/#string"&gt;string&lt;/a&gt;</span>
+<span class="source-line-no">164</span><span id="line-164">   * data type instance.</span>
+<span class="source-line-no">165</span><span id="line-165">   */</span>
+<span class="source-line-no">166</span><span id="line-166">  @NonNull</span>
+<span class="source-line-no">167</span><span id="line-167">  public static final StringAdapter STRING = new StringAdapter();</span>
+<span class="source-line-no">168</span><span id="line-168">  /**</span>
+<span class="source-line-no">169</span><span id="line-169">   * The Metaschema time data type instance.</span>
+<span class="source-line-no">170</span><span id="line-170">   */</span>
+<span class="source-line-no">171</span><span id="line-171">  // FIXME: add documentation link</span>
+<span class="source-line-no">172</span><span id="line-172">  @NonNull</span>
+<span class="source-line-no">173</span><span id="line-173">  public static final TimeAdapter TIME = new TimeAdapter();</span>
+<span class="source-line-no">174</span><span id="line-174">  /**</span>
+<span class="source-line-no">175</span><span id="line-175">   * The Metaschema time with timezone data type instance.</span>
+<span class="source-line-no">176</span><span id="line-176">   */</span>
+<span class="source-line-no">177</span><span id="line-177">  // FIXME: add documentation link</span>
+<span class="source-line-no">178</span><span id="line-178">  @NonNull</span>
+<span class="source-line-no">179</span><span id="line-179">  public static final TimeWithTZAdapter TIME_WITH_TZ = new TimeWithTZAdapter();</span>
+<span class="source-line-no">180</span><span id="line-180">  /**</span>
+<span class="source-line-no">181</span><span id="line-181">   * The Metaschema &lt;a href=</span>
+<span class="source-line-no">182</span><span id="line-182">   * "https://pages.nist.gov/metaschema/specification/datatypes/#token"&gt;token&lt;/a&gt;</span>
+<span class="source-line-no">183</span><span id="line-183">   * data type instance.</span>
+<span class="source-line-no">184</span><span id="line-184">   */</span>
+<span class="source-line-no">185</span><span id="line-185">  @NonNull</span>
+<span class="source-line-no">186</span><span id="line-186">  public static final TokenAdapter TOKEN = new TokenAdapter();</span>
+<span class="source-line-no">187</span><span id="line-187">  /**</span>
+<span class="source-line-no">188</span><span id="line-188">   * The default Metaschema data type instance to use when no data type is defined</span>
+<span class="source-line-no">189</span><span id="line-189">   * on a field or flag.</span>
+<span class="source-line-no">190</span><span id="line-190">   */</span>
+<span class="source-line-no">191</span><span id="line-191">  @NonNull</span>
+<span class="source-line-no">192</span><span id="line-192">  public static final StringAdapter DEFAULT_DATA_TYPE = STRING;</span>
+<span class="source-line-no">193</span><span id="line-193"></span>
+<span class="source-line-no">194</span><span id="line-194">  /**</span>
+<span class="source-line-no">195</span><span id="line-195">   * Initialize the built-in data types.</span>
+<span class="source-line-no">196</span><span id="line-196">   */</span>
+<span class="source-line-no">197</span><span id="line-197">  public MetaschemaDataTypeProvider() {</span>
+<span class="source-line-no">198</span><span id="line-198">    // The data type "string" must be first since this is the default data type for</span>
+<span class="source-line-no">199</span><span id="line-199">    // the {@link String}</span>
+<span class="source-line-no">200</span><span id="line-200">    // Java type. This ensures that when a data type is resolved that this data type</span>
+<span class="source-line-no">201</span><span id="line-201">    // is matched first</span>
+<span class="source-line-no">202</span><span id="line-202">    // before other String-based data types.</span>
+<span class="source-line-no">203</span><span id="line-203">    register(STRING);</span>
+<span class="source-line-no">204</span><span id="line-204">    register(BASE64);</span>
+<span class="source-line-no">205</span><span id="line-205">    register(BOOLEAN);</span>
+<span class="source-line-no">206</span><span id="line-206">    register(DATE);</span>
+<span class="source-line-no">207</span><span id="line-207">    register(DATE_WITH_TZ);</span>
+<span class="source-line-no">208</span><span id="line-208">    register(DATE_TIME);</span>
+<span class="source-line-no">209</span><span id="line-209">    register(DATE_TIME_WITH_TZ);</span>
+<span class="source-line-no">210</span><span id="line-210">    register(DAY_TIME_DURATION);</span>
+<span class="source-line-no">211</span><span id="line-211">    register(DECIMAL);</span>
+<span class="source-line-no">212</span><span id="line-212">    register(EMAIL_ADDRESS);</span>
+<span class="source-line-no">213</span><span id="line-213">    register(HOSTNAME);</span>
+<span class="source-line-no">214</span><span id="line-214">    register(INTEGER);</span>
+<span class="source-line-no">215</span><span id="line-215">    register(IP_V4_ADDRESS);</span>
+<span class="source-line-no">216</span><span id="line-216">    register(IP_V6_ADDRESS);</span>
+<span class="source-line-no">217</span><span id="line-217">    register(NON_NEGATIVE_INTEGER);</span>
+<span class="source-line-no">218</span><span id="line-218">    register(POSITIVE_INTEGER);</span>
+<span class="source-line-no">219</span><span id="line-219">    register(TOKEN);</span>
+<span class="source-line-no">220</span><span id="line-220">    register(URI);</span>
+<span class="source-line-no">221</span><span id="line-221">    register(URI_REFERENCE);</span>
+<span class="source-line-no">222</span><span id="line-222">    register(UUID);</span>
+<span class="source-line-no">223</span><span id="line-223">    register(YEAR_MONTH_DURATION);</span>
+<span class="source-line-no">224</span><span id="line-224"></span>
+<span class="source-line-no">225</span><span id="line-225">    // register abstract types</span>
+<span class="source-line-no">226</span><span id="line-226">    register(TypeConstants.ANY_ATOMIC_TYPE);</span>
+<span class="source-line-no">227</span><span id="line-227">    // register(TypeConstants.UNTYPED_ATOMIC_TYPE);</span>
+<span class="source-line-no">228</span><span id="line-228">    register(TypeConstants.DURATION_TYPE);</span>
+<span class="source-line-no">229</span><span id="line-229">    register(TypeConstants.IP_ADDRESS_TYPE);</span>
+<span class="source-line-no">230</span><span id="line-230">    register(TypeConstants.NUMERIC_TYPE);</span>
+<span class="source-line-no">231</span><span id="line-231">    register(TypeConstants.TEMPORAL_TYPE);</span>
+<span class="source-line-no">232</span><span id="line-232">  }</span>
+<span class="source-line-no">233</span><span id="line-233">}</span>
 
 
 

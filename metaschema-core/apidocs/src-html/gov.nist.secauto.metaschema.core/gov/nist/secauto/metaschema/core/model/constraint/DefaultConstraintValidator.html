@@ -27,17 +27,17 @@
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.node.AbstractNodeItemVisitor;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;</span>
-<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;</span>
-<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;</span>
-<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;</span>
-<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;</span>
-<span class="source-line-no">024</span><span id="line-24">import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;</span>
-<span class="source-line-no">025</span><span id="line-25">import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;</span>
-<span class="source-line-no">026</span><span id="line-26">import gov.nist.secauto.metaschema.core.model.IFieldDefinition;</span>
-<span class="source-line-no">027</span><span id="line-27">import gov.nist.secauto.metaschema.core.model.IFlagDefinition;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.node.AbstractNodeItemVisitor;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;</span>
+<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;</span>
+<span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;</span>
+<span class="source-line-no">021</span><span id="line-21">import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;</span>
+<span class="source-line-no">022</span><span id="line-22">import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;</span>
+<span class="source-line-no">023</span><span id="line-23">import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;</span>
+<span class="source-line-no">024</span><span id="line-24">import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;</span>
+<span class="source-line-no">025</span><span id="line-25">import gov.nist.secauto.metaschema.core.model.IFieldDefinition;</span>
+<span class="source-line-no">026</span><span id="line-26">import gov.nist.secauto.metaschema.core.model.IFlagDefinition;</span>
+<span class="source-line-no">027</span><span id="line-27">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
 <span class="source-line-no">028</span><span id="line-28">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
 <span class="source-line-no">029</span><span id="line-29">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
 <span class="source-line-no">030</span><span id="line-30"></span>
@@ -53,8 +53,8 @@
 <span class="source-line-no">040</span><span id="line-40">import java.util.Map;</span>
 <span class="source-line-no">041</span><span id="line-41">import java.util.concurrent.ConcurrentHashMap;</span>
 <span class="source-line-no">042</span><span id="line-42">import java.util.regex.Pattern;</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">043</span><span id="line-43">import java.util.stream.Collectors;</span>
+<span class="source-line-no">044</span><span id="line-44">import java.util.stream.Stream;</span>
 <span class="source-line-no">045</span><span id="line-45"></span>
 <span class="source-line-no">046</span><span id="line-46">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">047</span><span id="line-47">import edu.umd.cs.findbugs.annotations.Nullable;</span>
@@ -554,7 +554,7 @@
 <span class="source-line-no">541</span><span id="line-541">      @NonNull INodeItem node,</span>
 <span class="source-line-no">542</span><span id="line-542">      @NonNull INodeItem item,</span>
 <span class="source-line-no">543</span><span id="line-543">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">544</span><span id="line-544">    String value = FnData.fnDataItem(item).asString();</span>
+<span class="source-line-no">544</span><span id="line-544">    String value = item.toAtomicItem().asString();</span>
 <span class="source-line-no">545</span><span id="line-545"></span>
 <span class="source-line-no">546</span><span id="line-546">    IConstraintValidationHandler handler = getConstraintValidationHandler();</span>
 <span class="source-line-no">547</span><span id="line-547">    boolean valid = true;</span>
@@ -894,180 +894,190 @@
 <span class="source-line-no">881</span><span id="line-881"></span>
 <span class="source-line-no">882</span><span id="line-882">    public ValueStatus(@NonNull INodeItem item) {</span>
 <span class="source-line-no">883</span><span id="line-883">      this.item = item;</span>
-<span class="source-line-no">884</span><span id="line-884">      this.value = FnData.fnDataItem(item).asString();</span>
+<span class="source-line-no">884</span><span id="line-884">      this.value = item.toAtomicItem().asString();</span>
 <span class="source-line-no">885</span><span id="line-885">    }</span>
 <span class="source-line-no">886</span><span id="line-886"></span>
 <span class="source-line-no">887</span><span id="line-887">    public void registerAllowedValue(</span>
 <span class="source-line-no">888</span><span id="line-888">        @NonNull IAllowedValuesConstraint allowedValues,</span>
 <span class="source-line-no">889</span><span id="line-889">        @NonNull IDefinitionNodeItem&lt;?, ?&gt; node) {</span>
-<span class="source-line-no">890</span><span id="line-890">      this.constraints.add(Pair.of(allowedValues, node));</span>
-<span class="source-line-no">891</span><span id="line-891">      if (!allowedValues.isAllowedOther()) {</span>
+<span class="source-line-no">890</span><span id="line-890">      IAllowedValuesConstraint.Extensible newExtensible = allowedValues.getExtensible();</span>
+<span class="source-line-no">891</span><span id="line-891">      if (newExtensible.ordinal() &gt; extensible.ordinal()) {</span>
 <span class="source-line-no">892</span><span id="line-892">        // record the most restrictive value</span>
-<span class="source-line-no">893</span><span id="line-893">        allowOthers = false;</span>
-<span class="source-line-no">894</span><span id="line-894">      }</span>
-<span class="source-line-no">895</span><span id="line-895"></span>
-<span class="source-line-no">896</span><span id="line-896">      IAllowedValuesConstraint.Extensible newExtensible = allowedValues.getExtensible();</span>
-<span class="source-line-no">897</span><span id="line-897">      if (newExtensible.ordinal() &gt; extensible.ordinal()) {</span>
-<span class="source-line-no">898</span><span id="line-898">        // record the most restrictive value</span>
-<span class="source-line-no">899</span><span id="line-899">        extensible = allowedValues.getExtensible();</span>
-<span class="source-line-no">900</span><span id="line-900">      } else if (IAllowedValuesConstraint.Extensible.NONE.equals(newExtensible)</span>
-<span class="source-line-no">901</span><span id="line-901">          &amp;&amp; IAllowedValuesConstraint.Extensible.NONE.equals(extensible)) {</span>
-<span class="source-line-no">902</span><span id="line-902">        // this is an error, where there are two none constraints that conflict</span>
-<span class="source-line-no">903</span><span id="line-903">        throw new MetapathException(</span>
-<span class="source-line-no">904</span><span id="line-904">            String.format("Multiple constraints have extensibility scope=none at path '%s'", item.getMetapath()));</span>
-<span class="source-line-no">905</span><span id="line-905">      } else if (allowedValues.getExtensible().ordinal() &lt; extensible.ordinal()) {</span>
-<span class="source-line-no">906</span><span id="line-906">        String msg = String.format(</span>
-<span class="source-line-no">907</span><span id="line-907">            "An allowed values constraint with an extensibility scope '%s'"</span>
-<span class="source-line-no">908</span><span id="line-908">                + " exceeds the allowed scope '%s' at path '%s'",</span>
-<span class="source-line-no">909</span><span id="line-909">            allowedValues.getExtensible().name(), extensible.name(), item.getMetapath());</span>
-<span class="source-line-no">910</span><span id="line-910">        LOGGER.atError().log(msg);</span>
-<span class="source-line-no">911</span><span id="line-911">        throw new MetapathException(msg);</span>
-<span class="source-line-no">912</span><span id="line-912">      }</span>
-<span class="source-line-no">913</span><span id="line-913">    }</span>
-<span class="source-line-no">914</span><span id="line-914"></span>
-<span class="source-line-no">915</span><span id="line-915">    public void validate(@NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">916</span><span id="line-916">      if (!constraints.isEmpty()) {</span>
-<span class="source-line-no">917</span><span id="line-917">        boolean match = false;</span>
-<span class="source-line-no">918</span><span id="line-918">        List&lt;IAllowedValuesConstraint&gt; failedConstraints = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">919</span><span id="line-919">        IConstraintValidationHandler handler = getConstraintValidationHandler();</span>
-<span class="source-line-no">920</span><span id="line-920">        for (Pair&lt;IAllowedValuesConstraint, IDefinitionNodeItem&lt;?, ?&gt;&gt; pair : constraints) {</span>
-<span class="source-line-no">921</span><span id="line-921">          IAllowedValuesConstraint allowedValues = pair.getLeft();</span>
-<span class="source-line-no">922</span><span id="line-922">          IDefinitionNodeItem&lt;?, ?&gt; node = ObjectUtils.notNull(pair.getRight());</span>
-<span class="source-line-no">923</span><span id="line-923">          IAllowedValue matchingValue = allowedValues.getAllowedValue(value);</span>
-<span class="source-line-no">924</span><span id="line-924">          if (matchingValue != null) {</span>
-<span class="source-line-no">925</span><span id="line-925">            match = true;</span>
-<span class="source-line-no">926</span><span id="line-926">            handlePass(allowedValues, node, item, dynamicContext);</span>
-<span class="source-line-no">927</span><span id="line-927">          } else if (IAllowedValuesConstraint.Extensible.NONE.equals(allowedValues.getExtensible())) {</span>
-<span class="source-line-no">928</span><span id="line-928">            // hard failure, since no other values can satisfy this constraint</span>
-<span class="source-line-no">929</span><span id="line-929">            failedConstraints = CollectionUtil.singletonList(allowedValues);</span>
-<span class="source-line-no">930</span><span id="line-930">            match = false;</span>
-<span class="source-line-no">931</span><span id="line-931">            break;</span>
-<span class="source-line-no">932</span><span id="line-932">          } else {</span>
-<span class="source-line-no">933</span><span id="line-933">            failedConstraints.add(allowedValues);</span>
-<span class="source-line-no">934</span><span id="line-934">          } // this constraint passes, but we need to make sure other constraints do as well</span>
-<span class="source-line-no">935</span><span id="line-935">        }</span>
-<span class="source-line-no">936</span><span id="line-936"></span>
-<span class="source-line-no">937</span><span id="line-937">        // it's not a failure if allow others is true</span>
-<span class="source-line-no">938</span><span id="line-938">        if (!match &amp;&amp; !allowOthers) {</span>
-<span class="source-line-no">939</span><span id="line-939">          handler.handleAllowedValuesViolation(failedConstraints, item, dynamicContext);</span>
-<span class="source-line-no">940</span><span id="line-940">        }</span>
-<span class="source-line-no">941</span><span id="line-941">      }</span>
-<span class="source-line-no">942</span><span id="line-942">    }</span>
-<span class="source-line-no">943</span><span id="line-943">  }</span>
-<span class="source-line-no">944</span><span id="line-944"></span>
-<span class="source-line-no">945</span><span id="line-945">  class Visitor</span>
-<span class="source-line-no">946</span><span id="line-946">      extends AbstractNodeItemVisitor&lt;DynamicContext, Void&gt; {</span>
-<span class="source-line-no">947</span><span id="line-947"></span>
-<span class="source-line-no">948</span><span id="line-948">    @NonNull</span>
-<span class="source-line-no">949</span><span id="line-949">    private DynamicContext handleLetStatements(</span>
-<span class="source-line-no">950</span><span id="line-950">        @NonNull INodeItem focus,</span>
-<span class="source-line-no">951</span><span id="line-951">        @NonNull Map&lt;QName, ILet&gt; letExpressions,</span>
-<span class="source-line-no">952</span><span id="line-952">        @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">953</span><span id="line-953"></span>
-<span class="source-line-no">954</span><span id="line-954">      DynamicContext retval;</span>
-<span class="source-line-no">955</span><span id="line-955">      Collection&lt;ILet&gt; lets = letExpressions.values();</span>
-<span class="source-line-no">956</span><span id="line-956">      if (lets.isEmpty()) {</span>
-<span class="source-line-no">957</span><span id="line-957">        retval = dynamicContext;</span>
-<span class="source-line-no">958</span><span id="line-958">      } else {</span>
-<span class="source-line-no">959</span><span id="line-959">        final DynamicContext subContext = dynamicContext.subContext();</span>
-<span class="source-line-no">960</span><span id="line-960"></span>
-<span class="source-line-no">961</span><span id="line-961">        for (ILet let : lets) {</span>
-<span class="source-line-no">962</span><span id="line-962">          QName name = let.getName();</span>
-<span class="source-line-no">963</span><span id="line-963">          ISequence&lt;?&gt; result = let.getValueExpression().evaluate(focus, subContext);</span>
-<span class="source-line-no">964</span><span id="line-964"></span>
-<span class="source-line-no">965</span><span id="line-965">          // ensure the sequence is list backed</span>
-<span class="source-line-no">966</span><span id="line-966">          result.getValue();</span>
-<span class="source-line-no">967</span><span id="line-967"></span>
-<span class="source-line-no">968</span><span id="line-968">          subContext.bindVariableValue(name, result);</span>
-<span class="source-line-no">969</span><span id="line-969">        }</span>
-<span class="source-line-no">970</span><span id="line-970">        retval = subContext;</span>
-<span class="source-line-no">971</span><span id="line-971">      }</span>
-<span class="source-line-no">972</span><span id="line-972">      return retval;</span>
-<span class="source-line-no">973</span><span id="line-973">    }</span>
+<span class="source-line-no">893</span><span id="line-893">        extensible = allowedValues.getExtensible();</span>
+<span class="source-line-no">894</span><span id="line-894">      } else if (IAllowedValuesConstraint.Extensible.NONE.equals(newExtensible)</span>
+<span class="source-line-no">895</span><span id="line-895">          &amp;&amp; IAllowedValuesConstraint.Extensible.NONE.equals(extensible)) {</span>
+<span class="source-line-no">896</span><span id="line-896">        // this is an error, where there are two none constraints that conflict</span>
+<span class="source-line-no">897</span><span id="line-897">        throw new MetapathException(</span>
+<span class="source-line-no">898</span><span id="line-898">            String.format(</span>
+<span class="source-line-no">899</span><span id="line-899">                "Multiple constraints matching path '%s' have scope='none', which prevents extension. Involved" +</span>
+<span class="source-line-no">900</span><span id="line-900">                    " constraints are those: %s",</span>
+<span class="source-line-no">901</span><span id="line-901">                Stream.concat(</span>
+<span class="source-line-no">902</span><span id="line-902">                    Stream.of(allowedValues),</span>
+<span class="source-line-no">903</span><span id="line-903">                    constraints.stream()</span>
+<span class="source-line-no">904</span><span id="line-904">                        .map(Pair::getLeft)</span>
+<span class="source-line-no">905</span><span id="line-905">                        .filter(</span>
+<span class="source-line-no">906</span><span id="line-906">                            constraint -&gt; IAllowedValuesConstraint.Extensible.NONE.equals(constraint.getExtensible())))</span>
+<span class="source-line-no">907</span><span id="line-907">                    .map(IConstraint::getConstraintIdentity)</span>
+<span class="source-line-no">908</span><span id="line-908">                    .collect(Collectors.joining(", ", "{", "}")),</span>
+<span class="source-line-no">909</span><span id="line-909">                item.getMetapath()));</span>
+<span class="source-line-no">910</span><span id="line-910">      } else if (allowedValues.getExtensible().ordinal() &lt; extensible.ordinal()) {</span>
+<span class="source-line-no">911</span><span id="line-911">        String msg = String.format(</span>
+<span class="source-line-no">912</span><span id="line-912">            "An allowed values constraint with an extensibility scope '%s'"</span>
+<span class="source-line-no">913</span><span id="line-913">                + " exceeds the allowed scope '%s' at path '%s'",</span>
+<span class="source-line-no">914</span><span id="line-914">            allowedValues.getExtensible().name(), extensible.name(), item.getMetapath());</span>
+<span class="source-line-no">915</span><span id="line-915">        LOGGER.atError().log(msg);</span>
+<span class="source-line-no">916</span><span id="line-916">        throw new MetapathException(msg);</span>
+<span class="source-line-no">917</span><span id="line-917">      }</span>
+<span class="source-line-no">918</span><span id="line-918">      this.constraints.add(Pair.of(allowedValues, node));</span>
+<span class="source-line-no">919</span><span id="line-919">      if (!allowedValues.isAllowedOther()) {</span>
+<span class="source-line-no">920</span><span id="line-920">        // record the most restrictive value</span>
+<span class="source-line-no">921</span><span id="line-921">        allowOthers = false;</span>
+<span class="source-line-no">922</span><span id="line-922">      }</span>
+<span class="source-line-no">923</span><span id="line-923">    }</span>
+<span class="source-line-no">924</span><span id="line-924"></span>
+<span class="source-line-no">925</span><span id="line-925">    public void validate(@NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">926</span><span id="line-926">      if (!constraints.isEmpty()) {</span>
+<span class="source-line-no">927</span><span id="line-927">        boolean match = false;</span>
+<span class="source-line-no">928</span><span id="line-928">        List&lt;IAllowedValuesConstraint&gt; failedConstraints = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">929</span><span id="line-929">        IConstraintValidationHandler handler = getConstraintValidationHandler();</span>
+<span class="source-line-no">930</span><span id="line-930">        for (Pair&lt;IAllowedValuesConstraint, IDefinitionNodeItem&lt;?, ?&gt;&gt; pair : constraints) {</span>
+<span class="source-line-no">931</span><span id="line-931">          IAllowedValuesConstraint allowedValues = pair.getLeft();</span>
+<span class="source-line-no">932</span><span id="line-932">          IDefinitionNodeItem&lt;?, ?&gt; node = ObjectUtils.notNull(pair.getRight());</span>
+<span class="source-line-no">933</span><span id="line-933">          IAllowedValue matchingValue = allowedValues.getAllowedValue(value);</span>
+<span class="source-line-no">934</span><span id="line-934">          if (matchingValue != null) {</span>
+<span class="source-line-no">935</span><span id="line-935">            match = true;</span>
+<span class="source-line-no">936</span><span id="line-936">            handlePass(allowedValues, node, item, dynamicContext);</span>
+<span class="source-line-no">937</span><span id="line-937">          } else if (IAllowedValuesConstraint.Extensible.NONE.equals(allowedValues.getExtensible())) {</span>
+<span class="source-line-no">938</span><span id="line-938">            // hard failure, since no other values can satisfy this constraint</span>
+<span class="source-line-no">939</span><span id="line-939">            failedConstraints = CollectionUtil.singletonList(allowedValues);</span>
+<span class="source-line-no">940</span><span id="line-940">            match = false;</span>
+<span class="source-line-no">941</span><span id="line-941">            break;</span>
+<span class="source-line-no">942</span><span id="line-942">          } else {</span>
+<span class="source-line-no">943</span><span id="line-943">            failedConstraints.add(allowedValues);</span>
+<span class="source-line-no">944</span><span id="line-944">          } // this constraint passes, but we need to make sure other constraints do as well</span>
+<span class="source-line-no">945</span><span id="line-945">        }</span>
+<span class="source-line-no">946</span><span id="line-946"></span>
+<span class="source-line-no">947</span><span id="line-947">        // it's not a failure if allow others is true</span>
+<span class="source-line-no">948</span><span id="line-948">        if (!match &amp;&amp; !allowOthers) {</span>
+<span class="source-line-no">949</span><span id="line-949">          handler.handleAllowedValuesViolation(failedConstraints, item, dynamicContext);</span>
+<span class="source-line-no">950</span><span id="line-950">        }</span>
+<span class="source-line-no">951</span><span id="line-951">      }</span>
+<span class="source-line-no">952</span><span id="line-952">    }</span>
+<span class="source-line-no">953</span><span id="line-953">  }</span>
+<span class="source-line-no">954</span><span id="line-954"></span>
+<span class="source-line-no">955</span><span id="line-955">  class Visitor</span>
+<span class="source-line-no">956</span><span id="line-956">      extends AbstractNodeItemVisitor&lt;DynamicContext, Void&gt; {</span>
+<span class="source-line-no">957</span><span id="line-957"></span>
+<span class="source-line-no">958</span><span id="line-958">    @NonNull</span>
+<span class="source-line-no">959</span><span id="line-959">    private DynamicContext handleLetStatements(</span>
+<span class="source-line-no">960</span><span id="line-960">        @NonNull INodeItem focus,</span>
+<span class="source-line-no">961</span><span id="line-961">        @NonNull Map&lt;IEnhancedQName, ILet&gt; letExpressions,</span>
+<span class="source-line-no">962</span><span id="line-962">        @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">963</span><span id="line-963"></span>
+<span class="source-line-no">964</span><span id="line-964">      DynamicContext retval;</span>
+<span class="source-line-no">965</span><span id="line-965">      Collection&lt;ILet&gt; lets = letExpressions.values();</span>
+<span class="source-line-no">966</span><span id="line-966">      if (lets.isEmpty()) {</span>
+<span class="source-line-no">967</span><span id="line-967">        retval = dynamicContext;</span>
+<span class="source-line-no">968</span><span id="line-968">      } else {</span>
+<span class="source-line-no">969</span><span id="line-969">        final DynamicContext subContext = dynamicContext.subContext();</span>
+<span class="source-line-no">970</span><span id="line-970"></span>
+<span class="source-line-no">971</span><span id="line-971">        for (ILet let : lets) {</span>
+<span class="source-line-no">972</span><span id="line-972">          IEnhancedQName name = let.getName();</span>
+<span class="source-line-no">973</span><span id="line-973">          ISequence&lt;?&gt; result = let.getValueExpression().evaluate(focus, subContext);</span>
 <span class="source-line-no">974</span><span id="line-974"></span>
-<span class="source-line-no">975</span><span id="line-975">    @Override</span>
-<span class="source-line-no">976</span><span id="line-976">    public Void visitFlag(@NonNull IFlagNodeItem item, DynamicContext context) {</span>
-<span class="source-line-no">977</span><span id="line-977">      assert context != null;</span>
-<span class="source-line-no">978</span><span id="line-978"></span>
-<span class="source-line-no">979</span><span id="line-979">      IFlagDefinition definition = item.getDefinition();</span>
-<span class="source-line-no">980</span><span id="line-980">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
-<span class="source-line-no">981</span><span id="line-981"></span>
-<span class="source-line-no">982</span><span id="line-982">      validateFlag(item, effectiveContext);</span>
-<span class="source-line-no">983</span><span id="line-983">      super.visitFlag(item, effectiveContext);</span>
-<span class="source-line-no">984</span><span id="line-984">      handleAllowedValues(item, context);</span>
-<span class="source-line-no">985</span><span id="line-985">      return null;</span>
-<span class="source-line-no">986</span><span id="line-986">    }</span>
-<span class="source-line-no">987</span><span id="line-987"></span>
-<span class="source-line-no">988</span><span id="line-988">    @Override</span>
-<span class="source-line-no">989</span><span id="line-989">    public Void visitField(@NonNull IFieldNodeItem item, DynamicContext context) {</span>
-<span class="source-line-no">990</span><span id="line-990">      assert context != null;</span>
+<span class="source-line-no">975</span><span id="line-975">          // ensure the sequence is list backed</span>
+<span class="source-line-no">976</span><span id="line-976">          result.getValue();</span>
+<span class="source-line-no">977</span><span id="line-977"></span>
+<span class="source-line-no">978</span><span id="line-978">          subContext.bindVariableValue(name, result);</span>
+<span class="source-line-no">979</span><span id="line-979">        }</span>
+<span class="source-line-no">980</span><span id="line-980">        retval = subContext;</span>
+<span class="source-line-no">981</span><span id="line-981">      }</span>
+<span class="source-line-no">982</span><span id="line-982">      return retval;</span>
+<span class="source-line-no">983</span><span id="line-983">    }</span>
+<span class="source-line-no">984</span><span id="line-984"></span>
+<span class="source-line-no">985</span><span id="line-985">    @Override</span>
+<span class="source-line-no">986</span><span id="line-986">    public Void visitFlag(@NonNull IFlagNodeItem item, DynamicContext context) {</span>
+<span class="source-line-no">987</span><span id="line-987">      assert context != null;</span>
+<span class="source-line-no">988</span><span id="line-988"></span>
+<span class="source-line-no">989</span><span id="line-989">      IFlagDefinition definition = item.getDefinition();</span>
+<span class="source-line-no">990</span><span id="line-990">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
 <span class="source-line-no">991</span><span id="line-991"></span>
-<span class="source-line-no">992</span><span id="line-992">      IFieldDefinition definition = item.getDefinition();</span>
-<span class="source-line-no">993</span><span id="line-993">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
-<span class="source-line-no">994</span><span id="line-994"></span>
-<span class="source-line-no">995</span><span id="line-995">      validateField(item, effectiveContext);</span>
-<span class="source-line-no">996</span><span id="line-996">      super.visitField(item, effectiveContext);</span>
-<span class="source-line-no">997</span><span id="line-997">      handleAllowedValues(item, context);</span>
-<span class="source-line-no">998</span><span id="line-998">      return null;</span>
-<span class="source-line-no">999</span><span id="line-999">    }</span>
-<span class="source-line-no">1000</span><span id="line-1000"></span>
-<span class="source-line-no">1001</span><span id="line-1001">    @Override</span>
-<span class="source-line-no">1002</span><span id="line-1002">    public Void visitAssembly(@NonNull IAssemblyNodeItem item, DynamicContext context) {</span>
-<span class="source-line-no">1003</span><span id="line-1003">      assert context != null;</span>
+<span class="source-line-no">992</span><span id="line-992">      validateFlag(item, effectiveContext);</span>
+<span class="source-line-no">993</span><span id="line-993">      super.visitFlag(item, effectiveContext);</span>
+<span class="source-line-no">994</span><span id="line-994">      handleAllowedValues(item, context);</span>
+<span class="source-line-no">995</span><span id="line-995">      return null;</span>
+<span class="source-line-no">996</span><span id="line-996">    }</span>
+<span class="source-line-no">997</span><span id="line-997"></span>
+<span class="source-line-no">998</span><span id="line-998">    @Override</span>
+<span class="source-line-no">999</span><span id="line-999">    public Void visitField(@NonNull IFieldNodeItem item, DynamicContext context) {</span>
+<span class="source-line-no">1000</span><span id="line-1000">      assert context != null;</span>
+<span class="source-line-no">1001</span><span id="line-1001"></span>
+<span class="source-line-no">1002</span><span id="line-1002">      IFieldDefinition definition = item.getDefinition();</span>
+<span class="source-line-no">1003</span><span id="line-1003">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
 <span class="source-line-no">1004</span><span id="line-1004"></span>
-<span class="source-line-no">1005</span><span id="line-1005">      IAssemblyDefinition definition = item.getDefinition();</span>
-<span class="source-line-no">1006</span><span id="line-1006">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
-<span class="source-line-no">1007</span><span id="line-1007"></span>
-<span class="source-line-no">1008</span><span id="line-1008">      validateAssembly(item, effectiveContext);</span>
-<span class="source-line-no">1009</span><span id="line-1009">      super.visitAssembly(item, effectiveContext);</span>
-<span class="source-line-no">1010</span><span id="line-1010">      return null;</span>
-<span class="source-line-no">1011</span><span id="line-1011">    }</span>
-<span class="source-line-no">1012</span><span id="line-1012"></span>
-<span class="source-line-no">1013</span><span id="line-1013">    @Override</span>
-<span class="source-line-no">1014</span><span id="line-1014">    public Void visitMetaschema(@NonNull IModuleNodeItem item, DynamicContext context) {</span>
-<span class="source-line-no">1015</span><span id="line-1015">      throw new UnsupportedOperationException("not needed");</span>
-<span class="source-line-no">1016</span><span id="line-1016">    }</span>
+<span class="source-line-no">1005</span><span id="line-1005">      validateField(item, effectiveContext);</span>
+<span class="source-line-no">1006</span><span id="line-1006">      super.visitField(item, effectiveContext);</span>
+<span class="source-line-no">1007</span><span id="line-1007">      handleAllowedValues(item, context);</span>
+<span class="source-line-no">1008</span><span id="line-1008">      return null;</span>
+<span class="source-line-no">1009</span><span id="line-1009">    }</span>
+<span class="source-line-no">1010</span><span id="line-1010"></span>
+<span class="source-line-no">1011</span><span id="line-1011">    @Override</span>
+<span class="source-line-no">1012</span><span id="line-1012">    public Void visitAssembly(@NonNull IAssemblyNodeItem item, DynamicContext context) {</span>
+<span class="source-line-no">1013</span><span id="line-1013">      assert context != null;</span>
+<span class="source-line-no">1014</span><span id="line-1014"></span>
+<span class="source-line-no">1015</span><span id="line-1015">      IAssemblyDefinition definition = item.getDefinition();</span>
+<span class="source-line-no">1016</span><span id="line-1016">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
 <span class="source-line-no">1017</span><span id="line-1017"></span>
-<span class="source-line-no">1018</span><span id="line-1018">    @Override</span>
-<span class="source-line-no">1019</span><span id="line-1019">    protected Void defaultResult() {</span>
-<span class="source-line-no">1020</span><span id="line-1020">      // no result value</span>
-<span class="source-line-no">1021</span><span id="line-1021">      return null;</span>
-<span class="source-line-no">1022</span><span id="line-1022">    }</span>
-<span class="source-line-no">1023</span><span id="line-1023">  }</span>
-<span class="source-line-no">1024</span><span id="line-1024"></span>
-<span class="source-line-no">1025</span><span id="line-1025">  private static class KeyRef {</span>
-<span class="source-line-no">1026</span><span id="line-1026">    @NonNull</span>
-<span class="source-line-no">1027</span><span id="line-1027">    private final IIndexHasKeyConstraint constraint;</span>
-<span class="source-line-no">1028</span><span id="line-1028">    @NonNull</span>
-<span class="source-line-no">1029</span><span id="line-1029">    private final INodeItem node;</span>
-<span class="source-line-no">1030</span><span id="line-1030">    @NonNull</span>
-<span class="source-line-no">1031</span><span id="line-1031">    private final List&lt;INodeItem&gt; targets;</span>
-<span class="source-line-no">1032</span><span id="line-1032"></span>
-<span class="source-line-no">1033</span><span id="line-1033">    public KeyRef(</span>
-<span class="source-line-no">1034</span><span id="line-1034">        @NonNull IIndexHasKeyConstraint constraint,</span>
-<span class="source-line-no">1035</span><span id="line-1035">        @NonNull INodeItem node,</span>
-<span class="source-line-no">1036</span><span id="line-1036">        @NonNull List&lt;INodeItem&gt; targets) {</span>
-<span class="source-line-no">1037</span><span id="line-1037">      this.node = node;</span>
-<span class="source-line-no">1038</span><span id="line-1038">      this.constraint = constraint;</span>
-<span class="source-line-no">1039</span><span id="line-1039">      this.targets = targets;</span>
-<span class="source-line-no">1040</span><span id="line-1040">    }</span>
-<span class="source-line-no">1041</span><span id="line-1041"></span>
-<span class="source-line-no">1042</span><span id="line-1042">    @NonNull</span>
-<span class="source-line-no">1043</span><span id="line-1043">    public IIndexHasKeyConstraint getConstraint() {</span>
-<span class="source-line-no">1044</span><span id="line-1044">      return constraint;</span>
-<span class="source-line-no">1045</span><span id="line-1045">    }</span>
-<span class="source-line-no">1046</span><span id="line-1046"></span>
-<span class="source-line-no">1047</span><span id="line-1047">    @NonNull</span>
-<span class="source-line-no">1048</span><span id="line-1048">    protected INodeItem getNode() {</span>
-<span class="source-line-no">1049</span><span id="line-1049">      return node;</span>
+<span class="source-line-no">1018</span><span id="line-1018">      validateAssembly(item, effectiveContext);</span>
+<span class="source-line-no">1019</span><span id="line-1019">      super.visitAssembly(item, effectiveContext);</span>
+<span class="source-line-no">1020</span><span id="line-1020">      return null;</span>
+<span class="source-line-no">1021</span><span id="line-1021">    }</span>
+<span class="source-line-no">1022</span><span id="line-1022"></span>
+<span class="source-line-no">1023</span><span id="line-1023">    @Override</span>
+<span class="source-line-no">1024</span><span id="line-1024">    public Void visitMetaschema(@NonNull IModuleNodeItem item, DynamicContext context) {</span>
+<span class="source-line-no">1025</span><span id="line-1025">      throw new UnsupportedOperationException("Method not used.");</span>
+<span class="source-line-no">1026</span><span id="line-1026">    }</span>
+<span class="source-line-no">1027</span><span id="line-1027"></span>
+<span class="source-line-no">1028</span><span id="line-1028">    @Override</span>
+<span class="source-line-no">1029</span><span id="line-1029">    protected Void defaultResult() {</span>
+<span class="source-line-no">1030</span><span id="line-1030">      // no result value</span>
+<span class="source-line-no">1031</span><span id="line-1031">      return null;</span>
+<span class="source-line-no">1032</span><span id="line-1032">    }</span>
+<span class="source-line-no">1033</span><span id="line-1033">  }</span>
+<span class="source-line-no">1034</span><span id="line-1034"></span>
+<span class="source-line-no">1035</span><span id="line-1035">  private static class KeyRef {</span>
+<span class="source-line-no">1036</span><span id="line-1036">    @NonNull</span>
+<span class="source-line-no">1037</span><span id="line-1037">    private final IIndexHasKeyConstraint constraint;</span>
+<span class="source-line-no">1038</span><span id="line-1038">    @NonNull</span>
+<span class="source-line-no">1039</span><span id="line-1039">    private final INodeItem node;</span>
+<span class="source-line-no">1040</span><span id="line-1040">    @NonNull</span>
+<span class="source-line-no">1041</span><span id="line-1041">    private final List&lt;INodeItem&gt; targets;</span>
+<span class="source-line-no">1042</span><span id="line-1042"></span>
+<span class="source-line-no">1043</span><span id="line-1043">    public KeyRef(</span>
+<span class="source-line-no">1044</span><span id="line-1044">        @NonNull IIndexHasKeyConstraint constraint,</span>
+<span class="source-line-no">1045</span><span id="line-1045">        @NonNull INodeItem node,</span>
+<span class="source-line-no">1046</span><span id="line-1046">        @NonNull List&lt;INodeItem&gt; targets) {</span>
+<span class="source-line-no">1047</span><span id="line-1047">      this.node = node;</span>
+<span class="source-line-no">1048</span><span id="line-1048">      this.constraint = constraint;</span>
+<span class="source-line-no">1049</span><span id="line-1049">      this.targets = targets;</span>
 <span class="source-line-no">1050</span><span id="line-1050">    }</span>
 <span class="source-line-no">1051</span><span id="line-1051"></span>
 <span class="source-line-no">1052</span><span id="line-1052">    @NonNull</span>
-<span class="source-line-no">1053</span><span id="line-1053">    public List&lt;INodeItem&gt; getTargets() {</span>
-<span class="source-line-no">1054</span><span id="line-1054">      return targets;</span>
+<span class="source-line-no">1053</span><span id="line-1053">    public IIndexHasKeyConstraint getConstraint() {</span>
+<span class="source-line-no">1054</span><span id="line-1054">      return constraint;</span>
 <span class="source-line-no">1055</span><span id="line-1055">    }</span>
-<span class="source-line-no">1056</span><span id="line-1056">  }</span>
-<span class="source-line-no">1057</span><span id="line-1057">}</span>
+<span class="source-line-no">1056</span><span id="line-1056"></span>
+<span class="source-line-no">1057</span><span id="line-1057">    @NonNull</span>
+<span class="source-line-no">1058</span><span id="line-1058">    protected INodeItem getNode() {</span>
+<span class="source-line-no">1059</span><span id="line-1059">      return node;</span>
+<span class="source-line-no">1060</span><span id="line-1060">    }</span>
+<span class="source-line-no">1061</span><span id="line-1061"></span>
+<span class="source-line-no">1062</span><span id="line-1062">    @NonNull</span>
+<span class="source-line-no">1063</span><span id="line-1063">    public List&lt;INodeItem&gt; getTargets() {</span>
+<span class="source-line-no">1064</span><span id="line-1064">      return targets;</span>
+<span class="source-line-no">1065</span><span id="line-1065">    }</span>
+<span class="source-line-no">1066</span><span id="line-1066">  }</span>
+<span class="source-line-no">1067</span><span id="line-1067">}</span>
 
 
 

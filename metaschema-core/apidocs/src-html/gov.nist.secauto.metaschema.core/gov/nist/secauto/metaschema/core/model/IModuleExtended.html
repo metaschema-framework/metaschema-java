@@ -18,205 +18,204 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import java.util.Collection;</span>
-<span class="source-line-no">011</span><span id="line-11">import java.util.List;</span>
-<span class="source-line-no">012</span><span id="line-12">import java.util.function.Predicate;</span>
-<span class="source-line-no">013</span><span id="line-13">import java.util.stream.Collectors;</span>
-<span class="source-line-no">014</span><span id="line-14">import java.util.stream.Stream;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">019</span><span id="line-19">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">/**</span>
-<span class="source-line-no">022</span><span id="line-22"> * The API for accessing information about a given Metaschema module.</span>
-<span class="source-line-no">023</span><span id="line-23"> * &lt;p&gt;</span>
-<span class="source-line-no">024</span><span id="line-24"> * A Metaschem module may import another Metaschema module. This import graph</span>
-<span class="source-line-no">025</span><span id="line-25"> * can be accessed using {@link #getImportedModules()}.</span>
-<span class="source-line-no">026</span><span id="line-26"> * &lt;p&gt;</span>
-<span class="source-line-no">027</span><span id="line-27"> * Global scoped Metaschema definitions can be accessed using</span>
-<span class="source-line-no">028</span><span id="line-28"> * {@link #getScopedAssemblyDefinitionByName(QName)},</span>
-<span class="source-line-no">029</span><span id="line-29"> * {@link #getScopedFieldDefinitionByName(QName)}, and</span>
-<span class="source-line-no">030</span><span id="line-30"> * {@link #getScopedFlagDefinitionByName(QName)}. These methods take into</span>
-<span class="source-line-no">031</span><span id="line-31"> * consideration the import order to provide the global definitions that are in</span>
-<span class="source-line-no">032</span><span id="line-32"> * scope within the given Metschema module.</span>
-<span class="source-line-no">033</span><span id="line-33"> * &lt;p&gt;</span>
-<span class="source-line-no">034</span><span id="line-34"> * Global scoped definitions exported by this Metaschema module, available for</span>
-<span class="source-line-no">035</span><span id="line-35"> * use by importing Metaschema modules, can be accessed using</span>
-<span class="source-line-no">036</span><span id="line-36"> * {@link #getExportedAssemblyDefinitions()},</span>
-<span class="source-line-no">037</span><span id="line-37"> * {@link #getExportedFieldDefinitions()}, and</span>
-<span class="source-line-no">038</span><span id="line-38"> * {@link #getExportedFlagDefinitions()}.</span>
-<span class="source-line-no">039</span><span id="line-39"> * &lt;p&gt;</span>
-<span class="source-line-no">040</span><span id="line-40"> * Global scoped definitions defined directly within the given Metaschema module</span>
-<span class="source-line-no">041</span><span id="line-41"> * can be accessed using {@link #getAssemblyDefinitions()},</span>
-<span class="source-line-no">042</span><span id="line-42"> * {@link #getFieldDefinitions()}, and {@link #getFlagDefinitions()}, along with</span>
-<span class="source-line-no">043</span><span id="line-43"> * similarly named access methods.</span>
-<span class="source-line-no">044</span><span id="line-44"> *</span>
-<span class="source-line-no">045</span><span id="line-45"> * @param &lt;M&gt;</span>
-<span class="source-line-no">046</span><span id="line-46"> *          the imported module Java type</span>
-<span class="source-line-no">047</span><span id="line-47"> * @param &lt;D&gt;</span>
-<span class="source-line-no">048</span><span id="line-48"> *          the model definition Java type</span>
-<span class="source-line-no">049</span><span id="line-49"> * @param &lt;FL&gt;</span>
-<span class="source-line-no">050</span><span id="line-50"> *          the flag definition Java type</span>
-<span class="source-line-no">051</span><span id="line-51"> * @param &lt;FI&gt;</span>
-<span class="source-line-no">052</span><span id="line-52"> *          the field definition Java type</span>
-<span class="source-line-no">053</span><span id="line-53"> * @param &lt;A&gt;</span>
-<span class="source-line-no">054</span><span id="line-54"> *          the assembly definition Java type</span>
-<span class="source-line-no">055</span><span id="line-55"> */</span>
-<span class="source-line-no">056</span><span id="line-56">public interface IModuleExtended&lt;</span>
-<span class="source-line-no">057</span><span id="line-57">    M extends IModuleExtended&lt;M, D, FL, FI, A&gt;,</span>
-<span class="source-line-no">058</span><span id="line-58">    D extends IModelDefinition,</span>
-<span class="source-line-no">059</span><span id="line-59">    FL extends IFlagDefinition,</span>
-<span class="source-line-no">060</span><span id="line-60">    FI extends IFieldDefinition,</span>
-<span class="source-line-no">061</span><span id="line-61">    A extends IAssemblyDefinition&gt; extends IModule {</span>
-<span class="source-line-no">062</span><span id="line-62"></span>
-<span class="source-line-no">063</span><span id="line-63">  /**</span>
-<span class="source-line-no">064</span><span id="line-64">   * Get a filter that will match all definitions that are not locally defined.</span>
-<span class="source-line-no">065</span><span id="line-65">   *</span>
-<span class="source-line-no">066</span><span id="line-66">   * @param &lt;DEF&gt;</span>
-<span class="source-line-no">067</span><span id="line-67">   *          the type of definition</span>
-<span class="source-line-no">068</span><span id="line-68">   * @return a predicate implementing the filter</span>
-<span class="source-line-no">069</span><span id="line-69">   */</span>
-<span class="source-line-no">070</span><span id="line-70">  static &lt;DEF extends IDefinition&gt; Predicate&lt;DEF&gt; allNonLocalDefinitions() {</span>
-<span class="source-line-no">071</span><span id="line-71">    return definition -&gt; IDefinition.ModuleScope.PUBLIC.equals(definition.getModuleScope())</span>
-<span class="source-line-no">072</span><span id="line-72">        || ModelType.ASSEMBLY.equals(definition.getModelType())</span>
-<span class="source-line-no">073</span><span id="line-73">            &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
-<span class="source-line-no">074</span><span id="line-74">  }</span>
-<span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">  /**</span>
-<span class="source-line-no">077</span><span id="line-77">   * Get a filter that will match all definitions that are root assemblies.</span>
-<span class="source-line-no">078</span><span id="line-78">   *</span>
-<span class="source-line-no">079</span><span id="line-79">   * @param &lt;DEF&gt;</span>
-<span class="source-line-no">080</span><span id="line-80">   *          the type of definition</span>
-<span class="source-line-no">081</span><span id="line-81">   * @return a predicate implementing the filter</span>
-<span class="source-line-no">082</span><span id="line-82">   */</span>
-<span class="source-line-no">083</span><span id="line-83">  static &lt;DEF extends IDefinition&gt; Predicate&lt;DEF&gt; allRootAssemblyDefinitions() {</span>
-<span class="source-line-no">084</span><span id="line-84">    return definition -&gt; ModelType.ASSEMBLY.equals(definition.getModelType())</span>
-<span class="source-line-no">085</span><span id="line-85">        &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
-<span class="source-line-no">086</span><span id="line-86">  }</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">  @Override</span>
-<span class="source-line-no">089</span><span id="line-89">  @NonNull</span>
-<span class="source-line-no">090</span><span id="line-90">  List&lt;? extends M&gt; getImportedModules();</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">  @Override</span>
-<span class="source-line-no">093</span><span id="line-93">  @Nullable</span>
-<span class="source-line-no">094</span><span id="line-94">  M getImportedModuleByShortName(String name);</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">  @Override</span>
-<span class="source-line-no">097</span><span id="line-97">  @NonNull</span>
-<span class="source-line-no">098</span><span id="line-98">  Collection&lt;FL&gt; getFlagDefinitions();</span>
-<span class="source-line-no">099</span><span id="line-99"></span>
-<span class="source-line-no">100</span><span id="line-100">  @Override</span>
-<span class="source-line-no">101</span><span id="line-101">  @Nullable</span>
-<span class="source-line-no">102</span><span id="line-102">  FL getFlagDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  @Override</span>
-<span class="source-line-no">105</span><span id="line-105">  @NonNull</span>
-<span class="source-line-no">106</span><span id="line-106">  Collection&lt;A&gt; getAssemblyDefinitions();</span>
-<span class="source-line-no">107</span><span id="line-107"></span>
-<span class="source-line-no">108</span><span id="line-108">  @Override</span>
-<span class="source-line-no">109</span><span id="line-109">  @Nullable</span>
-<span class="source-line-no">110</span><span id="line-110">  A getAssemblyDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  @Override</span>
-<span class="source-line-no">113</span><span id="line-113">  @NonNull</span>
-<span class="source-line-no">114</span><span id="line-114">  Collection&lt;FI&gt; getFieldDefinitions();</span>
-<span class="source-line-no">115</span><span id="line-115"></span>
-<span class="source-line-no">116</span><span id="line-116">  @Override</span>
-<span class="source-line-no">117</span><span id="line-117">  @Nullable</span>
-<span class="source-line-no">118</span><span id="line-118">  FI getFieldDefinitionByName(@NonNull QName name);</span>
-<span class="source-line-no">119</span><span id="line-119"></span>
-<span class="source-line-no">120</span><span id="line-120">  @Override</span>
-<span class="source-line-no">121</span><span id="line-121">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">122</span><span id="line-122">  @NonNull</span>
-<span class="source-line-no">123</span><span id="line-123">  default List&lt;D&gt; getAssemblyAndFieldDefinitions() {</span>
-<span class="source-line-no">124</span><span id="line-124">    return ObjectUtils.notNull(</span>
-<span class="source-line-no">125</span><span id="line-125">        Stream.concat(</span>
-<span class="source-line-no">126</span><span id="line-126">            (Stream&lt;D&gt;) getAssemblyDefinitions().stream(),</span>
-<span class="source-line-no">127</span><span id="line-127">            (Stream&lt;D&gt;) getFieldDefinitions().stream())</span>
-<span class="source-line-no">128</span><span id="line-128">            .collect(Collectors.toList()));</span>
-<span class="source-line-no">129</span><span id="line-129">  }</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">  @Override</span>
-<span class="source-line-no">132</span><span id="line-132">  @Nullable</span>
-<span class="source-line-no">133</span><span id="line-133">  default A getScopedAssemblyDefinitionByName(@NonNull QName name) {</span>
-<span class="source-line-no">134</span><span id="line-134">    // first try local/global top-level definitions from current metaschema module</span>
-<span class="source-line-no">135</span><span id="line-135">    A retval = getAssemblyDefinitionByName(name);</span>
-<span class="source-line-no">136</span><span id="line-136">    if (retval == null) {</span>
-<span class="source-line-no">137</span><span id="line-137">      // try global definitions from imported Metaschema modules</span>
-<span class="source-line-no">138</span><span id="line-138">      retval = getExportedAssemblyDefinitionByName(name);</span>
-<span class="source-line-no">139</span><span id="line-139">    }</span>
-<span class="source-line-no">140</span><span id="line-140">    return retval;</span>
-<span class="source-line-no">141</span><span id="line-141">  }</span>
-<span class="source-line-no">142</span><span id="line-142"></span>
-<span class="source-line-no">143</span><span id="line-143">  @Override</span>
-<span class="source-line-no">144</span><span id="line-144">  @Nullable</span>
-<span class="source-line-no">145</span><span id="line-145">  default FI getScopedFieldDefinitionByName(@NonNull QName name) {</span>
-<span class="source-line-no">146</span><span id="line-146">    // first try local/global top-level definitions from current metaschema module</span>
-<span class="source-line-no">147</span><span id="line-147">    FI retval = getFieldDefinitionByName(name);</span>
-<span class="source-line-no">148</span><span id="line-148">    if (retval == null) {</span>
-<span class="source-line-no">149</span><span id="line-149">      // try global definitions from imported metaschema modules</span>
-<span class="source-line-no">150</span><span id="line-150">      retval = getExportedFieldDefinitionByName(name);</span>
-<span class="source-line-no">151</span><span id="line-151">    }</span>
-<span class="source-line-no">152</span><span id="line-152">    return retval;</span>
-<span class="source-line-no">153</span><span id="line-153">  }</span>
-<span class="source-line-no">154</span><span id="line-154"></span>
-<span class="source-line-no">155</span><span id="line-155">  @Override</span>
-<span class="source-line-no">156</span><span id="line-156">  @Nullable</span>
-<span class="source-line-no">157</span><span id="line-157">  default FL getScopedFlagDefinitionByName(@NonNull QName name) {</span>
-<span class="source-line-no">158</span><span id="line-158">    // first try local/global top-level definitions from current metaschema module</span>
-<span class="source-line-no">159</span><span id="line-159">    FL retval = getFlagDefinitionByName(name);</span>
-<span class="source-line-no">160</span><span id="line-160">    if (retval == null) {</span>
-<span class="source-line-no">161</span><span id="line-161">      // try global definitions from imported metaschema modules</span>
-<span class="source-line-no">162</span><span id="line-162">      retval = getExportedFlagDefinitionByName(name);</span>
-<span class="source-line-no">163</span><span id="line-163">    }</span>
-<span class="source-line-no">164</span><span id="line-164">    return retval;</span>
-<span class="source-line-no">165</span><span id="line-165">  }</span>
-<span class="source-line-no">166</span><span id="line-166"></span>
-<span class="source-line-no">167</span><span id="line-167">  @Override</span>
-<span class="source-line-no">168</span><span id="line-168">  @NonNull</span>
-<span class="source-line-no">169</span><span id="line-169">  default Collection&lt;? extends A&gt; getExportedRootAssemblyDefinitions() {</span>
-<span class="source-line-no">170</span><span id="line-170">    return ObjectUtils.notNull(getExportedAssemblyDefinitions().stream()</span>
-<span class="source-line-no">171</span><span id="line-171">        .filter(allRootAssemblyDefinitions())</span>
-<span class="source-line-no">172</span><span id="line-172">        .collect(Collectors.toList()));</span>
-<span class="source-line-no">173</span><span id="line-173">  }</span>
-<span class="source-line-no">174</span><span id="line-174"></span>
-<span class="source-line-no">175</span><span id="line-175">  @Override</span>
-<span class="source-line-no">176</span><span id="line-176">  @NonNull</span>
-<span class="source-line-no">177</span><span id="line-177">  default Collection&lt;? extends A&gt; getRootAssemblyDefinitions() {</span>
-<span class="source-line-no">178</span><span id="line-178">    return ObjectUtils.notNull(getAssemblyDefinitions().stream()</span>
-<span class="source-line-no">179</span><span id="line-179">        .filter(allRootAssemblyDefinitions())</span>
-<span class="source-line-no">180</span><span id="line-180">        .collect(Collectors.toList()));</span>
-<span class="source-line-no">181</span><span id="line-181">  }</span>
-<span class="source-line-no">182</span><span id="line-182"></span>
-<span class="source-line-no">183</span><span id="line-183">  @Override</span>
-<span class="source-line-no">184</span><span id="line-184">  @NonNull</span>
-<span class="source-line-no">185</span><span id="line-185">  Collection&lt;? extends FL&gt; getExportedFlagDefinitions();</span>
-<span class="source-line-no">186</span><span id="line-186"></span>
-<span class="source-line-no">187</span><span id="line-187">  @Override</span>
-<span class="source-line-no">188</span><span id="line-188">  @Nullable</span>
-<span class="source-line-no">189</span><span id="line-189">  FL getExportedFlagDefinitionByName(QName name);</span>
-<span class="source-line-no">190</span><span id="line-190"></span>
-<span class="source-line-no">191</span><span id="line-191">  @Override</span>
-<span class="source-line-no">192</span><span id="line-192">  @NonNull</span>
-<span class="source-line-no">193</span><span id="line-193">  Collection&lt;? extends FI&gt; getExportedFieldDefinitions();</span>
-<span class="source-line-no">194</span><span id="line-194"></span>
-<span class="source-line-no">195</span><span id="line-195">  @Override</span>
-<span class="source-line-no">196</span><span id="line-196">  @Nullable</span>
-<span class="source-line-no">197</span><span id="line-197">  FI getExportedFieldDefinitionByName(QName name);</span>
-<span class="source-line-no">198</span><span id="line-198"></span>
-<span class="source-line-no">199</span><span id="line-199">  @Override</span>
-<span class="source-line-no">200</span><span id="line-200">  @NonNull</span>
-<span class="source-line-no">201</span><span id="line-201">  Collection&lt;? extends A&gt; getExportedAssemblyDefinitions();</span>
-<span class="source-line-no">202</span><span id="line-202"></span>
-<span class="source-line-no">203</span><span id="line-203">  @Override</span>
-<span class="source-line-no">204</span><span id="line-204">  @Nullable</span>
-<span class="source-line-no">205</span><span id="line-205">  A getExportedAssemblyDefinitionByName(QName name);</span>
-<span class="source-line-no">206</span><span id="line-206">}</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">010</span><span id="line-10"></span>
+<span class="source-line-no">011</span><span id="line-11">import java.util.Collection;</span>
+<span class="source-line-no">012</span><span id="line-12">import java.util.List;</span>
+<span class="source-line-no">013</span><span id="line-13">import java.util.function.Predicate;</span>
+<span class="source-line-no">014</span><span id="line-14">import java.util.stream.Collectors;</span>
+<span class="source-line-no">015</span><span id="line-15">import java.util.stream.Stream;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">018</span><span id="line-18">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">019</span><span id="line-19"></span>
+<span class="source-line-no">020</span><span id="line-20">/**</span>
+<span class="source-line-no">021</span><span id="line-21"> * The API for accessing information about a given Metaschema module.</span>
+<span class="source-line-no">022</span><span id="line-22"> * &lt;p&gt;</span>
+<span class="source-line-no">023</span><span id="line-23"> * A Metaschem module may import another Metaschema module. This import graph</span>
+<span class="source-line-no">024</span><span id="line-24"> * can be accessed using {@link #getImportedModules()}.</span>
+<span class="source-line-no">025</span><span id="line-25"> * &lt;p&gt;</span>
+<span class="source-line-no">026</span><span id="line-26"> * Global scoped Metaschema definitions can be accessed using</span>
+<span class="source-line-no">027</span><span id="line-27"> * {@link #getScopedAssemblyDefinitionByName(Integer)},</span>
+<span class="source-line-no">028</span><span id="line-28"> * {@link #getScopedFieldDefinitionByName(Integer)}, and</span>
+<span class="source-line-no">029</span><span id="line-29"> * {@link #getScopedFlagDefinitionByName(IEnhancedQName)}. These methods take</span>
+<span class="source-line-no">030</span><span id="line-30"> * into consideration the import order to provide the global definitions that</span>
+<span class="source-line-no">031</span><span id="line-31"> * are in scope within the given Metschema module.</span>
+<span class="source-line-no">032</span><span id="line-32"> * &lt;p&gt;</span>
+<span class="source-line-no">033</span><span id="line-33"> * Global scoped definitions exported by this Metaschema module, available for</span>
+<span class="source-line-no">034</span><span id="line-34"> * use by importing Metaschema modules, can be accessed using</span>
+<span class="source-line-no">035</span><span id="line-35"> * {@link #getExportedAssemblyDefinitions()},</span>
+<span class="source-line-no">036</span><span id="line-36"> * {@link #getExportedFieldDefinitions()}, and</span>
+<span class="source-line-no">037</span><span id="line-37"> * {@link #getExportedFlagDefinitions()}.</span>
+<span class="source-line-no">038</span><span id="line-38"> * &lt;p&gt;</span>
+<span class="source-line-no">039</span><span id="line-39"> * Global scoped definitions defined directly within the given Metaschema module</span>
+<span class="source-line-no">040</span><span id="line-40"> * can be accessed using {@link #getAssemblyDefinitions()},</span>
+<span class="source-line-no">041</span><span id="line-41"> * {@link #getFieldDefinitions()}, and {@link #getFlagDefinitions()}, along with</span>
+<span class="source-line-no">042</span><span id="line-42"> * similarly named access methods.</span>
+<span class="source-line-no">043</span><span id="line-43"> *</span>
+<span class="source-line-no">044</span><span id="line-44"> * @param &lt;M&gt;</span>
+<span class="source-line-no">045</span><span id="line-45"> *          the imported module Java type</span>
+<span class="source-line-no">046</span><span id="line-46"> * @param &lt;D&gt;</span>
+<span class="source-line-no">047</span><span id="line-47"> *          the model definition Java type</span>
+<span class="source-line-no">048</span><span id="line-48"> * @param &lt;FL&gt;</span>
+<span class="source-line-no">049</span><span id="line-49"> *          the flag definition Java type</span>
+<span class="source-line-no">050</span><span id="line-50"> * @param &lt;FI&gt;</span>
+<span class="source-line-no">051</span><span id="line-51"> *          the field definition Java type</span>
+<span class="source-line-no">052</span><span id="line-52"> * @param &lt;A&gt;</span>
+<span class="source-line-no">053</span><span id="line-53"> *          the assembly definition Java type</span>
+<span class="source-line-no">054</span><span id="line-54"> */</span>
+<span class="source-line-no">055</span><span id="line-55">public interface IModuleExtended&lt;</span>
+<span class="source-line-no">056</span><span id="line-56">    M extends IModuleExtended&lt;M, D, FL, FI, A&gt;,</span>
+<span class="source-line-no">057</span><span id="line-57">    D extends IModelDefinition,</span>
+<span class="source-line-no">058</span><span id="line-58">    FL extends IFlagDefinition,</span>
+<span class="source-line-no">059</span><span id="line-59">    FI extends IFieldDefinition,</span>
+<span class="source-line-no">060</span><span id="line-60">    A extends IAssemblyDefinition&gt; extends IModule {</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  /**</span>
+<span class="source-line-no">063</span><span id="line-63">   * Get a filter that will match all definitions that are not locally defined.</span>
+<span class="source-line-no">064</span><span id="line-64">   *</span>
+<span class="source-line-no">065</span><span id="line-65">   * @param &lt;DEF&gt;</span>
+<span class="source-line-no">066</span><span id="line-66">   *          the type of definition</span>
+<span class="source-line-no">067</span><span id="line-67">   * @return a predicate implementing the filter</span>
+<span class="source-line-no">068</span><span id="line-68">   */</span>
+<span class="source-line-no">069</span><span id="line-69">  static &lt;DEF extends IDefinition&gt; Predicate&lt;DEF&gt; allNonLocalDefinitions() {</span>
+<span class="source-line-no">070</span><span id="line-70">    return definition -&gt; IDefinition.ModuleScope.PUBLIC.equals(definition.getModuleScope())</span>
+<span class="source-line-no">071</span><span id="line-71">        || ModelType.ASSEMBLY.equals(definition.getModelType())</span>
+<span class="source-line-no">072</span><span id="line-72">            &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  /**</span>
+<span class="source-line-no">076</span><span id="line-76">   * Get a filter that will match all definitions that are root assemblies.</span>
+<span class="source-line-no">077</span><span id="line-77">   *</span>
+<span class="source-line-no">078</span><span id="line-78">   * @param &lt;DEF&gt;</span>
+<span class="source-line-no">079</span><span id="line-79">   *          the type of definition</span>
+<span class="source-line-no">080</span><span id="line-80">   * @return a predicate implementing the filter</span>
+<span class="source-line-no">081</span><span id="line-81">   */</span>
+<span class="source-line-no">082</span><span id="line-82">  static &lt;DEF extends IDefinition&gt; Predicate&lt;DEF&gt; allRootAssemblyDefinitions() {</span>
+<span class="source-line-no">083</span><span id="line-83">    return definition -&gt; ModelType.ASSEMBLY.equals(definition.getModelType())</span>
+<span class="source-line-no">084</span><span id="line-84">        &amp;&amp; ((IAssemblyDefinition) definition).isRoot();</span>
+<span class="source-line-no">085</span><span id="line-85">  }</span>
+<span class="source-line-no">086</span><span id="line-86"></span>
+<span class="source-line-no">087</span><span id="line-87">  @Override</span>
+<span class="source-line-no">088</span><span id="line-88">  @NonNull</span>
+<span class="source-line-no">089</span><span id="line-89">  List&lt;? extends M&gt; getImportedModules();</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">  @Override</span>
+<span class="source-line-no">092</span><span id="line-92">  @Nullable</span>
+<span class="source-line-no">093</span><span id="line-93">  M getImportedModuleByShortName(String name);</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">  @Override</span>
+<span class="source-line-no">096</span><span id="line-96">  @NonNull</span>
+<span class="source-line-no">097</span><span id="line-97">  Collection&lt;FL&gt; getFlagDefinitions();</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">  @Override</span>
+<span class="source-line-no">100</span><span id="line-100">  @Nullable</span>
+<span class="source-line-no">101</span><span id="line-101">  FL getFlagDefinitionByName(@NonNull IEnhancedQName name);</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">  @Override</span>
+<span class="source-line-no">104</span><span id="line-104">  @NonNull</span>
+<span class="source-line-no">105</span><span id="line-105">  Collection&lt;A&gt; getAssemblyDefinitions();</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">  @Override</span>
+<span class="source-line-no">108</span><span id="line-108">  @Nullable</span>
+<span class="source-line-no">109</span><span id="line-109">  A getAssemblyDefinitionByName(@NonNull Integer name);</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">  @Override</span>
+<span class="source-line-no">112</span><span id="line-112">  @NonNull</span>
+<span class="source-line-no">113</span><span id="line-113">  Collection&lt;FI&gt; getFieldDefinitions();</span>
+<span class="source-line-no">114</span><span id="line-114"></span>
+<span class="source-line-no">115</span><span id="line-115">  @Override</span>
+<span class="source-line-no">116</span><span id="line-116">  @Nullable</span>
+<span class="source-line-no">117</span><span id="line-117">  FI getFieldDefinitionByName(@NonNull Integer name);</span>
+<span class="source-line-no">118</span><span id="line-118"></span>
+<span class="source-line-no">119</span><span id="line-119">  @Override</span>
+<span class="source-line-no">120</span><span id="line-120">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">121</span><span id="line-121">  @NonNull</span>
+<span class="source-line-no">122</span><span id="line-122">  default List&lt;D&gt; getAssemblyAndFieldDefinitions() {</span>
+<span class="source-line-no">123</span><span id="line-123">    return ObjectUtils.notNull(</span>
+<span class="source-line-no">124</span><span id="line-124">        Stream.concat(</span>
+<span class="source-line-no">125</span><span id="line-125">            (Stream&lt;D&gt;) getAssemblyDefinitions().stream(),</span>
+<span class="source-line-no">126</span><span id="line-126">            (Stream&lt;D&gt;) getFieldDefinitions().stream())</span>
+<span class="source-line-no">127</span><span id="line-127">            .collect(Collectors.toList()));</span>
+<span class="source-line-no">128</span><span id="line-128">  }</span>
+<span class="source-line-no">129</span><span id="line-129"></span>
+<span class="source-line-no">130</span><span id="line-130">  @Override</span>
+<span class="source-line-no">131</span><span id="line-131">  @Nullable</span>
+<span class="source-line-no">132</span><span id="line-132">  default A getScopedAssemblyDefinitionByName(@NonNull Integer name) {</span>
+<span class="source-line-no">133</span><span id="line-133">    // first try local/global top-level definitions from current metaschema module</span>
+<span class="source-line-no">134</span><span id="line-134">    A retval = getAssemblyDefinitionByName(name);</span>
+<span class="source-line-no">135</span><span id="line-135">    if (retval == null) {</span>
+<span class="source-line-no">136</span><span id="line-136">      // try global definitions from imported Metaschema modules</span>
+<span class="source-line-no">137</span><span id="line-137">      retval = getExportedAssemblyDefinitionByName(name);</span>
+<span class="source-line-no">138</span><span id="line-138">    }</span>
+<span class="source-line-no">139</span><span id="line-139">    return retval;</span>
+<span class="source-line-no">140</span><span id="line-140">  }</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">  @Override</span>
+<span class="source-line-no">143</span><span id="line-143">  @Nullable</span>
+<span class="source-line-no">144</span><span id="line-144">  default FI getScopedFieldDefinitionByName(@NonNull Integer name) {</span>
+<span class="source-line-no">145</span><span id="line-145">    // first try local/global top-level definitions from current metaschema module</span>
+<span class="source-line-no">146</span><span id="line-146">    FI retval = getFieldDefinitionByName(name);</span>
+<span class="source-line-no">147</span><span id="line-147">    if (retval == null) {</span>
+<span class="source-line-no">148</span><span id="line-148">      // try global definitions from imported metaschema modules</span>
+<span class="source-line-no">149</span><span id="line-149">      retval = getExportedFieldDefinitionByName(name);</span>
+<span class="source-line-no">150</span><span id="line-150">    }</span>
+<span class="source-line-no">151</span><span id="line-151">    return retval;</span>
+<span class="source-line-no">152</span><span id="line-152">  }</span>
+<span class="source-line-no">153</span><span id="line-153"></span>
+<span class="source-line-no">154</span><span id="line-154">  @Override</span>
+<span class="source-line-no">155</span><span id="line-155">  @Nullable</span>
+<span class="source-line-no">156</span><span id="line-156">  default FL getScopedFlagDefinitionByName(@NonNull IEnhancedQName name) {</span>
+<span class="source-line-no">157</span><span id="line-157">    // first try local/global top-level definitions from current metaschema module</span>
+<span class="source-line-no">158</span><span id="line-158">    FL retval = getFlagDefinitionByName(name);</span>
+<span class="source-line-no">159</span><span id="line-159">    if (retval == null) {</span>
+<span class="source-line-no">160</span><span id="line-160">      // try global definitions from imported metaschema modules</span>
+<span class="source-line-no">161</span><span id="line-161">      retval = getExportedFlagDefinitionByName(name);</span>
+<span class="source-line-no">162</span><span id="line-162">    }</span>
+<span class="source-line-no">163</span><span id="line-163">    return retval;</span>
+<span class="source-line-no">164</span><span id="line-164">  }</span>
+<span class="source-line-no">165</span><span id="line-165"></span>
+<span class="source-line-no">166</span><span id="line-166">  @Override</span>
+<span class="source-line-no">167</span><span id="line-167">  @NonNull</span>
+<span class="source-line-no">168</span><span id="line-168">  default Collection&lt;? extends A&gt; getExportedRootAssemblyDefinitions() {</span>
+<span class="source-line-no">169</span><span id="line-169">    return ObjectUtils.notNull(getExportedAssemblyDefinitions().stream()</span>
+<span class="source-line-no">170</span><span id="line-170">        .filter(allRootAssemblyDefinitions())</span>
+<span class="source-line-no">171</span><span id="line-171">        .collect(Collectors.toList()));</span>
+<span class="source-line-no">172</span><span id="line-172">  }</span>
+<span class="source-line-no">173</span><span id="line-173"></span>
+<span class="source-line-no">174</span><span id="line-174">  @Override</span>
+<span class="source-line-no">175</span><span id="line-175">  @NonNull</span>
+<span class="source-line-no">176</span><span id="line-176">  default Collection&lt;? extends A&gt; getRootAssemblyDefinitions() {</span>
+<span class="source-line-no">177</span><span id="line-177">    return ObjectUtils.notNull(getAssemblyDefinitions().stream()</span>
+<span class="source-line-no">178</span><span id="line-178">        .filter(allRootAssemblyDefinitions())</span>
+<span class="source-line-no">179</span><span id="line-179">        .collect(Collectors.toList()));</span>
+<span class="source-line-no">180</span><span id="line-180">  }</span>
+<span class="source-line-no">181</span><span id="line-181"></span>
+<span class="source-line-no">182</span><span id="line-182">  @Override</span>
+<span class="source-line-no">183</span><span id="line-183">  @NonNull</span>
+<span class="source-line-no">184</span><span id="line-184">  Collection&lt;? extends FL&gt; getExportedFlagDefinitions();</span>
+<span class="source-line-no">185</span><span id="line-185"></span>
+<span class="source-line-no">186</span><span id="line-186">  @Override</span>
+<span class="source-line-no">187</span><span id="line-187">  @Nullable</span>
+<span class="source-line-no">188</span><span id="line-188">  FL getExportedFlagDefinitionByName(IEnhancedQName name);</span>
+<span class="source-line-no">189</span><span id="line-189"></span>
+<span class="source-line-no">190</span><span id="line-190">  @Override</span>
+<span class="source-line-no">191</span><span id="line-191">  @NonNull</span>
+<span class="source-line-no">192</span><span id="line-192">  Collection&lt;? extends FI&gt; getExportedFieldDefinitions();</span>
+<span class="source-line-no">193</span><span id="line-193"></span>
+<span class="source-line-no">194</span><span id="line-194">  @Override</span>
+<span class="source-line-no">195</span><span id="line-195">  @Nullable</span>
+<span class="source-line-no">196</span><span id="line-196">  FI getExportedFieldDefinitionByName(Integer name);</span>
+<span class="source-line-no">197</span><span id="line-197"></span>
+<span class="source-line-no">198</span><span id="line-198">  @Override</span>
+<span class="source-line-no">199</span><span id="line-199">  @NonNull</span>
+<span class="source-line-no">200</span><span id="line-200">  Collection&lt;? extends A&gt; getExportedAssemblyDefinitions();</span>
+<span class="source-line-no">201</span><span id="line-201"></span>
+<span class="source-line-no">202</span><span id="line-202">  @Override</span>
+<span class="source-line-no">203</span><span id="line-203">  @Nullable</span>
+<span class="source-line-no">204</span><span id="line-204">  A getExportedAssemblyDefinitionByName(Integer name);</span>
+<span class="source-line-no">205</span><span id="line-205">}</span>
 
 
 

@@ -121,11 +121,11 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> 
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>   @BoundChoiceGroup(
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>       maxOccurs = -1,
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>       assemblies = {
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Inline Flag Definition"</span>, useName = <span class="jxr_string">"define-flag"</span>, binding = InlineDefineFlag.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Flag Reference"</span>, useName = <span class="jxr_string">"flag"</span>, binding = FlagReference.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>       },
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>       groupAs = @gov.nist.secauto.metaschema.databind.model.annotations.GroupAs(name = <span class="jxr_string">"flags"</span>, inJson = JsonGroupAsBehavior.LIST)
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>       groupAs = @gov.nist.secauto.metaschema.databind.model.annotations.GroupAs(name = <span class="jxr_string">"flags"</span>, inJson = JsonGroupAsBehavior.LIST),
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>       assemblies = {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Inline Flag Definition"</span>, useName = <span class="jxr_string">"define-flag"</span>, binding = InlineDefineFlag.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Flag Reference"</span>, useName = <span class="jxr_string">"flag"</span>, binding = FlagReference.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>       }
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>   )
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>   <strong class="jxr_keyword">private</strong> List&lt;Object&gt; _flags;
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> 

@@ -20,52 +20,100 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">012</span><span id="line-12">import inet.ipaddr.ipv6.IPv6Address;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.IPv6AddressItemImpl;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;</span>
 <span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">public interface IIPv6AddressItem extends IIPAddressItem {</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">  /**</span>
-<span class="source-line-no">017</span><span id="line-17">   * Construct a new IPv6 item using the provided {@code value}.</span>
-<span class="source-line-no">018</span><span id="line-18">   *</span>
-<span class="source-line-no">019</span><span id="line-19">   * @param value</span>
-<span class="source-line-no">020</span><span id="line-20">   *          an IPv6 value</span>
-<span class="source-line-no">021</span><span id="line-21">   * @return the new item</span>
-<span class="source-line-no">022</span><span id="line-22">   */</span>
-<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
-<span class="source-line-no">024</span><span id="line-24">  static IIPv6AddressItem valueOf(@NonNull IPv6Address value) {</span>
-<span class="source-line-no">025</span><span id="line-25">    return new IPv6AddressItemImpl(value);</span>
-<span class="source-line-no">026</span><span id="line-26">  }</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  /**</span>
-<span class="source-line-no">029</span><span id="line-29">   * Cast the provided type to this item type.</span>
-<span class="source-line-no">030</span><span id="line-30">   *</span>
-<span class="source-line-no">031</span><span id="line-31">   * @param item</span>
-<span class="source-line-no">032</span><span id="line-32">   *          the item to cast</span>
-<span class="source-line-no">033</span><span id="line-33">   * @return the original item if it is already this type, otherwise a new item</span>
-<span class="source-line-no">034</span><span id="line-34">   *         cast to this type</span>
-<span class="source-line-no">035</span><span id="line-35">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">036</span><span id="line-36">   *           if the provided {@code item} cannot be cast to this type</span>
-<span class="source-line-no">037</span><span id="line-37">   */</span>
-<span class="source-line-no">038</span><span id="line-38">  @NonNull</span>
-<span class="source-line-no">039</span><span id="line-39">  static IIPv6AddressItem cast(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">040</span><span id="line-40">    return MetaschemaDataTypeProvider.IP_V6_ADDRESS.cast(item);</span>
-<span class="source-line-no">041</span><span id="line-41">  }</span>
-<span class="source-line-no">042</span><span id="line-42"></span>
-<span class="source-line-no">043</span><span id="line-43">  @Override</span>
-<span class="source-line-no">044</span><span id="line-44">  IPv6Address getValue();</span>
-<span class="source-line-no">045</span><span id="line-45"></span>
-<span class="source-line-no">046</span><span id="line-46">  @Override</span>
-<span class="source-line-no">047</span><span id="line-47">  default IIPv6AddressItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">048</span><span id="line-48">    return cast(item);</span>
-<span class="source-line-no">049</span><span id="line-49">  }</span>
-<span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">  @Override</span>
-<span class="source-line-no">052</span><span id="line-52">  default int compareTo(IAnyAtomicItem item) {</span>
-<span class="source-line-no">053</span><span id="line-53">    return compareTo(cast(item));</span>
-<span class="source-line-no">054</span><span id="line-54">  }</span>
-<span class="source-line-no">055</span><span id="line-55">}</span>
+<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">015</span><span id="line-15">import inet.ipaddr.ipv6.IPv6Address;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">/**</span>
+<span class="source-line-no">018</span><span id="line-18"> * An atomic Metapath item containing an IPv6 address data value.</span>
+<span class="source-line-no">019</span><span id="line-19"> */</span>
+<span class="source-line-no">020</span><span id="line-20">public interface IIPv6AddressItem extends IIPAddressItem {</span>
+<span class="source-line-no">021</span><span id="line-21">  /**</span>
+<span class="source-line-no">022</span><span id="line-22">   * Get the type information for this item.</span>
+<span class="source-line-no">023</span><span id="line-23">   *</span>
+<span class="source-line-no">024</span><span id="line-24">   * @return the type information</span>
+<span class="source-line-no">025</span><span id="line-25">   */</span>
+<span class="source-line-no">026</span><span id="line-26">  @NonNull</span>
+<span class="source-line-no">027</span><span id="line-27">  static IAtomicOrUnionType&lt;IIPv6AddressItem&gt; type() {</span>
+<span class="source-line-no">028</span><span id="line-28">    return MetaschemaDataTypeProvider.IP_V6_ADDRESS.getItemType();</span>
+<span class="source-line-no">029</span><span id="line-29">  }</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">  @Override</span>
+<span class="source-line-no">032</span><span id="line-32">  default IAtomicOrUnionType&lt;IIPv6AddressItem&gt; getType() {</span>
+<span class="source-line-no">033</span><span id="line-33">    return type();</span>
+<span class="source-line-no">034</span><span id="line-34">  }</span>
+<span class="source-line-no">035</span><span id="line-35"></span>
+<span class="source-line-no">036</span><span id="line-36">  /**</span>
+<span class="source-line-no">037</span><span id="line-37">   * Construct a new IPv6 item using the provided {@code value}.</span>
+<span class="source-line-no">038</span><span id="line-38">   *</span>
+<span class="source-line-no">039</span><span id="line-39">   * @param value</span>
+<span class="source-line-no">040</span><span id="line-40">   *          an IPv6 value</span>
+<span class="source-line-no">041</span><span id="line-41">   * @return the new item</span>
+<span class="source-line-no">042</span><span id="line-42">   */</span>
+<span class="source-line-no">043</span><span id="line-43">  @NonNull</span>
+<span class="source-line-no">044</span><span id="line-44">  static IIPv6AddressItem valueOf(@NonNull String value) {</span>
+<span class="source-line-no">045</span><span id="line-45">    try {</span>
+<span class="source-line-no">046</span><span id="line-46">      return valueOf(MetaschemaDataTypeProvider.IP_V6_ADDRESS.parse(value));</span>
+<span class="source-line-no">047</span><span id="line-47">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">048</span><span id="line-48">      throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">049</span><span id="line-49">          null,</span>
+<span class="source-line-no">050</span><span id="line-50">          String.format("Invalid IPv6 address value '%s'. %s",</span>
+<span class="source-line-no">051</span><span id="line-51">              value,</span>
+<span class="source-line-no">052</span><span id="line-52">              ex.getLocalizedMessage()),</span>
+<span class="source-line-no">053</span><span id="line-53">          ex);</span>
+<span class="source-line-no">054</span><span id="line-54">    }</span>
+<span class="source-line-no">055</span><span id="line-55">  }</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">  /**</span>
+<span class="source-line-no">058</span><span id="line-58">   * Construct a new IPv6 item using the provided {@code value}.</span>
+<span class="source-line-no">059</span><span id="line-59">   *</span>
+<span class="source-line-no">060</span><span id="line-60">   * @param value</span>
+<span class="source-line-no">061</span><span id="line-61">   *          an IPv6 value</span>
+<span class="source-line-no">062</span><span id="line-62">   * @return the new item</span>
+<span class="source-line-no">063</span><span id="line-63">   */</span>
+<span class="source-line-no">064</span><span id="line-64">  @NonNull</span>
+<span class="source-line-no">065</span><span id="line-65">  static IIPv6AddressItem valueOf(@NonNull IPv6Address value) {</span>
+<span class="source-line-no">066</span><span id="line-66">    return new IPv6AddressItemImpl(value);</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  /**</span>
+<span class="source-line-no">070</span><span id="line-70">   * Cast the provided type to this item type.</span>
+<span class="source-line-no">071</span><span id="line-71">   *</span>
+<span class="source-line-no">072</span><span id="line-72">   * @param item</span>
+<span class="source-line-no">073</span><span id="line-73">   *          the item to cast</span>
+<span class="source-line-no">074</span><span id="line-74">   * @return the original item if it is already this type, otherwise a new item</span>
+<span class="source-line-no">075</span><span id="line-75">   *         cast to this type</span>
+<span class="source-line-no">076</span><span id="line-76">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">077</span><span id="line-77">   *           if the provided {@code item} cannot be cast to this type</span>
+<span class="source-line-no">078</span><span id="line-78">   */</span>
+<span class="source-line-no">079</span><span id="line-79">  @NonNull</span>
+<span class="source-line-no">080</span><span id="line-80">  static IIPv6AddressItem cast(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">081</span><span id="line-81">    try {</span>
+<span class="source-line-no">082</span><span id="line-82">      return item instanceof IIPv6AddressItem</span>
+<span class="source-line-no">083</span><span id="line-83">          ? (IIPv6AddressItem) item</span>
+<span class="source-line-no">084</span><span id="line-84">          : valueOf(item.asString());</span>
+<span class="source-line-no">085</span><span id="line-85">    } catch (IllegalStateException | InvalidTypeMetapathException ex) {</span>
+<span class="source-line-no">086</span><span id="line-86">      // asString can throw IllegalStateException exception</span>
+<span class="source-line-no">087</span><span id="line-87">      throw new InvalidValueForCastFunctionException(ex);</span>
+<span class="source-line-no">088</span><span id="line-88">    }</span>
+<span class="source-line-no">089</span><span id="line-89">  }</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">  @Override</span>
+<span class="source-line-no">092</span><span id="line-92">  IPv6Address getValue();</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">  @Override</span>
+<span class="source-line-no">095</span><span id="line-95">  default IIPv6AddressItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">096</span><span id="line-96">    return cast(item);</span>
+<span class="source-line-no">097</span><span id="line-97">  }</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">  @Override</span>
+<span class="source-line-no">100</span><span id="line-100">  default int compareTo(IAnyAtomicItem item) {</span>
+<span class="source-line-no">101</span><span id="line-101">    return compareTo(cast(item));</span>
+<span class="source-line-no">102</span><span id="line-102">  }</span>
+<span class="source-line-no">103</span><span id="line-103">}</span>
 
 
 

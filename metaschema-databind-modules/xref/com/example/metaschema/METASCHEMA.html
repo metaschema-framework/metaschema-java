@@ -146,12 +146,12 @@
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>   @BoundChoiceGroup(
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>       maxOccurs = -1,
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>       assemblies = {
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Global Assembly Definition"</span>, description = <span class="jxr_string">"In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the `model` of any assembly (another assembly type, or itself), by `assembly` reference."</span>, useName = <span class="jxr_string">"define-assembly"</span>, binding = DefineAssembly.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Global Field Definition"</span>, useName = <span class="jxr_string">"define-field"</span>, binding = DefineField.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Global Flag Definition"</span>, useName = <span class="jxr_string">"define-flag"</span>, binding = DefineFlag.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>       },
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>       groupAs = @GroupAs(name = <span class="jxr_string">"definitions"</span>, inJson = JsonGroupAsBehavior.LIST)
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>       groupAs = @GroupAs(name = <span class="jxr_string">"definitions"</span>, inJson = JsonGroupAsBehavior.LIST),
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>       assemblies = {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Global Assembly Definition"</span>, description = <span class="jxr_string">"In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the `model` of any assembly (another assembly type, or itself), by `assembly` reference."</span>, useName = <span class="jxr_string">"define-assembly"</span>, binding = DefineAssembly.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Global Field Definition"</span>, useName = <span class="jxr_string">"define-field"</span>, binding = DefineField.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>           @BoundGroupedAssembly(formalName = <span class="jxr_string">"Global Flag Definition"</span>, useName = <span class="jxr_string">"define-flag"</span>, binding = DefineFlag.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>       }
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>   )
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>   <strong class="jxr_keyword">private</strong> List&lt;Object&gt; _definitions;
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> 
@@ -440,11 +440,11 @@
 <a class="jxr_linenumber" name="L432" href="#L432">432</a> 
 <a class="jxr_linenumber" name="L433" href="#L433">433</a>     @BoundChoiceGroup(
 <a class="jxr_linenumber" name="L434" href="#L434">434</a>         maxOccurs = -1,
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>         assemblies = {
-<a class="jxr_linenumber" name="L436" href="#L436">436</a>             @BoundGroupedAssembly(formalName = <span class="jxr_string">"Inline Flag Definition"</span>, useName = <span class="jxr_string">"define-flag"</span>, binding = InlineDefineFlag.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L437" href="#L437">437</a>             @BoundGroupedAssembly(formalName = <span class="jxr_string">"Flag Reference"</span>, useName = <span class="jxr_string">"flag"</span>, binding = FlagReference.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L438" href="#L438">438</a>         },
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>         groupAs = @GroupAs(name = <span class="jxr_string">"flags"</span>, inJson = JsonGroupAsBehavior.LIST)
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>         groupAs = @GroupAs(name = <span class="jxr_string">"flags"</span>, inJson = JsonGroupAsBehavior.LIST),
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>         assemblies = {
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>             @BoundGroupedAssembly(formalName = <span class="jxr_string">"Inline Flag Definition"</span>, useName = <span class="jxr_string">"define-flag"</span>, binding = InlineDefineFlag.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>             @BoundGroupedAssembly(formalName = <span class="jxr_string">"Flag Reference"</span>, useName = <span class="jxr_string">"flag"</span>, binding = FlagReference.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>         }
 <a class="jxr_linenumber" name="L440" href="#L440">440</a>     )
 <a class="jxr_linenumber" name="L441" href="#L441">441</a>     <strong class="jxr_keyword">private</strong> List&lt;Object&gt; _flags;
 <a class="jxr_linenumber" name="L442" href="#L442">442</a> 
@@ -829,11 +829,11 @@
 <a class="jxr_linenumber" name="L821" href="#L821">821</a> 
 <a class="jxr_linenumber" name="L822" href="#L822">822</a>     @BoundChoiceGroup(
 <a class="jxr_linenumber" name="L823" href="#L823">823</a>         maxOccurs = -1,
-<a class="jxr_linenumber" name="L824" href="#L824">824</a>         assemblies = {
-<a class="jxr_linenumber" name="L825" href="#L825">825</a>             @BoundGroupedAssembly(formalName = <span class="jxr_string">"Inline Flag Definition"</span>, useName = <span class="jxr_string">"define-flag"</span>, binding = InlineDefineFlag.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L826" href="#L826">826</a>             @BoundGroupedAssembly(formalName = <span class="jxr_string">"Flag Reference"</span>, useName = <span class="jxr_string">"flag"</span>, binding = FlagReference.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L827" href="#L827">827</a>         },
-<a class="jxr_linenumber" name="L828" href="#L828">828</a>         groupAs = @GroupAs(name = <span class="jxr_string">"flags"</span>, inJson = JsonGroupAsBehavior.LIST)
+<a class="jxr_linenumber" name="L824" href="#L824">824</a>         groupAs = @GroupAs(name = <span class="jxr_string">"flags"</span>, inJson = JsonGroupAsBehavior.LIST),
+<a class="jxr_linenumber" name="L825" href="#L825">825</a>         assemblies = {
+<a class="jxr_linenumber" name="L826" href="#L826">826</a>             @BoundGroupedAssembly(formalName = <span class="jxr_string">"Inline Flag Definition"</span>, useName = <span class="jxr_string">"define-flag"</span>, binding = InlineDefineFlag.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L827" href="#L827">827</a>             @BoundGroupedAssembly(formalName = <span class="jxr_string">"Flag Reference"</span>, useName = <span class="jxr_string">"flag"</span>, binding = FlagReference.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L828" href="#L828">828</a>         }
 <a class="jxr_linenumber" name="L829" href="#L829">829</a>     )
 <a class="jxr_linenumber" name="L830" href="#L830">830</a>     <strong class="jxr_keyword">private</strong> List&lt;Object&gt; _flags;
 <a class="jxr_linenumber" name="L831" href="#L831">831</a> 

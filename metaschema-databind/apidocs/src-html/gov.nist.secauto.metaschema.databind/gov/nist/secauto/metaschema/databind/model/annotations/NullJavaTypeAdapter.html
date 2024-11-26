@@ -24,18 +24,18 @@
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
 <span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.databind.model.annotations.NullJavaTypeAdapter.VoidItem;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.List;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.type.IItemType;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.databind.model.annotations.NullJavaTypeAdapter.VoidItem;</span>
 <span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">018</span><span id="line-18">import java.util.List;</span>
 <span class="source-line-no">019</span><span id="line-19"></span>
 <span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">021</span><span id="line-21"></span>
 <span class="source-line-no">022</span><span id="line-22">/**</span>
 <span class="source-line-no">023</span><span id="line-23"> * Used to mark a Java type that has no configured adapter.</span>
 <span class="source-line-no">024</span><span id="line-24"> */</span>
-<span class="source-line-no">025</span><span id="line-25">public class NullJavaTypeAdapter</span>
+<span class="source-line-no">025</span><span id="line-25">public final class NullJavaTypeAdapter</span>
 <span class="source-line-no">026</span><span id="line-26">    extends AbstractDataTypeAdapter&lt;Void, VoidItem&gt; {</span>
 <span class="source-line-no">027</span><span id="line-27"></span>
 <span class="source-line-no">028</span><span id="line-28">  private static final String NOT_VALID = "not a valid type";</span>
@@ -46,8 +46,8 @@
 <span class="source-line-no">033</span><span id="line-33">   * @param clazz</span>
 <span class="source-line-no">034</span><span id="line-34">   *          the class to adapt</span>
 <span class="source-line-no">035</span><span id="line-35">   */</span>
-<span class="source-line-no">036</span><span id="line-36">  public NullJavaTypeAdapter(@NonNull Class&lt;Void&gt; clazz) {</span>
-<span class="source-line-no">037</span><span id="line-37">    super(clazz);</span>
+<span class="source-line-no">036</span><span id="line-36">  public NullJavaTypeAdapter() {</span>
+<span class="source-line-no">037</span><span id="line-37">    super(Void.class, VoidItem.class, VoidItem::cast);</span>
 <span class="source-line-no">038</span><span id="line-38">  }</span>
 <span class="source-line-no">039</span><span id="line-39"></span>
 <span class="source-line-no">040</span><span id="line-40">  @Override</span>
@@ -65,64 +65,71 @@
 <span class="source-line-no">052</span><span id="line-52">    throw new UnsupportedOperationException(NOT_VALID);</span>
 <span class="source-line-no">053</span><span id="line-53">  }</span>
 <span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">  @Override</span>
-<span class="source-line-no">056</span><span id="line-56">  public VoidItem newItem(Object value) {</span>
-<span class="source-line-no">057</span><span id="line-57">    throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">058</span><span id="line-58">  }</span>
-<span class="source-line-no">059</span><span id="line-59"></span>
-<span class="source-line-no">060</span><span id="line-60">  @Override</span>
-<span class="source-line-no">061</span><span id="line-61">  public List&lt;QName&gt; getNames() {</span>
-<span class="source-line-no">062</span><span id="line-62">    throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">063</span><span id="line-63">  }</span>
-<span class="source-line-no">064</span><span id="line-64"></span>
-<span class="source-line-no">065</span><span id="line-65">  @Override</span>
-<span class="source-line-no">066</span><span id="line-66">  public Class&lt;VoidItem&gt; getItemClass() {</span>
-<span class="source-line-no">067</span><span id="line-67">    throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">068</span><span id="line-68">  }</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">  /**</span>
-<span class="source-line-no">071</span><span id="line-71">   * Used to support {@link NullJavaTypeAdapter#getItemClass()}.</span>
-<span class="source-line-no">072</span><span id="line-72">   */</span>
-<span class="source-line-no">073</span><span id="line-73">  public static class VoidItem implements IAnyAtomicItem {</span>
-<span class="source-line-no">074</span><span id="line-74"></span>
-<span class="source-line-no">075</span><span id="line-75">    @Override</span>
-<span class="source-line-no">076</span><span id="line-76">    public Void getValue() {</span>
-<span class="source-line-no">077</span><span id="line-77">      throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">078</span><span id="line-78">    }</span>
-<span class="source-line-no">079</span><span id="line-79"></span>
-<span class="source-line-no">080</span><span id="line-80">    @Override</span>
-<span class="source-line-no">081</span><span id="line-81">    public @NonNull</span>
-<span class="source-line-no">082</span><span id="line-82">    IAnyAtomicItem toAtomicItem() {</span>
-<span class="source-line-no">083</span><span id="line-83">      throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">084</span><span id="line-84">    }</span>
-<span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">    @Override</span>
-<span class="source-line-no">087</span><span id="line-87">    public @NonNull</span>
-<span class="source-line-no">088</span><span id="line-88">    String asString() {</span>
-<span class="source-line-no">089</span><span id="line-89">      throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">090</span><span id="line-90">    }</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">    @Override</span>
-<span class="source-line-no">093</span><span id="line-93">    public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {</span>
-<span class="source-line-no">094</span><span id="line-94">      throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">095</span><span id="line-95">    }</span>
-<span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">    @Override</span>
-<span class="source-line-no">098</span><span id="line-98">    public IAnyAtomicItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">099</span><span id="line-99">      throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">100</span><span id="line-100">    }</span>
-<span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">    @Override</span>
-<span class="source-line-no">103</span><span id="line-103">    public int compareTo(IAnyAtomicItem item) {</span>
-<span class="source-line-no">104</span><span id="line-104">      throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">105</span><span id="line-105">    }</span>
-<span class="source-line-no">106</span><span id="line-106"></span>
-<span class="source-line-no">107</span><span id="line-107">    @Override</span>
-<span class="source-line-no">108</span><span id="line-108">    public IMapKey asMapKey() {</span>
-<span class="source-line-no">109</span><span id="line-109">      throw new UnsupportedOperationException(NOT_VALID);</span>
-<span class="source-line-no">110</span><span id="line-110">    }</span>
-<span class="source-line-no">111</span><span id="line-111">  }</span>
-<span class="source-line-no">112</span><span id="line-112">}</span>
+<span class="source-line-no">055</span><span id="line-55">  @SuppressWarnings("exports")</span>
+<span class="source-line-no">056</span><span id="line-56">  @Override</span>
+<span class="source-line-no">057</span><span id="line-57">  public VoidItem newItem(Object value) {</span>
+<span class="source-line-no">058</span><span id="line-58">    throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">059</span><span id="line-59">  }</span>
+<span class="source-line-no">060</span><span id="line-60"></span>
+<span class="source-line-no">061</span><span id="line-61">  @Override</span>
+<span class="source-line-no">062</span><span id="line-62">  public List&lt;IEnhancedQName&gt; getNames() {</span>
+<span class="source-line-no">063</span><span id="line-63">    throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">064</span><span id="line-64">  }</span>
+<span class="source-line-no">065</span><span id="line-65"></span>
+<span class="source-line-no">066</span><span id="line-66">  protected static class VoidItem implements IAnyAtomicItem {</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">    public static VoidItem cast(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">069</span><span id="line-69">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">070</span><span id="line-70">    }</span>
+<span class="source-line-no">071</span><span id="line-71"></span>
+<span class="source-line-no">072</span><span id="line-72">    @Override</span>
+<span class="source-line-no">073</span><span id="line-73">    public Void getValue() {</span>
+<span class="source-line-no">074</span><span id="line-74">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">075</span><span id="line-75">    }</span>
+<span class="source-line-no">076</span><span id="line-76"></span>
+<span class="source-line-no">077</span><span id="line-77">    @Override</span>
+<span class="source-line-no">078</span><span id="line-78">    public @NonNull</span>
+<span class="source-line-no">079</span><span id="line-79">    IAnyAtomicItem toAtomicItem() {</span>
+<span class="source-line-no">080</span><span id="line-80">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">081</span><span id="line-81">    }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">    @Override</span>
+<span class="source-line-no">084</span><span id="line-84">    public @NonNull</span>
+<span class="source-line-no">085</span><span id="line-85">    String asString() {</span>
+<span class="source-line-no">086</span><span id="line-86">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">087</span><span id="line-87">    }</span>
+<span class="source-line-no">088</span><span id="line-88"></span>
+<span class="source-line-no">089</span><span id="line-89">    @Override</span>
+<span class="source-line-no">090</span><span id="line-90">    public IDataTypeAdapter&lt;?&gt; getJavaTypeAdapter() {</span>
+<span class="source-line-no">091</span><span id="line-91">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">092</span><span id="line-92">    }</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">    @Override</span>
+<span class="source-line-no">095</span><span id="line-95">    public IAnyAtomicItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">096</span><span id="line-96">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">097</span><span id="line-97">    }</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">    @Override</span>
+<span class="source-line-no">100</span><span id="line-100">    public int compareTo(IAnyAtomicItem item) {</span>
+<span class="source-line-no">101</span><span id="line-101">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">102</span><span id="line-102">    }</span>
+<span class="source-line-no">103</span><span id="line-103"></span>
+<span class="source-line-no">104</span><span id="line-104">    @Override</span>
+<span class="source-line-no">105</span><span id="line-105">    public IMapKey asMapKey() {</span>
+<span class="source-line-no">106</span><span id="line-106">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">107</span><span id="line-107">    }</span>
+<span class="source-line-no">108</span><span id="line-108"></span>
+<span class="source-line-no">109</span><span id="line-109">    @Override</span>
+<span class="source-line-no">110</span><span id="line-110">    public IItemType getType() {</span>
+<span class="source-line-no">111</span><span id="line-111">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">112</span><span id="line-112">    }</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">    @Override</span>
+<span class="source-line-no">115</span><span id="line-115">    public String toSignature() {</span>
+<span class="source-line-no">116</span><span id="line-116">      throw new UnsupportedOperationException(NOT_VALID);</span>
+<span class="source-line-no">117</span><span id="line-117">    }</span>
+<span class="source-line-no">118</span><span id="line-118">  }</span>
+<span class="source-line-no">119</span><span id="line-119">}</span>
 
 
 

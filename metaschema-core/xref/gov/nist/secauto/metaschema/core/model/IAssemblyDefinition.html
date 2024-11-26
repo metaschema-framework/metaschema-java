@@ -15,14 +15,14 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.MetaschemaConstants;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IFeatureModelConstrained;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> javax.xml.namespace.QName;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.Nullable;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="IAssemblyDefinition" href="../../../../../../gov/nist/secauto/metaschema/core/model/IAssemblyDefinition.html#IAssemblyDefinition">IAssemblyDefinition</a>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">extends</strong> IModelDefinition, IContainerModelAssembly, IAssembly, <a name="IFeatureModelConstrained" href="../../../../../../gov/nist/secauto/metaschema/core/model/constraint/IFeatureModelConstrained.html#IFeatureModelConstrained">IFeatureModelConstrained</a> {
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>    QName MODEL_QNAME = <strong class="jxr_keyword">new</strong> QName(MetaschemaConstants.METASCHEMA_NAMESPACE, <span class="jxr_string">"model"</span>);
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>    <a name="IEnhancedQName" href="../../../../../../gov/nist/secauto/metaschema/core/qname/IEnhancedQName.html#IEnhancedQName">IEnhancedQName</a> MODEL_QNAME = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, <span class="jxr_string">"model"</span>);
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">   * Check if the assembly is a top-level root assembly.</em>
@@ -66,11 +66,11 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment">   * @return the root XML qualified name if this assembly is a top-level root, or</em>
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">   *         {@code null} otherwise</em>
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">default</strong> QName getRootXmlQName() {
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      QName retval = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">default</strong> <a name="IEnhancedQName" href="../../../../../../gov/nist/secauto/metaschema/core/qname/IEnhancedQName.html#IEnhancedQName">IEnhancedQName</a> getRootQName() {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <a name="IEnhancedQName" href="../../../../../../gov/nist/secauto/metaschema/core/qname/IEnhancedQName.html#IEnhancedQName">IEnhancedQName</a> retval = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      String rootName = getRootName();
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">if</strong> (rootName != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        retval = getContainingModule().toModelQName(rootName);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>        retval = ModuleUtils.parseModelName(getContainingModule(), rootName);
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      }
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    }

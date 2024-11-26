@@ -23,59 +23,60 @@
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import java.net.URI;</span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.List;</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.qname.EQNameFactory;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">import java.net.URI;</span>
+<span class="source-line-no">018</span><span id="line-18">import java.util.List;</span>
 <span class="source-line-no">019</span><span id="line-19"></span>
 <span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">public class UriAdapter</span>
-<span class="source-line-no">023</span><span id="line-23">    extends AbstractDataTypeAdapter&lt;URI, IAnyUriItem&gt; {</span>
-<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
-<span class="source-line-no">025</span><span id="line-25">  private static final List&lt;QName&gt; NAMES = ObjectUtils.notNull(</span>
-<span class="source-line-no">026</span><span id="line-26">      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "uri")));</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  UriAdapter() {</span>
-<span class="source-line-no">029</span><span id="line-29">    super(URI.class);</span>
-<span class="source-line-no">030</span><span id="line-30">  }</span>
-<span class="source-line-no">031</span><span id="line-31"></span>
-<span class="source-line-no">032</span><span id="line-32">  @Override</span>
-<span class="source-line-no">033</span><span id="line-33">  public List&lt;QName&gt; getNames() {</span>
-<span class="source-line-no">034</span><span id="line-34">    return NAMES;</span>
-<span class="source-line-no">035</span><span id="line-35">  }</span>
-<span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37">  @Override</span>
-<span class="source-line-no">038</span><span id="line-38">  public JsonFormatTypes getJsonRawType() {</span>
-<span class="source-line-no">039</span><span id="line-39">    return JsonFormatTypes.STRING;</span>
-<span class="source-line-no">040</span><span id="line-40">  }</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
-<span class="source-line-no">042</span><span id="line-42">  @SuppressWarnings("null")</span>
+<span class="source-line-no">022</span><span id="line-22">/**</span>
+<span class="source-line-no">023</span><span id="line-23"> * Support for the Metaschema &lt;a href=</span>
+<span class="source-line-no">024</span><span id="line-24"> * "https://pages.nist.gov/metaschema/specification/datatypes/#uri"&gt;uri&lt;/a&gt; data</span>
+<span class="source-line-no">025</span><span id="line-25"> * type.</span>
+<span class="source-line-no">026</span><span id="line-26"> */</span>
+<span class="source-line-no">027</span><span id="line-27">public class UriAdapter</span>
+<span class="source-line-no">028</span><span id="line-28">    extends AbstractDataTypeAdapter&lt;URI, IAnyUriItem&gt; {</span>
+<span class="source-line-no">029</span><span id="line-29">  @NonNull</span>
+<span class="source-line-no">030</span><span id="line-30">  private static final List&lt;IEnhancedQName&gt; NAMES = ObjectUtils.notNull(</span>
+<span class="source-line-no">031</span><span id="line-31">      List.of(</span>
+<span class="source-line-no">032</span><span id="line-32">          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "uri")));</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34">  UriAdapter() {</span>
+<span class="source-line-no">035</span><span id="line-35">    super(URI.class, IAnyUriItem.class, IAnyUriItem::cast);</span>
+<span class="source-line-no">036</span><span id="line-36">  }</span>
+<span class="source-line-no">037</span><span id="line-37"></span>
+<span class="source-line-no">038</span><span id="line-38">  @Override</span>
+<span class="source-line-no">039</span><span id="line-39">  public List&lt;IEnhancedQName&gt; getNames() {</span>
+<span class="source-line-no">040</span><span id="line-40">    return NAMES;</span>
+<span class="source-line-no">041</span><span id="line-41">  }</span>
+<span class="source-line-no">042</span><span id="line-42"></span>
 <span class="source-line-no">043</span><span id="line-43">  @Override</span>
-<span class="source-line-no">044</span><span id="line-44">  public URI parse(String value) {</span>
-<span class="source-line-no">045</span><span id="line-45">    return URI.create(value);</span>
+<span class="source-line-no">044</span><span id="line-44">  public JsonFormatTypes getJsonRawType() {</span>
+<span class="source-line-no">045</span><span id="line-45">    return JsonFormatTypes.STRING;</span>
 <span class="source-line-no">046</span><span id="line-46">  }</span>
 <span class="source-line-no">047</span><span id="line-47"></span>
-<span class="source-line-no">048</span><span id="line-48">  @Override</span>
-<span class="source-line-no">049</span><span id="line-49">  public URI copy(Object obj) {</span>
-<span class="source-line-no">050</span><span id="line-50">    // a URI is immutable</span>
-<span class="source-line-no">051</span><span id="line-51">    return (URI) obj;</span>
+<span class="source-line-no">048</span><span id="line-48">  @SuppressWarnings("null")</span>
+<span class="source-line-no">049</span><span id="line-49">  @Override</span>
+<span class="source-line-no">050</span><span id="line-50">  public URI parse(String value) {</span>
+<span class="source-line-no">051</span><span id="line-51">    return URI.create(value);</span>
 <span class="source-line-no">052</span><span id="line-52">  }</span>
 <span class="source-line-no">053</span><span id="line-53"></span>
 <span class="source-line-no">054</span><span id="line-54">  @Override</span>
-<span class="source-line-no">055</span><span id="line-55">  public Class&lt;IAnyUriItem&gt; getItemClass() {</span>
-<span class="source-line-no">056</span><span id="line-56">    return IAnyUriItem.class;</span>
-<span class="source-line-no">057</span><span id="line-57">  }</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">  @Override</span>
-<span class="source-line-no">060</span><span id="line-60">  public IAnyUriItem newItem(Object value) {</span>
-<span class="source-line-no">061</span><span id="line-61">    URI item = toValue(value);</span>
-<span class="source-line-no">062</span><span id="line-62">    return IAnyUriItem.valueOf(item);</span>
-<span class="source-line-no">063</span><span id="line-63">  }</span>
-<span class="source-line-no">064</span><span id="line-64"></span>
-<span class="source-line-no">065</span><span id="line-65">}</span>
+<span class="source-line-no">055</span><span id="line-55">  public URI copy(Object obj) {</span>
+<span class="source-line-no">056</span><span id="line-56">    // a URI is immutable</span>
+<span class="source-line-no">057</span><span id="line-57">    return (URI) obj;</span>
+<span class="source-line-no">058</span><span id="line-58">  }</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  @Override</span>
+<span class="source-line-no">061</span><span id="line-61">  public IAnyUriItem newItem(Object value) {</span>
+<span class="source-line-no">062</span><span id="line-62">    URI item = toValue(value);</span>
+<span class="source-line-no">063</span><span id="line-63">    return IAnyUriItem.valueOf(item);</span>
+<span class="source-line-no">064</span><span id="line-64">  }</span>
+<span class="source-line-no">065</span><span id="line-65"></span>
+<span class="source-line-no">066</span><span id="line-66">}</span>
 
 
 

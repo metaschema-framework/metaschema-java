@@ -151,12 +151,12 @@
 <span class="source-line-no">138</span><span id="line-138"></span>
 <span class="source-line-no">139</span><span id="line-139">  @BoundChoiceGroup(</span>
 <span class="source-line-no">140</span><span id="line-140">      maxOccurs = -1,</span>
-<span class="source-line-no">141</span><span id="line-141">      assemblies = {</span>
-<span class="source-line-no">142</span><span id="line-142">          @BoundGroupedAssembly(formalName = "Global Assembly Definition", description = "In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the `model` of any assembly (another assembly type, or itself), by `assembly` reference.", useName = "define-assembly", binding = DefineAssembly.class),</span>
-<span class="source-line-no">143</span><span id="line-143">          @BoundGroupedAssembly(formalName = "Global Field Definition", useName = "define-field", binding = DefineField.class),</span>
-<span class="source-line-no">144</span><span id="line-144">          @BoundGroupedAssembly(formalName = "Global Flag Definition", useName = "define-flag", binding = DefineFlag.class)</span>
-<span class="source-line-no">145</span><span id="line-145">      },</span>
-<span class="source-line-no">146</span><span id="line-146">      groupAs = @GroupAs(name = "definitions", inJson = JsonGroupAsBehavior.LIST)</span>
+<span class="source-line-no">141</span><span id="line-141">      groupAs = @GroupAs(name = "definitions", inJson = JsonGroupAsBehavior.LIST),</span>
+<span class="source-line-no">142</span><span id="line-142">      assemblies = {</span>
+<span class="source-line-no">143</span><span id="line-143">          @BoundGroupedAssembly(formalName = "Global Assembly Definition", description = "In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the `model` of any assembly (another assembly type, or itself), by `assembly` reference.", useName = "define-assembly", binding = DefineAssembly.class),</span>
+<span class="source-line-no">144</span><span id="line-144">          @BoundGroupedAssembly(formalName = "Global Field Definition", useName = "define-field", binding = DefineField.class),</span>
+<span class="source-line-no">145</span><span id="line-145">          @BoundGroupedAssembly(formalName = "Global Flag Definition", useName = "define-flag", binding = DefineFlag.class)</span>
+<span class="source-line-no">146</span><span id="line-146">      }</span>
 <span class="source-line-no">147</span><span id="line-147">  )</span>
 <span class="source-line-no">148</span><span id="line-148">  private List&lt;Object&gt; _definitions;</span>
 <span class="source-line-no">149</span><span id="line-149"></span>
@@ -445,11 +445,11 @@
 <span class="source-line-no">432</span><span id="line-432"></span>
 <span class="source-line-no">433</span><span id="line-433">    @BoundChoiceGroup(</span>
 <span class="source-line-no">434</span><span id="line-434">        maxOccurs = -1,</span>
-<span class="source-line-no">435</span><span id="line-435">        assemblies = {</span>
-<span class="source-line-no">436</span><span id="line-436">            @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag", binding = InlineDefineFlag.class),</span>
-<span class="source-line-no">437</span><span id="line-437">            @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)</span>
-<span class="source-line-no">438</span><span id="line-438">        },</span>
-<span class="source-line-no">439</span><span id="line-439">        groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST)</span>
+<span class="source-line-no">435</span><span id="line-435">        groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST),</span>
+<span class="source-line-no">436</span><span id="line-436">        assemblies = {</span>
+<span class="source-line-no">437</span><span id="line-437">            @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag", binding = InlineDefineFlag.class),</span>
+<span class="source-line-no">438</span><span id="line-438">            @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)</span>
+<span class="source-line-no">439</span><span id="line-439">        }</span>
 <span class="source-line-no">440</span><span id="line-440">    )</span>
 <span class="source-line-no">441</span><span id="line-441">    private List&lt;Object&gt; _flags;</span>
 <span class="source-line-no">442</span><span id="line-442"></span>
@@ -834,11 +834,11 @@
 <span class="source-line-no">821</span><span id="line-821"></span>
 <span class="source-line-no">822</span><span id="line-822">    @BoundChoiceGroup(</span>
 <span class="source-line-no">823</span><span id="line-823">        maxOccurs = -1,</span>
-<span class="source-line-no">824</span><span id="line-824">        assemblies = {</span>
-<span class="source-line-no">825</span><span id="line-825">            @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag", binding = InlineDefineFlag.class),</span>
-<span class="source-line-no">826</span><span id="line-826">            @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)</span>
-<span class="source-line-no">827</span><span id="line-827">        },</span>
-<span class="source-line-no">828</span><span id="line-828">        groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST)</span>
+<span class="source-line-no">824</span><span id="line-824">        groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST),</span>
+<span class="source-line-no">825</span><span id="line-825">        assemblies = {</span>
+<span class="source-line-no">826</span><span id="line-826">            @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag", binding = InlineDefineFlag.class),</span>
+<span class="source-line-no">827</span><span id="line-827">            @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)</span>
+<span class="source-line-no">828</span><span id="line-828">        }</span>
 <span class="source-line-no">829</span><span id="line-829">    )</span>
 <span class="source-line-no">830</span><span id="line-830">    private List&lt;Object&gt; _flags;</span>
 <span class="source-line-no">831</span><span id="line-831"></span>

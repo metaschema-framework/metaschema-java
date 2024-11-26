@@ -346,8 +346,8 @@
 <span class="source-line-no">333</span><span id="line-333">   *         bound</span>
 <span class="source-line-no">334</span><span id="line-334">   */</span>
 <span class="source-line-no">335</span><span id="line-335">  @Nullable</span>
-<span class="source-line-no">336</span><span id="line-336">  default &lt;TYPE extends IDataTypeAdapter&lt;?&gt;&gt; TYPE getJavaTypeAdapterInstance(@NonNull Class&lt;TYPE&gt; clazz) {</span>
-<span class="source-line-no">337</span><span id="line-337">    return DataTypeService.getInstance().getJavaTypeAdapterByClass(clazz);</span>
+<span class="source-line-no">336</span><span id="line-336">  default &lt;TYPE extends IDataTypeAdapter&lt;?&gt;&gt; TYPE getDataTypeAdapterInstance(@NonNull Class&lt;TYPE&gt; clazz) {</span>
+<span class="source-line-no">337</span><span id="line-337">    return DataTypeService.instance().getDataTypeByAdapterClass(clazz);</span>
 <span class="source-line-no">338</span><span id="line-338">  }</span>
 <span class="source-line-no">339</span><span id="line-339"></span>
 <span class="source-line-no">340</span><span id="line-340">  /**</span>

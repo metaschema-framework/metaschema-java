@@ -20,16 +20,16 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.IBoundObject;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.databind.io.BindingException;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.databind.model.impl.InstanceModelChoiceGroup;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.databind.model.info.IItemReadHandler;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.databind.model.info.IItemWriteHandler;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import java.io.IOException;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.lang.reflect.Field;</span>
-<span class="source-line-no">018</span><span id="line-18"></span>
-<span class="source-line-no">019</span><span id="line-19">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.IFeatureContainerModelGrouped;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.databind.io.BindingException;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.databind.model.impl.InstanceModelChoiceGroup;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.databind.model.info.IItemReadHandler;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.databind.model.info.IItemWriteHandler;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">import java.io.IOException;</span>
+<span class="source-line-no">019</span><span id="line-19">import java.lang.reflect.Field;</span>
 <span class="source-line-no">020</span><span id="line-20"></span>
 <span class="source-line-no">021</span><span id="line-21">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">022</span><span id="line-22">import edu.umd.cs.findbugs.annotations.Nullable;</span>
@@ -38,111 +38,115 @@
 <span class="source-line-no">025</span><span id="line-25"> * Represents a choice group instance bound to Java field.</span>
 <span class="source-line-no">026</span><span id="line-26"> */</span>
 <span class="source-line-no">027</span><span id="line-27">public interface IBoundInstanceModelChoiceGroup</span>
-<span class="source-line-no">028</span><span id="line-28">    extends IBoundInstanceModel&lt;IBoundObject&gt;, IBoundContainerModelChoiceGroup, IChoiceGroupInstance {</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">  /**</span>
-<span class="source-line-no">031</span><span id="line-31">   * Create a new bound choice group instance.</span>
-<span class="source-line-no">032</span><span id="line-32">   *</span>
-<span class="source-line-no">033</span><span id="line-33">   * @param field</span>
-<span class="source-line-no">034</span><span id="line-34">   *          the Java field the instance is bound to</span>
-<span class="source-line-no">035</span><span id="line-35">   * @param containingDefinition</span>
-<span class="source-line-no">036</span><span id="line-36">   *          the definition containing the instance</span>
-<span class="source-line-no">037</span><span id="line-37">   * @return the new instance</span>
-<span class="source-line-no">038</span><span id="line-38">   */</span>
-<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
-<span class="source-line-no">040</span><span id="line-40">  static IBoundInstanceModelChoiceGroup newInstance(</span>
-<span class="source-line-no">041</span><span id="line-41">      @NonNull Field field,</span>
-<span class="source-line-no">042</span><span id="line-42">      @NonNull IBoundDefinitionModelAssembly containingDefinition) {</span>
-<span class="source-line-no">043</span><span id="line-43">    return InstanceModelChoiceGroup.newInstance(field, containingDefinition);</span>
-<span class="source-line-no">044</span><span id="line-44">  }</span>
-<span class="source-line-no">045</span><span id="line-45"></span>
-<span class="source-line-no">046</span><span id="line-46">  @Override</span>
-<span class="source-line-no">047</span><span id="line-47">  default String getJsonName() {</span>
-<span class="source-line-no">048</span><span id="line-48">    // always the group-as name</span>
-<span class="source-line-no">049</span><span id="line-49">    return ObjectUtils.requireNonNull(getGroupAsName());</span>
-<span class="source-line-no">050</span><span id="line-50">  }</span>
-<span class="source-line-no">051</span><span id="line-51"></span>
-<span class="source-line-no">052</span><span id="line-52">  @Override</span>
-<span class="source-line-no">053</span><span id="line-53">  @NonNull</span>
-<span class="source-line-no">054</span><span id="line-54">  IBoundDefinitionModelAssembly getOwningDefinition();</span>
+<span class="source-line-no">028</span><span id="line-28">    extends IBoundInstanceModel&lt;IBoundObject&gt;, IFeatureContainerModelGrouped&lt;</span>
+<span class="source-line-no">029</span><span id="line-29">        IBoundInstanceModelGroupedNamed,</span>
+<span class="source-line-no">030</span><span id="line-30">        IBoundInstanceModelGroupedField,</span>
+<span class="source-line-no">031</span><span id="line-31">        IBoundInstanceModelGroupedAssembly&gt;,</span>
+<span class="source-line-no">032</span><span id="line-32">    IChoiceGroupInstance {</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34">  /**</span>
+<span class="source-line-no">035</span><span id="line-35">   * Create a new bound choice group instance.</span>
+<span class="source-line-no">036</span><span id="line-36">   *</span>
+<span class="source-line-no">037</span><span id="line-37">   * @param field</span>
+<span class="source-line-no">038</span><span id="line-38">   *          the Java field the instance is bound to</span>
+<span class="source-line-no">039</span><span id="line-39">   * @param containingDefinition</span>
+<span class="source-line-no">040</span><span id="line-40">   *          the definition containing the instance</span>
+<span class="source-line-no">041</span><span id="line-41">   * @return the new instance</span>
+<span class="source-line-no">042</span><span id="line-42">   */</span>
+<span class="source-line-no">043</span><span id="line-43">  @NonNull</span>
+<span class="source-line-no">044</span><span id="line-44">  static IBoundInstanceModelChoiceGroup newInstance(</span>
+<span class="source-line-no">045</span><span id="line-45">      @NonNull Field field,</span>
+<span class="source-line-no">046</span><span id="line-46">      @NonNull IBoundDefinitionModelAssembly containingDefinition) {</span>
+<span class="source-line-no">047</span><span id="line-47">    return InstanceModelChoiceGroup.newInstance(field, containingDefinition);</span>
+<span class="source-line-no">048</span><span id="line-48">  }</span>
+<span class="source-line-no">049</span><span id="line-49"></span>
+<span class="source-line-no">050</span><span id="line-50">  @Override</span>
+<span class="source-line-no">051</span><span id="line-51">  default String getJsonName() {</span>
+<span class="source-line-no">052</span><span id="line-52">    // always the group-as name</span>
+<span class="source-line-no">053</span><span id="line-53">    return ObjectUtils.requireNonNull(getGroupAsName());</span>
+<span class="source-line-no">054</span><span id="line-54">  }</span>
 <span class="source-line-no">055</span><span id="line-55"></span>
 <span class="source-line-no">056</span><span id="line-56">  @Override</span>
-<span class="source-line-no">057</span><span id="line-57">  default IBoundDefinitionModelAssembly getContainingDefinition() {</span>
-<span class="source-line-no">058</span><span id="line-58">    return getOwningDefinition();</span>
-<span class="source-line-no">059</span><span id="line-59">  }</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  /**</span>
-<span class="source-line-no">062</span><span id="line-62">   * Get the bound grouped model instance associated with the provided Java class.</span>
-<span class="source-line-no">063</span><span id="line-63">   *</span>
-<span class="source-line-no">064</span><span id="line-64">   * @param clazz</span>
-<span class="source-line-no">065</span><span id="line-65">   *          the Java class which should be bound to a grouped model instance</span>
-<span class="source-line-no">066</span><span id="line-66">   * @return the grouped model instance or {code null} if no instance was bound to</span>
-<span class="source-line-no">067</span><span id="line-67">   *         the requested class</span>
-<span class="source-line-no">068</span><span id="line-68">   */</span>
-<span class="source-line-no">069</span><span id="line-69">  @Nullable</span>
-<span class="source-line-no">070</span><span id="line-70">  IBoundInstanceModelGroupedNamed getGroupedModelInstance(@NonNull Class&lt;?&gt; clazz);</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">  /**</span>
-<span class="source-line-no">073</span><span id="line-73">   * Get the bound grouped model instance associated with the provided XML</span>
-<span class="source-line-no">074</span><span id="line-74">   * qualified name.</span>
-<span class="source-line-no">075</span><span id="line-75">   *</span>
-<span class="source-line-no">076</span><span id="line-76">   * @param name</span>
-<span class="source-line-no">077</span><span id="line-77">   *          the XML qualified name which should be bound to a grouped model</span>
-<span class="source-line-no">078</span><span id="line-78">   *          instance</span>
-<span class="source-line-no">079</span><span id="line-79">   * @return the grouped model instance or {code null} if no instance was bound to</span>
-<span class="source-line-no">080</span><span id="line-80">   *         the requested XML qualified name</span>
-<span class="source-line-no">081</span><span id="line-81">   */</span>
-<span class="source-line-no">082</span><span id="line-82">  @Nullable</span>
-<span class="source-line-no">083</span><span id="line-83">  IBoundInstanceModelGroupedNamed getGroupedModelInstance(@NonNull QName name);</span>
-<span class="source-line-no">084</span><span id="line-84"></span>
-<span class="source-line-no">085</span><span id="line-85">  /**</span>
-<span class="source-line-no">086</span><span id="line-86">   * Get the bound grouped model instance associated with the provided JSON</span>
-<span class="source-line-no">087</span><span id="line-87">   * discriminator value.</span>
-<span class="source-line-no">088</span><span id="line-88">   *</span>
-<span class="source-line-no">089</span><span id="line-89">   * @param discriminator</span>
-<span class="source-line-no">090</span><span id="line-90">   *          the JSON discriminator value which should be bound to a grouped</span>
-<span class="source-line-no">091</span><span id="line-91">   *          model instance</span>
-<span class="source-line-no">092</span><span id="line-92">   * @return the grouped model instance or {code null} if no instance was bound to</span>
-<span class="source-line-no">093</span><span id="line-93">   *         the requested JSON discriminator value</span>
-<span class="source-line-no">094</span><span id="line-94">   */</span>
-<span class="source-line-no">095</span><span id="line-95">  @Nullable</span>
-<span class="source-line-no">096</span><span id="line-96">  IBoundInstanceModelGroupedNamed getGroupedModelInstance(@NonNull String discriminator);</span>
-<span class="source-line-no">097</span><span id="line-97"></span>
-<span class="source-line-no">098</span><span id="line-98">  /**</span>
-<span class="source-line-no">099</span><span id="line-99">   * Get the bound grouped model instance associated with the provided item.</span>
-<span class="source-line-no">100</span><span id="line-100">   *</span>
-<span class="source-line-no">101</span><span id="line-101">   * @param item</span>
-<span class="source-line-no">102</span><span id="line-102">   *          the item which should be bound to a grouped model instance</span>
-<span class="source-line-no">103</span><span id="line-103">   * @return the grouped model instance or {code null} if no instance was bound to</span>
-<span class="source-line-no">104</span><span id="line-104">   *         the requested item</span>
-<span class="source-line-no">105</span><span id="line-105">   */</span>
-<span class="source-line-no">106</span><span id="line-106">  @Override</span>
-<span class="source-line-no">107</span><span id="line-107">  @NonNull</span>
-<span class="source-line-no">108</span><span id="line-108">  default IBoundInstanceModelGroupedNamed getItemInstance(Object item) {</span>
-<span class="source-line-no">109</span><span id="line-109">    return ObjectUtils.requireNonNull(getGroupedModelInstance(item.getClass()));</span>
-<span class="source-line-no">110</span><span id="line-110">  }</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  @Override</span>
-<span class="source-line-no">113</span><span id="line-113">  default IBoundObject readItem(IBoundObject parent, IItemReadHandler handler) throws IOException {</span>
-<span class="source-line-no">114</span><span id="line-114">    return handler.readChoiceGroupItem(ObjectUtils.requireNonNull(parent, "parent"), this);</span>
-<span class="source-line-no">115</span><span id="line-115">  }</span>
-<span class="source-line-no">116</span><span id="line-116"></span>
-<span class="source-line-no">117</span><span id="line-117">  @Override</span>
-<span class="source-line-no">118</span><span id="line-118">  default void writeItem(IBoundObject item, IItemWriteHandler handler) throws IOException {</span>
-<span class="source-line-no">119</span><span id="line-119">    handler.writeChoiceGroupItem(item, this);</span>
-<span class="source-line-no">120</span><span id="line-120">  }</span>
-<span class="source-line-no">121</span><span id="line-121"></span>
-<span class="source-line-no">122</span><span id="line-122">  @Override</span>
-<span class="source-line-no">123</span><span id="line-123">  default IBoundObject deepCopyItem(IBoundObject item, IBoundObject parentInstance) throws BindingException {</span>
-<span class="source-line-no">124</span><span id="line-124">    IBoundInstanceModelGroupedNamed itemInstance = getItemInstance(item);</span>
-<span class="source-line-no">125</span><span id="line-125">    return itemInstance.deepCopyItem(item, parentInstance);</span>
-<span class="source-line-no">126</span><span id="line-126">  }</span>
-<span class="source-line-no">127</span><span id="line-127"></span>
-<span class="source-line-no">128</span><span id="line-128">  @Override</span>
-<span class="source-line-no">129</span><span id="line-129">  default boolean canHandleXmlQName(@NonNull QName qname) {</span>
-<span class="source-line-no">130</span><span id="line-130">    return getGroupedModelInstance(qname) != null;</span>
-<span class="source-line-no">131</span><span id="line-131">  }</span>
-<span class="source-line-no">132</span><span id="line-132">}</span>
+<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
+<span class="source-line-no">058</span><span id="line-58">  IBoundDefinitionModelAssembly getOwningDefinition();</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  @Override</span>
+<span class="source-line-no">061</span><span id="line-61">  default IBoundDefinitionModelAssembly getContainingDefinition() {</span>
+<span class="source-line-no">062</span><span id="line-62">    return getOwningDefinition();</span>
+<span class="source-line-no">063</span><span id="line-63">  }</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">  /**</span>
+<span class="source-line-no">066</span><span id="line-66">   * Get the bound grouped model instance associated with the provided Java class.</span>
+<span class="source-line-no">067</span><span id="line-67">   *</span>
+<span class="source-line-no">068</span><span id="line-68">   * @param clazz</span>
+<span class="source-line-no">069</span><span id="line-69">   *          the Java class which should be bound to a grouped model instance</span>
+<span class="source-line-no">070</span><span id="line-70">   * @return the grouped model instance or {code null} if no instance was bound to</span>
+<span class="source-line-no">071</span><span id="line-71">   *         the requested class</span>
+<span class="source-line-no">072</span><span id="line-72">   */</span>
+<span class="source-line-no">073</span><span id="line-73">  @Nullable</span>
+<span class="source-line-no">074</span><span id="line-74">  IBoundInstanceModelGroupedNamed getGroupedModelInstance(@NonNull Class&lt;?&gt; clazz);</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">  /**</span>
+<span class="source-line-no">077</span><span id="line-77">   * Get the bound grouped model instance associated with the provided XML</span>
+<span class="source-line-no">078</span><span id="line-78">   * qualified name.</span>
+<span class="source-line-no">079</span><span id="line-79">   *</span>
+<span class="source-line-no">080</span><span id="line-80">   * @param name</span>
+<span class="source-line-no">081</span><span id="line-81">   *          the XML qualified name which should be bound to a grouped model</span>
+<span class="source-line-no">082</span><span id="line-82">   *          instance</span>
+<span class="source-line-no">083</span><span id="line-83">   * @return the grouped model instance or {code null} if no instance was bound to</span>
+<span class="source-line-no">084</span><span id="line-84">   *         the requested XML qualified name</span>
+<span class="source-line-no">085</span><span id="line-85">   */</span>
+<span class="source-line-no">086</span><span id="line-86">  @Nullable</span>
+<span class="source-line-no">087</span><span id="line-87">  IBoundInstanceModelGroupedNamed getGroupedModelInstance(@NonNull IEnhancedQName name);</span>
+<span class="source-line-no">088</span><span id="line-88"></span>
+<span class="source-line-no">089</span><span id="line-89">  /**</span>
+<span class="source-line-no">090</span><span id="line-90">   * Get the bound grouped model instance associated with the provided JSON</span>
+<span class="source-line-no">091</span><span id="line-91">   * discriminator value.</span>
+<span class="source-line-no">092</span><span id="line-92">   *</span>
+<span class="source-line-no">093</span><span id="line-93">   * @param discriminator</span>
+<span class="source-line-no">094</span><span id="line-94">   *          the JSON discriminator value which should be bound to a grouped</span>
+<span class="source-line-no">095</span><span id="line-95">   *          model instance</span>
+<span class="source-line-no">096</span><span id="line-96">   * @return the grouped model instance or {code null} if no instance was bound to</span>
+<span class="source-line-no">097</span><span id="line-97">   *         the requested JSON discriminator value</span>
+<span class="source-line-no">098</span><span id="line-98">   */</span>
+<span class="source-line-no">099</span><span id="line-99">  @Nullable</span>
+<span class="source-line-no">100</span><span id="line-100">  IBoundInstanceModelGroupedNamed getGroupedModelInstance(@NonNull String discriminator);</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">  /**</span>
+<span class="source-line-no">103</span><span id="line-103">   * Get the bound grouped model instance associated with the provided item.</span>
+<span class="source-line-no">104</span><span id="line-104">   *</span>
+<span class="source-line-no">105</span><span id="line-105">   * @param item</span>
+<span class="source-line-no">106</span><span id="line-106">   *          the item which should be bound to a grouped model instance</span>
+<span class="source-line-no">107</span><span id="line-107">   * @return the grouped model instance or {code null} if no instance was bound to</span>
+<span class="source-line-no">108</span><span id="line-108">   *         the requested item</span>
+<span class="source-line-no">109</span><span id="line-109">   */</span>
+<span class="source-line-no">110</span><span id="line-110">  @Override</span>
+<span class="source-line-no">111</span><span id="line-111">  @NonNull</span>
+<span class="source-line-no">112</span><span id="line-112">  default IBoundInstanceModelGroupedNamed getItemInstance(Object item) {</span>
+<span class="source-line-no">113</span><span id="line-113">    return ObjectUtils.requireNonNull(getGroupedModelInstance(item.getClass()));</span>
+<span class="source-line-no">114</span><span id="line-114">  }</span>
+<span class="source-line-no">115</span><span id="line-115"></span>
+<span class="source-line-no">116</span><span id="line-116">  @Override</span>
+<span class="source-line-no">117</span><span id="line-117">  default IBoundObject readItem(IBoundObject parent, IItemReadHandler handler) throws IOException {</span>
+<span class="source-line-no">118</span><span id="line-118">    return handler.readChoiceGroupItem(ObjectUtils.requireNonNull(parent, "parent"), this);</span>
+<span class="source-line-no">119</span><span id="line-119">  }</span>
+<span class="source-line-no">120</span><span id="line-120"></span>
+<span class="source-line-no">121</span><span id="line-121">  @Override</span>
+<span class="source-line-no">122</span><span id="line-122">  default void writeItem(IBoundObject item, IItemWriteHandler handler) throws IOException {</span>
+<span class="source-line-no">123</span><span id="line-123">    handler.writeChoiceGroupItem(item, this);</span>
+<span class="source-line-no">124</span><span id="line-124">  }</span>
+<span class="source-line-no">125</span><span id="line-125"></span>
+<span class="source-line-no">126</span><span id="line-126">  @Override</span>
+<span class="source-line-no">127</span><span id="line-127">  default IBoundObject deepCopyItem(IBoundObject item, IBoundObject parentInstance) throws BindingException {</span>
+<span class="source-line-no">128</span><span id="line-128">    IBoundInstanceModelGroupedNamed itemInstance = getItemInstance(item);</span>
+<span class="source-line-no">129</span><span id="line-129">    return itemInstance.deepCopyItem(item, parentInstance);</span>
+<span class="source-line-no">130</span><span id="line-130">  }</span>
+<span class="source-line-no">131</span><span id="line-131"></span>
+<span class="source-line-no">132</span><span id="line-132">  @Override</span>
+<span class="source-line-no">133</span><span id="line-133">  default boolean canHandleXmlQName(@NonNull IEnhancedQName qname) {</span>
+<span class="source-line-no">134</span><span id="line-134">    return getGroupedModelInstance(qname) != null;</span>
+<span class="source-line-no">135</span><span id="line-135">  }</span>
+<span class="source-line-no">136</span><span id="line-136">}</span>
 
 
 

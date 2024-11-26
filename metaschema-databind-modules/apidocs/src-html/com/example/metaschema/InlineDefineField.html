@@ -166,11 +166,11 @@
 <span class="source-line-no">153</span><span id="line-153"></span>
 <span class="source-line-no">154</span><span id="line-154">  @BoundChoiceGroup(</span>
 <span class="source-line-no">155</span><span id="line-155">      maxOccurs = -1,</span>
-<span class="source-line-no">156</span><span id="line-156">      assemblies = {</span>
-<span class="source-line-no">157</span><span id="line-157">          @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag", binding = InlineDefineFlag.class),</span>
-<span class="source-line-no">158</span><span id="line-158">          @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)</span>
-<span class="source-line-no">159</span><span id="line-159">      },</span>
-<span class="source-line-no">160</span><span id="line-160">      groupAs = @gov.nist.secauto.metaschema.databind.model.annotations.GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST)</span>
+<span class="source-line-no">156</span><span id="line-156">      groupAs = @gov.nist.secauto.metaschema.databind.model.annotations.GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST),</span>
+<span class="source-line-no">157</span><span id="line-157">      assemblies = {</span>
+<span class="source-line-no">158</span><span id="line-158">          @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag", binding = InlineDefineFlag.class),</span>
+<span class="source-line-no">159</span><span id="line-159">          @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)</span>
+<span class="source-line-no">160</span><span id="line-160">      }</span>
 <span class="source-line-no">161</span><span id="line-161">  )</span>
 <span class="source-line-no">162</span><span id="line-162">  private List&lt;Object&gt; _flags;</span>
 <span class="source-line-no">163</span><span id="line-163"></span>

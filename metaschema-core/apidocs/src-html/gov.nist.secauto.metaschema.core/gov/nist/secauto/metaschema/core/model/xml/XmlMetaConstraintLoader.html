@@ -55,194 +55,210 @@
 <span class="source-line-no">042</span><span id="line-42">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">043</span><span id="line-43">import edu.umd.cs.findbugs.annotations.Nullable;</span>
 <span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
-<span class="source-line-no">046</span><span id="line-46">public class XmlMetaConstraintLoader</span>
-<span class="source-line-no">047</span><span id="line-47">    extends AbstractLoader&lt;List&lt;IConstraintSet&gt;&gt;</span>
-<span class="source-line-no">048</span><span id="line-48">    implements IConstraintLoader {</span>
-<span class="source-line-no">049</span><span id="line-49"></span>
-<span class="source-line-no">050</span><span id="line-50">  @Override</span>
-<span class="source-line-no">051</span><span id="line-51">  protected List&lt;IConstraintSet&gt; parseResource(URI resource, Deque&lt;URI&gt; visitedResources) throws IOException {</span>
+<span class="source-line-no">045</span><span id="line-45">/**</span>
+<span class="source-line-no">046</span><span id="line-46"> * Used to load a set of external constraints from an XML-based resource.</span>
+<span class="source-line-no">047</span><span id="line-47"> */</span>
+<span class="source-line-no">048</span><span id="line-48">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
+<span class="source-line-no">049</span><span id="line-49">public class XmlMetaConstraintLoader</span>
+<span class="source-line-no">050</span><span id="line-50">    extends AbstractLoader&lt;List&lt;IConstraintSet&gt;&gt;</span>
+<span class="source-line-no">051</span><span id="line-51">    implements IConstraintLoader {</span>
 <span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53">    // parse this metaschema</span>
-<span class="source-line-no">054</span><span id="line-54">    MetaschemaMetaConstraintsDocument xmlObject = parseConstraintSet(resource);</span>
+<span class="source-line-no">053</span><span id="line-53">  @Override</span>
+<span class="source-line-no">054</span><span id="line-54">  protected List&lt;IConstraintSet&gt; parseResource(URI resource, Deque&lt;URI&gt; visitedResources) throws IOException {</span>
 <span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">    MetaschemaMetaConstraintsDocument.MetaschemaMetaConstraints constraints = xmlObject.getMetaschemaMetaConstraints();</span>
-<span class="source-line-no">057</span><span id="line-57"></span>
-<span class="source-line-no">058</span><span id="line-58">    StaticContext.Builder builder = StaticContext.builder()</span>
-<span class="source-line-no">059</span><span id="line-59">        .baseUri(resource);</span>
+<span class="source-line-no">056</span><span id="line-56">    // parse this metaschema</span>
+<span class="source-line-no">057</span><span id="line-57">    MetaschemaMetaConstraintsDocument xmlObject = parseConstraintSet(resource);</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">    MetaschemaMetaConstraintsDocument.MetaschemaMetaConstraints constraints = xmlObject.getMetaschemaMetaConstraints();</span>
 <span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">    constraints.getNamespaceBindingList().stream()</span>
-<span class="source-line-no">062</span><span id="line-62">        .forEach(binding -&gt; builder.namespace(</span>
-<span class="source-line-no">063</span><span id="line-63">            ObjectUtils.notNull(binding.getPrefix()), ObjectUtils.notNull(binding.getUri())));</span>
-<span class="source-line-no">064</span><span id="line-64">    builder.useWildcardWhenNamespaceNotDefaulted(true);</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">    ISource source = ISource.externalSource(builder.build());</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">    List&lt;ITargetedConstraints&gt; targetedConstraints = ObjectUtils.notNull(constraints.getContextList().stream()</span>
-<span class="source-line-no">069</span><span id="line-69">        .flatMap(context -&gt; parseContext(ObjectUtils.notNull(context), null, source).getTargetedConstraints().stream())</span>
-<span class="source-line-no">070</span><span id="line-70">        .collect(Collectors.toList()));</span>
-<span class="source-line-no">071</span><span id="line-71">    return CollectionUtil.singletonList(new MetaConstraintSet(targetedConstraints));</span>
-<span class="source-line-no">072</span><span id="line-72">  }</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">  private Context parseContext(</span>
-<span class="source-line-no">075</span><span id="line-75">      @NonNull ModelContextType contextObj,</span>
-<span class="source-line-no">076</span><span id="line-76">      @Nullable Context parent,</span>
-<span class="source-line-no">077</span><span id="line-77">      @NonNull ISource source) {</span>
-<span class="source-line-no">078</span><span id="line-78"></span>
-<span class="source-line-no">079</span><span id="line-79">    List&lt;String&gt; metapaths;</span>
-<span class="source-line-no">080</span><span id="line-80">    if (parent == null) {</span>
-<span class="source-line-no">081</span><span id="line-81">      metapaths = ObjectUtils.notNull(contextObj.getMetapathList().stream()</span>
-<span class="source-line-no">082</span><span id="line-82">          .map(MetaschemaMetapathReferenceType::getTarget)</span>
-<span class="source-line-no">083</span><span id="line-83">          .collect(Collectors.toList()));</span>
-<span class="source-line-no">084</span><span id="line-84">    } else {</span>
-<span class="source-line-no">085</span><span id="line-85">      List&lt;String&gt; parentMetapaths = parent.getMetapaths().stream()</span>
-<span class="source-line-no">086</span><span id="line-86">          .collect(Collectors.toList());</span>
-<span class="source-line-no">087</span><span id="line-87">      metapaths = ObjectUtils.notNull(contextObj.getMetapathList().stream()</span>
-<span class="source-line-no">088</span><span id="line-88">          .map(MetaschemaMetapathReferenceType::getTarget)</span>
-<span class="source-line-no">089</span><span id="line-89">          .flatMap(childPath -&gt; {</span>
-<span class="source-line-no">090</span><span id="line-90">            return parentMetapaths.stream()</span>
-<span class="source-line-no">091</span><span id="line-91">                .map(parentPath -&gt; parentPath + '/' + childPath);</span>
-<span class="source-line-no">092</span><span id="line-92">          })</span>
-<span class="source-line-no">093</span><span id="line-93">          .collect(Collectors.toList()));</span>
-<span class="source-line-no">094</span><span id="line-94">    }</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">    IModelConstrained constraints = new AssemblyConstraintSet();</span>
-<span class="source-line-no">097</span><span id="line-97">    ConstraintXmlSupport.parse(constraints, ObjectUtils.notNull(contextObj.getConstraints()), source);</span>
-<span class="source-line-no">098</span><span id="line-98">    Context context = new Context(metapaths, constraints);</span>
-<span class="source-line-no">099</span><span id="line-99"></span>
-<span class="source-line-no">100</span><span id="line-100">    List&lt;Context&gt; childContexts = contextObj.getContextList().stream()</span>
-<span class="source-line-no">101</span><span id="line-101">        .map(childObj -&gt; parseContext(ObjectUtils.notNull(childObj), context, source))</span>
-<span class="source-line-no">102</span><span id="line-102">        .collect(Collectors.toList());</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">    context.addAll(childContexts);</span>
-<span class="source-line-no">105</span><span id="line-105"></span>
-<span class="source-line-no">106</span><span id="line-106">    return context;</span>
-<span class="source-line-no">107</span><span id="line-107">  }</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">  /**</span>
-<span class="source-line-no">110</span><span id="line-110">   * Parse the provided XML resource as a Metaschema constraints.</span>
-<span class="source-line-no">111</span><span id="line-111">   *</span>
-<span class="source-line-no">112</span><span id="line-112">   * @param resource</span>
-<span class="source-line-no">113</span><span id="line-113">   *          the resource to parse</span>
-<span class="source-line-no">114</span><span id="line-114">   * @return the XMLBeans representation of the Metaschema contraints</span>
-<span class="source-line-no">115</span><span id="line-115">   * @throws IOException</span>
-<span class="source-line-no">116</span><span id="line-116">   *           if a parsing error occurred</span>
-<span class="source-line-no">117</span><span id="line-117">   */</span>
-<span class="source-line-no">118</span><span id="line-118">  @NonNull</span>
-<span class="source-line-no">119</span><span id="line-119">  protected MetaschemaMetaConstraintsDocument parseConstraintSet(@NonNull URI resource) throws IOException {</span>
-<span class="source-line-no">120</span><span id="line-120">    try {</span>
-<span class="source-line-no">121</span><span id="line-121">      XmlOptions options = new XmlOptions();</span>
-<span class="source-line-no">122</span><span id="line-122">      options.setBaseURI(resource);</span>
-<span class="source-line-no">123</span><span id="line-123">      options.setLoadLineNumbers();</span>
-<span class="source-line-no">124</span><span id="line-124">      return ObjectUtils.notNull(MetaschemaMetaConstraintsDocument.Factory.parse(resource.toURL(),</span>
-<span class="source-line-no">125</span><span id="line-125">          options));</span>
-<span class="source-line-no">126</span><span id="line-126">    } catch (XmlException ex) {</span>
-<span class="source-line-no">127</span><span id="line-127">      throw new IOException(ex);</span>
-<span class="source-line-no">128</span><span id="line-128">    }</span>
-<span class="source-line-no">129</span><span id="line-129">  }</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">  private static class Context {</span>
-<span class="source-line-no">132</span><span id="line-132">    @NonNull</span>
-<span class="source-line-no">133</span><span id="line-133">    private final List&lt;String&gt; metapaths;</span>
-<span class="source-line-no">134</span><span id="line-134">    @NonNull</span>
-<span class="source-line-no">135</span><span id="line-135">    private final IModelConstrained constraints;</span>
-<span class="source-line-no">136</span><span id="line-136">    @NonNull</span>
-<span class="source-line-no">137</span><span id="line-137">    private final List&lt;Context&gt; childContexts = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">    public Context(</span>
-<span class="source-line-no">140</span><span id="line-140">        @NonNull List&lt;String&gt; metapaths,</span>
-<span class="source-line-no">141</span><span id="line-141">        @NonNull IModelConstrained constraints) {</span>
-<span class="source-line-no">142</span><span id="line-142">      this.metapaths = metapaths;</span>
-<span class="source-line-no">143</span><span id="line-143">      this.constraints = constraints;</span>
-<span class="source-line-no">144</span><span id="line-144">    }</span>
-<span class="source-line-no">145</span><span id="line-145"></span>
-<span class="source-line-no">146</span><span id="line-146">    public List&lt;ITargetedConstraints&gt; getTargetedConstraints() {</span>
-<span class="source-line-no">147</span><span id="line-147">      return Stream.concat(</span>
-<span class="source-line-no">148</span><span id="line-148">          getMetapaths().stream()</span>
-<span class="source-line-no">149</span><span id="line-149">              .map(metapath -&gt; new MetaTargetedContraints(ObjectUtils.notNull(metapath), constraints)),</span>
-<span class="source-line-no">150</span><span id="line-150">          childContexts.stream()</span>
-<span class="source-line-no">151</span><span id="line-151">              .flatMap(child -&gt; child.getTargetedConstraints().stream()))</span>
-<span class="source-line-no">152</span><span id="line-152">          .collect(Collectors.toList());</span>
-<span class="source-line-no">153</span><span id="line-153">    }</span>
-<span class="source-line-no">154</span><span id="line-154"></span>
-<span class="source-line-no">155</span><span id="line-155">    public void addAll(Collection&lt;Context&gt; childContexts) {</span>
-<span class="source-line-no">156</span><span id="line-156">      childContexts.addAll(childContexts);</span>
-<span class="source-line-no">157</span><span id="line-157">    }</span>
-<span class="source-line-no">158</span><span id="line-158"></span>
-<span class="source-line-no">159</span><span id="line-159">    public List&lt;String&gt; getMetapaths() {</span>
-<span class="source-line-no">160</span><span id="line-160">      return metapaths;</span>
-<span class="source-line-no">161</span><span id="line-161">    }</span>
-<span class="source-line-no">162</span><span id="line-162">  }</span>
+<span class="source-line-no">061</span><span id="line-61">    StaticContext.Builder builder = StaticContext.builder()</span>
+<span class="source-line-no">062</span><span id="line-62">        .baseUri(resource);</span>
+<span class="source-line-no">063</span><span id="line-63"></span>
+<span class="source-line-no">064</span><span id="line-64">    constraints.getNamespaceBindingList().stream()</span>
+<span class="source-line-no">065</span><span id="line-65">        .forEach(binding -&gt; builder.namespace(</span>
+<span class="source-line-no">066</span><span id="line-66">            ObjectUtils.notNull(binding.getPrefix()), ObjectUtils.notNull(binding.getUri())));</span>
+<span class="source-line-no">067</span><span id="line-67">    builder.useWildcardWhenNamespaceNotDefaulted(true);</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">    ISource source = ISource.externalSource(resource);</span>
+<span class="source-line-no">070</span><span id="line-70"></span>
+<span class="source-line-no">071</span><span id="line-71">    List&lt;ITargetedConstraints&gt; targetedConstraints = ObjectUtils.notNull(constraints.getContextList().stream()</span>
+<span class="source-line-no">072</span><span id="line-72">        .flatMap(context -&gt; parseContext(ObjectUtils.notNull(context), null, source).getTargetedConstraints().stream())</span>
+<span class="source-line-no">073</span><span id="line-73">        .collect(Collectors.toList()));</span>
+<span class="source-line-no">074</span><span id="line-74">    return CollectionUtil.singletonList(new MetaConstraintSet(source, targetedConstraints));</span>
+<span class="source-line-no">075</span><span id="line-75">  }</span>
+<span class="source-line-no">076</span><span id="line-76"></span>
+<span class="source-line-no">077</span><span id="line-77">  private Context parseContext(</span>
+<span class="source-line-no">078</span><span id="line-78">      @NonNull ModelContextType contextObj,</span>
+<span class="source-line-no">079</span><span id="line-79">      @Nullable Context parent,</span>
+<span class="source-line-no">080</span><span id="line-80">      @NonNull ISource source) {</span>
+<span class="source-line-no">081</span><span id="line-81"></span>
+<span class="source-line-no">082</span><span id="line-82">    List&lt;String&gt; metapaths;</span>
+<span class="source-line-no">083</span><span id="line-83">    if (parent == null) {</span>
+<span class="source-line-no">084</span><span id="line-84">      metapaths = ObjectUtils.notNull(contextObj.getMetapathList().stream()</span>
+<span class="source-line-no">085</span><span id="line-85">          .map(MetaschemaMetapathReferenceType::getTarget)</span>
+<span class="source-line-no">086</span><span id="line-86">          .collect(Collectors.toList()));</span>
+<span class="source-line-no">087</span><span id="line-87">    } else {</span>
+<span class="source-line-no">088</span><span id="line-88">      List&lt;String&gt; parentMetapaths = parent.getMetapaths().stream()</span>
+<span class="source-line-no">089</span><span id="line-89">          .collect(Collectors.toList());</span>
+<span class="source-line-no">090</span><span id="line-90">      metapaths = ObjectUtils.notNull(contextObj.getMetapathList().stream()</span>
+<span class="source-line-no">091</span><span id="line-91">          .map(MetaschemaMetapathReferenceType::getTarget)</span>
+<span class="source-line-no">092</span><span id="line-92">          .flatMap(childPath -&gt; parentMetapaths.stream()</span>
+<span class="source-line-no">093</span><span id="line-93">              .map(parentPath -&gt; parentPath + '/' + childPath))</span>
+<span class="source-line-no">094</span><span id="line-94">          .collect(Collectors.toList()));</span>
+<span class="source-line-no">095</span><span id="line-95">    }</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">    IModelConstrained constraints = new AssemblyConstraintSet(source);</span>
+<span class="source-line-no">098</span><span id="line-98">    ConstraintXmlSupport.parse(constraints, ObjectUtils.notNull(contextObj.getConstraints()), source);</span>
+<span class="source-line-no">099</span><span id="line-99">    Context context = new Context(source, metapaths, constraints);</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">    List&lt;Context&gt; childContexts = contextObj.getContextList().stream()</span>
+<span class="source-line-no">102</span><span id="line-102">        .map(childObj -&gt; parseContext(ObjectUtils.notNull(childObj), context, source))</span>
+<span class="source-line-no">103</span><span id="line-103">        .collect(Collectors.toList());</span>
+<span class="source-line-no">104</span><span id="line-104"></span>
+<span class="source-line-no">105</span><span id="line-105">    context.addAll(childContexts);</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">    return context;</span>
+<span class="source-line-no">108</span><span id="line-108">  }</span>
+<span class="source-line-no">109</span><span id="line-109"></span>
+<span class="source-line-no">110</span><span id="line-110">  /**</span>
+<span class="source-line-no">111</span><span id="line-111">   * Parse the provided XML resource as a Metaschema constraints.</span>
+<span class="source-line-no">112</span><span id="line-112">   *</span>
+<span class="source-line-no">113</span><span id="line-113">   * @param resource</span>
+<span class="source-line-no">114</span><span id="line-114">   *          the resource to parse</span>
+<span class="source-line-no">115</span><span id="line-115">   * @return the XMLBeans representation of the Metaschema contraints</span>
+<span class="source-line-no">116</span><span id="line-116">   * @throws IOException</span>
+<span class="source-line-no">117</span><span id="line-117">   *           if a parsing error occurred</span>
+<span class="source-line-no">118</span><span id="line-118">   */</span>
+<span class="source-line-no">119</span><span id="line-119">  @NonNull</span>
+<span class="source-line-no">120</span><span id="line-120">  protected MetaschemaMetaConstraintsDocument parseConstraintSet(@NonNull URI resource) throws IOException {</span>
+<span class="source-line-no">121</span><span id="line-121">    try {</span>
+<span class="source-line-no">122</span><span id="line-122">      XmlOptions options = new XmlOptions();</span>
+<span class="source-line-no">123</span><span id="line-123">      options.setBaseURI(resource);</span>
+<span class="source-line-no">124</span><span id="line-124">      options.setLoadLineNumbers();</span>
+<span class="source-line-no">125</span><span id="line-125">      return ObjectUtils.notNull(MetaschemaMetaConstraintsDocument.Factory.parse(resource.toURL(),</span>
+<span class="source-line-no">126</span><span id="line-126">          options));</span>
+<span class="source-line-no">127</span><span id="line-127">    } catch (XmlException ex) {</span>
+<span class="source-line-no">128</span><span id="line-128">      throw new IOException(ex);</span>
+<span class="source-line-no">129</span><span id="line-129">    }</span>
+<span class="source-line-no">130</span><span id="line-130">  }</span>
+<span class="source-line-no">131</span><span id="line-131"></span>
+<span class="source-line-no">132</span><span id="line-132">  private static class Context {</span>
+<span class="source-line-no">133</span><span id="line-133">    @NonNull</span>
+<span class="source-line-no">134</span><span id="line-134">    private final ISource source;</span>
+<span class="source-line-no">135</span><span id="line-135">    @NonNull</span>
+<span class="source-line-no">136</span><span id="line-136">    private final List&lt;String&gt; metapaths;</span>
+<span class="source-line-no">137</span><span id="line-137">    @NonNull</span>
+<span class="source-line-no">138</span><span id="line-138">    private final IModelConstrained constraints;</span>
+<span class="source-line-no">139</span><span id="line-139">    @NonNull</span>
+<span class="source-line-no">140</span><span id="line-140">    private final List&lt;Context&gt; childContexts = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">    public Context(</span>
+<span class="source-line-no">143</span><span id="line-143">        @NonNull ISource source,</span>
+<span class="source-line-no">144</span><span id="line-144">        @NonNull List&lt;String&gt; metapaths,</span>
+<span class="source-line-no">145</span><span id="line-145">        @NonNull IModelConstrained constraints) {</span>
+<span class="source-line-no">146</span><span id="line-146">      this.source = source;</span>
+<span class="source-line-no">147</span><span id="line-147">      this.metapaths = metapaths;</span>
+<span class="source-line-no">148</span><span id="line-148">      this.constraints = constraints;</span>
+<span class="source-line-no">149</span><span id="line-149">    }</span>
+<span class="source-line-no">150</span><span id="line-150"></span>
+<span class="source-line-no">151</span><span id="line-151">    public List&lt;ITargetedConstraints&gt; getTargetedConstraints() {</span>
+<span class="source-line-no">152</span><span id="line-152">      return Stream.concat(</span>
+<span class="source-line-no">153</span><span id="line-153">          getMetapaths().stream()</span>
+<span class="source-line-no">154</span><span id="line-154">              .map(metapath -&gt; new MetaTargetedContraints(source, ObjectUtils.notNull(metapath), constraints)),</span>
+<span class="source-line-no">155</span><span id="line-155">          childContexts.stream()</span>
+<span class="source-line-no">156</span><span id="line-156">              .flatMap(child -&gt; child.getTargetedConstraints().stream()))</span>
+<span class="source-line-no">157</span><span id="line-157">          .collect(Collectors.toList());</span>
+<span class="source-line-no">158</span><span id="line-158">    }</span>
+<span class="source-line-no">159</span><span id="line-159"></span>
+<span class="source-line-no">160</span><span id="line-160">    public void addAll(Collection&lt;Context&gt; childContexts) {</span>
+<span class="source-line-no">161</span><span id="line-161">      childContexts.addAll(childContexts);</span>
+<span class="source-line-no">162</span><span id="line-162">    }</span>
 <span class="source-line-no">163</span><span id="line-163"></span>
-<span class="source-line-no">164</span><span id="line-164">  private static class MetaTargetedContraints</span>
-<span class="source-line-no">165</span><span id="line-165">      extends AbstractTargetedConstraints&lt;IModelConstrained&gt;</span>
-<span class="source-line-no">166</span><span id="line-166">      implements IFeatureModelConstrained {</span>
-<span class="source-line-no">167</span><span id="line-167"></span>
-<span class="source-line-no">168</span><span id="line-168">    protected MetaTargetedContraints(</span>
-<span class="source-line-no">169</span><span id="line-169">        @NonNull String target,</span>
-<span class="source-line-no">170</span><span id="line-170">        @NonNull IModelConstrained constraints) {</span>
-<span class="source-line-no">171</span><span id="line-171">      super(target, constraints);</span>
-<span class="source-line-no">172</span><span id="line-172">    }</span>
-<span class="source-line-no">173</span><span id="line-173"></span>
-<span class="source-line-no">174</span><span id="line-174">    /**</span>
-<span class="source-line-no">175</span><span id="line-175">     * Apply the constraints to the provided {@code definition}.</span>
-<span class="source-line-no">176</span><span id="line-176">     * &lt;p&gt;</span>
-<span class="source-line-no">177</span><span id="line-177">     * This will be called when a definition is found that matches the target</span>
-<span class="source-line-no">178</span><span id="line-178">     * expression.</span>
-<span class="source-line-no">179</span><span id="line-179">     *</span>
-<span class="source-line-no">180</span><span id="line-180">     * @param definition</span>
-<span class="source-line-no">181</span><span id="line-181">     *          the definition to apply the constraints to.</span>
-<span class="source-line-no">182</span><span id="line-182">     */</span>
-<span class="source-line-no">183</span><span id="line-183">    protected void applyTo(@NonNull IDefinition definition) {</span>
-<span class="source-line-no">184</span><span id="line-184">      getAllowedValuesConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">185</span><span id="line-185">      getMatchesConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">186</span><span id="line-186">      getIndexHasKeyConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">187</span><span id="line-187">      getExpectConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">188</span><span id="line-188">    }</span>
-<span class="source-line-no">189</span><span id="line-189"></span>
-<span class="source-line-no">190</span><span id="line-190">    protected void applyTo(@NonNull IAssemblyDefinition definition) {</span>
-<span class="source-line-no">191</span><span id="line-191">      applyTo((IDefinition) definition);</span>
-<span class="source-line-no">192</span><span id="line-192">      getIndexConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">193</span><span id="line-193">      getUniqueConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">194</span><span id="line-194">      getHasCardinalityConstraints().forEach(definition::addConstraint);</span>
-<span class="source-line-no">195</span><span id="line-195">    }</span>
-<span class="source-line-no">196</span><span id="line-196"></span>
-<span class="source-line-no">197</span><span id="line-197">    @Override</span>
-<span class="source-line-no">198</span><span id="line-198">    public void target(IFlagDefinition definition) {</span>
-<span class="source-line-no">199</span><span id="line-199">      applyTo(definition);</span>
-<span class="source-line-no">200</span><span id="line-200">    }</span>
-<span class="source-line-no">201</span><span id="line-201"></span>
-<span class="source-line-no">202</span><span id="line-202">    @Override</span>
-<span class="source-line-no">203</span><span id="line-203">    public void target(IFieldDefinition definition) {</span>
-<span class="source-line-no">204</span><span id="line-204">      applyTo(definition);</span>
-<span class="source-line-no">205</span><span id="line-205">    }</span>
-<span class="source-line-no">206</span><span id="line-206"></span>
-<span class="source-line-no">207</span><span id="line-207">    @Override</span>
-<span class="source-line-no">208</span><span id="line-208">    public void target(IAssemblyDefinition definition) {</span>
-<span class="source-line-no">209</span><span id="line-209">      applyTo(definition);</span>
-<span class="source-line-no">210</span><span id="line-210">    }</span>
-<span class="source-line-no">211</span><span id="line-211">  }</span>
+<span class="source-line-no">164</span><span id="line-164">    public List&lt;String&gt; getMetapaths() {</span>
+<span class="source-line-no">165</span><span id="line-165">      return metapaths;</span>
+<span class="source-line-no">166</span><span id="line-166">    }</span>
+<span class="source-line-no">167</span><span id="line-167">  }</span>
+<span class="source-line-no">168</span><span id="line-168"></span>
+<span class="source-line-no">169</span><span id="line-169">  private static class MetaTargetedContraints</span>
+<span class="source-line-no">170</span><span id="line-170">      extends AbstractTargetedConstraints&lt;IModelConstrained&gt;</span>
+<span class="source-line-no">171</span><span id="line-171">      implements IFeatureModelConstrained {</span>
+<span class="source-line-no">172</span><span id="line-172"></span>
+<span class="source-line-no">173</span><span id="line-173">    protected MetaTargetedContraints(</span>
+<span class="source-line-no">174</span><span id="line-174">        @NonNull ISource source,</span>
+<span class="source-line-no">175</span><span id="line-175">        @NonNull String target,</span>
+<span class="source-line-no">176</span><span id="line-176">        @NonNull IModelConstrained constraints) {</span>
+<span class="source-line-no">177</span><span id="line-177">      super(source, target, constraints);</span>
+<span class="source-line-no">178</span><span id="line-178">    }</span>
+<span class="source-line-no">179</span><span id="line-179"></span>
+<span class="source-line-no">180</span><span id="line-180">    /**</span>
+<span class="source-line-no">181</span><span id="line-181">     * Apply the constraints to the provided {@code definition}.</span>
+<span class="source-line-no">182</span><span id="line-182">     * &lt;p&gt;</span>
+<span class="source-line-no">183</span><span id="line-183">     * This will be called when a definition is found that matches the target</span>
+<span class="source-line-no">184</span><span id="line-184">     * expression.</span>
+<span class="source-line-no">185</span><span id="line-185">     *</span>
+<span class="source-line-no">186</span><span id="line-186">     * @param definition</span>
+<span class="source-line-no">187</span><span id="line-187">     *          the definition to apply the constraints to.</span>
+<span class="source-line-no">188</span><span id="line-188">     */</span>
+<span class="source-line-no">189</span><span id="line-189">    protected void applyTo(@NonNull IDefinition definition) {</span>
+<span class="source-line-no">190</span><span id="line-190">      getAllowedValuesConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">191</span><span id="line-191">      getMatchesConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">192</span><span id="line-192">      getIndexHasKeyConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">193</span><span id="line-193">      getExpectConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">194</span><span id="line-194">    }</span>
+<span class="source-line-no">195</span><span id="line-195"></span>
+<span class="source-line-no">196</span><span id="line-196">    protected void applyTo(@NonNull IAssemblyDefinition definition) {</span>
+<span class="source-line-no">197</span><span id="line-197">      applyTo((IDefinition) definition);</span>
+<span class="source-line-no">198</span><span id="line-198">      getIndexConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">199</span><span id="line-199">      getUniqueConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">200</span><span id="line-200">      getHasCardinalityConstraints().forEach(definition::addConstraint);</span>
+<span class="source-line-no">201</span><span id="line-201">    }</span>
+<span class="source-line-no">202</span><span id="line-202"></span>
+<span class="source-line-no">203</span><span id="line-203">    @Override</span>
+<span class="source-line-no">204</span><span id="line-204">    public void target(IFlagDefinition definition) {</span>
+<span class="source-line-no">205</span><span id="line-205">      applyTo(definition);</span>
+<span class="source-line-no">206</span><span id="line-206">    }</span>
+<span class="source-line-no">207</span><span id="line-207"></span>
+<span class="source-line-no">208</span><span id="line-208">    @Override</span>
+<span class="source-line-no">209</span><span id="line-209">    public void target(IFieldDefinition definition) {</span>
+<span class="source-line-no">210</span><span id="line-210">      applyTo(definition);</span>
+<span class="source-line-no">211</span><span id="line-211">    }</span>
 <span class="source-line-no">212</span><span id="line-212"></span>
-<span class="source-line-no">213</span><span id="line-213">  private static final class MetaConstraintSet implements IConstraintSet {</span>
-<span class="source-line-no">214</span><span id="line-214">    @NonNull</span>
-<span class="source-line-no">215</span><span id="line-215">    private final List&lt;ITargetedConstraints&gt; targetedConstraints;</span>
-<span class="source-line-no">216</span><span id="line-216"></span>
-<span class="source-line-no">217</span><span id="line-217">    private MetaConstraintSet(@NonNull List&lt;ITargetedConstraints&gt; targetedConstraints) {</span>
-<span class="source-line-no">218</span><span id="line-218">      this.targetedConstraints = targetedConstraints;</span>
-<span class="source-line-no">219</span><span id="line-219">    }</span>
-<span class="source-line-no">220</span><span id="line-220"></span>
-<span class="source-line-no">221</span><span id="line-221">    @Override</span>
-<span class="source-line-no">222</span><span id="line-222">    public Iterable&lt;ITargetedConstraints&gt; getTargetedConstraintsForModule(IModule module) {</span>
-<span class="source-line-no">223</span><span id="line-223">      return targetedConstraints;</span>
-<span class="source-line-no">224</span><span id="line-224">    }</span>
-<span class="source-line-no">225</span><span id="line-225"></span>
-<span class="source-line-no">226</span><span id="line-226">    @Override</span>
-<span class="source-line-no">227</span><span id="line-227">    public Collection&lt;IConstraintSet&gt; getImportedConstraintSets() {</span>
-<span class="source-line-no">228</span><span id="line-228">      return CollectionUtil.emptyList();</span>
-<span class="source-line-no">229</span><span id="line-229">    }</span>
-<span class="source-line-no">230</span><span id="line-230"></span>
-<span class="source-line-no">231</span><span id="line-231">  }</span>
-<span class="source-line-no">232</span><span id="line-232">}</span>
+<span class="source-line-no">213</span><span id="line-213">    @Override</span>
+<span class="source-line-no">214</span><span id="line-214">    public void target(IAssemblyDefinition definition) {</span>
+<span class="source-line-no">215</span><span id="line-215">      applyTo(definition);</span>
+<span class="source-line-no">216</span><span id="line-216">    }</span>
+<span class="source-line-no">217</span><span id="line-217">  }</span>
+<span class="source-line-no">218</span><span id="line-218"></span>
+<span class="source-line-no">219</span><span id="line-219">  private static final class MetaConstraintSet implements IConstraintSet {</span>
+<span class="source-line-no">220</span><span id="line-220">    @NonNull</span>
+<span class="source-line-no">221</span><span id="line-221">    private final ISource source;</span>
+<span class="source-line-no">222</span><span id="line-222">    @NonNull</span>
+<span class="source-line-no">223</span><span id="line-223">    private final List&lt;ITargetedConstraints&gt; targetedConstraints;</span>
+<span class="source-line-no">224</span><span id="line-224"></span>
+<span class="source-line-no">225</span><span id="line-225">    private MetaConstraintSet(</span>
+<span class="source-line-no">226</span><span id="line-226">        @NonNull ISource source,</span>
+<span class="source-line-no">227</span><span id="line-227">        @NonNull List&lt;ITargetedConstraints&gt; targetedConstraints) {</span>
+<span class="source-line-no">228</span><span id="line-228">      this.source = source;</span>
+<span class="source-line-no">229</span><span id="line-229">      this.targetedConstraints = targetedConstraints;</span>
+<span class="source-line-no">230</span><span id="line-230">    }</span>
+<span class="source-line-no">231</span><span id="line-231"></span>
+<span class="source-line-no">232</span><span id="line-232">    @Override</span>
+<span class="source-line-no">233</span><span id="line-233">    public ISource getSource() {</span>
+<span class="source-line-no">234</span><span id="line-234">      return source;</span>
+<span class="source-line-no">235</span><span id="line-235">    }</span>
+<span class="source-line-no">236</span><span id="line-236"></span>
+<span class="source-line-no">237</span><span id="line-237">    @Override</span>
+<span class="source-line-no">238</span><span id="line-238">    public Iterable&lt;ITargetedConstraints&gt; getTargetedConstraintsForModule(IModule module) {</span>
+<span class="source-line-no">239</span><span id="line-239">      return targetedConstraints;</span>
+<span class="source-line-no">240</span><span id="line-240">    }</span>
+<span class="source-line-no">241</span><span id="line-241"></span>
+<span class="source-line-no">242</span><span id="line-242">    @Override</span>
+<span class="source-line-no">243</span><span id="line-243">    public Collection&lt;IConstraintSet&gt; getImportedConstraintSets() {</span>
+<span class="source-line-no">244</span><span id="line-244">      return CollectionUtil.emptyList();</span>
+<span class="source-line-no">245</span><span id="line-245">    }</span>
+<span class="source-line-no">246</span><span id="line-246"></span>
+<span class="source-line-no">247</span><span id="line-247">  }</span>
+<span class="source-line-no">248</span><span id="line-248">}</span>
 
 
 

@@ -10,38 +10,51 @@
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.metapath.item.node;
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="IDocumentNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IDocumentNodeItem.html#IDocumentNodeItem">IDocumentNodeItem</a> <strong class="jxr_keyword">extends</strong> <a name="IDocumentBasedNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IDocumentBasedNodeItem.html#IDocumentBasedNodeItem">IDocumentBasedNodeItem</a> {
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>     @Override
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>    <strong class="jxr_keyword">default</strong> <a name="NodeItemType" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/NodeItemType.html#NodeItemType">NodeItemType</a> getNodeItemType() {
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">return</strong> NodeItemType.DOCUMENT;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>    }
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>    @Override
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>    <strong class="jxr_keyword">default</strong> <a name="IDocumentNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IDocumentNodeItem.html#IDocumentNodeItem">IDocumentNodeItem</a> getNodeItem() {
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>    }
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">   * Get the node item for the document root element.</em>
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">   * @return the root node item</em>
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>    @NonNull
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <a name="IRootAssemblyNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IRootAssemblyNodeItem.html#IRootAssemblyNodeItem">IRootAssemblyNodeItem</a> getRootAssemblyNodeItem();
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a name="IDocumentNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IDocumentNodeItem.html#IDocumentNodeItem">IDocumentNodeItem</a> <strong class="jxr_keyword">extends</strong> <a name="IDocumentBasedNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IDocumentBasedNodeItem.html#IDocumentBasedNodeItem">IDocumentBasedNodeItem</a> {
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>    @NonNull
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>    <strong class="jxr_keyword">static</strong> <a name="IItemType" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/type/IItemType.html#IItemType">IItemType</a> type() {
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">return</strong> IItemType.document();
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>    }
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>    @Override
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>    <strong class="jxr_keyword">default</strong> IKindTest&lt;IDocumentNodeItem&gt; getType() {
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">return</strong> IItemType.document(
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>          getRootAssemblyNodeItem().getType());
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>    }
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>    @Override
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>    <strong class="jxr_keyword">default</strong> <a name="NodeItemKind" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/NodeItemKind.html#NodeItemKind">NodeItemKind</a> getNodeItemKind() {
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>      <strong class="jxr_keyword">return</strong> NodeItemKind.DOCUMENT;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>    }
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>    @Override
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">default</strong> String format(@NonNull <a name="IPathFormatter" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/format/IPathFormatter.html#IPathFormatter">IPathFormatter</a> formatter) {
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">return</strong> formatter.formatDocument(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">default</strong> <a name="IDocumentNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IDocumentNodeItem.html#IDocumentNodeItem">IDocumentNodeItem</a> getNodeItem() {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>    }
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    @Override
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">default</strong> &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull INodeItemVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>      <strong class="jxr_keyword">return</strong> visitor.visitDocument(<strong class="jxr_keyword">this</strong>, context);
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    }
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  }
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">   * Get the node item for the document root element.</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">   * @return the root node item</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    @NonNull
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <a name="IRootAssemblyNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IRootAssemblyNodeItem.html#IRootAssemblyNodeItem">IRootAssemblyNodeItem</a> getRootAssemblyNodeItem();
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    @Override
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">default</strong> String format(@NonNull <a name="IPathFormatter" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/format/IPathFormatter.html#IPathFormatter">IPathFormatter</a> formatter) {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">return</strong> formatter.formatDocument(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    }
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    @Override
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">default</strong> &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull INodeItemVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">return</strong> visitor.visitDocument(<strong class="jxr_keyword">this</strong>, context);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

@@ -13,7 +13,7 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.model;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.impl.DefaultContainerModelAssemblySupport;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.impl.DefaultContainerModelAssemblySupport;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
@@ -62,32 +62,33 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">   * @return the empty container</em>
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">static</strong> &lt;
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>        MI <strong class="jxr_keyword">extends</strong> IModelInstance,
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        NMI <strong class="jxr_keyword">extends</strong> INamedModelInstance,
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        FI <strong class="jxr_keyword">extends</strong> IFieldInstance,
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>        AI <strong class="jxr_keyword">extends</strong> IAssemblyInstance,
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        CI <strong class="jxr_keyword">extends</strong> IChoiceInstance,
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        CGI <strong class="jxr_keyword">extends</strong> IChoiceGroupInstance&gt; IContainerModelAssemblySupport&lt;MI, NMI, FI, AI, CI, CGI&gt; empty() {
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">return</strong> DefaultContainerModelAssemblySupport.EMPTY;
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   * Get a listing of all choice instances.</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   * @return the listing</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    @NonNull
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    List&lt;CI&gt; getChoiceInstances();
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   * Get a listing of all choice group instances.</em>
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   * @return the listing</em>
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    @NonNull
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    Map&lt;String, CGI&gt; getChoiceGroupInstanceMap();
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  }
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    @NonNull
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">static</strong> &lt;
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>        MI <strong class="jxr_keyword">extends</strong> IModelInstance,
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        NMI <strong class="jxr_keyword">extends</strong> INamedModelInstance,
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        FI <strong class="jxr_keyword">extends</strong> IFieldInstance,
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        AI <strong class="jxr_keyword">extends</strong> IAssemblyInstance,
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        CI <strong class="jxr_keyword">extends</strong> IChoiceInstance,
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        CGI <strong class="jxr_keyword">extends</strong> IChoiceGroupInstance&gt; IContainerModelAssemblySupport&lt;MI, NMI, FI, AI, CI, CGI&gt; empty() {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">return</strong> DefaultContainerModelAssemblySupport.EMPTY;
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">   * Get a listing of all choice instances.</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   * @return the listing</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    @NonNull
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    List&lt;CI&gt; getChoiceInstances();
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   * Get a listing of all choice group instances.</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">   * @return the listing</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    @NonNull
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    Map&lt;String, CGI&gt; getChoiceGroupInstanceMap();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2024</div>

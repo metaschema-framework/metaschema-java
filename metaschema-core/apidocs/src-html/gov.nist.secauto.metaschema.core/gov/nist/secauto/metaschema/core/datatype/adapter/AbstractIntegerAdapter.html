@@ -23,53 +23,67 @@
 <span class="source-line-no">010</span><span id="line-10"></span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;</span>
-<span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">import java.io.IOException;</span>
-<span class="source-line-no">015</span><span id="line-15">import java.math.BigInteger;</span>
-<span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">/**</span>
-<span class="source-line-no">018</span><span id="line-18"> * Provides a common base class for integer-based data types.</span>
-<span class="source-line-no">019</span><span id="line-19"> * &lt;p&gt;</span>
-<span class="source-line-no">020</span><span id="line-20"> * An underlying {@link BigInteger} is used to support arbitrary sized integers.</span>
-<span class="source-line-no">021</span><span id="line-21"> *</span>
-<span class="source-line-no">022</span><span id="line-22"> * @param &lt;ITEM_TYPE&gt;</span>
-<span class="source-line-no">023</span><span id="line-23"> *          the Metapath item type supported by the adapter</span>
-<span class="source-line-no">024</span><span id="line-24"> */</span>
-<span class="source-line-no">025</span><span id="line-25">public abstract class AbstractIntegerAdapter&lt;ITEM_TYPE extends IIntegerItem&gt;</span>
-<span class="source-line-no">026</span><span id="line-26">    extends AbstractDataTypeAdapter&lt;BigInteger, ITEM_TYPE&gt; {</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  /**</span>
-<span class="source-line-no">029</span><span id="line-29">   * Construct a new integer-based adapter.</span>
-<span class="source-line-no">030</span><span id="line-30">   */</span>
-<span class="source-line-no">031</span><span id="line-31">  protected AbstractIntegerAdapter() {</span>
-<span class="source-line-no">032</span><span id="line-32">    super(BigInteger.class);</span>
-<span class="source-line-no">033</span><span id="line-33">  }</span>
-<span class="source-line-no">034</span><span id="line-34"></span>
-<span class="source-line-no">035</span><span id="line-35">  @Override</span>
-<span class="source-line-no">036</span><span id="line-36">  public JsonFormatTypes getJsonRawType() {</span>
-<span class="source-line-no">037</span><span id="line-37">    return JsonFormatTypes.INTEGER;</span>
-<span class="source-line-no">038</span><span id="line-38">  }</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">  @Override</span>
-<span class="source-line-no">041</span><span id="line-41">  public BigInteger parse(String value) {</span>
-<span class="source-line-no">042</span><span id="line-42">    return new BigInteger(value);</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;</span>
+<span class="source-line-no">014</span><span id="line-14"></span>
+<span class="source-line-no">015</span><span id="line-15">import java.io.IOException;</span>
+<span class="source-line-no">016</span><span id="line-16">import java.math.BigInteger;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">019</span><span id="line-19"></span>
+<span class="source-line-no">020</span><span id="line-20">/**</span>
+<span class="source-line-no">021</span><span id="line-21"> * Provides a common base class for integer-based data types.</span>
+<span class="source-line-no">022</span><span id="line-22"> * &lt;p&gt;</span>
+<span class="source-line-no">023</span><span id="line-23"> * An underlying {@link BigInteger} is used to support arbitrary sized integers.</span>
+<span class="source-line-no">024</span><span id="line-24"> *</span>
+<span class="source-line-no">025</span><span id="line-25"> * @param &lt;ITEM_TYPE&gt;</span>
+<span class="source-line-no">026</span><span id="line-26"> *          the Metapath item type supported by the adapter</span>
+<span class="source-line-no">027</span><span id="line-27"> */</span>
+<span class="source-line-no">028</span><span id="line-28">public abstract class AbstractIntegerAdapter&lt;ITEM_TYPE extends IIntegerItem&gt;</span>
+<span class="source-line-no">029</span><span id="line-29">    extends AbstractDataTypeAdapter&lt;BigInteger, ITEM_TYPE&gt; {</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">  /**</span>
+<span class="source-line-no">032</span><span id="line-32">   * Construct a new integer-based adapter.</span>
+<span class="source-line-no">033</span><span id="line-33">   *</span>
+<span class="source-line-no">034</span><span id="line-34">   * @param itemClass</span>
+<span class="source-line-no">035</span><span id="line-35">   *          the Java type of the Metapath item this adapter supports</span>
+<span class="source-line-no">036</span><span id="line-36">   * @param castExecutor</span>
+<span class="source-line-no">037</span><span id="line-37">   *          the method to call to cast an item to an item based on this type</span>
+<span class="source-line-no">038</span><span id="line-38">   */</span>
+<span class="source-line-no">039</span><span id="line-39">  protected AbstractIntegerAdapter(</span>
+<span class="source-line-no">040</span><span id="line-40">      @NonNull Class&lt;ITEM_TYPE&gt; itemClass,</span>
+<span class="source-line-no">041</span><span id="line-41">      @NonNull IAtomicOrUnionType.ICastExecutor&lt;ITEM_TYPE&gt; castExecutor) {</span>
+<span class="source-line-no">042</span><span id="line-42">    super(BigInteger.class, itemClass, castExecutor);</span>
 <span class="source-line-no">043</span><span id="line-43">  }</span>
 <span class="source-line-no">044</span><span id="line-44"></span>
 <span class="source-line-no">045</span><span id="line-45">  @Override</span>
-<span class="source-line-no">046</span><span id="line-46">  public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {</span>
-<span class="source-line-no">047</span><span id="line-47">    try {</span>
-<span class="source-line-no">048</span><span id="line-48">      generator.writeNumber((BigInteger) value);</span>
-<span class="source-line-no">049</span><span id="line-49">    } catch (ClassCastException ex) {</span>
-<span class="source-line-no">050</span><span id="line-50">      throw new IOException(ex);</span>
-<span class="source-line-no">051</span><span id="line-51">    }</span>
-<span class="source-line-no">052</span><span id="line-52">  }</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">  @Override</span>
-<span class="source-line-no">055</span><span id="line-55">  public BigInteger copy(Object obj) {</span>
-<span class="source-line-no">056</span><span id="line-56">    // a BigInteger is immutable</span>
-<span class="source-line-no">057</span><span id="line-57">    return (BigInteger) obj;</span>
-<span class="source-line-no">058</span><span id="line-58">  }</span>
-<span class="source-line-no">059</span><span id="line-59">}</span>
+<span class="source-line-no">046</span><span id="line-46">  public JsonFormatTypes getJsonRawType() {</span>
+<span class="source-line-no">047</span><span id="line-47">    return JsonFormatTypes.INTEGER;</span>
+<span class="source-line-no">048</span><span id="line-48">  }</span>
+<span class="source-line-no">049</span><span id="line-49"></span>
+<span class="source-line-no">050</span><span id="line-50">  @Override</span>
+<span class="source-line-no">051</span><span id="line-51">  public BigInteger parse(String value) {</span>
+<span class="source-line-no">052</span><span id="line-52">    try {</span>
+<span class="source-line-no">053</span><span id="line-53">      return new BigInteger(value);</span>
+<span class="source-line-no">054</span><span id="line-54">    } catch (NumberFormatException ex) {</span>
+<span class="source-line-no">055</span><span id="line-55">      throw new IllegalArgumentException(ex);</span>
+<span class="source-line-no">056</span><span id="line-56">    }</span>
+<span class="source-line-no">057</span><span id="line-57">  }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  @Override</span>
+<span class="source-line-no">060</span><span id="line-60">  public void writeJsonValue(Object value, JsonGenerator generator) throws IOException {</span>
+<span class="source-line-no">061</span><span id="line-61">    try {</span>
+<span class="source-line-no">062</span><span id="line-62">      generator.writeNumber((BigInteger) value);</span>
+<span class="source-line-no">063</span><span id="line-63">    } catch (ClassCastException ex) {</span>
+<span class="source-line-no">064</span><span id="line-64">      throw new IOException(ex);</span>
+<span class="source-line-no">065</span><span id="line-65">    }</span>
+<span class="source-line-no">066</span><span id="line-66">  }</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  @Override</span>
+<span class="source-line-no">069</span><span id="line-69">  public BigInteger copy(Object obj) {</span>
+<span class="source-line-no">070</span><span id="line-70">    // a BigInteger is immutable</span>
+<span class="source-line-no">071</span><span id="line-71">    return (BigInteger) obj;</span>
+<span class="source-line-no">072</span><span id="line-72">  }</span>
+<span class="source-line-no">073</span><span id="line-73">}</span>
 
 
 

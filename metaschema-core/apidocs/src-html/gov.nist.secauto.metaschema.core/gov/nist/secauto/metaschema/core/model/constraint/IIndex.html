@@ -19,211 +19,210 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model.constraint;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ResultType;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.library.FnData;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultIndex;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">import java.util.ArrayList;</span>
-<span class="source-line-no">021</span><span id="line-21">import java.util.List;</span>
-<span class="source-line-no">022</span><span id="line-22">import java.util.regex.Matcher;</span>
-<span class="source-line-no">023</span><span id="line-23">import java.util.regex.Pattern;</span>
-<span class="source-line-no">024</span><span id="line-24">import java.util.stream.Collectors;</span>
-<span class="source-line-no">025</span><span id="line-25"></span>
-<span class="source-line-no">026</span><span id="line-26">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">027</span><span id="line-27">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">public interface IIndex {</span>
-<span class="source-line-no">030</span><span id="line-30"></span>
-<span class="source-line-no">031</span><span id="line-31">  /**</span>
-<span class="source-line-no">032</span><span id="line-32">   * Construct a new index using the provided key field components to generate</span>
-<span class="source-line-no">033</span><span id="line-33">   * keys.</span>
-<span class="source-line-no">034</span><span id="line-34">   *</span>
-<span class="source-line-no">035</span><span id="line-35">   * @param keyFields</span>
-<span class="source-line-no">036</span><span id="line-36">   *          the key field components to use to generate keys by default</span>
-<span class="source-line-no">037</span><span id="line-37">   * @return the new index</span>
-<span class="source-line-no">038</span><span id="line-38">   */</span>
-<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
-<span class="source-line-no">040</span><span id="line-40">  static IIndex newInstance(@NonNull List&lt;? extends IKeyField&gt; keyFields) {</span>
-<span class="source-line-no">041</span><span id="line-41">    return new DefaultIndex(keyFields);</span>
-<span class="source-line-no">042</span><span id="line-42">  }</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  /**</span>
-<span class="source-line-no">045</span><span id="line-45">   * Check if a key contains information other than {@code null} Strings.</span>
-<span class="source-line-no">046</span><span id="line-46">   *</span>
-<span class="source-line-no">047</span><span id="line-47">   * @param key</span>
-<span class="source-line-no">048</span><span id="line-48">   *          the key to check</span>
-<span class="source-line-no">049</span><span id="line-49">   * @return {@code true} if the series of key values contains only {@code null}</span>
-<span class="source-line-no">050</span><span id="line-50">   *         values, or {@code false} otherwise</span>
-<span class="source-line-no">051</span><span id="line-51">   */</span>
-<span class="source-line-no">052</span><span id="line-52">  static boolean isAllNulls(@NonNull Iterable&lt;String&gt; key) {</span>
-<span class="source-line-no">053</span><span id="line-53">    for (String value : key) {</span>
-<span class="source-line-no">054</span><span id="line-54">      if (value != null) {</span>
-<span class="source-line-no">055</span><span id="line-55">        return false; // NOPMD readability</span>
-<span class="source-line-no">056</span><span id="line-56">      }</span>
-<span class="source-line-no">057</span><span id="line-57">    }</span>
-<span class="source-line-no">058</span><span id="line-58">    return true;</span>
-<span class="source-line-no">059</span><span id="line-59">  }</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  /**</span>
-<span class="source-line-no">062</span><span id="line-62">   * Retrieve the key field components used to generate a key for this index.</span>
-<span class="source-line-no">063</span><span id="line-63">   *</span>
-<span class="source-line-no">064</span><span id="line-64">   * @return the key field components</span>
-<span class="source-line-no">065</span><span id="line-65">   */</span>
-<span class="source-line-no">066</span><span id="line-66">  @NonNull</span>
-<span class="source-line-no">067</span><span id="line-67">  List&lt;IKeyField&gt; getKeyFields();</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  /**</span>
-<span class="source-line-no">070</span><span id="line-70">   * Store the provided item in the index using the index's key field components</span>
-<span class="source-line-no">071</span><span id="line-71">   * to generate the key.</span>
-<span class="source-line-no">072</span><span id="line-72">   *</span>
-<span class="source-line-no">073</span><span id="line-73">   * @param item</span>
-<span class="source-line-no">074</span><span id="line-74">   *          the item to store in the index</span>
-<span class="source-line-no">075</span><span id="line-75">   * @param dynamicContext</span>
-<span class="source-line-no">076</span><span id="line-76">   *          the Metapath evaluation context</span>
-<span class="source-line-no">077</span><span id="line-77">   * @return the previous item stored in the index, or {@code null} otherwise</span>
-<span class="source-line-no">078</span><span id="line-78">   */</span>
-<span class="source-line-no">079</span><span id="line-79">  @Nullable</span>
-<span class="source-line-no">080</span><span id="line-80">  default INodeItem put(@NonNull INodeItem item, @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">081</span><span id="line-81">    List&lt;String&gt; key = toKey(item, getKeyFields(), dynamicContext);</span>
-<span class="source-line-no">082</span><span id="line-82">    return put(item, key);</span>
-<span class="source-line-no">083</span><span id="line-83">  }</span>
-<span class="source-line-no">084</span><span id="line-84"></span>
-<span class="source-line-no">085</span><span id="line-85">  /**</span>
-<span class="source-line-no">086</span><span id="line-86">   * Store the provided item using the provided key.</span>
-<span class="source-line-no">087</span><span id="line-87">   *</span>
-<span class="source-line-no">088</span><span id="line-88">   * @param item</span>
-<span class="source-line-no">089</span><span id="line-89">   *          the item to store</span>
-<span class="source-line-no">090</span><span id="line-90">   * @param key</span>
-<span class="source-line-no">091</span><span id="line-91">   *          the key to store the item with</span>
-<span class="source-line-no">092</span><span id="line-92">   * @return the previous item stored in the index using the key, or {@code null}</span>
-<span class="source-line-no">093</span><span id="line-93">   *         otherwise</span>
-<span class="source-line-no">094</span><span id="line-94">   */</span>
-<span class="source-line-no">095</span><span id="line-95">  @Nullable</span>
-<span class="source-line-no">096</span><span id="line-96">  INodeItem put(@NonNull INodeItem item, @NonNull List&lt;String&gt; key);</span>
-<span class="source-line-no">097</span><span id="line-97"></span>
-<span class="source-line-no">098</span><span id="line-98">  /**</span>
-<span class="source-line-no">099</span><span id="line-99">   * Retrieve the item from the index that matches the key generated by evaluating</span>
-<span class="source-line-no">100</span><span id="line-100">   * the index's default key field components against the provided item.</span>
-<span class="source-line-no">101</span><span id="line-101">   *</span>
-<span class="source-line-no">102</span><span id="line-102">   * @param item</span>
-<span class="source-line-no">103</span><span id="line-103">   *          the item to store in the index</span>
-<span class="source-line-no">104</span><span id="line-104">   * @param dynamicContext</span>
-<span class="source-line-no">105</span><span id="line-105">   *          the Metapath evaluation context</span>
-<span class="source-line-no">106</span><span id="line-106">   * @return the previous item stored in the index, or {@code null} otherwise</span>
-<span class="source-line-no">107</span><span id="line-107">   */</span>
-<span class="source-line-no">108</span><span id="line-108">  @Nullable</span>
-<span class="source-line-no">109</span><span id="line-109">  default INodeItem get(@NonNull INodeItem item, @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">110</span><span id="line-110">    List&lt;String&gt; key = toKey(item, getKeyFields(), dynamicContext);</span>
-<span class="source-line-no">111</span><span id="line-111">    return get(key);</span>
-<span class="source-line-no">112</span><span id="line-112">  }</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">  /**</span>
-<span class="source-line-no">115</span><span id="line-115">   * Retrieve the item from the index that matches the provided key.</span>
-<span class="source-line-no">116</span><span id="line-116">   *</span>
-<span class="source-line-no">117</span><span id="line-117">   * @param key</span>
-<span class="source-line-no">118</span><span id="line-118">   *          the key to use for lookup</span>
-<span class="source-line-no">119</span><span id="line-119">   * @return the item with the matching key or {@code null} if no matching item</span>
-<span class="source-line-no">120</span><span id="line-120">   *         was found</span>
-<span class="source-line-no">121</span><span id="line-121">   */</span>
-<span class="source-line-no">122</span><span id="line-122">  INodeItem get(List&lt;String&gt; key);</span>
-<span class="source-line-no">123</span><span id="line-123"></span>
-<span class="source-line-no">124</span><span id="line-124">  /**</span>
-<span class="source-line-no">125</span><span id="line-125">   * Construct a key by evaluating the provided key field components against the</span>
-<span class="source-line-no">126</span><span id="line-126">   * provided item.</span>
-<span class="source-line-no">127</span><span id="line-127">   *</span>
-<span class="source-line-no">128</span><span id="line-128">   * @param item</span>
-<span class="source-line-no">129</span><span id="line-129">   *          the item to generate the key from</span>
-<span class="source-line-no">130</span><span id="line-130">   * @param keyFields</span>
-<span class="source-line-no">131</span><span id="line-131">   *          the key field components used to generate the key</span>
-<span class="source-line-no">132</span><span id="line-132">   * @param dynamicContext</span>
-<span class="source-line-no">133</span><span id="line-133">   *          the Metapath evaluation context</span>
-<span class="source-line-no">134</span><span id="line-134">   * @return a new key</span>
-<span class="source-line-no">135</span><span id="line-135">   */</span>
-<span class="source-line-no">136</span><span id="line-136">  @NonNull</span>
-<span class="source-line-no">137</span><span id="line-137">  static List&lt;String&gt; toKey(@NonNull INodeItem item, @NonNull List&lt;? extends IKeyField&gt; keyFields,</span>
-<span class="source-line-no">138</span><span id="line-138">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">139</span><span id="line-139">    return CollectionUtil.unmodifiableList(</span>
-<span class="source-line-no">140</span><span id="line-140">        ObjectUtils.notNull(keyFields.stream()</span>
-<span class="source-line-no">141</span><span id="line-141">            .map(keyField -&gt; {</span>
-<span class="source-line-no">142</span><span id="line-142">              assert keyField != null;</span>
-<span class="source-line-no">143</span><span id="line-143">              return buildKeyItem(item, keyField, dynamicContext);</span>
-<span class="source-line-no">144</span><span id="line-144">            })</span>
-<span class="source-line-no">145</span><span id="line-145">            .collect(Collectors.toCollection(ArrayList::new))));</span>
-<span class="source-line-no">146</span><span id="line-146">  }</span>
-<span class="source-line-no">147</span><span id="line-147"></span>
-<span class="source-line-no">148</span><span id="line-148">  /**</span>
-<span class="source-line-no">149</span><span id="line-149">   * Evaluates the provided key field component against the item to generate a key</span>
-<span class="source-line-no">150</span><span id="line-150">   * value.</span>
-<span class="source-line-no">151</span><span id="line-151">   *</span>
-<span class="source-line-no">152</span><span id="line-152">   * @param item</span>
-<span class="source-line-no">153</span><span id="line-153">   *          the item to generate the key value from</span>
-<span class="source-line-no">154</span><span id="line-154">   * @param keyField</span>
-<span class="source-line-no">155</span><span id="line-155">   *          the key field component used to generate the key value</span>
-<span class="source-line-no">156</span><span id="line-156">   * @param dynamicContext</span>
-<span class="source-line-no">157</span><span id="line-157">   *          the Metapath evaluation context</span>
-<span class="source-line-no">158</span><span id="line-158">   * @return the key value or {@code null} if the evaluation resulted in no value</span>
-<span class="source-line-no">159</span><span id="line-159">   */</span>
-<span class="source-line-no">160</span><span id="line-160">  @Nullable</span>
-<span class="source-line-no">161</span><span id="line-161">  private static String buildKeyItem(</span>
-<span class="source-line-no">162</span><span id="line-162">      @NonNull INodeItem item,</span>
-<span class="source-line-no">163</span><span id="line-163">      @NonNull IKeyField keyField,</span>
-<span class="source-line-no">164</span><span id="line-164">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">165</span><span id="line-165">    MetapathExpression keyMetapath = keyField.getTargetMetapath();</span>
-<span class="source-line-no">166</span><span id="line-166"></span>
-<span class="source-line-no">167</span><span id="line-167">    IItem keyItem;</span>
-<span class="source-line-no">168</span><span id="line-168">    try {</span>
-<span class="source-line-no">169</span><span id="line-169">      keyItem = keyMetapath.evaluateAs(item, ResultType.ITEM, dynamicContext);</span>
-<span class="source-line-no">170</span><span id="line-170">    } catch (InvalidTypeMetapathException ex) {</span>
-<span class="source-line-no">171</span><span id="line-171">      throw new MetapathException("Key path did not result in a single item", ex);</span>
-<span class="source-line-no">172</span><span id="line-172">    }</span>
-<span class="source-line-no">173</span><span id="line-173"></span>
-<span class="source-line-no">174</span><span id="line-174">    String keyValue = null;</span>
-<span class="source-line-no">175</span><span id="line-175">    if (keyItem != null) {</span>
-<span class="source-line-no">176</span><span id="line-176">      keyValue = FnData.fnDataItem(keyItem).asString();</span>
-<span class="source-line-no">177</span><span id="line-177">      assert keyValue != null;</span>
-<span class="source-line-no">178</span><span id="line-178">      Pattern pattern = keyField.getPattern();</span>
-<span class="source-line-no">179</span><span id="line-179">      if (pattern != null) {</span>
-<span class="source-line-no">180</span><span id="line-180">        keyValue = applyPattern(keyMetapath, keyValue, pattern);</span>
-<span class="source-line-no">181</span><span id="line-181">      }</span>
-<span class="source-line-no">182</span><span id="line-182">    } // empty key</span>
-<span class="source-line-no">183</span><span id="line-183">    return keyValue;</span>
-<span class="source-line-no">184</span><span id="line-184">  }</span>
-<span class="source-line-no">185</span><span id="line-185"></span>
-<span class="source-line-no">186</span><span id="line-186">  /**</span>
-<span class="source-line-no">187</span><span id="line-187">   * Apply the key value pattern, if configured, to generate the final key value.</span>
-<span class="source-line-no">188</span><span id="line-188">   *</span>
-<span class="source-line-no">189</span><span id="line-189">   * @param keyItem</span>
-<span class="source-line-no">190</span><span id="line-190">   *          the node item used to form the key field</span>
-<span class="source-line-no">191</span><span id="line-191">   * @param pattern</span>
-<span class="source-line-no">192</span><span id="line-192">   *          the key field pattern configuration from the constraint</span>
-<span class="source-line-no">193</span><span id="line-193">   * @param keyValue</span>
-<span class="source-line-no">194</span><span id="line-194">   *          the current key value</span>
-<span class="source-line-no">195</span><span id="line-195">   * @return the final key value</span>
-<span class="source-line-no">196</span><span id="line-196">   */</span>
-<span class="source-line-no">197</span><span id="line-197">  private static String applyPattern(@NonNull MetapathExpression keyMetapath, @NonNull String keyValue,</span>
-<span class="source-line-no">198</span><span id="line-198">      @NonNull Pattern pattern) {</span>
-<span class="source-line-no">199</span><span id="line-199">    Matcher matcher = pattern.matcher(keyValue);</span>
-<span class="source-line-no">200</span><span id="line-200">    if (!matcher.matches()) {</span>
-<span class="source-line-no">201</span><span id="line-201">      throw new MetapathException(</span>
-<span class="source-line-no">202</span><span id="line-202">          String.format("Key field declares the pattern '%s' which does not match the value '%s' of node '%s'",</span>
-<span class="source-line-no">203</span><span id="line-203">              pattern.pattern(), keyValue, keyMetapath));</span>
-<span class="source-line-no">204</span><span id="line-204">    }</span>
-<span class="source-line-no">205</span><span id="line-205"></span>
-<span class="source-line-no">206</span><span id="line-206">    if (matcher.groupCount() != 1) {</span>
-<span class="source-line-no">207</span><span id="line-207">      throw new MetapathException(String.format(</span>
-<span class="source-line-no">208</span><span id="line-208">          "The first group was not a match for value '%s' of node '%s' for key field pattern '%s'",</span>
-<span class="source-line-no">209</span><span id="line-209">          keyValue, keyMetapath, pattern.pattern()));</span>
-<span class="source-line-no">210</span><span id="line-210">    }</span>
-<span class="source-line-no">211</span><span id="line-211">    return matcher.group(1);</span>
-<span class="source-line-no">212</span><span id="line-212">  }</span>
-<span class="source-line-no">213</span><span id="line-213">}</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ResultType;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultIndex;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">import java.util.ArrayList;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.util.List;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.regex.Matcher;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.regex.Pattern;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.util.stream.Collectors;</span>
+<span class="source-line-no">024</span><span id="line-24"></span>
+<span class="source-line-no">025</span><span id="line-25">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">026</span><span id="line-26">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">public interface IIndex {</span>
+<span class="source-line-no">029</span><span id="line-29"></span>
+<span class="source-line-no">030</span><span id="line-30">  /**</span>
+<span class="source-line-no">031</span><span id="line-31">   * Construct a new index using the provided key field components to generate</span>
+<span class="source-line-no">032</span><span id="line-32">   * keys.</span>
+<span class="source-line-no">033</span><span id="line-33">   *</span>
+<span class="source-line-no">034</span><span id="line-34">   * @param keyFields</span>
+<span class="source-line-no">035</span><span id="line-35">   *          the key field components to use to generate keys by default</span>
+<span class="source-line-no">036</span><span id="line-36">   * @return the new index</span>
+<span class="source-line-no">037</span><span id="line-37">   */</span>
+<span class="source-line-no">038</span><span id="line-38">  @NonNull</span>
+<span class="source-line-no">039</span><span id="line-39">  static IIndex newInstance(@NonNull List&lt;? extends IKeyField&gt; keyFields) {</span>
+<span class="source-line-no">040</span><span id="line-40">    return new DefaultIndex(keyFields);</span>
+<span class="source-line-no">041</span><span id="line-41">  }</span>
+<span class="source-line-no">042</span><span id="line-42"></span>
+<span class="source-line-no">043</span><span id="line-43">  /**</span>
+<span class="source-line-no">044</span><span id="line-44">   * Check if a key contains information other than {@code null} Strings.</span>
+<span class="source-line-no">045</span><span id="line-45">   *</span>
+<span class="source-line-no">046</span><span id="line-46">   * @param key</span>
+<span class="source-line-no">047</span><span id="line-47">   *          the key to check</span>
+<span class="source-line-no">048</span><span id="line-48">   * @return {@code true} if the series of key values contains only {@code null}</span>
+<span class="source-line-no">049</span><span id="line-49">   *         values, or {@code false} otherwise</span>
+<span class="source-line-no">050</span><span id="line-50">   */</span>
+<span class="source-line-no">051</span><span id="line-51">  static boolean isAllNulls(@NonNull Iterable&lt;String&gt; key) {</span>
+<span class="source-line-no">052</span><span id="line-52">    for (String value : key) {</span>
+<span class="source-line-no">053</span><span id="line-53">      if (value != null) {</span>
+<span class="source-line-no">054</span><span id="line-54">        return false; // NOPMD readability</span>
+<span class="source-line-no">055</span><span id="line-55">      }</span>
+<span class="source-line-no">056</span><span id="line-56">    }</span>
+<span class="source-line-no">057</span><span id="line-57">    return true;</span>
+<span class="source-line-no">058</span><span id="line-58">  }</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  /**</span>
+<span class="source-line-no">061</span><span id="line-61">   * Retrieve the key field components used to generate a key for this index.</span>
+<span class="source-line-no">062</span><span id="line-62">   *</span>
+<span class="source-line-no">063</span><span id="line-63">   * @return the key field components</span>
+<span class="source-line-no">064</span><span id="line-64">   */</span>
+<span class="source-line-no">065</span><span id="line-65">  @NonNull</span>
+<span class="source-line-no">066</span><span id="line-66">  List&lt;IKeyField&gt; getKeyFields();</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  /**</span>
+<span class="source-line-no">069</span><span id="line-69">   * Store the provided item in the index using the index's key field components</span>
+<span class="source-line-no">070</span><span id="line-70">   * to generate the key.</span>
+<span class="source-line-no">071</span><span id="line-71">   *</span>
+<span class="source-line-no">072</span><span id="line-72">   * @param item</span>
+<span class="source-line-no">073</span><span id="line-73">   *          the item to store in the index</span>
+<span class="source-line-no">074</span><span id="line-74">   * @param dynamicContext</span>
+<span class="source-line-no">075</span><span id="line-75">   *          the Metapath evaluation context</span>
+<span class="source-line-no">076</span><span id="line-76">   * @return the previous item stored in the index, or {@code null} otherwise</span>
+<span class="source-line-no">077</span><span id="line-77">   */</span>
+<span class="source-line-no">078</span><span id="line-78">  @Nullable</span>
+<span class="source-line-no">079</span><span id="line-79">  default INodeItem put(@NonNull INodeItem item, @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">080</span><span id="line-80">    List&lt;String&gt; key = toKey(item, getKeyFields(), dynamicContext);</span>
+<span class="source-line-no">081</span><span id="line-81">    return put(item, key);</span>
+<span class="source-line-no">082</span><span id="line-82">  }</span>
+<span class="source-line-no">083</span><span id="line-83"></span>
+<span class="source-line-no">084</span><span id="line-84">  /**</span>
+<span class="source-line-no">085</span><span id="line-85">   * Store the provided item using the provided key.</span>
+<span class="source-line-no">086</span><span id="line-86">   *</span>
+<span class="source-line-no">087</span><span id="line-87">   * @param item</span>
+<span class="source-line-no">088</span><span id="line-88">   *          the item to store</span>
+<span class="source-line-no">089</span><span id="line-89">   * @param key</span>
+<span class="source-line-no">090</span><span id="line-90">   *          the key to store the item with</span>
+<span class="source-line-no">091</span><span id="line-91">   * @return the previous item stored in the index using the key, or {@code null}</span>
+<span class="source-line-no">092</span><span id="line-92">   *         otherwise</span>
+<span class="source-line-no">093</span><span id="line-93">   */</span>
+<span class="source-line-no">094</span><span id="line-94">  @Nullable</span>
+<span class="source-line-no">095</span><span id="line-95">  INodeItem put(@NonNull INodeItem item, @NonNull List&lt;String&gt; key);</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">  /**</span>
+<span class="source-line-no">098</span><span id="line-98">   * Retrieve the item from the index that matches the key generated by evaluating</span>
+<span class="source-line-no">099</span><span id="line-99">   * the index's default key field components against the provided item.</span>
+<span class="source-line-no">100</span><span id="line-100">   *</span>
+<span class="source-line-no">101</span><span id="line-101">   * @param item</span>
+<span class="source-line-no">102</span><span id="line-102">   *          the item to store in the index</span>
+<span class="source-line-no">103</span><span id="line-103">   * @param dynamicContext</span>
+<span class="source-line-no">104</span><span id="line-104">   *          the Metapath evaluation context</span>
+<span class="source-line-no">105</span><span id="line-105">   * @return the previous item stored in the index, or {@code null} otherwise</span>
+<span class="source-line-no">106</span><span id="line-106">   */</span>
+<span class="source-line-no">107</span><span id="line-107">  @Nullable</span>
+<span class="source-line-no">108</span><span id="line-108">  default INodeItem get(@NonNull INodeItem item, @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">109</span><span id="line-109">    List&lt;String&gt; key = toKey(item, getKeyFields(), dynamicContext);</span>
+<span class="source-line-no">110</span><span id="line-110">    return get(key);</span>
+<span class="source-line-no">111</span><span id="line-111">  }</span>
+<span class="source-line-no">112</span><span id="line-112"></span>
+<span class="source-line-no">113</span><span id="line-113">  /**</span>
+<span class="source-line-no">114</span><span id="line-114">   * Retrieve the item from the index that matches the provided key.</span>
+<span class="source-line-no">115</span><span id="line-115">   *</span>
+<span class="source-line-no">116</span><span id="line-116">   * @param key</span>
+<span class="source-line-no">117</span><span id="line-117">   *          the key to use for lookup</span>
+<span class="source-line-no">118</span><span id="line-118">   * @return the item with the matching key or {@code null} if no matching item</span>
+<span class="source-line-no">119</span><span id="line-119">   *         was found</span>
+<span class="source-line-no">120</span><span id="line-120">   */</span>
+<span class="source-line-no">121</span><span id="line-121">  INodeItem get(List&lt;String&gt; key);</span>
+<span class="source-line-no">122</span><span id="line-122"></span>
+<span class="source-line-no">123</span><span id="line-123">  /**</span>
+<span class="source-line-no">124</span><span id="line-124">   * Construct a key by evaluating the provided key field components against the</span>
+<span class="source-line-no">125</span><span id="line-125">   * provided item.</span>
+<span class="source-line-no">126</span><span id="line-126">   *</span>
+<span class="source-line-no">127</span><span id="line-127">   * @param item</span>
+<span class="source-line-no">128</span><span id="line-128">   *          the item to generate the key from</span>
+<span class="source-line-no">129</span><span id="line-129">   * @param keyFields</span>
+<span class="source-line-no">130</span><span id="line-130">   *          the key field components used to generate the key</span>
+<span class="source-line-no">131</span><span id="line-131">   * @param dynamicContext</span>
+<span class="source-line-no">132</span><span id="line-132">   *          the Metapath evaluation context</span>
+<span class="source-line-no">133</span><span id="line-133">   * @return a new key</span>
+<span class="source-line-no">134</span><span id="line-134">   */</span>
+<span class="source-line-no">135</span><span id="line-135">  @NonNull</span>
+<span class="source-line-no">136</span><span id="line-136">  static List&lt;String&gt; toKey(@NonNull INodeItem item, @NonNull List&lt;? extends IKeyField&gt; keyFields,</span>
+<span class="source-line-no">137</span><span id="line-137">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">138</span><span id="line-138">    return CollectionUtil.unmodifiableList(</span>
+<span class="source-line-no">139</span><span id="line-139">        ObjectUtils.notNull(keyFields.stream()</span>
+<span class="source-line-no">140</span><span id="line-140">            .map(keyField -&gt; {</span>
+<span class="source-line-no">141</span><span id="line-141">              assert keyField != null;</span>
+<span class="source-line-no">142</span><span id="line-142">              return buildKeyItem(item, keyField, dynamicContext);</span>
+<span class="source-line-no">143</span><span id="line-143">            })</span>
+<span class="source-line-no">144</span><span id="line-144">            .collect(Collectors.toCollection(ArrayList::new))));</span>
+<span class="source-line-no">145</span><span id="line-145">  }</span>
+<span class="source-line-no">146</span><span id="line-146"></span>
+<span class="source-line-no">147</span><span id="line-147">  /**</span>
+<span class="source-line-no">148</span><span id="line-148">   * Evaluates the provided key field component against the item to generate a key</span>
+<span class="source-line-no">149</span><span id="line-149">   * value.</span>
+<span class="source-line-no">150</span><span id="line-150">   *</span>
+<span class="source-line-no">151</span><span id="line-151">   * @param item</span>
+<span class="source-line-no">152</span><span id="line-152">   *          the item to generate the key value from</span>
+<span class="source-line-no">153</span><span id="line-153">   * @param keyField</span>
+<span class="source-line-no">154</span><span id="line-154">   *          the key field component used to generate the key value</span>
+<span class="source-line-no">155</span><span id="line-155">   * @param dynamicContext</span>
+<span class="source-line-no">156</span><span id="line-156">   *          the Metapath evaluation context</span>
+<span class="source-line-no">157</span><span id="line-157">   * @return the key value or {@code null} if the evaluation resulted in no value</span>
+<span class="source-line-no">158</span><span id="line-158">   */</span>
+<span class="source-line-no">159</span><span id="line-159">  @Nullable</span>
+<span class="source-line-no">160</span><span id="line-160">  private static String buildKeyItem(</span>
+<span class="source-line-no">161</span><span id="line-161">      @NonNull INodeItem item,</span>
+<span class="source-line-no">162</span><span id="line-162">      @NonNull IKeyField keyField,</span>
+<span class="source-line-no">163</span><span id="line-163">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">164</span><span id="line-164">    MetapathExpression keyMetapath = keyField.getTargetMetapath();</span>
+<span class="source-line-no">165</span><span id="line-165"></span>
+<span class="source-line-no">166</span><span id="line-166">    IItem keyItem;</span>
+<span class="source-line-no">167</span><span id="line-167">    try {</span>
+<span class="source-line-no">168</span><span id="line-168">      keyItem = keyMetapath.evaluateAs(item, ResultType.ITEM, dynamicContext);</span>
+<span class="source-line-no">169</span><span id="line-169">    } catch (InvalidTypeMetapathException ex) {</span>
+<span class="source-line-no">170</span><span id="line-170">      throw new MetapathException("Key path did not result in a single item", ex);</span>
+<span class="source-line-no">171</span><span id="line-171">    }</span>
+<span class="source-line-no">172</span><span id="line-172"></span>
+<span class="source-line-no">173</span><span id="line-173">    String keyValue = null;</span>
+<span class="source-line-no">174</span><span id="line-174">    if (keyItem != null) {</span>
+<span class="source-line-no">175</span><span id="line-175">      keyValue = keyItem.toAtomicItem().asString();</span>
+<span class="source-line-no">176</span><span id="line-176">      assert keyValue != null;</span>
+<span class="source-line-no">177</span><span id="line-177">      Pattern pattern = keyField.getPattern();</span>
+<span class="source-line-no">178</span><span id="line-178">      if (pattern != null) {</span>
+<span class="source-line-no">179</span><span id="line-179">        keyValue = applyPattern(keyMetapath, keyValue, pattern);</span>
+<span class="source-line-no">180</span><span id="line-180">      }</span>
+<span class="source-line-no">181</span><span id="line-181">    } // empty key</span>
+<span class="source-line-no">182</span><span id="line-182">    return keyValue;</span>
+<span class="source-line-no">183</span><span id="line-183">  }</span>
+<span class="source-line-no">184</span><span id="line-184"></span>
+<span class="source-line-no">185</span><span id="line-185">  /**</span>
+<span class="source-line-no">186</span><span id="line-186">   * Apply the key value pattern, if configured, to generate the final key value.</span>
+<span class="source-line-no">187</span><span id="line-187">   *</span>
+<span class="source-line-no">188</span><span id="line-188">   * @param keyItem</span>
+<span class="source-line-no">189</span><span id="line-189">   *          the node item used to form the key field</span>
+<span class="source-line-no">190</span><span id="line-190">   * @param pattern</span>
+<span class="source-line-no">191</span><span id="line-191">   *          the key field pattern configuration from the constraint</span>
+<span class="source-line-no">192</span><span id="line-192">   * @param keyValue</span>
+<span class="source-line-no">193</span><span id="line-193">   *          the current key value</span>
+<span class="source-line-no">194</span><span id="line-194">   * @return the final key value</span>
+<span class="source-line-no">195</span><span id="line-195">   */</span>
+<span class="source-line-no">196</span><span id="line-196">  private static String applyPattern(@NonNull MetapathExpression keyMetapath, @NonNull String keyValue,</span>
+<span class="source-line-no">197</span><span id="line-197">      @NonNull Pattern pattern) {</span>
+<span class="source-line-no">198</span><span id="line-198">    Matcher matcher = pattern.matcher(keyValue);</span>
+<span class="source-line-no">199</span><span id="line-199">    if (!matcher.matches()) {</span>
+<span class="source-line-no">200</span><span id="line-200">      throw new MetapathException(</span>
+<span class="source-line-no">201</span><span id="line-201">          String.format("Key field declares the pattern '%s' which does not match the value '%s' of node '%s'",</span>
+<span class="source-line-no">202</span><span id="line-202">              pattern.pattern(), keyValue, keyMetapath));</span>
+<span class="source-line-no">203</span><span id="line-203">    }</span>
+<span class="source-line-no">204</span><span id="line-204"></span>
+<span class="source-line-no">205</span><span id="line-205">    if (matcher.groupCount() != 1) {</span>
+<span class="source-line-no">206</span><span id="line-206">      throw new MetapathException(String.format(</span>
+<span class="source-line-no">207</span><span id="line-207">          "The first group was not a match for value '%s' of node '%s' for key field pattern '%s'",</span>
+<span class="source-line-no">208</span><span id="line-208">          keyValue, keyMetapath, pattern.pattern()));</span>
+<span class="source-line-no">209</span><span id="line-209">    }</span>
+<span class="source-line-no">210</span><span id="line-210">    return matcher.group(1);</span>
+<span class="source-line-no">211</span><span id="line-211">  }</span>
+<span class="source-line-no">212</span><span id="line-212">}</span>
 
 
 

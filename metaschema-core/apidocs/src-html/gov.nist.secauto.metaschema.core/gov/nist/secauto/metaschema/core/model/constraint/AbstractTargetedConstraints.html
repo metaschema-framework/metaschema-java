@@ -18,47 +18,60 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model.constraint;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.ISource;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">/**</span>
-<span class="source-line-no">011</span><span id="line-11"> * Provides an base implementation for a set of constraints that target a</span>
-<span class="source-line-no">012</span><span id="line-12"> * definition using a target Metapath expression.</span>
-<span class="source-line-no">013</span><span id="line-13"> *</span>
-<span class="source-line-no">014</span><span id="line-14"> * @param &lt;T&gt;</span>
-<span class="source-line-no">015</span><span id="line-15"> *          the Java type of the constraint container</span>
-<span class="source-line-no">016</span><span id="line-16"> */</span>
-<span class="source-line-no">017</span><span id="line-17">public abstract class AbstractTargetedConstraints&lt;T extends IValueConstrained&gt;</span>
-<span class="source-line-no">018</span><span id="line-18">    implements ITargetedConstraints, IFeatureValueConstrained {</span>
-<span class="source-line-no">019</span><span id="line-19">  @NonNull</span>
-<span class="source-line-no">020</span><span id="line-20">  private final String targetExpression;</span>
+<span class="source-line-no">010</span><span id="line-10">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">011</span><span id="line-11"></span>
+<span class="source-line-no">012</span><span id="line-12">/**</span>
+<span class="source-line-no">013</span><span id="line-13"> * Provides an base implementation for a set of constraints that target a</span>
+<span class="source-line-no">014</span><span id="line-14"> * definition using a target Metapath expression.</span>
+<span class="source-line-no">015</span><span id="line-15"> *</span>
+<span class="source-line-no">016</span><span id="line-16"> * @param &lt;T&gt;</span>
+<span class="source-line-no">017</span><span id="line-17"> *          the Java type of the constraint container</span>
+<span class="source-line-no">018</span><span id="line-18"> */</span>
+<span class="source-line-no">019</span><span id="line-19">public abstract class AbstractTargetedConstraints&lt;T extends IValueConstrained&gt;</span>
+<span class="source-line-no">020</span><span id="line-20">    implements ITargetedConstraints, IFeatureValueConstrained {</span>
 <span class="source-line-no">021</span><span id="line-21">  @NonNull</span>
-<span class="source-line-no">022</span><span id="line-22">  private final T constraints;</span>
-<span class="source-line-no">023</span><span id="line-23"></span>
-<span class="source-line-no">024</span><span id="line-24">  /**</span>
-<span class="source-line-no">025</span><span id="line-25">   * Construct a new set of targeted constraints.</span>
-<span class="source-line-no">026</span><span id="line-26">   *</span>
-<span class="source-line-no">027</span><span id="line-27">   * @param target</span>
-<span class="source-line-no">028</span><span id="line-28">   *          the Metapath expression that can be used to find matching targets</span>
-<span class="source-line-no">029</span><span id="line-29">   * @param constraints</span>
-<span class="source-line-no">030</span><span id="line-30">   *          the constraints to apply to matching targets</span>
-<span class="source-line-no">031</span><span id="line-31">   */</span>
-<span class="source-line-no">032</span><span id="line-32">  protected AbstractTargetedConstraints(</span>
-<span class="source-line-no">033</span><span id="line-33">      @NonNull String target,</span>
-<span class="source-line-no">034</span><span id="line-34">      @NonNull T constraints) {</span>
-<span class="source-line-no">035</span><span id="line-35">    this.targetExpression = target;</span>
-<span class="source-line-no">036</span><span id="line-36">    this.constraints = constraints;</span>
-<span class="source-line-no">037</span><span id="line-37">  }</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  @Override</span>
-<span class="source-line-no">040</span><span id="line-40">  public String getTargetExpression() {</span>
-<span class="source-line-no">041</span><span id="line-41">    return targetExpression;</span>
-<span class="source-line-no">042</span><span id="line-42">  }</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  @Override</span>
-<span class="source-line-no">045</span><span id="line-45">  public T getConstraintSupport() {</span>
-<span class="source-line-no">046</span><span id="line-46">    return constraints;</span>
-<span class="source-line-no">047</span><span id="line-47">  }</span>
-<span class="source-line-no">048</span><span id="line-48">}</span>
+<span class="source-line-no">022</span><span id="line-22">  private final ISource source;</span>
+<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
+<span class="source-line-no">024</span><span id="line-24">  private final String targetExpression;</span>
+<span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
+<span class="source-line-no">026</span><span id="line-26">  private final T constraints;</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">  /**</span>
+<span class="source-line-no">029</span><span id="line-29">   * Construct a new set of targeted constraints.</span>
+<span class="source-line-no">030</span><span id="line-30">   *</span>
+<span class="source-line-no">031</span><span id="line-31">   * @param source</span>
+<span class="source-line-no">032</span><span id="line-32">   *          information about the resource the constraints were sources from</span>
+<span class="source-line-no">033</span><span id="line-33">   * @param target</span>
+<span class="source-line-no">034</span><span id="line-34">   *          the Metapath expression that can be used to find matching targets</span>
+<span class="source-line-no">035</span><span id="line-35">   * @param constraints</span>
+<span class="source-line-no">036</span><span id="line-36">   *          the constraints to apply to matching targets</span>
+<span class="source-line-no">037</span><span id="line-37">   */</span>
+<span class="source-line-no">038</span><span id="line-38">  protected AbstractTargetedConstraints(</span>
+<span class="source-line-no">039</span><span id="line-39">      @NonNull ISource source,</span>
+<span class="source-line-no">040</span><span id="line-40">      @NonNull String target,</span>
+<span class="source-line-no">041</span><span id="line-41">      @NonNull T constraints) {</span>
+<span class="source-line-no">042</span><span id="line-42">    this.source = source;</span>
+<span class="source-line-no">043</span><span id="line-43">    this.targetExpression = target;</span>
+<span class="source-line-no">044</span><span id="line-44">    this.constraints = constraints;</span>
+<span class="source-line-no">045</span><span id="line-45">  }</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">  @Override</span>
+<span class="source-line-no">048</span><span id="line-48">  public ISource getSource() {</span>
+<span class="source-line-no">049</span><span id="line-49">    return source;</span>
+<span class="source-line-no">050</span><span id="line-50">  }</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  @Override</span>
+<span class="source-line-no">053</span><span id="line-53">  public String getTargetExpression() {</span>
+<span class="source-line-no">054</span><span id="line-54">    return targetExpression;</span>
+<span class="source-line-no">055</span><span id="line-55">  }</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">  @Override</span>
+<span class="source-line-no">058</span><span id="line-58">  public T getConstraintSupport() {</span>
+<span class="source-line-no">059</span><span id="line-59">    return constraints;</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61">}</span>
 
 
 

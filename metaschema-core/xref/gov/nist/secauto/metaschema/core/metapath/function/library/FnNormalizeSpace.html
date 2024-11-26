@@ -41,7 +41,7 @@
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>        .deterministic()
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>        .contextDependent()
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>        .focusDependent()
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>        .returnType(IStringItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>        .returnType(IStringItem.type())
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>        .returnOne()
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>        .functionHandler(FnNormalizeSpace::executeNoArg)
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>        .build();
@@ -55,10 +55,10 @@
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>        .focusIndependent()
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>        .argument(IArgument.builder()
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>            .name(<span class="jxr_string">"arg"</span>)
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>            .type(IStringItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>            .type(IStringItem.type())
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>            .zeroOrOne()
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>            .build())
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>        .returnType(IStringItem.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>        .returnType(IStringItem.type())
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>        .returnOne()
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>        .functionHandler(FnNormalizeSpace::executeOneArg)
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>        .build();

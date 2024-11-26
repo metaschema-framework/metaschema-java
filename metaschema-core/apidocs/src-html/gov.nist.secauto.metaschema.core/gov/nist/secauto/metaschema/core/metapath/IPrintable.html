@@ -20,15 +20,19 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">public interface IPrintable {</span>
-<span class="source-line-no">011</span><span id="line-11">  /**</span>
-<span class="source-line-no">012</span><span id="line-12">   * Get the string value.</span>
-<span class="source-line-no">013</span><span id="line-13">   *</span>
-<span class="source-line-no">014</span><span id="line-14">   * @return the string value</span>
-<span class="source-line-no">015</span><span id="line-15">   */</span>
-<span class="source-line-no">016</span><span id="line-16">  @NonNull</span>
-<span class="source-line-no">017</span><span id="line-17">  String asString();</span>
-<span class="source-line-no">018</span><span id="line-18">}</span>
+<span class="source-line-no">010</span><span id="line-10">/**</span>
+<span class="source-line-no">011</span><span id="line-11"> * Identifies the implementation as being able to produce a string value for</span>
+<span class="source-line-no">012</span><span id="line-12"> * output.</span>
+<span class="source-line-no">013</span><span id="line-13"> */</span>
+<span class="source-line-no">014</span><span id="line-14">public interface IPrintable {</span>
+<span class="source-line-no">015</span><span id="line-15">  /**</span>
+<span class="source-line-no">016</span><span id="line-16">   * Get the string value.</span>
+<span class="source-line-no">017</span><span id="line-17">   *</span>
+<span class="source-line-no">018</span><span id="line-18">   * @return the string value</span>
+<span class="source-line-no">019</span><span id="line-19">   */</span>
+<span class="source-line-no">020</span><span id="line-20">  @NonNull</span>
+<span class="source-line-no">021</span><span id="line-21">  String asString();</span>
+<span class="source-line-no">022</span><span id="line-22">}</span>
 
 
 

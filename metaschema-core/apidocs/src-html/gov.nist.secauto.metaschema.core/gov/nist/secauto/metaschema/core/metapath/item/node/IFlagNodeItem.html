@@ -14,128 +14,139 @@
 <pre><span class="source-line-no">001</span><span id="line-1"></span>
 <span class="source-line-no">002</span><span id="line-2">package gov.nist.secauto.metaschema.core.metapath.item.node;</span>
 <span class="source-line-no">003</span><span id="line-3"></span>
-<span class="source-line-no">004</span><span id="line-4">import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;</span>
-<span class="source-line-no">005</span><span id="line-5">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAtomicValuedItem;</span>
-<span class="source-line-no">006</span><span id="line-6">import gov.nist.secauto.metaschema.core.model.IFlagDefinition;</span>
-<span class="source-line-no">007</span><span id="line-7">import gov.nist.secauto.metaschema.core.model.IFlagInstance;</span>
-<span class="source-line-no">008</span><span id="line-8"></span>
-<span class="source-line-no">009</span><span id="line-9">import java.net.URI;</span>
-<span class="source-line-no">010</span><span id="line-10">import java.util.Collection;</span>
-<span class="source-line-no">011</span><span id="line-11">import java.util.Collections;</span>
-<span class="source-line-no">012</span><span id="line-12">import java.util.List;</span>
-<span class="source-line-no">013</span><span id="line-13">import java.util.stream.Stream;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">018</span><span id="line-18">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">/**</span>
-<span class="source-line-no">021</span><span id="line-21"> * A Metapath node valued item representing a Metaschema module flag.</span>
-<span class="source-line-no">022</span><span id="line-22"> */</span>
-<span class="source-line-no">023</span><span id="line-23"></span>
-<span class="source-line-no">024</span><span id="line-24">public interface IFlagNodeItem</span>
-<span class="source-line-no">025</span><span id="line-25">    extends IDefinitionNodeItem&lt;IFlagDefinition, IFlagInstance&gt;, IAtomicValuedItem {</span>
-<span class="source-line-no">026</span><span id="line-26">  @Override</span>
-<span class="source-line-no">027</span><span id="line-27">  default NodeItemType getNodeItemType() {</span>
-<span class="source-line-no">028</span><span id="line-28">    return NodeItemType.FLAG;</span>
-<span class="source-line-no">029</span><span id="line-29">  }</span>
-<span class="source-line-no">030</span><span id="line-30"></span>
-<span class="source-line-no">031</span><span id="line-31">  @Override</span>
-<span class="source-line-no">032</span><span id="line-32">  default IFlagNodeItem getNodeItem() {</span>
-<span class="source-line-no">033</span><span id="line-33">    return this;</span>
-<span class="source-line-no">034</span><span id="line-34">  }</span>
-<span class="source-line-no">035</span><span id="line-35"></span>
-<span class="source-line-no">036</span><span id="line-36">  @Override</span>
-<span class="source-line-no">037</span><span id="line-37">  IFlagDefinition getDefinition();</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">  @Override</span>
-<span class="source-line-no">040</span><span id="line-40">  IFlagInstance getInstance();</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
-<span class="source-line-no">042</span><span id="line-42">  @Override</span>
-<span class="source-line-no">043</span><span id="line-43">  @Nullable</span>
-<span class="source-line-no">044</span><span id="line-44">  default URI getBaseUri() {</span>
-<span class="source-line-no">045</span><span id="line-45">    INodeItem parent = getParentNodeItem();</span>
-<span class="source-line-no">046</span><span id="line-46">    return parent == null ? null : parent.getBaseUri();</span>
-<span class="source-line-no">047</span><span id="line-47">  }</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">  /**</span>
-<span class="source-line-no">050</span><span id="line-50">   * FlagContainer do not have flag items. This call should return an empty</span>
-<span class="source-line-no">051</span><span id="line-51">   * collection.</span>
-<span class="source-line-no">052</span><span id="line-52">   */</span>
-<span class="source-line-no">053</span><span id="line-53">  @SuppressWarnings("null")</span>
-<span class="source-line-no">054</span><span id="line-54">  @Override</span>
-<span class="source-line-no">055</span><span id="line-55">  default Collection&lt;? extends IFlagNodeItem&gt; getFlags() {</span>
-<span class="source-line-no">056</span><span id="line-56">    // a flag does not have flags</span>
-<span class="source-line-no">057</span><span id="line-57">    return Collections.emptyList();</span>
+<span class="source-line-no">004</span><span id="line-4">import gov.nist.secauto.metaschema.core.metapath.StaticContext;</span>
+<span class="source-line-no">005</span><span id="line-5">import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;</span>
+<span class="source-line-no">006</span><span id="line-6">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAtomicValuedItem;</span>
+<span class="source-line-no">007</span><span id="line-7">import gov.nist.secauto.metaschema.core.metapath.type.IItemType;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.IFlagDefinition;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.IFlagInstance;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">import java.net.URI;</span>
+<span class="source-line-no">014</span><span id="line-14">import java.util.Collection;</span>
+<span class="source-line-no">015</span><span id="line-15">import java.util.Collections;</span>
+<span class="source-line-no">016</span><span id="line-16">import java.util.List;</span>
+<span class="source-line-no">017</span><span id="line-17">import java.util.stream.Stream;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">020</span><span id="line-20">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">/**</span>
+<span class="source-line-no">023</span><span id="line-23"> * A Metapath node valued item representing a Metaschema module flag.</span>
+<span class="source-line-no">024</span><span id="line-24"> */</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">public interface IFlagNodeItem</span>
+<span class="source-line-no">027</span><span id="line-27">    extends IDefinitionNodeItem&lt;IFlagDefinition, IFlagInstance&gt;, IAtomicValuedItem {</span>
+<span class="source-line-no">028</span><span id="line-28">  @Override</span>
+<span class="source-line-no">029</span><span id="line-29">  default NodeItemKind getNodeItemKind() {</span>
+<span class="source-line-no">030</span><span id="line-30">    return NodeItemKind.FLAG;</span>
+<span class="source-line-no">031</span><span id="line-31">  }</span>
+<span class="source-line-no">032</span><span id="line-32"></span>
+<span class="source-line-no">033</span><span id="line-33">  @Override</span>
+<span class="source-line-no">034</span><span id="line-34">  default IFlagNodeItem getNodeItem() {</span>
+<span class="source-line-no">035</span><span id="line-35">    return this;</span>
+<span class="source-line-no">036</span><span id="line-36">  }</span>
+<span class="source-line-no">037</span><span id="line-37"></span>
+<span class="source-line-no">038</span><span id="line-38">  @Override</span>
+<span class="source-line-no">039</span><span id="line-39">  IFlagDefinition getDefinition();</span>
+<span class="source-line-no">040</span><span id="line-40"></span>
+<span class="source-line-no">041</span><span id="line-41">  @Override</span>
+<span class="source-line-no">042</span><span id="line-42">  IFlagInstance getInstance();</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  @Override</span>
+<span class="source-line-no">045</span><span id="line-45">  default IKindTest&lt;IFlagNodeItem&gt; getType() {</span>
+<span class="source-line-no">046</span><span id="line-46">    StaticContext staticContext = getStaticContext();</span>
+<span class="source-line-no">047</span><span id="line-47">    return IItemType.flag(</span>
+<span class="source-line-no">048</span><span id="line-48">        getQName(),</span>
+<span class="source-line-no">049</span><span id="line-49">        getDefinition().getDefinitionQName().toEQName(staticContext),</span>
+<span class="source-line-no">050</span><span id="line-50">        staticContext);</span>
+<span class="source-line-no">051</span><span id="line-51">  }</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">  @Override</span>
+<span class="source-line-no">054</span><span id="line-54">  @Nullable</span>
+<span class="source-line-no">055</span><span id="line-55">  default URI getBaseUri() {</span>
+<span class="source-line-no">056</span><span id="line-56">    INodeItem parent = getParentNodeItem();</span>
+<span class="source-line-no">057</span><span id="line-57">    return parent == null ? null : parent.getBaseUri();</span>
 <span class="source-line-no">058</span><span id="line-58">  }</span>
 <span class="source-line-no">059</span><span id="line-59"></span>
 <span class="source-line-no">060</span><span id="line-60">  /**</span>
-<span class="source-line-no">061</span><span id="line-61">   * FlagContainer do not have flag items. This call should return {@code null}.</span>
-<span class="source-line-no">062</span><span id="line-62">   */</span>
-<span class="source-line-no">063</span><span id="line-63">  @Override</span>
-<span class="source-line-no">064</span><span id="line-64">  default IFlagNodeItem getFlagByName(@NonNull QName name) {</span>
-<span class="source-line-no">065</span><span id="line-65">    // a flag does not have flags</span>
-<span class="source-line-no">066</span><span id="line-66">    return null;</span>
-<span class="source-line-no">067</span><span id="line-67">  }</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  /**</span>
-<span class="source-line-no">070</span><span id="line-70">   * FlagContainer do not have flag items. This call should return an empty</span>
-<span class="source-line-no">071</span><span id="line-71">   * stream.</span>
-<span class="source-line-no">072</span><span id="line-72">   */</span>
-<span class="source-line-no">073</span><span id="line-73">  @SuppressWarnings("null")</span>
+<span class="source-line-no">061</span><span id="line-61">   * FlagContainer do not have flag items. This call should return an empty</span>
+<span class="source-line-no">062</span><span id="line-62">   * collection.</span>
+<span class="source-line-no">063</span><span id="line-63">   */</span>
+<span class="source-line-no">064</span><span id="line-64">  @SuppressWarnings("null")</span>
+<span class="source-line-no">065</span><span id="line-65">  @Override</span>
+<span class="source-line-no">066</span><span id="line-66">  default Collection&lt;? extends IFlagNodeItem&gt; getFlags() {</span>
+<span class="source-line-no">067</span><span id="line-67">    // a flag does not have flags</span>
+<span class="source-line-no">068</span><span id="line-68">    return Collections.emptyList();</span>
+<span class="source-line-no">069</span><span id="line-69">  }</span>
+<span class="source-line-no">070</span><span id="line-70"></span>
+<span class="source-line-no">071</span><span id="line-71">  /**</span>
+<span class="source-line-no">072</span><span id="line-72">   * FlagContainer do not have flag items. This call should return {@code null}.</span>
+<span class="source-line-no">073</span><span id="line-73">   */</span>
 <span class="source-line-no">074</span><span id="line-74">  @Override</span>
-<span class="source-line-no">075</span><span id="line-75">  default @NonNull</span>
-<span class="source-line-no">076</span><span id="line-76">  Stream&lt;? extends IFlagNodeItem&gt; flags() {</span>
-<span class="source-line-no">077</span><span id="line-77">    // a flag does not have flags</span>
-<span class="source-line-no">078</span><span id="line-78">    return Stream.empty();</span>
-<span class="source-line-no">079</span><span id="line-79">  }</span>
-<span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">  /**</span>
-<span class="source-line-no">082</span><span id="line-82">   * FlagContainer do not have model items. This call should return an empty</span>
-<span class="source-line-no">083</span><span id="line-83">   * collection.</span>
-<span class="source-line-no">084</span><span id="line-84">   */</span>
-<span class="source-line-no">085</span><span id="line-85">  @SuppressWarnings("null")</span>
-<span class="source-line-no">086</span><span id="line-86">  @Override</span>
-<span class="source-line-no">087</span><span id="line-87">  default @NonNull</span>
-<span class="source-line-no">088</span><span id="line-88">  Collection&lt;? extends List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; getModelItems() {</span>
-<span class="source-line-no">089</span><span id="line-89">    // a flag does not have model items</span>
-<span class="source-line-no">090</span><span id="line-90">    return Collections.emptyList();</span>
-<span class="source-line-no">091</span><span id="line-91">  }</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">  /**</span>
-<span class="source-line-no">094</span><span id="line-94">   * FlagContainer do not have model items. This call should return an empty list.</span>
+<span class="source-line-no">075</span><span id="line-75">  default IFlagNodeItem getFlagByName(@NonNull IEnhancedQName name) {</span>
+<span class="source-line-no">076</span><span id="line-76">    // a flag does not have flags</span>
+<span class="source-line-no">077</span><span id="line-77">    return null;</span>
+<span class="source-line-no">078</span><span id="line-78">  }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">  /**</span>
+<span class="source-line-no">081</span><span id="line-81">   * FlagContainer do not have flag items. This call should return an empty</span>
+<span class="source-line-no">082</span><span id="line-82">   * stream.</span>
+<span class="source-line-no">083</span><span id="line-83">   */</span>
+<span class="source-line-no">084</span><span id="line-84">  @SuppressWarnings("null")</span>
+<span class="source-line-no">085</span><span id="line-85">  @Override</span>
+<span class="source-line-no">086</span><span id="line-86">  default @NonNull</span>
+<span class="source-line-no">087</span><span id="line-87">  Stream&lt;? extends IFlagNodeItem&gt; flags() {</span>
+<span class="source-line-no">088</span><span id="line-88">    // a flag does not have flags</span>
+<span class="source-line-no">089</span><span id="line-89">    return Stream.empty();</span>
+<span class="source-line-no">090</span><span id="line-90">  }</span>
+<span class="source-line-no">091</span><span id="line-91"></span>
+<span class="source-line-no">092</span><span id="line-92">  /**</span>
+<span class="source-line-no">093</span><span id="line-93">   * FlagContainer do not have model items. This call should return an empty</span>
+<span class="source-line-no">094</span><span id="line-94">   * collection.</span>
 <span class="source-line-no">095</span><span id="line-95">   */</span>
 <span class="source-line-no">096</span><span id="line-96">  @SuppressWarnings("null")</span>
 <span class="source-line-no">097</span><span id="line-97">  @Override</span>
-<span class="source-line-no">098</span><span id="line-98">  default List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; getModelItemsByName(QName name) {</span>
-<span class="source-line-no">099</span><span id="line-99">    // a flag does not have model items</span>
-<span class="source-line-no">100</span><span id="line-100">    return Collections.emptyList();</span>
-<span class="source-line-no">101</span><span id="line-101">  }</span>
-<span class="source-line-no">102</span><span id="line-102"></span>
-<span class="source-line-no">103</span><span id="line-103">  /**</span>
-<span class="source-line-no">104</span><span id="line-104">   * FlagContainer do not have model items. This call should return an empty</span>
-<span class="source-line-no">105</span><span id="line-105">   * stream.</span>
+<span class="source-line-no">098</span><span id="line-98">  default @NonNull</span>
+<span class="source-line-no">099</span><span id="line-99">  Collection&lt;? extends List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; getModelItems() {</span>
+<span class="source-line-no">100</span><span id="line-100">    // a flag does not have model items</span>
+<span class="source-line-no">101</span><span id="line-101">    return Collections.emptyList();</span>
+<span class="source-line-no">102</span><span id="line-102">  }</span>
+<span class="source-line-no">103</span><span id="line-103"></span>
+<span class="source-line-no">104</span><span id="line-104">  /**</span>
+<span class="source-line-no">105</span><span id="line-105">   * FlagContainer do not have model items. This call should return an empty list.</span>
 <span class="source-line-no">106</span><span id="line-106">   */</span>
 <span class="source-line-no">107</span><span id="line-107">  @SuppressWarnings("null")</span>
-<span class="source-line-no">108</span><span id="line-108">  @NonNull</span>
-<span class="source-line-no">109</span><span id="line-109">  @Override</span>
-<span class="source-line-no">110</span><span id="line-110">  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; modelItems() {</span>
-<span class="source-line-no">111</span><span id="line-111">    // a flag does not have model items</span>
-<span class="source-line-no">112</span><span id="line-112">    return Stream.empty();</span>
-<span class="source-line-no">113</span><span id="line-113">  }</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">  @Override</span>
-<span class="source-line-no">116</span><span id="line-116">  default @NonNull</span>
-<span class="source-line-no">117</span><span id="line-117">  String format(@NonNull IPathFormatter formatter) {</span>
-<span class="source-line-no">118</span><span id="line-118">    return formatter.formatFlag(this);</span>
-<span class="source-line-no">119</span><span id="line-119">  }</span>
-<span class="source-line-no">120</span><span id="line-120"></span>
-<span class="source-line-no">121</span><span id="line-121">  @Override</span>
-<span class="source-line-no">122</span><span id="line-122">  default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull INodeItemVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
-<span class="source-line-no">123</span><span id="line-123">    return visitor.visitFlag(this, context);</span>
+<span class="source-line-no">108</span><span id="line-108">  @Override</span>
+<span class="source-line-no">109</span><span id="line-109">  default List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; getModelItemsByName(IEnhancedQName name) {</span>
+<span class="source-line-no">110</span><span id="line-110">    // a flag does not have model items</span>
+<span class="source-line-no">111</span><span id="line-111">    return Collections.emptyList();</span>
+<span class="source-line-no">112</span><span id="line-112">  }</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">  /**</span>
+<span class="source-line-no">115</span><span id="line-115">   * FlagContainer do not have model items. This call should return an empty</span>
+<span class="source-line-no">116</span><span id="line-116">   * stream.</span>
+<span class="source-line-no">117</span><span id="line-117">   */</span>
+<span class="source-line-no">118</span><span id="line-118">  @SuppressWarnings("null")</span>
+<span class="source-line-no">119</span><span id="line-119">  @NonNull</span>
+<span class="source-line-no">120</span><span id="line-120">  @Override</span>
+<span class="source-line-no">121</span><span id="line-121">  default Stream&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; modelItems() {</span>
+<span class="source-line-no">122</span><span id="line-122">    // a flag does not have model items</span>
+<span class="source-line-no">123</span><span id="line-123">    return Stream.empty();</span>
 <span class="source-line-no">124</span><span id="line-124">  }</span>
-<span class="source-line-no">125</span><span id="line-125">}</span>
+<span class="source-line-no">125</span><span id="line-125"></span>
+<span class="source-line-no">126</span><span id="line-126">  @Override</span>
+<span class="source-line-no">127</span><span id="line-127">  default @NonNull</span>
+<span class="source-line-no">128</span><span id="line-128">  String format(@NonNull IPathFormatter formatter) {</span>
+<span class="source-line-no">129</span><span id="line-129">    return formatter.formatFlag(this);</span>
+<span class="source-line-no">130</span><span id="line-130">  }</span>
+<span class="source-line-no">131</span><span id="line-131"></span>
+<span class="source-line-no">132</span><span id="line-132">  @Override</span>
+<span class="source-line-no">133</span><span id="line-133">  default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull INodeItemVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
+<span class="source-line-no">134</span><span id="line-134">    return visitor.visitFlag(this, context);</span>
+<span class="source-line-no">135</span><span id="line-135">  }</span>
+<span class="source-line-no">136</span><span id="line-136">}</span>
 
 
 

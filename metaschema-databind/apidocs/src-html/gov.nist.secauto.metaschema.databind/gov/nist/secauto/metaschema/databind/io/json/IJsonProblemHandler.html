@@ -18,42 +18,43 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.databind.io.json;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import com.fasterxml.jackson.core.JsonParser;</span>
-<span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.IBoundObject;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.databind.io.IProblemHandler;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.IBoundObject;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.databind.io.IProblemHandler;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;</span>
+<span class="source-line-no">011</span><span id="line-11"></span>
+<span class="source-line-no">012</span><span id="line-12">import java.io.IOException;</span>
 <span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">import java.io.IOException;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">017</span><span id="line-17">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">018</span><span id="line-18"></span>
-<span class="source-line-no">019</span><span id="line-19">public interface IJsonProblemHandler extends IProblemHandler {</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">  /**</span>
-<span class="source-line-no">022</span><span id="line-22">   * Callback used to handle a JSON property that is unknown to the model being</span>
-<span class="source-line-no">023</span><span id="line-23">   * parsed.</span>
-<span class="source-line-no">024</span><span id="line-24">   *</span>
-<span class="source-line-no">025</span><span id="line-25">   * @param definition</span>
-<span class="source-line-no">026</span><span id="line-26">   *          the bound class currently describing the data being parsed</span>
-<span class="source-line-no">027</span><span id="line-27">   * @param parentItem</span>
-<span class="source-line-no">028</span><span id="line-28">   *          the Java object for the {@code parentDefinition}</span>
-<span class="source-line-no">029</span><span id="line-29">   * @param fieldName</span>
-<span class="source-line-no">030</span><span id="line-30">   *          the unknown JSON field name</span>
-<span class="source-line-no">031</span><span id="line-31">   * @param parser</span>
-<span class="source-line-no">032</span><span id="line-32">   *          the JSON reader context used for parsing</span>
-<span class="source-line-no">033</span><span id="line-33">   * @return {@code true} if the attribute was handled by this method, or</span>
-<span class="source-line-no">034</span><span id="line-34">   *         {@code false} otherwise</span>
-<span class="source-line-no">035</span><span id="line-35">   * @throws IOException</span>
-<span class="source-line-no">036</span><span id="line-36">   *           if an error occurred while handling the unrecognized data</span>
-<span class="source-line-no">037</span><span id="line-37">   */</span>
-<span class="source-line-no">038</span><span id="line-38">  boolean handleUnknownProperty(</span>
-<span class="source-line-no">039</span><span id="line-39">      @NonNull IBoundDefinitionModelComplex definition,</span>
-<span class="source-line-no">040</span><span id="line-40">      @Nullable IBoundObject parentItem,</span>
-<span class="source-line-no">041</span><span id="line-41">      @NonNull String fieldName,</span>
-<span class="source-line-no">042</span><span id="line-42">      @NonNull JsonParser parser) throws IOException;</span>
-<span class="source-line-no">043</span><span id="line-43">}</span>
+<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">015</span><span id="line-15">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">/**</span>
+<span class="source-line-no">018</span><span id="line-18"> * Handles common issues resulting from parsing JSON content.</span>
+<span class="source-line-no">019</span><span id="line-19"> */</span>
+<span class="source-line-no">020</span><span id="line-20">public interface IJsonProblemHandler extends IProblemHandler {</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">  /**</span>
+<span class="source-line-no">023</span><span id="line-23">   * Callback used to handle a JSON property that is unknown to the model being</span>
+<span class="source-line-no">024</span><span id="line-24">   * parsed.</span>
+<span class="source-line-no">025</span><span id="line-25">   *</span>
+<span class="source-line-no">026</span><span id="line-26">   * @param definition</span>
+<span class="source-line-no">027</span><span id="line-27">   *          the bound class currently describing the data being parsed</span>
+<span class="source-line-no">028</span><span id="line-28">   * @param parentItem</span>
+<span class="source-line-no">029</span><span id="line-29">   *          the Java object for the {@code parentDefinition}</span>
+<span class="source-line-no">030</span><span id="line-30">   * @param fieldName</span>
+<span class="source-line-no">031</span><span id="line-31">   *          the unknown JSON field name</span>
+<span class="source-line-no">032</span><span id="line-32">   * @param parsingContext</span>
+<span class="source-line-no">033</span><span id="line-33">   *          the JSON parsing context used for parsing</span>
+<span class="source-line-no">034</span><span id="line-34">   * @return {@code true} if the attribute was handled by this method, or</span>
+<span class="source-line-no">035</span><span id="line-35">   *         {@code false} otherwise</span>
+<span class="source-line-no">036</span><span id="line-36">   * @throws IOException</span>
+<span class="source-line-no">037</span><span id="line-37">   *           if an error occurred while handling the unrecognized data</span>
+<span class="source-line-no">038</span><span id="line-38">   */</span>
+<span class="source-line-no">039</span><span id="line-39">  boolean handleUnknownProperty(</span>
+<span class="source-line-no">040</span><span id="line-40">      @NonNull IBoundDefinitionModelComplex definition,</span>
+<span class="source-line-no">041</span><span id="line-41">      @Nullable IBoundObject parentItem,</span>
+<span class="source-line-no">042</span><span id="line-42">      @NonNull String fieldName,</span>
+<span class="source-line-no">043</span><span id="line-43">      @NonNull IJsonParsingContext parsingContext) throws IOException;</span>
+<span class="source-line-no">044</span><span id="line-44">}</span>
 
 
 

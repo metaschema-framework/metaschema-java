@@ -25,37 +25,66 @@
 <span class="source-line-no">012</span><span id="line-12"></span>
 <span class="source-line-no">013</span><span id="line-13">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">public abstract class AbstractCommandExecutor implements ICommandExecutor {</span>
-<span class="source-line-no">016</span><span id="line-16">  @NonNull</span>
-<span class="source-line-no">017</span><span id="line-17">  private final CallingContext callingContext;</span>
-<span class="source-line-no">018</span><span id="line-18">  @NonNull</span>
-<span class="source-line-no">019</span><span id="line-19">  private final CommandLine commandLine;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">  public AbstractCommandExecutor(</span>
-<span class="source-line-no">022</span><span id="line-22">      @NonNull CallingContext callingContext,</span>
-<span class="source-line-no">023</span><span id="line-23">      @NonNull CommandLine commandLine) {</span>
-<span class="source-line-no">024</span><span id="line-24">    this.callingContext = callingContext;</span>
-<span class="source-line-no">025</span><span id="line-25">    this.commandLine = commandLine;</span>
-<span class="source-line-no">026</span><span id="line-26">  }</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
-<span class="source-line-no">029</span><span id="line-29">  protected CallingContext getCallingContext() {</span>
-<span class="source-line-no">030</span><span id="line-30">    return callingContext;</span>
-<span class="source-line-no">031</span><span id="line-31">  }</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
-<span class="source-line-no">034</span><span id="line-34">  protected CommandLine getCommandLine() {</span>
-<span class="source-line-no">035</span><span id="line-35">    return commandLine;</span>
-<span class="source-line-no">036</span><span id="line-36">  }</span>
-<span class="source-line-no">037</span><span id="line-37"></span>
-<span class="source-line-no">038</span><span id="line-38">  @Override</span>
-<span class="source-line-no">039</span><span id="line-39">  public abstract void execute() throws CommandExecutionException;</span>
-<span class="source-line-no">040</span><span id="line-40"></span>
-<span class="source-line-no">041</span><span id="line-41">  @NonNull</span>
-<span class="source-line-no">042</span><span id="line-42">  protected ICommand getCommand() {</span>
-<span class="source-line-no">043</span><span id="line-43">    return ObjectUtils.requireNonNull(getCallingContext().getTargetCommand());</span>
-<span class="source-line-no">044</span><span id="line-44">  }</span>
-<span class="source-line-no">045</span><span id="line-45">}</span>
+<span class="source-line-no">015</span><span id="line-15">/**</span>
+<span class="source-line-no">016</span><span id="line-16"> * A base class for implementation that perform the operation supported by a</span>
+<span class="source-line-no">017</span><span id="line-17"> * command.</span>
+<span class="source-line-no">018</span><span id="line-18"> */</span>
+<span class="source-line-no">019</span><span id="line-19">public abstract class AbstractCommandExecutor implements ICommandExecutor {</span>
+<span class="source-line-no">020</span><span id="line-20">  @NonNull</span>
+<span class="source-line-no">021</span><span id="line-21">  private final CallingContext callingContext;</span>
+<span class="source-line-no">022</span><span id="line-22">  @NonNull</span>
+<span class="source-line-no">023</span><span id="line-23">  private final CommandLine commandLine;</span>
+<span class="source-line-no">024</span><span id="line-24"></span>
+<span class="source-line-no">025</span><span id="line-25">  /**</span>
+<span class="source-line-no">026</span><span id="line-26">   * Construct a new command executor.</span>
+<span class="source-line-no">027</span><span id="line-27">   *</span>
+<span class="source-line-no">028</span><span id="line-28">   * @param callingContext</span>
+<span class="source-line-no">029</span><span id="line-29">   *          the context of the command execution</span>
+<span class="source-line-no">030</span><span id="line-30">   * @param commandLine</span>
+<span class="source-line-no">031</span><span id="line-31">   *          the parsed command line details</span>
+<span class="source-line-no">032</span><span id="line-32">   */</span>
+<span class="source-line-no">033</span><span id="line-33">  protected AbstractCommandExecutor(</span>
+<span class="source-line-no">034</span><span id="line-34">      @NonNull CallingContext callingContext,</span>
+<span class="source-line-no">035</span><span id="line-35">      @NonNull CommandLine commandLine) {</span>
+<span class="source-line-no">036</span><span id="line-36">    this.callingContext = callingContext;</span>
+<span class="source-line-no">037</span><span id="line-37">    this.commandLine = commandLine;</span>
+<span class="source-line-no">038</span><span id="line-38">  }</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  /**</span>
+<span class="source-line-no">041</span><span id="line-41">   * Get the context of the command execution, which provides access to the</span>
+<span class="source-line-no">042</span><span id="line-42">   * execution environment needed for command processing.</span>
+<span class="source-line-no">043</span><span id="line-43">   *</span>
+<span class="source-line-no">044</span><span id="line-44">   * @return the context</span>
+<span class="source-line-no">045</span><span id="line-45">   */</span>
+<span class="source-line-no">046</span><span id="line-46">  @NonNull</span>
+<span class="source-line-no">047</span><span id="line-47">  protected CallingContext getCallingContext() {</span>
+<span class="source-line-no">048</span><span id="line-48">    return callingContext;</span>
+<span class="source-line-no">049</span><span id="line-49">  }</span>
+<span class="source-line-no">050</span><span id="line-50"></span>
+<span class="source-line-no">051</span><span id="line-51">  /**</span>
+<span class="source-line-no">052</span><span id="line-52">   * Get the parsed command line details containing the command options and</span>
+<span class="source-line-no">053</span><span id="line-53">   * arguments provided by the user during execution.</span>
+<span class="source-line-no">054</span><span id="line-54">   *</span>
+<span class="source-line-no">055</span><span id="line-55">   * @return the cli details</span>
+<span class="source-line-no">056</span><span id="line-56">   */</span>
+<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
+<span class="source-line-no">058</span><span id="line-58">  protected CommandLine getCommandLine() {</span>
+<span class="source-line-no">059</span><span id="line-59">    return commandLine;</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">062</span><span id="line-62">  @Override</span>
+<span class="source-line-no">063</span><span id="line-63">  public abstract void execute() throws CommandExecutionException;</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">  /**</span>
+<span class="source-line-no">066</span><span id="line-66">   * Get the command associated with this execution.</span>
+<span class="source-line-no">067</span><span id="line-67">   *</span>
+<span class="source-line-no">068</span><span id="line-68">   * @return the command</span>
+<span class="source-line-no">069</span><span id="line-69">   */</span>
+<span class="source-line-no">070</span><span id="line-70">  @NonNull</span>
+<span class="source-line-no">071</span><span id="line-71">  protected ICommand getCommand() {</span>
+<span class="source-line-no">072</span><span id="line-72">    return ObjectUtils.requireNonNull(getCallingContext().getTargetCommand());</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74">}</span>
 
 
 

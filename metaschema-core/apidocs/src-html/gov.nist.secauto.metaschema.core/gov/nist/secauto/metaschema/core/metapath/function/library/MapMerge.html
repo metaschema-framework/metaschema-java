@@ -65,10 +65,10 @@
 <span class="source-line-no">052</span><span id="line-52">      .focusIndependent()</span>
 <span class="source-line-no">053</span><span id="line-53">      .argument(IArgument.builder()</span>
 <span class="source-line-no">054</span><span id="line-54">          .name("maps")</span>
-<span class="source-line-no">055</span><span id="line-55">          .type(IMapItem.class)</span>
+<span class="source-line-no">055</span><span id="line-55">          .type(IMapItem.type())</span>
 <span class="source-line-no">056</span><span id="line-56">          .zeroOrMore()</span>
 <span class="source-line-no">057</span><span id="line-57">          .build())</span>
-<span class="source-line-no">058</span><span id="line-58">      .returnType(IMapItem.class)</span>
+<span class="source-line-no">058</span><span id="line-58">      .returnType(IMapItem.type())</span>
 <span class="source-line-no">059</span><span id="line-59">      .returnOne()</span>
 <span class="source-line-no">060</span><span id="line-60">      .functionHandler(MapMerge::executeOneArg)</span>
 <span class="source-line-no">061</span><span id="line-61">      .build();</span>
@@ -82,15 +82,15 @@
 <span class="source-line-no">069</span><span id="line-69">      .focusIndependent()</span>
 <span class="source-line-no">070</span><span id="line-70">      .argument(IArgument.builder()</span>
 <span class="source-line-no">071</span><span id="line-71">          .name("maps")</span>
-<span class="source-line-no">072</span><span id="line-72">          .type(IMapItem.class)</span>
+<span class="source-line-no">072</span><span id="line-72">          .type(IMapItem.type())</span>
 <span class="source-line-no">073</span><span id="line-73">          .zeroOrMore()</span>
 <span class="source-line-no">074</span><span id="line-74">          .build())</span>
 <span class="source-line-no">075</span><span id="line-75">      .argument(IArgument.builder()</span>
 <span class="source-line-no">076</span><span id="line-76">          .name("options")</span>
-<span class="source-line-no">077</span><span id="line-77">          .type(IMapItem.class)</span>
+<span class="source-line-no">077</span><span id="line-77">          .type(IMapItem.type())</span>
 <span class="source-line-no">078</span><span id="line-78">          .one()</span>
 <span class="source-line-no">079</span><span id="line-79">          .build())</span>
-<span class="source-line-no">080</span><span id="line-80">      .returnType(IMapItem.class)</span>
+<span class="source-line-no">080</span><span id="line-80">      .returnType(IMapItem.type())</span>
 <span class="source-line-no">081</span><span id="line-81">      .returnOne()</span>
 <span class="source-line-no">082</span><span id="line-82">      .functionHandler(MapMerge::executeTwoArg)</span>
 <span class="source-line-no">083</span><span id="line-83">      .build();</span>
@@ -108,8 +108,8 @@
 <span class="source-line-no">095</span><span id="line-95">    @SuppressWarnings("checkstyle:Indentation")</span>
 <span class="source-line-no">096</span><span id="line-96">    COMBINE(</span>
 <span class="source-line-no">097</span><span id="line-97">        "combine",</span>
-<span class="source-line-no">098</span><span id="line-98">        (key, v1, v2) -&gt; Stream.concat(v1.asSequence().stream(), v2.asSequence().stream())</span>
-<span class="source-line-no">099</span><span id="line-99">            .collect(ISequence.toSequence()));</span>
+<span class="source-line-no">098</span><span id="line-98">        (key, v1, v2) -&gt; Stream.concat(v1.toSequence().stream(), v2.toSequence().stream())</span>
+<span class="source-line-no">099</span><span id="line-99">            .collect(CustomCollectors.toSequence()));</span>
 <span class="source-line-no">100</span><span id="line-100"></span>
 <span class="source-line-no">101</span><span id="line-101">    private static final Map&lt;String, Duplicates&gt; BY_NAME;</span>
 <span class="source-line-no">102</span><span id="line-102"></span>
@@ -201,7 +201,7 @@
 <span class="source-line-no">188</span><span id="line-188">      duplicates = Duplicates.USE_FIRST;</span>
 <span class="source-line-no">189</span><span id="line-189">    } else {</span>
 <span class="source-line-no">190</span><span id="line-190">      // resolve the provided option</span>
-<span class="source-line-no">191</span><span id="line-191">      IAnyAtomicItem atomicValue = FnData.fnData(duplicatesOption.asSequence()).getFirstItem(true);</span>
+<span class="source-line-no">191</span><span id="line-191">      IAnyAtomicItem atomicValue = ISequence.of(duplicatesOption.toSequence().atomize()).getFirstItem(true);</span>
 <span class="source-line-no">192</span><span id="line-192">      if (atomicValue == null) {</span>
 <span class="source-line-no">193</span><span id="line-193">        throw new JsonFunctionException(</span>
 <span class="source-line-no">194</span><span id="line-194">            JsonFunctionException.INVALID_OPTION,</span>

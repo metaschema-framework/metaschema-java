@@ -23,11 +23,11 @@
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPv4AddressItem;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import java.util.List;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.qname.EQNameFactory;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
 <span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">017</span><span id="line-17">import java.util.List;</span>
 <span class="source-line-no">018</span><span id="line-18"></span>
 <span class="source-line-no">019</span><span id="line-19">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">020</span><span id="line-20">import inet.ipaddr.AddressStringException;</span>
@@ -36,68 +36,69 @@
 <span class="source-line-no">023</span><span id="line-23">import inet.ipaddr.IncompatibleAddressException;</span>
 <span class="source-line-no">024</span><span id="line-24">import inet.ipaddr.ipv4.IPv4Address;</span>
 <span class="source-line-no">025</span><span id="line-25"></span>
-<span class="source-line-no">026</span><span id="line-26">public class IPv4AddressAdapter</span>
-<span class="source-line-no">027</span><span id="line-27">    extends AbstractDataTypeAdapter&lt;IPv4Address, IIPv4AddressItem&gt; {</span>
-<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
-<span class="source-line-no">029</span><span id="line-29">  private static final List&lt;QName&gt; NAMES = ObjectUtils.notNull(</span>
-<span class="source-line-no">030</span><span id="line-30">      List.of(new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "ip-v4-address")));</span>
-<span class="source-line-no">031</span><span id="line-31">  private static final IPAddressStringParameters IP_V_4;</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">  static {</span>
-<span class="source-line-no">034</span><span id="line-34">    IP_V_4 = new IPAddressStringParameters.Builder()</span>
-<span class="source-line-no">035</span><span id="line-35">        .allowIPv6(false)</span>
-<span class="source-line-no">036</span><span id="line-36">        .allowEmpty(false)</span>
-<span class="source-line-no">037</span><span id="line-37">        .allowSingleSegment(false)</span>
-<span class="source-line-no">038</span><span id="line-38">        .allowWildcardedSeparator(false)</span>
-<span class="source-line-no">039</span><span id="line-39">        .getIPv4AddressParametersBuilder()</span>
-<span class="source-line-no">040</span><span id="line-40">        .allowBinary(false)</span>
-<span class="source-line-no">041</span><span id="line-41">        .allowLeadingZeros(false)</span>
-<span class="source-line-no">042</span><span id="line-42">        .allowPrefixesBeyondAddressSize(false)</span>
-<span class="source-line-no">043</span><span id="line-43">        .getParentBuilder()</span>
-<span class="source-line-no">044</span><span id="line-44">        .toParams();</span>
-<span class="source-line-no">045</span><span id="line-45">  }</span>
-<span class="source-line-no">046</span><span id="line-46"></span>
-<span class="source-line-no">047</span><span id="line-47">  IPv4AddressAdapter() {</span>
-<span class="source-line-no">048</span><span id="line-48">    super(IPv4Address.class);</span>
-<span class="source-line-no">049</span><span id="line-49">  }</span>
-<span class="source-line-no">050</span><span id="line-50"></span>
-<span class="source-line-no">051</span><span id="line-51">  @Override</span>
-<span class="source-line-no">052</span><span id="line-52">  public List&lt;QName&gt; getNames() {</span>
-<span class="source-line-no">053</span><span id="line-53">    return NAMES;</span>
-<span class="source-line-no">054</span><span id="line-54">  }</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  @Override</span>
-<span class="source-line-no">057</span><span id="line-57">  public JsonFormatTypes getJsonRawType() {</span>
-<span class="source-line-no">058</span><span id="line-58">    return JsonFormatTypes.STRING;</span>
-<span class="source-line-no">059</span><span id="line-59">  }</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  @SuppressWarnings("null")</span>
+<span class="source-line-no">026</span><span id="line-26">/**</span>
+<span class="source-line-no">027</span><span id="line-27"> * Support for the Metaschema &lt;a href=</span>
+<span class="source-line-no">028</span><span id="line-28"> * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address"&gt;ip-v4-address&lt;/a&gt;</span>
+<span class="source-line-no">029</span><span id="line-29"> * data type.</span>
+<span class="source-line-no">030</span><span id="line-30"> */</span>
+<span class="source-line-no">031</span><span id="line-31">public class IPv4AddressAdapter</span>
+<span class="source-line-no">032</span><span id="line-32">    extends AbstractDataTypeAdapter&lt;IPv4Address, IIPv4AddressItem&gt; {</span>
+<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
+<span class="source-line-no">034</span><span id="line-34">  private static final List&lt;IEnhancedQName&gt; NAMES = ObjectUtils.notNull(</span>
+<span class="source-line-no">035</span><span id="line-35">      List.of(</span>
+<span class="source-line-no">036</span><span id="line-36">          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "ip-v4-address")));</span>
+<span class="source-line-no">037</span><span id="line-37">  private static final IPAddressStringParameters IP_V_4;</span>
+<span class="source-line-no">038</span><span id="line-38"></span>
+<span class="source-line-no">039</span><span id="line-39">  static {</span>
+<span class="source-line-no">040</span><span id="line-40">    IP_V_4 = new IPAddressStringParameters.Builder()</span>
+<span class="source-line-no">041</span><span id="line-41">        .allowIPv6(false)</span>
+<span class="source-line-no">042</span><span id="line-42">        .allowEmpty(false)</span>
+<span class="source-line-no">043</span><span id="line-43">        .allowSingleSegment(false)</span>
+<span class="source-line-no">044</span><span id="line-44">        .allowWildcardedSeparator(false)</span>
+<span class="source-line-no">045</span><span id="line-45">        .getIPv4AddressParametersBuilder()</span>
+<span class="source-line-no">046</span><span id="line-46">        .allowBinary(false)</span>
+<span class="source-line-no">047</span><span id="line-47">        .allowLeadingZeros(false)</span>
+<span class="source-line-no">048</span><span id="line-48">        .allowPrefixesBeyondAddressSize(false)</span>
+<span class="source-line-no">049</span><span id="line-49">        .getParentBuilder()</span>
+<span class="source-line-no">050</span><span id="line-50">        .toParams();</span>
+<span class="source-line-no">051</span><span id="line-51">  }</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">  IPv4AddressAdapter() {</span>
+<span class="source-line-no">054</span><span id="line-54">    super(IPv4Address.class, IIPv4AddressItem.class, IIPv4AddressItem::cast);</span>
+<span class="source-line-no">055</span><span id="line-55">  }</span>
+<span class="source-line-no">056</span><span id="line-56"></span>
+<span class="source-line-no">057</span><span id="line-57">  @Override</span>
+<span class="source-line-no">058</span><span id="line-58">  public List&lt;IEnhancedQName&gt; getNames() {</span>
+<span class="source-line-no">059</span><span id="line-59">    return NAMES;</span>
+<span class="source-line-no">060</span><span id="line-60">  }</span>
+<span class="source-line-no">061</span><span id="line-61"></span>
 <span class="source-line-no">062</span><span id="line-62">  @Override</span>
-<span class="source-line-no">063</span><span id="line-63">  public IPv4Address parse(String value) {</span>
-<span class="source-line-no">064</span><span id="line-64">    try {</span>
-<span class="source-line-no">065</span><span id="line-65">      return (IPv4Address) new IPAddressString(value, IP_V_4).toAddress();</span>
-<span class="source-line-no">066</span><span id="line-66">    } catch (AddressStringException | IncompatibleAddressException ex) {</span>
-<span class="source-line-no">067</span><span id="line-67">      throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);</span>
-<span class="source-line-no">068</span><span id="line-68">    }</span>
-<span class="source-line-no">069</span><span id="line-69">  }</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  @Override</span>
-<span class="source-line-no">072</span><span id="line-72">  public IPv4Address copy(Object obj) {</span>
-<span class="source-line-no">073</span><span id="line-73">    // value is immutable</span>
-<span class="source-line-no">074</span><span id="line-74">    return (IPv4Address) obj;</span>
+<span class="source-line-no">063</span><span id="line-63">  public JsonFormatTypes getJsonRawType() {</span>
+<span class="source-line-no">064</span><span id="line-64">    return JsonFormatTypes.STRING;</span>
+<span class="source-line-no">065</span><span id="line-65">  }</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">  @SuppressWarnings("null")</span>
+<span class="source-line-no">068</span><span id="line-68">  @Override</span>
+<span class="source-line-no">069</span><span id="line-69">  public IPv4Address parse(String value) {</span>
+<span class="source-line-no">070</span><span id="line-70">    try {</span>
+<span class="source-line-no">071</span><span id="line-71">      return (IPv4Address) new IPAddressString(value, IP_V_4).toAddress();</span>
+<span class="source-line-no">072</span><span id="line-72">    } catch (AddressStringException | IncompatibleAddressException ex) {</span>
+<span class="source-line-no">073</span><span id="line-73">      throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);</span>
+<span class="source-line-no">074</span><span id="line-74">    }</span>
 <span class="source-line-no">075</span><span id="line-75">  }</span>
 <span class="source-line-no">076</span><span id="line-76"></span>
 <span class="source-line-no">077</span><span id="line-77">  @Override</span>
-<span class="source-line-no">078</span><span id="line-78">  public Class&lt;IIPv4AddressItem&gt; getItemClass() {</span>
-<span class="source-line-no">079</span><span id="line-79">    return IIPv4AddressItem.class;</span>
-<span class="source-line-no">080</span><span id="line-80">  }</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">  @Override</span>
-<span class="source-line-no">083</span><span id="line-83">  public IIPv4AddressItem newItem(Object value) {</span>
-<span class="source-line-no">084</span><span id="line-84">    IPv4Address item = toValue(value);</span>
-<span class="source-line-no">085</span><span id="line-85">    return IIPv4AddressItem.valueOf(item);</span>
-<span class="source-line-no">086</span><span id="line-86">  }</span>
-<span class="source-line-no">087</span><span id="line-87">}</span>
+<span class="source-line-no">078</span><span id="line-78">  public IPv4Address copy(Object obj) {</span>
+<span class="source-line-no">079</span><span id="line-79">    // value is immutable</span>
+<span class="source-line-no">080</span><span id="line-80">    return (IPv4Address) obj;</span>
+<span class="source-line-no">081</span><span id="line-81">  }</span>
+<span class="source-line-no">082</span><span id="line-82"></span>
+<span class="source-line-no">083</span><span id="line-83">  @Override</span>
+<span class="source-line-no">084</span><span id="line-84">  public IIPv4AddressItem newItem(Object value) {</span>
+<span class="source-line-no">085</span><span id="line-85">    IPv4Address item = toValue(value);</span>
+<span class="source-line-no">086</span><span id="line-86">    return IIPv4AddressItem.valueOf(item);</span>
+<span class="source-line-no">087</span><span id="line-87">  }</span>
+<span class="source-line-no">088</span><span id="line-88">}</span>
 
 
 

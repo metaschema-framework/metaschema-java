@@ -1,2 +1,3 @@
 gov.nist.secauto.metaschema.cli.processor
 gov.nist.secauto.metaschema.cli.processor.command
+gov.nist.secauto.metaschema.cli.processor.command.impl

@@ -22,18 +22,28 @@
 <span class="source-line-no">009</span><span id="line-9"></span>
 <span class="source-line-no">010</span><span id="line-10">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">public final class OptionUtils {</span>
-<span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">  private OptionUtils() {</span>
-<span class="source-line-no">015</span><span id="line-15">    // disable construction</span>
-<span class="source-line-no">016</span><span id="line-16">  }</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">  @NonNull</span>
-<span class="source-line-no">019</span><span id="line-19">  public static String toArgument(@NonNull Option option) {</span>
-<span class="source-line-no">020</span><span id="line-20">    return option.hasLongOpt() ? "--" + option.getLongOpt() : "-" + option.getOpt();</span>
-<span class="source-line-no">021</span><span id="line-21">  }</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">}</span>
+<span class="source-line-no">012</span><span id="line-12">/**</span>
+<span class="source-line-no">013</span><span id="line-13"> * A collection of utilities for handling command line options.</span>
+<span class="source-line-no">014</span><span id="line-14"> */</span>
+<span class="source-line-no">015</span><span id="line-15">public final class OptionUtils {</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">  private OptionUtils() {</span>
+<span class="source-line-no">018</span><span id="line-18">    // disable construction</span>
+<span class="source-line-no">019</span><span id="line-19">  }</span>
+<span class="source-line-no">020</span><span id="line-20"></span>
+<span class="source-line-no">021</span><span id="line-21">  /**</span>
+<span class="source-line-no">022</span><span id="line-22">   * Generate the argument text for the given option.</span>
+<span class="source-line-no">023</span><span id="line-23">   *</span>
+<span class="source-line-no">024</span><span id="line-24">   * @param option</span>
+<span class="source-line-no">025</span><span id="line-25">   *          the CLI option</span>
+<span class="source-line-no">026</span><span id="line-26">   * @return the argument text</span>
+<span class="source-line-no">027</span><span id="line-27">   */</span>
+<span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
+<span class="source-line-no">029</span><span id="line-29">  public static String toArgument(@NonNull Option option) {</span>
+<span class="source-line-no">030</span><span id="line-30">    return option.hasLongOpt() ? "--" + option.getLongOpt() : "-" + option.getOpt();</span>
+<span class="source-line-no">031</span><span id="line-31">  }</span>
+<span class="source-line-no">032</span><span id="line-32"></span>
+<span class="source-line-no">033</span><span id="line-33">}</span>
 
 
 

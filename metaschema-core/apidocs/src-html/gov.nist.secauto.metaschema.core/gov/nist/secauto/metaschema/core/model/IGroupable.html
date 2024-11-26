@@ -18,152 +18,123 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import java.util.Collection;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">public interface IGroupable extends IInstance {</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">  int DEFAULT_GROUP_AS_MIN_OCCURS = 0;</span>
-<span class="source-line-no">021</span><span id="line-21">  int DEFAULT_GROUP_AS_MAX_OCCURS = 1;</span>
-<span class="source-line-no">022</span><span id="line-22">  @NonNull</span>
-<span class="source-line-no">023</span><span id="line-23">  JsonGroupAsBehavior DEFAULT_JSON_GROUP_AS_BEHAVIOR = JsonGroupAsBehavior.SINGLETON_OR_LIST;</span>
-<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
-<span class="source-line-no">025</span><span id="line-25">  XmlGroupAsBehavior DEFAULT_XML_GROUP_AS_BEHAVIOR = XmlGroupAsBehavior.UNGROUPED;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">  /**</span>
-<span class="source-line-no">028</span><span id="line-28">   * Get the minimum cardinality for this associated instance. This value must be</span>
-<span class="source-line-no">029</span><span id="line-29">   * less than or equal to the maximum cardinality returned by</span>
-<span class="source-line-no">030</span><span id="line-30">   * {@link #getMaxOccurs()}.</span>
-<span class="source-line-no">031</span><span id="line-31">   *</span>
-<span class="source-line-no">032</span><span id="line-32">   * @return {@code 0} or a positive integer value</span>
-<span class="source-line-no">033</span><span id="line-33">   * @see #DEFAULT_GROUP_AS_MIN_OCCURS</span>
-<span class="source-line-no">034</span><span id="line-34">   */</span>
-<span class="source-line-no">035</span><span id="line-35">  int getMinOccurs();</span>
-<span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37">  /**</span>
-<span class="source-line-no">038</span><span id="line-38">   * Get the maximum cardinality for this associated instance. This value must be</span>
-<span class="source-line-no">039</span><span id="line-39">   * greater than or equal to the minimum cardinality returned by</span>
-<span class="source-line-no">040</span><span id="line-40">   * {@link #getMinOccurs()}, or {@code -1} if unbounded.</span>
-<span class="source-line-no">041</span><span id="line-41">   *</span>
-<span class="source-line-no">042</span><span id="line-42">   * @return a positive integer value or {@code -1} if unbounded</span>
-<span class="source-line-no">043</span><span id="line-43">   * @see #DEFAULT_GROUP_AS_MAX_OCCURS</span>
-<span class="source-line-no">044</span><span id="line-44">   */</span>
-<span class="source-line-no">045</span><span id="line-45">  int getMaxOccurs();</span>
-<span class="source-line-no">046</span><span id="line-46"></span>
-<span class="source-line-no">047</span><span id="line-47">  /**</span>
-<span class="source-line-no">048</span><span id="line-48">   * Get the name provided for grouping. An instance in Metaschema must have a</span>
-<span class="source-line-no">049</span><span id="line-49">   * group name if the instance has a cardinality greater than {@code 1}.</span>
-<span class="source-line-no">050</span><span id="line-50">   *</span>
-<span class="source-line-no">051</span><span id="line-51">   * @return the group-as name or {@code null} if no name is configured, such as</span>
-<span class="source-line-no">052</span><span id="line-52">   *         when {@link #getMaxOccurs()} = 1</span>
-<span class="source-line-no">053</span><span id="line-53">   */</span>
-<span class="source-line-no">054</span><span id="line-54">  @Nullable</span>
-<span class="source-line-no">055</span><span id="line-55">  default String getGroupAsName() {</span>
-<span class="source-line-no">056</span><span id="line-56">    // no group-as by default</span>
-<span class="source-line-no">057</span><span id="line-57">    return null;</span>
-<span class="source-line-no">058</span><span id="line-58">  }</span>
-<span class="source-line-no">059</span><span id="line-59"></span>
-<span class="source-line-no">060</span><span id="line-60">  /**</span>
-<span class="source-line-no">061</span><span id="line-61">   * Retrieve the XML namespace for this grouping.</span>
-<span class="source-line-no">062</span><span id="line-62">   *</span>
-<span class="source-line-no">063</span><span id="line-63">   * @return the XML namespace or {@code null} if no namespace is configured</span>
-<span class="source-line-no">064</span><span id="line-64">   */</span>
-<span class="source-line-no">065</span><span id="line-65">  @Nullable</span>
-<span class="source-line-no">066</span><span id="line-66">  default String getGroupAsXmlNamespace() {</span>
-<span class="source-line-no">067</span><span id="line-67">    return getContainingDefinition().getXmlNamespace();</span>
-<span class="source-line-no">068</span><span id="line-68">  }</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">  /**</span>
-<span class="source-line-no">071</span><span id="line-71">   * Retrieve the XML namespace for this grouping.</span>
-<span class="source-line-no">072</span><span id="line-72">   * &lt;p&gt;</span>
-<span class="source-line-no">073</span><span id="line-73">   * If this instance doesn't have a namespace defined, then the module's XML</span>
-<span class="source-line-no">074</span><span id="line-74">   * namespace will be used.</span>
-<span class="source-line-no">075</span><span id="line-75">   *</span>
-<span class="source-line-no">076</span><span id="line-76">   * @return the XML namespace</span>
-<span class="source-line-no">077</span><span id="line-77">   */</span>
-<span class="source-line-no">078</span><span id="line-78">  // REFACTOR: remove this method</span>
-<span class="source-line-no">079</span><span id="line-79">  // REFACTOR: consider pushing down the call for getGroupAsXmlNamespace</span>
-<span class="source-line-no">080</span><span id="line-80">  @NonNull</span>
-<span class="source-line-no">081</span><span id="line-81">  default String getEffectiveGroupAsNamespace() {</span>
-<span class="source-line-no">082</span><span id="line-82">    @Nullable</span>
-<span class="source-line-no">083</span><span id="line-83">    String namespace = getGroupAsXmlNamespace();</span>
-<span class="source-line-no">084</span><span id="line-84">    if (namespace == null) {</span>
-<span class="source-line-no">085</span><span id="line-85">      namespace = ObjectUtils.notNull(getContainingModule().getXmlNamespace().toASCIIString());</span>
-<span class="source-line-no">086</span><span id="line-86">    }</span>
-<span class="source-line-no">087</span><span id="line-87">    return namespace;</span>
-<span class="source-line-no">088</span><span id="line-88">  }</span>
-<span class="source-line-no">089</span><span id="line-89"></span>
-<span class="source-line-no">090</span><span id="line-90">  /**</span>
-<span class="source-line-no">091</span><span id="line-91">   * Get the name used for the associated element wrapping a collection of</span>
-<span class="source-line-no">092</span><span id="line-92">   * elements in XML. This value is required when {@link #getXmlGroupAsBehavior()}</span>
-<span class="source-line-no">093</span><span id="line-93">   * = {@link XmlGroupAsBehavior#GROUPED}. This name will be the element name</span>
-<span class="source-line-no">094</span><span id="line-94">   * wrapping a collection of elements.</span>
-<span class="source-line-no">095</span><span id="line-95">   *</span>
-<span class="source-line-no">096</span><span id="line-96">   * @return the groupAs QName or {@code null} if no name is configured, such as</span>
-<span class="source-line-no">097</span><span id="line-97">   *         when {@link #getMaxOccurs()} = 1.</span>
-<span class="source-line-no">098</span><span id="line-98">   */</span>
-<span class="source-line-no">099</span><span id="line-99">  // REFACTOR: rename to getXmlGroupAsQName</span>
-<span class="source-line-no">100</span><span id="line-100">  @Nullable</span>
-<span class="source-line-no">101</span><span id="line-101">  default QName getEffectiveXmlGroupAsQName() {</span>
-<span class="source-line-no">102</span><span id="line-102">    return XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())</span>
-<span class="source-line-no">103</span><span id="line-103">        // require a group-as name in this case</span>
-<span class="source-line-no">104</span><span id="line-104">        ? new QName(getEffectiveGroupAsNamespace(), ObjectUtils.requireNonNull(getGroupAsName()))</span>
-<span class="source-line-no">105</span><span id="line-105">        // no group-as name in this case</span>
-<span class="source-line-no">106</span><span id="line-106">        : null;</span>
-<span class="source-line-no">107</span><span id="line-107">  }</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">  /**</span>
-<span class="source-line-no">110</span><span id="line-110">   * Gets the configured JSON group-as strategy. A JSON group-as strategy is only</span>
-<span class="source-line-no">111</span><span id="line-111">   * required when {@link #getMaxOccurs()} &amp;gt; 1.</span>
-<span class="source-line-no">112</span><span id="line-112">   * &lt;p&gt;</span>
-<span class="source-line-no">113</span><span id="line-113">   * The default for this method is {@link JsonGroupAsBehavior#NONE}, since the</span>
-<span class="source-line-no">114</span><span id="line-114">   * default behavior is to have no grouping. If {@link #getMaxOccurs()} is</span>
-<span class="source-line-no">115</span><span id="line-115">   * greater than {@code 1}, then the default behavior is</span>
-<span class="source-line-no">116</span><span id="line-116">   * {@code #DEFAULT_JSON_GROUP_AS_BEHAVIOR}.</span>
-<span class="source-line-no">117</span><span id="line-117">   *</span>
-<span class="source-line-no">118</span><span id="line-118">   * @return the JSON group-as strategy, or {@code JsonGroupAsBehavior#NONE} if</span>
-<span class="source-line-no">119</span><span id="line-119">   *         {@link #getMaxOccurs()} = 1</span>
-<span class="source-line-no">120</span><span id="line-120">   * @see #DEFAULT_JSON_GROUP_AS_BEHAVIOR</span>
-<span class="source-line-no">121</span><span id="line-121">   */</span>
-<span class="source-line-no">122</span><span id="line-122">  @NonNull</span>
-<span class="source-line-no">123</span><span id="line-123">  default JsonGroupAsBehavior getJsonGroupAsBehavior() {</span>
-<span class="source-line-no">124</span><span id="line-124">    return JsonGroupAsBehavior.NONE;</span>
-<span class="source-line-no">125</span><span id="line-125">  }</span>
-<span class="source-line-no">126</span><span id="line-126"></span>
-<span class="source-line-no">127</span><span id="line-127">  /**</span>
-<span class="source-line-no">128</span><span id="line-128">   * Gets the configured XML group-as strategy. A XML group-as strategy is only</span>
-<span class="source-line-no">129</span><span id="line-129">   * required when {@link #getMaxOccurs()} &amp;gt; 1.</span>
-<span class="source-line-no">130</span><span id="line-130">   *</span>
-<span class="source-line-no">131</span><span id="line-131">   * @return the JSON group-as strategy, or {@code XmlGroupAsBehavior#UNGROUPED}</span>
-<span class="source-line-no">132</span><span id="line-132">   *         if {@link #getMaxOccurs()} = 1</span>
-<span class="source-line-no">133</span><span id="line-133">   * @see #DEFAULT_XML_GROUP_AS_BEHAVIOR</span>
-<span class="source-line-no">134</span><span id="line-134">   */</span>
-<span class="source-line-no">135</span><span id="line-135">  @NonNull</span>
-<span class="source-line-no">136</span><span id="line-136">  default XmlGroupAsBehavior getXmlGroupAsBehavior() {</span>
-<span class="source-line-no">137</span><span id="line-137">    return DEFAULT_XML_GROUP_AS_BEHAVIOR;</span>
-<span class="source-line-no">138</span><span id="line-138">  }</span>
-<span class="source-line-no">139</span><span id="line-139"></span>
-<span class="source-line-no">140</span><span id="line-140">  /**</span>
-<span class="source-line-no">141</span><span id="line-141">   * Get the item values for the provided {@code instanceValue}. An instance may</span>
-<span class="source-line-no">142</span><span id="line-142">   * be singular or many valued.</span>
-<span class="source-line-no">143</span><span id="line-143">   *</span>
-<span class="source-line-no">144</span><span id="line-144">   * @param instanceValue</span>
-<span class="source-line-no">145</span><span id="line-145">   *          the instance</span>
-<span class="source-line-no">146</span><span id="line-146">   * @return the item values or an empty collection if no item values exist</span>
-<span class="source-line-no">147</span><span id="line-147">   */</span>
-<span class="source-line-no">148</span><span id="line-148">  @NonNull</span>
-<span class="source-line-no">149</span><span id="line-149">  default Collection&lt;?&gt; getItemValues(@NonNull Object instanceValue) {</span>
-<span class="source-line-no">150</span><span id="line-150">    // no item values by default</span>
-<span class="source-line-no">151</span><span id="line-151">    return CollectionUtil.emptyList();</span>
-<span class="source-line-no">152</span><span id="line-152">  }</span>
-<span class="source-line-no">153</span><span id="line-153">}</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">011</span><span id="line-11"></span>
+<span class="source-line-no">012</span><span id="line-12">import java.util.Collection;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">015</span><span id="line-15">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">016</span><span id="line-16"></span>
+<span class="source-line-no">017</span><span id="line-17">public interface IGroupable extends IInstance {</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">  int DEFAULT_GROUP_AS_MIN_OCCURS = 0;</span>
+<span class="source-line-no">020</span><span id="line-20">  int DEFAULT_GROUP_AS_MAX_OCCURS = 1;</span>
+<span class="source-line-no">021</span><span id="line-21">  @NonNull</span>
+<span class="source-line-no">022</span><span id="line-22">  JsonGroupAsBehavior DEFAULT_JSON_GROUP_AS_BEHAVIOR = JsonGroupAsBehavior.SINGLETON_OR_LIST;</span>
+<span class="source-line-no">023</span><span id="line-23">  @NonNull</span>
+<span class="source-line-no">024</span><span id="line-24">  XmlGroupAsBehavior DEFAULT_XML_GROUP_AS_BEHAVIOR = XmlGroupAsBehavior.UNGROUPED;</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">  /**</span>
+<span class="source-line-no">027</span><span id="line-27">   * Get the minimum cardinality for this associated instance. This value must be</span>
+<span class="source-line-no">028</span><span id="line-28">   * less than or equal to the maximum cardinality returned by</span>
+<span class="source-line-no">029</span><span id="line-29">   * {@link #getMaxOccurs()}.</span>
+<span class="source-line-no">030</span><span id="line-30">   *</span>
+<span class="source-line-no">031</span><span id="line-31">   * @return {@code 0} or a positive integer value</span>
+<span class="source-line-no">032</span><span id="line-32">   * @see #DEFAULT_GROUP_AS_MIN_OCCURS</span>
+<span class="source-line-no">033</span><span id="line-33">   */</span>
+<span class="source-line-no">034</span><span id="line-34">  int getMinOccurs();</span>
+<span class="source-line-no">035</span><span id="line-35"></span>
+<span class="source-line-no">036</span><span id="line-36">  /**</span>
+<span class="source-line-no">037</span><span id="line-37">   * Get the maximum cardinality for this associated instance. This value must be</span>
+<span class="source-line-no">038</span><span id="line-38">   * greater than or equal to the minimum cardinality returned by</span>
+<span class="source-line-no">039</span><span id="line-39">   * {@link #getMinOccurs()}, or {@code -1} if unbounded.</span>
+<span class="source-line-no">040</span><span id="line-40">   *</span>
+<span class="source-line-no">041</span><span id="line-41">   * @return a positive integer value or {@code -1} if unbounded</span>
+<span class="source-line-no">042</span><span id="line-42">   * @see #DEFAULT_GROUP_AS_MAX_OCCURS</span>
+<span class="source-line-no">043</span><span id="line-43">   */</span>
+<span class="source-line-no">044</span><span id="line-44">  int getMaxOccurs();</span>
+<span class="source-line-no">045</span><span id="line-45"></span>
+<span class="source-line-no">046</span><span id="line-46">  /**</span>
+<span class="source-line-no">047</span><span id="line-47">   * Get the name provided for grouping. An instance in Metaschema must have a</span>
+<span class="source-line-no">048</span><span id="line-48">   * group name if the instance has a cardinality greater than {@code 1}.</span>
+<span class="source-line-no">049</span><span id="line-49">   *</span>
+<span class="source-line-no">050</span><span id="line-50">   * @return the group-as name or {@code null} if no name is configured, such as</span>
+<span class="source-line-no">051</span><span id="line-51">   *         when {@link #getMaxOccurs()} = 1</span>
+<span class="source-line-no">052</span><span id="line-52">   */</span>
+<span class="source-line-no">053</span><span id="line-53">  @Nullable</span>
+<span class="source-line-no">054</span><span id="line-54">  default String getGroupAsName() {</span>
+<span class="source-line-no">055</span><span id="line-55">    // no group-as by default</span>
+<span class="source-line-no">056</span><span id="line-56">    return null;</span>
+<span class="source-line-no">057</span><span id="line-57">  }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  /**</span>
+<span class="source-line-no">060</span><span id="line-60">   * Get the name used for the associated element wrapping a collection of</span>
+<span class="source-line-no">061</span><span id="line-61">   * elements in XML. This value is required when {@link #getXmlGroupAsBehavior()}</span>
+<span class="source-line-no">062</span><span id="line-62">   * = {@link XmlGroupAsBehavior#GROUPED}. This name will be the element name</span>
+<span class="source-line-no">063</span><span id="line-63">   * wrapping a collection of elements.</span>
+<span class="source-line-no">064</span><span id="line-64">   * &lt;p&gt;</span>
+<span class="source-line-no">065</span><span id="line-65">   * If this instance doesn't have a namespace defined, then the module's XML</span>
+<span class="source-line-no">066</span><span id="line-66">   * namespace will be used.</span>
+<span class="source-line-no">067</span><span id="line-67">   *</span>
+<span class="source-line-no">068</span><span id="line-68">   * @return the groupAs QName or {@code null} if no name is configured, such as</span>
+<span class="source-line-no">069</span><span id="line-69">   *         when {@link #getMaxOccurs()} = 1.</span>
+<span class="source-line-no">070</span><span id="line-70">   */</span>
+<span class="source-line-no">071</span><span id="line-71">  @Nullable</span>
+<span class="source-line-no">072</span><span id="line-72">  default IEnhancedQName getEffectiveXmlGroupAsQName() {</span>
+<span class="source-line-no">073</span><span id="line-73">    return XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())</span>
+<span class="source-line-no">074</span><span id="line-74">        ? IEnhancedQName.of(</span>
+<span class="source-line-no">075</span><span id="line-75">            getContainingDefinition().getQName().getNamespace(),</span>
+<span class="source-line-no">076</span><span id="line-76">            ObjectUtils.requireNonNull(getGroupAsName()))</span>
+<span class="source-line-no">077</span><span id="line-77">        : null;</span>
+<span class="source-line-no">078</span><span id="line-78">  }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">  /**</span>
+<span class="source-line-no">081</span><span id="line-81">   * Gets the configured JSON group-as strategy. A JSON group-as strategy is only</span>
+<span class="source-line-no">082</span><span id="line-82">   * required when {@link #getMaxOccurs()} &amp;gt; 1.</span>
+<span class="source-line-no">083</span><span id="line-83">   * &lt;p&gt;</span>
+<span class="source-line-no">084</span><span id="line-84">   * The default for this method is {@link JsonGroupAsBehavior#NONE}, since the</span>
+<span class="source-line-no">085</span><span id="line-85">   * default behavior is to have no grouping. If {@link #getMaxOccurs()} is</span>
+<span class="source-line-no">086</span><span id="line-86">   * greater than {@code 1}, then the default behavior is</span>
+<span class="source-line-no">087</span><span id="line-87">   * {@code #DEFAULT_JSON_GROUP_AS_BEHAVIOR}.</span>
+<span class="source-line-no">088</span><span id="line-88">   *</span>
+<span class="source-line-no">089</span><span id="line-89">   * @return the JSON group-as strategy, or {@code JsonGroupAsBehavior#NONE} if</span>
+<span class="source-line-no">090</span><span id="line-90">   *         {@link #getMaxOccurs()} = 1</span>
+<span class="source-line-no">091</span><span id="line-91">   * @see #DEFAULT_JSON_GROUP_AS_BEHAVIOR</span>
+<span class="source-line-no">092</span><span id="line-92">   */</span>
+<span class="source-line-no">093</span><span id="line-93">  @NonNull</span>
+<span class="source-line-no">094</span><span id="line-94">  default JsonGroupAsBehavior getJsonGroupAsBehavior() {</span>
+<span class="source-line-no">095</span><span id="line-95">    return JsonGroupAsBehavior.NONE;</span>
+<span class="source-line-no">096</span><span id="line-96">  }</span>
+<span class="source-line-no">097</span><span id="line-97"></span>
+<span class="source-line-no">098</span><span id="line-98">  /**</span>
+<span class="source-line-no">099</span><span id="line-99">   * Gets the configured XML group-as strategy. A XML group-as strategy is only</span>
+<span class="source-line-no">100</span><span id="line-100">   * required when {@link #getMaxOccurs()} &amp;gt; 1.</span>
+<span class="source-line-no">101</span><span id="line-101">   *</span>
+<span class="source-line-no">102</span><span id="line-102">   * @return the JSON group-as strategy, or {@code XmlGroupAsBehavior#UNGROUPED}</span>
+<span class="source-line-no">103</span><span id="line-103">   *         if {@link #getMaxOccurs()} = 1</span>
+<span class="source-line-no">104</span><span id="line-104">   * @see #DEFAULT_XML_GROUP_AS_BEHAVIOR</span>
+<span class="source-line-no">105</span><span id="line-105">   */</span>
+<span class="source-line-no">106</span><span id="line-106">  @NonNull</span>
+<span class="source-line-no">107</span><span id="line-107">  default XmlGroupAsBehavior getXmlGroupAsBehavior() {</span>
+<span class="source-line-no">108</span><span id="line-108">    return DEFAULT_XML_GROUP_AS_BEHAVIOR;</span>
+<span class="source-line-no">109</span><span id="line-109">  }</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">  /**</span>
+<span class="source-line-no">112</span><span id="line-112">   * Get the item values for the provided {@code instanceValue}. An instance may</span>
+<span class="source-line-no">113</span><span id="line-113">   * be singular or many valued.</span>
+<span class="source-line-no">114</span><span id="line-114">   *</span>
+<span class="source-line-no">115</span><span id="line-115">   * @param instanceValue</span>
+<span class="source-line-no">116</span><span id="line-116">   *          the instance</span>
+<span class="source-line-no">117</span><span id="line-117">   * @return the item values or an empty collection if no item values exist</span>
+<span class="source-line-no">118</span><span id="line-118">   */</span>
+<span class="source-line-no">119</span><span id="line-119">  @NonNull</span>
+<span class="source-line-no">120</span><span id="line-120">  default Collection&lt;?&gt; getItemValues(@NonNull Object instanceValue) {</span>
+<span class="source-line-no">121</span><span id="line-121">    // no item values by default</span>
+<span class="source-line-no">122</span><span id="line-122">    return CollectionUtil.emptyList();</span>
+<span class="source-line-no">123</span><span id="line-123">  }</span>
+<span class="source-line-no">124</span><span id="line-124">}</span>
 
 
 

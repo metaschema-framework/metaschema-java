@@ -54,7 +54,7 @@
 <span class="source-line-no">041</span><span id="line-41"></span>
 <span class="source-line-no">042</span><span id="line-42">  @Override</span>
 <span class="source-line-no">043</span><span id="line-43">  public String formatRootAssembly(IRootAssemblyNodeItem root) {</span>
-<span class="source-line-no">044</span><span id="line-44">    return ObjectUtils.notNull(root.getQName().getLocalPart());</span>
+<span class="source-line-no">044</span><span id="line-44">    return ObjectUtils.notNull(root.getQName().getLocalName());</span>
 <span class="source-line-no">045</span><span id="line-45">  }</span>
 <span class="source-line-no">046</span><span id="line-46"></span>
 <span class="source-line-no">047</span><span id="line-47">  @Override</span>
@@ -82,7 +82,7 @@
 <span class="source-line-no">069</span><span id="line-69">  @SuppressWarnings("null")</span>
 <span class="source-line-no">070</span><span id="line-70">  @NonNull</span>
 <span class="source-line-no">071</span><span id="line-71">  private static String formatModelPathSegment(@NonNull IModelNodeItem&lt;?, ?&gt; item) {</span>
-<span class="source-line-no">072</span><span id="line-72">    StringBuilder builder = new StringBuilder(item.getQName().getLocalPart())</span>
+<span class="source-line-no">072</span><span id="line-72">    StringBuilder builder = new StringBuilder(item.getQName().getLocalName())</span>
 <span class="source-line-no">073</span><span id="line-73">        .append('[')</span>
 <span class="source-line-no">074</span><span id="line-74">        .append(item.getPosition())</span>
 <span class="source-line-no">075</span><span id="line-75">        .append(']');</span>

@@ -18,57 +18,99 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">008</span><span id="line-8">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import java.net.URI;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import javax.xml.XMLConstants;</span>
-<span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">/**</span>
-<span class="source-line-no">017</span><span id="line-17"> * Provides constant values used in Metapath.</span>
-<span class="source-line-no">018</span><span id="line-18"> */</span>
-<span class="source-line-no">019</span><span id="line-19">@SuppressWarnings("PMD.DataClass")</span>
-<span class="source-line-no">020</span><span id="line-20">public final class MetapathConstants {</span>
-<span class="source-line-no">021</span><span id="line-21">  @NonNull</span>
-<span class="source-line-no">022</span><span id="line-22">  public static final URI NS_METAPATH = ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">023</span><span id="line-23">      URI.create("http://csrc.nist.gov/ns/metaschema/metapath"));</span>
-<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
-<span class="source-line-no">025</span><span id="line-25">  public static final URI NS_XML_SCHEMA = ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">026</span><span id="line-26">      URI.create(XMLConstants.W3C_XML_SCHEMA_NS_URI));</span>
-<span class="source-line-no">027</span><span id="line-27">  @NonNull</span>
-<span class="source-line-no">028</span><span id="line-28">  public static final URI NS_METAPATH_FUNCTIONS = ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">029</span><span id="line-29">      URI.create("http://csrc.nist.gov/ns/metaschema/metapath-functions"));</span>
-<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
-<span class="source-line-no">031</span><span id="line-31">  public static final URI NS_METAPATH_FUNCTIONS_MATH = ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">032</span><span id="line-32">      URI.create(NS_METAPATH_FUNCTIONS + "/math"));</span>
-<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
-<span class="source-line-no">034</span><span id="line-34">  public static final URI NS_METAPATH_FUNCTIONS_ARRAY = ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">035</span><span id="line-35">      URI.create(NS_METAPATH_FUNCTIONS + "/array"));</span>
-<span class="source-line-no">036</span><span id="line-36">  @NonNull</span>
-<span class="source-line-no">037</span><span id="line-37">  public static final URI NS_METAPATH_FUNCTIONS_MAP = ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">038</span><span id="line-38">      URI.create(NS_METAPATH_FUNCTIONS + "/map"));</span>
-<span class="source-line-no">039</span><span id="line-39">  @NonNull</span>
-<span class="source-line-no">040</span><span id="line-40">  public static final URI NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH_FUNCTIONS;</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">010</span><span id="line-10">/**</span>
+<span class="source-line-no">011</span><span id="line-11"> * Provides constant values for use in Metapath.</span>
+<span class="source-line-no">012</span><span id="line-12"> */</span>
+<span class="source-line-no">013</span><span id="line-13">@SuppressWarnings("PMD.DataClass")</span>
+<span class="source-line-no">014</span><span id="line-14">public final class MetapathConstants {</span>
+<span class="source-line-no">015</span><span id="line-15">  /**</span>
+<span class="source-line-no">016</span><span id="line-16">   * The namespace URI for Metapath data types and built-in casting functions, as</span>
+<span class="source-line-no">017</span><span id="line-17">   * a string.</span>
+<span class="source-line-no">018</span><span id="line-18">   */</span>
+<span class="source-line-no">019</span><span id="line-19">  @NonNull</span>
+<span class="source-line-no">020</span><span id="line-20">  public static final String NS_METAPATH = "http://csrc.nist.gov/ns/metaschema/metapath";</span>
+<span class="source-line-no">021</span><span id="line-21">  /**</span>
+<span class="source-line-no">022</span><span id="line-22">   * The namespace URI for Metapath built-in functions, as a string.</span>
+<span class="source-line-no">023</span><span id="line-23">   *</span>
+<span class="source-line-no">024</span><span id="line-24">   * @see #PREFIX_METAPATH for the default prefix for this namespace</span>
+<span class="source-line-no">025</span><span id="line-25">   */</span>
+<span class="source-line-no">026</span><span id="line-26">  @NonNull</span>
+<span class="source-line-no">027</span><span id="line-27">  public static final String NS_METAPATH_FUNCTIONS = "http://csrc.nist.gov/ns/metaschema/metapath-functions";</span>
+<span class="source-line-no">028</span><span id="line-28">  /**</span>
+<span class="source-line-no">029</span><span id="line-29">   * The namespace URI for Metapath math-related built-in functions, as a string.</span>
+<span class="source-line-no">030</span><span id="line-30">   *</span>
+<span class="source-line-no">031</span><span id="line-31">   * @see #PREFIX_METAPATH_FUNCTIONS_MATH for the default prefix for this</span>
+<span class="source-line-no">032</span><span id="line-32">   *      namespace</span>
+<span class="source-line-no">033</span><span id="line-33">   */</span>
+<span class="source-line-no">034</span><span id="line-34">  @NonNull</span>
+<span class="source-line-no">035</span><span id="line-35">  public static final String NS_METAPATH_FUNCTIONS_MATH = NS_METAPATH_FUNCTIONS + "/math";</span>
+<span class="source-line-no">036</span><span id="line-36">  /**</span>
+<span class="source-line-no">037</span><span id="line-37">   * The namespace URI for Metapath array-related built-in functions, as a string.</span>
+<span class="source-line-no">038</span><span id="line-38">   *</span>
+<span class="source-line-no">039</span><span id="line-39">   * @see #PREFIX_METAPATH_FUNCTIONS_ARRAY for the default prefix for this</span>
+<span class="source-line-no">040</span><span id="line-40">   *      namespace</span>
+<span class="source-line-no">041</span><span id="line-41">   */</span>
 <span class="source-line-no">042</span><span id="line-42">  @NonNull</span>
-<span class="source-line-no">043</span><span id="line-43">  public static final String PREFIX_METAPATH = "meta";</span>
-<span class="source-line-no">044</span><span id="line-44">  @NonNull</span>
-<span class="source-line-no">045</span><span id="line-45">  public static final String PREFIX_XML_SCHEMA = "xs";</span>
-<span class="source-line-no">046</span><span id="line-46">  @NonNull</span>
-<span class="source-line-no">047</span><span id="line-47">  public static final String PREFIX_XPATH_FUNCTIONS = "mp";</span>
-<span class="source-line-no">048</span><span id="line-48">  @NonNull</span>
-<span class="source-line-no">049</span><span id="line-49">  public static final String PREFIX_XPATH_FUNCTIONS_MATH = "math";</span>
-<span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
-<span class="source-line-no">051</span><span id="line-51">  public static final String PREFIX_XPATH_FUNCTIONS_ARRAY = "array";</span>
-<span class="source-line-no">052</span><span id="line-52">  @NonNull</span>
-<span class="source-line-no">053</span><span id="line-53">  public static final String PREFIX_XPATH_FUNCTIONS_MAP = "map";</span>
-<span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">  private MetapathConstants() {</span>
-<span class="source-line-no">056</span><span id="line-56">    // disable construction</span>
-<span class="source-line-no">057</span><span id="line-57">  }</span>
-<span class="source-line-no">058</span><span id="line-58">}</span>
+<span class="source-line-no">043</span><span id="line-43">  public static final String NS_METAPATH_FUNCTIONS_ARRAY = NS_METAPATH_FUNCTIONS + "/array";</span>
+<span class="source-line-no">044</span><span id="line-44">  /**</span>
+<span class="source-line-no">045</span><span id="line-45">   * The namespace URI for Metapath map-related built-in functions, as a string.</span>
+<span class="source-line-no">046</span><span id="line-46">   *</span>
+<span class="source-line-no">047</span><span id="line-47">   * @see #PREFIX_METAPATH_FUNCTIONS_MAP for the default prefix for this namespace</span>
+<span class="source-line-no">048</span><span id="line-48">   */</span>
+<span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
+<span class="source-line-no">050</span><span id="line-50">  public static final String NS_METAPATH_FUNCTIONS_MAP = NS_METAPATH_FUNCTIONS + "/map";</span>
+<span class="source-line-no">051</span><span id="line-51">  /**</span>
+<span class="source-line-no">052</span><span id="line-52">   * The namespace URI for Metapath extension built-in functions, as a string.</span>
+<span class="source-line-no">053</span><span id="line-53">   * &lt;p&gt;</span>
+<span class="source-line-no">054</span><span id="line-54">   * This is currently an alias for {@link #NS_METAPATH_FUNCTIONS} and can be used</span>
+<span class="source-line-no">055</span><span id="line-55">   * when implementing custom extension functions to distinguish them from core</span>
+<span class="source-line-no">056</span><span id="line-56">   * functions.</span>
+<span class="source-line-no">057</span><span id="line-57">   */</span>
+<span class="source-line-no">058</span><span id="line-58">  @NonNull</span>
+<span class="source-line-no">059</span><span id="line-59">  public static final String NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH_FUNCTIONS;</span>
+<span class="source-line-no">060</span><span id="line-60"></span>
+<span class="source-line-no">061</span><span id="line-61">  /**</span>
+<span class="source-line-no">062</span><span id="line-62">   * The namespace prefix for Metapath data types and built-in casting functions.</span>
+<span class="source-line-no">063</span><span id="line-63">   *</span>
+<span class="source-line-no">064</span><span id="line-64">   * @see #NS_METAPATH for the corresponding namespace URI</span>
+<span class="source-line-no">065</span><span id="line-65">   */</span>
+<span class="source-line-no">066</span><span id="line-66">  @NonNull</span>
+<span class="source-line-no">067</span><span id="line-67">  public static final String PREFIX_METAPATH = "meta";</span>
+<span class="source-line-no">068</span><span id="line-68">  /**</span>
+<span class="source-line-no">069</span><span id="line-69">   * The namespace prefix for Metapath built-in functions.</span>
+<span class="source-line-no">070</span><span id="line-70">   *</span>
+<span class="source-line-no">071</span><span id="line-71">   * @see #NS_METAPATH_FUNCTIONS for the corresponding namespace URI</span>
+<span class="source-line-no">072</span><span id="line-72">   */</span>
+<span class="source-line-no">073</span><span id="line-73">  @NonNull</span>
+<span class="source-line-no">074</span><span id="line-74">  public static final String PREFIX_METAPATH_FUNCTIONS = "fn";</span>
+<span class="source-line-no">075</span><span id="line-75">  /**</span>
+<span class="source-line-no">076</span><span id="line-76">   * The namespace prefix for Metapath math-related built-in functions.</span>
+<span class="source-line-no">077</span><span id="line-77">   *</span>
+<span class="source-line-no">078</span><span id="line-78">   * @see #NS_METAPATH_FUNCTIONS_MATH for the corresponding namespace URI</span>
+<span class="source-line-no">079</span><span id="line-79">   */</span>
+<span class="source-line-no">080</span><span id="line-80">  @NonNull</span>
+<span class="source-line-no">081</span><span id="line-81">  public static final String PREFIX_METAPATH_FUNCTIONS_MATH = "math";</span>
+<span class="source-line-no">082</span><span id="line-82">  /**</span>
+<span class="source-line-no">083</span><span id="line-83">   * The namespace prefix for Metapath array-related built-in functions.</span>
+<span class="source-line-no">084</span><span id="line-84">   *</span>
+<span class="source-line-no">085</span><span id="line-85">   * @see #NS_METAPATH_FUNCTIONS_ARRAY for the corresponding namespace URI</span>
+<span class="source-line-no">086</span><span id="line-86">   */</span>
+<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
+<span class="source-line-no">088</span><span id="line-88">  public static final String PREFIX_METAPATH_FUNCTIONS_ARRAY = "array";</span>
+<span class="source-line-no">089</span><span id="line-89">  /**</span>
+<span class="source-line-no">090</span><span id="line-90">   * The namespace prefix for Metapath map-related built-in functions.</span>
+<span class="source-line-no">091</span><span id="line-91">   *</span>
+<span class="source-line-no">092</span><span id="line-92">   * @see #NS_METAPATH_FUNCTIONS_MAP for the corresponding namespace URI</span>
+<span class="source-line-no">093</span><span id="line-93">   */</span>
+<span class="source-line-no">094</span><span id="line-94">  @NonNull</span>
+<span class="source-line-no">095</span><span id="line-95">  public static final String PREFIX_METAPATH_FUNCTIONS_MAP = "map";</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">  private MetapathConstants() {</span>
+<span class="source-line-no">098</span><span id="line-98">    // disable construction</span>
+<span class="source-line-no">099</span><span id="line-99">  }</span>
+<span class="source-line-no">100</span><span id="line-100">}</span>
 
 
 

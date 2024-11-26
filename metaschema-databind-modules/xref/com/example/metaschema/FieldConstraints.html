@@ -43,13 +43,13 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    @BoundChoiceGroup(
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>        minOccurs = 1,
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>        maxOccurs = -1,
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>        assemblies = {
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>            @BoundGroupedAssembly(formalName = <span class="jxr_string">"Allowed Values Constraint"</span>, useName = <span class="jxr_string">"allowed-values"</span>, binding = TargetedAllowedValuesConstraint.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>            @BoundGroupedAssembly(formalName = <span class="jxr_string">"Expect Condition Constraint"</span>, useName = <span class="jxr_string">"expect"</span>, binding = TargetedExpectConstraint.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>            @BoundGroupedAssembly(formalName = <span class="jxr_string">"Targeted Index Has Key Constraint"</span>, useName = <span class="jxr_string">"index-has-key"</span>, binding = TargetedIndexHasKeyConstraint.<strong class="jxr_keyword">class</strong>),
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>            @BoundGroupedAssembly(formalName = <span class="jxr_string">"Value Matches Constraint"</span>, useName = <span class="jxr_string">"matches"</span>, binding = TargetedMatchesConstraint.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>        },
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>        groupAs = @GroupAs(name = <span class="jxr_string">"rules"</span>, inJson = JsonGroupAsBehavior.LIST)
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>        groupAs = @GroupAs(name = <span class="jxr_string">"rules"</span>, inJson = JsonGroupAsBehavior.LIST),
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>        assemblies = {
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>            @BoundGroupedAssembly(formalName = <span class="jxr_string">"Allowed Values Constraint"</span>, useName = <span class="jxr_string">"allowed-values"</span>, binding = TargetedAllowedValuesConstraint.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>            @BoundGroupedAssembly(formalName = <span class="jxr_string">"Expect Condition Constraint"</span>, useName = <span class="jxr_string">"expect"</span>, binding = TargetedExpectConstraint.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>            @BoundGroupedAssembly(formalName = <span class="jxr_string">"Targeted Index Has Key Constraint"</span>, useName = <span class="jxr_string">"index-has-key"</span>, binding = TargetedIndexHasKeyConstraint.<strong class="jxr_keyword">class</strong>),
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>            @BoundGroupedAssembly(formalName = <span class="jxr_string">"Value Matches Constraint"</span>, useName = <span class="jxr_string">"matches"</span>, binding = TargetedMatchesConstraint.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>        }
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    )
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">private</strong> List&lt;Object&gt; _rules;
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  

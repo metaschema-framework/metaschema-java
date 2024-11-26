@@ -201,7 +201,7 @@
 <span class="source-line-no">188</span><span id="line-188">    if (NullJavaTypeAdapter.class.equals(adapterClass)) {</span>
 <span class="source-line-no">189</span><span id="line-189">      retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;</span>
 <span class="source-line-no">190</span><span id="line-190">    } else {</span>
-<span class="source-line-no">191</span><span id="line-191">      retval = bindingContext.getJavaTypeAdapterInstance(adapterClass);</span>
+<span class="source-line-no">191</span><span id="line-191">      retval = bindingContext.getDataTypeAdapterInstance(adapterClass);</span>
 <span class="source-line-no">192</span><span id="line-192">      if (retval == null) {</span>
 <span class="source-line-no">193</span><span id="line-193">        throw new IllegalArgumentException("Unable to get type adapter instance for class: " + adapterClass.getName());</span>
 <span class="source-line-no">194</span><span id="line-194">      }</span>

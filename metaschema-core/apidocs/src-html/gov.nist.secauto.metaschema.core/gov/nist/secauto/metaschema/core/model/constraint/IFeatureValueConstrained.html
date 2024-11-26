@@ -18,10 +18,10 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model.constraint;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import java.util.List;</span>
-<span class="source-line-no">009</span><span id="line-9">import java.util.Map;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">009</span><span id="line-9"></span>
+<span class="source-line-no">010</span><span id="line-10">import java.util.List;</span>
+<span class="source-line-no">011</span><span id="line-11">import java.util.Map;</span>
 <span class="source-line-no">012</span><span id="line-12"></span>
 <span class="source-line-no">013</span><span id="line-13">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">014</span><span id="line-14"></span>
@@ -41,7 +41,7 @@
 <span class="source-line-no">028</span><span id="line-28">  }</span>
 <span class="source-line-no">029</span><span id="line-29"></span>
 <span class="source-line-no">030</span><span id="line-30">  @Override</span>
-<span class="source-line-no">031</span><span id="line-31">  default Map&lt;QName, ILet&gt; getLetExpressions() {</span>
+<span class="source-line-no">031</span><span id="line-31">  default Map&lt;IEnhancedQName, ILet&gt; getLetExpressions() {</span>
 <span class="source-line-no">032</span><span id="line-32">    return getConstraintSupport().getLetExpressions();</span>
 <span class="source-line-no">033</span><span id="line-33">  }</span>
 <span class="source-line-no">034</span><span id="line-34"></span>

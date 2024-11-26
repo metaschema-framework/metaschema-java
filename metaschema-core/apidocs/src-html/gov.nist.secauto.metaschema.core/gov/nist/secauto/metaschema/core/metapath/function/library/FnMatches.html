@@ -56,15 +56,15 @@
 <span class="source-line-no">043</span><span id="line-43">      .focusIndependent()</span>
 <span class="source-line-no">044</span><span id="line-44">      .argument(IArgument.builder()</span>
 <span class="source-line-no">045</span><span id="line-45">          .name("input")</span>
-<span class="source-line-no">046</span><span id="line-46">          .type(IStringItem.class)</span>
+<span class="source-line-no">046</span><span id="line-46">          .type(IStringItem.type())</span>
 <span class="source-line-no">047</span><span id="line-47">          .zeroOrOne()</span>
 <span class="source-line-no">048</span><span id="line-48">          .build())</span>
 <span class="source-line-no">049</span><span id="line-49">      .argument(IArgument.builder()</span>
 <span class="source-line-no">050</span><span id="line-50">          .name("pattern")</span>
-<span class="source-line-no">051</span><span id="line-51">          .type(IStringItem.class)</span>
+<span class="source-line-no">051</span><span id="line-51">          .type(IStringItem.type())</span>
 <span class="source-line-no">052</span><span id="line-52">          .one()</span>
 <span class="source-line-no">053</span><span id="line-53">          .build())</span>
-<span class="source-line-no">054</span><span id="line-54">      .returnType(IBooleanItem.class)</span>
+<span class="source-line-no">054</span><span id="line-54">      .returnType(IBooleanItem.type())</span>
 <span class="source-line-no">055</span><span id="line-55">      .returnOne()</span>
 <span class="source-line-no">056</span><span id="line-56">      .functionHandler(FnMatches::executeTwoArg)</span>
 <span class="source-line-no">057</span><span id="line-57">      .build();</span>
@@ -78,95 +78,97 @@
 <span class="source-line-no">065</span><span id="line-65">      .focusIndependent()</span>
 <span class="source-line-no">066</span><span id="line-66">      .argument(IArgument.builder()</span>
 <span class="source-line-no">067</span><span id="line-67">          .name("input")</span>
-<span class="source-line-no">068</span><span id="line-68">          .type(IStringItem.class)</span>
+<span class="source-line-no">068</span><span id="line-68">          .type(IStringItem.type())</span>
 <span class="source-line-no">069</span><span id="line-69">          .zeroOrOne()</span>
 <span class="source-line-no">070</span><span id="line-70">          .build())</span>
 <span class="source-line-no">071</span><span id="line-71">      .argument(IArgument.builder()</span>
 <span class="source-line-no">072</span><span id="line-72">          .name("pattern")</span>
-<span class="source-line-no">073</span><span id="line-73">          .type(IStringItem.class)</span>
+<span class="source-line-no">073</span><span id="line-73">          .type(IStringItem.type())</span>
 <span class="source-line-no">074</span><span id="line-74">          .one()</span>
 <span class="source-line-no">075</span><span id="line-75">          .build())</span>
 <span class="source-line-no">076</span><span id="line-76">      .argument(IArgument.builder()</span>
 <span class="source-line-no">077</span><span id="line-77">          .name("flags")</span>
-<span class="source-line-no">078</span><span id="line-78">          .type(IStringItem.class)</span>
+<span class="source-line-no">078</span><span id="line-78">          .type(IStringItem.type())</span>
 <span class="source-line-no">079</span><span id="line-79">          .one()</span>
 <span class="source-line-no">080</span><span id="line-80">          .build())</span>
-<span class="source-line-no">081</span><span id="line-81">      .returnType(IBooleanItem.class)</span>
+<span class="source-line-no">081</span><span id="line-81">      .returnType(IBooleanItem.type())</span>
 <span class="source-line-no">082</span><span id="line-82">      .returnOne()</span>
 <span class="source-line-no">083</span><span id="line-83">      .functionHandler(FnMatches::executeThreeArg)</span>
 <span class="source-line-no">084</span><span id="line-84">      .build();</span>
 <span class="source-line-no">085</span><span id="line-85">  // CPD-ON</span>
 <span class="source-line-no">086</span><span id="line-86"></span>
-<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
-<span class="source-line-no">088</span><span id="line-88">  private static ISequence&lt;IBooleanItem&gt; executeTwoArg(</span>
-<span class="source-line-no">089</span><span id="line-89">      @SuppressWarnings("unused") @NonNull IFunction function,</span>
-<span class="source-line-no">090</span><span id="line-90">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">091</span><span id="line-91">      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">092</span><span id="line-92">      @SuppressWarnings("unused") IItem focus) {</span>
-<span class="source-line-no">093</span><span id="line-93">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="source-line-no">094</span><span id="line-94">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">    return execute(input, pattern, IStringItem.valueOf(""));</span>
-<span class="source-line-no">097</span><span id="line-97">  }</span>
-<span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">  @NonNull</span>
-<span class="source-line-no">100</span><span id="line-100">  private static ISequence&lt;IBooleanItem&gt; executeThreeArg(</span>
-<span class="source-line-no">101</span><span id="line-101">      @SuppressWarnings("unused") @NonNull IFunction function,</span>
-<span class="source-line-no">102</span><span id="line-102">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">103</span><span id="line-103">      @SuppressWarnings("unused") @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">104</span><span id="line-104">      @SuppressWarnings("unused") IItem focus) {</span>
-<span class="source-line-no">105</span><span id="line-105">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
-<span class="source-line-no">106</span><span id="line-106">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
-<span class="source-line-no">107</span><span id="line-107">    IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">    return execute(input, pattern, flags);</span>
-<span class="source-line-no">110</span><span id="line-110">  }</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">  @NonNull</span>
-<span class="source-line-no">113</span><span id="line-113">  private static ISequence&lt;IBooleanItem&gt; execute(</span>
-<span class="source-line-no">114</span><span id="line-114">      @Nullable IStringItem input,</span>
-<span class="source-line-no">115</span><span id="line-115">      @NonNull IStringItem pattern,</span>
-<span class="source-line-no">116</span><span id="line-116">      @NonNull IStringItem flags) {</span>
-<span class="source-line-no">117</span><span id="line-117">    return input == null</span>
-<span class="source-line-no">118</span><span id="line-118">        ? ISequence.empty()</span>
-<span class="source-line-no">119</span><span id="line-119">        : ISequence.of(</span>
-<span class="source-line-no">120</span><span id="line-120">            IBooleanItem.valueOf(</span>
-<span class="source-line-no">121</span><span id="line-121">                fnMatches(input.asString(), pattern.asString(), flags.asString())));</span>
-<span class="source-line-no">122</span><span id="line-122">  }</span>
-<span class="source-line-no">123</span><span id="line-123"></span>
-<span class="source-line-no">124</span><span id="line-124">  /**</span>
-<span class="source-line-no">125</span><span id="line-125">   * Implements &lt;a href=</span>
-<span class="source-line-no">126</span><span id="line-126">   * "https://www.w3.org/TR/xpath-functions-31/#func-matches"&gt;fn:matches&lt;/a&gt;.</span>
-<span class="source-line-no">127</span><span id="line-127">   *</span>
-<span class="source-line-no">128</span><span id="line-128">   * @param input</span>
-<span class="source-line-no">129</span><span id="line-129">   *          the string to match against</span>
-<span class="source-line-no">130</span><span id="line-130">   * @param pattern</span>
-<span class="source-line-no">131</span><span id="line-131">   *          the regular expression to use for matching</span>
-<span class="source-line-no">132</span><span id="line-132">   * @param flags</span>
-<span class="source-line-no">133</span><span id="line-133">   *          matching options</span>
-<span class="source-line-no">134</span><span id="line-134">   * @return {@code true} if the pattern matches or {@code false} otherwise</span>
-<span class="source-line-no">135</span><span id="line-135">   */</span>
-<span class="source-line-no">136</span><span id="line-136">  public static boolean fnMatches(@NonNull String input, @NonNull String pattern, @NonNull String flags) {</span>
-<span class="source-line-no">137</span><span id="line-137">    try {</span>
-<span class="source-line-no">138</span><span id="line-138">      return Pattern.compile(pattern, RegexUtil.parseFlags(flags))</span>
-<span class="source-line-no">139</span><span id="line-139">          .matcher(input).find();</span>
-<span class="source-line-no">140</span><span id="line-140">    } catch (PatternSyntaxException ex) {</span>
-<span class="source-line-no">141</span><span id="line-141">      throw new RegularExpressionMetapathException(</span>
-<span class="source-line-no">142</span><span id="line-142">          RegularExpressionMetapathException.INVALID_EXPRESSION,</span>
-<span class="source-line-no">143</span><span id="line-143">          "Invalid regular expression pattern: '" + pattern + "'",</span>
-<span class="source-line-no">144</span><span id="line-144">          ex);</span>
-<span class="source-line-no">145</span><span id="line-145">    } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">146</span><span id="line-146">      throw new RegularExpressionMetapathException(</span>
-<span class="source-line-no">147</span><span id="line-147">          RegularExpressionMetapathException.INVALID_FLAG,</span>
-<span class="source-line-no">148</span><span id="line-148">          "Invalid regular expression flags: '" + flags + "'",</span>
-<span class="source-line-no">149</span><span id="line-149">          ex);</span>
-<span class="source-line-no">150</span><span id="line-150">    }</span>
-<span class="source-line-no">151</span><span id="line-151">  }</span>
-<span class="source-line-no">152</span><span id="line-152"></span>
-<span class="source-line-no">153</span><span id="line-153">  private FnMatches() {</span>
-<span class="source-line-no">154</span><span id="line-154">    // disable construction</span>
-<span class="source-line-no">155</span><span id="line-155">  }</span>
-<span class="source-line-no">156</span><span id="line-156">}</span>
+<span class="source-line-no">087</span><span id="line-87">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">088</span><span id="line-88">  @NonNull</span>
+<span class="source-line-no">089</span><span id="line-89">  private static ISequence&lt;IBooleanItem&gt; executeTwoArg(</span>
+<span class="source-line-no">090</span><span id="line-90">      @NonNull IFunction function,</span>
+<span class="source-line-no">091</span><span id="line-91">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">092</span><span id="line-92">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">093</span><span id="line-93">      IItem focus) {</span>
+<span class="source-line-no">094</span><span id="line-94">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="source-line-no">095</span><span id="line-95">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">    return execute(input, pattern, IStringItem.valueOf(""));</span>
+<span class="source-line-no">098</span><span id="line-98">  }</span>
+<span class="source-line-no">099</span><span id="line-99"></span>
+<span class="source-line-no">100</span><span id="line-100">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">101</span><span id="line-101">  @NonNull</span>
+<span class="source-line-no">102</span><span id="line-102">  private static ISequence&lt;IBooleanItem&gt; executeThreeArg(</span>
+<span class="source-line-no">103</span><span id="line-103">      @NonNull IFunction function,</span>
+<span class="source-line-no">104</span><span id="line-104">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">105</span><span id="line-105">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">106</span><span id="line-106">      IItem focus) {</span>
+<span class="source-line-no">107</span><span id="line-107">    IStringItem input = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));</span>
+<span class="source-line-no">108</span><span id="line-108">    IStringItem pattern = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true)));</span>
+<span class="source-line-no">109</span><span id="line-109">    IStringItem flags = ObjectUtils.requireNonNull(FunctionUtils.asTypeOrNull(arguments.get(2).getFirstItem(true)));</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">    return execute(input, pattern, flags);</span>
+<span class="source-line-no">112</span><span id="line-112">  }</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">  @NonNull</span>
+<span class="source-line-no">115</span><span id="line-115">  private static ISequence&lt;IBooleanItem&gt; execute(</span>
+<span class="source-line-no">116</span><span id="line-116">      @Nullable IStringItem input,</span>
+<span class="source-line-no">117</span><span id="line-117">      @NonNull IStringItem pattern,</span>
+<span class="source-line-no">118</span><span id="line-118">      @NonNull IStringItem flags) {</span>
+<span class="source-line-no">119</span><span id="line-119">    return input == null</span>
+<span class="source-line-no">120</span><span id="line-120">        ? ISequence.empty()</span>
+<span class="source-line-no">121</span><span id="line-121">        : ISequence.of(</span>
+<span class="source-line-no">122</span><span id="line-122">            IBooleanItem.valueOf(</span>
+<span class="source-line-no">123</span><span id="line-123">                fnMatches(input.asString(), pattern.asString(), flags.asString())));</span>
+<span class="source-line-no">124</span><span id="line-124">  }</span>
+<span class="source-line-no">125</span><span id="line-125"></span>
+<span class="source-line-no">126</span><span id="line-126">  /**</span>
+<span class="source-line-no">127</span><span id="line-127">   * Implements &lt;a href=</span>
+<span class="source-line-no">128</span><span id="line-128">   * "https://www.w3.org/TR/xpath-functions-31/#func-matches"&gt;fn:matches&lt;/a&gt;.</span>
+<span class="source-line-no">129</span><span id="line-129">   *</span>
+<span class="source-line-no">130</span><span id="line-130">   * @param input</span>
+<span class="source-line-no">131</span><span id="line-131">   *          the string to match against</span>
+<span class="source-line-no">132</span><span id="line-132">   * @param pattern</span>
+<span class="source-line-no">133</span><span id="line-133">   *          the regular expression to use for matching</span>
+<span class="source-line-no">134</span><span id="line-134">   * @param flags</span>
+<span class="source-line-no">135</span><span id="line-135">   *          matching options</span>
+<span class="source-line-no">136</span><span id="line-136">   * @return {@code true} if the pattern matches or {@code false} otherwise</span>
+<span class="source-line-no">137</span><span id="line-137">   */</span>
+<span class="source-line-no">138</span><span id="line-138">  public static boolean fnMatches(@NonNull String input, @NonNull String pattern, @NonNull String flags) {</span>
+<span class="source-line-no">139</span><span id="line-139">    try {</span>
+<span class="source-line-no">140</span><span id="line-140">      return Pattern.compile(pattern, RegexUtil.parseFlags(flags))</span>
+<span class="source-line-no">141</span><span id="line-141">          .matcher(input).find();</span>
+<span class="source-line-no">142</span><span id="line-142">    } catch (PatternSyntaxException ex) {</span>
+<span class="source-line-no">143</span><span id="line-143">      throw new RegularExpressionMetapathException(</span>
+<span class="source-line-no">144</span><span id="line-144">          RegularExpressionMetapathException.INVALID_EXPRESSION,</span>
+<span class="source-line-no">145</span><span id="line-145">          "Invalid regular expression pattern: '" + pattern + "'",</span>
+<span class="source-line-no">146</span><span id="line-146">          ex);</span>
+<span class="source-line-no">147</span><span id="line-147">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">148</span><span id="line-148">      throw new RegularExpressionMetapathException(</span>
+<span class="source-line-no">149</span><span id="line-149">          RegularExpressionMetapathException.INVALID_FLAG,</span>
+<span class="source-line-no">150</span><span id="line-150">          "Invalid regular expression flags: '" + flags + "'",</span>
+<span class="source-line-no">151</span><span id="line-151">          ex);</span>
+<span class="source-line-no">152</span><span id="line-152">    }</span>
+<span class="source-line-no">153</span><span id="line-153">  }</span>
+<span class="source-line-no">154</span><span id="line-154"></span>
+<span class="source-line-no">155</span><span id="line-155">  private FnMatches() {</span>
+<span class="source-line-no">156</span><span id="line-156">    // disable construction</span>
+<span class="source-line-no">157</span><span id="line-157">  }</span>
+<span class="source-line-no">158</span><span id="line-158">}</span>
 
 
 

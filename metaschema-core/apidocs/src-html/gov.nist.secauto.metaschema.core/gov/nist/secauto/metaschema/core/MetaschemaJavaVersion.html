@@ -16,51 +16,57 @@
 <span class="source-line-no">003</span><span id="line-3"></span>
 <span class="source-line-no">004</span><span id="line-4">import gov.nist.secauto.metaschema.core.util.IVersionInfo;</span>
 <span class="source-line-no">005</span><span id="line-5"></span>
-<span class="source-line-no">006</span><span id="line-6">public class MetaschemaJavaVersion implements IVersionInfo {</span>
-<span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">  public static final String NAME = "metaschema-java";</span>
-<span class="source-line-no">009</span><span id="line-9">  public static final String VERSION = "2.0.1";</span>
-<span class="source-line-no">010</span><span id="line-10">  public static final String BUILD_TIMESTAMP = "2024-11-09T21:13:28+0000";</span>
-<span class="source-line-no">011</span><span id="line-11">  public static final String COMMIT = "964b845";</span>
-<span class="source-line-no">012</span><span id="line-12">  public static final String BRANCH = "964b8456020ec810a0eb885208dda4584c660f9a";</span>
-<span class="source-line-no">013</span><span id="line-13">  public static final String CLOSEST_TAG = "";</span>
-<span class="source-line-no">014</span><span id="line-14">  public static final String ORIGIN = "https://github.com/metaschema-framework/metaschema-java";</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">  @Override</span>
-<span class="source-line-no">017</span><span id="line-17">  public String getName() {</span>
-<span class="source-line-no">018</span><span id="line-18">    return NAME;</span>
-<span class="source-line-no">019</span><span id="line-19">  }</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">  @Override</span>
-<span class="source-line-no">022</span><span id="line-22">  public String getVersion() {</span>
-<span class="source-line-no">023</span><span id="line-23">    return VERSION;</span>
-<span class="source-line-no">024</span><span id="line-24">  }</span>
-<span class="source-line-no">025</span><span id="line-25"></span>
-<span class="source-line-no">026</span><span id="line-26">  @Override</span>
-<span class="source-line-no">027</span><span id="line-27">  public String getBuildTimestamp() {</span>
-<span class="source-line-no">028</span><span id="line-28">    return BUILD_TIMESTAMP;</span>
-<span class="source-line-no">029</span><span id="line-29">  }</span>
-<span class="source-line-no">030</span><span id="line-30"></span>
-<span class="source-line-no">031</span><span id="line-31">  @Override</span>
-<span class="source-line-no">032</span><span id="line-32">  public String getGitOriginUrl() {</span>
-<span class="source-line-no">033</span><span id="line-33">    return ORIGIN;</span>
-<span class="source-line-no">034</span><span id="line-34">  }</span>
-<span class="source-line-no">035</span><span id="line-35"></span>
-<span class="source-line-no">036</span><span id="line-36">  @Override</span>
-<span class="source-line-no">037</span><span id="line-37">  public String getGitCommit() {</span>
-<span class="source-line-no">038</span><span id="line-38">    return COMMIT;</span>
-<span class="source-line-no">039</span><span id="line-39">  }</span>
-<span class="source-line-no">040</span><span id="line-40"></span>
-<span class="source-line-no">041</span><span id="line-41">  @Override</span>
-<span class="source-line-no">042</span><span id="line-42">  public String getGitBranch() {</span>
-<span class="source-line-no">043</span><span id="line-43">    return BRANCH;</span>
-<span class="source-line-no">044</span><span id="line-44">  }</span>
-<span class="source-line-no">045</span><span id="line-45"></span>
-<span class="source-line-no">046</span><span id="line-46">  @Override</span>
-<span class="source-line-no">047</span><span id="line-47">  public String getGitClosestTag() {</span>
-<span class="source-line-no">048</span><span id="line-48">    return CLOSEST_TAG;</span>
-<span class="source-line-no">049</span><span id="line-49">  }</span>
-<span class="source-line-no">050</span><span id="line-50">}</span>
+<span class="source-line-no">006</span><span id="line-6">/**</span>
+<span class="source-line-no">007</span><span id="line-7"> * Provides version information for this library.</span>
+<span class="source-line-no">008</span><span id="line-8"> * &lt;p&gt;</span>
+<span class="source-line-no">009</span><span id="line-9"> * This class exposes build-time metadata including version numbers, build</span>
+<span class="source-line-no">010</span><span id="line-10"> * timestamps, and Git repository information.</span>
+<span class="source-line-no">011</span><span id="line-11"> */</span>
+<span class="source-line-no">012</span><span id="line-12">public class MetaschemaJavaVersion implements IVersionInfo {</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">  private static final String NAME = "metaschema-java";</span>
+<span class="source-line-no">015</span><span id="line-15">  private static final String VERSION = "2.1.0";</span>
+<span class="source-line-no">016</span><span id="line-16">  private static final String BUILD_TIMESTAMP = "2024-11-26T16:21:36+0000";</span>
+<span class="source-line-no">017</span><span id="line-17">  private static final String COMMIT = "462da0c";</span>
+<span class="source-line-no">018</span><span id="line-18">  private static final String BRANCH = "462da0c64add5b369af740f4d2057643ac72b056";</span>
+<span class="source-line-no">019</span><span id="line-19">  private static final String CLOSEST_TAG = "";</span>
+<span class="source-line-no">020</span><span id="line-20">  private static final String ORIGIN = "https://github.com/metaschema-framework/metaschema-java";</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">  @Override</span>
+<span class="source-line-no">023</span><span id="line-23">  public String getName() {</span>
+<span class="source-line-no">024</span><span id="line-24">    return NAME;</span>
+<span class="source-line-no">025</span><span id="line-25">  }</span>
+<span class="source-line-no">026</span><span id="line-26"></span>
+<span class="source-line-no">027</span><span id="line-27">  @Override</span>
+<span class="source-line-no">028</span><span id="line-28">  public String getVersion() {</span>
+<span class="source-line-no">029</span><span id="line-29">    return VERSION;</span>
+<span class="source-line-no">030</span><span id="line-30">  }</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">  @Override</span>
+<span class="source-line-no">033</span><span id="line-33">  public String getBuildTimestamp() {</span>
+<span class="source-line-no">034</span><span id="line-34">    return BUILD_TIMESTAMP;</span>
+<span class="source-line-no">035</span><span id="line-35">  }</span>
+<span class="source-line-no">036</span><span id="line-36"></span>
+<span class="source-line-no">037</span><span id="line-37">  @Override</span>
+<span class="source-line-no">038</span><span id="line-38">  public String getGitOriginUrl() {</span>
+<span class="source-line-no">039</span><span id="line-39">    return ORIGIN;</span>
+<span class="source-line-no">040</span><span id="line-40">  }</span>
+<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">042</span><span id="line-42">  @Override</span>
+<span class="source-line-no">043</span><span id="line-43">  public String getGitCommit() {</span>
+<span class="source-line-no">044</span><span id="line-44">    return COMMIT;</span>
+<span class="source-line-no">045</span><span id="line-45">  }</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">  @Override</span>
+<span class="source-line-no">048</span><span id="line-48">  public String getGitBranch() {</span>
+<span class="source-line-no">049</span><span id="line-49">    return BRANCH;</span>
+<span class="source-line-no">050</span><span id="line-50">  }</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  @Override</span>
+<span class="source-line-no">053</span><span id="line-53">  public String getGitClosestTag() {</span>
+<span class="source-line-no">054</span><span id="line-54">    return CLOSEST_TAG;</span>
+<span class="source-line-no">055</span><span id="line-55">  }</span>
+<span class="source-line-no">056</span><span id="line-56">}</span>
 
 
 

@@ -18,243 +18,266 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.CustomCollectors;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import org.apache.logging.log4j.LogManager;</span>
-<span class="source-line-no">013</span><span id="line-13">import org.apache.logging.log4j.Logger;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import java.util.Collection;</span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.List;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.util.Locale;</span>
-<span class="source-line-no">018</span><span id="line-18">import java.util.Map;</span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.function.Function;</span>
-<span class="source-line-no">020</span><span id="line-20">import java.util.function.Predicate;</span>
-<span class="source-line-no">021</span><span id="line-21">import java.util.stream.Collectors;</span>
-<span class="source-line-no">022</span><span id="line-22">import java.util.stream.Stream;</span>
-<span class="source-line-no">023</span><span id="line-23"></span>
-<span class="source-line-no">024</span><span id="line-24">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">025</span><span id="line-25"></span>
-<span class="source-line-no">026</span><span id="line-26">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">027</span><span id="line-27">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</span>
-<span class="source-line-no">028</span><span id="line-28">import nl.talsmasoftware.lazy4j.Lazy;</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">/**</span>
-<span class="source-line-no">031</span><span id="line-31"> * Provides a common, abstract implementation of a {@link IModule}.</span>
-<span class="source-line-no">032</span><span id="line-32"> *</span>
-<span class="source-line-no">033</span><span id="line-33"> * @param &lt;M&gt;</span>
-<span class="source-line-no">034</span><span id="line-34"> *          the imported module Java type</span>
-<span class="source-line-no">035</span><span id="line-35"> * @param &lt;D&gt;</span>
-<span class="source-line-no">036</span><span id="line-36"> *          the definition Java type</span>
-<span class="source-line-no">037</span><span id="line-37"> * @param &lt;FL&gt;</span>
-<span class="source-line-no">038</span><span id="line-38"> *          the flag definition Java type</span>
-<span class="source-line-no">039</span><span id="line-39"> * @param &lt;FI&gt;</span>
-<span class="source-line-no">040</span><span id="line-40"> *          the field definition Java type</span>
-<span class="source-line-no">041</span><span id="line-41"> * @param &lt;A&gt;</span>
-<span class="source-line-no">042</span><span id="line-42"> *          the assembly definition Java type</span>
-<span class="source-line-no">043</span><span id="line-43"> */</span>
-<span class="source-line-no">044</span><span id="line-44">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
-<span class="source-line-no">045</span><span id="line-45">public abstract class AbstractModule&lt;</span>
-<span class="source-line-no">046</span><span id="line-46">    M extends IModuleExtended&lt;M, D, FL, FI, A&gt;,</span>
-<span class="source-line-no">047</span><span id="line-47">    D extends IModelDefinition,</span>
-<span class="source-line-no">048</span><span id="line-48">    FL extends IFlagDefinition,</span>
-<span class="source-line-no">049</span><span id="line-49">    FI extends IFieldDefinition,</span>
-<span class="source-line-no">050</span><span id="line-50">    A extends IAssemblyDefinition&gt;</span>
-<span class="source-line-no">051</span><span id="line-51">    implements IModuleExtended&lt;M, D, FL, FI, A&gt; {</span>
-<span class="source-line-no">052</span><span id="line-52">  private static final Logger LOGGER = LogManager.getLogger(AbstractModule.class);</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">  @NonNull</span>
-<span class="source-line-no">055</span><span id="line-55">  private final List&lt;? extends M&gt; importedModules;</span>
-<span class="source-line-no">056</span><span id="line-56">  @NonNull</span>
-<span class="source-line-no">057</span><span id="line-57">  private final Lazy&lt;Exports&gt; exports;</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">  /**</span>
-<span class="source-line-no">060</span><span id="line-60">   * Construct a new Metaschema module object.</span>
-<span class="source-line-no">061</span><span id="line-61">   *</span>
-<span class="source-line-no">062</span><span id="line-62">   * @param importedModules</span>
-<span class="source-line-no">063</span><span id="line-63">   *          the collection of Metaschema module objects this Metaschema module</span>
-<span class="source-line-no">064</span><span id="line-64">   *          imports</span>
-<span class="source-line-no">065</span><span id="line-65">   */</span>
-<span class="source-line-no">066</span><span id="line-66">  public AbstractModule(@NonNull List&lt;? extends M&gt; importedModules) {</span>
-<span class="source-line-no">067</span><span id="line-67">    this.importedModules</span>
-<span class="source-line-no">068</span><span id="line-68">        = CollectionUtil.unmodifiableList(ObjectUtils.requireNonNull(importedModules, "importedModules"));</span>
-<span class="source-line-no">069</span><span id="line-69">    this.exports = ObjectUtils.notNull(Lazy.lazy(() -&gt; new Exports(importedModules)));</span>
-<span class="source-line-no">070</span><span id="line-70">  }</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">  @Override</span>
-<span class="source-line-no">073</span><span id="line-73">  @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "interface doesn't allow modification")</span>
-<span class="source-line-no">074</span><span id="line-74">  public List&lt;? extends M&gt; getImportedModules() {</span>
-<span class="source-line-no">075</span><span id="line-75">    return importedModules;</span>
-<span class="source-line-no">076</span><span id="line-76">  }</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">  @SuppressWarnings("null")</span>
-<span class="source-line-no">079</span><span id="line-79">  @NonNull</span>
-<span class="source-line-no">080</span><span id="line-80">  private Exports getExports() {</span>
-<span class="source-line-no">081</span><span id="line-81">    return exports.get();</span>
-<span class="source-line-no">082</span><span id="line-82">  }</span>
-<span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">  private Map&lt;String, ? extends M&gt; getImportedModulesByShortName() {</span>
-<span class="source-line-no">085</span><span id="line-85">    return importedModules.stream().collect(Collectors.toMap(IModule::getShortName, Function.identity()));</span>
-<span class="source-line-no">086</span><span id="line-86">  }</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">  @Override</span>
-<span class="source-line-no">089</span><span id="line-89">  public M getImportedModuleByShortName(String name) {</span>
-<span class="source-line-no">090</span><span id="line-90">    return getImportedModulesByShortName().get(name);</span>
-<span class="source-line-no">091</span><span id="line-91">  }</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">  @SuppressWarnings("null")</span>
-<span class="source-line-no">094</span><span id="line-94">  @Override</span>
-<span class="source-line-no">095</span><span id="line-95">  public Collection&lt;FL&gt; getExportedFlagDefinitions() {</span>
-<span class="source-line-no">096</span><span id="line-96">    return getExports().getExportedFlagDefinitionMap().values();</span>
-<span class="source-line-no">097</span><span id="line-97">  }</span>
-<span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">  @Override</span>
-<span class="source-line-no">100</span><span id="line-100">  public FL getExportedFlagDefinitionByName(QName name) {</span>
-<span class="source-line-no">101</span><span id="line-101">    return getExports().getExportedFlagDefinitionMap().get(name);</span>
-<span class="source-line-no">102</span><span id="line-102">  }</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  @SuppressWarnings("null")</span>
-<span class="source-line-no">105</span><span id="line-105">  @Override</span>
-<span class="source-line-no">106</span><span id="line-106">  public Collection&lt;FI&gt; getExportedFieldDefinitions() {</span>
-<span class="source-line-no">107</span><span id="line-107">    return getExports().getExportedFieldDefinitionMap().values();</span>
-<span class="source-line-no">108</span><span id="line-108">  }</span>
-<span class="source-line-no">109</span><span id="line-109"></span>
-<span class="source-line-no">110</span><span id="line-110">  @Override</span>
-<span class="source-line-no">111</span><span id="line-111">  public FI getExportedFieldDefinitionByName(QName name) {</span>
-<span class="source-line-no">112</span><span id="line-112">    return getExports().getExportedFieldDefinitionMap().get(name);</span>
-<span class="source-line-no">113</span><span id="line-113">  }</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">  @SuppressWarnings("null")</span>
-<span class="source-line-no">116</span><span id="line-116">  @Override</span>
-<span class="source-line-no">117</span><span id="line-117">  public Collection&lt;A&gt; getExportedAssemblyDefinitions() {</span>
-<span class="source-line-no">118</span><span id="line-118">    return getExports().getExportedAssemblyDefinitionMap().values();</span>
-<span class="source-line-no">119</span><span id="line-119">  }</span>
-<span class="source-line-no">120</span><span id="line-120"></span>
-<span class="source-line-no">121</span><span id="line-121">  @Override</span>
-<span class="source-line-no">122</span><span id="line-122">  public A getExportedAssemblyDefinitionByName(QName name) {</span>
-<span class="source-line-no">123</span><span id="line-123">    return getExports().getExportedAssemblyDefinitionMap().get(name);</span>
-<span class="source-line-no">124</span><span id="line-124">  }</span>
-<span class="source-line-no">125</span><span id="line-125"></span>
-<span class="source-line-no">126</span><span id="line-126">  @Override</span>
-<span class="source-line-no">127</span><span id="line-127">  public A getExportedRootAssemblyDefinitionByName(QName name) {</span>
-<span class="source-line-no">128</span><span id="line-128">    return getExports().getExportedRootAssemblyDefinitionMap().get(name);</span>
-<span class="source-line-no">129</span><span id="line-129">  }</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">  @SuppressWarnings({ "unused", "PMD.UnusedPrivateMethod" }) // used by lambda</span>
-<span class="source-line-no">132</span><span id="line-132">  private static &lt;DEF extends IDefinition&gt; DEF handleShadowedDefinitions(</span>
-<span class="source-line-no">133</span><span id="line-133">      @NonNull QName key,</span>
-<span class="source-line-no">134</span><span id="line-134">      @NonNull DEF oldDef,</span>
-<span class="source-line-no">135</span><span id="line-135">      @NonNull DEF newDef) {</span>
-<span class="source-line-no">136</span><span id="line-136">    if (!oldDef.equals(newDef) &amp;&amp; LOGGER.isWarnEnabled()) {</span>
-<span class="source-line-no">137</span><span id="line-137">      LOGGER.warn("The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'",</span>
-<span class="source-line-no">138</span><span id="line-138">          newDef.getModelType().name().toLowerCase(Locale.ROOT),</span>
-<span class="source-line-no">139</span><span id="line-139">          newDef.getName(),</span>
-<span class="source-line-no">140</span><span id="line-140">          newDef.getContainingModule().getShortName(),</span>
-<span class="source-line-no">141</span><span id="line-141">          oldDef.getName(),</span>
-<span class="source-line-no">142</span><span id="line-142">          oldDef.getContainingModule().getShortName());</span>
-<span class="source-line-no">143</span><span id="line-143">    }</span>
-<span class="source-line-no">144</span><span id="line-144">    return newDef;</span>
-<span class="source-line-no">145</span><span id="line-145">  }</span>
-<span class="source-line-no">146</span><span id="line-146"></span>
-<span class="source-line-no">147</span><span id="line-147">  private class Exports {</span>
-<span class="source-line-no">148</span><span id="line-148">    @NonNull</span>
-<span class="source-line-no">149</span><span id="line-149">    private final Map&lt;QName, FL&gt; exportedFlagDefinitions;</span>
-<span class="source-line-no">150</span><span id="line-150">    @NonNull</span>
-<span class="source-line-no">151</span><span id="line-151">    private final Map&lt;QName, FI&gt; exportedFieldDefinitions;</span>
-<span class="source-line-no">152</span><span id="line-152">    @NonNull</span>
-<span class="source-line-no">153</span><span id="line-153">    private final Map&lt;QName, A&gt; exportedAssemblyDefinitions;</span>
-<span class="source-line-no">154</span><span id="line-154">    @NonNull</span>
-<span class="source-line-no">155</span><span id="line-155">    private final Map&lt;QName, A&gt; exportedRootAssemblyDefinitions;</span>
-<span class="source-line-no">156</span><span id="line-156"></span>
-<span class="source-line-no">157</span><span id="line-157">    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")</span>
-<span class="source-line-no">158</span><span id="line-158">    public Exports(@NonNull List&lt;? extends M&gt; importedModules) {</span>
-<span class="source-line-no">159</span><span id="line-159">      // Populate the stream with the definitions from this module</span>
-<span class="source-line-no">160</span><span id="line-160">      Predicate&lt;IDefinition&gt; filter = IModuleExtended.allNonLocalDefinitions();</span>
-<span class="source-line-no">161</span><span id="line-161">      Stream&lt;FL&gt; flags = getFlagDefinitions().stream()</span>
-<span class="source-line-no">162</span><span id="line-162">          .filter(filter);</span>
-<span class="source-line-no">163</span><span id="line-163">      Stream&lt;FI&gt; fields = getFieldDefinitions().stream()</span>
-<span class="source-line-no">164</span><span id="line-164">          .filter(filter);</span>
-<span class="source-line-no">165</span><span id="line-165">      Stream&lt;A&gt; assemblies = getAssemblyDefinitions().stream()</span>
-<span class="source-line-no">166</span><span id="line-166">          .filter(filter);</span>
-<span class="source-line-no">167</span><span id="line-167"></span>
-<span class="source-line-no">168</span><span id="line-168">      // handle definitions from any included module</span>
-<span class="source-line-no">169</span><span id="line-169">      if (!importedModules.isEmpty()) {</span>
-<span class="source-line-no">170</span><span id="line-170">        Stream&lt;FL&gt; importedFlags = Stream.empty();</span>
-<span class="source-line-no">171</span><span id="line-171">        Stream&lt;FI&gt; importedFields = Stream.empty();</span>
-<span class="source-line-no">172</span><span id="line-172">        Stream&lt;A&gt; importedAssemblies = Stream.empty();</span>
-<span class="source-line-no">173</span><span id="line-173"></span>
-<span class="source-line-no">174</span><span id="line-174">        for (M module : importedModules) {</span>
-<span class="source-line-no">175</span><span id="line-175">          importedFlags = Stream.concat(importedFlags, module.getExportedFlagDefinitions().stream());</span>
-<span class="source-line-no">176</span><span id="line-176">          importedFields = Stream.concat(importedFields, module.getExportedFieldDefinitions().stream());</span>
-<span class="source-line-no">177</span><span id="line-177">          importedAssemblies</span>
-<span class="source-line-no">178</span><span id="line-178">              = Stream.concat(importedAssemblies, module.getExportedAssemblyDefinitions().stream());</span>
-<span class="source-line-no">179</span><span id="line-179">        }</span>
-<span class="source-line-no">180</span><span id="line-180"></span>
-<span class="source-line-no">181</span><span id="line-181">        flags = Stream.concat(importedFlags, flags);</span>
-<span class="source-line-no">182</span><span id="line-182">        fields = Stream.concat(importedFields, fields);</span>
-<span class="source-line-no">183</span><span id="line-183">        assemblies = Stream.concat(importedAssemblies, assemblies);</span>
-<span class="source-line-no">184</span><span id="line-184">      }</span>
-<span class="source-line-no">185</span><span id="line-185"></span>
-<span class="source-line-no">186</span><span id="line-186">      // Build the maps. Definitions from this module will take priority, with</span>
-<span class="source-line-no">187</span><span id="line-187">      // shadowing being reported when a definition from this module has the same name</span>
-<span class="source-line-no">188</span><span id="line-188">      // as an imported one</span>
-<span class="source-line-no">189</span><span id="line-189">      Map&lt;QName, FL&gt; exportedFlagDefinitions = flags.collect(</span>
-<span class="source-line-no">190</span><span id="line-190">          CustomCollectors.toMap(</span>
-<span class="source-line-no">191</span><span id="line-191">              IFlagDefinition::getDefinitionQName,</span>
-<span class="source-line-no">192</span><span id="line-192">              CustomCollectors.identity(),</span>
-<span class="source-line-no">193</span><span id="line-193">              AbstractModule::handleShadowedDefinitions));</span>
-<span class="source-line-no">194</span><span id="line-194">      Map&lt;QName, FI&gt; exportedFieldDefinitions = fields.collect(</span>
-<span class="source-line-no">195</span><span id="line-195">          CustomCollectors.toMap(</span>
-<span class="source-line-no">196</span><span id="line-196">              IFieldDefinition::getDefinitionQName,</span>
-<span class="source-line-no">197</span><span id="line-197">              CustomCollectors.identity(),</span>
-<span class="source-line-no">198</span><span id="line-198">              AbstractModule::handleShadowedDefinitions));</span>
-<span class="source-line-no">199</span><span id="line-199">      Map&lt;QName, A&gt; exportedAssemblyDefinitions = assemblies.collect(</span>
-<span class="source-line-no">200</span><span id="line-200">          CustomCollectors.toMap(</span>
-<span class="source-line-no">201</span><span id="line-201">              IAssemblyDefinition::getDefinitionQName,</span>
-<span class="source-line-no">202</span><span id="line-202">              CustomCollectors.identity(),</span>
-<span class="source-line-no">203</span><span id="line-203">              AbstractModule::handleShadowedDefinitions));</span>
-<span class="source-line-no">204</span><span id="line-204"></span>
-<span class="source-line-no">205</span><span id="line-205">      this.exportedFlagDefinitions = exportedFlagDefinitions.isEmpty()</span>
-<span class="source-line-no">206</span><span id="line-206">          ? CollectionUtil.emptyMap()</span>
-<span class="source-line-no">207</span><span id="line-207">          : CollectionUtil.unmodifiableMap(exportedFlagDefinitions);</span>
-<span class="source-line-no">208</span><span id="line-208">      this.exportedFieldDefinitions = exportedFieldDefinitions.isEmpty()</span>
-<span class="source-line-no">209</span><span id="line-209">          ? CollectionUtil.emptyMap()</span>
-<span class="source-line-no">210</span><span id="line-210">          : CollectionUtil.unmodifiableMap(exportedFieldDefinitions);</span>
-<span class="source-line-no">211</span><span id="line-211">      this.exportedAssemblyDefinitions = exportedAssemblyDefinitions.isEmpty()</span>
-<span class="source-line-no">212</span><span id="line-212">          ? CollectionUtil.emptyMap()</span>
-<span class="source-line-no">213</span><span id="line-213">          : CollectionUtil.unmodifiableMap(exportedAssemblyDefinitions);</span>
-<span class="source-line-no">214</span><span id="line-214">      this.exportedRootAssemblyDefinitions = exportedAssemblyDefinitions.isEmpty()</span>
-<span class="source-line-no">215</span><span id="line-215">          ? CollectionUtil.emptyMap()</span>
-<span class="source-line-no">216</span><span id="line-216">          : CollectionUtil.unmodifiableMap(ObjectUtils.notNull(exportedAssemblyDefinitions.values().stream()</span>
-<span class="source-line-no">217</span><span id="line-217">              .filter(IAssemblyDefinition::isRoot)</span>
-<span class="source-line-no">218</span><span id="line-218">              .collect(CustomCollectors.toMap(</span>
-<span class="source-line-no">219</span><span id="line-219">                  IAssemblyDefinition::getRootXmlQName,</span>
-<span class="source-line-no">220</span><span id="line-220">                  CustomCollectors.identity(),</span>
-<span class="source-line-no">221</span><span id="line-221">                  AbstractModule::handleShadowedDefinitions))));</span>
-<span class="source-line-no">222</span><span id="line-222">    }</span>
-<span class="source-line-no">223</span><span id="line-223"></span>
-<span class="source-line-no">224</span><span id="line-224">    @NonNull</span>
-<span class="source-line-no">225</span><span id="line-225">    public Map&lt;QName, FL&gt; getExportedFlagDefinitionMap() {</span>
-<span class="source-line-no">226</span><span id="line-226">      return this.exportedFlagDefinitions;</span>
-<span class="source-line-no">227</span><span id="line-227">    }</span>
-<span class="source-line-no">228</span><span id="line-228"></span>
-<span class="source-line-no">229</span><span id="line-229">    @NonNull</span>
-<span class="source-line-no">230</span><span id="line-230">    public Map&lt;QName, FI&gt; getExportedFieldDefinitionMap() {</span>
-<span class="source-line-no">231</span><span id="line-231">      return this.exportedFieldDefinitions;</span>
-<span class="source-line-no">232</span><span id="line-232">    }</span>
-<span class="source-line-no">233</span><span id="line-233"></span>
-<span class="source-line-no">234</span><span id="line-234">    @NonNull</span>
-<span class="source-line-no">235</span><span id="line-235">    public Map&lt;QName, A&gt; getExportedAssemblyDefinitionMap() {</span>
-<span class="source-line-no">236</span><span id="line-236">      return this.exportedAssemblyDefinitions;</span>
-<span class="source-line-no">237</span><span id="line-237">    }</span>
-<span class="source-line-no">238</span><span id="line-238"></span>
-<span class="source-line-no">239</span><span id="line-239">    @NonNull</span>
-<span class="source-line-no">240</span><span id="line-240">    public Map&lt;QName, A&gt; getExportedRootAssemblyDefinitionMap() {</span>
-<span class="source-line-no">241</span><span id="line-241">      return this.exportedRootAssemblyDefinitions;</span>
-<span class="source-line-no">242</span><span id="line-242">    }</span>
-<span class="source-line-no">243</span><span id="line-243">  }</span>
-<span class="source-line-no">244</span><span id="line-244">}</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.CustomCollectors;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">import org.apache.logging.log4j.LogManager;</span>
+<span class="source-line-no">014</span><span id="line-14">import org.apache.logging.log4j.Logger;</span>
+<span class="source-line-no">015</span><span id="line-15"></span>
+<span class="source-line-no">016</span><span id="line-16">import java.util.Collection;</span>
+<span class="source-line-no">017</span><span id="line-17">import java.util.List;</span>
+<span class="source-line-no">018</span><span id="line-18">import java.util.Locale;</span>
+<span class="source-line-no">019</span><span id="line-19">import java.util.Map;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.util.function.Function;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.function.Predicate;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.stream.Collectors;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.util.stream.Stream;</span>
+<span class="source-line-no">024</span><span id="line-24"></span>
+<span class="source-line-no">025</span><span id="line-25">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">026</span><span id="line-26">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</span>
+<span class="source-line-no">027</span><span id="line-27">import nl.talsmasoftware.lazy4j.Lazy;</span>
+<span class="source-line-no">028</span><span id="line-28"></span>
+<span class="source-line-no">029</span><span id="line-29">/**</span>
+<span class="source-line-no">030</span><span id="line-30"> * Provides a common, abstract implementation of a {@link IModule}.</span>
+<span class="source-line-no">031</span><span id="line-31"> *</span>
+<span class="source-line-no">032</span><span id="line-32"> * @param &lt;M&gt;</span>
+<span class="source-line-no">033</span><span id="line-33"> *          the imported module Java type</span>
+<span class="source-line-no">034</span><span id="line-34"> * @param &lt;D&gt;</span>
+<span class="source-line-no">035</span><span id="line-35"> *          the definition Java type</span>
+<span class="source-line-no">036</span><span id="line-36"> * @param &lt;FL&gt;</span>
+<span class="source-line-no">037</span><span id="line-37"> *          the flag definition Java type</span>
+<span class="source-line-no">038</span><span id="line-38"> * @param &lt;FI&gt;</span>
+<span class="source-line-no">039</span><span id="line-39"> *          the field definition Java type</span>
+<span class="source-line-no">040</span><span id="line-40"> * @param &lt;A&gt;</span>
+<span class="source-line-no">041</span><span id="line-41"> *          the assembly definition Java type</span>
+<span class="source-line-no">042</span><span id="line-42"> */</span>
+<span class="source-line-no">043</span><span id="line-43">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
+<span class="source-line-no">044</span><span id="line-44">public abstract class AbstractModule&lt;</span>
+<span class="source-line-no">045</span><span id="line-45">    M extends IModuleExtended&lt;M, D, FL, FI, A&gt;,</span>
+<span class="source-line-no">046</span><span id="line-46">    D extends IModelDefinition,</span>
+<span class="source-line-no">047</span><span id="line-47">    FL extends IFlagDefinition,</span>
+<span class="source-line-no">048</span><span id="line-48">    FI extends IFieldDefinition,</span>
+<span class="source-line-no">049</span><span id="line-49">    A extends IAssemblyDefinition&gt;</span>
+<span class="source-line-no">050</span><span id="line-50">    implements IModuleExtended&lt;M, D, FL, FI, A&gt; {</span>
+<span class="source-line-no">051</span><span id="line-51">  private static final Logger LOGGER = LogManager.getLogger(AbstractModule.class);</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">  @NonNull</span>
+<span class="source-line-no">054</span><span id="line-54">  private final List&lt;? extends M&gt; importedModules;</span>
+<span class="source-line-no">055</span><span id="line-55">  @NonNull</span>
+<span class="source-line-no">056</span><span id="line-56">  private final Lazy&lt;Exports&gt; exports;</span>
+<span class="source-line-no">057</span><span id="line-57">  @NonNull</span>
+<span class="source-line-no">058</span><span id="line-58">  private final Lazy&lt;IEnhancedQName&gt; qname;</span>
+<span class="source-line-no">059</span><span id="line-59"></span>
+<span class="source-line-no">060</span><span id="line-60">  /**</span>
+<span class="source-line-no">061</span><span id="line-61">   * Construct a new Metaschema module object.</span>
+<span class="source-line-no">062</span><span id="line-62">   *</span>
+<span class="source-line-no">063</span><span id="line-63">   * @param importedModules</span>
+<span class="source-line-no">064</span><span id="line-64">   *          the collection of Metaschema module objects this Metaschema module</span>
+<span class="source-line-no">065</span><span id="line-65">   *          imports</span>
+<span class="source-line-no">066</span><span id="line-66">   */</span>
+<span class="source-line-no">067</span><span id="line-67">  public AbstractModule(@NonNull List&lt;? extends M&gt; importedModules) {</span>
+<span class="source-line-no">068</span><span id="line-68">    this.importedModules</span>
+<span class="source-line-no">069</span><span id="line-69">        = CollectionUtil.unmodifiableList(ObjectUtils.requireNonNull(importedModules, "importedModules"));</span>
+<span class="source-line-no">070</span><span id="line-70">    this.exports = ObjectUtils.notNull(Lazy.lazy(() -&gt; new Exports(importedModules)));</span>
+<span class="source-line-no">071</span><span id="line-71">    this.qname = ObjectUtils.notNull(Lazy.lazy(() -&gt; IEnhancedQName.of(getXmlNamespace(), getShortName())));</span>
+<span class="source-line-no">072</span><span id="line-72">  }</span>
+<span class="source-line-no">073</span><span id="line-73"></span>
+<span class="source-line-no">074</span><span id="line-74">  @Override</span>
+<span class="source-line-no">075</span><span id="line-75">  public IEnhancedQName getQName() {</span>
+<span class="source-line-no">076</span><span id="line-76">    return ObjectUtils.notNull(qname.get());</span>
+<span class="source-line-no">077</span><span id="line-77">  }</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">  @Override</span>
+<span class="source-line-no">080</span><span id="line-80">  @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "interface doesn't allow modification")</span>
+<span class="source-line-no">081</span><span id="line-81">  public List&lt;? extends M&gt; getImportedModules() {</span>
+<span class="source-line-no">082</span><span id="line-82">    return importedModules;</span>
+<span class="source-line-no">083</span><span id="line-83">  }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">  @SuppressWarnings("null")</span>
+<span class="source-line-no">086</span><span id="line-86">  @NonNull</span>
+<span class="source-line-no">087</span><span id="line-87">  private Exports getExports() {</span>
+<span class="source-line-no">088</span><span id="line-88">    return exports.get();</span>
+<span class="source-line-no">089</span><span id="line-89">  }</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">  private Map&lt;String, ? extends M&gt; getImportedModulesByShortName() {</span>
+<span class="source-line-no">092</span><span id="line-92">    return importedModules.stream().collect(Collectors.toMap(IModule::getShortName, Function.identity()));</span>
+<span class="source-line-no">093</span><span id="line-93">  }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">  @Override</span>
+<span class="source-line-no">096</span><span id="line-96">  public M getImportedModuleByShortName(String name) {</span>
+<span class="source-line-no">097</span><span id="line-97">    return getImportedModulesByShortName().get(name);</span>
+<span class="source-line-no">098</span><span id="line-98">  }</span>
+<span class="source-line-no">099</span><span id="line-99"></span>
+<span class="source-line-no">100</span><span id="line-100">  @SuppressWarnings("null")</span>
+<span class="source-line-no">101</span><span id="line-101">  @Override</span>
+<span class="source-line-no">102</span><span id="line-102">  public Collection&lt;FL&gt; getExportedFlagDefinitions() {</span>
+<span class="source-line-no">103</span><span id="line-103">    return getExports().getExportedFlagDefinitionMap().values();</span>
+<span class="source-line-no">104</span><span id="line-104">  }</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">  @Override</span>
+<span class="source-line-no">107</span><span id="line-107">  public FL getExportedFlagDefinitionByName(IEnhancedQName name) {</span>
+<span class="source-line-no">108</span><span id="line-108">    return getExports().getExportedFlagDefinitionMap().get(name);</span>
+<span class="source-line-no">109</span><span id="line-109">  }</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">  @SuppressWarnings("null")</span>
+<span class="source-line-no">112</span><span id="line-112">  @Override</span>
+<span class="source-line-no">113</span><span id="line-113">  public Collection&lt;FI&gt; getExportedFieldDefinitions() {</span>
+<span class="source-line-no">114</span><span id="line-114">    return getExports().getExportedFieldDefinitionMap().values();</span>
+<span class="source-line-no">115</span><span id="line-115">  }</span>
+<span class="source-line-no">116</span><span id="line-116"></span>
+<span class="source-line-no">117</span><span id="line-117">  @Override</span>
+<span class="source-line-no">118</span><span id="line-118">  public FI getExportedFieldDefinitionByName(Integer name) {</span>
+<span class="source-line-no">119</span><span id="line-119">    return getExports().getExportedFieldDefinitionMap().get(name);</span>
+<span class="source-line-no">120</span><span id="line-120">  }</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">  @SuppressWarnings("null")</span>
+<span class="source-line-no">123</span><span id="line-123">  @Override</span>
+<span class="source-line-no">124</span><span id="line-124">  public Collection&lt;A&gt; getExportedAssemblyDefinitions() {</span>
+<span class="source-line-no">125</span><span id="line-125">    return getExports().getExportedAssemblyDefinitionMap().values();</span>
+<span class="source-line-no">126</span><span id="line-126">  }</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">  @Override</span>
+<span class="source-line-no">129</span><span id="line-129">  public A getExportedAssemblyDefinitionByName(Integer name) {</span>
+<span class="source-line-no">130</span><span id="line-130">    return getExports().getExportedAssemblyDefinitionMap().get(name);</span>
+<span class="source-line-no">131</span><span id="line-131">  }</span>
+<span class="source-line-no">132</span><span id="line-132"></span>
+<span class="source-line-no">133</span><span id="line-133">  @Override</span>
+<span class="source-line-no">134</span><span id="line-134">  public A getExportedRootAssemblyDefinitionByName(Integer name) {</span>
+<span class="source-line-no">135</span><span id="line-135">    return getExports().getExportedRootAssemblyDefinitionMap().get(name);</span>
+<span class="source-line-no">136</span><span id="line-136">  }</span>
+<span class="source-line-no">137</span><span id="line-137"></span>
+<span class="source-line-no">138</span><span id="line-138">  @SuppressWarnings({ "unused", "PMD.UnusedPrivateMethod" }) // used by lambda</span>
+<span class="source-line-no">139</span><span id="line-139">  private static &lt;DEF extends IDefinition&gt; DEF handleShadowedDefinitions(</span>
+<span class="source-line-no">140</span><span id="line-140">      @NonNull IEnhancedQName key,</span>
+<span class="source-line-no">141</span><span id="line-141">      @NonNull DEF oldDef,</span>
+<span class="source-line-no">142</span><span id="line-142">      @NonNull DEF newDef) {</span>
+<span class="source-line-no">143</span><span id="line-143">    if (!oldDef.equals(newDef) &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">144</span><span id="line-144">      LOGGER.warn("The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'",</span>
+<span class="source-line-no">145</span><span id="line-145">          newDef.getModelType().name().toLowerCase(Locale.ROOT),</span>
+<span class="source-line-no">146</span><span id="line-146">          newDef.getName(),</span>
+<span class="source-line-no">147</span><span id="line-147">          newDef.getContainingModule().getShortName(),</span>
+<span class="source-line-no">148</span><span id="line-148">          oldDef.getName(),</span>
+<span class="source-line-no">149</span><span id="line-149">          oldDef.getContainingModule().getShortName());</span>
+<span class="source-line-no">150</span><span id="line-150">    }</span>
+<span class="source-line-no">151</span><span id="line-151">    return newDef;</span>
+<span class="source-line-no">152</span><span id="line-152">  }</span>
+<span class="source-line-no">153</span><span id="line-153"></span>
+<span class="source-line-no">154</span><span id="line-154">  @SuppressWarnings({ "unused", "PMD.UnusedPrivateMethod" }) // used by lambda</span>
+<span class="source-line-no">155</span><span id="line-155">  private static &lt;DEF extends IDefinition&gt; DEF handleShadowedDefinitions(</span>
+<span class="source-line-no">156</span><span id="line-156">      @NonNull Integer key,</span>
+<span class="source-line-no">157</span><span id="line-157">      @NonNull DEF oldDef,</span>
+<span class="source-line-no">158</span><span id="line-158">      @NonNull DEF newDef) {</span>
+<span class="source-line-no">159</span><span id="line-159">    if (!oldDef.equals(newDef) &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">160</span><span id="line-160">      LOGGER.warn("The {} '{}' from metaschema '{}' is shadowing '{}' from metaschema '{}'",</span>
+<span class="source-line-no">161</span><span id="line-161">          newDef.getModelType().name().toLowerCase(Locale.ROOT),</span>
+<span class="source-line-no">162</span><span id="line-162">          newDef.getName(),</span>
+<span class="source-line-no">163</span><span id="line-163">          newDef.getContainingModule().getShortName(),</span>
+<span class="source-line-no">164</span><span id="line-164">          oldDef.getName(),</span>
+<span class="source-line-no">165</span><span id="line-165">          oldDef.getContainingModule().getShortName());</span>
+<span class="source-line-no">166</span><span id="line-166">    }</span>
+<span class="source-line-no">167</span><span id="line-167">    return newDef;</span>
+<span class="source-line-no">168</span><span id="line-168">  }</span>
+<span class="source-line-no">169</span><span id="line-169"></span>
+<span class="source-line-no">170</span><span id="line-170">  private class Exports {</span>
+<span class="source-line-no">171</span><span id="line-171">    @NonNull</span>
+<span class="source-line-no">172</span><span id="line-172">    private final Map&lt;IEnhancedQName, FL&gt; exportedFlagDefinitions;</span>
+<span class="source-line-no">173</span><span id="line-173">    @NonNull</span>
+<span class="source-line-no">174</span><span id="line-174">    private final Map&lt;Integer, FI&gt; exportedFieldDefinitions;</span>
+<span class="source-line-no">175</span><span id="line-175">    @NonNull</span>
+<span class="source-line-no">176</span><span id="line-176">    private final Map&lt;Integer, A&gt; exportedAssemblyDefinitions;</span>
+<span class="source-line-no">177</span><span id="line-177">    @NonNull</span>
+<span class="source-line-no">178</span><span id="line-178">    private final Map&lt;Integer, A&gt; exportedRootAssemblyDefinitions;</span>
+<span class="source-line-no">179</span><span id="line-179"></span>
+<span class="source-line-no">180</span><span id="line-180">    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")</span>
+<span class="source-line-no">181</span><span id="line-181">    public Exports(@NonNull List&lt;? extends M&gt; importedModules) {</span>
+<span class="source-line-no">182</span><span id="line-182">      // Populate the stream with the definitions from this module</span>
+<span class="source-line-no">183</span><span id="line-183">      Predicate&lt;IDefinition&gt; filter = IModuleExtended.allNonLocalDefinitions();</span>
+<span class="source-line-no">184</span><span id="line-184">      Stream&lt;FL&gt; flags = getFlagDefinitions().stream()</span>
+<span class="source-line-no">185</span><span id="line-185">          .filter(filter);</span>
+<span class="source-line-no">186</span><span id="line-186">      Stream&lt;FI&gt; fields = getFieldDefinitions().stream()</span>
+<span class="source-line-no">187</span><span id="line-187">          .filter(filter);</span>
+<span class="source-line-no">188</span><span id="line-188">      Stream&lt;A&gt; assemblies = getAssemblyDefinitions().stream()</span>
+<span class="source-line-no">189</span><span id="line-189">          .filter(filter);</span>
+<span class="source-line-no">190</span><span id="line-190"></span>
+<span class="source-line-no">191</span><span id="line-191">      // handle definitions from any included module</span>
+<span class="source-line-no">192</span><span id="line-192">      if (!importedModules.isEmpty()) {</span>
+<span class="source-line-no">193</span><span id="line-193">        Stream&lt;FL&gt; importedFlags = Stream.empty();</span>
+<span class="source-line-no">194</span><span id="line-194">        Stream&lt;FI&gt; importedFields = Stream.empty();</span>
+<span class="source-line-no">195</span><span id="line-195">        Stream&lt;A&gt; importedAssemblies = Stream.empty();</span>
+<span class="source-line-no">196</span><span id="line-196"></span>
+<span class="source-line-no">197</span><span id="line-197">        for (M module : importedModules) {</span>
+<span class="source-line-no">198</span><span id="line-198">          importedFlags = Stream.concat(importedFlags, module.getExportedFlagDefinitions().stream());</span>
+<span class="source-line-no">199</span><span id="line-199">          importedFields = Stream.concat(importedFields, module.getExportedFieldDefinitions().stream());</span>
+<span class="source-line-no">200</span><span id="line-200">          importedAssemblies</span>
+<span class="source-line-no">201</span><span id="line-201">              = Stream.concat(importedAssemblies, module.getExportedAssemblyDefinitions().stream());</span>
+<span class="source-line-no">202</span><span id="line-202">        }</span>
+<span class="source-line-no">203</span><span id="line-203"></span>
+<span class="source-line-no">204</span><span id="line-204">        flags = Stream.concat(importedFlags, flags);</span>
+<span class="source-line-no">205</span><span id="line-205">        fields = Stream.concat(importedFields, fields);</span>
+<span class="source-line-no">206</span><span id="line-206">        assemblies = Stream.concat(importedAssemblies, assemblies);</span>
+<span class="source-line-no">207</span><span id="line-207">      }</span>
+<span class="source-line-no">208</span><span id="line-208"></span>
+<span class="source-line-no">209</span><span id="line-209">      // Build the maps. Definitions from this module will take priority, with</span>
+<span class="source-line-no">210</span><span id="line-210">      // shadowing being reported when a definition from this module has the same name</span>
+<span class="source-line-no">211</span><span id="line-211">      // as an imported one</span>
+<span class="source-line-no">212</span><span id="line-212">      Map&lt;IEnhancedQName, FL&gt; exportedFlagDefinitions = flags.collect(</span>
+<span class="source-line-no">213</span><span id="line-213">          CustomCollectors.toMap(</span>
+<span class="source-line-no">214</span><span id="line-214">              IFlagDefinition::getDefinitionQName,</span>
+<span class="source-line-no">215</span><span id="line-215">              CustomCollectors.identity(),</span>
+<span class="source-line-no">216</span><span id="line-216">              AbstractModule::handleShadowedDefinitions));</span>
+<span class="source-line-no">217</span><span id="line-217">      Map&lt;Integer, FI&gt; exportedFieldDefinitions = fields.collect(</span>
+<span class="source-line-no">218</span><span id="line-218">          CustomCollectors.toMap(</span>
+<span class="source-line-no">219</span><span id="line-219">              def -&gt; def.getDefinitionQName().getIndexPosition(),</span>
+<span class="source-line-no">220</span><span id="line-220">              CustomCollectors.identity(),</span>
+<span class="source-line-no">221</span><span id="line-221">              AbstractModule::handleShadowedDefinitions));</span>
+<span class="source-line-no">222</span><span id="line-222">      Map&lt;Integer, A&gt; exportedAssemblyDefinitions = assemblies.collect(</span>
+<span class="source-line-no">223</span><span id="line-223">          CustomCollectors.toMap(</span>
+<span class="source-line-no">224</span><span id="line-224">              def -&gt; def.getDefinitionQName().getIndexPosition(),</span>
+<span class="source-line-no">225</span><span id="line-225">              CustomCollectors.identity(),</span>
+<span class="source-line-no">226</span><span id="line-226">              AbstractModule::handleShadowedDefinitions));</span>
+<span class="source-line-no">227</span><span id="line-227"></span>
+<span class="source-line-no">228</span><span id="line-228">      this.exportedFlagDefinitions = exportedFlagDefinitions.isEmpty()</span>
+<span class="source-line-no">229</span><span id="line-229">          ? CollectionUtil.emptyMap()</span>
+<span class="source-line-no">230</span><span id="line-230">          : CollectionUtil.unmodifiableMap(exportedFlagDefinitions);</span>
+<span class="source-line-no">231</span><span id="line-231">      this.exportedFieldDefinitions = exportedFieldDefinitions.isEmpty()</span>
+<span class="source-line-no">232</span><span id="line-232">          ? CollectionUtil.emptyMap()</span>
+<span class="source-line-no">233</span><span id="line-233">          : CollectionUtil.unmodifiableMap(exportedFieldDefinitions);</span>
+<span class="source-line-no">234</span><span id="line-234">      this.exportedAssemblyDefinitions = exportedAssemblyDefinitions.isEmpty()</span>
+<span class="source-line-no">235</span><span id="line-235">          ? CollectionUtil.emptyMap()</span>
+<span class="source-line-no">236</span><span id="line-236">          : CollectionUtil.unmodifiableMap(exportedAssemblyDefinitions);</span>
+<span class="source-line-no">237</span><span id="line-237">      this.exportedRootAssemblyDefinitions = exportedAssemblyDefinitions.isEmpty()</span>
+<span class="source-line-no">238</span><span id="line-238">          ? CollectionUtil.emptyMap()</span>
+<span class="source-line-no">239</span><span id="line-239">          : CollectionUtil.unmodifiableMap(ObjectUtils.notNull(exportedAssemblyDefinitions.values().stream()</span>
+<span class="source-line-no">240</span><span id="line-240">              .filter(IAssemblyDefinition::isRoot)</span>
+<span class="source-line-no">241</span><span id="line-241">              .collect(CustomCollectors.toMap(</span>
+<span class="source-line-no">242</span><span id="line-242">                  def -&gt; def.getRootQName().getIndexPosition(),</span>
+<span class="source-line-no">243</span><span id="line-243">                  CustomCollectors.identity(),</span>
+<span class="source-line-no">244</span><span id="line-244">                  AbstractModule::handleShadowedDefinitions))));</span>
+<span class="source-line-no">245</span><span id="line-245">    }</span>
+<span class="source-line-no">246</span><span id="line-246"></span>
+<span class="source-line-no">247</span><span id="line-247">    @NonNull</span>
+<span class="source-line-no">248</span><span id="line-248">    public Map&lt;IEnhancedQName, FL&gt; getExportedFlagDefinitionMap() {</span>
+<span class="source-line-no">249</span><span id="line-249">      return this.exportedFlagDefinitions;</span>
+<span class="source-line-no">250</span><span id="line-250">    }</span>
+<span class="source-line-no">251</span><span id="line-251"></span>
+<span class="source-line-no">252</span><span id="line-252">    @NonNull</span>
+<span class="source-line-no">253</span><span id="line-253">    public Map&lt;Integer, FI&gt; getExportedFieldDefinitionMap() {</span>
+<span class="source-line-no">254</span><span id="line-254">      return this.exportedFieldDefinitions;</span>
+<span class="source-line-no">255</span><span id="line-255">    }</span>
+<span class="source-line-no">256</span><span id="line-256"></span>
+<span class="source-line-no">257</span><span id="line-257">    @NonNull</span>
+<span class="source-line-no">258</span><span id="line-258">    public Map&lt;Integer, A&gt; getExportedAssemblyDefinitionMap() {</span>
+<span class="source-line-no">259</span><span id="line-259">      return this.exportedAssemblyDefinitions;</span>
+<span class="source-line-no">260</span><span id="line-260">    }</span>
+<span class="source-line-no">261</span><span id="line-261"></span>
+<span class="source-line-no">262</span><span id="line-262">    @NonNull</span>
+<span class="source-line-no">263</span><span id="line-263">    public Map&lt;Integer, A&gt; getExportedRootAssemblyDefinitionMap() {</span>
+<span class="source-line-no">264</span><span id="line-264">      return this.exportedRootAssemblyDefinitions;</span>
+<span class="source-line-no">265</span><span id="line-265">    }</span>
+<span class="source-line-no">266</span><span id="line-266">  }</span>
+<span class="source-line-no">267</span><span id="line-267">}</span>
 
 
 

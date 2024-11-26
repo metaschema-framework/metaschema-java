@@ -28,102 +28,96 @@
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
 <span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">import java.net.URI;</span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.List;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">/**</span>
-<span class="source-line-no">026</span><span id="line-26"> * Provides a generic implementation of methods defined by &lt;a href=</span>
-<span class="source-line-no">027</span><span id="line-27"> * "https://www.w3.org/TR/xpath-functions-31/#numeric-value-functions"&gt;XPath 3.1</span>
-<span class="source-line-no">028</span><span id="line-28"> * Functions on numeric values&lt;/a&gt;.</span>
-<span class="source-line-no">029</span><span id="line-29"> */</span>
-<span class="source-line-no">030</span><span id="line-30">public final class NumericFunction implements IFunctionExecutor {</span>
-<span class="source-line-no">031</span><span id="line-31"></span>
-<span class="source-line-no">032</span><span id="line-32">  @NonNull</span>
-<span class="source-line-no">033</span><span id="line-33">  private final INumericExecutor executor;</span>
-<span class="source-line-no">034</span><span id="line-34"></span>
-<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
-<span class="source-line-no">036</span><span id="line-36">  static IFunction signature(@NonNull URI namespace, @NonNull String name, @NonNull INumericExecutor executor) {</span>
-<span class="source-line-no">037</span><span id="line-37">    return signature(ObjectUtils.notNull(namespace.toASCIIString()), name, executor);</span>
-<span class="source-line-no">038</span><span id="line-38">  }</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">  @NonNull</span>
-<span class="source-line-no">041</span><span id="line-41">  static IFunction signature(@NonNull String namespace, @NonNull String name, @NonNull INumericExecutor executor) {</span>
-<span class="source-line-no">042</span><span id="line-42">    return IFunction.builder()</span>
-<span class="source-line-no">043</span><span id="line-43">        .name(name)</span>
-<span class="source-line-no">044</span><span id="line-44">        .namespace(namespace)</span>
-<span class="source-line-no">045</span><span id="line-45">        .deterministic()</span>
-<span class="source-line-no">046</span><span id="line-46">        .contextIndependent()</span>
-<span class="source-line-no">047</span><span id="line-47">        .focusIndependent()</span>
-<span class="source-line-no">048</span><span id="line-48">        .argument(IArgument.builder()</span>
-<span class="source-line-no">049</span><span id="line-49">            .name("arg1")</span>
-<span class="source-line-no">050</span><span id="line-50">            .type(INumericItem.class)</span>
-<span class="source-line-no">051</span><span id="line-51">            .zeroOrOne()</span>
-<span class="source-line-no">052</span><span id="line-52">            .build())</span>
-<span class="source-line-no">053</span><span id="line-53">        .returnType(INumericItem.class)</span>
-<span class="source-line-no">054</span><span id="line-54">        .returnZeroOrOne()</span>
-<span class="source-line-no">055</span><span id="line-55">        .functionHandler(newFunctionHandler(executor))</span>
-<span class="source-line-no">056</span><span id="line-56">        .build();</span>
-<span class="source-line-no">057</span><span id="line-57">  }</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">  @NonNull</span>
-<span class="source-line-no">060</span><span id="line-60">  static IFunction signature(@NonNull QName qname, @NonNull INumericExecutor executor) {</span>
-<span class="source-line-no">061</span><span id="line-61">    return signature(</span>
-<span class="source-line-no">062</span><span id="line-62">        ObjectUtils.requireNonNull(qname.getNamespaceURI(), "the namespace URI must not be null"),</span>
-<span class="source-line-no">063</span><span id="line-63">        ObjectUtils.requireNonNull(qname.getLocalPart(), "the localpart must not be null"),</span>
-<span class="source-line-no">064</span><span id="line-64">        executor);</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  @NonNull</span>
-<span class="source-line-no">068</span><span id="line-68">  static NumericFunction newFunctionHandler(@NonNull INumericExecutor executor) {</span>
-<span class="source-line-no">069</span><span id="line-69">    return new NumericFunction(executor);</span>
-<span class="source-line-no">070</span><span id="line-70">  }</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">  private NumericFunction(@NonNull INumericExecutor executor) {</span>
-<span class="source-line-no">073</span><span id="line-73">    this.executor = executor;</span>
-<span class="source-line-no">074</span><span id="line-74">  }</span>
+<span class="source-line-no">018</span><span id="line-18">import java.util.List;</span>
+<span class="source-line-no">019</span><span id="line-19"></span>
+<span class="source-line-no">020</span><span id="line-20">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">/**</span>
+<span class="source-line-no">025</span><span id="line-25"> * Provides a generic implementation of methods defined by &lt;a href=</span>
+<span class="source-line-no">026</span><span id="line-26"> * "https://www.w3.org/TR/xpath-functions-31/#numeric-value-functions"&gt;XPath 3.1</span>
+<span class="source-line-no">027</span><span id="line-27"> * Functions on numeric values&lt;/a&gt;.</span>
+<span class="source-line-no">028</span><span id="line-28"> */</span>
+<span class="source-line-no">029</span><span id="line-29">public final class NumericFunction implements IFunctionExecutor {</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">  @NonNull</span>
+<span class="source-line-no">032</span><span id="line-32">  private final INumericExecutor executor;</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34">  @NonNull</span>
+<span class="source-line-no">035</span><span id="line-35">  static IFunction signature(@NonNull String namespace, @NonNull String name, @NonNull INumericExecutor executor) {</span>
+<span class="source-line-no">036</span><span id="line-36">    return IFunction.builder()</span>
+<span class="source-line-no">037</span><span id="line-37">        .name(name)</span>
+<span class="source-line-no">038</span><span id="line-38">        .namespace(namespace)</span>
+<span class="source-line-no">039</span><span id="line-39">        .deterministic()</span>
+<span class="source-line-no">040</span><span id="line-40">        .contextIndependent()</span>
+<span class="source-line-no">041</span><span id="line-41">        .focusIndependent()</span>
+<span class="source-line-no">042</span><span id="line-42">        .argument(IArgument.builder()</span>
+<span class="source-line-no">043</span><span id="line-43">            .name("arg1")</span>
+<span class="source-line-no">044</span><span id="line-44">            .type(INumericItem.type())</span>
+<span class="source-line-no">045</span><span id="line-45">            .zeroOrOne()</span>
+<span class="source-line-no">046</span><span id="line-46">            .build())</span>
+<span class="source-line-no">047</span><span id="line-47">        .returnType(INumericItem.type())</span>
+<span class="source-line-no">048</span><span id="line-48">        .returnZeroOrOne()</span>
+<span class="source-line-no">049</span><span id="line-49">        .functionHandler(newFunctionHandler(executor))</span>
+<span class="source-line-no">050</span><span id="line-50">        .build();</span>
+<span class="source-line-no">051</span><span id="line-51">  }</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">  @NonNull</span>
+<span class="source-line-no">054</span><span id="line-54">  static IFunction signature(@NonNull QName qname, @NonNull INumericExecutor executor) {</span>
+<span class="source-line-no">055</span><span id="line-55">    return signature(</span>
+<span class="source-line-no">056</span><span id="line-56">        ObjectUtils.requireNonNull(qname.getNamespaceURI(), "the namespace URI must not be null"),</span>
+<span class="source-line-no">057</span><span id="line-57">        ObjectUtils.requireNonNull(qname.getLocalPart(), "the localpart must not be null"),</span>
+<span class="source-line-no">058</span><span id="line-58">        executor);</span>
+<span class="source-line-no">059</span><span id="line-59">  }</span>
+<span class="source-line-no">060</span><span id="line-60"></span>
+<span class="source-line-no">061</span><span id="line-61">  @NonNull</span>
+<span class="source-line-no">062</span><span id="line-62">  static NumericFunction newFunctionHandler(@NonNull INumericExecutor executor) {</span>
+<span class="source-line-no">063</span><span id="line-63">    return new NumericFunction(executor);</span>
+<span class="source-line-no">064</span><span id="line-64">  }</span>
+<span class="source-line-no">065</span><span id="line-65"></span>
+<span class="source-line-no">066</span><span id="line-66">  private NumericFunction(@NonNull INumericExecutor executor) {</span>
+<span class="source-line-no">067</span><span id="line-67">    this.executor = executor;</span>
+<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  @Override</span>
+<span class="source-line-no">071</span><span id="line-71">  public ISequence&lt;INumericItem&gt; execute(@NonNull IFunction function,</span>
+<span class="source-line-no">072</span><span id="line-72">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
+<span class="source-line-no">073</span><span id="line-73">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">074</span><span id="line-74">      IItem focus) {</span>
 <span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">  @Override</span>
-<span class="source-line-no">077</span><span id="line-77">  public ISequence&lt;INumericItem&gt; execute(@NonNull IFunction function,</span>
-<span class="source-line-no">078</span><span id="line-78">      @NonNull List&lt;ISequence&lt;?&gt;&gt; arguments,</span>
-<span class="source-line-no">079</span><span id="line-79">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">080</span><span id="line-80">      IItem focus) {</span>
+<span class="source-line-no">076</span><span id="line-76">    ISequence&lt;? extends INumericItem&gt; sequence = FunctionUtils.asType(</span>
+<span class="source-line-no">077</span><span id="line-77">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
+<span class="source-line-no">078</span><span id="line-78">    if (sequence.isEmpty()) {</span>
+<span class="source-line-no">079</span><span id="line-79">      return ISequence.empty(); // NOPMD - readability</span>
+<span class="source-line-no">080</span><span id="line-80">    }</span>
 <span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">    ISequence&lt;? extends INumericItem&gt; sequence = FunctionUtils.asType(</span>
-<span class="source-line-no">083</span><span id="line-83">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
-<span class="source-line-no">084</span><span id="line-84">    if (sequence.isEmpty()) {</span>
-<span class="source-line-no">085</span><span id="line-85">      return ISequence.empty(); // NOPMD - readability</span>
-<span class="source-line-no">086</span><span id="line-86">    }</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">    INumericItem item = sequence.getFirstItem(true);</span>
-<span class="source-line-no">089</span><span id="line-89">    if (item == null) {</span>
-<span class="source-line-no">090</span><span id="line-90">      return ISequence.empty(); // NOPMD - readability</span>
-<span class="source-line-no">091</span><span id="line-91">    }</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">    INumericItem result = executor.execute(item);</span>
-<span class="source-line-no">094</span><span id="line-94">    return ISequence.of(result);</span>
-<span class="source-line-no">095</span><span id="line-95">  }</span>
-<span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">  /**</span>
-<span class="source-line-no">098</span><span id="line-98">   * Implementations of this interface are used to execute a numeric opertaion on</span>
-<span class="source-line-no">099</span><span id="line-99">   * the provided item.</span>
-<span class="source-line-no">100</span><span id="line-100">   */</span>
-<span class="source-line-no">101</span><span id="line-101">  @FunctionalInterface</span>
-<span class="source-line-no">102</span><span id="line-102">  public interface INumericExecutor {</span>
-<span class="source-line-no">103</span><span id="line-103">    /**</span>
-<span class="source-line-no">104</span><span id="line-104">     * Perform the execution using the provided {@code item}.</span>
-<span class="source-line-no">105</span><span id="line-105">     *</span>
-<span class="source-line-no">106</span><span id="line-106">     * @param item</span>
-<span class="source-line-no">107</span><span id="line-107">     *          the item to operate on</span>
-<span class="source-line-no">108</span><span id="line-108">     * @return the numeric result from the execution</span>
-<span class="source-line-no">109</span><span id="line-109">     */</span>
-<span class="source-line-no">110</span><span id="line-110">    @NonNull</span>
-<span class="source-line-no">111</span><span id="line-111">    INumericItem execute(@NonNull INumericItem item);</span>
-<span class="source-line-no">112</span><span id="line-112">  }</span>
-<span class="source-line-no">113</span><span id="line-113">}</span>
+<span class="source-line-no">082</span><span id="line-82">    INumericItem item = sequence.getFirstItem(true);</span>
+<span class="source-line-no">083</span><span id="line-83">    if (item == null) {</span>
+<span class="source-line-no">084</span><span id="line-84">      return ISequence.empty(); // NOPMD - readability</span>
+<span class="source-line-no">085</span><span id="line-85">    }</span>
+<span class="source-line-no">086</span><span id="line-86"></span>
+<span class="source-line-no">087</span><span id="line-87">    INumericItem result = executor.execute(item);</span>
+<span class="source-line-no">088</span><span id="line-88">    return ISequence.of(result);</span>
+<span class="source-line-no">089</span><span id="line-89">  }</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">  /**</span>
+<span class="source-line-no">092</span><span id="line-92">   * Implementations of this interface are used to execute a numeric opertaion on</span>
+<span class="source-line-no">093</span><span id="line-93">   * the provided item.</span>
+<span class="source-line-no">094</span><span id="line-94">   */</span>
+<span class="source-line-no">095</span><span id="line-95">  @FunctionalInterface</span>
+<span class="source-line-no">096</span><span id="line-96">  public interface INumericExecutor {</span>
+<span class="source-line-no">097</span><span id="line-97">    /**</span>
+<span class="source-line-no">098</span><span id="line-98">     * Perform the execution using the provided {@code item}.</span>
+<span class="source-line-no">099</span><span id="line-99">     *</span>
+<span class="source-line-no">100</span><span id="line-100">     * @param item</span>
+<span class="source-line-no">101</span><span id="line-101">     *          the item to operate on</span>
+<span class="source-line-no">102</span><span id="line-102">     * @return the numeric result from the execution</span>
+<span class="source-line-no">103</span><span id="line-103">     */</span>
+<span class="source-line-no">104</span><span id="line-104">    @NonNull</span>
+<span class="source-line-no">105</span><span id="line-105">    INumericItem execute(@NonNull INumericItem item);</span>
+<span class="source-line-no">106</span><span id="line-106">  }</span>
+<span class="source-line-no">107</span><span id="line-107">}</span>
 
 
 

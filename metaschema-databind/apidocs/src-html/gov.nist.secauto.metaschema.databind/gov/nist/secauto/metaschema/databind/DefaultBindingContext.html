@@ -130,180 +130,179 @@
 <span class="source-line-no">117</span><span id="line-117">  public final IBoundModule registerModule(@NonNull Class&lt;? extends IBoundModule&gt; clazz) {</span>
 <span class="source-line-no">118</span><span id="line-118">    IModuleLoaderStrategy strategy = getModuleLoaderStrategy();</span>
 <span class="source-line-no">119</span><span id="line-119">    IBoundModule module = strategy.loadModule(clazz, this);</span>
-<span class="source-line-no">120</span><span id="line-120">    strategy.registerModule(module, this);</span>
-<span class="source-line-no">121</span><span id="line-121">    return module;</span>
-<span class="source-line-no">122</span><span id="line-122">  }</span>
-<span class="source-line-no">123</span><span id="line-123"></span>
-<span class="source-line-no">124</span><span id="line-124">  /**</span>
-<span class="source-line-no">125</span><span id="line-125">   * Get the binding matchers that are associated with this class.</span>
-<span class="source-line-no">126</span><span id="line-126">   *</span>
-<span class="source-line-no">127</span><span id="line-127">   * @return the list of matchers</span>
-<span class="source-line-no">128</span><span id="line-128">   */</span>
-<span class="source-line-no">129</span><span id="line-129">  @NonNull</span>
-<span class="source-line-no">130</span><span id="line-130">  protected Collection&lt;IBindingMatcher&gt; getBindingMatchers() {</span>
-<span class="source-line-no">131</span><span id="line-131">    return getModuleLoaderStrategy().getBindingMatchers();</span>
-<span class="source-line-no">132</span><span id="line-132">  }</span>
-<span class="source-line-no">133</span><span id="line-133"></span>
-<span class="source-line-no">134</span><span id="line-134">  @Override</span>
-<span class="source-line-no">135</span><span id="line-135">  public final IBoundDefinitionModelComplex registerClassBinding(IBoundDefinitionModelComplex definition) {</span>
-<span class="source-line-no">136</span><span id="line-136">    Class&lt;?&gt; clazz = definition.getBoundClass();</span>
-<span class="source-line-no">137</span><span id="line-137">    return boundClassToStrategyMap.computeIfAbsent(clazz, k -&gt; definition);</span>
-<span class="source-line-no">138</span><span id="line-138">  }</span>
-<span class="source-line-no">139</span><span id="line-139"></span>
-<span class="source-line-no">140</span><span id="line-140">  @Override</span>
-<span class="source-line-no">141</span><span id="line-141">  public final IBoundDefinitionModelComplex getBoundDefinitionForClass(@NonNull Class&lt;? extends IBoundObject&gt; clazz) {</span>
-<span class="source-line-no">142</span><span id="line-142">    return moduleLoaderStrategy.getBoundDefinitionForClass(clazz, this);</span>
-<span class="source-line-no">143</span><span id="line-143">  }</span>
-<span class="source-line-no">144</span><span id="line-144"></span>
-<span class="source-line-no">145</span><span id="line-145">  /**</span>
-<span class="source-line-no">146</span><span id="line-146">   * {@inheritDoc}</span>
-<span class="source-line-no">147</span><span id="line-147">   * &lt;p&gt;</span>
-<span class="source-line-no">148</span><span id="line-148">   * A serializer returned by this method is thread-safe.</span>
-<span class="source-line-no">149</span><span id="line-149">   */</span>
-<span class="source-line-no">150</span><span id="line-150">  @Override</span>
-<span class="source-line-no">151</span><span id="line-151">  public &lt;CLASS extends IBoundObject&gt; ISerializer&lt;CLASS&gt; newSerializer(</span>
-<span class="source-line-no">152</span><span id="line-152">      @NonNull Format format,</span>
-<span class="source-line-no">153</span><span id="line-153">      @NonNull Class&lt;CLASS&gt; clazz) {</span>
-<span class="source-line-no">154</span><span id="line-154">    Objects.requireNonNull(format, "format");</span>
-<span class="source-line-no">155</span><span id="line-155">    IBoundDefinitionModelAssembly definition;</span>
-<span class="source-line-no">156</span><span id="line-156">    try {</span>
-<span class="source-line-no">157</span><span id="line-157">      definition = IBoundDefinitionModelAssembly.class.cast(getBoundDefinitionForClass(clazz));</span>
-<span class="source-line-no">158</span><span id="line-158">    } catch (ClassCastException ex) {</span>
-<span class="source-line-no">159</span><span id="line-159">      throw new IllegalStateException(</span>
-<span class="source-line-no">160</span><span id="line-160">          String.format("Class '%s' is not a bound assembly.", clazz.getClass().getName()), ex);</span>
-<span class="source-line-no">161</span><span id="line-161">    }</span>
-<span class="source-line-no">162</span><span id="line-162">    if (definition == null) {</span>
-<span class="source-line-no">163</span><span id="line-163">      throw new IllegalStateException(String.format("Class '%s' is not bound", clazz.getClass().getName()));</span>
-<span class="source-line-no">164</span><span id="line-164">    }</span>
-<span class="source-line-no">165</span><span id="line-165">    ISerializer&lt;CLASS&gt; retval;</span>
-<span class="source-line-no">166</span><span id="line-166">    switch (format) {</span>
-<span class="source-line-no">167</span><span id="line-167">    case JSON:</span>
-<span class="source-line-no">168</span><span id="line-168">      retval = new DefaultJsonSerializer&lt;&gt;(definition);</span>
-<span class="source-line-no">169</span><span id="line-169">      break;</span>
-<span class="source-line-no">170</span><span id="line-170">    case XML:</span>
-<span class="source-line-no">171</span><span id="line-171">      retval = new DefaultXmlSerializer&lt;&gt;(definition);</span>
-<span class="source-line-no">172</span><span id="line-172">      break;</span>
-<span class="source-line-no">173</span><span id="line-173">    case YAML:</span>
-<span class="source-line-no">174</span><span id="line-174">      retval = new DefaultYamlSerializer&lt;&gt;(definition);</span>
-<span class="source-line-no">175</span><span id="line-175">      break;</span>
-<span class="source-line-no">176</span><span id="line-176">    default:</span>
-<span class="source-line-no">177</span><span id="line-177">      throw new UnsupportedOperationException(String.format("Unsupported format '%s'", format));</span>
-<span class="source-line-no">178</span><span id="line-178">    }</span>
-<span class="source-line-no">179</span><span id="line-179">    return retval;</span>
-<span class="source-line-no">180</span><span id="line-180">  }</span>
-<span class="source-line-no">181</span><span id="line-181"></span>
-<span class="source-line-no">182</span><span id="line-182">  /**</span>
-<span class="source-line-no">183</span><span id="line-183">   * {@inheritDoc}</span>
-<span class="source-line-no">184</span><span id="line-184">   * &lt;p&gt;</span>
-<span class="source-line-no">185</span><span id="line-185">   * A deserializer returned by this method is thread-safe.</span>
-<span class="source-line-no">186</span><span id="line-186">   */</span>
-<span class="source-line-no">187</span><span id="line-187">  @Override</span>
-<span class="source-line-no">188</span><span id="line-188">  public &lt;CLASS extends IBoundObject&gt; IDeserializer&lt;CLASS&gt; newDeserializer(</span>
-<span class="source-line-no">189</span><span id="line-189">      @NonNull Format format,</span>
-<span class="source-line-no">190</span><span id="line-190">      @NonNull Class&lt;CLASS&gt; clazz) {</span>
-<span class="source-line-no">191</span><span id="line-191">    IBoundDefinitionModelAssembly definition;</span>
-<span class="source-line-no">192</span><span id="line-192">    try {</span>
-<span class="source-line-no">193</span><span id="line-193">      definition = IBoundDefinitionModelAssembly.class.cast(getBoundDefinitionForClass(clazz));</span>
-<span class="source-line-no">194</span><span id="line-194">    } catch (ClassCastException ex) {</span>
-<span class="source-line-no">195</span><span id="line-195">      throw new IllegalStateException(</span>
-<span class="source-line-no">196</span><span id="line-196">          String.format("Class '%s' is not a bound assembly.", clazz.getClass().getName()),</span>
-<span class="source-line-no">197</span><span id="line-197">          ex);</span>
-<span class="source-line-no">198</span><span id="line-198">    }</span>
-<span class="source-line-no">199</span><span id="line-199">    if (definition == null) {</span>
-<span class="source-line-no">200</span><span id="line-200">      throw new IllegalStateException(String.format("Class '%s' is not bound", clazz.getName()));</span>
-<span class="source-line-no">201</span><span id="line-201">    }</span>
-<span class="source-line-no">202</span><span id="line-202">    IDeserializer&lt;CLASS&gt; retval;</span>
-<span class="source-line-no">203</span><span id="line-203">    switch (format) {</span>
-<span class="source-line-no">204</span><span id="line-204">    case JSON:</span>
-<span class="source-line-no">205</span><span id="line-205">      retval = new DefaultJsonDeserializer&lt;&gt;(definition);</span>
-<span class="source-line-no">206</span><span id="line-206">      break;</span>
-<span class="source-line-no">207</span><span id="line-207">    case XML:</span>
-<span class="source-line-no">208</span><span id="line-208">      retval = new DefaultXmlDeserializer&lt;&gt;(definition);</span>
-<span class="source-line-no">209</span><span id="line-209">      break;</span>
-<span class="source-line-no">210</span><span id="line-210">    case YAML:</span>
-<span class="source-line-no">211</span><span id="line-211">      retval = new DefaultYamlDeserializer&lt;&gt;(definition);</span>
-<span class="source-line-no">212</span><span id="line-212">      break;</span>
-<span class="source-line-no">213</span><span id="line-213">    default:</span>
-<span class="source-line-no">214</span><span id="line-214">      throw new UnsupportedOperationException(String.format("Unsupported format '%s'", format));</span>
-<span class="source-line-no">215</span><span id="line-215">    }</span>
-<span class="source-line-no">216</span><span id="line-216"></span>
-<span class="source-line-no">217</span><span id="line-217">    return retval;</span>
-<span class="source-line-no">218</span><span id="line-218">  }</span>
-<span class="source-line-no">219</span><span id="line-219"></span>
-<span class="source-line-no">220</span><span id="line-220">  @Override</span>
-<span class="source-line-no">221</span><span id="line-221">  public Class&lt;? extends IBoundObject&gt; getBoundClassForRootXmlQName(@NonNull QName rootQName) {</span>
-<span class="source-line-no">222</span><span id="line-222">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
-<span class="source-line-no">223</span><span id="line-223">    for (IBindingMatcher matcher : getBindingMatchers()) {</span>
-<span class="source-line-no">224</span><span id="line-224">      retval = matcher.getBoundClassForXmlQName(rootQName);</span>
-<span class="source-line-no">225</span><span id="line-225">      if (retval != null) {</span>
-<span class="source-line-no">226</span><span id="line-226">        break;</span>
-<span class="source-line-no">227</span><span id="line-227">      }</span>
-<span class="source-line-no">228</span><span id="line-228">    }</span>
-<span class="source-line-no">229</span><span id="line-229">    return retval;</span>
-<span class="source-line-no">230</span><span id="line-230">  }</span>
-<span class="source-line-no">231</span><span id="line-231"></span>
-<span class="source-line-no">232</span><span id="line-232">  @Override</span>
-<span class="source-line-no">233</span><span id="line-233">  public Class&lt;? extends IBoundObject&gt; getBoundClassForRootJsonName(@NonNull String rootName) {</span>
-<span class="source-line-no">234</span><span id="line-234">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
-<span class="source-line-no">235</span><span id="line-235">    for (IBindingMatcher matcher : getBindingMatchers()) {</span>
-<span class="source-line-no">236</span><span id="line-236">      retval = matcher.getBoundClassForJsonName(rootName);</span>
-<span class="source-line-no">237</span><span id="line-237">      if (retval != null) {</span>
-<span class="source-line-no">238</span><span id="line-238">        break;</span>
-<span class="source-line-no">239</span><span id="line-239">      }</span>
-<span class="source-line-no">240</span><span id="line-240">    }</span>
-<span class="source-line-no">241</span><span id="line-241">    return retval;</span>
-<span class="source-line-no">242</span><span id="line-242">  }</span>
-<span class="source-line-no">243</span><span id="line-243"></span>
-<span class="source-line-no">244</span><span id="line-244">  @Override</span>
-<span class="source-line-no">245</span><span id="line-245">  public &lt;CLASS extends IBoundObject&gt; CLASS deepCopy(@NonNull CLASS other, IBoundObject parentInstance)</span>
-<span class="source-line-no">246</span><span id="line-246">      throws BindingException {</span>
-<span class="source-line-no">247</span><span id="line-247">    IBoundDefinitionModelComplex definition = getBoundDefinitionForClass(other.getClass());</span>
-<span class="source-line-no">248</span><span id="line-248">    if (definition == null) {</span>
-<span class="source-line-no">249</span><span id="line-249">      throw new IllegalStateException(String.format("Class '%s' is not bound", other.getClass().getName()));</span>
-<span class="source-line-no">250</span><span id="line-250">    }</span>
-<span class="source-line-no">251</span><span id="line-251">    return ObjectUtils.asType(definition.deepCopyItem(other, parentInstance));</span>
-<span class="source-line-no">252</span><span id="line-252">  }</span>
-<span class="source-line-no">253</span><span id="line-253"></span>
-<span class="source-line-no">254</span><span id="line-254">  private static class ModuleLoader</span>
-<span class="source-line-no">255</span><span id="line-255">      extends BindingModuleLoader {</span>
-<span class="source-line-no">256</span><span id="line-256"></span>
-<span class="source-line-no">257</span><span id="line-257">    public ModuleLoader(</span>
-<span class="source-line-no">258</span><span id="line-258">        @NonNull IBindingContext bindingContext,</span>
-<span class="source-line-no">259</span><span id="line-259">        @NonNull ModuleLoadingPostProcessor postProcessor) {</span>
-<span class="source-line-no">260</span><span id="line-260">      super(bindingContext, postProcessor);</span>
-<span class="source-line-no">261</span><span id="line-261">    }</span>
-<span class="source-line-no">262</span><span id="line-262"></span>
-<span class="source-line-no">263</span><span id="line-263">    @Override</span>
-<span class="source-line-no">264</span><span id="line-264">    public IBindingMetaschemaModule load(URI resource) throws MetaschemaException, IOException {</span>
-<span class="source-line-no">265</span><span id="line-265">      IBindingMetaschemaModule module = super.load(resource);</span>
-<span class="source-line-no">266</span><span id="line-266">      getBindingContext().registerModule(module);</span>
-<span class="source-line-no">267</span><span id="line-267">      return module;</span>
-<span class="source-line-no">268</span><span id="line-268">    }</span>
-<span class="source-line-no">269</span><span id="line-269"></span>
-<span class="source-line-no">270</span><span id="line-270">    @Override</span>
-<span class="source-line-no">271</span><span id="line-271">    public IBindingMetaschemaModule load(Path path) throws MetaschemaException, IOException {</span>
-<span class="source-line-no">272</span><span id="line-272">      IBindingMetaschemaModule module = super.load(path);</span>
-<span class="source-line-no">273</span><span id="line-273">      getBindingContext().registerModule(module);</span>
-<span class="source-line-no">274</span><span id="line-274">      return module;</span>
-<span class="source-line-no">275</span><span id="line-275">    }</span>
-<span class="source-line-no">276</span><span id="line-276"></span>
-<span class="source-line-no">277</span><span id="line-277">    @Override</span>
-<span class="source-line-no">278</span><span id="line-278">    public IBindingMetaschemaModule load(URL url) throws MetaschemaException, IOException {</span>
-<span class="source-line-no">279</span><span id="line-279">      IBindingMetaschemaModule module = super.load(url);</span>
-<span class="source-line-no">280</span><span id="line-280">      getBindingContext().registerModule(module);</span>
-<span class="source-line-no">281</span><span id="line-281">      return module;</span>
-<span class="source-line-no">282</span><span id="line-282">    }</span>
-<span class="source-line-no">283</span><span id="line-283"></span>
-<span class="source-line-no">284</span><span id="line-284">    @Override</span>
-<span class="source-line-no">285</span><span id="line-285">    protected IBindingMetaschemaModule newModule(</span>
-<span class="source-line-no">286</span><span id="line-286">        URI resource,</span>
-<span class="source-line-no">287</span><span id="line-287">        METASCHEMA binding,</span>
-<span class="source-line-no">288</span><span id="line-288">        List&lt;? extends IBindingMetaschemaModule&gt; importedModules) throws MetaschemaException {</span>
-<span class="source-line-no">289</span><span id="line-289">      return super.newModule(resource, binding, importedModules);</span>
-<span class="source-line-no">290</span><span id="line-290">    }</span>
-<span class="source-line-no">291</span><span id="line-291"></span>
-<span class="source-line-no">292</span><span id="line-292">  }</span>
-<span class="source-line-no">293</span><span id="line-293">}</span>
+<span class="source-line-no">120</span><span id="line-120">    return strategy.registerModule(module, this);</span>
+<span class="source-line-no">121</span><span id="line-121">  }</span>
+<span class="source-line-no">122</span><span id="line-122"></span>
+<span class="source-line-no">123</span><span id="line-123">  /**</span>
+<span class="source-line-no">124</span><span id="line-124">   * Get the binding matchers that are associated with this class.</span>
+<span class="source-line-no">125</span><span id="line-125">   *</span>
+<span class="source-line-no">126</span><span id="line-126">   * @return the list of matchers</span>
+<span class="source-line-no">127</span><span id="line-127">   */</span>
+<span class="source-line-no">128</span><span id="line-128">  @NonNull</span>
+<span class="source-line-no">129</span><span id="line-129">  protected Collection&lt;IBindingMatcher&gt; getBindingMatchers() {</span>
+<span class="source-line-no">130</span><span id="line-130">    return getModuleLoaderStrategy().getBindingMatchers();</span>
+<span class="source-line-no">131</span><span id="line-131">  }</span>
+<span class="source-line-no">132</span><span id="line-132"></span>
+<span class="source-line-no">133</span><span id="line-133">  @Override</span>
+<span class="source-line-no">134</span><span id="line-134">  public final IBoundDefinitionModelComplex registerClassBinding(IBoundDefinitionModelComplex definition) {</span>
+<span class="source-line-no">135</span><span id="line-135">    Class&lt;?&gt; clazz = definition.getBoundClass();</span>
+<span class="source-line-no">136</span><span id="line-136">    return boundClassToStrategyMap.computeIfAbsent(clazz, k -&gt; definition);</span>
+<span class="source-line-no">137</span><span id="line-137">  }</span>
+<span class="source-line-no">138</span><span id="line-138"></span>
+<span class="source-line-no">139</span><span id="line-139">  @Override</span>
+<span class="source-line-no">140</span><span id="line-140">  public final IBoundDefinitionModelComplex getBoundDefinitionForClass(@NonNull Class&lt;? extends IBoundObject&gt; clazz) {</span>
+<span class="source-line-no">141</span><span id="line-141">    return moduleLoaderStrategy.getBoundDefinitionForClass(clazz, this);</span>
+<span class="source-line-no">142</span><span id="line-142">  }</span>
+<span class="source-line-no">143</span><span id="line-143"></span>
+<span class="source-line-no">144</span><span id="line-144">  /**</span>
+<span class="source-line-no">145</span><span id="line-145">   * {@inheritDoc}</span>
+<span class="source-line-no">146</span><span id="line-146">   * &lt;p&gt;</span>
+<span class="source-line-no">147</span><span id="line-147">   * A serializer returned by this method is thread-safe.</span>
+<span class="source-line-no">148</span><span id="line-148">   */</span>
+<span class="source-line-no">149</span><span id="line-149">  @Override</span>
+<span class="source-line-no">150</span><span id="line-150">  public &lt;CLASS extends IBoundObject&gt; ISerializer&lt;CLASS&gt; newSerializer(</span>
+<span class="source-line-no">151</span><span id="line-151">      @NonNull Format format,</span>
+<span class="source-line-no">152</span><span id="line-152">      @NonNull Class&lt;CLASS&gt; clazz) {</span>
+<span class="source-line-no">153</span><span id="line-153">    Objects.requireNonNull(format, "format");</span>
+<span class="source-line-no">154</span><span id="line-154">    IBoundDefinitionModelAssembly definition;</span>
+<span class="source-line-no">155</span><span id="line-155">    try {</span>
+<span class="source-line-no">156</span><span id="line-156">      definition = IBoundDefinitionModelAssembly.class.cast(getBoundDefinitionForClass(clazz));</span>
+<span class="source-line-no">157</span><span id="line-157">    } catch (ClassCastException ex) {</span>
+<span class="source-line-no">158</span><span id="line-158">      throw new IllegalStateException(</span>
+<span class="source-line-no">159</span><span id="line-159">          String.format("Class '%s' is not a bound assembly.", clazz.getClass().getName()), ex);</span>
+<span class="source-line-no">160</span><span id="line-160">    }</span>
+<span class="source-line-no">161</span><span id="line-161">    if (definition == null) {</span>
+<span class="source-line-no">162</span><span id="line-162">      throw new IllegalStateException(String.format("Class '%s' is not bound", clazz.getClass().getName()));</span>
+<span class="source-line-no">163</span><span id="line-163">    }</span>
+<span class="source-line-no">164</span><span id="line-164">    ISerializer&lt;CLASS&gt; retval;</span>
+<span class="source-line-no">165</span><span id="line-165">    switch (format) {</span>
+<span class="source-line-no">166</span><span id="line-166">    case JSON:</span>
+<span class="source-line-no">167</span><span id="line-167">      retval = new DefaultJsonSerializer&lt;&gt;(definition);</span>
+<span class="source-line-no">168</span><span id="line-168">      break;</span>
+<span class="source-line-no">169</span><span id="line-169">    case XML:</span>
+<span class="source-line-no">170</span><span id="line-170">      retval = new DefaultXmlSerializer&lt;&gt;(definition);</span>
+<span class="source-line-no">171</span><span id="line-171">      break;</span>
+<span class="source-line-no">172</span><span id="line-172">    case YAML:</span>
+<span class="source-line-no">173</span><span id="line-173">      retval = new DefaultYamlSerializer&lt;&gt;(definition);</span>
+<span class="source-line-no">174</span><span id="line-174">      break;</span>
+<span class="source-line-no">175</span><span id="line-175">    default:</span>
+<span class="source-line-no">176</span><span id="line-176">      throw new UnsupportedOperationException(String.format("Unsupported format '%s'", format));</span>
+<span class="source-line-no">177</span><span id="line-177">    }</span>
+<span class="source-line-no">178</span><span id="line-178">    return retval;</span>
+<span class="source-line-no">179</span><span id="line-179">  }</span>
+<span class="source-line-no">180</span><span id="line-180"></span>
+<span class="source-line-no">181</span><span id="line-181">  /**</span>
+<span class="source-line-no">182</span><span id="line-182">   * {@inheritDoc}</span>
+<span class="source-line-no">183</span><span id="line-183">   * &lt;p&gt;</span>
+<span class="source-line-no">184</span><span id="line-184">   * A deserializer returned by this method is thread-safe.</span>
+<span class="source-line-no">185</span><span id="line-185">   */</span>
+<span class="source-line-no">186</span><span id="line-186">  @Override</span>
+<span class="source-line-no">187</span><span id="line-187">  public &lt;CLASS extends IBoundObject&gt; IDeserializer&lt;CLASS&gt; newDeserializer(</span>
+<span class="source-line-no">188</span><span id="line-188">      @NonNull Format format,</span>
+<span class="source-line-no">189</span><span id="line-189">      @NonNull Class&lt;CLASS&gt; clazz) {</span>
+<span class="source-line-no">190</span><span id="line-190">    IBoundDefinitionModelAssembly definition;</span>
+<span class="source-line-no">191</span><span id="line-191">    try {</span>
+<span class="source-line-no">192</span><span id="line-192">      definition = IBoundDefinitionModelAssembly.class.cast(getBoundDefinitionForClass(clazz));</span>
+<span class="source-line-no">193</span><span id="line-193">    } catch (ClassCastException ex) {</span>
+<span class="source-line-no">194</span><span id="line-194">      throw new IllegalStateException(</span>
+<span class="source-line-no">195</span><span id="line-195">          String.format("Class '%s' is not a bound assembly.", clazz.getClass().getName()),</span>
+<span class="source-line-no">196</span><span id="line-196">          ex);</span>
+<span class="source-line-no">197</span><span id="line-197">    }</span>
+<span class="source-line-no">198</span><span id="line-198">    if (definition == null) {</span>
+<span class="source-line-no">199</span><span id="line-199">      throw new IllegalStateException(String.format("Class '%s' is not bound", clazz.getName()));</span>
+<span class="source-line-no">200</span><span id="line-200">    }</span>
+<span class="source-line-no">201</span><span id="line-201">    IDeserializer&lt;CLASS&gt; retval;</span>
+<span class="source-line-no">202</span><span id="line-202">    switch (format) {</span>
+<span class="source-line-no">203</span><span id="line-203">    case JSON:</span>
+<span class="source-line-no">204</span><span id="line-204">      retval = new DefaultJsonDeserializer&lt;&gt;(definition);</span>
+<span class="source-line-no">205</span><span id="line-205">      break;</span>
+<span class="source-line-no">206</span><span id="line-206">    case XML:</span>
+<span class="source-line-no">207</span><span id="line-207">      retval = new DefaultXmlDeserializer&lt;&gt;(definition);</span>
+<span class="source-line-no">208</span><span id="line-208">      break;</span>
+<span class="source-line-no">209</span><span id="line-209">    case YAML:</span>
+<span class="source-line-no">210</span><span id="line-210">      retval = new DefaultYamlDeserializer&lt;&gt;(definition);</span>
+<span class="source-line-no">211</span><span id="line-211">      break;</span>
+<span class="source-line-no">212</span><span id="line-212">    default:</span>
+<span class="source-line-no">213</span><span id="line-213">      throw new UnsupportedOperationException(String.format("Unsupported format '%s'", format));</span>
+<span class="source-line-no">214</span><span id="line-214">    }</span>
+<span class="source-line-no">215</span><span id="line-215"></span>
+<span class="source-line-no">216</span><span id="line-216">    return retval;</span>
+<span class="source-line-no">217</span><span id="line-217">  }</span>
+<span class="source-line-no">218</span><span id="line-218"></span>
+<span class="source-line-no">219</span><span id="line-219">  @Override</span>
+<span class="source-line-no">220</span><span id="line-220">  public Class&lt;? extends IBoundObject&gt; getBoundClassForRootXmlQName(@NonNull QName rootQName) {</span>
+<span class="source-line-no">221</span><span id="line-221">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
+<span class="source-line-no">222</span><span id="line-222">    for (IBindingMatcher matcher : getBindingMatchers()) {</span>
+<span class="source-line-no">223</span><span id="line-223">      retval = matcher.getBoundClassForXmlQName(rootQName);</span>
+<span class="source-line-no">224</span><span id="line-224">      if (retval != null) {</span>
+<span class="source-line-no">225</span><span id="line-225">        break;</span>
+<span class="source-line-no">226</span><span id="line-226">      }</span>
+<span class="source-line-no">227</span><span id="line-227">    }</span>
+<span class="source-line-no">228</span><span id="line-228">    return retval;</span>
+<span class="source-line-no">229</span><span id="line-229">  }</span>
+<span class="source-line-no">230</span><span id="line-230"></span>
+<span class="source-line-no">231</span><span id="line-231">  @Override</span>
+<span class="source-line-no">232</span><span id="line-232">  public Class&lt;? extends IBoundObject&gt; getBoundClassForRootJsonName(@NonNull String rootName) {</span>
+<span class="source-line-no">233</span><span id="line-233">    Class&lt;? extends IBoundObject&gt; retval = null;</span>
+<span class="source-line-no">234</span><span id="line-234">    for (IBindingMatcher matcher : getBindingMatchers()) {</span>
+<span class="source-line-no">235</span><span id="line-235">      retval = matcher.getBoundClassForJsonName(rootName);</span>
+<span class="source-line-no">236</span><span id="line-236">      if (retval != null) {</span>
+<span class="source-line-no">237</span><span id="line-237">        break;</span>
+<span class="source-line-no">238</span><span id="line-238">      }</span>
+<span class="source-line-no">239</span><span id="line-239">    }</span>
+<span class="source-line-no">240</span><span id="line-240">    return retval;</span>
+<span class="source-line-no">241</span><span id="line-241">  }</span>
+<span class="source-line-no">242</span><span id="line-242"></span>
+<span class="source-line-no">243</span><span id="line-243">  @Override</span>
+<span class="source-line-no">244</span><span id="line-244">  public &lt;CLASS extends IBoundObject&gt; CLASS deepCopy(@NonNull CLASS other, IBoundObject parentInstance)</span>
+<span class="source-line-no">245</span><span id="line-245">      throws BindingException {</span>
+<span class="source-line-no">246</span><span id="line-246">    IBoundDefinitionModelComplex definition = getBoundDefinitionForClass(other.getClass());</span>
+<span class="source-line-no">247</span><span id="line-247">    if (definition == null) {</span>
+<span class="source-line-no">248</span><span id="line-248">      throw new IllegalStateException(String.format("Class '%s' is not bound", other.getClass().getName()));</span>
+<span class="source-line-no">249</span><span id="line-249">    }</span>
+<span class="source-line-no">250</span><span id="line-250">    return ObjectUtils.asType(definition.deepCopyItem(other, parentInstance));</span>
+<span class="source-line-no">251</span><span id="line-251">  }</span>
+<span class="source-line-no">252</span><span id="line-252"></span>
+<span class="source-line-no">253</span><span id="line-253">  private static class ModuleLoader</span>
+<span class="source-line-no">254</span><span id="line-254">      extends BindingModuleLoader {</span>
+<span class="source-line-no">255</span><span id="line-255"></span>
+<span class="source-line-no">256</span><span id="line-256">    public ModuleLoader(</span>
+<span class="source-line-no">257</span><span id="line-257">        @NonNull IBindingContext bindingContext,</span>
+<span class="source-line-no">258</span><span id="line-258">        @NonNull ModuleLoadingPostProcessor postProcessor) {</span>
+<span class="source-line-no">259</span><span id="line-259">      super(bindingContext, postProcessor);</span>
+<span class="source-line-no">260</span><span id="line-260">    }</span>
+<span class="source-line-no">261</span><span id="line-261"></span>
+<span class="source-line-no">262</span><span id="line-262">    @Override</span>
+<span class="source-line-no">263</span><span id="line-263">    public IBindingMetaschemaModule load(URI resource) throws MetaschemaException, IOException {</span>
+<span class="source-line-no">264</span><span id="line-264">      IBindingMetaschemaModule module = super.load(resource);</span>
+<span class="source-line-no">265</span><span id="line-265">      getBindingContext().registerModule(module);</span>
+<span class="source-line-no">266</span><span id="line-266">      return module;</span>
+<span class="source-line-no">267</span><span id="line-267">    }</span>
+<span class="source-line-no">268</span><span id="line-268"></span>
+<span class="source-line-no">269</span><span id="line-269">    @Override</span>
+<span class="source-line-no">270</span><span id="line-270">    public IBindingMetaschemaModule load(Path path) throws MetaschemaException, IOException {</span>
+<span class="source-line-no">271</span><span id="line-271">      IBindingMetaschemaModule module = super.load(path);</span>
+<span class="source-line-no">272</span><span id="line-272">      getBindingContext().registerModule(module);</span>
+<span class="source-line-no">273</span><span id="line-273">      return module;</span>
+<span class="source-line-no">274</span><span id="line-274">    }</span>
+<span class="source-line-no">275</span><span id="line-275"></span>
+<span class="source-line-no">276</span><span id="line-276">    @Override</span>
+<span class="source-line-no">277</span><span id="line-277">    public IBindingMetaschemaModule load(URL url) throws MetaschemaException, IOException {</span>
+<span class="source-line-no">278</span><span id="line-278">      IBindingMetaschemaModule module = super.load(url);</span>
+<span class="source-line-no">279</span><span id="line-279">      getBindingContext().registerModule(module);</span>
+<span class="source-line-no">280</span><span id="line-280">      return module;</span>
+<span class="source-line-no">281</span><span id="line-281">    }</span>
+<span class="source-line-no">282</span><span id="line-282"></span>
+<span class="source-line-no">283</span><span id="line-283">    @Override</span>
+<span class="source-line-no">284</span><span id="line-284">    protected IBindingMetaschemaModule newModule(</span>
+<span class="source-line-no">285</span><span id="line-285">        URI resource,</span>
+<span class="source-line-no">286</span><span id="line-286">        METASCHEMA binding,</span>
+<span class="source-line-no">287</span><span id="line-287">        List&lt;? extends IBindingMetaschemaModule&gt; importedModules) throws MetaschemaException {</span>
+<span class="source-line-no">288</span><span id="line-288">      return super.newModule(resource, binding, importedModules);</span>
+<span class="source-line-no">289</span><span id="line-289">    }</span>
+<span class="source-line-no">290</span><span id="line-290"></span>
+<span class="source-line-no">291</span><span id="line-291">  }</span>
+<span class="source-line-no">292</span><span id="line-292">}</span>
 
 
 

@@ -21,72 +21,74 @@
 <span class="source-line-no">008</span><span id="line-8">import java.util.Collection;</span>
 <span class="source-line-no">009</span><span id="line-9">import java.util.function.Predicate;</span>
 <span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">public interface IModelDefinition extends IDefinition, IContainer {</span>
-<span class="source-line-no">017</span><span id="line-17">  /**</span>
-<span class="source-line-no">018</span><span id="line-18">   * Tests if the provided definition represents complex data. The data is complex</span>
-<span class="source-line-no">019</span><span id="line-19">   * if one of the following is true:</span>
-<span class="source-line-no">020</span><span id="line-20">   * &lt;ul&gt;</span>
-<span class="source-line-no">021</span><span id="line-21">   * &lt;li&gt;The instance is a {@link IAssemblyDefinition}.&lt;/li&gt;</span>
-<span class="source-line-no">022</span><span id="line-22">   * &lt;li&gt;The instance is a {@link IFieldDefinition} that has flags.&lt;/li&gt;</span>
-<span class="source-line-no">023</span><span id="line-23">   * &lt;/ul&gt;</span>
-<span class="source-line-no">024</span><span id="line-24">   *</span>
-<span class="source-line-no">025</span><span id="line-25">   * This method can be used as a {@link Predicate}.</span>
+<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">/**</span>
+<span class="source-line-no">015</span><span id="line-15"> * Represents a Metaschema definition for a complex object that may contain</span>
+<span class="source-line-no">016</span><span id="line-16"> * flags.</span>
+<span class="source-line-no">017</span><span id="line-17"> */</span>
+<span class="source-line-no">018</span><span id="line-18">public interface IModelDefinition extends IDefinition, IContainer {</span>
+<span class="source-line-no">019</span><span id="line-19">  /**</span>
+<span class="source-line-no">020</span><span id="line-20">   * Tests if the provided definition represents complex data. The data is complex</span>
+<span class="source-line-no">021</span><span id="line-21">   * if one of the following is true:</span>
+<span class="source-line-no">022</span><span id="line-22">   * &lt;ul&gt;</span>
+<span class="source-line-no">023</span><span id="line-23">   * &lt;li&gt;The instance is a {@link IAssemblyDefinition}.&lt;/li&gt;</span>
+<span class="source-line-no">024</span><span id="line-24">   * &lt;li&gt;The instance is a {@link IFieldDefinition} that has flags.&lt;/li&gt;</span>
+<span class="source-line-no">025</span><span id="line-25">   * &lt;/ul&gt;</span>
 <span class="source-line-no">026</span><span id="line-26">   *</span>
-<span class="source-line-no">027</span><span id="line-27">   * @param definition</span>
-<span class="source-line-no">028</span><span id="line-28">   *          the definition to test</span>
-<span class="source-line-no">029</span><span id="line-29">   * @return {@code true} if the data is complex, or {@code false} otherwise</span>
-<span class="source-line-no">030</span><span id="line-30">   */</span>
-<span class="source-line-no">031</span><span id="line-31">  static boolean complexObjectFilter(IModelDefinition definition) {</span>
-<span class="source-line-no">032</span><span id="line-32">    boolean retval = true;</span>
-<span class="source-line-no">033</span><span id="line-33">    if (definition instanceof IFieldDefinition) {</span>
-<span class="source-line-no">034</span><span id="line-34">      IFieldDefinition field = (IFieldDefinition) definition;</span>
-<span class="source-line-no">035</span><span id="line-35">      retval = !field.getFlagInstances().isEmpty();</span>
-<span class="source-line-no">036</span><span id="line-36">    }</span>
-<span class="source-line-no">037</span><span id="line-37">    return retval;</span>
-<span class="source-line-no">038</span><span id="line-38">  }</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">  @Override</span>
-<span class="source-line-no">041</span><span id="line-41">  default boolean hasChildren() {</span>
-<span class="source-line-no">042</span><span id="line-42">    return !getFlagInstances().isEmpty();</span>
-<span class="source-line-no">043</span><span id="line-43">  }</span>
-<span class="source-line-no">044</span><span id="line-44"></span>
-<span class="source-line-no">045</span><span id="line-45">  /**</span>
-<span class="source-line-no">046</span><span id="line-46">   * Retrieves a flag instance, by the flag's effective name, that is defined on</span>
-<span class="source-line-no">047</span><span id="line-47">   * the containing definition.</span>
-<span class="source-line-no">048</span><span id="line-48">   *</span>
-<span class="source-line-no">049</span><span id="line-49">   * @param name</span>
-<span class="source-line-no">050</span><span id="line-50">   *          the flag's name</span>
-<span class="source-line-no">051</span><span id="line-51">   * @return the matching flag instance, or {@code null} if there is no flag</span>
-<span class="source-line-no">052</span><span id="line-52">   *         matching the specified name</span>
-<span class="source-line-no">053</span><span id="line-53">   */</span>
-<span class="source-line-no">054</span><span id="line-54">  @Nullable</span>
-<span class="source-line-no">055</span><span id="line-55">  IFlagInstance getFlagInstanceByName(@NonNull QName name);</span>
-<span class="source-line-no">056</span><span id="line-56"></span>
-<span class="source-line-no">057</span><span id="line-57">  /**</span>
-<span class="source-line-no">058</span><span id="line-58">   * Retrieves the flag instances for all flags defined on the containing</span>
-<span class="source-line-no">059</span><span id="line-59">   * definition.</span>
-<span class="source-line-no">060</span><span id="line-60">   *</span>
-<span class="source-line-no">061</span><span id="line-61">   * @return the flags</span>
-<span class="source-line-no">062</span><span id="line-62">   */</span>
-<span class="source-line-no">063</span><span id="line-63">  @NonNull</span>
-<span class="source-line-no">064</span><span id="line-64">  Collection&lt;? extends IFlagInstance&gt; getFlagInstances();</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">  /**</span>
-<span class="source-line-no">067</span><span id="line-67">   * Retrieves the flag instance to use as as the property name for the containing</span>
-<span class="source-line-no">068</span><span id="line-68">   * object in JSON who's value will be the object containing the flag.</span>
-<span class="source-line-no">069</span><span id="line-69">   *</span>
-<span class="source-line-no">070</span><span id="line-70">   * @return the flag instance if a JSON key is configured, or {@code null}</span>
-<span class="source-line-no">071</span><span id="line-71">   *         otherwise</span>
-<span class="source-line-no">072</span><span id="line-72">   */</span>
-<span class="source-line-no">073</span><span id="line-73">  // TODO: remove once moved to the instance side</span>
-<span class="source-line-no">074</span><span id="line-74">  @Nullable</span>
-<span class="source-line-no">075</span><span id="line-75">  IFlagInstance getJsonKey();</span>
-<span class="source-line-no">076</span><span id="line-76">}</span>
+<span class="source-line-no">027</span><span id="line-27">   * This method can be used as a {@link Predicate}.</span>
+<span class="source-line-no">028</span><span id="line-28">   *</span>
+<span class="source-line-no">029</span><span id="line-29">   * @param definition</span>
+<span class="source-line-no">030</span><span id="line-30">   *          the definition to test</span>
+<span class="source-line-no">031</span><span id="line-31">   * @return {@code true} if the data is complex, or {@code false} otherwise</span>
+<span class="source-line-no">032</span><span id="line-32">   */</span>
+<span class="source-line-no">033</span><span id="line-33">  static boolean complexObjectFilter(IModelDefinition definition) {</span>
+<span class="source-line-no">034</span><span id="line-34">    boolean retval = true;</span>
+<span class="source-line-no">035</span><span id="line-35">    if (definition instanceof IFieldDefinition) {</span>
+<span class="source-line-no">036</span><span id="line-36">      IFieldDefinition field = (IFieldDefinition) definition;</span>
+<span class="source-line-no">037</span><span id="line-37">      retval = !field.getFlagInstances().isEmpty();</span>
+<span class="source-line-no">038</span><span id="line-38">    }</span>
+<span class="source-line-no">039</span><span id="line-39">    return retval;</span>
+<span class="source-line-no">040</span><span id="line-40">  }</span>
+<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">042</span><span id="line-42">  @Override</span>
+<span class="source-line-no">043</span><span id="line-43">  default boolean hasChildren() {</span>
+<span class="source-line-no">044</span><span id="line-44">    return !getFlagInstances().isEmpty();</span>
+<span class="source-line-no">045</span><span id="line-45">  }</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">  /**</span>
+<span class="source-line-no">048</span><span id="line-48">   * Retrieves a flag instance, by the flag's effective name-based qualified name</span>
+<span class="source-line-no">049</span><span id="line-49">   * index.</span>
+<span class="source-line-no">050</span><span id="line-50">   *</span>
+<span class="source-line-no">051</span><span id="line-51">   * @param index</span>
+<span class="source-line-no">052</span><span id="line-52">   *          the flag's name-based qualified name index</span>
+<span class="source-line-no">053</span><span id="line-53">   * @return the matching flag instance, or {@code null} if there is no flag</span>
+<span class="source-line-no">054</span><span id="line-54">   *         matching the specified name</span>
+<span class="source-line-no">055</span><span id="line-55">   */</span>
+<span class="source-line-no">056</span><span id="line-56">  @Nullable</span>
+<span class="source-line-no">057</span><span id="line-57">  IFlagInstance getFlagInstanceByName(@NonNull Integer index);</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  /**</span>
+<span class="source-line-no">060</span><span id="line-60">   * Retrieves the flag instances for all flags defined on the containing</span>
+<span class="source-line-no">061</span><span id="line-61">   * definition.</span>
+<span class="source-line-no">062</span><span id="line-62">   *</span>
+<span class="source-line-no">063</span><span id="line-63">   * @return the flags</span>
+<span class="source-line-no">064</span><span id="line-64">   */</span>
+<span class="source-line-no">065</span><span id="line-65">  @NonNull</span>
+<span class="source-line-no">066</span><span id="line-66">  Collection&lt;? extends IFlagInstance&gt; getFlagInstances();</span>
+<span class="source-line-no">067</span><span id="line-67"></span>
+<span class="source-line-no">068</span><span id="line-68">  /**</span>
+<span class="source-line-no">069</span><span id="line-69">   * Retrieves the flag instance to use as as the property name for the containing</span>
+<span class="source-line-no">070</span><span id="line-70">   * object in JSON who's value will be the object containing the flag.</span>
+<span class="source-line-no">071</span><span id="line-71">   *</span>
+<span class="source-line-no">072</span><span id="line-72">   * @return the flag instance if a JSON key is configured, or {@code null}</span>
+<span class="source-line-no">073</span><span id="line-73">   *         otherwise</span>
+<span class="source-line-no">074</span><span id="line-74">   */</span>
+<span class="source-line-no">075</span><span id="line-75">  // TODO: remove once moved to the instance side</span>
+<span class="source-line-no">076</span><span id="line-76">  @Nullable</span>
+<span class="source-line-no">077</span><span id="line-77">  IFlagInstance getJsonKey();</span>
+<span class="source-line-no">078</span><span id="line-78">}</span>
 
 
 

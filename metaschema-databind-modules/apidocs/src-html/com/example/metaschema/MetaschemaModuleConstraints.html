@@ -294,12 +294,12 @@
 <span class="source-line-no">281</span><span id="line-281">    @BoundChoiceGroup(</span>
 <span class="source-line-no">282</span><span id="line-282">        minOccurs = 1,</span>
 <span class="source-line-no">283</span><span id="line-283">        maxOccurs = -1,</span>
-<span class="source-line-no">284</span><span id="line-284">        assemblies = {</span>
-<span class="source-line-no">285</span><span id="line-285">            @BoundGroupedAssembly(useName = "assembly", binding = Assembly.class),</span>
-<span class="source-line-no">286</span><span id="line-286">            @BoundGroupedAssembly(useName = "field", binding = Field.class),</span>
-<span class="source-line-no">287</span><span id="line-287">            @BoundGroupedAssembly(useName = "flag", binding = Flag.class)</span>
-<span class="source-line-no">288</span><span id="line-288">        },</span>
-<span class="source-line-no">289</span><span id="line-289">        groupAs = @GroupAs(name = "constraints", inJson = JsonGroupAsBehavior.LIST)</span>
+<span class="source-line-no">284</span><span id="line-284">        groupAs = @GroupAs(name = "constraints", inJson = JsonGroupAsBehavior.LIST),</span>
+<span class="source-line-no">285</span><span id="line-285">        assemblies = {</span>
+<span class="source-line-no">286</span><span id="line-286">            @BoundGroupedAssembly(useName = "assembly", binding = Assembly.class),</span>
+<span class="source-line-no">287</span><span id="line-287">            @BoundGroupedAssembly(useName = "field", binding = Field.class),</span>
+<span class="source-line-no">288</span><span id="line-288">            @BoundGroupedAssembly(useName = "flag", binding = Flag.class)</span>
+<span class="source-line-no">289</span><span id="line-289">        }</span>
 <span class="source-line-no">290</span><span id="line-290">    )</span>
 <span class="source-line-no">291</span><span id="line-291">    private List&lt;Object&gt; _constraints;</span>
 <span class="source-line-no">292</span><span id="line-292"></span>
@@ -392,16 +392,16 @@
 <span class="source-line-no">379</span><span id="line-379">      @BoundChoiceGroup(</span>
 <span class="source-line-no">380</span><span id="line-380">          minOccurs = 1,</span>
 <span class="source-line-no">381</span><span id="line-381">          maxOccurs = -1,</span>
-<span class="source-line-no">382</span><span id="line-382">          assemblies = {</span>
-<span class="source-line-no">383</span><span id="line-383">              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = TargetedAllowedValuesConstraint.class),</span>
-<span class="source-line-no">384</span><span id="line-384">              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = TargetedExpectConstraint.class),</span>
-<span class="source-line-no">385</span><span id="line-385">              @BoundGroupedAssembly(formalName = "Targeted Index Has Key Constraint", useName = "index-has-key", binding = TargetedIndexHasKeyConstraint.class),</span>
-<span class="source-line-no">386</span><span id="line-386">              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = TargetedMatchesConstraint.class),</span>
-<span class="source-line-no">387</span><span id="line-387">              @BoundGroupedAssembly(formalName = "Targeted Unique Constraint", useName = "is-unique", binding = TargetedIsUniqueConstraint.class),</span>
-<span class="source-line-no">388</span><span id="line-388">              @BoundGroupedAssembly(formalName = "Targeted Index Constraint", useName = "index", binding = TargetedIndexConstraint.class),</span>
-<span class="source-line-no">389</span><span id="line-389">              @BoundGroupedAssembly(formalName = "Targeted Cardinality Constraint", useName = "has-cardinality", binding = TargetedHasCardinalityConstraint.class)</span>
-<span class="source-line-no">390</span><span id="line-390">          },</span>
-<span class="source-line-no">391</span><span id="line-391">          groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST)</span>
+<span class="source-line-no">382</span><span id="line-382">          groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST),</span>
+<span class="source-line-no">383</span><span id="line-383">          assemblies = {</span>
+<span class="source-line-no">384</span><span id="line-384">              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = TargetedAllowedValuesConstraint.class),</span>
+<span class="source-line-no">385</span><span id="line-385">              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = TargetedExpectConstraint.class),</span>
+<span class="source-line-no">386</span><span id="line-386">              @BoundGroupedAssembly(formalName = "Targeted Index Has Key Constraint", useName = "index-has-key", binding = TargetedIndexHasKeyConstraint.class),</span>
+<span class="source-line-no">387</span><span id="line-387">              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = TargetedMatchesConstraint.class),</span>
+<span class="source-line-no">388</span><span id="line-388">              @BoundGroupedAssembly(formalName = "Targeted Unique Constraint", useName = "is-unique", binding = TargetedIsUniqueConstraint.class),</span>
+<span class="source-line-no">389</span><span id="line-389">              @BoundGroupedAssembly(formalName = "Targeted Index Constraint", useName = "index", binding = TargetedIndexConstraint.class),</span>
+<span class="source-line-no">390</span><span id="line-390">              @BoundGroupedAssembly(formalName = "Targeted Cardinality Constraint", useName = "has-cardinality", binding = TargetedHasCardinalityConstraint.class)</span>
+<span class="source-line-no">391</span><span id="line-391">          }</span>
 <span class="source-line-no">392</span><span id="line-392">      )</span>
 <span class="source-line-no">393</span><span id="line-393">      private List&lt;Object&gt; _rules;</span>
 <span class="source-line-no">394</span><span id="line-394"></span>
@@ -458,13 +458,13 @@
 <span class="source-line-no">445</span><span id="line-445">      @BoundChoiceGroup(</span>
 <span class="source-line-no">446</span><span id="line-446">          minOccurs = 1,</span>
 <span class="source-line-no">447</span><span id="line-447">          maxOccurs = -1,</span>
-<span class="source-line-no">448</span><span id="line-448">          assemblies = {</span>
-<span class="source-line-no">449</span><span id="line-449">              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = TargetedAllowedValuesConstraint.class),</span>
-<span class="source-line-no">450</span><span id="line-450">              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = TargetedExpectConstraint.class),</span>
-<span class="source-line-no">451</span><span id="line-451">              @BoundGroupedAssembly(formalName = "Targeted Index Has Key Constraint", useName = "index-has-key", binding = TargetedIndexHasKeyConstraint.class),</span>
-<span class="source-line-no">452</span><span id="line-452">              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = TargetedMatchesConstraint.class)</span>
-<span class="source-line-no">453</span><span id="line-453">          },</span>
-<span class="source-line-no">454</span><span id="line-454">          groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST)</span>
+<span class="source-line-no">448</span><span id="line-448">          groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST),</span>
+<span class="source-line-no">449</span><span id="line-449">          assemblies = {</span>
+<span class="source-line-no">450</span><span id="line-450">              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = TargetedAllowedValuesConstraint.class),</span>
+<span class="source-line-no">451</span><span id="line-451">              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = TargetedExpectConstraint.class),</span>
+<span class="source-line-no">452</span><span id="line-452">              @BoundGroupedAssembly(formalName = "Targeted Index Has Key Constraint", useName = "index-has-key", binding = TargetedIndexHasKeyConstraint.class),</span>
+<span class="source-line-no">453</span><span id="line-453">              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = TargetedMatchesConstraint.class)</span>
+<span class="source-line-no">454</span><span id="line-454">          }</span>
 <span class="source-line-no">455</span><span id="line-455">      )</span>
 <span class="source-line-no">456</span><span id="line-456">      private List&lt;Object&gt; _rules;</span>
 <span class="source-line-no">457</span><span id="line-457"></span>
@@ -521,13 +521,13 @@
 <span class="source-line-no">508</span><span id="line-508">      @BoundChoiceGroup(</span>
 <span class="source-line-no">509</span><span id="line-509">          minOccurs = 1,</span>
 <span class="source-line-no">510</span><span id="line-510">          maxOccurs = -1,</span>
-<span class="source-line-no">511</span><span id="line-511">          assemblies = {</span>
-<span class="source-line-no">512</span><span id="line-512">              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = FlagAllowedValues.class),</span>
-<span class="source-line-no">513</span><span id="line-513">              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = FlagExpect.class),</span>
-<span class="source-line-no">514</span><span id="line-514">              @BoundGroupedAssembly(formalName = "Index Has Key Constraint", useName = "index-has-key", binding = FlagIndexHasKey.class),</span>
-<span class="source-line-no">515</span><span id="line-515">              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = FlagMatches.class)</span>
-<span class="source-line-no">516</span><span id="line-516">          },</span>
-<span class="source-line-no">517</span><span id="line-517">          groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST)</span>
+<span class="source-line-no">511</span><span id="line-511">          groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST),</span>
+<span class="source-line-no">512</span><span id="line-512">          assemblies = {</span>
+<span class="source-line-no">513</span><span id="line-513">              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = FlagAllowedValues.class),</span>
+<span class="source-line-no">514</span><span id="line-514">              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = FlagExpect.class),</span>
+<span class="source-line-no">515</span><span id="line-515">              @BoundGroupedAssembly(formalName = "Index Has Key Constraint", useName = "index-has-key", binding = FlagIndexHasKey.class),</span>
+<span class="source-line-no">516</span><span id="line-516">              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = FlagMatches.class)</span>
+<span class="source-line-no">517</span><span id="line-517">          }</span>
 <span class="source-line-no">518</span><span id="line-518">      )</span>
 <span class="source-line-no">519</span><span id="line-519">      private List&lt;Object&gt; _rules;</span>
 <span class="source-line-no">520</span><span id="line-520"></span>

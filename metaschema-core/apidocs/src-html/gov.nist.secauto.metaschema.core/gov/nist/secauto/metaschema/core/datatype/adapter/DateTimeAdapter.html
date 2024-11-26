@@ -21,41 +21,41 @@
 <span class="source-line-no">008</span><span id="line-8">import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapter;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.datatype.object.DateTime;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;</span>
-<span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import java.time.LocalDateTime;</span>
-<span class="source-line-no">022</span><span id="line-22">import java.time.ZoneOffset;</span>
-<span class="source-line-no">023</span><span id="line-23">import java.time.ZonedDateTime;</span>
-<span class="source-line-no">024</span><span id="line-24">import java.time.format.DateTimeParseException;</span>
-<span class="source-line-no">025</span><span id="line-25">import java.util.List;</span>
-<span class="source-line-no">026</span><span id="line-26"></span>
-<span class="source-line-no">027</span><span id="line-27">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.qname.EQNameFactory;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">import java.time.LocalDateTime;</span>
+<span class="source-line-no">019</span><span id="line-19">import java.time.ZoneOffset;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.time.ZonedDateTime;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.time.format.DateTimeParseException;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.List;</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">/**</span>
+<span class="source-line-no">027</span><span id="line-27"> * Support for the Metaschema &lt;a href=</span>
+<span class="source-line-no">028</span><span id="line-28"> * "https://pages.nist.gov/metaschema/specification/datatypes/#date-time"&gt;date-time&lt;/a&gt;</span>
+<span class="source-line-no">029</span><span id="line-29"> * data type.</span>
+<span class="source-line-no">030</span><span id="line-30"> */</span>
 <span class="source-line-no">031</span><span id="line-31">public class DateTimeAdapter</span>
-<span class="source-line-no">032</span><span id="line-32">    extends AbstractCustomJavaDataTypeAdapter&lt;DateTime, IDateTimeItem&gt; {</span>
+<span class="source-line-no">032</span><span id="line-32">    extends AbstractCustomJavaDataTypeAdapter&lt;AmbiguousDateTime, IDateTimeItem&gt; {</span>
 <span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
-<span class="source-line-no">034</span><span id="line-34">  private static final List&lt;QName&gt; NAMES = ObjectUtils.notNull(</span>
+<span class="source-line-no">034</span><span id="line-34">  private static final List&lt;IEnhancedQName&gt; NAMES = ObjectUtils.notNull(</span>
 <span class="source-line-no">035</span><span id="line-35">      List.of(</span>
-<span class="source-line-no">036</span><span id="line-36">          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "date-time"),</span>
+<span class="source-line-no">036</span><span id="line-36">          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "date-time"),</span>
 <span class="source-line-no">037</span><span id="line-37">          // for backwards compatibility with original type name</span>
-<span class="source-line-no">038</span><span id="line-38">          new QName(MetapathConstants.NS_METAPATH.toASCIIString(), "dateTime")));</span>
+<span class="source-line-no">038</span><span id="line-38">          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "dateTime")));</span>
 <span class="source-line-no">039</span><span id="line-39"></span>
 <span class="source-line-no">040</span><span id="line-40">  DateTimeAdapter() {</span>
-<span class="source-line-no">041</span><span id="line-41">    super(DateTime.class);</span>
+<span class="source-line-no">041</span><span id="line-41">    super(AmbiguousDateTime.class, IDateTimeItem.class, IDateTimeItem::cast);</span>
 <span class="source-line-no">042</span><span id="line-42">  }</span>
 <span class="source-line-no">043</span><span id="line-43"></span>
 <span class="source-line-no">044</span><span id="line-44">  @Override</span>
-<span class="source-line-no">045</span><span id="line-45">  public List&lt;QName&gt; getNames() {</span>
+<span class="source-line-no">045</span><span id="line-45">  public List&lt;IEnhancedQName&gt; getNames() {</span>
 <span class="source-line-no">046</span><span id="line-46">    return NAMES;</span>
 <span class="source-line-no">047</span><span id="line-47">  }</span>
 <span class="source-line-no">048</span><span id="line-48"></span>
@@ -64,68 +64,52 @@
 <span class="source-line-no">051</span><span id="line-51">    return JsonFormatTypes.STRING;</span>
 <span class="source-line-no">052</span><span id="line-52">  }</span>
 <span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">  @SuppressWarnings("null")</span>
-<span class="source-line-no">055</span><span id="line-55">  @Override</span>
-<span class="source-line-no">056</span><span id="line-56">  public DateTime parse(String value) {</span>
+<span class="source-line-no">054</span><span id="line-54">  @Override</span>
+<span class="source-line-no">055</span><span id="line-55">  public AmbiguousDateTime parse(String value) {</span>
+<span class="source-line-no">056</span><span id="line-56">    AmbiguousDateTime retval;</span>
 <span class="source-line-no">057</span><span id="line-57">    try {</span>
-<span class="source-line-no">058</span><span id="line-58">      return new DateTime(ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(value)), true); // NOPMD - readability</span>
+<span class="source-line-no">058</span><span id="line-58">      retval = parseWithTimeZone(value);</span>
 <span class="source-line-no">059</span><span id="line-59">    } catch (DateTimeParseException ex) {</span>
 <span class="source-line-no">060</span><span id="line-60">      try {</span>
-<span class="source-line-no">061</span><span id="line-61">        LocalDateTime dateTime = LocalDateTime.from(DateFormats.DATE_TIME_WITHOUT_TZ.parse(value));</span>
-<span class="source-line-no">062</span><span id="line-62">        return new DateTime(ZonedDateTime.of(dateTime, ZoneOffset.UTC), false);</span>
-<span class="source-line-no">063</span><span id="line-63">      } catch (DateTimeParseException ex2) {</span>
-<span class="source-line-no">064</span><span id="line-64">        IllegalArgumentException newEx = new IllegalArgumentException(ex2.getLocalizedMessage(), ex2);</span>
-<span class="source-line-no">065</span><span id="line-65">        newEx.addSuppressed(ex);</span>
-<span class="source-line-no">066</span><span id="line-66">        throw newEx; // NOPMD - it's ok</span>
-<span class="source-line-no">067</span><span id="line-67">      }</span>
-<span class="source-line-no">068</span><span id="line-68">    }</span>
+<span class="source-line-no">061</span><span id="line-61">        retval = parseWithoutTimeZone(value);</span>
+<span class="source-line-no">062</span><span id="line-62">      } catch (DateTimeParseException ex2) {</span>
+<span class="source-line-no">063</span><span id="line-63">        IllegalArgumentException newEx = new IllegalArgumentException(ex2.getLocalizedMessage(), ex2);</span>
+<span class="source-line-no">064</span><span id="line-64">        newEx.addSuppressed(ex);</span>
+<span class="source-line-no">065</span><span id="line-65">        throw newEx;</span>
+<span class="source-line-no">066</span><span id="line-66">      }</span>
+<span class="source-line-no">067</span><span id="line-67">    }</span>
+<span class="source-line-no">068</span><span id="line-68">    return retval;</span>
 <span class="source-line-no">069</span><span id="line-69">  }</span>
 <span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  @Override</span>
-<span class="source-line-no">072</span><span id="line-72">  public String asString(Object obj) {</span>
-<span class="source-line-no">073</span><span id="line-73">    DateTime value = (DateTime) obj;</span>
-<span class="source-line-no">074</span><span id="line-74">    String retval;</span>
-<span class="source-line-no">075</span><span id="line-75">    if (value.hasTimeZone()) {</span>
-<span class="source-line-no">076</span><span id="line-76">      @SuppressWarnings("null")</span>
-<span class="source-line-no">077</span><span id="line-77">      @NonNull</span>
-<span class="source-line-no">078</span><span id="line-78">      String formatted = DateFormats.DATE_TIME_WITH_TZ.format(value.getValue());</span>
-<span class="source-line-no">079</span><span id="line-79">      retval = formatted;</span>
-<span class="source-line-no">080</span><span id="line-80">    } else {</span>
-<span class="source-line-no">081</span><span id="line-81">      @SuppressWarnings("null")</span>
-<span class="source-line-no">082</span><span id="line-82">      @NonNull</span>
-<span class="source-line-no">083</span><span id="line-83">      String formatted = DateFormats.DATE_TIME_WITHOUT_TZ.format(value.getValue());</span>
-<span class="source-line-no">084</span><span id="line-84">      retval = formatted;</span>
-<span class="source-line-no">085</span><span id="line-85">    }</span>
-<span class="source-line-no">086</span><span id="line-86">    return retval;</span>
-<span class="source-line-no">087</span><span id="line-87">  }</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">  @Override</span>
-<span class="source-line-no">090</span><span id="line-90">  public Class&lt;IDateTimeItem&gt; getItemClass() {</span>
-<span class="source-line-no">091</span><span id="line-91">    return IDateTimeItem.class;</span>
+<span class="source-line-no">071</span><span id="line-71">  @NonNull</span>
+<span class="source-line-no">072</span><span id="line-72">  private static AmbiguousDateTime parseWithTimeZone(@NonNull String value) {</span>
+<span class="source-line-no">073</span><span id="line-73">    return new AmbiguousDateTime(</span>
+<span class="source-line-no">074</span><span id="line-74">        ObjectUtils.notNull(ZonedDateTime.from(DateFormats.DATE_TIME_WITH_TZ.parse(value))),</span>
+<span class="source-line-no">075</span><span id="line-75">        true);</span>
+<span class="source-line-no">076</span><span id="line-76">  }</span>
+<span class="source-line-no">077</span><span id="line-77"></span>
+<span class="source-line-no">078</span><span id="line-78">  @NonNull</span>
+<span class="source-line-no">079</span><span id="line-79">  private static AmbiguousDateTime parseWithoutTimeZone(@NonNull String value) {</span>
+<span class="source-line-no">080</span><span id="line-80">    LocalDateTime dateTime = LocalDateTime.from(DateFormats.DATE_TIME_WITH_OPTIONAL_TZ.parse(value));</span>
+<span class="source-line-no">081</span><span id="line-81">    return new AmbiguousDateTime(</span>
+<span class="source-line-no">082</span><span id="line-82">        ObjectUtils.notNull(ZonedDateTime.of(dateTime, ZoneOffset.UTC)),</span>
+<span class="source-line-no">083</span><span id="line-83">        false);</span>
+<span class="source-line-no">084</span><span id="line-84">  }</span>
+<span class="source-line-no">085</span><span id="line-85"></span>
+<span class="source-line-no">086</span><span id="line-86">  @Override</span>
+<span class="source-line-no">087</span><span id="line-87">  public String asString(Object obj) {</span>
+<span class="source-line-no">088</span><span id="line-88">    AmbiguousDateTime value = toValue(obj);</span>
+<span class="source-line-no">089</span><span id="line-89">    return ObjectUtils.notNull(value.hasTimeZone()</span>
+<span class="source-line-no">090</span><span id="line-90">        ? DateFormats.DATE_TIME_WITH_TZ.format(value.getValue())</span>
+<span class="source-line-no">091</span><span id="line-91">        : DateFormats.DATE_TIME_WITH_OPTIONAL_TZ.format(value.getValue()));</span>
 <span class="source-line-no">092</span><span id="line-92">  }</span>
 <span class="source-line-no">093</span><span id="line-93"></span>
 <span class="source-line-no">094</span><span id="line-94">  @Override</span>
 <span class="source-line-no">095</span><span id="line-95">  public IDateTimeItem newItem(Object value) {</span>
-<span class="source-line-no">096</span><span id="line-96">    DateTime item = toValue(value);</span>
+<span class="source-line-no">096</span><span id="line-96">    AmbiguousDateTime item = toValue(value);</span>
 <span class="source-line-no">097</span><span id="line-97">    return IDateTimeItem.valueOf(item);</span>
 <span class="source-line-no">098</span><span id="line-98">  }</span>
-<span class="source-line-no">099</span><span id="line-99"></span>
-<span class="source-line-no">100</span><span id="line-100">  @Override</span>
-<span class="source-line-no">101</span><span id="line-101">  protected IDateTimeItem castInternal(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">102</span><span id="line-102">    // TODO: bring up to spec</span>
-<span class="source-line-no">103</span><span id="line-103">    IDateTimeItem retval;</span>
-<span class="source-line-no">104</span><span id="line-104">    if (item instanceof IDateItem) {</span>
-<span class="source-line-no">105</span><span id="line-105">      retval = IDateTimeItem.valueOf(((IDateItem) item).asZonedDateTime());</span>
-<span class="source-line-no">106</span><span id="line-106">    } else if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {</span>
-<span class="source-line-no">107</span><span id="line-107">      retval = super.castInternal(item);</span>
-<span class="source-line-no">108</span><span id="line-108">    } else {</span>
-<span class="source-line-no">109</span><span id="line-109">      throw new InvalidValueForCastFunctionException(</span>
-<span class="source-line-no">110</span><span id="line-110">          String.format("unsupported item type '%s'", item.getClass().getName()));</span>
-<span class="source-line-no">111</span><span id="line-111">    }</span>
-<span class="source-line-no">112</span><span id="line-112">    return retval;</span>
-<span class="source-line-no">113</span><span id="line-113">  }</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">}</span>
+<span class="source-line-no">099</span><span id="line-99">}</span>
 
 
 

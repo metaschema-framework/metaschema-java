@@ -14,82 +14,81 @@
 <pre><span class="source-line-no">001</span><span id="line-1"></span>
 <span class="source-line-no">002</span><span id="line-2">package gov.nist.secauto.metaschema.core.metapath.item.node;</span>
 <span class="source-line-no">003</span><span id="line-3"></span>
-<span class="source-line-no">004</span><span id="line-4">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">005</span><span id="line-5"></span>
-<span class="source-line-no">006</span><span id="line-6">import java.util.Collection;</span>
-<span class="source-line-no">007</span><span id="line-7">import java.util.List;</span>
-<span class="source-line-no">008</span><span id="line-8">import java.util.Map;</span>
-<span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">/**</span>
-<span class="source-line-no">015</span><span id="line-15"> * This mixin interface indicates that the implementation is a {@link INodeItem}</span>
-<span class="source-line-no">016</span><span id="line-16"> * that may have both flag and model children.</span>
-<span class="source-line-no">017</span><span id="line-17"> */</span>
-<span class="source-line-no">018</span><span id="line-18">public interface IFeatureModelContainerItem extends IFeatureFlagContainerItem {</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">  @Override</span>
-<span class="source-line-no">021</span><span id="line-21">  ModelContainer getModel();</span>
-<span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">  @Override</span>
-<span class="source-line-no">024</span><span id="line-24">  default Collection&lt;? extends List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; getModelItems() {</span>
-<span class="source-line-no">025</span><span id="line-25">    return getModel().getModelItems();</span>
-<span class="source-line-no">026</span><span id="line-26">  }</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  @Override</span>
-<span class="source-line-no">029</span><span id="line-29">  default List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; getModelItemsByName(QName name) {</span>
-<span class="source-line-no">030</span><span id="line-30">    return getModel().getModelItemsByName(name);</span>
-<span class="source-line-no">031</span><span id="line-31">  }</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">  /**</span>
-<span class="source-line-no">034</span><span id="line-34">   * Provides an abstract implementation of a lazy loaded model.</span>
-<span class="source-line-no">035</span><span id="line-35">   */</span>
-<span class="source-line-no">036</span><span id="line-36">  class ModelContainer</span>
-<span class="source-line-no">037</span><span id="line-37">      extends FlagContainer {</span>
-<span class="source-line-no">038</span><span id="line-38">    private final Map&lt;QName, List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; modelItems;</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">    /**</span>
-<span class="source-line-no">041</span><span id="line-41">     * Creates a new collection of flags and model items.</span>
-<span class="source-line-no">042</span><span id="line-42">     *</span>
-<span class="source-line-no">043</span><span id="line-43">     * @param flags</span>
-<span class="source-line-no">044</span><span id="line-44">     *          a mapping of flag name to a flag item</span>
-<span class="source-line-no">045</span><span id="line-45">     * @param modelItems</span>
-<span class="source-line-no">046</span><span id="line-46">     *          a mapping of model item name to a list of model items</span>
-<span class="source-line-no">047</span><span id="line-47">     */</span>
-<span class="source-line-no">048</span><span id="line-48">    protected ModelContainer(</span>
-<span class="source-line-no">049</span><span id="line-49">        @NonNull Map&lt;QName, IFlagNodeItem&gt; flags,</span>
-<span class="source-line-no">050</span><span id="line-50">        @NonNull Map&lt;QName, List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; modelItems) {</span>
-<span class="source-line-no">051</span><span id="line-51">      super(flags);</span>
-<span class="source-line-no">052</span><span id="line-52">      this.modelItems = modelItems;</span>
-<span class="source-line-no">053</span><span id="line-53">    }</span>
-<span class="source-line-no">054</span><span id="line-54"></span>
-<span class="source-line-no">055</span><span id="line-55">    /**</span>
-<span class="source-line-no">056</span><span id="line-56">     * Get the matching list of model items having the provided name.</span>
-<span class="source-line-no">057</span><span id="line-57">     *</span>
-<span class="source-line-no">058</span><span id="line-58">     * @param name</span>
-<span class="source-line-no">059</span><span id="line-59">     *          the name of the model items to retrieve</span>
-<span class="source-line-no">060</span><span id="line-60">     * @return a lisy of matching model items or {@code null} if no match was found</span>
-<span class="source-line-no">061</span><span id="line-61">     */</span>
-<span class="source-line-no">062</span><span id="line-62">    @NonNull</span>
-<span class="source-line-no">063</span><span id="line-63">    public List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; getModelItemsByName(@NonNull QName name) {</span>
-<span class="source-line-no">064</span><span id="line-64">      List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; result = modelItems.get(name);</span>
-<span class="source-line-no">065</span><span id="line-65">      return result == null ? CollectionUtil.emptyList() : result;</span>
-<span class="source-line-no">066</span><span id="line-66">    }</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">    /**</span>
-<span class="source-line-no">069</span><span id="line-69">     * Get all model items grouped by model item name.</span>
-<span class="source-line-no">070</span><span id="line-70">     *</span>
-<span class="source-line-no">071</span><span id="line-71">     * @return a collection of lists containg model items grouped by names</span>
-<span class="source-line-no">072</span><span id="line-72">     */</span>
-<span class="source-line-no">073</span><span id="line-73">    @SuppressWarnings("null")</span>
-<span class="source-line-no">074</span><span id="line-74">    @NonNull</span>
-<span class="source-line-no">075</span><span id="line-75">    public Collection&lt;List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; getModelItems() {</span>
-<span class="source-line-no">076</span><span id="line-76">      return modelItems.values();</span>
-<span class="source-line-no">077</span><span id="line-77">    }</span>
-<span class="source-line-no">078</span><span id="line-78">  }</span>
-<span class="source-line-no">079</span><span id="line-79">}</span>
+<span class="source-line-no">004</span><span id="line-4">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">005</span><span id="line-5">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">006</span><span id="line-6"></span>
+<span class="source-line-no">007</span><span id="line-7">import java.util.Collection;</span>
+<span class="source-line-no">008</span><span id="line-8">import java.util.List;</span>
+<span class="source-line-no">009</span><span id="line-9">import java.util.Map;</span>
+<span class="source-line-no">010</span><span id="line-10"></span>
+<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">/**</span>
+<span class="source-line-no">014</span><span id="line-14"> * This mixin interface indicates that the implementation is a {@link INodeItem}</span>
+<span class="source-line-no">015</span><span id="line-15"> * that may have both flag and model children.</span>
+<span class="source-line-no">016</span><span id="line-16"> */</span>
+<span class="source-line-no">017</span><span id="line-17">public interface IFeatureModelContainerItem extends IFeatureFlagContainerItem {</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">  @Override</span>
+<span class="source-line-no">020</span><span id="line-20">  ModelContainer getModel();</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">  @Override</span>
+<span class="source-line-no">023</span><span id="line-23">  default Collection&lt;? extends List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; getModelItems() {</span>
+<span class="source-line-no">024</span><span id="line-24">    return getModel().getModelItems();</span>
+<span class="source-line-no">025</span><span id="line-25">  }</span>
+<span class="source-line-no">026</span><span id="line-26"></span>
+<span class="source-line-no">027</span><span id="line-27">  @Override</span>
+<span class="source-line-no">028</span><span id="line-28">  default List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; getModelItemsByName(IEnhancedQName name) {</span>
+<span class="source-line-no">029</span><span id="line-29">    return getModel().getModelItemsByName(name);</span>
+<span class="source-line-no">030</span><span id="line-30">  }</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">  /**</span>
+<span class="source-line-no">033</span><span id="line-33">   * Provides an abstract implementation of a lazy loaded model.</span>
+<span class="source-line-no">034</span><span id="line-34">   */</span>
+<span class="source-line-no">035</span><span id="line-35">  class ModelContainer</span>
+<span class="source-line-no">036</span><span id="line-36">      extends FlagContainer {</span>
+<span class="source-line-no">037</span><span id="line-37">    private final Map&lt;Integer, List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; modelItems;</span>
+<span class="source-line-no">038</span><span id="line-38"></span>
+<span class="source-line-no">039</span><span id="line-39">    /**</span>
+<span class="source-line-no">040</span><span id="line-40">     * Creates a new collection of flags and model items.</span>
+<span class="source-line-no">041</span><span id="line-41">     *</span>
+<span class="source-line-no">042</span><span id="line-42">     * @param flags</span>
+<span class="source-line-no">043</span><span id="line-43">     *          a mapping of flag name to a flag item</span>
+<span class="source-line-no">044</span><span id="line-44">     * @param modelItems</span>
+<span class="source-line-no">045</span><span id="line-45">     *          a mapping of model item name to a list of model items</span>
+<span class="source-line-no">046</span><span id="line-46">     */</span>
+<span class="source-line-no">047</span><span id="line-47">    protected ModelContainer(</span>
+<span class="source-line-no">048</span><span id="line-48">        @NonNull Map&lt;Integer, IFlagNodeItem&gt; flags,</span>
+<span class="source-line-no">049</span><span id="line-49">        @NonNull Map&lt;Integer, List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; modelItems) {</span>
+<span class="source-line-no">050</span><span id="line-50">      super(flags);</span>
+<span class="source-line-no">051</span><span id="line-51">      this.modelItems = modelItems;</span>
+<span class="source-line-no">052</span><span id="line-52">    }</span>
+<span class="source-line-no">053</span><span id="line-53"></span>
+<span class="source-line-no">054</span><span id="line-54">    /**</span>
+<span class="source-line-no">055</span><span id="line-55">     * Get the matching list of model items having the provided name.</span>
+<span class="source-line-no">056</span><span id="line-56">     *</span>
+<span class="source-line-no">057</span><span id="line-57">     * @param name</span>
+<span class="source-line-no">058</span><span id="line-58">     *          the name of the model items to retrieve</span>
+<span class="source-line-no">059</span><span id="line-59">     * @return a lisy of matching model items or {@code null} if no match was found</span>
+<span class="source-line-no">060</span><span id="line-60">     */</span>
+<span class="source-line-no">061</span><span id="line-61">    @NonNull</span>
+<span class="source-line-no">062</span><span id="line-62">    public List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; getModelItemsByName(@NonNull IEnhancedQName name) {</span>
+<span class="source-line-no">063</span><span id="line-63">      List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt; result = modelItems.get(name.getIndexPosition());</span>
+<span class="source-line-no">064</span><span id="line-64">      return result == null ? CollectionUtil.emptyList() : result;</span>
+<span class="source-line-no">065</span><span id="line-65">    }</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">    /**</span>
+<span class="source-line-no">068</span><span id="line-68">     * Get all model items grouped by model item name.</span>
+<span class="source-line-no">069</span><span id="line-69">     *</span>
+<span class="source-line-no">070</span><span id="line-70">     * @return a collection of lists containg model items grouped by names</span>
+<span class="source-line-no">071</span><span id="line-71">     */</span>
+<span class="source-line-no">072</span><span id="line-72">    @SuppressWarnings("null")</span>
+<span class="source-line-no">073</span><span id="line-73">    @NonNull</span>
+<span class="source-line-no">074</span><span id="line-74">    public Collection&lt;List&lt;? extends IModelNodeItem&lt;?, ?&gt;&gt;&gt; getModelItems() {</span>
+<span class="source-line-no">075</span><span id="line-75">      return modelItems.values();</span>
+<span class="source-line-no">076</span><span id="line-76">    }</span>
+<span class="source-line-no">077</span><span id="line-77">  }</span>
+<span class="source-line-no">078</span><span id="line-78">}</span>
 
 
 

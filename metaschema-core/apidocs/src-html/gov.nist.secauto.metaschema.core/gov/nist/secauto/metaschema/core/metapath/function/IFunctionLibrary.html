@@ -18,9 +18,9 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.function;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import java.util.stream.Stream;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">010</span><span id="line-10">import java.util.stream.Stream;</span>
 <span class="source-line-no">011</span><span id="line-11"></span>
 <span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">013</span><span id="line-13"></span>
@@ -35,64 +35,35 @@
 <span class="source-line-no">022</span><span id="line-22">  Stream&lt;IFunction&gt; stream();</span>
 <span class="source-line-no">023</span><span id="line-23"></span>
 <span class="source-line-no">024</span><span id="line-24">  /**</span>
-<span class="source-line-no">025</span><span id="line-25">   * Determine if there is a function with the provided name that supports the</span>
-<span class="source-line-no">026</span><span id="line-26">   * signature of the provided {@code arity}.</span>
+<span class="source-line-no">025</span><span id="line-25">   * Determine if there is a function with the provided namespace qualified name</span>
+<span class="source-line-no">026</span><span id="line-26">   * that supports the signature of the provided {@code arity}.</span>
 <span class="source-line-no">027</span><span id="line-27">   *</span>
 <span class="source-line-no">028</span><span id="line-28">   * @param name</span>
-<span class="source-line-no">029</span><span id="line-29">   *          the name of a group of functions</span>
+<span class="source-line-no">029</span><span id="line-29">   *          the namespace qualified name of a group of functions</span>
 <span class="source-line-no">030</span><span id="line-30">   * @param arity</span>
 <span class="source-line-no">031</span><span id="line-31">   *          the count of arguments for use in determining an argument signature</span>
 <span class="source-line-no">032</span><span id="line-32">   *          match</span>
 <span class="source-line-no">033</span><span id="line-33">   * @return {@code true} if a function signature matches or {@code false}</span>
 <span class="source-line-no">034</span><span id="line-34">   *         otherwise</span>
 <span class="source-line-no">035</span><span id="line-35">   */</span>
-<span class="source-line-no">036</span><span id="line-36">  default boolean hasFunction(@NonNull String name, int arity) {</span>
+<span class="source-line-no">036</span><span id="line-36">  default boolean hasFunction(@NonNull IEnhancedQName name, int arity) {</span>
 <span class="source-line-no">037</span><span id="line-37">    return getFunction(name, arity) != null;</span>
 <span class="source-line-no">038</span><span id="line-38">  }</span>
 <span class="source-line-no">039</span><span id="line-39"></span>
 <span class="source-line-no">040</span><span id="line-40">  /**</span>
-<span class="source-line-no">041</span><span id="line-41">   * Determine if there is a function with the provided namespace qualified name</span>
-<span class="source-line-no">042</span><span id="line-42">   * that supports the signature of the provided {@code arity}.</span>
-<span class="source-line-no">043</span><span id="line-43">   *</span>
-<span class="source-line-no">044</span><span id="line-44">   * @param name</span>
-<span class="source-line-no">045</span><span id="line-45">   *          the namespace qualified name of a group of functions</span>
-<span class="source-line-no">046</span><span id="line-46">   * @param arity</span>
-<span class="source-line-no">047</span><span id="line-47">   *          the count of arguments for use in determining an argument signature</span>
-<span class="source-line-no">048</span><span id="line-48">   *          match</span>
-<span class="source-line-no">049</span><span id="line-49">   * @return {@code true} if a function signature matches or {@code false}</span>
-<span class="source-line-no">050</span><span id="line-50">   *         otherwise</span>
+<span class="source-line-no">041</span><span id="line-41">   * Retrieve the function with the provided namespace qualified name that</span>
+<span class="source-line-no">042</span><span id="line-42">   * supports the signature of the provided {@code arity}, if such a function</span>
+<span class="source-line-no">043</span><span id="line-43">   * exists.</span>
+<span class="source-line-no">044</span><span id="line-44">   *</span>
+<span class="source-line-no">045</span><span id="line-45">   * @param name</span>
+<span class="source-line-no">046</span><span id="line-46">   *          the namespace qualified name of a group of functions</span>
+<span class="source-line-no">047</span><span id="line-47">   * @param arity</span>
+<span class="source-line-no">048</span><span id="line-48">   *          the count of arguments for use in determining an argument signature</span>
+<span class="source-line-no">049</span><span id="line-49">   *          match</span>
+<span class="source-line-no">050</span><span id="line-50">   * @return the matching function or {@code null} if no match exists</span>
 <span class="source-line-no">051</span><span id="line-51">   */</span>
-<span class="source-line-no">052</span><span id="line-52">  default boolean hasFunction(@NonNull QName name, int arity) {</span>
-<span class="source-line-no">053</span><span id="line-53">    return getFunction(name, arity) != null;</span>
-<span class="source-line-no">054</span><span id="line-54">  }</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  /**</span>
-<span class="source-line-no">057</span><span id="line-57">   * Retrieve the function with the provided name that supports the signature of</span>
-<span class="source-line-no">058</span><span id="line-58">   * the provided {@code arity}, if such a function exists.</span>
-<span class="source-line-no">059</span><span id="line-59">   *</span>
-<span class="source-line-no">060</span><span id="line-60">   * @param name</span>
-<span class="source-line-no">061</span><span id="line-61">   *          the name of a group of functions</span>
-<span class="source-line-no">062</span><span id="line-62">   * @param arity</span>
-<span class="source-line-no">063</span><span id="line-63">   *          the count of arguments for use in determining an argument signature</span>
-<span class="source-line-no">064</span><span id="line-64">   *          match</span>
-<span class="source-line-no">065</span><span id="line-65">   * @return the matching function or {@code null} if no match exists</span>
-<span class="source-line-no">066</span><span id="line-66">   */</span>
-<span class="source-line-no">067</span><span id="line-67">  IFunction getFunction(@NonNull String name, int arity);</span>
-<span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  /**</span>
-<span class="source-line-no">070</span><span id="line-70">   * Retrieve the function with the provided namespace qualified name that</span>
-<span class="source-line-no">071</span><span id="line-71">   * supports the signature of the provided {@code arity}, if such a function</span>
-<span class="source-line-no">072</span><span id="line-72">   * exists.</span>
-<span class="source-line-no">073</span><span id="line-73">   *</span>
-<span class="source-line-no">074</span><span id="line-74">   * @param name</span>
-<span class="source-line-no">075</span><span id="line-75">   *          the namespace qualified name of a group of functions</span>
-<span class="source-line-no">076</span><span id="line-76">   * @param arity</span>
-<span class="source-line-no">077</span><span id="line-77">   *          the count of arguments for use in determining an argument signature</span>
-<span class="source-line-no">078</span><span id="line-78">   *          match</span>
-<span class="source-line-no">079</span><span id="line-79">   * @return the matching function or {@code null} if no match exists</span>
-<span class="source-line-no">080</span><span id="line-80">   */</span>
-<span class="source-line-no">081</span><span id="line-81">  IFunction getFunction(@NonNull QName name, int arity);</span>
-<span class="source-line-no">082</span><span id="line-82">}</span>
+<span class="source-line-no">052</span><span id="line-52">  IFunction getFunction(@NonNull IEnhancedQName name, int arity);</span>
+<span class="source-line-no">053</span><span id="line-53">}</span>
 
 
 

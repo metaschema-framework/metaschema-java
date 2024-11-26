@@ -47,134 +47,146 @@
 <span class="source-line-no">034</span><span id="line-34">import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;</span>
 <span class="source-line-no">035</span><span id="line-35">import nl.talsmasoftware.lazy4j.Lazy;</span>
 <span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37">public class DefaultXmlDeserializer&lt;CLASS extends IBoundObject&gt;</span>
-<span class="source-line-no">038</span><span id="line-38">    extends AbstractDeserializer&lt;CLASS&gt; {</span>
-<span class="source-line-no">039</span><span id="line-39">  private Lazy&lt;XMLInputFactory2&gt; factory;</span>
-<span class="source-line-no">040</span><span id="line-40"></span>
-<span class="source-line-no">041</span><span id="line-41">  @NonNull</span>
-<span class="source-line-no">042</span><span id="line-42">  private final IBoundDefinitionModelAssembly rootDefinition;</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  /**</span>
-<span class="source-line-no">045</span><span id="line-45">   * Construct a new Module binding-based deserializer that reads XML-based Module</span>
-<span class="source-line-no">046</span><span id="line-46">   * content.</span>
-<span class="source-line-no">047</span><span id="line-47">   *</span>
-<span class="source-line-no">048</span><span id="line-48">   * @param definition</span>
-<span class="source-line-no">049</span><span id="line-49">   *          the assembly class binding describing the Java objects this</span>
-<span class="source-line-no">050</span><span id="line-50">   *          deserializer parses data into</span>
-<span class="source-line-no">051</span><span id="line-51">   */</span>
-<span class="source-line-no">052</span><span id="line-52">  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")</span>
-<span class="source-line-no">053</span><span id="line-53">  public DefaultXmlDeserializer(@NonNull IBoundDefinitionModelAssembly definition) {</span>
-<span class="source-line-no">054</span><span id="line-54">    super(definition);</span>
-<span class="source-line-no">055</span><span id="line-55">    this.rootDefinition = definition;</span>
-<span class="source-line-no">056</span><span id="line-56">    if (!definition.isRoot()) {</span>
-<span class="source-line-no">057</span><span id="line-57">      throw new UnsupportedOperationException(</span>
-<span class="source-line-no">058</span><span id="line-58">          String.format("The assembly '%s' is not a root assembly.", definition.getBoundClass().getName()));</span>
-<span class="source-line-no">059</span><span id="line-59">    }</span>
-<span class="source-line-no">060</span><span id="line-60">    resetFactory();</span>
-<span class="source-line-no">061</span><span id="line-61">  }</span>
-<span class="source-line-no">062</span><span id="line-62"></span>
-<span class="source-line-no">063</span><span id="line-63">  protected final void resetFactory() {</span>
-<span class="source-line-no">064</span><span id="line-64">    this.factory = Lazy.lazy(this::newFactoryInstance);</span>
-<span class="source-line-no">065</span><span id="line-65">  }</span>
-<span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  @Override</span>
-<span class="source-line-no">068</span><span id="line-68">  protected void configurationChanged(IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; config) {</span>
-<span class="source-line-no">069</span><span id="line-69">    super.configurationChanged(config);</span>
-<span class="source-line-no">070</span><span id="line-70">    resetFactory();</span>
-<span class="source-line-no">071</span><span id="line-71">  }</span>
-<span class="source-line-no">072</span><span id="line-72"></span>
-<span class="source-line-no">073</span><span id="line-73">  /**</span>
-<span class="source-line-no">074</span><span id="line-74">   * Get a JSON factory instance.</span>
-<span class="source-line-no">075</span><span id="line-75">   * &lt;p&gt;</span>
-<span class="source-line-no">076</span><span id="line-76">   * This method can be used by sub-classes to create a customized factory</span>
-<span class="source-line-no">077</span><span id="line-77">   * instance.</span>
-<span class="source-line-no">078</span><span id="line-78">   *</span>
-<span class="source-line-no">079</span><span id="line-79">   * @return the factory</span>
-<span class="source-line-no">080</span><span id="line-80">   */</span>
-<span class="source-line-no">081</span><span id="line-81">  @SuppressWarnings("resource")</span>
-<span class="source-line-no">082</span><span id="line-82">  @NonNull</span>
-<span class="source-line-no">083</span><span id="line-83">  protected XMLInputFactory2 newFactoryInstance() {</span>
-<span class="source-line-no">084</span><span id="line-84">    XMLInputFactory2 retval = (XMLInputFactory2) XMLInputFactory.newInstance();</span>
-<span class="source-line-no">085</span><span id="line-85">    assert retval instanceof WstxInputFactory;</span>
-<span class="source-line-no">086</span><span id="line-86">    retval.configureForXmlConformance();</span>
-<span class="source-line-no">087</span><span id="line-87">    retval.setProperty(XMLInputFactory.IS_COALESCING, false);</span>
-<span class="source-line-no">088</span><span id="line-88">    retval.setProperty(XMLInputFactory2.P_PRESERVE_LOCATION, true);</span>
-<span class="source-line-no">089</span><span id="line-89">    // xmlInputFactory.configureForSpeed();</span>
-<span class="source-line-no">090</span><span id="line-90"></span>
-<span class="source-line-no">091</span><span id="line-91">    if (isFeatureEnabled(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION)) {</span>
-<span class="source-line-no">092</span><span id="line-92">      retval.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, true);</span>
-<span class="source-line-no">093</span><span id="line-93">      retval.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);</span>
-<span class="source-line-no">094</span><span id="line-94">      retval.setProperty(XMLInputFactory.SUPPORT_DTD, true);</span>
-<span class="source-line-no">095</span><span id="line-95">      retval.setProperty(XMLInputFactory.RESOLVER,</span>
-<span class="source-line-no">096</span><span id="line-96">          (XMLResolver) (publicID, systemID, baseURI, namespace) -&gt; {</span>
-<span class="source-line-no">097</span><span id="line-97">            URI base = URI.create(baseURI);</span>
-<span class="source-line-no">098</span><span id="line-98">            URI resource = base.resolve(systemID);</span>
-<span class="source-line-no">099</span><span id="line-99">            try {</span>
-<span class="source-line-no">100</span><span id="line-100"></span>
-<span class="source-line-no">101</span><span id="line-101">              return ObjectUtils.notNull(resource.toURL().openStream());</span>
-<span class="source-line-no">102</span><span id="line-102">            } catch (IOException ex) {</span>
-<span class="source-line-no">103</span><span id="line-103">              throw new XMLStreamException(ex);</span>
-<span class="source-line-no">104</span><span id="line-104">            }</span>
-<span class="source-line-no">105</span><span id="line-105">          });</span>
-<span class="source-line-no">106</span><span id="line-106">    }</span>
-<span class="source-line-no">107</span><span id="line-107">    return retval;</span>
-<span class="source-line-no">108</span><span id="line-108">  }</span>
-<span class="source-line-no">109</span><span id="line-109"></span>
-<span class="source-line-no">110</span><span id="line-110">  /**</span>
-<span class="source-line-no">111</span><span id="line-111">   * Get the XML input factory instance used to create XML parser instances.</span>
-<span class="source-line-no">112</span><span id="line-112">   * &lt;p&gt;</span>
-<span class="source-line-no">113</span><span id="line-113">   * Uses a built-in default if a user specified factory is not provided.</span>
-<span class="source-line-no">114</span><span id="line-114">   *</span>
-<span class="source-line-no">115</span><span id="line-115">   * @return the factory instance</span>
-<span class="source-line-no">116</span><span id="line-116">   * @see #setXMLInputFactory(XMLInputFactory2)</span>
-<span class="source-line-no">117</span><span id="line-117">   */</span>
-<span class="source-line-no">118</span><span id="line-118">  @NonNull</span>
-<span class="source-line-no">119</span><span id="line-119">  private XMLInputFactory2 getXMLInputFactory() {</span>
-<span class="source-line-no">120</span><span id="line-120">    return ObjectUtils.notNull(factory.get());</span>
-<span class="source-line-no">121</span><span id="line-121">  }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">  @NonNull</span>
-<span class="source-line-no">124</span><span id="line-124">  private XMLEventReader2 newXMLEventReader2(</span>
-<span class="source-line-no">125</span><span id="line-125">      @NonNull URI documentUri,</span>
-<span class="source-line-no">126</span><span id="line-126">      @NonNull Reader reader) throws XMLStreamException {</span>
-<span class="source-line-no">127</span><span id="line-127">    XMLEventReader2 eventReader</span>
-<span class="source-line-no">128</span><span id="line-128">        = (XMLEventReader2) getXMLInputFactory().createXMLEventReader(documentUri.toASCIIString(), reader);</span>
-<span class="source-line-no">129</span><span id="line-129">    EventFilter filter = new CommentFilter();</span>
-<span class="source-line-no">130</span><span id="line-130">    return ObjectUtils.notNull((XMLEventReader2) getXMLInputFactory().createFilteredReader(eventReader, filter));</span>
-<span class="source-line-no">131</span><span id="line-131">  }</span>
-<span class="source-line-no">132</span><span id="line-132"></span>
-<span class="source-line-no">133</span><span id="line-133">  @Override</span>
-<span class="source-line-no">134</span><span id="line-134">  protected final IDocumentNodeItem deserializeToNodeItemInternal(Reader reader, URI documentUri) throws IOException {</span>
-<span class="source-line-no">135</span><span id="line-135">    Object value = deserializeToValueInternal(reader, documentUri);</span>
-<span class="source-line-no">136</span><span id="line-136">    return INodeItemFactory.instance().newDocumentNodeItem(rootDefinition, documentUri, value);</span>
-<span class="source-line-no">137</span><span id="line-137">  }</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">  @Override</span>
-<span class="source-line-no">140</span><span id="line-140">  public final CLASS deserializeToValueInternal(Reader reader, URI documentUri) throws IOException {</span>
-<span class="source-line-no">141</span><span id="line-141">    // doesn't auto close the underlying reader</span>
-<span class="source-line-no">142</span><span id="line-142">    try (AutoCloser&lt;XMLEventReader2, XMLStreamException&gt; closer = AutoCloser.autoClose(</span>
-<span class="source-line-no">143</span><span id="line-143">        newXMLEventReader2(documentUri, reader), XMLEventReader::close)) {</span>
-<span class="source-line-no">144</span><span id="line-144">      return parseXmlInternal(closer.getResource());</span>
-<span class="source-line-no">145</span><span id="line-145">    } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">146</span><span id="line-146">      throw new IOException("Unable to create a new XMLEventReader2 instance.", ex);</span>
-<span class="source-line-no">147</span><span id="line-147">    }</span>
-<span class="source-line-no">148</span><span id="line-148">  }</span>
-<span class="source-line-no">149</span><span id="line-149"></span>
-<span class="source-line-no">150</span><span id="line-150">  @NonNull</span>
-<span class="source-line-no">151</span><span id="line-151">  private CLASS parseXmlInternal(@NonNull XMLEventReader2 reader)</span>
-<span class="source-line-no">152</span><span id="line-152">      throws IOException {</span>
-<span class="source-line-no">153</span><span id="line-153"></span>
-<span class="source-line-no">154</span><span id="line-154">    MetaschemaXmlReader parser = new MetaschemaXmlReader(reader, new DefaultXmlProblemHandler());</span>
-<span class="source-line-no">155</span><span id="line-155"></span>
-<span class="source-line-no">156</span><span id="line-156">    try {</span>
-<span class="source-line-no">157</span><span id="line-157">      return parser.read(rootDefinition);</span>
-<span class="source-line-no">158</span><span id="line-158">    } catch (IOException | AssertionError ex) {</span>
-<span class="source-line-no">159</span><span id="line-159">      throw new IOException(</span>
-<span class="source-line-no">160</span><span id="line-160">          String.format("An unexpected error occurred during parsing: %s", ex.getMessage()),</span>
-<span class="source-line-no">161</span><span id="line-161">          ex);</span>
-<span class="source-line-no">162</span><span id="line-162">    }</span>
-<span class="source-line-no">163</span><span id="line-163">  }</span>
-<span class="source-line-no">164</span><span id="line-164">}</span>
+<span class="source-line-no">037</span><span id="line-37">/**</span>
+<span class="source-line-no">038</span><span id="line-38"> * Provides support for reading XML-based data based on a bound Metaschema</span>
+<span class="source-line-no">039</span><span id="line-39"> * module.</span>
+<span class="source-line-no">040</span><span id="line-40"> *</span>
+<span class="source-line-no">041</span><span id="line-41"> * @param &lt;CLASS&gt;</span>
+<span class="source-line-no">042</span><span id="line-42"> *          the Java type of the bound object representing the root node to read</span>
+<span class="source-line-no">043</span><span id="line-43"> */</span>
+<span class="source-line-no">044</span><span id="line-44">public class DefaultXmlDeserializer&lt;CLASS extends IBoundObject&gt;</span>
+<span class="source-line-no">045</span><span id="line-45">    extends AbstractDeserializer&lt;CLASS&gt; {</span>
+<span class="source-line-no">046</span><span id="line-46">  private Lazy&lt;XMLInputFactory2&gt; factory;</span>
+<span class="source-line-no">047</span><span id="line-47"></span>
+<span class="source-line-no">048</span><span id="line-48">  @NonNull</span>
+<span class="source-line-no">049</span><span id="line-49">  private final IBoundDefinitionModelAssembly rootDefinition;</span>
+<span class="source-line-no">050</span><span id="line-50"></span>
+<span class="source-line-no">051</span><span id="line-51">  /**</span>
+<span class="source-line-no">052</span><span id="line-52">   * Construct a new Module binding-based deserializer that reads XML-based Module</span>
+<span class="source-line-no">053</span><span id="line-53">   * content.</span>
+<span class="source-line-no">054</span><span id="line-54">   *</span>
+<span class="source-line-no">055</span><span id="line-55">   * @param definition</span>
+<span class="source-line-no">056</span><span id="line-56">   *          the assembly class binding describing the Java objects this</span>
+<span class="source-line-no">057</span><span id="line-57">   *          deserializer parses data into</span>
+<span class="source-line-no">058</span><span id="line-58">   */</span>
+<span class="source-line-no">059</span><span id="line-59">  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")</span>
+<span class="source-line-no">060</span><span id="line-60">  public DefaultXmlDeserializer(@NonNull IBoundDefinitionModelAssembly definition) {</span>
+<span class="source-line-no">061</span><span id="line-61">    super(definition);</span>
+<span class="source-line-no">062</span><span id="line-62">    this.rootDefinition = definition;</span>
+<span class="source-line-no">063</span><span id="line-63">    if (!definition.isRoot()) {</span>
+<span class="source-line-no">064</span><span id="line-64">      throw new UnsupportedOperationException(</span>
+<span class="source-line-no">065</span><span id="line-65">          String.format("The assembly '%s' is not a root assembly.", definition.getBoundClass().getName()));</span>
+<span class="source-line-no">066</span><span id="line-66">    }</span>
+<span class="source-line-no">067</span><span id="line-67">    resetFactory();</span>
+<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">069</span><span id="line-69"></span>
+<span class="source-line-no">070</span><span id="line-70">  /**</span>
+<span class="source-line-no">071</span><span id="line-71">   * For use by subclasses to reset the underlying XML factory when an important</span>
+<span class="source-line-no">072</span><span id="line-72">   * change has occurred that will change how the factory produces an</span>
+<span class="source-line-no">073</span><span id="line-73">   * {@link XMLInputFactory2}.</span>
+<span class="source-line-no">074</span><span id="line-74">   */</span>
+<span class="source-line-no">075</span><span id="line-75">  protected final void resetFactory() {</span>
+<span class="source-line-no">076</span><span id="line-76">    this.factory = Lazy.lazy(this::newFactoryInstance);</span>
+<span class="source-line-no">077</span><span id="line-77">  }</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">  @Override</span>
+<span class="source-line-no">080</span><span id="line-80">  protected void configurationChanged(IMutableConfiguration&lt;DeserializationFeature&lt;?&gt;&gt; config) {</span>
+<span class="source-line-no">081</span><span id="line-81">    super.configurationChanged(config);</span>
+<span class="source-line-no">082</span><span id="line-82">    resetFactory();</span>
+<span class="source-line-no">083</span><span id="line-83">  }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">  /**</span>
+<span class="source-line-no">086</span><span id="line-86">   * Get a JSON factory instance.</span>
+<span class="source-line-no">087</span><span id="line-87">   * &lt;p&gt;</span>
+<span class="source-line-no">088</span><span id="line-88">   * This method can be used by sub-classes to create a customized factory</span>
+<span class="source-line-no">089</span><span id="line-89">   * instance.</span>
+<span class="source-line-no">090</span><span id="line-90">   *</span>
+<span class="source-line-no">091</span><span id="line-91">   * @return the factory</span>
+<span class="source-line-no">092</span><span id="line-92">   */</span>
+<span class="source-line-no">093</span><span id="line-93">  @SuppressWarnings("resource")</span>
+<span class="source-line-no">094</span><span id="line-94">  @NonNull</span>
+<span class="source-line-no">095</span><span id="line-95">  protected XMLInputFactory2 newFactoryInstance() {</span>
+<span class="source-line-no">096</span><span id="line-96">    XMLInputFactory2 retval = (XMLInputFactory2) XMLInputFactory.newInstance();</span>
+<span class="source-line-no">097</span><span id="line-97">    assert retval instanceof WstxInputFactory;</span>
+<span class="source-line-no">098</span><span id="line-98">    retval.configureForXmlConformance();</span>
+<span class="source-line-no">099</span><span id="line-99">    retval.setProperty(XMLInputFactory.IS_COALESCING, false);</span>
+<span class="source-line-no">100</span><span id="line-100">    retval.setProperty(XMLInputFactory2.P_PRESERVE_LOCATION, true);</span>
+<span class="source-line-no">101</span><span id="line-101">    // xmlInputFactory.configureForSpeed();</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">    if (isFeatureEnabled(DeserializationFeature.DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION)) {</span>
+<span class="source-line-no">104</span><span id="line-104">      retval.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, true);</span>
+<span class="source-line-no">105</span><span id="line-105">      retval.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);</span>
+<span class="source-line-no">106</span><span id="line-106">      retval.setProperty(XMLInputFactory.SUPPORT_DTD, true);</span>
+<span class="source-line-no">107</span><span id="line-107">      retval.setProperty(XMLInputFactory.RESOLVER,</span>
+<span class="source-line-no">108</span><span id="line-108">          (XMLResolver) (publicID, systemID, baseURI, namespace) -&gt; {</span>
+<span class="source-line-no">109</span><span id="line-109">            URI base = URI.create(baseURI);</span>
+<span class="source-line-no">110</span><span id="line-110">            URI resource = base.resolve(systemID);</span>
+<span class="source-line-no">111</span><span id="line-111">            try {</span>
+<span class="source-line-no">112</span><span id="line-112"></span>
+<span class="source-line-no">113</span><span id="line-113">              return ObjectUtils.notNull(resource.toURL().openStream());</span>
+<span class="source-line-no">114</span><span id="line-114">            } catch (IOException ex) {</span>
+<span class="source-line-no">115</span><span id="line-115">              throw new XMLStreamException(ex);</span>
+<span class="source-line-no">116</span><span id="line-116">            }</span>
+<span class="source-line-no">117</span><span id="line-117">          });</span>
+<span class="source-line-no">118</span><span id="line-118">    }</span>
+<span class="source-line-no">119</span><span id="line-119">    return retval;</span>
+<span class="source-line-no">120</span><span id="line-120">  }</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">  /**</span>
+<span class="source-line-no">123</span><span id="line-123">   * Get the XML input factory instance used to create XML parser instances.</span>
+<span class="source-line-no">124</span><span id="line-124">   * &lt;p&gt;</span>
+<span class="source-line-no">125</span><span id="line-125">   * Uses a built-in default if a user specified factory is not provided.</span>
+<span class="source-line-no">126</span><span id="line-126">   *</span>
+<span class="source-line-no">127</span><span id="line-127">   * @return the factory instance</span>
+<span class="source-line-no">128</span><span id="line-128">   * @see #setXMLInputFactory(XMLInputFactory2)</span>
+<span class="source-line-no">129</span><span id="line-129">   */</span>
+<span class="source-line-no">130</span><span id="line-130">  @NonNull</span>
+<span class="source-line-no">131</span><span id="line-131">  private XMLInputFactory2 getXMLInputFactory() {</span>
+<span class="source-line-no">132</span><span id="line-132">    return ObjectUtils.notNull(factory.get());</span>
+<span class="source-line-no">133</span><span id="line-133">  }</span>
+<span class="source-line-no">134</span><span id="line-134"></span>
+<span class="source-line-no">135</span><span id="line-135">  @NonNull</span>
+<span class="source-line-no">136</span><span id="line-136">  private XMLEventReader2 newXMLEventReader2(</span>
+<span class="source-line-no">137</span><span id="line-137">      @NonNull URI documentUri,</span>
+<span class="source-line-no">138</span><span id="line-138">      @NonNull Reader reader) throws XMLStreamException {</span>
+<span class="source-line-no">139</span><span id="line-139">    XMLEventReader2 eventReader</span>
+<span class="source-line-no">140</span><span id="line-140">        = (XMLEventReader2) getXMLInputFactory().createXMLEventReader(documentUri.toASCIIString(), reader);</span>
+<span class="source-line-no">141</span><span id="line-141">    EventFilter filter = new CommentFilter();</span>
+<span class="source-line-no">142</span><span id="line-142">    return ObjectUtils.notNull((XMLEventReader2) getXMLInputFactory().createFilteredReader(eventReader, filter));</span>
+<span class="source-line-no">143</span><span id="line-143">  }</span>
+<span class="source-line-no">144</span><span id="line-144"></span>
+<span class="source-line-no">145</span><span id="line-145">  @Override</span>
+<span class="source-line-no">146</span><span id="line-146">  protected final IDocumentNodeItem deserializeToNodeItemInternal(Reader reader, URI documentUri) throws IOException {</span>
+<span class="source-line-no">147</span><span id="line-147">    Object value = deserializeToValueInternal(reader, documentUri);</span>
+<span class="source-line-no">148</span><span id="line-148">    return INodeItemFactory.instance().newDocumentNodeItem(rootDefinition, documentUri, value);</span>
+<span class="source-line-no">149</span><span id="line-149">  }</span>
+<span class="source-line-no">150</span><span id="line-150"></span>
+<span class="source-line-no">151</span><span id="line-151">  @Override</span>
+<span class="source-line-no">152</span><span id="line-152">  public final CLASS deserializeToValueInternal(Reader reader, URI resource) throws IOException {</span>
+<span class="source-line-no">153</span><span id="line-153">    // doesn't auto close the underlying reader</span>
+<span class="source-line-no">154</span><span id="line-154">    try (AutoCloser&lt;XMLEventReader2, XMLStreamException&gt; closer = AutoCloser.autoClose(</span>
+<span class="source-line-no">155</span><span id="line-155">        newXMLEventReader2(resource, reader), XMLEventReader::close)) {</span>
+<span class="source-line-no">156</span><span id="line-156">      return parseXmlInternal(closer.getResource(), resource);</span>
+<span class="source-line-no">157</span><span id="line-157">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">158</span><span id="line-158">      throw new IOException("Unable to create a new XMLEventReader2 instance.", ex);</span>
+<span class="source-line-no">159</span><span id="line-159">    }</span>
+<span class="source-line-no">160</span><span id="line-160">  }</span>
+<span class="source-line-no">161</span><span id="line-161"></span>
+<span class="source-line-no">162</span><span id="line-162">  @NonNull</span>
+<span class="source-line-no">163</span><span id="line-163">  private CLASS parseXmlInternal(@NonNull XMLEventReader2 reader, @NonNull URI resource)</span>
+<span class="source-line-no">164</span><span id="line-164">      throws IOException {</span>
+<span class="source-line-no">165</span><span id="line-165"></span>
+<span class="source-line-no">166</span><span id="line-166">    MetaschemaXmlReader parser = new MetaschemaXmlReader(reader, resource, new DefaultXmlProblemHandler());</span>
+<span class="source-line-no">167</span><span id="line-167"></span>
+<span class="source-line-no">168</span><span id="line-168">    try {</span>
+<span class="source-line-no">169</span><span id="line-169">      return parser.read(rootDefinition);</span>
+<span class="source-line-no">170</span><span id="line-170">    } catch (IOException | AssertionError ex) {</span>
+<span class="source-line-no">171</span><span id="line-171">      throw new IOException(</span>
+<span class="source-line-no">172</span><span id="line-172">          String.format("An unexpected error occurred during parsing: %s", ex.getMessage()),</span>
+<span class="source-line-no">173</span><span id="line-173">          ex);</span>
+<span class="source-line-no">174</span><span id="line-174">    }</span>
+<span class="source-line-no">175</span><span id="line-175">  }</span>
+<span class="source-line-no">176</span><span id="line-176">}</span>
 
 
 

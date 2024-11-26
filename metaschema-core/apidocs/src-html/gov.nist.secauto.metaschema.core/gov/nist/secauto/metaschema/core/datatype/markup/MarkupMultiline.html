@@ -24,68 +24,73 @@
 <span class="source-line-no">011</span><span id="line-11"></span>
 <span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">public class MarkupMultiline</span>
-<span class="source-line-no">015</span><span id="line-15">    extends AbstractMarkupString&lt;MarkupMultiline&gt; {</span>
-<span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">  @NonNull</span>
-<span class="source-line-no">018</span><span id="line-18">  private static final FlexmarkFactory FLEXMARK_FACTORY = FlexmarkFactory.instance();</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">  /**</span>
-<span class="source-line-no">021</span><span id="line-21">   * Convert the provided HTML string into markup.</span>
-<span class="source-line-no">022</span><span id="line-22">   *</span>
-<span class="source-line-no">023</span><span id="line-23">   * @param html</span>
-<span class="source-line-no">024</span><span id="line-24">   *          the HTML</span>
-<span class="source-line-no">025</span><span id="line-25">   * @return the markup instance</span>
-<span class="source-line-no">026</span><span id="line-26">   */</span>
-<span class="source-line-no">027</span><span id="line-27">  @NonNull</span>
-<span class="source-line-no">028</span><span id="line-28">  public static MarkupMultiline fromHtml(@NonNull String html) {</span>
-<span class="source-line-no">029</span><span id="line-29">    return new MarkupMultiline(</span>
-<span class="source-line-no">030</span><span id="line-30">        parseHtml(</span>
-<span class="source-line-no">031</span><span id="line-31">            html,</span>
-<span class="source-line-no">032</span><span id="line-32">            FLEXMARK_FACTORY.getFlexmarkHtmlConverter(),</span>
-<span class="source-line-no">033</span><span id="line-33">            FLEXMARK_FACTORY.getMarkdownParser()));</span>
-<span class="source-line-no">034</span><span id="line-34">  }</span>
-<span class="source-line-no">035</span><span id="line-35"></span>
-<span class="source-line-no">036</span><span id="line-36">  /**</span>
-<span class="source-line-no">037</span><span id="line-37">   * Convert the provided markdown string into markup.</span>
-<span class="source-line-no">038</span><span id="line-38">   *</span>
-<span class="source-line-no">039</span><span id="line-39">   * @param markdown</span>
-<span class="source-line-no">040</span><span id="line-40">   *          the markup</span>
-<span class="source-line-no">041</span><span id="line-41">   * @return the markup instance</span>
-<span class="source-line-no">042</span><span id="line-42">   */</span>
-<span class="source-line-no">043</span><span id="line-43">  @NonNull</span>
-<span class="source-line-no">044</span><span id="line-44">  public static MarkupMultiline fromMarkdown(@NonNull String markdown) {</span>
-<span class="source-line-no">045</span><span id="line-45">    return new MarkupMultiline(</span>
-<span class="source-line-no">046</span><span id="line-46">        parseMarkdown(markdown, FLEXMARK_FACTORY.getMarkdownParser()));</span>
-<span class="source-line-no">047</span><span id="line-47">  }</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">  /**</span>
-<span class="source-line-no">050</span><span id="line-50">   * Construct a new multiline markup instance.</span>
-<span class="source-line-no">051</span><span id="line-51">   *</span>
-<span class="source-line-no">052</span><span id="line-52">   * @param astNode</span>
-<span class="source-line-no">053</span><span id="line-53">   *          the parsed markup AST</span>
-<span class="source-line-no">054</span><span id="line-54">   */</span>
-<span class="source-line-no">055</span><span id="line-55">  public MarkupMultiline(@NonNull Document astNode) {</span>
-<span class="source-line-no">056</span><span id="line-56">    super(astNode);</span>
-<span class="source-line-no">057</span><span id="line-57">  }</span>
-<span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">  @Override</span>
-<span class="source-line-no">060</span><span id="line-60">  public FlexmarkFactory getFlexmarkFactory() {</span>
-<span class="source-line-no">061</span><span id="line-61">    return FLEXMARK_FACTORY;</span>
+<span class="source-line-no">014</span><span id="line-14">/**</span>
+<span class="source-line-no">015</span><span id="line-15"> * Supports a data value which may be multiple lines of markup.</span>
+<span class="source-line-no">016</span><span id="line-16"> * &lt;p&gt;</span>
+<span class="source-line-no">017</span><span id="line-17"> * This markup can be presented as XHTML or Markdown.</span>
+<span class="source-line-no">018</span><span id="line-18"> */</span>
+<span class="source-line-no">019</span><span id="line-19">public class MarkupMultiline</span>
+<span class="source-line-no">020</span><span id="line-20">    extends AbstractMarkupString&lt;MarkupMultiline&gt; {</span>
+<span class="source-line-no">021</span><span id="line-21"></span>
+<span class="source-line-no">022</span><span id="line-22">  @NonNull</span>
+<span class="source-line-no">023</span><span id="line-23">  private static final FlexmarkFactory FLEXMARK_FACTORY = FlexmarkFactory.instance();</span>
+<span class="source-line-no">024</span><span id="line-24"></span>
+<span class="source-line-no">025</span><span id="line-25">  /**</span>
+<span class="source-line-no">026</span><span id="line-26">   * Convert the provided HTML string into markup.</span>
+<span class="source-line-no">027</span><span id="line-27">   *</span>
+<span class="source-line-no">028</span><span id="line-28">   * @param html</span>
+<span class="source-line-no">029</span><span id="line-29">   *          the HTML</span>
+<span class="source-line-no">030</span><span id="line-30">   * @return the markup instance</span>
+<span class="source-line-no">031</span><span id="line-31">   */</span>
+<span class="source-line-no">032</span><span id="line-32">  @NonNull</span>
+<span class="source-line-no">033</span><span id="line-33">  public static MarkupMultiline fromHtml(@NonNull String html) {</span>
+<span class="source-line-no">034</span><span id="line-34">    return new MarkupMultiline(</span>
+<span class="source-line-no">035</span><span id="line-35">        parseHtml(</span>
+<span class="source-line-no">036</span><span id="line-36">            html,</span>
+<span class="source-line-no">037</span><span id="line-37">            FLEXMARK_FACTORY.getFlexmarkHtmlConverter(),</span>
+<span class="source-line-no">038</span><span id="line-38">            FLEXMARK_FACTORY.getMarkdownParser()));</span>
+<span class="source-line-no">039</span><span id="line-39">  }</span>
+<span class="source-line-no">040</span><span id="line-40"></span>
+<span class="source-line-no">041</span><span id="line-41">  /**</span>
+<span class="source-line-no">042</span><span id="line-42">   * Convert the provided markdown string into markup.</span>
+<span class="source-line-no">043</span><span id="line-43">   *</span>
+<span class="source-line-no">044</span><span id="line-44">   * @param markdown</span>
+<span class="source-line-no">045</span><span id="line-45">   *          the markup</span>
+<span class="source-line-no">046</span><span id="line-46">   * @return the markup instance</span>
+<span class="source-line-no">047</span><span id="line-47">   */</span>
+<span class="source-line-no">048</span><span id="line-48">  @NonNull</span>
+<span class="source-line-no">049</span><span id="line-49">  public static MarkupMultiline fromMarkdown(@NonNull String markdown) {</span>
+<span class="source-line-no">050</span><span id="line-50">    return new MarkupMultiline(</span>
+<span class="source-line-no">051</span><span id="line-51">        parseMarkdown(markdown, FLEXMARK_FACTORY.getMarkdownParser()));</span>
+<span class="source-line-no">052</span><span id="line-52">  }</span>
+<span class="source-line-no">053</span><span id="line-53"></span>
+<span class="source-line-no">054</span><span id="line-54">  /**</span>
+<span class="source-line-no">055</span><span id="line-55">   * Construct a new multiline markup instance.</span>
+<span class="source-line-no">056</span><span id="line-56">   *</span>
+<span class="source-line-no">057</span><span id="line-57">   * @param astNode</span>
+<span class="source-line-no">058</span><span id="line-58">   *          the parsed markup AST</span>
+<span class="source-line-no">059</span><span id="line-59">   */</span>
+<span class="source-line-no">060</span><span id="line-60">  public MarkupMultiline(@NonNull Document astNode) {</span>
+<span class="source-line-no">061</span><span id="line-61">    super(astNode);</span>
 <span class="source-line-no">062</span><span id="line-62">  }</span>
 <span class="source-line-no">063</span><span id="line-63"></span>
 <span class="source-line-no">064</span><span id="line-64">  @Override</span>
-<span class="source-line-no">065</span><span id="line-65">  public MarkupMultiline copy() {</span>
-<span class="source-line-no">066</span><span id="line-66">    // TODO: find a way to do a deep copy</span>
-<span class="source-line-no">067</span><span id="line-67">    // this is a shallow copy that uses the same underlying Document object</span>
-<span class="source-line-no">068</span><span id="line-68">    return new MarkupMultiline(getDocument());</span>
-<span class="source-line-no">069</span><span id="line-69">  }</span>
-<span class="source-line-no">070</span><span id="line-70"></span>
-<span class="source-line-no">071</span><span id="line-71">  @Override</span>
-<span class="source-line-no">072</span><span id="line-72">  public boolean isBlock() {</span>
-<span class="source-line-no">073</span><span id="line-73">    return true;</span>
+<span class="source-line-no">065</span><span id="line-65">  public FlexmarkFactory getFlexmarkFactory() {</span>
+<span class="source-line-no">066</span><span id="line-66">    return FLEXMARK_FACTORY;</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  @Override</span>
+<span class="source-line-no">070</span><span id="line-70">  public MarkupMultiline copy() {</span>
+<span class="source-line-no">071</span><span id="line-71">    // TODO: find a way to do a deep copy</span>
+<span class="source-line-no">072</span><span id="line-72">    // this is a shallow copy that uses the same underlying Document object</span>
+<span class="source-line-no">073</span><span id="line-73">    return new MarkupMultiline(getDocument());</span>
 <span class="source-line-no">074</span><span id="line-74">  }</span>
-<span class="source-line-no">075</span><span id="line-75">}</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">  @Override</span>
+<span class="source-line-no">077</span><span id="line-77">  public boolean isBlock() {</span>
+<span class="source-line-no">078</span><span id="line-78">    return true;</span>
+<span class="source-line-no">079</span><span id="line-79">  }</span>
+<span class="source-line-no">080</span><span id="line-80">}</span>
 
 
 
