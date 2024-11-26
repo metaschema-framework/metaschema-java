@@ -44,11 +44,6 @@ public class DayTimeDurationItemImpl
   }
 
   @Override
-  public IMapKey asMapKey() {
-    return new MapKey();
-  }
-
-  @Override
   public int hashCode() {
     return asDuration().hashCode();
   }
@@ -58,6 +53,16 @@ public class DayTimeDurationItemImpl
   public boolean equals(Object obj) {
     return this == obj
         || obj instanceof IDayTimeDurationItem && compareTo((IDayTimeDurationItem) obj) == 0;
+  }
+
+  @Override
+  protected String getValueSignature() {
+    return "'" + asString() + "'";
+  }
+
+  @Override
+  public IMapKey asMapKey() {
+    return new MapKey();
   }
 
   private final class MapKey implements IMapKey {

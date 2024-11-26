@@ -27,6 +27,11 @@ public interface IHostnameItem extends IStringItem {
     return MetaschemaDataTypeProvider.HOSTNAME.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IHostnameItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new host name item using the provided string {@code value}.
    *

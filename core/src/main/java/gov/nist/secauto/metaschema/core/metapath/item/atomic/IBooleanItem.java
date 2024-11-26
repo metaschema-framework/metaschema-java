@@ -38,6 +38,11 @@ public interface IBooleanItem extends IAnyAtomicItem {
     return MetaschemaDataTypeProvider.BOOLEAN.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IBooleanItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new boolean item using the provided string {@code value}.
    * <p>

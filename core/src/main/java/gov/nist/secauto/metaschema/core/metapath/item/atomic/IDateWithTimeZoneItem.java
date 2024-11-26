@@ -32,6 +32,11 @@ public interface IDateWithTimeZoneItem extends IDateItem {
     return MetaschemaDataTypeProvider.DATE_WITH_TZ.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IDateWithTimeZoneItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new date item using the provided string {@code value}.
    *

@@ -41,4 +41,9 @@ class AssemblyInstanceNoValueNodeItemImpl
   public String stringValue() {
     return "";
   }
+
+  @Override
+  protected String getValueSignature() {
+    return null;
+  }
 }

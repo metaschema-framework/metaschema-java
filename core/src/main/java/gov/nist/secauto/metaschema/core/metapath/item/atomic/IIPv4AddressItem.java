@@ -28,6 +28,11 @@ public interface IIPv4AddressItem extends IIPAddressItem {
     return MetaschemaDataTypeProvider.IP_V4_ADDRESS.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IIPv4AddressItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new IPv4 item using the provided {@code value}.
    *

@@ -50,4 +50,9 @@ abstract class AbstractOrphanedDefinitionNodeItem<D extends IDefinition, I exten
   public StaticContext getStaticContext() {
     return staticContext;
   }
+
+  @Override
+  protected String getValueSignature() {
+    return null;
+  }
 }

@@ -30,6 +30,11 @@ public interface IAnyUriItem extends IAnyAtomicItem {
     return MetaschemaDataTypeProvider.URI.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<? extends IAnyUriItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new URI item using the provided string {@code value}.
    *

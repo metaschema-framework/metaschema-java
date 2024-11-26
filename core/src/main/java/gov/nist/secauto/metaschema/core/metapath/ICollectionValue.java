@@ -95,4 +95,12 @@ public interface ICollectionValue {
    */
   @NonNull
   Stream<? extends IItem> flatten();
+
+  /**
+   * Get a representation of the value based on its type signature.
+   *
+   * @return the signature
+   */
+  @NonNull
+  String toSignature();
 }

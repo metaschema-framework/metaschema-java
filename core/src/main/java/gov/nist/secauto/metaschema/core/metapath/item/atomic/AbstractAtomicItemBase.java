@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -27,7 +28,21 @@ public abstract class AbstractAtomicItemBase<TYPE> implements IAnyAtomicItem {
   }
 
   @Override
+  public String toSignature() {
+    return ObjectUtils.notNull(new StringBuilder()
+        .append(getType().toSignature())
+        .append("(")
+        .append(getValueSignature())
+        .append(")")
+        .toString());
+  }
+
+  @NonNull
+  protected abstract String getValueSignature();
+
+  @NonNull
+  @Override
   public String toString() {
-    return asString();
+    return toSignature();
   }
 }

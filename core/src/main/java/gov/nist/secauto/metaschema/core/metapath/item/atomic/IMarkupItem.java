@@ -27,6 +27,11 @@ public interface IMarkupItem extends IAnyAtomicItem {
     return MarkupDataTypeProvider.MARKUP_TYPE;
   }
 
+  @Override
+  default IAtomicOrUnionType<? extends IMarkupItem> getType() {
+    return type();
+  }
+
   /**
    * Cast the provided type to this item type.
    *

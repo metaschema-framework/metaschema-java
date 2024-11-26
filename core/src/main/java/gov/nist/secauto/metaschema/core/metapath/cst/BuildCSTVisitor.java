@@ -58,6 +58,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Cast;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Castable;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.InstanceOf;
+import gov.nist.secauto.metaschema.core.metapath.cst.type.Treat;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.TypeTestSupport;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractKeySpecifier;
@@ -1121,7 +1122,13 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleTreatexpr(Metapath10.TreatexprContext ctx) {
-    throw new UnsupportedOperationException("expression not supported");
+    IExpression left = visit(ctx.castableexpr());
+
+    ISequenceType sequenceType = TypeTestSupport.parseSequenceType(
+        ObjectUtils.notNull(ctx.sequencetype()),
+        getContext());
+
+    return new Treat(left, sequenceType);
   }
 
   // =========================================================================

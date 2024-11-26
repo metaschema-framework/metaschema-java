@@ -27,6 +27,11 @@ public interface IIPAddressItem extends IAnyAtomicItem {
     return TypeConstants.IP_ADDRESS_TYPE;
   }
 
+  @Override
+  default IAtomicOrUnionType<? extends IIPAddressItem> getType() {
+    return type();
+  }
+
   /**
    * Get the "wrapped" IP address value.
    *

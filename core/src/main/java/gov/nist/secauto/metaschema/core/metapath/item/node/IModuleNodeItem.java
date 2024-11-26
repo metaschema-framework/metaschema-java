@@ -3,6 +3,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.model.IModule;
 
 import java.net.URI;
@@ -19,6 +20,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * be queried.
  */
 public interface IModuleNodeItem extends IDocumentBasedNodeItem, IFeatureNoDataValuedItem {
+  @NonNull
+  static IItemType type() {
+    return IItemType.document();
+  }
+
+  @Override
+  default IItemType getType() {
+    return type();
+  }
 
   /**
    * The Metaschema module this item is based on.

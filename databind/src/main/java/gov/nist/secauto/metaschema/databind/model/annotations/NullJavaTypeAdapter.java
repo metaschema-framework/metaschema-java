@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.databind.model.annotations.NullJavaTypeAdapter.VoidItem;
 
@@ -102,6 +103,16 @@ public final class NullJavaTypeAdapter
 
     @Override
     public IMapKey asMapKey() {
+      throw new UnsupportedOperationException(NOT_VALID);
+    }
+
+    @Override
+    public IItemType getType() {
+      throw new UnsupportedOperationException(NOT_VALID);
+    }
+
+    @Override
+    public String toSignature() {
       throw new UnsupportedOperationException(NOT_VALID);
     }
   }

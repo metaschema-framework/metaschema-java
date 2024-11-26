@@ -1,10 +1,12 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 
@@ -20,6 +22,15 @@ public interface IAssemblyNodeItem extends IModelNodeItem<IAssemblyDefinition, I
   @NonNull
   static IItemType type() {
     return IItemType.assembly();
+  }
+
+  @Override
+  default IKindTest<IAssemblyNodeItem> getType() {
+    StaticContext staticContext = getStaticContext();
+    return IItemType.assembly(
+        getQName(),
+        getDefinition().getDefinitionQName().toEQName(staticContext),
+        staticContext);
   }
 
   @Override

@@ -27,6 +27,11 @@ public interface IStringItem extends IAnyAtomicItem {
     return MetaschemaDataTypeProvider.STRING.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<? extends IStringItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new item using the provided string {@code value}.
    *

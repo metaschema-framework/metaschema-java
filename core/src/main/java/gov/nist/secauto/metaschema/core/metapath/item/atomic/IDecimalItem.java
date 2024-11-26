@@ -37,6 +37,11 @@ public interface IDecimalItem extends INumericItem {
     return MetaschemaDataTypeProvider.DECIMAL.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<? extends IDecimalItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new decimal item using the provided string {@code value}.
    *

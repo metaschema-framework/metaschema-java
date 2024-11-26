@@ -60,4 +60,9 @@ class AssemblyInstanceNodeItemImpl
         .map(INodeItem::stringValue)
         .collect(Collectors.joining()));
   }
+
+  @Override
+  protected String getValueSignature() {
+    return null;
+  }
 }

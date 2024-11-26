@@ -11,7 +11,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicIt
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUuidItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.UUID;
 
@@ -45,16 +44,6 @@ public class UuidItemImpl
   }
 
   @Override
-  public IMapKey asMapKey() {
-    return new MapKey();
-  }
-
-  @Override
-  public String asString() {
-    return ObjectUtils.notNull(asUuid().toString());
-  }
-
-  @Override
   public int hashCode() {
     return asString().hashCode();
   }
@@ -70,6 +59,16 @@ public class UuidItemImpl
   public IStringItem normalizeSpace() {
     // noop
     return this;
+  }
+
+  @Override
+  protected String getValueSignature() {
+    return "'" + asString() + "'";
+  }
+
+  @Override
+  public IMapKey asMapKey() {
+    return new MapKey();
   }
 
   private final class MapKey implements IMapKey {

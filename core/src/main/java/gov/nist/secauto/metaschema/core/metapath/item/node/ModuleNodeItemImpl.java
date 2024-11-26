@@ -11,6 +11,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 class ModuleNodeItemImpl
+    extends AbstractNodeItem
     implements IModuleNodeItem, IFeatureModelContainerItem {
   @NonNull
   private final IModule module;
@@ -50,5 +51,10 @@ class ModuleNodeItemImpl
   @Override
   public String stringValue() {
     return "";
+  }
+
+  @Override
+  protected String getValueSignature() {
+    return null;
   }
 }

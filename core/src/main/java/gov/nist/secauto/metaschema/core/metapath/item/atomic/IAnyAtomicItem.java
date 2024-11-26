@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.metapath.IPrintable;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
@@ -24,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * values that serve as the fundamental building blocks for complex data
  * structures in the Metaschema framework.
  */
-public interface IAnyAtomicItem extends IAtomicValuedItem, IPrintable {
+public interface IAnyAtomicItem extends IAtomicValuedItem {
   /**
    * Get the type information for this item.
    *
@@ -50,16 +49,21 @@ public interface IAnyAtomicItem extends IAtomicValuedItem, IPrintable {
   @NonNull
   Object getValue();
 
-  @Override
-  @NonNull
-  String toString();
+  /**
+   * Get a new {@link IStringItem} based on the the textual value of the item's
+   * "wrapped" value.
+   *
+   * @return a new string item
+   */
+  default IStringItem asStringItem() {
+    return IStringItem.valueOf(asString());
+  }
 
   /**
    * Get the item's string value.
    *
    * @return the string value value of the item
    */
-  @Override
   @NonNull
   String asString();
 
@@ -75,17 +79,6 @@ public interface IAnyAtomicItem extends IAtomicValuedItem, IPrintable {
    */
   @NonNull
   IMapKey asMapKey();
-
-  /**
-   * Get a new {@link IStringItem} based on the the textual value of the item's
-   * "wrapped" value.
-   *
-   * @return a new string item
-   */
-  @NonNull
-  default IStringItem asStringItem() {
-    return IStringItem.valueOf(asString());
-  }
 
   /**
    * Get the item's type adapter.

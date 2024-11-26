@@ -28,6 +28,11 @@ public interface INcNameItem extends IStringItem {
     return MetaschemaDataTypeProvider.NCNAME.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<INcNameItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new item using the provided string {@code value}.
    *

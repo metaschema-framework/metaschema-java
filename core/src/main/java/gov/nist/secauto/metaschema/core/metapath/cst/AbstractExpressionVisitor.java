@@ -50,6 +50,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Cast;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Castable;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.InstanceOf;
+import gov.nist.secauto.metaschema.core.metapath.cst.type.Treat;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -405,6 +406,11 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
 
   @Override
   public RESULT visitCastable(Castable expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
+  public RESULT visitTreat(Treat expr, CONTEXT context) {
     return visitChildren(expr, context);
   }
 }

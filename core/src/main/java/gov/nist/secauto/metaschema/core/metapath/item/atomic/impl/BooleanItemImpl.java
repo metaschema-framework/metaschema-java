@@ -67,7 +67,7 @@ public class BooleanItemImpl
   }
 
   @Override
-  public String toString() {
+  protected String getValueSignature() {
     return asString();
   }
 

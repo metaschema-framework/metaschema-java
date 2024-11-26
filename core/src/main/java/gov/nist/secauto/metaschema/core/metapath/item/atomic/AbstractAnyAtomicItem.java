@@ -36,5 +36,4 @@ public abstract class AbstractAnyAtomicItem<TYPE>
   public TYPE getValue() {
     return value;
   }
-
 }

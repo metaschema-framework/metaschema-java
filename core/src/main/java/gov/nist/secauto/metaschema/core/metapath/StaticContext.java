@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.qname.NamespaceCache;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -70,13 +71,15 @@ public final class StaticContext {
         .collect(Collectors.toUnmodifiableMap(
             (Function<? super Entry<String, String>, ? extends String>) Entry::getValue,
             Map.Entry::getKey,
-            (v1, v2) -> v2)));
+            (v1, v2) -> v1)));
   }
 
   @Nullable
   private final URI baseUri;
   @NonNull
-  private final Map<String, String> knownNamespaces;
+  private final Map<String, String> knownPrefixToNamespace;
+  @NonNull
+  private final Map<String, String> knownNamespacesToPrefix;
   @Nullable
   private final String defaultModelNamespace;
   @Nullable
@@ -133,7 +136,13 @@ public final class StaticContext {
 
   private StaticContext(Builder builder) {
     this.baseUri = builder.baseUri;
-    this.knownNamespaces = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(Map.copyOf(builder.namespaces)));
+    this.knownPrefixToNamespace = CollectionUtil.unmodifiableMap(ObjectUtils.notNull(Map.copyOf(builder.namespaces)));
+    this.knownNamespacesToPrefix = ObjectUtils.notNull(builder.namespaces.entrySet().stream()
+        .map(entry -> Map.entry(entry.getValue(), entry.getKey()))
+        .collect(Collectors.toUnmodifiableMap(
+            Map.Entry::getKey,
+            Map.Entry::getValue,
+            CustomCollectors.useFirstMapper())));
     this.defaultModelNamespace = builder.defaultModelNamespace;
     this.defaultFunctionNamespace = builder.defaultFunctionNamespace;
     this.useWildcardWhenNamespaceNotDefaulted = builder.useWildcardWhenNamespaceNotDefaulted;
@@ -171,10 +180,20 @@ public final class StaticContext {
    */
   @Nullable
   private String lookupNamespaceURIForPrefix(@NonNull String prefix) {
-    String retval = knownNamespaces.get(prefix);
+    String retval = knownPrefixToNamespace.get(prefix);
     if (retval == null) {
       // fall back to well-known namespaces
       retval = WELL_KNOWN_NAMESPACES.get(prefix);
+    }
+    return retval;
+  }
+
+  @Nullable
+  private String lookupPrefixForNamespaceURI(@NonNull String namespace) {
+    String retval = knownNamespacesToPrefix.get(namespace);
+    if (retval == null) {
+      // fall back to well-known namespaces
+      retval = WELL_KNOWN_URI_TO_PREFIX.get(namespace);
     }
     return retval;
   }
@@ -192,6 +211,21 @@ public final class StaticContext {
   public String lookupNamespaceForPrefix(@NonNull String prefix) {
     String result = lookupNamespaceURIForPrefix(prefix);
     return result == null ? null : result;
+  }
+
+  /**
+   * Get the prefix associated with the provided {@code namespace} as a string, if
+   * any is bound.
+   *
+   * @param namespace
+   *          the namespace
+   * @return the prefix string bound to the prefix, or {@code null} if no prefix
+   *         is bound to the namespace
+   */
+  @Nullable
+  public String lookupPrefixForNamespace(@NonNull String namespace) {
+    String result = lookupPrefixForNamespaceURI(namespace);
+    return result == null ? XMLConstants.DEFAULT_NS_PREFIX : result;
   }
 
   /**
@@ -551,7 +585,7 @@ public final class StaticContext {
   public Builder buildFrom() {
     Builder builder = builder();
     builder.baseUri = this.baseUri;
-    builder.namespaces.putAll(this.knownNamespaces);
+    builder.namespaces.putAll(this.knownPrefixToNamespace);
     builder.defaultModelNamespace = this.defaultModelNamespace;
     builder.defaultFunctionNamespace = this.defaultFunctionNamespace;
     return builder;

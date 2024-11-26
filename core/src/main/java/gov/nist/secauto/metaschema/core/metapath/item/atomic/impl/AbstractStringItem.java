@@ -86,4 +86,8 @@ public abstract class AbstractStringItem
     return IStringItem.valueOf(value);
   }
 
+  @Override
+  protected String getValueSignature() {
+    return "'" + getValue() + "'";
+  }
 }

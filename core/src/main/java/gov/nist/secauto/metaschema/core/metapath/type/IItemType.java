@@ -51,6 +51,7 @@ public interface IItemType {
    *
    * @return the function test
    */
+  @NonNull
   static IItemType function() {
     return AnyFunctionItemType.ANY_FUNCTION;
   }

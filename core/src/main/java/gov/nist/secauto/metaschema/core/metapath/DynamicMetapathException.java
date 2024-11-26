@@ -40,7 +40,7 @@ public class DynamicMetapathException
    * "/" or "//" in a path expression is an abbreviation for an initial step that
    * includes the clause <code>treat as document-node()</code>.
    */
-  public static final int CONTEXT_NODE_NOT_A_DOCUMENT_NODE = 50;
+  public static final int TREAT_DOES_NOT_MATCH_TYPE = 50;
 
   /**
    * Constructs a new exception with the provided {@code code}, {@code message},

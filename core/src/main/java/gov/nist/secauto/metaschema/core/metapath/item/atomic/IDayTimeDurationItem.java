@@ -30,6 +30,11 @@ public interface IDayTimeDurationItem extends IDurationItem {
     return MetaschemaDataTypeProvider.DAY_TIME_DURATION.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IDayTimeDurationItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new day time duration item using the provided string
    * {@code value}.

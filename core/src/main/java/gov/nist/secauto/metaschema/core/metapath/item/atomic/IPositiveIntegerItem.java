@@ -36,6 +36,11 @@ public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
     return MetaschemaDataTypeProvider.POSITIVE_INTEGER.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IPositiveIntegerItem> getType() {
+    return type();
+  }
+
   /**
    * Create an item from an existing integer value.
    *

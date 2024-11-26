@@ -1,8 +1,11 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 
@@ -25,6 +28,15 @@ public interface IFieldNodeItem
   @Override
   default IFieldNodeItem getNodeItem() {
     return this;
+  }
+
+  @Override
+  default IKindTest<IFieldNodeItem> getType() {
+    StaticContext staticContext = getStaticContext();
+    return IItemType.field(
+        getQName(),
+        getDefinition().getDefinitionQName().toEQName(staticContext),
+        staticContext);
   }
 
   @Override

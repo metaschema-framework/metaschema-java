@@ -38,6 +38,11 @@ public interface IDateTimeItem extends ITemporalItem {
     return MetaschemaDataTypeProvider.DATE_TIME.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<? extends IDateTimeItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new date/time item using the provided string {@code value}.
    *

@@ -50,6 +50,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Cast;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Castable;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.InstanceOf;
+import gov.nist.secauto.metaschema.core.metapath.cst.type.Treat;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -626,4 +627,15 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    * @return the visitation result or {@code null} if no result was produced
    */
   RESULT visitCastable(@NonNull Castable expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
+  RESULT visitTreat(@NonNull Treat expr, @NonNull CONTEXT context);
 }

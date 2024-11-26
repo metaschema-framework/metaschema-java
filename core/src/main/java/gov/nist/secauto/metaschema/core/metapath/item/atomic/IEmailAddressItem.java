@@ -27,6 +27,11 @@ public interface IEmailAddressItem extends IStringItem {
     return MetaschemaDataTypeProvider.EMAIL_ADDRESS.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IEmailAddressItem> getType() {
+    return type();
+  }
+
   /**
    * /** Construct a new email address item using the provided string
    * {@code value}.

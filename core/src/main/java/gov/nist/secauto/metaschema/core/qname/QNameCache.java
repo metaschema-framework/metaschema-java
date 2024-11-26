@@ -140,11 +140,6 @@ final class QNameCache {
     }
 
     @Override
-    public QName toQName(@NonNull String prefix) {
-      return new QName(getNamespace(), getLocalName(), prefix);
-    }
-
-    @Override
     public int hashCode() {
       return Objects.hashCode(qnameIndexPosition);
     }
@@ -164,7 +159,7 @@ final class QNameCache {
 
     @Override
     public String toString() {
-      return toEQName(null);
+      return toEQName();
     }
   }
 }

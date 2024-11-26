@@ -3,6 +3,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -10,6 +11,12 @@ public interface IDocumentNodeItem extends IDocumentBasedNodeItem {
   @NonNull
   static IItemType type() {
     return IItemType.document();
+  }
+
+  @Override
+  default IKindTest<IDocumentNodeItem> getType() {
+    return IItemType.document(
+        getRootAssemblyNodeItem().getType());
   }
 
   @Override

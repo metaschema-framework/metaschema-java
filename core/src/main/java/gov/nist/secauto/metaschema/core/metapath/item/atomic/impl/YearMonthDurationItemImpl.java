@@ -45,11 +45,6 @@ public class YearMonthDurationItemImpl
   }
 
   @Override
-  public IMapKey asMapKey() {
-    return new MapKey();
-  }
-
-  @Override
   public int hashCode() {
     return Objects.hash(asPeriod());
   }
@@ -59,6 +54,16 @@ public class YearMonthDurationItemImpl
   public boolean equals(Object obj) {
     return this == obj
         || obj instanceof IYearMonthDurationItem && compareTo((IYearMonthDurationItem) obj) == 0;
+  }
+
+  @Override
+  protected String getValueSignature() {
+    return "'" + asString() + "'";
+  }
+
+  @Override
+  public IMapKey asMapKey() {
+    return new MapKey();
   }
 
   private final class MapKey implements IMapKey {

@@ -77,4 +77,9 @@ class FieldInstanceNodeItemImpl
   public String stringValue() {
     return toAtomicItem().asString();
   }
+
+  @Override
+  protected String getValueSignature() {
+    return toAtomicItem().toSignature();
+  }
 }

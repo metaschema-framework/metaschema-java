@@ -48,6 +48,11 @@ public abstract class AbstractUriItem
     return asUri().hashCode();
   }
 
+  @Override
+  protected String getValueSignature() {
+    return "'" + asString() + "'";
+  }
+
   @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {

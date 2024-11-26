@@ -24,6 +24,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -147,7 +148,14 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
   }
 
   @Override
-  public String asString() {
-    return ObjectUtils.notNull(toString());
+  public String toSignature() {
+    return ObjectUtils.notNull(entrySet().stream()
+        .map(entry -> entry.getKey().getKey().toSignature() + "=" + entry.getValue().toSignature())
+        .collect(Collectors.joining(",", "[", "]")));
+  }
+
+  @Override
+  public String toString() {
+    return toSignature();
   }
 }

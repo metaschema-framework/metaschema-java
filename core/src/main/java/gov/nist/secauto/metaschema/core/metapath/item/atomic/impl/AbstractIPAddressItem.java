@@ -51,6 +51,11 @@ public abstract class AbstractIPAddressItem<TYPE extends IPAddress>
   }
 
   @Override
+  protected String getValueSignature() {
+    return "'" + asString() + "'";
+  }
+
+  @Override
   public IMapKey asMapKey() {
     return new MapKey();
   }

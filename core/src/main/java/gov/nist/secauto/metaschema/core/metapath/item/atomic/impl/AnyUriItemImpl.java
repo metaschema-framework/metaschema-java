@@ -32,4 +32,5 @@ public class AnyUriItemImpl
   public UriAdapter getJavaTypeAdapter() {
     return MetaschemaDataTypeProvider.URI;
   }
+
 }

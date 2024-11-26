@@ -173,48 +173,18 @@ public class MetapathExpression {
       retval = CONTEXT_NODE;
     } else {
       try {
-        Metapath10Lexer lexer = new Metapath10Lexer(CharStreams.fromString(path));
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(new FailingErrorListener());
-
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        Metapath10 parser = new Metapath10(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(new FailingErrorListener());
-        parser.setErrorHandler(new DefaultErrorStrategy() {
-
-          @Override
-          public void sync(Parser recognizer) {
-            // disable
-          }
-        });
-
+        Metapath10 parser = newParser(path);
         ParseTree tree = ObjectUtils.notNull(parser.metapath());
-
-        if (LOGGER.isDebugEnabled()) {
-          try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-            try (PrintStream ps = new PrintStream(os, true, StandardCharsets.UTF_8)) {
-              ParseTreePrinter printer = new ParseTreePrinter(ps);
-              printer.print(tree, Metapath10.ruleNames);
-              ps.flush();
-            }
-            LOGGER.atDebug().log(String.format("Metapath AST:%n%s", os.toString(StandardCharsets.UTF_8)));
-          } catch (IOException ex) {
-            LOGGER.atError().withThrowable(ex).log("An unexpected error occurred while closing the steam.");
-          }
-        }
-
+        logAst(tree);
         IExpression expr = new BuildCSTVisitor(context).visit(tree);
-
-        if (LOGGER.isDebugEnabled()) {
-          LOGGER.atDebug().log(String.format("Metapath CST:%n%s", CSTPrinter.toString(expr)));
-        }
+        logCst(expr);
         retval = new MetapathExpression(path, expr, context);
       } catch (StaticMetapathException ex) {
         String message = ex.getMessageText();
         throw new StaticMetapathException(
             ex.getCode(),
-            String.format("Unable to compile path '%s'.%s", path, message == null ? "" : " " + message));
+            String.format("Unable to compile path '%s'.%s", path, message == null ? "" : " " + message),
+            ex);
       } catch (MetapathException | ParseCancellationException ex) {
         String msg = String.format("Unable to compile Metapath '%s'", path);
         LOGGER.atError().withThrowable(ex).log(msg);
@@ -222,6 +192,47 @@ public class MetapathExpression {
       }
     }
     return retval;
+  }
+
+  private static void logCst(@NonNull IExpression expr) {
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.atDebug().log(String.format("Metapath CST:%n%s", CSTPrinter.toString(expr)));
+    }
+  }
+
+  private static void logAst(@NonNull ParseTree tree) {
+    if (LOGGER.isDebugEnabled()) {
+      try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+        try (PrintStream ps = new PrintStream(os, true, StandardCharsets.UTF_8)) {
+          ParseTreePrinter printer = new ParseTreePrinter(ps);
+          printer.print(tree, Metapath10.ruleNames);
+          ps.flush();
+        }
+        LOGGER.atDebug().log(String.format("Metapath AST:%n%s", os.toString(StandardCharsets.UTF_8)));
+      } catch (IOException ex) {
+        LOGGER.atError().withThrowable(ex).log("An unexpected error occurred while closing the steam.");
+      }
+    }
+  }
+
+  @NonNull
+  private static Metapath10 newParser(@NonNull String path) {
+    Metapath10Lexer lexer = new Metapath10Lexer(CharStreams.fromString(path));
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(new FailingErrorListener());
+
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    Metapath10 parser = new Metapath10(tokens);
+    parser.removeErrorListeners();
+    parser.addErrorListener(new FailingErrorListener());
+    parser.setErrorHandler(new DefaultErrorStrategy() {
+
+      @Override
+      public void sync(Parser recognizer) {
+        // disable
+      }
+    });
+    return parser;
   }
 
   /**

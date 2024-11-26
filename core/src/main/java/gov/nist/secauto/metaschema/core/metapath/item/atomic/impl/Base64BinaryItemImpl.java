@@ -44,6 +44,11 @@ public class Base64BinaryItemImpl
   }
 
   @Override
+  protected String getValueSignature() {
+    return "'" + asString() + "'";
+  }
+
+  @Override
   public IMapKey asMapKey() {
     return new MapKey();
   }

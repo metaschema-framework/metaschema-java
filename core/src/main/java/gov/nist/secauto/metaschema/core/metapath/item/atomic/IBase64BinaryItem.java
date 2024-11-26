@@ -29,6 +29,11 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
     return MetaschemaDataTypeProvider.BASE64.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IBase64BinaryItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new base64 encoded byte sequence item using the provided string
    * {@code value}.

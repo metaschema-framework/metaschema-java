@@ -102,7 +102,7 @@ public final class FnSubstring {
         fnSubstring(
             sourceString.asString(),
             startIndex,
-            sourceString.toString().length() - Math.max(startIndex, 1) + 1)));
+            sourceString.asString().length() - Math.max(startIndex, 1) + 1)));
   }
 
   @SuppressWarnings({ "unused", "PMD.OnlyOneReturn" })

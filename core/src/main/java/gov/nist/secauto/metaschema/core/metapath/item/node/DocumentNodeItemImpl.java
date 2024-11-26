@@ -12,6 +12,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 class DocumentNodeItemImpl
+    extends AbstractNodeItem
     implements IDocumentNodeItem, IFeatureModelContainerItem {
   @NonNull
   private final IRootAssemblyNodeItem root;
@@ -81,4 +82,8 @@ class DocumentNodeItemImpl
     return getRootAssemblyNodeItem().stringValue();
   }
 
+  @Override
+  protected String getValueSignature() {
+    return null;
+  }
 }

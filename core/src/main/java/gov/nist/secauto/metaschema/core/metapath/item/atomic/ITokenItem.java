@@ -27,6 +27,11 @@ public interface ITokenItem extends IStringItem {
     return MetaschemaDataTypeProvider.TOKEN.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<ITokenItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new item using the provided string {@code value}.
    *

@@ -33,6 +33,11 @@ public abstract class AbstractDecimalItem<TYPE>
   }
 
   @Override
+  protected String getValueSignature() {
+    return asString();
+  }
+
+  @Override
   public IMapKey asMapKey() {
     return new MapKey();
   }

@@ -34,6 +34,11 @@ public interface IUriReferenceItem extends IAnyUriItem {
     return MetaschemaDataTypeProvider.URI_REFERENCE.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IUriReferenceItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new URI item using the provided string {@code value}.
    *

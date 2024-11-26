@@ -37,4 +37,5 @@ class AssemblyOrphanedDefinitionNodeItemImpl
   public String stringValue() {
     return "";
   }
+
 }

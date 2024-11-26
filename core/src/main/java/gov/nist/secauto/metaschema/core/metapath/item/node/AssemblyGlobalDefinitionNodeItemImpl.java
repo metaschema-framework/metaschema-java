@@ -31,8 +31,4 @@ class AssemblyGlobalDefinitionNodeItemImpl
     return model.get();
   }
 
-  @Override
-  public String stringValue() {
-    return "";
-  }
 }

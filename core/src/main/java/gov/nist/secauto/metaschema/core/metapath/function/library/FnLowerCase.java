@@ -72,6 +72,6 @@ public final class FnLowerCase {
    */
   @NonNull
   public static IStringItem fnLowerCase(@NonNull IStringItem arg) {
-    return IStringItem.valueOf(ObjectUtils.notNull(arg.toString().toLowerCase(Locale.ROOT)));
+    return IStringItem.valueOf(ObjectUtils.notNull(arg.asString().toLowerCase(Locale.ROOT)));
   }
 }

@@ -688,6 +688,7 @@
 						<!-- Use of TCP to transmit events to the plugin -->
 						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
 						<useModulePath>false</useModulePath>
+						<redirectTestOutputToFile>true</redirectTestOutputToFile>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -734,7 +735,7 @@
 				<artifactId>maven-jxr-plugin</artifactId>
 				<reportSets>
 					<reportSet>
-            <id>default</id>
+            			<id>default</id>
 						<configuration>
 							<linkJavadoc>false</linkJavadoc>
 						</configuration>

@@ -53,14 +53,14 @@ public abstract class AbstractSequence<ITEM extends IItem>
   }
 
   @Override
-  public String asString() {
-    return ObjectUtils.notNull(toString());
+  public String toSignature() {
+    return ObjectUtils.notNull(safeStream()
+        .map(IItem::toSignature)
+        .collect(Collectors.joining(",", "(", ")")));
   }
 
   @Override
   public String toString() {
-    return safeStream()
-        .map(Object::toString)
-        .collect(Collectors.joining(",", "(", ")"));
+    return toSignature();
   }
 }

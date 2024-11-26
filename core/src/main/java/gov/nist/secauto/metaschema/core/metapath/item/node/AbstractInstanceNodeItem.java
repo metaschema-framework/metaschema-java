@@ -11,6 +11,7 @@ abstract class AbstractInstanceNodeItem<
     D extends IDefinition,
     I extends INamedInstance,
     P extends IModelNodeItem<? extends IModelDefinition, ? extends INamedInstance>>
+    extends AbstractNodeItem
     implements IDefinitionNodeItem<D, I> {
 
   @NonNull

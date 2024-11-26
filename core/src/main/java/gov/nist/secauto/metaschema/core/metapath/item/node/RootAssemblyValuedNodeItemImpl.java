@@ -10,6 +10,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 class RootAssemblyValuedNodeItemImpl
+    extends AbstractNodeItem
     implements IRootAssemblyNodeItem, IFeatureModelContainerItem {
   @NonNull
   private final IAssemblyDefinition definition;
@@ -65,5 +66,10 @@ class RootAssemblyValuedNodeItemImpl
     return ObjectUtils.notNull(modelItems()
         .map(INodeItem::stringValue)
         .collect(Collectors.joining()));
+  }
+
+  @Override
+  protected String getValueSignature() {
+    return null;
   }
 }

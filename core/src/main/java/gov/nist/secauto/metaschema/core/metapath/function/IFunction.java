@@ -69,6 +69,12 @@ public interface IFunction extends IItem {
     UNBOUNDED_ARITY;
   }
 
+  @Override
+  default IItemType getType() {
+    // TODO: implement this based on the signature
+    return IItemType.function();
+  }
+
   /**
    * Retrieve the name of the function.
    *
@@ -204,6 +210,7 @@ public interface IFunction extends IItem {
    *
    * @return the signature
    */
+  @Override
   @NonNull
   default String toSignature() {
     return ObjectUtils.notNull(String.format("%s(%s) as %s",

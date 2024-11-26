@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.IPrintable;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapItem;
@@ -29,7 +28,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the value type
  */
 public interface IMapItem<VALUE extends ICollectionValue>
-    extends IFunction, IItem, Map<IMapKey, VALUE>, IPrintable {
+    extends IFunction, IItem, Map<IMapKey, VALUE> {
   /**
    * Get the type information for this item.
    *
@@ -38,6 +37,11 @@ public interface IMapItem<VALUE extends ICollectionValue>
   @NonNull
   static IItemType type() {
     return IItemType.map();
+  }
+
+  @Override
+  default IItemType getType() {
+    return type();
   }
 
   /**

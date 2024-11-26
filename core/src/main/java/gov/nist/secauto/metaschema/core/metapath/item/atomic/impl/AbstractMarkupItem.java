@@ -43,6 +43,11 @@ public abstract class AbstractMarkupItem<TYPE extends IMarkupString<TYPE>>
     return asMarkup().hashCode();
   }
 
+  @Override
+  protected String getValueSignature() {
+    return "'" + asString() + "'";
+  }
+
   @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {

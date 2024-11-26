@@ -47,4 +47,14 @@ abstract class AbstractGlobalDefinitionNodeItem<D extends IDefinition, I extends
   public StaticContext getStaticContext() {
     return getMetaschemaNodeItem().getStaticContext();
   }
+
+  @Override
+  public String stringValue() {
+    return "";
+  }
+
+  @Override
+  protected String getValueSignature() {
+    return null;
+  }
 }

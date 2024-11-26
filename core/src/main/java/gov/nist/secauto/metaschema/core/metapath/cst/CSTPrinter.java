@@ -50,6 +50,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Cast;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Castable;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.InstanceOf;
+import gov.nist.secauto.metaschema.core.metapath.cst.type.Treat;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -393,6 +394,11 @@ public final class CSTPrinter {
     @Override
     public String visitCastable(Castable expr, State context) {
       return appendNode(expr, super.visitCastable(expr, context), context);
+    }
+
+    @Override
+    public String visitTreat(Treat expr, State context) {
+      return appendNode(expr, super.visitTreat(expr, context), context);
     }
   }
 

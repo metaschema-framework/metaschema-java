@@ -46,6 +46,11 @@ public interface IIntegerItem extends IDecimalItem {
     return MetaschemaDataTypeProvider.INTEGER.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<? extends IIntegerItem> getType() {
+    return type();
+  }
+
   /**
    * Create an item from an existing integer value.
    *

@@ -28,6 +28,11 @@ public interface IMarkupMultilineItem extends IMarkupItem {
     return MarkupDataTypeProvider.MARKUP_MULTILINE.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IMarkupMultilineItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new item using the provided {@code value}.
    *

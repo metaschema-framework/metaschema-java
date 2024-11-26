@@ -29,6 +29,11 @@ public interface IUuidItem extends IStringItem {
     return MetaschemaDataTypeProvider.UUID.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IUuidItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new UUID item using the provided string {@code value}.
    *

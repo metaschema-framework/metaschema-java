@@ -72,6 +72,6 @@ public final class FnUpperCase {
    */
   @NonNull
   public static IStringItem fnUpperCase(@NonNull IStringItem arg) {
-    return IStringItem.valueOf(ObjectUtils.notNull(arg.toString().toUpperCase(Locale.ROOT)));
+    return IStringItem.valueOf(ObjectUtils.notNull(arg.asString().toUpperCase(Locale.ROOT)));
   }
 }

@@ -72,7 +72,7 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
 
   @Override
   default String toSignature() {
-    return getQName().toEQName(null);
+    return getQName().toEQName();
   }
 
   /**

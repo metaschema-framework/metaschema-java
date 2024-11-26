@@ -32,6 +32,14 @@ public interface IItem extends ICollectionValue {
   }
 
   /**
+   * Get the type information for the item.
+   *
+   * @return the item's type information
+   */
+  @NonNull
+  IItemType getType();
+
+  /**
    * Get the item's "wrapped" value. This "wrapped" value may be:
    * <ul>
    * <li>In the case of an Assembly, a Java object representing the fields and

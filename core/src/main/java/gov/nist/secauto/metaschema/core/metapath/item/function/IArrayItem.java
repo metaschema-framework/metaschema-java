@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.IPrintable;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
@@ -42,7 +41,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the Metapath item type of array members
  */
 @SuppressWarnings({ "PMD.ShortMethodName", "PMD.ExcessivePublicCount" })
-public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, IItem, List<ITEM>, IPrintable {
+public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, IItem, List<ITEM> {
   /**
    * Get the type information for this item.
    *
@@ -51,6 +50,11 @@ public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, II
   @NonNull
   static IItemType type() {
     return IItemType.array();
+  }
+
+  @Override
+  default IItemType getType() {
+    return type();
   }
 
   /**

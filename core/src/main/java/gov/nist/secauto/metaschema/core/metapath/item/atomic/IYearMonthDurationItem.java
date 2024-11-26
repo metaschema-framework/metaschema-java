@@ -31,6 +31,11 @@ public interface IYearMonthDurationItem extends IDurationItem {
     return MetaschemaDataTypeProvider.YEAR_MONTH_DURATION.getItemType();
   }
 
+  @Override
+  default IAtomicOrUnionType<IYearMonthDurationItem> getType() {
+    return type();
+  }
+
   /**
    * Construct a new year month day duration item using the provided string
    * {@code value}.

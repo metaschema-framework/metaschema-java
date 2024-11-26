@@ -83,7 +83,9 @@ public interface IEnhancedQName {
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull QName qname) {
-    return of(ObjectUtils.notNull(qname.getNamespaceURI()), ObjectUtils.notNull(qname.getLocalPart()));
+    return of(
+        ObjectUtils.notNull(qname.getNamespaceURI()),
+        ObjectUtils.notNull(qname.getLocalPart()));
   }
 
   /**
@@ -129,6 +131,11 @@ public interface IEnhancedQName {
     return EQNameFactory.instance().newQName(namespace, localName);
   }
 
+  @NonNull
+  default String toEQName() {
+    return toEQName((NamespaceToPrefixResolver) null);
+  }
+
   /**
    * Generate a qualified name for this QName, use a prefix provided by the
    * resolver, or by prepending the namespace if no prefix can be resolved.
@@ -144,6 +151,21 @@ public interface IEnhancedQName {
     if (prefix == null && resolver != null) {
       prefix = resolver.resolve(namespace);
     }
+    return toEQName(namespace, getLocalName(), prefix);
+  }
+
+  @NonNull
+  default String toEQName(@NonNull StaticContext staticContext) {
+    String namespace = getNamespace();
+    String prefix = namespace.isEmpty() ? null : staticContext.lookupPrefixForNamespace(namespace);
+    return toEQName(namespace, getLocalName(), prefix);
+  }
+
+  @NonNull
+  private static String toEQName(
+      @NonNull String namespace,
+      @NonNull String localName,
+      @Nullable String prefix) {
 
     StringBuilder builder = new StringBuilder();
     if (prefix == null) {
@@ -156,7 +178,7 @@ public interface IEnhancedQName {
       builder.append(prefix)
           .append(':');
     }
-    return ObjectUtils.notNull(builder.append(getLocalName())
+    return ObjectUtils.notNull(builder.append(localName)
         .toString());
   }
 
@@ -178,7 +200,9 @@ public interface IEnhancedQName {
    * @return the name
    */
   @NonNull
-  QName toQName(@NonNull String prefix);
+  default QName toQName(@NonNull String prefix) {
+    return new QName(getNamespace(), getLocalName(), prefix);
+  }
 
   /**
    * Provides a callback for resolving namespace prefixes.
