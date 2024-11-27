@@ -11,24 +11,31 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Objects;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Represents a single function argument signature.
  */
 public interface IArgument {
+  @NonNull
+  static IArgument of(@NonNull IEnhancedQName name, @NonNull ISequenceType sequenceType) {
+    return new ArgumentImpl(name, sequenceType);
+  }
+
   /**
    * Get the argument's name.
    *
    * @return the argument's name
    */
   @NonNull
-  String getName();
+  IEnhancedQName getName();
 
   /**
    * Get information about the type of sequence supported by the argument.
@@ -49,6 +56,9 @@ public interface IArgument {
   /**
    * Get a new argument builder.
    *
+   * @param staticContext
+   *          used to resolve variable names
+   *
    * @return the new argument builder
    */
   @NonNull
@@ -56,11 +66,19 @@ public interface IArgument {
     return new Builder();
   }
 
+  @Nullable
+  private static String resolveArgumentName(@NonNull String prefix) {
+    if (!"".equals(prefix)) {
+      throw new UnsupportedOperationException("Lexical qualified names are not allowed.");
+    }
+    return "";
+  }
+
   /**
    * Used to create an argument's signature using a builder pattern.
    */
   final class Builder {
-    private String name;
+    private IEnhancedQName name;
     @NonNull
     private IItemType type;
     private Occurrence occurrence;
@@ -82,7 +100,7 @@ public interface IArgument {
       if (Objects.requireNonNull(name, "name").isBlank()) {
         throw new IllegalArgumentException("the name must be non-blank");
       }
-      this.name = name.trim();
+      this.name = EQNameFactory.instance().parseName(name, IArgument::resolveArgumentName);
       return this;
     }
 

@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.function;
 
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Objects;
 
@@ -13,17 +14,17 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 class ArgumentImpl implements IArgument {
   @NonNull
-  private final String name;
+  private final IEnhancedQName name;
   @NonNull
   private final ISequenceType sequenceType;
 
-  protected ArgumentImpl(@NonNull String name, @NonNull ISequenceType sequenceType) {
+  protected ArgumentImpl(@NonNull IEnhancedQName name, @NonNull ISequenceType sequenceType) {
     this.name = name;
     this.sequenceType = sequenceType;
   }
 
   @Override
-  public String getName() {
+  public IEnhancedQName getName() {
     return name;
   }
 
@@ -38,7 +39,7 @@ class ArgumentImpl implements IArgument {
     StringBuilder builder = new StringBuilder();
 
     // name
-    builder.append(getName())
+    builder.append(getName().toEQName())
         .append(" as ")
         .append(getSequenceType().toSignature());
 

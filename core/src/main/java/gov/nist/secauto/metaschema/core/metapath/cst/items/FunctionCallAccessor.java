@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.cst.AnonymousFunctionCall;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
@@ -20,6 +21,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -27,7 +30,7 @@ public class FunctionCallAccessor implements IExpression {
   @NonNull
   private final IExpression base;
   @NonNull
-  private final IExpression argument;
+  private final List<IExpression> arguments;
 
   /**
    * Construct a new functional call accessor.
@@ -39,9 +42,9 @@ public class FunctionCallAccessor implements IExpression {
    *          the value to find, which will be the key for a map or the index for
    *          an array
    */
-  public FunctionCallAccessor(@NonNull IExpression base, @NonNull IExpression keyOrIndex) {
+  public FunctionCallAccessor(@NonNull IExpression base, @NonNull List<IExpression> arguments) {
     this.base = base;
-    this.argument = keyOrIndex;
+    this.arguments = arguments;
   }
 
   /**
@@ -60,21 +63,35 @@ public class FunctionCallAccessor implements IExpression {
    * @return the argument
    */
   @NonNull
-  public IExpression getArgument() {
-    return argument;
+  public List<IExpression> getArguments() {
+    return arguments;
   }
 
   @SuppressWarnings("null")
   @Override
-  public List<? extends IExpression> getChildren() {
-    return List.of(getBase(), getArgument());
+  public List<IExpression> getChildren() {
+    return Stream.concat(Stream.of(getBase()), getArguments().stream())
+        .collect(Collectors.toUnmodifiableList());
   }
 
   @Override
   public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<?> target = getBase().accept(dynamicContext, focus);
     IItem collection = target.getFirstItem(true);
-    IAnyAtomicItem key = ISequence.of(getArgument().accept(dynamicContext, focus).atomize())
+
+    if (collection instanceof AnonymousFunctionCall) {
+      return ((AnonymousFunctionCall) collection).execute(
+          getArguments().stream()
+              .map(expr -> expr.accept(dynamicContext, focus))
+              .collect(Collectors.toUnmodifiableList()),
+          dynamicContext,
+          focus);
+    }
+
+    // the value to find, which will be the key for a map or the index for an array
+    IExpression argument = getArguments().stream().findFirst().get();
+
+    IAnyAtomicItem key = ISequence.of(argument.accept(dynamicContext, focus).atomize())
         .getFirstItem(false);
     if (key == null) {
       throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,

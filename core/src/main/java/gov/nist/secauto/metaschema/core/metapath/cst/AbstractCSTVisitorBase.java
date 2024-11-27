@@ -135,7 +135,48 @@ public abstract class AbstractCSTVisitorBase
    * @return the outer expression or {@code null} if no children exist to parse
    */
   @Nullable
-  protected <CONTEXT extends ParserRuleContext, T extends IExpression, R extends IExpression>
+  protected <CONTEXT extends ParserRuleContext, T, R, S extends List<R>>
+      List<R> nairyToList(
+          @NonNull CONTEXT context,
+          int startIndex,
+          int step,
+          @NonNull BiFunction<CONTEXT, Integer, R> parser) {
+    int numChildren = context.getChildCount();
+
+    List<R> retval = null;
+    if (startIndex < numChildren) {
+      retval = new ArrayList<>((numChildren - startIndex) / step);
+      for (int idx = startIndex; idx < numChildren; idx += step) {
+        R result = parser.apply(context, idx);
+        retval.add(result);
+      }
+    }
+    return retval;
+  }
+
+  /**
+   * Parse the provided context as an n-ary phrase.
+   *
+   * @param <CONTEXT>
+   *          the Java type of the antlr context to parse
+   * @param <T>
+   *          the Java type of the child expressions produced by this parser
+   * @param <R>
+   *          the Java type of the outer expression produced by the parser
+   * @param context
+   *          the antlr context to parse
+   * @param startIndex
+   *          the child index to start parsing on
+   * @param step
+   *          the increment to advance while parsing child expressions
+   * @param parser
+   *          a binary function used to produce child expressions
+   * @param supplier
+   *          a function used to produce the other expression
+   * @return the outer expression or {@code null} if no children exist to parse
+   */
+  @Nullable
+  protected <CONTEXT extends ParserRuleContext, T, R>
       R nairyToCollection(
           @NonNull CONTEXT context,
           int startIndex,

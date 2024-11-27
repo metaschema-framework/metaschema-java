@@ -220,6 +220,11 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   }
 
   @Override
+  public RESULT visitAnonymousFunctionCall(AnonymousFunctionCall expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
   public RESULT visitIntegerDivision(IntegerDivision expr, CONTEXT context) {
     return visitChildren(expr, context);
   }

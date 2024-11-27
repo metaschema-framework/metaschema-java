@@ -202,6 +202,11 @@ public final class CSTPrinter {
     }
 
     @Override
+    public String visitAnonymousFunctionCall(AnonymousFunctionCall expr, State context) {
+      return appendNode(expr, super.visitAnonymousFunctionCall(expr, context), context);
+    }
+
+    @Override
     public String visitIntegerDivision(IntegerDivision expr, State context) {
       return appendNode(expr, super.visitIntegerDivision(expr, context), context);
     }

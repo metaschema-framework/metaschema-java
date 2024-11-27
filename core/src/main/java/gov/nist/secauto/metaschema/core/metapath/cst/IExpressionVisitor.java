@@ -219,6 +219,17 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    *          the processing context
    * @return the visitation result or {@code null} if no result was produced
    */
+  RESULT visitAnonymousFunctionCall(@NonNull AnonymousFunctionCall expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
   RESULT visitIntegerDivision(@NonNull IntegerDivision expr, @NonNull CONTEXT context);
 
   /**

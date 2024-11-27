@@ -246,6 +246,40 @@ public abstract class AbstractAstVisitor<R>
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
+  // ============================================================
+  // https://www.w3.org/TR/xpath-31/#doc-xpath31-NamedFunctionRef
+  // ============================================================
+
+  @Override
+  public R visitNamedfunctionref(Metapath10.NamedfunctionrefContext ctx) {
+    throw new UnsupportedOperationException("expression not supported");
+  }
+
+  // ==============================================
+  // https://www.w3.org/TR/xpath-31/#id-inline-func
+  // ==============================================
+
+  @Override
+  public R visitFunctionitemexpr(Metapath10.FunctionitemexprContext ctx) {
+    assert ctx != null;
+    return delegateToChild(ctx);
+  }
+
+  /**
+   * Handle the provided expression.
+   *
+   * @param ctx
+   *          the provided expression context
+   * @return the result
+   */
+  protected abstract R handleInlinefunctionexpr(@NonNull Metapath10.InlinefunctionexprContext ctx);
+
+  @Override
+  public R visitInlinefunctionexpr(Metapath10.InlinefunctionexprContext ctx) {
+    assert ctx != null;
+    return handle(ctx, this::handleInlinefunctionexpr);
+  }
+
   // =======================================================================
   // Enclosed Expressions - https://www.w3.org/TR/xpath-31/#id-enclosed-expr
   // =======================================================================
@@ -1018,16 +1052,6 @@ public abstract class AbstractAstVisitor<R>
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }
 
-  @Override
-  public R visitNamedfunctionref(Metapath10.NamedfunctionrefContext ctx) {
-    throw new UnsupportedOperationException("expression not supported");
-  }
-
-  @Override
-  public R visitInlinefunctionexpr(Metapath10.InlinefunctionexprContext ctx) {
-    throw new UnsupportedOperationException("expression not supported");
-  }
-
   /*
    * ==========================================================
    * The following are handled inline by other expression types
@@ -1221,12 +1245,6 @@ public abstract class AbstractAstVisitor<R>
 
   @Override
   public R visitFunctionbody(Metapath10.FunctionbodyContext ctx) {
-    // should never be called, since this is handled by the parent expression
-    throw new IllegalStateException(ERR_NO_DELEGATION);
-  }
-
-  @Override
-  public R visitFunctionitemexpr(Metapath10.FunctionitemexprContext ctx) {
     // should never be called, since this is handled by the parent expression
     throw new IllegalStateException(ERR_NO_DELEGATION);
   }

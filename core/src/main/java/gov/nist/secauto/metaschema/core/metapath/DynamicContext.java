@@ -10,7 +10,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
-import gov.nist.secauto.metaschema.core.metapath.function.DefaultFunction.CallingContext;
+import gov.nist.secauto.metaschema.core.metapath.function.CallingContext;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction.FunctionProperty;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IUriResolver;
