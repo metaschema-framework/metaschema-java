@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -14,7 +14,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FOCA: Exceptions related to type casting.
  */
 public class CastFunctionException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "FOCA";
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFOCA0002">err:FOCA0002</a>:
@@ -52,7 +54,7 @@ public class CastFunctionException
    *          the exception message text
    */
   public CastFunctionException(int code, @NonNull IAnyAtomicItem item, String message) {
-    super(code, message);
+    super(PREFIX, code, message);
     this.item = item;
   }
 
@@ -70,7 +72,7 @@ public class CastFunctionException
    *          the original exception cause
    */
   public CastFunctionException(int code, @NonNull IAnyAtomicItem item, String message, Throwable cause) {
-    super(code, message, cause);
+    super(PREFIX, code, message, cause);
     this.item = item;
   }
 
@@ -82,10 +84,5 @@ public class CastFunctionException
   @NonNull
   public IAnyAtomicItem getItem() {
     return item;
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "FOCA";
   }
 }

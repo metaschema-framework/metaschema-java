@@ -14,8 +14,9 @@ import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IndexOutOfBoundsArrayMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.item.function.NegativeLengthArrayMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -91,7 +92,9 @@ public final class ArrayInsertBefore {
    * @param member
    *          the Metapath item to insert into the identified array
    * @return a new array containing the modification
-   * @throws ArrayException
+   * @throws NegativeLengthArrayMetapathException
+   *           if the position is negative
+   * @throws IndexOutOfBoundsArrayMetapathException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
@@ -115,7 +118,9 @@ public final class ArrayInsertBefore {
    * @param member
    *          the Metapath item to insert into the identified array
    * @return a new array containing the modification
-   * @throws ArrayException
+   * @throws NegativeLengthArrayMetapathException
+   *           if the position is negative
+   * @throws IndexOutOfBoundsArrayMetapathException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull

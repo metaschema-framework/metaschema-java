@@ -5,13 +5,17 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * MPTY: Exceptions related to Metapath type errors.
  */
 public class TypeMetapathException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "MPTY";
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPTY0004">err:MPTY0004</a>: It
    * is a <a href="https://www.w3.org/TR/xpath-31/#dt-type-error">type error</a>
@@ -57,7 +61,7 @@ public class TypeMetapathException
    *          the original exception cause
    */
   public TypeMetapathException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(PREFIX, code, message, cause);
   }
 
   /**
@@ -70,7 +74,7 @@ public class TypeMetapathException
    *          the exception message
    */
   public TypeMetapathException(int code, String message) {
-    super(code, message);
+    super(PREFIX, code, message);
   }
 
   /**
@@ -83,11 +87,6 @@ public class TypeMetapathException
    *          the original exception cause
    */
   public TypeMetapathException(int code, Throwable cause) {
-    super(code, cause);
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "MPTY";
+    super(PREFIX, code, cause);
   }
 }

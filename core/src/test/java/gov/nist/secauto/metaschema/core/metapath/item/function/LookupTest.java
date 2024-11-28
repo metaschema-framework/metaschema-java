@@ -156,9 +156,7 @@ public class LookupTest
         });
     Throwable cause = thrown.getCause();
     assertEquals(
-        ArrayException.INDEX_OUT_OF_BOUNDS,
-        cause instanceof ArrayException
-            ? ((ArrayException) cause).getCode()
-            : null);
+        IndexOutOfBoundsArrayMetapathException.class,
+        cause == null ? null : cause.getClass());
   }
 }

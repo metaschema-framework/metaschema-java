@@ -5,13 +5,17 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * FODT: Exceptions related to Date/Time/Duration errors.
  */
 public class DateTimeFunctionException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "FODT";
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFODT0001">err:FODT0001</a>:
@@ -49,7 +53,7 @@ public class DateTimeFunctionException
    *          the exception message
    */
   public DateTimeFunctionException(int code, String message) {
-    super(code, message);
+    super(PREFIX, code, message);
   }
 
   /**
@@ -64,7 +68,7 @@ public class DateTimeFunctionException
    *          the original exception cause
    */
   public DateTimeFunctionException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(PREFIX, code, message, cause);
   }
 
   /**
@@ -77,12 +81,6 @@ public class DateTimeFunctionException
    *          the original exception cause
    */
   public DateTimeFunctionException(int code, Throwable cause) {
-    super(code, cause);
+    super(PREFIX, code, cause);
   }
-
-  @Override
-  public String getCodePrefix() {
-    return "FODT";
-  }
-
 }

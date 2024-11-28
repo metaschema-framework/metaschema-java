@@ -5,12 +5,18 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * MPDY: Exceptions related to the Metapath dynamic context and dynamic
  * evaluation.
  */
 public class DynamicMetapathException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "MPDY";
 
   /**
    * the serial version UID.
@@ -52,7 +58,7 @@ public class DynamicMetapathException
    *          the exception message
    */
   public DynamicMetapathException(int code, String message) {
-    super(code, message);
+    super(PREFIX, code, message);
   }
 
   /**
@@ -67,7 +73,7 @@ public class DynamicMetapathException
    *          the original exception cause
    */
   public DynamicMetapathException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(PREFIX, code, message, cause);
   }
 
   /**
@@ -80,11 +86,6 @@ public class DynamicMetapathException
    *          the original exception cause
    */
   public DynamicMetapathException(int code, Throwable cause) {
-    super(code, cause);
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "MPDY";
+    super(PREFIX, code, cause);
   }
 }

@@ -5,10 +5,14 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.regex;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class RegularExpressionMetapathException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "MPRX";
   /**
    * the serial version UID.
    */
@@ -65,7 +69,7 @@ public class RegularExpressionMetapathException
    *          the original exception cause
    */
   public RegularExpressionMetapathException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(PREFIX, code, message, cause);
   }
 
   /**
@@ -78,7 +82,7 @@ public class RegularExpressionMetapathException
    *          the exception message
    */
   public RegularExpressionMetapathException(int code, String message) {
-    super(code, message);
+    super(PREFIX, code, message);
   }
 
   /**
@@ -91,11 +95,6 @@ public class RegularExpressionMetapathException
    *          the original exception cause
    */
   public RegularExpressionMetapathException(int code, Throwable cause) {
-    super(code, cause);
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "MPRX";
+    super(PREFIX, code, cause);
   }
 }

@@ -5,13 +5,19 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * MPST: Exceptions related to the Metapath static context and static
  * evaluation.
  */
 @SuppressWarnings("PMD.DataClass")
 public class StaticMetapathException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "MPST";
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPST0003">err:MPST0003</a>: It
    * is a <a href="https://www.w3.org/TR/xpath-31/#dt-static-error">static
@@ -133,7 +139,7 @@ public class StaticMetapathException
    *          the original exception cause
    */
   public StaticMetapathException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(PREFIX, code, message, cause);
   }
 
   /**
@@ -146,7 +152,7 @@ public class StaticMetapathException
    *          the exception message
    */
   public StaticMetapathException(int code, String message) {
-    super(code, message);
+    super(PREFIX, code, message);
   }
 
   /**
@@ -159,12 +165,6 @@ public class StaticMetapathException
    *          the original exception cause
    */
   public StaticMetapathException(int code, Throwable cause) {
-    super(code, cause);
+    super(PREFIX, code, cause);
   }
-
-  @Override
-  public String getCodePrefix() {
-    return "MPST";
-  }
-
 }
