@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;

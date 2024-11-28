@@ -5,7 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;

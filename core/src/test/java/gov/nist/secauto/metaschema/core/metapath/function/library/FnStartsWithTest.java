@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;

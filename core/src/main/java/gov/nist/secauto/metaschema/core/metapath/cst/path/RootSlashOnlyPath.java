@@ -6,9 +6,9 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;

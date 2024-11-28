@@ -6,10 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Executes a function call based on a specifier expression that is used to
- * dtermine the function and multiple argument expressions that are used to
+ * determine the function and multiple argument expressions that are used to
  * determine the function arguments.
  */
 public class DynamicFunctionCall implements IExpression {

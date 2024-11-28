@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

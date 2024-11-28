@@ -6,10 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -43,13 +43,13 @@ public class StaticFunctionCall implements IExpression {
    * Construct a new function call expression.
    *
    * @param functionSupplier
-   *          the function supplier
+   *          the function supplier, which is used to lazy fetch the function
+   *          allowing the containing Metapaths to parse even if a function does
+   *          not exist during the parsing phase.
    * @param arguments
    *          the expressions used to provide arguments to the function call
    */
   public StaticFunctionCall(@NonNull Supplier<IFunction> functionSupplier, @NonNull List<IExpression> arguments) {
-    // lazy fetches the function so that Metapaths can parse even if a function does
-    // not exist
     this.functionSupplier = ObjectUtils.notNull(Lazy.lazy(functionSupplier));
     this.arguments = arguments;
   }
@@ -62,8 +62,16 @@ public class StaticFunctionCall implements IExpression {
    * @throws StaticMetapathException
    *           if the function was not found
    */
+  @NonNull
   public IFunction getFunction() {
-    return functionSupplier.get();
+    IFunction function = functionSupplier.get();
+    if (function == null) {
+      throw new StaticMetapathException(
+          StaticMetapathException.NO_FUNCTION_MATCH,
+          String.format(
+              "No matching function found for the given name and arguments"));
+    }
+    return function;
   }
 
   @Override

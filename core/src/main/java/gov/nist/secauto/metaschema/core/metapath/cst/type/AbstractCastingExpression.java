@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;

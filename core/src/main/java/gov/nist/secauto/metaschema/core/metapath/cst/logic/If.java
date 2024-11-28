@@ -6,11 +6,11 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 

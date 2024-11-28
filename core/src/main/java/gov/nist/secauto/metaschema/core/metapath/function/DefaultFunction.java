@@ -6,10 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.function;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.AbstractFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 
 import java.util.Collections;
@@ -82,7 +82,9 @@ public class DefaultFunction
    * @param dynamicContext
    *          the dynamic evaluation context
    * @param focus
-   *          the current focus
+   *          the current focus item in the evaluation context. This represents
+   *          the context item for anonymous function evaluation. May be null for
+   *          functions that don't require context item access.
    * @return a sequence containing the result of the execution
    * @throws MetapathException
    *           if an error occurred while executing the function

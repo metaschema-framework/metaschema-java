@@ -355,7 +355,7 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull IDateTimeItem moment,
       @NonNull IDayTimeDurationItem duration) {
     return IDateTimeWithTimeZoneItem.valueOf(
-        ObjectUtils.notNull(moment.asZonedDateTime().plus(duration.asDuration())));
+        ObjectUtils.notNull(moment.asZonedDateTime().minus(duration.asDuration())));
   }
 
   /**

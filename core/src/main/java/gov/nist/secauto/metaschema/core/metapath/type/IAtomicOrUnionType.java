@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.type;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.NonAdapterAtomicItemType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;

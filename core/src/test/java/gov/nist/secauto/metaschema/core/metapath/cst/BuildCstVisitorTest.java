@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
@@ -35,6 +34,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.logic.If;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.ValueComparison;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUuidItem;

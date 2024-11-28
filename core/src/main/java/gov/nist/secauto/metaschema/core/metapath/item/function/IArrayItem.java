@@ -5,13 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.ArrayItemN;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;

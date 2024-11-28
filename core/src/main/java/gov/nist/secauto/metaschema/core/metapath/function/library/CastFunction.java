@@ -6,12 +6,12 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunctionExecutor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -37,16 +37,16 @@ public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctio
   @NonNull
   static <ITEM extends IAnyAtomicItem> IFunction signature(
       @NonNull IEnhancedQName name,
-      @NonNull IAtomicOrUnionType<?> resulingAtomicType,
+      @NonNull IAtomicOrUnionType<?> resultingAtomicType,
       @NonNull IAtomicOrUnionType.ICastExecutor<ITEM> executor) {
-    return signature(name.getNamespace(), name.getLocalName(), resulingAtomicType, executor);
+    return signature(name.getNamespace(), name.getLocalName(), resultingAtomicType, executor);
   }
 
   @NonNull
   static <ITEM extends IAnyAtomicItem> IFunction signature(
       @NonNull String namespace,
       @NonNull String name,
-      @NonNull IAtomicOrUnionType<?> resulingAtomicType,
+      @NonNull IAtomicOrUnionType<?> resultingAtomicType,
       @NonNull IAtomicOrUnionType.ICastExecutor<ITEM> executor) {
     return IFunction.builder()
         .name(name)
@@ -59,7 +59,7 @@ public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctio
             .type(IAnyAtomicItem.type())
             .zeroOrOne()
             .build())
-        .returnType(resulingAtomicType)
+        .returnType(resultingAtomicType)
         .returnZeroOrOne()
         .functionHandler(newCastExecutor(executor))
         .build();

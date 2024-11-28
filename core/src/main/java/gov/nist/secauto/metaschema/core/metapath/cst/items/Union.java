@@ -6,12 +6,12 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractNAryExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;

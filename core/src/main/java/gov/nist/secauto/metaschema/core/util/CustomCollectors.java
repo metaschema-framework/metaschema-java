@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.util;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
 import java.util.ArrayList;
 import java.util.Collections;

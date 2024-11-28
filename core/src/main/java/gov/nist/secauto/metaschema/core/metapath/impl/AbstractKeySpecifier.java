@@ -6,12 +6,12 @@
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
 import gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;

@@ -10,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 
 import java.util.List;
@@ -101,7 +101,7 @@ public class FunctionTestBase
       @NonNull List<? extends ISequence<?>> arguments) {
 
     DynamicContext context = dynamicContext == null ? new DynamicContext() : dynamicContext;
-    ISequence<?> focusSeqence = function.isFocusDepenent()
+    ISequence<?> focusSeqence = function.isFocusDependent()
         ? focus == null ? ISequence.empty() : focus
         : ISequence.empty();
     return (ISequence<R>) function.execute(

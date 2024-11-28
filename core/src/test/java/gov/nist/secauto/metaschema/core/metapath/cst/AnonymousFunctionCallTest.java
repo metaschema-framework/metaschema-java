@@ -5,14 +5,11 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,13 +22,21 @@ import org.junit.jupiter.api.Test;
 class AnonymousFunctionCallTest {
   private static final String NS = "http://example.com/ns";
 
+  /**
+   * Tests the basic functionality of anonymous function definition and execution.
+   * This test validates:
+   * <ul>
+   * <li>Function definition using the 'let' syntax</li>
+   * <li>Function execution with string parameters</li>
+   * <li>String concatenation within the function body</li>
+   * </ul>
+   */
   @Test
   void test() {
     StaticContext staticContext = StaticContext.builder()
         .namespace("ex", NS)
         .build();
     DynamicContext dynamicContext = new DynamicContext(staticContext);
-    dynamicContext.bindVariableValue(IEnhancedQName.of(NS, "var1"), ISequence.of(string("fn:empty")));
 
     String metapath = "let $function := function($str) as meta:string { fn:concat('extra ',$str) } "
         + "return $function('cool')";
@@ -44,4 +49,18 @@ class AnonymousFunctionCallTest {
             dynamicContext));
   }
 
+  @Test
+  void testMultipleParameters() {
+    // FIXME: Add test for function with multiple parameters
+  }
+
+  @Test
+  void testDifferentReturnTypes() {
+    // FIXME: Add test for functions returning different types
+  }
+
+  @Test
+  void testErrorCases() {
+    // FIXME: Add test for invalid function definitions
+  }
 }

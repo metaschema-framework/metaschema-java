@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.SequenceTypeImpl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;

@@ -3,18 +3,15 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst.items;
+package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.cst.AnonymousFunctionCall;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
 import gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
@@ -90,7 +87,10 @@ public class FunctionCallAccessor implements IExpression {
     }
 
     // the value to find, which will be the key for a map or the index for an array
-    IExpression argument = getArguments().stream().findFirst().get();
+    IExpression argument = getArguments().stream().findFirst()
+        .orElseThrow(() -> new StaticMetapathException(
+            StaticMetapathException.NO_FUNCTION_MATCH,
+            "No key provided for array or map lookup"));
 
     IAnyAtomicItem key = ISequence.of(argument.accept(dynamicContext, focus).atomize())
         .getFirstItem(false);

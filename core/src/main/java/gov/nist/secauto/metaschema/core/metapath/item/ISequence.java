@@ -3,13 +3,12 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.item;
 
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractSequence;
 import gov.nist.secauto.metaschema.core.metapath.impl.SequenceN;
 import gov.nist.secauto.metaschema.core.metapath.impl.SingletonSequence;
 import gov.nist.secauto.metaschema.core.metapath.impl.StreamSequence;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;

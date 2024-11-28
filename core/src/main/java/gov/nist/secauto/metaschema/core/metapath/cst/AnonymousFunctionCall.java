@@ -6,11 +6,11 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.AbstractFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -24,9 +24,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Executes a function call based on a specifier expression that is used to
- * dtermine the function and multiple argument expressions that are used to
- * determine the function arguments.
+ * Executes an unnamed function call based on a client provided Metapath
+ * expression that is declared inline within a Metapath expression.
  */
 public class AnonymousFunctionCall
     extends AbstractFunction
@@ -107,6 +106,10 @@ public class AnonymousFunctionCall
       @Nullable IItem focus) {
 
     DynamicContext subContext = dynamicContext.subContext();
+    if (arguments.size() != getArguments().size()) {
+      throw new IllegalArgumentException("Number of arguments does not match the number of parameters.");
+    }
+
     Iterator<? extends ISequence<?>> args = arguments.iterator();
     Iterator<IArgument> params = getArguments().iterator();
     while (args.hasNext() && params.hasNext()) {

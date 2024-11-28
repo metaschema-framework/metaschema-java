@@ -18,7 +18,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.util.Objects;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Represents a single function argument signature.
@@ -57,9 +56,6 @@ public interface IArgument {
   /**
    * Get a new argument builder.
    *
-   * @param staticContext
-   *          used to resolve variable names
-   *
    * @return the new argument builder
    */
   @NonNull
@@ -67,7 +63,7 @@ public interface IArgument {
     return new Builder();
   }
 
-  @Nullable
+  @NonNull
   private static String resolveArgumentName(@NonNull String prefix) {
     if (!"".equals(prefix)) {
       throw new UnsupportedOperationException("Lexical qualified names are not allowed.");

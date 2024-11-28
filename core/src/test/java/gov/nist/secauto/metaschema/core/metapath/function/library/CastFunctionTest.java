@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,11 +35,28 @@ class CastFunctionTest
 
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
+        // Boolean cases
         Arguments.of(string("ABCD0"), IBooleanItem.type(), bool(false)),
         Arguments.of(string("true"), IBooleanItem.type(), bool(true)),
         Arguments.of(string("0"), IBooleanItem.type(), bool(false)),
         Arguments.of(string("1"), IBooleanItem.type(), bool(true)),
-        Arguments.of(string("1234567"), IIntegerItem.type(), integer(1234567)));
+        Arguments.of(string("yes"), IBooleanItem.type(), bool(false)),
+        Arguments.of(string("no"), IBooleanItem.type(), bool(false)),
+        Arguments.of(string("TRUE"), IBooleanItem.type(), bool(true)),
+        Arguments.of(string(""), IBooleanItem.type(), bool(false)),
+        Arguments.of(string("   "), IBooleanItem.type(), bool(false)),
+        // Integer cases
+        Arguments.of(string("1234567"), IIntegerItem.type(), integer(1234567)),
+        Arguments.of(string("-1234567"), IIntegerItem.type(), integer(-1234567)),
+        Arguments.of(string("0"), IIntegerItem.type(), integer(0)),
+        Arguments.of(
+            string(ObjectUtils.notNull(Integer.toString(Integer.MAX_VALUE))),
+            IIntegerItem.type(),
+            integer(Integer.MAX_VALUE)),
+        Arguments.of(
+            string(ObjectUtils.notNull(Integer.toString(Integer.MIN_VALUE))),
+            IIntegerItem.type(),
+            integer(Integer.MIN_VALUE)));
   }
 
   @ParameterizedTest

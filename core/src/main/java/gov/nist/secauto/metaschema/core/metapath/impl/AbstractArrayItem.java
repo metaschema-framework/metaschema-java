@@ -6,10 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
@@ -75,7 +75,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
   }
 
   @Override
-  public boolean isFocusDepenent() {
+  public boolean isFocusDependent() {
     return false;
   }
 

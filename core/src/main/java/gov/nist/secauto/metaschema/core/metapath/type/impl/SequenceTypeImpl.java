@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;

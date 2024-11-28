@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.item;
 
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;

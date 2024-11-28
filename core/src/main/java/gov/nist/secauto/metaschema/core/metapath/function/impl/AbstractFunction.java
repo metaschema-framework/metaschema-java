@@ -7,15 +7,14 @@ package gov.nist.secauto.metaschema.core.metapath.function.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.function.CalledContext;
-import gov.nist.secauto.metaschema.core.metapath.function.DefaultFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
@@ -110,17 +109,15 @@ public abstract class AbstractFunction implements IFunction {
       assert argument != null;
       assert parameter != null;
 
-      retval.add(convertArgument(argument, parameter, dynamicContext));
+      retval.add(convertArgument(argument, parameter));
     }
     return CollectionUtil.unmodifiableList(retval);
   }
 
-  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<?> convertArgument(
       @NonNull IArgument argument,
-      @NonNull ISequence<?> parameter,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull ISequence<?> parameter) {
     // apply occurrence
     ISequence<?> retval = argument.getSequenceType().getOccurrence().getSequenceHandler().handle(parameter);
 
@@ -199,7 +196,7 @@ public abstract class AbstractFunction implements IFunction {
 
   private IItem getContextItem(@NonNull ISequence<?> focus) {
     IItem contextItem = focus.getFirstItem(true);
-    if (isFocusDepenent() && contextItem == null) {
+    if (isFocusDependent() && contextItem == null) {
       throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");
     }
     return contextItem;
@@ -266,7 +263,7 @@ public abstract class AbstractFunction implements IFunction {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getQName(), getArguments(), getProperties(), getResult());
+    return Objects.hash(getQName(), getArguments());
   }
 
   @Override
@@ -277,11 +274,9 @@ public abstract class AbstractFunction implements IFunction {
     if (obj == null || getClass() != obj.getClass()) {
       return false; // NOPMD - readability
     }
-    DefaultFunction other = (DefaultFunction) obj;
+    AbstractFunction other = (AbstractFunction) obj;
     return Objects.equals(getQName(), other.getQName())
-        && Objects.equals(getArguments(), other.getArguments())
-        && Objects.equals(getProperties(), other.getProperties())
-        && Objects.equals(getResult(), other.getResult());
+        && Objects.equals(getArguments(), other.getArguments());
   }
 
   @Override

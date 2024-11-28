@@ -6,11 +6,11 @@
 package gov.nist.secauto.metaschema.core.metapath.function;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
@@ -146,7 +146,7 @@ public interface IFunction extends IItem {
    *         otherwise
    * @see FunctionProperty#FOCUS_DEPENDENT
    */
-  default boolean isFocusDepenent() {
+  default boolean isFocusDependent() {
     return getProperties().contains(FunctionProperty.FOCUS_DEPENDENT);
   }
 

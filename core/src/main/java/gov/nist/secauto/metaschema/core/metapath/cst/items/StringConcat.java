@@ -6,11 +6,11 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractNAryExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnConcat;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 

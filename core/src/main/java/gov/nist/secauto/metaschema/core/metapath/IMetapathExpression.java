@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath;
 
@@ -5,6 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ConversionFu
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;

@@ -50,10 +50,11 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
   Object getValue();
 
   /**
-   * Get a new {@link IStringItem} based on the the textual value of the item's
-   * "wrapped" value.
+   * Converts this atomic item to a string item representation.
    *
-   * @return a new string item
+   * @return a new {@link IStringItem} containing the string representation of
+   *         this item
+   * @see #asString()
    */
   @NonNull
   default IStringItem asStringItem() {

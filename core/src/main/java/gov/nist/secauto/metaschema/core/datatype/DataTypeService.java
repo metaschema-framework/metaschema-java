@@ -218,7 +218,10 @@ public final class DataTypeService {
   }
 
   /**
-   * Get the collection of data type adapters provided by this service.
+   * Get the collection of all registered data type adapters provided by this
+   * service.
+   * <p>
+   * The returned collection is unmodifiable.
    *
    * @return the data type adapters
    */

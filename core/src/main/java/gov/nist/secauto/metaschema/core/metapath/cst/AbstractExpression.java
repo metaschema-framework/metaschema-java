@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
 

@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.decimal;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;

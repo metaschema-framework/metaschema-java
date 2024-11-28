@@ -14,7 +14,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstruc
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySquareConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.DecimalLiteral;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.EmptySequence;
-import gov.nist.secauto.metaschema.core.metapath.cst.items.FunctionCallAccessor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.IntegerLiteral;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.Intersect;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.MapConstructor;

@@ -6,8 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.item;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;

@@ -14,10 +14,10 @@ import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 

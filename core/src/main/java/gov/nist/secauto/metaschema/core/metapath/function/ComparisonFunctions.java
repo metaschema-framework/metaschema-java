@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnNot;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
@@ -211,39 +211,29 @@ public final class ComparisonFunctions {
    * @return the comparison result
    */
   @NonNull
-  public static IBooleanItem stringCompare(@NonNull IStringItem left, @NonNull Operator operator,
+  public static IBooleanItem stringCompare(
+      @NonNull IStringItem left,
+      @NonNull Operator operator,
       @NonNull IStringItem right) {
     int result = left.compareTo(right);
     boolean retval;
     switch (operator) {
     case EQ:
-      // retval = OperationFunctions.opNumericEqual(left.compare(right),
-      // IIntegerItem.ZERO);
       retval = result == 0;
       break;
     case GE:
-      // retval = OperationFunctions.opNumericGreaterThan(left.compare(right),
-      // IIntegerItem.NEGATIVE_ONE);
       retval = result >= 0;
       break;
     case GT:
-      // retval = OperationFunctions.opNumericGreaterThan(left.compare(right),
-      // IIntegerItem.ZERO);
       retval = result > 0;
       break;
     case LE:
-      // retval = OperationFunctions.opNumericLessThan(left.compare(right),
-      // IIntegerItem.ONE);
       retval = result <= 0;
       break;
     case LT:
-      // retval = OperationFunctions.opNumericLessThan(left.compare(right),
-      // IIntegerItem.ZERO);
       retval = result < 0;
       break;
     case NE:
-      // retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left.compare(right),
-      // IIntegerItem.ZERO));
       retval = result != 0;
       break;
     default:

@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
