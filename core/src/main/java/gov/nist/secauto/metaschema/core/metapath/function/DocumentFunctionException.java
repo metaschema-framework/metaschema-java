@@ -5,14 +5,18 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnDoc;
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * FODC: Exceptions representing document related errors.
  */
 public class DocumentFunctionException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "FODC";
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFODC0002">err:FODC0002</a>:
@@ -51,7 +55,7 @@ public class DocumentFunctionException
    *          the exception message
    */
   public DocumentFunctionException(int code, String message) {
-    super(code, message);
+    super(PREFIX, code, message);
   }
 
   /**
@@ -66,7 +70,7 @@ public class DocumentFunctionException
    *          the original exception cause
    */
   public DocumentFunctionException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(PREFIX, code, message, cause);
   }
 
   /**
@@ -79,12 +83,6 @@ public class DocumentFunctionException
    *          the original exception cause
    */
   public DocumentFunctionException(int code, Throwable cause) {
-    super(code, cause);
+    super(PREFIX, code, cause);
   }
-
-  @Override
-  public String getCodePrefix() {
-    return "FODC";
-  }
-
 }

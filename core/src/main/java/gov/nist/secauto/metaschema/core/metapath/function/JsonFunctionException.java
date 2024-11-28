@@ -5,10 +5,14 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class JsonFunctionException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "FOJS";
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFOJS0003">err:FOJS0003</a>:
@@ -39,7 +43,7 @@ public class JsonFunctionException
    *          the exception message
    */
   public JsonFunctionException(int code, String message) {
-    super(code, message);
+    super(PREFIX, code, message);
   }
 
   /**
@@ -54,7 +58,7 @@ public class JsonFunctionException
    *          the original exception cause
    */
   public JsonFunctionException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(PREFIX, code, message, cause);
   }
 
   /**
@@ -67,11 +71,6 @@ public class JsonFunctionException
    *          the original exception cause
    */
   public JsonFunctionException(int code, Throwable cause) {
-    super(code, cause);
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "FOJS";
+    super(PREFIX, code, cause);
   }
 }

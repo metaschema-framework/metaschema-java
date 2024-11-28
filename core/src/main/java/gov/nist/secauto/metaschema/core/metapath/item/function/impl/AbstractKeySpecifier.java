@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.impl;
+package gov.nist.secauto.metaschema.core.metapath.item.function.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
@@ -14,10 +14,10 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IndexOutOfBoundsArrayMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -174,8 +174,8 @@ public abstract class AbstractKeySpecifier implements IKeySpecifier {
       try {
         return ObjectUtils.notNull(Stream.ofNullable(ArrayGet.get(targetItem, index)));
       } catch (IndexOutOfBoundsException ex) {
-        throw new ArrayException(
-            ArrayException.INDEX_OUT_OF_BOUNDS,
+        throw new IndexOutOfBoundsArrayMetapathException(
+            targetItem,
             String.format("The index '%d' is outside the range of values for the array size '%d'.",
                 index + 1,
                 targetItem.size()),
@@ -243,8 +243,8 @@ public abstract class AbstractKeySpecifier implements IKeySpecifier {
               try {
                 return Stream.ofNullable(ArrayGet.get(targetItem, index));
               } catch (IndexOutOfBoundsException ex) {
-                throw new ArrayException(
-                    ArrayException.INDEX_OUT_OF_BOUNDS,
+                throw new IndexOutOfBoundsArrayMetapathException(
+                    targetItem,
                     String.format("The index %d is outside the range of values for the array size '%d'.",
                         index + 1,
                         targetItem.size()),

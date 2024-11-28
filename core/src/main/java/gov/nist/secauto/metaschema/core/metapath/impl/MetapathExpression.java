@@ -3,8 +3,12 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
@@ -40,7 +44,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 @SuppressWarnings({
     "PMD.CouplingBetweenObjects" // necessary since this class aggregates functionality
 })
-class MetapathExpression implements IMetapathExpression {
+public class MetapathExpression
+    extends AbstractMetapathExpression {
 
   /**
    * The Metapath expression identifying the current context node.
@@ -49,13 +54,8 @@ class MetapathExpression implements IMetapathExpression {
   public static final MetapathExpression CONTEXT_NODE
       = new MetapathExpression(".", ContextItem.instance(), StaticContext.instance());
   private static final Logger LOGGER = LogManager.getLogger(MetapathExpression.class);
-
-  @NonNull
-  private final String path;
   @NonNull
   private final IExpression expression;
-  @NonNull
-  private final StaticContext staticContext;
 
   /**
    * Compiles a Metapath expression string using the provided static context.
@@ -152,14 +152,8 @@ class MetapathExpression implements IMetapathExpression {
       @NonNull String path,
       @NonNull IExpression expr,
       @NonNull StaticContext staticContext) {
-    this.path = path;
+    super(path, staticContext);
     this.expression = expr;
-    this.staticContext = staticContext;
-  }
-
-  @Override
-  public String getPath() {
-    return path;
   }
 
   /**
@@ -170,11 +164,6 @@ class MetapathExpression implements IMetapathExpression {
   @NonNull
   protected IExpression getASTNode() {
     return expression;
-  }
-
-  @Override
-  public StaticContext getStaticContext() {
-    return staticContext;
   }
 
   @Override
@@ -196,12 +185,6 @@ class MetapathExpression implements IMetapathExpression {
               ex.getLocalizedMessage()),
           ex);
     }
-  }
-
-  @FunctionalInterface
-  interface ConversionFunction {
-    @Nullable
-    Object convert(@NonNull ISequence<?> sequence);
   }
 
 }

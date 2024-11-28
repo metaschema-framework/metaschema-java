@@ -145,14 +145,13 @@ public class LookupTest
 
   @Test
   void testUnaryLookupMissingMember() {
-    ArrayException thrown = assertThrows(
-        ArrayException.class,
+    IndexOutOfBoundsArrayMetapathException thrown = assertThrows(
+        IndexOutOfBoundsArrayMetapathException.class,
         () -> {
           ISequence<?> result = IMetapathExpression.compile("([1,2,3], [1,2,5], [1,2])[?3 = 5]")
               .evaluate(null, newDynamicContext());
           assertNotNull(result);
           result.safeStream();
         });
-    assertEquals(ArrayException.INDEX_OUT_OF_BOUNDS, thrown.getCode());
   }
 }

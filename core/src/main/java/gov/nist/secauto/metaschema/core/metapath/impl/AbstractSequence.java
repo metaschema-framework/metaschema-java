@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.impl;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.function.impl.ImmutableCollections;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Iterator;
