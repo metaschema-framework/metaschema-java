@@ -18,8 +18,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class IndexOutOfBoundsArrayMetapathException
     extends ArrayMetapathException {
 
+  private static final long serialVersionUID = 1L;
+
   /**
-   * Constructs a new exception with the provided {@code code}, {@code message},
+   * Constructs a new exception with the provided {@code item}, {@code message},
    * and no cause.
    *
    * @param item
@@ -32,7 +34,7 @@ public class IndexOutOfBoundsArrayMetapathException
   }
 
   /**
-   * Constructs a new exception with the provided {@code code}, {@code message},
+   * Constructs a new exception with the provided {@code item}, {@code message},
    * and {@code cause}.
    *
    * @param item
@@ -48,7 +50,7 @@ public class IndexOutOfBoundsArrayMetapathException
   }
 
   /**
-   * Constructs a new exception with the provided {@code code}, no message, and
+   * Constructs a new exception with the provided {@code item}, no message, and
    * the {@code cause}.
    *
    * @param item
