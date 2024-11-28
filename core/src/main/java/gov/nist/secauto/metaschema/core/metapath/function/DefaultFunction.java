@@ -77,8 +77,6 @@ public class DefaultFunction
    * Execute the provided function using the provided arguments, dynamic context,
    * and focus.
    *
-   * @param function
-   *          the signature of the function
    * @param arguments
    *          the function arguments
    * @param dynamicContext

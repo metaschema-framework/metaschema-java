@@ -45,6 +45,11 @@ public class AnonymousFunctionCall
    * Construct a new function call expression.
    *
    * @param arguments
+   *          the parameter declarations for the function call
+   * @param result
+   *          the expected result of the function call
+   * @param body
+   *          the Metapath expression that implements the logic of the function
    */
   public AnonymousFunctionCall(
       @NonNull List<IArgument> arguments,

@@ -12,7 +12,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,8 +42,8 @@ class ArrayTailTest
   @MethodSource("provideValues")
   void testExpression(@NonNull IArrayItem<?> expected, @NonNull String metapath) {
 
-    IArrayItem<?> result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext());
+    IArrayItem<?> result = IMetapathExpression.compile(metapath)
+        .evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext());
     assertEquals(expected, result);
   }
 }

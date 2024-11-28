@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,8 +36,8 @@ class FnEndsWithTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull IBooleanItem expected, @NonNull String metapath) {
-    IBooleanItem result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext());
+    IBooleanItem result = IMetapathExpression.compile(metapath)
+        .evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext());
     assertEquals(expected, result);
   }
 }

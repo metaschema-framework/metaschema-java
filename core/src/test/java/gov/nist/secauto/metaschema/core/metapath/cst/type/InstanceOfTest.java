@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
@@ -85,8 +85,8 @@ class InstanceOfTest
         IEnhancedQName.of("M"),
         IMapItem.of(integer(0), string("no"), integer(1), string("yes")).toSequence());
 
-    MetapathExpression metapath = MetapathExpression.compile(test);
-    Boolean result = metapath.evaluateAs(null, MetapathExpression.ResultType.BOOLEAN, dynamicContext);
+    Boolean result = IMetapathExpression.compile(test)
+        .evaluateAs(null, IMetapathExpression.ResultType.BOOLEAN, dynamicContext);
 
     assertEquals(
         expected,
@@ -140,14 +140,13 @@ class InstanceOfTest
     StaticContext staticContext = StaticContext.builder()
         .namespace("x", NS)
         .build();
-    MetapathExpression metapath = MetapathExpression.compile(test, staticContext);
-
     DynamicContext dynamicContext = new DynamicContext(staticContext);
     dynamicContext.bindVariableValue(
         IEnhancedQName.of("M"),
         IMapItem.of(integer(0), string("no"), integer(1), string("yes")).toSequence());
 
-    Boolean result = metapath.evaluateAs(documentNodeItem, MetapathExpression.ResultType.BOOLEAN, dynamicContext);
+    Boolean result = IMetapathExpression.compile(test, staticContext)
+        .evaluateAs(documentNodeItem, IMetapathExpression.ResultType.BOOLEAN, dynamicContext);
 
     assertEquals(
         expected,

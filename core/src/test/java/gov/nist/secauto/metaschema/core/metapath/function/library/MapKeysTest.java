@@ -9,8 +9,8 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import org.junit.jupiter.api.Test;
@@ -23,8 +23,8 @@ class MapKeysTest
 
   @Test
   void test() {
-    ISequence<IAnyAtomicItem> result = MetapathExpression.compile("map:keys(map{1:\"yes\", 2:\"no\"})")
-        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE);
+    ISequence<IAnyAtomicItem> result = IMetapathExpression.compile("map:keys(map{1:\"yes\", 2:\"no\"})")
+        .evaluate(null);
     assert result != null;
 
     // use a set to allow any ordering of the keys, since we have no control over

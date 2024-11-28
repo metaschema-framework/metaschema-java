@@ -6,9 +6,8 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ResultType;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
@@ -161,11 +160,11 @@ public interface IIndex {
       @NonNull INodeItem item,
       @NonNull IKeyField keyField,
       @NonNull DynamicContext dynamicContext) {
-    MetapathExpression keyMetapath = keyField.getTargetMetapath();
+    IMetapathExpression keyMetapath = keyField.getTargetMetapath();
 
     IItem keyItem;
     try {
-      keyItem = keyMetapath.evaluateAs(item, ResultType.ITEM, dynamicContext);
+      keyItem = keyMetapath.evaluateAs(item, IMetapathExpression.ResultType.ITEM, dynamicContext);
     } catch (InvalidTypeMetapathException ex) {
       throw new MetapathException("Key path did not result in a single item", ex);
     }
@@ -193,7 +192,7 @@ public interface IIndex {
    *          the current key value
    * @return the final key value
    */
-  private static String applyPattern(@NonNull MetapathExpression keyMetapath, @NonNull String keyValue,
+  private static String applyPattern(@NonNull IMetapathExpression keyMetapath, @NonNull String keyValue,
       @NonNull Pattern pattern) {
     Matcher matcher = pattern.matcher(keyValue);
     if (!matcher.matches()) {

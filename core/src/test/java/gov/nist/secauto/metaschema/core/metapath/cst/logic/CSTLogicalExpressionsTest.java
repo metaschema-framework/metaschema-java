@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -65,7 +65,7 @@ class CSTLogicalExpressionsTest
     ISequence<?> result = expr.accept(dynamicContext, focus);
     assertEquals(ISequence.of(expectedResult), result);
 
-    result = MetapathExpression.compile(ObjectUtils.notNull(
+    result = IMetapathExpression.compile(ObjectUtils.notNull(
         new StringBuilder()
             .append(bool1.toBoolean() ? "true()" : "false()")
             .append(" and ")
@@ -109,7 +109,7 @@ class CSTLogicalExpressionsTest
     ISequence<?> result = expr.accept(dynamicContext, focus);
     assertEquals(ISequence.of(expectedResult), result, "Sequence does not match");
 
-    result = MetapathExpression.compile(ObjectUtils.notNull(
+    result = IMetapathExpression.compile(ObjectUtils.notNull(
         new StringBuilder()
             .append(bool1.toBoolean() ? "true()" : "false()")
             .append(" or ")

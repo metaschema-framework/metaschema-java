@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.model.xml;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnPath;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
@@ -42,7 +42,7 @@ public class MetaConstraintLoaderTest {
         Paths.get("metaschema/examples/computer-example.xml").toUri());
     IXmlMetaschemaModule module = loader.load(moduleUri);
 
-    MetapathExpression expression = MetapathExpression.compile("//@id", module.getModuleStaticContext());
+    IMetapathExpression expression = IMetapathExpression.compile("//@id", module.getModuleStaticContext());
     IModuleNodeItem moduleItem = INodeItemFactory.instance().newModuleNodeItem(module);
     for (IItem item : expression.evaluate(moduleItem)) {
       IDefinitionNodeItem<?, ?> nodeItem = (IDefinitionNodeItem<?, ?>) item;

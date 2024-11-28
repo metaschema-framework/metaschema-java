@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -24,7 +24,7 @@ public class DefaultLet implements ILet {
   @NonNull
   private final IEnhancedQName name;
   @NonNull
-  private final MetapathExpression valueExpression;
+  private final IMetapathExpression valueExpression;
   @NonNull
   private final ISource source;
   @Nullable
@@ -44,7 +44,7 @@ public class DefaultLet implements ILet {
    */
   public DefaultLet(
       @NonNull IEnhancedQName name,
-      @NonNull MetapathExpression metapath,
+      @NonNull IMetapathExpression metapath,
       @NonNull ISource source,
       @Nullable MarkupMultiline remarks) {
     this.name = name;
@@ -59,7 +59,7 @@ public class DefaultLet implements ILet {
   }
 
   @Override
-  public MetapathExpression getValueExpression() {
+  public IMetapathExpression getValueExpression() {
     return valueExpression;
   }
 

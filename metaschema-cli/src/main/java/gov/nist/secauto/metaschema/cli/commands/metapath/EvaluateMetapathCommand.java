@@ -13,8 +13,8 @@ import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionExcepti
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.DefaultItemWriter;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemWriter;
@@ -192,8 +192,8 @@ class EvaluateMetapathCommand
 
     try {
       // Parse and compile the Metapath expression
-      MetapathExpression compiledMetapath = MetapathExpression.compile(expression, staticContext);
-      ISequence<?> sequence = compiledMetapath.evaluate(item, new DynamicContext(staticContext));
+      ISequence<?> sequence = IMetapathExpression.compile(expression, staticContext)
+          .evaluate(item, new DynamicContext(staticContext));
 
       // handle the metapath results
       try (Writer stringWriter = new StringWriter()) {

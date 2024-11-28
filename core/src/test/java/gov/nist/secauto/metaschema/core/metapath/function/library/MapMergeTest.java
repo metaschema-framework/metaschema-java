@@ -13,7 +13,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.LookupTest;
 
@@ -85,8 +85,8 @@ class MapMergeTest
   @MethodSource("provideValues")
   void testExpression(@NonNull IItem expected, @NonNull String metapath) {
 
-    IItem result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext());
+    IItem result = IMetapathExpression.compile(metapath)
+        .evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext());
     assertEquals(expected, result);
   }
 }

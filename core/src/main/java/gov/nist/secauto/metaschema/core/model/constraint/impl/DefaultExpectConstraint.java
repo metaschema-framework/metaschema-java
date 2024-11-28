@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
@@ -31,7 +31,7 @@ public final class DefaultExpectConstraint
     extends AbstractConfigurableMessageConstraint
     implements IExpectConstraint {
   @NonNull
-  private final Lazy<MetapathExpression> testMetapath;
+  private final Lazy<IMetapathExpression> testMetapath;
 
   /**
    * Construct a new expect constraint.
@@ -73,7 +73,7 @@ public final class DefaultExpectConstraint
       @Nullable MarkupMultiline remarks) {
     super(id, formalName, description, source, level, target, properties, message, remarks);
     this.testMetapath = ObjectUtils.notNull(
-        Lazy.lazy(() -> MetapathExpression.compile(
+        Lazy.lazy(() -> IMetapathExpression.compile(
             test,
             source.getStaticContext())));
   }
@@ -84,7 +84,7 @@ public final class DefaultExpectConstraint
    * @return the compiled Metapath expression
    */
   @NonNull
-  public MetapathExpression getTestMetapath() {
+  public IMetapathExpression getTestMetapath() {
     return ObjectUtils.notNull(testMetapath.get());
   }
 

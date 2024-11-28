@@ -37,6 +37,11 @@ public abstract class AbstractAtomicItemBase<TYPE> implements IAnyAtomicItem {
         .toString());
   }
 
+  /**
+   * Get the string to use for the item's value in the item's signature.
+   *
+   * @return the value string
+   */
   @NonNull
   protected abstract String getValueSignature();
 

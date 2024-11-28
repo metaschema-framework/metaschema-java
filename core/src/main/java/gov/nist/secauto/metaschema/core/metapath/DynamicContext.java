@@ -10,7 +10,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
-import gov.nist.secauto.metaschema.core.metapath.function.CallingContext;
+import gov.nist.secauto.metaschema.core.metapath.function.CalledContext;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction.FunctionProperty;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IUriResolver;
@@ -75,7 +75,7 @@ public class DynamicContext { // NOPMD - intentional data class
     @NonNull
     private final Map<URI, IDocumentNodeItem> availableDocuments;
     @NonNull
-    private final Map<CallingContext, ISequence<?>> functionResultCache;
+    private final Map<CalledContext, ISequence<?>> functionResultCache;
     @Nullable
     private CachingLoader documentLoader;
     @NonNull
@@ -92,7 +92,7 @@ public class DynamicContext { // NOPMD - intentional data class
       this.functionResultCache = ObjectUtils.notNull(Caffeine.newBuilder()
           .maximumSize(5000)
           .expireAfterAccess(10, TimeUnit.MINUTES)
-          .<CallingContext, ISequence<?>>build().asMap());
+          .<CalledContext, ISequence<?>>build().asMap());
       this.configuration = new DefaultConfiguration<>();
       this.configuration.enableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);
     }
@@ -194,7 +194,7 @@ public class DynamicContext { // NOPMD - intentional data class
    * @return the cached result sequence for the function call
    */
   @Nullable
-  public ISequence<?> getCachedResult(@NonNull CallingContext callingContext) {
+  public ISequence<?> getCachedResult(@NonNull CalledContext callingContext) {
     return sharedState.functionResultCache.get(callingContext);
   }
 
@@ -208,7 +208,7 @@ public class DynamicContext { // NOPMD - intentional data class
    * @param result
    *          the function call result
    */
-  public void cacheResult(@NonNull CallingContext callingContext, @NonNull ISequence<?> result) {
+  public void cacheResult(@NonNull CalledContext callingContext, @NonNull ISequence<?> result) {
     ISequence<?> old = sharedState.functionResultCache.put(callingContext, result);
     assert old == null;
   }

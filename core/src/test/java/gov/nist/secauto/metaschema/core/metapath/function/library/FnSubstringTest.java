@@ -9,7 +9,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -65,8 +65,8 @@ class FnSubstringTest
   void testExpression(@NonNull IStringItem expected, @NonNull String metapath) {
     assertEquals(
         expected,
-        MetapathExpression.compile(metapath)
-            .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext()));
+        IMetapathExpression.compile(metapath)
+            .evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext()));
   }
 
 }

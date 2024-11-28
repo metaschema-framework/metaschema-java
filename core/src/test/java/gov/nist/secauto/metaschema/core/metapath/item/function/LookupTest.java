@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -108,9 +108,7 @@ public class LookupTest
   @ParameterizedTest
   @MethodSource("functionCallLookupValues")
   void testFunctionCallLookup(@NonNull ISequence<?> expected, @NonNull String metapath) {
-    ISequence<?> result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE, newDynamicContext());
-    assertEquals(expected, result);
+    assertEquals(expected, IMetapathExpression.compile(metapath).evaluate(null, newDynamicContext()));
   }
 
   private static Stream<Arguments> postfixLookupValues() { // NOPMD - false positive
@@ -142,9 +140,7 @@ public class LookupTest
   @ParameterizedTest
   @MethodSource("postfixLookupValues")
   void testPostfixLookup(@NonNull ISequence<?> expected, @NonNull String metapath) {
-    ISequence<?> result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE, newDynamicContext());
-    assertEquals(expected, result);
+    assertEquals(expected, IMetapathExpression.compile(metapath).evaluate(null, newDynamicContext()));
   }
 
   @Test
@@ -152,8 +148,8 @@ public class LookupTest
     ArrayException thrown = assertThrows(
         ArrayException.class,
         () -> {
-          ISequence<?> result = MetapathExpression.compile("([1,2,3], [1,2,5], [1,2])[?3 = 5]")
-              .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE, newDynamicContext());
+          ISequence<?> result = IMetapathExpression.compile("([1,2,3], [1,2,5], [1,2])[?3 = 5]")
+              .evaluate(null, newDynamicContext());
           assertNotNull(result);
           result.safeStream();
         });

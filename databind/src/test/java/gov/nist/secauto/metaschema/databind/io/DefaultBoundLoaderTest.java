@@ -7,8 +7,7 @@ package gov.nist.secauto.metaschema.databind.io;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -36,10 +35,10 @@ class DefaultBoundLoaderTest
     IDocumentNodeItem docItem = loader.loadAsNodeItem(ObjectUtils.notNull(
         Paths.get("src/test/resources/content/issue187-instance.xml")));
 
-    MetapathExpression metapath = MetapathExpression.compile("//a//b", docItem.getStaticContext());
-
-    ISequence<?> result = metapath.evaluate(docItem);
-
-    assertEquals(8, result.size());
+    assertEquals(
+        8,
+        IMetapathExpression.compile("//a//b", docItem.getStaticContext())
+            .evaluate(docItem)
+            .size());
   }
 }

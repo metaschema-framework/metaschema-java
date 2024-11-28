@@ -108,8 +108,7 @@ public class METASCHEMA implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   /**
-   * "Determines if the Metaschema module is abstract (&lsquo;yes&rsquo;) or not
-   * (&lsquo;no&rsquo;)."
+   * Determines if the Metaschema module is abstract ("yes") or not ("no").
    */
   @BoundFlag(
       formalName = "Is Abstract?",

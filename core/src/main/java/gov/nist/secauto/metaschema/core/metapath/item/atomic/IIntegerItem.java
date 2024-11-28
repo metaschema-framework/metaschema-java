@@ -64,7 +64,7 @@ public interface IIntegerItem extends IDecimalItem {
   static IIntegerItem valueOf(@NonNull String value) {
     try {
       return valueOf(MetaschemaDataTypeProvider.INTEGER.parse(value));
-    } catch (NumberFormatException ex) {
+    } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(null,
           ex.getMessage(),
           ex);

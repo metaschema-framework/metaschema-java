@@ -1,7 +1,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceGrouped;

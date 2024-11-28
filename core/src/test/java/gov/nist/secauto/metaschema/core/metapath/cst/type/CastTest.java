@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -105,8 +105,8 @@ class CastTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void testCast(@NonNull IAnyAtomicItem actual, @NonNull String singleType, @NonNull IAnyAtomicItem expected) {
-    MetapathExpression metapath = MetapathExpression.compile(". cast as " + singleType);
-    IItem result = metapath.evaluateAs(actual, MetapathExpression.ResultType.ITEM);
+    IMetapathExpression metapath = IMetapathExpression.compile(". cast as " + singleType);
+    IItem result = metapath.evaluateAs(actual, IMetapathExpression.ResultType.ITEM);
 
     assertEquals(
         expected,
@@ -117,7 +117,7 @@ class CastTest
   @Test
   void testInvalidTypePrefix() {
     StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
-      MetapathExpression.compile("'a' cast as foo:bar");
+      IMetapathExpression.compile("'a' cast as foo:bar");
     });
     assertEquals(StaticMetapathException.PREFIX_NOT_EXPANDABLE, ex.getCode());
   }
@@ -125,7 +125,7 @@ class CastTest
   @Test
   void testInvalidType() {
     StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
-      MetapathExpression.compile("'a' cast as meta:bar");
+      IMetapathExpression.compile("'a' cast as meta:bar");
     });
     assertEquals(StaticMetapathException.CAST_UNKNOWN_TYPE, ex.getCode());
   }
@@ -133,7 +133,7 @@ class CastTest
   @Test
   void testAnyAtomicType() {
     StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
-      MetapathExpression.compile("'a' cast as meta:any-atomic-type");
+      IMetapathExpression.compile("'a' cast as meta:any-atomic-type");
     });
     assertEquals(StaticMetapathException.CAST_ANY_ATOMIC, ex.getCode());
   }

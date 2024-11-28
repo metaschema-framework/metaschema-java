@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -25,17 +25,17 @@ class QuantifiedTest
     return Stream.of(
         Arguments.of(
             true,
-            MetapathExpression.compile("some $x in (1, 2, 3), $y in (2, 3, 4) satisfies $x + $y = 4")),
+            IMetapathExpression.compile("some $x in (1, 2, 3), $y in (2, 3, 4) satisfies $x + $y = 4")),
         Arguments.of(
             false,
-            MetapathExpression.compile("every $x in (1, 2, 3), $y in (2, 3, 4) satisfies $x + $y = 4")));
+            IMetapathExpression.compile("every $x in (1, 2, 3), $y in (2, 3, 4) satisfies $x + $y = 4")));
   }
 
   @ParameterizedTest
   @MethodSource
-  void testQuantified(boolean expected, @NonNull MetapathExpression metapath) {
+  void testQuantified(boolean expected, @NonNull IMetapathExpression metapath) {
     DynamicContext dynamicContext = newDynamicContext();
 
-    assertEquals(expected, metapath.evaluateAs(null, MetapathExpression.ResultType.BOOLEAN, dynamicContext));
+    assertEquals(expected, metapath.evaluateAs(null, IMetapathExpression.ResultType.BOOLEAN, dynamicContext));
   }
 }

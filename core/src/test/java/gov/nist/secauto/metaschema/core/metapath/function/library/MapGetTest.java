@@ -10,8 +10,8 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.function.LookupTest;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,17 +33,14 @@ class MapGetTest
         Arguments.of(
             sequence(),
             "let $week :=  " + LookupTest.WEEKDAYS_GERMAN + " return map:get($week, 9)"),
-        Arguments.of(
-            sequence(),
-            "map:get(map:entry(7,()), 7)"));
+        Arguments.of(sequence(), "map:get(map:entry(7,()), 7)"));
   }
 
   @ParameterizedTest
   @MethodSource("provideValues")
   void testExpression(@NonNull ISequence<?> expected, @NonNull String metapath) {
-
-    ISequence<?> result = MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE, newDynamicContext());
-    assertEquals(expected, result);
+    assertEquals(
+        expected,
+        IMetapathExpression.compile(metapath).evaluate(null, newDynamicContext()));
   }
 }

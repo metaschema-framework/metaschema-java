@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
@@ -10,7 +14,17 @@ import java.util.Objects;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-public final class CallingContext {
+/**
+ * Represents an immutable execution context for function calls in Metapath
+ * expressions.
+ * <p>
+ * This class is designed to support both named and anonymous functions by
+ * maintaining the function instance, its arguments, and the current context
+ * item. It ensures thread-safety through immutability and is primarily used
+ * during the evaluation of Metapath expressions and for caching the function
+ * results.
+ */
+public final class CalledContext {
   @NonNull
   private final IFunction function;
   @Nullable
@@ -19,16 +33,17 @@ public final class CallingContext {
   private final List<ISequence<?>> arguments;
 
   /**
-   * Set up the execution context for this function.
+   * Creates an immutable execution context for a function call.
    *
    * @param function
-   *          the function
+   *          the function to be executed
    * @param arguments
-   *          the function arguments
+   *          the list of evaluated arguments as sequences, must match function's
+   *          arity
    * @param contextItem
-   *          the current node context
+   *          the optional context item representing the current node in scope
    */
-  public CallingContext(
+  public CalledContext(
       @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @Nullable IItem contextItem) {
@@ -50,7 +65,7 @@ public final class CallingContext {
   /**
    * Get the node item focus associated with the calling context.
    *
-   * @return the function instance
+   * @return the context item, or null if no context is set
    */
   @Nullable
   public IItem getContextItem() {
@@ -75,18 +90,21 @@ public final class CallingContext {
     return prime * result + Objects.hash(contextItem, arguments);
   }
 
+  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
-      return true; // NOPMD - readability
+      return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
-      return false; // NOPMD - readability
+      return false;
     }
-    CallingContext other = (CallingContext) obj;
+    CalledContext other = (CalledContext) obj;
     if (!getFunction().equals(other.getFunction())) {
-      return false; // NOPMD - readability
+      return false;
     }
-    return Objects.equals(arguments, other.arguments) && Objects.equals(contextItem, other.contextItem);
+    return Objects.equals(function, other.function)
+        && Objects.equals(arguments, other.arguments)
+        && Objects.equals(contextItem, other.contextItem);
   }
 }

@@ -103,6 +103,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 // https://www.w3.org/TR/xpath-31/#id-node-comparisons
 public class BuildCSTVisitor
     extends AbstractCSTVisitorBase {
+  @NonNull
   private static final ISequenceType DEFAULT_FUNCTION_SEQUENCE_TYPE
       = ISequenceType.of(IItemType.item(), Occurrence.ZERO_OR_MORE);
 
@@ -416,7 +417,9 @@ public class BuildCSTVisitor
                   getContext().parseVariableName(ObjectUtils.notNull(tree.eqname().getText())),
                   tree.typedeclaration() == null
                       ? DEFAULT_FUNCTION_SEQUENCE_TYPE
-                      : TypeTestSupport.parseSequenceType(tree.typedeclaration().sequencetype(), getContext()));
+                      : TypeTestSupport.parseSequenceType(
+                          ObjectUtils.notNull(tree.typedeclaration().sequencetype()),
+                          getContext()));
             }));
 
     // parse the result type

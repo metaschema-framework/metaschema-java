@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
@@ -70,8 +70,8 @@ class FnMatchesTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull IBooleanItem expected, @NonNull String metapath) {
-    assertEquals(expected, MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.ITEM,
+    assertEquals(expected, IMetapathExpression.compile(metapath)
+        .evaluateAs(null, IMetapathExpression.ResultType.ITEM,
             newDynamicContext()));
   }
 

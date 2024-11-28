@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -22,8 +22,8 @@ class FnImplicitTimezoneTest {
   @Test
   void test() {
     DynamicContext context = new DynamicContext();
-    IDayTimeDurationItem currentTime = ObjectUtils.notNull(MetapathExpression.compile("fn:implicit-timezone()")
-        .evaluateAs(null, MetapathExpression.ResultType.ITEM, context));
+    IDayTimeDurationItem currentTime = ObjectUtils.notNull(IMetapathExpression.compile("fn:implicit-timezone()")
+        .evaluateAs(null, IMetapathExpression.ResultType.ITEM, context));
 
     assertEquals(
         context.getCurrentDateTime().getOffset().get(ChronoField.OFFSET_SECONDS),

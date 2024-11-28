@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.schemagen;
 
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
@@ -93,7 +93,7 @@ public abstract class AbstractGenerationState<WRITER, DATATYPE_MANAGER extends I
         closed = true;
       }
 
-      if (!MetapathExpression.CONTEXT_NODE.getPath().equals(constraint.getTarget())) {
+      if (!IMetapathExpression.contextNode().getPath().equals(constraint.getTarget())) {
         values = CollectionUtil.emptyList();
         break;
       }

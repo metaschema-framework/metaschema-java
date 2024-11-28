@@ -6,9 +6,8 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ResultType;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
@@ -94,8 +93,8 @@ public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IMo
     for (ITargetedConstraints targeted : set.getTargetedConstraintsForModule(module)) {
       // apply targeted constraints
       String targetExpression = targeted.getTargetExpression();
-      MetapathExpression metapath = MetapathExpression.compile(targetExpression, dynamicContext.getStaticContext());
-      ISequence<?> items = metapath.evaluateAs(moduleItem, ResultType.SEQUENCE, dynamicContext);
+      IMetapathExpression metapath = IMetapathExpression.compile(targetExpression, dynamicContext.getStaticContext());
+      ISequence<?> items = metapath.evaluate(moduleItem, dynamicContext);
       assert items != null;
 
       // first build a map to ensure the constraint is only applied once to each
@@ -113,7 +112,7 @@ public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IMo
     }
   }
 
-  private static boolean filterNonDefinitionItem(IItem item, @NonNull MetapathExpression metapath) {
+  private static boolean filterNonDefinitionItem(IItem item, @NonNull IMetapathExpression metapath) {
     boolean retval = item instanceof IDefinitionNodeItem;
     if (!retval) {
       LOGGER.atError().log(

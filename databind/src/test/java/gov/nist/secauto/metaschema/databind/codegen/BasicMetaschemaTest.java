@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
@@ -204,19 +204,19 @@ class BasicMetaschemaTest
 
     // ISequence<?> imports = importsMetapath.evaluate(moduleItem, dynamicContext);
 
-    MetapathExpression allImportsExpression = MetapathExpression.compile(
+    IMetapathExpression allImportsExpression = IMetapathExpression.compile(
         "recurse-depth(/METASCHEMA,'for $import in ./import return doc(resolve-uri($import/@href))/METASCHEMA')",
         staticContext);
 
     ISequence<?> allImports = allImportsExpression.evaluate(moduleItem, dynamicContext);
     allImports.getValue();
 
-    MetapathExpression path = MetapathExpression.compile("exists($all-imports/define-assembly/root-name)",
+    IMetapathExpression path = IMetapathExpression.compile("exists($all-imports/define-assembly/root-name)",
         staticContext);
 
     boolean result = ObjectUtils.requireNonNull(path.evaluateAs(
         moduleItem,
-        MetapathExpression.ResultType.BOOLEAN,
+        IMetapathExpression.ResultType.BOOLEAN,
         dynamicContext.subContext().bindVariableValue(IEnhancedQName.of("all-imports"), allImports)));
 
     assertTrue(result, "no root");

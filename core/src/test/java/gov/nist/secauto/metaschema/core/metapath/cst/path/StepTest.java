@@ -7,8 +7,8 @@ package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
@@ -276,11 +276,11 @@ class StepTest
   void testSelfAxis() {
     DynamicContext dynamicContext = newDynamicContext();
 
-    IModelNodeItem<?, ?> nodeB = MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-        .evaluateAs(getTestNodeItem(), MetapathExpression.ResultType.ITEM, dynamicContext);
+    IModelNodeItem<?, ?> nodeB = IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+        .evaluateAs(getTestNodeItem(), IMetapathExpression.ResultType.ITEM, dynamicContext);
 
-    INodeItem actual = MetapathExpression.compile("self::*", dynamicContext.getStaticContext())
-        .evaluateAs(nodeB, MetapathExpression.ResultType.ITEM, dynamicContext);
+    INodeItem actual = IMetapathExpression.compile("self::*", dynamicContext.getStaticContext())
+        .evaluateAs(nodeB, IMetapathExpression.ResultType.ITEM, dynamicContext);
 
     Assertions.assertThat(actual)
         .isEqualTo(nodeB)
@@ -292,11 +292,11 @@ class StepTest
     DynamicContext dynamicContext = newDynamicContext();
 
     IModelNodeItem<?, ?> nodeB = ObjectUtils.requireNonNull(
-        MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-            .evaluateAs(getTestNodeItem(), MetapathExpression.ResultType.ITEM, dynamicContext));
+        IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+            .evaluateAs(getTestNodeItem(), IMetapathExpression.ResultType.ITEM, dynamicContext));
 
-    INodeItem actual = MetapathExpression.compile("parent::*", dynamicContext.getStaticContext())
-        .evaluateAs(nodeB, MetapathExpression.ResultType.ITEM, dynamicContext);
+    INodeItem actual = IMetapathExpression.compile("parent::*", dynamicContext.getStaticContext())
+        .evaluateAs(nodeB, IMetapathExpression.ResultType.ITEM, dynamicContext);
 
     Assertions.assertThat(actual)
         .isEqualTo(nodeB.getParentNodeItem())
@@ -307,10 +307,10 @@ class StepTest
   void testFlagAxis() {
     DynamicContext dynamicContext = newDynamicContext();
 
-    IModelNodeItem<?, ?> nodeB = MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-        .evaluateAs(getTestNodeItem(), MetapathExpression.ResultType.ITEM, dynamicContext);
+    IModelNodeItem<?, ?> nodeB = IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+        .evaluateAs(getTestNodeItem(), IMetapathExpression.ResultType.ITEM, dynamicContext);
 
-    ISequence<?> actual = MetapathExpression.compile("flag::*", dynamicContext.getStaticContext())
+    ISequence<?> actual = IMetapathExpression.compile("flag::*", dynamicContext.getStaticContext())
         .evaluate(nodeB, dynamicContext);
 
     Assertions.assertThat(actual.getValue())
@@ -325,11 +325,12 @@ class StepTest
 
     IDocumentNodeItem document = getTestNodeItem();
 
-    IModelNodeItem<?, ?> nodeB = MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-        .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext);
+    IModelNodeItem<?, ?> nodeB = IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+        .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext);
 
-    ISequence<? extends INodeItem> actual = MetapathExpression.compile("ancestor::*", dynamicContext.getStaticContext())
-        .evaluate(nodeB, dynamicContext);
+    ISequence<? extends INodeItem> actual
+        = IMetapathExpression.compile("ancestor::*", dynamicContext.getStaticContext())
+            .evaluate(nodeB, dynamicContext);
 
     Assertions.assertThat(actual.getValue()).isEqualTo(List.of(
         document.getRootAssemblyNodeItem()
@@ -345,11 +346,11 @@ class StepTest
 
     IDocumentNodeItem document = getTestNodeItem();
 
-    IModelNodeItem<?, ?> nodeB = MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-        .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext);
+    IModelNodeItem<?, ?> nodeB = IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+        .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext);
 
     ISequence<? extends INodeItem> actual
-        = MetapathExpression.compile("ancestor-or-self::*", dynamicContext.getStaticContext())
+        = IMetapathExpression.compile("ancestor-or-self::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
     Assertions.assertThat(actual.getValue()).isEqualTo(List.of(
@@ -368,11 +369,11 @@ class StepTest
     IDocumentNodeItem document = getTestNodeItem();
 
     IModelNodeItem<?, ?> nodeB
-        = ObjectUtils.requireNonNull(MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-            .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext));
+        = ObjectUtils.requireNonNull(IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+            .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext));
 
     ISequence<? extends INodeItem> actual
-        = MetapathExpression.compile("child::*", dynamicContext.getStaticContext())
+        = IMetapathExpression.compile("child::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
     Assertions.assertThat(actual.getValue()).isEqualTo(
@@ -389,11 +390,11 @@ class StepTest
     IDocumentNodeItem document = getTestNodeItem();
 
     IModelNodeItem<?, ?> node2
-        = ObjectUtils.requireNonNull(MetapathExpression.compile("/root/node-2", dynamicContext.getStaticContext())
-            .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext));
+        = ObjectUtils.requireNonNull(IMetapathExpression.compile("/root/node-2", dynamicContext.getStaticContext())
+            .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext));
 
     ISequence<? extends INodeItem> actual
-        = MetapathExpression.compile("descendant::*", dynamicContext.getStaticContext())
+        = IMetapathExpression.compile("descendant::*", dynamicContext.getStaticContext())
             .evaluate(node2, dynamicContext);
 
     IModelNodeItem<?, ?> nodeA
@@ -426,11 +427,11 @@ class StepTest
     IDocumentNodeItem document = getTestNodeItem();
 
     IModelNodeItem<?, ?> node2
-        = ObjectUtils.requireNonNull(MetapathExpression.compile("/root/node-2", dynamicContext.getStaticContext())
-            .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext));
+        = ObjectUtils.requireNonNull(IMetapathExpression.compile("/root/node-2", dynamicContext.getStaticContext())
+            .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext));
 
     ISequence<? extends INodeItem> actual
-        = MetapathExpression.compile("descendant-or-self::*", dynamicContext.getStaticContext())
+        = IMetapathExpression.compile("descendant-or-self::*", dynamicContext.getStaticContext())
             .evaluate(node2, dynamicContext);
 
     IModelNodeItem<?, ?> nodeA
@@ -464,11 +465,11 @@ class StepTest
     IDocumentNodeItem document = getTestNodeItem();
 
     IModelNodeItem<?, ?> nodeB
-        = ObjectUtils.requireNonNull(MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-            .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext));
+        = ObjectUtils.requireNonNull(IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+            .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext));
 
     ISequence<? extends INodeItem> actual
-        = MetapathExpression.compile("following-sibling::*", dynamicContext.getStaticContext())
+        = IMetapathExpression.compile("following-sibling::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()
@@ -486,11 +487,11 @@ class StepTest
     IDocumentNodeItem document = getTestNodeItem();
 
     IModelNodeItem<?, ?> nodeB
-        = ObjectUtils.requireNonNull(MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-            .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext));
+        = ObjectUtils.requireNonNull(IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+            .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext));
 
     ISequence<? extends INodeItem> actual
-        = MetapathExpression.compile("preceding-sibling::*", dynamicContext.getStaticContext())
+        = IMetapathExpression.compile("preceding-sibling::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()
@@ -508,11 +509,11 @@ class StepTest
     IDocumentNodeItem document = getTestNodeItem();
 
     IModelNodeItem<?, ?> nodeB
-        = ObjectUtils.requireNonNull(MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-            .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext));
+        = ObjectUtils.requireNonNull(IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+            .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext));
 
     ISequence<? extends INodeItem> actual
-        = MetapathExpression.compile("following::*", dynamicContext.getStaticContext())
+        = IMetapathExpression.compile("following::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()
@@ -537,11 +538,11 @@ class StepTest
     IDocumentNodeItem document = getTestNodeItem();
 
     IModelNodeItem<?, ?> nodeB
-        = ObjectUtils.requireNonNull(MetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
-            .evaluateAs(document, MetapathExpression.ResultType.ITEM, dynamicContext));
+        = ObjectUtils.requireNonNull(IMetapathExpression.compile("/root/node-2/b", dynamicContext.getStaticContext())
+            .evaluateAs(document, IMetapathExpression.ResultType.ITEM, dynamicContext));
 
     ISequence<? extends INodeItem> actual
-        = MetapathExpression.compile("preceding::*", dynamicContext.getStaticContext())
+        = IMetapathExpression.compile("preceding::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()

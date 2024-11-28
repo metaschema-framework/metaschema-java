@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,9 +39,8 @@ public class FunctionCallAccessor implements IExpression {
    * @param base
    *          the expression whose result is used as the map or array to perform
    *          the lookup on
-   * @param keyOrIndex
-   *          the value to find, which will be the key for a map or the index for
-   *          an array
+   * @param arguments
+   *          the function call argument expressions
    */
   public FunctionCallAccessor(@NonNull IExpression base, @NonNull List<IExpression> arguments) {
     this.base = base;
@@ -74,6 +74,7 @@ public class FunctionCallAccessor implements IExpression {
         .collect(Collectors.toUnmodifiableList());
   }
 
+  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<?> target = getBase().accept(dynamicContext, focus);
@@ -81,9 +82,9 @@ public class FunctionCallAccessor implements IExpression {
 
     if (collection instanceof AnonymousFunctionCall) {
       return ((AnonymousFunctionCall) collection).execute(
-          getArguments().stream()
+          ObjectUtils.notNull(getArguments().stream()
               .map(expr -> expr.accept(dynamicContext, focus))
-              .collect(Collectors.toUnmodifiableList()),
+              .collect(Collectors.toUnmodifiableList())),
           dynamicContext,
           focus);
     }

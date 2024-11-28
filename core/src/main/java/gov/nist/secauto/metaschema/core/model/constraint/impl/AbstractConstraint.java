@@ -8,8 +8,8 @@ package gov.nist.secauto.metaschema.core.model.constraint.impl;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
@@ -44,7 +44,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   @NonNull
   private final Map<IAttributable.Key, Set<String>> properties;
   @NonNull
-  private final Lazy<MetapathExpression> targetMetapath;
+  private final Lazy<IMetapathExpression> targetMetapath;
 
   /**
    * Construct a new Metaschema constraint.
@@ -85,7 +85,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
     this.properties = properties;
     this.remarks = remarks;
     this.targetMetapath = ObjectUtils.notNull(
-        Lazy.lazy(() -> MetapathExpression.compile(
+        Lazy.lazy(() -> IMetapathExpression.compile(
             target,
             source.getStaticContext())));
   }
@@ -137,7 +137,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
    * @return the compiled Metapath expression
    */
   @NonNull
-  public final MetapathExpression getTargetMetapath() {
+  public final IMetapathExpression getTargetMetapath() {
     return ObjectUtils.notNull(targetMetapath.get());
   }
 

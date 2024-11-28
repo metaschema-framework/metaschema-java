@@ -37,7 +37,7 @@ class MetapathExpressionTest {
         continue;
       }
       // System.out.println(line);
-      MetapathExpression.compile(line);
+      IMetapathExpression.compile(line);
     }
   }
   //
@@ -60,13 +60,13 @@ class MetapathExpressionTest {
   @Test
   void testSyntaxError() {
     assertThrows(MetapathException.class, () -> {
-      MetapathExpression.compile("**");
+      IMetapathExpression.compile("**");
     });
   }
 
   @Test
   void test() {
-    MetapathExpression path = MetapathExpression.compile("2 eq 1 + 1");
+    IMetapathExpression path = IMetapathExpression.compile("2 eq 1 + 1");
     ISequence<?> result = path.evaluate();
     assertNotNull(result, "null result");
     assertTrue(!result.isEmpty(), "result was empty");
@@ -77,7 +77,7 @@ class MetapathExpressionTest {
   @Test
   void testMalformedIf() throws IOException {
     StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
-      MetapathExpression.compile("if 'a' = '1.1.2' then true() else false()");
+      IMetapathExpression.compile("if 'a' = '1.1.2' then true() else false()");
     });
     assertEquals(StaticMetapathException.INVALID_PATH_GRAMMAR, ex.getCode());
   }

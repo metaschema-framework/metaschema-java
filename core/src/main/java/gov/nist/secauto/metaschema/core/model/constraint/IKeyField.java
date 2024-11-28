@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultKeyField;
 
@@ -62,7 +62,7 @@ public interface IKeyField {
    * @return the compiled Metapath expression
    */
   @NonNull
-  MetapathExpression getTargetMetapath();
+  IMetapathExpression getTargetMetapath();
 
   /**
    * A pattern to use to retrieve the value. If non-{@code null}, the first

@@ -22,8 +22,17 @@ import nl.talsmasoftware.lazy4j.Lazy;
 /**
  * Executes a function call based on the provided function and multiple argument
  * expressions that are used to determine the function arguments.
+ * <p>
+ * This class handles static function calls where the name of the function is
+ * known during static analysis (the parsing phase), as opposed to dynamic or
+ * anonymous function calls where the name is not available or known until
+ * execution.
+ * <p>
+ * Static functions are resolved during the parsing phase and must exist in the
+ * function registry.
  */
-
+// FIXME: Change compilation to error when a non-existant function is called.
+// Manage this error where the compilation is requested
 public class StaticFunctionCall implements IExpression {
   @NonNull
   private final Lazy<IFunction> functionSupplier;

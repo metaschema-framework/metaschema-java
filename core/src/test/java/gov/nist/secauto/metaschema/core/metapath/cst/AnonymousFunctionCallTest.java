@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
@@ -5,13 +9,19 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for anonymous function calls in Metapath expressions.
+ * <p>
+ * These tests validate the compilation and execution of anonymous functions as
+ * defined in the Metaschema specification.
+ */
 class AnonymousFunctionCallTest {
   private static final String NS = "http://example.com/ns";
 
@@ -28,9 +38,9 @@ class AnonymousFunctionCallTest {
 
     assertEquals(
         "extra cool",
-        MetapathExpression.compile(metapath, staticContext).evaluateAs(
+        IMetapathExpression.compile(metapath, staticContext).evaluateAs(
             null,
-            MetapathExpression.ResultType.STRING,
+            IMetapathExpression.ResultType.STRING,
             dynamicContext));
   }
 

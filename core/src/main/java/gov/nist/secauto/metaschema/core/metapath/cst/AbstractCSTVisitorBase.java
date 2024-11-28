@@ -130,12 +130,10 @@ public abstract class AbstractCSTVisitorBase
    *          the increment to advance while parsing child expressions
    * @param parser
    *          a binary function used to produce child expressions
-   * @param supplier
-   *          a function used to produce the other expression
    * @return the outer expression or {@code null} if no children exist to parse
    */
   @Nullable
-  protected <CONTEXT extends ParserRuleContext, T, R, S extends List<R>>
+  protected <CONTEXT extends ParserRuleContext, T, R>
       List<R> nairyToList(
           @NonNull CONTEXT context,
           int startIndex,

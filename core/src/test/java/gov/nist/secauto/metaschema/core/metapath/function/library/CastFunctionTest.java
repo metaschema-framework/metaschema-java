@@ -9,15 +9,18 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -42,9 +45,16 @@ class CastFunctionTest
   @MethodSource("provideValues")
   void testExpression(@NonNull IStringItem text, @NonNull IAtomicOrUnionType<?> type,
       @NonNull IAnyAtomicItem expected) {
-    IAnyAtomicItem result = MetapathExpression.compile(type.getQName().toEQName() + "('" + text.asString() + "')")
-        .evaluateAs(null, MetapathExpression.ResultType.ITEM, newDynamicContext());
+    IAnyAtomicItem result = IMetapathExpression.compile(type.getQName().toEQName() + "('" + text.asString() + "')")
+        .evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext());
     assertEquals(expected, result);
   }
 
+  @Test
+  void testInvalidCasts() {
+    assertThrows(MetapathException.class, () -> {
+      IMetapathExpression.compile(IIntegerItem.type().getQName().toEQName() + "('invalid')")
+          .evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext());
+    });
+  }
 }

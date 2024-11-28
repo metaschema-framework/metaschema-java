@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -55,9 +55,7 @@ class FnTokenizeTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull ISequence<?> expected, @NonNull String metapath) {
-    assertEquals(expected, MetapathExpression.compile(metapath)
-        .evaluateAs(null, MetapathExpression.ResultType.SEQUENCE,
-            newDynamicContext()));
+    assertEquals(expected, IMetapathExpression.compile(metapath).evaluate(null, newDynamicContext()));
   }
 
   @Test

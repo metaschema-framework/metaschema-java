@@ -24,6 +24,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Represents a single function argument signature.
  */
 public interface IArgument {
+  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IArgument of(@NonNull IEnhancedQName name, @NonNull ISequenceType sequenceType) {
     return new ArgumentImpl(name, sequenceType);

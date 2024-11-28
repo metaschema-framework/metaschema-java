@@ -171,7 +171,7 @@ public final class InstanceModelFieldComplex
       if (jsonKey != null) {
         flagFilter = flag -> !jsonKey.equals(flag);
       }
-      return getDefinition().getJsonProperties(flagFilter);
+      return definition.getJsonProperties(flagFilter);
     }));
     this.properties = ObjectUtils.notNull(
         Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(

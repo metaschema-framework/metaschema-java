@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.function.CallingContext;
+import gov.nist.secauto.metaschema.core.metapath.function.CalledContext;
 import gov.nist.secauto.metaschema.core.metapath.function.DefaultFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -87,16 +88,14 @@ public abstract class AbstractFunction implements IFunction {
    *          the argument parameters
    * @param dynamicContext
    *          the dynamic evaluation context
-   * @return the converted argument list
+   * @return a new unmodifiable list containing the converted arguments
    */
   @NonNull
   public static List<ISequence<?>> convertArguments(
       @NonNull IFunction function,
       @NonNull List<? extends ISequence<?>> parameters,
       @NonNull DynamicContext dynamicContext) {
-    @NonNull
     List<ISequence<?>> retval = new ArrayList<>(parameters.size());
-
     Iterator<IArgument> argumentIterator = function.getArguments().iterator();
     IArgument argument = null;
     for (ISequence<?> parameter : parameters) {
@@ -113,7 +112,7 @@ public abstract class AbstractFunction implements IFunction {
 
       retval.add(convertArgument(argument, parameter, dynamicContext));
     }
-    return retval;
+    return CollectionUtil.unmodifiableList(retval);
   }
 
   @SuppressWarnings("unused")
@@ -217,11 +216,11 @@ public abstract class AbstractFunction implements IFunction {
 
       List<ISequence<?>> convertedArguments = convertArguments(this, arguments, dynamicContext);
 
-      CallingContext callingContext = null;
+      CalledContext callingContext = null;
       ISequence<?> result = null;
       if (isDeterministic()) {
         // check cache
-        callingContext = new CallingContext(this, convertedArguments, contextItem);
+        callingContext = new CalledContext(this, convertedArguments, contextItem);
         // TODO: implement something like computeIfAbsent
         // attempt to get the result from the cache
         result = dynamicContext.getCachedResult(callingContext);

@@ -10,8 +10,8 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -39,7 +39,6 @@ class FnHeadTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull ISequence<?> expected, @NonNull String metapath) {
-    assertEquals(expected, MetapathExpression.compile(metapath).evaluateAs(null, MetapathExpression.ResultType.SEQUENCE,
-        newDynamicContext()));
+    assertEquals(expected, IMetapathExpression.compile(metapath).evaluate(null, newDynamicContext()));
   }
 }

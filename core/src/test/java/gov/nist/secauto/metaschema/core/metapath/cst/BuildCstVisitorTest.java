@@ -21,9 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ResultType;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
@@ -124,13 +123,13 @@ class BuildCstVisitorTest {
     StaticContext staticContext = newStaticContext();
     // compile expression
     String path = "../field2";
-    MetapathExpression expr = MetapathExpression.compile(path, staticContext);
+    IMetapathExpression expr = IMetapathExpression.compile(path, staticContext);
 
     // select starting node
     IDocumentNodeItem document = newTestDocument();
     IFieldNodeItem field
-        = MetapathExpression.compile("/root/field1", staticContext)
-            .evaluateAs(document, ResultType.ITEM);
+        = IMetapathExpression.compile("/root/field1", staticContext)
+            .evaluateAs(document, IMetapathExpression.ResultType.ITEM);
     assert field != null;
 
     // evaluate
@@ -146,13 +145,13 @@ class BuildCstVisitorTest {
 
     // select starting node
     IDocumentNodeItem document = newTestDocument();
-    IFieldNodeItem field = MetapathExpression.compile("/root/field1", staticContext)
-        .evaluateAs(document, ResultType.ITEM);
+    IFieldNodeItem field = IMetapathExpression.compile("/root/field1", staticContext)
+        .evaluateAs(document, IMetapathExpression.ResultType.ITEM);
     assert field != null;
 
     // compile expression
-    IItem result = MetapathExpression.compile("parent::root", staticContext)
-        .evaluateAs(field, ResultType.ITEM);
+    IItem result = IMetapathExpression.compile("parent::root", staticContext)
+        .evaluateAs(field, IMetapathExpression.ResultType.ITEM);
     assert result != null;
 
     assertAll(
@@ -166,13 +165,13 @@ class BuildCstVisitorTest {
 
     // select starting node
     IDocumentNodeItem document = newTestDocument();
-    IFieldNodeItem field = MetapathExpression.compile("/root/field1", staticContext)
-        .evaluateAs(document, ResultType.ITEM);
+    IFieldNodeItem field = IMetapathExpression.compile("/root/field1", staticContext)
+        .evaluateAs(document, IMetapathExpression.ResultType.ITEM);
     assert field != null;
 
     // compile expression
     String path = "parent::other";
-    MetapathExpression expr = MetapathExpression.compile(path, staticContext);
+    IMetapathExpression expr = IMetapathExpression.compile(path, staticContext);
 
     // evaluate
     ISequence<?> result = expr.evaluate(field);
@@ -185,7 +184,7 @@ class BuildCstVisitorTest {
 
     // compile expression
     String path = "parent::other";
-    MetapathExpression expr = MetapathExpression.compile(path, staticContext);
+    IMetapathExpression expr = IMetapathExpression.compile(path, staticContext);
 
     // select starting node
     IDocumentNodeItem document = newTestDocument();
@@ -200,7 +199,7 @@ class BuildCstVisitorTest {
     StaticContext staticContext = newStaticContext();
 
     String path = "./root";
-    MetapathExpression expr = MetapathExpression.compile(path, staticContext);
+    IMetapathExpression expr = IMetapathExpression.compile(path, staticContext);
 
     // select starting node
     IDocumentNodeItem document = newTestDocument();
@@ -218,12 +217,12 @@ class BuildCstVisitorTest {
     StaticContext staticContext = newStaticContext();
 
     String path = "./@flag";
-    MetapathExpression expr = MetapathExpression.compile(path, staticContext);
+    IMetapathExpression expr = IMetapathExpression.compile(path, staticContext);
 
     // select starting node
     IDocumentNodeItem document = newTestDocument();
-    IFieldNodeItem field = MetapathExpression.compile("/root/field2", staticContext)
-        .evaluateAs(document, ResultType.ITEM);
+    IFieldNodeItem field = IMetapathExpression.compile("/root/field2", staticContext)
+        .evaluateAs(document, IMetapathExpression.ResultType.ITEM);
     assert field != null;
 
     // evaluate
@@ -239,12 +238,12 @@ class BuildCstVisitorTest {
     StaticContext staticContext = newStaticContext();
 
     String path = "child::*";
-    MetapathExpression expr = MetapathExpression.compile(path, staticContext);
+    IMetapathExpression expr = IMetapathExpression.compile(path, staticContext);
 
     // select starting node
     IDocumentNodeItem document = newTestDocument();
-    IRootAssemblyNodeItem root = MetapathExpression.compile("/root", staticContext)
-        .evaluateAs(document, ResultType.ITEM, new DynamicContext(staticContext));
+    IRootAssemblyNodeItem root = IMetapathExpression.compile("/root", staticContext)
+        .evaluateAs(document, IMetapathExpression.ResultType.ITEM, new DynamicContext(staticContext));
     assert root != null;
 
     // evaluate

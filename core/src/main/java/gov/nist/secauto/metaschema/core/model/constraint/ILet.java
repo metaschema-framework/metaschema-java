@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultLet;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -44,7 +44,7 @@ public interface ILet {
     try {
       return of(
           name,
-          MetapathExpression.compile(valueExpression, source.getStaticContext()),
+          IMetapathExpression.compile(valueExpression, source.getStaticContext()),
           source,
           remarks);
     } catch (MetapathException ex) {
@@ -75,7 +75,7 @@ public interface ILet {
   @NonNull
   static ILet of(
       @NonNull IEnhancedQName name,
-      @NonNull MetapathExpression valueExpression,
+      @NonNull IMetapathExpression valueExpression,
       @NonNull ISource source,
       @Nullable MarkupMultiline remarks) {
     return new DefaultLet(name, valueExpression, source, remarks);
@@ -95,7 +95,7 @@ public interface ILet {
    * @return the Metapath expression to use to query the value
    */
   @NonNull
-  MetapathExpression getValueExpression();
+  IMetapathExpression getValueExpression();
 
   /**
    * Information about the source resource containing the let statement.

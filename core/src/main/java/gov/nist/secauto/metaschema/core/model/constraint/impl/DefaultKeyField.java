@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -22,7 +22,7 @@ public class DefaultKeyField implements IKeyField {
   @Nullable
   private final Pattern pattern;
   @NonNull
-  private final Lazy<MetapathExpression> target;
+  private final Lazy<IMetapathExpression> target;
   @Nullable
   private final MarkupMultiline remarks;
 
@@ -45,7 +45,7 @@ public class DefaultKeyField implements IKeyField {
       @Nullable MarkupMultiline remarks,
       @NonNull ISource source) {
     this.pattern = pattern;
-    this.target = ObjectUtils.notNull(Lazy.lazy(() -> MetapathExpression.compile(target, source.getStaticContext())));
+    this.target = ObjectUtils.notNull(Lazy.lazy(() -> IMetapathExpression.compile(target, source.getStaticContext())));
     this.remarks = remarks;
   }
 
@@ -60,7 +60,7 @@ public class DefaultKeyField implements IKeyField {
   }
 
   @Override
-  public MetapathExpression getTargetMetapath() {
+  public IMetapathExpression getTargetMetapath() {
     return ObjectUtils.notNull(target.get());
   }
 
