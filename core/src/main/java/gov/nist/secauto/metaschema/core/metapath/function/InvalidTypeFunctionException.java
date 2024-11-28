@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
@@ -17,7 +17,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FOTY: Exceptions related to type errors.
  */
 public class InvalidTypeFunctionException
-    extends AbstractCodedMetapathException {
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "FOTY";
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFOTY0012">err:FOTY0012</a>:
@@ -61,7 +63,7 @@ public class InvalidTypeFunctionException
    *          the item the exception applies to
    */
   public InvalidTypeFunctionException(int code, @NonNull IItem item) {
-    super(code, generateMessage(item));
+    super(PREFIX, code, generateMessage(item));
   }
 
   /**
@@ -76,7 +78,7 @@ public class InvalidTypeFunctionException
    *          the original exception cause
    */
   public InvalidTypeFunctionException(int code, @NonNull IItem item, Throwable cause) {
-    super(code, generateMessage(item), cause);
+    super(PREFIX, code, generateMessage(item), cause);
   }
 
   private static String generateMessage(@NonNull IItem item) {
@@ -90,10 +92,5 @@ public class InvalidTypeFunctionException
       retval = String.format("Item '%s' has an improperly typed value", item.getClass().getName());
     }
     return retval;
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "FOTY";
   }
 }

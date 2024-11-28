@@ -3,39 +3,41 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.function;
+package gov.nist.secauto.metaschema.core.metapath.item.function.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Represents an error that occurred while performing mathematical operations.
  */
-public class ArithmeticFunctionException
+public class ArrayMetapathException
     extends CodedMetapathException {
   @NonNull
-  private static final String PREFIX = "FOAR";
+  private static final String PREFIX = "FOAY";
   /**
    * <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#ERRFOAR0001">err:FOAR0001</a>:
-   * This error is raised whenever an attempt is made to divide by zero.
+   * "https://www.w3.org/TR/xpath-functions-31/#ERRFOAY0001">err:FOAY0001</a>:
+   * This error is raised when an integer used to select a member of an array is
+   * outside the range of values for that array.
    */
-  public static final int DIVISION_BY_ZERO = 1;
+  protected static final int INDEX_OUT_OF_BOUNDS = 1;
   /**
    * <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#ERRFOAR0002">err:FOAR0002</a>:
-   * This error is raised whenever numeric operations result in an overflow or
-   * underflow.
+   * "https://www.w3.org/TR/xpath-functions-31/#ERRFOAY0001">err:FOAY0001</a>:
+   * This error is raised when the $length argument to array:subarray is negative.
    */
-  public static final int OVERFLOW_UNDERFLOW_ERROR = 2;
-
-  public static final String DIVISION_BY_ZERO_MESSAGE = "Division by zero";
+  public static final int NEGATIVE_ARRAY_LENGTH = 2;
 
   /**
    * the serial version UID.
    */
   private static final long serialVersionUID = 2L;
+
+  @NonNull
+  private final IArrayItem<?> item;
 
   /**
    * Constructs a new exception with the provided {@code code}, {@code message},
@@ -43,11 +45,14 @@ public class ArithmeticFunctionException
    *
    * @param code
    *          the error code value
+   * @param item
+   *          the array item involved
    * @param message
    *          the exception message
    */
-  public ArithmeticFunctionException(int code, String message) {
+  public ArrayMetapathException(int code, @NonNull IArrayItem<?> item, String message) {
     super(PREFIX, code, message);
+    this.item = item;
   }
 
   /**
@@ -56,13 +61,16 @@ public class ArithmeticFunctionException
    *
    * @param code
    *          the error code value
+   * @param item
+   *          the array item involved
    * @param message
    *          the exception message
    * @param cause
    *          the original exception cause
    */
-  public ArithmeticFunctionException(int code, String message, Throwable cause) {
+  public ArrayMetapathException(int code, @NonNull IArrayItem<?> item, String message, Throwable cause) {
     super(PREFIX, code, message, cause);
+    this.item = item;
   }
 
   /**
@@ -71,10 +79,13 @@ public class ArithmeticFunctionException
    *
    * @param code
    *          the error code value
+   * @param item
+   *          the array item involved
    * @param cause
    *          the original exception cause
    */
-  public ArithmeticFunctionException(int code, Throwable cause) {
+  public ArrayMetapathException(int code, @NonNull IArrayItem<?> item, Throwable cause) {
     super(PREFIX, code, cause);
+    this.item = item;
   }
 }

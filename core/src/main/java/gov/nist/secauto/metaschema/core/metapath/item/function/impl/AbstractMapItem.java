@@ -3,16 +3,18 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.impl;
+package gov.nist.secauto.metaschema.core.metapath.item.function.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -27,41 +29,51 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * The base class for {@link IArrayItem} implementations, that provides an
- * implementation of common methods.
+ * The base class for {@link IMapItem} implementations, that provide an
+ * implementation of common utility methods.
  *
- * @param <ITEM>
- *          the Java type of the items contained within the sequence
+ * @param <VALUE>
+ *          the Java type of the value items contained within the map
  */
-public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
-    extends ImmutableCollections.AbstractImmutableDelegatedList<ITEM>
-    implements IArrayItem<ITEM> {
+public abstract class AbstractMapItem<VALUE extends ICollectionValue>
+    extends ImmutableCollections.AbstractImmutableDelegatedMap<IMapKey, VALUE>
+    implements IMapItem<VALUE> {
+  /**
+   * The function qualified name.
+   */
   @NonNull
-  private static final IEnhancedQName QNAME = IEnhancedQName.of("array");
+  private static final IEnhancedQName QNAME = IEnhancedQName.of("map");
+  /**
+   * The function properties.
+   */
   @NonNull
   private static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(
       EnumSet.of(FunctionProperty.DETERMINISTIC));
+  /**
+   * The function arguments.
+   */
   @NonNull
   private static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
-      IArgument.builder().name("position").type(IIntegerItem.type()).one().build()));
+      IArgument.builder().name("key").type(IAnyAtomicItem.type()).one().build()));
   @NonNull
   private static final ISequenceType RESULT = ISequenceType.of(
       IAnyAtomicItem.type(), Occurrence.ZERO_OR_ONE);
 
   @NonNull
-  private static final IArrayItem<?> EMPTY = new ArrayItemN<>();
+  private static final IMapItem<?> EMPTY = new MapItemN<>();
 
   /**
-   * Get an immutable array item that is empty.
+   * Get an immutable map item that is empty.
    *
-   * @param <T>
-   *          the item Java type
-   * @return the empty array item
+   * @param <V>
+   *          the Java type of the collection value
+   * @return the empty map item
    */
+
   @SuppressWarnings("unchecked")
   @NonNull
-  public static <T extends ICollectionValue> IArrayItem<T> empty() {
-    return (IArrayItem<T>) EMPTY;
+  public static <V extends ICollectionValue> IMapItem<V> empty() {
+    return (IMapItem<V>) EMPTY;
   }
 
   @Override
@@ -115,14 +127,13 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
     ISequence<? extends IIntegerItem> arg = FunctionUtils.asType(
         ObjectUtils.notNull(arguments.get(0)));
 
-    IIntegerItem position = arg.getFirstItem(true);
-    if (position == null) {
+    IAnyAtomicItem key = arg.getFirstItem(true);
+    if (key == null) {
       return ISequence.empty(); // NOPMD - readability
     }
 
-    int index = position.asInteger().intValueExact() - 1;
-    ICollectionValue result = getValue().get(index);
-    return result.toSequence();
+    ICollectionValue result = MapGet.get(this, key);
+    return result == null ? ISequence.empty() : result.toSequence();
   }
 
   @Override
@@ -133,13 +144,13 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
   @Override
   public boolean equals(Object other) {
     return other == this
-        || other instanceof IArrayItem && getValue().equals(((IArrayItem<?>) other).getValue());
+        || other instanceof IMapItem && getValue().equals(((IMapItem<?>) other).getValue());
   }
 
   @Override
   public String toSignature() {
-    return ObjectUtils.notNull(stream()
-        .map(ICollectionValue::toSignature)
+    return ObjectUtils.notNull(entrySet().stream()
+        .map(entry -> entry.getKey().getKey().toSignature() + "=" + entry.getValue().toSignature())
         .collect(Collectors.joining(",", "[", "]")));
   }
 
