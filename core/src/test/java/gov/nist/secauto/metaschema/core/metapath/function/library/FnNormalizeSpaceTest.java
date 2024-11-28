@@ -10,7 +10,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
@@ -46,7 +46,7 @@ class FnNormalizeSpaceTest
 
   @Test
   void testNoFocus() {
-    DynamicMetapathException throwable = assertThrows(DynamicMetapathException.class,
+    assertThrows(ContextAbsentDynamicMetapathException.class,
         () -> {
           try {
             FunctionTestBase.executeFunction(
@@ -58,6 +58,5 @@ class FnNormalizeSpaceTest
             throw ex.getCause();
           }
         });
-    assertEquals(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, throwable.getCode());
   }
 }
