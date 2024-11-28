@@ -145,7 +145,7 @@ public class LookupTest
 
   @Test
   void testUnaryLookupMissingMember() {
-    IndexOutOfBoundsArrayMetapathException thrown = assertThrows(
+    assertThrows(
         IndexOutOfBoundsArrayMetapathException.class,
         () -> {
           ISequence<?> result = IMetapathExpression.compile("([1,2,3], [1,2,5], [1,2])[?3 = 5]")

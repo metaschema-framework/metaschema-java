@@ -88,4 +88,13 @@ public class ArrayMetapathException
     super(PREFIX, code, cause);
     this.item = item;
   }
+
+  /**
+   * Get the array item involved in the exception.
+   *
+   * @return the array item
+   */
+  public IArrayItem<?> getArrayItem() {
+    return item;
+  }
 }

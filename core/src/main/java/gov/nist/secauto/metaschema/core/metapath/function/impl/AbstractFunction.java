@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.function.CalledContext;
@@ -197,7 +197,7 @@ public abstract class AbstractFunction implements IFunction {
   private IItem getContextItem(@NonNull ISequence<?> focus) {
     IItem contextItem = focus.getFirstItem(true);
     if (isFocusDependent() && contextItem == null) {
-      throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");
+      throw new ContextAbsentDynamicMetapathException("The context item is empty");
     }
     return contextItem;
   }

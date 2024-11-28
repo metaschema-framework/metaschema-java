@@ -160,16 +160,14 @@ public class DynamicContext { // NOPMD - intentional data class
    * Get the document loader assigned to this dynamic context.
    *
    * @return the loader
-   * @throws DynamicMetapathException
-   *           with an error code
-   *           {@link DynamicMetapathException#DYNAMIC_CONTEXT_ABSENT} if a
-   *           document loader is not configured for this dynamic context
+   * @throws ContextAbsentDynamicMetapathException
+   *           if a document loader is not configured for this dynamic context
    */
   @NonNull
   public IDocumentLoader getDocumentLoader() {
     IDocumentLoader retval = sharedState.documentLoader;
     if (retval == null) {
-      throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT,
+      throw new ContextAbsentDynamicMetapathException(
           "No document loader configured for the dynamic context.");
     }
     return retval;
