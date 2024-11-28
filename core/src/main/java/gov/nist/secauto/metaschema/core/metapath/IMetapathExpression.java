@@ -5,10 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ConversionFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
 import gov.nist.secauto.metaschema.core.metapath.impl.LazyCompilationMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.impl.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -92,11 +92,17 @@ public interface IMetapathExpression {
         return ObjectUtils.asNullableType(converter.convert(sequence));
       } catch (ClassCastException ex) {
         throw new InvalidTypeMetapathException(null,
-            String.format("Unable to cast to expected result type '%s' using expected type '%s'.",
-                name(),
-                expectedClass().getName()),
+            String.format("Unable to cast type '%s' to expected result type '%s'.",
+                expectedClass().getName(),
+                name()),
             ex);
       }
+    }
+
+    @FunctionalInterface
+    interface ConversionFunction {
+      @Nullable
+      Object convert(@NonNull ISequence<?> sequence);
     }
   }
 
@@ -308,4 +314,5 @@ public interface IMetapathExpression {
   <T extends IItem> ISequence<T> evaluate(
       @Nullable IItem focus,
       @NonNull DynamicContext dynamicContext);
+
 }

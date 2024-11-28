@@ -5,11 +5,14 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class UnidentifiedFunctionError
-    extends AbstractCodedMetapathException {
-
+    extends CodedMetapathException {
+  @NonNull
+  private static final String PREFIX = "FOER";
   /**
    * the serial version UID.
    */
@@ -25,7 +28,7 @@ public class UnidentifiedFunctionError
    *          the original exception cause
    */
   public UnidentifiedFunctionError(String message, Throwable cause) {
-    super(0, message, cause);
+    super(PREFIX, 0, message, cause);
   }
 
   /**
@@ -36,7 +39,7 @@ public class UnidentifiedFunctionError
    *          the exception message
    */
   public UnidentifiedFunctionError(String message) {
-    super(0, message);
+    super(PREFIX, 0, message);
   }
 
   /**
@@ -47,12 +50,6 @@ public class UnidentifiedFunctionError
    *          the original exception cause
    */
   public UnidentifiedFunctionError(Throwable cause) {
-    super(0, cause);
+    super(PREFIX, 0, cause);
   }
-
-  @Override
-  public String getCodePrefix() {
-    return "FOER";
-  }
-
 }

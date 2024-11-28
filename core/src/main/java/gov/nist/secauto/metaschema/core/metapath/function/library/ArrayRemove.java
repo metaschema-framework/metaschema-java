@@ -13,8 +13,9 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IndexOutOfBoundsArrayMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.item.function.NegativeLengthArrayMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
@@ -83,7 +84,9 @@ public final class ArrayRemove {
    * @param positions
    *          the integer position of the items to remove
    * @return a new array containing the modification
-   * @throws ArrayException
+   * @throws NegativeLengthArrayMetapathException
+   *           if the position is negative
+   * @throws IndexOutOfBoundsArrayMetapathException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
@@ -97,7 +100,7 @@ public final class ArrayRemove {
             .map(IIntegerItem::toIntValueExact)
             .peek(position -> {
               if (position < 1 || position > size) {
-                throw new ArrayException(ArrayException.INDEX_OUT_OF_BOUNDS,
+                throw new ArrayIndexOutOfBoundsException(
                     String.format("Index position '%d' is out of bounds for the array of size '%d'.", position, size));
               }
             })
@@ -115,7 +118,9 @@ public final class ArrayRemove {
    * @param positions
    *          the integer position of the items to remove
    * @return a new array containing the modification
-   * @throws ArrayException
+   * @throws NegativeLengthArrayMetapathException
+   *           if the position is negative
+   * @throws IndexOutOfBoundsArrayMetapathException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
