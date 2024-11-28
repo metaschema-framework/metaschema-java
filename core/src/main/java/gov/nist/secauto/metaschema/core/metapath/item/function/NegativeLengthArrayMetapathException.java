@@ -18,6 +18,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class NegativeLengthArrayMetapathException
     extends ArrayMetapathException {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * Constructs a new exception with the provided {@code code}, {@code message},
    * and no cause.

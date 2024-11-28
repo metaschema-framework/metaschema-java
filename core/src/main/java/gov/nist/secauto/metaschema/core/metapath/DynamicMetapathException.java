@@ -31,7 +31,7 @@ public class DynamicMetapathException
    * context</a> that is
    * <a href="https://www.w3.org/TR/xpath-datamodel-31/#dt-absent">absent</a>.
    */
-  public static final int DYNAMIC_CONTEXT_ABSENT = 2;
+  protected static final int DYNAMIC_CONTEXT_ABSENT = 2;
 
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPDY0050">err:MPDY0050</a>: It
