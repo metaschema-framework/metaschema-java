@@ -5,8 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item;
 
+import gov.nist.secauto.metaschema.core.metapath.InvalidTreatTypeDynamicMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -21,7 +25,7 @@ public final class ItemUtils {
   }
 
   /**
-   * Checks that the item is a node item.
+   * Checks that the item is an {@link INodeItem}.
    *
    * @param item
    *          the item to check
@@ -29,20 +33,53 @@ public final class ItemUtils {
    * @throws TypeMetapathException
    *           if the item is {@code null} or not an {@link INodeItem}
    */
-  // FIXME: make this a method on the type implementation
   @NonNull
-  public static INodeItem checkItemIsNodeItemForStep(@Nullable IItem item) {
-    if (item instanceof INodeItem) {
-      return (INodeItem) item;
+  public static INodeItem checkItemIsNodeItem(@Nullable IItem item) {
+    return checkItemIsType(item, INodeItem.class);
+  }
+
+  /**
+   * Checks that the item is an {@link IDocumentNodeItem}.
+   *
+   * @param item
+   *          the item to check
+   * @return the item cast to a {@link INodeItem}
+   * @throws TypeMetapathException
+   *           if the item is {@code null} or not an {@link INodeItem}
+   */
+  @NonNull
+  public static IDocumentNodeItem checkItemIsDocumentNodeItem(@Nullable IItem item) {
+    return checkItemIsType(item, IDocumentNodeItem.class);
+  }
+
+  @NonNull
+  private static <T extends IItem> T checkItemIsType(@Nullable IItem item, @NonNull Class<T> itemClass) {
+    if (itemClass.isInstance(item)) {
+      return ObjectUtils.notNull(itemClass.cast(item));
     }
+
     if (item == null) {
       throw new TypeMetapathException(TypeMetapathException.NOT_A_NODE_ITEM_FOR_STEP,
           "Item is null.");
     }
+
     throw new TypeMetapathException(TypeMetapathException.NOT_A_NODE_ITEM_FOR_STEP,
         String.format(
-            "The item of type '%s' is not a INodeItem.",
-            item.getClass().getName()));
+            "The item of type '%s' is not of the type '%s'.",
+            item.getClass().getName(),
+            itemClass.getName()));
+  }
+
+  @NonNull
+  public static ISequence<IDocumentNodeItem> getDocumentNodeItems(@NonNull ISequence<?> items) {
+    return ISequence.of(ObjectUtils.notNull(items.stream()
+        // ensures a non-null INodeItem instance
+        .map(ItemUtils::checkItemIsNodeItem)
+        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item))
+            .filter(IDocumentNodeItem.class::isInstance)
+            .map(ItemUtils::checkItemIsDocumentNodeItem)
+            .findFirst().orElseThrow(() -> new InvalidTreatTypeDynamicMetapathException(
+                String.format("The node '%s' is not the descendant of a document node.", item.getMetapath()))))));
   }
 
   /**

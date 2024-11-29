@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTreatTypeDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -58,8 +58,7 @@ public class Treat implements IExpression {
   public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<?> retval = value.accept(dynamicContext, focus);
     if (!type.matches(retval)) {
-      throw new DynamicMetapathException(
-          DynamicMetapathException.TREAT_DOES_NOT_MATCH_TYPE,
+      throw new InvalidTreatTypeDynamicMetapathException(
           String.format("The sequence '%s' does not match the sequence type '%s'.", retval, type.toSignature()));
     }
     return retval;
