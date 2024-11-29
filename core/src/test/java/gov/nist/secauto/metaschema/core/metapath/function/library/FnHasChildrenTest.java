@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
@@ -78,13 +78,7 @@ class FnHasChildrenTest
     });
     Throwable cause = ex.getCause() != null ? ex.getCause().getCause() : null;
 
-    assertAll(
-        () -> assertEquals(DynamicMetapathException.class, cause == null
-            ? null
-            : cause.getClass()),
-        () -> assertEquals(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, cause instanceof DynamicMetapathException
-            ? ((DynamicMetapathException) cause).getCode()
-            : null));
+    assertEquals(ContextAbsentDynamicMetapathException.class, cause == null ? null : cause.getClass());
   }
 
   @Test

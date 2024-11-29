@@ -10,8 +10,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.util.CustomCollectors;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -35,16 +33,7 @@ public class RootSlashPath
   }
 
   @Override
-  public ISequence<?> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
-
-    ISequence<?> roots = ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        // the previous checks for a null instance
-        .flatMap(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).limit(1))
-        .collect(CustomCollectors.toSequence()));
-
-    return getExpression().accept(dynamicContext, roots);
+  public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    return getExpression().accept(dynamicContext, ItemUtils.getDocumentNodeItems(focus));
   }
 }

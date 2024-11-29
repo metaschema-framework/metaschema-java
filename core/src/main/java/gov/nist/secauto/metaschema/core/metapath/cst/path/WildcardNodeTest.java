@@ -45,9 +45,9 @@ public class WildcardNodeTest implements INodeTestExpression {
   }
 
   @Override
-  public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    Stream<INodeItem> stream = focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep);
+  public ISequence<? extends INodeItem> accept(
+      DynamicContext dynamicContext, ISequence<?> focus) {
+    Stream<INodeItem> stream = focus.stream().map(ItemUtils::checkItemIsNodeItem);
 
     if (matcher != null) {
       stream = stream.filter(this::match);

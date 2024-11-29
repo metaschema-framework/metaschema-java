@@ -10,10 +10,9 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.CustomCollectors;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
@@ -36,13 +35,7 @@ public class RootSlashOnlyPath
   }
 
   @Override
-  public ISequence<? extends INodeItem> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
-
-    return ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).findFirst().get())
-        .collect(CustomCollectors.toSequence()));
+  public ISequence<IDocumentNodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    return ItemUtils.getDocumentNodeItems(focus);
   }
 }

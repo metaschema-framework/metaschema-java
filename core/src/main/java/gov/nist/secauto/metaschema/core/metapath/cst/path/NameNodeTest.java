@@ -56,7 +56,7 @@ public class NameNodeTest
   @Override
   public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
+        .map(ItemUtils::checkItemIsNodeItem)
         .filter(this::match)));
   }
 
