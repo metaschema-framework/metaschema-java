@@ -77,9 +77,9 @@ class MetapathExpressionTest {
 
   @Test
   void testMalformedIf() throws IOException {
-    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
       IMetapathExpression.compile("if 'a' = '1.1.2' then true() else false()");
     });
-    assertEquals(StaticMetapathException.INVALID_PATH_GRAMMAR, ex.getCode());
+    assertEquals(StaticMetapathError.INVALID_PATH_GRAMMAR, ex.getErrorCode().getCode());
   }
 }

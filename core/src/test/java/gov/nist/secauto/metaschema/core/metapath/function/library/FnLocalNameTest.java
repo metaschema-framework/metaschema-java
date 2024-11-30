@@ -105,7 +105,7 @@ class FnLocalNameTest
             ? null
             : cause.getClass()),
         () -> assertEquals(TypeMetapathException.INVALID_TYPE_ERROR, cause instanceof TypeMetapathException
-            ? ((TypeMetapathException) cause).getCode()
+            ? ((TypeMetapathException) cause).getErrorCode().getCode()
             : null));
   }
 }

@@ -5,7 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.function.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -14,7 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Represents an error that occurred while performing mathematical operations.
  */
 public class ArrayMetapathException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FOAY";
   /**
@@ -51,7 +52,7 @@ public class ArrayMetapathException
    *          the exception message
    */
   public ArrayMetapathException(int code, @NonNull IArrayItem<?> item, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
     this.item = item;
   }
 
@@ -69,7 +70,7 @@ public class ArrayMetapathException
    *          the original exception cause
    */
   public ArrayMetapathException(int code, @NonNull IArrayItem<?> item, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
     this.item = item;
   }
 
@@ -85,7 +86,7 @@ public class ArrayMetapathException
    *          the original exception cause
    */
   public ArrayMetapathException(int code, @NonNull IArrayItem<?> item, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
     this.item = item;
   }
 

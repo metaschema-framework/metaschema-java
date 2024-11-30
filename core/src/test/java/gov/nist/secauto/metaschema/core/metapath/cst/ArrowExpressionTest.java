@@ -15,8 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -78,7 +77,7 @@ class ArrowExpressionTest
         MetapathException.class,
         () -> IMetapathExpression.compile("() => $ex:undefined()", staticContext)
             .evaluate(null, dynamicContext));
-    assertEquals(StaticMetapathException.NOT_DEFINED,
-        ObjectUtils.requireNonNull((CodedMetapathException) ex.getCause()).getCode());
+    assertEquals(StaticMetapathError.NOT_DEFINED,
+        ObjectUtils.requireNonNull((StaticMetapathError) ex.getCause()).getErrorCode().getCode());
   }
 }

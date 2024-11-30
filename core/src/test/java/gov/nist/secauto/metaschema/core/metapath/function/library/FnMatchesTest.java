@@ -107,7 +107,7 @@ class FnMatchesTest
             throw ex;
           }
         });
-    assertEquals(RegularExpressionMetapathException.INVALID_EXPRESSION, throwable.getCode());
+    assertEquals(RegularExpressionMetapathException.INVALID_EXPRESSION, throwable.getErrorCode().getCode());
   }
 
   @Test
@@ -131,6 +131,6 @@ class FnMatchesTest
             throw ex;
           }
         });
-    assertEquals(RegularExpressionMetapathException.INVALID_FLAG, throwable.getCode());
+    assertEquals(RegularExpressionMetapathException.INVALID_FLAG, throwable.getErrorCode().getCode());
   }
 }

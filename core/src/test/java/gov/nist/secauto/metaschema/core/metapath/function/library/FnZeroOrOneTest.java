@@ -59,7 +59,7 @@ class FnZeroOrOneTest
           () -> assertEquals(
               InvalidArgumentFunctionException.INVALID_ARGUMENT_ZERO_OR_ONE,
               cause instanceof InvalidArgumentFunctionException
-                  ? ((InvalidArgumentFunctionException) cause).getCode()
+                  ? ((InvalidArgumentFunctionException) cause).getErrorCode().getCode()
                   : null));
     }
   }

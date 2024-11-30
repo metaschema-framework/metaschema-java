@@ -5,7 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -13,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FORG: Exceptions related to argument types.
  */
 public class InvalidArgumentFunctionException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FORG";
 
@@ -86,7 +87,7 @@ public class InvalidArgumentFunctionException
    *          the original exception cause
    */
   public InvalidArgumentFunctionException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -99,7 +100,7 @@ public class InvalidArgumentFunctionException
    *          the exception message
    */
   public InvalidArgumentFunctionException(int code, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -112,6 +113,6 @@ public class InvalidArgumentFunctionException
    *          the original exception cause
    */
   public InvalidArgumentFunctionException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

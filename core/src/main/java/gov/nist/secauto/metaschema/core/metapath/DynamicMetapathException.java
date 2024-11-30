@@ -5,8 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -14,7 +12,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * evaluation.
  */
 public class DynamicMetapathException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "MPDY";
 
@@ -58,7 +56,7 @@ public class DynamicMetapathException
    *          the exception message
    */
   public DynamicMetapathException(int code, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -73,7 +71,7 @@ public class DynamicMetapathException
    *          the original exception cause
    */
   public DynamicMetapathException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -86,6 +84,6 @@ public class DynamicMetapathException
    *          the original exception cause
    */
   public DynamicMetapathException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

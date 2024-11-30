@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.impl;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
@@ -82,16 +82,16 @@ public class MetapathExpression
         IExpression expr = new BuildCSTVisitor(context).visit(tree);
         logCst(expr);
         retval = new MetapathExpression(path, expr, context);
-      } catch (StaticMetapathException ex) {
+      } catch (StaticMetapathError ex) {
         String message = ex.getMessageText();
-        throw new StaticMetapathException(
-            ex.getCode(),
+        throw new StaticMetapathError(
+            ex.getErrorCode(),
             String.format("Unable to compile path '%s'.%s", path, message == null ? "" : " " + message),
             ex);
       } catch (MetapathException | ParseCancellationException ex) {
         String msg = String.format("Unable to compile Metapath '%s'", path);
         LOGGER.atError().withThrowable(ex).log(msg);
-        throw new StaticMetapathException(StaticMetapathException.INVALID_PATH_GRAMMAR, msg, ex);
+        throw new StaticMetapathError(StaticMetapathError.INVALID_PATH_GRAMMAR, msg, ex);
       }
     }
     return retval;

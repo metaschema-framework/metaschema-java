@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParamContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
@@ -1150,16 +1150,16 @@ public class BuildCSTVisitor
     IAtomicOrUnionType<?> type;
     try {
       type = getContext().lookupAtomicType(name);
-    } catch (StaticMetapathException ex) {
-      if (StaticMetapathException.UNKNOWN_TYPE == ex.getCode()) {
-        throw new StaticMetapathException(StaticMetapathException.CAST_UNKNOWN_TYPE, ex);
+    } catch (StaticMetapathError ex) {
+      if (StaticMetapathError.UNKNOWN_TYPE == ex.getErrorCode().getCode()) {
+        throw new StaticMetapathError(StaticMetapathError.CAST_UNKNOWN_TYPE, ex);
       }
       throw ex;
     }
 
     if (IItemType.anyAtomic().equals(type)) {
-      throw new StaticMetapathException(
-          StaticMetapathException.CAST_ANY_ATOMIC,
+      throw new StaticMetapathError(
+          StaticMetapathError.CAST_ANY_ATOMIC,
           String.format("Type cannot be '%s',", IItemType.anyAtomic()));
     }
     return type;
@@ -1251,8 +1251,8 @@ public class BuildCSTVisitor
           // function expression
           result = visit(arrowCtx.parenthesizedexpr().expr());
         } else {
-          throw new StaticMetapathException(
-              StaticMetapathException.INVALID_PATH_GRAMMAR,
+          throw new StaticMetapathError(
+              StaticMetapathError.INVALID_PATH_GRAMMAR,
               String.format("Unable to get function name using arrow specifier '%s'.", arrowCtx.getText()));
         }
 

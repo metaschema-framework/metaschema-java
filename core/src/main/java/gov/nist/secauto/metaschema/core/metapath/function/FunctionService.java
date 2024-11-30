@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -85,16 +85,16 @@ public final class FunctionService {
    *          the count of arguments for use in determining an argument signature
    *          match
    * @return the matching function or {@code null} if no match exists
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
-   *           a matching function was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#NO_FUNCTION_MATCH} if a
+   *           matching function was not found
    */
   @NonNull
   public IFunction getFunction(@NonNull IEnhancedQName name, int arity) {
     IFunction retval = getLibrary().getFunction(name, arity);
 
     if (retval == null) {
-      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,
+      throw new StaticMetapathError(StaticMetapathError.NO_FUNCTION_MATCH,
           String.format("unable to find function with name '%s' having arity '%d'", name, arity));
     }
     return retval;

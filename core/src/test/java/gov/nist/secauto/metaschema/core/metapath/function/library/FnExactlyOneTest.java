@@ -59,7 +59,7 @@ class FnExactlyOneTest
           () -> assertEquals(
               InvalidArgumentFunctionException.INVALID_ARGUMENT_EXACTLY_ONE,
               cause instanceof InvalidArgumentFunctionException
-                  ? ((InvalidArgumentFunctionException) cause).getCode()
+                  ? ((InvalidArgumentFunctionException) cause).getErrorCode().getCode()
                   : null));
     }
   }
