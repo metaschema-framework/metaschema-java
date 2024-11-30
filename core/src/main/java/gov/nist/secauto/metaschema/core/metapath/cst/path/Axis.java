@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -36,8 +36,8 @@ public enum Axis implements IExpression {
   FOLLOWING(INodeItem::following),
   PRECEDING(INodeItem::preceding),
   NAMESPACE(focus -> {
-    throw new StaticMetapathException(
-        StaticMetapathException.AXIS_NAMESPACE_UNSUPPORTED,
+    throw new StaticMetapathError(
+        StaticMetapathError.AXIS_NAMESPACE_UNSUPPORTED,
         "The 'namespace' axis is not supported");
   });
 

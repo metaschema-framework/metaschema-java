@@ -5,8 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnDoc;
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -14,7 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FODC: Exceptions representing document related errors.
  */
 public class DocumentFunctionException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FODC";
   /**
@@ -55,7 +56,7 @@ public class DocumentFunctionException
    *          the exception message
    */
   public DocumentFunctionException(int code, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -70,7 +71,7 @@ public class DocumentFunctionException
    *          the original exception cause
    */
   public DocumentFunctionException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -83,6 +84,6 @@ public class DocumentFunctionException
    *          the original exception cause
    */
   public DocumentFunctionException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

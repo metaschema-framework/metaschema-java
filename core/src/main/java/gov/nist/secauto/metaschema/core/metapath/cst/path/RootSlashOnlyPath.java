@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentBasedNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
@@ -35,7 +35,7 @@ public class RootSlashOnlyPath
   }
 
   @Override
-  public ISequence<IDocumentNodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  public ISequence<IDocumentBasedNodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     return ItemUtils.getDocumentNodeItems(focus);
   }
 }

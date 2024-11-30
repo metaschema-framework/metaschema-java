@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.antlr.AbstractAstVisitor;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -49,7 +49,7 @@ public abstract class AbstractCSTVisitorBase
    *          if {@code true} require the resulting QName to have a namespace, or
    *          {@code false} otherwise
    * @return the QName
-   * @throws StaticMetapathException
+   * @throws StaticMetapathError
    *           if the expanded QName prefix is not bound or if the resulting
    *           namespace is invalid
    */
@@ -86,8 +86,8 @@ public abstract class AbstractCSTVisitorBase
       }
       namespaceUri = context.lookupNamespaceForPrefix(prefix);
       if (namespaceUri == null && requireNamespace) {
-        throw new StaticMetapathException(
-            StaticMetapathException.PREFIX_NOT_EXPANDABLE,
+        throw new StaticMetapathError(
+            StaticMetapathError.PREFIX_NOT_EXPANDABLE,
             String.format("The static context does not have a namespace URI configured for prefix '%s'.", prefix));
       }
     }
@@ -97,7 +97,7 @@ public abstract class AbstractCSTVisitorBase
       retval = new QName(localName);
     } else {
       if ("http://www.w3.org/2000/xmlns/".equals(namespaceUri)) {
-        throw new StaticMetapathException(StaticMetapathException.NAMESPACE_MISUSE,
+        throw new StaticMetapathError(StaticMetapathError.NAMESPACE_MISUSE,
             "The namespace of an expanded QName cannot be: http://www.w3.org/2000/xmlns/");
       }
       retval = new QName(namespaceUri, localName);

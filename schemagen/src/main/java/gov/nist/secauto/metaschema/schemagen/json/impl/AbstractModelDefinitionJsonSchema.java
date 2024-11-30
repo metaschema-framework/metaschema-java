@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
@@ -58,7 +58,7 @@ public abstract class AbstractModelDefinitionJsonSchema<D extends IModelDefiniti
       try {
         jsonKeyFlag = definition.getFlagInstanceByName(
             ModuleUtils.parseFlagName(definition.getContainingModule(), jsonKeyFlagName).getIndexPosition());
-      } catch (StaticMetapathException ex) {
+      } catch (StaticMetapathError ex) {
         throw new IllegalArgumentException(ex);
       }
       if (jsonKeyFlag == null) {

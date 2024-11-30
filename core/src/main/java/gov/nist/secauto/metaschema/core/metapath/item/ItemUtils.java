@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item;
 
 import gov.nist.secauto.metaschema.core.metapath.InvalidTreatTypeDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentBasedNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -38,20 +38,6 @@ public final class ItemUtils {
     return checkItemIsType(item, INodeItem.class);
   }
 
-  /**
-   * Checks that the item is an {@link IDocumentNodeItem}.
-   *
-   * @param item
-   *          the item to check
-   * @return the item cast to a {@link INodeItem}
-   * @throws TypeMetapathException
-   *           if the item is {@code null} or not an {@link INodeItem}
-   */
-  @NonNull
-  public static IDocumentNodeItem checkItemIsDocumentNodeItem(@Nullable IItem item) {
-    return checkItemIsType(item, IDocumentNodeItem.class);
-  }
-
   @NonNull
   private static <T extends IItem> T checkItemIsType(@Nullable IItem item, @NonNull Class<T> itemClass) {
     if (itemClass.isInstance(item)) {
@@ -71,13 +57,13 @@ public final class ItemUtils {
   }
 
   @NonNull
-  public static ISequence<IDocumentNodeItem> getDocumentNodeItems(@NonNull ISequence<?> items) {
+  public static ISequence<IDocumentBasedNodeItem> getDocumentNodeItems(@NonNull ISequence<?> items) {
     return ISequence.of(ObjectUtils.notNull(items.stream()
         // ensures a non-null INodeItem instance
         .map(ItemUtils::checkItemIsNodeItem)
         .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item))
-            .filter(IDocumentNodeItem.class::isInstance)
-            .map(ItemUtils::checkItemIsDocumentNodeItem)
+            .filter(IDocumentBasedNodeItem.class::isInstance)
+            .map(node -> (IDocumentBasedNodeItem) node)
             .findFirst().orElseThrow(() -> new InvalidTreatTypeDynamicMetapathException(
                 String.format("The node '%s' is not the descendant of a document node.", item.getMetapath()))))));
   }

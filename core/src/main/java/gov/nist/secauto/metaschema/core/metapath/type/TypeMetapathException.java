@@ -5,7 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -13,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * MPTY: Exceptions related to Metapath type errors.
  */
 public class TypeMetapathException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "MPTY";
   /**
@@ -31,6 +32,7 @@ public class TypeMetapathException
    * <a href="https://www.w3.org/TR/xpath-31/#id-sequencetype-matching">2.5.5
    * SequenceType Matching</a>.
    */
+  // FIXME: differentiate static vs dynamic errors
   public static final int INVALID_TYPE_ERROR = 4;
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPTY0019">err:MPTY0019</a>: It
@@ -61,7 +63,7 @@ public class TypeMetapathException
    *          the original exception cause
    */
   public TypeMetapathException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -74,7 +76,7 @@ public class TypeMetapathException
    *          the exception message
    */
   public TypeMetapathException(int code, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -87,6 +89,6 @@ public class TypeMetapathException
    *          the original exception cause
    */
   public TypeMetapathException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

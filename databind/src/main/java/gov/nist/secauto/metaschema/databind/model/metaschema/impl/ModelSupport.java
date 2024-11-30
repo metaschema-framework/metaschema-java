@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvi
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -132,7 +132,7 @@ public final class ModelSupport {
       try {
         source.getStaticContext();
         type = StaticContext.lookupAtomicType(qname);
-      } catch (StaticMetapathException ex) {
+      } catch (StaticMetapathError ex) {
         throw new IllegalStateException("Unrecognized data type: " + qname, ex);
 
       }

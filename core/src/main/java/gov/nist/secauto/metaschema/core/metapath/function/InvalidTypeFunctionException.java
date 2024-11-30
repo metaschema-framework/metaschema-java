@@ -5,7 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
@@ -17,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FOTY: Exceptions related to type errors.
  */
 public class InvalidTypeFunctionException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FOTY";
   /**
@@ -63,7 +64,7 @@ public class InvalidTypeFunctionException
    *          the item the exception applies to
    */
   public InvalidTypeFunctionException(int code, @NonNull IItem item) {
-    super(PREFIX, code, generateMessage(item));
+    super(IErrorCode.of(PREFIX, code), generateMessage(item));
   }
 
   /**
@@ -78,7 +79,7 @@ public class InvalidTypeFunctionException
    *          the original exception cause
    */
   public InvalidTypeFunctionException(int code, @NonNull IItem item, Throwable cause) {
-    super(PREFIX, code, generateMessage(item), cause);
+    super(IErrorCode.of(PREFIX, code), generateMessage(item), cause);
   }
 
   private static String generateMessage(@NonNull IItem item) {

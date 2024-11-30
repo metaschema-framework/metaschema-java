@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
 import gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
@@ -88,14 +88,14 @@ public class FunctionCallAccessor implements IExpression {
 
     // the value to find, which will be the key for a map or the index for an array
     IExpression argument = getArguments().stream().findFirst()
-        .orElseThrow(() -> new StaticMetapathException(
-            StaticMetapathException.NO_FUNCTION_MATCH,
+        .orElseThrow(() -> new StaticMetapathError(
+            StaticMetapathError.NO_FUNCTION_MATCH,
             "No key provided for array or map lookup"));
 
     IAnyAtomicItem key = ISequence.of(argument.accept(dynamicContext, focus).atomize())
         .getFirstItem(false);
     if (key == null) {
-      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,
+      throw new StaticMetapathError(StaticMetapathError.NO_FUNCTION_MATCH,
           "No key provided for functional call lookup");
     }
 

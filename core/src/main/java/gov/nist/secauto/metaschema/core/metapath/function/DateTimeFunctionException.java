@@ -5,7 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -13,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FODT: Exceptions related to Date/Time/Duration errors.
  */
 public class DateTimeFunctionException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FODT";
   /**
@@ -53,7 +54,7 @@ public class DateTimeFunctionException
    *          the exception message
    */
   public DateTimeFunctionException(int code, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -68,7 +69,7 @@ public class DateTimeFunctionException
    *          the original exception cause
    */
   public DateTimeFunctionException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -81,6 +82,6 @@ public class DateTimeFunctionException
    *          the original exception cause
    */
   public DateTimeFunctionException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

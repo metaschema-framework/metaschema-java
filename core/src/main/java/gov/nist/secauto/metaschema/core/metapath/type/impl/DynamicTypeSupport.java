@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext.EQNameResolver;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
@@ -89,7 +89,7 @@ public final class DynamicTypeSupport {
       IEnhancedQName expectedName = staticContext.parseModelName(expected);
       IAssemblyDefinition definition = actual.getDefinition();
       return definition.getDefinitionQName().equals(expectedName); // AT is ET
-    } catch (StaticMetapathException ex) {
+    } catch (StaticMetapathError ex) {
       throw new InvalidTypeMetapathException(
           null,
           String.format("The expected type '%s' is not known to the type system.", expected),
@@ -105,7 +105,7 @@ public final class DynamicTypeSupport {
     try {
       IEnhancedQName expectedName = nameResolver.resolve(expected);
       retval = definition.getDefinitionQName().equals(expectedName); // AT is ET
-    } catch (StaticMetapathException ex) {
+    } catch (StaticMetapathError ex) {
       // fail the definition name test
       retval = false;
     }
@@ -120,7 +120,7 @@ public final class DynamicTypeSupport {
     IAtomicOrUnionType<?> expectedType;
     try {
       expectedType = staticContext.lookupAtomicType(expected);
-    } catch (StaticMetapathException ex) {
+    } catch (StaticMetapathError ex) {
       throw new InvalidTypeMetapathException(
           null,
           String.format("The expected type '%s' is not known to the type system.", expected),
