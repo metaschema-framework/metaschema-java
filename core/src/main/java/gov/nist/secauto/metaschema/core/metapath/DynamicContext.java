@@ -333,8 +333,8 @@ public class DynamicContext { // NOPMD - intentional data class
       if (letVariableMap.containsKey(name.getIndexPosition())) {
         throw new MetapathException(String.format("Variable '%s' has null contents.", name));
       }
-      throw new StaticMetapathException(
-          StaticMetapathException.NOT_DEFINED,
+      throw new StaticMetapathError(
+          StaticMetapathError.NOT_DEFINED,
           String.format("Variable '%s' not defined in the dynamic context.", name));
     }
     return retval;
@@ -348,13 +348,13 @@ public class DynamicContext { // NOPMD - intentional data class
    * @param arity
    *          the number of arguments in the requested function
    * @return the function
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
-   *           a matching function was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#NO_FUNCTION_MATCH} if a
+   *           matching function was not found
    */
   @NonNull
-  public IFunction getFunction(@NonNull IEnhancedQName name, int arity) {
-    return StaticContext.lookupFunction(name, arity);
+  public IFunction lookupFunction(@NonNull IEnhancedQName name, int arity) {
+    return getStaticContext().lookupFunction(name, arity);
   }
 
   /**

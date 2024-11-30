@@ -16,6 +16,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 
@@ -74,10 +76,10 @@ class MetapathExpressionTest {
   }
 
   @Test
-  void testMalformedIf() {
-    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+  void testMalformedIf() throws IOException {
+    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
       IMetapathExpression.compile("if 'a' = '1.1.2' then true() else false()");
     });
-    assertEquals(StaticMetapathException.INVALID_PATH_GRAMMAR, ex.getCode());
+    assertEquals(StaticMetapathError.INVALID_PATH_GRAMMAR, ex.getErrorCode().getCode());
   }
 }

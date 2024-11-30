@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -106,8 +106,8 @@ public enum Axis {
    * This axis is not supported.
    */
   NAMESPACE(focus -> {
-    throw new StaticMetapathException(
-        StaticMetapathException.AXIS_NAMESPACE_UNSUPPORTED,
+    throw new StaticMetapathError(
+        StaticMetapathError.AXIS_NAMESPACE_UNSUPPORTED,
         "The 'namespace' axis is not supported");
   });
 

@@ -147,7 +147,7 @@ class OperationFunctionsTest {
         ArithmeticFunctionException thrown = assertThrows(ArithmeticFunctionException.class, () -> {
           OperationFunctions.opNumericDivide(dividend, divisor);
         });
-        assertEquals(ArithmeticFunctionException.DIVISION_BY_ZERO, thrown.getCode());
+        assertEquals(ArithmeticFunctionException.DIVISION_BY_ZERO, thrown.getErrorCode().getCode());
       }
     }
 
@@ -193,7 +193,7 @@ class OperationFunctionsTest {
         ArithmeticFunctionException thrown = assertThrows(ArithmeticFunctionException.class, () -> {
           OperationFunctions.opNumericIntegerDivide(dividend, divisor);
         });
-        assertEquals(ArithmeticFunctionException.DIVISION_BY_ZERO, thrown.getCode());
+        assertEquals(ArithmeticFunctionException.DIVISION_BY_ZERO, thrown.getErrorCode().getCode());
       }
     }
 
@@ -465,7 +465,7 @@ class OperationFunctionsTest {
                 IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"),
                 IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
+          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
         }
 
         @Test
@@ -486,7 +486,7 @@ class OperationFunctionsTest {
                 IYearMonthDurationItem.valueOf("-P" + Integer.MAX_VALUE + "Y"),
                 IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
+          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
         }
 
         @Test
@@ -518,7 +518,7 @@ class OperationFunctionsTest {
                 IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"),
                 IDecimalItem.valueOf("2.5"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
+          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
         }
 
         @Test
@@ -564,7 +564,7 @@ class OperationFunctionsTest {
                 IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"),
                 IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
+          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
         }
 
         @Test
@@ -585,7 +585,7 @@ class OperationFunctionsTest {
                 IDayTimeDurationItem.valueOf("-PT" + (Long.MAX_VALUE - 807) + "S"),
                 IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
+          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
         }
 
         @Test
@@ -606,7 +606,7 @@ class OperationFunctionsTest {
                 IDayTimeDurationItem.valueOf("PT" + Long.MAX_VALUE / 2 + "S"),
                 IDecimalItem.valueOf("5"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
+          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
         }
 
         @Test

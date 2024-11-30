@@ -5,12 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class JsonFunctionException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FOJS";
   /**
@@ -43,7 +44,7 @@ public class JsonFunctionException
    *          the exception message
    */
   public JsonFunctionException(int code, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -58,7 +59,7 @@ public class JsonFunctionException
    *          the original exception cause
    */
   public JsonFunctionException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -71,6 +72,6 @@ public class JsonFunctionException
    *          the original exception cause
    */
   public JsonFunctionException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

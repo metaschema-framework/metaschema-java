@@ -9,7 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
@@ -115,7 +115,7 @@ public final class MpRecurseDepth {
     try {
       recursionMetapath = IMetapathExpression.compile(recursionPath.asString(), dynamicContext.getStaticContext());
     } catch (MetapathException ex) {
-      throw new StaticMetapathException(StaticMetapathException.INVALID_PATH_GRAMMAR, ex.getMessage(), ex);
+      throw new StaticMetapathError(StaticMetapathError.INVALID_PATH_GRAMMAR, ex.getMessage(), ex);
     }
 
     return recurseDepth(initialContext, recursionMetapath, dynamicContext);

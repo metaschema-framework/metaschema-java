@@ -5,7 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -14,7 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FOCA: Exceptions related to type casting.
  */
 public class CastFunctionException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FOCA";
   /**
@@ -54,7 +55,7 @@ public class CastFunctionException
    *          the exception message text
    */
   public CastFunctionException(int code, @NonNull IAnyAtomicItem item, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
     this.item = item;
   }
 
@@ -72,7 +73,7 @@ public class CastFunctionException
    *          the original exception cause
    */
   public CastFunctionException(int code, @NonNull IAnyAtomicItem item, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
     this.item = item;
   }
 

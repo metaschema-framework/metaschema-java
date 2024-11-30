@@ -28,7 +28,7 @@ import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
@@ -303,9 +303,9 @@ class BuildCstVisitorTest {
     Throwable cause = thrown.getCause();
 
     assertEquals(
-        StaticMetapathException.NO_FUNCTION_MATCH,
-        cause instanceof StaticMetapathException
-            ? ((StaticMetapathException) cause).getCode()
+        StaticMetapathError.NO_FUNCTION_MATCH,
+        cause instanceof StaticMetapathError
+            ? ((StaticMetapathError) cause).getErrorCode().getCode()
             : null);
   }
 

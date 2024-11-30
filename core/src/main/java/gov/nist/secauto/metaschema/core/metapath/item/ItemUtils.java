@@ -13,10 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -75,6 +71,29 @@ public final class ItemUtils {
   }
 
   /**
+   * Get the ancestor document nodes for the provided items.
+   * <p>
+   * The resulting sequence has items of the {@link IDocumentBasedNodeItem} to
+   * allow for both module and document querying.
+   *
+   * @param items
+   *          the node items to get the document roots for
+   * @return the document root node items
+   */
+  @NonNull
+  public static ISequence<IDocumentBasedNodeItem> getDocumentNodeItems(@NonNull ISequence<?> items) {
+    return ISequence.of(ObjectUtils.notNull(items.stream()
+        // ensures a non-null INodeItem instance
+        .map(ItemUtils::checkItemIsNodeItem)
+        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item))
+            .findFirst().stream()
+            .filter(IDocumentBasedNodeItem.class::isInstance)
+            .map(ItemUtils::checkItemIsDocumentNodeItem)
+            .findFirst().orElseThrow(() -> new InvalidTreatTypeDynamicMetapathException(
+                String.format("The node '%s' is not the descendant of a document node.", item.getMetapath()))))));
+  }
+
+  /**
    * Check that the item is the type specified by {@code clazz}.
    *
    * @param <TYPE>
@@ -100,55 +119,5 @@ public final class ItemUtils {
             "The item of type '%s' is not the required type '%s'.",
             item.getClass().getName(),
             clazz.getName()));
-  }
-
-  /**
-   * Get the ancestor document nodes for the provided items.
-   * <p>
-   * The resulting sequence has items of the {@link IDocumentBasedNodeItem} to
-   * allow for both module and document querying.
-   *
-   * @param items
-   *          the node items to get the document roots for
-   * @return the document root node items
-   */
-  @NonNull
-  public static ISequence<IDocumentBasedNodeItem> getDocumentNodeItems(@NonNull ISequence<?> items) {
-    return ISequence.of(ObjectUtils.notNull(items.stream()
-        // ensures a non-null INodeItem instance
-        .map(ItemUtils::checkItemIsNodeItem)
-        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item))
-            .findFirst().stream()
-            .filter(IDocumentBasedNodeItem.class::isInstance)
-            .map(ItemUtils::checkItemIsDocumentNodeItem)
-            .findFirst().orElseThrow(() -> new InvalidTreatTypeDynamicMetapathException(
-                String.format("The node '%s' is not the descendant of a document node.", item.getMetapath()))))));
-  }
-
-  @NonNull
-  public static <T> Stream<Class<? extends T>> interfacesFor(
-      @NonNull Class<? extends T> seed,
-      @NonNull Class<T> base) {
-    return ancestorsOrSelf(seed)
-        .flatMap(clazz -> Stream.ofNullable(asSubclassOrNull(clazz, base)))
-        .flatMap(clazz -> Stream.concat(
-            Stream.of(clazz),
-            Arrays.stream(seed.getInterfaces())
-                .flatMap(cls -> Stream.ofNullable(asSubclassOrNull(cls, base)))));
-  }
-
-  private static <T> Stream<Class<? super T>> ancestorsOrSelf(@NonNull Class<T> seed) {
-    return Stream.iterate(seed, Objects::nonNull, Class::getSuperclass);
-  }
-
-  @Nullable
-  private static <T> Class<? extends T> asSubclassOrNull(Class<?> clazz, Class<T> base) {
-    Class<? extends T> retval = null;
-    try {
-      retval = clazz.asSubclass(base);
-    } catch (@SuppressWarnings("unused") ClassCastException ex) {
-      // not a subclass, do nothing
-    }
-    return retval;
   }
 }
