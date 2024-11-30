@@ -5,14 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class UnidentifiedFunctionError
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
-  private static final String PREFIX = "FOER";
+  private static final IErrorCode ERROR_CODE = IErrorCode.of("FOER", 0);
+
   /**
    * the serial version UID.
    */
@@ -28,7 +30,7 @@ public class UnidentifiedFunctionError
    *          the original exception cause
    */
   public UnidentifiedFunctionError(String message, Throwable cause) {
-    super(PREFIX, 0, message, cause);
+    super(ERROR_CODE, message, cause);
   }
 
   /**
@@ -39,7 +41,7 @@ public class UnidentifiedFunctionError
    *          the exception message
    */
   public UnidentifiedFunctionError(String message) {
-    super(PREFIX, 0, message);
+    super(ERROR_CODE, message);
   }
 
   /**
@@ -50,6 +52,6 @@ public class UnidentifiedFunctionError
    *          the original exception cause
    */
   public UnidentifiedFunctionError(Throwable cause) {
-    super(PREFIX, 0, cause);
+    super(ERROR_CODE, cause);
   }
 }

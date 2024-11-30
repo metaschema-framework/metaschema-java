@@ -82,7 +82,7 @@ public class NamedFunctionReference
 
   @Override
   protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
-    IFunction function = dynamicContext.getFunction(name, arity);
+    IFunction function = dynamicContext.lookupFunction(name, arity);
     return ISequence.of(function);
   }
 }

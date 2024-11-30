@@ -5,7 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -13,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Represents an error that occurred while performing mathematical operations.
  */
 public class ArithmeticFunctionException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FOAR";
   /**
@@ -50,7 +51,7 @@ public class ArithmeticFunctionException
    *          the exception message
    */
   public ArithmeticFunctionException(int code, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -65,7 +66,7 @@ public class ArithmeticFunctionException
    *          the original exception cause
    */
   public ArithmeticFunctionException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -78,6 +79,6 @@ public class ArithmeticFunctionException
    *          the original exception cause
    */
   public ArithmeticFunctionException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

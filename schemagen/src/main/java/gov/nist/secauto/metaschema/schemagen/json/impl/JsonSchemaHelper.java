@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IContainerModelAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
@@ -199,12 +198,7 @@ public final class JsonSchemaHelper {
 
     // determine the flag instances to generate
     if (jsonKeyFlagName != null) {
-      IFlagInstance jsonKeyFlag;
-      try {
-        jsonKeyFlag = definition.getFlagInstanceByName(jsonKeyFlagName.getIndexPosition());
-      } catch (StaticMetapathException ex) {
-        throw new IllegalArgumentException(ex);
-      }
+      IFlagInstance jsonKeyFlag = definition.getFlagInstanceByName(jsonKeyFlagName.getIndexPosition());
       if (jsonKeyFlag == null) {
         throw new IllegalArgumentException(
             String.format("The referenced json-key flag-name '%s' does not exist on definition '%s'.",

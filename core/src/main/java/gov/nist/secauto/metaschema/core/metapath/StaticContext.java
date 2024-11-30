@@ -24,7 +24,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -255,9 +254,9 @@ public final class StaticContext {
    * @param name
    *          the name
    * @return the parsed qualified name
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if a non-empty prefix is provided
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           a non-empty prefix is provided
    */
   @NonNull
   public IEnhancedQName parseAtomicTypeName(@NonNull String name) {
@@ -280,24 +279,24 @@ public final class StaticContext {
    * Lookup the atomic type with the provided name in the static context.
    * <p>
    * This method will first attempt to expand the namespace prefix for a lexical
-   * QName. A {@link StaticMetapathException} with the code
-   * {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE} if the prefix is not
-   * known to the static context.
+   * QName. A {@link StaticMetapathError} with the code
+   * {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if the prefix is not known
+   * to the static context.
    * <p>
    * Once the qualified name has been produced, the atomic type will be retrieved
    * from the available atomic types. If the atomic type was not found, a
-   * {@link StaticMetapathException} with the code
-   * {@link StaticMetapathException#UNKNOWN_TYPE} will be thrown. Otherwise, the
-   * type information is returned for the matching atomic type.
+   * {@link StaticMetapathError} with the code
+   * {@link StaticMetapathError#UNKNOWN_TYPE} will be thrown. Otherwise, the type
+   * information is returned for the matching atomic type.
    *
    * @param name
    *          the namespace qualified or lexical name of the data type.
    * @return the data type information
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if the lexical name was not able to be expanded or the code
-   *           {@link StaticMetapathException#NO_FUNCTION_MATCH} if a matching
-   *           type was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           the lexical name was not able to be expanded or the code
+   *           {@link StaticMetapathError#NO_FUNCTION_MATCH} if a matching type
+   *           was not found
    */
   @NonNull
   public IAtomicOrUnionType<?> lookupAtomicType(@NonNull String name) {
@@ -311,16 +310,16 @@ public final class StaticContext {
    * @param qname
    *          the qualified name
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
-   *           type was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#UNKNOWN_TYPE} if the type
+   *           was not found
    */
   @NonNull
   public static IAtomicOrUnionType<?> lookupAtomicType(@NonNull IEnhancedQName qname) {
     IAtomicOrUnionType<?> retval = DataTypeService.instance().getAtomicTypeByQNameIndex(qname.getIndexPosition());
     if (retval == null) {
-      throw new StaticMetapathException(
-          StaticMetapathException.UNKNOWN_TYPE,
+      throw new StaticMetapathError(
+          StaticMetapathError.UNKNOWN_TYPE,
           String.format("The atomic type named '%s' was not found.", qname));
     }
     return retval;
@@ -334,16 +333,16 @@ public final class StaticContext {
    * @param clazz
    *          the item class associated with the atomic type
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
-   *           type was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#UNKNOWN_TYPE} if the type
+   *           was not found
    */
   @NonNull
   public static <T extends IAnyAtomicItem> IAtomicOrUnionType<T> lookupAtomicType(Class<T> clazz) {
     IAtomicOrUnionType<T> retval = DataTypeService.instance().getAtomicTypeByItemClass(clazz);
     if (retval == null) {
-      throw new StaticMetapathException(
-          StaticMetapathException.UNKNOWN_TYPE,
+      throw new StaticMetapathError(
+          StaticMetapathError.UNKNOWN_TYPE,
           String.format("The atomic type for item class '%s' was not found.", clazz.getName()));
     }
     return retval;
@@ -355,16 +354,16 @@ public final class StaticContext {
    * @param clazz
    *          the item class associated with the atomic type
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
-   *           type was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#UNKNOWN_TYPE} if the type
+   *           was not found
    */
   @NonNull
   public static IItemType lookupItemType(Class<? extends IItem> clazz) {
     IItemType retval = DataTypeService.instance().getItemTypeByItemClass(clazz);
     if (retval == null) {
-      throw new StaticMetapathException(
-          StaticMetapathException.UNKNOWN_TYPE,
+      throw new StaticMetapathError(
+          StaticMetapathError.UNKNOWN_TYPE,
           String.format("The item type for item class '%s' was not found.", clazz.getName()));
     }
     return retval;
@@ -414,14 +413,14 @@ public final class StaticContext {
    *
    * @param prefix
    *          the lexical prefix to check
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if a non-empty prefix is provided
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           a non-empty prefix is provided
    */
   private static void checkForUnknownPrefix(@NonNull String prefix) {
     if (!prefix.isEmpty()) {
-      throw new StaticMetapathException(
-          StaticMetapathException.PREFIX_NOT_EXPANDABLE,
+      throw new StaticMetapathError(
+          StaticMetapathError.PREFIX_NOT_EXPANDABLE,
           String.format("The namespace prefix '%s' is not expandable.",
               prefix));
     }
@@ -431,31 +430,31 @@ public final class StaticContext {
    * Lookup a known Metapath function based on the function's name and arity.
    * <p>
    * This method will first attempt to expand the namespace prefix for a lexical
-   * QName. A {@link StaticMetapathException} with the code
-   * {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE} if the prefix is not
-   * known to the static context.
+   * QName. A {@link StaticMetapathError} with the code
+   * {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if the prefix is not known
+   * to the static context.
    * <p>
    * Once the qualified name has been produced, the function will be retrieved
    * from the available functions. If the function was not found, a
-   * {@link StaticMetapathException} with the code
-   * {@link StaticMetapathException#UNKNOWN_TYPE} will be thrown. Otherwise, the
-   * data type information is returned for the matching data type.
+   * {@link StaticMetapathError} with the code
+   * {@link StaticMetapathError#UNKNOWN_TYPE} will be thrown. Otherwise, the data
+   * type information is returned for the matching data type.
    *
    * @param name
    *          the qualified or lexical name of the function
    * @param arity
    *          the number of arguments
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if the lexical name was not able to be expanded or the code
-   *           {@link StaticMetapathException#NO_FUNCTION_MATCH} if a matching
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           the lexical name was not able to be expanded or the code
+   *           {@link StaticMetapathError#NO_FUNCTION_MATCH} if a matching
    *           function was not found
    */
   @NonNull
   public IFunction lookupFunction(@NonNull String name, int arity) {
     IEnhancedQName qname = parseFunctionName(name);
-    return functionResolver.getFunction(qname, arity);
+    return lookupFunction(qname, arity);
   }
 
   /**
@@ -464,17 +463,15 @@ public final class StaticContext {
    * @param qname
    *          the qualified name of the function
    * @param arity
-   *          the number of arguments
+   *          the number of arguments <<<<<<< HEAD
    * @return the function
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
-   *           a matching function was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#NO_FUNCTION_MATCH} if a
+   *           matching function was not found
    */
   @NonNull
-  public static IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
-    return FunctionService.getInstance().getFunction(
-        Objects.requireNonNull(qname, "name"),
-        arity);
+  public IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
+    return functionResolver.getFunction(qname, arity);
   }
 
   /**
@@ -496,9 +493,9 @@ public final class StaticContext {
    * @param name
    *          the name
    * @return the parsed qualified name
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if a non-empty prefix is provided
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           a non-empty prefix is provided
    */
   @NonNull
   public IEnhancedQName parseFlagName(@NonNull String name) {

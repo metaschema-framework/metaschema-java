@@ -5,17 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * MPST: Exceptions related to the Metapath static context and static
  * evaluation.
  */
 @SuppressWarnings("PMD.DataClass")
-public class StaticMetapathException
-    extends CodedMetapathException {
+public class StaticMetapathError
+    extends MetapathException {
   @NonNull
   private static final String PREFIX = "MPST";
   /**
@@ -126,6 +125,11 @@ public class StaticMetapathException
    * the serial version UID.
    */
   private static final long serialVersionUID = 2L;
+  /**
+   * The error prefix which identifies what kind of error it is.
+   */
+  @NonNull
+  private final IErrorCode errorCode;
 
   /**
    * Constructs a new exception with the provided {@code code}, {@code message},
@@ -138,8 +142,24 @@ public class StaticMetapathException
    * @param cause
    *          the original exception cause
    */
-  public StaticMetapathException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+  public StaticMetapathError(int code, String message, Throwable cause) {
+    this(IErrorCode.of(PREFIX, code), message, cause);
+  }
+
+  /**
+   * Constructs a new exception with the provided {@code code}, {@code message},
+   * and {@code cause}.
+   *
+   * @param errorCode
+   *          the error code
+   * @param message
+   *          the exception message
+   * @param cause
+   *          the original exception cause
+   */
+  public StaticMetapathError(@NonNull IErrorCode errorCode, String message, Throwable cause) {
+    super(message, cause);
+    this.errorCode = errorCode;
   }
 
   /**
@@ -151,8 +171,9 @@ public class StaticMetapathException
    * @param message
    *          the exception message
    */
-  public StaticMetapathException(int code, String message) {
-    super(PREFIX, code, message);
+  public StaticMetapathError(int code, String message) {
+    super(message);
+    this.errorCode = IErrorCode.of(PREFIX, code);
   }
 
   /**
@@ -164,7 +185,33 @@ public class StaticMetapathException
    * @param cause
    *          the original exception cause
    */
-  public StaticMetapathException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+  public StaticMetapathError(int code, Throwable cause) {
+    super(cause);
+    this.errorCode = IErrorCode.of(PREFIX, code);
+  }
+
+  @Override
+  public final String getMessage() {
+    String message = getMessageText();
+    return String.format("%s%s", getErrorCode().toString(), message == null ? "" : ": " + message);
+  }
+
+  /**
+   * Get the message text without the error code prefix.
+   *
+   * @return the message text or {@code null}
+   */
+  @Nullable
+  public final String getMessageText() {
+    return super.getMessage();
+  }
+
+  /**
+   * Get the error code, which indicates what type of error it is.
+   *
+   * @return the error code
+   */
+  public final IErrorCode getErrorCode() {
+    return errorCode;
   }
 }

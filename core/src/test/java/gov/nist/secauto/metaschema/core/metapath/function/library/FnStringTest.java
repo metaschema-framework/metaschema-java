@@ -106,6 +106,6 @@ class FnStringTest
             throw ex.getCause();
           }
         });
-    assertEquals(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION, throwable.getCode());
+    assertEquals(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION, throwable.getErrorCode().getCode());
   }
 }

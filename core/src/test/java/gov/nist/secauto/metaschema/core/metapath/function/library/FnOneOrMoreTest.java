@@ -59,7 +59,7 @@ class FnOneOrMoreTest
           () -> assertEquals(
               InvalidArgumentFunctionException.INVALID_ARGUMENT_ONE_OR_MORE,
               cause instanceof InvalidArgumentFunctionException
-                  ? ((InvalidArgumentFunctionException) cause).getCode()
+                  ? ((InvalidArgumentFunctionException) cause).getErrorCode().getCode()
                   : null));
     }
   }

@@ -5,8 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnResolveUri;
-import gov.nist.secauto.metaschema.core.metapath.impl.CodedMetapathException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -14,7 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FONS: Exceptions related to function namespaces.
  */
 public class UriFunctionException
-    extends CodedMetapathException {
+    extends DynamicMetapathError {
   @NonNull
   private static final String PREFIX = "FONS";
   /**
@@ -49,7 +50,7 @@ public class UriFunctionException
    *          the exception message
    */
   public UriFunctionException(int code, String message) {
-    super(PREFIX, code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -64,7 +65,7 @@ public class UriFunctionException
    *          the original exception cause
    */
   public UriFunctionException(int code, String message, Throwable cause) {
-    super(PREFIX, code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -77,6 +78,6 @@ public class UriFunctionException
    *          the original exception cause
    */
   public UriFunctionException(int code, Throwable cause) {
-    super(PREFIX, code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

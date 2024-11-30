@@ -76,7 +76,7 @@ class FnTokenizeTest
             throw ex;
           }
         });
-    assertEquals(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING, throwable.getCode());
+    assertEquals(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING, throwable.getErrorCode().getCode());
   }
 
   @Test
@@ -97,7 +97,7 @@ class FnTokenizeTest
             throw ex;
           }
         });
-    assertEquals(RegularExpressionMetapathException.INVALID_EXPRESSION, throwable.getCode());
+    assertEquals(RegularExpressionMetapathException.INVALID_EXPRESSION, throwable.getErrorCode().getCode());
   }
 
   @Test
@@ -121,6 +121,6 @@ class FnTokenizeTest
             throw ex;
           }
         });
-    assertEquals(RegularExpressionMetapathException.INVALID_FLAG, throwable.getCode());
+    assertEquals(RegularExpressionMetapathException.INVALID_FLAG, throwable.getErrorCode().getCode());
   }
 }
