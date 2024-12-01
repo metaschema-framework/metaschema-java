@@ -14,6 +14,9 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * The default implementation of a component of a key used in a key-based index.
+ */
 public class DefaultKeyField implements IKeyField {
 
   @Nullable

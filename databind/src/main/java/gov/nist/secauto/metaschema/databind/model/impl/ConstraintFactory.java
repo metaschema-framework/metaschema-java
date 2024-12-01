@@ -57,7 +57,7 @@ final class ConstraintFactory {
   }
 
   @NonNull
-  static IMetapathExpression toMetapath(
+  static IMetapathExpression metapath(
       @NonNull String metapath,
       @NonNull ISource source) {
     return metapath.isBlank()
@@ -92,9 +92,8 @@ final class ConstraintFactory {
   @NonNull
   static <T extends AbstractConstraintBuilder<T, ?>> T applyTarget(
       @NonNull T builder,
-      @NonNull String target,
-      @NonNull ISource source) {
-    builder.target(toMetapath(target, source));
+      @NonNull IMetapathExpression expression) {
+    builder.target(expression);
     return builder;
   }
 
@@ -174,7 +173,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target(), source);
+    applyTarget(builder, metapath(constraint.target(), source));
     applyProperties(builder, constraint.properties());
     applyRemarks(builder, constraint.remarks());
 
@@ -194,7 +193,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target(), source);
+    applyTarget(builder, metapath(constraint.target(), source));
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -220,7 +219,7 @@ final class ConstraintFactory {
     for (KeyField keyField : keyFields) {
       @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ok
       IKeyField field = IKeyField.of(
-          toMetapath(keyField.target(), source),
+          metapath(keyField.target(), source),
           toPattern(keyField.pattern()),
           toRemarks(keyField.remarks()));
       builder.keyField(field);
@@ -237,7 +236,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target(), source);
+    applyTarget(builder, metapath(constraint.target(), source));
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -256,7 +255,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target(), source);
+    applyTarget(builder, metapath(constraint.target(), source));
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -277,7 +276,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target(), source);
+    applyTarget(builder, metapath(constraint.target(), source));
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -296,12 +295,12 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target(), source);
+    applyTarget(builder, metapath(constraint.target(), source));
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
 
-    builder.test(toMetapath(constraint.test(), source));
+    builder.test(metapath(constraint.test(), source));
 
     return builder.build();
   }
@@ -321,7 +320,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target(), source);
+    applyTarget(builder, metapath(constraint.target(), source));
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -346,7 +345,7 @@ final class ConstraintFactory {
         : MarkupMultiline.fromMarkdown(remarkMarkdown);
     return ILet.of(
         source.getStaticContext().parseVariableName(annotation.name()),
-        annotation.target(),
+        IMetapathExpression.compile(annotation.target(), source.getStaticContext()),
         source,
         remarks);
   }

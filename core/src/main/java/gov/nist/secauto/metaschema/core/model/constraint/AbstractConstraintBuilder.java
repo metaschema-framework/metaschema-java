@@ -43,7 +43,7 @@ public abstract class AbstractConstraintBuilder<
   @NonNull
   private Level level = IConstraint.DEFAULT_LEVEL;
   @NonNull
-  private IMetapathExpression target = IConstraint.DEFAULT_TARGET_METAPATH;
+  private IMetapathExpression target = IMetapathExpression.contextNode();
   @NonNull
   private Map<IAttributable.Key, Set<String>> properties = new LinkedHashMap<>(); // NOPMD not thread safe
   private MarkupMultiline remarks;

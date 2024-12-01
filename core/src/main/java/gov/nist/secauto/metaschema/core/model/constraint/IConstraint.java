@@ -91,7 +91,10 @@ public interface IConstraint extends IAttributable, IDescribable {
   Level DEFAULT_LEVEL = Level.ERROR;
 
   /**
-   * The compiled default target Metapath to use if no target is provided.
+   * <<<<<<< HEAD The compiled default target Metapath to use if no target is
+   * provided. ======= The default target Metapath to use if no target is
+   * provided. >>>>>>> a9987e63a (Cleaned up Metapath compilation in constraint
+   * implementations. Metapaths are now directly compiled at parse time.)
    */
   @NonNull
   IMetapathExpression DEFAULT_TARGET_METAPATH = IMetapathExpression.contextNode();

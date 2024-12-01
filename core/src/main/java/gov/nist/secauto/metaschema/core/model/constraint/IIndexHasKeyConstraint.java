@@ -38,7 +38,7 @@ public interface IIndexHasKeyConstraint extends IKeyConstraint {
    * Create a new constraint builder.
    *
    * @param useIndex
-   *          the index name
+   *          the index name this constraint references
    * @return the builder
    */
   @NonNull

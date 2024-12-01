@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@SuppressWarnings("PMD.DataClass")
 public class RegularExpressionMetapathException
     extends DynamicMetapathError {
   @NonNull

@@ -93,6 +93,7 @@ public abstract class AbstractGenerationState<WRITER, DATATYPE_MANAGER extends I
         closed = true;
       }
 
+      // FIXME: Should this compare the actual compiled expression?
       if (!IMetapathExpression.contextNode().getPath().equals(constraint.getTarget().getPath())) {
         values = CollectionUtil.emptyList();
         break;

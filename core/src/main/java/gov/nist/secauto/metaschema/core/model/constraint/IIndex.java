@@ -24,6 +24,10 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents an index that can support the {@link IIndexConstraint},
+ * {@link IIndexHasKeyConstraint}, and {@link IUniqueConstraint}.
+ */
 public interface IIndex {
 
   /**

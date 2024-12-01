@@ -113,7 +113,7 @@ public interface IMetapathExpression {
    */
   @NonNull
   static IMetapathExpression contextNode() {
-    return MetapathExpression.CONTEXT_NODE;
+    return MetapathExpression.CONTEXT_METAPATH;
   }
 
   /**
@@ -127,7 +127,7 @@ public interface IMetapathExpression {
    */
   @NonNull
   static IMetapathExpression compile(@NonNull String path) {
-    return MetapathExpression.compile(path, StaticContext.instance());
+    return compile(path, StaticContext.instance());
   }
 
   /**

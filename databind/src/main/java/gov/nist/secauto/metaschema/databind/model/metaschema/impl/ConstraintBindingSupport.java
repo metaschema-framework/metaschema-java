@@ -202,7 +202,9 @@ public final class ConstraintBindingSupport {
 
           return ILet.of(
               staticContext.parseVariableName(ObjectUtils.requireNonNull(letObj.getVar())),
-              ObjectUtils.requireNonNull(letObj.getExpression()),
+              IMetapathExpression.compile(
+                  ObjectUtils.requireNonNull(letObj.getExpression()),
+                  source.getStaticContext()),
               source,
               remarks);
         })
