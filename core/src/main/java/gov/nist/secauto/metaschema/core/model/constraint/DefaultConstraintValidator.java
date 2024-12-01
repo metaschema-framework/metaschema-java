@@ -392,7 +392,7 @@ public class DefaultConstraintValidator
     String id = constraint.getId();
     if (id == null) {
       builder.append(" targeting the metapath '")
-          .append(constraint.getTarget())
+          .append(constraint.getTarget().getPath())
           .append('\'');
     } else {
       builder.append(" with id '")
@@ -676,9 +676,7 @@ public class DefaultConstraintValidator
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
       @NonNull DynamicContext dynamicContext) {
-    IMetapathExpression metapath = IMetapathExpression.compile(
-        constraint.getTest(),
-        dynamicContext.getStaticContext());
+    IMetapathExpression test = constraint.getTest();
 
     IConstraintValidationHandler handler = getConstraintValidationHandler();
     targets.stream()
@@ -687,7 +685,7 @@ public class DefaultConstraintValidator
 
           if (item.hasValue()) {
             try {
-              ISequence<?> result = metapath.evaluate(item, dynamicContext);
+              ISequence<?> result = test.evaluate(item, dynamicContext);
               if (FnBoolean.fnBoolean(result).toBoolean()) {
                 handlePass(constraint, node, item, dynamicContext);
               } else {

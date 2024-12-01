@@ -12,6 +12,16 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides builder methods for the core data elements of an {@link IConstraint}
+ * that supports a custom message.
+ *
+ * @param <T>
+ *          the Java type of the implementing builder
+ * @param <R>
+ *          the Java type of the resulting built object
+ * @since 2.0.0
+ */
 public abstract class AbstractKeyConstraintBuilder<
     T extends AbstractKeyConstraintBuilder<T, R>,
     R extends IKeyConstraint>

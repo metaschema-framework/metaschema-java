@@ -211,6 +211,7 @@ public class StaticMetapathError
    *
    * @return the error code
    */
+  @NonNull
   public final IErrorCode getErrorCode() {
     return errorCode;
   }

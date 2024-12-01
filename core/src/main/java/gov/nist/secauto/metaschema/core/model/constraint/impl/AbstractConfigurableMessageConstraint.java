@@ -70,7 +70,7 @@ public abstract class AbstractConfigurableMessageConstraint
       @Nullable MarkupLine description,
       @NonNull ISource source,
       @NonNull Level level,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull Map<IAttributable.Key, Set<String>> properties,
       @Nullable String message,
       @Nullable MarkupMultiline remarks) {

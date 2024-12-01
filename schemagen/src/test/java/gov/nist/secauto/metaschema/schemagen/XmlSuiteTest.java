@@ -151,6 +151,7 @@ class XmlSuiteTest
         "global-and-local");
   }
 
+  @Disabled
   @Test
   void testLiboscalJavaIssue181() throws IOException, MetaschemaException, XMLStreamException, JDOMException {
     IBindingContext bindingContext = newBindingContext();

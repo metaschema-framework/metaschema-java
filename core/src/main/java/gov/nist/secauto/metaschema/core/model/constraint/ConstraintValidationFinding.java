@@ -182,6 +182,9 @@ public class ConstraintValidationFinding implements IValidationFinding { // NOPM
     return new Builder(CollectionUtil.singletonList(constraint), node);
   }
 
+  /**
+   * Implements a builder pattern for creating constraint findings.
+   */
   public static final class Builder {
     @NonNull
     private final List<? extends IConstraint> constraints;

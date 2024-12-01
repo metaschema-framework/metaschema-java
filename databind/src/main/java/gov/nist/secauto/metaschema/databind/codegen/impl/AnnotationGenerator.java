@@ -116,7 +116,7 @@ public final class AnnotationGenerator {
 
     annotation.addMember("level", "$T.$L", IConstraint.Level.class, constraint.getLevel());
 
-    String target = constraint.getTarget();
+    String target = constraint.getTarget().getPath();
     if (!target.equals(getDefaultValue(annotationType, "target"))) {
       annotation.addMember("target", "$S", target);
     }
@@ -291,7 +291,7 @@ public final class AnnotationGenerator {
     for (IKeyField key : keyFields) {
       AnnotationSpec.Builder keyAnnotation = AnnotationSpec.builder(KeyField.class);
 
-      String target = key.getTarget();
+      String target = key.getTarget().getPath();
       if (!target.equals(getDefaultValue(KeyField.class, "target"))) {
         keyAnnotation.addMember("target", "$S", target);
       }
@@ -348,7 +348,7 @@ public final class AnnotationGenerator {
 
       buildConstraint(Expect.class, constraintAnnotation, constraint);
 
-      constraintAnnotation.addMember("test", "$S", constraint.getTest());
+      constraintAnnotation.addMember("test", "$S", constraint.getTest().getPath());
 
       if (constraint.getMessage() != null) {
         constraintAnnotation.addMember("message", "$S", constraint.getMessage());
@@ -433,7 +433,9 @@ public final class AnnotationGenerator {
       } else {
         warn.log(String.format(
             "Definition '%s' has min-occurs=%d cardinality constraint targeting '%s' that is not a model instance",
-            definition.getName(), constraint.getMinOccurs(), constraint.getTarget()));
+            definition.getName(),
+            constraint.getMinOccurs(),
+            constraint.getTarget().getPath()));
       }
     }
   }
@@ -452,14 +454,18 @@ public final class AnnotationGenerator {
         logBuilder.log(String.format(
             "Definition '%s' has min-occurs=%d cardinality constraint targeting '%s' that is redundant with a"
                 + " targeted instance named '%s' that requires min-occurs=%d",
-            definition.getName(), minOccurs, constraint.getTarget(),
+            definition.getName(),
+            minOccurs,
+            constraint.getTarget().getPath(),
             modelInstance.getName(),
             modelInstance.getMinOccurs()));
       } else if (minOccurs < modelInstance.getMinOccurs()) {
         logBuilder.log(String.format(
             "Definition '%s' has min-occurs=%d cardinality constraint targeting '%s' that conflicts with a"
                 + " targeted instance named '%s' that requires min-occurs=%d",
-            definition.getName(), minOccurs, constraint.getTarget(),
+            definition.getName(),
+            minOccurs,
+            constraint.getTarget().getPath(),
             modelInstance.getName(),
             modelInstance.getMinOccurs()));
       }
@@ -480,14 +486,18 @@ public final class AnnotationGenerator {
         logBuilder.log(String.format(
             "Definition '%s' has max-occurs=%d cardinality constraint targeting '%s' that is redundant with a"
                 + " targeted instance named '%s' that requires max-occurs=%d",
-            definition.getName(), maxOccurs, constraint.getTarget(),
+            definition.getName(),
+            maxOccurs,
+            constraint.getTarget().getPath(),
             modelInstance.getName(),
             modelInstance.getMaxOccurs()));
       } else if (maxOccurs < modelInstance.getMaxOccurs()) {
         logBuilder.log(String.format(
             "Definition '%s' has max-occurs=%d cardinality constraint targeting '%s' that conflicts with a"
                 + " targeted instance named '%s' that requires max-occurs=%d",
-            definition.getName(), maxOccurs, constraint.getTarget(),
+            definition.getName(),
+            maxOccurs,
+            constraint.getTarget().getPath(),
             modelInstance.getName(),
             modelInstance.getMaxOccurs()));
       }

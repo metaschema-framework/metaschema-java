@@ -36,8 +36,7 @@ public interface IIndexConstraint extends IKeyConstraint {
    * Create a new constraint builder.
    *
    * @param name
-   *          the identifier for the index
-   *
+   *          the name of the index
    * @return the builder
    */
   @NonNull
@@ -54,6 +53,7 @@ public interface IIndexConstraint extends IKeyConstraint {
     private final String name;
 
     private Builder(@NonNull String name) {
+      // disable construction
       this.name = name;
     }
 

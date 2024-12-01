@@ -60,6 +60,8 @@ class DefaultConstraintValidatorTest {
 
     ISource source = mock(ISource.class);
 
+    StaticContext staticContext = StaticContext.builder().build();
+
     IAllowedValuesConstraint allowedValues = IAllowedValuesConstraint.builder()
         .source(source)
         .allowedValue(IAllowedValue.of(
@@ -82,7 +84,7 @@ class DefaultConstraintValidatorTest {
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
     DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext();
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
     validator.validate(flag, dynamicContext);
     validator.finalizeValidation(dynamicContext);
 

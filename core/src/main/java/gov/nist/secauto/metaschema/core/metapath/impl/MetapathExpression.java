@@ -51,8 +51,14 @@ public class MetapathExpression
    * The Metapath expression identifying the current context node.
    */
   @NonNull
-  public static final MetapathExpression CONTEXT_NODE
-      = new MetapathExpression(".", ContextItem.instance(), StaticContext.instance());
+  public static final String CONTEXT_EXPRESSION = ".";
+
+  /**
+   * The Metapath expression identifying the current context node.
+   */
+  @NonNull
+  public static final MetapathExpression CONTEXT_METAPATH
+      = new MetapathExpression(CONTEXT_EXPRESSION, ContextItem.instance(), StaticContext.instance());
   private static final Logger LOGGER = LogManager.getLogger(MetapathExpression.class);
   @NonNull
   private final IExpression expression;
@@ -73,7 +79,7 @@ public class MetapathExpression
     @NonNull
     MetapathExpression retval;
     if (".".equals(path)) {
-      retval = CONTEXT_NODE;
+      retval = CONTEXT_METAPATH;
     } else {
       try {
         Metapath10 parser = newParser(path);

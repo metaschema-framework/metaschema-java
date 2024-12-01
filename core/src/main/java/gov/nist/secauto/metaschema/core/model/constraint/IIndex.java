@@ -24,6 +24,10 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents an index that can support the {@link IIndexConstraint},
+ * {@link IIndexHasKeyConstraint}, and {@link IUniqueConstraint}.
+ */
 public interface IIndex {
 
   /**
@@ -160,7 +164,7 @@ public interface IIndex {
       @NonNull INodeItem item,
       @NonNull IKeyField keyField,
       @NonNull DynamicContext dynamicContext) {
-    IMetapathExpression keyMetapath = keyField.getTargetMetapath();
+    IMetapathExpression keyMetapath = keyField.getTarget();
 
     IItem keyItem;
     try {
