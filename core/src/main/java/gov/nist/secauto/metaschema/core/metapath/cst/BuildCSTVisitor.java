@@ -381,7 +381,7 @@ public class BuildCSTVisitor
             .collect(Collectors.toUnmodifiableList()));
 
     return new StaticFunctionCall(
-        () -> getContext().lookupFunction(
+        getContext().lookupFunction(
             ObjectUtils.notNull(ctx.eqname().getText()),
             arguments.size()),
         arguments);
@@ -1238,7 +1238,7 @@ public class BuildCSTVisitor
         if (arrowCtx.eqname() != null) {
           // named function
           return new StaticFunctionCall(
-              () -> getContext().lookupFunction(ObjectUtils.notNull(arrowCtx.eqname().getText()), arguments.size()),
+              getContext().lookupFunction(ObjectUtils.notNull(arrowCtx.eqname().getText()), arguments.size()),
               arguments);
         }
 

@@ -97,7 +97,7 @@ public abstract class AbstractConfigurableMessageConstraint
     return ObjectUtils.notNull(ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
       String metapath = ObjectUtils.notNull(match.group(2));
       try {
-        IMetapathExpression expr = IMetapathExpression.compile(
+        IMetapathExpression expr = IMetapathExpression.lazyCompile(
             metapath,
             // need to use the static context of the source to resolve prefixes, etc., since
             // this is where the message is defined

@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext.EQNameResolver;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
@@ -18,6 +17,7 @@ import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName.PrefixToNamespaceResolver;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -100,7 +100,7 @@ public final class DynamicTypeSupport {
   private static boolean compareDefinition(
       @NonNull IDefinition definition,
       @NonNull String expected,
-      @NonNull EQNameResolver nameResolver) {
+      @NonNull PrefixToNamespaceResolver nameResolver) {
     boolean retval;
     try {
       IEnhancedQName expectedName = nameResolver.resolve(expected);
@@ -135,5 +135,4 @@ public final class DynamicTypeSupport {
   private DynamicTypeSupport() {
     // disable construction
   }
-
 }

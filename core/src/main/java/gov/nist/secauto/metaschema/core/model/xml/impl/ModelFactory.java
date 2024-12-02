@@ -508,7 +508,7 @@ public final class ModelFactory {
     StaticContext staticContext = source.getStaticContext();
     return ILet.of(
         staticContext.parseVariableName(ObjectUtils.requireNonNull(xmlObject.getVar())),
-        IMetapathExpression.compile(ObjectUtils.notNull(xmlObject.getExpression()), staticContext),
+        IMetapathExpression.lazyCompile(ObjectUtils.notNull(xmlObject.getExpression()), staticContext),
         source,
         xmlObject.isSetRemarks()
             ? remarks(ObjectUtils.notNull(xmlObject.getRemarks()))
