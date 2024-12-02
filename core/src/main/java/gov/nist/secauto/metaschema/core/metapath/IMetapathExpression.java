@@ -181,7 +181,7 @@ public interface IMetapathExpression {
    * @param <T>
    *          the expected result type
    * @param focus
-   *          the outer focus of the expression
+   *          the focus of the expression
    * @param resultType
    *          the type of result to produce
    * @return the converted result

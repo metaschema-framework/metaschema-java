@@ -32,8 +32,6 @@ public class AnonymousFunctionCall
     implements IExpression, IFunction {
   @NonNull
   private static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(EnumSet.of(
-      // FunctionProperty.CONTEXT_DEPENDENT,
-      // FunctionProperty.FOCUS_DEPENDENT,
       FunctionProperty.DETERMINISTIC));
   @NonNull
   private final ISequenceType result;
