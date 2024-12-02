@@ -93,7 +93,6 @@ class MetaschemaModuleMetaschemaTest
     assertNotNull(module);
   }
 
-  @Disabled
   @Test
   void testOscalBindingModuleLoader() throws MetaschemaException, IOException {
     IBindingModuleLoader loader = newBindingContext().newModuleLoader();

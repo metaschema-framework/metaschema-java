@@ -26,7 +26,6 @@ import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -181,7 +180,6 @@ class BasicMetaschemaTest
         ObjectUtils.notNull(generationDir));
   }
 
-  @Disabled
   @Test
   void testExistsWithVariable() throws IOException, URISyntaxException, MetaschemaException {
     IBindingContext bindingContext = newBindingContext();

@@ -15,7 +15,6 @@ import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -24,7 +23,6 @@ import java.net.URI;
 public class GenerationTest
     extends AbstractMetaschemaTest {
 
-  @Disabled
   @Test
   void testOscalBindingModuleLoader() throws MetaschemaException, IOException {
     IBindingContext bindingContext = newBindingContext();
