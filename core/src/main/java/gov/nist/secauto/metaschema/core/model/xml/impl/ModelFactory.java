@@ -70,7 +70,7 @@ public final class ModelFactory {
       @NonNull ISource source) {
     return target == null
         ? IConstraint.DEFAULT_TARGET_METAPATH
-        : IMetapathExpression.compile(target, source.getStaticContext());
+        : IMetapathExpression.lazyCompile(target, source.getStaticContext());
   }
 
   @NonNull
@@ -277,7 +277,9 @@ public final class ModelFactory {
       @NonNull ISource source) {
     for (KeyConstraintType.KeyField xmlKeyField : xmlObject.getKeyFieldList()) {
       IKeyField keyField = IKeyField.of(
-          IMetapathExpression.compile(ObjectUtils.requireNonNull(xmlKeyField.getTarget()), source.getStaticContext()),
+          IMetapathExpression.lazyCompile(
+              ObjectUtils.requireNonNull(xmlKeyField.getTarget()),
+              source.getStaticContext()),
           xmlKeyField.isSetPattern() ? xmlKeyField.getPattern() : null, // NOPMD - intentional
           xmlKeyField.isSetRemarks() ? remarks(ObjectUtils.notNull(xmlKeyField.getRemarks())) : null);
       builder.keyField(keyField);
@@ -510,7 +512,7 @@ public final class ModelFactory {
     StaticContext staticContext = source.getStaticContext();
     return ILet.of(
         staticContext.parseVariableName(ObjectUtils.requireNonNull(xmlObject.getVar())),
-        IMetapathExpression.compile(ObjectUtils.notNull(xmlObject.getExpression()), staticContext),
+        IMetapathExpression.lazyCompile(ObjectUtils.notNull(xmlObject.getExpression()), staticContext),
         source,
         xmlObject.isSetRemarks()
             ? remarks(ObjectUtils.notNull(xmlObject.getRemarks()))

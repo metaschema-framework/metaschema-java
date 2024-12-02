@@ -11,7 +11,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.DataClass") // not a data class
-public final class DeserializationFeature<V>
+public class DeserializationFeature<V>
     extends AbstractConfigurationFeature<V> {
   public static final int YAML_CODEPOINT_LIMIT_DEFAULT = Integer.MAX_VALUE - 1; // 2 GB
   public static final int FORMAT_DETECTION_LOOKAHEAD = 32_768; // 2 GB
@@ -55,7 +55,17 @@ public final class DeserializationFeature<V>
   public static final DeserializationFeature<Integer> FORMAT_DETECTION_LOOKAHEAD_LIMIT
       = new DeserializationFeature<>("format-detection-lookahead-limit", Integer.class, FORMAT_DETECTION_LOOKAHEAD);
 
-  private DeserializationFeature(
+  /**
+   * Construct a new deserialization feature.
+   *
+   * @param name
+   *          the name of the feature
+   * @param valueClass
+   *          the Java class of the feature's value
+   * @param defaultValue
+   *          the default value for the feature
+   */
+  protected DeserializationFeature(
       @NonNull String name,
       @NonNull Class<V> valueClass,
       @NonNull V defaultValue) {

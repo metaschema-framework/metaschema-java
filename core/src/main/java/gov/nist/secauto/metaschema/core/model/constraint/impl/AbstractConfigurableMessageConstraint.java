@@ -95,7 +95,7 @@ public abstract class AbstractConfigurableMessageConstraint
 
     return ObjectUtils.notNull(ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
       String metapath = ObjectUtils.notNull(match.group(2));
-      IMetapathExpression expr = IMetapathExpression.compile(metapath, context.getStaticContext());
+      IMetapathExpression expr = IMetapathExpression.lazyCompile(metapath, context.getStaticContext());
       return expr.evaluateAs(item, IMetapathExpression.ResultType.STRING, context);
     }).toString());
   }

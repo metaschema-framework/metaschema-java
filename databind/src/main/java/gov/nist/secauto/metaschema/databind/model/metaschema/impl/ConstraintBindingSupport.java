@@ -202,7 +202,7 @@ public final class ConstraintBindingSupport {
 
           return ILet.of(
               staticContext.parseVariableName(ObjectUtils.requireNonNull(letObj.getVar())),
-              IMetapathExpression.compile(
+              IMetapathExpression.lazyCompile(
                   ObjectUtils.requireNonNull(letObj.getExpression()),
                   source.getStaticContext()),
               source,
@@ -451,7 +451,7 @@ public final class ConstraintBindingSupport {
       @NonNull ISource source) {
     return target == null
         ? IConstraint.DEFAULT_TARGET_METAPATH
-        : IMetapathExpression.compile(target, source.getStaticContext());
+        : IMetapathExpression.lazyCompile(target, source.getStaticContext());
   }
 
   @NonNull

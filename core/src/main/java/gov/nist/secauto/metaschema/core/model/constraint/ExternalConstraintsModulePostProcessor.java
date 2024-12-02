@@ -93,7 +93,9 @@ public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IMo
     for (ITargetedConstraints targeted : set.getTargetedConstraintsForModule(module)) {
       // apply targeted constraints
       String targetExpression = targeted.getTargetExpression();
-      IMetapathExpression metapath = IMetapathExpression.compile(targetExpression, dynamicContext.getStaticContext());
+      IMetapathExpression metapath = IMetapathExpression.lazyCompile(
+          targetExpression,
+          dynamicContext.getStaticContext());
       ISequence<?> items = metapath.evaluate(moduleItem, dynamicContext);
       assert items != null;
 

@@ -13,11 +13,9 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * Executes a function call based on the provided function and multiple argument
@@ -31,26 +29,22 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Static functions are resolved during the parsing phase and must exist in the
  * function registry.
  */
-// FIXME: Change compilation to error when a non-existant function is called.
-// Manage this error where the compilation is requested
 public class StaticFunctionCall implements IExpression {
   @NonNull
-  private final Lazy<IFunction> functionSupplier;
+  private final IFunction function;
   @NonNull
   private final List<IExpression> arguments;
 
   /**
    * Construct a new function call expression.
    *
-   * @param functionSupplier
-   *          the function supplier, which is used to lazy fetch the function
-   *          allowing the containing Metapaths to parse even if a function does
-   *          not exist during the parsing phase.
+   * @param function
+   *          the function implementation
    * @param arguments
    *          the expressions used to provide arguments to the function call
    */
-  public StaticFunctionCall(@NonNull Supplier<IFunction> functionSupplier, @NonNull List<IExpression> arguments) {
-    this.functionSupplier = ObjectUtils.notNull(Lazy.lazy(functionSupplier));
+  public StaticFunctionCall(@NonNull IFunction function, @NonNull List<IExpression> arguments) {
+    this.function = function;
     this.arguments = arguments;
   }
 
@@ -64,13 +58,6 @@ public class StaticFunctionCall implements IExpression {
    */
   @NonNull
   public IFunction getFunction() {
-    IFunction function = functionSupplier.get();
-    if (function == null) {
-      throw new StaticMetapathError(
-          StaticMetapathError.NO_FUNCTION_MATCH,
-          String.format(
-              "No matching function found for the given name and arguments"));
-    }
     return function;
   }
 

@@ -345,7 +345,7 @@ final class ConstraintFactory {
         : MarkupMultiline.fromMarkdown(remarkMarkdown);
     return ILet.of(
         source.getStaticContext().parseVariableName(annotation.name()),
-        IMetapathExpression.compile(annotation.target(), source.getStaticContext()),
+        IMetapathExpression.lazyCompile(annotation.target(), source.getStaticContext()),
         source,
         remarks);
   }

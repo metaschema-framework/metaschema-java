@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath;
 
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
+import gov.nist.secauto.metaschema.core.metapath.impl.LazyCompilationMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.impl.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -143,6 +144,23 @@ public interface IMetapathExpression {
   @NonNull
   static IMetapathExpression compile(@NonNull String path, @NonNull StaticContext staticContext) {
     return MetapathExpression.compile(path, staticContext);
+  }
+
+  /**
+   * Gets a new Metapath expression that is compiled on use.
+   * <p>
+   * Lazy compilation may cause additional {@link MetapathException} errors at
+   * evaluation time, since compilation errors are not raised until evaluation.
+   *
+   * @param path
+   *          the metapath expression
+   * @param staticContext
+   *          the static evaluation context
+   * @return the expression object
+   */
+  @NonNull
+  static IMetapathExpression lazyCompile(@NonNull String path, @NonNull StaticContext staticContext) {
+    return new LazyCompilationMetapathExpression(path, staticContext);
   }
 
   /**
