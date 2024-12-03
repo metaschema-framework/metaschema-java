@@ -1,0 +1,104 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.metapath.function.impl;
+
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
+import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * The base class for {@link IArrayItem} implementations, that provides an
+ * implementation of common methods.
+ *
+ * @param <ITEM>
+ *          the Java type of the items contained within the sequence
+ */
+public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
+    extends ImmutableCollections.AbstractImmutableDelegatedList<ITEM>
+    implements IArrayItem<ITEM>, IFeatureCollectionFunctionItem {
+  @NonNull
+  private static final IEnhancedQName QNAME = IEnhancedQName.of("array");
+  @NonNull
+  private static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
+      IArgument.builder().name("position").type(IIntegerItem.type()).one().build()));
+
+  @NonNull
+  private static final IArrayItem<?> EMPTY = new ArrayItemN<>();
+
+  /**
+   * Get an immutable array item that is empty.
+   *
+   * @param <T>
+   *          the item Java type
+   * @return the empty array item
+   */
+  @SuppressWarnings("unchecked")
+  @NonNull
+  public static <T extends ICollectionValue> IArrayItem<T> empty() {
+    return (IArrayItem<T>) EMPTY;
+  }
+
+  @Override
+  public IEnhancedQName getQName() {
+    return QNAME;
+  }
+
+  @Override
+  public List<IArgument> getArguments() {
+    return ARGUMENTS;
+  }
+
+  @Override
+  public ISequence<?> execute(List<? extends ISequence<?>> arguments, DynamicContext dynamicContext,
+      ISequence<?> focus) {
+    ISequence<? extends IIntegerItem> arg = FunctionUtils.asType(
+        ObjectUtils.notNull(arguments.get(0)));
+
+    IIntegerItem position = arg.getFirstItem(true);
+    if (position == null) {
+      return ISequence.empty(); // NOPMD - readability
+    }
+
+    int index = position.asInteger().intValueExact() - 1;
+    ICollectionValue result = getValue().get(index);
+    return result.toSequence();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getValue());
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    return other == this
+        || other instanceof IArrayItem && getValue().equals(((IArrayItem<?>) other).getValue());
+  }
+
+  @Override
+  public String toSignature() {
+    return ObjectUtils.notNull(stream()
+        .map(ICollectionValue::toSignature)
+        .collect(Collectors.joining(",", "[", "]")));
+  }
+
+  @Override
+  public String toString() {
+    return toSignature();
+  }
+}

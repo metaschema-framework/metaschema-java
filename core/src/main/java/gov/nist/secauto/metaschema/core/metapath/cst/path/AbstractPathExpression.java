@@ -6,13 +6,13 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IItem;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.metapath.item.node.ICycledAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.ICycledAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.stream.Stream;

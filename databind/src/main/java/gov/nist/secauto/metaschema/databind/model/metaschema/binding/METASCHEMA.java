@@ -5,12 +5,12 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.UriAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
+import gov.nist.secauto.metaschema.core.datatype.NonNegativeIntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.PositiveIntegerAdapter;
+import gov.nist.secauto.metaschema.core.datatype.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.TokenAdapter;
+import gov.nist.secauto.metaschema.core.datatype.UriAdapter;
+import gov.nist.secauto.metaschema.core.datatype.UriReferenceAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;

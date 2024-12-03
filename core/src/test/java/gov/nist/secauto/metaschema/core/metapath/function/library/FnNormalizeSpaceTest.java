@@ -14,7 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathExc
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;

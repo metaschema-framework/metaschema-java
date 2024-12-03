@@ -5,23 +5,20 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyUriItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IBase64BinaryItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDayTimeDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IYearMonthDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.function.IMapItem;
+import gov.nist.secauto.metaschema.core.metapath.function.IMapKey;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;

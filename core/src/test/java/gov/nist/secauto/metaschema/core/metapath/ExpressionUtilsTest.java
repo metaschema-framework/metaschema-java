@@ -9,12 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFieldNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IModelNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;

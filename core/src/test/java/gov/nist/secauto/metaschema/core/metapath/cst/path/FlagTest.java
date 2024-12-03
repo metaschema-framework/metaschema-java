@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.NodeItemKind;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IModelNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.NodeItemKind;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 

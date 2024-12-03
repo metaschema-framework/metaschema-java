@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.format;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IMetapathQueryable;
 
 import java.util.List;

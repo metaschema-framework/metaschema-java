@@ -6,17 +6,15 @@
 package gov.nist.secauto.metaschema.core.metapath;
 
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionService;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunctionResolver;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.NamespaceCache;
 import gov.nist.secauto.metaschema.core.qname.WellKnown;
+import gov.nist.secauto.metaschema.core.qname.impl.NamespaceCache;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -34,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * The implementation of a Metapath
+ * An implementation of the Metapath
  * <a href="https://www.w3.org/TR/xpath-31/#static_context">static context</a>.
  */
 public final class StaticContext {

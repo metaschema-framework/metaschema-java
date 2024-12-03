@@ -5,19 +5,19 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
+import gov.nist.secauto.metaschema.core.metapath.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.Occurrence;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
-import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
-import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
-import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFieldNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IKindTest;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 

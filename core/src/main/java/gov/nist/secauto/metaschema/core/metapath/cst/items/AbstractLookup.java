@@ -6,9 +6,9 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
+import gov.nist.secauto.metaschema.core.metapath.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.function.IKeySpecifier;
+import gov.nist.secauto.metaschema.core.metapath.function.IMapItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 

@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.jmock.Expectations;

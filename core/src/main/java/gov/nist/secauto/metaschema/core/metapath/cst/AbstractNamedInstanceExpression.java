@@ -9,7 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.AbstractPathExpression
 import gov.nist.secauto.metaschema.core.metapath.cst.path.INodeTestExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.NameTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 
 import java.util.List;
 

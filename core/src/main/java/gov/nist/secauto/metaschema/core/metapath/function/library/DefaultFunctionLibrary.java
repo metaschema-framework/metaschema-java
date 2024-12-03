@@ -8,8 +8,8 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionLibrary;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

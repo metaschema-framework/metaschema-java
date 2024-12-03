@@ -4,7 +4,7 @@
  */
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.datatype.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunctionLibrary;
 import gov.nist.secauto.metaschema.core.metapath.function.library.DefaultFunctionLibrary;
@@ -66,7 +66,6 @@ module gov.nist.secauto.metaschema.core {
   exports gov.nist.secauto.metaschema.core;
   exports gov.nist.secauto.metaschema.core.configuration;
   exports gov.nist.secauto.metaschema.core.datatype;
-  exports gov.nist.secauto.metaschema.core.datatype.adapter;
   exports gov.nist.secauto.metaschema.core.datatype.markup;
   exports gov.nist.secauto.metaschema.core.datatype.object;
   exports gov.nist.secauto.metaschema.core.metapath;
@@ -74,13 +73,11 @@ module gov.nist.secauto.metaschema.core {
   exports gov.nist.secauto.metaschema.core.metapath.function;
   exports gov.nist.secauto.metaschema.core.metapath.function.library;
   exports gov.nist.secauto.metaschema.core.metapath.function.regex;
-  exports gov.nist.secauto.metaschema.core.metapath.item;
-  exports gov.nist.secauto.metaschema.core.metapath.item.atomic;
-  exports gov.nist.secauto.metaschema.core.metapath.item.function;
-  exports gov.nist.secauto.metaschema.core.metapath.item.node;
-  exports gov.nist.secauto.metaschema.core.metapath.type;
+  exports gov.nist.secauto.metaschema.core.metapath.atomic;
+  exports gov.nist.secauto.metaschema.core.metapath.node;
   exports gov.nist.secauto.metaschema.core.model;
   exports gov.nist.secauto.metaschema.core.model.constraint;
+  exports gov.nist.secauto.metaschema.core.model.json;
   exports gov.nist.secauto.metaschema.core.model.util;
   exports gov.nist.secauto.metaschema.core.model.validation;
   exports gov.nist.secauto.metaschema.core.model.xml;

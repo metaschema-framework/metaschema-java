@@ -5,10 +5,10 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.UriAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
+import gov.nist.secauto.metaschema.core.datatype.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.TokenAdapter;
+import gov.nist.secauto.metaschema.core.datatype.UriAdapter;
+import gov.nist.secauto.metaschema.core.datatype.UriReferenceAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;

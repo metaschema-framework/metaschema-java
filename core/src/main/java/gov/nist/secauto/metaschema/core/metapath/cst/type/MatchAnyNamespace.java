@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
 import gov.nist.secauto.metaschema.core.metapath.cst.path.IWildcardMatcher;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDefinitionNodeItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 

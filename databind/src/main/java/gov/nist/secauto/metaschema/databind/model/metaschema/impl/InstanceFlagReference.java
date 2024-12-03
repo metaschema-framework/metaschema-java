@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.model.AbstractFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IFeatureDefinitionReferenceInstance;

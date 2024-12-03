@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
+import gov.nist.secauto.metaschema.core.metapath.IItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 
 public interface IPathExpression<RESULT_TYPE extends IItem> extends IExpression {
   @Override

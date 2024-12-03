@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.datatype;
 
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
