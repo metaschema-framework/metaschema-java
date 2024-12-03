@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.cst.type.MatchAnyLocalName;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.MatchAnyNamespace;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDefinitionNodeItem;
 
 import java.util.function.Predicate;
 

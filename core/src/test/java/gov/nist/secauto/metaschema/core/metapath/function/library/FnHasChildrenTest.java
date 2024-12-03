@@ -13,12 +13,12 @@ import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathExc
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.TypeMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.function.library.impl.MockedDocumentGenerator;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -95,8 +95,8 @@ class FnHasChildrenTest
         () -> assertEquals(InvalidTypeMetapathException.class, cause == null
             ? null
             : cause.getClass()),
-        () -> assertEquals(TypeMetapathException.INVALID_TYPE_ERROR, cause instanceof TypeMetapathException
-            ? ((TypeMetapathException) cause).getErrorCode().getCode()
+        () -> assertEquals(TypeMetapathError.INVALID_TYPE_ERROR, cause instanceof TypeMetapathError
+            ? ((TypeMetapathError) cause).getErrorCode().getCode()
             : null));
   }
 }

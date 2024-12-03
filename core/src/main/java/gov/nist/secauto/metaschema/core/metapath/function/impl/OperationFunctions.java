@@ -5,26 +5,26 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.impl; // NOPMD - intentional
 
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyUriItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IBase64BinaryItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDateTimeWithTimeZoneItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDateWithTimeZoneItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDayTimeDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.INumericItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IUntypedAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeWithTimeZoneItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateWithTimeZoneItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -1070,6 +1070,7 @@ public final class OperationFunctions { // NOPMD - intentional
     return IBooleanItem.valueOf(!left && right);
   }
 
+  // FIXME: Is this method needed? Is it handled by the key implmentation?
   public static boolean opSameKey(@NonNull IAnyAtomicItem k1, @NonNull IAnyAtomicItem k2) {
     boolean retval;
     if ((k1 instanceof IStringItem || k1 instanceof IAnyUriItem || k1 instanceof IUntypedAtomicItem)

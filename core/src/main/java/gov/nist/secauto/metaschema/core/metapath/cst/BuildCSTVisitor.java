@@ -5,11 +5,15 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import gov.nist.secauto.metaschema.core.metapath.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.Occurrence;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParamContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySquareConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.DecimalLiteral;
@@ -62,13 +66,8 @@ import gov.nist.secauto.metaschema.core.metapath.cst.type.Treat;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.TypeTestSupport;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
-import gov.nist.secauto.metaschema.core.metapath.item.function.impl.AbstractKeySpecifier;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
-import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
-import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.metapath.function.IKeySpecifier;
+import gov.nist.secauto.metaschema.core.metapath.function.impl.AbstractKeySpecifier;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -411,7 +410,7 @@ public class BuildCSTVisitor
             2,
             (ctx, idx) -> {
               int pos = (idx - 1) / 2;
-              ParamContext tree = ctx.param(pos);
+              Metapath10.ParamContext tree = ctx.param(pos);
               return IArgument.of(
                   getContext().parseVariableName(ObjectUtils.notNull(tree.eqname().getText())),
                   tree.typedeclaration() == null

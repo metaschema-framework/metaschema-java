@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.mdm.impl;
 
 import gov.nist.secauto.metaschema.core.mdm.IDMAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.mdm.IDMFieldNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;

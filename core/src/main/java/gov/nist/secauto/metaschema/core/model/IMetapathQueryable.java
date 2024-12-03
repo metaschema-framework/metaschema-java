@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 

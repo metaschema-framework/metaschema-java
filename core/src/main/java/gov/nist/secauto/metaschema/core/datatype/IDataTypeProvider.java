@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.datatype;
 
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndex;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;

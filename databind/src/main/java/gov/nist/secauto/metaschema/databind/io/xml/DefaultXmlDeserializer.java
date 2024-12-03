@@ -8,8 +8,8 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 import com.ctc.wstx.stax.WstxInputFactory;
 
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.metapath.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;

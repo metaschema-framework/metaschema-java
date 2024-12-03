@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.qname;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.qname.impl.NamespaceCache;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 

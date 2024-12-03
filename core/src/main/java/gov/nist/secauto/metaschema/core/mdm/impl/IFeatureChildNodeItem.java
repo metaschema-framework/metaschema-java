@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.mdm.impl;
 
 import gov.nist.secauto.metaschema.core.mdm.IDMNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
 

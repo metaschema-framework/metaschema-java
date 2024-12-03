@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.qname;
 
+import gov.nist.secauto.metaschema.core.qname.impl.QNameCache;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Optional;

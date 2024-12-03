@@ -8,12 +8,12 @@ package gov.nist.secauto.metaschema.core.datatype;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.metapath.type.DataTypeItemType;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
-import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.metapath.atomic.AbstractAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.DataTypeItemType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.model.json.JsonUtil;
+import gov.nist.secauto.metaschema.core.model.xml.XmlEventUtil;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 

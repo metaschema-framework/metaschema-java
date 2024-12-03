@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.ISequenceType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import java.util.Objects;

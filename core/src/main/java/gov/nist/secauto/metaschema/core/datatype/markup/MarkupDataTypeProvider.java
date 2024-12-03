@@ -7,8 +7,8 @@ package gov.nist.secauto.metaschema.core.datatype.markup;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IMarkupItem;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 
 import edu.umd.cs.findbugs.annotations.NonNull;

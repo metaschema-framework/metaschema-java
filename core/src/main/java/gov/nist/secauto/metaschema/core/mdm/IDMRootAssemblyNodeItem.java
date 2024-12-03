@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.mdm;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IRootAssemblyNodeItem;
 
 /**
  * Represents a Metapath root assembly node item implementation that is backed
