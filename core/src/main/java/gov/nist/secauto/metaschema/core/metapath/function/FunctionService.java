@@ -30,7 +30,7 @@ public final class FunctionService implements IFunctionResolver {
    */
   @NonNull
   public static FunctionService instance() {
-    return INSTANCE.get();
+    return ObjectUtils.notNull(INSTANCE.get());
   }
 
   /**

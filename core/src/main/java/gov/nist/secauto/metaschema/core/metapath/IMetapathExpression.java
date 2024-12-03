@@ -14,7 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathError;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -82,7 +82,7 @@ public interface IMetapathExpression {
      * @param sequence
      *          the Metapath result sequence to convert
      * @return the converted sequence as the expected type
-     * @throws TypeMetapathException
+     * @throws TypeMetapathError
      *           if the provided sequence is incompatible with the expected result
      *           type
      */
@@ -188,7 +188,7 @@ public interface IMetapathExpression {
    * @param resultType
    *          the type of result to produce
    * @return the converted result
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException
@@ -212,7 +212,7 @@ public interface IMetapathExpression {
    * @param resultType
    *          the type of result to produce
    * @return the converted result
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException
@@ -243,7 +243,7 @@ public interface IMetapathExpression {
    * @param dynamicContext
    *          the dynamic context to use for evaluation
    * @return the converted result
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException

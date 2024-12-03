@@ -12,7 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.impl.StreamSequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathError;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -77,17 +77,17 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
    * <p>
    * If the sequence is empty, a {@code null} result is returned. If
    * requireSingleton is {@code true} and the sequence contains more than one
-   * item, a {@link TypeMetapathException} is thrown.
+   * item, a {@link TypeMetapathError} is thrown.
    *
    * @param <T>
    *          the item type to return derived from the provided sequence
    * @param items
    *          the sequence to retrieve the first item from
    * @param requireSingleton
-   *          if {@code true} then a {@link TypeMetapathException} is thrown if
-   *          the sequence contains more than one item
+   *          if {@code true} then a {@link TypeMetapathError} is thrown if the
+   *          sequence contains more than one item
    * @return {@code null} if the sequence is empty, or the item otherwise
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the sequence contains more than one item and requireSingleton is
    *           {@code true}
    */
@@ -100,17 +100,17 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
    * <p>
    * If the sequence is empty, a {@code null} result is returned. If
    * requireSingleton is {@code true} and the sequence contains more than one
-   * item, a {@link TypeMetapathException} is thrown.
+   * item, a {@link TypeMetapathError} is thrown.
    *
    * @param <T>
    *          the item type to return derived from the provided sequence
    * @param items
    *          the sequence to retrieve the first item from
    * @param requireSingleton
-   *          if {@code true} then a {@link TypeMetapathException} is thrown if
-   *          the sequence contains more than one item
+   *          if {@code true} then a {@link TypeMetapathError} is thrown if the
+   *          sequence contains more than one item
    * @return {@code null} if the sequence is empty, or the item otherwise
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the sequence contains more than one item and requireSingleton is
    *           {@code true}
    */
@@ -131,13 +131,13 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
    * <p>
    * If the sequence is empty, a {@code null} result is returned. If
    * requireSingleton is {@code true} and the sequence contains more than one
-   * item, a {@link TypeMetapathException} is thrown.
+   * item, a {@link TypeMetapathError} is thrown.
    *
    * @param requireSingleton
-   *          if {@code true} then a {@link TypeMetapathException} is thrown if
-   *          the sequence contains more than one item
+   *          if {@code true} then a {@link TypeMetapathError} is thrown if the
+   *          sequence contains more than one item
    * @return {@code null} if the sequence is empty, or the item otherwise
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the sequence contains more than one item and requireSingleton is
    *           {@code true}
    */

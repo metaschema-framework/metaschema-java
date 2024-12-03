@@ -241,7 +241,7 @@ public interface IEnhancedQName {
    * Provides a callback for resolving namespace prefixes.
    */
   @FunctionalInterface
-  public interface PrefixToNamespaceResolver {
+  interface PrefixToNamespaceResolver {
     /**
      * Get the URI string for the provided namespace prefix.
      *

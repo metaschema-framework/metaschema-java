@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnDoc;
 
@@ -15,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FODC: Exceptions representing document related errors.
  */
 public class DocumentFunctionException
-    extends DynamicMetapathError {
+    extends FunctionMetapathError {
   @NonNull
   private static final String PREFIX = "FODC";
   /**
