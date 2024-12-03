@@ -125,7 +125,7 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
    *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the sequence contains more than one item
    */
   @Nullable

@@ -91,7 +91,7 @@ public class MetapathExpression
       } catch (StaticMetapathError ex) {
         String message = ex.getMessageText();
         throw new StaticMetapathError(
-            ex.getErrorCode(),
+            ex.getErrorCode().getCode(),
             String.format("Unable to compile path '%s'.%s", path, message == null ? "" : " " + message),
             ex);
       } catch (MetapathException | ParseCancellationException ex) {

@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathError;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -20,10 +20,10 @@ public abstract class AbstractExpression implements IExpression {
    * @param sequence
    *          the sequence to get the data item from
    * @param requireSingleton
-   *          if {@code true} then a {@link TypeMetapathException} is thrown if
-   *          the sequence contains more than one item
+   *          if {@code true} then a {@link TypeMetapathError} is thrown if the
+   *          sequence contains more than one item
    * @return {@code null} if the sequence is empty, or the item otherwise
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the sequence contains more than one item and requireSingleton is
    *           {@code true}, or if the data item cannot be cast
    */

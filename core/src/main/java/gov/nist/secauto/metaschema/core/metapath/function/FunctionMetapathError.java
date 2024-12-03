@@ -3,15 +3,14 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package gov.nist.secauto.metaschema.core.metapath.function;
+
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
+import gov.nist.secauto.metaschema.core.metapath.RuntimeMetapathError;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-/**
- * This Metapath exception base class is used for all exceptions that have a
- * defined error code family and value.
- */
-public class DynamicMetapathError
+public class FunctionMetapathError
     extends RuntimeMetapathError {
 
   /**
@@ -28,7 +27,7 @@ public class DynamicMetapathError
    * @param message
    *          the exception message
    */
-  public DynamicMetapathError(@NonNull IErrorCode errorCode, String message) {
+  public FunctionMetapathError(@NonNull IErrorCode errorCode, String message) {
     super(errorCode, message);
   }
 
@@ -43,7 +42,7 @@ public class DynamicMetapathError
    * @param cause
    *          the original exception cause
    */
-  protected DynamicMetapathError(@NonNull IErrorCode errorCode, String message, Throwable cause) {
+  protected FunctionMetapathError(@NonNull IErrorCode errorCode, String message, Throwable cause) {
     super(errorCode, message, cause);
   }
 
@@ -56,7 +55,8 @@ public class DynamicMetapathError
    * @param cause
    *          the original exception cause
    */
-  public DynamicMetapathError(@NonNull IErrorCode errorCode, Throwable cause) {
+  public FunctionMetapathError(@NonNull IErrorCode errorCode, Throwable cause) {
     super(errorCode, cause);
   }
+
 }

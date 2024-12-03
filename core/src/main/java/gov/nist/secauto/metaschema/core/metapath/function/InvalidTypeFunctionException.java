@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
@@ -18,7 +17,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FOTY: Exceptions related to type errors.
  */
 public class InvalidTypeFunctionException
-    extends DynamicMetapathError {
+    extends FunctionMetapathError {
   @NonNull
   private static final String PREFIX = "FOTY";
   /**

@@ -12,10 +12,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Provides a convenient way to raise a
- * {@link TypeMetapathException#INVALID_TYPE_ERROR}.
+ * {@link TypeMetapathError#INVALID_TYPE_ERROR}.
  */
 public class InvalidTypeMetapathException
-    extends TypeMetapathException {
+    extends TypeMetapathError {
 
   /**
    * the serial version UID.
