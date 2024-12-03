@@ -43,7 +43,7 @@
 		<dependency.commons-io.version>2.18.0</dependency.commons-io.version>
 		<dependency.commons-lang3.version>3.17.0</dependency.commons-lang3.version>
 		<dependency.commons-text.version>1.12.0</dependency.commons-text.version>
-		<dependency.eclipse-jdt.version>2.3.0</dependency.eclipse-jdt.version>
+		<dependency.eclipse-jdt.version>2.3.100</dependency.eclipse-jdt.version>
 		<dependency.everit-json.version>1.14.4</dependency.everit-json.version>
 		<dependency.flexmark.version>0.64.8</dependency.flexmark.version>
 		<dependency.freemarker.version>2.3.33</dependency.freemarker.version>
