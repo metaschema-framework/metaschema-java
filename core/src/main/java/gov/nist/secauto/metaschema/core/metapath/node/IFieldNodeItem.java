@@ -3,7 +3,7 @@ package gov.nist.secauto.metaschema.core.metapath.node;
 
 import gov.nist.secauto.metaschema.core.metapath.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicValuedItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
@@ -18,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 public interface IFieldNodeItem
     extends IModelNodeItem<IFieldDefinition, IFieldInstance>,
-    IAtomicValuedItem {
+    IAtomicValuedNodeItem {
   @Override
   default NodeItemKind getNodeItemKind() {
     return NodeItemKind.FIELD;
@@ -36,6 +36,11 @@ public interface IFieldNodeItem
         getQName(),
         getDefinition().getDefinitionQName().toEQName(staticContext),
         staticContext);
+  }
+
+  @Override
+  default IAtomicOrUnionType<?> getValueItemType() {
+    return getDefinition().getJavaTypeAdapter().getItemType();
   }
 
   @Override

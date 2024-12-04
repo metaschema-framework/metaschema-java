@@ -12,5 +12,5 @@ import gov.nist.secauto.metaschema.core.metapath.IItem;
  * associated {@link IAnyAtomicItem} value.
  */
 public interface IAtomicValuedItem extends IItem {
-  // no additional methods
+  // no new methods
 }

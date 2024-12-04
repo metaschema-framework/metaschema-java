@@ -3,7 +3,7 @@ package gov.nist.secauto.metaschema.core.metapath.node;
 
 import gov.nist.secauto.metaschema.core.metapath.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicValuedItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 
 public interface IFlagNodeItem
-    extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedItem {
+    extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedNodeItem {
   @Override
   default NodeItemKind getNodeItemKind() {
     return NodeItemKind.FLAG;
@@ -47,6 +47,11 @@ public interface IFlagNodeItem
         getQName(),
         getDefinition().getDefinitionQName().toEQName(staticContext),
         staticContext);
+  }
+
+  @Override
+  default IAtomicOrUnionType<?> getValueItemType() {
+    return getDefinition().getJavaTypeAdapter().getItemType();
   }
 
   @Override

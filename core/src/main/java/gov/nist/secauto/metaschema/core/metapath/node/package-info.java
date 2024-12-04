@@ -4,8 +4,8 @@
  * represented using a Metaschema model.
  * <p>
  * The factory
- * {@link gov.nist.secauto.metaschema.core.metapath.node.INodeItemFactory}
- * can be used to create instances of various node item objects.
+ * {@link gov.nist.secauto.metaschema.core.metapath.node.INodeItemFactory} can
+ * be used to create instances of various node item objects.
  */
 
 package gov.nist.secauto.metaschema.core.metapath.node;

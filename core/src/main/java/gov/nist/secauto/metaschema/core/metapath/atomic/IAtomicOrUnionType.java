@@ -111,6 +111,7 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
+  @NonNull
   I cast(@NonNull IAnyAtomicItem item);
 
   /**
@@ -133,6 +134,9 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
     IAnyAtomicItem item = ISequence.of(sequence.atomize()).getFirstItem(true);
     return item == null ? null : cast(item);
   }
+
+  @NonNull
+  I newItem(@NonNull Object value);
 
   /**
    * A callback used to perform a casting operation.
