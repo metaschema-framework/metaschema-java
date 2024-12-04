@@ -136,6 +136,16 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
   }
 
   /**
+   * Construct a new instance of this type using the provided value.
+   *
+   * @param value
+   *          the "wrapped" value of the type
+   * @return the new item
+   */
+  @NonNull
+  I newItem(@NonNull Object value);
+
+  /**
    * A callback used to perform a casting operation.
    *
    * @param <ITEM>
@@ -153,14 +163,4 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
     @NonNull
     ITEM cast(@NonNull IAnyAtomicItem item);
   }
-
-  /**
-   * Construct a new instance of this type using the provided value.
-   *
-   * @param value
-   *          the "wrapped" value of the type
-   * @return the new item
-   */
-  @NonNull
-  I newItem(@NonNull Object value);
 }
