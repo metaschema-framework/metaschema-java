@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ public final class FnIndexOf {
    * @return a list of index numbers indicating the position of matches in the
    *         sequence
    */
+  @NonNull
   public static ISequence<IIntegerItem> fnIndexOf(@NonNull List<IAnyAtomicItem> items,
       @NonNull IAnyAtomicItem search) {
     int index = 0;
@@ -94,9 +96,13 @@ public final class FnIndexOf {
       IAnyAtomicItem item = iterator.next();
       assert item != null;
       // use the "eq" operator
-      if (ComparisonFunctions.valueCompairison(item, ComparisonFunctions.Operator.EQ, search).toBoolean()) {
-        // Offset for Metapath indices that start from 1
-        indices.add(IIntegerItem.valueOf(index));
+      try {
+        if (ComparisonFunctions.valueCompairison(item, ComparisonFunctions.Operator.EQ, search).toBoolean()) {
+          // Offset for Metapath indices that start from 1
+          indices.add(IIntegerItem.valueOf(index));
+        }
+      } catch (InvalidTypeMetapathException ex) {
+        // this is an effective false on the match
       }
     }
     return ISequence.ofCollection(indices);

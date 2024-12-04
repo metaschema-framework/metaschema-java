@@ -50,7 +50,8 @@ public class DefaultFunctionLibrary
     registerFunction(FnContains.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-count
     registerFunction(FnCount.SIGNATURE);
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-current-date
+    // https://www.w3.org/TR/xpath-functions-31/#func-current-date
+    registerFunction(FnCurrentDate.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-current-dateTime
     registerFunction(FnCurrentDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-current-time

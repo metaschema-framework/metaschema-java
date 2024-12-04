@@ -10,8 +10,8 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeWithTimeZoneItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateWithTimeZoneItem;
 
 import java.util.List;
 
@@ -19,45 +19,45 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Implements the XPath 3.1 <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-current-time">fn:current-time</a>
+ * "https://www.w3.org/TR/xpath-functions-31/#func-current-dateTime">fn:current-dateTime</a>
  * function.
  */
-public final class FnCurrentTime {
+public final class FnCurrentDate {
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("current-time")
+      .name("current-date")
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()
       .focusIndependent()
-      .returnType(ITimeItem.type())
+      .returnType(IDateItem.type())
       .returnOne()
-      .functionHandler(FnCurrentTime::execute)
+      .functionHandler(FnCurrentDate::execute)
       .build();
 
-  private FnCurrentTime() {
+  private FnCurrentDate() {
     // disable construction
   }
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<ITimeItem> execute(@NonNull IFunction function,
+  private static ISequence<IDateItem> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    return ISequence.of(fnCurrentTime(dynamicContext));
+    return ISequence.of(fnCurrentDate(dynamicContext));
   }
 
   /**
    * Implements <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-current-time">fn:current-time</a>.
+   * "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>.
    *
    * @param dynamicContext
    *          the dynamic evaluation context
    * @return the current date
    */
   @NonNull
-  public static ITimeItem fnCurrentTime(@NonNull DynamicContext dynamicContext) {
-    return ITimeWithTimeZoneItem.valueOf(dynamicContext.getCurrentDateTime());
+  public static IDateItem fnCurrentDate(@NonNull DynamicContext dynamicContext) {
+    return IDateWithTimeZoneItem.valueOf(dynamicContext.getCurrentDateTime());
   }
 }

@@ -35,11 +35,9 @@ class FnIndexOfTest
         Arguments.of(
             sequence(integer(1), integer(4)),
             "index-of(('a', 'sport', 'and', 'a', 'pasttime'), 'a')"),
-        // TODO: add current-date() test after metaschema-framework/metaschema-java#162
-        // complete
-        // Arguments.of(
-        // ISequence.empty(),
-        // "index-of(current-date(), 23)"),
+        Arguments.of(
+            ISequence.empty(),
+            "index-of(current-date(), 23)"),
         Arguments.of(
             sequence(integer(1)),
             "index-of((true()), 'true')"),
