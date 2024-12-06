@@ -106,13 +106,13 @@ public final class SarifValidationHandler {
   @NonNull
   static final String SARIF_NS = "https://docs.oasis-open.org/sarif/sarif/v2.1.0";
   @NonNull
-  static final IAttributable.Key SARIF_HELP_URL_KEY
+  public static final IAttributable.Key SARIF_HELP_URL_KEY
       = IAttributable.key("help-url", SARIF_NS);
   @NonNull
-  static final IAttributable.Key SARIF_HELP_TEXT_KEY
+  public static final IAttributable.Key SARIF_HELP_TEXT_KEY
       = IAttributable.key("help-text", SARIF_NS);
   @NonNull
-  static final IAttributable.Key SARIF_HELP_MARKDOWN_KEY
+  public static final IAttributable.Key SARIF_HELP_MARKDOWN_KEY
       = IAttributable.key("help-markdown", SARIF_NS);
 
   @NonNull
