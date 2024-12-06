@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.qname;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +22,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 final class QNameCache {
+
+  private static final Comparator<IEnhancedQName> COMPARATOR
+      = Comparator.comparingInt(IEnhancedQName::getIndexPosition);
+
   @NonNull
   private static final Lazy<QNameCache> INSTANCE = ObjectUtils.notNull(Lazy.lazy(QNameCache::new));
 
@@ -158,8 +163,14 @@ final class QNameCache {
     }
 
     @Override
+    public int compareTo(IEnhancedQName other) {
+      return COMPARATOR.compare(this, other);
+    }
+
+    @Override
     public String toString() {
       return toEQName();
     }
   }
+
 }

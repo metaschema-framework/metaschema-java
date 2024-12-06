@@ -1,6 +1,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
+import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
 
@@ -10,7 +11,6 @@ public interface IFeatureNoDataAtomicValuedItem extends IFeatureNoDataValuedItem
   @Override
   @Nullable
   default IAnyAtomicItem toAtomicItem() {
-    // no value
-    return null;
+    throw new InvalidTypeFunctionException(InvalidTypeFunctionException.DATA_ITEM_IS_FUNCTION, this);
   }
 }

@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionExce
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
@@ -20,6 +21,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -1065,5 +1068,18 @@ public final class OperationFunctions { // NOPMD - intentional
     boolean right = arg2 != null && arg2.toBoolean();
 
     return IBooleanItem.valueOf(!left && right);
+  }
+
+  public static boolean opSameKey(@NonNull IAnyAtomicItem k1, @NonNull IAnyAtomicItem k2) {
+    boolean retval;
+    if ((k1 instanceof IStringItem || k1 instanceof IAnyUriItem || k1 instanceof IUntypedAtomicItem)
+        && (k2 instanceof IStringItem || k2 instanceof IAnyUriItem || k2 instanceof IUntypedAtomicItem)) {
+      retval = k1.asString().equals(k2.asString());
+    } else if (k1 instanceof IDecimalItem && k2 instanceof IDecimalItem) {
+      retval = ((IDecimalItem) k1).asDecimal().equals(((IDecimalItem) k2).asDecimal());
+    } else {
+      retval = k1.deepEquals(k2);
+    }
+    return retval;
   }
 }

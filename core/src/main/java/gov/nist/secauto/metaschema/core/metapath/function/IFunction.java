@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -179,6 +180,12 @@ public interface IFunction extends IItem {
   // otherwise
   // */
   // boolean isSupported(List<IExpression<?>> arguments);
+
+  @Override
+  default boolean deepEquals(ICollectionValue other) {
+    // this is the expected result
+    return false;
+  }
 
   /**
    * Execute the function with the provided {@code arguments}, using the provided

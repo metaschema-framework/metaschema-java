@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * memory footprint of qualified names and namespaces by reusing instances with
  * the same namespace and local name.
  */
-public interface IEnhancedQName {
+public interface IEnhancedQName extends Comparable<IEnhancedQName> {
   /**
    * Get the index position of the qualified name.
    * <p>
@@ -131,6 +131,16 @@ public interface IEnhancedQName {
     return EQNameFactory.instance().newQName(namespace, localName);
   }
 
+  /**
+   * Generate a qualified name for this QName.
+   * <p>
+   * This method uses prefixes associated with well-known namespaces, or will
+   * prepending the namespace if no prefix can be resolved.
+   *
+   * @param resolver
+   *          the resolver to use to lookup the prefix
+   * @return the extended qualified-name
+   */
   @NonNull
   default String toEQName() {
     return toEQName((NamespaceToPrefixResolver) null);
@@ -154,6 +164,15 @@ public interface IEnhancedQName {
     return toEQName(namespace, getLocalName(), prefix);
   }
 
+  /**
+   * Generate a qualified name for this QName, use a prefix resolved from the
+   * provided static context, or by prepending the namespace if no prefix can be
+   * resolved.
+   *
+   * @param staticContext
+   *          the static context to use to lookup the prefix
+   * @return the extended qualified-name
+   */
   @NonNull
   default String toEQName(@NonNull StaticContext staticContext) {
     String namespace = getNamespace();

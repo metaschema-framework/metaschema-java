@@ -58,6 +58,7 @@ public abstract class AbstractUriItem
   public boolean equals(Object obj) {
     return this == obj
         || obj instanceof IAnyUriItem && compareTo((IAnyUriItem) obj) == 0;
+
   }
 
   private final class MapKey

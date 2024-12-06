@@ -3,6 +3,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
@@ -25,9 +26,24 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IFlagNodeItem
     extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedItem {
+  /**
+   * Get the static type information of the node item.
+   *
+   * @return the item type
+   */
+  @NonNull
+  static IItemType type() {
+    return IItemType.flag();
+  }
+
   @Override
   default NodeItemKind getNodeItemKind() {
     return NodeItemKind.FLAG;
+  }
+
+  @Override
+  default NodeType getNodeType() {
+    return NodeType.FLAG;
   }
 
   @Override
@@ -84,7 +100,7 @@ public interface IFlagNodeItem
   @SuppressWarnings("null")
   @Override
   default @NonNull
-  Stream<? extends IFlagNodeItem> flags() {
+      Stream<? extends IFlagNodeItem> flags() {
     // a flag does not have flags
     return Stream.empty();
   }
@@ -96,7 +112,7 @@ public interface IFlagNodeItem
   @SuppressWarnings("null")
   @Override
   default @NonNull
-  Collection<? extends List<? extends IModelNodeItem<?, ?>>> getModelItems() {
+      Collection<? extends List<? extends IModelNodeItem<?, ?>>> getModelItems() {
     // a flag does not have model items
     return Collections.emptyList();
   }
@@ -125,12 +141,18 @@ public interface IFlagNodeItem
 
   @Override
   default @NonNull
-  String format(@NonNull IPathFormatter formatter) {
+      String format(@NonNull IPathFormatter formatter) {
     return formatter.formatFlag(this);
   }
 
   @Override
   default <CONTEXT, RESULT> RESULT accept(@NonNull INodeItemVisitor<CONTEXT, RESULT> visitor, CONTEXT context) {
     return visitor.visitFlag(this, context);
+  }
+
+  @Override
+  default boolean deepEquals(ICollectionValue other) {
+    return other instanceof IFlagNodeItem
+        && NodeComparators.compareNodeItem(this, (IFlagNodeItem) other) == 0;
   }
 }
