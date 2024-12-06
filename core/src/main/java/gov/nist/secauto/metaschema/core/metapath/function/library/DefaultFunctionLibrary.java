@@ -63,7 +63,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-day-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-days-from-duration
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-deep-equal
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-distinct-values
+    // https://www.w3.org/TR/xpath-functions-31/#func-distinct-values
+    registerFunction(FnDistinctValues.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-doc
     registerFunction(FnDoc.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-doc-available
