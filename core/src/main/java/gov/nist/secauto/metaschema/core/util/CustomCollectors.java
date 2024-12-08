@@ -271,7 +271,7 @@ public final class CustomCollectors {
 
       @Override
       public Supplier<List<ITEM_TYPE>> supplier() {
-        return ObjectUtils.notNull(ArrayList::new);
+        return ArrayList::new;
       }
 
       @Override

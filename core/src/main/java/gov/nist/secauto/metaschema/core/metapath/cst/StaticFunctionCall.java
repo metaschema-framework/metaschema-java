@@ -99,7 +99,8 @@ public class StaticFunctionCall implements IExpression {
   @Override
   public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     List<ISequence<?>> arguments = ObjectUtils.notNull(this.arguments.stream()
-        .map(expression -> expression.accept(dynamicContext, focus)).collect(Collectors.toList()));
+        .map(expression -> expression.accept(dynamicContext, focus).contentsAsSequence())
+        .collect(Collectors.toList()));
 
     IFunction function = getFunction();
     return function.execute(arguments, dynamicContext, focus);

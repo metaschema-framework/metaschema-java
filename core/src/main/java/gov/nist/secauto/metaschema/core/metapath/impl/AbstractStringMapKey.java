@@ -21,7 +21,7 @@ public abstract class AbstractStringMapKey
   @Override
   public boolean equals(Object obj) {
     return this == obj ||
-        obj instanceof AbstractStringMapKey
+        obj instanceof IMapKey
             && getKey().asStringItem().equals(((AbstractStringMapKey) obj).getKey().asStringItem());
   }
 }

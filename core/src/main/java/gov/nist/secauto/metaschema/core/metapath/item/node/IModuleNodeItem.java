@@ -3,6 +3,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.model.IModule;
 
@@ -20,9 +21,19 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * be queried.
  */
 public interface IModuleNodeItem extends IDocumentBasedNodeItem, IFeatureNoDataValuedItem {
+  /**
+   * Get the static type information of the node item.
+   *
+   * @return the item type
+   */
   @NonNull
   static IItemType type() {
-    return IItemType.document();
+    return IItemType.module();
+  }
+
+  @Override
+  default NodeType getNodeType() {
+    return NodeType.MODULE;
   }
 
   @Override
@@ -66,5 +77,11 @@ public interface IModuleNodeItem extends IDocumentBasedNodeItem, IFeatureNoDataV
   @Override
   default StaticContext getStaticContext() {
     return getModule().getModuleStaticContext();
+  }
+
+  @Override
+  default boolean deepEquals(ICollectionValue other) {
+    return other instanceof IModuleNodeItem
+        && NodeComparators.compareNodeItem(this, (IModuleNodeItem) other) == 0;
   }
 }

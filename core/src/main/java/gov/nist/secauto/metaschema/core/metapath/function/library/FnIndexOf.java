@@ -64,10 +64,7 @@ public final class FnIndexOf {
     ISequence<IAnyAtomicItem> seq = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
     IAnyAtomicItem search = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
-    if (seq.size() == 0) {
-      return ISequence.empty();
-    }
-    return fnIndexOf(seq, search);
+    return seq.isEmpty() ? ISequence.empty() : fnIndexOf(seq, search);
   }
 
   /**

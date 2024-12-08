@@ -96,6 +96,20 @@ public interface ICollectionValue {
   Stream<? extends IItem> flatten();
 
   /**
+   * Determine if this and the other value are deeply equal.
+   * <p>
+   * Item equality is defined by the
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-deep-equal">XPath 3.1
+   * fn:deep-equal</a> specification.
+   *
+   * @param other
+   *          the other value to compare to this value to
+   * @return the {@code true} if the two values are equal, or {@code false}
+   *         otherwise
+   */
+  boolean deepEquals(ICollectionValue other);
+
+  /**
    * Get a representation of the value based on its type signature.
    *
    * @return the signature

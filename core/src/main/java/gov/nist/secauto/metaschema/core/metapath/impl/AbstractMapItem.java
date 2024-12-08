@@ -21,7 +21,9 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -145,6 +147,34 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
   public boolean equals(Object other) {
     return other == this
         || other instanceof IMapItem && getValue().equals(((IMapItem<?>) other).getValue());
+  }
+
+  @SuppressWarnings("PMD.OnlyOneReturn")
+  @Override
+  public boolean deepEquals(ICollectionValue other) {
+    if (!(other instanceof IMapItem)) {
+      return false;
+    }
+
+    IMapItem<?> otherItem = (IMapItem<?>) other;
+    if (size() != otherItem.size()) {
+      return false;
+    }
+
+    Iterator<Map.Entry<IMapKey, VALUE>> thisIterator = entrySet().iterator();
+    Iterator<? extends Map.Entry<IMapKey, ? extends ICollectionValue>> otherIterator = otherItem.entrySet().iterator();
+    boolean retval = true;
+    while (thisIterator.hasNext() && otherIterator.hasNext()) {
+      Map.Entry<IMapKey, ? extends ICollectionValue> i1 = thisIterator.next();
+      Map.Entry<IMapKey, ? extends ICollectionValue> i2 = otherIterator.next();
+
+      retval = i1.getKey().equals(i2.getKey())
+          && i1.getValue().deepEquals(i2.getValue());
+      if (!retval) {
+        break;
+      }
+    }
+    return retval;
   }
 
   @Override

@@ -8,6 +8,8 @@ import gov.nist.secauto.metaschema.core.model.IValuedDefinition;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+// FIXME: cleanup these feature interfaces to reduce the number of interfaces and methods
+// FIXME: rename to IFeatureRequiredDataAtomicValuedNodeItem
 interface IFeatureAtomicValuedItem
     extends IFeatureRequiredDataItem, IAtomicValuedItem {
 

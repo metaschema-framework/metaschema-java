@@ -6,12 +6,15 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
+import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.stream.Stream;
@@ -125,6 +128,20 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
    *         than, equal to, or greater than the {@code item}.
    */
   int compareTo(@NonNull IAnyAtomicItem other);
+
+  @Override
+  default boolean deepEquals(ICollectionValue other) {
+    boolean retval;
+    try {
+      retval = other instanceof IAnyAtomicItem
+          && ComparisonFunctions.valueCompairison(this, ComparisonFunctions.Operator.EQ, (IAnyAtomicItem) other)
+              .toBoolean();
+    } catch (InvalidTypeMetapathException ex) {
+      // incompatible types are a non-match
+      retval = false;
+    }
+    return retval;
+  }
 
   @Override
   default void accept(IItemVisitor visitor) {

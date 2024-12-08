@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -134,6 +135,32 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
   public boolean equals(Object other) {
     return other == this
         || other instanceof IArrayItem && getValue().equals(((IArrayItem<?>) other).getValue());
+  }
+
+  @SuppressWarnings("PMD.OnlyOneReturn")
+  @Override
+  public boolean deepEquals(ICollectionValue other) {
+    if (!(other instanceof IArrayItem)) {
+      return false;
+    }
+
+    IArrayItem<?> otherArray = (IArrayItem<?>) other;
+    if (size() != otherArray.size()) {
+      return false;
+    }
+
+    Iterator<? extends ICollectionValue> thisIterator = iterator();
+    Iterator<? extends ICollectionValue> otherIterator = otherArray.iterator();
+    boolean retval = true;
+    while (thisIterator.hasNext() && otherIterator.hasNext()) {
+      ICollectionValue i1 = thisIterator.next();
+      ICollectionValue i2 = otherIterator.next();
+      if (!i1.deepEquals(i2)) {
+        retval = false;
+        break;
+      }
+    }
+    return retval;
   }
 
   @Override

@@ -20,9 +20,33 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Represents a queryable Metapath model node.
+ * Represents a Metapath model node.
  */
 public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
+  /**
+   * The type of node.
+   */
+  enum NodeType {
+    MODULE,
+    DOCUMENT,
+    ASSEMBLY,
+    FIELD,
+    FLAG;
+  }
+
+  /**
+   * Get the node type for the node item.
+   *
+   * @return the node type
+   */
+  @NonNull
+  NodeType getNodeType();
+
+  /**
+   * Get the static type information of the node item.
+   *
+   * @return the item type
+   */
   @NonNull
   static IItemType type() {
     return IItemType.node();

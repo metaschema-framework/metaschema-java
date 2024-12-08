@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.function.impl;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.function.CalledContext;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
@@ -19,6 +18,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -32,12 +32,38 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * This abstract implementation provides common functionality shared by all
+ * functions.
+ */
 public abstract class AbstractFunction implements IFunction {
   @NonNull
   private final IEnhancedQName qname;
   @NonNull
   private final List<IArgument> arguments;
 
+  /**
+   * Construct a new function using the provided name and namespace, used together
+   * to form the function's qualified name, and the provided arguments.
+   * <p>
+   * This constructor is equivalent to calling:
+   *
+   * <pre>
+   * {@code
+   * String name = ...;
+   * String namespace = ...;
+   * List<IArgument> arguments = ...;
+   * new AbstractFunction(IEnhancedQName.of(namespace, name), arguments);
+   * }
+   * </pre>
+   *
+   * @param name
+   *          the function's name
+   * @param namespace
+   *          the function's namespace
+   * @param arguments
+   *          the function's arguments
+   */
   protected AbstractFunction(
       @NonNull String name,
       @NonNull String namespace,
@@ -45,6 +71,14 @@ public abstract class AbstractFunction implements IFunction {
     this(IEnhancedQName.of(namespace, name), arguments);
   }
 
+  /**
+   * Construct a new function using the provided qualified name and arguments.
+   *
+   * @param qname
+   *          the function's qualified name
+   * @param arguments
+   *          the function's arguments
+   */
   protected AbstractFunction(
       @NonNull IEnhancedQName qname,
       @NonNull List<IArgument> arguments) {
@@ -118,26 +152,24 @@ public abstract class AbstractFunction implements IFunction {
   private static ISequence<?> convertArgument(
       @NonNull IArgument argument,
       @NonNull ISequence<?> parameter) {
+    ISequenceType sequenceType = argument.getSequenceType();
+
     // apply occurrence
-    ISequence<?> retval = argument.getSequenceType().getOccurrence().getSequenceHandler().handle(parameter);
+    ISequence<?> retval = sequenceType.getOccurrence().getSequenceHandler().handle(parameter);
 
     // apply function conversion and type promotion to the parameter
     if (!retval.isEmpty()) {
-      IItemType type = argument.getSequenceType().getType();
+      IItemType type = sequenceType.getType();
       // this is not required to be an empty sequence
       retval = convertSequence(argument, retval, type);
 
       // verify resulting values
-      Class<? extends IItem> argumentClass = type.getItemClass();
-      for (IItem item : retval.getValue()) {
-        Class<? extends IItem> itemClass = item.getClass();
-        if (!argumentClass.isAssignableFrom(itemClass)) {
-          throw new InvalidTypeMetapathException(
-              item,
-              String.format("The type '%s' is not a subtype of '%s'",
-                  StaticContext.lookupItemType(itemClass),
-                  type));
-        }
+      if (!sequenceType.matches(retval)) {
+        throw new InvalidTypeMetapathException(
+            null,
+            String.format("The argument '%s' is not a '%s'",
+                retval.toSignature(),
+                sequenceType.toSignature()));
       }
     }
     return retval;
