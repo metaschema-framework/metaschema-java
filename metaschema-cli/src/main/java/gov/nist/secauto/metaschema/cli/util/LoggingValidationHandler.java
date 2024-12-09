@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.model.validation.AbstractValidationResul
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
+import gov.nist.secauto.metaschema.modules.sarif.SarifValidationHandler;
 
 import org.apache.logging.log4j.LogBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +23,8 @@ import org.fusesource.jansi.Ansi.Color;
 import org.xml.sax.SAXParseException;
 
 import java.net.URI;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -130,7 +133,17 @@ public final class LoggingValidationHandler
       ansi.format(" %s:", id);
     }
 
-    getLogger(finding).log(ansi.format(" %s", finding.getMessage()));
+    ansi.format(" %s", finding.getMessage());
+
+    Set<String> helpUrls = finding.getConstraints().stream()
+        .flatMap(constraint -> constraint.getPropertyValues(SarifValidationHandler.SARIF_HELP_URL_KEY).stream())
+        .collect(Collectors.toSet());
+    if (!helpUrls.isEmpty()) {
+      ansi.format(" (help: %s)",
+          helpUrls.stream().collect(Collectors.joining(", ")));
+    }
+
+    getLogger(finding).log(ansi);
   }
 
   @NonNull
