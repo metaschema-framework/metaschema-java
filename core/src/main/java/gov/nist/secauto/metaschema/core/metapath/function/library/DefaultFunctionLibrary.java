@@ -78,7 +78,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-encode-for-uri
     // https://www.w3.org/TR/xpath-functions-31/#func-ends-with
     registerFunction(FnEndsWith.SIGNATURE);
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-exactly-one
+    // https://www.w3.org/TR/xpath-functions-31/#func-exactly-one
+    registerFunction(FnExactlyOne.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-exists
     registerFunction(FnExists.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-false
@@ -129,7 +130,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-not
     registerFunction(FnNot.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-number
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-one-or-more
+    // https://www.w3.org/TR/xpath-functions-31/#func-one-or-more
+    registerFunction(FnOneOrMore.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-outermost
     // https://www.w3.org/TR/xpath-functions-31/#func-parse-ietf-date
     // https://www.w3.org/TR/xpath-functions-31/#func-path
@@ -194,7 +196,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-year-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-year-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one
+    // https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one
+    registerFunction(FnZeroOrOne.SIGNATURE);
 
     // https://www.w3.org/TR/xpath-functions-31/#func-array-get
     registerFunction(ArrayGet.SIGNATURE);

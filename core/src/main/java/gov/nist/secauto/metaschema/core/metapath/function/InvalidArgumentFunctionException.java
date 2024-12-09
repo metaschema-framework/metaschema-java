@@ -29,9 +29,39 @@ public class InvalidArgumentFunctionException
   public static final int INVALID_ARGUMENT_TO_RESOLVE_URI = 2;
   /**
    * <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#ERRFORG0003">err:FORG0003</a>:
+   * Raised by <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one">fn:zero-or-one</a>
+   * if the supplied value contains more than one item.
+   *
+   */
+  public static final int INVALID_ARGUMENT_ZERO_OR_ONE = 3;
+  /**
+   * <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#ERRFORG0004">err:FORG0005</a>:
+   * Raised by <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-one-or-more">fn:one-or-more</a>
+   * if the supplied value is an empty sequence.
+   */
+  public static final int INVALID_ARGUMENT_ONE_OR_MORE = 4;
+  /**
+   * <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#ERRFORG0005">err:FORG0005</a>:
+   * Raised by <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-exactly-one">fn:exactly-one</a>
+   * if the supplied value is not a singleton sequence.
+   *
+   */
+  public static final int INVALID_ARGUMENT_EXACTLY_ONE = 5;
+  /**
+   * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFORG0006">err:FORG0006</a>:
-   * Raised by functions such as fn:max, fn:min, fn:avg, fn:sum if the supplied
-   * sequence contains values inappropriate to this function.
+   * Raised by functions such as
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-max">fn:max</a>,
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-min">fn:min</a>,
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-avg">fn:avg</a>,
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-sum">fn:sum</a> if
+   * the supplied sequence contains values inappropriate to this function.
    */
   public static final int INVALID_ARGUMENT_TYPE = 6;
 

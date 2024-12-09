@@ -269,7 +269,12 @@ public abstract class AbstractFunction implements IFunction {
       // toSignature(), convertedArguments.toString(), result.asList().toString()));
       return result;
     } catch (MetapathException ex) {
-      throw new MetapathException(String.format("Unable to execute function '%s'", toSignature()), ex);
+      // FIXME: avoid throwing a new exception for a function-related exception. Fix
+      // this after refactoring the exception hierarchy.
+      throw new MetapathException(String.format("Unable to execute function '%s'. %s",
+          toSignature(),
+          ex.getLocalizedMessage()),
+          ex);
     }
   }
 
