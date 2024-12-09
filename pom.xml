@@ -66,7 +66,7 @@
 		<dependency.plexus-build-api.version>1.2.0</dependency.plexus-build-api.version>
 		<dependency.saxon.version>12.5</dependency.saxon.version>
 		<dependency.stax2-api.version>4.2.2</dependency.stax2-api.version>
-		<dependency.thymeleaf.version>3.1.2.RELEASE</dependency.thymeleaf.version>
+		<dependency.thymeleaf.version>3.1.3.RELEASE</dependency.thymeleaf.version>
 		<dependency.woodstox.version>7.1.0</dependency.woodstox.version>
 		<dependency.xmlbeans.version>5.2.2</dependency.xmlbeans.version>
 		<dependency.xmlcalabash.version>1.5.7-120</dependency.xmlcalabash.version>
