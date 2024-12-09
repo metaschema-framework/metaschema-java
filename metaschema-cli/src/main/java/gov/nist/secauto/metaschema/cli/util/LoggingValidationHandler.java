@@ -143,7 +143,7 @@ public final class LoggingValidationHandler
           helpUrls.stream().collect(Collectors.joining(", ")));
     }
 
-    getLogger(finding).log();
+    getLogger(finding).log(ansi);
   }
 
   @NonNull
