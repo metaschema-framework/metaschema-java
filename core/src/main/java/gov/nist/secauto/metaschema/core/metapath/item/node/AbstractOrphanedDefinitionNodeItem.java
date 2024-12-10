@@ -11,7 +11,7 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-abstract class AbstractOrphanedDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
+public abstract class AbstractOrphanedDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
     extends AbstractDefinitionNodeItem<D, I> {
 
   @Nullable

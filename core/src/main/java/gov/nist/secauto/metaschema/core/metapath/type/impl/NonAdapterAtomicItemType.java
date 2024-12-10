@@ -79,4 +79,9 @@ public class NonAdapterAtomicItemType<T extends IAnyAtomicItem>
     return Objects.equals(getItemClass(), other.getItemClass())
         && Objects.equals(getQName(), other.getQName());
   }
+
+  @Override
+  public T newItem(Object value) {
+    throw new UnsupportedOperationException("Not a conrete atomic type.");
+  }
 }

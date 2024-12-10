@@ -11,39 +11,24 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class MockedModelTestSupport implements IMockFactory {
+public class MockedModelTestSupport implements IModuleMockFactory {
   @RegisterExtension
   @NonNull
-  Mockery context = new JUnit5Mockery();
+  Mockery context;
 
   /**
-   * Get a new flag builder.
-   *
-   * @return the builder
+   * Construct a new model mock factory using the default JUnit-based mocking
+   * context.
    */
-  @NonNull
-  protected FlagBuilder flag() {
-    return FlagBuilder.builder(context);
+  public MockedModelTestSupport() {
+    this(new JUnit5Mockery());
   }
 
   /**
-   * Get a new field builder.
-   *
-   * @return the builder
+   * Construct a new model mock factory using the provided mocking context.
    */
-  @NonNull
-  protected FieldBuilder field() {
-    return FieldBuilder.builder(context);
-  }
-
-  /**
-   * Get a new assembly builder.
-   *
-   * @return the builder
-   */
-  @NonNull
-  protected AssemblyBuilder assembly() {
-    return AssemblyBuilder.builder(context);
+  public MockedModelTestSupport(@NonNull Mockery context) {
+    this.context = context;
   }
 
   @Override

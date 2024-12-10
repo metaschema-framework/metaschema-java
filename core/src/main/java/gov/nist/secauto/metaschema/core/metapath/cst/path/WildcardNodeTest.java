@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * <a href="https://www.w3.org/TR/xpath-31/#doc-xpath31-Wildcard">wildcard name
  * test</a>.
  */
-public class Wildcard implements INameTestExpression {
+public class WildcardNodeTest implements INodeTestExpression {
   @Nullable
   private final Predicate<IDefinitionNodeItem<?, ?>> matcher;
 
@@ -34,20 +34,25 @@ public class Wildcard implements INameTestExpression {
    * @param matcher
    *          the matcher used to determine matching nodes
    */
-  public Wildcard(@Nullable IWildcardMatcher matcher) {
+  public WildcardNodeTest(@Nullable IWildcardMatcher matcher) {
     this.matcher = matcher;
   }
 
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitWildcard(this, context);
+    return visitor.visitWildcardNodeTest(this, context);
   }
 
   @Override
-  public ISequence<? extends INodeItem> accept(
-      DynamicContext dynamicContext, ISequence<?> focus) {
-    Stream<? extends INodeItem> nodes = ObjectUtils.notNull(focus.stream().map(ItemUtils::checkItemIsNodeItemForStep));
-    return ISequence.of(match(nodes));
+  public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    Stream<INodeItem> stream = focus.stream()
+        .map(ItemUtils::checkItemIsNodeItemForStep);
+
+    if (matcher != null) {
+      stream = stream.filter(this::match);
+    }
+
+    return ISequence.of(ObjectUtils.notNull(stream));
   }
 
   /**
@@ -63,7 +68,7 @@ public class Wildcard implements INameTestExpression {
    * @return the matching items
    */
   @NonNull
-  public <T extends INodeItem> Stream<T> match(@SuppressWarnings("resource") @NonNull Stream<T> items) {
+  public <T extends INodeItem> Stream<T> matchStream(@SuppressWarnings("resource") @NonNull Stream<T> items) {
     Stream<T> nodes = items;
     if (matcher != null) {
       Predicate<IDefinitionNodeItem<?, ?>> test = matcher;
@@ -74,6 +79,20 @@ public class Wildcard implements INameTestExpression {
       }));
     }
     return nodes;
+  }
+
+  /**
+   * Check the provided item to determine if it matches the wildcard.
+   *
+   * @param item
+   *          the item to check for a match
+   * @return {@code true} if the item matches or {@code false} otherwise
+   */
+  private boolean match(@NonNull INodeItem item) {
+    assert matcher != null;
+    Predicate<IDefinitionNodeItem<?, ?>> test = matcher;
+    return !(item instanceof IDefinitionNodeItem) ||
+        test.test((IDefinitionNodeItem<?, ?>) item);
   }
 
   @SuppressWarnings("null")

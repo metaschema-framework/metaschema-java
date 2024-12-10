@@ -98,7 +98,7 @@ class MetaschemaModuleMetaschemaTest
     IBindingModuleLoader loader = newBindingContext().newModuleLoader();
     loader.allowEntityResolution();
     IBindingMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
-        "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.2/src/metaschema/oscal_complete_metaschema.xml")));
+        "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.3/src/metaschema/oscal_complete_metaschema.xml")));
     assertNotNull(module);
   }
 
@@ -108,7 +108,7 @@ class MetaschemaModuleMetaschemaTest
     // loader.allowEntityResolution();
 
     IXmlMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
-        "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.2/src/metaschema/oscal_complete_metaschema.xml")));
+        "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.3/src/metaschema/oscal_complete_metaschema.xml")));
     assertNotNull(module);
   }
 }

@@ -37,15 +37,16 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.NameTest;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.NameNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashOnlyPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Step;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.WildcardNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Cast;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Castable;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.InstanceOf;
@@ -306,7 +307,7 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    *          the processing context
    * @return the visitation result or {@code null} if no result was produced
    */
-  RESULT visitName(@NonNull NameTest expr, @NonNull CONTEXT context);
+  RESULT visitNameNodeTest(@NonNull NameNodeTest expr, @NonNull CONTEXT context);
 
   /**
    * Visit the CST node.
@@ -449,7 +450,7 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    *          the processing context
    * @return the visitation result or {@code null} if no result was produced
    */
-  RESULT visitWildcard(@NonNull Wildcard expr, @NonNull CONTEXT context);
+  RESULT visitWildcardNodeTest(@NonNull WildcardNodeTest expr, @NonNull CONTEXT context);
 
   /**
    * Visit the CST node.
@@ -659,4 +660,15 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    * @return the visitation result or {@code null} if no result was produced
    */
   RESULT visitTreat(@NonNull Treat expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
+  RESULT visitKindNodeTest(@NonNull KindNodeTest expr, @NonNull CONTEXT context);
 }

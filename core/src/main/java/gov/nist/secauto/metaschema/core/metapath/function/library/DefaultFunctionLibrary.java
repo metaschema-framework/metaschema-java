@@ -92,7 +92,9 @@ public class DefaultFunctionLibrary
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-number
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-time
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-generate-id
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-has-children
+    // https://www.w3.org/TR/xpath-functions-31/#func-has-children
+    registerFunction(FnHasChildren.SIGNATURE_NO_ARG);
+    registerFunction(FnHasChildren.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-head
     registerFunction(FnHead.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-dateTime
@@ -103,10 +105,14 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-index-of
     registerFunction(FnIndexOf.SIGNATURE_TWO_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-innermost
+    registerFunction(FnInnermost.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-insert-before
     registerFunction(FnInsertBefore.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-iri-to-uri
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-last
+    // https://www.w3.org/TR/xpath-functions-31/#func-local-name
+    registerFunction(FnLocalName.SIGNATURE_NO_ARG);
+    registerFunction(FnLocalName.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-lower-case
     registerFunction(FnLowerCase.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-matches
@@ -122,6 +128,12 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-months-from-duration
+    // https://www.w3.org/TR/xpath-functions-31/#func-name
+    registerFunction(FnName.SIGNATURE_NO_ARG);
+    registerFunction(FnName.SIGNATURE_ONE_ARG);
+    // https://www.w3.org/TR/xpath-functions-31/#func-namespace-uri
+    registerFunction(FnNamespaceUri.SIGNATURE_NO_ARG);
+    registerFunction(FnNamespaceUri.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-node-name
     // https://www.w3.org/TR/xpath-functions-31/#func-normalize-space
     registerFunction(FnNormalizeSpace.SIGNATURE_NO_ARG);
@@ -133,6 +145,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-one-or-more
     registerFunction(FnOneOrMore.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-outermost
+    registerFunction(FnOutermost.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-parse-ietf-date
     // https://www.w3.org/TR/xpath-functions-31/#func-path
     registerFunction(FnPath.SIGNATURE_NO_ARG);
@@ -146,7 +159,9 @@ public class DefaultFunctionLibrary
     registerFunction(FnResolveUri.SIGNATURE_TWO_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-reverse
     registerFunction(FnReverse.SIGNATURE_ONE_ARG);
-    // P1: https://www.w3.org/TR/xpath-functions-31/#func-root
+    // https://www.w3.org/TR/xpath-functions-31/#func-root
+    registerFunction(FnRoot.SIGNATURE_NO_ARG);
+    registerFunction(FnRoot.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-round
     registerFunction(FnRound.SIGNATURE);
     registerFunction(FnRound.SIGNATURE_WITH_PRECISION);

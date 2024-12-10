@@ -53,6 +53,12 @@ public class DataTypeItemType<T extends IAnyAtomicItem>
     return getAdapter().getPreferredName();
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public T newItem(Object value) {
+    return (T) getAdapter().newItem(value);
+  }
+
   @Override
   public String toString() {
     return toSignature();

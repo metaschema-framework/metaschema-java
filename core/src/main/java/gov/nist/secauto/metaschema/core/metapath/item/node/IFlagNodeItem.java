@@ -4,7 +4,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 
 public interface IFlagNodeItem
-    extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedItem {
+    extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedNodeItem {
   /**
    * Get the static type information of the node item.
    *
@@ -64,6 +64,11 @@ public interface IFlagNodeItem
         getQName(),
         getDefinition().getDefinitionQName().toEQName(staticContext),
         staticContext);
+  }
+
+  @Override
+  default IAtomicOrUnionType<?> getValueItemType() {
+    return getDefinition().getJavaTypeAdapter().getItemType();
   }
 
   @Override
