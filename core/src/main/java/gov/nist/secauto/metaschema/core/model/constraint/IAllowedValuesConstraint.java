@@ -47,6 +47,11 @@ public interface IAllowedValuesConstraint extends IConstraint {
     NONE;
   }
 
+  @Override
+  default Type getType() {
+    return Type.ALLOWED_VALUES;
+  }
+
   /**
    * Get the collection allowed values associated with this constraint.
    *

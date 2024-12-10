@@ -18,6 +18,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * generated, but this constraint type does not persist a named index.
  */
 public interface IUniqueConstraint extends IKeyConstraint {
+  @Override
+  default Type getType() {
+    return Type.UNIQUE;
+  }
 
   @Override
   default <T, R> R accept(IConstraintVisitor<T, R> visitor, T state) {

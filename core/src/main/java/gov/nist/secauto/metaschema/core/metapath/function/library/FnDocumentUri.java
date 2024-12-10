@@ -17,7 +17,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.net.URI;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -106,7 +105,6 @@ public final class FnDocumentUri {
    */
   @Nullable
   public static IAnyUriItem fnDocumentUri(@NonNull IDocumentNodeItem document) {
-    URI documentUri = document.getDocumentUri();
-    return documentUri == null ? null : IAnyUriItem.valueOf(documentUri);
+    return IAnyUriItem.valueOf(document.getDocumentUri());
   }
 }

@@ -24,6 +24,31 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 public interface IConstraint extends IAttributable, IDescribable {
   /**
+   * The type of constraint.
+   */
+  enum Type {
+    ALLOWED_VALUES("allowed-values"),
+    CARDINALITY("cardinality"),
+    EXPECT("expect"),
+    INDEX("index"),
+    UNIQUE("unique"),
+    INDEX_HAS_KEY("index-has-key"),
+    MATCHES("matches");
+
+    @NonNull
+    private final String name;
+
+    Type(@NonNull String name) {
+      this.name = name;
+    }
+
+    @NonNull
+    public String getName() {
+      return name;
+    }
+  }
+
+  /**
    * The degree to which a constraint violation is significant.
    * <p>
    * These values are ordered from least significant to most significant.
@@ -90,6 +115,14 @@ public interface IConstraint extends IAttributable, IDescribable {
     }
     return ObjectUtils.notNull(identity);
   }
+
+  /**
+   * Get the constraint type.
+   *
+   * @return the constraint type
+   */
+  @NonNull
+  Type getType();
 
   /**
    * Retrieve the unique identifier for the constraint.

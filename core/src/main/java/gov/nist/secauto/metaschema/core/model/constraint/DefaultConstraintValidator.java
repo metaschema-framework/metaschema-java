@@ -386,7 +386,7 @@ public class DefaultConstraintValidator
       @NonNull Throwable ex) {
     StringBuilder builder = new StringBuilder(128);
     builder.append("A ")
-        .append(constraint.getClass().getName())
+        .append(constraint.getType().getName())
         .append(" constraint");
 
     String id = constraint.getId();
@@ -402,7 +402,7 @@ public class DefaultConstraintValidator
 
     builder.append(", matching the item at path '")
         .append(item.getMetapath())
-        .append("', resulted in an unexpected error. The error was: ")
+        .append("', resulted in an unexpected error. ")
         .append(ex.getLocalizedMessage());
     return ObjectUtils.notNull(builder.toString());
   }

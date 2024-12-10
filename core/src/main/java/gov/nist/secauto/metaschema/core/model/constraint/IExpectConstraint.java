@@ -17,6 +17,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A custom message can be used to indicate what a test failure signifies.
  */
 public interface IExpectConstraint extends IConfigurableMessageConstraint {
+  @Override
+  default Type getType() {
+    return Type.EXPECT;
+  }
+
   /**
    * Get the test to use to validate selected nodes.
    *

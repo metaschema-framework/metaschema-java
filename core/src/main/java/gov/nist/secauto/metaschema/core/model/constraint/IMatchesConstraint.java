@@ -19,6 +19,11 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * and/or conform to an identified data type.
  */
 public interface IMatchesConstraint extends IConfigurableMessageConstraint {
+  @Override
+  default Type getType() {
+    return Type.MATCHES;
+  }
+
   /**
    * Get the expected pattern.
    *

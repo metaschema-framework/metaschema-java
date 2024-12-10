@@ -18,6 +18,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data objects using the {@link IIndexHasKeyConstraint}.
  */
 public interface IIndexConstraint extends IKeyConstraint {
+  @Override
+  default Type getType() {
+    return Type.INDEX;
+  }
+
   /**
    * Get the name of the index, which is used to refer to the index by an
    * {@link IIndexHasKeyConstraint}.

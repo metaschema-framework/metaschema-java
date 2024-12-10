@@ -6,6 +6,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 
+import java.net.URI;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -43,6 +45,10 @@ public interface IDocumentNodeItem extends IDocumentBasedNodeItem {
   default IDocumentNodeItem getNodeItem() {
     return this;
   }
+
+  @Override
+  @NonNull
+  URI getDocumentUri();
 
   /**
    * Get the node item for the document root element.

@@ -72,10 +72,11 @@ public final class UriUtils {
    * @throws URISyntaxException
    *           if any of the URIs are malformed
    */
+  @NonNull
   public static URI relativize(URI base, URI other, boolean prepend) throws URISyntaxException {
     URI normBase = Objects.requireNonNull(base).normalize();
     URI normOther = Objects.requireNonNull(other).normalize();
-    URI retval = normBase.relativize(normOther);
+    URI retval = ObjectUtils.notNull(normBase.relativize(normOther));
 
     if (prepend && !normBase.isOpaque() && !retval.isOpaque() && hasSameSchemeAndAuthority(normBase, retval)) {
       // the URIs are not opaque and they share the same scheme and authority
@@ -85,7 +86,6 @@ public final class UriUtils {
 
       retval = new URI(null, null, newPath, normOther.getQuery(), normOther.getFragment());
     }
-
     return retval;
   }
 

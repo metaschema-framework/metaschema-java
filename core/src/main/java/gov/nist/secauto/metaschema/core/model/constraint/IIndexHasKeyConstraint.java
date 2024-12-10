@@ -16,6 +16,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * {@link IIndexConstraint}.
  */
 public interface IIndexHasKeyConstraint extends IKeyConstraint {
+  @Override
+  default Type getType() {
+    return Type.INDEX_HAS_KEY;
+  }
+
   /**
    * The name of the index used to verify cross references.
    *
