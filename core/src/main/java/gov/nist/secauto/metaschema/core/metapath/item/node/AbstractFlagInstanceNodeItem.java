@@ -9,7 +9,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A {@link INodeItem} supported by a {@link IFlagInstance}.
  */
-abstract class AbstractFlagInstanceNodeItem
+public abstract class AbstractFlagInstanceNodeItem
     extends AbstractInstanceNodeItem<IFlagDefinition, IFlagInstance, IModelNodeItem<?, ?>>
     implements IFlagNodeItem {
 

@@ -4,7 +4,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
+import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 
 public interface IFlagNodeItem
-    extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedItem {
+    extends IDefinitionNodeItem<IFlagDefinition, IFlagInstance>, IAtomicValuedNodeItem {
   /**
    * Get the static type information of the node item.
    *
@@ -67,6 +67,11 @@ public interface IFlagNodeItem
   }
 
   @Override
+  default IAtomicOrUnionType<?> getValueItemType() {
+    return getDefinition().getJavaTypeAdapter().getItemType();
+  }
+
+  @Override
   @Nullable
   default URI getBaseUri() {
     INodeItem parent = getParentNodeItem();
@@ -100,7 +105,7 @@ public interface IFlagNodeItem
   @SuppressWarnings("null")
   @Override
   default @NonNull
-  Stream<? extends IFlagNodeItem> flags() {
+      Stream<? extends IFlagNodeItem> flags() {
     // a flag does not have flags
     return Stream.empty();
   }
@@ -112,7 +117,7 @@ public interface IFlagNodeItem
   @SuppressWarnings("null")
   @Override
   default @NonNull
-  Collection<? extends List<? extends IModelNodeItem<?, ?>>> getModelItems() {
+      Collection<? extends List<? extends IModelNodeItem<?, ?>>> getModelItems() {
     // a flag does not have model items
     return Collections.emptyList();
   }
@@ -141,7 +146,7 @@ public interface IFlagNodeItem
 
   @Override
   default @NonNull
-  String format(@NonNull IPathFormatter formatter) {
+      String format(@NonNull IPathFormatter formatter) {
     return formatter.formatFlag(this);
   }
 

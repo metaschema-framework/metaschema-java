@@ -15,7 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <D>
  *          the definition type
  */
-abstract class AbstractGlobalDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
+public abstract class AbstractGlobalDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
     extends AbstractDefinitionNodeItem<D, I> {
   @NonNull
   private final IModuleNodeItem metaschemaNodeItem;
