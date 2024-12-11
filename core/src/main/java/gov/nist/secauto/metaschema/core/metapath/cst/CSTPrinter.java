@@ -37,15 +37,16 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.NameTest;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.NameNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashOnlyPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Step;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.WildcardNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Cast;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Castable;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.InstanceOf;
@@ -241,8 +242,8 @@ public final class CSTPrinter {
     }
 
     @Override
-    public String visitName(NameTest expr, State context) {
-      return appendNode(expr, super.visitName(expr, context), context);
+    public String visitNameNodeTest(NameNodeTest expr, State context) {
+      return appendNode(expr, super.visitNameNodeTest(expr, context), context);
     }
 
     @Override
@@ -311,8 +312,8 @@ public final class CSTPrinter {
     }
 
     @Override
-    public String visitWildcard(Wildcard expr, State context) {
-      return appendNode(expr, super.visitWildcard(expr, context), context);
+    public String visitWildcardNodeTest(WildcardNodeTest expr, State context) {
+      return appendNode(expr, super.visitWildcardNodeTest(expr, context), context);
     }
 
     @Override
@@ -409,6 +410,12 @@ public final class CSTPrinter {
     public String visitTreat(Treat expr, State context) {
       return appendNode(expr, super.visitTreat(expr, context), context);
     }
+
+    @Override
+    public String visitKindNodeTest(KindNodeTest expr, State context) {
+      return appendNode(expr, super.visitKindNodeTest(expr, context), context);
+    }
+
   }
 
   static class State {

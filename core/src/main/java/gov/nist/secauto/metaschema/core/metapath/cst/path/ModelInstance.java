@@ -74,13 +74,13 @@ public class ModelInstance
     Stream<? extends IModelNodeItem<?, ?>> retval;
 
     INodeTestExpression test = getTest();
-    if (test instanceof NameTest) {
-      IEnhancedQName name = ((NameTest) getTest()).getName();
+    if (test instanceof NameNodeTest) {
+      IEnhancedQName name = ((NameNodeTest) getTest()).getName();
       List<? extends IModelNodeItem<?, ?>> items = focusedItem.getModelItemsByName(name);
       retval = items.stream();
-    } else if (test instanceof Wildcard) {
+    } else if (test instanceof WildcardNodeTest) {
       // match all items
-      retval = ((Wildcard) test).match(focusedItem.modelItems());
+      retval = ((WildcardNodeTest) test).matchStream(focusedItem.modelItems());
     } else {
       throw new UnsupportedOperationException(test.getClass().getName());
     }

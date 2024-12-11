@@ -100,7 +100,7 @@ public final class TypeTestSupport {
   }
 
   @NonNull
-  private static IItemType parseKindTest(
+  public static IItemType parseKindTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     ParseTree child = ObjectUtils.requireNonNull(tree.getChild(0));

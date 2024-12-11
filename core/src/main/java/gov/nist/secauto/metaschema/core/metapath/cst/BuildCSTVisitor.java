@@ -43,18 +43,18 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.INameTestExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.INodeTestExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.IWildcardMatcher;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.NameTest;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.NameNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashOnlyPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RootSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Step;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Wildcard;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.WildcardNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Cast;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.Castable;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.InstanceOf;
@@ -688,9 +688,17 @@ public class BuildCSTVisitor
    */
   @NonNull
   protected INodeTestExpression parseNodeTest(Metapath10.NodetestContext ctx, boolean flag) {
-    // TODO: implement kind test
-    Metapath10.NametestContext nameTestCtx = ctx.nametest();
-    return parseNameTest(nameTestCtx, flag);
+    INodeTestExpression retval;
+    if (ctx.kindtest() != null) {
+      IItemType itemType = TypeTestSupport.parseKindTest(
+          ObjectUtils.notNull(ctx.kindtest()),
+          getContext());
+      retval = new KindNodeTest(itemType);
+    } else {
+      Metapath10.NametestContext nameTestCtx = ctx.nametest();
+      retval = parseNameTest(nameTestCtx, flag);
+    }
+    return retval;
   }
 
   /**
@@ -703,12 +711,12 @@ public class BuildCSTVisitor
    * @return the resulting expression
    */
   @NonNull
-  protected INameTestExpression parseNameTest(Metapath10.NametestContext ctx, boolean flag) {
+  protected INodeTestExpression parseNameTest(Metapath10.NametestContext ctx, boolean flag) {
     ParseTree testType = ObjectUtils.requireNonNull(ctx.getChild(0));
 
     StaticContext staticContext = getContext();
 
-    INameTestExpression retval;
+    INodeTestExpression retval;
     if (testType instanceof Metapath10.EqnameContext) {
       String name = ObjectUtils.notNull(ctx.eqname().getText());
       IEnhancedQName qname = flag
@@ -719,9 +727,9 @@ public class BuildCSTVisitor
           && qname.getNamespace().isEmpty()
           && staticContext.isUseWildcardWhenNamespaceNotDefaulted()) {
         // Use a wildcard namespace
-        retval = new Wildcard(IWildcardMatcher.anyNamespace(ObjectUtils.notNull(qname.getLocalName())));
+        retval = new WildcardNodeTest(IWildcardMatcher.anyNamespace(ObjectUtils.notNull(qname.getLocalName())));
       } else {
-        retval = new NameTest(qname);
+        retval = new NameNodeTest(qname);
       }
     } else { // wildcard
       retval = handleWildcard((Metapath10.WildcardContext) testType);
@@ -730,7 +738,7 @@ public class BuildCSTVisitor
   }
 
   @Override
-  protected Wildcard handleWildcard(Metapath10.WildcardContext ctx) {
+  protected WildcardNodeTest handleWildcard(Metapath10.WildcardContext ctx) {
     IWildcardMatcher matcher = null;
     if (ctx.STAR() == null) {
       if (ctx.CS() != null) {
@@ -752,7 +760,7 @@ public class BuildCSTVisitor
       }
     } // star needs no matcher: any prefix, any local-name
 
-    return new Wildcard(matcher);
+    return new WildcardNodeTest(matcher);
   }
 
   // ======================================================================

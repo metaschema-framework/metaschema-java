@@ -68,14 +68,14 @@ public class Flag // NOPMD - intentional name
     Stream<? extends IFlagNodeItem> retval;
 
     INodeTestExpression test = getTest();
-    if (test instanceof NameTest) {
-      IEnhancedQName name = ((NameTest) getTest()).getName();
+    if (test instanceof NameNodeTest) {
+      IEnhancedQName name = ((NameNodeTest) getTest()).getName();
 
       IFlagNodeItem item = focusedItem.getFlagByName(name);
       retval = item == null ? Stream.empty() : Stream.of(item);
-    } else if (test instanceof Wildcard) {
+    } else if (test instanceof WildcardNodeTest) {
       // match all items
-      retval = ((Wildcard) test).match(focusedItem.flags());
+      retval = ((WildcardNodeTest) test).matchStream(focusedItem.flags());
     } else {
       throw new UnsupportedOperationException(test.getClass().getName());
     }

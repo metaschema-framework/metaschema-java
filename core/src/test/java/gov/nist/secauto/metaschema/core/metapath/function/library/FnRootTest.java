@@ -58,7 +58,11 @@ class FnRootTest
     INodeItem root = MockedDocumentGenerator.generateDocumentNodeItem(getContext());
     INodeItem result = IMetapathExpression.compile(metapath, dynamicContext.getStaticContext())
         .evaluateAs(root, IMetapathExpression.ResultType.ITEM, dynamicContext);
+    INodeItem rootResult
+        = IMetapathExpression.compile("ancestor-or-self::node()[1]", dynamicContext.getStaticContext())
+            .evaluateAs(root, IMetapathExpression.ResultType.ITEM, dynamicContext);
     assertEquals(root, result);
+    assertEquals(rootResult, result);
   }
 
   @Test

@@ -22,8 +22,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * name test</a>.
  */
 @SuppressWarnings("PMD.TestClassWithoutTestCases")
-public class NameTest
-    implements INameTestExpression {
+public class NameNodeTest
+    implements INodeTestExpression {
 
   @NonNull
   private final IEnhancedQName name;
@@ -34,7 +34,7 @@ public class NameTest
    * @param name
    *          the literal value
    */
-  public NameTest(@NonNull IEnhancedQName name) {
+  public NameNodeTest(@NonNull IEnhancedQName name) {
     this.name = name;
   }
 
@@ -50,13 +50,11 @@ public class NameTest
 
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitName(this, context);
+    return visitor.visitNameNodeTest(this, context);
   }
 
   @Override
-  public ISequence<? extends INodeItem> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
+  public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(ObjectUtils.notNull(focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep)
         .filter(this::match)));
