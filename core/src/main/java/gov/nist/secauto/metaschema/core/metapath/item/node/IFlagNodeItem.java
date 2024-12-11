@@ -105,7 +105,7 @@ public interface IFlagNodeItem
   @SuppressWarnings("null")
   @Override
   default @NonNull
-      Stream<? extends IFlagNodeItem> flags() {
+  Stream<? extends IFlagNodeItem> flags() {
     // a flag does not have flags
     return Stream.empty();
   }
@@ -117,7 +117,7 @@ public interface IFlagNodeItem
   @SuppressWarnings("null")
   @Override
   default @NonNull
-      Collection<? extends List<? extends IModelNodeItem<?, ?>>> getModelItems() {
+  Collection<? extends List<? extends IModelNodeItem<?, ?>>> getModelItems() {
     // a flag does not have model items
     return Collections.emptyList();
   }
@@ -146,7 +146,7 @@ public interface IFlagNodeItem
 
   @Override
   default @NonNull
-      String format(@NonNull IPathFormatter formatter) {
+  String format(@NonNull IPathFormatter formatter) {
     return formatter.formatFlag(this);
   }
 

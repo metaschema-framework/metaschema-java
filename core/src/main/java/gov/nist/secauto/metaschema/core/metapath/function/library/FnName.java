@@ -60,12 +60,14 @@ public final class FnName {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IStringItem> executeNoArg(@NonNull IFunction function,
+  private static ISequence<IStringItem> executeNoArg(
+      @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-
-    INodeItem arg = FunctionUtils.asType(ObjectUtils.requireNonNull(focus));
+    INodeItem arg = FunctionUtils.asType(
+        // test that the focus is an INodeItem
+        INodeItem.type().test(ObjectUtils.requireNonNull(focus)));
 
     return ISequence.of(
         IStringItem.valueOf(fnName(arg, dynamicContext.getStaticContext())));

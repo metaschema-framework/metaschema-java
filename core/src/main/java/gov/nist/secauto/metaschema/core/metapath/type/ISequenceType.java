@@ -6,6 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.type;
 
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.SequenceTypeImpl;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -86,4 +88,47 @@ public interface ISequenceType {
    *         type or {@code false} otherwise
    */
   boolean matches(@NonNull ICollectionValue value);
+
+  /**
+   * Test if the provided sequence matches this sequence type.
+   *
+   * @param sequence
+   *          the sequence to test
+   * @return the sequence if the test passes
+   * @throw InvalidTypeMetapathException if the test fails because the sequence is
+   *        not the required type
+   */
+  @NonNull
+  default <T extends IItem> ISequence<T> test(@NonNull ISequence<T> sequence) {
+    if (matches(sequence)) {
+      return sequence;
+    }
+    throw new InvalidTypeMetapathException(
+        null,
+        String.format("The argument '%s' is not a '%s'",
+            sequence.toSignature(),
+            toSignature()));
+  }
+
+  /**
+   * Test if the provided item matches this sequence type.
+   *
+   * @param item
+   *          the item to test
+   * @return the item if the test passes
+   * @throw InvalidTypeMetapathException if the test fails because the item is not
+   *        the required type
+   */
+  @NonNull
+  default <T extends IItem> T test(@NonNull T item) {
+    ISequence<T> sequence = ISequence.of(item);
+    if (matches(sequence)) {
+      return item;
+    }
+    throw new InvalidTypeMetapathException(
+        null,
+        String.format("The item '%s' is not a '%s'",
+            item.toSignature(),
+            toSignature()));
+  }
 }

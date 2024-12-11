@@ -69,7 +69,7 @@ public interface IFieldNodeItem
 
   @Override
   default @NonNull
-      String format(@NonNull IPathFormatter formatter) {
+  String format(@NonNull IPathFormatter formatter) {
     return formatter.formatField(this);
   }
 

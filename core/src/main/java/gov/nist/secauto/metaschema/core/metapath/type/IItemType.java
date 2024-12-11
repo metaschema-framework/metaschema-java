@@ -323,6 +323,27 @@ public interface IItemType {
   }
 
   /**
+   * Test if the provided item matches this item type.
+   *
+   * @param item
+   *          the item to test
+   * @return the item if the test passes
+   * @throw InvalidTypeMetapathException if the test fails because the item is not
+   *        the required type
+   */
+  @NonNull
+  default <T extends IItem> T test(@Nullable T item) {
+    if (item != null && isInstance(item)) {
+      return item;
+    }
+    throw new InvalidTypeMetapathException(
+        null,
+        String.format("The item '%s' is not a '%s'",
+            item == null ? "null" : item.toSignature(),
+            toSignature()));
+  }
+
+  /**
    * Get the item Java class associated with this item type.
    *
    * @return the item Java class
