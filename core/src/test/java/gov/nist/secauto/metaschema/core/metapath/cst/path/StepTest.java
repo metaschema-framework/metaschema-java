@@ -333,11 +333,11 @@ class StepTest
             .evaluate(nodeB, dynamicContext);
 
     Assertions.assertThat(actual.getValue()).isEqualTo(List.of(
+        document,
+        document.getRootAssemblyNodeItem(),
         document.getRootAssemblyNodeItem()
             .getModelItemsByName(IEnhancedQName.of(NS, "node-2"))
-            .iterator().next(),
-        document.getRootAssemblyNodeItem(),
-        document));
+            .iterator().next()));
   }
 
   @Test
@@ -354,12 +354,12 @@ class StepTest
             .evaluate(nodeB, dynamicContext);
 
     Assertions.assertThat(actual.getValue()).isEqualTo(List.of(
-        nodeB,
+        document,
+        document.getRootAssemblyNodeItem(),
         document.getRootAssemblyNodeItem()
             .getModelItemsByName(IEnhancedQName.of(NS, "node-2"))
             .iterator().next(),
-        document.getRootAssemblyNodeItem(),
-        document));
+        nodeB));
   }
 
   @Test

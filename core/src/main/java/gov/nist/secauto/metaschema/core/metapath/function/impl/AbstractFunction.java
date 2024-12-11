@@ -155,24 +155,17 @@ public abstract class AbstractFunction implements IFunction {
     ISequenceType sequenceType = argument.getSequenceType();
 
     // apply occurrence
-    ISequence<?> retval = sequenceType.getOccurrence().getSequenceHandler().handle(parameter);
+    ISequence<?> result = sequenceType.getOccurrence().getSequenceHandler().handle(parameter);
 
     // apply function conversion and type promotion to the parameter
-    if (!retval.isEmpty()) {
+    if (!result.isEmpty()) {
       IItemType type = sequenceType.getType();
       // this is not required to be an empty sequence
-      retval = convertSequence(argument, retval, type);
-
-      // verify resulting values
-      if (!sequenceType.matches(retval)) {
-        throw new InvalidTypeMetapathException(
-            null,
-            String.format("The argument '%s' is not a '%s'",
-                retval.toSignature(),
-                sequenceType.toSignature()));
-      }
+      result = convertSequence(argument, result, type);
     }
-    return retval;
+
+    // verify resulting values
+    return sequenceType.test(result);
   }
 
   /**
@@ -259,6 +252,9 @@ public abstract class AbstractFunction implements IFunction {
         result = executeInternal(convertedArguments, dynamicContext, contextItem);
 
         if (callingContext != null) {
+          // FIXME: ensure the result sequence is list backed, otherwise the stream will
+          // exhaust on subsequent access
+          // result.getValue();
           // add result to cache
           dynamicContext.cacheResult(callingContext, result);
         }

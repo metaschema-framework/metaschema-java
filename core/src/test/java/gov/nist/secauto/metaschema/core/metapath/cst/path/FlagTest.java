@@ -57,7 +57,7 @@ class FlagTest
       }
     });
 
-    Flag expr = new Flag(new NameTest(flagName));
+    Flag expr = new Flag(new NameNodeTest(flagName));
 
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(focusItem));
     assertEquals(ISequence.of(flagNode), result, "Sequence does not match");

@@ -225,8 +225,7 @@ public final class StaticContext {
    */
   @Nullable
   public String lookupPrefixForNamespace(@NonNull String namespace) {
-    String result = lookupPrefixForNamespaceURI(namespace);
-    return result == null ? XMLConstants.DEFAULT_NS_PREFIX : result;
+    return lookupPrefixForNamespaceURI(namespace);
   }
 
   /**

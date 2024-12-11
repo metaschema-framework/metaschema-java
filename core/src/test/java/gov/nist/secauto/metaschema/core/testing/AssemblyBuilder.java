@@ -11,10 +11,12 @@ import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -27,6 +29,8 @@ public final class AssemblyBuilder
     extends AbstractModelBuilder<AssemblyBuilder>
     implements IModelInstanceBuilder {
 
+  private String rootNamespace = "";
+  private String rootName;
   private List<FlagBuilder> flags;
   private List<? extends IModelInstanceBuilder> modelInstances;
 
@@ -50,6 +54,58 @@ public final class AssemblyBuilder
   public AssemblyBuilder reset() {
     this.flags = CollectionUtil.emptyList();
     this.modelInstances = CollectionUtil.emptyList();
+    return this;
+  }
+
+  /**
+   * Apply the provided root namespace for use by this builder.
+   *
+   * @param name
+   *          the namespace to use
+   * @return this builder
+   */
+  @NonNull
+  public AssemblyBuilder rootNamespace(@NonNull String name) {
+    this.rootNamespace = name;
+    return this;
+  }
+
+  /**
+   * Apply the provided root namespace for use by this builder.
+   *
+   * @param name
+   *          the namespace to use
+   * @return this builder
+   */
+  @NonNull
+  public AssemblyBuilder rootNamespace(@NonNull URI name) {
+    return rootNamespace(ObjectUtils.notNull(name.toASCIIString()));
+  }
+
+  /**
+   * Apply the provided root name for use by this builder.
+   *
+   * @param name
+   *          the name to use
+   * @return this builder
+   */
+  @NonNull
+  public AssemblyBuilder rootName(@NonNull String name) {
+    this.rootName = name;
+    return this;
+  }
+
+  /**
+   * Apply the provided root qualified name for use by this builder.
+   *
+   * @param qname
+   *          the qualified name to use
+   * @return this builder
+   */
+  @NonNull
+  public AssemblyBuilder rootQName(@NonNull IEnhancedQName qname) {
+    this.rootName = qname.getLocalName();
+    this.rootNamespace = qname.getNamespace();
     return this;
   }
 
@@ -132,6 +188,11 @@ public final class AssemblyBuilder
 
     getContext().checking(new Expectations() {
       {
+        if (rootName != null) {
+          allowing(retval).getRootQName();
+          will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(rootNamespace), ObjectUtils.notNull(rootName))));
+        }
+
         allowing(retval).getFlagInstances();
         will(returnValue(flags.values()));
         flags.forEach((key, value) -> {

@@ -110,6 +110,7 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
+  @NonNull
   I cast(@NonNull IAnyAtomicItem item);
 
   /**
@@ -151,4 +152,14 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
     @NonNull
     ITEM cast(@NonNull IAnyAtomicItem item);
   }
+
+  /**
+   * Construct a new instance of this type using the provided value.
+   *
+   * @param value
+   *          the "wrapped" value of the type
+   * @return the new item
+   */
+  @NonNull
+  I newItem(@NonNull Object value);
 }

@@ -15,17 +15,13 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
-import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
-import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -39,28 +35,18 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public abstract class AbstractMapItem<VALUE extends ICollectionValue>
     extends ImmutableCollections.AbstractImmutableDelegatedMap<IMapKey, VALUE>
-    implements IMapItem<VALUE> {
+    implements IMapItem<VALUE>, IFeatureCollectionFunctionItem {
   /**
    * The function qualified name.
    */
   @NonNull
   private static final IEnhancedQName QNAME = IEnhancedQName.of("map");
   /**
-   * The function properties.
-   */
-  @NonNull
-  private static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(
-      EnumSet.of(FunctionProperty.DETERMINISTIC));
-  /**
    * The function arguments.
    */
   @NonNull
   private static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
       IArgument.builder().name("key").type(IAnyAtomicItem.type()).one().build()));
-  @NonNull
-  private static final ISequenceType RESULT = ISequenceType.of(
-      IAnyAtomicItem.type(), Occurrence.ZERO_OR_ONE);
-
   @NonNull
   private static final IMapItem<?> EMPTY = new MapItemN<>();
 
@@ -79,48 +65,13 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
   }
 
   @Override
-  public boolean isDeterministic() {
-    return true;
-  }
-
-  @Override
-  public boolean isContextDepenent() {
-    return false;
-  }
-
-  @Override
-  public boolean isFocusDependent() {
-    return false;
-  }
-
-  @Override
   public IEnhancedQName getQName() {
     return QNAME;
   }
 
   @Override
-  public Set<FunctionProperty> getProperties() {
-    return PROPERTIES;
-  }
-
-  @Override
   public List<IArgument> getArguments() {
     return ARGUMENTS;
-  }
-
-  @Override
-  public int arity() {
-    return 1;
-  }
-
-  @Override
-  public boolean isArityUnbounded() {
-    return false;
-  }
-
-  @Override
-  public ISequenceType getResult() {
-    return RESULT;
   }
 
   @Override
