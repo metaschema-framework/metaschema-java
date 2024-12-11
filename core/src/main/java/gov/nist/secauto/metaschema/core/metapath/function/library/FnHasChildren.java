@@ -12,8 +12,8 @@ import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -22,13 +22,13 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-namespace-uri">fn:namespace-uri</a>
+ * /** Implements
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-root">fn:root</a>
  * functions.
  */
-public final class FnNamespaceUri {
+public final class FnHasChildren {
   @NonNull
-  private static final String NAME = "namespace-uri";
+  private static final String NAME = "has-children";
   @NonNull
   static final IFunction SIGNATURE_NO_ARG = IFunction.builder()
       .name(NAME)
@@ -38,7 +38,7 @@ public final class FnNamespaceUri {
       .focusDependent()
       .returnType(IStringItem.type())
       .returnOne()
-      .functionHandler(FnNamespaceUri::executeNoArg)
+      .functionHandler(FnHasChildren::executeNoArg)
       .build();
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
@@ -52,14 +52,14 @@ public final class FnNamespaceUri {
           .type(INodeItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IStringItem.type())
+      .returnType(IBooleanItem.type())
       .returnOne()
-      .functionHandler(FnNamespaceUri::executeOneArg)
+      .functionHandler(FnHasChildren::executeOneArg)
       .build();
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IStringItem> executeNoArg(@NonNull IFunction function,
+  private static ISequence<IBooleanItem> executeNoArg(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
@@ -68,42 +68,37 @@ public final class FnNamespaceUri {
         // test that the focus is an INodeItem
         INodeItem.type().test(ObjectUtils.requireNonNull(focus)));
 
-    return ISequence.of(
-        IStringItem.valueOf(fnNamespaceUri(arg)));
+    return ISequence.of(IBooleanItem.valueOf(fnHasChildren(arg)));
   }
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IStringItem> executeOneArg(@NonNull IFunction function,
+  private static ISequence<IBooleanItem> executeOneArg(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     INodeItem arg = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0)).getFirstItem(true));
 
-    return ISequence.of(
-        IStringItem.valueOf(arg == null ? "" : fnNamespaceUri(arg)));
+    return arg == null ? ISequence.empty() : ISequence.of(IBooleanItem.valueOf(fnHasChildren(arg)));
   }
 
   /**
-   * Get the namespace URI of the provided node item.
+   * Determine if the provided node argument has model item children.
    * <p>
    * Based on the XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-namespace-uri">fn:namespace-uri</a>
+   * "https://www.w3.org/TR/xpath-functions-31/#func-has-children">fn:has-children</a>
    * function.
    *
    * @param arg
-   *          the node item to get the namespace URI for
-   * @return the namespace URI of the node if it has one, or an empty string
-   *         otherwise
+   *          the node item to check for children
+   * @return {@code true} if the provided node has model item children, or
+   *         {@code false} otherwise
    */
-  @NonNull
-  public static String fnNamespaceUri(@NonNull INodeItem arg) {
-    return arg instanceof IDefinitionNodeItem
-        ? ((IDefinitionNodeItem<?, ?>) arg).getQName().getNamespace()
-        : "";
+  public static boolean fnHasChildren(@NonNull INodeItem arg) {
+    return arg.modelItems().findFirst().isPresent();
   }
 
-  private FnNamespaceUri() {
+  private FnHasChildren() {
     // disable construction
   }
 }

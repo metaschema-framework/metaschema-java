@@ -47,7 +47,7 @@ public final class FnName {
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
-      .focusDependent()
+      .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
           .type(INodeItem.type())

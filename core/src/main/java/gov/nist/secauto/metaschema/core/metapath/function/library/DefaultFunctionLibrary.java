@@ -92,7 +92,9 @@ public class DefaultFunctionLibrary
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-number
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-time
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-generate-id
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-has-children
+    // https://www.w3.org/TR/xpath-functions-31/#func-has-children
+    registerFunction(FnHasChildren.SIGNATURE_NO_ARG);
+    registerFunction(FnHasChildren.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-head
     registerFunction(FnHead.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-hours-from-dateTime

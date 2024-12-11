@@ -46,7 +46,7 @@ public final class FnLocalName {
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextIndependent()
-      .focusDependent()
+      .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
           .type(INodeItem.type())
