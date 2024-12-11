@@ -131,6 +131,12 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
     applyModelElement(definition);
     applyNamed(definition);
     applyAttributable(definition);
+    getContext().checking(new Expectations() {
+      {
+        allowing(definition).getDefinitionQName();
+        will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
+      }
+    });
   }
 
   /**

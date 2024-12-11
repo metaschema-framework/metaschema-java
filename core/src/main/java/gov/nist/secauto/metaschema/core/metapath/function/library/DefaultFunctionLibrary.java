@@ -105,6 +105,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-index-of
     registerFunction(FnIndexOf.SIGNATURE_TWO_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-innermost
+    registerFunction(FnInnermost.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-insert-before
     registerFunction(FnInsertBefore.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-iri-to-uri
