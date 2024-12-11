@@ -26,9 +26,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-name">fn:name</a>
  * functions.
  */
-public final class FnLocalName {
+public final class FnNamespaceUri {
   @NonNull
-  private static final String NAME = "local-name";
+  private static final String NAME = "namespace-uri";
   @NonNull
   static final IFunction SIGNATURE_NO_ARG = IFunction.builder()
       .name(NAME)
@@ -38,7 +38,7 @@ public final class FnLocalName {
       .focusDependent()
       .returnType(IStringItem.type())
       .returnOne()
-      .functionHandler(FnLocalName::executeNoArg)
+      .functionHandler(FnNamespaceUri::executeNoArg)
       .build();
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
@@ -54,7 +54,7 @@ public final class FnLocalName {
           .build())
       .returnType(IStringItem.type())
       .returnOne()
-      .functionHandler(FnLocalName::executeOneArg)
+      .functionHandler(FnNamespaceUri::executeOneArg)
       .build();
 
   @SuppressWarnings("unused")
@@ -69,7 +69,7 @@ public final class FnLocalName {
         INodeItem.type().test(ObjectUtils.requireNonNull(focus)));
 
     return ISequence.of(
-        IStringItem.valueOf(fnLocalName(arg)));
+        IStringItem.valueOf(fnNamespaceUri(arg)));
   }
 
   @SuppressWarnings("unused")
@@ -81,28 +81,29 @@ public final class FnLocalName {
     INodeItem arg = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0)).getFirstItem(true));
 
     return ISequence.of(
-        IStringItem.valueOf(arg == null ? "" : fnLocalName(arg)));
+        IStringItem.valueOf(arg == null ? "" : fnNamespaceUri(arg)));
   }
 
   /**
-   * Get the name of the provided node item.
+   * Get the namespace URI of the provided node item.
    * <p>
    * Based on the XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-local-name">fn:local-name</a>
+   * "https://www.w3.org/TR/xpath-functions-31/#func-namespace-uri">fn:namespace-uri</a>
    * function.
    *
    * @param arg
-   *          the node item to get the name for
-   * @return the name of the node if it has one, or an empty string otherwise
+   *          the node item to get the namespace URI for
+   * @return the namespace URI of the node if it has one, or an empty string
+   *         otherwise
    */
   @NonNull
-  public static String fnLocalName(@NonNull INodeItem arg) {
+  public static String fnNamespaceUri(@NonNull INodeItem arg) {
     return arg instanceof IDefinitionNodeItem
-        ? ((IDefinitionNodeItem<?, ?>) arg).getQName().getLocalName()
+        ? ((IDefinitionNodeItem<?, ?>) arg).getQName().getNamespace()
         : "";
   }
 
-  private FnLocalName() {
+  private FnNamespaceUri() {
     // disable construction
   }
 }
