@@ -31,31 +31,32 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-class FnNameTest
+class FnLocalNameTest
     extends ExpressionTestBase {
+
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
             null,
-            "name()"),
+            "local-name()"),
         Arguments.of(
             null,
-            "name(.)"),
+            "local-name(.)"),
         Arguments.of(
             MockedDocumentGenerator.ROOT_QNAME,
-            "name(/root)"),
+            "local-name(/root)"),
         Arguments.of(
             MockedDocumentGenerator.ASSEMBLY_QNAME,
-            "name(/root/assembly)"),
+            "local-name(/root/assembly)"),
         Arguments.of(
             MockedDocumentGenerator.ASSEMBLY_FLAG_QNAME,
-            "name(/root/assembly/@assembly-flag)"),
+            "local-name(/root/assembly/@assembly-flag)"),
         Arguments.of(
             MockedDocumentGenerator.FIELD_QNAME,
-            "name(/root/field)"),
+            "local-name(/root/field)"),
         Arguments.of(
             MockedDocumentGenerator.FIELD_FLAG_QNAME,
-            "name(/root/field/@field-flag)"));
+            "local-name(/root/field/@field-flag)"));
   }
 
   @ParameterizedTest
@@ -72,7 +73,7 @@ class FnNameTest
     assertEquals(
         expected == null
             ? ""
-            : expected.toEQName(dynamicContext.getStaticContext()),
+            : expected.getLocalName(),
         result.asString());
   }
 
@@ -81,7 +82,7 @@ class FnNameTest
     DynamicContext dynamicContext = newDynamicContext();
 
     MetapathException ex = assertThrows(MetapathException.class, () -> {
-      IMetapathExpression.compile("name()", dynamicContext.getStaticContext())
+      IMetapathExpression.compile("local-name()", dynamicContext.getStaticContext())
           .evaluateAs(null, IMetapathExpression.ResultType.ITEM, dynamicContext);
     });
     Throwable cause = ex.getCause() != null ? ex.getCause().getCause() : null;
@@ -100,7 +101,7 @@ class FnNameTest
     DynamicContext dynamicContext = newDynamicContext();
 
     MetapathException ex = assertThrows(MetapathException.class, () -> {
-      IMetapathExpression.compile("name()", dynamicContext.getStaticContext())
+      IMetapathExpression.compile("local-name()", dynamicContext.getStaticContext())
           .evaluateAs(IStringItem.valueOf("test"), IMetapathExpression.ResultType.ITEM, dynamicContext);
     });
     Throwable cause = ex.getCause() != null ? ex.getCause().getCause() : null;
