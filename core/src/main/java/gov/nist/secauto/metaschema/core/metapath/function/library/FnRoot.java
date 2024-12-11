@@ -13,7 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -22,13 +21,13 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-local-name">fn:local-name</a>
+ * /** Implements
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-root">fn:root</a>
  * functions.
  */
-public final class FnLocalName {
+public final class FnRoot {
   @NonNull
-  private static final String NAME = "local-name";
+  private static final String NAME = "root";
   @NonNull
   static final IFunction SIGNATURE_NO_ARG = IFunction.builder()
       .name(NAME)
@@ -38,7 +37,7 @@ public final class FnLocalName {
       .focusDependent()
       .returnType(IStringItem.type())
       .returnOne()
-      .functionHandler(FnLocalName::executeNoArg)
+      .functionHandler(FnRoot::executeNoArg)
       .build();
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
@@ -52,14 +51,14 @@ public final class FnLocalName {
           .type(INodeItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IStringItem.type())
-      .returnOne()
-      .functionHandler(FnLocalName::executeOneArg)
+      .returnType(INodeItem.type())
+      .returnZeroOrOne()
+      .functionHandler(FnRoot::executeOneArg)
       .build();
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IStringItem> executeNoArg(@NonNull IFunction function,
+  private static ISequence<INodeItem> executeNoArg(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
@@ -68,41 +67,42 @@ public final class FnLocalName {
         // test that the focus is an INodeItem
         INodeItem.type().test(ObjectUtils.requireNonNull(focus)));
 
-    return ISequence.of(
-        IStringItem.valueOf(fnLocalName(arg)));
+    return ISequence.of(fnRoot(arg));
   }
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IStringItem> executeOneArg(@NonNull IFunction function,
+  private static ISequence<INodeItem> executeOneArg(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     INodeItem arg = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0)).getFirstItem(true));
 
-    return ISequence.of(
-        IStringItem.valueOf(arg == null ? "" : fnLocalName(arg)));
+    return arg == null ? ISequence.empty() : ISequence.of(fnRoot(arg));
   }
 
   /**
-   * Get the name of the provided node item.
+   * Get the root of the tree to which the provided node argument belongs.
    * <p>
-   * Based on the XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-local-name">fn:local-name</a>
+   * Based on the XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-root">fn:root</a>
    * function.
    *
    * @param arg
-   *          the node item to get the name for
-   * @return the name of the node if it has one, or an empty string otherwise
+   *          the node item to get the namespace URI for
+   * @return the root of the tree to which the provided node argument belongs
    */
   @NonNull
-  public static String fnLocalName(@NonNull INodeItem arg) {
-    return arg instanceof IDefinitionNodeItem
-        ? ((IDefinitionNodeItem<?, ?>) arg).getQName().getLocalName()
-        : "";
+  public static INodeItem fnRoot(@NonNull INodeItem arg) {
+    INodeItem retval = arg;
+    while (retval.getParentNodeItem() != null) {
+      retval = retval.getParentNodeItem();
+    }
+
+    return retval;
   }
 
-  private FnLocalName() {
+  private FnRoot() {
     // disable construction
   }
 }

@@ -22,8 +22,8 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements
- * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-name">fn:name</a>
+ * /** Implements <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-namespace-uri">fn:namespace-uri</a>
  * functions.
  */
 public final class FnNamespaceUri {
