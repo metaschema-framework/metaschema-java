@@ -6,7 +6,7 @@ import gov.nist.secauto.metaschema.core.model.INamedInstance;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-abstract class AbstractDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
+public abstract class AbstractDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
     extends AbstractNodeItem
     implements IFeatureOrhpanedDefinitionNodeItem<D, I> {
 

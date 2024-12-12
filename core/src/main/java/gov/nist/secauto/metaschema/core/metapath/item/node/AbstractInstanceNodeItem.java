@@ -7,7 +7,7 @@ import gov.nist.secauto.metaschema.core.model.INamedInstance;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-abstract class AbstractInstanceNodeItem<
+public abstract class AbstractInstanceNodeItem<
     D extends IDefinition,
     I extends INamedInstance,
     P extends IModelNodeItem<? extends IModelDefinition, ? extends INamedInstance>>

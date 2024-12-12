@@ -60,6 +60,9 @@ public class StreamSequence<ITEM extends IItem>
     instanceLock.lock();
     try {
       if (list == null) {
+        if (stream == null) {
+          throw new IllegalStateException("stream is already consumed");
+        }
         list = stream.collect(Collectors.toUnmodifiableList());
         stream = null;
       }

@@ -178,12 +178,12 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    */
   @NonNull
   default Stream<? extends INodeItem> ancestorOrSelf() {
-    return ObjectUtils.notNull(Stream.concat(Stream.of(this), ancestor()));
+    return ObjectUtils.notNull(Stream.concat(ancestor(), Stream.of(this)));
   }
 
   /**
    * Get a stream of the ancestors of the provided {@code item}. The stream is
-   * ordered from the closest to farthest ancestor.
+   * ordered from the farthest ancestor to the closest.
    *
    * @param item
    *          the target item to get ancestors for
@@ -193,7 +193,7 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   @NonNull
   static Stream<? extends INodeItem> ancestorsOf(@NonNull INodeItem item) {
     INodeItem parent = item.getParentNodeItem();
-    return ObjectUtils.notNull(parent == null ? Stream.empty() : Stream.concat(Stream.of(parent), ancestorsOf(parent)));
+    return ObjectUtils.notNull(parent == null ? Stream.empty() : Stream.concat(ancestorsOf(parent), Stream.of(parent)));
   }
 
   /**

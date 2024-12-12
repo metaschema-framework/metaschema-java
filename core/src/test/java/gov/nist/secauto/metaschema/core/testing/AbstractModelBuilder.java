@@ -22,6 +22,12 @@ import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A base class for Metaschema module-based model builders.
+ *
+ * @param <T>
+ *          the Java type of this builder
+ */
 public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
     extends MockFactory {
 
@@ -52,7 +58,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
   }
 
   /**
-   * Apply the provided namespace to use for names built using this builder.
+   * Apply the provided namespace for use by this builder.
    *
    * @param name
    *          the namespace to use
@@ -66,7 +72,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
   }
 
   /**
-   * Apply the provided namespace to use for names built using this builder.
+   * Apply the provided namespace for use by this builder.
    *
    * @param name
    *          the namespace to use
@@ -75,12 +81,11 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
   @SuppressWarnings("unchecked")
   @NonNull
   public T namespace(@NonNull URI name) {
-    this.namespace = name.toASCIIString();
-    return (T) this;
+    return namespace(name.toASCIIString());
   }
 
   /**
-   * Apply the provided names to use for names built using this builder.
+   * Apply the provided name for use by this builder.
    *
    * @param name
    *          the name to use
@@ -90,6 +95,21 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
   @NonNull
   public T name(@NonNull String name) {
     this.name = name;
+    return (T) this;
+  }
+
+  /**
+   * Apply the provided qualified name for use by this builder.
+   *
+   * @param qname
+   *          the qualified name to use
+   * @return this builder
+   */
+  @SuppressWarnings("unchecked")
+  @NonNull
+  public T qname(@NonNull IEnhancedQName qname) {
+    this.name = qname.getLocalName();
+    this.namespace = qname.getNamespace();
     return (T) this;
   }
 
@@ -111,6 +131,12 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
     applyModelElement(definition);
     applyNamed(definition);
     applyAttributable(definition);
+    getContext().checking(new Expectations() {
+      {
+        allowing(definition).getDefinitionQName();
+        will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
+      }
+    });
   }
 
   /**
